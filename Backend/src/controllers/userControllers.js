@@ -1,9 +1,9 @@
-import { getUsersCollection as usersCollection } from '../models/userModels.js';
+import { getUsersCollection } from '../models/userModels.js';
 
 export const getProfile = async (req, res) => {
     try {
         const userEmail = req.user.email;
-        
+        const usersCollection = getUsersCollection();
         const user = await usersCollection.findOne({ email: userEmail });
         if (!user) {
           return res.status(404).json({ success: false, message: 'User not found' });
@@ -21,7 +21,7 @@ export const updateProfile = async (req, res) => {
         const userEmail = req.user.email; 
         
         const { profile } = req.body;
-    
+        const usersCollection = getUsersCollection();
         const updatedUser = await usersCollection.findOneAndUpdate(
           { email: userEmail },
           { $set: { profile } },
