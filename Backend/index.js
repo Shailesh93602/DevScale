@@ -1,9 +1,9 @@
 import { config } from 'dotenv';
 import express from 'express';
 import bodyParser from 'body-parser';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import { MongoClient } from 'mongodb';
+import authRoutes from './src/routes/authRoutes.js';
+import userRoutes from './src/routes/userRoutes.js';
 
 config();
 const app = express();
@@ -13,91 +13,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const port = process.env.PORT || 3000;
 const url = process.env.DB_URL;
-const client = new MongoClient(url);
-
-let usersCollection;
-
-const connectToDatabase = async () => {
-    try {
-      await client.connect();
-      const database = client.db('MrEngineers');
-      usersCollection = database.collection('users');
-      console.log('Connected to MongoDB Atlas');
-    } catch (error) {
-      console.error('Error connecting to MongoDB Atlas:', error);
-      process.exit(1);
-    }
-}
-connectToDatabase();
-
-const sendResetEmail = async(email, resetLink) => {
-  const transporter = nodemailer.createTransport({
-    service: 'Gmail',
-    auth: {
-      user: process.env.MAIL_ADDRESS,
-      pass: process.env.MAIL_PASSWORD
-    }
-  });
-
-  const mailOptions = {
-    from: process.env.MAIL_ADDRESS,
-    to: email,
-    subject: 'Password Reset',
-    text: `Click the following link to reset your password: ${resetLink}`
-  };
-
-  await transporter.sendMail(mailOptions);
-}
-app.post('/auth/register', async(req, res) => {
-  try {
-    const { email, password } = req.body;
-    if(!email || !password) res.status(300).json({ success: false, message: "Invalid payload"});
-    let isUserExists = usersCollection.findOne({ email });
-    if(isUserExists) res.status(500).json({ success: false, message: "User already exits!"});
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = { email, password: hashedPassword };
-    await usersCollection.insertOne(user);
-    res.status(201).json({ success: true, message: "Registered Successfully!"});
-  } catch (error) {
-    console.error('Error registering user:', error);
-    res.status(500).json({ success: false, message: error.message });
-  }
-});
-
-app.post('/auth/login', async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const user = await usersCollection.findOne({ email });
-    if (!user) return res.status(400).json({ success: false, message: 'Cannot find user'});
-    if (await bcrypt.compare(password, user.password)) {
-      const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
-      res.status(200).json({ success: true, accessToken });
-    }
-    else res.status(401).json({ success: false, message: 'Incorrect username of password'});
-  } catch (error) {
-    console.error('Error logging in:', error);
-    res.status(500).send();
-  }
-});
-
-app.post('/auth/forgotPassword', async(req, res) => {
-  try {
-    const { email } = req.body;
-    const user = await usersCollection.findOne({ email });
-    if (!user) return res.status(400).json({ success: false, message: 'Cannot find user'});
-    
-    const resetToken = jwt.sign({ email }, process.env.RESET_TOKEN_SECRET, { expiresIn: '1h' });
-
-    const resetLink = `localhost:3000/resetPassword?token=${resetToken}`;
-    await sendResetEmail(email, resetLink);
-
-    res.status(200).json({ success: true, message: 'Password reset link sent to your email' });
-  } catch (error) {
-    console.error('Error logging in:', error);
-    res.status(500).json({ success: false, message: error.message });
-  }
-});
-
+app.use('/auth', authRoutes);
+app.use('/user', userRoutes);
 
 app.listen(port, () => {
     console.log("Server is listing on port: " + port);
