@@ -2,7 +2,7 @@ import { config } from 'dotenv';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
-import { getUsersCollection as usersCollection } from '../models/userModels.js';
+import { getUsersCollection } from '../models/userModels.js';
 
 config();
 const sendResetEmail = async(email, resetLink) => {
@@ -26,8 +26,11 @@ const sendResetEmail = async(email, resetLink) => {
 
 export const register = async (req, res) => {
   try {
+    // const { firstName, lastName, dob, gender, email, phoneNumber, password, address, city, state, country, zipCode  } = req.body;
     const { email, password } = req.body;
+
     if(!email || !password) res.status(300).json({ success: false, message: "Invalid payload"});
+    const usersCollection = getUsersCollection();
     let isUserExists = usersCollection.findOne({ email });
     if(isUserExists) res.status(500).json({ success: false, message: "User already exits!"});
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -43,6 +46,7 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    const usersCollection = getUsersCollection();
     const user = await usersCollection.findOne({ email });
     if (!user) return res.status(400).json({ success: false, message: 'Incorrect username or password'});
 
@@ -60,6 +64,7 @@ export const login = async (req, res) => {
 export const forgotPassword = async(req, res) => {
   try {
     const { email } = req.body;
+    const usersCollection = getUsersCollection();
     const user = await usersCollection.findOne({ email });
     if (!user) return res.status(400).json({ success: false, message: 'Cannot find user'});
     
@@ -78,7 +83,7 @@ export const forgotPassword = async(req, res) => {
 export const resetPassword = async (req, res) => {
   try {
     const { token, password } = req.body;
-    if (!token || !newPassword) {
+    if (!token || !password) {
       return res.status(400).json({ success: false, message: 'Token and newPassword are required' });
     }
 
@@ -88,6 +93,7 @@ export const resetPassword = async (req, res) => {
       }
 
       const { email } = decoded;
+      const usersCollection = getUsersCollection();
       const user = await usersCollection.findOne({ email });
       if (!user) {
         return res.status(400).json({ success: false, message: 'User not found' });
