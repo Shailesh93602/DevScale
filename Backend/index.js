@@ -2,12 +2,19 @@ import { config } from 'dotenv';
 import express from 'express';
 import bodyParser from 'body-parser';
 import routes from './src/routes/routes.js';
+import { connectToDatabase } from './config/database.js';
+import cors from 'cors';
 
+connectToDatabase();
 config();
 const app = express();
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors({
+    credentials: true,
+    origin: ['http://localhost:3001', 'https://localhost:4000']
+}))
 app.use(routes);
 
 const port = process.env.PORT || 3000;
