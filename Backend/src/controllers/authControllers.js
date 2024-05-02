@@ -2,7 +2,7 @@ import { config } from 'dotenv';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
-import { getUsersCollection } from '../models/userModels.js';
+import User from '../models/userModels.js';
 
 config();
 const sendResetEmail = async(email, resetLink) => {
@@ -27,15 +27,18 @@ const sendResetEmail = async(email, resetLink) => {
 export const register = async (req, res) => {
   try {
     // const { firstName, lastName, dob, gender, email, phoneNumber, password, address, city, state, country, zipCode  } = req.body;
-    const { email, password } = req.body;
-
-    if(!email || !password) res.status(300).json({ success: false, message: "Invalid payload"});
-    const usersCollection = getUsersCollection();
-    let isUserExists = usersCollection.findOne({ email });
-    if(isUserExists) res.status(500).json({ success: false, message: "User already exits!"});
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = { email, password: hashedPassword };
-    await usersCollection.insertOne(user);
+    const { name, email } = req.body;
+    if(!name || !email || !req.body.password) res.status(300).json({ success: false, message: "Invalid payload"});
+    
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const user = new User({
+      name,
+      email,
+      password: hashedPassword
+    });
+    
+    const result = await user.save();
+    const { password, ...data } = await result.toJSON();
     res.status(201).json({ success: true, message: "Registered Successfully!"});
   } catch (error) {
     console.error('Error registering user:', error);
@@ -46,15 +49,21 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const usersCollection = getUsersCollection();
-    const user = await usersCollection.findOne({ email });
-    if (!user) return res.status(400).json({ success: false, message: 'Incorrect username or password'});
+    const user = await User.findOne({ email });
+    
+    if(!user) res.status(404).json({ success: false, message: "User not found"});
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) return res.status(401).json({ success: false, message: 'Incorrect username or password' });
     
-    const accessToken = jwt.sign({ email: user.email }, process.env.ACCESS_TOKEN_SECRET);
-    res.status(200).json({ success: true, accessToken });
+    const token = jwt.sign({ email: user.email }, process.env.ACCESS_TOKEN_SECRET);
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      maxAge: 24*60*60*1000 // 1 day
+    });
+
+    res.status(200).json({ success: true, message: "Logged in successfully!" });
   } catch (error) {
     console.error('Error logging in:', error);
     res.status(500).send();
@@ -64,8 +73,7 @@ export const login = async (req, res) => {
 export const forgotPassword = async(req, res) => {
   try {
     const { email } = req.body;
-    const usersCollection = getUsersCollection();
-    const user = await usersCollection.findOne({ email });
+    const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ success: false, message: 'Cannot find user'});
     
     const resetToken = jwt.sign({ email }, process.env.RESET_TOKEN_SECRET, { expiresIn: '1h' });
@@ -93,15 +101,14 @@ export const resetPassword = async (req, res) => {
       }
 
       const { email } = decoded;
-      const usersCollection = getUsersCollection();
-      const user = await usersCollection.findOne({ email });
+      const user = await User.findOne({ email });
       if (!user) {
         return res.status(400).json({ success: false, message: 'User not found' });
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      await usersCollection.updateOne({ email }, { $set: { password: hashedPassword } });
+      await User.updateOne({ email }, { $set: { password: hashedPassword } });
 
       res.status(200).json({ success: true, message: 'Password updated successfully' });
     });

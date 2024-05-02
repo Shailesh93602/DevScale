@@ -1,20 +1,19 @@
-import { connectToDatabase } from '../../config/database.js';
+import mongoose from 'mongoose';
 
-let usersCollection;
-
-export const initializeUsersCollection = async () => {
-    try {
-        const database = await connectToDatabase();
-        usersCollection = database.collection('users');
-    } catch (error) {
-        console.error('Error initializing users collection:', error);
-        throw error; 
+const UserSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        unique: true,
+        required: true
+    },
+    password: {
+        type: String,
+        required: true
     }
-};
+});
 
-export const getUsersCollection = () => {
-    if (!usersCollection) {
-        throw new Error('Users collection not initialized');
-    }
-    return usersCollection;
-};
+export default mongoose.model('User', UserSchema);
