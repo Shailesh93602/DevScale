@@ -24,12 +24,11 @@ export const applyPassportStrategy = () => {
   options.jwtFromRequest = jwt;
   passport.use(
     new Strategy(options, async (payload, done) => {
-      let result = await findOne([payload.email]);
-      result = result[0];
-      if (result) {
-        return done(null, result);
+      let user = await user.findOne({ email: payload.email });
+      if (user) {
+        return done(null, user);
       }
-      return done(null, false);
+      return done(null, false); 
     })
   );
 };

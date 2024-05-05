@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import routes from './src/routes/routes.js';
 import { connectToDatabase } from './config/database.js';
 import cors from 'cors';
+import { applyPassportStrategy } from './src/middleware/passport.js';
 
 connectToDatabase();
 config();
@@ -14,8 +15,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({
     credentials: true,
     origin: ['http://localhost:3001', 'https://localhost:4000']
-}))
+}));
 app.use(routes);
+applyPassportStrategy();
 
 const port = process.env.PORT || 3000;
 
