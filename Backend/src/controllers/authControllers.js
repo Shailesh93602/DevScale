@@ -3,25 +3,30 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 import User from '../models/userModels.js';
+import { logger } from '../helpers/logger.js';
 
 config();
 const sendResetEmail = async(email, resetLink) => {
-  const transporter = nodemailer.createTransport({
-    service: 'Gmail',
-    auth: {
-      user: process.env.MAIL_ADDRESS,
-      pass: process.env.MAIL_PASSWORD
-    }
-  });
+  try{
+    const transporter = nodemailer.createTransport({
+      service: 'Gmail',
+      auth: {
+        user: process.env.MAIL_ADDRESS,
+        pass: process.env.MAIL_PASSWORD
+      }
+    });
 
-  const mailOptions = {
-    from: process.env.MAIL_ADDRESS,
-    to: email,
-    subject: 'Password Reset',
-    text: `Click the following link to reset your password: ${resetLink}`
-  };
+    const mailOptions = {
+      from: process.env.MAIL_ADDRESS,
+      to: email,
+      subject: 'Password Reset',
+      text: `Click the following link to reset your password: ${resetLink}`
+    };
 
-  await transporter.sendMail(mailOptions);
+    await transporter.sendMail(mailOptions);
+  } catch(error) {
+    logger.error(error);
+  }
 }
 
 export const register = async (req, res) => {
@@ -41,7 +46,7 @@ export const register = async (req, res) => {
     const { password, ...data } = await result.toJSON();
     res.status(201).json({ success: true, message: "Registered Successfully!"});
   } catch (error) {
-    console.error('Error registering user:', error);
+    logger.error('Error registering user:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 }
@@ -65,7 +70,7 @@ export const login = async (req, res) => {
 
     res.status(200).json({ success: true, message: "Logged in successfully!" });
   } catch (error) {
-    console.error('Error logging in:', error);
+    logger.error('Error logging in:', error);
     res.status(500).send();
   }
 }
@@ -83,7 +88,7 @@ export const forgotPassword = async(req, res) => {
 
     res.status(200).json({ success: true, message: 'Password reset link sent to your email' });
   } catch (error) {
-    console.error('Error logging in:', error);
+    logger.error('Error logging in:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 }
@@ -113,7 +118,7 @@ export const resetPassword = async (req, res) => {
       res.status(200).json({ success: true, message: 'Password updated successfully' });
     });
   } catch (error) {
-    console.error('Error resetting password:', error);
+    logger.error('Error resetting password:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 }
@@ -128,7 +133,7 @@ export const logout = async (req, res) => {
       res.status(200).json({ success: true, message: 'Logged out successfully' });
     });
   } catch (error) {
-    console.error('Error logging out:', error);
+    logger.error('Error logging out:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 }
