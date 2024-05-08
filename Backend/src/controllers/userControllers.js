@@ -1,30 +1,47 @@
-import User from '../models/userModels.js';
+import UserInfo from '../models/userInfoModels.js';
+import{ logger } from '../helpers/logger.js';
+
+export const insertProfile = async(req, res) => {
+  try{
+    const { name } = req.body;
+    if(!name) res.status(300).json({ success: false, message: "Invalid payload"});
+    
+    const userInfo = new UserInfo({
+      name
+    });
+    
+    const result = await userInfo.save();
+    const data = await result.toJSON();
+    res.status(201).json({ success: true, message: "User inserted Successfully!"});
+  } catch(error) {
+    logger.error(error);
+    res.status(500).json({ success: false, message: 'Error adding user' });
+  }
+}
 
 export const getProfile = async (req, res) => {
     try {
-        const userEmail = req.user.email;
-        const usersCollection = getUsersCollection();
-        const user = await usersCollection.findOne({ email: userEmail });
-        if (!user) {
+        const email = req.user.email;
+        const userInfo = await UserInfo.findOne({ email });
+        if (!userInfo) {
           return res.status(404).json({ success: false, message: 'User not found' });
         }
     
-        res.status(200).json({ success: true, profile: user.profile });
+        res.status(200).json({ success: true, userInfo });
       } catch (error) {
-        console.error('Error fetching user profile:', error);
+        logger.error(error);
         res.status(500).json({ success: false, message: 'Internal server error' });
       }
 };
 
 export const updateProfile = async (req, res) => {
     try {
-        const userEmail = req.user.email; 
-        
-        const { profile } = req.body;
-        const usersCollection = getUsersCollection();
-        const updatedUser = await usersCollection.findOneAndUpdate(
-          { email: userEmail },
-          { $set: { profile } },
+        const email = req.user.email; 
+    
+        const { name } = req.body;
+        const updatedUser = await UserInfo.findOneAndUpdate(
+          { email },
+          { $set: { name } },
           { returnOriginal: false }
         );
     
@@ -32,9 +49,9 @@ export const updateProfile = async (req, res) => {
           return res.status(404).json({ success: false, message: 'User not found' });
         }
     
-        res.status(200).json({ success: true, profile: updatedUser.value.profile });
+        res.status(200).json({ success: true, name });
       } catch (error) {
-        console.error('Error updating user profile:', error);
+        logger.error(error);
         res.status(500).json({ success: false, message: 'Internal server error' });
       }
 };
