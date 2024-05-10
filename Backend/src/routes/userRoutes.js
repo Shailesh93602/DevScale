@@ -3,8 +3,8 @@ import { getProfile, insertProfile, updateProfile } from '../controllers/userCon
 
 const router = express.Router();
 
-router.get('/profile', getProfile);
-router.post('/profile', insertProfile);
-router.put('/profile', updateProfile);
+router.get('/', getProfile);
+router.post('/', insertProfile);
+router.put('/update', updateProfile);
 
 export default router;
