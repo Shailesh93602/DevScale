@@ -1,4 +1,4 @@
-import { logger } from './../helpers/logger';
+import { logger } from './../helpers/logger.js';
 
 export const getChats = (req, res) => {
     try{

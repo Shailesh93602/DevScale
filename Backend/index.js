@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({
     credentials: true,
-    origin: ['http://localhost:3001', 'https://localhost:4000']
+    origin: ['http://localhost:3000', 'https://localhost:3001']
 }));
 app.use(routes);
 applyPassportStrategy();

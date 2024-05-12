@@ -1,4 +1,4 @@
-import { logger } from './../helpers/logger';
+import { logger } from './../helpers/logger.js';
 
 export const getJobs = (req, res) => {
     try{
