@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 import User from '../models/userModels.js';
 import { logger } from '../helpers/logger.js';
+import validator from "email-validator";
 
 config();
 const sendResetEmail = async (email, resetLink) => {
@@ -31,15 +32,12 @@ const sendResetEmail = async (email, resetLink) => {
 
 export const register = async (req, res) => {
   try {
-    // const { firstName, lastName, dob, gender, email, phoneNumber, password, address, city, state, country, zipCode  } = req.body;
-    console.log(req.body);
-    return;
-    const { name, email } = req.body;
-    if (!name || !email || !req.body.password) res.status(300).json({ success: false, message: "Invalid payload" });
+    const { username, email } = req.body;
+    if (!username || !email || !req.body.password) res.status(300).json({ success: false, message: "Invalid payload" });
 
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const user = new User({
-      name,
+      username,
       email,
       password: hashedPassword
     });
@@ -48,17 +46,25 @@ export const register = async (req, res) => {
     const { password, ...data } = await result.toJSON();
     res.status(201).json({ success: true, message: "Registered Successfully!" });
   } catch (error) {
-    logger.error('Error registering user:', error);
-    res.status(500).json({ success: false, message: error.message });
+    console.log(error);
+    logger.error(error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 }
 
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    console.log("Here");
+    console.log(req.body);
+    const { username, password } = req.body;
 
-    if (!user) res.status(404).json({ success: false, message: "User not found" });
+    const isEmail = validator.validate(username);
+
+    let user;
+    if (isEmail) user = await User.findOne({ email: username });
+    else user = await User.findOne({ username });
+
+    if (!user) res.status(404).json({ success: false, message: "Incorrect username of password" });
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) return res.status(401).json({ success: false, message: 'Incorrect username or password' });
@@ -67,12 +73,12 @@ export const login = async (req, res) => {
 
     res.cookie('token', token, {
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000 // 1 day
+      maxAge: 24 * 60 * 60 * 1000
     });
 
     res.status(200).json({ success: true, message: "Logged in successfully!" });
   } catch (error) {
-    logger.error('Error logging in:', error);
+    logger.error(error);
     res.status(500).send();
   }
 }

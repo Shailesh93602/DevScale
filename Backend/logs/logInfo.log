@@ -1,0 +1,13 @@
+[2024-05-12 04:44:09.217 AM] error: [object Object]
+[2024-05-12 04:44:46.061 AM] error: [object Object]
+[2024-05-12 04:45:45.599 AM] error: [object Object]
+[2024-05-12 04:46:22.610 AM] error: [object Object]
+[2024-05-12 04:48:44.469 AM] error: [object Object]
+[2024-05-12 04:49:34.768 AM] error: [object Object]
+[2024-05-12 04:50:03.352 AM] error: [object Object]
+[2024-05-12 04:50:28.864 AM] error: [object Object]
+[2024-05-12 04:51:15.031 AM] error: ReferenceError: name is not defined
+[2024-05-12 04:51:58.559 AM] error: MongoServerError: E11000 duplicate key error collection: test.users index: email_1 dup key: { email: "shailesh@gmail.com" }
+[2024-05-12 04:52:17.755 AM] error: MongoServerError: E11000 duplicate key error collection: test.users index: username_1 dup key: { username: "shaileshbhai" }
+[2024-05-12 04:53:31.754 AM] error: MongoServerError: E11000 duplicate key error collection: test.users index: email_1 dup key: { email: "shaileshbhai1234@gmail.com" }
+[2024-05-12 05:31:50.772 AM] error: TypeError: Cannot read properties of null (reading 'password')
