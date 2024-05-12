@@ -44,6 +44,7 @@ export const register = async (req, res) => {
 
     const result = await user.save();
     const { password, ...data } = await result.toJSON();
+
     res.status(201).json({ success: true, message: "Registered Successfully!" });
   } catch (error) {
     console.log(error);

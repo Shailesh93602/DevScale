@@ -4,7 +4,7 @@ import { getProfile, insertProfile, updateProfile } from '../controllers/userCon
 const router = express.Router();
 
 router.get('/', getProfile);
-router.post('/', insertProfile);
+router.post('/register', insertProfile);
 router.put('/update', updateProfile);
 
 export default router;
