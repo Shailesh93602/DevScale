@@ -6,8 +6,8 @@ import User from '../models/userModels.js';
 import { logger } from '../helpers/logger.js';
 
 config();
-const sendResetEmail = async(email, resetLink) => {
-  try{
+const sendResetEmail = async (email, resetLink) => {
+  try {
     const transporter = nodemailer.createTransport({
       service: 'Gmail',
       auth: {
@@ -24,7 +24,7 @@ const sendResetEmail = async(email, resetLink) => {
     };
 
     await transporter.sendMail(mailOptions);
-  } catch(error) {
+  } catch (error) {
     logger.error(error);
   }
 }
@@ -32,19 +32,21 @@ const sendResetEmail = async(email, resetLink) => {
 export const register = async (req, res) => {
   try {
     // const { firstName, lastName, dob, gender, email, phoneNumber, password, address, city, state, country, zipCode  } = req.body;
+    console.log(req.body);
+    return;
     const { name, email } = req.body;
-    if(!name || !email || !req.body.password) res.status(300).json({ success: false, message: "Invalid payload"});
-    
+    if (!name || !email || !req.body.password) res.status(300).json({ success: false, message: "Invalid payload" });
+
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const user = new User({
       name,
       email,
       password: hashedPassword
     });
-    
+
     const result = await user.save();
     const { password, ...data } = await result.toJSON();
-    res.status(201).json({ success: true, message: "Registered Successfully!"});
+    res.status(201).json({ success: true, message: "Registered Successfully!" });
   } catch (error) {
     logger.error('Error registering user:', error);
     res.status(500).json({ success: false, message: error.message });
@@ -55,17 +57,17 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-    
-    if(!user) res.status(404).json({ success: false, message: "User not found"});
+
+    if (!user) res.status(404).json({ success: false, message: "User not found" });
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) return res.status(401).json({ success: false, message: 'Incorrect username or password' });
-    
+
     const token = jwt.sign({ email: user.email }, process.env.ACCESS_TOKEN_SECRET);
 
     res.cookie('token', token, {
       httpOnly: true,
-      maxAge: 24*60*60*1000 // 1 day
+      maxAge: 24 * 60 * 60 * 1000 // 1 day
     });
 
     res.status(200).json({ success: true, message: "Logged in successfully!" });
@@ -75,12 +77,12 @@ export const login = async (req, res) => {
   }
 }
 
-export const forgotPassword = async(req, res) => {
+export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ success: false, message: 'Cannot find user'});
-    
+    if (!user) return res.status(400).json({ success: false, message: 'Cannot find user' });
+
     const resetToken = jwt.sign({ email }, process.env.RESET_TOKEN_SECRET, { expiresIn: '1h' });
 
     const resetLink = `localhost:3000/resetPassword?token=${resetToken}`;
