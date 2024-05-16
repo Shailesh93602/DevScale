@@ -5,6 +5,7 @@ import nodemailer from 'nodemailer';
 import User from '../models/userModels.js';
 import { logger } from '../helpers/logger.js';
 import validator from "email-validator";
+import { validationResult } from 'express-validator';
 
 config();
 const sendResetEmail = async (email, resetLink) => {
@@ -32,8 +33,11 @@ const sendResetEmail = async (email, resetLink) => {
 
 export const register = async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(301).json({ success: false, message: "Invalid Payload" });
+    }
     const { username, email } = req.body;
-    if (!username || !email || !req.body.password) res.status(300).json({ success: false, message: "Invalid payload" });
 
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const user = new User({
@@ -55,8 +59,10 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    console.log("Here");
-    console.log(req.body);
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(301).json({ success: false, message: "Invalid Payload" });
+    }
     const { username, password } = req.body;
 
     const isEmail = validator.validate(username);
@@ -86,6 +92,10 @@ export const login = async (req, res) => {
 
 export const forgotPassword = async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(301).json({ success: false, message: "Invalid Payload" });
+    }
     const { email } = req.body;
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ success: false, message: 'Cannot find user' });
@@ -104,10 +114,11 @@ export const forgotPassword = async (req, res) => {
 
 export const resetPassword = async (req, res) => {
   try {
-    const { token, password } = req.body;
-    if (!token || !password) {
-      return res.status(400).json({ success: false, message: 'Token and newPassword are required' });
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(301).json({ success: false, message: "Invalid Payload" });
     }
+    const { token, password } = req.body;
 
     jwt.verify(token, process.env.RESET_TOKEN_SECRET, async (err, decoded) => {
       if (err) {
@@ -128,21 +139,6 @@ export const resetPassword = async (req, res) => {
     });
   } catch (error) {
     logger.error('Error resetting password:', error);
-    res.status(500).json({ success: false, message: error.message });
-  }
-}
-
-export const logout = async (req, res) => {
-  try {
-    req.session.destroy((err) => {
-      if (err) {
-        console.error('Error logging out:', err);
-        return res.status(500).json({ success: false, message: 'Internal server error' });
-      }
-      res.status(200).json({ success: true, message: 'Logged out successfully' });
-    });
-  } catch (error) {
-    logger.error('Error logging out:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 }
