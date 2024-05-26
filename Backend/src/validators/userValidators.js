@@ -39,7 +39,7 @@ export const userInsertionValidator = [
     body("branch")
         .exists()
         .withMessage("Please provide a branch"),
-    boyd("semester")
+    body("semester")
         .isNumeric()
         .withMessage("Please provide a valid semester")
 ];
