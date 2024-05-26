@@ -11,3 +11,4 @@
 [2024-05-12 04:52:17.755 AM] error: MongoServerError: E11000 duplicate key error collection: test.users index: username_1 dup key: { username: "shaileshbhai" }
 [2024-05-12 04:53:31.754 AM] error: MongoServerError: E11000 duplicate key error collection: test.users index: email_1 dup key: { email: "shaileshbhai1234@gmail.com" }
 [2024-05-12 05:31:50.772 AM] error: TypeError: Cannot read properties of null (reading 'password')
+[2024-05-21 07:45:43.482 AM] error: Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
