@@ -10,6 +10,7 @@
   },
   "proxy": "http://localhost:4000",
   "dependencies": {
+    "@nextui-org/button": "^2.0.31",
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18",
