@@ -12,3 +12,16 @@
 [2024-05-12 04:53:31.754 AM] error: MongoServerError: E11000 duplicate key error collection: test.users index: email_1 dup key: { email: "shaileshbhai1234@gmail.com" }
 [2024-05-12 05:31:50.772 AM] error: TypeError: Cannot read properties of null (reading 'password')
 [2024-05-21 07:45:43.482 AM] error: Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+[2024-05-27 04:42:05.773 PM] error: Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+[2024-05-27 04:46:50.692 PM] error: Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+[2024-05-27 04:50:53.826 PM] error: MongoServerError: E11000 duplicate key error collection: test.users index: email_1 dup key: { email: "test12223@gmail.com" }
+[2024-05-27 05:07:16.021 PM] error: MongoServerError: E11000 duplicate key error collection: test.users index: email_1 dup key: { email: "test@gmail.com" }
+[2024-05-27 05:07:59.750 PM] error: MongoServerError: E11000 duplicate key error collection: test.users index: email_1 dup key: { email: "test@gmail.com" }
+[2024-05-27 05:08:22.591 PM] error: MongoServerError: E11000 duplicate key error collection: test.users index: email_1 dup key: { email: "test@gmail.com" }
+[2024-05-27 05:08:33.067 PM] error: MongoServerError: E11000 duplicate key error collection: test.users index: email_1 dup key: { email: "test@gmail.com" }
+[2024-05-27 05:10:41.515 PM] error: MongoServerError: E11000 duplicate key error collection: test.users index: email_1 dup key: { email: "test@gmail.com" }
+[2024-05-27 05:10:57.684 PM] error: MongoServerError: E11000 duplicate key error collection: test.users index: email_1 dup key: { email: "test@gmail.com" }
+[2024-05-27 05:13:21.120 PM] error: MongoServerError: E11000 duplicate key error collection: test.users index: email_1 dup key: { email: "viraj@gmail.com" }
+[2024-05-27 05:14:09.891 PM] error: MongoServerError: E11000 duplicate key error collection: test.users index: email_1 dup key: { email: "viraj@gmail.com" }
+[2024-05-27 05:14:43.623 PM] error: MongoServerError: E11000 duplicate key error collection: test.users index: email_1 dup key: { email: "viraj@gmail.com" }
+[2024-05-27 05:20:18.655 PM] error: MongoServerError: E11000 duplicate key error collection: test.users index: email_1 dup key: { email: "viraj@gmail.com" }
