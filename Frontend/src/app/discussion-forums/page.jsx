@@ -12,7 +12,7 @@ const DiscussionForum = () => {
   ];
 
   const goToTopic = (topicId) => {
-    router.push(`/forums/${topicId}`); 
+    router.push(`/discussion-forums/${topicId}`); 
   };
 
   return (

@@ -6,7 +6,7 @@ const Navbar = () => {
   const router = useRouter();
 
   return (
-    <div className="bg-gray-800 p-4">
+    <div className="bg-primary-800 p-4">
       <div className="flex items-center">
         <Link href="/" className="text-white text-xl font-bold">Mr. Engineers</Link>
       </div>
