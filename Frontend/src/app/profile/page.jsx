@@ -28,6 +28,30 @@ export default function ProfilePage() {
     setIsEditing(false);
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:4000/profile", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setUser(data.userInfo);
+        setAuthenticated(data.success);
+        console.log(user);
+      } catch (error) {
+        console.error("There was a problem with the fetch operation:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <div className="container mx-auto p-4">
       <div className="bg-white shadow rounded-md p-6">
