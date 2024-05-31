@@ -27,3 +27,5 @@
 [2024-05-27 05:20:18.655 PM] error: MongoServerError: E11000 duplicate key error collection: test.users index: email_1 dup key: { email: "viraj@gmail.com" }
 [2024-05-29 10:03:10.171 PM] error: Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
 [2024-05-29 10:06:33.898 PM] error: MongoServerError: E11000 duplicate key error collection: test.users index: username_1 dup key: { username: "shaileshbhai" }
+[2024-05-31 03:55:40.321 PM] error: TypeError: Cannot read properties of undefined (reading 'email')
+[2024-05-31 03:55:40.326 PM] error: TypeError: Cannot read properties of undefined (reading 'email')
