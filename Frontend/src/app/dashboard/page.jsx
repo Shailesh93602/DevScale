@@ -14,8 +14,8 @@
 //     }, [])
 
 //     return (
-//         <main className="flex flex-col bg-white">
-//             <section className="bg-white py-12 md:py-20 lg:py-28">
+//         <main className="flex flex-col bg-light">
+//             <section className="bg-light py-12 md:py-20 lg:py-28">
 //                 <div className="container px-4 md:px-6">
 //                     <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
 //                         <div className="space-y-4">
@@ -171,12 +171,12 @@ export default function Home() {
         <div className="mb-12">
           <h3 className="text-xl font-semibold mb-4 text-zinc-900 dark:text-zinc-100">Continue Previous:</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <div className="relative bg-white dark:bg-zinc-800 rounded-lg shadow-lg p-4 hover:shadow-xl transition-shadow duration-300">
+            <div className="relative bg-light dark:bg-zinc-800 rounded-lg shadow-lg p-4 hover:shadow-xl transition-shadow duration-300">
               <img src="https://placehold.co/200x100" alt="Course Thumbnail" className="rounded-lg w-full mb-4" />
               <div className="">
                 <h4 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">Dynamic Programming</h4>
                 <p className="text-sm text-zinc-500 dark:text-zinc-400">Detailed Explanation of</p>
-                <div className="absolute bottom-[70px] right-[-15px] transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-16 h-16 bg-white rounded-full border-4 border-green-600">
+                <div className="absolute bottom-[70px] right-[-15px] transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-16 h-16 bg-light rounded-full border-4 border-green-600">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                     <path d="M7 6v12l10-6z"></path>
                 </svg>
@@ -204,12 +204,12 @@ export default function Home() {
           <h3 className="text-2xl font-bold mb-6 text-zinc-900 dark:text-zinc-100">Featured</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {courses.map(course => (
-              <div key={course.id} className="relative bg-white dark:bg-zinc-800 rounded-lg shadow-lg p-4 hover:shadow-xl transition-shadow duration-300">
+              <div key={course.id} className="relative bg-light dark:bg-zinc-800 rounded-lg shadow-lg p-4 hover:shadow-xl transition-shadow duration-300">
                 <img src={course.thumbnail} alt="Course Thumbnail" className="rounded-lg w-full mb-4" />
                 <div className="">
                   <h4 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">{course.title}</h4>
                   <p className="text-sm text-zinc-500 dark:text-zinc-400">{course.description}</p>
-                  <div className="absolute top-1/2 right-[-15px] transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-16 h-16 bg-white rounded-full border-4 border-green-600">
+                  <div className="absolute top-1/2 right-[-15px] transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-16 h-16 bg-light rounded-full border-4 border-green-600">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                     <path d="M7 6v12l10-6z"></path>
                 </svg>

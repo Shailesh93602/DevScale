@@ -35,14 +35,14 @@ export default function CodingChallengesPage() {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="bg-white shadow-md rounded-lg p-6">
+      <div className="bg-light shadow-md rounded-lg p-6">
         <h1 className="text-2xl font-bold text-gray-900 mb-4">Coding Challenges</h1>
         <input
           type="text"
           placeholder="Search challenges..."
           value={searchTerm}
           onChange={handleSearch}
-          className="w-full p-2 mb-6 border border-gray-300 rounded-md text-black"
+          className="w-full p-2 mb-6 border border-gray-300 rounded-md text-dark"
         />
 
         {filteredChallenges.length > 0 ? (

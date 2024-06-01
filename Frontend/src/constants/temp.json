@@ -1,0 +1,1006 @@
+{
+    "_id": 1,
+    "title": "Full Stack Development with Next.js, Nest.js, MySQL",
+    "description": "Comprehensive roadmap to becoming a full stack developer using Next.js, Nest.js, and MySQL.",
+    "sections": [
+        {
+            "title": "Basics of Web Development",
+            "steps": [
+                {
+                    "title": "HTML Basics",
+                    "description": "Learn the fundamentals of HTML."
+                },
+                {
+                    "title": "CSS Basics",
+                    "description": "Learn the fundamentals of CSS."
+                },
+                {
+                    "title": "JavaScript Basics",
+                    "description": "Learn the fundamentals of JavaScript."
+                },
+                {
+                    "title": "Understanding HTTP",
+                    "description": "Understand the basics of HTTP protocol."
+                },
+                {
+                    "title": "Understanding Client-Server Architecture",
+                    "description": "Learn about client-server architecture."
+                },
+                {
+                    "title": "Version Control with Git",
+                    "description": "Learn version control using Git."
+                }
+            ]
+        },
+        {
+            "title": "Fundamentals of Database",
+            "steps": [
+                {
+                    "title": "Basics of Relational Databases",
+                    "description": "Introduction to relational databases."
+                },
+                {
+                    "title": "SQL Basics",
+                    "description": "Learn the basics of SQL."
+                },
+                {
+                    "title": "MySQL Database",
+                    "description": "Learn how to work with MySQL."
+                },
+                {
+                    "title": "Data Modeling and Design",
+                    "description": "Learn data modeling and design."
+                },
+                {
+                    "title": "Normalization",
+                    "description": "Understand database normalization."
+                },
+                {
+                    "title": "Database Transactions",
+                    "description": "Learn about database transactions."
+                }
+            ]
+        },
+        {
+            "title": "Introduction to Node.js",
+            "steps": [
+                {
+                    "title": "Node.js Fundamentals",
+                    "description": "Learn the basics of Node.js."
+                },
+                {
+                    "title": "Understanding Asynchronous Programming",
+                    "description": "Learn about asynchronous programming in Node.js."
+                },
+                {
+                    "title": "Working with File System in Node.js",
+                    "description": "Learn how to work with the file system in Node.js."
+                },
+                {
+                    "title": "Node.js Modules",
+                    "description": "Understand how to use Node.js modules."
+                },
+                {
+                    "title": "Building a HTTP Server with Node.js",
+                    "description": "Learn how to build an HTTP server using Node.js."
+                },
+                {
+                    "title": "Error Handling in Node.js",
+                    "description": "Learn error handling in Node.js."
+                }
+            ]
+        },
+        {
+            "title": "Backend Development with Nest.js",
+            "steps": [
+                {
+                    "title": "Introduction to Nest.js",
+                    "description": "Learn the basics of Nest.js."
+                },
+                {
+                    "title": "Understanding Typescript",
+                    "description": "Learn the fundamentals of Typescript."
+                },
+                {
+                    "title": "Nest.js Modules, Controllers, Services",
+                    "description": "Understand modules, controllers, and services in Nest.js."
+                },
+                {
+                    "title": "Building REST API with Nest.js",
+                    "description": "Learn how to build REST APIs using Nest.js."
+                },
+                {
+                    "title": "Data Validation and Serialization",
+                    "description": "Understand data validation and serialization in Nest.js."
+                },
+                {
+                    "title": "Error Handling in Nest.js",
+                    "description": "Learn error handling in Nest.js."
+                }
+            ]
+        },
+        {
+            "title": "Frontend Development with Next.js",
+            "steps": [
+                {
+                    "title": "Introduction to Next.js",
+                    "description": "Learn the basics of Next.js."
+                },
+                {
+                    "title": "React Basics",
+                    "description": "Learn the fundamentals of React."
+                },
+                {
+                    "title": "Next.js Routing",
+                    "description": "Understand routing in Next.js."
+                },
+                {
+                    "title": "Server-Side Rendering with Next.js",
+                    "description": "Learn about server-side rendering in Next.js."
+                },
+                {
+                    "title": "Styling in Next.js",
+                    "description": "Understand how to style applications in Next.js."
+                },
+                {
+                    "title": "Building a Frontend Application with Next.js",
+                    "description": "Learn how to build a frontend application using Next.js."
+                }
+            ]
+        },
+        {
+            "title": "Integration of Next.js and Nest.js",
+            "steps": [
+                {
+                    "title": "Setup and Configuration",
+                    "description": "Learn how to set up and configure Next.js and Nest.js."
+                },
+                {
+                    "title": "Implementation of Client-Server Communication",
+                    "description": "Learn how to implement client-server communication."
+                },
+                {
+                    "title": "Handling Authentication",
+                    "description": "Understand how to handle authentication."
+                },
+                {
+                    "title": "Cross-Origin Resource Sharing (CORS)",
+                    "description": "Learn about CORS."
+                },
+                {
+                    "title": "Deployment Strategies",
+                    "description": "Understand deployment strategies."
+                }
+            ]
+        },
+        {
+            "title": "Working with MySQL in Nest.js",
+            "steps": [
+                {
+                    "title": "MySQL Database Connection",
+                    "description": "Learn how to connect to MySQL database using Nest.js."
+                },
+                {
+                    "title": "Create, Read, Update, Delete (CRUD) Operations",
+                    "description": "Understand CRUD operations."
+                },
+                {
+                    "title": "Data Validation",
+                    "description": "Learn about data validation."
+                },
+                {
+                    "title": "Handling Database Errors",
+                    "description": "Understand how to handle database errors."
+                }
+            ]
+        },
+        {
+            "title": "State Management in Next.js",
+            "steps": [
+                {
+                    "title": "Understanding State Management",
+                    "description": "Learn about state management."
+                },
+                {
+                    "title": "Introduction to Redux",
+                    "description": "Understand the basics of Redux."
+                },
+                {
+                    "title": "Building a Redux Store",
+                    "description": "Learn how to build a Redux store."
+                },
+                {
+                    "title": "Redux Middleware",
+                    "description": "Understand Redux middleware."
+                },
+                {
+                    "title": "Asynchronous Actions in Redux",
+                    "description": "Learn about asynchronous actions in Redux."
+                },
+                {
+                    "title": "Redux DevTools",
+                    "description": "Understand how to use Redux DevTools."
+                }
+            ]
+        },
+        {
+            "title": "Testing in Full Stack Development",
+            "steps": [
+                {
+                    "title": "Introduction to Testing",
+                    "description": "Learn the basics of testing."
+                },
+                {
+                    "title": "Unit Testing in Nest.js",
+                    "description": "Learn about unit testing in Nest.js."
+                },
+                {
+                    "title": "Unit Testing in Next.js",
+                    "description": "Learn about unit testing in Next.js."
+                },
+                {
+                    "title": "Integration Testing",
+                    "description": "Understand integration testing."
+                },
+                {
+                    "title": "End-to-End Testing",
+                    "description": "Learn about end-to-end testing."
+                },
+                {
+                    "title": "Best Practices in Testing",
+                    "description": "Understand best practices in testing."
+                }
+            ]
+        },
+        {
+            "title": "Deployment and DevOps",
+            "steps": [
+                {
+                    "title": "Basics of Hosting",
+                    "description": "Learn about hosting basics."
+                },
+                {
+                    "title": "Continuous Integration (CI) and Continuous Deployment (CD)",
+                    "description": "Understand CI/CD."
+                },
+                {
+                    "title": "Docker Basics",
+                    "description": "Learn the basics of Docker."
+                },
+                {
+                    "title": "Kubernetes Basics",
+                    "description": "Understand the basics of Kubernetes."
+                },
+                {
+                    "title": "CI/CD with Jenkins",
+                    "description": "Learn about CI/CD with Jenkins."
+                },
+                {
+                    "title": "Cloud Hosting Providers (AWS, Google Cloud, Azure)",
+                    "description": "Understand various cloud hosting providers."
+                }
+            ]
+        },
+        {
+            "title": "Performance Optimization",
+            "steps": [
+                {
+                    "title": "Basics of Performance Optimization",
+                    "description": "Learn about performance optimization."
+                },
+                {
+                    "title": "Webpack and Babel",
+                    "description": "Understand Webpack and Babel."
+                },
+                {
+                    "title": "Frontend Performance Optimization",
+                    "description": "Learn about frontend performance optimization."
+                },
+                {
+                    "title": "Backend Performance Optimization",
+                    "description": "Understand backend performance optimization."
+                },
+                {
+                    "title": "Database Performance Optimization",
+                    "description": "Learn about database performance optimization."
+                },
+                {
+                    "title": "Network Performance Optimization",
+                    "description": "Understand network performance optimization."
+                }
+            ]
+        },
+        {
+            "title": "Business and Legal",
+            "steps": [
+                {
+                    "title": "Understanding Business Basics",
+                    "description": "Learn the basics of business."
+                },
+                {
+                    "title": "Intellectual Property Rights",
+
+
+
+
+                    {
+                        "_id": 1,
+                        "title": "Full Stack Development with Next.js, Nest.js, MySQL",
+                        "description": "Comprehensive roadmap to becoming a full stack developer using Next.js, Nest.js, and MySQL.",
+                        "sections": [
+                            {
+                                "title": "Basics of Web Development",
+                                "steps": [
+                                    {
+                                        "title": "HTML Basics",
+                                        "description": "Learn the fundamentals of HTML."
+                                    },
+                                    {
+                                        "title": "CSS Basics",
+                                        "description": "Learn the fundamentals of CSS."
+                                    },
+                                    {
+                                        "title": "JavaScript Basics",
+                                        "description": "Learn the fundamentals of JavaScript."
+                                    },
+                                    {
+                                        "title": "Understanding HTTP",
+                                        "description": "Understand the basics of HTTP protocol."
+                                    },
+                                    {
+                                        "title": "Understanding Client-Server Architecture",
+                                        "description": "Learn about client-server architecture."
+                                    },
+                                    {
+                                        "title": "Version Control with Git",
+                                        "description": "Learn version control using Git."
+                                    }
+                                ]
+                            },
+                            {
+                                "title": "Fundamentals of Database",
+                                "steps": [
+                                    {
+                                        "title": "Basics of Relational Databases",
+                                        "description": "Introduction to relational databases."
+                                    },
+                                    {
+                                        "title": "SQL Basics",
+                                        "description": "Learn the basics of SQL."
+                                    },
+                                    {
+                                        "title": "MySQL Database",
+                                        "description": "Learn how to work with MySQL."
+                                    },
+                                    {
+                                        "title": "Data Modeling and Design",
+                                        "description": "Learn data modeling and design."
+                                    },
+                                    {
+                                        "title": "Normalization",
+                                        "description": "Understand database normalization."
+                                    },
+                                    {
+                                        "title": "Database Transactions",
+                                        "description": "Learn about database transactions."
+                                    }
+                                ]
+                            },
+                            {
+                                "title": "Introduction to Node.js",
+                                "steps": [
+                                    {
+                                        "title": "Node.js Fundamentals",
+                                        "description": "Learn the basics of Node.js."
+                                    },
+                                    {
+                                        "title": "Understanding Asynchronous Programming",
+                                        "description": "Learn about asynchronous programming in Node.js."
+                                    },
+                                    {
+                                        "title": "Working with File System in Node.js",
+                                        "description": "Learn how to work with the file system in Node.js."
+                                    },
+                                    {
+                                        "title": "Node.js Modules",
+                                        "description": "Understand how to use Node.js modules."
+                                    },
+                                    {
+                                        "title": "Building a HTTP Server with Node.js",
+                                        "description": "Learn how to build an HTTP server using Node.js."
+                                    },
+                                    {
+                                        "title": "Error Handling in Node.js",
+                                        "description": "Learn error handling in Node.js."
+                                    }
+                                ]
+                            },
+                            {
+                                "title": "Backend Development with Nest.js",
+                                "steps": [
+                                    {
+                                        "title": "Introduction to Nest.js",
+                                        "description": "Learn the basics of Nest.js."
+                                    },
+                                    {
+                                        "title": "Understanding Typescript",
+                                        "description": "Learn the fundamentals of Typescript."
+                                    },
+                                    {
+                                        "title": "Nest.js Modules, Controllers, Services",
+                                        "description": "Understand modules, controllers, and services in Nest.js."
+                                    },
+                                    {
+                                        "title": "Building REST API with Nest.js",
+                                        "description": "Learn how to build REST APIs using Nest.js."
+                                    },
+                                    {
+                                        "title": "Data Validation and Serialization",
+                                        "description": "Understand data validation and serialization in Nest.js."
+                                    },
+                                    {
+                                        "title": "Error Handling in Nest.js",
+                                        "description": "Learn error handling in Nest.js."
+                                    }
+                                ]
+                            },
+                            {
+                                "title": "Frontend Development with Next.js",
+                                "steps": [
+                                    {
+                                        "title": "Introduction to Next.js",
+                                        "description": "Learn the basics of Next.js."
+                                    },
+                                    {
+                                        "title": "React Basics",
+                                        "description": "Learn the fundamentals of React."
+                                    },
+                                    {
+                                        "title": "Next.js Routing",
+                                        "description": "Understand routing in Next.js."
+                                    },
+                                    {
+                                        "title": "Server-Side Rendering with Next.js",
+                                        "description": "Learn about server-side rendering in Next.js."
+                                    },
+                                    {
+                                        "title": "Styling in Next.js",
+                                        "description": "Understand how to style applications in Next.js."
+                                    },
+                                    {
+                                        "title": "Building a Frontend Application with Next.js",
+                                        "description": "Learn how to build a frontend application using Next.js."
+                                    }
+                                ]
+                            },
+                            {
+                                "title": "Integration of Next.js and Nest.js",
+                                "steps": [
+                                    {
+                                        "title": "Setup and Configuration",
+                                        "description": "Learn how to set up and configure Next.js and Nest.js."
+                                    },
+                                    {
+                                        "title": "Implementation of Client-Server Communication",
+                                        "description": "Learn how to implement client-server communication."
+                                    },
+                                    {
+                                        "title": "Handling Authentication",
+                                        "description": "Understand how to handle authentication."
+                                    },
+                                    {
+                                        "title": "Cross-Origin Resource Sharing (CORS)",
+                                        "description": "Learn about CORS."
+                                    },
+                                    {
+                                        "title": "Deployment Strategies",
+                                        "description": "Understand deployment strategies."
+                                    }
+                                ]
+                            },
+                            {
+                                "title": "Working with MySQL in Nest.js",
+                                "steps": [
+                                    {
+                                        "title": "MySQL Database Connection",
+                                        "description": "Learn how to connect to MySQL database using Nest.js."
+                                    },
+                                    {
+                                        "title": "Create, Read, Update, Delete (CRUD) Operations",
+                                        "description": "Understand CRUD operations."
+                                    },
+                                    {
+                                        "title": "Data Validation",
+                                        "description": "Learn about data validation."
+                                    },
+                                    {
+                                        "title": "Handling Database Errors",
+                                        "description": "Understand how to handle database errors."
+                                    }
+                                ]
+                            },
+                            {
+                                "title": "State Management in Next.js",
+                                "steps": [
+                                    {
+                                        "title": "Understanding State Management",
+                                        "description": "Learn about state management."
+                                    },
+                                    {
+                                        "title": "Introduction to Redux",
+                                        "description": "Understand the basics of Redux."
+                                    },
+                                    {
+                                        "title": "Building a Redux Store",
+                                        "description": "Learn how to build a Redux store."
+                                    },
+                                    {
+                                        "title": "Redux Middleware",
+                                        "description": "Understand Redux middleware."
+                                    },
+                                    {
+                                        "title": "Asynchronous Actions in Redux",
+                                        "description": "Learn about asynchronous actions in Redux."
+                                    },
+                                    {
+                                        "title": "Redux DevTools",
+                                        "description": "Understand how to use Redux DevTools."
+                                    }
+                                ]
+                            },
+                            {
+                                "title": "Testing in Full Stack Development",
+                                "steps": [
+                                    {
+                                        "title": "Introduction to Testing",
+                                        "description": "Learn the basics of testing."
+                                    },
+                                    {
+                                        "title": "Unit Testing in Nest.js",
+                                        "description": "Learn about unit testing in Nest.js."
+                                    },
+                                    {
+                                        "title": "Unit Testing in Next.js",
+                                        "description": "Learn about unit testing in Next.js."
+                                    },
+                                    {
+                                        "title": "Integration Testing",
+                                        "description": "Understand integration testing."
+                                    },
+                                    {
+                                        "title": "End-to-End Testing",
+                                        "description": "Learn about end-to-end testing."
+                                    },
+                                    {
+                                        "title": "Best Practices in Testing",
+                                        "description": "Understand best practices in testing."
+                                    }
+                                ]
+                            },
+                            {
+                                "title": "Deployment and DevOps",
+                                "steps": [
+                                    {
+                                        "title": "Basics of Hosting",
+                                        "description": "Learn about hosting basics."
+                                    },
+                                    {
+                                        "title": "Continuous Integration (CI) and Continuous Deployment (CD)",
+                                        "description": "Understand CI/CD."
+                                    },
+                                    {
+                                        "title": "Docker Basics",
+                                        "description": "Learn the basics of Docker."
+                                    },
+                                    {
+                                        "title": "Kubernetes Basics",
+                                        "description": "Understand the basics of Kubernetes."
+                                    },
+                                    {
+                                        "title": "CI/CD with Jenkins",
+                                        "description": "Learn about CI/CD with Jenkins."
+                                    },
+                                    {
+                                        "title": "Cloud Hosting Providers (AWS, Google Cloud, Azure)",
+                                        "description": "Understand various cloud hosting providers."
+                                    }
+                                ]
+                            },
+                            {
+                                "title": "Performance Optimization",
+                                "steps": [
+                                    {
+                                        "title": "Basics of Performance Optimization",
+                                        "description": "Learn about performance optimization."
+                                    },
+                                    {
+                                        "title": "Webpack and Babel",
+                                        "description": "Understand Webpack and Babel."
+                                    },
+                                    {
+                                        "title": "Frontend Performance Optimization",
+                                        "description": "Learn about frontend performance optimization."
+                                    },
+                                    {
+                                        "title": "Backend Performance Optimization",
+                                        "description": "Understand backend performance optimization."
+                                    },
+                                    {
+                                        "title": "Database Performance Optimization",
+
+
+
+
+
+
+
+
+
+                                        {"_id": 1,
+                                        "title": "Full Stack Development with Next.js, Nest.js, MySQL",
+                                        "description": "Comprehensive roadmap to becoming a full stack developer using Next.js, Nest.js, and MySQL.",
+                                        "sections": [
+                                            {
+                                                "title": "Basics of Web Development",
+                                                "steps": [
+                                                    {
+                                                        "title": "HTML Basics",
+                                                        "description": "Learn the fundamentals of HTML."
+                                                    },
+                                                    {
+                                                        "title": "CSS Basics",
+                                                        "description": "Learn the fundamentals of CSS."
+                                                    },
+                                                    {
+                                                        "title": "JavaScript Basics",
+                                                        "description": "Learn the fundamentals of JavaScript."
+                                                    },
+                                                    {
+                                                        "title": "Understanding HTTP",
+                                                        "description": "Understand the basics of HTTP protocol."
+                                                    },
+                                                    {
+                                                        "title": "Understanding Client-Server Architecture",
+                                                        "description": "Learn about client-server architecture."
+                                                    },
+                                                    {
+                                                        "title": "Version Control with Git",
+                                                        "description": "Learn version control using Git."
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "title": "Fundamentals of Database",
+                                                "steps": [
+                                                    {
+                                                        "title": "Basics of Relational Databases",
+                                                        "description": "Introduction to relational databases."
+                                                    },
+                                                    {
+                                                        "title": "SQL Basics",
+                                                        "description": "Learn the basics of SQL."
+                                                    },
+                                                    {
+                                                        "title": "MySQL Database",
+                                                        "description": "Learn how to work with MySQL."
+                                                    },
+                                                    {
+                                                        "title": "Data Modeling and Design",
+                                                        "description": "Learn data modeling and design."
+                                                    },
+                                                    {
+                                                        "title": "Normalization",
+                                                        "description": "Understand database normalization."
+                                                    },
+                                                    {
+                                                        "title": "Database Transactions",
+                                                        "description": "Learn about database transactions."
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "title": "Introduction to Node.js",
+                                                "steps": [
+                                                    {
+                                                        "title": "Node.js Fundamentals",
+                                                        "description": "Learn the basics of Node.js."
+                                                    },
+                                                    {
+                                                        "title": "Understanding Asynchronous Programming",
+                                                        "description": "Learn about asynchronous programming in Node.js."
+                                                    },
+                                                    {
+                                                        "title": "Working with File System in Node.js",
+                                                        "description": "Learn how to work with the file system in Node.js."
+                                                    },
+                                                    {
+                                                        "title": "Node.js Modules",
+                                                        "description": "Understand how to use Node.js modules."
+                                                    },
+                                                    {
+                                                        "title": "Building a HTTP Server with Node.js",
+                                                        "description": "Learn how to build an HTTP server using Node.js."
+                                                    },
+                                                    {
+                                                        "title": "Error Handling in Node.js",
+                                                        "description": "Learn error handling in Node.js."
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "title": "Backend Development with Nest.js",
+                                                "steps": [
+                                                    {
+                                                        "title": "Introduction to Nest.js",
+                                                        "description": "Learn the basics of Nest.js."
+                                                    },
+                                                    {
+                                                        "title": "Understanding Typescript",
+                                                        "description": "Learn the fundamentals of Typescript."
+                                                    },
+                                                    {
+                                                        "title": "Nest.js Modules, Controllers, Services",
+                                                        "description": "Understand modules, controllers, and services in Nest.js."
+                                                    },
+                                                    {
+                                                        "title": "Building REST API with Nest.js",
+                                                        "description": "Learn how to build REST APIs using Nest.js."
+                                                    },
+                                                    {
+                                                        "title": "Data Validation and Serialization",
+                                                        "description": "Understand data validation and serialization in Nest.js."
+                                                    },
+                                                    {
+                                                        "title": "Error Handling in Nest.js",
+                                                        "description": "Learn error handling in Nest.js."
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "title": "Frontend Development with Next.js",
+                                                "steps": [
+                                                    {
+                                                        "title": "Introduction to Next.js",
+                                                        "description": "Learn the basics of Next.js."
+                                                    },
+                                                    {
+                                                        "title": "React Basics",
+                                                        "description": "Learn the fundamentals of React."
+                                                    },
+                                                    {
+                                                        "title": "Next.js Routing",
+                                                        "description": "Understand routing in Next.js."
+                                                    },
+                                                    {
+                                                        "title": "Server-Side Rendering with Next.js",
+                                                        "description": "Learn about server-side rendering in Next.js."
+                                                    },
+                                                    {
+                                                        "title": "Styling in Next.js",
+                                                        "description": "Understand how to style applications in Next.js."
+                                                    },
+                                                    {
+                                                        "title": "Building a Frontend Application with Next.js",
+                                                        "description": "Learn how to build a frontend application using Next.js."
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "title": "Integration of Next.js and Nest.js",
+                                                "steps": [
+                                                    {
+                                                        "title": "Setup and Configuration",
+                                                        "description": "Learn how to set up and configure Next.js and Nest.js."
+                                                    },
+                                                    {
+                                                        "title": "Implementation of Client-Server Communication",
+                                                        "description": "Learn how to implement client-server communication."
+                                                    },
+                                                    {
+                                                        "title": "Handling Authentication",
+                                                        "description": "Understand how to handle authentication."
+                                                    },
+                                                    {
+                                                        "title": "Cross-Origin Resource Sharing (CORS)",
+                                                        "description": "Learn about CORS."
+                                                    },
+                                                    {
+                                                        "title": "Deployment Strategies",
+                                                        "description": "Understand deployment strategies."
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "title": "Working with MySQL in Nest.js",
+                                                "steps": [
+                                                    {
+                                                        "title": "MySQL Database Connection",
+                                                        "description": "Learn how to connect to MySQL database using Nest.js."
+                                                    },
+                                                    {
+                                                        "title": "Create, Read, Update, Delete (CRUD) Operations",
+                                                        "description": "Understand CRUD operations."
+                                                    },
+                                                    {
+                                                        "title": "Data Validation",
+                                                        "description": "Learn about data validation."
+                                                    },
+                                                    {
+                                                        "title": "Handling Database Errors",
+                                                        "description": "Understand how to handle database errors."
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "title": "State Management in Next.js",
+                                                "steps": [
+                                                    {
+                                                        "title": "Understanding State Management",
+                                                        "description": "Learn about state management."
+                                                    },
+                                                    {
+                                                        "title": "Introduction to Redux",
+                                                        "description": "Understand the basics of Redux."
+                                                    },
+                                                    {
+                                                        "title": "Building a Redux Store",
+                                                        "description": "Learn how to build a Redux store."
+                                                    },
+                                                    {
+                                                        "title": "Redux Middleware",
+                                                        "description": "Understand Redux middleware."
+                                                    },
+                                                    {
+                                                        "title": "Asynchronous Actions in Redux",
+                                                        "description": "Learn about asynchronous actions in Redux."
+                                                    },
+                                                    {
+                                                        "title": "Redux DevTools",
+                                                        "description": "Understand how to use Redux DevTools."
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "title": "Testing in Full Stack Development",
+                                                "steps": [
+                                                    {
+                                                        "title": "Introduction to Testing",
+                                                        "description": "Learn the basics of testing."
+                                                    },
+                                                    {
+                                                        "title": "Unit Testing in Nest.js",
+                                                        "description": "Learn about unit testing in Nest.js."
+                                                    },
+                                                    {
+                                                        "title": "Unit Testing in Next.js",
+                                                        "description": "Learn about unit testing in Next.js."
+                                                    },
+                                                    {
+                                                        "title": "Integration Testing",
+                                                        "description": "Understand integration testing."
+                                                    },
+                                                    {
+                                                        "title": "End-to-End Testing",
+                                                        "description": "Learn about end-to-end testing."
+                                                    },
+                                                    {
+                                                        "title": "Best Practices in Testing",
+                                                        "description": "Understand best practices in testing."
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "title": "Deployment and DevOps",
+                                                "steps": [
+                                                    {
+                                                        "title": "Basics of Hosting",
+                                                        "description": "Learn about hosting basics."
+                                                    },
+                                                    {
+                                                        "title": "Continuous Integration (CI) and Continuous Deployment (CD)",
+                                                        "description": "Understand CI/CD."
+                                                    },
+                                                    {
+                                                        "title": "Docker Basics",
+                                                        "description": "Learn the basics of Docker."
+                                                    },
+                                                    {
+                                                        "title": "Kubernetes Basics",
+                                                        "description": "Understand the basics of Kubernetes."
+                                                    },
+                                                    {
+                                                        "title": "CI/CD with Jenkins",
+                                                        "description": "Learn about CI/CD with Jenkins."
+                                                    },
+                                                    {
+                                                        "title": "Cloud Hosting Providers (AWS, Google Cloud, Azure)",
+                                                        "description": "Understand various cloud hosting providers."
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "title": "Performance Optimization",
+                                                "steps": [
+                                                    {
+                                                        "title": "Basics of Performance Optimization",
+                                                        "description": "Learn about performance optimization."
+                                                    },
+                                                    {
+                                                        "title": "Webpack and Babel",
+                                                        "description": "Understand Webpack and Babel."
+                                                    },
+                                                    {
+                                                        "title": "Frontend Performance Optimization",
+                                                        "description": "Learn about frontend performance optimization."
+                                                    },
+                                                    {
+                                                        "title": "Backend Performance Optimization",
+                                                        "description": "Understand backend performance optimization."
+                                                    },
+                                                    {
+                                                        "title": "Database Performance Optimization",
+                                                        "description": "Learn about database performance optimization."
+                                                    },
+                                                    {
+                                                        "title": "Network Performance Optimization",
+                                                        "description": "Understand network performance optimization."
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "title": "Business and Legal",
+                                                "steps": [
+                                                    {
+                                                        "title": "Understanding Business Basics",
+                                                        "description": "Learn the basics of business."
+                                                    },
+                                                    {
+                                                        "title": "Intellectual Property Rights",
+                                                        "description": "Learn about intellectual property rights."
+                                                    },
+                                                    {
+                                                        "title": "Privacy and Data Protection Laws",
+                                                        "description": "Understand privacy and data protection laws."
+                                                    },
+                                                    {
+                                                        "title": "Accessibility and Compliance",
+                                                        "description": "Learn about accessibility and compliance."
+                                                    },
+                                                    {
+                                                        "title": "Security Laws",
+                                                        "description": "Understand security laws."
+                                                    },
+                                                    {
+                                                        "title": "Ethics in IT",
+                                                        "description": "Learn about ethics in IT."
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "title": "Advanced Topics",
+                                                "steps": [
+                                                    {
+                                                        "title": "Microservices Architecture",
+                                                        "description": "Understand microservices architecture."
+                                                    },
+                                                    {
+                                                        "title": "Real-Time Applications with Websockets",
+                                                        "description": "Learn about real-time applications using Websockets."
+                                                    },
+                                                    {
+                                                        "title": "GraphQL",
+                                                        "description": "Understand GraphQL."
+                                                    },
+                                                    {
+                                                        "title": "Progressive Web App (PWA)",
+                                                        "description": "Learn about Progressive Web Apps."
+                                                    },
+                                                    {
+                                                        "title": "Serverless Architecture",
+                                                        "description": "Understand serverless architecture."
+                                                    },
+                                                    {
+                                                        "title": "Scalability and Availability",
+                                                        "description": "Learn about scalability and availability."
+                                                    }
+                                                ]

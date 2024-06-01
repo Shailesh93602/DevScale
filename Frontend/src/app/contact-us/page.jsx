@@ -23,7 +23,7 @@ export default function Contact() {
           Have any questions or feedback? Fill out the form below to get in touch with us.
         </p>
 
-        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6">
+        <form onSubmit={handleSubmit} className="bg-light rounded-lg shadow p-6">
           <div className="mb-4">
             <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">Name</label>
             <input
@@ -31,7 +31,7 @@ export default function Contact() {
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500 text-black"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500 text-dark"
               required
             />
           </div>
@@ -63,7 +63,7 @@ export default function Contact() {
           <div className="flex items-center justify-between">
             <button
               type="submit"
-              className="bg-indigo-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:bg-indigo-600"
+              className="bg-indigo-500 text-light font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:bg-indigo-600"
             >
               Send Message
             </button>

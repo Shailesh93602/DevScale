@@ -53,7 +53,7 @@ export default function ViewChallengePage({ params }) {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="bg-white shadow-md rounded-lg p-6">
+      <div className="bg-light shadow-md rounded-lg p-6">
         <h1 className="text-2xl font-bold text-gray-900 mb-4">{challenge.title}</h1>
         <p className="text-gray-700 mb-2"><strong>Description:</strong> {challenge.description}</p>
         <p className="text-gray-700 mb-2"><strong>Difficulty:</strong> {challenge.difficulty}</p>
@@ -65,12 +65,12 @@ export default function ViewChallengePage({ params }) {
           value={solution}
           onChange={handleSolutionChange}
           placeholder="Write your solution here..."
-          className="w-full p-2 mb-4 border border-gray-300 rounded-md text-black"
+          className="w-full p-2 mb-4 border border-gray-300 rounded-md text-dark"
           rows="6"
         />
         <button
           onClick={handleSubmit}
-          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+          className="bg-blue-500 text-light px-4 py-2 rounded-md hover:bg-blue-600"
         >
           Submit Solution
         </button>

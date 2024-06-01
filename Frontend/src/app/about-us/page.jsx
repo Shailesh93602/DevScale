@@ -21,17 +21,17 @@ export default function About() {
           <section className="mb-12">
             <h2 className="text-3xl font-semibold text-gray-800 mb-4">Our Team</h2>
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="bg-white rounded-lg shadow p-6">
+              <div className="bg-light rounded-lg shadow p-6">
                 <img src="/team/member1.jpg" alt="Team Member 1" className="w-32 h-32 rounded-full mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-gray-800 text-center">John Doe</h3>
                 <p className="text-gray-600 text-center">CEO & Founder</p>
               </div>
-              <div className="bg-white rounded-lg shadow p-6">
+              <div className="bg-light rounded-lg shadow p-6">
                 <img src="/team/member2.jpg" alt="Team Member 2" className="w-32 h-32 rounded-full mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-gray-800 text-center">Jane Smith</h3>
                 <p className="text-gray-600 text-center">CTO</p>
               </div>
-              <div className="bg-white rounded-lg shadow p-6">
+              <div className="bg-light rounded-lg shadow p-6">
                 <img src="/team/member3.jpg" alt="Team Member 3" className="w-32 h-32 rounded-full mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-gray-800 text-center">Sam Johnson</h3>
                 <p className="text-gray-600 text-center">Lead Developer</p>
