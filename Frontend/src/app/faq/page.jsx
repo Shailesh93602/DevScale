@@ -36,7 +36,7 @@ export default function FAQ() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <h1 className="text-4xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h1>
 
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-light rounded-lg shadow p-6">
           {faqs.map((faq, index) => (
             <div key={index} className="mb-4">
               <button

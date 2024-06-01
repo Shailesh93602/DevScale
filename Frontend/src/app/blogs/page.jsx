@@ -32,7 +32,7 @@ export default function Blogs() {
         </p>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {blogs.map((blog) => (
-            <div key={blog.id} className="bg-white rounded-lg shadow p-6">
+            <div key={blog.id} className="bg-light rounded-lg shadow p-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">{blog.title}</h2>
               <p className="text-gray-600 mb-4">{blog.description}</p>
               <Link href={blog.link} className="text-indigo-500 font-semibold hover:underline">Read more</Link>

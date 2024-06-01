@@ -26,7 +26,7 @@ export default function BlogPost({ params }) {
         <div className="min-h-screen bg-gray-100 py-12">
             <div className="max-w-7xl mx-auto px-6 lg:px-8">
                 <h1 className="text-4xl font-bold text-gray-900 mb-6">{blog.title}</h1>
-                <div className="bg-white rounded-lg shadow p-6">
+                <div className="bg-lgiht rounded-lg shadow p-6">
                     <p className="text-gray-600">{blog.content}</p>
                 </div>
             </div>

@@ -121,7 +121,7 @@ export default function Details() {
                 <Link href="/" className="flex items-center mb-6 text-2xl font-semibold text-gray-900">
                     Mr. Engineers
                 </Link>
-                <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
+                <div className="w-full bg-light rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                         <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
                             Register
@@ -131,8 +131,8 @@ export default function Details() {
                             {step === 2 && <Step2 mobile={mobile} setMobile={setMobile} whatsapp={whatsapp} setWhatsapp={setWhatsapp} address={address} setAddress={setAddress} />}
                             {step === 3 && <Step3 university={university} setUniversity={setUniversity} college={college} setCollege={setCollege} branch={branch} setBranch={setBranch} semester={semester} setSemester={setSemester} />}
                             <div className="flex justify-between">
-                                {step > 1 && <button type="button" className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center" onClick={() => setStep(step - 1)}>Previous</button>}
-                                <button type="submit" className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">{step < 3 ? 'Next' : 'Submit'}</button>
+                                {step > 1 && <button type="button" className="text-light bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center" onClick={() => setStep(step - 1)}>Previous</button>}
+                                <button type="submit" className="text-light bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">{step < 3 ? 'Next' : 'Submit'}</button>
                             </div>
                         </form>
                     </div>

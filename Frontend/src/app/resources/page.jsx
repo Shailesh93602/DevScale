@@ -35,7 +35,7 @@ export default function ResourcesPage() {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="bg-white shadow-md rounded-lg p-6">
+      <div className="bg-light shadow-md rounded-lg p-6">
         <h1 className="text-2xl font-bold text-gray-900 mb-4">Resources</h1>
         <input
           type="text"

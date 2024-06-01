@@ -53,7 +53,7 @@ const icons = {
 
 export default function ResourceCard({ title, description, icon }) {
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+    <div className="bg-light p-6 rounded-lg shadow-lg text-center">
       {icons[icon]}
       <h3 className="text-xl font-semibold mb-2">{title}</h3>
       <p className="text-gray-700">{description}</p>
