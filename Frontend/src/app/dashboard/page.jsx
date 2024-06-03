@@ -4,17 +4,15 @@ import { FiPlayCircle } from "react-icons/fi";
 
 export default function Home() {
   return (
-    <div className="p-6 bg-gradient-to-r from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900 min-h-screen">
+    <div className="p-6 bg-gradient-to-r from-blue-50 to-indigo-100 min-h-screen">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-extrabold mb-2 text-gray-900 dark:text-white">
-          Welcome,
-        </h1>
-        <h2 className="text-5xl font-extrabold mb-8 text-indigo-700 dark:text-indigo-300">
+        <h1 className="text-4xl font-extrabold mb-2 text-gray-900">Welcome,</h1>
+        <h2 className="text-5xl font-extrabold mb-8 text-indigo-700">
           Shailesh Chaudhari
         </h2>
 
         <div className="mb-12">
-          <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
+          <h3 className="text-2xl font-bold mb-4 text-gray-900">
             Continue Previous:
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
@@ -30,9 +28,7 @@ export default function Home() {
         </div>
 
         <div>
-          <h3 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
-            Featured
-          </h3>
+          <h3 className="text-3xl font-bold mb-6 text-gray-900">Featured</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {courses.map((course) => (
               <Card
@@ -60,29 +56,25 @@ const Card = ({
   items,
   completed,
 }) => (
-  <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 transform hover:scale-105">
+  <div className="relative bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 transform hover:scale-105">
     <img
       src={thumbnail}
       alt="Course Thumbnail"
       className="rounded-lg w-full mb-4 object-cover"
     />
     <div className="space-y-2">
-      <h4 className="text-xl font-bold text-gray-900 dark:text-white">
-        {title}
-      </h4>
-      <p className="text-sm text-gray-500 dark:text-gray-400">{description}</p>
+      <h4 className="text-xl font-bold text-gray-900">{title}</h4>
+      <p className="text-sm text-gray-500">{description}</p>
       <div className="absolute top-4 right-4 flex items-center justify-center w-12 h-12 bg-indigo-600 text-white rounded-full shadow-lg">
         <FiPlayCircle size={24} />
       </div>
       <ProgressCircle completed={completed} />
     </div>
-    <div className="mt-4 flex items-center text-gray-700 dark:text-gray-300">
+    <div className="mt-4 flex items-center text-gray-700">
       <span className="mr-4">{chapters} Chapters</span>
       <span>{items} Items</span>
     </div>
-    <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-      {completed}% Completed
-    </div>
+    <div className="mt-1 text-xs text-gray-500">{completed}% Completed</div>
   </div>
 );
 
@@ -95,7 +87,7 @@ const ProgressCircle = ({ completed }) => {
     <div className="relative mt-4 w-16 h-16">
       <svg className="absolute inset-0 w-full h-full transform -rotate-90">
         <circle
-          className="text-gray-300 dark:text-gray-700"
+          className="text-gray-300"
           strokeWidth="4"
           stroke="currentColor"
           fill="transparent"
@@ -104,7 +96,7 @@ const ProgressCircle = ({ completed }) => {
           cy="50%"
         />
         <circle
-          className="text-indigo-600 dark:text-indigo-400"
+          className="text-indigo-600"
           strokeWidth="4"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
@@ -116,7 +108,7 @@ const ProgressCircle = ({ completed }) => {
           cy="50%"
         />
       </svg>
-      <div className="absolute inset-0 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+      <div className="absolute inset-0 flex items-center justify-center text-indigo-600">
         {completed}%
       </div>
     </div>
