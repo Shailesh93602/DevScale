@@ -76,6 +76,7 @@ export const login = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       res.status(301).json({ success: false, message: "Invalid Payload" });
+      return;
     }
     const { username, password } = req.body;
 
@@ -85,16 +86,20 @@ export const login = async (req, res) => {
     if (isEmail) user = await User.findOne({ email: username });
     else user = await User.findOne({ username });
 
-    if (!user)
+    if (!user) {
       res
         .status(404)
         .json({ success: false, message: "Incorrect username of password" });
+      return;
+    }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid)
+    if (!isPasswordValid) {
       return res
         .status(401)
         .json({ success: false, message: "Incorrect username or password" });
+      return;
+    }
 
     const token = jwt.sign(
       { email: user.email },

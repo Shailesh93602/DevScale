@@ -1,6 +1,7 @@
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { config } from "dotenv";
 import passport from "passport";
+import User from "../models/userModels.js";
 
 config();
 var cookieExtractor = function (req) {
@@ -17,18 +18,17 @@ export const applyPassportStrategy = () => {
   let jwt = null;
   try {
     jwt = ExtractJwt.fromExtractors([cookieExtractor]);
-  }
-  catch (error) {
+  } catch (error) {
     return null;
   }
   options.jwtFromRequest = jwt;
   passport.use(
     new Strategy(options, async (payload, done) => {
-      let user = await user.findOne({ email: payload.email });
+      let user = await User.findOne({ email: payload.email });
       if (user) {
         return done(null, user);
       }
-      return done(null, false); 
+      return done(null, false);
     })
   );
 };
