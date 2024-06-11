@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Button, ButtonGroup } from "@nextui-org/button";
 import { useNavigate } from "react-router-dom";
 import { useRouter } from "next/navigation";
+import { toast } from 'react-hot-toast'
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -43,8 +44,10 @@ export default function Register() {
       if (json.success) {
         console.log(json.message);
         router.push("/");
+        toast.success(json.message);
       } else {
         console.log(json.message);
+        toast.error(json.message);
       }
     } catch (error) {
       console.log(error);

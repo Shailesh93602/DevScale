@@ -1,6 +1,8 @@
 "use client";
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import "./styles.css";
+import { UserContext } from '../../context/UserContext';
+import { useRouter } from 'next/navigation';
 
 export default function CodingChallengesPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -25,6 +27,15 @@ export default function CodingChallengesPage() {
     }
   ]);
 
+  const { authenticated } = useContext(UserContext);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!authenticated) {
+      router.push("/u/login")
+    }
+  })
+
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
@@ -32,6 +43,8 @@ export default function CodingChallengesPage() {
   const filteredChallenges = challenges.filter((challenge) =>
     challenge.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+
 
   return (
     <div className="container mx-auto p-4">

@@ -1,11 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from 'next/navigation';
+import { useContext, useState } from "react";
+import { UserContext } from '../../../context/UserContext';
+import { toast } from "react-hot-toast"
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
+  const { setAuthenticated } = useContext(UserContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,8 +29,15 @@ export default function Login() {
       credentials: "include",
     });
     console.log(result);
-    let json = await result.json();
-    if (json.success) console.log(json);
+    let json = await result.json()
+    if (json.success) {
+      setAuthenticated(true);
+      router.push('/');
+      toast.success(json.message);
+    }
+    else {
+      toast.error(json.message);
+    }
   };
   return (
     <section className="bg-gray-50">
@@ -107,6 +119,7 @@ export default function Login() {
           </div>
         </div>
       </div>
+
     </section>
   );
 }

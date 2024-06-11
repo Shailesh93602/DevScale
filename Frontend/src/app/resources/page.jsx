@@ -1,6 +1,9 @@
 "use client";
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import './styles.css';
+import { UserContext } from '../../context/UserContext';
+import { useRouter } from 'next/navigation';
+
 
 export default function ResourcesPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -24,6 +27,15 @@ export default function ResourcesPage() {
       category: 'Articles'
     }
   ]);
+
+  const { authenticated } = useContext(UserContext);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!authenticated) {
+      router.push("/u/login");
+    }
+  })
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);

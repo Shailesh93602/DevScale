@@ -1,5 +1,8 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from '../../context/UserContext';
+import { useRouter } from 'next/navigation';
+
 
 export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
@@ -15,6 +18,15 @@ export default function ProfilePage() {
     ],
   });
 
+  const { authenticated } = useContext(UserContext);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!authenticated) {
+      router.push('/u/login')
+    }
+  })
+
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
   };
@@ -24,20 +36,20 @@ export default function ProfilePage() {
     setUserInfo((prev) => ({ ...prev, [name]: value }));
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://localhost:4000/profile", {
-          credentials: "include",
-        });
-        const data = await response.json();
-        setUserInfo({ ...userInfo, ...data.userInfo });
-      } catch (error) {
-        console.error("There was a problem with the fetch operation:", error);
-      }
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch("http://localhost:4000/profile", {
+  //         credentials: "include",
+  //       });
+  //       const data = await response.json();
+  //       setUserInfo({ ...userInfo, ...data.userInfo });
+  //     } catch (error) {
+  //       console.error("There was a problem with the fetch operation:", error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
 
   const handleSave = () => {
     setIsEditing(false);

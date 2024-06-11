@@ -1,14 +1,48 @@
 "use client";
 import Link from "next/link"
-
+import React, { useContext } from "react";
+import { UserContext } from "../context/UserContext";
+import { useRouter } from 'next/navigation';
+import { BannerCard } from '../components/BannerCard'
+import toast, { Toaster } from 'react-hot-toast';
 export default function LandingPage() {
+
+  const { user, authenticated, setAuthenticated } = useContext(UserContext);
+
+  console.log(user);
+
+
+
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("http://localhost:4000/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+      if (response.ok) {
+        setAuthenticated(false);
+        toast.success("Logged out successfully!");
+
+      } else {
+        toast.error("Failed to logout.");
+      }
+    } catch (error) {
+      console.error("Failed to logout:", error.message);
+    }
+  }
   return (
     <main className="flex flex-col text-gray-900">
+
       <section className="bg-gray-100 py-12 md:py-20 lg:py-28">
+
         <div className="container px-4 md:px-6">
           <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
             <div className="flex flex-col justify-center space-y-4">
               <div className="space-y-2">
+                <h1 className='text-3xl font-blod tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none'>
+                  Hello , {authenticated ? <span className="text-blue-800">{user?._doc.fullName}</span> : <span className='text-blue-800'>Guest</span>}
+                </h1>
                 <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
                   Welcome to Mr. Engineers
                 </h1>
@@ -24,21 +58,29 @@ export default function LandingPage() {
                 >
                   Get Started
                 </Link>
-                <Link
+                {/* <Link
                   className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
                   href="/u/login"
-                >
+                >   
                   Login
-                </Link>
+                </Link> */}
+                {
+                  authenticated ? (
+                    <button
+                      className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
+                      onClick={handleLogout}
+                    >Logout</button>
+                  ) : (
+                    <Link
+                      className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
+                      href="/u/login">
+                      Login
+                    </Link>
+                  )
+                }
               </div>
             </div>
-            <img
-              alt="Hero"
-              className="mx-auto aspect-video overflow-hidden rounded-xl object-bottom sm:w-full lg:order-last lg:aspect-square"
-              height="550"
-              src="/dashboard.svg"
-              width="550"
-            />
+            < BannerCard />
           </div>
         </div>
       </section>
@@ -173,6 +215,7 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
     </main>
   )
 }
