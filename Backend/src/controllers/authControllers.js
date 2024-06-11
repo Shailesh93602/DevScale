@@ -111,23 +111,30 @@ export const login = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000,
     });
 
-    res.status(200).json({ success: true, message: "Logged in successfully!" });
+    const isOld = User.findOne({ email: user.email });
+    let route;
+    if (isOld) route = "/dashboard";
+    else route = "/u/details";
+    res
+      .status(200)
+      .json({ success: true, message: "Logged in successfully!", route });
   } catch (error) {
     logger.error(error);
     res.status(500).send();
   }
 };
 
-
 export const logout = (req, res) => {
   try {
     res.clearCookie("token");
-    res.status(200).json({ success: true, message: "Logged out successfully!" });
+    res
+      .status(200)
+      .json({ success: true, message: "Logged out successfully!" });
   } catch (error) {
     logger.error(error);
     res.status(500).send();
   }
-}
+};
 
 export const forgotPassword = async (req, res) => {
   try {
