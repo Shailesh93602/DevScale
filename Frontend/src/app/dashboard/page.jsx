@@ -1,19 +1,18 @@
-
-
 "use client";
 import React, { useContext, useEffect, useState } from "react";
 import { FiPlayCircle } from "react-icons/fi";
-import { UserContext } from '../../context/UserContext';
-import { useRouter } from 'next/navigation';
+import { UserContext } from "../../context/UserContext";
+import { useRouter } from "next/navigation";
 
-export default function Dashboard() {
+const Dashboard = () => {
   const [username, setUsername] = useState("Loading...");
-  const { authenticated } = useContext(UserContext);
+  // const { authenticated, user } = useContext(UserContext);
+  // setUsername(user.fullName.slice(0, user.fullName.indexOf(" ") + 1));
   const router = useRouter();
 
   useEffect(() => {
     if (!authenticated) {
-      router.push("/u/login");
+      // router.push("/u/login");
     }
   }, []);
   return (
@@ -90,7 +89,7 @@ export default function Dashboard() {
       </div>
     </div>
   );
-}
+};
 
 const Card = ({
   title,
@@ -224,3 +223,5 @@ const courses = [
     completed: 100,
   },
 ];
+
+export default withAuth(Dashboard);
