@@ -30,3 +30,8 @@
 [2024-05-31 03:55:40.321 PM] error: TypeError: Cannot read properties of undefined (reading 'email')
 [2024-05-31 03:55:40.326 PM] error: TypeError: Cannot read properties of undefined (reading 'email')
 [2024-06-10 10:22:29.899 PM] error: MongoServerError: E11000 duplicate key error collection: test.users index: username_1 dup key: { username: "shaileshbhai" }
+[2024-06-11 04:00:20.809 PM] error: MongoServerError: E11000 duplicate key error collection: test.users index: username_1 dup key: { username: "vaibhav" }
+[2024-06-11 04:01:10.349 PM] error: MongoServerError: E11000 duplicate key error collection: test.users index: username_1 dup key: { username: "vaibhav" }
+[2024-06-11 04:01:45.244 PM] error: MongoServerError: E11000 duplicate key error collection: test.users index: username_1 dup key: { username: "vaibhavvvv" }
+[2024-06-11 04:01:55.634 PM] error: MongoServerError: E11000 duplicate key error collection: test.users index: username_1 dup key: { username: "vaibhavvvv" }
+[2024-06-11 04:02:29.071 PM] error: MongoServerError: E11000 duplicate key error collection: test.users index: username_1 dup key: { username: "vaibhavvvv" }

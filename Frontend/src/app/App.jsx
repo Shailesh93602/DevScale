@@ -1,5 +1,8 @@
 "use client";
+import UserContextProvider from '@/context/UserContext';
 import { useEffect, useState } from "react";
+
+
 export default function App({ children }) {
   const [theme, setTheme] = useState("light");
 
@@ -17,14 +20,19 @@ export default function App({ children }) {
   };
 
   return (
-    <div>
-      <button
-        onClick={toggleTheme}
-        className="py-2 px-4 text-gray-700 hover:text-gray-900"
-      >
-        Toggle Theme
-      </button>
-      {children}
-    </div>
+    <>
+      <div>
+        <button
+          onClick={toggleTheme}
+          className="py-2 px-4 text-gray-700 hover:text-gray-900"
+        >
+          Toggle Theme
+        </button>
+        {children}
+      </div>
+
+    </>
+
+
   );
 }

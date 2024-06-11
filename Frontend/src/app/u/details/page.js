@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
 import { useState } from "react";
 
 const Step1 = ({ fullName, setFullName, dob, setDOB, gender, setGender }) => (
@@ -222,6 +223,8 @@ export default function Details() {
   const [semester, setSemester] = useState("");
   const [step, setStep] = useState(1);
 
+  const router = useRouter();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (step < 3) {
@@ -257,7 +260,9 @@ export default function Details() {
         credentials: "include",
       });
       let json = await result.json();
-      if (json.success) console.log(json);
+      if (json.success) {
+        router.push('/')
+      };
     }
   };
 
