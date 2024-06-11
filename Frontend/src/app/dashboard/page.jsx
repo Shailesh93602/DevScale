@@ -233,17 +233,30 @@
 // ];
 
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FiPlayCircle } from "react-icons/fi";
 
-const user = { name: "shailesh" };
 export default function Dashboard() {
+  const [username, setUsername] = useState("Loading...");
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch("http://localhost:4000/profile", {
+        credentials: "include",
+      });
+      const data = await response.json();
+      if (data.success) {
+        const name = data.userInfo.fullName;
+        setUsername(name.slice(0, name.indexOf(" ")));
+      }
+    };
+    fetchData();
+  });
   return (
     <div className="p-6 bg-gradient-to-r from-blue-50 to-indigo-100 min-h-screen">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-extrabold mb-2 text-gray-900">Welcome,</h1>
         <h2 className="text-5xl font-extrabold mb-8 text-indigo-700">
-          {user.name}
+          {username}
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">

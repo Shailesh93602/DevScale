@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [userInfo, setUserInfo] = useState({
-    name: "Shailesh Chaudhari",
+    fullName: "Shailesh Chaudhari",
     email: "shailesh@mrengineers.com",
     bio: "Aspiring software engineer with a passion for coding and technology.",
     profilePicture: "https://via.placeholder.com/150",
@@ -30,12 +30,8 @@ export default function ProfilePage() {
         const response = await fetch("http://localhost:4000/profile", {
           credentials: "include",
         });
-        console.log(response);
         const data = await response.json();
-        console.log(data);
-        setUser(data.userInfo);
-        setAuthenticated(data.success);
-        console.log(user);
+        setUserInfo({ ...userInfo, ...data.userInfo });
       } catch (error) {
         console.error("There was a problem with the fetch operation:", error);
       }
@@ -62,13 +58,13 @@ export default function ProfilePage() {
                 <input
                   type="text"
                   name="name"
-                  value={userInfo.name}
+                  value={userInfo.fullName}
                   onChange={handleChange}
                   className="text-xl font-bold text-gray-900 border-b border-gray-300 focus:outline-none bg-transparent"
                 />
               ) : (
                 <h1 className="text-xl font-bold text-gray-900">
-                  {userInfo.name}
+                  {userInfo.fullName}
                 </h1>
               )}
               <p className="text-gray-700">{userInfo.email}</p>
