@@ -7,14 +7,16 @@ import { useRouter } from "next/navigation";
 export default function Dashboard() {
   const [username, setUsername] = useState("Loading...");
   const { authenticated, user } = useContext(UserContext);
-  // setUsername(user.fullName.slice(0, user.fullName.indexOf(" ") + 1));
   const router = useRouter();
 
   useEffect(() => {
     if (!authenticated) {
       router.push("/u/login");
+    } else {
+      setUsername(user.fullName?.split(" ")[0]);
     }
-  }, []);
+  }, [authenticated, router, user]);
+
   return (
     <div className="p-6 bg-gradient-to-r from-blue-50 to-indigo-100 min-h-screen">
       <div className="max-w-7xl mx-auto">
@@ -23,43 +25,38 @@ export default function Dashboard() {
           {username}
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
-          <div className="p-4 bg-blue-500 text-white rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold">Progress Overview</h3>
-            <p className="mt-2">You've completed 40% of your roadmap.</p>
-            <div className="mt-4">
-              <div className="h-2 bg-gray-300 rounded-full">
-                <div
-                  className="h-full bg-green-500 rounded-full"
-                  style={{ width: "40%" }}
-                ></div>
-              </div>
-            </div>
-          </div>
-
-          <div className="p-4 bg-green-500 text-white rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold">Upcoming Events</h3>
-            <ul className="mt-2">
-              <li>- JavaScript Quiz on June 10</li>
-              <li>- HTML Webinar on June 12</li>
-            </ul>
-          </div>
-
-          <div className="p-4 bg-purple-500 text-white rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold">Recent Achievements</h3>
-            <ul className="mt-2">
-              <li>- Completed "JavaScript Basics" course</li>
-              <li>- Scored 95% on "HTML Quiz"</li>
-            </ul>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          <StatCard
+            title="Progress Overview"
+            content="You've completed 40% of your roadmap."
+            progress={40}
+            color="blue"
+          />
+          <StatCard
+            title="Upcoming Events"
+            content={
+              <ul>
+                <li>- JavaScript Quiz on June 10</li>
+                <li>- HTML Webinar on June 12</li>
+              </ul>
+            }
+            color="green"
+          />
+          <StatCard
+            title="Recent Achievements"
+            content={
+              <ul>
+                <li>- Completed "JavaScript Basics" course</li>
+                <li>- Scored 95% on "HTML Quiz"</li>
+              </ul>
+            }
+            color="purple"
+          />
         </div>
 
-        <div className="mb-12">
-          <h3 className="text-2xl font-bold mb-4 text-gray-900">
-            Continue Previous:
-          </h3>
+        <Section title="Continue Previous:">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            <Card
+            <CourseCard
               title="Dynamic Programming"
               description="Detailed Explanation of"
               thumbnail="https://placehold.co/200x100"
@@ -68,13 +65,12 @@ export default function Dashboard() {
               completed={7}
             />
           </div>
-        </div>
+        </Section>
 
-        <div>
-          <h3 className="text-3xl font-bold mb-6 text-gray-900">Featured</h3>
+        <Section title="Featured">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {courses.map((course) => (
-              <Card
+              <CourseCard
                 key={course.id}
                 title={course.title}
                 description={course.description}
@@ -85,13 +81,39 @@ export default function Dashboard() {
               />
             ))}
           </div>
-        </div>
+        </Section>
       </div>
     </div>
   );
 }
 
-const Card = ({
+const StatCard = ({ title, content, progress, color }) => (
+  <div
+    className={`p-6 bg-${color}-500 text-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105`}
+  >
+    <h3 className="text-xl font-semibold">{title}</h3>
+    <div className="mt-2">{content}</div>
+    {progress && (
+      <div className="mt-4">
+        <div className="h-2 bg-gray-300 rounded-full">
+          <div
+            className={`h-full bg-${color}-700 rounded-full`}
+            style={{ width: `${progress}%` }}
+          ></div>
+        </div>
+      </div>
+    )}
+  </div>
+);
+
+const Section = ({ title, children }) => (
+  <div className="mb-12">
+    <h3 className="text-3xl font-bold mb-6 text-gray-900">{title}</h3>
+    {children}
+  </div>
+);
+
+const CourseCard = ({
   title,
   description,
   thumbnail,
