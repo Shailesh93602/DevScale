@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const protectedPages = ["/dashboard", "/profile"];
+const protectedPages = [];
 
 export async function middleware(req) {
   if (protectedPages.find((page) => page === req.nextUrl.pathname)) {
@@ -30,7 +30,7 @@ export async function middleware(req) {
     const token = req.cookies.get("token");
     if (token) {
       const url = req.nextUrl.clone();
-      document.cookie = "token=; Max-Age=0; path=/";
+      // document.cookie = "token=; Max-Age=0; path=/";
       return NextResponse.next();
     } else {
       return NextResponse.next();
