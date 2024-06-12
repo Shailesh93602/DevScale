@@ -4,15 +4,15 @@ import { FiPlayCircle } from "react-icons/fi";
 import { UserContext } from "../../context/UserContext";
 import { useRouter } from "next/navigation";
 
-const Dashboard = () => {
+export default function Dashboard() {
   const [username, setUsername] = useState("Loading...");
-  // const { authenticated, user } = useContext(UserContext);
+  const { authenticated, user } = useContext(UserContext);
   // setUsername(user.fullName.slice(0, user.fullName.indexOf(" ") + 1));
   const router = useRouter();
 
   useEffect(() => {
     if (!authenticated) {
-      // router.push("/u/login");
+      router.push("/u/login");
     }
   }, []);
   return (
@@ -89,7 +89,7 @@ const Dashboard = () => {
       </div>
     </div>
   );
-};
+}
 
 const Card = ({
   title,
@@ -223,5 +223,3 @@ const courses = [
     completed: 100,
   },
 ];
-
-export default withAuth(Dashboard);

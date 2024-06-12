@@ -1,15 +1,41 @@
 import { NextResponse } from "next/server";
 
-export function middleware(req) {
-  const token = req.cookies.get("token");
+const protectedPages = ["/dashboard", "/profile"];
 
-  if (!token) {
-    return NextResponse.redirect("http://localhost:3000/u/login");
+export async function middleware(req) {
+  if (protectedPages.find((page) => page === req.nextUrl.pathname)) {
+    const token = req.cookies.get("token");
+    if (!token) {
+      const url = req.nextUrl.clone();
+      url.pathname = "/u/login";
+      return NextResponse.redirect(url);
+    } else {
+      const response = await fetch("http://localhost:4000/profile", {
+        credentials: "include",
+        headers: {
+          Cookie: req.headers.get("cookie"),
+        },
+      });
+      if (response.status == 401) {
+        const url = req.nextUrl.clone();
+        url.pathname = "/u/login";
+        return NextResponse.redirect(url);
+      } else {
+        const json = await response.json();
+        console.log(json);
+        NextResponse.next();
+      }
+    }
+  } else {
+    const token = req.cookies.get("token");
+    if (token) {
+      const url = req.nextUrl.clone();
+      document.cookie = "token=; Max-Age=0; path=/";
+      return NextResponse.next();
+    } else {
+      return NextResponse.next();
+    }
   }
-
-  return NextResponse.next();
 }
 
-export const config = {
-  matcher: ["/dashboard", "/profile"],
-};
+// export default function () {}
