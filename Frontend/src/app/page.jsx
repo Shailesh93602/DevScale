@@ -5,13 +5,17 @@ import { UserContext } from "../context/UserContext";
 import { useRouter } from "next/navigation";
 import { BannerCard } from "../components/BannerCard";
 import toast, { Toaster } from "react-hot-toast";
-import { ArrowLeft, ArrowRight } from 'react-feather';
+import { ArrowLeft, ArrowRight } from "react-feather";
 import CentralizedButton from "../components/common/CentralizedButton";
+import { showToast } from "../components/Toast";
 export default function LandingPage() {
   const { user, authenticated, setAuthenticated } = useContext(UserContext);
-
-  console.log(user?.userInfo
-  );
+  showToast("This is a default toast message!");
+  showToast("This is a success message!", "success");
+  showToast("This is an info message!", "info");
+  showToast("This is a warning message!", "warn");
+  showToast("This is an error message!", "error");
+  console.log(user?.userInfo);
 
   const handleLogout = async () => {
     try {
@@ -39,7 +43,9 @@ export default function LandingPage() {
                 <h1 className="text-3xl font-blod tracking-tighter sm:text-4xl md:text-5xl lg:text-5xl/none">
                   Hello ,{" "}
                   {authenticated ? (
-                    <span className="text-blue-800">{user?._doc.fullName?.split(" ")[0]}</span>
+                    <span className="text-blue-800">
+                      {user?._doc.fullName?.split(" ")[0]}
+                    </span>
                   ) : (
                     <span className="text-blue-800">Guest</span>
                   )}
@@ -56,31 +62,31 @@ export default function LandingPage() {
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
                 <CentralizedButton
-                  href={authenticated ? 'dashboard' : '/u/register'}
+                  href={authenticated ? "dashboard" : "/u/register"}
                   icon={ArrowRight}
                   isIconRightSide
-                  text={authenticated ? 'Start your journey' : 'Get Started'}
+                  text={authenticated ? "Start your journey" : "Get Started"}
                   color="info"
                   size="lg"
-                  style={{ display: 'flex', justifyContent: 'center' }}
+                  style={{ display: "flex", justifyContent: "center" }}
                 />
                 {authenticated ? (
                   <CentralizedButton
-                    text='logout'
+                    text="logout"
                     onClick={handleLogout}
                     outline
-                    size='lg'
-                    color='info'
-                    style={{ display: 'flex', justifyContent: 'center' }}
+                    size="lg"
+                    color="info"
+                    style={{ display: "flex", justifyContent: "center" }}
                   />
                 ) : (
                   <CentralizedButton
                     href="/u/login"
-                    text='login'
+                    text="login"
                     color="info"
                     outline
                     size="lg"
-                    style={{ display: 'flex', justifyContent: 'center' }}
+                    style={{ display: "flex", justifyContent: "center" }}
                   />
                 )}
               </div>
@@ -115,13 +121,12 @@ export default function LandingPage() {
                 </Link> */}
 
                 <CentralizedButton
-                  size='lg'
-                  color='info'
+                  size="lg"
+                  color="info"
                   href="/resources"
-                  text='Explore Resources'
-                  style={{ display: 'flex', justifyContent: 'center' }}
+                  text="Explore Resources"
+                  style={{ display: "flex", justifyContent: "center" }}
                 />
-
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -182,11 +187,11 @@ export default function LandingPage() {
                 </Link> */}
 
                 <CentralizedButton
-                  href='/career-roadmap'
-                  text='Get Your Roadmap'
-                  color='info'
-                  size='lg'
-                  style={{ display: 'flex', justifyContent: 'center' }}
+                  href="/career-roadmap"
+                  text="Get Your Roadmap"
+                  color="info"
+                  size="lg"
+                  style={{ display: "flex", justifyContent: "center" }}
                 />
               </div>
             </div>
@@ -218,11 +223,11 @@ export default function LandingPage() {
                   Explore Placement Support
                 </Link> */}
                 <CentralizedButton
-                  text='Explore Placement Support'
-                  href='placement-preparation'
-                  color='info'
-                  size='lg'
-                  style={{ display: 'flex', justifyContent: 'center' }}
+                  text="Explore Placement Support"
+                  href="placement-preparation"
+                  color="info"
+                  size="lg"
+                  style={{ display: "flex", justifyContent: "center" }}
                 />
               </div>
             </div>
