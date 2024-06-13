@@ -5,10 +5,13 @@ import { UserContext } from "../context/UserContext";
 import { useRouter } from "next/navigation";
 import { BannerCard } from "../components/BannerCard";
 import toast, { Toaster } from "react-hot-toast";
+import { ArrowLeft, ArrowRight } from 'react-feather';
+import CentralizedButton from "../components/common/CentralizedButton";
 export default function LandingPage() {
   const { user, authenticated, setAuthenticated } = useContext(UserContext);
 
-  console.log(user);
+  console.log(user?.userInfo
+  );
 
   const handleLogout = async () => {
     try {
@@ -33,10 +36,10 @@ export default function LandingPage() {
           <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
             <div className="flex flex-col justify-center space-y-4">
               <div className="space-y-2">
-                <h1 className="text-3xl font-blod tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
+                <h1 className="text-3xl font-blod tracking-tighter sm:text-4xl md:text-5xl lg:text-5xl/none">
                   Hello ,{" "}
                   {authenticated ? (
-                    <span className="text-blue-800">{user?._doc.fullName}</span>
+                    <span className="text-blue-800">{user?._doc.fullName?.split(" ")[0]}</span>
                   ) : (
                     <span className="text-blue-800">Guest</span>
                   )}
@@ -52,32 +55,33 @@ export default function LandingPage() {
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <Link
-                  className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
-                  href="/u/register"
-                >
-                  Get Started
-                </Link>
-                {/* <Link
-                  className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
-                  href="/u/login"
-                >   
-                  Login
-                </Link> */}
+                <CentralizedButton
+                  href={authenticated ? 'dashboard' : '/u/register'}
+                  icon={ArrowRight}
+                  isIconRightSide
+                  text={authenticated ? 'Start your journey' : 'Get Started'}
+                  color="info"
+                  size="lg"
+                  style={{ display: 'flex', justifyContent: 'center' }}
+                />
                 {authenticated ? (
-                  <button
-                    className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
+                  <CentralizedButton
+                    text='logout'
                     onClick={handleLogout}
-                  >
-                    Logout
-                  </button>
+                    outline
+                    size='lg'
+                    color='info'
+                    style={{ display: 'flex', justifyContent: 'center' }}
+                  />
                 ) : (
-                  <Link
-                    className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
+                  <CentralizedButton
                     href="/u/login"
-                  >
-                    Login
-                  </Link>
+                    text='login'
+                    color="info"
+                    outline
+                    size="lg"
+                    style={{ display: 'flex', justifyContent: 'center' }}
+                  />
                 )}
               </div>
             </div>
@@ -103,12 +107,21 @@ export default function LandingPage() {
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <Link
+                {/* <Link
                   className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
-                  href="/u/register"
+                  href="/resources"
                 >
                   Explore Resources
-                </Link>
+                </Link> */}
+
+                <CentralizedButton
+                  size='lg'
+                  color='info'
+                  href="/resources"
+                  text='Explore Resources'
+                  style={{ display: 'flex', justifyContent: 'center' }}
+                />
+
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -161,12 +174,20 @@ export default function LandingPage() {
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <Link
+                {/* <Link
                   className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
                   href="/u/register"
                 >
                   Get Your Roadmap
-                </Link>
+                </Link> */}
+
+                <CentralizedButton
+                  href='/career-roadmap'
+                  text='Get Your Roadmap'
+                  color='info'
+                  size='lg'
+                  style={{ display: 'flex', justifyContent: 'center' }}
+                />
               </div>
             </div>
           </div>
@@ -190,12 +211,19 @@ export default function LandingPage() {
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <Link
+                {/* <Link
                   className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
                   href="/u/register"
                 >
                   Explore Placement Support
-                </Link>
+                </Link> */}
+                <CentralizedButton
+                  text='Explore Placement Support'
+                  href='placement-preparation'
+                  color='info'
+                  size='lg'
+                  style={{ display: 'flex', justifyContent: 'center' }}
+                />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">

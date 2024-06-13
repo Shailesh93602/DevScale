@@ -13,7 +13,7 @@ export default function Dashboard() {
     if (!authenticated) {
       router.push("/u/login");
     } else {
-      setUsername(user.fullName?.split(" ")[0]);
+      setUsername(user?.fullName?.split(" ")[0]);
     }
   }, [authenticated, router, user]);
 

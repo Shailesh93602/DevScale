@@ -10,7 +10,10 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const { setAuthenticated } = useContext(UserContext);
+  const { setAuthenticated, user } = useContext(UserContext);
+
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,7 +35,8 @@ export default function Login() {
     let json = await result.json()
     if (json.success) {
       setAuthenticated(true);
-      router.push('/');
+      //  router.push('/');
+
       toast.success(json.message);
     }
     else {
