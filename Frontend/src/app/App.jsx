@@ -1,7 +1,5 @@
 "use client";
-import UserContextProvider from "@/context/UserContext";
 import { useEffect, useState } from "react";
-import Toast from "../components/Toast";
 
 export default function App({ children }) {
   const [theme, setTheme] = useState("light");
@@ -28,7 +26,6 @@ export default function App({ children }) {
         >
           Toggle Theme
         </button>
-        <Toast />
         {children}
       </div>
     </>

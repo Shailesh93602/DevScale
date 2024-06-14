@@ -1,19 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
-import { UserContext } from '../../../context/UserContext';
-import { toast } from "react-hot-toast"
+import { UserContext } from "../../../context/UserContext";
+import { toast } from "react-hot-toast";
+import Toast, { showToast } from "../../../components/Toast";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
   const { setAuthenticated, user } = useContext(UserContext);
-
-
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,20 +29,20 @@ export default function Login() {
       }),
       credentials: "include",
     });
-    console.log(result);
-    let json = await result.json()
+    let json = await result.json();
     if (json.success) {
       setAuthenticated(true);
-      //  router.push('/');
-
-      toast.success(json.message);
-    }
-    else {
+      showToast("Logged In Successfully!", "success");
+      setTimeout(() => {
+        router.push(json.route);
+      }, 2000);
+    } else {
       toast.error(json.message);
     }
   };
   return (
     <section className="bg-gray-50">
+      <Toast />
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <Link
           href="/"
@@ -123,7 +121,6 @@ export default function Login() {
           </div>
         </div>
       </div>
-
     </section>
   );
 }
