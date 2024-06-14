@@ -1,35 +1,53 @@
 "use client";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FiMenu, FiX } from "react-icons/fi";
+import { FiMenu, FiX, FiSun, FiMoon, FiUser } from "react-icons/fi";
 import { UserContext } from "../context/UserContext";
 
 const Navbar = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [theme, setTheme] = useState("light");
 
   const { user, authenticated } = useContext(UserContext);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") || "light";
+    document.documentElement.setAttribute("data-theme", savedTheme);
+    setTheme(savedTheme);
+  }, []);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
-  console.log(authenticated);
 
-  const handleLinkClick = (e, href) => {
+  const handleLinkClick = () => {
     setIsOpen(false);
   };
 
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    document.documentElement.setAttribute("data-theme", newTheme);
+    localStorage.setItem("theme", newTheme);
+  };
+
   return (
-    <div className="bg-primary-800 p-4">
-      <div className="flex items-center justify-between">
-        <Link href="/" className="text-light text-xl font-bold">
+    <nav className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-4 shadow-lg">
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <Link href="/" className="text-white text-2xl font-bold">
           Mr. Engineers
         </Link>
-        <div className="md:hidden">
-          <button onClick={toggleMenu} className="text-light">
-            {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+        <div className="flex items-center">
+          <button onClick={toggleTheme} className="text-white mr-4">
+            {theme === "light" ? <FiMoon size={24} /> : <FiSun size={24} />}
           </button>
+          <div className="md:hidden">
+            <button onClick={toggleMenu} className="text-white">
+              {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+            </button>
+          </div>
         </div>
       </div>
       <div
@@ -37,84 +55,90 @@ const Navbar = () => {
           isOpen ? "block" : "hidden"
         } mt-4 md:flex md:flex-row md:space-x-4`}
       >
-        <Link
-          onClick={handleLinkClick}
+        <NavItem
           href="/dashboard"
-          className={`block md:inline-block text-gray-300 hover:text-light px-3 py-2 ${
-            pathname === "/dashboard"
-              ? "border-b-2 border-light text-light"
-              : ""
-          }`}
+          pathname={pathname}
+          onClick={handleLinkClick}
         >
           Dashboard
-        </Link>
-        <Link
-          href="/profile"
-          className={`block md:inline-block text-gray-300 hover:text-light px-3 py-2 ${
-            pathname === "/profile" ? "border-b-2 border-light text-light" : ""
-          }`}
-          onClick={handleLinkClick}
-        >
+        </NavItem>
+        <NavItem href="/profile" pathname={pathname} onClick={handleLinkClick}>
           Profile
-        </Link>
-        <Link
+        </NavItem>
+        <NavItem
           href="/resources"
-          className={`block md:inline-block text-gray-300 hover:text-light px-3 py-2 ${
-            pathname === "/resources"
-              ? "border-b-2 border-light text-light"
-              : ""
-          }`}
+          pathname={pathname}
           onClick={handleLinkClick}
         >
           Resources
-        </Link>
-        <Link
+        </NavItem>
+        <NavItem
           href="/coding-challenges"
-          className={`block md:inline-block text-gray-300 hover:text-light px-3 py-2 ${
-            pathname === "/coding-challenges"
-              ? "border-b-2 border-light text-light"
-              : ""
-          }`}
+          pathname={pathname}
           onClick={handleLinkClick}
         >
           Coding Challenges
-        </Link>
-        <Link
+        </NavItem>
+        <NavItem
           href="/career-roadmap"
-          className={`block md:inline-block text-gray-300 hover:text-light px-3 py-2 ${
-            pathname === "/career-roadmap"
-              ? "border-b-2 border-light text-light"
-              : ""
-          }`}
+          pathname={pathname}
           onClick={handleLinkClick}
         >
           Career Roadmap
-        </Link>
-        <Link
+        </NavItem>
+        <NavItem
           href="/placement-preparation"
-          className={`block md:inline-block text-gray-300 hover:text-light px-3 py-2 ${
-            pathname === "/placement-preparation"
-              ? "border-b-2 border-light text-light"
-              : ""
-          }`}
+          pathname={pathname}
           onClick={handleLinkClick}
         >
           Placement Preparation
-        </Link>
-        <Link
+        </NavItem>
+        <NavItem
           href="/community"
-          className={`block md:inline-block text-gray-300 hover:text-light px-3 py-2 ${
-            pathname === "/community"
-              ? "border-b-2 border-light text-light"
-              : ""
-          }`}
+          pathname={pathname}
           onClick={handleLinkClick}
         >
           Community
-        </Link>
+        </NavItem>
+        {authenticated && (
+          <div className="relative">
+            <button className="text-white flex items-center">
+              <FiUser size={24} />
+              <span className="ml-2">{user?.fullName?.split(" ")[0]}</span>
+            </button>
+            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20">
+              <Link
+                href="/profile"
+                onClick={handleLinkClick}
+                className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+              >
+                Profile
+              </Link>
+              <Link
+                href="/logout"
+                onClick={handleLinkClick}
+                className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+              >
+                Logout
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
-    </div>
+    </nav>
   );
 };
+
+const NavItem = ({ href, pathname, onClick, children }) => (
+  <Link
+    href={href}
+    className={`block md:inline-block text-white hover:bg-white hover:bg-opacity-20 px-3 py-2 rounded-md transition ${
+      pathname === href ? "bg-white bg-opacity-20" : ""
+    }`}
+    onClick={onClick}
+  >
+    {children}
+  </Link>
+);
 
 export default Navbar;

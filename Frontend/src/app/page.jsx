@@ -7,14 +7,8 @@ import { BannerCard } from "../components/BannerCard";
 import toast, { Toaster } from "react-hot-toast";
 import { ArrowLeft, ArrowRight } from "react-feather";
 import CentralizedButton from "../components/common/CentralizedButton";
-import { showToast } from "../components/Toast";
 export default function LandingPage() {
   const { user, authenticated, setAuthenticated } = useContext(UserContext);
-  showToast("This is a default toast message!");
-  showToast("This is a success message!", "success");
-  showToast("This is an info message!", "info");
-  showToast("This is a warning message!", "warn");
-  showToast("This is an error message!", "error");
   console.log(user?.userInfo);
 
   const handleLogout = async () => {
