@@ -571,8 +571,8 @@ import { motion } from "framer-motion";
 import { Parallax, ParallaxProvider } from "react-scroll-parallax";
 import { useInView } from "react-intersection-observer";
 import { FiCheckCircle } from "react-icons/fi";
-import { UserContext } from '../../context/UserContext';
-import { useRouter } from 'next/navigation';
+// import { UserContext } from '../../context/UserContext';
+import { useRouter } from "next/navigation";
 
 // Variants for animations
 const nodeVariants = {
@@ -655,13 +655,13 @@ const RoadmapStep = ({ title, description, icon: Icon, link }) => (
 const RoadmapSection = ({ title, steps, completed }) => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
-  const { authenticated } = useContext(UserContext);
+  // const { authenticated } = useContext(UserContext);
   const router = useRouter();
-  useEffect(() => {
-    if (!authenticated) {
-      router.push('/u/login')
-    }
-  })
+  // useEffect(() => {
+  //   if (!authenticated) {
+  //     router.push("/u/login");
+  //   }
+  // });
 
   return (
     <Parallax className="parallax-container" y={[20, -20]}>
@@ -1226,8 +1226,6 @@ const roadmapData = {
 };
 
 const Roadmap = () => (
-
-
   <ParallaxProvider>
     <div className="roadmap-container p-6 bg-gray-100 dark:bg-gray-800 min-h-screen">
       <h1 className="text-3xl font-bold mb-8 text-gray-900 dark:text-gray-100 text-center">
@@ -1245,7 +1243,6 @@ const Roadmap = () => (
       </motion.div>
     </div>
   </ParallaxProvider>
-
 );
 
 export default Roadmap;

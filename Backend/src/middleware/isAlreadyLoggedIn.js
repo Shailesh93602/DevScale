@@ -1,5 +1,5 @@
-import jwt from 'jsonwebtoken';
-import { config } from 'dotenv';
+import jwt from "jsonwebtoken";
+import { config } from "dotenv";
 
 config();
 
@@ -18,13 +18,12 @@ export const isAlreadyLoggedIn = async (req, res, next) => {
     }
 
     const user = await user.findOne({ email });
-
     if (!user || user.length === 0) {
       return next();
     }
 
     const { role_id } = user[0];
-    const redirectUrl = role_id === 0 ? '/customer/home' : '/owner/home';
+    const redirectUrl = role_id === 0 ? "/customer/home" : "/owner/home";
     res.redirect(redirectUrl);
   } catch (error) {
     next();

@@ -35,3 +35,12 @@
 [2024-06-11 04:01:45.244 PM] error: MongoServerError: E11000 duplicate key error collection: test.users index: username_1 dup key: { username: "vaibhavvvv" }
 [2024-06-11 04:01:55.634 PM] error: MongoServerError: E11000 duplicate key error collection: test.users index: username_1 dup key: { username: "vaibhavvvv" }
 [2024-06-11 04:02:29.071 PM] error: MongoServerError: E11000 duplicate key error collection: test.users index: username_1 dup key: { username: "vaibhavvvv" }
+[2024-06-16 12:09:07.264 PM] error: MongooseError: Operation `users.findOne()` buffering timed out after 10000ms
+[2024-06-16 12:09:15.562 PM] error: MongooseError: Operation `users.findOne()` buffering timed out after 10000ms
+[2024-06-16 12:11:14.544 PM] error: MongooseError: Operation `users.findOne()` buffering timed out after 10000ms
+[2024-06-16 12:11:19.003 PM] error: MongooseError: Operation `users.findOne()` buffering timed out after 10000ms
+[2024-06-16 12:31:23.358 PM] error: MongooseError: Operation `users.findOne()` buffering timed out after 10000ms
+[2024-06-16 12:31:26.692 PM] error: MongooseError: Operation `users.findOne()` buffering timed out after 10000ms
+[2024-06-16 12:31:32.260 PM] error: MongooseError: Operation `users.findOne()` buffering timed out after 10000ms
+[2024-06-16 12:31:33.068 PM] error: MongooseError: Operation `users.findOne()` buffering timed out after 10000ms
+[2024-06-16 12:32:05.688 PM] error: MongooseError: Operation `users.findOne()` buffering timed out after 10000ms

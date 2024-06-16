@@ -12,14 +12,21 @@
   "dependencies": {
     "@monaco-editor/react": "^4.6.0",
     "@nextui-org/button": "^2.0.31",
+    "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-slot": "^1.0.2",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
     "d3": "^7.9.0",
     "daisyui": "^4.12.2",
     "framer-motion": "^11.2.10",
+    "lucide-react": "^0.395.0",
     "monaco-editor": "^0.49.0",
     "next": "14.2.3",
+    "next-themes": "^0.3.0",
     "react": "^18",
     "react-dom": "^18",
     "react-feather": "^2.0.10",
+    "react-hook-form": "^7.52.0",
     "react-hot-toast": "^2.4.1",
     "react-icons": "^5.2.1",
     "react-intersection-observer": "^9.10.2",
@@ -29,7 +36,9 @@
     "react-tooltip": "^5.26.4",
     "reactstrap": "^9.2.2",
     "saas": "^1.0.0",
-    "swiper": "^11.1.4"
+    "swiper": "^11.1.4",
+    "tailwind-merge": "^2.3.0",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@types/node": "20.12.12",

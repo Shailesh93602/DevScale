@@ -1,15 +1,15 @@
 "use client";
 import Link from "next/link";
 import React, { useContext } from "react";
-import { UserContext } from "../context/UserContext";
+// import { UserContext } from "../context/UserContext";
 import { useRouter } from "next/navigation";
 import { BannerCard } from "../components/BannerCard";
 import toast, { Toaster } from "react-hot-toast";
 import { ArrowLeft, ArrowRight } from "react-feather";
 import CentralizedButton from "../components/common/CentralizedButton";
 export default function LandingPage() {
-  const { user, authenticated, setAuthenticated } = useContext(UserContext);
-  console.log(user?.userInfo);
+  // const { user, authenticated, setAuthenticated } = useContext(UserContext);
+  // console.log(user?.userInfo);
 
   const handleLogout = async () => {
     try {

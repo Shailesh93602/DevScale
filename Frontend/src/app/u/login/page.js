@@ -3,15 +3,14 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
-import { UserContext } from "../../../context/UserContext";
 import { toast } from "react-hot-toast";
 import Toast, { showToast } from "../../../components/Toast";
+import { Button } from "@/components/ui/button";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const { setAuthenticated, user } = useContext(UserContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,7 +30,6 @@ export default function Login() {
     });
     let json = await result.json();
     if (json.success) {
-      setAuthenticated(true);
       showToast("Logged In Successfully!", "success");
       setTimeout(() => {
         router.push(json.route);
@@ -40,86 +38,78 @@ export default function Login() {
       toast.error(json.message);
     }
   };
+
   return (
-    <section className="bg-gray-50">
+    <section className="bg-gray-50 min-h-screen flex items-center justify-center">
       <Toast />
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <Link
-          href="/"
-          className="flex items-center mb-6 text-2xl font-semibold text-gray-900"
-        >
-          Mr. Engineers
-        </Link>
-        <div className="w-full bg-light rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
-          <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
-              Login
-            </h1>
-            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
-              <div>
-                <label
-                  htmlFor="username"
-                  className="block mb-2 text-sm font-medium text-gray-900"
-                >
-                  {" "}
-                  Username or Email
-                </label>
-                <input
-                  type="text"
-                  name="username"
-                  id="username"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                  placeholder="john1998"
-                  required=""
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="password"
-                  className="block mb-2 text-sm font-medium text-gray-900"
-                >
-                  Password
-                </label>
-                <input
-                  type="password"
-                  name="password"
-                  id="password"
-                  placeholder="••••••••"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                  required=""
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <button
-                type="submit"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-              >
-                Login
-              </button>
-              <p className="text-sm font-light text-gray-500">
-                Don't have account?{" "}
-                <a
-                  href="/u/register"
-                  className="font-medium text-primary-600 hover:underline"
-                >
-                  Create one
-                </a>
-              </p>
-              <p className="text-sm font-light text-gray-500">
-                forgot password?{" "}
-                <a
-                  href="/u/login/forgotpassword"
-                  className="font-medium text-primary-600 hover:underline"
-                >
-                  Click here
-                </a>
-              </p>
-            </form>
-          </div>
+      <div className="max-w-md w-full bg-white shadow-lg rounded-lg p-8">
+        <div className="text-center mb-6">
+          <Link href="/" className="text-2xl font-bold text-blue-600">
+            Mr. Engineers
+          </Link>
         </div>
+        <h1 className="text-2xl font-bold text-center text-gray-900 mb-4">
+          Login
+        </h1>
+        <form className="space-y-6" onSubmit={handleSubmit}>
+          <div>
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Username or Email
+            </label>
+            <input
+              type="text"
+              name="username"
+              id="username"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              placeholder="john1998"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Password
+            </label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md">
+            Login
+          </Button>
+          <div className="text-sm text-gray-500">
+            <p>
+              Don't have an account?{" "}
+              <Link
+                href="/u/register"
+                className="text-blue-600 hover:underline"
+              >
+                Create one
+              </Link>
+            </p>
+            <p>
+              Forgot password?{" "}
+              <Link
+                href="/u/forgotPassword"
+                className="text-blue-600 hover:underline"
+              >
+                Click here
+              </Link>
+            </p>
+          </div>
+        </form>
       </div>
     </section>
   );

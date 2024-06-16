@@ -1,6 +1,14 @@
 import { NextResponse } from "next/server";
 
-const protectedPages = [];
+const protectedPages = [
+  "/dashboard",
+  "/profile",
+  "/resources",
+  "/coding-challenges",
+  "/career-roadmap",
+  "/placement-preparation",
+  "/community",
+];
 
 export async function middleware(req) {
   if (protectedPages.find((page) => page === req.nextUrl.pathname)) {
