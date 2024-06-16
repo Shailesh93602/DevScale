@@ -1,22 +1,14 @@
 "use client";
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FiMenu, FiX, FiSun, FiMoon, FiUser } from "react-icons/fi";
-import { UserContext } from "../context/UserContext";
+import { useTheme } from "next-themes";
 
 const Navbar = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const [theme, setTheme] = useState("light");
-
-  const { user, authenticated } = useContext(UserContext);
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") || "light";
-    document.documentElement.setAttribute("data-theme", savedTheme);
-    setTheme(savedTheme);
-  }, []);
+  const { theme, setTheme } = useTheme();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -27,10 +19,7 @@ const Navbar = () => {
   };
 
   const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    document.documentElement.setAttribute("data-theme", newTheme);
-    localStorage.setItem("theme", newTheme);
+    setTheme(theme === "light" ? "dark" : "light");
   };
 
   return (
@@ -40,11 +29,17 @@ const Navbar = () => {
           Mr. Engineers
         </Link>
         <div className="flex items-center">
-          <button onClick={toggleTheme} className="text-white mr-4">
+          <button
+            onClick={toggleTheme}
+            className="text-white mr-4 focus:outline-none"
+          >
             {theme === "light" ? <FiMoon size={24} /> : <FiSun size={24} />}
           </button>
           <div className="md:hidden">
-            <button onClick={toggleMenu} className="text-white">
+            <button
+              onClick={toggleMenu}
+              className="text-white focus:outline-none"
+            >
               {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
             </button>
           </div>
@@ -100,30 +95,29 @@ const Navbar = () => {
         >
           Community
         </NavItem>
-        {authenticated && (
-          <div className="relative">
-            <button className="text-white flex items-center">
-              <FiUser size={24} />
-              <span className="ml-2">{user?.fullName?.split(" ")[0]}</span>
-            </button>
-            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20">
-              <Link
-                href="/profile"
-                onClick={handleLinkClick}
-                className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-              >
-                Profile
-              </Link>
-              <Link
-                href="/logout"
-                onClick={handleLinkClick}
-                className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-              >
-                Logout
-              </Link>
-            </div>
+        <div className="relative">
+          <button className="text-white flex items-center focus:outline-none">
+            <FiUser size={24} />
+            <span className="ml-2">User Name</span>{" "}
+            {/* Replace with dynamic user data */}
+          </button>
+          <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20">
+            <Link
+              href="/profile"
+              onClick={handleLinkClick}
+              className="block px-4 py-2 text-gray-800 hover:bg-gray-200 rounded-md"
+            >
+              Profile
+            </Link>
+            <Link
+              href="/logout"
+              onClick={handleLinkClick}
+              className="block px-4 py-2 text-gray-800 hover:bg-gray-200 rounded-md"
+            >
+              Logout
+            </Link>
           </div>
-        )}
+        </div>
       </div>
     </nav>
   );
@@ -132,10 +126,10 @@ const Navbar = () => {
 const NavItem = ({ href, pathname, onClick, children }) => (
   <Link
     href={href}
+    onClick={onClick}
     className={`block md:inline-block text-white hover:bg-white hover:bg-opacity-20 px-3 py-2 rounded-md transition ${
       pathname === href ? "bg-white bg-opacity-20" : ""
     }`}
-    onClick={onClick}
   >
     {children}
   </Link>

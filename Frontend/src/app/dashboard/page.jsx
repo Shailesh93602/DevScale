@@ -1,21 +1,21 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
 import { FiPlayCircle } from "react-icons/fi";
-import { UserContext } from "../../context/UserContext";
+// import { UserContext } from "../../context/UserContext";
 import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
   const [username, setUsername] = useState("Loading...");
-  const { authenticated, user } = useContext(UserContext);
+  // const { authenticated, user } = useContext(UserContext);
   const router = useRouter();
 
-  useEffect(() => {
-    if (!authenticated) {
-      router.push("/u/login");
-    } else {
-      setUsername(user?.fullName?.split(" ")[0]);
-    }
-  }, [authenticated, router, user]);
+  // useEffect(() => {
+  //   if (!authenticated) {
+  //     router.push("/u/login");
+  //   } else {
+  //     setUsername(user?.fullName?.split(" ")[0]);
+  //   }
+  // }, [authenticated, router, user]);
 
   return (
     <div className="p-6 bg-gradient-to-r from-blue-50 to-indigo-100 min-h-screen">

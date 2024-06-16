@@ -140,7 +140,7 @@
 
 "use client";
 import { useContext, useEffect, useState } from "react";
-import { UserContext } from "../../context/UserContext";
+// import { UserContext } from "../../context/UserContext";
 import { useRouter } from "next/navigation";
 import { FiEdit, FiSave, FiX } from "react-icons/fi";
 
@@ -167,14 +167,14 @@ export default function ProfilePage() {
     ],
   });
 
-  const { authenticated } = useContext(UserContext);
+  // const { authenticated } = useContext(UserContext);
   const router = useRouter();
 
-  useEffect(() => {
-    if (!authenticated) {
-      router.push("/u/login");
-    }
-  }, [authenticated, router]);
+  // useEffect(() => {
+  //   if (!authenticated) {
+  //     router.push("/u/login");
+  //   }
+  // }, [authenticated, router]);
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing);

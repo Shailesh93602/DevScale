@@ -1,15 +1,16 @@
 "use client";
+
 import Link from "next/link";
-import { useParams, useSearchParams } from "next/navigation";
-
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { Button } from "@/components/ui/button"; // Assuming you have a Button component
 
-export default function resetPassword() {
+export default function ResetPassword() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const router = useSearchParams();
-  const token = router.get("token");
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,7 +19,7 @@ export default function resetPassword() {
       return document.getElementById("confirmPassword").focus();
 
     if (password !== confirmPassword) {
-      return console.log("passwod and confirmpassword must be same");
+      return console.log("Password and confirm password must be the same");
     } else {
       let result = await fetch("http://localhost:4000/auth/resetPassword", {
         method: "POST",
@@ -36,70 +37,57 @@ export default function resetPassword() {
       if (json.success) console.log(json);
     }
   };
+
   return (
-    <section className="bg-gray-50 ">
-      <div className="flex mb-60 flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <Link
-          href="/"
-          className="flex items-center mb-4 text-2xl font-semibold text-gray-900"
-        >
-          Mr. Engineers
-        </Link>
-        <div className="w-full  bg-light rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
-          <div className="p-6  space-y-4 md:space-y-6 sm:p-8">
-            <h1 className="text-xl flex justify-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
-              Reset Password
-            </h1>
-            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
-              <div>
-                <label
-                  htmlFor="username"
-                  className="block mb-2 text-sm font-medium text-gray-900"
-                >
-                  {" "}
-                  New password
-                </label>
-                <input
-                  type="password"
-                  name="password"
-                  id="password"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                  placeholder="*********"
-                  required=""
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="username"
-                  className="block mb-2 text-sm font-medium text-gray-900"
-                >
-                  {" "}
-                  Confirm password
-                </label>
-                <input
-                  type="password"
-                  name="confirmpassword"
-                  id="confirmpassword"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                  placeholder="*********"
-                  required=""
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-              >
-                submit
-              </button>
-            </form>
-          </div>
+    <section className="bg-gray-50 min-h-screen flex items-center justify-center">
+      <div className="max-w-md w-full bg-white shadow-lg rounded-lg p-8">
+        <div className="text-center mb-6">
+          <Link href="/" className="text-2xl font-bold text-blue-600">
+            Mr. Engineers
+          </Link>
         </div>
+        <h1 className="text-2xl font-bold text-center text-gray-900 mb-4">
+          Reset Password
+        </h1>
+        <form className="space-y-6" onSubmit={handleSubmit}>
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
+              New Password
+            </label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              placeholder="*********"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Confirm Password
+            </label>
+            <input
+              type="password"
+              name="confirmPassword"
+              id="confirmPassword"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              placeholder="*********"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+          </div>
+          <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md">
+            Submit
+          </Button>
+        </form>
       </div>
     </section>
   );
