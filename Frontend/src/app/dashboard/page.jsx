@@ -1,26 +1,16 @@
 "use client";
-import React, { useContext, useEffect, useState } from "react";
-import { FiPlayCircle } from "react-icons/fi";
-// import { UserContext } from "../../context/UserContext";
-import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import StatCard from "@/components/StatCard";
+import CourseCard from "@/components/CourseCard";
+import Section from "@/components/Section";
 
 export default function Dashboard() {
   const [username, setUsername] = useState("Loading...");
-  // const { authenticated, user } = useContext(UserContext);
-  const router = useRouter();
-
-  // useEffect(() => {
-  //   if (!authenticated) {
-  //     router.push("/u/login");
-  //   } else {
-  //     setUsername(user?.fullName?.split(" ")[0]);
-  //   }
-  // }, [authenticated, router, user]);
 
   return (
-    <div className="p-6 bg-gradient-to-r from-blue-50 to-indigo-100 min-h-screen">
+    <div className="p-6 bg-white text-gray-900">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-extrabold mb-2 text-gray-900">Welcome,</h1>
+        <h1 className="text-4xl font-extrabold mb-2">Welcome,</h1>
         <h2 className="text-5xl font-extrabold mb-8 text-indigo-700">
           {username}
         </h2>
@@ -50,7 +40,7 @@ export default function Dashboard() {
                 <li>- Scored 95% on "HTML Quiz"</li>
               </ul>
             }
-            color="purple"
+            color="red"
           />
         </div>
 
@@ -86,99 +76,6 @@ export default function Dashboard() {
     </div>
   );
 }
-
-const StatCard = ({ title, content, progress, color }) => (
-  <div
-    className={`p-6 bg-${color}-500 text-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105`}
-  >
-    <h3 className="text-xl font-semibold">{title}</h3>
-    <div className="mt-2">{content}</div>
-    {progress && (
-      <div className="mt-4">
-        <div className="h-2 bg-gray-300 rounded-full">
-          <div
-            className={`h-full bg-${color}-700 rounded-full`}
-            style={{ width: `${progress}%` }}
-          ></div>
-        </div>
-      </div>
-    )}
-  </div>
-);
-
-const Section = ({ title, children }) => (
-  <div className="mb-12">
-    <h3 className="text-3xl font-bold mb-6 text-gray-900">{title}</h3>
-    {children}
-  </div>
-);
-
-const CourseCard = ({
-  title,
-  description,
-  thumbnail,
-  chapters,
-  items,
-  completed,
-}) => (
-  <div className="relative bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 transform hover:scale-105">
-    <img
-      src={thumbnail}
-      alt="Course Thumbnail"
-      className="rounded-lg w-full mb-4 object-cover"
-    />
-    <div className="space-y-2">
-      <h4 className="text-xl font-bold text-gray-900">{title}</h4>
-      <p className="text-sm text-gray-500">{description}</p>
-      <div className="absolute top-4 right-4 flex items-center justify-center w-12 h-12 bg-indigo-600 text-white rounded-full shadow-lg">
-        <FiPlayCircle size={24} />
-      </div>
-      <ProgressCircle completed={completed} />
-    </div>
-    <div className="mt-4 flex items-center text-gray-700">
-      <span className="mr-4">{chapters} Chapters</span>
-      <span>{items} Items</span>
-    </div>
-    <div className="mt-1 text-xs text-gray-500">{completed}% Completed</div>
-  </div>
-);
-
-const ProgressCircle = ({ completed }) => {
-  const radius = 28;
-  const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (completed / 100) * circumference;
-
-  return (
-    <div className="relative mt-4 w-16 h-16">
-      <svg className="absolute inset-0 w-full h-full transform -rotate-90">
-        <circle
-          className="text-gray-300"
-          strokeWidth="4"
-          stroke="currentColor"
-          fill="transparent"
-          r={radius}
-          cx="50%"
-          cy="50%"
-        />
-        <circle
-          className="text-indigo-600"
-          strokeWidth="4"
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          strokeLinecap="round"
-          stroke="currentColor"
-          fill="transparent"
-          r={radius}
-          cx="50%"
-          cy="50%"
-        />
-      </svg>
-      <div className="absolute inset-0 flex items-center justify-center text-indigo-600">
-        {completed}%
-      </div>
-    </div>
-  );
-};
 
 const courses = [
   {

@@ -70,10 +70,10 @@ export default function Register() {
                     type="text"
                     placeholder="Enter your username"
                     id="username"
-                    className={`border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    className={`border border-gray-300 rounded-md px-3 py-2 ${
                       errors.username
-                        ? "border-red-500 focus:ring-red-500"
-                        : "border-blue-500 focus:ring-blue-500"
+                        ? "border-red-500 focus-visible:outline-red-500"
+                        : "border-blue-500 focus-visible:outline-blue-500"
                     }`}
                   />
                 )}
@@ -103,10 +103,10 @@ export default function Register() {
                     type="text"
                     placeholder="Enter your email"
                     id="email"
-                    className={`border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    className={`border border-gray-300 rounded-md px-3 py-2 ${
                       errors.email
-                        ? "border-red-500 focus:ring-red-500"
-                        : "border-blue-500 focus:ring-blue-500"
+                        ? "border-red-500 focus-visible:outline-red-500"
+                        : "border-blue-500 focus-visible:outline-blue-500"
                     }`}
                   />
                 )}
@@ -128,10 +128,10 @@ export default function Register() {
                     type="password"
                     placeholder="Enter your password"
                     id="password"
-                    className={`border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    className={`border border-gray-300 rounded-md px-3 py-2 ${
                       errors.password
-                        ? "border-red-500 focus:ring-red-500"
-                        : "border-blue-500 focus:ring-blue-500"
+                        ? "border-red-500 focus-visible:outline-red-500"
+                        : "border-blue-500 focus-visible:outline-blue-500"
                     }`}
                   />
                 )}
@@ -160,10 +160,10 @@ export default function Register() {
                     type="password"
                     placeholder="Repeat your password"
                     id="confirmPassword"
-                    className={`border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 ${
+                    className={`border border-gray-300 rounded-md px-3 py-2 ${
                       errors.confirmPassword
-                        ? "border-red-500 focus:ring-red-500"
-                        : "border-blue-500 focus:ring-blue-500"
+                        ? "border-red-500 focus-visible:outline-red-500"
+                        : "border-blue-500 focus-visible:outline-blue-500"
                     }`}
                   />
                 )}

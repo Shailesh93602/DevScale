@@ -1,8 +1,24 @@
 "use client";
 import { useEffect, useState } from "react";
+import Navbar from "../components/navbar";
+import Footer from "../components/Footer";
+import toast, { Toaster } from "react-hot-toast";
+import { usePathname } from "next/navigation";
 
 export default function App({ children }) {
   const [theme, setTheme] = useState("light");
+  const path = usePathname();
+  let showNavbar = false;
+  const routes = [
+    "/dashboard",
+    "/profile",
+    "/resources",
+    "/coding-challenges",
+    "/career-roadmap",
+    "/placement-preparation",
+    "/community",
+  ];
+  if (routes.find((route) => route === path)) showNavbar = true;
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "light";
@@ -20,13 +36,10 @@ export default function App({ children }) {
   return (
     <>
       <div>
-        <button
-          onClick={toggleTheme}
-          className="py-2 px-4 text-gray-700 hover:text-gray-900"
-        >
-          Toggle Theme
-        </button>
+        {showNavbar && <Navbar />}
+
         {children}
+        <Footer />
       </div>
     </>
   );
