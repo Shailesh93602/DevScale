@@ -1,10 +1,8 @@
 import { Inter } from "next/font/google";
-import Navbar from "../components/navbar";
-import Footer from "../components/Footer";
-import toast, { Toaster } from "react-hot-toast";
 
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import App from "./App";
 // import UserContextProvider from "../context/UserContext";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -25,13 +23,11 @@ export default function RootLayout({ children }) {
           disableTransitionOnChange
         >
           {/* <UserContextProvider> */}
-          <Navbar />
 
-          {children}
-          <Footer />
+          <App>{children}</App>
           {/* </UserContextProvider> */}
 
-          <Toaster position="top-right" />
+          {/* <Toaster position="top-right" /> */}
         </ThemeProvider>
       </body>
     </html>
