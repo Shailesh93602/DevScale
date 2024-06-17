@@ -18,7 +18,7 @@ export default function LandingPage() {
         credentials: "include",
       });
       if (response.ok) {
-        setAuthenticated(false);
+        // setAuthenticated(false);
         toast.success("Logged out successfully!");
       } else {
         toast.error("Failed to logout.");
@@ -36,7 +36,7 @@ export default function LandingPage() {
               <div className="space-y-2">
                 <h1 className="text-3xl font-blod tracking-tighter sm:text-4xl md:text-5xl lg:text-5xl/none">
                   Hello ,{" "}
-                  {authenticated ? (
+                  {false ? (
                     <span className="text-blue-800">
                       {user?._doc.fullName?.split(" ")[0]}
                     </span>
@@ -56,15 +56,15 @@ export default function LandingPage() {
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
                 <CentralizedButton
-                  href={authenticated ? "dashboard" : "/u/register"}
+                  href={false ? "dashboard" : "/u/register"}
                   icon={ArrowRight}
                   isIconRightSide
-                  text={authenticated ? "Start your journey" : "Get Started"}
+                  text={false ? "Start your journey" : "Get Started"}
                   color="info"
                   size="lg"
                   style={{ display: "flex", justifyContent: "center" }}
                 />
-                {authenticated ? (
+                {false ? (
                   <CentralizedButton
                     text="logout"
                     onClick={handleLogout}
