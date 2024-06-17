@@ -3,11 +3,10 @@ import express from "express";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import routes from "./src/routes/routes.js";
-import { connectToDatabase } from "./config/database.js";
 import cors from "cors";
 import { applyPassportStrategy } from "./src/middleware/passport.js";
+import db from "./src/config/database.js";
 
-connectToDatabase();
 config();
 const app = express();
 app.use(express.json());
@@ -26,5 +25,5 @@ applyPassportStrategy();
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
-  console.log("Server is listing on port: " + port);
+  console.log("Server is listening on port: " + port);
 });

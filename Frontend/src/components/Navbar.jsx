@@ -1,5 +1,3 @@
-// components/Navbar.js
-
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
@@ -197,7 +195,6 @@ const Navbar = () => {
                   Logout
                 </Link>
               </div>
-              )}
             </div>
           </div>
         </div>
