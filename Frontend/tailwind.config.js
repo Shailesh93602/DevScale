@@ -7,7 +7,6 @@ module.exports = {
     "./app/**/*.{js,jsx}",
     "./src/**/*.{js,jsx}",
   ],
-  prefix: "",
   theme: {
     container: {
       center: true,
@@ -19,8 +18,8 @@ module.exports = {
     extend: {
       colors: {
         light: {
-          light: "white",
-          dark: "black",
+          light: "#ffffff",
+          dark: "#000000",
           background: "hsl(0 0% 100%)",
           foreground: "hsl(0 0% 3.9%)",
           primary: "hsl(0 0% 9%)",
@@ -33,8 +32,8 @@ module.exports = {
           ring: "hsl(0 0% 3.9%)",
         },
         dark: {
-          light: "black",
-          dark: "white",
+          light: "#000000",
+          dark: "#ffffff",
           background: "hsl(0 0% 3.9%)",
           foreground: "hsl(0 0% 98%)",
           primary: "hsl(0 0% 98%)",

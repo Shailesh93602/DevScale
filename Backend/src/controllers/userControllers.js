@@ -1,4 +1,8 @@
-import UserInfo from "../models/userInfoModels.js";
+import {
+  insertUserInfo,
+  findUserInfoByEmail,
+  updateUserInfoByEmail,
+} from "../models/userInfoModels.js";
 import { logger } from "../helpers/logger.js";
 
 export const insertProfile = async (req, res) => {
@@ -27,9 +31,11 @@ export const insertProfile = async (req, res) => {
       !branch ||
       !semester
     )
-      res.status(300).json({ success: false, message: "Invalid payload" });
+      return res
+        .status(300)
+        .json({ success: false, message: "Invalid payload" });
 
-    const userInfo = new UserInfo({
+    const userInfo = {
       fullName,
       dob,
       gender,
@@ -40,13 +46,20 @@ export const insertProfile = async (req, res) => {
       college,
       branch,
       semester,
-    });
+    };
 
-    const result = await userInfo.save();
-    const data = await result.toJSON();
-    res
-      .status(201)
-      .json({ success: true, message: "User inserted Successfully!" });
+    insertUserInfo(userInfo, (err, result) => {
+      if (err) {
+        logger.error(err);
+        return res
+          .status(500)
+          .json({ success: false, message: "Error adding user" });
+      }
+
+      res
+        .status(201)
+        .json({ success: true, message: "User inserted Successfully!" });
+    });
   } catch (error) {
     logger.error(error);
     res.status(500).json({ success: false, message: "Error adding user" });
@@ -56,15 +69,15 @@ export const insertProfile = async (req, res) => {
 export const getProfile = async (req, res) => {
   try {
     const email = req.user.email;
-    const userInfo = await UserInfo.findOne({ email });
-    if (!userInfo) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
-    }
+    findUserInfoByEmail(email, (err, userInfo) => {
+      if (err || !userInfo) {
+        return res
+          .status(404)
+          .json({ success: false, message: "User not found" });
+      }
 
-    const user = { ...userInfo, email: email };
-    res.status(200).json({ success: true, userInfo: user });
+      res.status(200).json({ success: true, userInfo });
+    });
   } catch (error) {
     logger.error(error);
     res.status(500).json({ success: false, message: "Internal server error" });
@@ -74,21 +87,17 @@ export const getProfile = async (req, res) => {
 export const updateProfile = async (req, res) => {
   try {
     const email = req.user.email;
-
     const { name } = req.body;
-    const updatedUser = await UserInfo.findOneAndUpdate(
-      { email },
-      { $set: { name } },
-      { returnOriginal: false }
-    );
 
-    if (!updatedUser.value) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
-    }
+    updateUserInfoByEmail(email, { name }, (err, result) => {
+      if (err || result.affectedRows === 0) {
+        return res
+          .status(404)
+          .json({ success: false, message: "User not found" });
+      }
 
-    res.status(200).json({ success: true, name });
+      res.status(200).json({ success: true, name });
+    });
   } catch (error) {
     logger.error(error);
     res.status(500).json({ success: false, message: "Internal server error" });
