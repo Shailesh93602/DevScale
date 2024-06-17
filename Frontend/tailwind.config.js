@@ -19,6 +19,8 @@ module.exports = {
     extend: {
       colors: {
         light: {
+          light: "white",
+          dark: "black",
           background: "hsl(0 0% 100%)",
           foreground: "hsl(0 0% 3.9%)",
           primary: "hsl(0 0% 9%)",
@@ -31,6 +33,8 @@ module.exports = {
           ring: "hsl(0 0% 3.9%)",
         },
         dark: {
+          light: "black",
+          dark: "white",
           background: "hsl(0 0% 3.9%)",
           foreground: "hsl(0 0% 98%)",
           primary: "hsl(0 0% 98%)",
@@ -42,6 +46,8 @@ module.exports = {
           input: "hsl(0 0% 14.9%)",
           ring: "hsl(0 0% 83.1%)",
         },
+        dark: "var(--dark)",
+        light: "var(--light)",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
