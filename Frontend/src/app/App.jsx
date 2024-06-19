@@ -17,6 +17,7 @@ export default function App({ children }) {
     "/career-roadmap",
     "/placement-preparation",
     "/community",
+    "/Achivement"
   ];
   if (routes.find((route) => route === path)) showNavbar = true;
 
