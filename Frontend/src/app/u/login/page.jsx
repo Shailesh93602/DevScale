@@ -43,7 +43,7 @@ export default function Login() {
   };
 
   return (
-    <section className="bg-gray-50 min-h-screen flex items-center justify-center">
+    <section className="bg-gray-100 min-h-screen flex items-center justify-center">
       <Toast />
       <div className="max-w-md w-full bg-white shadow-lg rounded-lg p-8">
         <div className="text-center mb-6">
@@ -54,9 +54,9 @@ export default function Login() {
         <h1 className="text-2xl font-bold text-center text-gray-900 mb-4">
           Login
         </h1>
-        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex flex-col gap-4">
-            <div className="grid gap-1.5">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <div className="grid gap-4">
+            <div>
               <Label htmlFor="username">Username or Email</Label>
               <Controller
                 name="username"
@@ -69,21 +69,18 @@ export default function Login() {
                     type="text"
                     placeholder="Enter your username or Email"
                     id="username"
-                    className={`border border-gray-300 rounded-md px-3 py-2 ${
-                      errors.username
-                        ? "border-red-500 focus-visible:outline-red-500"
-                        : "border-blue-500 focus-visible:outline-blue-500"
-                    }`}
+                    className={`border border-gray-300 rounded-md px-3 py-2 focus:outline-none ${errors.username ? "border-red-500" : "focus:border-blue-500"
+                      }`}
                   />
                 )}
               />
               {errors.username && (
-                <p className="text-red-500 text-sm">
+                <p className="text-red-500 text-sm mt-1">
                   {errors.username.message}
                 </p>
               )}
             </div>
-            <div className="grid gap-1.5">
+            <div>
               <Label htmlFor="password">Password</Label>
               <Controller
                 name="password"
@@ -96,31 +93,25 @@ export default function Login() {
                     type="password"
                     placeholder="Enter your password"
                     id="password"
-                    className={`border border-gray-300 rounded-md px-3 py-2 ${
-                      errors.password
-                        ? "border-red-500 focus-visible:outline-red-500"
-                        : "border-blue-500 focus-visible:outline-blue-500"
-                    }`}
+                    className={`border border-gray-300 rounded-md px-3 py-2 focus:outline-none ${errors.password ? "border-red-500" : "focus:border-blue-500"
+                      }`}
                   />
                 )}
               />
               {errors.password && (
-                <p className="text-red-500 text-sm">
+                <p className="text-red-500 text-sm mt-1">
                   {errors.password.message}
                 </p>
               )}
             </div>
-            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white transition duration-300 ease-in-out">
               Login
             </Button>
           </div>
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-gray-500 mt-4">
             <p>
               Don't have an account?{" "}
-              <Link
-                href="/u/register"
-                className="text-blue-600 hover:underline"
-              >
+              <Link href="/u/register" className="text-blue-600 hover:underline">
                 Create one
               </Link>
             </p>
@@ -137,5 +128,6 @@ export default function Login() {
         </form>
       </div>
     </section>
+
   );
 }
