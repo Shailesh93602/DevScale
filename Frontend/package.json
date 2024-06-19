@@ -42,6 +42,7 @@
     "react-tooltip": "^5.26.4",
     "react-vertical-timeline-component": "^3.6.0",
     "reactstrap": "^9.2.2",
+    "recharts": "^2.12.7",
     "saas": "^1.0.0",
     "swiper": "^11.1.4",
     "tailwind-merge": "^2.3.0",
