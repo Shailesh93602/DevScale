@@ -40,7 +40,7 @@ export default function Dashboard() {
                 <li>- Scored 95% on "HTML Quiz"</li>
               </ul>
             }
-            color="red"
+            color="blue"
           />
         </div>
 

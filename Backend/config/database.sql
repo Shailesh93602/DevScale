@@ -1,0 +1,23 @@
+CREATE DATABASE mr_engineers;
+use mr_engineers;
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE user_info (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  fullName VARCHAR(255) NOT NULL,
+  dob DATE NOT NULL,
+  gender VARCHAR(50) NOT NULL,
+  mobile VARCHAR(20) NOT NULL,
+  whatsapp VARCHAR(20),
+  address TEXT NOT NULL,
+  university VARCHAR(255) NOT NULL,
+  college VARCHAR(255) NOT NULL,
+  branch VARCHAR(255) NOT NULL,
+  semester INT NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL
+);

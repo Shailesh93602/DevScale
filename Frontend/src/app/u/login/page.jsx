@@ -33,6 +33,7 @@ export default function Login() {
     let json = await result.json();
     if (json.success) {
       showToast("Logged In Successfully!", "success");
+      console.log(json);
       setTimeout(() => {
         router.push(json.route);
       }, 2000);

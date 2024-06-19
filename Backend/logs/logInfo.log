@@ -50,3 +50,5 @@
 [2024-06-17 09:36:45.407 PM] error: MongooseError: Operation `users.findOne()` buffering timed out after 10000ms
 [2024-06-17 09:36:51.050 PM] error: MongooseError: Operation `users.findOne()` buffering timed out after 10000ms
 [2024-06-17 09:37:21.547 PM] error: MongooseError: Operation `users.findOne()` buffering timed out after 10000ms
+[2024-06-18 10:03:49.993 PM] error: Error: Field 'email' doesn't have a default value
+[2024-06-18 10:03:52.217 PM] error: Error: Field 'email' doesn't have a default value
