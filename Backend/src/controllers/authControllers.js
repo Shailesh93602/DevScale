@@ -11,8 +11,34 @@ import { validationResult } from "express-validator";
 import { config } from "dotenv";
 import { logger } from "../helpers/logger.js";
 import validator from "email-validator";
+import { findUserInfoByEmail } from "../models/userInfoModels.js";
 
 config();
+
+const checkUserDetailsFilled = async (email) => {
+  try {
+    findUserInfoByEmail(email, (err, userInfo) => {
+      if (err) {
+        logger.error("Error checking user details:", err);
+        return false;
+      }
+      if (
+        userInfo &&
+        userInfo.fullName &&
+        userInfo.dob &&
+        userInfo.gender &&
+        userInfo.mobile &&
+        userInfo.address
+      ) {
+        return true;
+      }
+      return false;
+    });
+  } catch (error) {
+    logger.error("Error checking user details:", error);
+    return false;
+  }
+};
 
 const sendResetEmail = async (email, resetLink) => {
   try {
@@ -119,10 +145,13 @@ export const login = async (req, res) => {
           httpOnly: true,
           maxAge: 24 * 60 * 60 * 1000,
         });
-
-        res
-          .status(200)
-          .json({ success: true, message: "Logged in successfully!" });
+        const userDetailsFilled = await checkUserDetailsFilled(user.email);
+        const route = userDetailsFilled ? "/dashboard" : "/u/details";
+        res.status(200).json({
+          success: true,
+          message: "Logged in successfully!",
+          route,
+        });
       });
     } else {
       findUserByUsername(username, async (err, result) => {
@@ -150,9 +179,13 @@ export const login = async (req, res) => {
           maxAge: 24 * 60 * 60 * 1000,
         });
 
-        res
-          .status(200)
-          .json({ success: true, message: "Logged in successfully!" });
+        const userDetailsFilled = await checkUserDetailsFilled(user.email);
+        const route = userDetailsFilled ? "/dashboard" : "/u/details";
+        res.status(200).json({
+          success: true,
+          message: "Logged in successfully!",
+          route,
+        });
       });
     }
   } catch (error) {

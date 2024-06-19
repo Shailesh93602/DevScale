@@ -87,16 +87,40 @@ export const getProfile = async (req, res) => {
 export const updateProfile = async (req, res) => {
   try {
     const email = req.user.email;
-    const { name } = req.body;
+    const {
+      fullName,
+      dob,
+      gender,
+      mobile,
+      whatsapp,
+      address,
+      university,
+      college,
+      branch,
+      semester,
+    } = req.body;
 
-    updateUserInfoByEmail(email, { name }, (err, result) => {
+    const userInfo = {
+      fullName,
+      dob,
+      gender,
+      mobile,
+      whatsapp,
+      address,
+      university,
+      college,
+      branch,
+      semester,
+    };
+
+    updateUserInfoByEmail(email, userInfo, (err, result) => {
       if (err || result.affectedRows === 0) {
         return res
           .status(404)
           .json({ success: false, message: "User not found" });
       }
 
-      res.status(200).json({ success: true, name });
+      res.status(200).json({ success: true, userInfo });
     });
   } catch (error) {
     logger.error(error);

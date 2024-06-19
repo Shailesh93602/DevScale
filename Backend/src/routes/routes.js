@@ -12,6 +12,7 @@ import courseRoutes from "./courseRoutes.js";
 import battleRoutes from "./battleRoutes.js";
 import passport from "passport";
 import { isAlreadyLoggedIn } from "../middleware/isAlreadyLoggedIn.js";
+import { codeRunner } from "../controllers/codeRunnerController.js";
 
 const router = express.Router();
 
@@ -95,5 +96,7 @@ router.use(
   }),
   battleRoutes
 );
+
+router.post("/run-code", codeRunner);
 
 export default router;
