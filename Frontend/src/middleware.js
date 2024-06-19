@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 
 const protectedPages = [
-  "/dashboard",
-  "/profile",
-  "/resources",
-  "/coding-challenges",
-  "/career-roadmap",
-  "/placement-preparation",
-  "/community",
+  // "/dashboard",
+  // "/profile",
+  // "/resources",
+  // "/coding-challenges",
+  // "/career-roadmap",
+  // "/placement-preparation",
+  // "/community",
 ];
 
 export async function middleware(req) {
