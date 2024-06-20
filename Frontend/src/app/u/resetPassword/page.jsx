@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { useForm, Controller } from "react-hook-form";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Suspense } from "react";
 
-export default function ResetPassword() {
+function ResetPasswordForm() {
   const {
     control,
     handleSubmit,
@@ -25,7 +26,7 @@ export default function ResetPassword() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify({ ...data, token }),
       credentials: "include",
     });
     console.log(result);
@@ -44,7 +45,7 @@ export default function ResetPassword() {
         <h1 className="text-2xl font-bold text-center text-gray-900 mb-4">
           Reset Password
         </h1>
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div className="grid gap-1.5">
             <Label htmlFor="password">Password</Label>
             <Controller
@@ -107,5 +108,13 @@ export default function ResetPassword() {
         </form>
       </div>
     </section>
+  );
+}
+
+export default function ResetPassword() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ResetPasswordForm />
+    </Suspense>
   );
 }
