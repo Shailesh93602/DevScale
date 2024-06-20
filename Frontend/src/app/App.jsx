@@ -17,9 +17,15 @@ export default function App({ children }) {
     "/career-roadmap",
     "/placement-preparation",
     "/community",
-    "/Achivement"
+    "/Achivement",
   ];
-  if (routes.find((route) => route === path)) showNavbar = true;
+  if (
+    routes.find(
+      (route) =>
+        route === path || path.slice(0, path.lastIndexOf("/")) === route
+    )
+  )
+    showNavbar = true;
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "light";
