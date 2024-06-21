@@ -26,6 +26,8 @@ export default function ProfilePage() {
     ],
   });
 
+  // const [profileImage, setProfileImage] = useState(null);
+
   const [profileImage, setProfileImage] = useState(null);
 
   const handleEditToggle = () => {
@@ -42,16 +44,18 @@ export default function ProfilePage() {
     setIsEditing(false);
   };
 
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setProfileImage(reader.result);
-      };
+      }
       reader.readAsDataURL(file);
     }
-  };
+  }
+
 
   return (
     <div className="container mx-auto p-4">
@@ -94,7 +98,7 @@ export default function ProfilePage() {
         </div>
 
         <div className="mt-6">
-          <h2 className="text-lg font-semibold text-gray-900">Bio</h2>
+          <h2 className="text-lg font-semibold text-blue-900">Bio</h2>
           {isEditing ? (
             <textarea
               name="bio"
@@ -109,7 +113,7 @@ export default function ProfilePage() {
 
         <div className={`mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 ${styles.infoGrid}`}>
           <div className={styles.infoSection}>
-            <h2 className="text-lg font-semibold text-gray-900">
+            <h2 className="text-lg font-semibold text-blue-900">
               Personal Information
             </h2>
             {renderInput(
@@ -149,7 +153,7 @@ export default function ProfilePage() {
             )}
           </div>
           <div className={styles.infoSection}>
-            <h2 className="text-lg font-semibold text-gray-900">
+            <h2 className="text-lg font-semibold text-blue-900">
               Academic Information
             </h2>
             {renderInput(
@@ -184,7 +188,7 @@ export default function ProfilePage() {
         </div>
 
         <div className={styles.achivementsection}>
-          <h2 className="text-lg font-semibold text-gray-900">Achievements</h2>
+          <h2 className="text-lg font-semibold text-blue-900">Achievements</h2>
           {isEditing ? (
             <textarea
               name="achievements"
