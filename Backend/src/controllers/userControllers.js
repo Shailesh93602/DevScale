@@ -36,6 +36,7 @@ export const insertProfile = async (req, res) => {
         .json({ success: false, message: "Invalid payload" });
 
     const userInfo = {
+      id: req.user.id,
       fullName,
       dob,
       gender,

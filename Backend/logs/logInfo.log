@@ -53,3 +53,10 @@
 [2024-06-18 10:03:49.993 PM] error: Error: Field 'email' doesn't have a default value
 [2024-06-18 10:03:52.217 PM] error: Error: Field 'email' doesn't have a default value
 [2024-06-19 09:55:10.202 PM] error: Error: Field 'email' doesn't have a default value
+[2024-06-21 07:50:51.570 AM] error: Error: Field 'email' doesn't have a default value
+[2024-06-21 07:50:53.526 AM] error: Error: Field 'email' doesn't have a default value
+[2024-06-21 07:58:20.709 AM] error: Error: Field 'user_id' doesn't have a default value
+[2024-06-21 07:58:28.387 AM] error: Error: Field 'user_id' doesn't have a default value
+[2024-06-21 07:58:48.857 AM] error: Error: Field 'user_id' doesn't have a default value
+[2024-06-21 07:59:41.904 AM] error: Error: Column count doesn't match value count at row 1
+[2024-06-21 08:00:22.156 AM] error: Error: Column count doesn't match value count at row 1

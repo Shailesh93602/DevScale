@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import App from "./App";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // import UserContextProvider from "../context/UserContext";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -22,6 +24,7 @@ export default function RootLayout({ children }) {
           enableSystem
           disableTransitionOnChange
         >
+          <ToastContainer />
           {/* <UserContextProvider> */}
 
           <App>{children}</App>
