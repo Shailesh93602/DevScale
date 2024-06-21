@@ -1,133 +1,162 @@
 "use client";
-
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import Toast, { showToast } from "../../../components/Toast";
 import { Button } from "@/components/ui/button";
-import { Controller, useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
-export default function Login() {
+const formSchema = yup.object({
+  username: yup
+    .string()
+    .trim()
+    .required("Username is required")
+    .min(2, "Username must be at least 2 characters."),
+  email: yup
+    .string()
+    .trim()
+    .required("Email is required")
+    .email("Please enter a valid email address"),
+  password: yup
+    .string()
+    .trim()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters"),
+  confirmPassword: yup
+    .string()
+    .trim()
+    .required("Confirm Password is required")
+    .oneOf([yup.ref("password"), null], "Passwords do not match"),
+});
+
+export default function Register() {
   const {
-    control,
+    register,
     handleSubmit,
-    getValues,
     formState: { errors },
-  } = useForm({ mode: "onTouched" });
+  } = useForm({
+    resolver: yupResolver(formSchema),
+    mode: "onTouched",
+  });
 
   const router = useRouter();
 
   const onSubmit = async (data) => {
-    console.log(data);
-
-    let result = await fetch("http://localhost:4000/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-      credentials: "include",
-    });
-    let json = await result.json();
-    if (json.success) {
-      showToast("Logged In Successfully!", "success");
-      console.log(json);
-      setTimeout(() => {
-        router.push(json.route);
-      }, 2000);
-    } else {
-      toast.error(json.message);
+    try {
+      const response = await fetch("http://localhost:4000/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+        credentials: "include",
+      });
+      const json = await response.json();
+      if (json.success) {
+        showToast("Registered Successfully!", "success");
+        setTimeout(() => {
+          router.push("/u/login");
+        }, 2000);
+      } else {
+        toast.error(json.message);
+      }
+    } catch (error) {
+      console.error("Registration failed:", error);
+      toast.error("Registration failed. Please try again later.");
     }
   };
 
   return (
-    <section className="bg-gray-100 min-h-screen flex items-center justify-center">
+    <section className="min-h-screen flex items-center justify-center py-12 bg-background text-foreground transition duration-300 ease-in-out">
       <Toast />
-      <div className="max-w-md w-full bg-white shadow-lg rounded-lg p-8">
-        <div className="text-center mb-6">
-          <Link href="/" className="text-2xl font-bold text-blue-600">
+      <div className="w-full max-w-lg bg-card shadow-lg rounded-lg p-10 dark:bg-gray-800">
+        <div className="text-center mb-8">
+          <Link
+            href="/"
+            className="text-4xl font-extrabold text-custom-color-light dark:text-custom-color-dark"
+          >
             Mr. Engineers
           </Link>
         </div>
-        <h1 className="text-2xl font-bold text-center text-gray-900 mb-4">
-          Login
+        <h1 className="text-3xl font-semibold text-center mb-6 dark:text-gray-100">
+          Create Your Account
         </h1>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <div className="grid gap-4">
-            <div>
-              <Label htmlFor="username">Username or Email</Label>
-              <Controller
-                name="username"
-                control={control}
-                defaultValue=""
-                rules={{ required: "Username or Email is required." }}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    type="text"
-                    placeholder="Enter your username or Email"
-                    id="username"
-                    className={`border border-gray-300 rounded-md px-3 py-2 focus:outline-none ${errors.username ? "border-red-500" : "focus:border-blue-500"
-                      }`}
-                  />
-                )}
-              />
-              {errors.username && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.username.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <Label htmlFor="password">Password</Label>
-              <Controller
-                name="password"
-                control={control}
-                defaultValue=""
-                rules={{ required: "Password is required." }}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    type="password"
-                    placeholder="Enter your password"
-                    id="password"
-                    className={`border border-gray-300 rounded-md px-3 py-2 focus:outline-none ${errors.password ? "border-red-500" : "focus:border-blue-500"
-                      }`}
-                  />
-                )}
-              />
-              {errors.password && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.password.message}
-                </p>
-              )}
-            </div>
-            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white transition duration-300 ease-in-out">
-              Login
-            </Button>
-          </div>
-          <div className="text-sm text-gray-500 mt-4">
+        <Form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <FormItem>
+            <FormLabel>Username</FormLabel>
+            <Input
+              type="text"
+              placeholder="Enter your username"
+              {...register("username")}
+              className="form-input"
+            />
+            {errors.username && (
+              <FormMessage>{errors.username.message}</FormMessage>
+            )}
+          </FormItem>
+          <FormItem>
+            <FormLabel>Email</FormLabel>
+            <Input
+              type="email"
+              placeholder="Enter your email"
+              {...register("email")}
+              className="form-input"
+            />
+            {errors.email && <FormMessage>{errors.email.message}</FormMessage>}
+          </FormItem>
+          <FormItem>
+            <FormLabel>Password</FormLabel>
+            <Input
+              type="password"
+              placeholder="Create a password"
+              {...register("password")}
+              className="form-input"
+            />
+            {errors.password && (
+              <FormMessage>{errors.password.message}</FormMessage>
+            )}
+          </FormItem>
+          <FormItem>
+            <FormLabel>Confirm Password</FormLabel>
+            <Input
+              type="password"
+              placeholder="Confirm your password"
+              {...register("confirmPassword")}
+              className="form-input"
+            />
+            {errors.confirmPassword && (
+              <FormMessage>{errors.confirmPassword.message}</FormMessage>
+            )}
+          </FormItem>
+          <Button
+            type="submit"
+            className="w-full py-3 mt-4 bg-custom-color-light text-white hover:bg-custom-color-dark transition duration-200 ease-in-out"
+          >
+            Register
+          </Button>
+          <div className="text-center mt-4 text-sm text-muted-foreground dark:text-gray-400">
             <p>
-              Don't have an account?{" "}
-              <Link href="/u/register" className="text-blue-600 hover:underline">
-                Create one
-              </Link>
-            </p>
-            <p>
-              Forgot password?{" "}
+              Already have an account?{" "}
               <Link
-                href="/u/forgotPassword"
-                className="text-blue-600 hover:underline"
+                href="/u/login"
+                className="text-custom-color-light hover:underline dark:text-custom-color-dark"
               >
-                Click here
+                Login here
               </Link>
             </p>
           </div>
-        </form>
+        </Form>
       </div>
     </section>
-
   );
 }

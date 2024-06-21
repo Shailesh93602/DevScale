@@ -16,7 +16,7 @@ import { codeRunner } from "../controllers/codeRunnerController.js";
 
 const router = express.Router();
 
-router.use("/auth", isAlreadyLoggedIn, authRoutes);
+router.use("/auth", authRoutes);
 router.use(
   "/profile",
   passport.authenticate("jwt", {
