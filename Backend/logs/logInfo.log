@@ -60,3 +60,6 @@
 [2024-06-21 07:58:48.857 AM] error: Error: Field 'user_id' doesn't have a default value
 [2024-06-21 07:59:41.904 AM] error: Error: Column count doesn't match value count at row 1
 [2024-06-21 08:00:22.156 AM] error: Error: Column count doesn't match value count at row 1
+[2024-06-22 07:27:29.408 PM] error: Error: Column 'whatsapp' cannot be null
+[2024-06-22 07:27:33.497 PM] error: Error: Column 'whatsapp' cannot be null
+[2024-06-22 07:46:21.029 PM] error: ReferenceError: re is not defined

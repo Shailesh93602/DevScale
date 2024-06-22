@@ -1,7 +1,7 @@
 import {
   insertUserInfo,
-  findUserInfoByEmail,
-  updateUserInfoByEmail,
+  findUserInfoByUserId,
+  updateUserInfoByUserId,
 } from "../models/userInfoModels.js";
 import { logger } from "../helpers/logger.js";
 
@@ -24,7 +24,6 @@ export const insertProfile = async (req, res) => {
       !dob ||
       !gender ||
       !mobile ||
-      !whatsapp ||
       !address ||
       !university ||
       !college ||
@@ -32,26 +31,26 @@ export const insertProfile = async (req, res) => {
       !semester
     )
       return res
-        .status(300)
+        .status(400)
         .json({ success: false, message: "Invalid payload" });
 
-    const userInfo = {
-      id: req.user.id,
+    const userInfo = [
+      req.user.id,
       fullName,
       dob,
       gender,
       mobile,
-      whatsapp,
+      whatsapp || mobile,
       address,
       university,
       college,
       branch,
       semester,
-    };
+    ];
 
     insertUserInfo(userInfo, (err, result) => {
       if (err) {
-        logger.error(err);
+        console.log(err);
         return res
           .status(500)
           .json({ success: false, message: "Error adding user" });
@@ -62,6 +61,7 @@ export const insertProfile = async (req, res) => {
         .json({ success: true, message: "User inserted Successfully!" });
     });
   } catch (error) {
+    console.log(error);
     logger.error(error);
     res.status(500).json({ success: false, message: "Error adding user" });
   }
@@ -69,14 +69,15 @@ export const insertProfile = async (req, res) => {
 
 export const getProfile = async (req, res) => {
   try {
-    const email = req.user.email;
-    findUserInfoByEmail(email, (err, userInfo) => {
+    const userId = req.user.id;
+    findUserInfoByUserId(userId, (err, userInfo) => {
       if (err || !userInfo) {
         return res
-          .status(404)
+          .status(400)
           .json({ success: false, message: "User not found" });
       }
-
+      userInfo.dob = userInfo.dob.toISOString().slice(0, 10);
+      userInfo.achievements = userInfo.achievements?.split(",");
       res.status(200).json({ success: true, userInfo });
     });
   } catch (error) {
@@ -87,7 +88,7 @@ export const getProfile = async (req, res) => {
 
 export const updateProfile = async (req, res) => {
   try {
-    const email = req.user.email;
+    const userId = req.user.id;
     const {
       fullName,
       dob,
@@ -99,7 +100,9 @@ export const updateProfile = async (req, res) => {
       college,
       branch,
       semester,
+      bio,
     } = req.body;
+    let achievements = req.body.achievements.join(",");
 
     const userInfo = {
       fullName,
@@ -112,12 +115,15 @@ export const updateProfile = async (req, res) => {
       college,
       branch,
       semester,
+      bio,
+      achievements,
     };
 
-    updateUserInfoByEmail(email, userInfo, (err, result) => {
+    updateUserInfoByUserId(userId, userInfo, (err, result) => {
+      console.log(err, result);
       if (err || result.affectedRows === 0) {
         return res
-          .status(404)
+          .status(400)
           .json({ success: false, message: "User not found" });
       }
 

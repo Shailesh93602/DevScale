@@ -25,7 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const formSchema = yup.array().of(
+const formSchema = [
   yup.object().shape({
     fullName: yup.string().required("Full Name is required."),
     dob: yup.date().required("Date of Birth is required."),
@@ -37,12 +37,14 @@ const formSchema = yup.array().of(
     address: yup.string().required("Address is required."),
   }),
   yup.object().shape({
-    university: yup.string(),
-    college: yup.string(),
-    branch: yup.string(),
-    semester: yup.number(),
-  })
-);
+    university: yup.string().required("University Name is required."),
+    college: yup.string().required("College Name is required."),
+    branch: yup.string().required("Branch Name is required"),
+    semester: yup
+      .number("Semester must be a number")
+      .required("Semester Name is required"),
+  }),
+];
 
 const Step1 = ({ control, errors }) => (
   <div>
@@ -88,7 +90,7 @@ const Step1 = ({ control, errors }) => (
           <Select onValueChange={field.onChange} defaultValue={field.value}>
             <FormControl>
               <SelectTrigger>
-                <SelectValue placeholder="Select a verified email to display" />
+                <SelectValue placeholder="Select you gender" />
               </SelectTrigger>
             </FormControl>
             <SelectContent>
@@ -216,6 +218,10 @@ export default function Details() {
   const router = useRouter();
 
   const onSubmit = async (data) => {
+    if (step < 3) {
+      setStep(step + 1);
+      return;
+    }
     const response = await fetch("http://localhost:4000/profile/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -223,10 +229,12 @@ export default function Details() {
       credentials: "include",
     });
     const result = await response.json();
-    if (result) {
+    if (result.success) {
       localStorage.setItem("user", JSON.stringify(result.user));
       toast.success("Registered Successfully!", { autoClose: 1500 });
       router.push("/dashboard");
+    } else {
+      toast.error(result.message, { autoClose: 1500 });
     }
   };
 
@@ -252,34 +260,26 @@ export default function Details() {
             {step === 2 && <Step2 control={form.control} />}
             {step === 3 && <Step3 control={form.control} />}
 
-            <div className="flex justify-between mt-4">
+            <div
+              className={`flex w-full mt-4 ${
+                step == 1 ? "justify-end" : "justify-between"
+              }`}
+            >
               {step > 1 && (
                 <Button
                   type="button"
-                  variant="outline"
+                  className="w-max py-3 mt-4 bg-blue-600 text-white hover:bg-blue-700 transition duration-200 ease-in-out"
                   onClick={() => setStep(step - 1)}
                 >
                   Previous
                 </Button>
               )}
-              {step < 3 ? (
-                <Button
-                  className="w-full py-3 mt-4 bg-blue-600 text-white hover:bg-blue-700 transition duration-200 ease-in-out"
-                  onClick={async () => {
-                    const isValid = await form.trigger();
-                    if (isValid) setStep(step + 1);
-                  }}
-                >
-                  Next
-                </Button>
-              ) : (
-                <Button
-                  type="submit"
-                  className="w-full py-3 mt-4 bg-blue-600 text-white hover:bg-blue-700 transition duration-200 ease-in-out"
-                >
-                  Submit
-                </Button>
-              )}
+              <Button
+                type="submit"
+                className="w-max py-3 mt-4 bg-blue-600 text-white hover:bg-blue-700 transition duration-200 ease-in-out"
+              >
+                {step < 3 ? "Next" : "Submit"}
+              </Button>
             </div>
           </form>
         </Form>

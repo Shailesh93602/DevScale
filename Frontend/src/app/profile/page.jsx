@@ -1,34 +1,50 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FiEdit, FiSave, FiX } from "react-icons/fi";
 import styles from "./ProfilePage.module.css";
+import { toast } from "react-toastify";
 
 export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [userInfo, setUserInfo] = useState({
-    fullName: "Shailesh Chaudhari",
-    dob: "1990-01-01",
-    gender: "Male",
-    mobile: "1234567890",
-    whatsapp: "0987654321",
-    address: "123 Main Street",
-    university: "Tech University",
-    college: "Engineering College",
-    branch: "Computer Science",
-    semester: 6,
-    email: "shailesh@mrengineers.com",
-    bio: "Aspiring software engineer with a passion for coding and technology.",
-    profilePicture: "https://via.placeholder.com/150",
-    achievements: [
-      "Solved 500+ Problems on Code Chef",
-      "Institute rank II on GFG",
-      "5* in C++ on Hackerrank",
-    ],
+    fullName: "",
+    dob: "",
+    gender: "",
+    mobile: "",
+    whatsapp: "",
+    address: "",
+    university: "",
+    college: "",
+    branch: "",
+    semester: "",
+    email: "",
+    bio: "",
+    profilePicture: "",
+    achievements: [],
   });
-
-  // const [profileImage, setProfileImage] = useState(null);
-
   const [profileImage, setProfileImage] = useState(null);
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const response = await fetch("http://localhost:4000/profile", {
+          method: "GET",
+          credentials: "include",
+        });
+        const data = await response.json();
+        if (data.success) {
+          let { achievements, ...otherDetails } = data.userInfo;
+          if (!achievements) achievements = [];
+          setUserInfo({ ...otherDetails, achievements });
+        } else toast.error(json.message);
+      } catch (error) {
+        toast.success(error.message);
+        console.error("Error fetching user info:", error);
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
@@ -39,11 +55,26 @@ export default function ProfilePage() {
     setUserInfo((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    try {
+      const response = await fetch("http://localhost:4000/profile/update", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userInfo),
+        credentials: "include",
+      });
 
-    setIsEditing(false);
+      const data = await response.json();
+      if (data.success) {
+        toast.success("Profile Updated Successfully!");
+        setIsEditing(false);
+      } else toast.error(data.message);
+    } catch (error) {
+      console.error("Error saving user info:", error);
+    }
   };
-
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -51,11 +82,11 @@ export default function ProfilePage() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setProfileImage(reader.result);
-      }
+        setUserInfo((prev) => ({ ...prev, profilePicture: reader.result }));
+      };
       reader.readAsDataURL(file);
     }
-  }
-
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -79,7 +110,7 @@ export default function ProfilePage() {
               </div>
             )}
           </label>
-          <div className='mt-5'>
+          <div className="mt-5">
             {isEditing ? (
               <input
                 type="text"
@@ -111,7 +142,9 @@ export default function ProfilePage() {
           )}
         </div>
 
-        <div className={`mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 ${styles.infoGrid}`}>
+        <div
+          className={`mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 ${styles.infoGrid}`}
+        >
           <div className={styles.infoSection}>
             <h2 className="text-lg font-semibold text-blue-900">
               Personal Information
@@ -119,7 +152,7 @@ export default function ProfilePage() {
             {renderInput(
               "Date of Birth",
               "dob",
-              userInfo.dob,
+              userInfo.dob?.slice(0, 10),
               handleChange,
               isEditing
             )}
@@ -258,4 +291,3 @@ const renderInput = (label, name, value, onChange, isEditing) => (
     )}
   </div>
 );
-
