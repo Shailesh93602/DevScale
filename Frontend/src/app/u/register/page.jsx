@@ -62,7 +62,7 @@ export default function Register() {
       if (json.success) {
         toast.success("Registered Successfully!");
         setTimeout(() => {
-          router.push("u/login");
+          router.push("/u/login");
         }, 1000);
       } else {
         toast.error(json.message);

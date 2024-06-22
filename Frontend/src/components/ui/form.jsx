@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { Controller, FormProvider, useFormContext } from "react-hook-form";
+
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 
@@ -19,19 +20,15 @@ const FormField = ({ ...props }) => {
 const useFormField = () => {
   const fieldContext = React.useContext(FormFieldContext);
   const itemContext = React.useContext(FormItemContext);
-  const formMethods = useFormContext();
-
   const { getFieldState, formState } = useFormContext();
+
+  const fieldState = getFieldState(fieldContext.name, formState);
 
   if (!fieldContext) {
     throw new Error("useFormField should be used within <FormField>");
   }
 
-  const fieldState = formMethods.getFieldState
-    ? formMethods.getFieldState(fieldContext.name)
-    : undefined;
-
-  const { id } = React.useContext(FormItemContext);
+  const { id } = itemContext;
 
   return {
     id,
@@ -62,7 +59,7 @@ const FormLabel = React.forwardRef(({ className, ...props }, ref) => {
   return (
     <Label
       ref={ref}
-      className={cn(error && "text-red-500", className)}
+      className={cn(error && "text-red-600", className)}
       htmlFor={formItemId}
       {...props}
     />
@@ -117,7 +114,7 @@ const FormMessage = React.forwardRef(
       <p
         ref={ref}
         id={formMessageId}
-        className={cn("text-sm font-medium text-red-500", className)}
+        className={cn("text-sm font-medium text-red-600", className)}
         {...props}
       >
         {body}

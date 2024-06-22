@@ -31,12 +31,6 @@ const formSchema = yup.object({
 });
 
 export default function Login() {
-  const [hydrated, setHydrated] = useState(false);
-
-  useEffect(() => {
-    setHydrated(true);
-  }, []);
-
   const form = useForm({
     resolver: yupResolver(formSchema),
     mode: "onChange",
@@ -68,10 +62,6 @@ export default function Login() {
     }
   };
 
-  if (!hydrated) {
-    return null;
-  }
-
   return (
     <section className="min-h-screen flex items-center justify-center py-12 bg-background text-foreground transition duration-300 ease-in-out">
       <div className="w-full max-w-lg bg-card shadow-lg rounded-lg p-10 dark:bg-gray-800 dark:text-white">
@@ -97,9 +87,7 @@ export default function Login() {
                   <FormControl>
                     <Input placeholder="Enter your username" {...field} />
                   </FormControl>
-                  <FormMessage>
-                    {form.formState.errors.username?.message}
-                  </FormMessage>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -116,9 +104,7 @@ export default function Login() {
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage>
-                    {form.formState.errors.password?.message}
-                  </FormMessage>
+                  <FormMessage />
                 </FormItem>
               )}
             />

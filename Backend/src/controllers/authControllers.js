@@ -90,7 +90,7 @@ export const register = async (req, res) => {
         });
       }
 
-      const newUser = { username, email, password: hashedPassword };
+      const newUser = [username, email, hashedPassword];
       createUser(newUser, (err, result) => {
         if (err)
           return res

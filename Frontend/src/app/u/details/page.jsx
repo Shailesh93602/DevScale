@@ -2,291 +2,287 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Controller, useForm } from "react-hook-form";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const formSchema = yup.array().of(
+  yup.object().shape({
+    fullName: yup.string().required("Full Name is required."),
+    dob: yup.date().required("Date of Birth is required."),
+    gender: yup.string().required("Gender is required."),
+  }),
+  yup.object().shape({
+    mobile: yup.string().required("Mobile Number is required."),
+    whatsapp: yup.string(),
+    address: yup.string().required("Address is required."),
+  }),
+  yup.object().shape({
+    university: yup.string(),
+    college: yup.string(),
+    branch: yup.string(),
+    semester: yup.number(),
+  })
+);
 
 const Step1 = ({ control, errors }) => (
   <div>
-    <div>
-      <Label htmlFor="fullName">Full Name</Label>
-      <Controller
-        name="fullName"
-        control={control}
-        defaultValue=""
-        rules={{ required: "Full Name is required." }}
-        render={({ field }) => (
-          <Input
-            {...field}
-            type="text"
-            placeholder="John Doe"
-            id="fullName"
-            className={`border border-gray-300 rounded-md px-3 py-2 focus:outline-none ${
-              errors.fullName ? "border-red-500" : "focus:border-blue-500"
-            }`}
-          />
-        )}
-      />
-      {errors.fullName && (
-        <p className="text-red-500 text-sm mt-1">{errors.fullName.message}</p>
+    <FormField
+      control={control}
+      name="fullName"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Full Name</FormLabel>
+          <FormControl>
+            <Input placeholder="Enter your Full Name" {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
       )}
-    </div>
-    <div>
-      <Label htmlFor="dob">Date of Birth</Label>
-      <Controller
-        name="dob"
-        control={control}
-        defaultValue=""
-        rules={{ required: "Date of Birth is required." }}
-        render={({ field }) => (
-          <Input
-            {...field}
-            type="date"
-            id="dob"
-            className={`border border-gray-300 rounded-md px-3 py-2 focus:outline-none ${
-              errors.dob ? "border-red-500" : "focus:border-blue-500"
-            }`}
-          />
-        )}
-      />
-      {errors.dob && (
-        <p className="text-red-500 text-sm mt-1">{errors.dob.message}</p>
+    />
+    <FormField
+      control={control}
+      name="dob"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Date of Birth</FormLabel>
+          <FormControl>
+            <Input
+              {...field}
+              type="date"
+              id="dob"
+              className={`border ${
+                errors?.dob ? "border-red-500" : "border-gray-300"
+              } rounded-md px-3 py-2`}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
       )}
-    </div>
-    <div>
-      <Label htmlFor="gender">Gender</Label>
-      <Controller
-        name="gender"
-        control={control}
-        defaultValue=""
-        rules={{ required: "Gender is required." }}
-        render={({ field }) => (
-          <select
-            {...field}
-            id="gender"
-            className={`border border-gray-300 rounded-md px-3 py-2 focus:outline-none ${
-              errors.gender ? "border-red-500" : "focus:border-blue-500"
-            }`}
-          >
-            <option value="">Select Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-          </select>
-        )}
-      />
-      {errors.gender && (
-        <p className="text-red-500 text-sm mt-1">{errors.gender.message}</p>
+    />
+    <FormField
+      control={control}
+      name="gender"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Gender</FormLabel>
+          <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <FormControl>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a verified email to display" />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent>
+              <SelectItem value="male">Male</SelectItem>
+              <SelectItem value="female">Female</SelectItem>
+              <SelectItem value="other">Other</SelectItem>
+            </SelectContent>
+          </Select>
+          <FormMessage />
+        </FormItem>
       )}
-    </div>
+    />
   </div>
 );
 
-const Step2 = ({ control, errors }) => (
+const Step2 = ({ control }) => (
   <div>
-    <div>
-      <Label htmlFor="mobile">Mobile Number</Label>
-      <Controller
-        name="mobile"
-        control={control}
-        defaultValue=""
-        rules={{ required: "Mobile Number is required." }}
-        render={({ field }) => (
-          <Input
-            {...field}
-            type="tel"
-            placeholder="1234567890"
-            id="mobile"
-            className={`border border-gray-300 rounded-md px-3 py-2 focus:outline-none ${
-              errors.mobile ? "border-red-500" : "focus:border-blue-500"
-            }`}
-          />
-        )}
-      />
-      {errors.mobile && (
-        <p className="text-red-500 text-sm mt-1">{errors.mobile.message}</p>
+    <FormField
+      control={control}
+      name="mobile"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Mobile Number</FormLabel>
+          <FormControl>
+            <Input placeholder="Enter your Phone Number" {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
       )}
-    </div>
-    <div>
-      <Label htmlFor="whatsapp">Whatsapp Number</Label>
-      <Controller
-        name="whatsapp"
-        control={control}
-        defaultValue=""
-        render={({ field }) => (
-          <Input
-            {...field}
-            type="tel"
-            placeholder="1234567890"
-            id="whatsapp"
-            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-          />
-        )}
-      />
-    </div>
-    <div>
-      <Label htmlFor="address">Address</Label>
-      <Controller
-        name="address"
-        control={control}
-        defaultValue=""
-        rules={{ required: "Address is required." }}
-        render={({ field }) => (
-          <textarea
-            {...field}
-            id="address"
-            placeholder="123 Street, City, Country"
-            className={`border border-gray-300 rounded-md px-3 py-2 focus:outline-none ${
-              errors.address ? "border-red-500" : "focus:border-blue-500"
-            }`}
-          ></textarea>
-        )}
-      />
-      {errors.address && (
-        <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>
+    />
+    <FormField
+      control={control}
+      name="whatsapp"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>WhatsApp Number</FormLabel>
+          <FormControl>
+            <Input placeholder="Enter your Whatsapp Number" {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
       )}
-    </div>
+    />
+
+    <FormField
+      control={control}
+      name="address"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Address</FormLabel>
+          <FormControl>
+            <Input placeholder="Enter your Full Name" {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
   </div>
 );
 
-const Step3 = ({ control, errors }) => (
+const Step3 = ({ control }) => (
   <div>
-    <div>
-      <Label htmlFor="university">University</Label>
-      <Controller
-        name="university"
-        control={control}
-        defaultValue=""
-        render={({ field }) => (
-          <Input
-            {...field}
-            type="text"
-            placeholder="Your University"
-            id="university"
-            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-          />
-        )}
-      />
-    </div>
-    <div>
-      <Label htmlFor="college">College</Label>
-      <Controller
-        name="college"
-        control={control}
-        defaultValue=""
-        render={({ field }) => (
-          <Input
-            {...field}
-            type="text"
-            placeholder="Your College"
-            id="college"
-            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-          />
-        )}
-      />
-    </div>
-    <div>
-      <Label htmlFor="branch">Branch</Label>
-      <Controller
-        name="branch"
-        control={control}
-        defaultValue=""
-        render={({ field }) => (
-          <Input
-            {...field}
-            type="text"
-            placeholder="Your Branch"
-            id="branch"
-            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-          />
-        )}
-      />
-    </div>
-    <div>
-      <Label htmlFor="semester">Semester</Label>
-      <Controller
-        name="semester"
-        control={control}
-        defaultValue=""
-        render={({ field }) => (
-          <Input
-            {...field}
-            type="number"
-            placeholder="Your Semester"
-            id="semester"
-            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-          />
-        )}
-      />
-    </div>
+    <FormField
+      control={control}
+      name="university"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>University</FormLabel>
+          <FormControl>
+            <Input placeholder="Enter your University Name" {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+    <FormField
+      control={control}
+      name="college"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>College</FormLabel>
+          <FormControl>
+            <Input placeholder="Enter your College Name" {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+    <FormField
+      control={control}
+      name="branch"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Branch</FormLabel>
+          <FormControl>
+            <Input placeholder="Enter your Branch Name" {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+    <FormField
+      control={control}
+      name="semester"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Semester</FormLabel>
+          <FormControl>
+            <Input placeholder="Enter your Semester" {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
   </div>
 );
 
 export default function Details() {
-  const {
-    control,
-    handleSubmit,
-    getValues,
-    formState: { errors },
-  } = useForm({ mode: "onTouched" });
   const [step, setStep] = useState(1);
+  const form = useForm({
+    resolver: yupResolver(formSchema[step - 1]),
+    mode: "onChange",
+  });
+
   const router = useRouter();
 
   const onSubmit = async (data) => {
-    if (step < 3) {
-      setStep(step + 1);
-    } else {
-      let result = await fetch("http://localhost:4000/profile/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-        credentials: "include",
-      });
-      let json = await result.json();
-      if (json.success) {
-        toast.success("Registered Successfully!");
-        router.push("/");
-      } else {
-        toast.error(json.message);
-      }
+    const response = await fetch("http://localhost:4000/profile/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+      credentials: "include",
+    });
+    const result = await response.json();
+    if (result) {
+      localStorage.setItem("user", JSON.stringify(result.user));
+      toast.success("Registered Successfully!", { autoClose: 1500 });
+      router.push("/dashboard");
     }
   };
 
   return (
-    <section className="bg-gray-100 min-h-screen flex items-center justify-center">
-      <div className="max-w-md w-full bg-white shadow-lg rounded-lg p-8">
-        <div className="text-center mb-6">
-          <Link href="/" className="text-2xl font-bold text-blue-600">
+    <section className="min-h-screen flex items-center justify-center py-12 bg-background text-foreground transition duration-300 ease-in-out">
+      <div className="w-full max-w-lg bg-card shadow-lg rounded-lg p-10 dark:bg-gray-800 dark:text-white">
+        <div className="text-center mb-8">
+          <Link
+            href="/"
+            className="text-4xl font-extrabold text-blue-700 dark:text-blue-800"
+          >
             Mr. Engineers
           </Link>
         </div>
-        <h1 className="text-2xl font-bold text-center text-gray-900 mb-4">
-          Register
+        <h1 className="text-3xl font-semibold text-center mb-6 dark:text-gray-100">
+          Fill additional details
         </h1>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {step === 1 && <Step1 control={control} errors={errors} />}
-          {step === 2 && <Step2 control={control} errors={errors} />}
-          {step === 3 && <Step3 control={control} errors={errors} />}
-          <div className="flex justify-between">
-            {step > 1 && (
-              <Button
-                type="button"
-                className="bg-gray-600 text-white"
-                onClick={() => setStep(step - 1)}
-              >
-                Previous
-              </Button>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            {step === 1 && (
+              <Step1 control={form.control} errors={form.formState.errors} />
             )}
-            <Button type="submit" className="bg-blue-600 text-white">
-              {step < 3 ? "Next" : "Submit"}
-            </Button>
-          </div>
-        </form>
+            {step === 2 && <Step2 control={form.control} />}
+            {step === 3 && <Step3 control={form.control} />}
+
+            <div className="flex justify-between mt-4">
+              {step > 1 && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setStep(step - 1)}
+                >
+                  Previous
+                </Button>
+              )}
+              {step < 3 ? (
+                <Button
+                  className="w-full py-3 mt-4 bg-blue-600 text-white hover:bg-blue-700 transition duration-200 ease-in-out"
+                  onClick={async () => {
+                    const isValid = await form.trigger();
+                    if (isValid) setStep(step + 1);
+                  }}
+                >
+                  Next
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  className="w-full py-3 mt-4 bg-blue-600 text-white hover:bg-blue-700 transition duration-200 ease-in-out"
+                >
+                  Submit
+                </Button>
+              )}
+            </div>
+          </form>
+        </Form>
       </div>
     </section>
   );
