@@ -4,17 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FiMenu, FiX, FiSun, FiMoon, FiUser } from "react-icons/fi";
 import { useTheme } from "next-themes";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 const Navbar = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -32,21 +28,16 @@ const Navbar = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
-  if (!mounted) {
-    return null;
-  }
-
   return (
-
-    <nav className="bg-blue-500 shadow-lg w-full z-50">
+    <nav className="bg-blue-100 dark:bg-gray-900 shadow-lg w-full z-50 text-gray-900 dark:text-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="text-xl font-bold text-gray-100">
+            <Link href="/" className="text-xl font-bold">
               Mr.Eng
             </Link>
           </div>
-          <div className="hidden md:flex items-center space-x-4 text-gray-100">
+          <div className="hidden md:flex items-center space-x-4">
             <NavItem href="/dashboard" pathname={pathname}>
               Dashboard
             </NavItem>
@@ -70,7 +61,7 @@ const Navbar = () => {
             </NavItem>
             <button
               onClick={toggleTheme}
-              className="text-gray-100 hover:text-gray-300 focus:outline-none"
+              className=" hover:text-gray-900 dark:hover:text-gray-300 focus:outline-none"
             >
               {theme === "light" ? <FiMoon size={20} /> : <FiSun size={20} />}
             </button>
@@ -79,21 +70,25 @@ const Navbar = () => {
                 onClick={toggleDropdown}
                 className="text-gray-100 hover:text-gray-300 focus:outline-none"
               >
-                <FiUser size={20} />
+                {/* <FiUser size={20} /> */}
+                <Avatar className="bg-red-500 font-semibold text-3xl items-center justify-center">
+                  <AvatarImage src="" alt="S" />
+                  <AvatarFallback>S</AvatarFallback>
+                </Avatar>
               </button>
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg py-1">
+                <div className="absolute right-0 mt-2 w-48 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-800 rounded-md shadow-lg py-1">
                   <Link
                     href="/profile"
                     onClick={handleLinkClick}
-                    className="block px-4 py-2 text-gray-800 hover:bg-gray-100 rounded-md"
+                    className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md"
                   >
                     Profile
                   </Link>
                   <Link
                     href="/logout"
                     onClick={handleLinkClick}
-                    className="block px-4 py-2 text-gray-800 hover:bg-gray-100 rounded-md"
+                    className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md"
                   >
                     Logout
                   </Link>
@@ -174,11 +169,16 @@ const Navbar = () => {
                 onClick={toggleDropdown}
                 className="w-full text-left px-4 py-2 text-gray-100 hover:bg-gray-100 focus:outline-none rounded-md"
               >
-                <FiUser size={20} className="inline-block" /> User Name
+                {/* <FiUser size={20} className="inline-block" /> User Name */}
+                <Avatar className="bg-red-700 font-bold font-2xl">
+                  <AvatarImage src="" alt="S" />
+                  <AvatarFallback>s</AvatarFallback>
+                </Avatar>
               </button>
               <div
-                className={`absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg py-1 ${!dropdownOpen && "hidden"
-                  }`}
+                className={`absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg py-1 ${
+                  !dropdownOpen && "hidden"
+                }`}
               >
                 <Link
                   href="/profile"
@@ -207,8 +207,9 @@ const NavItem = ({ href, pathname, onClick, children }) => (
   <Link
     href={href}
     onClick={onClick}
-    className={`block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:text-gray-600 ${pathname === href ? "text-blue-500 font-semibold" : ""
-      }`}
+    className={`block px-3 py-2 rounded-md text-base font-medium ${
+      pathname === href ? "text-blue-500 font-semibold" : ""
+    }`}
   >
     {children}
   </Link>

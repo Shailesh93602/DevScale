@@ -78,6 +78,7 @@ export const getProfile = async (req, res) => {
       }
       userInfo.dob = userInfo.dob.toISOString().slice(0, 10);
       userInfo.achievements = userInfo.achievements?.split(",");
+      userInfo.email = req.user.email;
       res.status(200).json({ success: true, userInfo });
     });
   } catch (error) {

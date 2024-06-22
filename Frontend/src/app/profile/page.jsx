@@ -38,8 +38,8 @@ export default function ProfilePage() {
           setUserInfo({ ...otherDetails, achievements });
         } else toast.error(json.message);
       } catch (error) {
-        toast.success(error.message);
-        console.error("Error fetching user info:", error);
+        toast.error("Something went wrong");
+        console.error(error);
       }
     };
 
@@ -72,7 +72,7 @@ export default function ProfilePage() {
         setIsEditing(false);
       } else toast.error(data.message);
     } catch (error) {
-      console.error("Error saving user info:", error);
+      console.error("Internal server error");
     }
   };
 
@@ -121,7 +121,14 @@ export default function ProfilePage() {
               />
             ) : (
               <h1 className="text-xl font-bold text-gray-900">
-                {userInfo.fullName}
+                {userInfo.fullName
+                  .split(" ")
+                  .filter((name) => name.trim() !== "")
+                  .map(
+                    (word) =>
+                      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                  )
+                  .join(" ")}
               </h1>
             )}
             <p className="text-gray-700">{userInfo.email}</p>
