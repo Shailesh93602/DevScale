@@ -45,8 +45,8 @@
     --ring-light: hsl(0, 0%, 3.9%);
     --ring-dark: hsl(0, 0%, 83.1%);
     --radius: 0.5rem;
-    --custom-color-light: #3b82f6; /* Custom color light mode */
-    --custom-color-dark: #2563eb; /* Custom color dark mode */
+    --custom-color-light: #3b82f6;
+    --custom-color-dark: #2563eb;
   }
 
   .light {
@@ -69,7 +69,6 @@
     --border: var(--border-light);
     --input: var(--input-light);
     --ring: var(--ring-light);
-    --custom-color: var(--custom-color-light);
   }
 
   .dark {
@@ -92,14 +91,5 @@
     --border: var(--border-dark);
     --input: var(--input-dark);
     --ring: var(--ring-dark);
-    --custom-color: var(--custom-color-dark);
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
   }
 }
