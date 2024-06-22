@@ -1,12 +1,10 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { toast } from "react-hot-toast";
-import Toast, { showToast } from "../../../components/Toast";
+import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import {
@@ -39,13 +37,13 @@ const formSchema = yup.object({
     .string()
     .trim()
     .required("Confirm Password is required")
-    .oneOf([yup.ref("password"), null], "Passwords do not match"),
+    .oneOf([yup.ref("password")], "Passwords must match"),
 });
 
 export default function Register() {
   const form = useForm({
     resolver: yupResolver(formSchema),
-    mode: "onTouched",
+    mode: "onChange",
   });
 
   const router = useRouter();
@@ -62,27 +60,25 @@ export default function Register() {
       });
       const json = await response.json();
       if (json.success) {
-        showToast("Registered Successfully!", "success");
+        toast.success("Registered Successfully!");
         setTimeout(() => {
-          router.push("/u/login");
-        }, 2000);
+          router.push("u/login");
+        }, 1000);
       } else {
         toast.error(json.message);
       }
     } catch (error) {
-      console.error("Registration failed:", error);
       toast.error("Registration failed. Please try again later.");
     }
   };
 
   return (
     <section className="min-h-screen flex items-center justify-center py-12 bg-background text-foreground transition duration-300 ease-in-out">
-      <Toast />
-      <div className="w-full max-w-lg bg-card shadow-lg rounded-lg p-10 dark:bg-gray-800">
+      <div className="w-full max-w-lg bg-card shadow-lg rounded-lg p-10 dark:bg-card-dark dark:text-card-foreground-dark">
         <div className="text-center mb-8">
           <Link
             href="/"
-            className="text-4xl font-extrabold text-custom-color-light dark:text-custom-color-dark"
+            className="text-4xl font-extrabold text-blue-700 dark:text-blue-800"
           >
             Mr. Engineers
           </Link>
@@ -90,8 +86,8 @@ export default function Register() {
         <h1 className="text-3xl font-semibold text-center mb-6 dark:text-gray-100">
           Create Your Account
         </h1>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <Form {...form} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
               control={form.control}
               name="username"
@@ -99,11 +95,8 @@ export default function Register() {
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your username" {...field} />
+                    <Input placeholder="Create a username" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    This will be your public display name.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -115,11 +108,7 @@ export default function Register() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="Enter your email"
-                      {...field}
-                    />
+                    <Input placeholder="Enter your Email address" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -134,7 +123,7 @@ export default function Register() {
                   <FormControl>
                     <Input
                       type="password"
-                      placeholder="Create a password"
+                      placeholder="Enter your password"
                       {...field}
                     />
                   </FormControl>
@@ -151,7 +140,7 @@ export default function Register() {
                   <FormControl>
                     <Input
                       type="password"
-                      placeholder="Confirm your password"
+                      placeholder="Enter your password again"
                       {...field}
                     />
                   </FormControl>
@@ -159,7 +148,10 @@ export default function Register() {
                 </FormItem>
               )}
             />
-            <Button className="w-full py-3 mt-4 bg-custom-color-light text-white hover:bg-custom-color-dark transition duration-200 ease-in-out transform hover:scale-105 dark:bg-custom-color-dark dark:hover:bg-custom-color-light dark:text-gray-900">
+            <Button
+              type="submit"
+              className="w-full py-3 mt-4 bg-blue-600 text-white hover:bg-blue-700 transition duration-200 ease-in-out"
+            >
               Register
             </Button>
             <div className="text-center mt-4 text-sm text-muted-foreground dark:text-gray-400">
@@ -167,7 +159,7 @@ export default function Register() {
                 Already have an account?{" "}
                 <Link
                   href="/u/login"
-                  className="text-custom-color-light hover:underline dark:text-custom-color-dark"
+                  className="text-blue-600 hover:underline dark:text-blue-400"
                 >
                   Login here
                 </Link>

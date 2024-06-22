@@ -1,8 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { toast } from "react-hot-toast";
-import Toast, { showToast } from "../../../components/Toast";
+import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
@@ -10,11 +9,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useEffect, useState } from "react";
 
 const formSchema = yup.object({
   username: yup
@@ -22,38 +23,30 @@ const formSchema = yup.object({
     .trim()
     .required("Username is required")
     .min(2, "Username must be at least 2 characters."),
-  email: yup
-    .string()
-    .trim()
-    .required("Email is required")
-    .email("Please enter a valid email address"),
   password: yup
     .string()
     .trim()
     .required("Password is required")
     .min(8, "Password must be at least 8 characters"),
-  confirmPassword: yup
-    .string()
-    .trim()
-    .required("Confirm Password is required")
-    .oneOf([yup.ref("password"), null], "Passwords do not match"),
 });
 
-export default function Register() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+export default function Login() {
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  const form = useForm({
     resolver: yupResolver(formSchema),
-    mode: "onTouched",
+    mode: "onChange",
   });
 
   const router = useRouter();
 
   const onSubmit = async (data) => {
     try {
-      const response = await fetch("http://localhost:4000/auth/register", {
+      const response = await fetch("http://localhost:4000/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -63,98 +56,90 @@ export default function Register() {
       });
       const json = await response.json();
       if (json.success) {
-        showToast("Registered Successfully!", "success");
+        toast.success("Logged In Successfully!");
         setTimeout(() => {
-          router.push("/u/login");
-        }, 2000);
+          router.push(json.route);
+        }, 1000);
       } else {
         toast.error(json.message);
       }
     } catch (error) {
-      console.error("Registration failed:", error);
-      toast.error("Registration failed. Please try again later.");
+      toast.error("LogIn failed. Please try again later.");
     }
   };
 
+  if (!hydrated) {
+    return null;
+  }
+
   return (
     <section className="min-h-screen flex items-center justify-center py-12 bg-background text-foreground transition duration-300 ease-in-out">
-      <Toast />
-      <div className="w-full max-w-lg bg-card shadow-lg rounded-lg p-10 dark:bg-gray-800">
+      <div className="w-full max-w-lg bg-card shadow-lg rounded-lg p-10 dark:bg-gray-800 dark:text-white">
         <div className="text-center mb-8">
           <Link
             href="/"
-            className="text-4xl font-extrabold text-custom-color-light dark:text-custom-color-dark"
+            className="text-4xl font-extrabold text-blue-700 dark:text-blue-800"
           >
             Mr. Engineers
           </Link>
         </div>
         <h1 className="text-3xl font-semibold text-center mb-6 dark:text-gray-100">
-          Create Your Account
+          LogIn to Your Account
         </h1>
-        <Form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <FormItem>
-            <FormLabel>Username</FormLabel>
-            <Input
-              type="text"
-              placeholder="Enter your username"
-              {...register("username")}
-              className="form-input"
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter your username" {...field} />
+                  </FormControl>
+                  <FormMessage>
+                    {form.formState.errors.username?.message}
+                  </FormMessage>
+                </FormItem>
+              )}
             />
-            {errors.username && (
-              <FormMessage>{errors.username.message}</FormMessage>
-            )}
-          </FormItem>
-          <FormItem>
-            <FormLabel>Email</FormLabel>
-            <Input
-              type="email"
-              placeholder="Enter your email"
-              {...register("email")}
-              className="form-input"
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="Enter your password"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage>
+                    {form.formState.errors.password?.message}
+                  </FormMessage>
+                </FormItem>
+              )}
             />
-            {errors.email && <FormMessage>{errors.email.message}</FormMessage>}
-          </FormItem>
-          <FormItem>
-            <FormLabel>Password</FormLabel>
-            <Input
-              type="password"
-              placeholder="Create a password"
-              {...register("password")}
-              className="form-input"
-            />
-            {errors.password && (
-              <FormMessage>{errors.password.message}</FormMessage>
-            )}
-          </FormItem>
-          <FormItem>
-            <FormLabel>Confirm Password</FormLabel>
-            <Input
-              type="password"
-              placeholder="Confirm your password"
-              {...register("confirmPassword")}
-              className="form-input"
-            />
-            {errors.confirmPassword && (
-              <FormMessage>{errors.confirmPassword.message}</FormMessage>
-            )}
-          </FormItem>
-          <Button
-            type="submit"
-            className="w-full py-3 mt-4 bg-custom-color-light text-white hover:bg-custom-color-dark transition duration-200 ease-in-out"
-          >
-            Register
-          </Button>
-          <div className="text-center mt-4 text-sm text-muted-foreground dark:text-gray-400">
-            <p>
-              Already have an account?{" "}
-              <Link
-                href="/u/login"
-                className="text-custom-color-light hover:underline dark:text-custom-color-dark"
-              >
-                Login here
-              </Link>
-            </p>
-          </div>
+            <Button
+              type="submit"
+              className="w-full py-3 mt-4 bg-blue-600 text-white hover:bg-blue-700 transition duration-200 ease-in-out"
+            >
+              Login
+            </Button>
+            <div className="text-center mt-4 text-sm text-muted-foreground dark:text-gray-400">
+              <p>
+                Don't have an account?{" "}
+                <Link
+                  href="/u/register"
+                  className="text-blue-600 hover:underline dark:text-blue-400"
+                >
+                  Create one
+                </Link>
+              </p>
+            </div>
+          </form>
         </Form>
       </div>
     </section>
