@@ -11,13 +11,13 @@ import { validationResult } from "express-validator";
 import { config } from "dotenv";
 import { logger } from "../helpers/logger.js";
 import validator from "email-validator";
-import { findUserInfoByEmail } from "../models/userInfoModels.js";
+import { findUserInfoByUserId } from "../models/userInfoModels.js";
 
 config();
 
-const checkUserDetailsFilled = async (email) => {
+const checkUserDetailsFilled = async (id) => {
   try {
-    findUserInfoByEmail(email, (err, userInfo) => {
+    findUserInfoByUserId(id, (err, userInfo) => {
       if (err) {
         logger.error("Error checking user details:", err);
         return false;
@@ -145,7 +145,7 @@ export const login = async (req, res) => {
           httpOnly: true,
           maxAge: 24 * 60 * 60 * 1000,
         });
-        const userDetailsFilled = await checkUserDetailsFilled(user.email);
+        const userDetailsFilled = await checkUserDetailsFilled(user.id);
         const route = userDetailsFilled ? "/dashboard" : "/u/details";
         res.status(200).json({
           success: true,
@@ -179,7 +179,7 @@ export const login = async (req, res) => {
           maxAge: 24 * 60 * 60 * 1000,
         });
 
-        const userDetailsFilled = await checkUserDetailsFilled(user.email);
+        const userDetailsFilled = await checkUserDetailsFilled(user.id);
         const route = userDetailsFilled ? "/dashboard" : "/u/details";
         res.status(200).json({
           success: true,
