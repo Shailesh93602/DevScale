@@ -103,7 +103,7 @@ export const updateProfile = async (req, res) => {
       semester,
       bio,
     } = req.body;
-    let achievements = req.body.achievements.join(",");
+    let achievements = req.body.achievements?.join(",");
 
     const userInfo = {
       fullName,
@@ -118,6 +118,7 @@ export const updateProfile = async (req, res) => {
       semester,
       bio,
       achievements,
+      profilePicture: req.fileUrl,
     };
 
     updateUserInfoByUserId(userId, userInfo, (err, result) => {

@@ -63,3 +63,4 @@
 [2024-06-22 07:27:29.408 PM] error: Error: Column 'whatsapp' cannot be null
 [2024-06-22 07:27:33.497 PM] error: Error: Column 'whatsapp' cannot be null
 [2024-06-22 07:46:21.029 PM] error: ReferenceError: re is not defined
+[2024-06-23 12:30:43.959 PM] error: TypeError: Cannot read properties of undefined (reading 'join')

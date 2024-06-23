@@ -5,11 +5,12 @@ import {
   updateProfile,
 } from "../controllers/userControllers.js";
 import { userInsertionValidator } from "../validators/userValidators.js";
+import uploadToCloudinary from "../middleware/uploadMiddleware.js";
 
 const router = express.Router();
 
 router.get("/", getProfile);
 router.post("/register", userInsertionValidator, insertProfile);
-router.put("/update", updateProfile);
+router.put("/update", uploadToCloudinary, updateProfile);
 
 export default router;

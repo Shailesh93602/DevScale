@@ -5,9 +5,15 @@ import cookieParser from "cookie-parser";
 import routes from "./src/routes/routes.js";
 import cors from "cors";
 import { applyPassportStrategy } from "./src/middleware/passport.js";
-import db from "./src/config/database.js";
+import { v2 as cloudinary } from "cloudinary";
 
 config();
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 const app = express();
 app.use(express.json());
 app.use(bodyParser.json());
