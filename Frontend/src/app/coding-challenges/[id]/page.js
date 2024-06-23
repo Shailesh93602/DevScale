@@ -47,7 +47,20 @@ export default function ViewChallengePage({ params }) {
   let { id } = params;
   const challenge = challenges.find((challenge) => challenge.id === id);
 
-  const [solution, setSolution] = useState("");
+  const [solution, setSolution] = useState({
+    javascript: "",
+    python: "",
+    java: `class MrEngineers {
+    public static void main(String[] args) {
+    }
+}`,
+    cpp: `#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    
+}`,
+  });
   const [output, setOutput] = useState("");
   const [language, setLanguage] = useState("javascript");
   const [isRunning, setIsRunning] = useState(false);
@@ -62,7 +75,7 @@ export default function ViewChallengePage({ params }) {
   }, [challenge, router]);
 
   const handleSolutionChange = (value) => {
-    setSolution(value);
+    setSolution({ ...solution, [language]: value });
   };
 
   const handleLanguageChange = (e) => {
@@ -81,11 +94,10 @@ export default function ViewChallengePage({ params }) {
         },
         body: JSON.stringify({
           language,
-          code: solution,
+          code: solution[language],
         }),
         credentials: "include",
       });
-      console.log(response);
 
       const result = await response.json();
       if (result.error) {
@@ -142,7 +154,7 @@ export default function ViewChallengePage({ params }) {
               <option value="javascript">JavaScript</option>
               <option value="python">Python</option>
               <option value="java">Java</option>
-              {/* Add more languages as needed */}
+              <option value="cpp">C++</option>
             </select>
             <Button
               onClick={handleRunCode}
@@ -157,7 +169,7 @@ export default function ViewChallengePage({ params }) {
               height="calc(100vh - 20rem)"
               language={language}
               theme={theme === "dark" ? "vs-dark" : "vs-light"}
-              value={solution}
+              value={solution[language]}
               onChange={handleSolutionChange}
               options={{
                 selectOnLineNumbers: true,
