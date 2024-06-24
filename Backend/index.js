@@ -1,6 +1,5 @@
 import { config } from "dotenv";
 import express from "express";
-import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import routes from "./src/routes/routes.js";
 import cors from "cors";
@@ -15,9 +14,8 @@ cloudinary.config({
 });
 
 const app = express();
-app.use(express.json());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
