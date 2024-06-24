@@ -1,120 +1,107 @@
 "use client";
-
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
-import { useForm, Controller } from "react-hook-form";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Suspense } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { Form } from "@/components/ui/form";
+import CustomInput from "@/components/common/customInput";
 
-function ResetPasswordForm() {
-  const {
-    control,
-    handleSubmit,
-    getValues,
-    formState: { errors },
-  } = useForm({ mode: "onTouched" });
+const formSchema = yup.object({
+  password: yup
+    .string()
+    .trim()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters"),
+  confirmPassword: yup.string().trim().required("Confirm Password is required"),
+});
 
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
+export default function Login() {
+  const form = useForm({
+    resolver: yupResolver(formSchema),
+    mode: "onChange",
+  });
+
+  const router = useRouter();
 
   const onSubmit = async (data) => {
-    console.log(data);
-    let result = await fetch("http://localhost:4000/auth/resetPassword", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ ...data, token }),
-      credentials: "include",
-    });
-    console.log(result);
-    let json = await result.json();
-    if (json.success) console.log(json);
+    try {
+      const response = await fetch("http://localhost:4000/auth/reset", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+        credentials: "include",
+      });
+      const json = await response.json();
+      if (json.success) {
+        toast.success("Password changed Successfully!");
+        setTimeout(() => {
+          router.push("/u/login");
+        }, 1000);
+      } else {
+        toast.error(json.message);
+      }
+    } catch (error) {
+      toast.error("Something went wrong.");
+    }
   };
 
   return (
-    <section className="bg-gray-50 min-h-screen flex items-center justify-center">
-      <div className="max-w-md w-full bg-white shadow-lg rounded-lg p-8">
-        <div className="text-center mb-6">
-          <Link href="/" className="text-2xl font-bold text-blue-600">
+    <section className="min-h-screen flex items-center justify-center py-12 bg-background text-foreground transition duration-300 ease-in-out">
+      <div className="w-full max-w-lg bg-card shadow-lg rounded-lg p-10 dark:bg-gray-800 dark:text-white">
+        <div className="text-center mb-8">
+          <Link
+            href="/"
+            className="text-4xl font-extrabold text-blue-700 dark:text-blue-800"
+          >
             Mr. Engineers
           </Link>
         </div>
-        <h1 className="text-2xl font-bold text-center text-gray-900 mb-4">
+        <h1 className="text-3xl font-semibold text-center mb-6 dark:text-gray-100">
           Reset Password
         </h1>
-        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid gap-1.5">
-            <Label htmlFor="password">Password</Label>
-            <Controller
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <CustomInput
+              control={form.control}
+              errors={form.formState.errors}
               name="password"
-              control={control}
-              defaultValue=""
-              rules={{ required: "Password is required." }}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  type="password"
-                  placeholder="Enter your password"
-                  id="password"
-                  className={`border border-gray-300 rounded-md px-3 py-2 ${
-                    errors.password
-                      ? "border-red-500 focus-visible:outline-red-500"
-                      : "border-blue-500 focus-visible:outline-blue-500"
-                  }`}
-                />
-              )}
+              type="password"
+              label="Password"
+              placeholder="Enter your Password"
             />
-            {errors.password && (
-              <p className="text-red-500 text-sm">{errors.password.message}</p>
-            )}
-          </div>
-          <div className="grid gap-1.5">
-            <Label htmlFor="confirmPassword">Confirm Password</Label>
-            <Controller
+            <CustomInput
+              control={form.control}
+              errors={form.formState.errors}
               name="confirmPassword"
-              control={control}
-              defaultValue=""
-              rules={{
-                required: "Confirm Password is required.",
-                validate: (value) =>
-                  value === getValues("password") || "Passwords do not match.",
-              }}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  type="password"
-                  placeholder="Repeat your password"
-                  id="confirmPassword"
-                  className={`border border-gray-300 rounded-md px-3 py-2 ${
-                    errors.confirmPassword
-                      ? "border-red-500 focus-visible:outline-red-500"
-                      : "border-blue-500 focus-visible:outline-blue-500"
-                  }`}
-                />
-              )}
+              type="password"
+              label="Confirm Password"
+              placeholder="Enter your Password again"
             />
-            {errors.confirmPassword && (
-              <p className="text-red-500 text-sm">
-                {errors.confirmPassword.message}
+            <Button
+              type="submit"
+              className="w-full py-3 mt-4 bg-blue-600 text-white hover:bg-blue-700 transition duration-200 ease-in-out"
+            >
+              Login
+            </Button>
+            <div className="text-center mt-4 text-sm text-muted-foreground dark:text-gray-400">
+              <p>
+                Know your password?{" "}
+                <Link
+                  href="/u/register"
+                  className="text-blue-600 hover:underline dark:text-blue-400"
+                >
+                  Login here
+                </Link>
               </p>
-            )}
-          </div>
-          <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md">
-            Submit
-          </Button>
-        </form>
+            </div>
+          </form>
+        </Form>
       </div>
     </section>
-  );
-}
-
-export default function ResetPassword() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <ResetPasswordForm />
-    </Suspense>
   );
 }

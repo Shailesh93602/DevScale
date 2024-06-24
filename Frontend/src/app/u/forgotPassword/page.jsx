@@ -1,107 +1,96 @@
 "use client";
-
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { toast } from "react-hot-toast";
-import Toast, { showToast } from "@/components/Toast";
+import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
-import { Controller, useForm } from "react-hook-form";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { Form } from "@/components/ui/form";
+import CustomInput from "@/components/common/customInput";
+
+const formSchema = yup.object({
+  username: yup
+    .string()
+    .trim()
+    .required("Username is required")
+    .min(2, "Username must be at least 2 characters."),
+});
 
 export default function ForgotPassword() {
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({ mode: "onTouched" });
+  const form = useForm({
+    resolver: yupResolver(formSchema),
+    mode: "onChange",
+  });
+
   const router = useRouter();
 
   const onSubmit = async (data) => {
-    let result = await fetch("http://localhost:4000/auth/forgot-password", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-      credentials: "include",
-    });
-    let json = await result.json();
-    if (json.success) {
-      showToast("Password reset email sent!", "success");
-      setTimeout(() => {
-        router.push("/u/login");
-      }, 2000);
-    } else {
-      toast.error(json.message);
+    try {
+      const response = await fetch("http://localhost:4000/auth/forgot", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+        credentials: "include",
+      });
+      const json = await response.json();
+      if (json.success) {
+        toast.success(json.message);
+        setTimeout(() => {
+          router.push("/u/login");
+        }, 1000);
+      } else {
+        toast.error(json.message);
+      }
+    } catch (error) {
+      toast.error("Something went wrong");
     }
   };
 
   return (
-    <section className="bg-gray-50 min-h-screen flex items-center justify-center">
-      <Toast />
-      <div className="max-w-md w-full bg-white shadow-lg rounded-lg p-8">
-        <div className="text-center mb-6">
-          <Link href="/" className="text-2xl font-bold text-blue-600">
+    <section className="min-h-screen flex items-center justify-center py-12 bg-background text-foreground transition duration-300 ease-in-out">
+      <div className="w-full max-w-lg bg-card shadow-lg rounded-lg p-10 dark:bg-gray-800 dark:text-white">
+        <div className="text-center mb-8">
+          <Link
+            href="/"
+            className="text-4xl font-extrabold text-blue-700 dark:text-blue-800"
+          >
             Mr. Engineers
           </Link>
         </div>
-        <h1 className="text-2xl font-bold text-center text-gray-900 mb-4">
+        <h1 className="text-3xl font-semibold text-center mb-6 dark:text-gray-100">
           Forgot Password
         </h1>
-        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid gap-1.5">
-            <Label htmlFor="email">Email</Label>
-            <Controller
-              name="email"
-              control={control}
-              defaultValue=""
-              rules={{
-                required: "Email is required.",
-                pattern: {
-                  value: /\S+@\S+\.\S+/,
-                  message: "Please enter a valid email address.",
-                },
-              }}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  type="text"
-                  placeholder="Enter your email"
-                  id="email"
-                  className={`border border-gray-300 rounded-md px-3 py-2 ${
-                    errors.email
-                      ? "border-red-500 focus-visible:outline-red-500"
-                      : "border-blue-500 focus-visible:outline-blue-500"
-                  }`}
-                />
-              )}
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <CustomInput
+              control={form.control}
+              errors={form.formState.errors}
+              name="username"
+              label="Username"
+              placeholder="Enter your Username"
             />
-            {errors.email && (
-              <p className="text-red-500 text-sm">{errors.email.message}</p>
-            )}
-          </div>
-          <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md">
-            Send Reset Link
-          </Button>
-          <div className="text-sm text-gray-500">
-            <p>
-              Remember your password?{" "}
-              <Link href="/u/login" className="text-blue-600 hover:underline">
-                Login here
-              </Link>
-            </p>
-            <p>
-              Don't have an account?{" "}
-              <Link
-                href="/u/register"
-                className="text-blue-600 hover:underline"
-              >
-                Create one
-              </Link>
-            </p>
-          </div>
-        </form>
+            <Button
+              type="submit"
+              className="w-full py-3 mt-4 bg-blue-600 text-white hover:bg-blue-700 transition duration-200 ease-in-out"
+            >
+              Submit
+            </Button>
+            <div className="text-center mt-4 text-sm text-muted-foreground dark:text-gray-400">
+              <p>
+                Don't have an account?{" "}
+                <Link
+                  href="/u/register"
+                  className="text-blue-600 hover:underline dark:text-blue-400"
+                >
+                  Create one
+                </Link>
+              </p>
+            </div>
+          </form>
+        </Form>
       </div>
     </section>
   );

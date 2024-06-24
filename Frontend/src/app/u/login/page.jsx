@@ -3,19 +3,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { useEffect, useState } from "react";
+import { Form } from "@/components/ui/form";
+import CustomInput from "@/components/common/customInput";
 
 const formSchema = yup.object({
   username: yup
@@ -78,36 +70,29 @@ export default function Login() {
         </h1>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
+            <CustomInput
               control={form.control}
+              errors={form.formState.errors}
               name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter your username" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="Username"
+              placeholder="Enter your Username"
             />
-            <FormField
+            <CustomInput
               control={form.control}
+              errors={form.formState.errors}
               name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="Enter your password"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              type="password"
+              label="Password"
+              placeholder="Enter your Password"
             />
+            <div className="text-end mt-4 text-sm text-muted-foreground dark:text-gray-400">
+              <Link
+                href="/u/forgotPassword"
+                className="text-blue-600 hover:underline dark:text-blue-400"
+              >
+                Forgot Password?
+              </Link>
+            </div>
             <Button
               type="submit"
               className="w-full py-3 mt-4 bg-blue-600 text-white hover:bg-blue-700 transition duration-200 ease-in-out"

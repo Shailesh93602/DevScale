@@ -4,27 +4,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { useState } from "react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import CustomInput from "@/components/common/customInput";
+import CustomInput, { CustomSelect } from "@/components/common/customInput";
 
 const formSchema = [
   yup.object().shape({
@@ -54,51 +39,27 @@ const Step1 = ({ control, errors }) => (
       errors={errors}
       name="fullName"
       label="Full Name"
-      placeholder="Enter you Full Name"
+      placeholder="Enter your Full Name"
     />
-    <FormField
+    <CustomInput
       control={control}
+      errors={errors}
       name="dob"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Date of Birth</FormLabel>
-          <FormControl>
-            <Input
-              {...field}
-              type="date"
-              id="dob"
-              className={`border ${
-                errors?.dob ? "border-red-500" : "border-gray-300"
-              } rounded-md px-3 py-2`}
-            />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
+      type="date"
+      label="Date of Birth"
+      placeholder="Enter your Date of Birth"
     />
-    <FormField
+    <CustomSelect
       control={control}
+      errors={errors}
       name="gender"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Gender</FormLabel>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
-            <FormControl>
-              <SelectTrigger
-                className={`${errors?.gender && "border-red-600"}`}
-              >
-                <SelectValue placeholder="Select you gender" />
-              </SelectTrigger>
-            </FormControl>
-            <SelectContent>
-              <SelectItem value="male">Male</SelectItem>
-              <SelectItem value="female">Female</SelectItem>
-              <SelectItem value="other">Other</SelectItem>
-            </SelectContent>
-          </Select>
-          <FormMessage />
-        </FormItem>
-      )}
+      label="Gender"
+      placeholder="Select your gender"
+      options={[
+        { value: "male", label: "Male" },
+        { value: "female", label: "Female" },
+        { value: "other", label: "Other" },
+      ]}
     />
   </div>
 );
@@ -110,15 +71,14 @@ const Step2 = ({ control, errors }) => (
       errors={errors}
       name="mobile"
       label="Mobile Number"
-      placeholder="Enter you Phone Number"
+      placeholder="Enter your Phone Number"
     />
-
     <CustomInput
       control={control}
       errors={errors}
       name="whatsapp"
       label="WhatsApp Number"
-      placeholder="Enter you Whatsapp Number"
+      placeholder="Enter your Whatsapp Number"
     />
 
     <CustomInput
@@ -126,7 +86,7 @@ const Step2 = ({ control, errors }) => (
       errors={errors}
       name="address"
       label="Address"
-      placeholder="Enter you Address"
+      placeholder="Enter your Address"
     />
   </div>
 );
@@ -138,7 +98,7 @@ const Step3 = ({ control, errors }) => (
       errors={errors}
       name="university"
       label="University"
-      placeholder="Enter you University Name"
+      placeholder="Enter your University Name"
     />
     <CustomInput
       control={control}
@@ -147,7 +107,7 @@ const Step3 = ({ control, errors }) => (
       label="College"
       placeholder="Enter your College Name"
     />
-    <FormField
+    <CustomInput
       control={control}
       name="branch"
       label="Branch"
@@ -213,10 +173,10 @@ export default function Details() {
               <Step1 control={form.control} errors={form.formState.errors} />
             )}
             {step === 2 && (
-              <Step2 control={form.control} errors={form.errors} />
+              <Step2 control={form.control} errors={form.formState.errors} />
             )}
             {step === 3 && (
-              <Step3 control={form.control} errors={form.errors} />
+              <Step3 control={form.control} errors={form.formState.errors} />
             )}
 
             <div
