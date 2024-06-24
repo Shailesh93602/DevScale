@@ -5,9 +5,9 @@ import { usePathname } from "next/navigation";
 export default function Footer() {
   const pathname = usePathname();
   return (
-    <>
-      <div className="">
-        <div className="flex max-w-full flex-wrap">
+    <footer className="bg-blue-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 py-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-wrap justify-between">
           <Link
             href="/faq"
             className={`text-gray-300 hover:text-light px-3 py-2 min-w-max ${
@@ -55,8 +55,8 @@ export default function Footer() {
             Discussion Forums
           </Link>
         </div>
-        <p>@Mr. Engineers, All rights reserved</p>
+        <p className="text-center mt-4">@Mr. Engineers, All rights reserved</p>
       </div>
-    </>
+    </footer>
   );
 }
