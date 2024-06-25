@@ -1,0 +1,36 @@
+{
+    "gender": [
+        "male",
+        "female"
+    ],
+    "branch": [
+        "CS",
+        "EE",
+        "ME",
+        "CE",
+        "EC"
+    ],
+    "year": [
+        "freshman",
+        "sophomore",
+        "junior",
+        "senior"
+    ],
+    "favoriteTechDomain": [
+        "AI",
+        "Web",
+        "DataScience",
+        "CyberSecurity"
+    ],
+    "coreInterest": [
+        "development",
+        "research",
+        "management",
+        "design"
+    ],
+    "environmentPreference": [
+        "startup",
+        "corporate",
+        "freelance"
+    ]
+}

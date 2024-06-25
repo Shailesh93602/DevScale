@@ -11,11 +11,12 @@ import chatRoutes from "./chatRoutes.js";
 import courseRoutes from "./courseRoutes.js";
 import battleRoutes from "./battleRoutes.js";
 import passport from "passport";
-import { isAlreadyLoggedIn } from "../middleware/isAlreadyLoggedIn.js";
 import { codeRunner } from "../controllers/codeRunnerController.js";
+import { predict } from "../controllers/predectionController.js";
 
 const router = express.Router();
 
+router.post("/predict", predict);
 router.use("/auth", authRoutes);
 router.use(
   "/profile",
