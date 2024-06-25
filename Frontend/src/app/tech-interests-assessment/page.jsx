@@ -328,12 +328,22 @@ const TechInterestAssessment = () => {
     setStep((prevStep) => prevStep + 1);
   };
 
-  const prevStep = () => {
-    setStep((prevStep) => prevStep - 1);
-  };
-
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    if (step < 5) {
+      nextStep();
+      return;
+    }
+    const response = await fetch("http://localhost:4000/predict", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+      credentials: "include",
+    });
+    console.log(response);
+    const json = await response.json();
+    console.log(json);
   };
 
   const renderStep = () => {
@@ -349,35 +359,51 @@ const TechInterestAssessment = () => {
       case 5:
         return <StepFive control={form.control} />;
       default:
-        return <StepOne control={form.control} />;
+        return <h1>Invalid Step</h1>;
     }
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-8 bg-gray-100 dark:bg-gray-900 shadow-md rounded">
-      <h1 className="text-3xl font-bold mb-6 text-center">
-        Tech Interest Assessment
-      </h1>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          {renderStep()}
-          <div className="flex justify-between mt-6">
-            {step > 1 && (
-              <Button type="button" onClick={prevStep}>
-                Previous
+    <section className="min-h-screen flex items-center justify-center py-12 bg-background text-foreground transition duration-300 ease-in-out">
+      <div className="w-full max-w-lg bg-card shadow-lg rounded-lg p-10 dark:bg-gray-800 dark:text-white">
+        <div className="text-center mb-8">
+          <Link
+            href="/"
+            className="text-4xl font-extrabold text-blue-700 dark:text-blue-800"
+          >
+            Mr. Engineers
+          </Link>
+        </div>
+        <h1 className="text-3xl font-semibold text-center mb-6 dark:text-gray-100">
+          Tech Interest Assessment
+        </h1>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            {renderStep()}
+            <div
+              className={`flex w-full mt-4 ${
+                step == 1 ? "justify-end" : "justify-between"
+              }`}
+            >
+              {step > 1 && (
+                <Button
+                  type="submit"
+                  className="w-max py-3 mt-4 bg-blue-600 text-white hover:bg-blue-700 transition duration-200 ease-in-out"
+                >
+                  Previous
+                </Button>
+              )}
+              <Button
+                type="submit"
+                className="w-max py-3 mt-4 bg-blue-600 text-white hover:bg-blue-700 transition duration-200 ease-in-out"
+              >
+                {step < 5 ? "Next" : "Submit"}
               </Button>
-            )}
-            {step < 5 ? (
-              <Button type="button" onClick={nextStep}>
-                Next
-              </Button>
-            ) : (
-              <Button type="submit">Submit</Button>
-            )}
-          </div>
-        </form>
-      </Form>
-    </div>
+            </div>
+          </form>
+        </Form>
+      </div>
+    </section>
   );
 };
 
