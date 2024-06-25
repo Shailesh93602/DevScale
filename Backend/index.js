@@ -1,9 +1,9 @@
 import { config } from "dotenv";
 import express from "express";
 import cookieParser from "cookie-parser";
-import routes from "./src/routes/routes.js";
+import routes from "../src/routes/routes.js";
 import cors from "cors";
-import { applyPassportStrategy } from "./src/middleware/passport.js";
+import { applyPassportStrategy } from "../src/middleware/passport.js";
 import { v2 as cloudinary } from "cloudinary";
 
 config();
@@ -26,8 +26,4 @@ app.use(
 app.use(routes);
 applyPassportStrategy();
 
-const port = process.env.PORT || 3000;
-
-app.listen(port, () => {
-  console.log("Server is listening on port: " + port);
-});
+export default app;
