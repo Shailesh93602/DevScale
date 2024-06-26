@@ -18,12 +18,15 @@ export async function middleware(req) {
       url.pathname = "/u/login";
       return NextResponse.redirect(url);
     } else {
-      const response = await fetch("http://localhost:4000/profile", {
-        credentials: "include",
-        headers: {
-          Cookie: req.headers.get("cookie"),
-        },
-      });
+      const response = await fetch(
+        "https://mrengineersapi.vercel.app/profile",
+        {
+          credentials: "include",
+          headers: {
+            Cookie: req.headers.get("cookie"),
+          },
+        }
+      );
       if (response.status == 401) {
         const url = req.nextUrl.clone();
         url.pathname = "/u/login";

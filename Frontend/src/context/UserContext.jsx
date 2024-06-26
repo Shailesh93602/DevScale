@@ -12,7 +12,7 @@
 //     const fetchData = async () => {
 //       //   try {
 //       //     console.log('hi');
-//       //     const response = await fetch("http://localhost:4000/profile", {
+//       //     const response = await fetch("https://mrengineersapi.vercel.app/profile", {
 //       //       credentials: "include",
 //       //     });
 //       //     if (!response.ok) {
@@ -30,7 +30,7 @@
 //         if (!token) {
 //           setAuthenticated(false);
 //         }
-//         const response = await fetch("http://localhost:4000/profile", {
+//         const response = await fetch("https://mrengineersapi.vercel.app/profile", {
 //           credentials: "include",
 //         });
 //         if (!response.ok) {
