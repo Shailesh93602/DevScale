@@ -1,9 +1,9 @@
 import { config } from "dotenv";
 import express from "express";
 import cookieParser from "cookie-parser";
-import routes from "../src/routes/routes.js";
+import routes from "./src/routes/routes.js";
 import cors from "cors";
-import { applyPassportStrategy } from "../src/middleware/passport.js";
+import { applyPassportStrategy } from "./src/middleware/passport.js";
 import { v2 as cloudinary } from "cloudinary";
 
 config();
@@ -14,6 +14,7 @@ cloudinary.config({
 });
 
 const app = express();
+const port = process.env.PORT || 4000;
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cookieParser());
@@ -26,4 +27,7 @@ app.use(
 app.use(routes);
 applyPassportStrategy();
 
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
 export default app;
