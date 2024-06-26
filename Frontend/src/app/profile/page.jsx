@@ -27,10 +27,16 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const response = await fetch("http://localhost:4000/profile", {
-          method: "GET",
-          credentials: "include",
-        });
+        const response = await fetch(
+          "https://mrengineersapi.vercel.app/profile",
+          {
+            method: "GET",
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+            credentials: "include",
+          }
+        );
         const data = await response.json();
         if (data.success) {
           let { achievements, ...otherDetails } = data.userInfo;
@@ -57,14 +63,18 @@ export default function ProfilePage() {
 
   const handleSave = async () => {
     try {
-      const response = await fetch("http://localhost:4000/profile/update", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userInfo),
-        credentials: "include",
-      });
+      const response = await fetch(
+        "https://mrengineersapi.vercel.app/profile/update",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token"),
+          },
+          body: JSON.stringify(userInfo),
+          credentials: "include",
+        }
+      );
 
       const data = await response.json();
       if (data.success) {

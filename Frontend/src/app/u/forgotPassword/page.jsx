@@ -27,14 +27,17 @@ export default function ForgotPassword() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await fetch("http://localhost:4000/auth/forgot", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-        credentials: "include",
-      });
+      const response = await fetch(
+        "https://mrengineersapi.vercel.app/auth/forgot",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+          credentials: "include",
+        }
+      );
       const json = await response.json();
       if (json.success) {
         toast.success(json.message);

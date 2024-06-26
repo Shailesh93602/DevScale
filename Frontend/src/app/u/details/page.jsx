@@ -137,12 +137,15 @@ export default function Details() {
       setStep(step + 1);
       return;
     }
-    const response = await fetch("http://localhost:4000/profile/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-      credentials: "include",
-    });
+    const response = await fetch(
+      "https://mrengineersapi.vercel.app/profile/register",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+        credentials: "include",
+      }
+    );
     const result = await response.json();
     if (result.success) {
       localStorage.setItem("user", JSON.stringify(result.user));

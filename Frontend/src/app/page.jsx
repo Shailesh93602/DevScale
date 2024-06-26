@@ -13,10 +13,13 @@ export default function LandingPage() {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:4000/auth/logout", {
-        method: "POST",
-        credentials: "include",
-      });
+      const response = await fetch(
+        "https://mrengineersapi.vercel.app/auth/logout",
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
       if (response.ok) {
         // setAuthenticated(false);
         toast.success("Logged out successfully!");
