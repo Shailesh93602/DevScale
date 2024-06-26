@@ -100,7 +100,7 @@ export default function ProfilePage() {
 
   return (
     <div className="container mx-auto p-4">
-      <div className={`bg-white shadow rounded-md p-6 ${styles.profileCard}`}>
+      <div className={`bg-white  dark:bg-gray-800  shadow rounded-md p-6 ${styles.profileCard}`}>
         <div className="flex justify-between">
           <label className="relative cursor-pointer">
             <input
@@ -108,6 +108,7 @@ export default function ProfilePage() {
               accept="image/*"
               className="sr-only"
               onChange={handleImageChange}
+            // className="w-full p-3 mb-6 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <img
               src={profileImage || userInfo.profilePicture}
@@ -146,24 +147,24 @@ export default function ProfilePage() {
         </div>
 
         <div className="mt-6">
-          <h2 className="text-lg font-semibold text-blue-900">Bio</h2>
+          <h2 className="text-lg font-semibold dark:text-blue-500 text-blue-900">Bio</h2>
           {isEditing ? (
             <textarea
               name="bio"
               value={userInfo.bio}
               onChange={handleChange}
-              className="w-full mt-2 p-2 border text-gray-900 border-gray-300 rounded-md bg-transparent"
+              className="w-full mt-2 p-2 border text-gray-900 dark:text-gray-200 border-gray-300 rounded-md bg-transparent"
             />
           ) : (
-            <p className="mt-2 text-gray-700">{userInfo.bio}</p>
+            <p className="mt-2 dark:text-gra text-gray-700">{userInfo.bio}</p>
           )}
         </div>
 
         <div
           className={`mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 ${styles.infoGrid}`}
         >
-          <div className={styles.infoSection}>
-            <h2 className="text-lg font-semibold text-blue-900">
+          <div className={`dark:bg-gray-800  ${styles.infoSection} `} >
+            <h2 className="text-lg  dark:text-blue-500 font-semibold text-blue-900">
               Personal Information
             </h2>
             {renderInput(
@@ -202,8 +203,8 @@ export default function ProfilePage() {
               isEditing
             )}
           </div>
-          <div className={styles.infoSection}>
-            <h2 className="text-lg font-semibold text-blue-900">
+          <div className={`dark:bg-gray-800  ${styles.infoSection} `} >
+            <h2 className="text-lg font-semibold  dark:text-blue-500 text-blue-900">
               Academic Information
             </h2>
             {renderInput(
@@ -237,8 +238,8 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        <div className={styles.achivementsection}>
-          <h2 className="text-lg font-semibold text-blue-900">Achievements</h2>
+        <div className={`dark:bg-gray-800   ${styles.infoSection} `} >
+          <h2 className="text-lg font-semibold  dark:text-blue-500 text-blue-900">Achievements</h2>
           {isEditing ? (
             <textarea
               name="achievements"
@@ -251,10 +252,10 @@ export default function ProfilePage() {
                   },
                 })
               }
-              className="w-full mt-2 p-2 border text-gray-900 border-gray-300 rounded-md bg-transparent"
+              className="w-full mt-2 p-2 border dark:text-gray-200 text-gray-900 border-gray-300 rounded-md bg-transparent"
             />
           ) : (
-            <ul className="list-disc ml-5 mt-2 text-gray-700">
+            <ul className="list-disc ml-5 mt-2 dark:text-gray-200 text-gray-700">
               {userInfo.achievements.map((achievement, index) => (
                 <li key={index}>{achievement}</li>
               ))}
@@ -294,17 +295,17 @@ export default function ProfilePage() {
 
 const renderInput = (label, name, value, onChange, isEditing) => (
   <div className="mt-4">
-    <label className="block text-gray-700">{label}</label>
+    <label className="block dark:text-gray-400 text-gray-700">{label}</label>
     {isEditing ? (
       <input
         type="text"
         name={name}
         value={value}
         onChange={onChange}
-        className="mt-1 w-full p-2 border text-gray-900 border-gray-300 rounded-md bg-transparent"
+        className="mt-1 w-full p-2 border  dark:text-gray-200 text-gray-900 border-gray-300 rounded-md bg-transparent"
       />
     ) : (
-      <p className="mt-1 text-gray-700">{value}</p>
+      <p className="mt-1 dark:text-gray-200 text-gray-700">{value}</p>
     )}
   </div>
 );

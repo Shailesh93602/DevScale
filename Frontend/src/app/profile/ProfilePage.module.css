@@ -8,7 +8,13 @@
     margin-top: 20px;
   }
   
+  .dark\:bg-gray-800 {
+    background-color: #2d3748;
+}
+
   .infoSection {
+ 
+  
     padding: 20px;
     background-color: #f0f0f0;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);

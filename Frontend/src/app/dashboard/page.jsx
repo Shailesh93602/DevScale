@@ -8,9 +8,9 @@ export default function Dashboard() {
   const [username, setUsername] = useState("Loading...");
 
   return (
-    <div className="p-6 bg-white text-gray-900">
+    <div className="p-6 bg-white  dark:bg-gray-800 text-gray-900">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-extrabold mb-2">Welcome,</h1>
+        <h1 className="text-4xl dark:text-gray-200 font-extrabold mb-2">Welcome,</h1>
         <h2 className="text-5xl font-extrabold mb-8 text-indigo-700">
           {username}
         </h2>
