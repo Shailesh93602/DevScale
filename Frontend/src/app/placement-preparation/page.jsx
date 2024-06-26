@@ -16,14 +16,14 @@ export default function PlacementPreparation() {
   // })
 
   return (
-    <div className="min-h-screen bg-gray-100 py-12">
+    <div className="min-h-screen  dark:bg-gray-800  bg-gray-100 py-12">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-6">
+        <h1 className="text-4xl font-bold dark:text-gray-200 text-gray-900 mb-6">
           Placement Preparation
         </h1>
 
-        <div className="bg-light rounded-lg shadow p-6 mb-8">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+        <div className="bg-light rounded-lg dark:bg-gray-600 shadow p-6 mb-8">
+          <h2 className="text-2xl dark:text-gray-200 font-semibold text-gray-800 mb-4">
             Practice Tests
           </h2>
           <Image
@@ -32,7 +32,7 @@ export default function PlacementPreparation() {
             width={550}
             height={310}
           />
-          <p className="mt-4 text-gray-600">
+          <p className="mt-4 dark:text-gray-200 text-gray-600">
             Take a variety of practice tests to prepare for your placement
             exams. These tests cover different subjects and topics that are
             commonly seen in placement exams.
@@ -42,11 +42,11 @@ export default function PlacementPreparation() {
           </button>
         </div>
 
-        <div className="bg-light rounded-lg shadow p-6 mb-8">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+        <div className="bg-light rounded-lg dark:bg-gray-600 dark:text-gray-200 shadow p-6 mb-8">
+          <h2 className="text-2xl font-semibold dark:text-gray-200 text-gray-800 mb-4">
             Interview Tips
           </h2>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-300">
             Learn about the best strategies and tips to succeed in interviews.
             From understanding the company culture to practicing common
             questions, we’ve got you covered.
@@ -56,11 +56,11 @@ export default function PlacementPreparation() {
           </button>
         </div>
 
-        <div className="bg-light rounded-lg shadow p-6 mb-8">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+        <div className="bg-light dark:bg-gray-600 rounded-lg shadow p-6 mb-8">
+          <h2 className="text-2xl dark:text-gray-200 font-semibold text-gray-800 mb-4">
             Resume Building
           </h2>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-300">
             Create a professional resume that stands out. Use our resume
             building tools and templates to highlight your skills and
             experiences effectively.
@@ -70,11 +70,11 @@ export default function PlacementPreparation() {
           </button>
         </div>
 
-        <div className="bg-light rounded-lg shadow p-6">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+        <div className="bg-light dark:bg-gray-600 rounded-lg shadow p-6">
+          <h2 className="text-2xl font-semibold dark:text-gray-200 text-gray-800 mb-4">
             Common Interview Questions
           </h2>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-300">
             Prepare for your interviews by practicing answers to the most common
             interview questions. This will help you to articulate your thoughts
             and experiences clearly.
