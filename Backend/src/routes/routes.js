@@ -16,6 +16,7 @@ import { predict } from "../controllers/predectionController.js";
 
 const router = express.Router();
 
+router.get("/helloworld", (req, res) => res.send("Hello World!"));
 router.post("/predict", predict);
 router.use("/auth", authRoutes);
 router.use(

@@ -151,6 +151,7 @@ export const login = async (req, res) => {
           success: true,
           message: "Logged in successfully!",
           route,
+          token,
         });
       });
     } else {
@@ -185,6 +186,7 @@ export const login = async (req, res) => {
           success: true,
           message: "Logged in successfully!",
           route,
+          token,
         });
       });
     }
