@@ -21,7 +21,11 @@ app.use(cookieParser());
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:3000", "https://localhost:3001"],
+    origin: [
+      "http://localhost:3000",
+      "https://localhost:3001",
+      "https://mrengineers.vercel.app",
+    ],
   })
 );
 app.use(routes);
