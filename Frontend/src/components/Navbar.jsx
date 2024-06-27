@@ -41,9 +41,6 @@ const Navbar = () => {
             <NavItem href="/dashboard" pathname={pathname}>
               Dashboard
             </NavItem>
-            <NavItem href="/profile" pathname={pathname}>
-              Profile
-            </NavItem>
             <NavItem href="/resources" pathname={pathname}>
               Resources
             </NavItem>

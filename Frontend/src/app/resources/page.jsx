@@ -129,8 +129,8 @@ export default function ResourcesPage() {
   );
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
+    <div className="bg-white dark:bg-gray-800 mx-auto p-6 ">
+      <div className="bg-blue-50 dark:bg-gray-900 shadow-md rounded-lg p-6">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6">
           Resources
         </h1>
@@ -139,14 +139,14 @@ export default function ResourcesPage() {
           placeholder="Search resources..."
           value={searchTerm}
           onChange={handleSearch}
-          className="w-full p-3 mb-6 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-3 mb-6 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         {filteredResources.length > 0 ? (
           <ul className="space-y-6">
             {filteredResources.map((resource, index) => (
               <li
                 key={index}
-                className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-200"
+                className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-200"
               >
                 <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
                   {resource.title}
