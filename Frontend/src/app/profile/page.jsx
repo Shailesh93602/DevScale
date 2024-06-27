@@ -100,7 +100,9 @@ export default function ProfilePage() {
 
   return (
     <div className="container mx-auto p-4">
-      <div className={`bg-white  dark:bg-gray-800  shadow rounded-md p-6 ${styles.profileCard}`}>
+      <div
+        className={`bg-white  dark:bg-gray-800  shadow rounded-md p-6 ${styles.profileCard}`}
+      >
         <div className="flex justify-between">
           <label className="relative cursor-pointer">
             <input
@@ -108,7 +110,7 @@ export default function ProfilePage() {
               accept="image/*"
               className="sr-only"
               onChange={handleImageChange}
-            // className="w-full p-3 mb-6 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              // className="w-full p-3 mb-6 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <img
               src={profileImage || userInfo.profilePicture}
@@ -128,10 +130,10 @@ export default function ProfilePage() {
                 name="fullName"
                 value={userInfo.fullName}
                 onChange={handleChange}
-                className="text-xl font-bold text-gray-900 border-b border-gray-300 focus:outline-none bg-transparent"
+                className="text-xl font-bold border-b border-gray-300 focus:outline-none bg-transparent"
               />
             ) : (
-              <h1 className="text-xl font-bold text-gray-900">
+              <h1 className="text-xl font-bold">
                 {userInfo.fullName
                   .split(" ")
                   .filter((name) => name.trim() !== "")
@@ -142,28 +144,30 @@ export default function ProfilePage() {
                   .join(" ")}
               </h1>
             )}
-            <p className="text-gray-700">{userInfo.email}</p>
+            <p className="text-gray-700 dark:text-gray-400">{userInfo.email}</p>
           </div>
         </div>
 
         <div className="mt-6">
-          <h2 className="text-lg font-semibold dark:text-blue-500 text-blue-900">Bio</h2>
+          <h2 className="text-lg font-semibold dark:text-blue-500 text-blue-900">
+            Bio
+          </h2>
           {isEditing ? (
             <textarea
               name="bio"
               value={userInfo.bio}
               onChange={handleChange}
-              className="w-full mt-2 p-2 border text-gray-900 dark:text-gray-200 border-gray-300 rounded-md bg-transparent"
+              className="w-full mt-2 p-2 border dark:text-gray-200 border-gray-300 rounded-md bg-transparent"
             />
           ) : (
-            <p className="mt-2 dark:text-gra text-gray-700">{userInfo.bio}</p>
+            <p className="mt-2">{userInfo.bio}</p>
           )}
         </div>
 
         <div
           className={`mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 ${styles.infoGrid}`}
         >
-          <div className={`dark:bg-gray-800  ${styles.infoSection} `} >
+          <div className={`dark:bg-gray-800  ${styles.infoSection} `}>
             <h2 className="text-lg  dark:text-blue-500 font-semibold text-blue-900">
               Personal Information
             </h2>
@@ -203,7 +207,7 @@ export default function ProfilePage() {
               isEditing
             )}
           </div>
-          <div className={`dark:bg-gray-800  ${styles.infoSection} `} >
+          <div className={`dark:bg-gray-800  ${styles.infoSection} `}>
             <h2 className="text-lg font-semibold  dark:text-blue-500 text-blue-900">
               Academic Information
             </h2>
@@ -238,8 +242,10 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        <div className={`dark:bg-gray-800   ${styles.infoSection} `} >
-          <h2 className="text-lg font-semibold  dark:text-blue-500 text-blue-900">Achievements</h2>
+        <div className={`dark:bg-gray-800   ${styles.infoSection} `}>
+          <h2 className="text-lg font-semibold  dark:text-blue-500 text-blue-900">
+            Achievements
+          </h2>
           {isEditing ? (
             <textarea
               name="achievements"
