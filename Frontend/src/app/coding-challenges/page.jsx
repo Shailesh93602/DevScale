@@ -48,7 +48,7 @@ export default function CodingChallengesPage() {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="bg-white  dark:bg-gray-800  shadow-md rounded-lg p-6">
+      <div className="bg-blue-50  dark:bg-gray-800  shadow-md rounded-lg p-6">
         <h1 className="text-2xl font-bold dark:text-gray-200 text-gray-900 mb-4">
           Coding Challenges
         </h1>
@@ -63,18 +63,24 @@ export default function CodingChallengesPage() {
         {filteredChallenges.length > 0 ? (
           <ul className="space-y-4">
             {filteredChallenges.map((challenge, index) => (
-              <li key={index} className="bg-gray-100  dark:bg-gray-600  p-4 rounded-md shadow">
+              <li
+                key={index}
+                className="bg-gray-100  dark:bg-gray-900  p-4 rounded-md shadow"
+              >
                 <h2 className="text-xl font-semibold dark:text-gray-200 text-gray-900">
                   {challenge.title}
                 </h2>
-                <p className="dark:text-gray-200 stext-gray-700">{challenge.description}</p>
+                <p className="dark:text-gray-200 stext-gray-700">
+                  {challenge.description}
+                </p>
                 <span
-                  className={`inline-block px-2 py-1 text-sm font-semibold rounded-full ${challenge.difficulty === "Easy"
-                    ? "bg-green-200 text-green-800"
-                    : challenge.difficulty === "Medium"
+                  className={`inline-block px-2 py-1 text-sm font-semibold rounded-full ${
+                    challenge.difficulty === "Easy"
+                      ? "bg-green-200 text-green-800"
+                      : challenge.difficulty === "Medium"
                       ? "bg-yellow-200 text-yellow-800"
                       : "bg-red-200 text-red-800"
-                    }`}
+                  }`}
                 >
                   {challenge.difficulty}
                 </span>

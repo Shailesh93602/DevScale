@@ -17,12 +17,12 @@ export default function PlacementPreparation() {
 
   return (
     <div className="min-h-screen  dark:bg-gray-800  bg-gray-100 py-12">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+      <div className="max-w-7xl mx-5 rounded-lg px-6 lg:px-8 bg-blue-50 dark:bg-gray-900 ">
         <h1 className="text-4xl font-bold dark:text-gray-200 text-gray-900 mb-6">
           Placement Preparation
         </h1>
 
-        <div className="bg-light rounded-lg dark:bg-gray-600 shadow p-6 mb-8">
+        <div className="bg-gray-100 rounded-lg dark:bg-gray-800 shadow p-6 mb-8">
           <h2 className="text-2xl dark:text-gray-200 font-semibold text-gray-800 mb-4">
             Practice Tests
           </h2>
@@ -42,7 +42,7 @@ export default function PlacementPreparation() {
           </button>
         </div>
 
-        <div className="bg-light rounded-lg dark:bg-gray-600 dark:text-gray-200 shadow p-6 mb-8">
+        <div className="bg-gray-100 rounded-lg dark:bg-gray-800 dark:text-gray-200 shadow p-6 mb-8">
           <h2 className="text-2xl font-semibold dark:text-gray-200 text-gray-800 mb-4">
             Interview Tips
           </h2>
@@ -56,7 +56,7 @@ export default function PlacementPreparation() {
           </button>
         </div>
 
-        <div className="bg-light dark:bg-gray-600 rounded-lg shadow p-6 mb-8">
+        <div className="bg-gray-100 dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
           <h2 className="text-2xl dark:text-gray-200 font-semibold text-gray-800 mb-4">
             Resume Building
           </h2>
@@ -70,7 +70,7 @@ export default function PlacementPreparation() {
           </button>
         </div>
 
-        <div className="bg-light dark:bg-gray-600 rounded-lg shadow p-6">
+        <div className="bg-gray-100 dark:bg-gray-800 rounded-lg shadow p-6">
           <h2 className="text-2xl font-semibold dark:text-gray-200 text-gray-800 mb-4">
             Common Interview Questions
           </h2>
