@@ -1,11 +1,19 @@
 "use client";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import StatCard from "@/components/StatCard";
 import CourseCard from "@/components/CourseCard";
 import Section from "@/components/Section";
+import { UserContext } from '@/context/UserContext';
 
 export default function Dashboard() {
   const [username, setUsername] = useState("Loading...");
+  const { user, authenticated, setAuthenticated } = useContext(UserContext);
+
+
+  console.log(user);
+
+
+
 
   return (
     <div className="p-6 bg-white  dark:bg-gray-800 text-gray-900">
