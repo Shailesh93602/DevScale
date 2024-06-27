@@ -5,12 +5,12 @@ import { usePathname } from "next/navigation";
 export default function Footer() {
   const pathname = usePathname();
   return (
-    <footer className="bg-blue-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 py-4">
+    <footer className="bg-gray-50 border-t border-gray-100 dark:border-gray-800 dark:bg-gray-900 shadow-lg w-full z-50 text-gray-900 dark:text-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-wrap justify-between">
           <Link
             href="/faq"
-            className={`text-gray-300 hover:text-light px-3 py-2 min-w-max ${
+            className={`px-3 py-2 min-w-max ${
               pathname === "/faq" ? "border-b-2 border-light text-light" : ""
             }`}
           >
@@ -18,7 +18,7 @@ export default function Footer() {
           </Link>
           <Link
             href="/about-us"
-            className={`text-gray-300 hover:text-light px-3 py-2 min-w-max ${
+            className={`px-3 py-2 min-w-max ${
               pathname === "/about-us"
                 ? "border-b-2 border-light text-light"
                 : ""
@@ -28,7 +28,7 @@ export default function Footer() {
           </Link>
           <Link
             href="/contact-us"
-            className={`text-gray-300 hover:text-light px-3 py-2 min-w-max ${
+            className={`px-3 py-2 min-w-max ${
               pathname === "/contact-us"
                 ? "border-b-2 border-light text-light"
                 : ""
@@ -38,7 +38,7 @@ export default function Footer() {
           </Link>
           <Link
             href="/blogs"
-            className={`text-gray-300 hover:text-light px-3 py-2 min-w-max ${
+            className={` px-3 py-2 min-w-max ${
               pathname === "/blogs" ? "border-b-2 border-light text-light" : ""
             }`}
           >
@@ -46,7 +46,7 @@ export default function Footer() {
           </Link>
           <Link
             href="/discussion-forums"
-            className={`text-gray-300 hover:text-light px-3 py-2 min-w-max ${
+            className={`px-3 py-2 min-w-max ${
               pathname === "/discussion-forums"
                 ? "border-b-2 border-light text-light"
                 : ""

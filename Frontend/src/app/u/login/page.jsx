@@ -47,9 +47,7 @@ export default function Login() {
       if (json.success) {
         toast.success("Logged In Successfully!");
         localStorage.setItem("token", json.token);
-        setTimeout(() => {
-          router.push(json.route);
-        }, 1000);
+        router.push("/dashboard");
       } else {
         toast.error(json.message);
       }
