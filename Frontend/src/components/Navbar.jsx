@@ -2,7 +2,10 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FiMenu, FiX, FiSun, FiMoon, FiUser } from "react-icons/fi";
+import { FiMenu, FiX, FiSun, FiMoon } from "react-icons/fi";
+import { FaAngleDown, FaRegUserCircle } from "react-icons/fa";
+import { PiSignOutFill } from "react-icons/pi";
+import { GrAchievement } from "react-icons/gr";
 import { useTheme } from "next-themes";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
@@ -41,6 +44,11 @@ const Navbar = () => {
             <NavItem href="/dashboard" pathname={pathname}>
               Dashboard
             </NavItem>
+
+            <NavItem href="/battle-zone" pathname={pathname}>
+              Battle Zone
+              {/* <FaAngleDown /> */}
+            </NavItem>
             <NavItem href="/resources" pathname={pathname}>
               Resources
             </NavItem>
@@ -78,15 +86,25 @@ const Navbar = () => {
                   <Link
                     href="/profile"
                     onClick={handleLinkClick}
-                    className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md"
+                    className="flex items-center gap-2 px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-md"
                   >
+                    <FaRegUserCircle />
                     Profile
+                  </Link>
+                  <Link
+                    href="/achievements"
+                    onClick={handleLinkClick}
+                    className="flex items-center gap-2 px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-md"
+                  >
+                    <GrAchievement />
+                    Achievements
                   </Link>
                   <Link
                     href="/logout"
                     onClick={handleLinkClick}
-                    className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md"
+                    className="flex items-center gap-2 px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-md"
                   >
+                    <PiSignOutFill />
                     Logout
                   </Link>
                 </div>
@@ -112,6 +130,13 @@ const Navbar = () => {
               onClick={handleLinkClick}
             >
               Dashboard
+            </NavItem>
+            <NavItem
+              href="/battle-zone"
+              pathname={pathname}
+              onClick={handleLinkClick}
+            >
+              Battle Zone
             </NavItem>
             <NavItem
               href="/profile"
@@ -204,7 +229,7 @@ const NavItem = ({ href, pathname, onClick, children }) => (
   <Link
     href={href}
     onClick={onClick}
-    className={`block px-3 py-2 rounded-md text-base font-medium ${
+    className={`flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium ${
       pathname === href ? "text-blue-500 font-semibold" : ""
     }`}
   >

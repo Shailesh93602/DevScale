@@ -1,10 +1,14 @@
-import express from 'express';
-import { createChallenge, getBattle, getBattles } from '../controllers/battleControllers.js';
+import express from "express";
+import {
+  createBattle,
+  getBattle,
+  getBattles,
+} from "../controllers/battleControllers.js";
 
 const router = express.Router();
 
-router.get('/', getBattles);
-router.get('/:id', getBattle);
-router.post('/challenge', createChallenge);
+router.get("/", getBattles);
+router.get("/:id", getBattle);
+router.post("/create", createBattle);
 
 export default router;

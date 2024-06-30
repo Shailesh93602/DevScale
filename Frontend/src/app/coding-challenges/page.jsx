@@ -48,7 +48,7 @@ export default function CodingChallengesPage() {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="bg-blue-50  dark:bg-gray-800  shadow-md rounded-lg p-6">
+      <div className="bg-blue-50  dark:bg-gray-900  shadow-md rounded-lg p-6">
         <h1 className="text-2xl font-bold dark:text-gray-200 text-gray-900 mb-4">
           Coding Challenges
         </h1>
@@ -57,7 +57,7 @@ export default function CodingChallengesPage() {
           placeholder="Search challenges..."
           value={searchTerm}
           onChange={handleSearch}
-          className="w-full p-2 mb-6 border border-gray-300 rounded-md text-dark"
+          className="w-full p-2 mb-6 border border-gray-300 rounded-md text-dark dark:bg-gray-800"
         />
 
         {filteredChallenges.length > 0 ? (
@@ -65,12 +65,12 @@ export default function CodingChallengesPage() {
             {filteredChallenges.map((challenge, index) => (
               <li
                 key={index}
-                className="bg-gray-100  dark:bg-gray-900  p-4 rounded-md shadow"
+                className="bg-white  dark:bg-gray-800  p-4 rounded-md shadow"
               >
                 <h2 className="text-xl font-semibold dark:text-gray-200 text-gray-900">
                   {challenge.title}
                 </h2>
-                <p className="dark:text-gray-200 stext-gray-700">
+                <p className="dark:text-gray-200 text-gray-700">
                   {challenge.description}
                 </p>
                 <span
