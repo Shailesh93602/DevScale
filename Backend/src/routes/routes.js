@@ -92,7 +92,7 @@ router.use(
 );
 
 router.use(
-  "/battle",
+  "/battles",
   passport.authenticate("jwt", {
     session: false,
   }),

@@ -17,7 +17,8 @@ export default function App({ children }) {
     "/career-roadmap",
     "/placement-preparation",
     "/community",
-    "/Achivement",
+    "/achievements",
+    "/battle-zone",
   ];
   if (
     routes.find(
