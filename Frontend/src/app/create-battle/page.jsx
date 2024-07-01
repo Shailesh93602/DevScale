@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { Input } from "@/components/ui/input";
 
 const majorTopics = ["DSA", "OOPs", "JavaScript", "Python", "Java"];
 const difficulties = ["easy", "medium", "hard"];
@@ -17,20 +18,23 @@ export default function CreateBattlePage() {
 
   const handleCreate = async () => {
     try {
-      const response = await fetch("http://localhost:4000/battles/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token"),
-        },
-        body: JSON.stringify({
-          title,
-          description,
-          topic: selectedMajorTopic,
-          difficulty: selectedDifficulty.toLowerCase(),
-          length: selectedLength.toLocaleLowerCase(),
-        }),
-      });
+      const response = await fetch(
+        "https://mrengineersapi.vercel.app/battles/create",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token"),
+          },
+          body: JSON.stringify({
+            title,
+            description,
+            topic: selectedMajorTopic,
+            difficulty: selectedDifficulty.toLowerCase(),
+            length: selectedLength.toLocaleLowerCase(),
+          }),
+        }
+      );
       if (!response.ok) {
         console.error("Failed to create battle");
       }
@@ -100,6 +104,17 @@ export default function CreateBattlePage() {
             </option>
           ))}
         </select>
+        <Input
+          type="date"
+          name="date"
+          startDate={new Date()}
+          className="w-full p-3 mb-4 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <Input
+          type="time"
+          name="time"
+          className="w-full p-3 mb-4 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
         <button
           onClick={handleCreate}
           className="w-full py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200"

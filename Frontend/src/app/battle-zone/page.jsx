@@ -19,13 +19,16 @@ export default function BattleZonePage() {
   useEffect(() => {
     const fetchBattles = async () => {
       try {
-        const response = await fetch("http://localhost:4000/battles", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: localStorage.getItem("token"),
-          },
-        });
+        const response = await fetch(
+          "https://mrengineersapi.vercel.app/battles",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: localStorage.getItem("token"),
+            },
+          }
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch battles");
         }
