@@ -32,9 +32,7 @@ export default function BattleZonePage() {
         if (!response.ok) {
           throw new Error("Failed to fetch battles");
         }
-        console.log(response);
         const json = await response.json();
-        console.log(json);
         if (json.success) {
           setBattles(json.battles);
           setFilteredBattles(json.battles);
@@ -101,18 +99,18 @@ export default function BattleZonePage() {
   };
 
   return (
-    <div className="bg-white w-full max-w-[90vw] dark:bg-gray-800 mx-auto p-6">
+    <div className="bg-white w-full dark:bg-gray-800 mx-auto p-6">
       <div className="bg-blue-50 dark:bg-gray-900 shadow-md rounded-lg p-6">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6">
           Battle Zone
         </h1>
-        <div className="flex flex-col w-full items-center mb-4">
+        <div className="flex flex-col items-center mb-4">
           <BattleTopics
             topics={topics}
             selectedTopic={selectedTopic}
             onChange={handleTopicChange}
           />
-          <div className="flex flex-col md:flex-row w-full md:ml-4 mt-4 md:mt-0">
+          <div className="flex flex-col md:flex-row w-full mt-4">
             <input
               type="text"
               placeholder="Search battles by username or title..."
