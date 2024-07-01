@@ -14,6 +14,8 @@ export default function CreateBattlePage() {
   const [selectedMajorTopic, setSelectedMajorTopic] = useState(majorTopics[0]);
   const [selectedDifficulty, setSelectedDifficulty] = useState(difficulties[0]);
   const [selectedLength, setSelectedLength] = useState(lengths[0]);
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
   const router = useRouter();
 
   const handleCreate = async () => {
@@ -31,16 +33,18 @@ export default function CreateBattlePage() {
             description,
             topic: selectedMajorTopic,
             difficulty: selectedDifficulty.toLowerCase(),
-            length: selectedLength.toLocaleLowerCase(),
+            length: selectedLength.toLowerCase(),
+            date,
+            time,
           }),
         }
       );
       if (!response.ok) {
         console.error("Failed to create battle");
+        return;
       }
 
       const json = await response.json();
-      console.log(json);
       if (json.success) {
         toast.success(json.message);
         router.push("/battle-zone");
@@ -107,12 +111,15 @@ export default function CreateBattlePage() {
         <Input
           type="date"
           name="date"
-          startDate={new Date()}
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
           className="w-full p-3 mb-4 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <Input
           type="time"
           name="time"
+          value={time}
+          onChange={(e) => setTime(e.target.value)}
           className="w-full p-3 mb-4 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <button
