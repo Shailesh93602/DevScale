@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../components/Loader";
 
 export default function InstantBattlePage() {
-  const [opponentFound, setOpponentFound] = useState(false);
+  const [opponentFound, setOpponentFound] = useState(true);
   const [timeLeft, setTimeLeft] = useState(60);
   const [battleData, setBattleData] = useState(null);
   const router = useRouter();
@@ -37,7 +37,7 @@ export default function InstantBattlePage() {
       }
     };
 
-    const interval = setInterval(checkForOpponent, 5000); // Check every 5 seconds
+    const interval = setInterval(checkForOpponent, 5000);
 
     return () => clearInterval(interval);
   }, []);
@@ -46,15 +46,14 @@ export default function InstantBattlePage() {
     if (timeLeft > 0 && !opponentFound) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
       return () => clearTimeout(timer);
-    } else if (timeLeft === 0) {
-      toast.error("No opponent found. Battle cancelled.");
-      router.push("/battle-zone");
     } else if (opponentFound) {
       toast.success("Opponent found! Starting battle...");
       setTimeout(() => {
-        // Redirect to battle page with battle data
-        router.push(`/battles/${battleData.id}`);
+        router.push(`/battles/${battleData?.id}`);
       }, 3000);
+    } else if (timeLeft === 0) {
+      toast.error("No opponent found. Battle cancelled.");
+      router.push("/battle-zone");
     }
   }, [timeLeft, opponentFound, battleData, router]);
 

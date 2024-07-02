@@ -11,7 +11,7 @@ export default function BattleZonePage() {
   const [selectedLength, setSelectedLength] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [battles, setBattles] = useState([]);
-  const [filteredBattles, setFilteredBattles] = useState(battles);
+  const [filteredBattles, setFilteredBattles] = useState([]);
   const topics = ["DSA", "Sorting Algorithms", "C", "JavaScript"];
   const difficulties = ["Easy", "Medium", "Hard"];
   const lengths = ["Short", "Medium", "Long"];
