@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import BattleTopics from "../../components/BattleTopics";
 import BattleCard from "../../components/BattleCard";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
 
 export default function BattleZonePage() {
   const router = useRouter();
@@ -15,9 +17,11 @@ export default function BattleZonePage() {
   const topics = ["DSA", "Sorting Algorithms", "C", "JavaScript"];
   const difficulties = ["Easy", "Medium", "Hard"];
   const lengths = ["Short", "Medium", "Long"];
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchBattles = async () => {
+      dispatch(showLoader());
       try {
         const response = await fetch(
           "https://mrengineersapi.vercel.app/battles",
@@ -40,6 +44,7 @@ export default function BattleZonePage() {
       } catch (error) {
         console.error("Error fetching battles:", error);
       }
+      dispatch(hideLoader());
     };
 
     fetchBattles();
