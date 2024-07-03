@@ -4,6 +4,9 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import toast, { Toaster } from "react-hot-toast";
 import { usePathname } from "next/navigation";
+import Loader from "@/components/Loader";
+import { Provider } from "react-redux";
+import store from "@/lib/store";
 
 export default function App({ children }) {
   const [theme, setTheme] = useState("light");
@@ -44,10 +47,12 @@ export default function App({ children }) {
   return (
     <>
       <div>
-        {showNavbar && <Navbar />}
-
-        {children}
-        <Footer />
+        <Provider store={store}>
+          <Loader />
+          {showNavbar && <Navbar />}
+          {children}
+          <Footer />
+        </Provider>
       </div>
     </>
   );

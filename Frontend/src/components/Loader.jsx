@@ -1,8 +1,13 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 export default function Loader() {
+  const isLoading = useSelector((state) => state.loader.isLoading);
+  if (!isLoading) {
+    return null;
+  }
   return (
-    <div className="flex justify-center items-center">
+    <div className="w-screen h-screen z-10 flex justify-center items-center">
       <div className="loader"></div>
       <style jsx>{`
         .loader {
