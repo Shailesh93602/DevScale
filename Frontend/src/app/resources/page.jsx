@@ -91,6 +91,12 @@ export default function ResourcesPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [resources, setResources] = useState([
     {
+      title: "Introduction to DSA",
+      description: "A beginner-friendly course to learn Dsa from scratch.",
+      link: "/resources/dsa",
+      category: "resources",
+    },
+    {
       title: "Introduction to Programming",
       description: "A beginner-friendly course to learn programming basics.",
       link: "https://example.com/intro-to-programming",
