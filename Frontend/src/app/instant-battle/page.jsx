@@ -15,7 +15,8 @@ export default function InstantBattlePage() {
     const checkForOpponent = async () => {
       try {
         const response = await fetch(
-          "https://mrengineersapi.vercel.app/battles/waiting-room",
+          (process.env.NEXT_PUBLIC_BASE_URL ||
+            "https://mrengineersapi.vercel.app") + "/battles/waiting-room",
           {
             method: "GET",
             headers: {

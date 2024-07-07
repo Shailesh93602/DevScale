@@ -29,7 +29,8 @@ export default function Login() {
   const onSubmit = async (data) => {
     try {
       const response = await fetch(
-        "https://mrengineersapi.vercel.app/auth/reset",
+        (process.env.NEXT_PUBLIC_BASE_URL ||
+          "https://mrengineersapi.vercel.app") + "/auth/reset",
         {
           method: "POST",
           headers: {

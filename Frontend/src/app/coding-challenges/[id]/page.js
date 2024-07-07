@@ -88,7 +88,8 @@ int main() {
 
     try {
       const response = await fetch(
-        "https://mrengineersapi.vercel.app/run-code",
+        (process.env.NEXT_PUBLIC_BASE_URL ||
+          "https://mrengineersapi.vercel.app") + "/run-code",
         {
           method: "POST",
           headers: {

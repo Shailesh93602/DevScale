@@ -24,7 +24,8 @@ export default function BattleZonePage() {
       dispatch(showLoader());
       try {
         const response = await fetch(
-          "https://mrengineersapi.vercel.app/battles",
+          (process.env.NEXT_PUBLIC_BASE_URL ||
+            "https://mrengineersapi.vercel.app") + "/battles",
           {
             method: "GET",
             headers: {

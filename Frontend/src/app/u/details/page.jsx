@@ -138,7 +138,8 @@ export default function Details() {
       return;
     }
     const response = await fetch(
-      "https://mrengineersapi.vercel.app/profile/register",
+      (process.env.NEXT_PUBLIC_BASE_URL ||
+        "https://mrengineersapi.vercel.app") + "/profile/register",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

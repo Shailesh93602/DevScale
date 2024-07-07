@@ -4,15 +4,20 @@ import StatCard from "@/components/StatCard";
 import CourseCard from "@/components/CourseCard";
 import Section from "@/components/Section";
 import { UserContext } from "@/context/UserContext";
+import { useDispatch } from "react-redux";
+import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
 
 export default function Dashboard() {
   const [username, setUsername] = useState("Loading...");
   const { user, authenticated, setAuthenticated } = useContext(UserContext);
+  const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(showLoader());
     if (user) {
       setUsername(user.fullName);
     }
+    dispatch(hideLoader());
   }, [user]);
 
   return (
@@ -23,7 +28,12 @@ export default function Dashboard() {
             <h1 className="text-4xl font-extrabold">Welcome,</h1>
             <h2 className="text-5xl font-extrabold text-indigo-700">
               {username.charAt(0).toUpperCase() +
-                username.slice(1, username.indexOf(" ") + 1)}
+                username.slice(
+                  1,
+                  username.indexOf(" ") == -1
+                    ? username.length
+                    : username.indexOf(" ") + 1
+                )}
             </h2>
           </div>
           <div>

@@ -5,7 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import App from "./App";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import UserContextProvider from '@/context/UserContext';
+import UserContextProvider from "@/context/UserContext";
 // import UserContextProvider from "../context/UserContext";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -26,10 +26,8 @@ export default function RootLayout({ children }) {
           disableTransitionOnChange
         >
           <ToastContainer />
-          <UserContextProvider>
 
-            <App>{children}</App>
-          </UserContextProvider>
+          <App>{children}</App>
 
           {/* <Toaster position="top-right" /> */}
         </ThemeProvider>
