@@ -14,7 +14,8 @@ export default function LandingPage() {
   const handleLogout = async () => {
     try {
       const response = await fetch(
-        "https://mrengineersapi.vercel.app/auth/logout",
+        (process.env.NEXT_PUBLIC_BASE_URL ||
+          "https://mrengineersapi.vercel.app") + "/auth/logout",
         {
           method: "POST",
           credentials: "include",

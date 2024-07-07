@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import Loader from "@/components/Loader";
 import { Provider } from "react-redux";
 import store from "@/lib/store";
+import UserContextProvider from "@/context/UserContext";
 
 export default function App({ children }) {
   const [theme, setTheme] = useState("light");
@@ -48,10 +49,12 @@ export default function App({ children }) {
     <>
       <div>
         <Provider store={store}>
-          <Loader />
-          {showNavbar && <Navbar />}
-          {children}
-          <Footer />
+          <UserContextProvider>
+            <Loader />
+            {showNavbar && <Navbar />}
+            {children}
+            <Footer />
+          </UserContextProvider>
         </Provider>
       </div>
     </>

@@ -28,7 +28,8 @@ export default function ForgotPassword() {
   const onSubmit = async (data) => {
     try {
       const response = await fetch(
-        "https://mrengineersapi.vercel.app/auth/forgot",
+        (process.env.NEXT_PUBLIC_BASE_URL ||
+          "https://mrengineersapi.vercel.app") + "/auth/forgot",
         {
           method: "POST",
           headers: {

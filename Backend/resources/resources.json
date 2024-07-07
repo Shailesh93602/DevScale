@@ -1,0 +1,18 @@
+[
+    {
+        "id": "dsa",
+        "title": "Introduction to DSA",
+        "description": "A beginner-friendly course to learn DSA from scratch.",
+        "link": "/resources/dsa",
+        "category": "resources",
+        "tags": [
+            "dsa",
+            "arrays",
+            "linked lists",
+            "stacks",
+            "queues",
+            "trees",
+            "graphs"
+        ]
+    }
+]

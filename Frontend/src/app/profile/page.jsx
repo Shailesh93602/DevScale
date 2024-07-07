@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { FiEdit, FiSave, FiX } from "react-icons/fi";
 import styles from "./ProfilePage.module.css";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
 
 export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
@@ -23,12 +25,15 @@ export default function ProfilePage() {
     achievements: [],
   });
   const [profileImage, setProfileImage] = useState(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(showLoader());
     const fetchUserInfo = async () => {
       try {
         const response = await fetch(
-          "https://mrengineersapi.vercel.app/profile",
+          (process.env.NEXT_PUBLIC_BASE_URL ||
+            "https://mrengineersapi.vercel.app") + "/profile",
           {
             method: "GET",
             headers: {
@@ -46,6 +51,8 @@ export default function ProfilePage() {
       } catch (error) {
         toast.error("Something went wrong");
         console.error(error);
+      } finally {
+        dispatch(hideLoader());
       }
     };
 
@@ -64,7 +71,8 @@ export default function ProfilePage() {
   const handleSave = async () => {
     try {
       const response = await fetch(
-        "https://mrengineersapi.vercel.app/profile/update",
+        (process.env.NEXT_PUBLIC_BASE_URL ||
+          "https://mrengineersapi.vercel.app") + "/profile/update",
         {
           method: "PUT",
           headers: {

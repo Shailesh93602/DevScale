@@ -86,36 +86,13 @@
 import { useContext, useEffect, useState } from "react";
 // import { UserContext } from "../../context/UserContext";
 import { useRouter } from "next/navigation";
+import { join } from "path";
+import { useDispatch } from "react-redux";
+import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
 
 export default function ResourcesPage() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [resources, setResources] = useState([
-    {
-      title: "Introduction to DSA",
-      description: "A beginner-friendly course to learn Dsa from scratch.",
-      link: "/resources/dsa",
-      category: "resources",
-    },
-    {
-      title: "Introduction to Programming",
-      description: "A beginner-friendly course to learn programming basics.",
-      link: "https://example.com/intro-to-programming",
-      category: "Courses",
-    },
-    {
-      title: "JavaScript Documentation",
-      description:
-        "Comprehensive guide to JavaScript language and its features.",
-      link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
-      category: "Documentation",
-    },
-    {
-      title: "CSS Tricks",
-      description: "Tips and tricks for mastering CSS.",
-      link: "https://css-tricks.com",
-      category: "Articles",
-    },
-  ]);
+  const [resources, setResources] = useState([]);
 
   // const { authenticated } = useContext(UserContext);
   const router = useRouter();
@@ -125,12 +102,37 @@ export default function ResourcesPage() {
   //     router.push("/u/login");
   //   }
   // }, [authenticated, router]);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchResources = async () => {
+      dispatch(showLoader());
+      try {
+        const response = await fetch(
+          (process.env.NEXT_PUBLIC_BASE_URL || "https://vercelapi.vercel.app") +
+            "/resources",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: localStorage.getItem("token"),
+            },
+          }
+        );
+        const json = await response.json();
+        setResources(json.resources);
+      } catch (error) {
+        console.error("Error fetching resources:", error);
+      }
+      dispatch(hideLoader());
+    };
+    fetchResources();
+  }, []);
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
 
-  const filteredResources = resources.filter((resource) =>
+  const filteredResources = resources?.filter((resource) =>
     resource.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -147,7 +149,7 @@ export default function ResourcesPage() {
           onChange={handleSearch}
           className="w-full p-3 mb-6 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        {filteredResources.length > 0 ? (
+        {filteredResources?.length > 0 ? (
           <ul className="space-y-6">
             {filteredResources.map((resource, index) => (
               <li

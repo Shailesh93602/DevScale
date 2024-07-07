@@ -29,11 +29,11 @@ export default function Login() {
   });
 
   const router = useRouter();
-
   const onSubmit = async (data) => {
     try {
       const response = await fetch(
-        "https://mrengineersapi.vercel.app/auth/login",
+        (process.env.NEXT_PUBLIC_BASE_URL ||
+          "https://mrengineersapi.vercel.app") + "/auth/login",
         {
           method: "POST",
           headers: {

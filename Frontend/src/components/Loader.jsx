@@ -6,25 +6,37 @@ export default function Loader() {
   if (!isLoading) {
     return null;
   }
+
   return (
-    <div className="w-screen h-screen z-10 flex justify-center items-center">
-      <div className="loader"></div>
+    <div className="w-screen h-screen fixed z-10 flex justify-center items-center bg-white dark:bg-gray-900">
+      <div className="loader">Mr Engineers</div>
       <style jsx>{`
         .loader {
-          border: 4px solid rgba(0, 0, 0, 0.1);
-          width: 36px;
-          height: 36px;
-          border-radius: 50%;
-          border-left-color: #09f;
-          animation: spin 1s ease infinite;
+          font-size: 4rem;
+          font-weight: 700;
+          position: relative;
+          color: transparent;
+          text-transform: uppercase;
+          -webkit-text-stroke: 2px #09f; /* Outline color */
+          background: linear-gradient(90deg, #09f, #ff0099, #09f, #00ffcc);
+          background-size: 200%;
+          -webkit-background-clip: text;
+          animation: outline 2s ease-in-out infinite; /* Animation tweaks */
+          text-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        @keyframes spin {
+        @keyframes outline {
           0% {
-            transform: rotate(0deg);
+            background-position: 200% center;
+            transform: scale(1); /* Add initial scale */
+          }
+          50% {
+            background-position: -200% center;
+            transform: scale(1.2); /* Expand slightly */
           }
           100% {
-            transform: rotate(360deg);
+            background-position: 200% center;
+            transform: scale(1); /* Back to original size */
           }
         }
       `}</style>

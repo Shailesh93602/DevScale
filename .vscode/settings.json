@@ -1,4 +1,20 @@
 {
   "tabnine.cloudHost": "",
-  "cSpell.words": ["cloudinary", "hookform", "stdc", "toastify"]
+  "cSpell.words": [
+    "cloudinary",
+    "deque",
+    "hashlib",
+    "hashtable",
+    "heapify",
+    "heapq",
+    "hookform",
+    "iostream",
+    "noopener",
+    "noreferrer",
+    "pathfinding",
+    "popleft",
+    "stdc",
+    "subproblems",
+    "toastify"
+  ]
 }

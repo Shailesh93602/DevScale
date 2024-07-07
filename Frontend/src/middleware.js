@@ -19,7 +19,8 @@ export async function middleware(req) {
       return NextResponse.redirect(url);
     } else {
       const response = await fetch(
-        "https://mrengineersapi.vercel.app/profile",
+        (process.env.NEXT_PUBLIC_BASE_URL ||
+          "https://mrengineersapi.vercel.app") + +"/profile",
         {
           credentials: "include",
           headers: {

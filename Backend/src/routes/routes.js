@@ -10,9 +10,10 @@ import jobRoutes from "./jobRoutes.js";
 import chatRoutes from "./chatRoutes.js";
 import courseRoutes from "./courseRoutes.js";
 import battleRoutes from "./battleRoutes.js";
+import resourceRoutes from "./resourceRoutes.js";
 import passport from "passport";
 import { codeRunner } from "../controllers/codeRunnerController.js";
-import { predict } from "../controllers/predectionController.js";
+import { predict } from "../controllers/predictionController.js";
 
 const router = express.Router();
 
@@ -97,6 +98,14 @@ router.use(
     session: false,
   }),
   battleRoutes
+);
+
+router.use(
+  "/resources",
+  passport.authenticate("jwt", {
+    session: false,
+  }),
+  resourceRoutes
 );
 
 router.post("/run-code", codeRunner);

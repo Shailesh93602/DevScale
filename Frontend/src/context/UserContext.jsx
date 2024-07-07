@@ -1,22 +1,27 @@
 "use client";
 
+import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
 import React from "react";
+import { useDispatch } from "react-redux";
 
 export const UserContext = React.createContext({});
 
 const UserContextProvider = ({ children }) => {
   const [user, setUser] = React.useState(null);
   const [authenticated, setAuthenticated] = React.useState(false);
+  const dispatch = useDispatch();
 
   React.useEffect(() => {
     const fetchData = async () => {
+      dispatch(showLoader());
       try {
         const token = localStorage.getItem("token");
         if (!token) {
           setAuthenticated(false);
         }
         const response = await fetch(
-          "https://mrengineersapi.vercel.app/profile",
+          (process.env.NEXT_PUBLIC_BASE_URL ||
+            "https://mrengineersapi.vercel.app") + "/profile",
           {
             credentials: "include",
             headers: {
@@ -25,6 +30,7 @@ const UserContextProvider = ({ children }) => {
           }
         );
         if (!response.ok) {
+          console.error(response);
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
@@ -33,6 +39,7 @@ const UserContextProvider = ({ children }) => {
       } catch (error) {
         console.error("There was a problem with the fetch operation:", error);
       }
+      dispatch(hideLoader());
     };
 
     fetchData();

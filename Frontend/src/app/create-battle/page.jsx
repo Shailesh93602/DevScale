@@ -21,7 +21,8 @@ export default function CreateBattlePage() {
   const handleCreate = async () => {
     try {
       const response = await fetch(
-        "https://mrengineersapi.vercel.app/battles/create",
+        (process.env.NEXT_PUBLIC_BASE_URL ||
+          "https://mrengineersapi.vercel.app") + "/battles/create",
         {
           method: "POST",
           headers: {
