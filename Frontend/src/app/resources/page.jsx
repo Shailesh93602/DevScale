@@ -132,8 +132,10 @@ export default function ResourcesPage() {
     setSearchTerm(e.target.value);
   };
 
-  const filteredResources = resources?.filter((resource) =>
-    resource.title.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredResources = resources?.filter(
+    (resource) =>
+      resource.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      resource.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
