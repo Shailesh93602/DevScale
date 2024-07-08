@@ -109,8 +109,8 @@ export default function ResourcesPage() {
       dispatch(showLoader());
       try {
         const response = await fetch(
-          (process.env.NEXT_PUBLIC_BASE_URL || "https://vercelapi.vercel.app") +
-            "/resources",
+          (process.env.NEXT_PUBLIC_BASE_URL ||
+            "https://mrengineersapi.vercel.app") + "/resources",
           {
             headers: {
               "Content-Type": "application/json",
