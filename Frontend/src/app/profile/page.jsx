@@ -165,10 +165,10 @@ export default function ProfilePage() {
               name="bio"
               value={userInfo.bio}
               onChange={handleChange}
-              className="w-full mt-2 p-2 border dark:text-gray-200 border-gray-300 rounded-md bg-transparent"
+              className="w-full mt-2 p-2 border text-gray-900 dark:text-gray-200 border-gray-300 rounded-md bg-transparent"
             />
           ) : (
-            <p className="mt-2">{userInfo.bio}</p>
+            <p className="mt-2 dark:text-gra text-gray-700">{userInfo.bio}</p>
           )}
         </div>
 

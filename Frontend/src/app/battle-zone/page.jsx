@@ -5,6 +5,7 @@ import BattleCard from "../../components/BattleCard";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
+import ChallangeCard from '../../components/ChallangeCard'
 
 export default function BattleZonePage() {
   const router = useRouter();
@@ -110,7 +111,8 @@ export default function BattleZonePage() {
         <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6">
           Battle Zone
         </h1>
-        <div className="flex flex-col items-center mb-4">
+        <ChallangeCard />
+        <div className="flex flex-col items-center pt-7">
           <BattleTopics
             topics={topics}
             selectedTopic={selectedTopic}
@@ -161,12 +163,14 @@ export default function BattleZonePage() {
             No battles found for the selected filters.
           </p>
         )}
+
         <button
           onClick={handleCreateBattle}
           className="mt-6 py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200"
         >
           Create New Battle
         </button>
+
       </div>
     </div>
   );
