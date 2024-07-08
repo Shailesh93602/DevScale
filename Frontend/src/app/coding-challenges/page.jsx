@@ -48,7 +48,7 @@ export default function CodingChallengesPage() {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="bg-blue-50  dark:bg-gray-900  shadow-md rounded-lg p-6">
+      <div className="bg-light  dark:bg-gray-800  shadow-md rounded-lg p-6">
         <h1 className="text-2xl font-bold dark:text-gray-200 text-gray-900 mb-4">
           Coding Challenges
         </h1>
@@ -65,12 +65,12 @@ export default function CodingChallengesPage() {
             {filteredChallenges.map((challenge, index) => (
               <li
                 key={index}
-                className="bg-white  dark:bg-gray-800  p-4 rounded-md shadow"
+                className="bg-gray-100  dark:bg-gray-600  p-4 rounded-md shadow"
               >
                 <h2 className="text-xl font-semibold dark:text-gray-200 text-gray-900">
                   {challenge.title}
                 </h2>
-                <p className="dark:text-gray-200 text-gray-700">
+                <p className="dark:text-gray-200 stext-gray-700">
                   {challenge.description}
                 </p>
                 <span

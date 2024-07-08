@@ -21,27 +21,14 @@ export default function Dashboard() {
   }, [user]);
 
   return (
-    <div className="p-6 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200">
+    <div className="p-6 bg-white  dark:bg-gray-800 text-gray-900">
       <div className="max-w-7xl mx-auto">
-        <header className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-4xl font-extrabold">Welcome,</h1>
-            <h2 className="text-5xl font-extrabold text-indigo-700">
-              {username.charAt(0).toUpperCase() +
-                username.slice(
-                  1,
-                  username.indexOf(" ") == -1
-                    ? username.length
-                    : username.indexOf(" ") + 1
-                )}
-            </h2>
-          </div>
-          <div>
-            <button className="p-2 bg-gray-200 dark:bg-gray-700 rounded-full">
-              {/* Icon for settings or profile */}
-            </button>
-          </div>
-        </header>
+        <h1 className="text-4xl dark:text-gray-200 font-extrabold mb-2">
+          Welcome,
+        </h1>
+        <h2 className="text-5xl font-extrabold mb-8 text-indigo-700">
+          {username}
+        </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           <StatCard
