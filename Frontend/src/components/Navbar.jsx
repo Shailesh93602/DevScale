@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FiMenu, FiX, FiSun, FiMoon } from "react-icons/fi";
@@ -8,8 +8,10 @@ import { PiSignOutFill } from "react-icons/pi";
 import { GrAchievement } from "react-icons/gr";
 import { useTheme } from "next-themes";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { UserContext } from "@/context/UserContext";
 
 const Navbar = () => {
+  const [user, setUser] = useState(useContext(UserContext));
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -30,6 +32,7 @@ const Navbar = () => {
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
+  console.log(user);
 
   return (
     <nav className="bg-gray-50 border-b border-gray-100 dark:border-gray-800 dark:bg-gray-900 shadow-lg w-full z-50 text-gray-900 dark:text-gray-100">
@@ -77,8 +80,10 @@ const Navbar = () => {
               >
                 {/* <FiUser size={20} /> */}
                 <Avatar className="bg-red-500 font-semibold text-3xl items-center justify-center">
-                  <AvatarImage src="" alt="S" />
-                  <AvatarFallback>S</AvatarFallback>
+                  <AvatarImage src={user?.user?.profilePicture} alt="S" />
+                  <AvatarFallback>
+                    {user?.user?.fullName?.charAt(0)?.toUpperCase()}
+                  </AvatarFallback>
                 </Avatar>
               </button>
               {dropdownOpen && (

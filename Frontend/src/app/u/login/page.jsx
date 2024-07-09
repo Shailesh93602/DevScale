@@ -46,6 +46,7 @@ export default function Login() {
       const json = await response.json();
       if (json.success) {
         toast.success("Logged In Successfully!");
+        window.cookie = `token=${json.token};expires=100*60*60;path=/;domain=${json.domain}`;
         localStorage.setItem("token", json.token);
         router.push("/dashboard");
       } else {
