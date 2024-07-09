@@ -11,7 +11,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { UserContext } from "@/context/UserContext";
 
 const Navbar = () => {
-  const [user, setUser] = useState(useContext(UserContext));
+  const { user } = useContext(UserContext);
+  const { authenticated } = useContext(UserContext);
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -33,6 +34,7 @@ const Navbar = () => {
     setDropdownOpen(!dropdownOpen);
   };
   console.log(user);
+  console.log(authenticated)
 
   return (
     <nav className="bg-gray-50 border-b border-gray-100 dark:border-gray-800 dark:bg-gray-900 shadow-lg w-full z-50 text-gray-900 dark:text-gray-100">
@@ -203,9 +205,8 @@ const Navbar = () => {
                 </Avatar>
               </button>
               <div
-                className={`absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg py-1 ${
-                  !dropdownOpen && "hidden"
-                }`}
+                className={`absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg py-1 ${!dropdownOpen && "hidden"
+                  }`}
               >
                 <Link
                   href="/profile"
@@ -234,9 +235,8 @@ const NavItem = ({ href, pathname, onClick, children }) => (
   <Link
     href={href}
     onClick={onClick}
-    className={`flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium ${
-      pathname === href ? "text-blue-500 font-semibold" : ""
-    }`}
+    className={`flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium ${pathname === href ? "text-blue-500 font-semibold" : ""
+      }`}
   >
     {children}
   </Link>
