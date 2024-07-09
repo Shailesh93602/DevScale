@@ -10,12 +10,16 @@ const UserContextProvider = ({ children }) => {
   const [user, setUser] = React.useState(null);
   const [authenticated, setAuthenticated] = React.useState(false);
   const dispatch = useDispatch();
+  console.log(user);
 
   React.useEffect(() => {
+
+
     const fetchData = async () => {
       dispatch(showLoader());
       try {
         const token = localStorage.getItem("token");
+
         if (!token) {
           setAuthenticated(false);
         }
@@ -23,19 +27,21 @@ const UserContextProvider = ({ children }) => {
           (process.env.NEXT_PUBLIC_BASE_URL ||
             "https://mrengineersapi.vercel.app") + "/profile",
           {
-            credentials: "include",
+            method: "GET",
             headers: {
-              Authorization: token,
+              Authorization: localStorage.getItem("token"),
             },
+            credentials: "include",
           }
         );
         if (!response.ok) {
-          console.error(response);
+
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
+        console.log(data);
         setUser(data.userInfo);
-        setAuthenticated(data.success);
+        setAuthenticated(true);
       } catch (error) {
         console.error("There was a problem with the fetch operation:", error);
       }
