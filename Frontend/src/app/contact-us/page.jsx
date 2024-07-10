@@ -1,17 +1,16 @@
 "use client";
-import { useState } from 'react';
+import { useState } from "react";
 
 export default function Contact() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log({ name, email, message });
-    setName('');
-    setEmail('');
-    setMessage('');
+    setName("");
+    setEmail("");
+    setMessage("");
   };
 
   return (
@@ -20,12 +19,21 @@ export default function Contact() {
         <h1 className="text-4xl font-bold text-gray-900 mb-6">Contact Us</h1>
 
         <p className="text-gray-600 text-lg mb-6">
-          Have any questions or feedback? Fill out the form below to get in touch with us.
+          Have any questions or feedback? Fill out the form below to get in
+          touch with us.
         </p>
 
-        <form onSubmit={handleSubmit} className="bg-light rounded-lg shadow p-6">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-light rounded-lg shadow p-6"
+        >
           <div className="mb-4">
-            <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">Name</label>
+            <label
+              htmlFor="name"
+              className="block text-gray-700 text-sm font-bold mb-2"
+            >
+              Name
+            </label>
             <input
               type="text"
               id="name"
@@ -37,7 +45,12 @@ export default function Contact() {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">Email</label>
+            <label
+              htmlFor="email"
+              className="block text-gray-700 text-sm font-bold mb-2"
+            >
+              Email
+            </label>
             <input
               type="email"
               id="email"
@@ -49,7 +62,12 @@ export default function Contact() {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="message" className="block text-gray-700 text-sm font-bold mb-2">Message</label>
+            <label
+              htmlFor="message"
+              className="block text-gray-700 text-sm font-bold mb-2"
+            >
+              Message
+            </label>
             <textarea
               id="message"
               value={message}

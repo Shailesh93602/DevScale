@@ -12,6 +12,7 @@ import { UserContext } from "@/context/UserContext";
 
 const Navbar = () => {
   const { user } = useContext(UserContext);
+  console.log("🚀 ~ file: Navbar.jsx:15 ~ Navbar ~ user:", user);
   const { authenticated } = useContext(UserContext);
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
@@ -33,8 +34,6 @@ const Navbar = () => {
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
-  console.log(user);
-  console.log(authenticated)
 
   return (
     <nav className="bg-gray-50 border-b border-gray-100 dark:border-gray-800 dark:bg-gray-900 shadow-lg w-full z-50 text-gray-900 dark:text-gray-100">
@@ -82,9 +81,9 @@ const Navbar = () => {
               >
                 {/* <FiUser size={20} /> */}
                 <Avatar className="bg-red-500 font-semibold text-3xl items-center justify-center">
-                  <AvatarImage src={user?.user?.profilePicture} alt="S" />
+                  <AvatarImage src={user?.profilePicture} alt="S" />
                   <AvatarFallback>
-                    {user?.user?.fullName?.charAt(0)?.toUpperCase()}
+                    {user?.fullName?.charAt(0)?.toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
               </button>
@@ -205,8 +204,9 @@ const Navbar = () => {
                 </Avatar>
               </button>
               <div
-                className={`absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg py-1 ${!dropdownOpen && "hidden"
-                  }`}
+                className={`absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg py-1 ${
+                  !dropdownOpen && "hidden"
+                }`}
               >
                 <Link
                   href="/profile"
@@ -235,8 +235,9 @@ const NavItem = ({ href, pathname, onClick, children }) => (
   <Link
     href={href}
     onClick={onClick}
-    className={`flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium ${pathname === href ? "text-blue-500 font-semibold" : ""
-      }`}
+    className={`flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium ${
+      pathname === href ? "text-blue-500 font-semibold" : ""
+    }`}
   >
     {children}
   </Link>

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Editor from "@monaco-editor/react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
+import { fetchData } from "@/utils/fetchData";
 
 const challenges = [
   {
@@ -87,27 +88,20 @@ int main() {
     setOutput("");
 
     try {
-      const response = await fetch(
-        (process.env.NEXT_PUBLIC_BASE_URL ||
-          "https://mrengineersapi.vercel.app") + "/run-code",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            language,
-            code: solution[language],
-          }),
-          credentials: "include",
-        }
+      const response = await fetchData(
+        "POST",
+        "/run-code",
+        JSON.stringify({
+          language,
+          code: solution[language],
+        })
       );
 
-      const result = await response.json();
-      if (result.error) {
-        setOutput(result.error);
+      const data = response.data;
+      if (data.error) {
+        setOutput(data.error);
       } else {
-        setOutput(result.output);
+        setOutput(data.output);
       }
     } catch (error) {
       setOutput(`Error: ${error.message}`);

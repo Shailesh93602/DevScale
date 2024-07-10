@@ -1,3 +1,4 @@
+import { fetchData } from "@/utils/fetchData";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
@@ -7,9 +8,8 @@ const withAuth = (WrappedComponent) => {
 
     useEffect(() => {
       const checkAuth = async () => {
-        console.log("ehrekjdsakf");
         try {
-          await fetch("/isLoggedIn", { credentials: "include" });
+          await fetchData("GET", "/isLoggedIn");
         } catch (err) {
           router.replace("http://locahost:3000/u/login");
         }

@@ -510,7 +510,9 @@ const Interests = () => {
     if (step < 9) {
       setStep(step + 1);
       return;
-    } else console.log(data); // Here you would typically send data to your backend for processing
+    } else {
+      console.log("🚀 ~ file: testing.jsx:510 ~ onSubmit ~ data:", data);
+    }
   };
 
   const renderFormStep = () => {

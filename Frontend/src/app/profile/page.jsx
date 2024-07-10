@@ -5,6 +5,7 @@ import styles from "./ProfilePage.module.css";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
+import { fetchData } from "@/utils/fetchData";
 
 export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
@@ -31,26 +32,16 @@ export default function ProfilePage() {
     dispatch(showLoader());
     const fetchUserInfo = async () => {
       try {
-        const response = await fetch(
-          (process.env.NEXT_PUBLIC_BASE_URL ||
-            "https://mrengineersapi.vercel.app") + "/profile",
-          {
-            method: "GET",
-            headers: {
-              Authorization: localStorage.getItem("token"),
-            },
-            credentials: "include",
-          }
-        );
-        const data = await response.json();
+        const response = await fetchData("GET", "/profile");
+        const data = response.data;
         if (data.success) {
           let { achievements, ...otherDetails } = data.userInfo;
           if (!achievements) achievements = [];
           setUserInfo({ ...otherDetails, achievements });
         } else toast.error(json.message);
       } catch (error) {
+        console.log("🚀 ~ file: page.jsx:43 ~ fetchUserInfo ~ error:", error);
         toast.error("Something went wrong");
-        console.error(error);
       } finally {
         dispatch(hideLoader());
       }
@@ -70,18 +61,10 @@ export default function ProfilePage() {
 
   const handleSave = async () => {
     try {
-      const response = await fetch(
-        (process.env.NEXT_PUBLIC_BASE_URL ||
-          "https://mrengineersapi.vercel.app") + "/profile/update",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: localStorage.getItem("token"),
-          },
-          body: JSON.stringify(userInfo),
-          credentials: "include",
-        }
+      const response = await fetchData(
+        "PUT",
+        "/profile/update",
+        JSON.stringify(userInfo)
       );
 
       const data = await response.json();
@@ -90,7 +73,7 @@ export default function ProfilePage() {
         setIsEditing(false);
       } else toast.error(data.message);
     } catch (error) {
-      console.error("Internal server error");
+      console.log("🚀 ~ file: page.jsx:76 ~ handleSave ~ error:", error);
     }
   };
 

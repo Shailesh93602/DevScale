@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../components/Loader";
+import { fetchData } from "@/utils/fetchData";
 
 export default function InstantBattlePage() {
   const [opponentFound, setOpponentFound] = useState(true);
@@ -14,27 +15,20 @@ export default function InstantBattlePage() {
   useEffect(() => {
     const checkForOpponent = async () => {
       try {
-        const response = await fetch(
-          (process.env.NEXT_PUBLIC_BASE_URL ||
-            "https://mrengineersapi.vercel.app") + "/battles/waiting-room",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: localStorage.getItem("token"),
-            },
-          }
-        );
-        if (!response.ok) {
+        const response = await fetchData("GET", "/battles/waiting-room");
+        if (!response.data) {
           throw new Error("Failed to check for opponent");
         }
-        const json = await response.json();
-        if (json.success && json.opponentFound) {
+        const data = response.data;
+        if (data.success && data.opponentFound) {
           setOpponentFound(true);
-          setBattleData(json.battleData);
+          setBattleData(data.battleData);
         }
       } catch (error) {
-        console.error("Error checking for opponent:", error);
+        console.log(
+          "🚀 ~ file: page.jsx:28 ~ checkForOpponent ~ error:",
+          error
+        );
       }
     };
 

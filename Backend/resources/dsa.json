@@ -1,8 +1,12 @@
 [
     {
         "topic": "Introduction",
-        "definition": "Data Structures and Algorithms (DSA) refer to the study of methods for organizing, managing, and storing data in a computer so that it can be accessed and modified efficiently. This field also involves designing and analyzing procedures (algorithms) for solving problems and performing computations, which operate on these data structures. DSA forms the foundation of computer science and software engineering, enabling developers to write efficient and optimized code.",
-        "explanation": "Data Structures and Algorithms (DSA) refer to the study of methods for organizing, managing, and storing data in a computer so that it can be accessed and modified efficiently. This field also involves designing and analyzing procedures (algorithms) for solving problems and performing computations, which operate on these data structures. DSA forms the foundation of computer science and software engineering, enabling developers to write efficient and optimized code.",
+        "definition": "Data Structure is a way to store and organize data so that it can be used efficiently.",
+        "explanation": "As Per name indicates itself that organizing the data in memory. \n The data structure is not any programming language like c, c++, java etc. It is set of algorithms that we can use in any programming language to structure data in memory.",
+        "types": [
+            "linear Data Structure",
+            "Non-linear Data Structure"
+        ],
         "examples": [
             "Arrays",
             "Linked Lists",

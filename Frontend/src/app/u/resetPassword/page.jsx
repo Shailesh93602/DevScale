@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Form } from "@/components/ui/form";
 import CustomInput from "@/components/common/customInput";
+import { fetchData } from "@/utils/fetchData";
 
 const formSchema = yup.object({
   password: yup
@@ -28,26 +29,19 @@ export default function Login() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await fetch(
-        (process.env.NEXT_PUBLIC_BASE_URL ||
-          "https://mrengineersapi.vercel.app") + "/auth/reset",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-          credentials: "include",
-        }
+      const response = await fetchData(
+        "POST",
+        "/auth/reset",
+        JSON.stringify(data)
       );
-      const json = await response.json();
-      if (json.success) {
+      const data = response.data;
+      if (data.success) {
         toast.success("Password changed Successfully!");
         setTimeout(() => {
           router.push("/u/login");
         }, 1000);
       } else {
-        toast.error(json.message);
+        toast.error(data.message);
       }
     } catch (error) {
       toast.error("Something went wrong.");

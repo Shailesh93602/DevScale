@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Form } from "@/components/ui/form";
 import CustomInput from "@/components/common/customInput";
+import { fetchData } from "@/utils/fetchData";
 
 const formSchema = yup.object({
   username: yup
@@ -31,26 +32,19 @@ export default function Login() {
   const router = useRouter();
   const onSubmit = async (data) => {
     try {
-      const response = await fetch(
-        (process.env.NEXT_PUBLIC_BASE_URL ||
-          "https://mrengineersapi.vercel.app") + "/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-          credentials: "include",
-        }
+      const response = await fetchData(
+        "POST",
+        "/auth/login",
+        JSON.stringify(data)
       );
-      const json = await response.json();
-      if (json.success) {
+      const data = response.data;
+      if (data.success) {
         toast.success("Logged In Successfully!");
-        window.cookie = `token=${json.token};expires=100*60*60;path=/;domain=${json.domain}`;
-        localStorage.setItem("token", json.token);
+        window.cookie = `token=${data.token};expires=100*60*60;path=/;domain=${json.domain}`;
+        localStorage.setItem("token", data.token);
         router.push("/dashboard");
       } else {
-        toast.error(json.message);
+        toast.error(data.message);
       }
     } catch (error) {
       toast.error("LogIn failed. Please try again later.");

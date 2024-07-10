@@ -16,6 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { fetchData } from "@/utils/fetchData";
 
 const formSchema = yup.object({
   username: yup
@@ -50,26 +51,19 @@ export default function Register() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await fetch(
-        (process.env.NEXT_PUBLIC_BASE_URL ||
-          "https://mrengineersapi.vercel.app") + "/auth/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-          credentials: "include",
-        }
+      const response = await fetchData(
+        "POST",
+        "/auth/register",
+        JSON.stringify(data)
       );
-      const json = await response.json();
-      if (json.success) {
+      const data = response.data;
+      if (data.success) {
         toast.success("Registered Successfully!");
         setTimeout(() => {
           router.push("/u/login");
         }, 1000);
       } else {
-        toast.error(json.message);
+        toast.error(data.message);
       }
     } catch (error) {
       toast.error("Registration failed. Please try again later.");
