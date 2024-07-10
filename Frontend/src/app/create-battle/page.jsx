@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { Input } from "@/components/ui/input";
+import { fetchData } from "@/utils/fetchData";
 
 const majorTopics = ["DSA", "OOPs", "JavaScript", "Python", "Java"];
 const difficulties = ["easy", "medium", "hard"];
@@ -20,40 +21,39 @@ export default function CreateBattlePage() {
 
   const handleCreate = async () => {
     try {
-      const response = await fetch(
-        (process.env.NEXT_PUBLIC_BASE_URL ||
-          "https://mrengineersapi.vercel.app") + "/battles/create",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: localStorage.getItem("token"),
-          },
-          body: JSON.stringify({
-            title,
-            description,
-            topic: selectedMajorTopic,
-            difficulty: selectedDifficulty.toLowerCase(),
-            length: selectedLength.toLowerCase(),
-            date,
-            time,
-          }),
-        }
+      const response = await fetchData(
+        "POST",
+        "/battles/create",
+        JSON.stringify({
+          title,
+          description,
+          topic: selectedMajorTopic,
+          difficulty: selectedDifficulty.toLowerCase(),
+          length: selectedLength.toLowerCase(),
+          date,
+          time,
+        })
       );
-      if (!response.ok) {
-        console.error("Failed to create battle");
+      if (!response.data) {
+        console.log(
+          "🚀 ~ file: page.jsx:38 ~ handleCreate ~ data:",
+          response.data
+        );
         return;
       }
 
-      const json = await response.json();
-      if (json.success) {
-        toast.success(json.message);
+      const data = response.data;
+      if (data.success) {
+        toast.success(data.message);
         router.push("/battle-zone");
       } else {
-        toast.error(json.message);
+        console.log(
+          "🚀 ~ file: page.jsx:52 ~ handleCreate ~ message:",
+          data.message
+        );
       }
     } catch (error) {
-      console.error("Error creating battle:", error);
+      console.log("🚀 ~ file: page.jsx:53 ~ handleCreate ~ error:", error);
     }
   };
 

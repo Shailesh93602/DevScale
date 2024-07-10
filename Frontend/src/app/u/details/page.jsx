@@ -10,6 +10,7 @@ import * as yup from "yup";
 import { Form } from "@/components/ui/form";
 import { useState } from "react";
 import CustomInput, { CustomSelect } from "@/components/common/customInput";
+import { fetchData } from "@/utils/fetchData";
 
 const formSchema = [
   yup.object().shape({
@@ -137,23 +138,18 @@ export default function Details() {
       setStep(step + 1);
       return;
     }
-    const response = await fetch(
-      (process.env.NEXT_PUBLIC_BASE_URL ||
-        "https://mrengineersapi.vercel.app") + "/profile/register",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-        credentials: "include",
-      }
+    const response = await fetchData(
+      "POST",
+      "/profile/register",
+      JSON.stringify(data)
     );
-    const result = await response.json();
-    if (result.success) {
-      localStorage.setItem("user", JSON.stringify(result.user));
+    const data = response.data;
+    if (data.success) {
+      localStorage.setItem("user", JSON.stringify(data.user));
       toast.success("Registered Successfully!", { autoClose: 1500 });
       router.push("/dashboard");
     } else {
-      toast.error(result.message, { autoClose: 1500 });
+      toast.error(data.message, { autoClose: 1500 });
     }
   };
 

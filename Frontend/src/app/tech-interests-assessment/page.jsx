@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { fetchData } from "@/utils/fetchData";
 
 const StepOne = ({ control }) => (
   <>
@@ -333,21 +334,7 @@ const TechInterestAssessment = () => {
       nextStep();
       return;
     }
-    const response = await fetch(
-      (process.env.NEXT_PUBLIC_BASE_URL ||
-        "https://mrengineersapi.vercel.app") + "/predict",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-        credentials: "include",
-      }
-    );
-    console.log(response);
-    const json = await response.json();
-    console.log(json);
+    const response = await fetchData("POST", "/predict", JSON.stringify(data));
   };
 
   const renderStep = () => {

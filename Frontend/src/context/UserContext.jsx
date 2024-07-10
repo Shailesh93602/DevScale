@@ -1,6 +1,7 @@
 "use client";
 
 import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
+import { fetchData } from "@/utils/fetchData";
 import React from "react";
 import { useDispatch } from "react-redux";
 
@@ -10,12 +11,9 @@ const UserContextProvider = ({ children }) => {
   const [user, setUser] = React.useState(null);
   const [authenticated, setAuthenticated] = React.useState(false);
   const dispatch = useDispatch();
-  console.log(user);
 
   React.useEffect(() => {
-
-
-    const fetchData = async () => {
+    const fetchUser = async () => {
       dispatch(showLoader());
       try {
         const token = localStorage.getItem("token");
@@ -23,32 +21,23 @@ const UserContextProvider = ({ children }) => {
         if (!token) {
           setAuthenticated(false);
         }
-        const response = await fetch(
-          (process.env.NEXT_PUBLIC_BASE_URL ||
-            "https://mrengineersapi.vercel.app") + "/profile",
-          {
-            method: "GET",
-            headers: {
-              Authorization: localStorage.getItem("token"),
-            },
-            credentials: "include",
-          }
-        );
-        if (!response.ok) {
-
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        console.log(data);
-        setUser(data.userInfo);
+        const response = await fetchData("GET", "/profile");
+        // if (!response.ok) {
+        //   throw new Error("Network response was not ok");
+        // }
+        // const data = await response.json();
+        setUser(response.data?.userInfo);
         setAuthenticated(true);
       } catch (error) {
-        console.error("There was a problem with the fetch operation:", error);
+        console.log(
+          "🚀 ~ file: UserContext.jsx:32 ~ fetchUser ~ error:",
+          error
+        );
       }
       dispatch(hideLoader());
     };
 
-    fetchData();
+    fetchUser();
   }, []);
 
   return (

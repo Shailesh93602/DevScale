@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { fetchData } from "./utils/fetchData";
 
 const protectedPages = [
   // "/dashboard",
@@ -18,23 +19,13 @@ export async function middleware(req) {
       url.pathname = "/u/login";
       return NextResponse.redirect(url);
     } else {
-      const response = await fetch(
-        (process.env.NEXT_PUBLIC_BASE_URL ||
-          "https://mrengineersapi.vercel.app") + +"/profile",
-        {
-          credentials: "include",
-          headers: {
-            Cookie: req.headers.get("cookie"),
-          },
-        }
-      );
+      const response = await fetchData("get", "/profile");
       if (response.status == 401) {
         const url = req.nextUrl.clone();
         url.pathname = "/u/login";
         return NextResponse.redirect(url);
       } else {
         const json = await response.json();
-        console.log(json);
         NextResponse.next();
       }
     }

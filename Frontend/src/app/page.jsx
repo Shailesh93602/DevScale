@@ -7,28 +7,21 @@ import { BannerCard } from "../components/BannerCard";
 import toast, { Toaster } from "react-hot-toast";
 import { ArrowLeft, ArrowRight } from "react-feather";
 import CentralizedButton from "../components/common/CentralizedButton";
+import { fetchData } from "@/utils/fetchData";
 export default function LandingPage() {
   // const { user, authenticated, setAuthenticated } = useContext(UserContext);
-  // console.log(user?.userInfo);
 
   const handleLogout = async () => {
     try {
-      const response = await fetch(
-        (process.env.NEXT_PUBLIC_BASE_URL ||
-          "https://mrengineersapi.vercel.app") + "/auth/logout",
-        {
-          method: "POST",
-          credentials: "include",
-        }
-      );
-      if (response.ok) {
+      const response = await fetchData("POST", "/auth/logout");
+      if (response.data) {
         // setAuthenticated(false);
         toast.success("Logged out successfully!");
       } else {
         toast.error("Failed to logout.");
       }
     } catch (error) {
-      console.error("Failed to logout:", error.message);
+      console.log("🚀 ~ file: page.jsx:24 ~ handleLogout ~ error:", error);
     }
   };
   return (

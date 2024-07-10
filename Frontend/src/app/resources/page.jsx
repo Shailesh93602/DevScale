@@ -89,6 +89,7 @@ import { useRouter } from "next/navigation";
 import { join } from "path";
 import { useDispatch } from "react-redux";
 import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
+import { fetchData } from "@/utils/fetchData";
 
 export default function ResourcesPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -108,20 +109,11 @@ export default function ResourcesPage() {
     const fetchResources = async () => {
       dispatch(showLoader());
       try {
-        const response = await fetch(
-          (process.env.NEXT_PUBLIC_BASE_URL ||
-            "https://mrengineersapi.vercel.app") + "/resources",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: localStorage.getItem("token"),
-            },
-          }
-        );
-        const json = await response.json();
-        setResources(json.resources);
+        const response = await fetchData("GET", "/resources");
+        const data = response.data;
+        setResources(data.resources);
       } catch (error) {
-        console.error("Error fetching resources:", error);
+        console.log("🚀 ~ file: page.jsx:116 ~ fetchResources ~ error:", error);
       }
       dispatch(hideLoader());
     };

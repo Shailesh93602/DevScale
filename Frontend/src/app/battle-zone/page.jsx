@@ -5,7 +5,8 @@ import BattleCard from "../../components/BattleCard";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
-import ChallangeCard from '../../components/ChallangeCard'
+import ChallangeCard from "../../components/ChallangeCard";
+import { fetchData } from "@/utils/fetchData";
 
 export default function BattleZonePage() {
   const router = useRouter();
@@ -24,27 +25,17 @@ export default function BattleZonePage() {
     const fetchBattles = async () => {
       dispatch(showLoader());
       try {
-        const response = await fetch(
-          (process.env.NEXT_PUBLIC_BASE_URL ||
-            "https://mrengineersapi.vercel.app") + "/battles",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: localStorage.getItem("token"),
-            },
-          }
-        );
-        if (!response.ok) {
+        const response = await fetchData("GET", "/battles");
+        if (!response.data) {
           throw new Error("Failed to fetch battles");
         }
-        const json = await response.json();
-        if (json.success) {
-          setBattles(json.battles);
-          setFilteredBattles(json.battles);
+        const data = response.data;
+        if (data.success) {
+          setBattles(data.battles);
+          setFilteredBattles(data.battles);
         }
       } catch (error) {
-        console.error("Error fetching battles:", error);
+        console.log("🚀 ~ file: page.jsx:38 ~ fetchBattles ~ error:", error);
       }
       dispatch(hideLoader());
     };
@@ -170,7 +161,6 @@ export default function BattleZonePage() {
         >
           Create New Battle
         </button>
-
       </div>
     </div>
   );
