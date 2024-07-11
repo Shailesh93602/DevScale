@@ -154,8 +154,8 @@ export const login = async (req, res) => {
           token,
           domain:
             process.env.NODE_ENV === "production"
-              ? "https://mrengineers.vercel.app"
-              : "http://localhost:3000",
+              ? "mrengineers.vercel.app"
+              : "localhost",
         });
       });
     } else {
@@ -196,6 +196,7 @@ export const login = async (req, res) => {
     }
   } catch (error) {
     logger.error(error);
+    console.log(error);
     res.status(500).send();
   }
 };

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { fetchData } from "./utils/fetchData";
+import { fetchData } from "./app/services/fetchData";
 
 const protectedPages = [
   // "/dashboard",

@@ -89,7 +89,7 @@ import { useRouter } from "next/navigation";
 import { join } from "path";
 import { useDispatch } from "react-redux";
 import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
-import { fetchData } from "@/utils/fetchData";
+import { fetchData } from "@/app/services/fetchData";
 
 export default function ResourcesPage() {
   const [searchTerm, setSearchTerm] = useState("");

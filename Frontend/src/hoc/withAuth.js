@@ -1,4 +1,4 @@
-import { fetchData } from "@/utils/fetchData";
+import { fetchData } from "@/app/services/fetchData";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 

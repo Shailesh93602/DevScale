@@ -8,7 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Form } from "@/components/ui/form";
 import CustomInput from "@/components/common/customInput";
-import { fetchData } from "@/utils/fetchData";
+import { fetchData } from "@/app/services/fetchData";
 
 const formSchema = yup.object({
   username: yup

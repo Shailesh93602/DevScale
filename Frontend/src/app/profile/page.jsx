@@ -5,7 +5,7 @@ import styles from "./ProfilePage.module.css";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
-import { fetchData } from "@/utils/fetchData";
+import { fetchData } from "@/app/services/fetchData";
 
 export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
