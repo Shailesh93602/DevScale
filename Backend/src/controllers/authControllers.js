@@ -5,6 +5,7 @@ import {
   createUser,
   findUserByEmail,
   findUserByUsername,
+  getAllUsersFromDB,
   updateUserPassword,
 } from "../models/userModel.js";
 import { validationResult } from "express-validator";
@@ -110,6 +111,7 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
+    console.log('hi');
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res
@@ -167,6 +169,7 @@ export const login = async (req, res) => {
           });
 
         user = result;
+        console.log(result);
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
           return res.status(401).json({
@@ -285,5 +288,31 @@ export const resetPassword = async (req, res) => {
   } catch (error) {
     logger.error(error);
     res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const getAllUsers = async (req, res) => {
+  try {
+    getAllUsersFromDB((err, users) => {
+      if (err) {
+        logger.error(err);
+        return res.status(500).json({
+          success: false,
+          message: "Internal Server Error"
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        message: "Users retrieved successfully",
+        data: users
+      });
+    });
+  } catch (error) {
+    logger.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error"
+    });
   }
 };

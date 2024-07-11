@@ -3,25 +3,17 @@
 import React, { useState } from 'react';
 import './Followcard.css';
 
-function Card() {
+function Card({ users }) {
 
 
-    const users = [
-        { name: 'John Doe', role: 'Software Developer' },
-        { name: 'Jane Smith', role: 'Backend Developer' },
-        { name: 'Michael Johnson', role: 'UX Designer' },
-        { name: 'Sarah Wilson', role: 'Project Manager' },
-        { name: 'David Brown', role: 'Frontend Developer' },
-        { name: 'David Brown', role: 'Frontend Developer' },
-        { name: 'David Brown', role: 'Frontend Developer' },
-    ];
+    console.log(users);
 
 
 
-    const [follows, setFollows] = useState(() => {
+    // const [follows, setFollows] = useState(() => {
 
-        return users?.reduce((acc, user) => ({ ...acc, [user.name]: false }), {});
-    });
+    //     return users?.reduce((acc, user) => ({ ...acc, [user.name]: false }), {});
+    // });
 
 
 
@@ -34,11 +26,11 @@ function Card() {
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {users.map((user, index) => (
+            {/* {users.map((user, index) => (
                 <div className="card" key={index}>
                     <div className="image"></div>
                     <div className="card-info">
-                        <span>{user.name}</span>
+                        <span>{user.username}</span>
                         <p>{user.role}</p>
                     </div>
                     <a
@@ -49,7 +41,7 @@ function Card() {
                         {follows[user.name] ? 'Unfollow' : 'Follow'}
                     </a>
                 </div>
-            ))}
+            ))} */}
         </div>
     );
 }

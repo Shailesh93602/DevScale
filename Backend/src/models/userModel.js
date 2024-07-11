@@ -40,3 +40,14 @@ export const updateUserPassword = (email, password, callback) => {
     callback(null, result);
   });
 };
+
+
+export const getAllUsersFromDB = (callback) => {
+  const query = "SELECT * FROM users";
+  db.query(query, (err, results) => {
+    if (err) {
+      return callback(err);
+    }
+    callback(null, results);
+  });
+};
