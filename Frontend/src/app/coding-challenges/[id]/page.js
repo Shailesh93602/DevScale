@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Editor from "@monaco-editor/react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
-import { fetchData } from "@/utils/fetchData";
+import { fetchData } from "@/app/services/fetchData";
 
 const challenges = [
   {

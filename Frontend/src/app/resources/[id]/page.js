@@ -1,5 +1,5 @@
 "use client";
-import { fetchData } from "@/utils/fetchData";
+import { fetchData } from "@/app/services/fetchData";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 

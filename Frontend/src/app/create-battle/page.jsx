@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { Input } from "@/components/ui/input";
-import { fetchData } from "@/utils/fetchData";
+import { fetchData } from "@/app/services/fetchData";
 
 const majorTopics = ["DSA", "OOPs", "JavaScript", "Python", "Java"];
 const difficulties = ["easy", "medium", "hard"];

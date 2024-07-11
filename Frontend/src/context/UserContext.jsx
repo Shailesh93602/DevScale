@@ -1,7 +1,7 @@
 "use client";
 
 import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
-import { fetchData } from "@/utils/fetchData";
+import { fetchData } from "@/app/services/fetchData";
 import React from "react";
 import { useDispatch } from "react-redux";
 

@@ -7,7 +7,7 @@ import { BannerCard } from "../components/BannerCard";
 import toast, { Toaster } from "react-hot-toast";
 import { ArrowLeft, ArrowRight } from "react-feather";
 import CentralizedButton from "../components/common/CentralizedButton";
-import { fetchData } from "@/utils/fetchData";
+import { fetchData } from "@/app/services/fetchData";
 export default function LandingPage() {
   // const { user, authenticated, setAuthenticated } = useContext(UserContext);
 

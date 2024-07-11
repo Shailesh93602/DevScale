@@ -10,7 +10,7 @@ var cookieExtractor = function (req) {
     token = req.cookies.token;
   }
   if (!token) {
-    token = req.headers.authorization.split(" ")[1];
+    token = req.headers.authorization?.split(" ")[1];
   }
   if (!token) {
     token = req.headers.authorization;

@@ -64,7 +64,7 @@ export default function Dashboard() {
             <CourseCard
               title="Dynamic Programming"
               description="Detailed Explanation of"
-              thumbnail="https://placehold.co/200x100"
+              thumbnail="/images/dp.jpeg"
               chapters={6}
               items={55}
               completed={7}
@@ -95,7 +95,7 @@ export default function Dashboard() {
 const courses = [
   {
     id: 1,
-    thumbnail: "https://placehold.co/200x100",
+    thumbnail: "/images/dsa.jpeg",
     title: "Data Structures and Algorithms",
     description: "LeetCode's Interview Crash Course",
     chapters: 13,
@@ -104,7 +104,7 @@ const courses = [
   },
   {
     id: 2,
-    thumbnail: "https://placehold.co/200x100",
+    thumbnail: "/images/sd.jpeg",
     title: "System Design for Interviews and Beyond",
     description: "LeetCode's Interview Crash Course",
     chapters: 16,
@@ -112,17 +112,8 @@ const courses = [
     completed: 25,
   },
   {
-    id: 3,
-    thumbnail: "https://placehold.co/200x100",
-    title: "The LeetCode Beginner's Guide",
-    description: "",
-    chapters: 4,
-    items: 17,
-    completed: 30,
-  },
-  {
     id: 4,
-    thumbnail: "https://placehold.co/200x100",
+    thumbnail: "/images/interview.jpeg",
     title: "Top Interview Questions",
     description: "Easy Collection",
     chapters: 9,
@@ -131,7 +122,7 @@ const courses = [
   },
   {
     id: 5,
-    thumbnail: "https://placehold.co/200x100",
+    thumbnail: "/images/dp.jpeg",
     title: "Dynamic Programming",
     description: "Detailed Explanation of",
     chapters: 6,
@@ -140,7 +131,7 @@ const courses = [
   },
   {
     id: 6,
-    thumbnail: "https://placehold.co/200x100",
+    thumbnail: "/images/array.png",
     title: "Arrays 101",
     description: "Introduction to Data Structure",
     chapters: 6,
@@ -149,7 +140,7 @@ const courses = [
   },
   {
     id: 7,
-    thumbnail: "https://placehold.co/200x100",
+    thumbnail: "/images/google_interview.png",
     title: "Google Interview",
     description: "Get Well Prepared for",
     chapters: 9,
