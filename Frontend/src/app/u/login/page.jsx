@@ -9,6 +9,7 @@ import * as yup from "yup";
 import { Form } from "@/components/ui/form";
 import CustomInput from "@/components/common/customInput";
 import { fetchData } from "@/app/services/fetchData";
+import { apiResponse } from '@/api/api';
 
 const formSchema = yup.object({
   username: yup
@@ -32,16 +33,31 @@ export default function Login() {
   const router = useRouter();
   const onSubmit = async (data) => {
     try {
-      const response = await fetchData("POST", "/auth/login", data);
+      const response = await apiResponse({
+        method: 'POST',
+        endpoint: '/auth/login',
+        data
+      });
+
       if (response.data?.success) {
         console.log(response.data);
         toast.success("Logged In Successfully!");
-        document.cookies = `token=${response.data.token};expires=100*60*60;path=/;`;
-        localStorage.setItem("token", response.data.token);
+
+
+        document.cookie = `token=${response.data.token};expires=${new Date(Date.now() + 100 * 60 * 60 * 1000).toUTCString()};path=/;`;
+
         router.push("/dashboard");
+
+        if (response.status === 200) {
+          await AsyncStorage.setItem(
+            'userData',
+            JSON.stringify(response.data.additionalData),
+          );
+        }
       } else {
         toast.error(response.data?.message);
       }
+
     } catch (error) {
       toast.error("LogIn failed. Please try again later.");
     }

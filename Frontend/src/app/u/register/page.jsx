@@ -17,6 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { fetchData } from "@/app/services/fetchData";
+import { apiResponse } from '@/api/api';
 
 const formSchema = yup.object({
   username: yup
@@ -51,11 +52,11 @@ export default function Register() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await fetchData(
-        "POST",
-        "/auth/register",
-        JSON.stringify(data)
-      );
+      const response = await apiResponse({
+        method: 'POST',
+        endpoint: '/auth/register',
+        data: JSON.stringify(data)
+      });
       const data = response.data;
       if (data.success) {
         toast.success("Registered Successfully!");
