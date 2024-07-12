@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import { toast } from "react-toastify";
-import "react-quill/dist/quill.snow.css";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -15,7 +14,7 @@ const ResourceEditor = () => {
   };
 
   return (
-    <div className="container mx-auto p-6">
+    <div className=" mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">Create a Resource</h1>
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6">
         <ReactQuill
@@ -35,11 +34,20 @@ const ResourceEditor = () => {
               ["clean"],
             ],
           }}
+          theme="snow"
+          placeholder="Start writing your resource..."
+          style={{
+            height: 400,
+            maxHeight: 400,
+            overflowY: "auto",
+            padding: "1rem",
+            borderRadius: "0.5rem",
+          }}
         />
       </div>
       <button
         onClick={saveResource}
-        className="bg-blue-500 text-white py-2 px-4 rounded-lg"
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md"
       >
         Save Resource
       </button>

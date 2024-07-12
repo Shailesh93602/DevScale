@@ -48,3 +48,5 @@ export const getResource = (req, res) => {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
+
+export const createResource = () => {};
