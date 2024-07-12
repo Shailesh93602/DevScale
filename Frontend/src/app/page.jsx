@@ -5,9 +5,14 @@ import React, { useContext } from "react";
 import { useRouter } from "next/navigation";
 import { BannerCard } from "../components/BannerCard";
 import toast, { Toaster } from "react-hot-toast";
+
+import Image from "next/image";
 import { ArrowLeft, ArrowRight } from "react-feather";
 import CentralizedButton from "../components/common/CentralizedButton";
 import { fetchData } from "@/app/services/fetchData";
+import { HeroParallax } from '@/components/ui/hero-parallax';
+import { StickyScroll } from '@/components/ui/sticky-scroll-reveal';
+import { CardDemo } from '@/components/ui/CardDemo';
 export default function LandingPage() {
   // const { user, authenticated, setAuthenticated } = useContext(UserContext);
 
@@ -24,10 +29,156 @@ export default function LandingPage() {
       console.log("🚀 ~ file: page.jsx:24 ~ handleLogout ~ error:", error);
     }
   };
+
+
+  const products = [
+    {
+      title: "Moonbeam",
+      link: "https://gomoonbeam.com",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/moonbeam.png",
+    },
+    {
+      title: "Cursor",
+      link: "https://cursor.so",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/cursor.png",
+    },
+    {
+      title: "Rogue",
+      link: "https://userogue.com",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/rogue.png",
+    },
+
+    {
+      title: "Editorially",
+      link: "https://editorially.org",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/editorially.png",
+    },
+    {
+      title: "Editrix AI",
+      link: "https://editrix.ai",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/editrix.png",
+    },
+    {
+      title: "Pixel Perfect",
+      link: "https://app.pixelperfect.quest",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/pixelperfect.png",
+    },
+
+    {
+      title: "Algochurn",
+      link: "https://algochurn.com",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/algochurn.png",
+    },
+    {
+      title: "Aceternity UI",
+      link: "https://ui.aceternity.com",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/aceternityui.png",
+    },
+    {
+      title: "Tailwind Master Kit",
+      link: "https://tailwindmasterkit.com",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/tailwindmasterkit.png",
+    },
+    {
+      title: "SmartBridge",
+      link: "https://smartbridgetech.com",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/smartbridge.png",
+    },
+    {
+      title: "Renderwork Studio",
+      link: "https://renderwork.studio",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/renderwork.png",
+    },
+
+    {
+      title: "Creme Digital",
+      link: "https://cremedigital.com",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/cremedigital.png",
+    },
+    {
+      title: "Golden Bells Academy",
+      link: "https://goldenbellsacademy.com",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/goldenbellsacademy.png",
+    },
+    {
+      title: "Invoker Labs",
+      link: "https://invoker.lol",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/invoker.png",
+    },
+    {
+      title: "E Free Invoice",
+      link: "https://efreeinvoice.com",
+      thumbnail:
+        "https://aceternity.com/images/products/thumbnails/new/efreeinvoice.png",
+    },
+  ];
+
+  const content = [
+    {
+      title: "Interactive Coding Tutorials",
+      description:
+        "Dive into our interactive coding tutorials designed for all skill levels. From beginners to advanced programmers, our platform offers hands-on learning experiences that make complex concepts easy to understand. Code in real-time, get instant feedback, and watch your skills grow with every lesson.",
+      content: (
+        <div className="h-full w-full bg-[linear-gradient(to_bottom_right,var(--blue-500),var(--indigo-500))] flex items-center justify-center text-white">
+          Interactive Coding Tutorials
+        </div>
+      ),
+    },
+    {
+      title: "Live Coding Sessions",
+      description:
+        "Join our expert instructors in live coding sessions. Watch real-world problems being solved, ask questions, and learn best practices in real-time. These sessions bridge the gap between theory and practical application, giving you insights that textbooks can't provide.",
+      content: (
+        <div className="h-full w-full flex items-center justify-center text-white">
+          <Image
+            src="/skills-development.svg"
+            width={300}
+            height={300}
+            className="h-full w-full object-cover"
+            alt="Live coding session demo"
+          />
+        </div>
+      ),
+    },
+    {
+      title: "Project-Based Learning",
+      description:
+        "Apply your skills to real-world projects. Our project-based learning approach allows you to build a portfolio while you learn. From web applications to mobile apps, tackle projects that matter and showcase your abilities to potential employers.",
+      content: (
+        <div className="h-full w-full bg-[linear-gradient(to_bottom_right,var(--green-500),var(--teal-500))] flex items-center justify-center text-white">
+          Project-Based Learning
+        </div>
+      ),
+    },
+    {
+      title: "Personalized Learning Paths",
+      description:
+        "Everyone's learning journey is unique. Our AI-powered platform creates personalized learning paths tailored to your goals, current skill level, and learning style. Stay motivated with a curriculum that adapts to your progress and challenges you at the right pace.",
+      content: (
+        <div className="h-full w-full bg-[linear-gradient(to_bottom_right,var(--purple-500),var(--pink-500))] flex items-center justify-center text-white">
+          Personalized Learning Paths
+        </div>
+      ),
+    },
+  ];
   return (
     <main className="flex flex-col text-gray-900">
-      <section className="bg-gray-100 py-12 md:py-20 lg:py-28">
-        <div className="container px-4 md:px-6">
+      {/* <section className="bg-gray-100 py-12 md:py-20 lg:py-28"> */}
+      {/* <div className="container px-4 md:px-6">
           <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
             <div className="flex flex-col justify-center space-y-4">
               <div className="space-y-2">
@@ -84,9 +235,11 @@ export default function LandingPage() {
             </div>
             <BannerCard />
           </div>
-        </div>
-      </section>
-      <section className="bg-light py-12 md:py-20 lg:py-28">
+        </div> */}
+      <HeroParallax products={products} />
+      {/* </section> */}
+
+      {/* <section className="bg-light py-12 md:py-20 lg:py-28">
         <div className="container px-4 md:px-6">
           <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
             <div className="flex flex-col justify-center space-y-4">
@@ -104,12 +257,7 @@ export default function LandingPage() {
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                {/* <Link
-                  className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
-                  href="/resources"
-                >
-                  Explore Resources
-                </Link> */}
+
 
                 <CentralizedButton
                   size="lg"
@@ -144,17 +292,32 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
+      </section> */}
+      <section className='pt-5 bg-gray-600 py-12 md:py-20 lg:py-28"'>
+        <div className='pb-8'>
+          <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm">
+            Learning Resources
+          </div>
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+            Expand Your Knowledge
+          </h2>
+        </div>
+        <StickyScroll content={content} />
+
+
       </section>
-      <section className="bg-gray-100 py-12 md:py-20 lg:py-28">
+
+      <section className="bg-gray-600 py-12 md:py-20 lg:py-16">
         <div className="container px-4 md:px-6">
           <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
-            <img
+            {/* <img
               alt="Career Roadmap"
               className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full lg:order-last"
               height="310"
               src="/career-roadmap.svg"
               width="550"
-            />
+            /> */}
+            <CardDemo className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full lg:order-last" />
             <div className="flex flex-col justify-center space-y-4">
               <div className="space-y-2">
                 <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm">
@@ -163,19 +326,14 @@ export default function LandingPage() {
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
                   Discover Your Path to Success
                 </h2>
-                <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                <p className="max-w-[600px] text-white md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   Get a personalized roadmap to guide you through your
                   engineering journey, from skill development to landing your
                   dream job.
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                {/* <Link
-                  className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
-                  href="/u/register"
-                >
-                  Get Your Roadmap
-                </Link> */}
+                \
 
                 <CentralizedButton
                   href="/career-roadmap"
@@ -189,7 +347,7 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-      <section className="bg-light py-12 md:py-20 lg:py-28">
+      <section className="bg-gray-600 py-12 md:py-20 lg:py-28">
         <div className="container px-4 md:px-6">
           <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
             <div className="flex flex-col justify-center space-y-4">
@@ -200,19 +358,14 @@ export default function LandingPage() {
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
                   Ace Your Dream Job
                 </h2>
-                <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                <p className="max-w-[600px] text-white md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   Get comprehensive support to prepare for campus placements,
                   including mock interviews, resume building, and negotiation
                   strategies.
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                {/* <Link
-                  className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
-                  href="/u/register"
-                >
-                  Explore Placement Support
-                </Link> */}
+
                 <CentralizedButton
                   text="Explore Placement Support"
                   href="placement-preparation"
@@ -224,22 +377,22 @@ export default function LandingPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <ResourceCard
-                icon={<BriefcaseIcon className="h-8 w-8 text-gray-500" />}
+                icon={<BriefcaseIcon className="h-8 w-8 text-white" />}
                 title="Mock Interviews"
                 description="Practice with industry experts."
               />
               <ResourceCard
-                icon={<PresentationIcon className="h-8 w-8 text-gray-500" />}
+                icon={<PresentationIcon className="h-8 w-8 text-white" />}
                 title="Resume Building"
                 description="Create a winning resume that stands out."
               />
               <ResourceCard
-                icon={<ChatIcon className="h-8 w-8 text-gray-500" />}
+                icon={<ChatIcon className="h-8 w-8 text-white" />}
                 title="Negotiation Tips"
                 description="Learn to negotiate offers effectively."
               />
               <ResourceCard
-                icon={<ChartIcon className="h-8 w-8 text-gray-500" />}
+                icon={<ChartIcon className="h-8 w-8 text-white" />}
                 title="Career Counseling"
                 description="Get personalized career advice from experts."
               />
@@ -247,6 +400,7 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
     </main>
   );
 }
