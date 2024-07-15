@@ -1,6 +1,7 @@
 import { logger } from "../helpers/logger.js";
 import fs from "fs";
 import path from "path";
+import resourceModel from "../models/resourceModel.js";
 
 export const getResources = (req, res) => {
   try {
@@ -49,4 +50,15 @@ export const getResource = (req, res) => {
   }
 };
 
-export const createResource = () => {};
+export const createResource = async (req, res) => {
+  try {
+    const { content } = req.body;
+    console.log(req.body);
+    const newResource = new resourceModel({ content });
+    await newResource.save();
+    res.status(201).json(newResource);
+  } catch (error) {
+    console.error("Error saving resource:", error);
+    res.status(500).json({ error: "Failed to save resource" });
+  }
+};

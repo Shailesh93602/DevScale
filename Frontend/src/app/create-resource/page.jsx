@@ -2,19 +2,29 @@
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import { toast } from "react-toastify";
+import "react-quill/dist/quill.snow.css";
+import { fetchData } from "../services/fetchData";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const ResourceEditor = () => {
   const [content, setContent] = useState("");
 
-  const saveResource = () => {
-    console.log("Content: ", content);
-    toast.success("Resource saved successfully!");
+  const saveResource = async () => {
+    try {
+      const response = await fetchData("post", "/resources/create", {
+        content,
+      });
+      console.log("Content saved:", response.data);
+      toast.success("Resource saved successfully!");
+    } catch (error) {
+      console.error("Error saving resource:", error);
+      toast.error("Failed to save resource.");
+    }
   };
 
   return (
-    <div className=" mx-auto p-6">
+    <div className="container mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">Create a Resource</h1>
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6">
         <ReactQuill
@@ -34,20 +44,11 @@ const ResourceEditor = () => {
               ["clean"],
             ],
           }}
-          theme="snow"
-          placeholder="Start writing your resource..."
-          style={{
-            height: 400,
-            maxHeight: 400,
-            overflowY: "auto",
-            padding: "1rem",
-            borderRadius: "0.5rem",
-          }}
         />
       </div>
       <button
         onClick={saveResource}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md"
+        className="bg-blue-500 text-white py-2 px-4 rounded-lg"
       >
         Save Resource
       </button>

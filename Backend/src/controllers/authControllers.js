@@ -111,7 +111,6 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    console.log('hi');
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res
@@ -298,21 +297,21 @@ export const getAllUsers = async (req, res) => {
         logger.error(err);
         return res.status(500).json({
           success: false,
-          message: "Internal Server Error"
+          message: "Internal Server Error",
         });
       }
 
       res.status(200).json({
         success: true,
         message: "Users retrieved successfully",
-        data: users
+        data: users,
       });
     });
   } catch (error) {
     logger.error(error);
     res.status(500).json({
       success: false,
-      message: "Internal Server Error"
+      message: "Internal Server Error",
     });
   }
 };
