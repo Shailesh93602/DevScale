@@ -50,13 +50,27 @@ export const getResource = (req, res) => {
   }
 };
 
+export const getResourceDetails = (req, res) => {
+  try {
+    console.log(req.params);
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+export const getResourcesList = (req, res) => {
+  try {
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
 export const createResource = async (req, res) => {
   try {
-    const { content } = req.body;
-    console.log(req.body);
-    const newResource = new resourceModel({ content });
+    const { subject, topic, subtopic, content } = req.body;
+    const newResource = new Resource({ subject, topic, subtopic, content });
     await newResource.save();
-    res.status(201).json(newResource);
+    res.status(201).json({ success: true, resource: newResource });
   } catch (error) {
     console.error("Error saving resource:", error);
     res.status(500).json({ error: "Failed to save resource" });

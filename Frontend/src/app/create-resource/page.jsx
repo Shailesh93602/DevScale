@@ -1,59 +1,128 @@
 "use client";
-import React, { useState } from "react";
-import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
+import { fetchData } from "@/app/services/fetchData";
 import { toast } from "react-toastify";
-import "react-quill/dist/quill.snow.css";
-import { fetchData } from "../services/fetchData";
 
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+export default function ResourcesPage() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [resources, setResources] = useState([]);
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [availableTags, setAvailableTags] = useState([]);
 
-const ResourceEditor = () => {
-  const [content, setContent] = useState("");
+  const dispatch = useDispatch();
 
-  const saveResource = async () => {
-    try {
-      const response = await fetchData("post", "/resources/create", {
-        content,
-      });
-      console.log("Content saved:", response.data);
-      toast.success("Resource saved successfully!");
-    } catch (error) {
-      console.error("Error saving resource:", error);
-      toast.error("Failed to save resource.");
-    }
+  useEffect(() => {
+    const fetchResources = async () => {
+      dispatch(showLoader());
+      try {
+        const response = await fetchData("GET", "/resources/list");
+        const data = response.data;
+        setResources(data.resources);
+        setAvailableTags([
+          ...new Set(data.resources.flatMap((resource) => resource.tags)),
+        ]);
+      } catch (error) {
+        toast.error("Something went wrong, Please try again!");
+      }
+      dispatch(hideLoader());
+    };
+    fetchResources();
+  }, []);
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
   };
 
+  const handleTagSelection = (tag) => {
+    setSelectedTags((prevTags) =>
+      prevTags.includes(tag)
+        ? prevTags.filter((t) => t !== tag)
+        : [...prevTags, tag]
+    );
+  };
+
+  const filteredResources = resources?.filter(
+    (resource) =>
+      (resource.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        resource.description
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())) &&
+      (selectedTags.length === 0 ||
+        selectedTags.some((tag) => resource.tags.includes(tag)))
+  );
+
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Create a Resource</h1>
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6">
-        <ReactQuill
-          value={content}
-          onChange={setContent}
-          modules={{
-            toolbar: [
-              [{ font: [] }, { size: [] }],
-              ["bold", "italic", "underline", "strike"],
-              [{ color: [] }, { background: [] }],
-              [{ script: "sub" }, { script: "super" }],
-              [{ header: "1" }, { header: "2" }, "blockquote", "code-block"],
-              [{ list: "ordered" }, { list: "bullet" }],
-              [{ indent: "-1" }, { indent: "+1" }],
-              [{ direction: "rtl" }, { align: [] }],
-              ["link", "image", "video"],
-              ["clean"],
-            ],
-          }}
+    <div className="bg-white dark:bg-gray-800 mx-auto p-6 ">
+      <div className="bg-blue-50 dark:bg-gray-900 shadow-md rounded-lg p-6">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+          Available Topics
+        </h1>
+        <input
+          type="text"
+          placeholder="Search topics..."
+          value={searchTerm}
+          onChange={handleSearch}
+          className="w-full p-3 mb-6 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
+        <div className="mb-6">
+          {availableTags.map((tag) => (
+            <button
+              key={tag}
+              onClick={() => handleTagSelection(tag)}
+              className={`m-1 p-2 border rounded ${
+                selectedTags.includes(tag)
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+              }`}
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
+        {filteredResources?.length > 0 ? (
+          <ul className="space-y-6">
+            {filteredResources.map((resource, index) => (
+              <li
+                key={index}
+                className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-200"
+              >
+                <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+                  {resource.title}
+                </h2>
+                <p className="text-gray-700 dark:text-gray-300">
+                  {resource.description}
+                </p>
+                <a
+                  href={resource.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 dark:text-blue-400 hover:underline mt-2 block"
+                >
+                  Visit Resource
+                </a>
+                <span className="text-sm text-gray-500 dark:text-gray-400">
+                  {resource.category}
+                </span>
+                <div className="mt-2">
+                  {resource.tags.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="inline-block bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-xs px-2 py-1 rounded-full mr-1"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-gray-700 dark:text-gray-300">No topics found.</p>
+        )}
       </div>
-      <button
-        onClick={saveResource}
-        className="bg-blue-500 text-white py-2 px-4 rounded-lg"
-      >
-        Save Resource
-      </button>
     </div>
   );
-};
-
-export default ResourceEditor;
+}
