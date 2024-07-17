@@ -1,32 +1,24 @@
 // Card.jsx
-'use client';
-import React, { useState } from 'react';
-import './Followcard.css';
+"use client";
+import React, { useState } from "react";
+import "./Followcard.css";
 
 function Card({ users }) {
+  // const [follows, setFollows] = useState(() => {
 
+  //     return users?.reduce((acc, user) => ({ ...acc, [user.name]: false }), {});
+  // });
 
-    console.log(users);
+  const toggleFollow = (userName) => {
+    setFollows((prevFollows) => ({
+      ...prevFollows,
+      [userName]: !prevFollows[userName],
+    }));
+  };
 
-
-
-    // const [follows, setFollows] = useState(() => {
-
-    //     return users?.reduce((acc, user) => ({ ...acc, [user.name]: false }), {});
-    // });
-
-
-
-    const toggleFollow = (userName) => {
-        setFollows((prevFollows) => ({
-            ...prevFollows,
-            [userName]: !prevFollows[userName],
-        }));
-    };
-
-    return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {/* {users.map((user, index) => (
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* {users.map((user, index) => (
                 <div className="card" key={index}>
                     <div className="image"></div>
                     <div className="card-info">
@@ -42,8 +34,8 @@ function Card({ users }) {
                     </a>
                 </div>
             ))} */}
-        </div>
-    );
+    </div>
+  );
 }
 
 export default Card;

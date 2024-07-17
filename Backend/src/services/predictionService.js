@@ -21,7 +21,7 @@ class CustomLogisticRegression {
 let modelData;
 try {
   modelData = JSON.parse(fs.readFileSync("src/models/model.json", "utf8"));
-  console.log("Model data loaded successfully");
+  x;
 } catch (error) {
   console.error("Error reading model data:", error);
 }
@@ -29,7 +29,6 @@ try {
 let model;
 try {
   model = new CustomLogisticRegression(modelData.weights, modelData.intercept);
-  console.log("Model initialized successfully");
 } catch (error) {
   console.error("Error initializing model:", error);
 }
@@ -41,7 +40,6 @@ try {
     fs.readFileSync("src/models/labelEncoders.json", "utf8")
   );
   scaler = JSON.parse(fs.readFileSync("src/models/scaler.json", "utf8"));
-  console.log("Label encoders and scaler loaded successfully");
 } catch (error) {
   console.error("Error reading encoders or scaler:", error);
 }
@@ -59,8 +57,6 @@ const featureColumns = [
 
 const preprocessInput = (input) => {
   try {
-    console.log("Input data before preprocessing:", input);
-
     // Validate input structure
     if (!input || typeof input !== "object") {
       throw new Error("Invalid input structure");
@@ -86,7 +82,6 @@ const preprocessInput = (input) => {
         processedInput[key] = le.transform([processedInput[key]])[0];
       }
     });
-    console.log("After label encoding:", processedInput);
 
     // Apply scaling or any other preprocessing steps here
 
@@ -108,7 +103,6 @@ const predictCareerPath = (inputData) => {
     const inputMatrix = new Matrix([Object.values(preprocessedInput)]);
 
     const prediction = model.predict(inputMatrix);
-    console.log("Prediction result:", prediction);
 
     return prediction[0];
   } catch (error) {

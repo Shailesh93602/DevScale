@@ -153,6 +153,7 @@ export const login = async (req, res) => {
           message: "Logged in successfully!",
           route,
           token,
+          user,
           domain:
             process.env.NODE_ENV === "production"
               ? "mrengineers.vercel.app"
@@ -168,7 +169,6 @@ export const login = async (req, res) => {
           });
 
         user = result;
-        console.log(result);
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
           return res.status(401).json({
@@ -198,7 +198,6 @@ export const login = async (req, res) => {
     }
   } catch (error) {
     logger.error(error);
-    console.log(error);
     res.status(500).send();
   }
 };

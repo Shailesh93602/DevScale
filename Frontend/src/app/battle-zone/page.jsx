@@ -34,9 +34,7 @@ export default function BattleZonePage() {
           setBattles(data.battles);
           setFilteredBattles(data.battles);
         }
-      } catch (error) {
-        console.log("🚀 ~ file: page.jsx:38 ~ fetchBattles ~ error:", error);
-      }
+      } catch (error) {}
       dispatch(hideLoader());
     };
 

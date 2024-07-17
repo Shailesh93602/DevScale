@@ -3,7 +3,6 @@ import db from "../config/database.js";
 export const createUser = (user, callback) => {
   const query = "INSERT INTO users (username, email, password) VALUES (?)";
   db.query(query, [user], (err, result) => {
-    console.log(err);
     if (err) {
       return callback(err);
     }
@@ -40,7 +39,6 @@ export const updateUserPassword = (email, password, callback) => {
     callback(null, result);
   });
 };
-
 
 export const getAllUsersFromDB = (callback) => {
   const query = "SELECT * FROM users";

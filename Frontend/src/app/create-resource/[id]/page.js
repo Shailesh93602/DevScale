@@ -33,7 +33,6 @@ const ResourceEditor = ({ params }) => {
           toast.error("Failed to fetch resource details.");
         }
       } catch (error) {
-        console.log(error);
         toast.error("Something went wrong, Please try again!");
       }
       dispatch(hideLoader());

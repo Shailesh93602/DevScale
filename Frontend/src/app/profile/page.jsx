@@ -40,7 +40,6 @@ export default function ProfilePage() {
           setUserInfo({ ...otherDetails, achievements });
         } else toast.error(json.message);
       } catch (error) {
-        console.log("🚀 ~ file: page.jsx:43 ~ fetchUserInfo ~ error:", error);
         toast.error("Something went wrong");
       } finally {
         dispatch(hideLoader());
@@ -72,9 +71,7 @@ export default function ProfilePage() {
         toast.success("Profile Updated Successfully!");
         setIsEditing(false);
       } else toast.error(data.message);
-    } catch (error) {
-      console.log("🚀 ~ file: page.jsx:76 ~ handleSave ~ error:", error);
-    }
+    } catch (error) {}
   };
 
   const handleImageChange = (e) => {

@@ -58,7 +58,6 @@ export const createBattle = async (req, res) => {
     };
     insertBattle(newBattle, (err, result) => {
       if (err) {
-        console.log(err);
         logger.error(err);
         return res
           .status(500)
@@ -69,7 +68,6 @@ export const createBattle = async (req, res) => {
         .json({ success: true, message: "Battle created successfully!" });
     });
   } catch (error) {
-    console.log(error);
     logger.error(error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }

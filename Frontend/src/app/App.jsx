@@ -6,8 +6,9 @@ import toast, { Toaster } from "react-hot-toast";
 import { usePathname } from "next/navigation";
 import Loader from "@/components/Loader";
 import { Provider } from "react-redux";
-import store from "@/lib/store";
+import { store, persistor } from "@/lib/store";
 import UserContextProvider from "@/context/UserContext";
+import { PersistGate } from "redux-persist/integration/react";
 
 export default function App({ children }) {
   const [theme, setTheme] = useState("light");
@@ -49,12 +50,14 @@ export default function App({ children }) {
     <>
       <div>
         <Provider store={store}>
-          <UserContextProvider>
-            <Loader />
-            {showNavbar && <Navbar />}
-            {children}
-            <Footer />
-          </UserContextProvider>
+          <PersistGate loading={null} persistor={persistor}>
+            <UserContextProvider>
+              <Loader />
+              {showNavbar && <Navbar />}
+              {children}
+              <Footer />
+            </UserContextProvider>
+          </PersistGate>
         </Provider>
       </div>
     </>

@@ -10,9 +10,9 @@ import Image from "next/image";
 import { ArrowLeft, ArrowRight } from "react-feather";
 import CentralizedButton from "../components/common/CentralizedButton";
 import { fetchData } from "@/app/services/fetchData";
-import { HeroParallax } from '@/components/ui/hero-parallax';
-import { StickyScroll } from '@/components/ui/sticky-scroll-reveal';
-import { CardDemo } from '@/components/ui/CardDemo';
+import { HeroParallax } from "@/components/ui/hero-parallax";
+import { StickyScroll } from "@/components/ui/sticky-scroll-reveal";
+import { CardDemo } from "@/components/ui/CardDemo";
 export default function LandingPage() {
   // const { user, authenticated, setAuthenticated } = useContext(UserContext);
 
@@ -25,11 +25,8 @@ export default function LandingPage() {
       } else {
         toast.error("Failed to logout.");
       }
-    } catch (error) {
-      console.log("🚀 ~ file: page.jsx:24 ~ handleLogout ~ error:", error);
-    }
+    } catch (error) {}
   };
-
 
   const products = [
     {
@@ -294,7 +291,7 @@ export default function LandingPage() {
         </div>
       </section> */}
       <section className='pt-5 bg-gray-600 py-12 md:py-20 lg:py-28"'>
-        <div className='pb-8'>
+        <div className="pb-8">
           <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm">
             Learning Resources
           </div>
@@ -303,8 +300,6 @@ export default function LandingPage() {
           </h2>
         </div>
         <StickyScroll content={content} />
-
-
       </section>
 
       <section className="bg-gray-600 py-12 md:py-20 lg:py-16">
@@ -334,7 +329,6 @@ export default function LandingPage() {
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
                 \
-
                 <CentralizedButton
                   href="/career-roadmap"
                   text="Get Your Roadmap"
@@ -365,7 +359,6 @@ export default function LandingPage() {
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
-
                 <CentralizedButton
                   text="Explore Placement Support"
                   href="placement-preparation"
@@ -400,7 +393,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
     </main>
   );
 }

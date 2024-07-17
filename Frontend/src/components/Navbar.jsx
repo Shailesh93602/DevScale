@@ -12,7 +12,6 @@ import { UserContext } from "@/context/UserContext";
 
 const Navbar = () => {
   const { user } = useContext(UserContext);
-  console.log("🚀 ~ file: Navbar.jsx:15 ~ Navbar ~ user:", user);
   const { authenticated } = useContext(UserContext);
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);

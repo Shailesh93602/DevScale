@@ -511,7 +511,6 @@ const Interests = () => {
       setStep(step + 1);
       return;
     } else {
-      console.log("🚀 ~ file: testing.jsx:510 ~ onSubmit ~ data:", data);
     }
   };
 
