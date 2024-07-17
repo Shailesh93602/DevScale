@@ -28,12 +28,7 @@ const UserContextProvider = ({ children }) => {
         // const data = await response.json();
         setUser(response.data?.userInfo);
         setAuthenticated(true);
-      } catch (error) {
-        console.log(
-          "🚀 ~ file: UserContext.jsx:32 ~ fetchUser ~ error:",
-          error
-        );
-      }
+      } catch (error) {}
       dispatch(hideLoader());
     };
 

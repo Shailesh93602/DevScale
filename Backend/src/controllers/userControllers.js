@@ -50,7 +50,6 @@ export const insertProfile = async (req, res) => {
 
     insertUserInfo(userInfo, (err, result) => {
       if (err) {
-        console.log(err);
         return res
           .status(500)
           .json({ success: false, message: "Error adding user" });
@@ -61,7 +60,6 @@ export const insertProfile = async (req, res) => {
         .json({ success: true, message: "User inserted Successfully!" });
     });
   } catch (error) {
-    console.log(error);
     logger.error(error);
     res.status(500).json({ success: false, message: "Error adding user" });
   }
@@ -122,7 +120,6 @@ export const updateProfile = async (req, res) => {
     };
 
     updateUserInfoByUserId(userId, userInfo, (err, result) => {
-      console.log(err, result);
       if (err || result.affectedRows === 0) {
         return res
           .status(400)

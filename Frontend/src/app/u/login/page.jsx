@@ -9,7 +9,9 @@ import * as yup from "yup";
 import { Form } from "@/components/ui/form";
 import CustomInput from "@/components/common/customInput";
 import { fetchData } from "@/app/services/fetchData";
-import { apiResponse } from '@/api/api';
+import { apiResponse } from "@/api/api";
+import { useDispatch } from "react-redux";
+import { initialUser } from "@/lib/features/user/userSlice";
 
 const formSchema = yup.object({
   username: yup
@@ -25,6 +27,7 @@ const formSchema = yup.object({
 });
 
 export default function Login() {
+  const dispatch = useDispatch();
   const form = useForm({
     resolver: yupResolver(formSchema),
     mode: "onChange",
@@ -34,30 +37,30 @@ export default function Login() {
   const onSubmit = async (data) => {
     try {
       const response = await apiResponse({
-        method: 'POST',
-        endpoint: '/auth/login',
-        data
+        method: "POST",
+        endpoint: "/auth/login",
+        data,
       });
 
       if (response.data?.success) {
-        console.log(response.data);
+        dispatch(initialUser(response.data.user));
         toast.success("Logged In Successfully!");
 
-
-        document.cookie = `token=${response.data.token};expires=${new Date(Date.now() + 100 * 60 * 60 * 1000).toUTCString()};path=/;`;
+        document.cookie = `token=${response.data.token};expires=${new Date(
+          Date.now() + 100 * 60 * 60 * 1000
+        ).toUTCString()};path=/;`;
 
         router.push("/dashboard");
 
         if (response.status === 200) {
           await AsyncStorage.setItem(
-            'userData',
-            JSON.stringify(response.data.additionalData),
+            "userData",
+            JSON.stringify(response.data.additionalData)
           );
         }
       } else {
         toast.error(response.data?.message);
       }
-
     } catch (error) {
       toast.error("LogIn failed. Please try again later.");
     }

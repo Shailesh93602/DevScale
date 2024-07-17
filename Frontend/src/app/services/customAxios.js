@@ -8,11 +8,9 @@ const customAxios = axios.create({
 customAxios.interceptors.request.use(
   (config) => {
     const token = Cookies.get("token");
-    console.log("🚀 ~ Token from Cookies:", token);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     } else {
-      console.log("🚀 ~ No token found in Cookies");
     }
     return config;
   },

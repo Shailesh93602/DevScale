@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.get("/", getResources);
 router.get("/:id", getResource);
-router.get("/list", getResourceList);
+// router.get("/list", getResourceList);
 router.get("/details/:id", getResourceDetails);
 router.post("/create", createResource);
 

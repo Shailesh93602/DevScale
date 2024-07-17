@@ -35,10 +35,6 @@ export default function CreateBattlePage() {
         })
       );
       if (!response.data) {
-        console.log(
-          "🚀 ~ file: page.jsx:38 ~ handleCreate ~ data:",
-          response.data
-        );
         return;
       }
 
@@ -47,14 +43,8 @@ export default function CreateBattlePage() {
         toast.success(data.message);
         router.push("/battle-zone");
       } else {
-        console.log(
-          "🚀 ~ file: page.jsx:52 ~ handleCreate ~ message:",
-          data.message
-        );
       }
-    } catch (error) {
-      console.log("🚀 ~ file: page.jsx:53 ~ handleCreate ~ error:", error);
-    }
+    } catch (error) {}
   };
 
   return (

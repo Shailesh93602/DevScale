@@ -19,9 +19,7 @@ const Resource = ({ params }) => {
         } else {
           toast.error(data.message);
         }
-      } catch (error) {
-        console.log("🚀 ~ file: page.js:23 ~ fetchResource ~ error:", error);
-      }
+      } catch (error) {}
     };
     fetchResource();
   }, []);

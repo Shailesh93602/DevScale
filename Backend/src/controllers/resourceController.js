@@ -17,11 +17,9 @@ export const getResources = (req, res) => {
           .json({ success: false, message: "Internal Server Error" });
       }
       const resources = JSON.parse(data);
-      console.log(resources);
       res.status(200).json({ success: true, resources });
     });
   } catch (error) {
-    console.log(error);
     logger.error(error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
@@ -52,7 +50,6 @@ export const getResource = (req, res) => {
 
 export const getResourceDetails = (req, res) => {
   try {
-    console.log(req.params);
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal server error" });
   }

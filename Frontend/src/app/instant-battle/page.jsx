@@ -24,12 +24,7 @@ export default function InstantBattlePage() {
           setOpponentFound(true);
           setBattleData(data.battleData);
         }
-      } catch (error) {
-        console.log(
-          "🚀 ~ file: page.jsx:28 ~ checkForOpponent ~ error:",
-          error
-        );
-      }
+      } catch (error) {}
     };
 
     const interval = setInterval(checkForOpponent, 5000);
