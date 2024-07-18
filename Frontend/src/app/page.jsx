@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
-import React, { useContext } from "react";
-// import { UserContext } from "../context/UserContext";
+import React from "react";
+
 import { useRouter } from "next/navigation";
 import { BannerCard } from "../components/BannerCard";
 import toast, { Toaster } from "react-hot-toast";
@@ -14,13 +14,10 @@ import { HeroParallax } from "@/components/ui/hero-parallax";
 import { StickyScroll } from "@/components/ui/sticky-scroll-reveal";
 import { CardDemo } from "@/components/ui/CardDemo";
 export default function LandingPage() {
-  // const { user, authenticated, setAuthenticated } = useContext(UserContext);
-
   const handleLogout = async () => {
     try {
       const response = await fetchData("POST", "/auth/logout");
       if (response.data) {
-        // setAuthenticated(false);
         toast.success("Logged out successfully!");
       } else {
         toast.error("Failed to logout.");

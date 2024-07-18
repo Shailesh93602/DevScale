@@ -566,12 +566,12 @@
 // export default Roadmap;
 
 "use client";
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Parallax, ParallaxProvider } from "react-scroll-parallax";
 import { useInView } from "react-intersection-observer";
 import { FiCheckCircle } from "react-icons/fi";
-// import { UserContext } from '../../context/UserContext';
+
 import { useRouter } from "next/navigation";
 
 // Variants for animations
@@ -654,14 +654,6 @@ const RoadmapStep = ({ title, description, icon: Icon, link }) => (
 // Roadmap Section Component
 const RoadmapSection = ({ title, steps, completed }) => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
-
-  // const { authenticated } = useContext(UserContext);
-  const router = useRouter();
-  // useEffect(() => {
-  //   if (!authenticated) {
-  //     router.push("/u/login");
-  //   }
-  // });
 
   return (
     <Parallax className="parallax-container" y={[20, -20]}>

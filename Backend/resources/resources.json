@@ -14,5 +14,69 @@
             "trees",
             "graphs"
         ]
+    },
+    {
+        "id": "frontend",
+        "title": "Frontend Development Fundamentals",
+        "description": "Learn the basics of frontend web development.",
+        "link": "/resources/frontend",
+        "category": "resources",
+        "tags": [
+            "html",
+            "css",
+            "javascript",
+            "react",
+            "vue",
+            "angular",
+            "responsive design"
+        ]
+    },
+    {
+        "id": "backend",
+        "title": "Backend Development Essentials",
+        "description": "Explore server-side programming and API development.",
+        "link": "/resources/backend",
+        "category": "resources",
+        "tags": [
+            "node.js",
+            "express",
+            "python",
+            "django",
+            "ruby on rails",
+            "restful apis",
+            "authentication"
+        ]
+    },
+    {
+        "id": "app-dev",
+        "title": "Mobile Application Development",
+        "description": "Create cross-platform mobile apps using modern frameworks.",
+        "link": "/resources/app-development",
+        "category": "resources",
+        "tags": [
+            "react native",
+            "flutter",
+            "ionic",
+            "android",
+            "ios",
+            "mobile ui/ux",
+            "app store deployment"
+        ]
+    },
+    {
+        "id": "database",
+        "title": "Database Management Systems",
+        "description": "Master database design, querying, and administration.",
+        "link": "/resources/database",
+        "category": "resources",
+        "tags": [
+            "sql",
+            "mysql",
+            "postgresql",
+            "mongodb",
+            "redis",
+            "data modeling",
+            "database optimization"
+        ]
     }
 ]

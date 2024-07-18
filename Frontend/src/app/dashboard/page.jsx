@@ -1,24 +1,24 @@
 "use client";
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import StatCard from "@/components/StatCard";
 import CourseCard from "@/components/CourseCard";
 import Section from "@/components/Section";
-import { UserContext } from "@/context/UserContext";
+
 import { useDispatch } from "react-redux";
 import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
 
 export default function Dashboard() {
   const [username, setUsername] = useState("Loading...");
-  const { user, authenticated, setAuthenticated } = useContext(UserContext);
+
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(showLoader());
-    if (user) {
-      setUsername(user.fullName);
-    }
-    dispatch(hideLoader());
-  }, [user]);
+  // useEffect(() => {
+  //   dispatch(showLoader());
+  //   if (user) {
+  //     setUsername(user.fullName);
+  //   }
+  //   dispatch(hideLoader());
+  // }, [user]);
 
   return (
     <div className="p-6 bg-white  dark:bg-gray-800 text-gray-900">

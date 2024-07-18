@@ -1,7 +1,7 @@
 // "use client";
-// import { useContext, useEffect, useState } from 'react';
+
 // import './styles.css';
-// import { UserContext } from '../../context/UserContext';
+
 // import { useRouter } from 'next/navigation';
 
 // export default function ResourcesPage() {
@@ -27,14 +27,7 @@
 //     }
 //   ]);
 
-//   const { authenticated } = useContext(UserContext);
 //   const router = useRouter();
-
-//   useEffect(() => {
-//     if (!authenticated) {
-//       router.push("/u/login");
-//     }
-//   })
 
 //   const handleSearch = (e) => {
 //     setSearchTerm(e.target.value);
@@ -83,11 +76,10 @@
 // }
 
 "use client";
-import { useContext, useEffect, useState } from "react";
-// import { UserContext } from "../../context/UserContext";
+import { useEffect, useState } from "react";
+
 import { useRouter } from "next/navigation";
 
-// import { calsans } from "@/fonts/calsans";
 import { useDispatch } from "react-redux";
 import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
 import { fetchData } from "@/app/services/fetchData";
@@ -96,14 +88,8 @@ export default function ResourcesPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [resources, setResources] = useState([]);
 
-  // const { authenticated } = useContext(UserContext);
   const router = useRouter();
 
-  // useEffect(() => {
-  //   if (!authenticated) {
-  //     router.push("/u/login");
-  //   }
-  // }, [authenticated, router]);
   const dispatch = useDispatch();
 
   useEffect(() => {

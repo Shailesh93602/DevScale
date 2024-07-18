@@ -8,15 +8,36 @@ import { PiSignOutFill } from "react-icons/pi";
 import { GrAchievement } from "react-icons/gr";
 import { useTheme } from "next-themes";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { UserContext } from "@/context/UserContext";
+import { fetchData } from "@/app/services/fetchData";
 
 const Navbar = () => {
-  const { user } = useContext(UserContext);
-  const { authenticated } = useContext(UserContext);
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { theme, setTheme } = useTheme();
+  const [user, setUser] = useState("");
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      dispatch(showLoader());
+      try {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          setAuthenticated(false);
+        }
+        const response = await fetchData("GET", "/profile");
+        // if (!response.ok) {
+        //   throw new Error("Network response was not ok");
+        // }
+        // const data = await response.json();
+        setUser(response.data?.userInfo);
+        setAuthenticated(true);
+      } catch (error) {}
+      dispatch(hideLoader());
+    };
+    fetchUser();
+  }, []);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);

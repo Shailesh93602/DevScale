@@ -11,7 +11,9 @@ customAxios.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     } else {
+      console.log(Cookies.get("token"));
     }
+    console.log(config);
     return config;
   },
   (error) => {
