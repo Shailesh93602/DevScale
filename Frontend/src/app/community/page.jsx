@@ -1,22 +1,17 @@
 "use client";
 import Image from "next/image";
-import { useContext, useEffect } from "react";
-// import { UserContext } from '../../context/UserContext';
+
 import { useRouter } from "next/navigation";
 
 export default function Community() {
-  // const { authenticated } = useContext(UserContext);
   const router = useRouter();
-  // useEffect(() => {
-  //   if (!authenticated) {
-  //     router.push("/u/login");
-  //   }
-  // });
 
   return (
     <div className="min-h-screen  dark:bg-gray-800  bg-gray-100 py-12">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <h1 className="text-4xl font-bold dark:text-gray-200 text-gray-900 mb-6">Community</h1>
+        <h1 className="text-4xl font-bold dark:text-gray-200 text-gray-900 mb-6">
+          Community
+        </h1>
 
         <div className="bg-light dark:bg-gray-600 rounded-lg shadow p-6 mb-8">
           <h2 className="text-2xl dark:text-gray-200   font-semibold text-gray-800 mb-4">

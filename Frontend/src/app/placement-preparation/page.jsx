@@ -2,75 +2,79 @@
 
 import Image from "next/image";
 import { useEffect } from "react";
-// import { UserContext } from '../../context/UserContext';
+
 import { useRouter } from "next/navigation";
 import { PinContainer } from "@/components/ui/3d-pin";
 import { HoverEffect } from "@/components/ui/card-hover-effect";
 import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards";
 
 export default function PlacementPreparation() {
-  // const { authenticated } = useContext(UserContext)
   const router = useRouter();
+
+  const handleClick = () => {
+    router.replace("/interview-question");
+  };
+
   const interviewTips = [
     {
       title: "Data Structures & Algorithms",
       description:
         "Master fundamental data structures (arrays, linked lists, trees, graphs) and algorithms (sorting, searching, dynamic programming). Practice solving problems on platforms like LeetCode or HackerRank regularly.",
-      link: "https://leetcode.com",
+      link: "/resources",
     },
     {
       title: "System Design Basics",
       description:
         "Understand basic system design concepts like scalability, load balancing, and caching. Be prepared to discuss high-level architecture for simple applications.",
-      link: "https://github.com/donnemartin/system-design-primer",
+      link: "/resources",
     },
     {
       title: "Programming Languages",
       description:
         "Be proficient in at least one programming language (e.g., Java, Python, C++). Understand object-oriented programming principles and be able to write clean, efficient code.",
-      link: "https://www.codecademy.com",
+      link: "/resources",
     },
     {
       title: "Project Experience",
       description:
         "Develop personal projects or contribute to open-source. Be prepared to discuss your projects in detail, explaining your role, challenges faced, and solutions implemented.",
-      link: "https://github.com",
+      link: "/resources",
     },
     {
       title: "Behavioral Questions",
       description:
         "Prepare for common behavioral questions using the STAR method (Situation, Task, Action, Result). Have examples ready for teamwork, conflict resolution, and problem-solving scenarios.",
-      link: "https://www.themuse.com/advice/star-interview-method",
+      link: "/resources",
     },
     {
       title: "Company Research",
       description:
         "Research the company you're interviewing with. Understand their products, culture, and recent news. Prepare thoughtful questions to ask your interviewers.",
-      link: "https://www.glassdoor.com",
+      link: "/resources",
     },
     {
       title: "Mock Interviews",
       description:
         "Practice mock interviews with peers or use online platforms. Get comfortable explaining your thought process while solving problems out loud.",
-      link: "https://www.pramp.com",
+      link: "/resources",
     },
     {
       title: "Soft Skills",
       description:
         "Develop your communication skills. Practice explaining complex technical concepts in simple terms. Show enthusiasm for learning and teamwork.",
-      link: "https://www.coursera.org/learn/teamwork-skills-effective-communication",
+      link: "/resources",
     },
     {
       title: "Resume Building",
       description:
         "Craft a clear, concise resume highlighting your skills, projects, and any internship experience. Tailor your resume for each application.",
-      link: "https://www.resume.com",
+      link: "/resources",
     },
     {
       title: "Technical Concepts",
       description:
         "Review core CS concepts like operating systems, databases, and networking. Be prepared to discuss basic principles and their practical applications.",
-      link: "https://teachyourselfcs.com",
+      link: "/resources",
     },
   ];
 
@@ -226,7 +230,10 @@ export default function PlacementPreparation() {
             interview questions. This will help you to articulate your thoughts
             and experiences clearly.
           </p>
-          <button className="mt-4 px-4 py-2 bg-indigo-600 text-light rounded hover:bg-indigo-700">
+          <button
+            onClick={handleClick}
+            className="mt-4 px-4 py-2 bg-indigo-600 text-light rounded hover:bg-indigo-700"
+          >
             View Questions
           </button>
         </div>

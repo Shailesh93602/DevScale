@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import Loader from "@/components/Loader";
 import { Provider } from "react-redux";
 import { store, persistor } from "@/lib/store";
-import UserContextProvider from "@/context/UserContext";
+
 import { PersistGate } from "redux-persist/integration/react";
 
 export default function App({ children }) {
@@ -51,12 +51,10 @@ export default function App({ children }) {
       <div>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-            <UserContextProvider>
-              <Loader />
-              {showNavbar && <Navbar />}
-              {children}
-              <Footer />
-            </UserContextProvider>
+            <Loader />
+            {showNavbar && <Navbar />}
+            {children}
+            <Footer />
           </PersistGate>
         </Provider>
       </div>

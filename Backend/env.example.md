@@ -1,7 +1,7 @@
 PORT = 4000
 DB_URL = mysql://up4qkphpzayb5q4t:zpNBXbSiC4409ctWeYef@bz6gyjfeg2w2prlrxhon-mysql.services.clever-cloud.com:3306/bz6gyjfeg2w2prlrxhon
 SESSION_SECRET = TheNameIsShaileshbhai
-SECRET_KEY = TheNameIsShaileshbhai 
+SECRET_KEY = TheNameIsShaileshbhai
 ACCESS_TOKEN_SECRET = TheNameIsShaileshbhai
 RESET_TOKEN_SECRET = TheNameIsShaileshbhai
 MAIL_ADDRESS = engineermr671@gmail.com
@@ -13,3 +13,7 @@ DB_PASS=zpNBXbSiC4409ctWeYef
 DB_NAME=bz6gyjfeg2w2prlrxhon
 COMPILER_CLIENT_ID=391eb318fe740c7cacb2cb67151ffb35
 COMPILER_CLIENT_SECRET=e4459dcbc101f893ddc16bbde881795643c0fa3b9b3530096d2c6848315848e4
+CLOUDINARY_CLOUD_NAME=dutadv9s9
+CLOUDINARY_API_KEY=865354853578547
+CLOUDINARY_API_SECRET=seDTsJjxP1xCWg6wKnpTlINwvWA
+MONGO_URL='mongodb+srv://engineermr671:zOKTPlyltHJoVe0U@cluster0.mlhm1gm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'

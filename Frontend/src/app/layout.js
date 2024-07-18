@@ -5,8 +5,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 import App from "./App";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import UserContextProvider from "@/context/UserContext";
-// import UserContextProvider from "../context/UserContext";
 
 const inter = Inter({ subsets: ["latin"] });
 

@@ -43,6 +43,7 @@ export default function Login() {
       });
 
       if (response.data?.success) {
+        console.log("🚀 ~ file: page.jsx:46 ~ onSubmit ~ response:", response);
         dispatch(initialUser(response.data.user));
         toast.success("Logged In Successfully!");
 
