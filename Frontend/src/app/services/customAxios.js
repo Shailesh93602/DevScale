@@ -10,10 +10,7 @@ customAxios.interceptors.request.use(
     const token = Cookies.get("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-    } else {
-      console.log(Cookies.get("token"));
     }
-    console.log(config);
     return config;
   },
   (error) => {

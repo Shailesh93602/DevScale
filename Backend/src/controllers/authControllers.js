@@ -146,18 +146,19 @@ export const login = async (req, res) => {
           httpOnly: true,
           maxAge: 24 * 60 * 60 * 1000,
         });
-        const userDetailsFilled = await checkUserDetailsFilled(user.id);
-        const route = userDetailsFilled ? "/dashboard" : "/u/details";
-        res.status(200).json({
-          success: true,
-          message: "Logged in successfully!",
-          route,
-          token,
-          user,
-          domain:
-            process.env.NODE_ENV === "production"
-              ? "mrengineers.vercel.app"
-              : "localhost",
+        findUserInfoByUserId(user.id, (err, userInfo) => {
+          if (err) throw err;
+          res.status(200).json({
+            success: true,
+            message: "Logged in successfully!",
+            route: "/dashboard",
+            token,
+            user: { ...user, ...userInfo },
+            domain:
+              process.env.NODE_ENV === "production"
+                ? "mrengineers.vercel.app"
+                : "localhost",
+          });
         });
       });
     } else {
@@ -186,13 +187,19 @@ export const login = async (req, res) => {
           maxAge: 24 * 60 * 60 * 1000,
         });
 
-        const userDetailsFilled = await checkUserDetailsFilled(user.id);
-        const route = userDetailsFilled ? "/dashboard" : "/u/details";
-        res.status(200).json({
-          success: true,
-          message: "Logged in successfully!",
-          route: "/dashboard",
-          token,
+        findUserInfoByUserId(user.id, (err, userInfo) => {
+          if (err) throw err;
+          res.status(200).json({
+            success: true,
+            message: "Logged in successfully!",
+            route: "/dashboard",
+            token,
+            user: { ...user, ...userInfo },
+            domain:
+              process.env.NODE_ENV === "production"
+                ? "mrengineers.vercel.app"
+                : "localhost",
+          });
         });
       });
     }
