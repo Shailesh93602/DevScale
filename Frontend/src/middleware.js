@@ -9,27 +9,37 @@ const protectedPages = [
   "/career-roadmap",
   "/placement-preparation",
   "/community",
+  "/achievements",
+  "/battle-zone",
 ];
 
 export async function middleware(req) {
-  if (protectedPages.find((page) => page === req.nextUrl.pathname)) {
+  try {
     const token = req.cookies.get("token")?.value;
-    if (!token) {
-      const url = req.nextUrl.clone();
-      url.pathname = "/u/login";
-      return NextResponse.redirect(url);
-    } else {
-      customAxios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      const response = await customAxios.get("/profile");
-      if (response.data === "Unauthorized") {
+    if (protectedPages.find((page) => page === req.nextUrl.pathname)) {
+      if (!token) {
         const url = req.nextUrl.clone();
         url.pathname = "/u/login";
         return NextResponse.redirect(url);
       } else {
-        return NextResponse.next();
+        customAxios.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${token}`;
+        const response = await customAxios.get("/profile");
+        if (response.data === "Unauthorized") {
+          const url = req.nextUrl.clone();
+          url.pathname = "/u/login";
+          return NextResponse.redirect(url);
+        } else {
+          return NextResponse.next();
+        }
       }
+    } else {
+      return NextResponse.next();
     }
-  } else {
-    return NextResponse.next();
+  } catch (error) {
+    const url = req.nextUrl.clone();
+    url.pathname = "/u/login";
+    return NextResponse.redirect(url);
   }
 }

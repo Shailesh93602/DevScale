@@ -9,35 +9,14 @@ import { GrAchievement } from "react-icons/gr";
 import { useTheme } from "next-themes";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { fetchData } from "@/app/services/fetchData";
+import { useDispatch, useSelector } from "react-redux";
 
 const Navbar = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { theme, setTheme } = useTheme();
-  const [user, setUser] = useState("");
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      dispatch(showLoader());
-      try {
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-          setAuthenticated(false);
-        }
-        const response = await fetchData("GET", "/profile");
-        // if (!response.ok) {
-        //   throw new Error("Network response was not ok");
-        // }
-        // const data = await response.json();
-        setUser(response.data?.userInfo);
-        setAuthenticated(true);
-      } catch (error) {}
-      dispatch(hideLoader());
-    };
-    fetchUser();
-  }, []);
+  const [user, setUser] = useState(useSelector((state) => state.user?.user));
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -103,7 +82,7 @@ const Navbar = () => {
                 <Avatar className="bg-red-500 font-semibold text-3xl items-center justify-center">
                   <AvatarImage src={user?.profilePicture} alt="S" />
                   <AvatarFallback>
-                    {user?.fullName?.charAt(0)?.toUpperCase()}
+                    {user?.username?.charAt(0)?.toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
               </button>
