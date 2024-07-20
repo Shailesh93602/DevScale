@@ -37,7 +37,7 @@ const Resource = ({ params }) => {
   }
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+    <div className="flex flex-col md:flex-row min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
       <div className="w-full md:w-1/4 p-5 bg-gray-100 dark:bg-gray-800 h-full md:sticky top-0 border-r dark:border-gray-700 shadow-lg">
         <h2 className="text-2xl font-semibold mb-4 text-gray-700 dark:text-gray-300">
           Topics
@@ -59,7 +59,7 @@ const Resource = ({ params }) => {
         </ul>
       </div>
 
-      <div className="w-full md:w-3/4 p-5 bg-white dark:bg-gray-900 text-black dark:text-white shadow-lg overflow-y-auto">
+      <div className="w-full md:w-3/4 p-5 bg-gray-50 dark:bg-gray-900 text-black dark:text-white shadow-lg overflow-y-auto">
         {resource.map(
           (res, index) =>
             selectedTopic === res.topic && (
@@ -101,7 +101,7 @@ const Resource = ({ params }) => {
                   {res.examples.map((example, idx) => (
                     <div key={idx} className="mb-4">
                       <p className="font-semibold">{example.description}</p>
-                      <pre className="bg-gray-100 dark:bg-gray-800 p-2 rounded-lg mb-2 overflow-x-auto">
+                      <pre className="bg-gray-200 dark:bg-gray-800 p-2 rounded-lg mb-2 overflow-x-auto">
                         {example.code}
                       </pre>
                       <p>{example.explanation}</p>
@@ -172,7 +172,7 @@ const Resource = ({ params }) => {
                   {res.exercises.map((exercise, idx) => (
                     <div key={idx} className="mb-4">
                       <p className="font-semibold">{exercise.description}</p>
-                      <pre className="bg-gray-100 dark:bg-gray-800 p-2 rounded-lg mb-2 overflow-x-auto">
+                      <pre className="bg-gray-200 dark:bg-gray-800 p-2 rounded-lg mb-2 overflow-x-auto">
                         {exercise.solution}
                       </pre>
                     </div>
@@ -238,7 +238,7 @@ const Resource = ({ params }) => {
                   {res.real_world_applications?.map((application, idx) => (
                     <div key={idx} className="mb-4">
                       <p className="font-semibold">{application.application}</p>
-                      <p>{application.explanation}</p>
+                      <p>{application.description}</p>
                     </div>
                   ))}
                 </div>
