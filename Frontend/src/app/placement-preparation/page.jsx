@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import { PinContainer } from "@/components/ui/3d-pin";
 import { HoverEffect } from "@/components/ui/card-hover-effect";
 import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards";
+import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
+import { AceternityLogo } from "../page";
 
 export default function PlacementPreparation() {
   const router = useRouter();
@@ -182,9 +184,16 @@ export default function PlacementPreparation() {
             exams. These tests cover different subjects and topics that are
             commonly seen in placement exams.
           </p>
-          <button className="mt-4 px-4 py-2 bg-indigo-600 text-light rounded hover:bg-indigo-700">
-            Start Practice Tests
-          </button>
+          <div className="pt-5">
+            <HoverBorderGradient
+              containerClassName="rounded-full"
+              as="button"
+              className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
+            >
+              <AceternityLogo />
+              <span>Start Practice Tests</span>
+            </HoverBorderGradient>
+          </div>
         </div>
 
         <div className="bg-light rounded-lg dark:bg-gray-600 dark:text-gray-200 shadow p-6 mb-8">
@@ -197,9 +206,16 @@ export default function PlacementPreparation() {
             From understanding the company culture to practicing common
             questions, we’ve got you covered.
           </p>
-          <button className="mt-4 px-4 py-2 bg-indigo-600 text-light rounded hover:bg-indigo-700">
-            Read Interview Tips
-          </button>
+          <div className="pt-5">
+            <HoverBorderGradient
+              containerClassName="rounded-full"
+              as="button"
+              className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
+            >
+              <AceternityLogo />
+              <span>Read Interview Tips</span>
+            </HoverBorderGradient>
+          </div>
         </div>
 
         <div className="bg-light dark:bg-gray-600 rounded-lg shadow p-6 mb-8">
@@ -211,9 +227,16 @@ export default function PlacementPreparation() {
             building tools and templates to highlight your skills and
             experiences effectively.
           </p>
-          <button className="mt-4 px-4 py-2 bg-indigo-600 text-light rounded hover:bg-indigo-700">
-            Build Your Resume
-          </button>
+          <div className="pt-5">
+            <HoverBorderGradient
+              containerClassName="rounded-full"
+              as="button"
+              className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
+            >
+              <AceternityLogo />
+              <span>Build your Resume</span>
+            </HoverBorderGradient>
+          </div>
         </div>
 
         <div className="bg-light dark:bg-gray-600 rounded-lg shadow p-6">
@@ -230,12 +253,17 @@ export default function PlacementPreparation() {
             interview questions. This will help you to articulate your thoughts
             and experiences clearly.
           </p>
-          <button
-            onClick={handleClick}
-            className="mt-4 px-4 py-2 bg-indigo-600 text-light rounded hover:bg-indigo-700"
-          >
-            View Questions
-          </button>
+          <div className="pt-5">
+            {" "}
+            <HoverBorderGradient
+              containerClassName="rounded-full"
+              as="button"
+              className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
+            >
+              <AceternityLogo />
+              <span>view Questions</span>
+            </HoverBorderGradient>
+          </div>
         </div>
       </div>
     </div>
