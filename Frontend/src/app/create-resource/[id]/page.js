@@ -18,30 +18,30 @@ const ResourceEditor = ({ params }) => {
   const [content, setContent] = useState("");
 
   const dispatch = useDispatch();
-  useEffect(() => {
-    const fetchData = async () => {
-      dispatch(showLoader());
-      try {
-        const response = await fetchData("get", `/resources/details/${id}`);
-        console.log(response);
-        if (response.data?.success) {
-          const { subject, topic, subtopic, content } = response.data;
-          setSubject(subject);
-          setTopic(topic);
-          setSubtopic(subtopic);
-          setContent(content);
-        } else {
-          toast.error("Failed to fetch resource details.");
-        }
-      } catch (error) {
-        console.log(error);
-        toast.error("Something went wrong, Please try again!");
-      } finally {
-        dispatch(hideLoader());
-      }
-    };
-    fetchData();
-  }, [id, dispatch]);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     dispatch(showLoader());
+  //     try {
+  //       const response = await fetchData("get", `/resources/details/${id}`);
+  //       console.log(response);
+  //       if (response.data?.success) {
+  //         const { subject, topic, subtopic, content } = response.data;
+  //         setSubject(subject);
+  //         setTopic(topic);
+  //         setSubtopic(subtopic);
+  //         setContent(content);
+  //       } else {
+  //         toast.error("Failed to fetch resource details.");
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //       toast.error("Something went wrong, Please try again!");
+  //     } finally {
+  //       dispatch(hideLoader());
+  //     }
+  //   };
+  //   fetchData();
+  // }, [id, dispatch]);
 
   const saveResource = async () => {
     try {
