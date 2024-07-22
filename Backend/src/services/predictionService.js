@@ -20,8 +20,7 @@ class CustomLogisticRegression {
 // Load the model data
 let modelData;
 try {
-  modelData = JSON.parse(fs.readFileSync("src/models/model.json", "utf8"));
-  x;
+  // modelData = JSON.parse(fs.readFileSync("src/models/model.json", "utf8"));
 } catch (error) {
   console.error("Error reading model data:", error);
 }
