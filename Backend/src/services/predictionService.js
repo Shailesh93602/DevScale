@@ -1,6 +1,6 @@
 import fs from "fs";
 import { Matrix } from "ml-matrix";
-import { LabelEncoder } from "./labelEncoder.js";
+// import { LabelEncoder } from "./labelEncoder.js";
 
 // Custom Logistic Regression class
 // class CustomLogisticRegression {
@@ -33,12 +33,12 @@ try {
 }
 
 // Load label encoders and scaler
-let labelEncoders, scaler;
+// let labelEncoders, scaler;
 try {
-  labelEncoders = JSON.parse(
-    fs.readFileSync("src/models/labelEncoders.json", "utf8")
-  );
-  scaler = JSON.parse(fs.readFileSync("src/models/scaler.json", "utf8"));
+  // labelEncoders = JSON.parse(
+  // fs.readFileSync("src/models/labelEncoders.json", "utf8")
+  // );
+  // scaler = JSON.parse(fs.readFileSync("src/models/scaler.json", "utf8"));
 } catch (error) {
   console.error("Error reading encoders or scaler:", error);
 }
@@ -74,13 +74,13 @@ const preprocessInput = (input) => {
     }
 
     // Apply label encoding
-    Object.keys(labelEncoders).forEach((key) => {
-      if (key in processedInput) {
-        const le = new LabelEncoder();
-        le.fit(labelEncoders[key]);
-        processedInput[key] = le.transform([processedInput[key]])[0];
-      }
-    });
+    // Object.keys(labelEncoders).forEach((key) => {
+    // if (key in processedInput) {
+    // const le = new LabelEncoder();
+    // le.fit(labelEncoders[key]);
+    // processedInput[key] = le.transform([processedInput[key]])[0];
+    // }
+    // });
 
     // Apply scaling or any other preprocessing steps here
 
