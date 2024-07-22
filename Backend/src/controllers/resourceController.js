@@ -1,37 +1,36 @@
 import { logger } from "../helpers/logger.js";
 import fs from "fs";
+import { fileURLToPath } from "url";
 import path from "path";
 import Resource from "../models/resourceModel.js";
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 export const getResources = (req, res) => {
-  try {
-    const resourcesPath = path.join(
-      import.meta.dirname,
-      "../../resources/resources.json"
-    );
-    fs.readFile(resourcesPath, "utf8", (err, data) => {
-      if (err) {
-        logger.error(err);
-        return res
-          .status(500)
-          .json({ success: false, message: "Internal Server Error" });
-      }
+  const resourcesPath = path.join(__dirname, "../../resources/resources.json");
+
+  fs.readFile(resourcesPath, "utf8", (err, data) => {
+    if (err) {
+      console.error(`Error reading file: ${resourcesPath}`, err);
+      return res
+        .status(500)
+        .json({ success: false, message: "Error reading resources file" });
+    }
+    try {
       const resources = JSON.parse(data);
       res.status(200).json({ success: true, resources });
-    });
-  } catch (error) {
-    logger.error(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
-  }
+    } catch (parseError) {
+      console.error(`Error parsing JSON: ${resourcesPath}`, parseError);
+      res
+        .status(500)
+        .json({ success: false, message: "Error parsing resources file" });
+    }
+  });
 };
-
 export const getResource = (req, res) => {
   try {
     const id = req.params.id;
-    const resourcesPath = path.join(
-      import.meta.dirname,
-      `../../resources/${id}.json`
-    );
+    const resourcesPath = path.join(__dirname, `../../resources/${id}.json`);
     fs.readFile(resourcesPath, "utf8", (err, data) => {
       if (err) {
         logger.error(err);
@@ -100,4 +99,29 @@ export const createResource = async (req, res) => {
       .status(500)
       .json({ success: false, message: "Failed to save resource" });
   }
+};
+
+export const getInterviewquestions = async (req, res) => {
+  const interviewquestionsPath = path.join(
+    __dirname,
+    `../../resources/interviewquestions.json`
+  );
+
+  fs.readFile(interviewquestionsPath, "utf-8", (err, data) => {
+    if (err) {
+      console.error(`Error reading file : ${err.interviewquestionsPath}`, err);
+      return res
+        .status(500)
+        .json({ success: false, message: "Error reading resource file" });
+    }
+    try {
+      const interviewquestions = JSON.parse(data);
+      res.status(200).json({ success: true, interviewquestions });
+    } catch (parseError) {
+      console.error(`Error parsing JSON: ${resourcesPath}`, parseError);
+      res
+        .status(500)
+        .json({ success: false, message: "Error parsing resources file" });
+    }
+  });
 };
