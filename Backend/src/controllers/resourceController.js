@@ -1,7 +1,7 @@
 import { logger } from "../helpers/logger.js";
 import fs from "fs";
 import path from "path";
-import resourceModel from "../models/resourceModel.js";
+import Resource from "../models/resourceModel.js";
 
 export const getResources = (req, res) => {
   try {
@@ -48,13 +48,29 @@ export const getResource = (req, res) => {
   }
 };
 
-export const getResourceDetails = (req, res) => {
+export const getResourceDetails = async (req, res) => {
   try {
+    const { id } = req.params;
+    const resource = await Resource.findById(id);
+
+    if (!resource) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Resource not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      subject: resource.subject,
+      topic: resource.topic,
+      subtopic: resource.subtopic,
+      content: resource.content,
+    });
   } catch (error) {
+    console.error("Error fetching resource details:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
-
 export const getResourcesList = (req, res) => {
   try {
   } catch (error) {
@@ -65,11 +81,23 @@ export const getResourcesList = (req, res) => {
 export const createResource = async (req, res) => {
   try {
     const { subject, topic, subtopic, content } = req.body;
+
+    if (!subject || !topic || !content) {
+      return res.status(400).json({
+        success: false,
+        message: "Subject, topic, and content are required.",
+      });
+    }
+
     const newResource = new Resource({ subject, topic, subtopic, content });
+
     await newResource.save();
+
     res.status(201).json({ success: true, resource: newResource });
   } catch (error) {
     console.error("Error saving resource:", error);
-    res.status(500).json({ error: "Failed to save resource" });
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to save resource" });
   }
 };

@@ -22,7 +22,8 @@ const ResourceEditor = ({ params }) => {
     const fetchData = async () => {
       dispatch(showLoader());
       try {
-        const response = await fetchData("get", "/resources/details/" + id);
+        const response = await fetchData("get", `/resources/details/${id}`);
+        console.log(response);
         if (response.data?.success) {
           const { subject, topic, subtopic, content } = response.data;
           setSubject(subject);
@@ -33,15 +34,18 @@ const ResourceEditor = ({ params }) => {
           toast.error("Failed to fetch resource details.");
         }
       } catch (error) {
+        console.log(error);
         toast.error("Something went wrong, Please try again!");
+      } finally {
+        dispatch(hideLoader());
       }
-      dispatch(hideLoader());
     };
     fetchData();
-  }, []);
+  }, [id, dispatch]);
 
   const saveResource = async () => {
     try {
+      dispatch(showLoader());
       const response = await axios.post("/api/resources", {
         subject,
         topic,
@@ -57,6 +61,8 @@ const ResourceEditor = ({ params }) => {
     } catch (error) {
       console.error("Error saving resource:", error);
       toast.error("Failed to save resource.");
+    } finally {
+      dispatch(hideLoader());
     }
   };
 
