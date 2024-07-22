@@ -3,19 +3,19 @@ import { Matrix } from "ml-matrix";
 import { LabelEncoder } from "./labelEncoder.js";
 
 // Custom Logistic Regression class
-class CustomLogisticRegression {
-  constructor(weights, intercept) {
-    this.weights = new Matrix(weights);
-    this.intercept = intercept;
-  }
+// class CustomLogisticRegression {
+//   constructor(weights, intercept) {
+//     this.weights = new Matrix(weights);
+//     this.intercept = intercept;
+//   }
 
-  predict(X) {
-    const z = X.mmul(this.weights.transpose()).add(this.intercept);
-    return z
-      .to1DArray()
-      .map((value) => (1 / (1 + Math.exp(-value)) > 0.5 ? 1 : 0)); // Sigmoid function and thresholding
-  }
-}
+//   predict(X) {
+//     const z = X.mmul(this.weights.transpose()).add(this.intercept);
+//     return z
+//       .to1DArray()
+//       .map((value) => (1 / (1 + Math.exp(-value)) > 0.5 ? 1 : 0)); // Sigmoid function and thresholding
+//   }
+// }
 
 // Load the model data
 let modelData;
@@ -27,7 +27,7 @@ try {
 
 let model;
 try {
-  model = new CustomLogisticRegression(modelData.weights, modelData.intercept);
+  // model = new CustomLogisticRegression(modelData.weights, modelData.intercept);
 } catch (error) {
   console.error("Error initializing model:", error);
 }
