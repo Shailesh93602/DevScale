@@ -1,7 +1,9 @@
 "use client";
+import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import Image from "next/image";
 
 import { useRouter } from "next/navigation";
+import { AceternityLogo } from "../page";
 
 export default function Community() {
   const router = useRouter();
@@ -28,9 +30,16 @@ export default function Community() {
             and connect with other community members. Participate in various
             topics and grow together.
           </p>
-          <button className="mt-4 px-4 py-2 bg-indigo-600 text-light rounded hover:bg-indigo-700">
-            Join Discussions
-          </button>
+          <div className="pt-4">
+            <HoverBorderGradient
+              containerClassName="rounded-full"
+              as="button"
+              className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
+            >
+              <AceternityLogo />
+              <span> Join Discussions</span>
+            </HoverBorderGradient>
+          </div>
         </div>
 
         <div className="bg-light dark:bg-gray-600 dark:text-gray-200 rounded-lg shadow p-6 mb-8">
@@ -42,9 +51,16 @@ export default function Community() {
             be a part of events that enhance your learning and networking
             opportunities.
           </p>
-          <button className="mt-4 px-4 py-2 bg-indigo-600 text-light rounded hover:bg-indigo-700">
-            View Events
-          </button>
+          <div className="pt-4">
+            <HoverBorderGradient
+              containerClassName="rounded-full"
+              as="button"
+              className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
+            >
+              <AceternityLogo />
+              <span>View Events</span>
+            </HoverBorderGradient>
+          </div>
         </div>
 
         <div className="bg-light dark:bg-gray-600 rounded-lg shadow p-6 mb-8">
@@ -55,9 +71,16 @@ export default function Community() {
             Discover stories and achievements of our community members. Get
             inspired by their journeys and learn from their experiences.
           </p>
-          <button className="mt-4 px-4 py-2 bg-indigo-600 text-light rounded hover:bg-indigo-700">
-            View Highlights
-          </button>
+          <div className="pt-4">
+            <HoverBorderGradient
+              containerClassName="rounded-full"
+              as="button"
+              className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
+            >
+              <AceternityLogo />
+              <span>View Highlights</span>
+            </HoverBorderGradient>
+          </div>
         </div>
 
         <div className="bg-light dark:bg-gray-600 rounded-lg shadow p-6">
@@ -69,9 +92,17 @@ export default function Community() {
             initiatives. Find opportunities to work together and achieve common
             goals.
           </p>
-          <button className="mt-4 px-4 py-2 bg-indigo-600 text-light rounded hover:bg-indigo-700">
-            Find Opportunities
-          </button>
+          <div className="pt-4">
+            {" "}
+            <HoverBorderGradient
+              containerClassName="rounded-full"
+              as="button"
+              className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
+            >
+              <AceternityLogo />
+              <span>Find Opportunities</span>
+            </HoverBorderGradient>
+          </div>
         </div>
       </div>
     </div>

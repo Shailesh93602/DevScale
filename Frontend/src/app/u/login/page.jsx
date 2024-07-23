@@ -59,7 +59,7 @@ export default function Login() {
   };
 
   return (
-    <section className="min-h-screen flex items-center justify-center py-12 bg-background text-foreground transition duration-300 ease-in-out">
+    <section className="min-h-screen flex items-centerdark:bg-black justify-center py-12 bg-background text-foreground transition duration-300 ease-in-out">
       <div className="w-full max-w-lg bg-card shadow-lg rounded-lg p-10 dark:bg-gray-800 dark:text-white">
         <div className="text-center mb-8">
           <Link
