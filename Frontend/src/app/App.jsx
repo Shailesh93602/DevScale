@@ -51,7 +51,7 @@ export default function App({ children }) {
       <div>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-            <Loader />
+            {/* <Loader /> */}
             {showNavbar && <Navbar />}
             {children}
             <Footer />

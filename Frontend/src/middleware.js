@@ -26,7 +26,7 @@ export async function middleware(req) {
           "Authorization"
         ] = `Bearer ${token}`;
         const response = await customAxios.get("/profile");
-        if (response.data === "Unauthorized") {
+        if (response.data == "Unauthorized") {
           const url = req.nextUrl.clone();
           url.pathname = "/u/login";
           return NextResponse.redirect(url);

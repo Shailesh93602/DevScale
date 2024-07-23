@@ -744,7 +744,367 @@
             }
           }
         ]
-      }
+      }, 
+
+  
+        {
+          "category": "SQL Interview Questions",
+          "questions": [
+            {
+              "id": "sql-1",
+              "question": "What is SQL?",
+              "answer": {
+                "introduction": "SQL (Structured Query Language) is a standardized programming language used for managing and manipulating relational databases.",
+                "points": [
+                  {
+                    "title": "Data Manipulation",
+                    "description": "SQL allows users to insert, update, delete, and retrieve data from databases."
+                  },
+                  {
+                    "title": "Data Definition",
+                    "description": "It's used to define and modify database structures like tables, views, and indexes."
+                  },
+                  {
+                    "title": "Data Control",
+                    "description": "SQL provides commands for setting permissions and controlling access to data."
+                  }
+                ],
+                "conclusion": "SQL is essential for interacting with relational databases and is widely used in various applications and industries."
+              }
+            },
+            {
+              "id": "sql-2",
+              "question": "What is a database?",
+              "answer": {
+                "introduction": "A database is an organized collection of structured information or data, typically stored electronically in a computer system.",
+                "points": [
+                  {
+                    "title": "Data Storage",
+                    "description": "Databases store large amounts of data efficiently and securely."
+                  },
+                  {
+                    "title": "Data Retrieval",
+                    "description": "They allow quick and easy access to stored information."
+                  },
+                  {
+                    "title": "Data Management",
+                    "description": "Databases provide tools for organizing, updating, and maintaining data integrity."
+                  }
+                ],
+                "conclusion": "Databases are crucial for storing and managing large amounts of information in a structured and accessible manner."
+              }
+            },
+            {
+              "id": "sql-3",
+              "question": "What do you mean by data definition language?",
+              "answer": {
+                "introduction": "Data Definition Language (DDL) is a subset of SQL used to define and modify the structure of database objects.",
+                "points": [
+                  {
+                    "title": "Create",
+                    "description": "DDL includes commands like CREATE to create new database objects such as tables, views, or indexes."
+                  },
+                  {
+                    "title": "Alter",
+                    "description": "It allows modification of existing database objects using the ALTER command."
+                  },
+                  {
+                    "title": "Drop",
+                    "description": "DDL provides the DROP command to remove database objects."
+                  }
+                ],
+                "conclusion": "DDL is essential for defining and managing the structure of a database, allowing developers to create, modify, and remove database objects as needed."
+              }
+            },
+            {
+              "id": "sql-4",
+              "question": "What is the view in SQL?",
+              "answer": {
+                "introduction": "A view in SQL is a virtual table based on the result-set of an SQL statement.",
+                "points": [
+                  {
+                    "title": "Virtual Table",
+                    "description": "Views are not physical tables but appear as tables to a user."
+                  },
+                  {
+                    "title": "Simplified Data Access",
+                    "description": "They can simplify complex queries by encapsulating them into a single view."
+                  },
+                  {
+                    "title": "Data Security",
+                    "description": "Views can be used to restrict access to certain columns or rows of a table."
+                  }
+                ],
+                "conclusion": "Views provide a powerful way to present data, simplify complex queries, and enhance data security in SQL databases."
+              }
+            },
+            {
+              "id": "sql-5",
+              "question": "What do you mean by foreign key?",
+              "answer": {
+                "introduction": "A foreign key is a column or group of columns in a relational database table that provides a link between data in two tables.",
+                "points": [
+                  {
+                    "title": "Referential Integrity",
+                    "description": "It enforces referential integrity by ensuring that values in one table exist in another table."
+                  },
+                  {
+                    "title": "Relationship Definition",
+                    "description": "Foreign keys define and maintain relationships between tables in a database."
+                  },
+                  {
+                    "title": "Data Consistency",
+                    "description": "They help maintain consistency across related tables by preventing orphaned records."
+                  }
+                ],
+                "conclusion": "Foreign keys are crucial for maintaining data integrity and establishing relationships between tables in relational databases."
+              }
+            },
+            {
+              "id": "sql-6",
+              "question": "What are table and Field?",
+              "answer": {
+                "introduction": "Tables and fields are fundamental components of relational databases.",
+                "points": [
+                  {
+                    "title": "Table",
+                    "description": "A table is a collection of related data organized in rows and columns, similar to a spreadsheet."
+                  },
+                  {
+                    "title": "Field",
+                    "description": "A field, also known as a column, represents a specific piece of information within a table, such as 'Name' or 'Date'."
+                  },
+                  {
+                    "title": "Relationship",
+                    "description": "Each row in a table contains a set of fields, and each field contains a specific type of data."
+                  }
+                ],
+                "conclusion": "Understanding tables and fields is essential for designing and working with relational databases effectively."
+              }
+            },
+            {
+              "id": "sql-7",
+              "question": "What is the primary key?",
+              "answer": {
+                "introduction": "A primary key is a column or set of columns in a table that uniquely identifies each row in that table.",
+                "points": [
+                  {
+                    "title": "Uniqueness",
+                    "description": "Each value in the primary key column(s) must be unique across all rows in the table."
+                  },
+                  {
+                    "title": "Non-Null",
+                    "description": "Primary key values cannot be null, ensuring that each row can always be identified."
+                  },
+                  {
+                    "title": "Table Identifier",
+                    "description": "It serves as the main identifier for rows in a table and is often used in relationships with other tables."
+                  }
+                ],
+                "conclusion": "Primary keys are crucial for maintaining data integrity and establishing relationships between tables in relational databases."
+              }
+            },
+            {
+              "id": "sql-8",
+              "question": "What is a Default constraint?",
+              "answer": {
+                "introduction": "A Default constraint is used to provide a default value for a column when no specific value is supplied during data insertion.",
+                "points": [
+                  {
+                    "title": "Automatic Value Assignment",
+                    "description": "It automatically assigns a predefined value to a column if no value is explicitly provided."
+                  },
+                  {
+                    "title": "Data Consistency",
+                    "description": "Helps maintain data consistency by ensuring that columns always have a valid value."
+                  },
+                  {
+                    "title": "Efficiency",
+                    "description": "Reduces the need for explicit value assignments in INSERT statements, making data entry more efficient."
+                  }
+                ],
+                "conclusion": "Default constraints are useful for maintaining data integrity and simplifying data entry processes in SQL databases."
+              }
+            },
+            {
+              "id": "sql-9",
+              "question": "What is normalization and Denormalization?",
+              "answer": {
+                "introduction": "Normalization and denormalization are database design techniques used to optimize data storage and retrieval.",
+                "points": [
+                  {
+                    "title": "Normalization",
+                    "description": "A process of organizing data to reduce redundancy and improve data integrity by dividing large tables into smaller, related tables."
+                  },
+                  {
+                    "title": "Denormalization",
+                    "description": "The process of adding redundant data to one or more tables to improve read performance at the cost of some write performance."
+                  },
+                  {
+                    "title": "Trade-offs",
+                    "description": "Normalization reduces redundancy but can complicate queries, while denormalization can simplify queries but increase data redundancy."
+                  }
+                ],
+                "conclusion": "Both normalization and denormalization have their place in database design, and the choice between them depends on specific application requirements and performance needs."
+              }
+            },
+            {
+              "id": "sql-10",
+              "question": "What is a query?",
+              "answer": {
+                "introduction": "A query is a request for data or information from a database, or a request to perform an action on the data.",
+                "points": [
+                  {
+                    "title": "Data Retrieval",
+                    "description": "Queries are primarily used to extract specific data from one or more tables based on certain criteria."
+                  },
+                  {
+                    "title": "Data Manipulation",
+                    "description": "They can also be used to insert, update, or delete data in the database."
+                  },
+                  {
+                    "title": "SQL Statements",
+                    "description": "Queries are typically written using SQL statements such as SELECT, INSERT, UPDATE, or DELETE."
+                  }
+                ],
+                "conclusion": "Queries are fundamental to interacting with databases, allowing users to retrieve and manipulate data as needed."
+              }
+            },
+            {
+              "id": "sql-11",
+              "question": "What is a subquery?",
+              "answer": {
+                "introduction": "A subquery, also known as a nested query or inner query, is a query within another SQL query.",
+                "points": [
+                  {
+                    "title": "Nested Structure",
+                    "description": "It's a SELECT statement embedded within another SELECT, INSERT, UPDATE, or DELETE statement."
+                  },
+                  {
+                    "title": "Data Filtering",
+                    "description": "Subqueries are often used to filter results in the main query based on criteria in the subquery."
+                  },
+                  {
+                    "title": "Flexibility",
+                    "description": "They provide a way to perform complex operations and comparisons that might be difficult or impossible with a single query."
+                  }
+                ],
+                "conclusion": "Subqueries are powerful tools for creating complex, multi-layered queries in SQL, allowing for more sophisticated data manipulation and retrieval."
+              }
+            },
+            {
+              "id": "sql-12",
+              "question": "What is a Constraint?",
+              "answer": {
+                "introduction": "A constraint in SQL is a rule enforced on data columns in a table to maintain the accuracy and reliability of the data.",
+                "points": [
+                  {
+                    "title": "Data Integrity",
+                    "description": "Constraints ensure that the data in the database follows specific rules and remains consistent."
+                  },
+                  {
+                    "title": "Types",
+                    "description": "Common types include NOT NULL, UNIQUE, PRIMARY KEY, FOREIGN KEY, and CHECK constraints."
+                  },
+                  {
+                    "title": "Enforcement",
+                    "description": "Constraints are enforced automatically by the database management system when data is inserted, updated, or deleted."
+                  }
+                ],
+                "conclusion": "Constraints are essential for maintaining data integrity and ensuring that the database adheres to predefined rules and relationships."
+              }
+            },
+            {
+              "id": "sql-13",
+              "question": "What is Data Integrity?",
+              "answer": {
+                "introduction": "Data Integrity refers to the accuracy, consistency, and reliability of data stored in a database.",
+                "points": [
+                  {
+                    "title": "Accuracy",
+                    "description": "Ensures that data is correct and free from errors or corruptions."
+                  },
+                  {
+                    "title": "Consistency",
+                    "description": "Maintains data consistency across related tables and throughout the database."
+                  },
+                  {
+                    "title": "Reliability",
+                    "description": "Ensures that data remains intact and trustworthy throughout its lifecycle."
+                  }
+                ],
+                "conclusion": "Data Integrity is crucial for maintaining the quality and trustworthiness of data in a database system."
+              }
+            },
+            {
+              "id": "sql-14",
+              "question": "What are aggregate and scalar functions?",
+              "answer": {
+                "introduction": "Aggregate and scalar functions are types of built-in functions in SQL used for data manipulation and calculation.",
+                "points": [
+                  {
+                    "title": "Aggregate Functions",
+                    "description": "Operate on a set of values and return a single summarized result, such as SUM, AVG, COUNT, MAX, and MIN."
+                  },
+                  {
+                    "title": "Scalar Functions",
+                    "description": "Operate on a single value and return a single value, such as UPPER, LOWER, ROUND, and CONCAT."
+                  },
+                  {
+                    "title": "Usage",
+                    "description": "Aggregate functions are often used with GROUP BY clauses, while scalar functions can be used in SELECT, WHERE, and HAVING clauses."
+                  }
+                ],
+                "conclusion": "Both aggregate and scalar functions are essential tools for data analysis and manipulation in SQL queries."
+              }
+            },
+            {
+              "id": "sql-15",
+              "question": "What is an ALIAS command?",
+              "answer": {
+                "introduction": "An ALIAS in SQL is a temporary name assigned to a table, column, or result of a query to make it more readable and easier to reference.",
+                "points": [
+                  {
+                    "title": "Table Alias",
+                    "description": "Provides a shorthand way to refer to tables, especially useful in joins and subqueries."
+                  },
+                  {
+                    "title": "Column Alias",
+                    "description": "Allows renaming of columns in the result set, often used to provide more meaningful names."
+                  },
+                  {
+                    "title": "Syntax",
+                    "description": "Created using the AS keyword or simply by placing the alias after the table or column name."
+                  }
+                ],
+                "conclusion": "Aliases enhance query readability and can simplify complex queries by providing shorthand references to tables and columns."
+              }
+            },
+            {
+              "id": "sql-16",
+              "question": "What are Union, minus, and Intersect commands?",
+              "answer": {
+                "introduction": "Union, Minus (Except), and Intersect are set operations in SQL used to combine or compare the results of two or more SELECT statements.",
+                "points": [
+                  {
+                    "title": "UNION",
+                    "description": "Combines the result sets of two or more SELECT statements, removing duplicates unless UNION ALL is used."
+                  },
+                  {
+                    "title": "MINUS (EXCEPT)",
+                    "description": "Returns distinct rows from the first query that are not in the result of the second query."
+                  },
+                  {
+                    "title": "INTERSECT",
+                    "description": "Returns distinct rows that are common to both query results."
+                  }
+                ],
+                "conclusion": "These set operations provide powerful tools for combining and comparing data from different queries, allowing for complex data analysis and reporting."
+              }
+            }
+          ]
+        }
+
       
 
   ]

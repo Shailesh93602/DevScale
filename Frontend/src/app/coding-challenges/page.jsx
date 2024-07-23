@@ -231,8 +231,8 @@ export default function CodingChallengesPage() {
   );
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="bg-light  dark:bg-gray-800  shadow-md rounded-lg p-6">
+    <div className="container  mx-auto p-4">
+      <div className="bg-blue-50  dark:bg-gray-900  shadow-md rounded-lg p-6">
         <h1 className="text-2xl font-bold dark:text-gray-200 text-gray-900 mb-4">
           Coding Challenges
         </h1>
