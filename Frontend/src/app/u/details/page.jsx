@@ -143,13 +143,12 @@ export default function Details() {
       "/profile/register",
       JSON.stringify(data)
     );
-    const data = response.data;
-    if (data.success) {
-      localStorage.setItem("user", JSON.stringify(data.user));
+    if (response.data.success) {
+      localStorage.setItem("user", JSON.stringify(response.data.user));
       toast.success("Registered Successfully!", { autoClose: 1500 });
       router.push("/dashboard");
     } else {
-      toast.error(data.message, { autoClose: 1500 });
+      toast.error(response.data.message, { autoClose: 1500 });
     }
   };
 
