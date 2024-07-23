@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Followcard from "../../components/followcard";
+// import Followcard from "../../components/followcard";
 import { apiResponse } from "@/api/api";
 import toast from "react-hot-toast";
 
@@ -33,7 +33,7 @@ const page = () => {
       <h1 className="text-3xl font-bold mb-8 text-gray-900 dark:text-gray-100 text-center">
         Follow for challange your frineds
       </h1>
-      <Followcard users={users} />
+      {/* <Followcard users={users} /> */}
     </div>
   );
 };
