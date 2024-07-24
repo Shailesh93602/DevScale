@@ -3,6 +3,7 @@ import fs from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
 import Resource from "../models/resourceModel.js";
+import Article from "../models/articleModel.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -124,4 +125,55 @@ export const getInterviewquestions = async (req, res) => {
         .json({ success: false, message: "Error parsing resources file" });
     }
   });
+};
+
+export const createArticle = async (req, res) => {
+  const { title, content, author, topicId } = req.body;
+
+  try {
+    const article = new Article({
+      title,
+      content,
+      author,
+      topic: topicId,
+    });
+
+    await article.save();
+
+    const resource = await Resource.findById(topicId);
+    resource.articles.push(article._id);
+    await resource.save();
+
+    res.json(article);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+};
+
+export const getArticle = async (req, res) => {
+  try {
+    const articles = await Article.find({ topic: req.params.id });
+    res.json(articles);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+};
+
+export const selectArticle = async (req, res) => {
+  try {
+    const article = await Article.findById(req.params.id);
+    if (!article) {
+      return res.status(404).json({ msg: "Article not found" });
+    }
+
+    article.isSelected = true;
+    await article.save();
+
+    res.json(article);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
 };
