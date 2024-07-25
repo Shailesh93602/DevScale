@@ -4,7 +4,7 @@ const nextConfig = {
     autoPrerender: false,
   },
   images: {
-    domains: ['aceternity.com', 'images.unsplash.com'],
+    domains: ["aceternity.com", "images.unsplash.com"],
   },
 };
 

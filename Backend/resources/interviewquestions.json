@@ -1,5 +1,4 @@
 [
-    
         {
           "category": "React Interview Questions",
           "questions": [
@@ -391,9 +390,6 @@
             }
           ]
         },
-      
-      
-
     {
         "category": "Object-Oriented Programming (OOP) Interview Questions",
         "questions": [
@@ -745,8 +741,6 @@
           }
         ]
       }, 
-
-  
         {
           "category": "SQL Interview Questions",
           "questions": [
@@ -1104,7 +1098,4 @@
             }
           ]
         }
-
-      
-
   ]
