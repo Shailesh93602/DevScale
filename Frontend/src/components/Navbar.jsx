@@ -24,6 +24,7 @@ const Navbar = () => {
 
   const handleLinkClick = () => {
     setIsOpen(false);
+    setDropdownOpen(!dropdownOpen);
   };
 
   const toggleTheme = () => {

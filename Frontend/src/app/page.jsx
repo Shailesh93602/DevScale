@@ -14,6 +14,22 @@ import { HeroParallax } from "@/components/ui/hero-parallax";
 import { StickyScroll } from "@/components/ui/sticky-scroll-reveal";
 import { CardDemo } from "@/components/ui/CardDemo";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
+import javascript from "../../public/images/1_LyZcwuLWv2FArOumCxobpA.webp";
+import ReactImage from "../../public/images/react-context-api.png";
+import Angular from "../../public/images/angular.jpeg";
+import Python from "../../public/images/Python-01.jpg";
+import Node from "../../public/images/nodejs.png";
+import Mongo from "../../public/images/mongo.png";
+import PhP from "../../public/images/php-card.webp";
+import java from "../../public/images/java.webp";
+import Flutter from "../../public/images/flutter.png";
+import goLang from "../../public/images/golang-Programing.jpg";
+import DsA from "../../public/images/dsa.jpeg";
+import jango from "../../public/images/Django-tutorial-for-beginners-1.svg";
+import springboot from "../../public/images/springboot.png";
+import aws from "../../public/images/aws.jpg";
+import git from "../../public/images/git.png";
+
 export default function LandingPage() {
   const handleLogout = async () => {
     try {
@@ -28,97 +44,82 @@ export default function LandingPage() {
 
   const products = [
     {
-      title: "Moonbeam",
-      link: "https://gomoonbeam.com",
-      thumbnail:
-        "https://aceternity.com/images/products/thumbnails/new/moonbeam.png",
+      title: "javascript",
+      link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+      thumbnail: javascript,
     },
     {
-      title: "Cursor",
-      link: "https://cursor.so",
-      thumbnail:
-        "https://aceternity.com/images/products/thumbnails/new/cursor.png",
+      title: "React",
+      link: "https://react.dev/",
+      thumbnail: ReactImage,
     },
     {
-      title: "Rogue",
-      link: "https://userogue.com",
-      thumbnail:
-        "https://aceternity.com/images/products/thumbnails/new/rogue.png",
+      title: "Angular",
+      link: "https://v17.angular.io/start",
+      thumbnail: Angular,
     },
 
     {
-      title: "Editorially",
-      link: "https://editorially.org",
-      thumbnail:
-        "https://aceternity.com/images/products/thumbnails/new/editorially.png",
+      title: "python",
+      link: "https://www.python.org",
+      thumbnail: Python,
     },
     {
-      title: "Editrix AI",
-      link: "https://editrix.ai",
-      thumbnail:
-        "https://aceternity.com/images/products/thumbnails/new/editrix.png",
+      title: "Node js",
+      link: "https://nodejs.org/en",
+      thumbnail: Node,
     },
     {
-      title: "Pixel Perfect",
-      link: "https://app.pixelperfect.quest",
-      thumbnail:
-        "https://aceternity.com/images/products/thumbnails/new/pixelperfect.png",
+      title: "Mongo Db",
+      link: "https://www.mongodb.com/",
+      thumbnail: Mongo,
     },
 
     {
-      title: "Algochurn",
-      link: "https://algochurn.com",
-      thumbnail:
-        "https://aceternity.com/images/products/thumbnails/new/algochurn.png",
+      title: "PHP",
+      link: "https://www.php.net/",
+      thumbnail: PhP,
     },
     {
-      title: "Aceternity UI",
-      link: "https://ui.aceternity.com",
-      thumbnail:
-        "https://aceternity.com/images/products/thumbnails/new/aceternityui.png",
+      title: "java",
+      link: "https://www.java.com/en/",
+      thumbnail: java,
     },
     {
-      title: "Tailwind Master Kit",
-      link: "https://tailwindmasterkit.com",
-      thumbnail:
-        "https://aceternity.com/images/products/thumbnails/new/tailwindmasterkit.png",
+      title: "Flutter",
+      link: "https://flutter.dev/",
+      thumbnail: Flutter,
     },
     {
-      title: "SmartBridge",
-      link: "https://smartbridgetech.com",
-      thumbnail:
-        "https://aceternity.com/images/products/thumbnails/new/smartbridge.png",
+      title: "goLang",
+      link: "https://go.dev/",
+      thumbnail: goLang,
     },
     {
-      title: "Renderwork Studio",
-      link: "https://renderwork.studio",
-      thumbnail:
-        "https://aceternity.com/images/products/thumbnails/new/renderwork.png",
+      title: "DsA",
+      link: "https://www.programiz.com/dsa",
+      thumbnail: DsA,
     },
 
     {
-      title: "Creme Digital",
-      link: "https://cremedigital.com",
-      thumbnail:
-        "https://aceternity.com/images/products/thumbnails/new/cremedigital.png",
+      title: "Django",
+      link: "https://www.djangoproject.com/",
+      thumbnail: jango,
     },
     {
-      title: "Golden Bells Academy",
-      link: "https://goldenbellsacademy.com",
-      thumbnail:
-        "https://aceternity.com/images/products/thumbnails/new/goldenbellsacademy.png",
+      title: "springboot",
+      link: "https://spring.io/projects/spring-boot",
+      thumbnail: springboot,
     },
     {
-      title: "Invoker Labs",
-      link: "https://invoker.lol",
-      thumbnail:
-        "https://aceternity.com/images/products/thumbnails/new/invoker.png",
+      title: "Git",
+      link: "https://git-scm.com/",
+      thumbnail: git,
     },
     {
-      title: "E Free Invoice",
-      link: "https://efreeinvoice.com",
-      thumbnail:
-        "https://aceternity.com/images/products/thumbnails/new/efreeinvoice.png",
+      title: "AWS",
+      link: "https://aws.amazon.com/",
+      thumbnail: aws,
     },
   ];
 
