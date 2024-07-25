@@ -3,7 +3,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import routes from "./src/routes/routes.js";
 import cors from "cors";
-import { applyPassportStrategy } from "./src/middleware/passport.js";
+import { applyPassportStrategy } from "./src/middlewares/passport.js";
 import { v2 as cloudinary } from "cloudinary";
 import mongoose from "mongoose";
 

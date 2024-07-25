@@ -1,10 +1,7 @@
-import {
-  insertUserInfo,
-  findUserInfoByUserId,
-  updateUserInfoByUserId,
-} from "../models/userInfoModels.js";
 import { logger } from "../helpers/logger.js";
+import User from "../models/userModel.js"; // Import User model if needed for additional user details
 
+// Insert user profile
 export const insertProfile = async (req, res) => {
   try {
     const {
@@ -19,6 +16,7 @@ export const insertProfile = async (req, res) => {
       branch,
       semester,
     } = req.body;
+
     if (
       !fullName ||
       !dob ||
@@ -29,10 +27,11 @@ export const insertProfile = async (req, res) => {
       !college ||
       !branch ||
       !semester
-    )
+    ) {
       return res
         .status(400)
-        .json({ success: false, message: "Invalid payload" });
+        .json({ success: false, message: "All fields are required" });
+    }
 
     const userInfo = [
       req.user.id,
@@ -48,48 +47,55 @@ export const insertProfile = async (req, res) => {
       semester,
     ];
 
-    insertUserInfo(userInfo, (err, result) => {
-      if (err) {
-        return res
-          .status(500)
-          .json({ success: false, message: "Error adding user" });
-      }
-
-      res
-        .status(201)
-        .json({ success: true, message: "User inserted Successfully!" });
+    await new Promise((resolve, reject) => {
+      insertUserInfo(userInfo, (err, result) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(result);
+      });
     });
+
+    res
+      .status(201)
+      .json({ success: true, message: "User profile inserted successfully" });
   } catch (error) {
-    logger.error(error);
-    res.status(500).json({ success: false, message: "Error adding user" });
+    logger.error("Error inserting profile:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Error adding user profile" });
   }
 };
 
+// Get user profile
 export const getProfile = async (req, res) => {
   try {
     const userId = req.user.id;
-    findUserInfoByUserId(userId, (err, userInfo) => {
-      if (err || !userInfo) {
-        return res
-          .status(400)
-          .json({ success: false, message: "User not found" });
-      }
-      userInfo.dob = userInfo.dob.toISOString().slice(0, 10);
-      userInfo.achievements = userInfo.achievements?.split(",");
-      userInfo.email = req.user.email;
-      findUserInfoByUserId(req.user.id, (err, userDetails) => {
-        if (err) throw err;
-        res
-          .status(200)
-          .json({ success: true, userInfo: { ...userInfo, ...userDetails } });
-      });
-    });
+
+    // Fetch user profile details
+    const userInfo = await findUserInfoByUserId(userId);
+    if (!userInfo) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User profile not found" });
+    }
+
+    userInfo.dob = userInfo.dob.toISOString().slice(0, 10);
+    userInfo.achievements = userInfo.achievements?.split(",");
+    userInfo.email = req.user.email;
+
+    // Fetch additional user details if needed
+    const userDetails = await User.findByPk(userId);
+    res
+      .status(200)
+      .json({ success: true, userInfo: { ...userInfo, ...userDetails } });
   } catch (error) {
-    logger.error(error);
+    logger.error("Error fetching profile:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 
+// Update user profile
 export const updateProfile = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -105,9 +111,10 @@ export const updateProfile = async (req, res) => {
       branch,
       semester,
       bio,
+      achievements = [],
     } = req.body;
-    let achievements = req.body.achievements?.join(",");
 
+    const achievementsString = achievements.join(",");
     const userInfo = {
       fullName,
       dob,
@@ -120,21 +127,21 @@ export const updateProfile = async (req, res) => {
       branch,
       semester,
       bio,
-      achievements,
+      achievements: achievementsString,
       profilePicture: req.fileUrl,
     };
 
-    updateUserInfoByUserId(userId, userInfo, (err, result) => {
-      if (err || result.affectedRows === 0) {
-        return res
-          .status(400)
-          .json({ success: false, message: "User not found" });
-      }
+    const result = await updateUserInfoByUserId(userId, userInfo);
 
-      res.status(200).json({ success: true, userInfo });
-    });
+    if (result.affectedRows === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User profile not found" });
+    }
+
+    res.status(200).json({ success: true, userInfo });
   } catch (error) {
-    logger.error(error);
+    logger.error("Error updating profile:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };

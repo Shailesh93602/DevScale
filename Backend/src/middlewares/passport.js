@@ -1,7 +1,6 @@
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { config } from "dotenv";
 import passport from "passport";
-import { findUserByEmail } from "../models/userModel.js";
 
 config();
 var cookieExtractor = function (req) {
