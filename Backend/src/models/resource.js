@@ -1,22 +1,53 @@
-import mongoose from "mongoose";
+// // models/Resource.js
+// import { DataTypes } from "sequelize";
+// import sequelize from "../config/database.js";
+// import Article from "./articleModel.js";
+// import InterviewQuestion from "./interviewQuestionsModel.js";
 
-const ResourceSchema = new mongoose.Schema({
-  topic: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  articles: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Article",
-    },
-  ],
-});
+// const Resource = sequelize.define(
+//   "Resource",
+//   {
+//     id: {
+//       type: DataTypes.UUID,
+//       defaultValue: DataTypes.UUIDV4,
+//       primaryKey: true,
+//     },
+//     subject: {
+//       type: DataTypes.STRING,
+//       allowNull: false,
+//     },
+//     topic: {
+//       type: DataTypes.STRING,
+//       allowNull: false,
+//     },
+//     subtopic: {
+//       type: DataTypes.STRING,
+//       allowNull: true, // Subtopics may not always be applicable
+//     },
+//     content: {
+//       type: DataTypes.TEXT,
+//       allowNull: false,
+//     },
+//     createdAt: {
+//       type: DataTypes.DATE,
+//       defaultValue: DataTypes.NOW,
+//     },
+//     updatedAt: {
+//       type: DataTypes.DATE,
+//       defaultValue: DataTypes.NOW,
+//       onUpdate: DataTypes.NOW, // Automatically updates on record modification
+//     },
+//   },
+//   {
+//     timestamps: true, // Use Sequelize's automatic timestamps
+//   }
+// );
 
-const Resource = mongoose.model("Resource", ResourceSchema);
+// // Define relationships if needed
+// Resource.hasMany(Article, { foreignKey: "topicId" });
+// Article.belongsTo(Resource, { foreignKey: "topicId" });
 
-export default Resource;
+// Resource.hasMany(InterviewQuestion, { foreignKey: "resourceId" });
+// InterviewQuestion.belongsTo(Resource, { foreignKey: "resourceId" });
+
+// export default Resource;

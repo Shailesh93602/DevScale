@@ -1,10 +1,19 @@
-import express from 'express';
-import { enrollCourse, getCourse, getCourses } from '../controllers/courseControllers.js';
+import express from "express";
+import {
+  enrollCourse,
+  getCourse,
+  getCourses,
+} from "../controllers/courseControllers.js";
 
 const router = express.Router();
 
-router.get('/', getCourses);
-router.get('/:id', getCourse);
-router.post('/enroll', enrollCourse);
+// Route to get all courses
+router.get("/", getCourses);
+
+// Route to get a specific course by ID
+router.get("/:id", getCourse);
+
+// Route to enroll in a course
+router.post("/enroll", enrollCourse);
 
 export default router;

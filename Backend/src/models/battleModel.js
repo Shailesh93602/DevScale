@@ -1,39 +1,55 @@
-import db from "../config/database.js";
+// models/Battle.js
+import { DataTypes } from "sequelize";
+import sequelize from "../config/database.js";
 
-export const insertBattle = (battle, callback) => {
-  const query = `INSERT INTO battles (title, description, user_id, topic, difficulty, length) VALUES (?)`;
-  const values = [
-    battle.title,
-    battle.description,
-    battle.user_id,
-    battle.topic,
-    battle.difficulty,
-    battle.length,
-  ];
-  db.query(query, [values], (err, result) => {
-    callback(err, result);
-  });
-};
+const Battle = sequelize.define(
+  "Battle",
+  {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+        len: [1, 255], // Limiting length for better control
+      },
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    topicId: {
+      type: DataTypes.UUID,
+      references: {
+        model: "Topics", // Ensure this matches the model name in your database
+        key: "id",
+      },
+      allowNull: false,
+    },
+    difficulty: {
+      type: DataTypes.ENUM("easy", "medium", "hard"),
+      allowNull: false,
+    },
+    length: {
+      type: DataTypes.ENUM("short", "medium", "long"),
+      allowNull: false,
+    },
+    startDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    endDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-export const findBattleById = (id, callback) => {
-  const query = `
-    SELECT b.*, u.username 
-    FROM battles b
-    JOIN users u ON b.user_id = u.id
-    WHERE b.id = ?
-  `;
-  db.query(query, [id], (err, result) => {
-    callback(err, result[0]);
-  });
-};
-
-export const findAllBattles = (callback) => {
-  const query = `
-    SELECT b.*, u.username 
-    FROM battles b
-    JOIN users u ON b.user_id = u.id
-  `;
-  db.query(query, (err, result) => {
-    callback(err, result);
-  });
-};
+export default Battle;
