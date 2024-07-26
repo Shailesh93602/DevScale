@@ -1,23 +1,32 @@
-import User from "./user.model.js";
-import UserInfo from "./userInfo.model.js";
-import Subject from "./subject.model.js";
-import Topic from "./topic.model.js";
-import RoadMap from "./roadmap.model.js";
+"use strict";
 
-// Initialize models
-const models = {
-  User,
-  UserInfo,
-  Subject,
-  Topic,
-  RoadMap,
-};
+import fs from "fs";
+import path from "path";
+import Sequelize from "sequelize";
+import config from "../../config/config.js";
 
-// Define associations
-Object.keys(models).forEach((modelName) => {
-  if (models[modelName].associate) {
-    models[modelName].associate(models);
+var sequelize = new Sequelize(
+  config.database,
+  config.username,
+  config.password,
+  config
+);
+var db = {};
+
+fs.readdirSync(__dirname)
+  .filter(function (file) {
+    return file.indexOf(".") !== 0 && file !== "index.js";
+  })
+  .forEach(function (file) {
+    var model = sequelize.import(path.join(__dirname, file));
+    db[model.name] = model;
+  });
+
+Object.keys(db).forEach(function (modelName) {
+  if ("associate" in db[modelName]) {
+    db[modelName].associate(db);
   }
 });
 
-export default models;
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;

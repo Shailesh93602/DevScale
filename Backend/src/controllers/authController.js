@@ -4,8 +4,8 @@ import nodemailer from "nodemailer";
 import { validationResult } from "express-validator";
 import { config } from "dotenv";
 import validator from "email-validator";
-import User from "../models/userModel.js"; // Updated import
-import UserInfo from "../models/userInfoModels.js"; // Updated import
+import User from "../../db/models/user.model.js";
+import UserInfo from "../../db/models/userInfo.model.js";
 import { logger } from "../helpers/logger.js";
 
 config();
