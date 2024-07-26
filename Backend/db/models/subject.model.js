@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import sequelize from "../../config/database.js";
+import sequelize from "../../config/config.js";
 
 const Subject = sequelize.define(
   "Subject",

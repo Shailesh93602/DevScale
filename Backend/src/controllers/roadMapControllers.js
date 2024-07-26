@@ -1,4 +1,3 @@
-import Roadmap from "../models/roadMapModel.js"; // Import RoadMap model
 import { logger } from "../helpers/logger.js"; // Import logger
 
 // Get all roadmaps

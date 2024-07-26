@@ -1,5 +1,5 @@
 import { logger } from "../helpers/logger.js";
-import Chat from "../models/chatModel.js"; // Ensure this is your Sequelize model for Chat
+import Chat from "../../db/models/chat.model.js";
 
 export const getChats = async (req, res) => {
   try {

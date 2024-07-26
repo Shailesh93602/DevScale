@@ -1,5 +1,5 @@
 import { logger } from "../helpers/logger.js";
-import User from "../models/userModel.js"; // Import User model if needed for additional user details
+import User from "../../db/models/user.model.js";
 
 // Insert user profile
 export const insertProfile = async (req, res) => {

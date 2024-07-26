@@ -1,4 +1,4 @@
-import Battle from "../models/battleModel.js"; // Ensure you have a Sequelize model for Battle
+import Battle from "../../db/models/battle.model.js";
 import { logger } from "../helpers/logger.js";
 
 export const getBattles = async (req, res) => {
