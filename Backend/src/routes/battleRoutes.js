@@ -6,6 +6,7 @@ import {
 } from "../controllers/battleControllers.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 import { validateBattleCreation } from "../middlewares/validationMiddleware.js"; // Import validation middleware if needed
+import passport from "passport";
 
 const router = express.Router();
 
@@ -16,6 +17,11 @@ router.get("/", getBattles);
 router.get("/:id", getBattle);
 
 // Route to create a new battle
-router.post("/create", authMiddleware, validateBattleCreation, createBattle);
+router.post(
+  "/create",
+  passport.authenticate("jwt", { session: false }),
+  validateBattleCreation,
+  createBattle
+);
 
 export default router;

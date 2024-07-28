@@ -25,7 +25,6 @@ const Page = () => {
           "/resources/interviewquestions"
         );
         dispatch(hideLoader());
-        console.log(response.data.resource);
         setinterviewQuestions(response.data.resource);
       } catch (e) {
         dispatch(hideLoader());

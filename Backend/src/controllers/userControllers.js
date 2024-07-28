@@ -1,5 +1,6 @@
 import { logger } from "../helpers/logger.js";
 import User from "../../db/models/user.model.js";
+import db from "../../db/models/index.js";
 
 // Insert user profile
 export const insertProfile = async (req, res) => {
@@ -73,11 +74,11 @@ export const getProfile = async (req, res) => {
     const userId = req.user.id;
 
     // Fetch user profile details
-    const userInfo = await findUserInfoByUserId(userId);
+    const userInfo = await db.UserInfo.findOne({ where: { id: userId } });
     if (!userInfo) {
       return res
-        .status(404)
-        .json({ success: false, message: "User profile not found" });
+        .status(200)
+        .json({ success: true, message: "Please update your profile" });
     }
 
     userInfo.dob = userInfo.dob.toISOString().slice(0, 10);

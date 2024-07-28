@@ -6,8 +6,10 @@ import cors from "cors";
 import { applyPassportStrategy } from "./src/middlewares/passport.js";
 import { v2 as cloudinary } from "cloudinary";
 import mongoose from "mongoose";
+import db from "./db/models/index.js";
 
 config();
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -21,6 +23,7 @@ mongoose.connect(process.env.MONGO_URL, {
 
 const app = express();
 const port = process.env.PORT || 4000;
+
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cookieParser());
@@ -28,7 +31,22 @@ app.use(cors());
 app.use(routes);
 applyPassportStrategy();
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+const startServer = async () => {
+  try {
+    // await db.sequelize.authenticate();
+
+    // await db.sequelize.sync({ force: false });
+    db.connect;
+
+    app.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+    });
+  } catch (error) {
+    console.error("Error starting server:", error);
+    console.error("Stack trace:", error.stack);
+  }
+};
+
+startServer();
+
 export default app;

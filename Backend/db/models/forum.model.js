@@ -1,53 +1,61 @@
-"use strict";
 import { Model, DataTypes } from "sequelize";
-import sequelize from "../../config/config.js";
 
-class Forum extends Model {
-  static associate(models) {
-    this.belongsTo(models.User, {
-      as: "createdByUser",
-      foreignKey: "createdBy",
-    });
+export default (sequelize) => {
+  class Forum extends Model {
+    static associate(models) {
+      // Define associations here if needed
+    }
   }
-}
 
-Forum.init(
-  {
-    id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      primaryKey: true,
-    },
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
-    createdBy: {
-      type: DataTypes.UUID,
-      allowNull: false,
-      references: {
-        model: "Users",
-        key: "id",
+  Forum.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true,
+      },
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      description: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
+      createdBy: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+          model: "Users",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+      },
+      isActive: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+      },
+      tags: {
+        type: DataTypes.JSON,
+        allowNull: true,
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
       },
     },
-    isActive: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
-    },
-    tags: {
-      type: DataTypes.ARRAY(DataTypes.STRING), // For PostgreSQL; use JSON for other DBs
-      allowNull: true,
-    },
-  },
-  {
-    sequelize,
-    modelName: "Forum",
-    timestamps: true,
-  }
-);
+    {
+      sequelize,
+      modelName: "Forum",
+      timestamps: true,
+    }
+  );
 
-export default Forum;
+  return Forum;
+};

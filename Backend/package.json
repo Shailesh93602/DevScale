@@ -8,7 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "build": "echo 'No build step required'",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "seed:subjects": "node db/seeders/subject.seeder.js"
   },
   "keywords": [],
   "author": "",

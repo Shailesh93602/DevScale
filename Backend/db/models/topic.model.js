@@ -1,45 +1,42 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../../config/config.js";
-import Subject from "./subject.model.js";
+"use strict";
+import { Model, DataTypes } from "sequelize";
 
-const Topic = sequelize.define(
-  "Topic",
-  {
-    id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      primaryKey: true,
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-        len: [3, 255],
-      },
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-      validate: {
-        len: [0, 2000],
-      },
-    },
-    subjectId: {
-      type: DataTypes.UUID,
-      references: {
-        model: Subject,
-        key: "id",
-      },
-      allowNull: false,
-    },
-  },
-  {
-    timestamps: true,
+export default (sequelize) => {
+  class Topic extends Model {
+    static associate(models) {
+      this.hasMany(models.Article, { foreignKey: "topicId" });
+    }
   }
-);
 
-Subject.hasMany(Topic, { foreignKey: "subjectId" });
-Topic.belongsTo(Subject, { foreignKey: "subjectId" });
+  Topic.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true,
+      },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+          len: [3, 255],
+        },
+      },
+      description: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+        validate: {
+          len: [0, 2000],
+        },
+      },
+    },
+    {
+      sequelize,
+      modelName: "Topic",
+      timestamps: true,
+    }
+  );
 
-export default Topic;
+  return Topic;
+};

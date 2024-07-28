@@ -15,7 +15,7 @@ router.get("/", getResources);
 router.get("/:id", getResource);
 
 // Route to get all interview questions
-router.get("/interviewquestions", getInterviewquestions);
+// router.get("/interviewquestions", getInterviewquestions);
 
 // Route to get resource details by ID
 router.get("/details/:id", getResourceDetails);
