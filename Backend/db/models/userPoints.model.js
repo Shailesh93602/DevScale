@@ -1,39 +1,39 @@
 "use strict";
 import { Model, DataTypes } from "sequelize";
-import sequelize from "../../config/config.js";
-import User from "./user.model.js";
 
-class UserPoints extends Model {
-  static associate(models) {
-    this.belongsTo(models.User, { foreignKey: "userId" });
+export default (sequelize) => {
+  class UserPoints extends Model {
+    static associate(models) {
+      this.belongsTo(models.User, { foreignKey: "userId" });
+    }
   }
-}
 
-UserPoints.init(
-  {
-    id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      primaryKey: true,
-    },
-    userId: {
-      type: DataTypes.UUID,
-      allowNull: false,
-      references: {
-        model: User,
-        key: "id",
+  UserPoints.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true,
+      },
+      userId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+          model: "Users", // Ensure the model name matches the User model
+          key: "id",
+        },
+      },
+      points: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
       },
     },
-    points: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-  },
-  {
-    sequelize,
-    modelName: "UserPoints",
-    timestamps: true,
-  }
-);
+    {
+      sequelize,
+      modelName: "UserPoints",
+      timestamps: true,
+    }
+  );
 
-export default UserPoints;
+  return UserPoints;
+};

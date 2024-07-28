@@ -15,7 +15,6 @@ const createResources = async () => {
 
   try {
     await Resource.insertMany(resources);
-    console.log("Resources added");
   } catch (err) {
     console.error(err);
   } finally {

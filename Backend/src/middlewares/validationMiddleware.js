@@ -2,7 +2,6 @@
 
 export const validateBattleCreation = (req, res, next) => {
   const { title, description, topic, difficulty } = req.body;
-
   if (!title || !description || !topic || !difficulty) {
     return res.status(400).json({
       success: false,

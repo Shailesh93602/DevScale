@@ -1,46 +1,61 @@
-"use strict";
 import { Model, DataTypes } from "sequelize";
-import sequelize from "../../config/config.js";
 
-class InterviewQuestion extends Model {
-  static associate(models) {
-    // Define associations here if needed
+export default (sequelize) => {
+  class InterviewQuestion extends Model {
+    static associate(models) {
+      // Define associations here if needed
+    }
   }
-}
 
-InterviewQuestion.init(
-  {
-    id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      primaryKey: true,
+  InterviewQuestion.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true,
+      },
+      question: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
+      answer: {
+        type: DataTypes.TEXT,
+      },
+      difficulty: {
+        type: DataTypes.ENUM("easy", "medium", "hard"),
+      },
+      topic: {
+        type: DataTypes.STRING,
+      },
+      tags: {
+        type: DataTypes.JSON,
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+      resourceId: {
+        type: DataTypes.UUID,
+        references: {
+          model: "Resources",
+          key: "id",
+        },
+        onDelete: "SET NULL",
+        onUpdate: "CASCADE",
+      },
     },
-    question: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    answer: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
-    difficulty: {
-      type: DataTypes.ENUM("easy", "medium", "hard"),
-      allowNull: true,
-    },
-    topic: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    tags: {
-      type: DataTypes.ARRAY(DataTypes.STRING), // For PostgreSQL; use JSON for other DBs
-      allowNull: true,
-    },
-  },
-  {
-    sequelize,
-    modelName: "InterviewQuestion",
-    timestamps: true,
-  }
-);
+    {
+      sequelize,
+      modelName: "InterviewQuestion",
+      timestamps: true,
+    }
+  );
 
-export default InterviewQuestion;
+  return InterviewQuestion;
+};

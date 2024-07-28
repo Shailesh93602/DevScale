@@ -1,29 +1,30 @@
-import { Sequelize } from "sequelize";
+"use strict";
 
-/** @type {import('sequelize-cli').Migration} */
-export default {
+const { Sequelize, DataTypes } = require("sequelize");
+
+module.exports = {
   async up(queryInterface) {
     await queryInterface.createTable("RoadMaps", {
       id: {
-        type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
       title: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
       },
       description: {
-        type: Sequelize.TEXT,
+        type: DataTypes.TEXT,
         allowNull: true,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: DataTypes.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: DataTypes.DATE,
       },
     });
   },

@@ -1,43 +1,35 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../../config/config.js";
+import { Model, DataTypes } from "sequelize";
 
-const User = sequelize.define(
-  "User",
-  {
-    id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      primaryKey: true,
-    },
-    username: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: {
-        notEmpty: true,
-        len: [3, 50],
-      },
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: {
-        isEmail: true,
-      },
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-        len: [6, 255],
-      },
-    },
-  },
-  {
-    timestamps: true,
+export default (sequelize) => {
+  class UserInfo extends Model {
+    static associate(models) {
+      // Add associations if necessary, for example:
+      // this.hasMany(models.OtherModel, { as: "OtherModels", foreignKey: "userInfoId" });
+    }
   }
-);
 
-export default User;
+  UserInfo.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true,
+      },
+      fullName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+          len: [3, 50],
+        },
+      },
+    },
+    {
+      sequelize,
+      modelName: "UserInfo",
+      timestamps: true,
+    }
+  );
+
+  return UserInfo;
+};

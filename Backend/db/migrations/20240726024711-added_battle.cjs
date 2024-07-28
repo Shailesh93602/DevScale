@@ -1,24 +1,26 @@
-import { Sequelize } from "sequelize";
+"use strict";
+
+const { DataTypes } = require("sequelize");
 
 /** @type {import('sequelize-cli').Migration} */
-export default {
+module.exports = {
   async up(queryInterface) {
     await queryInterface.createTable("Battles", {
       id: {
-        type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
       title: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
       },
       description: {
-        type: Sequelize.TEXT,
+        type: DataTypes.TEXT,
         allowNull: true,
       },
       topicId: {
-        type: Sequelize.UUID,
+        type: DataTypes.UUID,
         allowNull: false,
         references: {
           model: "Topics",
@@ -27,28 +29,28 @@ export default {
         onDelete: "CASCADE",
       },
       difficulty: {
-        type: Sequelize.ENUM("easy", "medium", "hard"),
+        type: DataTypes.ENUM("easy", "medium", "hard"),
         allowNull: false,
       },
       length: {
-        type: Sequelize.ENUM("short", "medium", "long"),
+        type: DataTypes.ENUM("short", "medium", "long"),
         allowNull: false,
       },
       startDate: {
-        type: Sequelize.DATE,
+        type: DataTypes.DATE,
         allowNull: true,
       },
       endDate: {
-        type: Sequelize.DATE,
+        type: DataTypes.DATE,
         allowNull: true,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: DataTypes.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: DataTypes.DATE,
       },
     });
   },

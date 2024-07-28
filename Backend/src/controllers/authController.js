@@ -3,16 +3,15 @@ import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import { validationResult } from "express-validator";
 import { config } from "dotenv";
-import validator from "email-validator";
-import User from "../../db/models/user.model.js";
-import UserInfo from "../../db/models/userInfo.model.js";
 import { logger } from "../helpers/logger.js";
+import db from "../../db/models/index.js";
+import { Op } from "sequelize";
 
 config();
 
 const checkUserDetailsFilled = async (id) => {
   try {
-    const userInfo = await UserInfo.findOne({ where: { userId: id } });
+    const userInfo = await db.UserInfo.findOne({ where: { userId: id } });
     if (
       userInfo &&
       userInfo.fullName &&
@@ -68,7 +67,7 @@ export const register = async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const existingUser = await User.findOne({ where: { email } });
+    const existingUser = await db.User.findOne({ where: { email } });
     if (existingUser) {
       return res.status(409).json({
         success: false,
@@ -76,7 +75,7 @@ export const register = async (req, res) => {
       });
     }
 
-    const newUser = await User.create({
+    const newUser = await db.User.create({
       username,
       email,
       password: hashedPassword,
@@ -99,17 +98,15 @@ export const login = async (req, res) => {
   }
 
   const { username, password } = req.body;
-  const isEmail = validator.validate(username);
 
   try {
-    const user = isEmail
-      ? await User.findOne({ where: { email: username } })
-      : await User.findOne({ where: { username } });
-
+    const user = await db.User.findOne({
+      where: { [Op.or]: [{ email: username }, { username }] },
+    });
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "Incorrect username or password",
+        message: "Incorrect email or password",
       });
     }
 
@@ -117,7 +114,7 @@ export const login = async (req, res) => {
     if (!isPasswordValid) {
       return res.status(401).json({
         success: false,
-        message: "Incorrect username or password",
+        message: "Incorrect email or password",
       });
     }
 
@@ -131,7 +128,7 @@ export const login = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
 
-    const userInfo = await UserInfo.findOne({ where: { userId: user.id } });
+    const userInfo = await db.UserInfo.findOne({ where: { userId: user.id } });
 
     res.status(200).json({
       success: true,
@@ -142,7 +139,7 @@ export const login = async (req, res) => {
       domain:
         process.env.NODE_ENV === "production"
           ? "mrengineers.vercel.app"
-          : "localhost",
+          : "localhost:3000",
     });
   } catch (error) {
     logger.error(error);
@@ -171,7 +168,7 @@ export const forgotPassword = async (req, res) => {
   const { email } = req.body;
 
   try {
-    const user = await User.findOne({ where: { email } });
+    const user = await db.User.findOne({ where: { email } });
     if (!user) {
       return res
         .status(400)
@@ -206,7 +203,7 @@ export const resetPassword = async (req, res) => {
     const decoded = jwt.verify(token, process.env.RESET_TOKEN_SECRET);
     const { email } = decoded;
 
-    const user = await User.findOne({ where: { email } });
+    const user = await db.User.findOne({ where: { email } });
     if (!user) {
       return res
         .status(400)
@@ -214,7 +211,7 @@ export const resetPassword = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    await User.update({ password: hashedPassword }, { where: { email } });
+    await db.User.update({ password: hashedPassword }, { where: { email } });
 
     res
       .status(200)
@@ -227,7 +224,9 @@ export const resetPassword = async (req, res) => {
 
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.findAll();
+    const users = await db.User.findAll({
+      attributes: ["id", "firstName", "lastName", "email"], // Adjust based on fields available in the User model
+    });
     res.status(200).json({
       success: true,
       message: "Users retrieved successfully",

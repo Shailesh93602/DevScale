@@ -1,33 +1,42 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../../config/config.js";
+"use strict";
+import { Model, DataTypes } from "sequelize";
 
-const RoadMap = sequelize.define(
-  "RoadMap",
-  {
-    id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      primaryKey: true,
-    },
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-        len: [3, 255],
-      },
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-      validate: {
-        len: [0, 2000],
-      },
-    },
-  },
-  {
-    timestamps: true,
+export default (sequelize) => {
+  class RoadMap extends Model {
+    static associate(models) {
+      // Define associations here if needed
+    }
   }
-);
 
-export default RoadMap;
+  RoadMap.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true,
+      },
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+          len: [3, 255],
+        },
+      },
+      description: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+        validate: {
+          len: [0, 2000],
+        },
+      },
+    },
+    {
+      sequelize,
+      modelName: "RoadMap",
+      timestamps: true,
+    }
+  );
+
+  return RoadMap;
+};

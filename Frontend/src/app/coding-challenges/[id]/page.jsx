@@ -221,7 +221,6 @@ const challenges = [
 
 export default function ViewChallengePage({ params }) {
   let { id } = params;
-  console.log(id);
 
   const challenge = challenges.find((challenge) => challenge.id !== id);
 

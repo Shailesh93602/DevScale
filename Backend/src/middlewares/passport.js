@@ -1,6 +1,7 @@
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { config } from "dotenv";
 import passport from "passport";
+import db from "../../db/models/index.js";
 
 config();
 var cookieExtractor = function (req) {
@@ -29,15 +30,11 @@ export const applyPassportStrategy = () => {
   options.jwtFromRequest = jwt;
   passport.use(
     new Strategy(options, async (payload, done) => {
-      findUserByEmail(payload.email, (err, user) => {
-        if (err) {
-          return done(err, false);
-        }
-        if (user) {
-          return done(null, user);
-        }
-        return done(null, false);
-      });
+      const user = await db.User.findOne({ where: { email: payload.email } });
+      if (user) {
+        return done(null, user);
+      }
+      return done(null, false);
     })
   );
 };

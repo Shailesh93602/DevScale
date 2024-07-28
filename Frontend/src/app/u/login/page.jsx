@@ -42,7 +42,6 @@ export default function Login() {
       });
 
       if (response.data?.success) {
-        console.log(response);
         dispatch(initialUser(response.data.user));
         toast.success("Logged In Successfully!");
 

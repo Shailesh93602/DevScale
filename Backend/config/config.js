@@ -1,7 +1,8 @@
 import { config } from "dotenv";
 
 config();
-export default {
+
+const dbConfig = {
   username: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
@@ -11,4 +12,9 @@ export default {
   dialectOptions: {
     bigNumberStrings: true,
   },
+  define: {
+    timestamps: true, // Ensures Sequelize is looking for timestamp fields
+  },
 };
+
+export default dbConfig;

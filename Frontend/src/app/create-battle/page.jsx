@@ -21,19 +21,15 @@ export default function CreateBattlePage() {
 
   const handleCreate = async () => {
     try {
-      const response = await fetchData(
-        "POST",
-        "/battles/create",
-        JSON.stringify({
-          title,
-          description,
-          topic: selectedMajorTopic,
-          difficulty: selectedDifficulty.toLowerCase(),
-          length: selectedLength.toLowerCase(),
-          date,
-          time,
-        })
-      );
+      const response = await fetchData("POST", "/battles/create", {
+        title,
+        description,
+        topic: selectedMajorTopic,
+        difficulty: selectedDifficulty.toLowerCase(),
+        length: selectedLength.toLowerCase(),
+        date,
+        time,
+      });
       if (!response.data) {
         return;
       }
