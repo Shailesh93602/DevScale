@@ -3,8 +3,8 @@ import { Model, DataTypes } from "sequelize";
 export default (sequelize) => {
   class UserInfo extends Model {
     static associate(models) {
-      // Add associations if necessary, for example:
-      // this.hasMany(models.OtherModel, { as: "OtherModels", foreignKey: "userInfoId" });
+      // Add associations if necessary
+      // Example: this.belongsTo(models.User, { foreignKey: "userId" });
     }
   }
 

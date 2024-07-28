@@ -1,8 +1,11 @@
+"use strict";
 import { Model, DataTypes } from "sequelize";
 
 export default (sequelize) => {
   class Course extends Model {
-    static associate(models) {}
+    static associate(models) {
+      // Define any potential associations here
+    }
   }
 
   Course.init(

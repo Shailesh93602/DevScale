@@ -1,37 +1,34 @@
 "use strict";
 
-const { DataTypes } = require("sequelize");
+const { Sequelize, DataTypes } = require("sequelize");
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface) {
-    await queryInterface.createTable("Articles", {
+    await queryInterface.createTable("Chats", {
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      title: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      content: {
+      message: {
         type: DataTypes.TEXT,
         allowNull: false,
       },
-      author: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      isSelected: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-      },
-      topicId: {
+      user1Id: {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
-          model: "Resources",
+          model: "Users",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+      },
+      user2Id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+          model: "Users",
           key: "id",
         },
         onDelete: "CASCADE",
@@ -39,15 +36,17 @@ module.exports = {
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
       updatedAt: {
         allowNull: false,
         type: DataTypes.DATE,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
     });
   },
 
   async down(queryInterface) {
-    await queryInterface.dropTable("Articles");
+    await queryInterface.dropTable("Chats");
   },
 };

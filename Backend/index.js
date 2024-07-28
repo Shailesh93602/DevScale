@@ -6,7 +6,7 @@ import cors from "cors";
 import { applyPassportStrategy } from "./src/middlewares/passport.js";
 import { v2 as cloudinary } from "cloudinary";
 import mongoose from "mongoose";
-import db from "./db/models/index.js";
+import { loadModels } from "./db/models/index.js";
 
 config();
 
@@ -33,10 +33,9 @@ applyPassportStrategy();
 
 const startServer = async () => {
   try {
-    // await db.sequelize.authenticate();
+    const db = await loadModels();
 
-    // await db.sequelize.sync({ force: false });
-    db.connect;
+    await db.sequelize.authenticate();
 
     app.listen(port, () => {
       console.log(`Server is running on port ${port}`);

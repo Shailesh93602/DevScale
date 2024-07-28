@@ -1,11 +1,11 @@
 "use strict";
 
-const { DataTypes } = require("sequelize");
+const { Sequelize, DataTypes } = require("sequelize");
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface) {
-    await queryInterface.createTable("Battles", {
+    await queryInterface.createTable("Jobs", {
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
@@ -19,43 +19,49 @@ module.exports = {
         type: DataTypes.TEXT,
         allowNull: true,
       },
-      topicId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-          model: "Topics",
-          key: "id",
-        },
-        onDelete: "CASCADE",
-      },
-      difficulty: {
-        type: DataTypes.ENUM("easy", "medium", "hard"),
+      company: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
-      length: {
-        type: DataTypes.ENUM("short", "medium", "long"),
-        allowNull: false,
+      location: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
-      startDate: {
+      salary: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: true,
+      },
+      jobType: {
+        type: DataTypes.ENUM(
+          "full-time",
+          "part-time",
+          "contract",
+          "internship"
+        ),
+        allowNull: true,
+      },
+      postedDate: {
         type: DataTypes.DATE,
         allowNull: true,
       },
-      endDate: {
+      applicationDeadline: {
         type: DataTypes.DATE,
         allowNull: true,
       },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
       updatedAt: {
         allowNull: false,
         type: DataTypes.DATE,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
     });
   },
 
   async down(queryInterface) {
-    await queryInterface.dropTable("Battles");
+    await queryInterface.dropTable("Jobs");
   },
 };

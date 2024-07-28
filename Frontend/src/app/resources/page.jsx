@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
 import { fetchData } from "@/app/services/fetchData";
+import { toast } from "react-toastify";
 
 const programmingInfo = [
   {
@@ -103,7 +104,9 @@ export default function ResourcesPage() {
       try {
         const response = await fetchData("GET", "/resources");
         setResources(response.data.resources);
-      } catch (error) {}
+      } catch (error) {
+        toast.error("Error fetching resources, Please try again");
+      }
       dispatch(hideLoader());
     };
     fetchResources();
