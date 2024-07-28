@@ -3,8 +3,8 @@ import { Model, DataTypes } from "sequelize";
 export default (sequelize) => {
   class User extends Model {
     static associate(models) {
-      this.hasMany(models.Chat, { as: "Chats1", foreignKey: "user1" });
-      this.hasMany(models.Chat, { as: "Chats2", foreignKey: "user2" });
+      this.hasMany(models.Chat, { as: "Chats1", foreignKey: "user1Id" });
+      this.hasMany(models.Chat, { as: "Chats2", foreignKey: "user2Id" });
     }
   }
 

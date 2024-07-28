@@ -128,20 +128,21 @@ export const login = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
 
-    const userInfo = await db.UserInfo.findOne({ where: { userId: user.id } });
+    // const userInfo = await db.UserInfo.findOne({ where: { userId: user.id } });
 
     res.status(200).json({
       success: true,
       message: "Logged in successfully!",
       route: "/dashboard",
       token,
-      user: { ...user.toJSON(), ...userInfo?.toJSON() },
+      user: { ...user.toJSON() },
       domain:
         process.env.NODE_ENV === "production"
           ? "mrengineers.vercel.app"
           : "localhost:3000",
     });
   } catch (error) {
+    console.log("🚀 ~ file: authController.js:145 ~ login ~ error:", error);
     logger.error(error);
     res.status(500).send();
   }

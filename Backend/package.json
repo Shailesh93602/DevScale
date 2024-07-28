@@ -9,7 +9,8 @@
     "start": "node index.js",
     "build": "echo 'No build step required'",
     "dev": "nodemon index.js",
-    "seed:subjects": "node db/seeders/subject.seeder.js"
+    "seed:subjects": "node db/seeders/subject.seeder.js",
+    "seed:topics": "node db/seeders/topic.seeder.js"
   },
   "keywords": [],
   "author": "",

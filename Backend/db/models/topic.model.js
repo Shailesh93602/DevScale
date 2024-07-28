@@ -5,6 +5,7 @@ export default (sequelize) => {
   class Topic extends Model {
     static associate(models) {
       this.hasMany(models.Article, { foreignKey: "topicId" });
+      this.belongsTo(models.Subject, { foreignKey: "subjectId" });
     }
   }
 
@@ -28,6 +29,14 @@ export default (sequelize) => {
         allowNull: true,
         validate: {
           len: [0, 2000],
+        },
+      },
+      subjectId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+          model: "Subjects",
+          key: "id",
         },
       },
     },

@@ -18,14 +18,26 @@ export default (sequelize) => {
       title: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+          notEmpty: true,
+          len: [3, 255],
+        },
       },
       content: {
         type: DataTypes.TEXT,
         allowNull: false,
+        validate: {
+          notEmpty: true,
+          len: [3, 2000],
+        },
       },
       author: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+          notEmpty: true,
+          len: [3, 255],
+        },
       },
       isSelected: {
         type: DataTypes.BOOLEAN,
@@ -38,6 +50,7 @@ export default (sequelize) => {
           model: "Topics",
           key: "id",
         },
+        onDelete: "CASCADE",
       },
     },
     {

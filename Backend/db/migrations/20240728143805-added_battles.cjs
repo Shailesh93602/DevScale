@@ -1,16 +1,11 @@
 "use strict";
-import { Model, DataTypes } from "sequelize";
 
-export default (sequelize) => {
-  class Battle extends Model {
-    static associate(models) {
-      // Define associations here
-      this.belongsTo(models.Topic, { foreignKey: "topicId" });
-    }
-  }
+const { Sequelize, DataTypes } = require("sequelize");
 
-  Battle.init(
-    {
+/** @type {import('sequelize-cli').Migration} */
+module.exports = {
+  async up(queryInterface) {
+    await queryInterface.createTable("Battles", {
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
@@ -53,13 +48,20 @@ export default (sequelize) => {
         type: DataTypes.DATE,
         allowNull: true,
       },
-    },
-    {
-      sequelize,
-      modelName: "Battle",
-      timestamps: true,
-    }
-  );
+      createdAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+      },
+      updatedAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+      },
+    });
+  },
 
-  return Battle;
+  async down(queryInterface) {
+    await queryInterface.dropTable("Battles");
+  },
 };
