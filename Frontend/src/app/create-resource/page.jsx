@@ -18,11 +18,11 @@ export default function ResourcesPage() {
     const fetchResources = async () => {
       dispatch(showLoader());
       try {
-        const response = await fetchData("GET", "/resources/list");
+        const response = await fetchData("GET", "/topics/unpublished");
         const data = response.data;
-        setResources(data.resources);
+        setResources(data.topics);
         setAvailableTags([
-          ...new Set(data.resources.flatMap((resource) => resource.tags)),
+          ...new Set(data.topics?.flatMap((resource) => resource.tags)),
         ]);
       } catch (error) {
         toast.error("Something went wrong, Please try again!");
@@ -46,12 +46,12 @@ export default function ResourcesPage() {
 
   const filteredResources = resources?.filter(
     (resource) =>
-      (resource.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (resource.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         resource.description
           .toLowerCase()
           .includes(searchTerm.toLowerCase())) &&
       (selectedTags.length === 0 ||
-        selectedTags.some((tag) => resource.tags.includes(tag)))
+        selectedTags.some((tag) => resource.tags?.includes(tag)))
   );
 
   return (
@@ -90,24 +90,24 @@ export default function ResourcesPage() {
                 className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-200"
               >
                 <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
-                  {resource.title}
+                  {resource.name}
                 </h2>
                 <p className="text-gray-700 dark:text-gray-300">
                   {resource.description}
                 </p>
                 <a
-                  href={resource.link}
+                  href={`/create-resource/${resource.id}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-500 dark:text-blue-400 hover:underline mt-2 block"
                 >
-                  Visit Resource
+                  Add Article
                 </a>
                 <span className="text-sm text-gray-500 dark:text-gray-400">
                   {resource.category}
                 </span>
                 <div className="mt-2">
-                  {resource.tags.map((tag, index) => (
+                  {resource.tags?.map((tag, index) => (
                     <span
                       key={index}
                       className="inline-block bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-xs px-2 py-1 rounded-full mr-1"

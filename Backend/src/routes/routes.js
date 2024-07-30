@@ -11,6 +11,7 @@ import chatRoutes from "./chatRoutes.js";
 import courseRoutes from "./courseRoutes.js";
 import battleRoutes from "./battleRoutes.js";
 import resourceRoutes from "./resourceRoutes.js";
+import topicRoutes from "./topicRoutes.js";
 import passport from "passport";
 import { codeRunner } from "../controllers/codeRunnerController.js";
 import { predict } from "../controllers/predictionController.js";
@@ -91,6 +92,12 @@ router.use(
   "/resources",
   passport.authenticate("jwt", { session: false }),
   resourceRoutes
+);
+
+router.use(
+  "/topics",
+  passport.authenticate("jwt", { session: false }),
+  topicRoutes
 );
 
 // Code runner route

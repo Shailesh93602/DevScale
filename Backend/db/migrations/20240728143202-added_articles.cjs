@@ -19,13 +19,22 @@ module.exports = {
         type: DataTypes.TEXT,
         allowNull: false,
       },
-      author: {
-        type: DataTypes.STRING,
+      authorId: {
+        type: DataTypes.UUID,
         allowNull: false,
+        references: {
+          model: "Users",
+          key: "id",
+        },
+        onDelete: "CASCADE",
       },
-      isSelected: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
+      status: {
+        type: DataTypes.ENUM("pending", "approved", "rejected"),
+        defaultValue: "pending",
+      },
+      moderationNotes: {
+        type: DataTypes.TEXT,
+        allowNull: true,
       },
       topicId: {
         type: DataTypes.UUID,
@@ -34,6 +43,7 @@ module.exports = {
           model: "Topics",
           key: "id",
         },
+        onDelete: "CASCADE",
       },
       createdAt: {
         allowNull: false,
