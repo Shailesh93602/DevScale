@@ -14,17 +14,10 @@ module.exports = {
       name: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-          notEmpty: true,
-          len: [3, 255],
-        },
       },
       description: {
         type: DataTypes.TEXT,
         allowNull: true,
-        validate: {
-          len: [0, 2000],
-        },
       },
       subjectId: {
         type: DataTypes.UUID,

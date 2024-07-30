@@ -31,17 +31,22 @@ export default (sequelize) => {
           len: [3, 2000],
         },
       },
-      author: {
-        type: DataTypes.STRING,
+      authorId: {
+        type: DataTypes.UUID,
         allowNull: false,
-        validate: {
-          notEmpty: true,
-          len: [3, 255],
+        references: {
+          model: "Users",
+          key: "id",
         },
+        onDelete: "CASCADE",
       },
-      isSelected: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
+      status: {
+        type: DataTypes.ENUM("pending", "approved", "rejected"),
+        defaultValue: "pending",
+      },
+      moderationNotes: {
+        type: DataTypes.TEXT,
+        allowNull: true,
       },
       topicId: {
         type: DataTypes.UUID,
