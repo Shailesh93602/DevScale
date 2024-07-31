@@ -1,12 +1,12 @@
 // pages/resourceEditor.js
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import { toast } from "react-toastify";
-import axios from "axios";
 import "react-quill/dist/quill.snow.css";
 import { useDispatch } from "react-redux";
 import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
+import { fetchData } from "@/app/services/fetchData";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -18,46 +18,42 @@ const ResourceEditor = ({ params }) => {
   const [content, setContent] = useState("");
 
   const dispatch = useDispatch();
+
   // useEffect(() => {
-  //   const fetchData = async () => {
-  //     dispatch(showLoader());
+  //   const fetchSubjectAndTopic = async () => {
   //     try {
-  //       const response = await fetchData("get", `/resources/details/${id}`);
-  //       if (response.data?.success) {
-  //         const { subject, topic, subtopic, content } = response.data;
-  //         setSubject(subject);
-  //         setTopic(topic);
-  //         setSubtopic(subtopic);
-  //         setContent(content);
+  //       const response = await fetchData("get", `/resources/get/${id}`);
+  //       if (response.data.success) {
+  //         setSubject(response.data.data.subject);
+  //         setTopic(response.data.data.topic);
   //       } else {
-  //         toast.error("Failed to fetch resource details.");
+  //         toast.error("Failed to load topic details.");
   //       }
   //     } catch (error) {
-  //       toast.error("Something went wrong, Please try again!");
-  //     } finally {
-  //       dispatch(hideLoader());
+  //       console.error("Error fetching subject and topic:", error);
+  //       toast.error("Error fetching topic details.");
   //     }
   //   };
-  //   fetchData();
-  // }, [id, dispatch]);
+
+  //   fetchSubjectAndTopic();
+  // }, [id]);
 
   const saveResource = async () => {
     try {
       dispatch(showLoader());
-      const response = await axios.post("/api/resources", {
-        subject,
-        topic,
+      const response = await fetchData("post", `/resources/save/${id}`, {
         subtopic,
         content,
       });
 
       if (response.data.success) {
         toast.success("Resource saved successfully!");
+        setContent("");
+        window.location.href = "/resources";
       } else {
         toast.error("Failed to save resource.");
       }
     } catch (error) {
-      console.error("Error saving resource:", error);
       toast.error("Failed to save resource.");
     } finally {
       dispatch(hideLoader());
@@ -66,18 +62,12 @@ const ResourceEditor = ({ params }) => {
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Create a Resource</h1>
+      <h1 className="text-3xl font-bold mb-6">Add Content for {topic}</h1>
       <div className="mb-4">
-        <p className="text-black dark:text-white p-2 w-full">{subject}</p>
+        <p className="text-gray-700 dark:text-white p-2 w-full">
+          {subtopic ? `Subtopic: ${subtopic}` : "General Topic"}
+        </p>
       </div>
-      <div className="mb-4">
-        <p className="text-black dark:text-white p-2 w-full">{topic}</p>
-      </div>
-      {subtopic && (
-        <div className="mb-4">
-          <p className="text-black dark:text-white p-2 w-full">{subtopic}</p>
-        </div>
-      )}
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6">
         <ReactQuill
           value={content}
