@@ -4,6 +4,7 @@ import {
   getResource,
   getResourceDetails,
   getResources,
+  saveResource,
 } from "../controllers/resourceController.js";
 
 const router = express.Router();
@@ -22,5 +23,7 @@ router.get("/details/:id", getResourceDetails);
 
 // Route to create a new resource
 router.post("/create", createResource);
+
+router.post("/save/:id", saveResource);
 
 export default router;

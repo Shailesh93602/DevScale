@@ -6,6 +6,7 @@ import Resource from "../../db/models/resource.model.js";
 import Article from "../../db/models/article.model.js";
 import Subject from "../../db/models/subject.model.js";
 import Topic from "../../db/models/topic.model.js";
+import db from "../../db/models/index.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -226,5 +227,46 @@ export const selectArticle = async (req, res) => {
   } catch (err) {
     logger.error("Error selecting article:", err);
     res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+
+// Controller function to save a new resource
+export const saveResource = async (req, res) => {
+  console.log(req.params, req.body);
+  const { id } = req.params;
+  const { content, subtopic } = req.body;
+
+  try {
+    const topic = await db.Topic.findByPk(id);
+
+    if (!topic) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Topic not found." });
+    }
+
+    const article = await db.Article.create({
+      title: `${topic.name} - ${subtopic || "General"}`,
+      content,
+      topicId: id,
+      authorId: req.user.id,
+      status: "pending",
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Resource saved successfully. Pending approval.",
+      data: article,
+    });
+  } catch (error) {
+    console.log(
+      "🚀 ~ file: resourceController.js:261 ~ saveResource ~ error:",
+      error
+    );
+    logger.error("Error saving resource:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
   }
 };
