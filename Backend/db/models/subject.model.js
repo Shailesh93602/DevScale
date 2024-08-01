@@ -2,9 +2,7 @@ import { Model, DataTypes } from "sequelize";
 
 export default (sequelize) => {
   class Subject extends Model {
-    static associate(models) {
-      // Define associations here if needed
-    }
+    static associate(models) {}
   }
 
   Subject.init(
@@ -27,6 +25,21 @@ export default (sequelize) => {
         allowNull: true,
         validate: {
           len: [0, 2000],
+        },
+      },
+      link: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      tags: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      category: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        validate: {
+          len: [0, 255],
         },
       },
     },
