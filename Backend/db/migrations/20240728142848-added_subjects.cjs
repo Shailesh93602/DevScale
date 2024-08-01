@@ -14,17 +14,22 @@ module.exports = {
       name: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-          notEmpty: true,
-          len: [3, 255],
-        },
       },
       description: {
         type: DataTypes.TEXT,
         allowNull: true,
-        validate: {
-          len: [0, 2000],
-        },
+      },
+      link: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      tags: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      category: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
       createdAt: {
         allowNull: false,

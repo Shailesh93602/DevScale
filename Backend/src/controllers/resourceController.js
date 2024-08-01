@@ -45,56 +45,64 @@ export const addTopic = async (req, res) => {
   }
 };
 
-// Get all resources from a file
-export const getResources = (req, res) => {
-  const resourcesPath = path.join(__dirname, "../../resources/resources.json");
+// Function to get resources (subjects) from the database
+export const getResources = async (req, res) => {
+  try {
+    // Fetch all subjects from the database
+    const subjects = await db.Subject.findAll({
+      attributes: ["id", "name", "description"], // Specify the fields you want to retrieve
+    });
 
-  fs.readFile(resourcesPath, "utf8", (err, data) => {
-    if (err) {
-      logger.error(`Error reading resources file: ${resourcesPath}`, err);
-      return res
-        .status(500)
-        .json({ success: false, message: "Error reading resources file" });
-    }
-    try {
-      const resources = JSON.parse(data);
-      res.status(200).json({ success: true, resources });
-    } catch (parseError) {
-      logger.error(
-        `Error parsing resources JSON: ${resourcesPath}`,
-        parseError
-      );
-      res
-        .status(500)
-        .json({ success: false, message: "Error parsing resources file" });
-    }
-  });
+    // Send the retrieved subjects as the response
+    res.status(200).json({ success: true, resources: subjects });
+  } catch (error) {
+    // Log and handle any errors that occur during the process
+    logger.error("Error fetching subjects from database:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching subjects from database",
+    });
+  }
 };
 
-// Get a specific resource by ID
-export const getResource = (req, res) => {
-  const resourcesPath = path.join(
-    __dirname,
-    `../../resources/${req.params.id}.json`
-  );
+// Get a specific resource by Subject ID
+export const getResource = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-  fs.readFile(resourcesPath, "utf8", (err, data) => {
-    if (err) {
-      logger.error(`Error reading resource file: ${resourcesPath}`, err);
+    // Fetch the subject by ID
+    const subject = await db.Subject.findByPk(id);
+
+    if (!subject) {
       return res
-        .status(500)
-        .json({ success: false, message: "Internal Server Error" });
+        .status(404)
+        .json({ success: false, message: "Subject not found" });
     }
-    try {
-      const resource = JSON.parse(data);
-      res.status(200).json({ success: true, resource });
-    } catch (parseError) {
-      logger.error(`Error parsing resource JSON: ${resourcesPath}`, parseError);
-      res
-        .status(500)
-        .json({ success: false, message: "Internal Server Error" });
-    }
-  });
+
+    // Fetch the topics related to the subject
+    const topics = await db.Topic.findAll({
+      where: { subjectId: id },
+      include: [
+        {
+          model: db.Article,
+          attributes: ["id", "title", "content", "status"],
+          where: { status: "approved" }, // Only include approved articles
+          required: false,
+        },
+      ],
+    });
+
+    res.status(200).json({
+      success: true,
+      resource: {
+        subject,
+        topics,
+      },
+    });
+  } catch (error) {
+    logger.error("Error retrieving resource:", error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
 };
 
 // Get details of a specific resource
