@@ -1,4 +1,5 @@
 import { config } from "dotenv";
+import mysql2 from "mysql2";
 
 config();
 
@@ -9,6 +10,7 @@ const dbConfig = {
   host: process.env.DB_HOST,
   port: 3306,
   dialect: "mysql",
+  dialectModule: mysql2,
   dialectOptions: {
     bigNumberStrings: true,
   },
