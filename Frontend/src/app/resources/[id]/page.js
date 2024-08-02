@@ -2,13 +2,11 @@
 import { fetchData } from "@/app/services/fetchData";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import {
-  FaBook,
-  FaVideo,
-  FaRegComments,
-  FaPuzzlePiece,
-  FaLightbulb,
-} from "react-icons/fa";
+import DOMPurify from "dompurify";
+
+const sanitizeContent = (content) => {
+  return DOMPurify.sanitize(content);
+};
 
 const Resource = ({ params }) => {
   const { id } = params;
@@ -63,18 +61,17 @@ const Resource = ({ params }) => {
       <div className="w-full md:w-3/4 p-5 bg-gray-50 dark:bg-gray-900 text-black dark:text-white shadow-lg overflow-y-auto">
         {resource.map(
           (res, index) =>
-            selectedTopic === res.topic && (
+            selectedTopic === res.name && (
               <div key={index} className="mb-6">
                 <h2 className="text-3xl font-bold mb-4 border-b pb-2 border-gray-300 dark:border-gray-700">
                   {res.name}
                 </h2>
-                <div className="mb-4">
-                  <h3 className="text-xl font-semibold mb-2 flex items-center text-blue-600 dark:text-blue-400">
-                    <FaBook className="mr-2" />
-                    Definition
-                  </h3>
-                  {res.content}
-                </div>
+                <div
+                  className="mb-4"
+                  dangerouslySetInnerHTML={{
+                    __html: sanitizeContent(res?.Articles[0]?.content),
+                  }}
+                ></div>
               </div>
             )
         )}
