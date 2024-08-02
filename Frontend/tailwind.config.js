@@ -115,14 +115,27 @@ module.exports = {
         scroll:
           "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
       },
+      typography: (theme) => ({
+        DEFAULT: {
+          css: {
+            h1: {
+              fontSize: theme("fontSize.4xl"),
+              fontWeight: theme("fontWeight.bold"),
+            },
+            h2: {
+              fontSize: theme("fontSize.3xl"),
+            },
+          },
+        },
+      }),
     },
   },
 
-
-
-  plugins: [require("tailwindcss-animate"), addVariablesForColors],
-
-
+  plugins: [
+    require("@tailwindcss/typography"),
+    require("tailwindcss-animate"),
+    addVariablesForColors,
+  ],
 };
 
 function addVariablesForColors({ addBase, theme }) {
