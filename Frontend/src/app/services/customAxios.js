@@ -2,7 +2,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const customAxios = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BASE_URL || "https://mrengineersapi.com",
+  baseURL:
+    process.env.NEXT_PUBLIC_BASE_URL || "https://mrengineersapi.vercel.app",
 });
 
 customAxios.interceptors.request.use(
