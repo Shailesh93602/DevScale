@@ -29,8 +29,8 @@ async function loadModels() {
     });
 
     for (const file of modelFiles) {
-      const modelPath = path.join(__dirname, file); // Use the absolute path
-      const modelURL = pathToFileURL(modelPath).href; // Convert to file URL
+      const modelPath = path.join(__dirname, file);
+      const modelURL = pathToFileURL(modelPath).href;
       try {
         const { default: model } = await import(modelURL);
         const modelInstance = model(sequelize, Sequelize.DataTypes);
@@ -49,10 +49,10 @@ async function loadModels() {
     db.sequelize = sequelize;
     db.Sequelize = Sequelize;
 
-    return db; // Return the db object after loading models
+    return db;
   } catch (error) {
     console.error("Error loading models:", error);
-    throw error; // Re-throw error to handle it in the seeder
+    throw error;
   }
 }
 
