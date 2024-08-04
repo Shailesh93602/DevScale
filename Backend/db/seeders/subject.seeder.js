@@ -1,4 +1,4 @@
-import { loadModels } from "../models/index.js";
+import db from "../models";
 
 const subjects = [
   {
@@ -41,10 +41,8 @@ const subjects = [
 ];
 
 const seedSubjects = async () => {
-  let db;
   try {
-    db = await loadModels();
-
+    await db.connect;
     await db.sequelize.authenticate();
 
     for (const subject of subjects) {

@@ -1,4 +1,4 @@
-import { loadModels } from "../models/index.js";
+import db from "../models";
 
 const topics = [
   {
@@ -57,9 +57,8 @@ const topics = [
 ];
 
 const seedTopics = async () => {
-  let db;
   try {
-    db = await loadModels();
+    await db.connect;
 
     await db.sequelize.authenticate();
 
