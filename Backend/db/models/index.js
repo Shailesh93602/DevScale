@@ -1,14 +1,22 @@
+// index.js in models directory
 "use strict";
 
-import fs from "fs";
-import path from "path";
 import Sequelize from "sequelize";
 import config from "../../config/config.js";
-import { dirname } from "path";
-import { fileURLToPath, pathToFileURL } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import Article from "./article.model.js";
+import Battle from "./battle.model.js";
+import Chat from "./chat.model.js";
+import Course from "./course.model.js";
+import Forum from "./forum.model.js";
+import InterviewQuestion from "./interviewQuestion.model.js";
+import Job from "./job.model.js";
+import Resource from "./resource.model.js";
+import Roadmap from "./roadmap.model.js";
+import Subject from "./subject.model.js";
+import Topic from "./topic.model.js";
+import User from "./user.model.js";
+import UserInfo from "./userInfo.model.js";
+import UserPoints from "./userPoints.model.js";
 
 const sequelize = new Sequelize(
   config.database,
@@ -16,45 +24,32 @@ const sequelize = new Sequelize(
   config.password,
   config
 );
-const db = {};
 
-async function loadModels() {
-  try {
-    const modelFiles = fs.readdirSync(__dirname).filter((file) => {
-      return (
-        file.indexOf(".") !== 0 &&
-        file !== "index.js" &&
-        file.slice(-3) === ".js"
-      );
-    });
+const db = {
+  Article: Article(sequelize, Sequelize.DataTypes),
+  Battle: Battle(sequelize, Sequelize.DataTypes),
+  Chat: Chat(sequelize, Sequelize.DataTypes),
+  Course: Course(sequelize, Sequelize.DataTypes),
+  Forum: Forum(sequelize, Sequelize.DataTypes),
+  InterviewQuestion: InterviewQuestion(sequelize, Sequelize.DataTypes),
+  Job: Job(sequelize, Sequelize.DataTypes),
+  Resource: Resource(sequelize, Sequelize.DataTypes),
+  Roadmap: Roadmap(sequelize, Sequelize.DataTypes),
+  Subject: Subject(sequelize, Sequelize.DataTypes),
+  Topic: Topic(sequelize, Sequelize.DataTypes),
+  User: User(sequelize, Sequelize.DataTypes),
+  UserInfo: UserInfo(sequelize, Sequelize.DataTypes),
+  UserPoints: UserPoints(sequelize, Sequelize.DataTypes),
+};
 
-    for (const file of modelFiles) {
-      const modelPath = path.join(__dirname, file);
-      const modelURL = pathToFileURL(modelPath).href;
-      try {
-        const { default: model } = await import(modelURL);
-        const modelInstance = model(sequelize, Sequelize.DataTypes);
-        db[modelInstance.name] = modelInstance;
-      } catch (importError) {
-        console.error(`Error importing model ${file}:`, importError);
-      }
-    }
-
-    Object.keys(db).forEach((modelName) => {
-      if (db[modelName].associate) {
-        db[modelName].associate(db);
-      }
-    });
-
-    db.sequelize = sequelize;
-    db.Sequelize = Sequelize;
-
-    return db;
-  } catch (error) {
-    console.error("Error loading models:", error);
-    throw error;
+// Apply associations if they exist
+Object.keys(db).forEach((modelName) => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
   }
-}
+});
 
-export { loadModels };
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
+
 export default db;
