@@ -5,6 +5,10 @@ export default (sequelize) => {
   class Article extends Model {
     static associate(models) {
       this.belongsTo(models.Topic, { foreignKey: "topicId" });
+      this.belongsTo(models.User, {
+        foreignKey: "authorId",
+        as: "author",
+      });
     }
   }
 

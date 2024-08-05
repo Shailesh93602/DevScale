@@ -12,6 +12,7 @@ import courseRoutes from "./courseRoutes.js";
 import battleRoutes from "./battleRoutes.js";
 import resourceRoutes from "./resourceRoutes.js";
 import topicRoutes from "./topicRoutes.js";
+import articleRoutes from './articleRoutes.js';
 import passport from "passport";
 import { codeRunner } from "../controllers/codeRunnerController.js";
 import { predict } from "../controllers/predictionController.js";
@@ -99,6 +100,12 @@ router.use(
   passport.authenticate("jwt", { session: false }),
   topicRoutes
 );
+
+router.use(
+  "/articles",
+  passport.authenticate("jwt", { session: false }),
+  articleRoutes
+)
 
 // Code runner route
 router.post("/run-code", codeRunner);
