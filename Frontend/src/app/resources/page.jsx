@@ -31,8 +31,8 @@ export default function ResourcesPage() {
 
   const filteredResources = resources?.filter(
     (resource) =>
-      resource.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      resource.description.toLowerCase().includes(searchTerm.toLowerCase())
+      resource.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      resource.description?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
