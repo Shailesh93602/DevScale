@@ -142,7 +142,6 @@ export const login = async (req, res) => {
           : "localhost:3000",
     });
   } catch (error) {
-    console.log("🚀 ~ file: authController.js:145 ~ login ~ error:", error);
     logger.error(error);
     res.status(500).send();
   }

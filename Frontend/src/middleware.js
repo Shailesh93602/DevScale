@@ -19,7 +19,6 @@ export async function middleware(req) {
 
     if (protectedPages.find((page) => page === req.nextUrl.pathname)) {
       if (!token) {
-        console.log("notoken");
         const url = req.nextUrl.clone();
         url.pathname = "/u/login";
         return NextResponse.redirect(url);

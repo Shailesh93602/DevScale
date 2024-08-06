@@ -48,12 +48,18 @@ export const addTopic = async (req, res) => {
 // Function to get resources (subjects) from the database
 export const getResources = async (req, res) => {
   try {
-    // Fetch all subjects from the database
-    const subjects = await db.Subject.findAll({
-      attributes: ["id", "name", "description"], // Specify the fields you want to retrieve
+    let subjects = await db.Subject.findAll({
+      attributes: {
+        include: ["id", "name", "description", "tags", "link"],
+        exclude: ["baz"],
+      },
     });
 
-    // Send the retrieved subjects as the response
+    subjects = subjects.map((subject) => ({
+      ...subject.dataValues,
+      tags: subject.dataValues?.tags?.split(","),
+    }));
+    console.log(subjects);
     res.status(200).json({ success: true, resources: subjects });
   } catch (error) {
     // Log and handle any errors that occur during the process
@@ -70,7 +76,6 @@ export const getResource = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Fetch the subject by ID
     const subject = await db.Subject.findByPk(id);
 
     if (!subject) {
@@ -79,7 +84,6 @@ export const getResource = async (req, res) => {
         .json({ success: false, message: "Subject not found" });
     }
 
-    // Fetch the topics related to the subject
     const topics = await db.Topic.findAll({
       where: { subjectId: id },
       include: [
@@ -240,7 +244,6 @@ export const selectArticle = async (req, res) => {
 
 // Controller function to save a new resource
 export const saveResource = async (req, res) => {
-  console.log(req.params, req.body);
   const { id } = req.params;
   const { content, subtopic } = req.body;
 
@@ -267,10 +270,6 @@ export const saveResource = async (req, res) => {
       data: article,
     });
   } catch (error) {
-    console.log(
-      "🚀 ~ file: resourceController.js:261 ~ saveResource ~ error:",
-      error
-    );
     logger.error("Error saving resource:", error);
     res.status(500).json({
       success: false,
