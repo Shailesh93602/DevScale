@@ -173,122 +173,7 @@ export default function LandingPage() {
   ];
   return (
     <main className="flex flex-col text-gray-900">
-      {/* <section className="bg-gray-100 py-12 md:py-20 lg:py-28"> */}
-      {/* <div className="container px-4 md:px-6">
-          <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
-            <div className="flex flex-col justify-center space-y-4">
-              <div className="space-y-2">
-                <h1 className="text-3xl font-blod tracking-tighter sm:text-4xl md:text-5xl lg:text-5xl/none">
-                  Hello ,{" "}
-                  {false ? (
-                    <span className="text-blue-800">
-                      {user?._doc.fullName?.split(" ")[0]}
-                    </span>
-                  ) : (
-                    <span className="text-blue-800">Guest</span>
-                  )}
-                </h1>
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-                  Welcome to Mr. Engineers
-                </h1>
-                <p className="max-w-[600px] text-gray-500 md:text-xl">
-                  Discover a world of opportunities to grow your engineering
-                  skills, explore cutting-edge technologies, and build a
-                  successful career with our comprehensive resources and
-                  personalized support.
-                </p>
-              </div>
-              <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <CentralizedButton
-                  href={false ? "dashboard" : "/u/register"}
-                  icon={ArrowRight}
-                  isIconRightSide
-                  text={false ? "Start your journey" : "Get Started"}
-                  color="info"
-                  size="lg"
-                  style={{ display: "flex", justifyContent: "center" }}
-                />
-                {false ? (
-                  <CentralizedButton
-                    text="logout"
-                    onClick={handleLogout}
-                    outline
-                    size="lg"
-                    color="info"
-                    style={{ display: "flex", justifyContent: "center" }}
-                  />
-                ) : (
-                  <CentralizedButton
-                    href="/u/login"
-                    text="login"
-                    color="info"
-                    outline
-                    size="lg"
-                    style={{ display: "flex", justifyContent: "center" }}
-                  />
-                )}
-              </div>
-            </div>
-            <BannerCard />
-          </div>
-        </div> */}
       <HeroParallax products={products} />
-      {/* </section> */}
-
-      {/* <section className="bg-light py-12 md:py-20 lg:py-28">
-        <div className="container px-4 md:px-6">
-          <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
-            <div className="flex flex-col justify-center space-y-4">
-              <div className="space-y-2">
-                <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm">
-                  Learning Resources
-                </div>
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                  Expand Your Knowledge
-                </h2>
-                <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Dive into a vast library of tutorials, articles, and video
-                  lessons covering the latest engineering technologies and
-                  practices.
-                </p>
-              </div>
-              <div className="flex flex-col gap-2 min-[400px]:flex-row">
-
-
-                <CentralizedButton
-                  size="lg"
-                  color="info"
-                  href="/resources"
-                  text="Explore Resources"
-                  style={{ display: "flex", justifyContent: "center" }}
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <ResourceCard
-                icon={<BookIcon className="h-8 w-8 text-gray-500" />}
-                title="Tutorials"
-                description="Step-by-step guides to master new technologies."
-              />
-              <ResourceCard
-                icon={<VideoIcon className="h-8 w-8 text-gray-500" />}
-                title="Video Lessons"
-                description="Interactive video lessons for hands-on learning."
-              />
-              <ResourceCard
-                icon={<FileIcon className="h-8 w-8 text-gray-500" />}
-                title="Articles"
-                description="In-depth articles on the latest engineering trends."
-              />
-              <ResourceCard
-                icon={<PuzzleIcon className="h-8 w-8 text-gray-500" />}
-                title="Coding Challenges"
-                description="Sharpen your skills with interactive coding challenges."
-              />
-            </div>
-          </div>
-        </div>
-      </section> */}
       <section className='pt-5 bg-gray-600 py-12 md:py-20 lg:py-28"'>
         <div className="pb-8">
           <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm">
@@ -304,13 +189,6 @@ export default function LandingPage() {
       <section className="bg-gray-600 py-12 md:py-20 lg:py-16">
         <div className="container px-4 md:px-6">
           <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
-            {/* <img
-              alt="Career Roadmap"
-              className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full lg:order-last"
-              height="310"
-              src="/career-roadmap.svg"
-              width="550"
-            /> */}
             <CardDemo className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full lg:order-last" />
             <div className="flex flex-col justify-center space-y-4">
               <div className="space-y-2">
@@ -359,13 +237,6 @@ export default function LandingPage() {
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                {/* <CentralizedButton
-                  text="Explore Placement Support"
-                  href="placement-preparation"
-                  color="info"
-                  size="lg"
-                  style={{ display: "flex", justifyContent: "center" }}
-                /> */}
                 <HoverBorderGradient
                   containerClassName="rounded-full"
                   as="button"
