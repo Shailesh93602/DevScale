@@ -2,9 +2,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import toast, { Toaster } from "react-hot-toast";
 import { usePathname } from "next/navigation";
-import Loader from "@/components/Loader";
 import { Provider } from "react-redux";
 import { store, persistor } from "@/lib/store";
 

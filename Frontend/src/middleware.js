@@ -11,6 +11,8 @@ const protectedPages = [
   "/community",
   "/achievements",
   "/battle-zone",
+  "/create-resource",
+  "/article-listing",
 ];
 
 export async function middleware(req) {
