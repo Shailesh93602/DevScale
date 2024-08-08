@@ -158,6 +158,7 @@ export const createResource = async (req, res) => {
 
 // Get interview questions from a file
 export const getInterviewQuestions = (req, res) => {
+  console.log("hi");
   const interviewQuestionsPath = path.join(
     __dirname,
     "../../resources/interviewquestions.json"

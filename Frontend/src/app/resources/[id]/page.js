@@ -14,6 +14,7 @@ const Resource = ({ params }) => {
   const [resource, setResource] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState("Introduction");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showSolution, setShowSolution] = useState(false);
 
   useEffect(() => {
     const fetchResource = async () => {
@@ -35,13 +36,9 @@ const Resource = ({ params }) => {
     fetchResource();
   }, [id]);
 
-  if (!resource.length) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
+  const toggleSolution = () => {
+    setShowSolution(!showSolution);
+  };
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900">
@@ -101,7 +98,107 @@ const Resource = ({ params }) => {
                     __html: sanitizeContent(res?.Articles[0]?.content),
                   }}
                 ></div>
+
+                {/* Coding question section */}
+                <div className="mt-8">
+                  <h3 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">
+                    Coding Question
+                  </h3>
+                  <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
+                    <h4 className="text-lg font-bold mb-2">
+                      Implement a queue using an array
+                    </h4>
+                    <p className="text-gray-600 dark:text-gray-400 mb-4">
+                      Implement a queue data structure using an array. The queue
+                      should support the following operations: enqueue, dequeue,
+                      and peek.
+                    </p>
+                    <button
+                      className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                      onClick={toggleSolution}
+                    >
+                      {showSolution ? "Hide Solution" : "Show Solution"}
+                    </button>
+                    {showSolution && (
+                      <div
+                        className="prose dark:prose-invert max-w-none mt-4"
+                        dangerouslySetInnerHTML={{
+                          __html: sanitizeContent(`
+<pre>
+class Queue {
+  constructor() {
+    this.items = [];
+  }
+
+  enqueue(item) {
+    this.items.push(item);
+  }
+
+  dequeue() {
+    if (this.items.length === 0) {
+      return "Underflow";
+    }
+    return this.items.shift();
+  }
+
+  peek() {
+    return this.items[0];
+  }
+
+  isEmpty() {
+    return this.items.length === 0;
+  }
+
+  printQueue() {
+    let str = "";
+    for (let i = 0; i < this.items.length; i++) {
+      str += this.items[i] + " ";
+    }
+    return str;
+  }
+}
+
+// Example usage:
+const queue = new Queue();
+queue.enqueue(10);
+queue.enqueue(20);
+queue.enqueue(30);
+console.log(queue.printQueue()); // Output: 10 20 30
+console.log(queue.dequeue()); // Output: 10
+console.log(queue.peek()); // Output: 20
+console.log(queue.isEmpty()); // Output: false
+</pre>
+`),
+                        }}
+                      ></div>
+                    )}
+                  </div>
+                </div>
+
+                {/* <div className="mt-8">
+                  <h3 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">
+                    Related Resources
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {res.relatedResources.map((related, index) => (
+                      
+                        key={index}
+                        href={related.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg transition duration-300 hover:bg-gray-200 dark:hover:bg-gray-600 hover:shadow-md"
+                      >
+                        <h4 className="text-lg font-bold mb-2 text-gray-800 dark:text-gray-200">
+                          {related.title}
+                        </h4>
+                        <p className="text-gray-600 dark:text-gray-400">
+                          {related.description}
+                        </p>
+                      </a>
+                    ))}
+                  </div> */}
               </div>
+              // </div>
             )
         )}
       </div>
