@@ -1,6 +1,11 @@
 import db from "../models/index.js";
 
 const subjects = [
+
+  {
+    name: "C language",
+    description: "Fundamentals Concepts of Programming language C. ",
+  },
   {
     name: "Data Structures and Algorithms",
     description: "Fundamental concepts of data structures and algorithms.",
