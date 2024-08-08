@@ -3,7 +3,7 @@ import db from "../models/index.js";
 const subjects = [
 
   {
-    name: "C language",
+    name: "C Language",
     description: "Fundamentals Concepts of Programming language C. ",
   },
   {
