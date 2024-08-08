@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { fetchData } from "../services/fetchData";
+import Link from "next/link";
 
 const ArticleListPage = () => {
   const [articles, setArticles] = useState([]);
@@ -48,10 +49,7 @@ const ArticleListPage = () => {
 
   const handleUpdateStatus = async (id, newStatus) => {
     try {
-      await fetchData(
-        "post",
-        "/articles/status/?id=" + id + "&status=" + newStatus
-      );
+      await fetchData("post", `/articles/status/?id=${id}&status=${newStatus}`);
       setArticles(
         articles.map((article) =>
           article.id === id ? { ...article, status: newStatus } : article
@@ -63,8 +61,8 @@ const ArticleListPage = () => {
   };
 
   return (
-    <div className="p-6 bg-white dark:bg-gray-900 min-h-screen">
-      <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-gray-100">
+    <div className="p-6 bg-gray-100 dark:bg-gray-900 min-h-screen">
+      <h1 className="text-4xl font-bold mb-8 text-gray-900 dark:text-gray-100 text-center">
         Articles List
       </h1>
       <div className="mb-6 flex items-center space-x-4">
@@ -86,8 +84,8 @@ const ArticleListPage = () => {
           <option value="rejected">Rejected</option>
         </select>
       </div>
-      <div className="overflow-x-auto shadow-md rounded-lg border border-gray-200 dark:border-gray-700">
-        <table className="min-w-full bg-white dark:bg-gray-800">
+      <div className="overflow-x-auto shadow-md rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+        <table className="min-w-full">
           <thead className="bg-gray-100 dark:bg-gray-700">
             <tr className="text-left text-gray-900 dark:text-gray-100">
               <th className="py-3 px-6">Title</th>
@@ -124,7 +122,13 @@ const ArticleListPage = () => {
                   {new Date(article.createdAt).toLocaleDateString()}
                 </td>
                 <td className="py-3 px-6 flex items-center space-x-4">
-                  {article.status === "pending" ? (
+                  <Link
+                    href={`/articles/${article.id}`}
+                    className="text-blue-500 hover:underline dark:text-blue-300"
+                  >
+                    View
+                  </Link>
+                  {article.status === "pending" && (
                     <>
                       <button
                         className="text-green-500 hover:underline dark:text-green-300"
@@ -143,10 +147,6 @@ const ArticleListPage = () => {
                         Reject
                       </button>
                     </>
-                  ) : (
-                    <span className="text-gray-500 dark:text-gray-400">
-                      No actions available
-                    </span>
                   )}
                 </td>
               </tr>

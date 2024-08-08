@@ -67,3 +67,27 @@ export const updateArticleStatus = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const getArticleById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const article = await db.Article.findByPk(id, {
+      include: {
+        model: db.User,
+        as: "author",
+        attributes: ["username"],
+      },
+    });
+
+    if (!article) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Article not found." });
+    }
+
+    res.status(200).json({ success: true, article });
+  } catch (error) {
+    console.error("Error fetching article:", error);
+    res.status(500).json({ success: false, message: "Server error." });
+  }
+};

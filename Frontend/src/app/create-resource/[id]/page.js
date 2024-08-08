@@ -25,10 +25,6 @@ const ResourceEditor = ({ params }) => {
       try {
         const response = await fetchData("get", `/topics/${id}`);
         if (response.data.success) {
-          console.log(
-            "🚀 ~ file: page.js:28 ~ fetchSubjectAndTopic ~ response:",
-            response
-          );
           setSubject(response.data.data.subject);
           setTopic(response.data.data.topic);
         } else {
