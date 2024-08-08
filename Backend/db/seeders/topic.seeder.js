@@ -504,6 +504,336 @@ const topics = [
     description: "Techniques to optimize and improve database performance.",
     subject: "Database Systems",
   },
+  {
+      "name": "Introduction",
+      "description": "An overview of the C language, including its definition, history, features, technical aspects, usage, and significance.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Installation",
+      "description": "Guidelines on how to install the C compiler and set up the environment.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Syntax & Statements",
+      "description": "Basic syntax and statement structure in C programming.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Output & New Line",
+      "description": "How to generate output and use new line characters in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Variables",
+      "description": "Introduction to variables, including how to create, modify, and use them in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Create Variables",
+      "description": "Instructions on creating variables in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Format Specifiers",
+      "description": "Explanation of format specifiers and their usage in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Change Values",
+      "description": "How to change the values of variables in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Multiple Variables",
+      "description": "Handling multiple variables in a single statement in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Variable Names",
+      "description": "Rules and best practices for naming variables in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Real-Life Examples",
+      "description": "Practical examples of using variables in real-world scenarios.",
+      "subject": "C Language"
+    },
+    {
+      "name": "C Data Types",
+      "description": "Overview of data types in C, including characters, numbers, and more.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Data Types",
+      "description": "Detailed explanation of various data types in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Characters",
+      "description": "Understanding and using character data types in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Numbers",
+      "description": "Working with numerical data types in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Decimal Precision",
+      "description": "Managing decimal precision with floating-point numbers in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Memory Size",
+      "description": "Memory size considerations for different data types in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Real-Life Examples",
+      "description": "Practical examples of using data types in real-world scenarios.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Type Conversion",
+      "description": "Converting between different data types in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Constants",
+      "description": "Explanation of constants in C, including how to declare and use them.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Operators",
+      "description": "Overview of operators in C, including arithmetic, relational, and logical operators.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Booleans",
+      "description": "Understanding boolean data types and operations in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Real-Life Examples",
+      "description": "Practical examples of using booleans in real-world scenarios.",
+      "subject": "C Language"
+    },
+    {
+      "name": "If Else",
+      "description": "Control flow in C using if, else, and else-if statements.",
+      "subject": "C Language"
+    },
+    {
+      "name": "If",
+      "description": "Detailed explanation of the if statement in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Else",
+      "description": "How to use the else statement in conjunction with if in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Else If",
+      "description": "Explanation of the else-if ladder in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Short Hand If",
+      "description": "Usage of the shorthand if (ternary operator) in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Real-Life Examples",
+      "description": "Practical examples of using if-else statements in real-world scenarios.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Switch",
+      "description": "Switch case statements for multi-way branching in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "While Loop",
+      "description": "Explanation of while and do/while loops in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Do/While Loop",
+      "description": "How to use the do/while loop in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Real-Life Examples",
+      "description": "Practical examples of using loops in real-world scenarios.",
+      "subject": "C Language"
+    },
+    {
+      "name": "For Loop",
+      "description": "Explanation of the for loop in C and how to use it.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Nested Loops",
+      "description": "Understanding and using nested loops in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Real-Life Examples",
+      "description": "Practical examples of using for loops in real-world scenarios.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Break/Continue",
+      "description": "Explanation of break and continue statements in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Arrays",
+      "description": "Introduction to arrays, including how to declare, initialize, and use them in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Array Size",
+      "description": "Understanding and managing array size in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Real-Life Examples",
+      "description": "Practical examples of using arrays in real-world scenarios.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Multidimensional Arrays",
+      "description": "Working with multidimensional arrays in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Strings",
+      "description": "Introduction to strings in C, including how to declare, manipulate, and use them.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Special Characters",
+      "description": "Explanation of special characters in strings and how to use them.",
+      "subject": "C Language"
+    },
+    {
+      "name": "String Functions",
+      "description": "Common string functions in C and how to use them.",
+      "subject": "C Language"
+    },
+    {
+      "name": "User Input",
+      "description": "How to take input from the user in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Memory Address",
+      "description": "Understanding and using memory addresses in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Pointers",
+      "description": "Introduction to pointers, including how to declare, initialize, and use them in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Pointers and Arrays",
+      "description": "Relationship between pointers and arrays in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Functions",
+      "description": "Introduction to functions, including how to declare, define, and call them in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Functions Parameters",
+      "description": "Understanding function parameters and how to use them in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Scope",
+      "description": "Explanation of scope in C, including local and global variables.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Function Declaration",
+      "description": "How to declare functions in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Recursion",
+      "description": "Explanation of recursion in C and how to use it.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Math Functions",
+      "description": "Common math functions in C and how to use them.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Files",
+      "description": "Working with files in C, including how to create, write, and read files.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Create Files",
+      "description": "How to create files in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Write to Files",
+      "description": "How to write data to files in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Read Files",
+      "description": "How to read data from files in C.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Structures",
+      "description": "Introduction to structures in C, including how to declare and use them.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Enums",
+      "description": "Understanding enums in C and how to use them.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Memory",
+      "description": "Memory management in C, including dynamic memory allocation.",
+      "subject": "C Language"
+    },
+    {
+      "name": "References",
+      "description": "Additional resources and references for further reading on C programming.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Examples",
+      "description": "Collection of examples to demonstrate C programming concepts.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Exercises",
+      "description": "Practice exercises to reinforce understanding of C programming concepts.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Quiz",
+      "description": "Quizzes to test knowledge of C programming concepts.",
+      "subject": "C Language"
+    },
+    {
+      "name": "Compiler",
+      "description": "Information on compilers and how to use them with C programming.",
+      "subject": "C Language"
+    }
 ];
 
 const seedTopics = async () => {
