@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { fetchData } from "@/app/services/fetchData";
+import { fetchData, postData } from "@/app/services/fetchData";
 import Navbar from "@/components/Navbar";
 import { toast } from "react-toastify";
 import DOMPurify from "dompurify";
@@ -12,6 +12,8 @@ const sanitizeContent = (content) => {
 const ArticlePage = ({ params }) => {
   const { id } = params;
   const [article, setArticle] = useState(null);
+  const [moderationNotes, setModerationNotes] = useState("");
+  const [newNote, setNewNote] = useState("");
 
   useEffect(() => {
     if (id) {
@@ -20,6 +22,7 @@ const ArticlePage = ({ params }) => {
           const response = await fetchData("get", `/articles/${id}`);
           if (response.data.success) {
             setArticle(response.data.article);
+            setModerationNotes(response.data.article.moderationNotes || "");
           } else {
             toast.error("Failed to load article.");
           }
@@ -32,6 +35,25 @@ const ArticlePage = ({ params }) => {
       fetchArticle();
     }
   }, [id]);
+
+  const handleSaveNote = async () => {
+    try {
+      const response = await fetchData("post", `/articles/${id}/moderation`, {
+        moderationNotes: newNote,
+      });
+      if (response.data.success) {
+        toast.success("Moderation note saved successfully!");
+        setModerationNotes(newNote);
+        setNewNote("");
+        window.location.href = "/article-listing";
+      } else {
+        toast.error("Failed to save moderation note.");
+      }
+    } catch (error) {
+      console.error("Error saving moderation note:", error);
+      toast.error("Error saving moderation note.");
+    }
+  };
 
   if (!article) {
     return <div>Loading...</div>;
@@ -57,6 +79,27 @@ const ArticlePage = ({ params }) => {
               __html: sanitizeContent(article.content),
             }}
           ></p>
+        </div>
+        <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg mt-6">
+          <h2 className="text-xl font-semibold mb-4">Moderation Notes</h2>
+          {moderationNotes ? (
+            <p className="mb-4">{moderationNotes}</p>
+          ) : (
+            <p className="mb-4 text-gray-500">No moderation notes yet.</p>
+          )}
+          <textarea
+            className="w-full p-2 border rounded-lg dark:bg-gray-600 dark:text-white"
+            rows="4"
+            value={newNote}
+            onChange={(e) => setNewNote(e.target.value)}
+            placeholder="Add moderation notes here..."
+          />
+          <button
+            onClick={handleSaveNote}
+            className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-lg"
+          >
+            Save Note
+          </button>
         </div>
       </div>
     </>

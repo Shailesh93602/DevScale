@@ -91,3 +91,34 @@ export const getArticleById = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error." });
   }
 };
+
+export const updateModerationNotes = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { moderationNotes } = req.body;
+
+    const article = await db.Article.findOne({ where: { id } });
+
+    if (!article) {
+      return res.status(404).json({
+        success: false,
+        message: "Article not found",
+      });
+    }
+
+    article.moderationNotes = moderationNotes;
+    await article.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Moderation notes updated successfully",
+      article,
+    });
+  } catch (error) {
+    logger.error("Error updating moderation notes:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
