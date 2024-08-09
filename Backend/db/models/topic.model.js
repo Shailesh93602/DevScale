@@ -20,7 +20,7 @@ export default (sequelize) => {
         allowNull: false,
         validate: {
           notEmpty: true,
-          len: [3, 255],
+          len: [1, 255],
         },
       },
       description: {
