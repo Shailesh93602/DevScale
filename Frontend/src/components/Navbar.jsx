@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { FiMenu, FiX, FiSun, FiMoon } from "react-icons/fi";
 import { FaAngleDown, FaRegUserCircle } from "react-icons/fa";
 import { PiSignOutFill } from "react-icons/pi";
-import { GrAchievement } from "react-icons/gr";
+import { GrAchievement, GrArticle } from "react-icons/gr";
 import { useTheme } from "next-themes";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { fetchData } from "@/app/services/fetchData";
@@ -104,6 +104,14 @@ const Navbar = () => {
                   >
                     <GrAchievement />
                     Achievements
+                  </Link>
+                  <Link
+                    href="/articles"
+                    onClick={handleLinkClick}
+                    className="flex items-center gap-2 px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-md"
+                  >
+                    <GrArticle />
+                    My Articles
                   </Link>
                   <Link
                     href="/logout"
