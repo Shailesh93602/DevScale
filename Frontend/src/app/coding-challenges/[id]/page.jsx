@@ -264,20 +264,14 @@ int main() {
     setOutput("");
 
     try {
-      const response = await fetchData(
-        "POST",
-        "/run-code",
-        JSON.stringify({
-          language,
-          code: solution[language],
-        })
-      );
-
-      const data = response.data;
-      if (data.error) {
+      const response = await fetchData("POST", "/run-code", {
+        language,
+        code: solution[language],
+      });
+      if (response.data?.error) {
         setOutput(data.error);
       } else {
-        setOutput(data.output);
+        setOutput(response.data?.output);
       }
     } catch (error) {
       setOutput(`Error: ${error.message}`);

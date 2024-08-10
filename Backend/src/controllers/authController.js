@@ -75,7 +75,7 @@ export const register = async (req, res) => {
       });
     }
 
-    const newUser = await db.User.create({
+    await db.User.create({
       username,
       email,
       password: hashedPassword,

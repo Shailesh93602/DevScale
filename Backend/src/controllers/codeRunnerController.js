@@ -8,7 +8,6 @@ const execAsync = promisify(exec);
 export const codeRunner = async (req, res) => {
   try {
     const { code, language } = req.body;
-
     if (!code || !language) {
       return res
         .status(400)
@@ -18,7 +17,7 @@ export const codeRunner = async (req, res) => {
     let command;
     let filePath = null;
     let classFilePath = null;
-
+    console.log(language);
     switch (language) {
       case "javascript":
         command = `node -e "${code.replace(/"/g, '\\"')}"`;

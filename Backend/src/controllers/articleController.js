@@ -122,3 +122,59 @@ export const updateModerationNotes = async (req, res) => {
     });
   }
 };
+
+export const getMyArticles = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const articles = await db.Article.findAll({
+      where: {
+        authorId: userId,
+      },
+      attributes: ["id", "title", "status"],
+      order: [["createdAt", "DESC"]],
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Articles retrieved successfully",
+      articles,
+    });
+  } catch (error) {
+    logger.error("Error retrieving user's articles:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+export const getArticleComments = async (req, res) => {
+  try {
+    const articleId = req.params.id;
+
+    const article = await db.Article.findOne({
+      where: { id: articleId },
+      attributes: ["id", "moderationNotes"],
+    });
+
+    if (!article) {
+      return res.status(404).json({
+        success: false,
+        message: "Article not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Comments retrieved successfully",
+      comments: article.moderationNotes,
+    });
+  } catch (error) {
+    logger.error("Error retrieving article comments:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
