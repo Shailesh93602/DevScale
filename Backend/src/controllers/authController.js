@@ -86,6 +86,7 @@ export const register = async (req, res) => {
       message: "Registered Successfully!",
     });
   } catch (error) {
+    console.log("🚀 ~ file: authController.js:89 ~ register ~ error:", error);
     logger.error(error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
