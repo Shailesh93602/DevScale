@@ -176,8 +176,12 @@ const Resource = ({ params }) => {
               }}
             >
               {res.name}
+              {/* {progress.find((p) => p.topicId === res.id)?.isCompleted && (
+                <span className="text-green-500 ml-2">&#10003;</span>
+              )} */}
             </li>
           ))}
+
           {/* when the quiz data is coming dynamically from backend then we make condition here if quiz? then show the component otherwise not  */}
           {true && (
             <li
