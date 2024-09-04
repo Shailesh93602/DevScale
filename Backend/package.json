@@ -10,7 +10,9 @@
     "build": "echo 'No build step required'",
     "dev": "nodemon index.js",
     "seed:subjects": "node db/seeders/subject.seeder.js",
-    "seed:topics": "node db/seeders/topic.seeder.js"
+    "seed:topics": "node db/seeders/topic.seeder.js",
+    "seed:roadmaps": "node db/seeders/roadmap.seeder.js",
+    "seed:roadmapSubjects": "node db/seeders/roadmapSubjects.seeder.js"
   },
   "keywords": [],
   "author": "",

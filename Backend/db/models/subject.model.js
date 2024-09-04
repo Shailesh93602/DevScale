@@ -1,8 +1,17 @@
+"use strict";
 import { Model, DataTypes } from "sequelize";
 
 export default (sequelize) => {
   class Subject extends Model {
-    static associate(models) {}
+    static associate(models) {
+      // Many-to-many association with RoadMap
+      this.belongsToMany(models.RoadMap, {
+        through: models.RoadMapSubject,
+        as: "roadmaps",
+        foreignKey: "subjectId",
+        otherKey: "roadmapId",
+      });
+    }
   }
 
   Subject.init(

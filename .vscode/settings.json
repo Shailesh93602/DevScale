@@ -16,8 +16,10 @@
     "persistor",
     "popleft",
     "reduxjs",
+    "roadmaps",
     "stdc",
     "subproblems",
-    "toastify"
+    "toastify",
+    "UUIDV"
   ]
 }
