@@ -144,6 +144,7 @@ import { apiResponse } from "@/api/api";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { initialUser } from "@/lib/features/user/userSlice";
+import { PiVanLight } from "react-icons/pi";
 
 // Validation schema
 const schema = yup.object().shape({
@@ -192,6 +193,7 @@ const LoginPage = () => {
     // Handle form submission logic here
 
     try {
+      console.log("gg");
       const res = await apiResponse({
         method: "POST",
         url: "/auth/login",
@@ -391,7 +393,11 @@ const LoginPage = () => {
 
           <Typography variant="body2" align="center">
             New on our platform?{" "}
-            <Link href="#" underline="always" sx={{ color: "#00BFFF" }}>
+            <Link
+              href="/u/register"
+              underline="always"
+              sx={{ color: "#00BFFF" }}
+            >
               Create an account
             </Link>
           </Typography>

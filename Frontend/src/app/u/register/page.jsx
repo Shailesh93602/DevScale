@@ -374,6 +374,28 @@ const Register = () => {
               ),
             }}
           />
+          <Button
+            variant="contained"
+            type="submit"
+            fullWidth
+            sx={{
+              mt: 2,
+              mb: 2,
+              bgcolor: "#00BFFF",
+              "&:hover": {
+                bgcolor: "#00A0E0",
+              },
+            }}
+          >
+            register
+          </Button>
+
+          <Typography variant="body2" align="center">
+            Already have an account?{" "}
+            <Link href="/u/login" underline="always" sx={{ color: "#00BFFF" }}>
+              sign in
+            </Link>
+          </Typography>
         </Box>
       </RightWrapper>
     </Box>
