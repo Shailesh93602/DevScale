@@ -90,7 +90,7 @@ export const getResource = async (req, res) => {
         {
           model: db.Article,
           attributes: ["id", "title", "content", "status"],
-          where: { status: "approved" }, // Only include approved articles
+          where: { status: "approved" },
           required: false,
         },
       ],
@@ -105,6 +105,81 @@ export const getResource = async (req, res) => {
     });
   } catch (error) {
     logger.error("Error retrieving resource:", error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+export const createSubjects = async (req, res) => {
+  try {
+    const subjects = req.body;
+
+    if (!Array.isArray(subjects) || subjects.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Request body should be a non-empty array of subjects.",
+      });
+    }
+
+    const createdSubjects = await db.Subject.bulkCreate(subjects, {
+      validate: true,
+      returning: true,
+    });
+
+    res.status(201).json({
+      success: true,
+      message: `Successfully created ${createdSubjects.length} subjects.`,
+      subjects: createdSubjects,
+    });
+  } catch (error) {
+    logger.error("Error creating subjects:", error);
+    if (error.name === "SequelizeValidationError") {
+      return res.status(400).json({
+        success: false,
+        message: "Validation error",
+        errors: error.errors.map((e) => e.message),
+      });
+    }
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+export const deleteSubjects = async (req, res) => {
+  try {
+    const { ids } = req.body;
+
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Request body should contain a non-empty array of subject IDs.",
+      });
+    }
+
+    // First, find all subjects that are about to be deleted
+    const subjectsToDelete = await db.Subject.findAll({
+      where: { id: ids },
+      attributes: ["id", "name"], // Add any other attributes you want to return
+    });
+
+    // Perform the delete operation
+    const deletedCount = await db.Subject.destroy({
+      where: { id: ids },
+    });
+
+    if (deletedCount === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No subjects found with the provided IDs.",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Successfully deleted ${deletedCount} subjects.`,
+      deletedSubjects: subjectsToDelete,
+    });
+  } catch (error) {
+    logger.error("Error deleting subjects:", error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };

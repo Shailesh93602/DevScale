@@ -1,6 +1,8 @@
 import express from "express";
 import {
   createResource,
+  createSubjects,
+  deleteSubjects,
   getResource,
   getResourceDetails,
   getResources,
@@ -16,6 +18,10 @@ router.get("/", getResources);
 router.get("/:id", getResource);
 
 // Route to get all interview questions
+
+router.post("/create-subject", createSubjects);
+
+router.post("/delete-subjects", deleteSubjects);
 // router.get("/interviewquestions", getInterviewquestions);
 
 // Route to get resource details by ID
