@@ -4,7 +4,13 @@ import { Model, DataTypes } from "sequelize";
 export default (sequelize) => {
   class RoadMap extends Model {
     static associate(models) {
-      // Define associations here if needed
+      // Many-to-many association with Subject
+      this.belongsToMany(models.Subject, {
+        through: models.RoadMapSubject,
+        as: "subjects",
+        foreignKey: "roadmapId",
+        otherKey: "subjectId",
+      });
     }
   }
 

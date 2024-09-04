@@ -11,7 +11,8 @@ import Forum from "./forum.model.js";
 import InterviewQuestion from "./interviewQuestion.model.js";
 import Job from "./job.model.js";
 import Resource from "./resource.model.js";
-import Roadmap from "./roadmap.model.js";
+import RoadMap from "./roadmap.model.js";
+import RoadMapSubject from "./roadmap.model.js";
 import Subject from "./subject.model.js";
 import Topic from "./topic.model.js";
 import User from "./user.model.js";
@@ -34,7 +35,8 @@ const db = {
   InterviewQuestion: InterviewQuestion(sequelize, Sequelize.DataTypes),
   Job: Job(sequelize, Sequelize.DataTypes),
   Resource: Resource(sequelize, Sequelize.DataTypes),
-  Roadmap: Roadmap(sequelize, Sequelize.DataTypes),
+  RoadMap: RoadMap(sequelize, Sequelize.DataTypes),
+  RoadMapSubject: RoadMapSubject(sequelize, Sequelize.DataTypes),
   Subject: Subject(sequelize, Sequelize.DataTypes),
   Topic: Topic(sequelize, Sequelize.DataTypes),
   User: User(sequelize, Sequelize.DataTypes),
