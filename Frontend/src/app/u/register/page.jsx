@@ -185,7 +185,7 @@ import {
   InputAdornment,
   useMediaQuery,
 } from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+// import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { styled, useTheme } from "@mui/material/styles";
 import Spline from "@splinetool/react-spline";
 import { useForm, Controller } from "react-hook-form";
@@ -333,9 +333,7 @@ const Register = () => {
                     onClick={handleClickShowPassword}
                     edge="end"
                     sx={{ color: "white" }}
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
+                  ></IconButton>
                 </InputAdornment>
               ),
             }}
@@ -367,9 +365,7 @@ const Register = () => {
                     onClick={handleClickShowPassword}
                     edge="end"
                     sx={{ color: "white" }}
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
+                  ></IconButton>
                 </InputAdornment>
               ),
             }}
