@@ -4,12 +4,16 @@ import { Model, DataTypes } from "sequelize";
 export default (sequelize) => {
   class Resource extends Model {
     static associate(models) {
-      this.hasMany(models.Article, { foreignKey: "topicId" });
-      this.hasMany(models.InterviewQuestion, { foreignKey: "resourceId" });
-
-      // Ensure the inverse associations are set up correctly
-      models.Article.belongsTo(this, { foreignKey: "topicId" });
-      models.InterviewQuestion.belongsTo(this, { foreignKey: "resourceId" });
+      this.hasMany(models.Article, {
+        foreignKey: "topicId",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
+      this.hasMany(models.InterviewQuestion, {
+        foreignKey: "resourceId",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
     }
   }
 

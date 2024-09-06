@@ -4,10 +4,9 @@ import { Model, DataTypes } from "sequelize";
 export default (sequelize) => {
   class RoadMap extends Model {
     static associate(models) {
-      // Many-to-many association with Subject
+      // Define many-to-many relationship
       this.belongsToMany(models.Subject, {
         through: models.RoadMapSubject,
-        as: "subjects",
         foreignKey: "roadmapId",
         otherKey: "subjectId",
       });
@@ -21,28 +20,22 @@ export default (sequelize) => {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      title: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: true,
-          len: [3, 255],
-        },
-      },
-      description: {
-        type: DataTypes.TEXT,
-        allowNull: true,
-        validate: {
-          len: [0, 2000],
-        },
-      },
+      title: DataTypes.STRING,
+      description: DataTypes.STRING,
     },
     {
       sequelize,
       modelName: "RoadMap",
-      timestamps: true,
     }
   );
+
+  RoadMap.associate = function (models) {
+    RoadMap.belongsToMany(models.Subject, {
+      through: models.RoadMapSubject,
+      foreignKey: "roadmapId",
+      as: "Subjects",
+    });
+  };
 
   return RoadMap;
 };
