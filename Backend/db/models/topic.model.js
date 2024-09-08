@@ -15,7 +15,7 @@ export default (sequelize) => {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      name: {
+      title: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
@@ -29,6 +29,10 @@ export default (sequelize) => {
         validate: {
           len: [0, 2000],
         },
+      },
+      content: {
+        type: DataTypes.TEXT,
+        allowNull: true,
       },
       subjectId: {
         type: DataTypes.UUID,

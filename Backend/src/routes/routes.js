@@ -11,6 +11,8 @@ import chatRoutes from "./chatRoutes.js";
 import courseRoutes from "./courseRoutes.js";
 import battleRoutes from "./battleRoutes.js";
 import resourceRoutes from "./resourceRoutes.js";
+import mainConceptRoutes from "./mainConceptRoutes.js";
+import subjectRoutes from "./subjectRoutes.js";
 import topicRoutes from "./topicRoutes.js";
 import articleRoutes from "./articleRoutes.js";
 import quizRoutes from "./quizRoutes.js";
@@ -94,6 +96,18 @@ router.use(
   "/resources",
   passport.authenticate("jwt", { session: false }),
   resourceRoutes
+);
+
+router.use(
+  "/main-concepts",
+  passport.authenticate("jwt", { session: false }),
+  mainConceptRoutes
+);
+
+router.use(
+  "/subjects",
+  passport.authenticate("jwt", { session: false }),
+  subjectRoutes
 );
 
 router.use(

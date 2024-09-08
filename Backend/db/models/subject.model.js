@@ -1,15 +1,10 @@
-"use strict";
 import { Model, DataTypes } from "sequelize";
 
 export default (sequelize) => {
   class Subject extends Model {
     static associate(models) {
-      // Define many-to-many relationship
-      this.belongsToMany(models.RoadMap, {
-        through: models.RoadMapSubject,
-        foreignKey: "subjectId",
-        otherKey: "roadmapId",
-      });
+      this.belongsTo(models.MainConcept, { foreignKey: "mainConceptId" });
+      this.hasMany(models.Topic, { foreignKey: "subjectId" });
     }
   }
 
@@ -20,22 +15,21 @@ export default (sequelize) => {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      name: DataTypes.STRING,
-      description: DataTypes.STRING,
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      description: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
     },
     {
       sequelize,
       modelName: "Subject",
+      timestamps: true,
     }
   );
-
-  Subject.associate = function (models) {
-    Subject.belongsToMany(models.RoadMap, {
-      through: models.RoadMapSubject,
-      foreignKey: "subjectId",
-      as: "RoadMaps",
-    });
-  };
 
   return Subject;
 };

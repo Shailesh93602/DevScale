@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getProfile,
+  getUserProgress,
   insertProfile,
   updateProfile,
 } from "../controllers/userControllers.js";
@@ -17,5 +18,7 @@ router.post("/register", userInsertionValidator, insertProfile);
 
 // Route to update an existing user profile
 router.put("/update", uploadToCloudinary, updateProfile);
+
+router.get("/progress", getUserProgress);
 
 export default router;

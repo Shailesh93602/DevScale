@@ -1,21 +1,21 @@
 import { Model, DataTypes } from "sequelize";
 
 export default (sequelize) => {
-  class Roadmap extends Model {
+  class MainConcept extends Model {
     static associate(models) {
-      this.hasMany(models.MainConcept, { foreignKey: "roadmapId" });
-      this.hasMany(models.UserRoadmap, { foreignKey: "roadmapId" });
+      this.belongsTo(models.RoadMap, { foreignKey: "roadmapId" });
+      this.hasMany(models.Subject, { foreignKey: "mainConceptId" });
     }
   }
 
-  Roadmap.init(
+  MainConcept.init(
     {
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      title: {
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -26,10 +26,10 @@ export default (sequelize) => {
     },
     {
       sequelize,
-      modelName: "Roadmap",
+      modelName: "MainConcept",
       timestamps: true,
     }
   );
 
-  return Roadmap;
+  return MainConcept;
 };

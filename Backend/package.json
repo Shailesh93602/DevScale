@@ -12,7 +12,8 @@
     "seed:subjects": "node db/seeders/subject.seeder.js",
     "seed:topics": "node db/seeders/topic.seeder.js",
     "seed:roadmaps": "node db/seeders/roadmap.seeder.js",
-    "seed:roadmapSubjects": "node db/seeders/roadmapSubjects.seeder.js"
+    "seed:roadmapSubjects": "node db/seeders/roadmapSubjects.seeder.js",
+    "seed:roadmapSubjectTopics": "node db/seeders/roadmapSubjectTopics.seeder.js"
   },
   "keywords": [],
   "author": "",

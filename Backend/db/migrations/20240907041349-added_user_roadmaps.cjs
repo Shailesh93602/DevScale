@@ -1,50 +1,49 @@
 "use strict";
 
-const { Sequelize, DataTypes } = require("sequelize");
-
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface) {
-    await queryInterface.createTable("RoadMapSubjects", {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable("UserRoadmaps", {
       id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
       },
-      roadmapId: {
-        type: DataTypes.UUID,
+      userId: {
+        type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: "RoadMaps",
+          model: "Users",
           key: "id",
         },
         onDelete: "CASCADE",
-        onUpdate: "CASCADE",
       },
-      subjectId: {
-        type: DataTypes.UUID,
+      roadmapId: {
+        type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: "Subjects",
+          model: "Roadmaps",
           key: "id",
         },
         onDelete: "CASCADE",
-        onUpdate: "CASCADE",
+      },
+      isCustom: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
       },
       createdAt: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
       updatedAt: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
     });
   },
 
   async down(queryInterface) {
-    await queryInterface.dropTable("RoadMapSubjects");
+    await queryInterface.dropTable("UserRoadmaps");
   },
 };

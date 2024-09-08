@@ -1,10 +1,9 @@
 import db from "../models/index.js";
 
 const subjects = [
-
   {
     name: "C Language",
-    description: "Fundamentals Concepts of Programming language C. ",
+    description: "Fundamentals Concepts of Programming language C.",
   },
   {
     name: "Data Structures and Algorithms",
@@ -47,7 +46,6 @@ const subjects = [
 
 const seedSubjects = async () => {
   try {
-    await db.connect;
     await db.sequelize.authenticate();
 
     for (const subject of subjects) {

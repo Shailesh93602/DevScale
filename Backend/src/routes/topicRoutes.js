@@ -1,8 +1,16 @@
 import express from "express";
-import { getUnpublishedTopics } from "../controllers/topicController.js";
+import {
+  getArticlesForTopic,
+  getQuizByTopicId,
+  getUnpublishedTopics,
+  submitQuiz,
+} from "../controllers/topicController.js";
 
 const router = express.Router();
 
+router.get("/:id/articles", getArticlesForTopic);
+router.get("/:id/quiz", getQuizByTopicId);
+router.post("/quiz/submit", submitQuiz);
 router.get("/unpublished", getUnpublishedTopics);
 
 export default router;

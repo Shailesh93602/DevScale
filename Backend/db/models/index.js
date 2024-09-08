@@ -1,4 +1,3 @@
-// index.js in models directory
 "use strict";
 
 import Sequelize from "sequelize";
@@ -12,12 +11,15 @@ import InterviewQuestion from "./interviewQuestion.model.js";
 import Job from "./job.model.js";
 import Resource from "./resource.model.js";
 import RoadMap from "./roadmap.model.js";
-import RoadMapSubject from "./roadmap.model.js";
+import RoadMapSubject from "./roadmapSubjects.model.js";
 import Subject from "./subject.model.js";
 import Topic from "./topic.model.js";
 import User from "./user.model.js";
 import UserInfo from "./userInfo.model.js";
 import UserPoints from "./userPoints.model.js";
+import UserRoadmap from "./userRoadmap.model.js";
+import MainConcept from "./mainConcepts.model.js";
+import UserProgress from "./userProgress.model.js";
 
 const sequelize = new Sequelize(
   config.database,
@@ -42,9 +44,11 @@ const db = {
   User: User(sequelize, Sequelize.DataTypes),
   UserInfo: UserInfo(sequelize, Sequelize.DataTypes),
   UserPoints: UserPoints(sequelize, Sequelize.DataTypes),
+  UserRoadmap: UserRoadmap(sequelize, Sequelize.DataTypes), // Added missing model
+  MainConcept: MainConcept(sequelize, Sequelize.DataTypes), // Added missing model
+  UserProgress: UserProgress(sequelize, Sequelize.DataTypes), // Added missing model
 };
 
-// Apply associations if they exist
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
