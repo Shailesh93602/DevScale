@@ -13,37 +13,14 @@ const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const ResourceEditor = ({ params }) => {
   const { id } = params;
-  const [subject, setSubject] = useState("");
-  const [topic, setTopic] = useState("");
-  const [subtopic, setSubtopic] = useState("");
   const [content, setContent] = useState("");
 
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    const fetchSubjectAndTopic = async () => {
-      try {
-        const response = await fetchData("get", `/topics/${id}`);
-        if (response.data.success) {
-          setSubject(response.data.data.subject);
-          setTopic(response.data.data.topic);
-        } else {
-          toast.error("Failed to load topic details.");
-        }
-      } catch (error) {
-        console.error("Error fetching subject and topic:", error);
-        toast.error("Error fetching topic details.");
-      }
-    };
-
-    fetchSubjectAndTopic();
-  }, [id]);
 
   const saveResource = async () => {
     try {
       dispatch(showLoader());
       const response = await fetchData("post", `/resources/save/${id}`, {
-        subtopic,
         content,
       });
 
@@ -65,12 +42,6 @@ const ResourceEditor = ({ params }) => {
     <>
       <Navbar />
       <div className="container mx-auto p-6">
-        <h1 className="text-3xl font-bold mb-6">Add Content for {topic}</h1>
-        <div className="mb-4">
-          <p className="text-gray-700 dark:text-white p-2 w-full">
-            {subtopic ? `Subtopic: ${subtopic}` : "General Topic"}
-          </p>
-        </div>
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6">
           <ReactQuill
             value={content}

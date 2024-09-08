@@ -2,32 +2,31 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("UserProgresses", {
+    await queryInterface.createTable("QuizAnswers", {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
         allowNull: false,
       },
-      isCompleted: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
+      answer: {
+        type: Sequelize.TEXT,
         allowNull: false,
       },
-      userId: {
+      submissionId: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: "Users",
+          model: "QuizSubmissions",
           key: "id",
         },
         onDelete: "CASCADE",
       },
-      topicId: {
+      questionId: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: "Topics",
+          model: "QuizQuestions",
           key: "id",
         },
         onDelete: "CASCADE",
@@ -44,6 +43,6 @@ module.exports = {
   },
 
   down: async (queryInterface) => {
-    await queryInterface.dropTable("UserProgresses");
+    await queryInterface.dropTable("QuizAnswers");
   },
 };

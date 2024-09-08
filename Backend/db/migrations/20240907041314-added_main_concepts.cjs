@@ -2,19 +2,28 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Roadmaps", {
+    await queryInterface.createTable("MainConcepts", {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
       },
-      title: {
+      name: {
         type: Sequelize.STRING,
         allowNull: false,
       },
       description: {
         type: Sequelize.TEXT,
         allowNull: false,
+      },
+      roadmapId: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: "Roadmaps",
+          key: "id",
+        },
+        onDelete: "CASCADE",
       },
       createdAt: {
         allowNull: false,
@@ -30,6 +39,6 @@ module.exports = {
   },
 
   async down(queryInterface) {
-    await queryInterface.dropTable("Roadmaps");
+    await queryInterface.dropTable("MainConcepts");
   },
 };

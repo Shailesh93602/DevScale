@@ -1,13 +1,48 @@
-import { logger } from "../helpers/logger.js"; // Import logger
+import { logger } from "../helpers/logger.js";
+import db from "../../db/models/index.js";
 
-// Get all roadmaps
-export const getRoadMaps = async (req, res) => {
+export const getAllRoadmaps = async (req, res) => {
   try {
-    const roadMaps = await RoadMap.findAll(); // Fetch all roadmaps
-    res.status(200).json({ success: true, roadMaps });
+    const roadmaps = await db.RoadMap.findAll({
+      include: [
+        {
+          model: db.MainConcept,
+          attributes: ["id", "name", "description"],
+        },
+      ],
+    });
+    res.status(200).json(roadmaps);
   } catch (error) {
-    logger.error("Error fetching roadmaps:", error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    console.error("Error fetching roadmaps:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getMainConceptsInRoadmap = async (req, res) => {
+  const { roadmapId } = req.params;
+  try {
+    const roadmap = await db.RoadMap.findByPk(roadmapId, {
+      include: [
+        {
+          model: db.MainConcept,
+          attributes: ["id", "name", "description"],
+          include: [
+            {
+              model: db.Subject,
+              attributes: ["id", "name"],
+            },
+          ],
+        },
+      ],
+    });
+    if (roadmap) {
+      res.status(200).json(roadmap.MainConcepts);
+    } else {
+      res.status(404).json({ message: "Roadmap not found" });
+    }
+  } catch (error) {
+    console.error("Error fetching main concepts:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 

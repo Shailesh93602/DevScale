@@ -41,26 +41,28 @@ const roadmaps = [
 
 const seedRoadMaps = async () => {
   try {
-    await db.connect;
     await db.sequelize.authenticate();
 
     for (const roadmapData of roadmaps) {
       const [roadmap] = await db.RoadMap.findOrCreate({
         where: { title: roadmapData.title },
-        defaults: {
-          description: roadmapData.description,
-        },
+        defaults: { description: roadmapData.description },
       });
 
       for (const subjectName of roadmapData.subjects) {
         const [subject] = await db.Subject.findOrCreate({
           where: { name: subjectName },
-          defaults: {
-            description: `${subjectName} description`, // You can customize this based on your needs
-          },
+          defaults: { description: `${subjectName} description` },
         });
 
-        await roadmap.addSubject(subject); // This will create the association in the RoadMapSubject table
+        // Ensure that the `addSubject` method is defined in the RoadMap model
+        if (typeof roadmap.addSubject === "function") {
+          await roadmap.addSubject(subject);
+        } else {
+          console.error(
+            "The 'addSubject' method is not defined on RoadMap model."
+          );
+        }
       }
     }
 

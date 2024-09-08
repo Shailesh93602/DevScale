@@ -1,35 +1,34 @@
 import { Model, DataTypes } from "sequelize";
 
 export default (sequelize) => {
-  class Roadmap extends Model {
+  class QuizQuestion extends Model {
     static associate(models) {
-      this.hasMany(models.MainConcept, { foreignKey: "roadmapId" });
-      this.hasMany(models.UserRoadmap, { foreignKey: "roadmapId" });
+      this.belongsTo(models.Quiz, { foreignKey: "quizId" });
     }
   }
 
-  Roadmap.init(
+  QuizQuestion.init(
     {
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      title: {
-        type: DataTypes.STRING,
+      question: {
+        type: DataTypes.TEXT,
         allowNull: false,
       },
-      description: {
+      correctAnswer: {
         type: DataTypes.TEXT,
         allowNull: false,
       },
     },
     {
       sequelize,
-      modelName: "Roadmap",
+      modelName: "QuizQuestion",
       timestamps: true,
     }
   );
 
-  return Roadmap;
+  return QuizQuestion;
 };

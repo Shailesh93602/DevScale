@@ -50,7 +50,7 @@ export const getResources = async (req, res) => {
   try {
     let subjects = await db.Subject.findAll({
       attributes: {
-        include: ["id", "name", "description", "tags", "link"],
+        include: ["id", "name", "description", "tags"],
         exclude: ["baz"],
       },
     });
@@ -62,6 +62,10 @@ export const getResources = async (req, res) => {
     console.log(subjects);
     res.status(200).json({ success: true, resources: subjects });
   } catch (error) {
+    console.log(
+      "🚀 ~ file: resourceController.js:65 ~ getResources ~ error:",
+      error
+    );
     // Log and handle any errors that occur during the process
     logger.error("Error fetching subjects from database:", error);
     res.status(500).json({
@@ -321,7 +325,7 @@ export const selectArticle = async (req, res) => {
 // Controller function to save a new resource
 export const saveResource = async (req, res) => {
   const { id } = req.params;
-  const { content, subtopic } = req.body;
+  const { content } = req.body;
 
   try {
     const topic = await db.Topic.findByPk(id);
@@ -333,7 +337,7 @@ export const saveResource = async (req, res) => {
     }
 
     const article = await db.Article.create({
-      title: `${topic.name} - ${subtopic || "General"}`,
+      title: `${topic.title} - ${"General"}`,
       content,
       topicId: id,
       authorId: req.user.id,

@@ -2,18 +2,21 @@ import express from "express";
 import {
   createRoadMap,
   deleteRoadMap,
+  getAllRoadmaps,
+  getMainConceptsInRoadmap,
   getRoadMap,
-  getRoadMaps,
   updateRoadMap,
 } from "../controllers/roadMapControllers.js";
 
 const router = express.Router();
 
 // Route to get all roadmaps
-router.get("/", getRoadMaps);
+router.get("/", getAllRoadmaps);
 
 // Route to get a specific roadmap by ID
 router.get("/:id", getRoadMap);
+
+router.get("/:id/mainConcepts", getMainConceptsInRoadmap);
 
 // Route to create a new roadmap
 router.post("/create", createRoadMap);

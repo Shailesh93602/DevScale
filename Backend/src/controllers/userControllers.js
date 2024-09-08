@@ -146,3 +146,43 @@ export const updateProfile = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
+
+export const getUserProgress = async (req, res) => {
+  const { userId } = req.user;
+
+  try {
+    const roadmaps = await db.RoadMap.findAll({
+      include: [
+        {
+          model: db.MainConcept,
+          as: "mainConcepts",
+          include: [
+            {
+              model: db.Subject,
+              as: "subjects",
+              include: [
+                {
+                  model: db.Topic,
+                  as: "topics",
+                  include: [
+                    {
+                      model: db.UserProgress,
+                      as: "progress",
+                      where: { userId },
+                      required: false,
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
+    return res.status(200).json(roadmaps);
+  } catch (error) {
+    console.error("Error fetching user progress:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};

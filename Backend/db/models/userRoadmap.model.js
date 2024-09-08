@@ -1,31 +1,31 @@
 import { Model, DataTypes } from "sequelize";
 
 export default (sequelize) => {
-  class UserProgress extends Model {
+  class UserRoadmap extends Model {
     static associate(models) {
       this.belongsTo(models.User, { foreignKey: "userId" });
-      this.belongsTo(models.Topic, { foreignKey: "topicId" });
+      this.belongsTo(models.RoadMap, { foreignKey: "roadmapId" });
     }
   }
 
-  UserProgress.init(
+  UserRoadmap.init(
     {
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      isCompleted: {
+      isCustom: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
     },
     {
       sequelize,
-      modelName: "UserProgress",
+      modelName: "UserRoadmap",
       timestamps: true,
     }
   );
 
-  return UserProgress;
+  return UserRoadmap;
 };

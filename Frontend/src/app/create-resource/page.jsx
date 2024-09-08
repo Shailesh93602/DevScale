@@ -47,7 +47,7 @@ export default function ResourcesPage() {
 
   const filteredResources = resources?.filter(
     (resource) =>
-      (resource.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (resource.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         resource.description
           .toLowerCase()
           .includes(searchTerm.toLowerCase())) &&
@@ -93,7 +93,7 @@ export default function ResourcesPage() {
                   className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-200"
                 >
                   <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
-                    {resource.name}
+                    {resource.title}
                   </h2>
                   <p className="text-gray-700 dark:text-gray-300">
                     {resource.description}

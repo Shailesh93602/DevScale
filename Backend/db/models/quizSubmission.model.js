@@ -1,31 +1,32 @@
 import { Model, DataTypes } from "sequelize";
 
 export default (sequelize) => {
-  class UserProgress extends Model {
+  class QuizSubmission extends Model {
     static associate(models) {
       this.belongsTo(models.User, { foreignKey: "userId" });
-      this.belongsTo(models.Topic, { foreignKey: "topicId" });
+      this.belongsTo(models.Quiz, { foreignKey: "quizId" });
+      this.hasMany(models.QuizAnswer, { foreignKey: "submissionId" });
     }
   }
 
-  UserProgress.init(
+  QuizSubmission.init(
     {
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      isCompleted: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
+      score: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
       },
     },
     {
       sequelize,
-      modelName: "UserProgress",
+      modelName: "QuizSubmission",
       timestamps: true,
     }
   );
 
-  return UserProgress;
+  return QuizSubmission;
 };

@@ -81,12 +81,16 @@ const Resource = ({ params }) => {
     const fetchResource = async () => {
       try {
         const response = await fetchData("GET", "/resources/" + id);
+        console.log(
+          "🚀 ~ file: page.js:84 ~ fetchResource ~ response:",
+          response
+        );
         const data = response.data;
         if (data.success) {
           setResource(data.resource.topics);
           setQuiz(data.resource.quiz);
           if (data.resource.topics.length > 0) {
-            setSelectedTopic(data.resource.topics[0].name);
+            setSelectedTopic(data.resource.topics[0].title);
           }
         } else {
           toast.error(data.message);
@@ -166,16 +170,16 @@ const Resource = ({ params }) => {
             <li
               key={index}
               className={`cursor-pointer p-3 rounded-lg transition duration-300 ${
-                selectedTopic === res.name
+                selectedTopic === res.title
                   ? "bg-blue-600 text-white shadow-md transform scale-105"
                   : "hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 hover:shadow-md"
               }`}
               onClick={() => {
-                setSelectedTopic(res.name);
+                setSelectedTopic(res.title);
                 setSidebarOpen(false);
               }}
             >
-              {res.name}
+              {res.title}
               {/* {progress.find((p) => p.topicId === res.id)?.isCompleted && (
                 <span className="text-green-500 ml-2">&#10003;</span>
               )} */}
@@ -207,13 +211,13 @@ const Resource = ({ params }) => {
           ? renderQuiz()
           : resource.map(
               (res, index) =>
-                selectedTopic === res.name && (
+                selectedTopic === res.title && (
                   <div
                     key={index}
                     className="mb-8 bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8 transition-all duration-300 hover:shadow-2xl"
                   >
                     <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-200 border-b pb-2 border-gray-200 dark:border-gray-700">
-                      {res.name}
+                      {res.title}
                     </h2>
                     <div
                       className="prose dark:prose-invert max-w-none"
