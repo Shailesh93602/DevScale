@@ -31,7 +31,6 @@ export const enrollCourse = async (req, res) => {
     const courseId = req.params.id;
     const userId = req.user.id;
 
-    // Check if user is already enrolled
     const isEnrolled = await checkEnrollment(userId, courseId);
     if (isEnrolled) {
       return res

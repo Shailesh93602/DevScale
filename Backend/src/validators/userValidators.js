@@ -1,6 +1,5 @@
 import { body, validationResult } from "express-validator";
 
-// Validation rules for user profile insertion
 export const userInsertionValidator = [
   body("fullName").notEmpty().withMessage("Full name is required"),
   body("dob").isDate().withMessage("Date of birth must be a valid date"),
@@ -18,7 +17,6 @@ export const userInsertionValidator = [
     .isInt({ min: 1, max: 8 })
     .withMessage("Semester must be between 1 and 8"),
 
-  // Handle validation result
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

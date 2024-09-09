@@ -1,11 +1,10 @@
 import { Sequelize } from "sequelize";
 import User from "./userModel.js";
-import { UserPoints } from "./userPointsModel.js"; // Assuming you have a model for user points
+import { UserPoints } from "./userPointsModel.js";
 
-// Function to get leaderboard data from the database
-export const getLeaderboardData = async () => {
+export const getLeaderBoardData = async () => {
   try {
-    const leaderboard = await User.findAll({
+    const leaderBoard = await User.findAll({
       attributes: [
         "id",
         "username",
@@ -24,9 +23,9 @@ export const getLeaderboardData = async () => {
       order: [[Sequelize.literal("total_points"), "DESC"]],
       limit: 10,
     });
-    return leaderboard;
+    return leaderBoard;
   } catch (error) {
-    console.error("Error fetching leaderboard data from the database:", error);
-    throw new Error("Database Error: Unable to fetch leaderboard data");
+    console.error("Error fetching leaderBoard data from the database:", error);
+    throw new Error("Database Error: Unable to fetch leaderBoard data");
   }
 };

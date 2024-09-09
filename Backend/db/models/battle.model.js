@@ -4,7 +4,6 @@ import { Model, DataTypes } from "sequelize";
 export default (sequelize) => {
   class Battle extends Model {
     static associate(models) {
-      // Define associations here
       this.belongsTo(models.Topic, { foreignKey: "topicId" });
     }
   }
@@ -21,7 +20,7 @@ export default (sequelize) => {
         allowNull: false,
         validate: {
           notEmpty: true,
-          len: [1, 255], // Limiting length for better control
+          len: [1, 255],
         },
       },
       description: {

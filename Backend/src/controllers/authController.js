@@ -86,7 +86,6 @@ export const register = async (req, res) => {
       message: "Registered Successfully!",
     });
   } catch (error) {
-    console.log("🚀 ~ file: authController.js:89 ~ register ~ error:", error);
     logger.error(error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
@@ -126,10 +125,8 @@ export const login = async (req, res) => {
     );
     res.cookie("token", token, {
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      maxAge: 24 * 60 * 60 * 1000,
     });
-
-    // const userInfo = await db.UserInfo.findOne({ where: { userId: user.id } });
 
     res.status(200).json({
       success: true,
@@ -143,7 +140,6 @@ export const login = async (req, res) => {
           : "localhost:3000",
     });
   } catch (error) {
-    console.log("🚀 ~ file: authController.js:146 ~ login ~ error:", error);
     logger.error(error);
     res.status(500).send();
   }
@@ -227,7 +223,7 @@ export const resetPassword = async (req, res) => {
 export const getAllUsers = async (req, res) => {
   try {
     const users = await db.User.findAll({
-      attributes: ["id", "firstName", "lastName", "email"], // Adjust based on fields available in the User model
+      attributes: ["id", "firstName", "lastName", "email"],
     });
     res.status(200).json({
       success: true,

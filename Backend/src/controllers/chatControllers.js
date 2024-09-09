@@ -3,7 +3,7 @@ import Chat from "../../db/models/chat.model.js";
 
 export const getChats = async (req, res) => {
   try {
-    const chats = await Chat.findAll(); // Fetch all chats using Sequelize
+    const chats = await Chat.findAll();
     res.status(200).json({ success: true, chats });
   } catch (error) {
     logger.error("Error fetching chats:", error);
@@ -14,7 +14,7 @@ export const getChats = async (req, res) => {
 export const getChat = async (req, res) => {
   try {
     const chatId = req.params.id;
-    const chat = await Chat.findByPk(chatId); // Fetch chat by primary key using Sequelize
+    const chat = await Chat.findByPk(chatId);
     if (!chat) {
       return res
         .status(404)
@@ -36,7 +36,6 @@ export const createChat = async (req, res) => {
         .json({ success: false, message: "Invalid payload" });
     }
 
-    // Create a new chat using Sequelize
     const newChat = await Chat.create({ participants });
     res.status(201).json({
       success: true,
@@ -59,7 +58,6 @@ export const createMessage = async (req, res) => {
         .json({ success: false, message: "Invalid payload" });
     }
 
-    // Fetch chat by primary key
     const chat = await Chat.findByPk(chatId);
     if (!chat) {
       return res
@@ -67,9 +65,8 @@ export const createMessage = async (req, res) => {
         .json({ success: false, message: "Chat not found" });
     }
 
-    // Assuming Chat model has a messages field or similar
     chat.messages.push({ message, sender });
-    await chat.save(); // Save updated chat
+    await chat.save();
 
     res
       .status(201)
@@ -90,7 +87,7 @@ export const deleteChat = async (req, res) => {
         .json({ success: false, message: "Chat not found" });
     }
 
-    await chat.destroy(); // Delete chat using Sequelize
+    await chat.destroy();
     res
       .status(200)
       .json({ success: true, message: "Chat deleted successfully!" });

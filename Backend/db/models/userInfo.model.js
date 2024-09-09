@@ -2,10 +2,7 @@ import { Model, DataTypes } from "sequelize";
 
 export default (sequelize) => {
   class UserInfo extends Model {
-    static associate(models) {
-      // Add associations if necessary
-      // Example: this.belongsTo(models.User, { foreignKey: "userId" });
-    }
+    static associate(models) {}
   }
 
   UserInfo.init(

@@ -5,7 +5,7 @@ export default (sequelize) => {
     static associate(models) {
       this.belongsTo(models.User, { foreignKey: "userId" });
       this.belongsTo(models.Quiz, { foreignKey: "quizId" });
-      this.hasMany(models.QuizAnswer, { foreignKey: "submissionId" });
+      this.hasMany(models.QuizSubmissionAnswer, { foreignKey: "submissionId" });
     }
   }
 

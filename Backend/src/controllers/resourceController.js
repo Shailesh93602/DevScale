@@ -10,7 +10,6 @@ import db from "../../db/models/index.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Get all subjects
 export const getSubjects = async (req, res) => {
   try {
     const subjects = await Subject.findAll();
@@ -21,7 +20,6 @@ export const getSubjects = async (req, res) => {
   }
 };
 
-// Get topics by subject ID
 export const getTopics = async (req, res) => {
   try {
     const topics = await Topic.findAll({ where: { subjectId: req.params.id } });
@@ -32,7 +30,6 @@ export const getTopics = async (req, res) => {
   }
 };
 
-// Add a new topic
 export const addTopic = async (req, res) => {
   const { name, description, subjectId } = req.body;
 
@@ -45,7 +42,6 @@ export const addTopic = async (req, res) => {
   }
 };
 
-// Function to get resources (subjects) from the database
 export const getResources = async (req, res) => {
   try {
     let subjects = await db.Subject.findAll({
@@ -59,14 +55,8 @@ export const getResources = async (req, res) => {
       ...subject.dataValues,
       tags: subject.dataValues?.tags?.split(","),
     }));
-    console.log(subjects);
     res.status(200).json({ success: true, resources: subjects });
   } catch (error) {
-    console.log(
-      "🚀 ~ file: resourceController.js:65 ~ getResources ~ error:",
-      error
-    );
-    // Log and handle any errors that occur during the process
     logger.error("Error fetching subjects from database:", error);
     res.status(500).json({
       success: false,
@@ -75,7 +65,6 @@ export const getResources = async (req, res) => {
   }
 };
 
-// Get a specific resource by Subject ID
 export const getResource = async (req, res) => {
   try {
     const { id } = req.params;
@@ -159,13 +148,11 @@ export const deleteSubjects = async (req, res) => {
       });
     }
 
-    // First, find all subjects that are about to be deleted
     const subjectsToDelete = await db.Subject.findAll({
       where: { id: ids },
-      attributes: ["id", "name"], // Add any other attributes you want to return
+      attributes: ["id", "name"],
     });
 
-    // Perform the delete operation
     const deletedCount = await db.Subject.destroy({
       where: { id: ids },
     });
@@ -188,7 +175,6 @@ export const deleteSubjects = async (req, res) => {
   }
 };
 
-// Get details of a specific resource
 export const getResourceDetails = async (req, res) => {
   try {
     const resource = await Resource.findById(req.params.id);
@@ -212,7 +198,6 @@ export const getResourceDetails = async (req, res) => {
   }
 };
 
-// Create a new resource
 export const createResource = async (req, res) => {
   const { subject, topic, subtopic, content } = req.body;
 
@@ -235,9 +220,7 @@ export const createResource = async (req, res) => {
   }
 };
 
-// Get interview questions from a file
 export const getInterviewQuestions = (req, res) => {
-  console.log("hi");
   const interviewQuestionsPath = path.join(
     __dirname,
     "../../resources/interviewquestions.json"
@@ -270,7 +253,6 @@ export const getInterviewQuestions = (req, res) => {
   });
 };
 
-// Create a new article
 export const createArticle = async (req, res) => {
   const { title, content, author, topicId } = req.body;
 
@@ -291,7 +273,6 @@ export const createArticle = async (req, res) => {
   }
 };
 
-// Get articles by topic ID
 export const getArticle = async (req, res) => {
   try {
     const articles = await Article.find({ topic: req.params.id });
@@ -302,7 +283,6 @@ export const getArticle = async (req, res) => {
   }
 };
 
-// Select an article
 export const selectArticle = async (req, res) => {
   try {
     const article = await Article.findById(req.params.id);
@@ -322,7 +302,6 @@ export const selectArticle = async (req, res) => {
   }
 };
 
-// Controller function to save a new resource
 export const saveResource = async (req, res) => {
   const { id } = req.params;
   const { content } = req.body;

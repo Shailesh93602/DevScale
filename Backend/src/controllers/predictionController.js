@@ -10,13 +10,10 @@ export const predict = async (req, res) => {
         .json({ success: false, message: "Data is required" });
     }
 
-    // Replace with actual prediction API endpoint
     const apiEndpoint = "https://your-prediction-api.com/predict";
 
-    // Send the request to the prediction API
     const response = await axios.post(apiEndpoint, { data });
 
-    // Check if the response status is OK
     if (response.status === 200) {
       return res.status(200).json({ success: true, prediction: response.data });
     } else {

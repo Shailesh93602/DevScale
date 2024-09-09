@@ -1,7 +1,6 @@
-// models/userInfoModel.js
 import { DataTypes } from "sequelize";
 import sequelize from "../config/database.js";
-import User from "./userModel.js"; // Adjust the import path as needed
+import User from "./userModel.js";
 
 const UserInfo = sequelize.define(
   "UserInfo",
@@ -15,8 +14,8 @@ const UserInfo = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notEmpty: true, // Ensures fullName is not empty
-        len: [3, 255], // Full name length must be between 3 and 255 characters
+        notEmpty: true,
+        len: [3, 255],
       },
     },
     dob: {
@@ -27,14 +26,14 @@ const UserInfo = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isIn: [["Male", "Female", "Other"]], // Validates gender to be one of the specified values
+        isIn: [["Male", "Female", "Other"]],
       },
     },
     mobile: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        is: /^[0-9]{10}$/, // Ensures mobile number is exactly 10 digits
+        is: /^[0-9]{10}$/,
       },
     },
     whatsapp: {
@@ -61,8 +60,8 @@ const UserInfo = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
-        min: 1, // Semester must be at least 1
-        max: 8, // Assuming a max of 8 semesters
+        min: 1,
+        max: 8,
       },
     },
     userId: {
@@ -75,7 +74,7 @@ const UserInfo = sequelize.define(
     },
   },
   {
-    timestamps: true, // Automatically manage createdAt and updatedAt
+    timestamps: true,
   }
 );
 

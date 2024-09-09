@@ -6,9 +6,6 @@ import { useInView } from "react-intersection-observer";
 import { FiCheckCircle } from "react-icons/fi";
 import { useParams } from "next/navigation";
 
-// Assuming roadmapData is imported or defined here
-// const roadmapData = { ... };
-
 const roadmapData = {
   title: "Full Stack Development with Next.js, Nest.js, MySQL",
   sections: [
@@ -651,7 +648,6 @@ export default function CareerPathPage() {
   const params = useParams();
   const career = params?.id?.replace(/%20/g, " ") || "";
 
-  // Find the matching section based on the career path
   const matchingSection = roadmapData.sections.find(
     (section) => section.title.toLowerCase() === career.toLowerCase()
   );

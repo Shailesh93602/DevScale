@@ -11,7 +11,6 @@ const VerticalStepper = () => {
   ]);
 
   const handleAchievementUnlock = (stepIndex) => {
-    // Function to mark a step as achieved
     const updatedSteps = [...steps];
     updatedSteps[stepIndex].achieved = true;
     setSteps(updatedSteps);

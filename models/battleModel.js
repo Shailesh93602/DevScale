@@ -1,4 +1,3 @@
-// models/Battle.js
 import { DataTypes } from "sequelize";
 import sequelize from "../config/database.js";
 
@@ -15,7 +14,7 @@ const Battle = sequelize.define(
       allowNull: false,
       validate: {
         notEmpty: true,
-        len: [1, 255], // Limiting length for better control
+        len: [1, 255],
       },
     },
     description: {
@@ -25,7 +24,7 @@ const Battle = sequelize.define(
     topicId: {
       type: DataTypes.UUID,
       references: {
-        model: "Topics", // Ensure this matches the model name in your database
+        model: "Topics",
         key: "id",
       },
       allowNull: false,

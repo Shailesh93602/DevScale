@@ -1,13 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
-// import Followcard from "../../components/followcard";
 import { apiResponse } from "@/api/api";
 import toast from "react-hot-toast";
 
 const page = () => {
   const [users, setUsers] = useState("");
   useEffect(() => {
-    const getallusers = async () => {
+    const getAllUsers = async () => {
       try {
         const response = await apiResponse({
           method: "GET",
@@ -26,14 +25,13 @@ const page = () => {
         toast.error("LogIn failed. Please try again later.");
       }
     };
-    getallusers();
+    getAllUsers();
   }, []);
   return (
     <div className="roadmap-container p-6 bg-gray-100 dark:bg-gray-800 min-h-screen">
       <h1 className="text-3xl font-bold mb-8 text-gray-900 dark:text-gray-100 text-center">
-        Follow for challange your frineds
+        Follow for challenge your friends
       </h1>
-      {/* <Followcard users={users} /> */}
     </div>
   );
 };

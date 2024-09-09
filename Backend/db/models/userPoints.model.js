@@ -19,7 +19,7 @@ export default (sequelize) => {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
-          model: "Users", // Ensure the model name matches the User model
+          model: "Users",
           key: "id",
         },
       },

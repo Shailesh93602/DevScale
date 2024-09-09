@@ -1,4 +1,3 @@
-// models/InterviewQuestion.js
 import { DataTypes } from "sequelize";
 import sequelize from "../config/database.js";
 
@@ -16,18 +15,18 @@ const InterviewQuestion = sequelize.define(
     },
     answer: {
       type: DataTypes.TEXT,
-      allowNull: true, // Assuming the answer might not be required initially
+      allowNull: true,
     },
     difficulty: {
-      type: DataTypes.ENUM("easy", "medium", "hard"), // Example of difficulty levels
+      type: DataTypes.ENUM("easy", "medium", "hard"),
       allowNull: true,
     },
     topic: {
       type: DataTypes.STRING,
-      allowNull: true, // The topic or category of the question
+      allowNull: true,
     },
     tags: {
-      type: DataTypes.ARRAY(DataTypes.STRING), // For PostgreSQL; use JSON for other DBs
+      type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: true,
     },
   },
