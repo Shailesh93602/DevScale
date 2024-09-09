@@ -1,4 +1,3 @@
-// models/Forum.js
 import { DataTypes } from "sequelize";
 import sequelize from "../config/database.js";
 
@@ -21,7 +20,7 @@ const Forum = sequelize.define(
     createdBy: {
       type: DataTypes.UUID,
       references: {
-        model: "Users", // Assumes you have a 'Users' model
+        model: "Users",
         key: "id",
       },
       allowNull: false,
@@ -31,7 +30,7 @@ const Forum = sequelize.define(
       defaultValue: true,
     },
     tags: {
-      type: DataTypes.ARRAY(DataTypes.STRING), // For PostgreSQL; use JSON for other DBs
+      type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: true,
     },
   },

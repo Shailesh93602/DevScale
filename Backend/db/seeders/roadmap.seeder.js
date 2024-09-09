@@ -55,7 +55,6 @@ const seedRoadMaps = async () => {
           defaults: { description: `${subjectName} description` },
         });
 
-        // Ensure that the `addSubject` method is defined in the RoadMap model
         if (typeof roadmap.addSubject === "function") {
           await roadmap.addSubject(subject);
         } else {

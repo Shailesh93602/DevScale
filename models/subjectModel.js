@@ -1,6 +1,5 @@
-// models/subjectModel.js
 import { DataTypes } from "sequelize";
-import sequelize from "../config/database.js"; // Adjust the import path as needed
+import sequelize from "../config/database.js";
 
 const Subject = sequelize.define(
   "Subject",
@@ -14,20 +13,20 @@ const Subject = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notEmpty: true, // Ensures name is not empty
-        len: [3, 255], // Name length must be between 3 and 255 characters
+        notEmpty: true,
+        len: [3, 255],
       },
     },
     description: {
       type: DataTypes.TEXT,
       allowNull: true,
       validate: {
-        len: [0, 2000], // Description length can be up to 2000 characters
+        len: [0, 2000],
       },
     },
   },
   {
-    timestamps: true, // Automatically manage createdAt and updatedAt
+    timestamps: true,
   }
 );
 

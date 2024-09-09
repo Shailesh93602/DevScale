@@ -14,7 +14,7 @@ export const getBattles = async (req, res) => {
 export const getBattle = async (req, res) => {
   try {
     const battleId = req.params.id;
-    const battle = await db.Battle.findByPk(battleId); // Fetch battle by primary key using Sequelize
+    const battle = await db.Battle.findByPk(battleId);
     if (!battle) {
       return res
         .status(404)

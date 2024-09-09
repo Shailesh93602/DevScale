@@ -44,9 +44,9 @@ const db = {
   User: User(sequelize, Sequelize.DataTypes),
   UserInfo: UserInfo(sequelize, Sequelize.DataTypes),
   UserPoints: UserPoints(sequelize, Sequelize.DataTypes),
-  UserRoadmap: UserRoadmap(sequelize, Sequelize.DataTypes), // Added missing model
-  MainConcept: MainConcept(sequelize, Sequelize.DataTypes), // Added missing model
-  UserProgress: UserProgress(sequelize, Sequelize.DataTypes), // Added missing model
+  UserRoadmap: UserRoadmap(sequelize, Sequelize.DataTypes),
+  MainConcept: MainConcept(sequelize, Sequelize.DataTypes),
+  UserProgress: UserProgress(sequelize, Sequelize.DataTypes),
 };
 
 Object.keys(db).forEach((modelName) => {

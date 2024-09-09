@@ -98,7 +98,6 @@ export default function ProfilePage() {
               accept="image/*"
               className="sr-only"
               onChange={handleImageChange}
-              // className="w-full p-3 mb-6 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <img
               src={profileImage || userInfo.profilePicture}

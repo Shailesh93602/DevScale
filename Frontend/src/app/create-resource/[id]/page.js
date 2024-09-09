@@ -1,6 +1,5 @@
-// pages/resourceEditor.js
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import { toast } from "react-toastify";
 import "react-quill/dist/quill.snow.css";

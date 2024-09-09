@@ -2,7 +2,6 @@ import { logger } from "../helpers/logger.js";
 import User from "../../db/models/user.model.js";
 import db from "../../db/models/index.js";
 
-// Insert user profile
 export const insertProfile = async (req, res) => {
   try {
     const {
@@ -68,12 +67,10 @@ export const insertProfile = async (req, res) => {
   }
 };
 
-// Get user profile
 export const getProfile = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // Fetch user profile details
     const userInfo = await db.UserInfo.findOne({ where: { id: userId } });
     if (!userInfo) {
       return res
@@ -85,7 +82,6 @@ export const getProfile = async (req, res) => {
     userInfo.achievements = userInfo.achievements?.split(",");
     userInfo.email = req.user.email;
 
-    // Fetch additional user details if needed
     const userDetails = await User.findByPk(userId);
     res
       .status(200)
@@ -96,7 +92,6 @@ export const getProfile = async (req, res) => {
   }
 };
 
-// Update user profile
 export const updateProfile = async (req, res) => {
   try {
     const userId = req.user.id;

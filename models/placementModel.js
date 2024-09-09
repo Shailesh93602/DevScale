@@ -1,7 +1,6 @@
-import { Sequelize, DataTypes } from "sequelize";
+import { DataTypes } from "sequelize";
 import sequelize from "../config/database.js";
 
-// Define the Resource model
 export const Resource = sequelize.define(
   "Resource",
   {
@@ -33,7 +32,6 @@ export const Resource = sequelize.define(
   }
 );
 
-// Define the Book model
 export const Book = sequelize.define(
   "Book",
   {
@@ -65,7 +63,6 @@ export const Book = sequelize.define(
   }
 );
 
-// Function to get all resources from the database
 export const getAllResources = async () => {
   try {
     const resources = await Resource.findAll();
@@ -76,7 +73,6 @@ export const getAllResources = async () => {
   }
 };
 
-// Function to get all books from the database
 export const getAllBooks = async () => {
   try {
     const books = await Book.findAll();

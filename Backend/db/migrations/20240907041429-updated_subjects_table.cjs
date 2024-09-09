@@ -2,7 +2,6 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    // Add new column 'mainConceptId'
     await queryInterface.sequelize.query("SET FOREIGN_KEY_CHECKS = 0;");
     await queryInterface.addColumn("Subjects", "mainConceptId", {
       type: Sequelize.UUID,
@@ -14,7 +13,6 @@ module.exports = {
       onDelete: "CASCADE",
     });
 
-    // Remove unnecessary columns
     await queryInterface.removeColumn("Subjects", "link");
     await queryInterface.removeColumn("Subjects", "category");
 
@@ -22,10 +20,8 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    // Revert changes: remove 'mainConceptId'
     await queryInterface.removeColumn("Subjects", "mainConceptId");
 
-    // Add back removed columns
     await queryInterface.addColumn("Subjects", "link", {
       type: Sequelize.STRING,
       allowNull: true,

@@ -1,6 +1,5 @@
-import db from "../config/database.js"; // Ensure you have a configured database connection
+import db from "../config/database.js";
 
-// Function to get questions from the database
 export const getQuestionsFromDB = async () => {
   try {
     const [questions] = await db.query("SELECT * FROM questions");
@@ -11,7 +10,6 @@ export const getQuestionsFromDB = async () => {
   }
 };
 
-// Function to submit answers to questions to the database
 export const submitQuestionsToDB = async (userId, answers) => {
   try {
     const queries = answers.map((answer) => {

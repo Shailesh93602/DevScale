@@ -1,4 +1,3 @@
-// models/Chat.js
 import { DataTypes } from "sequelize";
 import sequelize from "../config/database.js";
 import User from "./userModel.js";
@@ -22,7 +21,7 @@ const Chat = sequelize.define(
     user2: {
       type: DataTypes.UUID,
       references: {
-        model: User, // Use the imported User model
+        model: User,
         key: "id",
       },
       allowNull: false,

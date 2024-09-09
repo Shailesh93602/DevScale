@@ -16,7 +16,7 @@ module.exports = {
         allowNull: false,
         validate: {
           notEmpty: true,
-          len: [1, 255], // Limiting length for better control
+          len: [1, 255],
         },
       },
       description: {

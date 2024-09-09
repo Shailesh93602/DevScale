@@ -46,11 +46,10 @@ export const getMainConceptsInRoadmap = async (req, res) => {
   }
 };
 
-// Get a single roadmap by ID
 export const getRoadMap = async (req, res) => {
   try {
     const roadMapId = req.params.id;
-    const roadMap = await RoadMap.findByPk(roadMapId); // Fetch roadmap by ID
+    const roadMap = await RoadMap.findByPk(roadMapId);
 
     if (!roadMap) {
       return res
@@ -65,7 +64,6 @@ export const getRoadMap = async (req, res) => {
   }
 };
 
-// Create a new roadmap
 export const createRoadMap = async (req, res) => {
   try {
     const { title, description, content } = req.body;
@@ -85,7 +83,6 @@ export const createRoadMap = async (req, res) => {
   }
 };
 
-// Update an existing roadmap
 export const updateRoadMap = async (req, res) => {
   try {
     const roadMapId = req.params.id;
@@ -99,7 +96,6 @@ export const updateRoadMap = async (req, res) => {
         .json({ success: false, message: "Roadmap not found" });
     }
 
-    // Update fields only if provided
     roadMap.title = title !== undefined ? title : roadMap.title;
     roadMap.description =
       description !== undefined ? description : roadMap.description;
@@ -113,7 +109,6 @@ export const updateRoadMap = async (req, res) => {
   }
 };
 
-// Delete a roadmap
 export const deleteRoadMap = async (req, res) => {
   try {
     const roadMapId = req.params.id;

@@ -3,9 +3,7 @@ import { Model, DataTypes } from "sequelize";
 
 export default (sequelize) => {
   class RoadMapSubject extends Model {
-    static associate(models) {
-      // Define associations in the RoadMap and Subject models
-    }
+    static associate(models) {}
   }
 
   RoadMapSubject.init(

@@ -143,12 +143,6 @@ export default function PlacementPreparation() {
     },
   ];
 
-  // useEffect(() => {
-  //   if (!authenticated) {
-  //     router.push('/u/login');
-  //   }
-  // })
-
   return (
     <div className="min-h-screen  dark:bg-gray-800  bg-gray-100 py-12">
       <div className="max-w-7xl  mx-auto px-6  rounded-lg  lg:px-8 bg-blue-50 dark:bg-gray-900 ">

@@ -17,7 +17,6 @@ export const codeRunner = async (req, res) => {
     let command;
     let filePath = null;
     let classFilePath = null;
-    console.log(language);
     switch (language) {
       case "javascript":
         command = `node -e "${code.replace(/"/g, '\\"')}"`;
@@ -26,7 +25,6 @@ export const codeRunner = async (req, res) => {
         command = `python -c "${code.replace(/"/g, '\\"')}"`;
         break;
       case "java":
-        // Save code to a temporary file for Java
         filePath = path.join(__dirname, "Main.java");
         classFilePath = path.join(__dirname, "Main.class");
         fs.writeFileSync(filePath, code);
@@ -40,7 +38,7 @@ export const codeRunner = async (req, res) => {
           .json({ success: false, message: "Unsupported language" });
     }
 
-    const { stdout, stderr } = await execAsync(command, { timeout: 10000 }); // Set a timeout to avoid hanging
+    const { stdout, stderr } = await execAsync(command, { timeout: 10000 });
 
     if (stderr) {
       return res
@@ -48,11 +46,10 @@ export const codeRunner = async (req, res) => {
         .json({ success: false, message: `Error: ${stderr}` });
     }
 
-    // Clean up temporary Java files if used
     if (filePath) {
-      fs.unlinkSync(filePath); // Remove Java source file
+      fs.unlinkSync(filePath);
       if (fs.existsSync(classFilePath)) {
-        fs.unlinkSync(classFilePath); // Remove Java compiled class file
+        fs.unlinkSync(classFilePath);
       }
     }
 

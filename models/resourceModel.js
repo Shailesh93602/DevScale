@@ -1,4 +1,3 @@
-// models/Resource.js
 import mongoose from "mongoose";
 
 const { Schema } = mongoose;
@@ -15,7 +14,7 @@ const ResourceSchema = new Schema(
     },
     subtopic: {
       type: String,
-      required: false, // Made optional if not every resource has a subtopic
+      required: false,
     },
     content: {
       type: String,
@@ -28,11 +27,10 @@ const ResourceSchema = new Schema(
     updatedAt: {
       type: Date,
       default: Date.now,
-      // Automatically update this field on document modification
     },
   },
   {
-    timestamps: true, // Automatically add createdAt and updatedAt fields
+    timestamps: true,
   }
 );
 

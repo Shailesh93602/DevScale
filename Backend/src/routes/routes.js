@@ -22,16 +22,12 @@ import { predict } from "../controllers/predictionController.js";
 
 const router = express.Router();
 
-// Simple test route
 router.get("/helloworld", (req, res) => res.send("Hello World!"));
 
-// Prediction route
 router.post("/predict", predict);
 
-// Auth routes
 router.use("/auth", authRoutes);
 
-// Routes requiring authentication
 router.use(
   "/profile",
   passport.authenticate("jwt", { session: false }),
@@ -128,7 +124,6 @@ router.use(
   quizRoutes
 );
 
-// Code runner route
 router.post("/run-code", codeRunner);
 
 export default router;

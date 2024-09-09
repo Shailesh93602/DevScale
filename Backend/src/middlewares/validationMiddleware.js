@@ -1,5 +1,3 @@
-// middlewares/validationMiddleware.js
-
 export const validateBattleCreation = (req, res, next) => {
   const { title, description, topic, difficulty } = req.body;
   if (!title || !description || !topic || !difficulty) {
@@ -8,8 +6,6 @@ export const validateBattleCreation = (req, res, next) => {
       message: "Title, description, topic, and difficulty are required.",
     });
   }
-
-  // Add more validation rules as needed
 
   next();
 };
@@ -29,8 +25,6 @@ export const validateChatCreation = (req, res, next) => {
     });
   }
 
-  // Add more validation rules as needed
-
   next();
 };
 
@@ -43,8 +37,6 @@ export const validateMessageCreation = (req, res, next) => {
       message: "Message content is required.",
     });
   }
-
-  // Add more validation rules as needed
 
   next();
 };

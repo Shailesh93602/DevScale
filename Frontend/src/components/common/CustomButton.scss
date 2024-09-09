@@ -1,5 +1,3 @@
-// CustomButtons.scss
-
 $primary-color: #f71454;
 $secondary-color: #d8d8d8;
 $white-color: #ffffff;
@@ -20,9 +18,7 @@ $gradient-color: linear-gradient(315.97deg, #1159f1 1.64%, #f41657 100%);
 }
 
 @mixin setOutline($color, $textColor: null) {
-  $textColor: if($textColor,
-      $textColor,
-      $color ); // If $textColor is not provided, use $color
+  $textColor: if($textColor, $textColor, $color);
   border: 1.5px solid $color !important;
   background-color: transparent !important;
   color: $textColor !important;
@@ -46,7 +42,7 @@ $gradient-color: linear-gradient(315.97deg, #1159f1 1.64%, #f41657 100%);
   }
 
   &:after {
-    content: '';
+    content: "";
     position: absolute;
     left: 1px;
     right: 1px;
@@ -180,8 +176,10 @@ $gradient-color: linear-gradient(315.97deg, #1159f1 1.64%, #f41657 100%);
       }
 
       &.btn-custom-outline-gradient {
-        @include gradientOutlinedButton($gradient-color,
-          0 8px 25px -8px #7b46c5);
+        @include gradientOutlinedButton(
+          $gradient-color,
+          0 8px 25px -8px #7b46c5
+        );
 
         .btn-custom-icon-data {
           color: #7b46c5 !important;

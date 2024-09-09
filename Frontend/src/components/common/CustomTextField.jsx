@@ -156,7 +156,7 @@ const CustomTextField = forwardRef((props, ref) => {
       variant="filled"
       InputLabelProps={{ ...InputLabelProps, shrink: true }}
       InputProps={{
-        style: { width: "100%", maxWidth: 1000 }, // Adjust the max width as per your requirement
+        style: { width: "100%", maxWidth: 1000 },
         ...InputProps,
       }}
     />

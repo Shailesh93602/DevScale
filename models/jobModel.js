@@ -1,4 +1,3 @@
-// models/Job.js
 import { DataTypes } from "sequelize";
 import sequelize from "../config/database.js";
 
@@ -24,23 +23,23 @@ const Job = sequelize.define(
     },
     location: {
       type: DataTypes.STRING,
-      allowNull: true, // Location of the job, if applicable
+      allowNull: true,
     },
     salary: {
-      type: DataTypes.DECIMAL(10, 2), // Example format for salary, adjust as needed
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: true,
     },
     jobType: {
-      type: DataTypes.ENUM("full-time", "part-time", "contract", "internship"), // Example job types
+      type: DataTypes.ENUM("full-time", "part-time", "contract", "internship"),
       allowNull: true,
     },
     postedDate: {
       type: DataTypes.DATE,
-      allowNull: true, // Date when the job was posted
+      allowNull: true,
     },
     applicationDeadline: {
       type: DataTypes.DATE,
-      allowNull: true, // Deadline for job application
+      allowNull: true,
     },
   },
   {

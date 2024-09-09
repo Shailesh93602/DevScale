@@ -1,35 +1,28 @@
 import { Model, DataTypes } from "sequelize";
 
 export default (sequelize) => {
-  class QuizAnswer extends Model {
+  class QuizSubmissionAnswer extends Model {
     static associate(models) {
+      this.belongsTo(models.QuizSubmission, { foreignKey: "submissionId" });
+      this.belongsTo(models.QuizAnswer, { foreignKey: "answerId" });
       this.belongsTo(models.QuizQuestion, { foreignKey: "questionId" });
-      this.hasMany(models.QuizSubmissionAnswer, { foreignKey: "answerId" });
     }
   }
 
-  QuizAnswer.init(
+  QuizSubmissionAnswer.init(
     {
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      answer: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-      },
-      isCorrect: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-      },
     },
     {
       sequelize,
-      modelName: "QuizAnswer",
+      modelName: "QuizSubmissionAnswer",
       timestamps: true,
     }
   );
 
-  return QuizAnswer;
+  return QuizSubmissionAnswer;
 };

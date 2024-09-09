@@ -81,7 +81,6 @@ export const submitQuiz = async (req, res) => {
   const { topicId, answers } = req.body;
 
   try {
-    // Fetch the quiz and related questions
     const quiz = await db.Quiz.findOne({
       where: { topicId },
       include: [{ model: db.Question, as: "questions" }],
@@ -91,7 +90,6 @@ export const submitQuiz = async (req, res) => {
       return res.status(404).json({ message: "Quiz not found" });
     }
 
-    // Calculate the score based on correct answers
     let score = 0;
     quiz.questions.forEach((question, index) => {
       if (question.correctAnswer === answers[index]) {
@@ -100,11 +98,10 @@ export const submitQuiz = async (req, res) => {
     });
 
     const passingScore =
-      quiz.passingScore || Math.ceil(quiz.questions.length * 0.7); // Default passing score is 70%
+      quiz.passingScore || Math.ceil(quiz.questions.length * 0.7);
 
     const isPassed = score >= passingScore;
 
-    // Update user progress if the quiz is passed
     if (isPassed) {
       await db.UserProgress.update(
         { isCompleted: true },

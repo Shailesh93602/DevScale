@@ -2,17 +2,17 @@ import { NextResponse } from "next/server";
 import customAxios from "./app/services/customAxios";
 
 const protectedPages = [
-  // "/dashboard",
-  // "/profile",
-  // "/resources",
-  // "/coding-challenges",
-  // "/career-roadmap",
-  // "/placement-preparation",
-  // "/community",
-  // "/achievements",
-  // "/battle-zone",
-  // "/create-resource",
-  // "/article-listing",
+  "/dashboard",
+  "/profile",
+  "/resources",
+  "/coding-challenges",
+  "/career-roadmap",
+  "/placement-preparation",
+  "/community",
+  "/achievements",
+  "/battle-zone",
+  "/create-resource",
+  "/article-listing",
 ];
 
 export async function middleware(req) {

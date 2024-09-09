@@ -3,9 +3,7 @@ import { Model, DataTypes } from "sequelize";
 
 export default (sequelize) => {
   class Course extends Model {
-    static associate(models) {
-      // Define any potential associations here
-    }
+    static associate(models) {}
   }
 
   Course.init(

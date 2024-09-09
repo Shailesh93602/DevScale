@@ -15,7 +15,7 @@ const dbConfig = {
     bigNumberStrings: true,
   },
   define: {
-    timestamps: true, // Ensures Sequelize is looking for timestamp fields
+    timestamps: true,
   },
 };
 

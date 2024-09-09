@@ -14,7 +14,7 @@ const dsaQuiz = {
     {
       text: "What is the time complexity of binary search?",
       options: ["O(n)", "O(log n)", "O(n log n)", "O(1)"],
-      correctAnswer: 1, // Index of the correct answer
+      correctAnswer: 1,
     },
     {
       text: "Which data structure uses LIFO (Last In First Out) principle?",
@@ -81,10 +81,6 @@ const Resource = ({ params }) => {
     const fetchResource = async () => {
       try {
         const response = await fetchData("GET", "/resources/" + id);
-        console.log(
-          "🚀 ~ file: page.js:84 ~ fetchResource ~ response:",
-          response
-        );
         const data = response.data;
         if (data.success) {
           setResource(data.resource.topics);
@@ -107,10 +103,6 @@ const Resource = ({ params }) => {
   };
 
   const renderQuiz = () => {
-    //write now we passing static Interview questions but i also make condtition in api check i set setQuiz if the quiz data is coming from backend then we render the quiz component in last otherwise we only show the resources
-
-    // if (!quiz) return null;
-
     return (
       <div className="mb-8 bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8 transition-all duration-300 hover:shadow-2xl">
         <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-200 border-b pb-2 border-gray-200 dark:border-gray-700">

@@ -49,20 +49,9 @@ const cards = [
   },
 ];
 
-// Progress Circle Component
-
-// Roadmap Step Component
-
-// Roadmap Section Component
-
-// Sample roadmap data
-
 const Roadmap = () => (
   <ParallaxProvider>
     <div className="roadmap-container p-6 bg-gray-100 dark:bg-gray-800 min-h-screen">
-      {/* <h1 className="text-4xl md:text-4xl lg:text-6xl font-semibold max-w-7xl mx-auto text-center mt-6 relative z-20 py-6 bg-clip-text text-transparent bg-gradient-to-b from-neutral-800 via-neutral-700 to-neutral-700 dark:from-neutral-800 dark:via-white dark:to-white">
-        learn how to make amazing websites <br /> at <Cover>Mr.Engineer</Cover>
-      </h1> */}
       <BackgroundBeamsWithCollision>
         <h2 className="text-2xl relative z-20 md:text-4xl lg:text-7xl font-bold text-center text-black dark:text-white font-sans tracking-tight">
           Choose&apos;a roadmap to{" "}
