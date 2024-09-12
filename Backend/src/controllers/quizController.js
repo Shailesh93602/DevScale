@@ -117,7 +117,7 @@ export const getUserProgress = async (req, res) => {
       progress,
     });
   } catch (error) {
-    logger.error("Error retrieving user progress:", error);
+    logger.error("Error retrieving User progress:", error);
     res.status(500).json({
       success: false,
       message: "Internal Server Error",
