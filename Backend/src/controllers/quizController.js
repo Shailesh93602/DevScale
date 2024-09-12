@@ -1,5 +1,5 @@
 import db from "../../db/models/index.js";
-import logger from "../../config/logger.js";
+import { logger } from "../helpers/logger.js";
 
 export const createQuiz = async (req, res) => {
   try {
