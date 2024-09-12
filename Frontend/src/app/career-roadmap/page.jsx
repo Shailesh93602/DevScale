@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Parallax, ParallaxProvider } from "react-scroll-parallax";
 import { useInView } from "react-intersection-observer";
@@ -9,6 +9,9 @@ import { useRouter } from "next/navigation";
 import { Cover } from "@/components/ui/cover";
 import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
 import { FocusCards } from "@/components/ui/focus-cards";
+import { useDispatch } from "react-redux";
+import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
+import { fetchData } from "../services/fetchData";
 
 const cards = [
   {
@@ -49,27 +52,48 @@ const cards = [
   },
 ];
 
-const Roadmap = () => (
-  <ParallaxProvider>
-    <div className="roadmap-container p-6 bg-gray-100 dark:bg-gray-800 min-h-screen">
-      <BackgroundBeamsWithCollision>
-        <h2 className="text-2xl relative z-20 md:text-4xl lg:text-7xl font-bold text-center text-black dark:text-white font-sans tracking-tight">
-          Choose&apos;a roadmap to{" "}
-          <div className="relative mx-auto inline-block w-max [filter:drop-shadow(0px_1px_3px_rgba(27,_37,_80,_0.14))]">
-            <div className="absolute left-0 top-[1px] bg-clip-text bg-no-repeat text-transparent bg-gradient-to-r py-4 from-purple-500 via-violet-500 to-pink-500 [text-shadow:0_0_rgba(0,0,0,0.1)]">
-              <span className="">start your journey.</span>
+const Roadmap = () => {
+  const dispatch = useDispatch();
+  const [resources, setResources] = useState("");
+
+  useEffect(() => {
+    console.log("hlo");
+    const fetchResources = async () => {
+      dispatch(showLoader());
+      try {
+        const response = await fetchData("GET", "/roadMaps");
+        console.log("response", response);
+        setResources(response.data);
+      } catch (error) {
+        toast.error("Error fetching resources, Please try again");
+      }
+      dispatch(hideLoader());
+    };
+    fetchResources();
+  }, []);
+
+  return (
+    <ParallaxProvider>
+      <div className="roadmap-container p-6 bg-gray-100 dark:bg-gray-800 min-h-screen">
+        <BackgroundBeamsWithCollision>
+          <h2 className="text-2xl relative z-20 md:text-4xl lg:text-7xl font-bold text-center text-black dark:text-white font-sans tracking-tight">
+            Choose&apos;a roadmap to{" "}
+            <div className="relative mx-auto inline-block w-max [filter:drop-shadow(0px_1px_3px_rgba(27,_37,_80,_0.14))]">
+              <div className="absolute left-0 top-[1px] bg-clip-text bg-no-repeat text-transparent bg-gradient-to-r py-4 from-purple-500 via-violet-500 to-pink-500 [text-shadow:0_0_rgba(0,0,0,0.1)]">
+                <span className="">start your journey.</span>
+              </div>
+              <div className="relative bg-clip-text text-transparent bg-no-repeat bg-gradient-to-r from-purple-500 via-violet-500 to-pink-500 py-4">
+                <span className="">start your journey.</span>
+              </div>
             </div>
-            <div className="relative bg-clip-text text-transparent bg-no-repeat bg-gradient-to-r from-purple-500 via-violet-500 to-pink-500 py-4">
-              <span className="">start your journey.</span>
-            </div>
-          </div>
-        </h2>
-      </BackgroundBeamsWithCollision>
-      <div className="mt-5">
-        <FocusCards cards={cards} />
+          </h2>
+        </BackgroundBeamsWithCollision>
+        <div className="mt-5">
+          <FocusCards cards={cards} resources={resources} />
+        </div>
       </div>
-    </div>
-  </ParallaxProvider>
-);
+    </ParallaxProvider>
+  );
+};
 
 export default Roadmap;
