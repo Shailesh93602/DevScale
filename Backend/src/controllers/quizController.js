@@ -1,5 +1,5 @@
 import db from "../../db/models/index.js";
-import { logger } from "../helpers/logger.js";
+// import logger from "../../config/logger.js";
 
 export const createQuiz = async (req, res) => {
   try {
@@ -25,7 +25,7 @@ export const createQuiz = async (req, res) => {
       quiz,
     });
   } catch (error) {
-    logger.error("Error creating quiz:", error);
+    // logger.error("Error creating quiz:", error);
     res.status(500).json({
       success: false,
       message: "Internal Server Error",
@@ -87,7 +87,7 @@ export const submitQuiz = async (req, res) => {
       completed,
     });
   } catch (error) {
-    logger.error("Error submitting quiz:", error);
+    // logger.error("Error submitting quiz:", error);
     res.status(500).json({
       success: false,
       message: "Internal Server Error",
@@ -117,7 +117,7 @@ export const getUserProgress = async (req, res) => {
       progress,
     });
   } catch (error) {
-    logger.error("Error retrieving User progress:", error);
+    // logger.error("Error retrieving user progress:", error);
     res.status(500).json({
       success: false,
       message: "Internal Server Error",

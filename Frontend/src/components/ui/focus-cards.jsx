@@ -4,8 +4,19 @@ import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
+const images = [
+  "/images/carrer-roadmap/material_1.png",
+  "/images/carrer-roadmap/material_2.png",
+  "/images/carrer-roadmap/material_3.png",
+  "/images/carrer-roadmap/material_4.png",
+  "/images/carrer-roadmap/material_5.png",
+  "/images/carrer-roadmap/material_6.png",
+  "/images/carrer-roadmap/material_7.png",
+  "/images/carrer-roadmap/material_8.png",
+];
+
 export const Card = React.memo(
-  ({ card, index, hovered, setHovered, onClick }) => (
+  ({ card, index, hovered, setHovered, onClick, resources, imageSrc }) => (
     <div
       onMouseEnter={() => setHovered(index)}
       onMouseLeave={() => setHovered(null)}
@@ -16,7 +27,7 @@ export const Card = React.memo(
       )}
     >
       <Image
-        src={card.src}
+        src={imageSrc}
         alt={card.title}
         fill
         className="object-cover absolute inset-0"
@@ -37,26 +48,33 @@ export const Card = React.memo(
 
 Card.displayName = "Card";
 
-export function FocusCards({ cards }) {
+export function FocusCards({ cards, resources }) {
+  console.log("resources", resources);
   const router = useRouter();
   const [hovered, setHovered] = useState(null);
 
-  const handleCardClick = (title) => {
-    router.push(`/career-roadmap/${title}`);
+  const handleCardClick = (id) => {
+    router.push(`/career-roadmap/${id}`);
   };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-5xl mx-auto md:px-8 w-full">
-      {cards.map((card, index) => (
-        <Card
-          key={card.title}
-          card={card}
-          index={index}
-          hovered={hovered}
-          setHovered={setHovered}
-          onClick={handleCardClick}
-        />
-      ))}
+      {resources && (
+        <>
+          {resources?.map((card, index) => (
+            <Card
+              key={card.id}
+              card={card}
+              resources={resources}
+              index={index}
+              hovered={hovered}
+              setHovered={setHovered}
+              onClick={() => handleCardClick(card.id)}
+              imageSrc={images[index % images.length]}
+            />
+          ))}
+        </>
+      )}
     </div>
   );
 }

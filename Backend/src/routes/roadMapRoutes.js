@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.get("/", getAllRoadmaps);
 router.get("/:id", getRoadMap);
-router.get("/:id/mainConcepts", getMainConceptsInRoadmap);
+router.get("/mainConcepts/:id", getMainConceptsInRoadmap);
 router.post("/create", createRoadMap);
 router.put("/update/:id", updateRoadMap);
 router.delete("/delete/:id", deleteRoadMap);
