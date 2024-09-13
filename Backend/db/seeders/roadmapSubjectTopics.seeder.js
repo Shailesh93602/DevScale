@@ -286,13 +286,18 @@ const seedDatabase = async () => {
         });
 
         for (const subjectData of mainConceptData.subjects) {
-          const [subject] = await db.Subject.findOrCreate({
+          const [subject, created] = await db.Subject.findOrCreate({
             where: { name: subjectData.name },
             defaults: {
               description: subjectData.description,
               mainConceptId: mainConcept.id,
             },
           });
+
+          // If the subject was found (i.e., not created), update the mainConceptId
+          if (!created && subject.mainConceptId !== mainConcept.id) {
+            await subject.update({ mainConceptId: mainConcept.id });
+          }
 
           for (const topicData of subjectData.topics) {
             await db.Topic.findOrCreate({
