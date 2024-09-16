@@ -28,11 +28,11 @@ export default (sequelize) => {
         },
       },
       content: {
-        type: DataTypes.TEXT,
+        type: DataTypes.TEXT("long"),
+        collate: "utf8mb4_unicode_ci",
         allowNull: false,
         validate: {
           notEmpty: true,
-          len: [3, 2000],
         },
       },
       authorId: {
