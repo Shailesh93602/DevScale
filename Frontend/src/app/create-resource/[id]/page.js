@@ -22,6 +22,7 @@ const ResourceEditor = ({ params }) => {
       const response = await fetchData("post", `/resources/save/${id}`, {
         content,
       });
+      console.log("🚀 ~ file: page.js:24 ~ saveResource ~ response:", response);
 
       if (response.data.success) {
         toast.success("Resource saved successfully!");
@@ -31,6 +32,7 @@ const ResourceEditor = ({ params }) => {
         toast.error("Failed to save resource.");
       }
     } catch (error) {
+      console.log(error);
       toast.error("Failed to save resource.");
     } finally {
       dispatch(hideLoader());

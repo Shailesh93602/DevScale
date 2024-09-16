@@ -12,6 +12,7 @@ const dbConfig = {
   dialect: "mysql",
   dialectModule: mysql2,
   dialectOptions: {
+    charset: "utf8mb4",
     bigNumberStrings: true,
   },
   define: {

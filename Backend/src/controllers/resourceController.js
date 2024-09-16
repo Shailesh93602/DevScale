@@ -329,6 +329,10 @@ export const saveResource = async (req, res) => {
       data: article,
     });
   } catch (error) {
+    console.log(
+      "🚀 ~ file: resourceController.js:332 ~ saveResource ~ error:",
+      error
+    );
     logger.error("Error saving resource:", error);
     res.status(500).json({
       success: false,
