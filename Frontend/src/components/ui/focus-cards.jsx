@@ -49,7 +49,6 @@ export const Card = React.memo(
 Card.displayName = "Card";
 
 export function FocusCards({ cards, resources }) {
-  console.log("resources", resources);
   const router = useRouter();
   const [hovered, setHovered] = useState(null);
 

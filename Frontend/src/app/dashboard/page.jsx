@@ -27,9 +27,7 @@ export default function Dashboard() {
             </h2>
           </div>
           <div>
-            <button className="p-2 bg-gray-200 dark:bg-gray-700 rounded-full">
-              {/* Icon for settings or profile */}
-            </button>
+            <button className="p-2 bg-gray-200 dark:bg-gray-700 rounded-full"></button>
           </div>
         </header>
 

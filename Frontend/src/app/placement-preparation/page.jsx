@@ -154,12 +154,6 @@ export default function PlacementPreparation() {
           <h2 className="text-2xl dark:text-gray-200 font-semibold text-gray-800 mb-4">
             Practice Tests
           </h2>
-          {/* <Image
-            src="/placement-preparation.svg"
-            alt="Practice Tests"
-            width={550}
-            height={310}
-          /> */}
           <PinContainer title="coding-challenges" href="/coding-challenges">
             <div className="flex basis-full flex-col p-4 tracking-tight text-slate-100/50 sm:basis-1/2 w-[20rem] h-[20rem] ">
               <h3 className="max-w-xs !pb-2 !m-0 font-bold  text-base text-slate-100">

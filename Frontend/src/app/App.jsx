@@ -45,17 +45,14 @@ export default function App({ children }) {
   };
 
   return (
-    <>
-      <div>
-        <Provider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
-            {/* <Loader /> */}
-            {showNavbar && <Navbar />}
-            {children}
-            <Footer />
-          </PersistGate>
-        </Provider>
-      </div>
-    </>
+    <div>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          {showNavbar && <Navbar />}
+          {children}
+          <Footer />
+        </PersistGate>
+      </Provider>
+    </div>
   );
 }

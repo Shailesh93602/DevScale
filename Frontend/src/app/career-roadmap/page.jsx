@@ -57,12 +57,10 @@ const Roadmap = () => {
   const [resources, setResources] = useState("");
 
   useEffect(() => {
-    console.log("hlo");
     const fetchResources = async () => {
       dispatch(showLoader());
       try {
         const response = await fetchData("GET", "/roadMaps");
-        console.log("response", response);
         setResources(response.data);
       } catch (error) {
         toast.error("Error fetching resources, Please try again");

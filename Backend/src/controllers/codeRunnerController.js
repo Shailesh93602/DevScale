@@ -17,20 +17,57 @@ export const codeRunner = async (req, res) => {
     let command;
     let filePath = null;
     let classFilePath = null;
+    let binaryFilePath = null;
+
     switch (language) {
       case "javascript":
-        command = `node -e "${code.replace(/"/g, '\\"')}"`;
+        filePath = path.join(process.cwd(), "main.js");
+        fs.writeFileSync(filePath, code);
+        command = `node ${filePath}`;
         break;
       case "python":
         command = `python -c "${code.replace(/"/g, '\\"')}"`;
         break;
       case "java":
-        filePath = path.join(__dirname, "Main.java");
-        classFilePath = path.join(__dirname, "Main.class");
+        filePath = path.join(process.cwd(), "Main.java");
+        classFilePath = path.join(process.cwd(), "Main.class");
         fs.writeFileSync(filePath, code);
         command = `javac ${filePath} && java -cp ${path.dirname(
           filePath
         )} Main`;
+        break;
+      case "cpp":
+        filePath = path.join(process.cwd(), "main.cpp");
+        binaryFilePath = path.join(process.cwd(), "main");
+        fs.writeFileSync(filePath, code);
+        command = `g++ ${filePath} -o ${binaryFilePath} && ${binaryFilePath}`;
+        break;
+      case "ruby":
+        filePath = path.join(process.cwd(), "main.rb");
+        fs.writeFileSync(filePath, code);
+        command = `ruby ${filePath}`;
+        break;
+      case "go":
+        filePath = path.join(process.cwd(), "main.go");
+        fs.writeFileSync(filePath, code);
+        command = `go run ${filePath}`;
+        break;
+      case "php":
+        filePath = path.join(process.cwd(), "main.php");
+        fs.writeFileSync(filePath, code);
+        command = `php ${filePath}`;
+        break;
+      case "rust":
+        filePath = path.join(process.cwd(), "main.rs");
+        binaryFilePath = path.join(process.cwd(), "main");
+        fs.writeFileSync(filePath, code);
+        command = `rustc ${filePath} -o ${binaryFilePath} && ${binaryFilePath}`;
+        break;
+      case "kotlin":
+        filePath = path.join(process.cwd(), "Main.kt");
+        binaryFilePath = path.join(process.cwd(), "Main");
+        fs.writeFileSync(filePath, code);
+        command = `kotlinc ${filePath} -include-runtime -d ${binaryFilePath}.jar && java -jar ${binaryFilePath}.jar`;
         break;
       default:
         return res
@@ -41,21 +78,22 @@ export const codeRunner = async (req, res) => {
     const { stdout, stderr } = await execAsync(command, { timeout: 10000 });
 
     if (stderr) {
-      return res
-        .status(400)
-        .json({ success: false, message: `Error: ${stderr}` });
+      return res.status(200).json({ success: false, output: stderr });
     }
 
     if (filePath) {
       fs.unlinkSync(filePath);
-      if (fs.existsSync(classFilePath)) {
+      if (classFilePath && fs.existsSync(classFilePath)) {
         fs.unlinkSync(classFilePath);
+      }
+      if (binaryFilePath && fs.existsSync(binaryFilePath)) {
+        fs.unlinkSync(binaryFilePath);
       }
     }
 
     res.status(200).json({ success: true, output: stdout });
   } catch (error) {
     console.error("Error running code:", error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    res.status(500).json({ success: false, output: error.message });
   }
 };

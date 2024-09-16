@@ -20,7 +20,6 @@ export const getAllRoadmaps = async (req, res) => {
 
 export const getMainConceptsInRoadmap = async (req, res) => {
   const roadmapId = req.params.id;
-  console.log("object", roadmapId);
   try {
     const roadmap = await db.RoadMap.findByPk(roadmapId, {
       include: [
