@@ -50,78 +50,68 @@ export const StickyScroll = ({ content, contentClassName }) => {
   }, [activeCard]);
 
   return (
-    <>
-      <motion.div
-        animate={{
-          backgroundColor:
-            backgroundColors[activeCard % backgroundColors.length],
-        }}
-        className="h-[25rem] overflow-y-auto flex justify-center relative space-x-10 rounded-md "
-        ref={ref}
-      >
-        <div className="div relative flex items-start px-4">
-          <div className="max-w-2xl">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-              Expand Your Knowledge
-            </h2>
-            {content.map((item, index) => (
-              <>
-                <div key={item.title + index} className="my-10">
-                  <motion.h2
-                    initial={{
-                      opacity: 0,
-                    }}
-                    animate={{
-                      opacity: activeCard === index ? 1 : 0.3,
-                    }}
-                    className="text-2xl font-bold text-slate-100"
-                  >
-                    {item.title}
-                  </motion.h2>
-                  <motion.p
-                    initial={{
-                      opacity: 0,
-                    }}
-                    animate={{
-                      opacity: activeCard === index ? 1 : 0.3,
-                    }}
-                    className="text-kg text-slate-300 max-w-sm mt-10"
-                  >
-                    {item.description}
-                  </motion.p>
-                </div>
-                <HoverBorderGradient
-                  containerClassName="rounded-full"
-                  as="button"
-                  href="/resources"
-                  className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
+    <motion.div
+      animate={{
+        backgroundColor: backgroundColors[activeCard % backgroundColors.length],
+      }}
+      className="h-[25rem] overflow-y-auto flex justify-center relative space-x-10 rounded-md "
+      ref={ref}
+    >
+      <div className="div relative flex items-start px-4">
+        <div className="max-w-2xl">
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+            Expand Your Knowledge
+          </h2>
+          {content.map((item, index) => (
+            <>
+              <div key={item.title + index} className="my-10">
+                <motion.h2
+                  initial={{
+                    opacity: 0,
+                  }}
+                  animate={{
+                    opacity: activeCard === index ? 1 : 0.3,
+                  }}
+                  className="text-2xl font-bold text-slate-100"
                 >
-                  <AceternityLogo />
-                  <span>Explore Resources</span>
-                </HoverBorderGradient>
-              </>
-            ))}
-            <div className="pb-9" />
-            {/* <CentralizedButton
-                        size="md"
-                        color="info"
-                        href="/resources"
-                        text="Explore Resources"
-                        style={{ display: "flex", justifyContent: "center" }}
-                    /> */}
-          </div>
+                  {item.title}
+                </motion.h2>
+                <motion.p
+                  initial={{
+                    opacity: 0,
+                  }}
+                  animate={{
+                    opacity: activeCard === index ? 1 : 0.3,
+                  }}
+                  className="text-kg text-slate-300 max-w-sm mt-10"
+                >
+                  {item.description}
+                </motion.p>
+              </div>
+              <HoverBorderGradient
+                containerClassName="rounded-full"
+                as="button"
+                href="/resources"
+                className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
+              >
+                <AceternityLogo />
+                <span>Explore Resources</span>
+              </HoverBorderGradient>
+            </>
+          ))}
+          <div className="pb-9" />
         </div>
+      </div>
 
-        <div
-          style={{ background: backgroundGradient }}
-          className={cn(
-            "hidden lg:block h-60 w-80 rounded-md bg-white sticky top-10 overflow-hidden",
-            contentClassName
-          )}
-        >
-          {content[activeCard].content ?? null}
-        </div>
-      </motion.div>
-    </>
+      <div
+        style={{ background: backgroundGradient }}
+        className={cn(
+          "hidden lg:block h-60 w-80 rounded-md bg-white sticky top-10 overflow-hidden",
+          contentClassName
+        )}
+      >
+        {content[activeCard].content ?? null}
+      </div>
+    </motion.div>
   );
 };

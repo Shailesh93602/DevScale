@@ -26,8 +26,6 @@ export default function RootLayout({ children }) {
           <ToastContainer />
 
           <App>{children}</App>
-
-          {/* <Toaster position="top-right" /> */}
         </ThemeProvider>
       </body>
     </html>

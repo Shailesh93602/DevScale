@@ -57,7 +57,7 @@ const ProgressCircle = ({ completed }) => {
   );
 };
 
-const RoadmapStep = ({ title, description, icon: Icon, link }) => (
+const RoadmapStep = ({ id, name, description, icon: Icon }) => (
   <motion.div
     className="roadmap-step bg-white dark:bg-gray-800 p-4 m-2 rounded shadow-lg flex items-start"
     variants={nodeVariants}
@@ -69,12 +69,13 @@ const RoadmapStep = ({ title, description, icon: Icon, link }) => (
     </div>
     <div>
       <h4 className="text-lg font-bold text-gray-900 dark:text-gray-100">
-        {title}
+        {name}
       </h4>
       <p className="text-gray-700 dark:text-gray-300">{description}</p>
-      {link && (
+      {id && (
         <a
-          href={link}
+          href={`/resources/${id}`}
+          target="_blank"
           className="text-indigo-600 dark:text-indigo-400 mt-2 inline-block"
         >
           Learn more
@@ -84,7 +85,7 @@ const RoadmapStep = ({ title, description, icon: Icon, link }) => (
   </motion.div>
 );
 
-const RoadmapSection = ({ name, description }) => {
+const RoadmapSection = ({ name, description, subjects }) => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
   const steps = [
@@ -121,7 +122,7 @@ const RoadmapSection = ({ name, description }) => {
         </div>
         <p className="text-gray-700 dark:text-gray-300 mb-4">{description}</p>
         <div className="roadmap-steps ml-6">
-          {steps.map((step, index) => (
+          {subjects?.map((step, index) => (
             <RoadmapStep key={index} {...step} />
           ))}
         </div>
@@ -168,6 +169,7 @@ export default function CareerPathPage() {
               key={section.id}
               name={section.name}
               description={section.description}
+              subjects={section.Subjects}
             />
           ))}
         </motion.div>

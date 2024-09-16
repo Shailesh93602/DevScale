@@ -35,7 +35,6 @@ const Doubts = () => {
         <section>
           <h2 className="text-2xl font-semibold mb-4">Recent Questions</h2>
           <ul className="space-y-4">
-            {/* Example question items */}
             <li className="p-4 bg-gray-100 rounded-md shadow-md">
               <h3 className="text-xl font-bold">
                 How to configure Tailwind CSS with Next.js?

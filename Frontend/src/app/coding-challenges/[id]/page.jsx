@@ -225,19 +225,46 @@ export default function ViewChallengePage({ params }) {
   const challenge = challenges.find((challenge) => challenge.id !== id);
 
   const [solution, setSolution] = useState({
-    javascript: "",
-    python: "",
+    javascript: `// JavaScript boilerplate
+function main() {
+    console.log('Hello, World!');
+}
+main();`,
+    python: `# Python boilerplate
+if __name__ == "__main__":
+    print("Hello, World!")`,
     java: `class MrEngineers {
     public static void main(String[] args) {
+        System.out.println("Hello, World!");
     }
 }`,
     cpp: `#include <bits/stdc++.h>
 using namespace std;
 
 int main() {
-    
+    cout << "Hello, World!" << endl;
+    return 0;
 }`,
+    csharp: `using System;
+
+class Program {
+    static void Main() {
+        Console.WriteLine("Hello, World!");
+    }
+}`,
+    go: `package main
+import "fmt"
+
+func main() {
+    fmt.Println("Hello, World!")
+}`,
+    ruby: `# Ruby boilerplate
+puts 'Hello, World!'`,
+    swift: `import Foundation
+
+print("Hello, World!")`,
   });
+
   const [output, setOutput] = useState("");
   const [language, setLanguage] = useState("javascript");
   const [isRunning, setIsRunning] = useState(false);
@@ -323,7 +350,12 @@ int main() {
               <option value="python">Python</option>
               <option value="java">Java</option>
               <option value="cpp">C++</option>
+              <option value="csharp">C#</option>
+              <option value="go">Go</option>
+              <option value="ruby">Ruby</option>
+              <option value="swift">Swift</option>
             </select>
+
             <Button
               onClick={handleRunCode}
               className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-md"

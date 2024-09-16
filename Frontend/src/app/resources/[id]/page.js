@@ -172,13 +172,9 @@ const Resource = ({ params }) => {
               }}
             >
               {res.title}
-              {/* {progress.find((p) => p.topicId === res.id)?.isCompleted && (
-                <span className="text-green-500 ml-2">&#10003;</span>
-              )} */}
             </li>
           ))}
 
-          {/* when the quiz data is coming dynamically from backend then we make condition here if quiz? then show the component otherwise not  */}
           {true && (
             <li
               className={`cursor-pointer p-3 rounded-lg transition duration-300 ${
@@ -197,7 +193,6 @@ const Resource = ({ params }) => {
         </ul>
       </div>
 
-      {/* Main content */}
       <div className="w-full md:w-9/12 lg:w-10/12 p-5 md:p-10 overflow-y-auto">
         {selectedTopic === "Quiz"
           ? renderQuiz()

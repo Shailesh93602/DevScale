@@ -233,27 +233,6 @@ export default function ProfilePage() {
           <h2 className="text-lg font-semibold  dark:text-blue-500 text-blue-900">
             Achievements
           </h2>
-          {/* {isEditing ? (
-            <textarea
-              name="achievements"
-              value={userInfo.achievements.join("\n")}
-              onChange={(e) =>
-                handleChange({
-                  target: {
-                    name: "achievements",
-                    value: e.target.value.split("\n"),
-                  },
-                })
-              }
-              className="w-full mt-2 p-2 border dark:text-gray-200 text-gray-900 border-gray-300 rounded-md bg-transparent"
-            />
-          ) : (
-            <ul className="list-disc ml-5 mt-2 dark:text-gray-200 text-gray-700"> */}
-          {/* {userInfo.achievements.map((achievement, index) => (
-                <li key={index}>{achievement}</li>
-              ))} */}
-          {/* </ul>
-          )} */}
         </div>
 
         <div className="mt-6 flex justify-end space-x-4">
