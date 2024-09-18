@@ -15,7 +15,7 @@ export default (sequelize) => {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      passingMarks: {
+      passingScore: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },

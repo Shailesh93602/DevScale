@@ -20,7 +20,7 @@ export default (sequelize) => {
       },
       correctAnswer: {
         type: DataTypes.TEXT,
-        allowNull: false,
+        allowNull: true,
       },
     },
     {
