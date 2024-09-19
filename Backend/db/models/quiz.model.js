@@ -4,7 +4,10 @@ export default (sequelize) => {
   class Quiz extends Model {
     static associate(models) {
       this.belongsTo(models.Topic, { foreignKey: "topicId" });
-      this.hasMany(models.QuizQuestion, { foreignKey: "quizId" });
+      this.hasMany(models.QuizQuestion, {
+        foreignKey: "quizId",
+        as: "questions",
+      });
     }
   }
 

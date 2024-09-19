@@ -52,11 +52,11 @@ const db = {
   UserRoadmap: UserRoadmap(sequelize, Sequelize.DataTypes),
   MainConcept: MainConcept(sequelize, Sequelize.DataTypes),
   UserProgress: UserProgress(sequelize, Sequelize.DataTypes),
-  Quiz: Quiz(sequelize, Sequelize.DataTypes), // Added Quiz
-  QuizQuestion: QuizQuestion(sequelize, Sequelize.DataTypes), // Added QuizQuestion
-  QuizAnswer: QuizAnswer(sequelize, Sequelize.DataTypes), // Added QuizAnswer
-  QuizSubmission: QuizSubmission(sequelize, Sequelize.DataTypes), // Added QuizSubmission
-  QuizSubmissionAnswer: QuizSubmissionAnswer(sequelize, Sequelize.DataTypes), // Added QuizSubmissionAnswer
+  Quiz: Quiz(sequelize, Sequelize.DataTypes),
+  QuizQuestion: QuizQuestion(sequelize, Sequelize.DataTypes),
+  QuizAnswer: QuizAnswer(sequelize, Sequelize.DataTypes),
+  QuizSubmission: QuizSubmission(sequelize, Sequelize.DataTypes),
+  QuizSubmissionAnswer: QuizSubmissionAnswer(sequelize, Sequelize.DataTypes),
 };
 
 Object.keys(db).forEach((modelName) => {
