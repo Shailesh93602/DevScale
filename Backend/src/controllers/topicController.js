@@ -57,12 +57,16 @@ export const getArticlesForTopic = async (req, res) => {
 };
 
 export const getQuizByTopicId = async (req, res) => {
-  const { topicId } = req.params;
+  const { id } = req.params;
+  console.log(
+    "🚀 ~ file: topicController.js:61 ~ getQuizByTopicId ~ topicId:",
+    id
+  );
 
   try {
     const quiz = await db.Quiz.findOne({
-      where: { topicId },
-      include: [{ model: db.Question, as: "questions" }],
+      where: { topicId: id },
+      include: [{ model: db.QuizQuestion, as: "questions" }],
     });
 
     if (!quiz) {
