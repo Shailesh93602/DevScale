@@ -4,6 +4,8 @@ import { fetchData } from "@/app/services/fetchData";
 import { toast } from "react-toastify";
 import DOMPurify from "dompurify";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { TextField, IconButton, Button, Box } from "@mui/material";
+import { Edit, Save, Visibility, VisibilityOff } from "@mui/icons-material";
 
 const sanitizeContent = (content) => {
   return DOMPurify.sanitize(content);
@@ -15,6 +17,9 @@ const Resource = ({ params }) => {
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [quiz, setQuiz] = useState(null);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editedTitle, setEditedTitle] = useState("");
+  const [editedContent, setEditedContent] = useState("");
 
   useEffect(() => {
     const fetchResource = async () => {
@@ -25,6 +30,10 @@ const Resource = ({ params }) => {
           setResource(data.resource.topics);
           if (data.resource.topics.length > 0) {
             setSelectedTopic(data.resource.topics[0]);
+            setEditedTitle(data.resource.topics[0].title);
+            setEditedContent(
+              data.resource.topics[0].Articles[0]?.content || ""
+            );
           }
         } else {
           toast.error(data.message);
@@ -47,7 +56,7 @@ const Resource = ({ params }) => {
           );
           const data = response.data;
           if (data.success) {
-            setQuiz(data.quiz);
+            setQuiz(data);
           } else {
             setQuiz(null);
           }
@@ -57,8 +66,9 @@ const Resource = ({ params }) => {
         }
       }
     };
-
-    fetchQuiz();
+    if (!quiz) {
+      fetchQuiz();
+    }
   }, [selectedTopic]);
 
   const renderQuiz = () => {
@@ -98,6 +108,43 @@ const Resource = ({ params }) => {
     );
   };
 
+  const handleEdit = () => {
+    setIsEditMode(true);
+  };
+
+  const handleSave = () => {};
+
+  // you can do api calling like this just add the endpoints
+
+  // const handleSave = async () => {
+  //   try {
+  //     const response = await fetchData("PUT", `/topics/${selectedTopic.id}`, {
+  //       title: editedTitle,
+  //       content: editedContent,
+  //     });
+  //     const data = response.data;
+  //     if (data.success) {
+  //       toast.success("Resource updated successfully!");
+  //       setSelectedTopic({
+  //         ...selectedTopic,
+  //         title: editedTitle,
+  //         Articles: [{ ...selectedTopic.Articles[0], content: editedContent }],
+  //       });
+  //       setIsEditMode(false);
+  //     } else {
+  //       toast.error(data.message);
+  //     }
+  //   } catch (error) {
+  //     toast.error("Failed to update resource. Please try again!");
+  //   }
+  // };
+
+  const handleCancel = () => {
+    setEditedTitle(selectedTopic.title);
+    setEditedContent(selectedTopic.Articles[0]?.content || "");
+    setIsEditMode(false);
+  };
+
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900">
       <button
@@ -129,6 +176,9 @@ const Resource = ({ params }) => {
               }`}
               onClick={() => {
                 setSelectedTopic(topic);
+                setEditedTitle(topic.title);
+                setEditedContent(topic.Articles[0]?.content || "");
+                setIsEditMode(false);
                 setSidebarOpen(false);
               }}
             >
@@ -141,18 +191,60 @@ const Resource = ({ params }) => {
       <div className="w-full md:w-9/12 lg:w-10/12 p-5 md:p-10 overflow-y-auto">
         {selectedTopic && (
           <div className="mb-8 bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8 transition-all duration-300 hover:shadow-2xl">
-            <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-200 border-b pb-2 border-gray-200 dark:border-gray-700">
-              {selectedTopic.title}
-            </h2>
-            {selectedTopic.Articles && selectedTopic.Articles.length > 0 ? (
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              mb={2}
+            >
+              {isEditMode ? (
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  value={editedTitle}
+                  onChange={(e) => setEditedTitle(e.target.value)}
+                  className="mb-4"
+                />
+              ) : (
+                <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-200 border-b pb-2 border-gray-200 dark:border-gray-700">
+                  {selectedTopic.title}
+                </h2>
+              )}
+              <Box>
+                {isEditMode ? (
+                  <>
+                    <IconButton onClick={handleSave} color="primary">
+                      <Save />
+                    </IconButton>
+                    <IconButton onClick={handleCancel} color="secondary">
+                      <VisibilityOff />
+                    </IconButton>
+                  </>
+                ) : (
+                  <IconButton onClick={handleEdit} color="primary">
+                    <Edit />
+                  </IconButton>
+                )}
+              </Box>
+            </Box>
+            {isEditMode ? (
+              <TextField
+                fullWidth
+                multiline
+                rows={10}
+                variant="outlined"
+                value={editedContent}
+                onChange={(e) => setEditedContent(e.target.value)}
+              />
+            ) : (
               <div
                 className="prose dark:prose-invert max-w-none"
                 dangerouslySetInnerHTML={{
-                  __html: sanitizeContent(selectedTopic.Articles[0]?.content),
+                  __html: sanitizeContent(
+                    selectedTopic.Articles[0]?.content || ""
+                  ),
                 }}
               ></div>
-            ) : (
-              <p>No content available for this topic.</p>
             )}
           </div>
         )}
