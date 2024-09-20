@@ -83,7 +83,6 @@ export const getResource = async (req, res) => {
         {
           model: db.Article,
           attributes: ["id", "title", "content", "status"],
-          where: { status: "approved" },
           required: false,
         },
       ],

@@ -12,7 +12,7 @@ export const getUnpublishedTopics = async (req, res) => {
             FROM \`Topics\`
             LEFT JOIN \`Articles\` ON \`Articles\`.\`topicId\` = \`Topics\`.\`id\`
             WHERE \`Articles\`.\`status\` IS NULL
-            OR \`Articles\`.\`status\` != 'approved'
+            OR \`Articles\`.\`status\` = 'rejected' 
           )`),
         },
       },
@@ -40,7 +40,16 @@ export const getArticlesForTopic = async (req, res) => {
         {
           model: db.Article,
           attributes: ["id", "title", "content"],
-          where: { status: "approved" },
+          where: {
+            [Op.or]: [
+              {
+                status: "approved",
+              },
+              {
+                status: "pending",
+              },
+            ],
+          },
           required: false,
         },
       ],
@@ -58,10 +67,6 @@ export const getArticlesForTopic = async (req, res) => {
 
 export const getQuizByTopicId = async (req, res) => {
   const { id } = req.params;
-  console.log(
-    "🚀 ~ file: topicController.js:61 ~ getQuizByTopicId ~ topicId:",
-    id
-  );
 
   try {
     const quiz = await db.Quiz.findOne({
