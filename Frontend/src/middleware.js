@@ -16,33 +16,66 @@ const protectedPages = [
 ];
 
 export async function middleware(req) {
-  try {
-    const token = req.cookies.get("token")?.value;
+  const pathname = req.nextUrl.pathname;
 
-    if (protectedPages.find((page) => page === req.nextUrl.pathname)) {
-      if (!token) {
-        const url = req.nextUrl.clone();
-        url.pathname = "/u/login";
-        return NextResponse.redirect(url);
-      } else {
-        customAxios.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${token}`;
-        const response = await customAxios.get("/profile");
-        if (response.data == "Unauthorized") {
-          const url = req.nextUrl.clone();
-          url.pathname = "/u/login";
-          return NextResponse.redirect(url);
-        } else {
-          return NextResponse.next();
-        }
-      }
-    } else {
-      return NextResponse.next();
+  // Check if the requested page is protected
+  if (!protectedPages.includes(pathname)) {
+    return NextResponse.next();
+  }
+
+  const token = req.cookies.get("token")?.value;
+
+  if (!token) {
+    return redirectToLogin(req);
+  }
+
+  try {
+    // Validate token
+    const response = await validateToken(token);
+
+    if (response === "Unauthorized") {
+      return redirectToLogin(req);
     }
+
+    // Token is valid, allow access to protected route
+    return NextResponse.next();
   } catch (error) {
-    const url = req.nextUrl.clone();
-    url.pathname = "/u/login";
-    return NextResponse.redirect(url);
+    console.error("Middleware error:", error);
+    return redirectToLogin(req);
   }
 }
+
+async function validateToken(token) {
+  customAxios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  try {
+    const response = await customAxios.get("/profile");
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      return "Unauthorized";
+    }
+    throw error;
+  }
+}
+
+function redirectToLogin(req) {
+  const url = req.nextUrl.clone();
+  url.pathname = "/u/login";
+  return NextResponse.redirect(url);
+}
+
+export const config = {
+  matcher: [
+    "/dashboard",
+    "/profile",
+    "/resources",
+    "/coding-challenges",
+    "/career-roadmap",
+    "/placement-preparation",
+    "/community",
+    "/achievements",
+    "/battle-zone",
+    "/create-resource",
+    "/article-listing",
+  ],
+};
