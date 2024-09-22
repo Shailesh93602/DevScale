@@ -9,7 +9,7 @@ const sequelize = new Sequelize(
   process.env.DB_PASS,
   {
     host: process.env.DB_HOST,
-    dialect: "mysql",
+    dialect: "postgres",
     pool: {
       max: 10,
       min: 0,
