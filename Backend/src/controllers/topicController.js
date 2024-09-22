@@ -8,11 +8,11 @@ export const getUnpublishedTopics = async (req, res) => {
       where: {
         id: {
           [Op.in]: Sequelize.literal(`(
-            SELECT DISTINCT \`Topics\`.\`id\`
-            FROM \`Topics\`
-            LEFT JOIN \`Articles\` ON \`Articles\`.\`topicId\` = \`Topics\`.\`id\`
-            WHERE \`Articles\`.\`status\` IS NULL
-            OR \`Articles\`.\`status\` = 'rejected' 
+            SELECT DISTINCT "Topics"."id"
+            FROM "Topics"
+            LEFT JOIN "Articles" ON "Articles"."topicId" = "Topics"."id"
+            WHERE "Articles"."status" IS NULL
+            OR "Articles"."status" = 'rejected'
           )`),
         },
       },
