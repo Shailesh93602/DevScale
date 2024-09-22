@@ -68,6 +68,42 @@ export const updateArticleStatus = async (req, res) => {
   }
 };
 
+export const updateArticleContent = async (req, res) => {
+  const { id } = req.params;
+  const { title, content } = req.body;
+
+  if (!title && !content) {
+    return res
+      .status(400)
+      .json({ error: "Please provide title or content to update" });
+  }
+
+  try {
+    const article = await db.Article.findByPk(id);
+
+    if (!article) {
+      return res.status(404).json({ error: "Article not found" });
+    }
+
+    if (title) article.title = title;
+    if (content) article.content = content;
+
+    await article.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Article content updated successfully",
+      article,
+    });
+  } catch (error) {
+    console.error("Error updating article content:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
 export const getArticleById = async (req, res) => {
   const { id } = req.params;
   try {

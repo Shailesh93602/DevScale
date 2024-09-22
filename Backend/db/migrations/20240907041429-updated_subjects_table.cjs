@@ -2,10 +2,10 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.sequelize.query("SET FOREIGN_KEY_CHECKS = 0;");
+    // Add mainConceptId column with foreign key constraint, allowing null (optional)
     await queryInterface.addColumn("Subjects", "mainConceptId", {
       type: Sequelize.UUID,
-      allowNull: false,
+      allowNull: true, // Making this optional
       references: {
         model: "MainConcepts",
         key: "id",
@@ -13,15 +13,16 @@ module.exports = {
       onDelete: "CASCADE",
     });
 
+    // Remove the link and category columns as per original migration
     await queryInterface.removeColumn("Subjects", "link");
     await queryInterface.removeColumn("Subjects", "category");
-
-    await queryInterface.sequelize.query("SET FOREIGN_KEY_CHECKS = 1;");
   },
 
   async down(queryInterface, Sequelize) {
+    // Remove mainConceptId foreign key column
     await queryInterface.removeColumn("Subjects", "mainConceptId");
 
+    // Add back the link and category columns (reverting changes)
     await queryInterface.addColumn("Subjects", "link", {
       type: Sequelize.STRING,
       allowNull: true,

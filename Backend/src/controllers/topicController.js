@@ -71,7 +71,18 @@ export const getQuizByTopicId = async (req, res) => {
   try {
     const quiz = await db.Quiz.findOne({
       where: { topicId: id },
-      include: [{ model: db.QuizQuestion, as: "questions" }],
+      include: [
+        {
+          model: db.QuizQuestion,
+          as: "questions",
+          include: [
+            {
+              model: db.QuizOption,
+              as: "options",
+            },
+          ],
+        },
+      ],
     });
 
     if (!quiz) {
