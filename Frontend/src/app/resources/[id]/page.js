@@ -4,8 +4,6 @@ import { fetchData } from "@/app/services/fetchData";
 import { toast } from "react-toastify";
 import DOMPurify from "dompurify";
 import { FaBars, FaTimes } from "react-icons/fa";
-import { TextField, IconButton, Button, Box } from "@mui/material";
-import { Edit, Save, Visibility, VisibilityOff } from "@mui/icons-material";
 
 const sanitizeContent = (content) => {
   return DOMPurify.sanitize(content);
@@ -17,9 +15,7 @@ const Resource = ({ params }) => {
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [quiz, setQuiz] = useState(null);
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [editedTitle, setEditedTitle] = useState("");
-  const [editedContent, setEditedContent] = useState("");
+  const [userAnswers, setUserAnswers] = useState({}); // New state to track user's answers
 
   useEffect(() => {
     const fetchResource = async () => {
@@ -30,10 +26,6 @@ const Resource = ({ params }) => {
           setResource(data.resource.topics);
           if (data.resource.topics.length > 0) {
             setSelectedTopic(data.resource.topics[0]);
-            setEditedTitle(data.resource.topics[0].title);
-            setEditedContent(
-              data.resource.topics[0].Articles[0]?.content || ""
-            );
           }
         } else {
           toast.error(data.message);
@@ -55,7 +47,7 @@ const Resource = ({ params }) => {
             `/topics/${selectedTopic.id}/quiz`
           );
           const data = response.data;
-          if (data.success) {
+          if (data) {
             setQuiz(data);
           } else {
             setQuiz(null);
@@ -66,10 +58,45 @@ const Resource = ({ params }) => {
         }
       }
     };
-    if (!quiz) {
-      fetchQuiz();
-    }
+    fetchQuiz();
   }, [selectedTopic]);
+
+  // Handle answer selection
+  const handleAnswerSelect = (questionId, selectedAnswer) => {
+    setUserAnswers((prevAnswers) => ({
+      ...prevAnswers,
+      [questionId]: selectedAnswer,
+    }));
+  };
+
+  // Submit quiz
+  const handleSubmitQuiz = async () => {
+    const answers = Object.entries(userAnswers).map(([questionId, answer]) => ({
+      questionId: parseInt(questionId),
+      answer,
+    }));
+
+    try {
+      const response = await fetchData("POST", "/quiz/submit", {
+        quizId: quiz.id,
+        answers,
+      });
+      const data = response.data;
+
+      if (data.success) {
+        toast.success("Quiz submitted successfully!");
+        if (data.completed) {
+          toast.success("You have passed the quiz!");
+        } else {
+          toast.info("You did not pass the quiz.");
+        }
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error("Error submitting quiz. Please try again!");
+    }
+  };
 
   const renderQuiz = () => {
     if (!quiz) return null;
@@ -82,7 +109,7 @@ const Resource = ({ params }) => {
         {quiz.questions.map((question, index) => (
           <div key={index} className="mb-6">
             <p className="font-semibold mb-2 text-lg">{`${index + 1}. ${
-              question.text
+              question.question
             }`}</p>
             <ul className="list-none pl-5">
               {question.options.map((option, optionIndex) => (
@@ -91,58 +118,28 @@ const Resource = ({ params }) => {
                     <input
                       type="radio"
                       name={`question-${index}`}
-                      value={optionIndex}
+                      value={option.answerText}
+                      checked={userAnswers[question.id] === option.answerText} // Track selected answer
+                      onChange={() =>
+                        handleAnswerSelect(question.id, option.answerText)
+                      } // Handle answer selection
                       className="mr-2"
                     />
-                    <span>{option}</span>
+                    <span>{option.answerText}</span>
                   </label>
                 </li>
               ))}
             </ul>
           </div>
         ))}
-        <button className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300">
+        <button
+          onClick={handleSubmitQuiz}
+          className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300"
+        >
           Submit Quiz
         </button>
       </div>
     );
-  };
-
-  const handleEdit = () => {
-    setIsEditMode(true);
-  };
-
-  const handleSave = () => {};
-
-  // you can do api calling like this just add the endpoints
-
-  // const handleSave = async () => {
-  //   try {
-  //     const response = await fetchData("PUT", `/topics/${selectedTopic.id}`, {
-  //       title: editedTitle,
-  //       content: editedContent,
-  //     });
-  //     const data = response.data;
-  //     if (data.success) {
-  //       toast.success("Resource updated successfully!");
-  //       setSelectedTopic({
-  //         ...selectedTopic,
-  //         title: editedTitle,
-  //         Articles: [{ ...selectedTopic.Articles[0], content: editedContent }],
-  //       });
-  //       setIsEditMode(false);
-  //     } else {
-  //       toast.error(data.message);
-  //     }
-  //   } catch (error) {
-  //     toast.error("Failed to update resource. Please try again!");
-  //   }
-  // };
-
-  const handleCancel = () => {
-    setEditedTitle(selectedTopic.title);
-    setEditedContent(selectedTopic.Articles[0]?.content || "");
-    setIsEditMode(false);
   };
 
   return (
@@ -176,10 +173,6 @@ const Resource = ({ params }) => {
               }`}
               onClick={() => {
                 setSelectedTopic(topic);
-                setEditedTitle(topic.title);
-                setEditedContent(topic.Articles[0]?.content || "");
-                setIsEditMode(false);
-                setSidebarOpen(false);
               }}
             >
               {topic.title}
@@ -191,61 +184,17 @@ const Resource = ({ params }) => {
       <div className="w-full md:w-9/12 lg:w-10/12 p-5 md:p-10 overflow-y-auto">
         {selectedTopic && (
           <div className="mb-8 bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8 transition-all duration-300 hover:shadow-2xl">
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              mb={2}
-            >
-              {isEditMode ? (
-                <TextField
-                  fullWidth
-                  variant="outlined"
-                  value={editedTitle}
-                  onChange={(e) => setEditedTitle(e.target.value)}
-                  className="mb-4"
-                />
-              ) : (
-                <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-200 border-b pb-2 border-gray-200 dark:border-gray-700">
-                  {selectedTopic.title}
-                </h2>
-              )}
-              <Box>
-                {isEditMode ? (
-                  <>
-                    <IconButton onClick={handleSave} color="primary">
-                      <Save />
-                    </IconButton>
-                    <IconButton onClick={handleCancel} color="secondary">
-                      <VisibilityOff />
-                    </IconButton>
-                  </>
-                ) : (
-                  <IconButton onClick={handleEdit} color="primary">
-                    <Edit />
-                  </IconButton>
-                )}
-              </Box>
-            </Box>
-            {isEditMode ? (
-              <TextField
-                fullWidth
-                multiline
-                rows={10}
-                variant="outlined"
-                value={editedContent}
-                onChange={(e) => setEditedContent(e.target.value)}
-              />
-            ) : (
-              <div
-                className="prose dark:prose-invert max-w-none"
-                dangerouslySetInnerHTML={{
-                  __html: sanitizeContent(
-                    selectedTopic.Articles[0]?.content || ""
-                  ),
-                }}
-              ></div>
-            )}
+            <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-200 border-b pb-2 border-gray-200 dark:border-gray-700">
+              {selectedTopic.title}
+            </h2>
+            <div
+              className="prose dark:prose-invert max-w-none"
+              dangerouslySetInnerHTML={{
+                __html: sanitizeContent(
+                  selectedTopic.Articles[0]?.content || ""
+                ),
+              }}
+            ></div>
           </div>
         )}
         {renderQuiz()}

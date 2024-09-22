@@ -8,10 +8,11 @@ import {
   getResources,
   saveResource,
 } from "../controllers/resourceController.js";
+import paginationMiddleware from "../middlewares/paginationMiddleware.js";
 
 const router = express.Router();
 
-router.get("/", getResources);
+router.get("/", paginationMiddleware, getResources);
 router.get("/:id", getResource);
 router.post("/create-subject", createSubjects);
 router.post("/delete-subjects", deleteSubjects);

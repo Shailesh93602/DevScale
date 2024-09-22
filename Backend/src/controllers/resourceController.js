@@ -44,17 +44,47 @@ export const addTopic = async (req, res) => {
 
 export const getResources = async (req, res) => {
   try {
+    const { limit, offset, search, order, orderBy } = req.pagination;
+    const searchCondition = search
+      ? {
+          [db.Sequelize.Op.or]: [
+            db.Sequelize.where(
+              db.Sequelize.fn("LOWER", db.Sequelize.col("name")),
+              {
+                [db.Sequelize.Op.like]: `%${search}%`,
+              }
+            ),
+            db.Sequelize.where(
+              db.Sequelize.fn("LOWER", db.Sequelize.col("description")),
+              {
+                [db.Sequelize.Op.like]: `%${search}%`,
+              }
+            ),
+            db.Sequelize.where(
+              db.Sequelize.fn("LOWER", db.Sequelize.col("tags")),
+              {
+                [db.Sequelize.Op.like]: `%${search}%`,
+              }
+            ),
+          ],
+        }
+      : {};
+
     let subjects = await db.Subject.findAll({
+      where: searchCondition,
       attributes: {
         include: ["id", "name", "description", "tags"],
         exclude: ["baz"],
       },
+      limit,
+      offset,
     });
 
     subjects = subjects.map((subject) => ({
       ...subject.dataValues,
       tags: subject.dataValues?.tags?.split(","),
     }));
+
     res.status(200).json({ success: true, resources: subjects });
   } catch (error) {
     logger.error("Error fetching subjects from database:", error);

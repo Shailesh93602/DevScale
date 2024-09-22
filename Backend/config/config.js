@@ -1,5 +1,5 @@
 import { config } from "dotenv";
-import mysql2 from "mysql2";
+import pg from "pg";
 
 config();
 
@@ -8,9 +8,9 @@ const dbConfig = {
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
   host: process.env.DB_HOST,
-  port: 3306,
-  dialect: "mysql",
-  dialectModule: mysql2,
+  port: 5432,
+  dialect: "postgres",
+  dialectModule: pg,
   dialectOptions: {
     charset: "utf8mb4",
     bigNumberStrings: true,

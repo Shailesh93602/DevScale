@@ -20,11 +20,12 @@ import UserPoints from "./userPoints.model.js";
 import UserRoadmap from "./userRoadmap.model.js";
 import MainConcept from "./mainConcepts.model.js";
 import UserProgress from "./userProgress.model.js";
-import Quiz from "./quiz.model.js"; // Add Quiz model
-import QuizQuestion from "./quizQuestion.model.js"; // Add QuizQuestion model
-import QuizAnswer from "./quizAnswer.model.js"; // Add QuizAnswer model
-import QuizSubmission from "./quizSubmission.model.js"; // Add QuizSubmission model
-import QuizSubmissionAnswer from "./quizSubmissionAnswer.model.js"; // Add QuizSubmissionAnswer model
+import Quiz from "./quiz.model.js";
+import QuizQuestion from "./quizQuestion.model.js";
+import QuizAnswer from "./quizAnswer.model.js";
+import QuizOption from "./quizOption.model.js";
+import QuizSubmission from "./quizSubmission.model.js";
+import QuizSubmissionAnswer from "./quizSubmissionAnswer.model.js";
 
 const sequelize = new Sequelize(
   config.database,
@@ -57,6 +58,7 @@ const db = {
   QuizAnswer: QuizAnswer(sequelize, Sequelize.DataTypes),
   QuizSubmission: QuizSubmission(sequelize, Sequelize.DataTypes),
   QuizSubmissionAnswer: QuizSubmissionAnswer(sequelize, Sequelize.DataTypes),
+  QuizOption: QuizOption(sequelize, Sequelize.DataTypes),
 };
 
 Object.keys(db).forEach((modelName) => {

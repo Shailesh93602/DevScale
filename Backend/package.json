@@ -9,6 +9,9 @@
     "start": "node index.js",
     "build": "echo 'No build step required'",
     "dev": "nodemon index.js",
+    "migrate": "npx sequelize-cli db:migrate",
+    "migrate:undo": "npx sequelize-cli db:migrate:undo",
+    "seed:all": "node db/seeders/subject.seeder.js && node db/seeders/topic.seeder.js && node db/seeders/roadmapSubjectTopics.seeder.js && node db/seeders/quizzes.seeder.js",
     "seed:subjects": "node db/seeders/subject.seeder.js",
     "seed:topics": "node db/seeders/topic.seeder.js",
     "seed:roadmaps": "node db/seeders/roadmap.seeder.js",
@@ -44,6 +47,7 @@
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
+    "pg": "^8.13.0",
     "sequelize": "^6.37.3",
     "winston": "^3.13.0"
   },

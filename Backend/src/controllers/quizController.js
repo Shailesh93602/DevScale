@@ -41,7 +41,11 @@ export const submitQuiz = async (req, res) => {
     const quiz = await db.Quiz.findByPk(quizId, {
       include: {
         model: db.QuizQuestion,
-        include: [db.QuizAnswer],
+        as: "questions",
+        include: {
+          model: db.QuizOption,
+          as: "options",
+        },
       },
     });
 
@@ -55,7 +59,7 @@ export const submitQuiz = async (req, res) => {
     let score = 0;
 
     for (const submittedAnswer of answers) {
-      const question = quiz.QuizQuestions.find(
+      const question = quiz.questions.find(
         (q) => q.id === submittedAnswer.questionId
       );
 
@@ -87,6 +91,7 @@ export const submitQuiz = async (req, res) => {
       completed,
     });
   } catch (error) {
+    console.log("🚀 ~ file: quizController.js:90 ~ submitQuiz ~ error:", error);
     // logger.error("Error submitting quiz:", error);
     res.status(500).json({
       success: false,
