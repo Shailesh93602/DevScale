@@ -28,7 +28,7 @@ const MyArticles = () => {
   }, []);
 
   const handleEdit = (id) => {
-    router.push(`/editArticle/${id}`);
+    router.push(`/edit-article/${id}`);
   };
 
   const handleViewComments = (id) => {

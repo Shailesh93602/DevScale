@@ -25,7 +25,6 @@ export const createQuiz = async (req, res) => {
       quiz,
     });
   } catch (error) {
-    // logger.error("Error creating quiz:", error);
     res.status(500).json({
       success: false,
       message: "Internal Server Error",
@@ -91,8 +90,6 @@ export const submitQuiz = async (req, res) => {
       completed,
     });
   } catch (error) {
-    console.log("🚀 ~ file: quizController.js:90 ~ submitQuiz ~ error:", error);
-    // logger.error("Error submitting quiz:", error);
     res.status(500).json({
       success: false,
       message: "Internal Server Error",
