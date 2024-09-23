@@ -1,42 +1,46 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { Form } from "@/components/ui/form";
-import CustomInput from "@/components/common/customInput";
 import { apiResponse } from "@/api/api";
 import { useDispatch } from "react-redux";
 import { initialUser } from "@/lib/features/user/userSlice";
-import { Lock, User } from "lucide-react";
+import { Moon, Sun, Loader } from "lucide-react";
+import loginimg from "@/assets/login4.avif";
+import Image from "next/image";
 
 const formSchema = yup.object({
-  username: yup
-    .string()
-    .trim()
-    .required("Username is required")
-    .min(2, "Username must be at least 2 characters."),
+  // email: yup.string().required("Email is required"),
   password: yup
     .string()
-    .trim()
     .required("Password is required")
-    .min(8, "Password must be at least 8 characters"),
+    .min(6, "Password must be at least 6 characters"),
 });
 
-export default function Login() {
+export default function ModernLogin() {
+  const [darkMode, setDarkMode] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
-  const form = useForm({
+  const router = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: yupResolver(formSchema),
     mode: "onChange",
   });
 
-  const router = useRouter();
   const onSubmit = async (data) => {
+    if (isLoading) return;
+    setIsLoading(true);
+
     try {
       const response = await apiResponse({
         method: "POST",
@@ -53,154 +57,142 @@ export default function Login() {
         ).toUTCString()};path=/;`;
         router.push("/dashboard");
       } else {
-        toast.error(response.data?.message);
+        toast.error(
+          response.data?.message || "Login failed. Please try again."
+        );
       }
     } catch (error) {
-      toast.error("LogIn failed. Please try again later.");
+      console.error("Login error:", error);
+      toast.error("An unexpected error occurred. Please try again later.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+
   return (
-    <section className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-100 to-blue-50 dark:from-gray-900 dark:to-gray-800 transition-all duration-300 ease-in-out">
-      <div className="max-w-md w-full space-y-8 bg-white dark:bg-gray-800 p-10 rounded-xl shadow-2xl transition-all duration-300 ease-in-out">
-        <div className="text-center">
-          <Link href="/" className="flex justify-center items-center mb-6">
-            <span className="sr-only">Mr. Engineers</span>
-            <img
-              className="h-12 w-auto"
-              src="/api/placeholder/200/200"
-              alt="Mr. Engineers Logo"
-            />
-          </Link>
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white">
-            Log in to your account
-          </h2>
-        </div>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="mt-8 space-y-6"
-          >
-            <div className="rounded-md shadow-sm -space-y-px">
-              <div className="mb-4">
-                <CustomInput
-                  control={form.control}
-                  errors={form.formState.errors}
-                  name="username"
-                  label="Username"
-                  placeholder="Enter your Username"
-                  icon={<User className="h-5 w-5 text-gray-400" />}
-                />
-              </div>
-              <div>
-                <CustomInput
-                  control={form.control}
-                  errors={form.formState.errors}
-                  name="password"
-                  type="password"
-                  label="Password"
-                  placeholder="Enter your Password"
-                  icon={<Lock className="h-5 w-5 text-gray-400" />}
-                />
-              </div>
+    <div
+      className={`flex min-h-screen 
+   bg-gray-100 text-gray-900
+      `}
+    >
+      <div className="flex-1 flex items-center justify-center p-10">
+        <div
+          className={`w-full max-w-md 
+           "bg-white
+           rounded-lg shadow-xl p-8`}
+        >
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold">Login</h2>
+            {/* <button
+              onClick={toggleDarkMode}
+              className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+            >
+              {darkMode ? (
+                <Sun className="w-5 h-5" />
+              ) : (
+                <Moon className="w-5 h-5" />
+              )}
+            </button> */}
+          </div>
+          <p className="mb-6 text-sm text-gray-500 dark:text-gray-400">
+            Don't have an account yet?{" "}
+            <Link
+              href="/u/register"
+              className="text-purple-600 hover:underline"
+            >
+              Sign Up
+            </Link>
+          </p>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium mb-2">
+                Email Address
+              </label>
+              <input
+                {...register("email")}
+                // type="email"
+                id="email"
+                placeholder="you@example.com"
+                className={`w-full px-3 py-2 border rounded-md bg-white border-gray-300`}
+              />
+              {/* {errors.email && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.email.message}
+                </p>
+              )} */}
             </div>
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-                <label
-                  htmlFor="remember-me"
-                  className="ml-2 block text-sm text-gray-900 dark:text-gray-300"
-                >
-                  Remember me
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <label htmlFor="password" className="block text-sm font-medium">
+                  Password
                 </label>
-              </div>
-
-              <div className="text-sm">
                 <Link
                   href="/u/forgotPassword"
-                  className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"
+                  className="text-sm text-purple-600 hover:underline"
                 >
-                  Forgot your password?
+                  Forgot Password?
                 </Link>
               </div>
+              <input
+                {...register("password")}
+                type="password"
+                id="password"
+                placeholder="Enter 6 character or more"
+                className={`w-full px-3 py-2 border rounded-md bg-white border-gray-300`}
+              />
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
-
-            <div>
-              <Button
-                type="submit"
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
-              >
-                Sign in
-              </Button>
-            </div>
+            {/* <div className="flex items-center">
+              <input type="checkbox" id="remember" className="mr-2" />
+              <label htmlFor="remember" className="text-sm">
+                Remember me
+              </label>
+            </div> */}
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-purple-600 text-white py-2 rounded-md hover:bg-purple-700 transition duration-300 flex items-center justify-center"
+            >
+              {isLoading ? (
+                <>
+                  <Loader className="animate-spin h-5 w-5 mr-3" />
+                  Signing in...
+                </>
+              ) : (
+                "LOGIN"
+              )}
+            </button>
           </form>
-        </Form>
-        <div className="mt-6">
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white dark:bg-gray-800 text-gray-500">
-                Or continue with
-              </span>
-            </div>
-          </div>
-          <div className="mt-6 grid grid-cols-3 gap-3">
-            <div>
-              <a
-                href="#"
-                className="w-full flex items-center justify-center px-8 py-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
-              >
-                <img
-                  className="h-5 w-5"
-                  src="/api/placeholder/20/20"
-                  alt="Google"
-                />
-              </a>
-            </div>
-            <div>
-              <a
-                href="#"
-                className="w-full flex items-center justify-center px-8 py-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
-              >
-                <img
-                  className="h-5 w-5"
-                  src="/api/placeholder/20/20"
-                  alt="Facebook"
-                />
-              </a>
-            </div>
-            <div>
-              <a
-                href="#"
-                className="w-full flex items-center justify-center px-8 py-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
-              >
-                <img
-                  className="h-5 w-5"
-                  src="/api/placeholder/20/20"
-                  alt="GitHub"
-                />
-              </a>
+          <div className="mt-6">
+            <p className="text-center text-sm text-gray-500 dark:text-gray-400 mb-4">
+              or login with
+            </p>
+            <div className="flex space-x-4">
+              <button className="flex-1 py-2 border rounded-md dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-300">
+                Google
+              </button>
+              <button className="flex-1 py-2 border rounded-md dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-300">
+                Facebook
+              </button>
             </div>
           </div>
         </div>
-        <p className="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
-          Not a member?{" "}
-          <Link
-            href="/u/register"
-            className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"
-          >
-            Sign up now
-          </Link>
-        </p>
       </div>
-    </section>
+      <div className="hidden lg:flex flex-1 items-center  justify-center bg-purple-100">
+        <Image
+          src={loginimg}
+          alt="Login illustration"
+          className=" w-full h-full"
+        />
+      </div>
+    </div>
   );
 }
