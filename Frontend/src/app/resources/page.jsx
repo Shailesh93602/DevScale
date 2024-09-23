@@ -71,7 +71,6 @@ export default function ResourcesPage() {
       const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
       const isBottom = scrollTop + clientHeight >= scrollHeight - 500;
 
-      console.log(isBottom, hasMore, loadingMore);
       if (isBottom && hasMore && !loadingMore) {
         setPage((prevPage) => prevPage + 1);
       }

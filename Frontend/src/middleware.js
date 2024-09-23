@@ -18,7 +18,6 @@ const protectedPages = [
 export async function middleware(req) {
   const pathname = req.nextUrl.pathname;
 
-  // Check if the requested page is protected
   if (!protectedPages.includes(pathname)) {
     return NextResponse.next();
   }
@@ -30,14 +29,12 @@ export async function middleware(req) {
   }
 
   try {
-    // Validate token
     const response = await validateToken(token);
 
     if (response === "Unauthorized") {
       return redirectToLogin(req);
     }
 
-    // Token is valid, allow access to protected route
     return NextResponse.next();
   } catch (error) {
     console.error("Middleware error:", error);

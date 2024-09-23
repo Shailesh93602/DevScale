@@ -17,9 +17,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-mongoose.connect(process.env.MONGO_URL, {
-  useUnifiedTopology: true,
-});
+mongoose.connect(process.env.MONGO_URL, {});
 
 const app = express();
 const port = process.env.PORT || 4000;

@@ -15,7 +15,7 @@ const Resource = ({ params }) => {
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [quiz, setQuiz] = useState(null);
-  const [userAnswers, setUserAnswers] = useState({}); // New state to track user's answers
+  const [userAnswers, setUserAnswers] = useState({});
 
   useEffect(() => {
     const fetchResource = async () => {
@@ -61,7 +61,6 @@ const Resource = ({ params }) => {
     fetchQuiz();
   }, [selectedTopic]);
 
-  // Handle answer selection
   const handleAnswerSelect = (questionId, selectedAnswer) => {
     setUserAnswers((prevAnswers) => ({
       ...prevAnswers,
@@ -69,7 +68,6 @@ const Resource = ({ params }) => {
     }));
   };
 
-  // Submit quiz
   const handleSubmitQuiz = async () => {
     const answers = Object.entries(userAnswers).map(([questionId, answer]) => ({
       questionId: parseInt(questionId),
@@ -119,10 +117,10 @@ const Resource = ({ params }) => {
                       type="radio"
                       name={`question-${index}`}
                       value={option.answerText}
-                      checked={userAnswers[question.id] === option.answerText} // Track selected answer
+                      checked={userAnswers[question.id] === option.answerText}
                       onChange={() =>
                         handleAnswerSelect(question.id, option.answerText)
-                      } // Handle answer selection
+                      }
                       className="mr-2"
                     />
                     <span>{option.answerText}</span>

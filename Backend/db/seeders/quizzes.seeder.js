@@ -1,7 +1,6 @@
 import db from "../models/index.js";
 import { roadmaps } from "../../resources/roadmaps/roadmap.js";
 
-// Array of quizzes to seed
 const quizzes = [
   {
     topicName: "HTML Basics",
@@ -50,16 +49,13 @@ const quizzes = [
       },
     ],
   },
-  // Add more quizzes as needed
 ];
 
 const seedQuizzes = async () => {
   try {
-    // Authenticate the connection
     await db.sequelize.authenticate();
 
     for (const quizData of quizzes) {
-      // Find or upsert the topic by name
       const [topic] = await db.Topic.findOrCreate({
         where: { title: quizData.topicName },
         defaults: { title: quizData.topicName },
@@ -100,5 +96,4 @@ const seedQuizzes = async () => {
   }
 };
 
-// Run the seeder
 seedQuizzes();

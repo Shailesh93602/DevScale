@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { toast } from "react-toastify";
 import "react-quill/dist/quill.snow.css";
@@ -10,28 +10,47 @@ import Navbar from "@/components/Navbar";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
-const ResourceEditor = ({ params }) => {
+const ArticleEditor = ({ params }) => {
   const { id } = params;
   const [content, setContent] = useState("");
 
   const dispatch = useDispatch();
 
-  const saveResource = async () => {
+  useEffect(() => {
+    const fetchArticle = async () => {
+      try {
+        dispatch(showLoader());
+        const response = await fetchData("get", `/articles/${id}`);
+        if (response.data.success) {
+          setContent(response.data.article.content);
+        } else {
+          toast.error("Failed to load article.");
+        }
+      } catch (error) {
+        toast.error("Failed to load article.");
+      } finally {
+        dispatch(hideLoader());
+      }
+    };
+
+    fetchArticle();
+  }, [id, dispatch]);
+
+  const updateArticle = async () => {
     try {
       dispatch(showLoader());
-      const response = await fetchData("post", `/resources/save/${id}`, {
+      const response = await fetchData("post", `/articles/${id}/update`, {
         content,
       });
 
       if (response.data.success) {
-        toast.success("Resource saved successfully!");
-        setContent("");
-        window.location.href = "/resources";
+        toast.success("Article updated successfully!");
+        window.location.href = `/articles/${id}`;
       } else {
-        toast.error("Failed to save resource.");
+        toast.error("Failed to update article.");
       }
     } catch (error) {
-      toast.error("Failed to save resource.");
+      toast.error("Failed to update article.");
     } finally {
       dispatch(hideLoader());
     }
@@ -62,14 +81,14 @@ const ResourceEditor = ({ params }) => {
           />
         </div>
         <button
-          onClick={saveResource}
+          onClick={updateArticle}
           className="bg-blue-500 text-white py-2 px-4 rounded-lg"
         >
-          Save Resource
+          Update Article
         </button>
       </div>
     </>
   );
 };
 
-export default ResourceEditor;
+export default ArticleEditor;
