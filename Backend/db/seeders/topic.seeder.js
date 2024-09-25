@@ -857,23 +857,270 @@ const topics = [
       "Information on compilers and how to use them with C programming.",
     subject: "C Language",
   },
+  {
+    name: "Introduction to Python",
+    description:
+      "Installing Python, writing and running your first Python program, understanding the Python interpreter and IDEs.",
+    subject: "Python",
+  },
+  {
+    name: "Python Variables and Data Types",
+    description:
+      "Introduction to variables, constants, and primitive data types like integers, floats, strings, and booleans.",
+    subject: "Python",
+  },
+  {
+    name: "Python Number and Casting",
+    description:
+      "Basic arithmetic operations and type conversion (casting) between different data types.",
+    subject: "Python",
+  },
+  {
+    name: "Python Strings",
+    description:
+      "String operations, methods, string formatting, and f-strings.",
+    subject: "Python",
+  },
+  {
+    name: "Python Booleans",
+    description:
+      "Understanding true/false logic and boolean operations in Python.",
+    subject: "Python",
+  },
+  {
+    name: "Python Operators",
+    description:
+      "Working with arithmetic, comparison, logical, assignment, identity, membership, and bitwise operators.",
+    subject: "Python",
+  },
+  {
+    name: "Python Input and Output",
+    description:
+      "Reading user input and printing output using Python’s input() and print() functions.",
+    subject: "Python",
+  },
+  {
+    name: "Python Lists",
+    description:
+      "List operations, slicing, and list comprehensions for working with lists in Python.",
+    subject: "Python",
+  },
+  {
+    name: "Python Tuples",
+    description:
+      "Introduction to tuples, their immutability, and how to work with them.",
+    subject: "Python",
+  },
+  {
+    name: "Python Sets",
+    description:
+      "Set operations, methods, and understanding the uniqueness property of set elements.",
+    subject: "Python",
+  },
+  {
+    name: "Python Dictionaries",
+    description:
+      "Working with dictionaries (key-value pairs), common methods, and dictionary comprehensions.",
+    subject: "Python",
+  },
+  {
+    name: "Python Conditional Statements",
+    description:
+      "Using if, else, and elif for decision-making in Python programs.",
+    subject: "Python",
+  },
+  {
+    name: "Python Loops",
+    description:
+      "Introduction to while and for loops, along with nested loops and loop control statements like break, continue, and pass.",
+    subject: "Python",
+  },
+  {
+    name: "Python Functions",
+    description:
+      "Defining and calling functions, function arguments, return values, and lambda functions.",
+    subject: "Python",
+  },
+  {
+    name: "Python Recursion",
+    description:
+      "Understanding recursion, base cases, and using recursive functions to solve problems.",
+    subject: "Python",
+  },
+  {
+    name: "Python Error and Exception Handling",
+    description:
+      "Using try, except, and finally blocks for handling exceptions and raising custom exceptions.",
+    subject: "Python",
+  },
+  {
+    name: "Python File Handling",
+    description:
+      "Reading and writing files using Python's file handling methods, including context managers.",
+    subject: "Python",
+  },
+  {
+    name: "Python Modules",
+    description:
+      "Importing, using, and creating Python modules for better code organization.",
+    subject: "Python",
+  },
+  {
+    name: "Python Packages",
+    description:
+      "Understanding packages and how to organize your Python code into modules and packages.",
+    subject: "Python",
+  },
+  {
+    name: "Python Arrays",
+    description:
+      "Working with arrays using the list data structure or the array module.",
+    subject: "Python",
+  },
+  {
+    name: "Python List Comprehensions and Generators",
+    description:
+      "Using list comprehensions and generator functions to write efficient code.",
+    subject: "Python",
+  },
+  {
+    name: "Object-Oriented Programming (OOP) in Python",
+    description:
+      "Introduction to classes, objects, inheritance, polymorphism, encapsulation, and abstraction in Python.",
+    subject: "Python",
+  },
+  {
+    name: "Python Decorators",
+    description:
+      "Function decorators, class decorators, and built-in decorators like @staticmethod and @classmethod.",
+    subject: "Python",
+  },
+  {
+    name: "Python Iterators and Generators",
+    description:
+      "Working with Python’s iterator protocol and creating generator functions using yield.",
+    subject: "Python",
+  },
+  {
+    name: "Python Regular Expressions",
+    description:
+      "Using the re module to match, search, and replace patterns with regular expressions.",
+    subject: "Python",
+  },
+  {
+    name: "Python Date and Time",
+    description:
+      "Working with dates and times using the datetime and time modules.",
+    subject: "Python",
+  },
+  {
+    name: "Python Functional Programming",
+    description:
+      "Using map, filter, reduce, lambda functions, and higher-order functions for functional programming in Python.",
+    subject: "Python",
+  },
+  {
+    name: "Python Comprehensions",
+    description:
+      "Advanced use of list, set, and dictionary comprehensions, with conditional logic.",
+    subject: "Python",
+  },
+  {
+    name: "Python Exception Handling (Advanced)",
+    description:
+      "Handling multiple exceptions, raising exceptions, and understanding the exception hierarchy.",
+    subject: "Python",
+  },
+  {
+    name: "Python File I/O (Advanced)",
+    description:
+      "Binary file handling, memory-mapped files, and reading/writing large files.",
+    subject: "Python",
+  },
+  {
+    name: "Python Unit Testing",
+    description:
+      "Writing and running test cases using unittest, mocking, and automating test suites.",
+    subject: "Python",
+  },
+  {
+    name: "Python Logging",
+    description:
+      "Setting up logging, using different logging levels, and configuring logs for applications.",
+    subject: "Python",
+  },
+  {
+    name: "Python Multi-threading and Concurrency",
+    description:
+      "Using threading, concurrent.futures, and asyncio to manage concurrency and parallelism in Python.",
+    subject: "Python",
+  },
+  {
+    name: "Python Networking",
+    description:
+      "Working with sockets, HTTP requests, APIs, and web scraping using Python.",
+    subject: "Python",
+  },
+  {
+    name: "Python Databases",
+    description:
+      "Connecting to databases (SQLite, MySQL, PostgreSQL) and using the sqlite3 module or SQLAlchemy ORM.",
+    subject: "Python",
+  },
+  {
+    name: "Python Data Science Libraries",
+    description:
+      "Introduction to popular data science libraries like NumPy, Pandas, Matplotlib, and SciPy.",
+    subject: "Python",
+  },
+  {
+    name: "Python Web Development",
+    description:
+      "Introduction to building web applications using Flask, Django, or FastAPI.",
+    subject: "Python",
+  },
+  {
+    name: "Python for Automation",
+    description:
+      "Automating tasks using os, shutil, subprocess, and other built-in Python modules.",
+    subject: "Python",
+  },
+  {
+    name: "Python for APIs",
+    description:
+      "Building and consuming REST APIs using Flask, FastAPI, or the requests module.",
+    subject: "Python",
+  },
+  {
+    name: "Python Best Practices and Code Optimization",
+    description:
+      "Writing efficient, clean Python code, avoiding common pitfalls, and profiling code for optimization.",
+    subject: "Python",
+  },
 ];
 
 const seedTopics = async () => {
   try {
     await db.sequelize.authenticate();
 
-    for (const topic of topics) {
+    for (const topicData of topics) {
+      // Find the subject for this topic
       const subject = await db.Subject.findOne({
-        where: { name: topic.subject },
+        where: { name: topicData.subject },
       });
+
       if (subject) {
-        await db.Topic.findOrCreate({
-          where: { name: topic.name },
-          defaults: { ...topic, subjectId: subject.id },
+        const [topic] = await db.Topic.findOrCreate({
+          where: { title: topicData.name },
+          defaults: {
+            description: topicData.description,
+            subjectId: subject.id,
+          },
         });
       } else {
-        console.error(`Subject "${topic.subject}" not found`);
+        console.error(
+          `Subject "${topicData.subject}" not found for topic "${topicData.name}"`
+        );
       }
     }
 
