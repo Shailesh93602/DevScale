@@ -46,6 +46,10 @@ const subjects = [
     name: "Python",
     description: "Introduction to Python Programming Language.",
   },
+  {
+    name: "C++",
+    description: "Introduction to C++ Programming Language.",
+  },
 ];
 
 const seedSubjects = async () => {
