@@ -1097,6 +1097,227 @@ const topics = [
       "Writing efficient, clean Python code, avoiding common pitfalls, and profiling code for optimization.",
     subject: "Python",
   },
+  {
+    name: "Introduction to C++",
+    description:
+      "Overview of C++, history, uses, and setting up the development environment.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Syntax and Structure",
+    description:
+      "Basic syntax, structure of a C++ program, writing and compiling your first program.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Variables and Data Types",
+    description:
+      "Introduction to variables, constants, and primitive data types (int, float, char, double, bool).",
+    subject: "C++",
+  },
+  {
+    name: "C++ Input and Output",
+    description:
+      "Using cin for input, cout for output, and basic I/O operations.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Operators",
+    description:
+      "Arithmetic, relational, logical, bitwise, assignment, and other operators.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Control Structures",
+    description:
+      "Using if, else, switch, and ternary operators for decision-making.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Loops",
+    description:
+      "For, while, do-while loops and loop control (break, continue).",
+    subject: "C++",
+  },
+  {
+    name: "C++ Functions",
+    description:
+      "Defining and calling functions, function arguments, return values, and function overloading.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Arrays",
+    description:
+      "Working with single and multi-dimensional arrays, array manipulation.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Strings",
+    description:
+      "String manipulation, C++ string class, common string operations.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Pointers",
+    description:
+      "Introduction to pointers, pointer arithmetic, and memory management.",
+    subject: "C++",
+  },
+  {
+    name: "C++ References",
+    description:
+      "Working with references, reference variables, and pointer vs reference.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Dynamic Memory",
+    description:
+      "Using new and delete for dynamic memory allocation, managing heap memory.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Structures",
+    description: "Defining and using structures to group data types together.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Enumerations",
+    description: "Working with enumerations to define user-defined data types.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Functions (Advanced)",
+    description:
+      "Inline functions, recursive functions, and default arguments.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Classes and Objects",
+    description:
+      "Introduction to OOP, defining classes, creating objects, access specifiers (public, private, protected).",
+    subject: "C++",
+  },
+  {
+    name: "C++ Constructors and Destructors",
+    description:
+      "Creating constructors and destructors, constructor overloading.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Inheritance",
+    description:
+      "Understanding inheritance, types of inheritance (single, multiple, hierarchical), base and derived classes.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Polymorphism",
+    description:
+      "Function and operator overloading, virtual functions, and runtime polymorphism.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Encapsulation and Abstraction",
+    description:
+      "Encapsulation using classes and abstraction using abstract classes.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Friend Functions and Classes",
+    description:
+      "Using friend functions and friend classes to access private members.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Static Members",
+    description: "Working with static variables and static functions.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Namespaces",
+    description: "Understanding and using namespaces to avoid name conflicts.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Templates",
+    description: "Using function and class templates for generic programming.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Exception Handling",
+    description:
+      "Using try, catch, throw to handle exceptions and error conditions.",
+    subject: "C++",
+  },
+  {
+    name: "C++ File Handling",
+    description:
+      "Reading from and writing to files, using file streams (ifstream, ofstream).",
+    subject: "C++",
+  },
+  {
+    name: "C++ Standard Template Library (STL)",
+    description:
+      "Introduction to STL containers (vector, list, map, set) and algorithms.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Iterators",
+    description:
+      "Using iterators with STL containers, iterator types (input, output, forward, bidirectional, random access).",
+    subject: "C++",
+  },
+  {
+    name: "C++ Lambda Expressions",
+    description: "Introduction to lambda expressions and their usage in C++.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Smart Pointers",
+    description:
+      "Using unique_ptr, shared_ptr, and weak_ptr for automatic memory management.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Multithreading",
+    description:
+      "Creating and managing threads, synchronization using mutex and condition variables.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Regular Expressions",
+    description: "Using regex for pattern matching and string manipulation.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Type Casting",
+    description:
+      "Understanding static_cast, dynamic_cast, const_cast, and reinterpret_cast.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Function Pointers",
+    description:
+      "Using pointers to functions and passing functions as arguments.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Move Semantics",
+    description:
+      "Understanding rvalue references, move constructors, and move assignment.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Memory Management",
+    description:
+      "Advanced memory management techniques, handling memory leaks, and using smart pointers.",
+    subject: "C++",
+  },
+  {
+    name: "C++ Best Practices",
+    description:
+      "Writing clean, efficient, and maintainable code in C++, avoiding common pitfalls.",
+    subject: "C++",
+  },
 ];
 
 const seedTopics = async () => {
