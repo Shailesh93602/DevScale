@@ -22,7 +22,7 @@ import { initialUser } from "@/lib/features/user/userSlice";
 
 // Define validation schema with Yup
 const formSchema = yup.object({
-  email: yup.string().required("Email is required"),
+  username: yup.string().required("Email or Username is required"),
   password: yup
     .string()
     .required("Password is required")
@@ -140,14 +140,14 @@ const LoginPage = () => {
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <TextField
-            {...register("email")}
+            {...register("username")}
             label="Email or Username"
             variant="outlined"
             fullWidth
             margin="normal"
             sx={{ mb: 2, "& .MuiOutlinedInput-root": { color: "white" } }}
-            error={!!errors.email}
-            helperText={errors.email?.message}
+            error={!!errors.username}
+            helperText={errors.username?.message}
           />
 
           <TextField
