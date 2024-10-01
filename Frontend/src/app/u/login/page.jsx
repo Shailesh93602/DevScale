@@ -176,7 +176,11 @@ const LoginPage = () => {
                 Remember Me
               </Typography>
             </Box>
-            <Link href="#" variant="body2" sx={{ color: "#696cff" }}>
+            <Link
+              href="/u/forgotPassword"
+              variant="body2"
+              sx={{ color: "#696cff" }}
+            >
               Forgot Password?
             </Link>
           </Box>
@@ -198,7 +202,7 @@ const LoginPage = () => {
           sx={{ mb: 2, color: "gray" }}
         >
           New on our platform?{" "}
-          <Link href="#" sx={{ color: "#696cff" }}>
+          <Link href="/u/register" sx={{ color: "#696cff" }}>
             Create an account
           </Link>
         </Typography>
