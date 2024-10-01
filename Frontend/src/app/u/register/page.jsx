@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import {
   Box,
@@ -8,10 +7,21 @@ import {
   TextField,
   Typography,
   Link,
+  useTheme,
   useMediaQuery,
+  ThemeProvider,
+  createTheme,
+  CssBaseline,
+  IconButton,
 } from "@mui/material";
-import { Facebook, Twitter, GitHub, Google } from "@mui/icons-material";
-import Image from "next/image";
+import {
+  Facebook,
+  Twitter,
+  GitHub,
+  Google,
+  Brightness4,
+  Brightness7,
+} from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -20,8 +30,8 @@ import { useRouter } from "next/navigation";
 import { apiResponse } from "@/api/api";
 import { useDispatch } from "react-redux";
 import { initialUser } from "@/lib/features/user/userSlice";
+import Image from "next/image";
 
-// Define validation schema with Yup
 const formSchema = yup.object({
   username: yup
     .string()
@@ -43,10 +53,27 @@ const formSchema = yup.object({
 
 const RegisterPage = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [mode, setMode] = useState("light");
   const router = useRouter();
   const dispatch = useDispatch();
 
-  // React Hook Form
+  const theme = React.useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode,
+        },
+      }),
+    [mode]
+  );
+
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+
+  const toggleColorMode = () => {
+    setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
+  };
+
   const {
     register,
     handleSubmit,
@@ -56,7 +83,6 @@ const RegisterPage = () => {
     mode: "onChange",
   });
 
-  // API call and submit handler
   const onSubmit = async (data) => {
     if (isLoading) return;
     setIsLoading(true);
@@ -89,168 +115,209 @@ const RegisterPage = () => {
     }
   };
 
-  // Static breakpoint for small screens
-  const isSmallScreen = useMediaQuery("(max-width:960px)");
-
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: isSmallScreen ? "column" : "row",
-        height: "100vh",
-        bgcolor: "#1e1e2f",
-      }}
-    >
-      {/* Left side - Illustration */}
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <Box
         sx={{
-          flex: isSmallScreen ? "none" : 1,
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          position: "relative",
-          p: 3,
+          minHeight: "100vh",
+          bgcolor: "background.default",
         }}
       >
-        <Typography
-          variant="h4"
-          sx={{ position: "absolute", top: 20, left: 20, color: "white" }}
+        {/* Theme toggle button */}
+        <IconButton
+          sx={{ position: "absolute", top: 16, right: 16 }}
+          onClick={toggleColorMode}
+          color="inherit"
         >
-          Mr.Engineer
-        </Typography>
+          {theme.palette.mode === "dark" ? <Brightness7 /> : <Brightness4 />}
+        </IconButton>
 
-        {!isSmallScreen && (
-          <Image
-            src="/images/boy-with-rocket-dark.png"
-            alt="Illustration"
-            width="1000"
-            height="1000"
-          />
-        )}
-      </Box>
-
-      {/* Right side - Register Form */}
-      <Box
-        sx={{
-          flex: isSmallScreen ? "none" : 1,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          p: 4,
-          bgcolor: "#2f3349",
-          overflowY: "auto",
-          marginY: isSmallScreen ? "auto" : "none",
-        }}
-      >
-        <Typography variant="h4" sx={{ mb: 1, color: "white" }}>
-          Adventure starts here 🚀
-        </Typography>
-        <Typography variant="body2" sx={{ mb: 4, color: "gray" }}>
-          Make your app management easy and fun!
-        </Typography>
-
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <TextField
-            {...register("username")}
-            label="Username"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            sx={{ mb: 2, "& .MuiOutlinedInput-root": { color: "white" } }}
-            error={!!errors.username}
-            helperText={errors.username?.message}
-          />
-
-          <TextField
-            {...register("email")}
-            label="Email"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            sx={{ mb: 2, "& .MuiOutlinedInput-root": { color: "white" } }}
-            error={!!errors.email}
-            helperText={errors.email?.message}
-          />
-
-          <TextField
-            {...register("password")}
-            label="Password"
-            type="password"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            sx={{ mb: 2, "& .MuiOutlinedInput-root": { color: "white" } }}
-            error={!!errors.password}
-            helperText={errors.password?.message}
-          />
-
-          <TextField
-            {...register("confirmPassword")}
-            label="Confirm Password"
-            type="password"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            sx={{ mb: 2, "& .MuiOutlinedInput-root": { color: "white" } }}
-            error={!!errors.confirmPassword}
-            helperText={errors.confirmPassword?.message}
-          />
+        {/* Left side - Gradient Background */}
+        {!isMobile && (
+          // <Box
+          //   sx={{
+          //     flex: isTablet ? "0 0 40%" : "0 0 50%",
+          //     background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
+          //     display: "flex",
+          //     flexDirection: "column",
+          //     justifyContent: "center",
+          //     alignItems: "center",
+          //     p: 4,
+          //     color: "white",
+          //   }}
+          // >
+          //   <Typography variant="h2" sx={{ mb: 4 }}>
+          //     Mr.Engineer
+          //   </Typography>
+          //   <Typography variant="h4" sx={{ mb: 2 }}>
+          //     Join Our Community
+          //   </Typography>
+          //   <Typography variant="body1" align="center">
+          //     Embark on an exciting journey of learning and innovation with
+          //     Mr.Engineer.
+          //   </Typography>
+          // </Box>
 
           <Box
             sx={{
+              flex: isMobile ? "none" : 1,
               display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
               alignItems: "center",
-              mb: 2,
+              position: "relative",
+              p: 3,
             }}
           >
-            <Checkbox sx={{ color: "gray" }} />
-            <Typography variant="body2" sx={{ color: "gray" }}>
-              I agree to{" "}
-              <Link href="#" sx={{ color: "#696cff" }}>
-                privacy policy & terms
-              </Link>
+            <Typography
+              variant="h4"
+              sx={{
+                position: "absolute",
+                top: 20,
+                left: 20,
+                color: "text.primary",
+              }}
+            >
+              Mr.Engineer
             </Typography>
+            {!isMobile && (
+              <Image
+                src={
+                  mode === "light"
+                    ? "/images/boy-with-rocket-dark.png"
+                    : "/images/boy-with-rocket-dark.png"
+                }
+                alt="Illustration"
+                width="1000"
+                height="1000"
+              />
+            )}
           </Box>
+        )}
 
-          <Button
-            type="submit"
-            variant="contained"
-            fullWidth
-            sx={{ mb: 2, bgcolor: "#696cff" }}
-            disabled={isLoading}
+        {/* Right side - Register Form */}
+        <Box
+          sx={{
+            flex: isMobile ? 1 : isTablet ? "0 0 60%" : "0 0 50%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            p: 4,
+            bgcolor: "background.paper",
+            overflowY: "auto",
+          }}
+        >
+          <Typography variant="h4" sx={{ mb: 1, color: "text.primary" }}>
+            Adventure starts here 🚀
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 4, color: "text.secondary" }}>
+            Make your app management easy and fun!
+          </Typography>
+
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <TextField
+              {...register("username")}
+              label="Username"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              sx={{ mb: 2 }}
+              error={!!errors.username}
+              helperText={errors.username?.message}
+            />
+
+            <TextField
+              {...register("email")}
+              label="Email"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              sx={{ mb: 2 }}
+              error={!!errors.email}
+              helperText={errors.email?.message}
+            />
+
+            <TextField
+              {...register("password")}
+              label="Password"
+              type="password"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              sx={{ mb: 2 }}
+              error={!!errors.password}
+              helperText={errors.password?.message}
+            />
+
+            <TextField
+              {...register("confirmPassword")}
+              label="Confirm Password"
+              type="password"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              sx={{ mb: 2 }}
+              error={!!errors.confirmPassword}
+              helperText={errors.confirmPassword?.message}
+            />
+
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                mb: 2,
+              }}
+            >
+              <Checkbox />
+              <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                I agree to{" "}
+                <Link href="#" sx={{ color: "primary.main" }}>
+                  privacy policy & terms
+                </Link>
+              </Typography>
+            </Box>
+
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              sx={{ mb: 2 }}
+              disabled={isLoading}
+            >
+              {isLoading ? "Signing up..." : "Sign up"}
+            </Button>
+          </form>
+
+          <Typography
+            variant="body2"
+            align="center"
+            sx={{ mb: 2, color: "text.secondary" }}
           >
-            {isLoading ? "Signing up..." : "Sign up"}
-          </Button>
-        </form>
+            Already have an account?{" "}
+            <Link href="/u/login" sx={{ color: "primary.main" }}>
+              Sign in instead
+            </Link>
+          </Typography>
 
-        <Typography
-          variant="body2"
-          align="center"
-          sx={{ mb: 2, color: "gray" }}
-        >
-          Already have an account?{" "}
-          <Link href="/u/login" sx={{ color: "#696cff" }}>
-            Sign in instead
-          </Link>
-        </Typography>
+          <Typography
+            variant="body2"
+            align="center"
+            sx={{ mb: 2, color: "text.secondary" }}
+          >
+            or
+          </Typography>
 
-        <Typography
-          variant="body2"
-          align="center"
-          sx={{ mb: 2, color: "gray" }}
-        >
-          or
-        </Typography>
-
-        <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
-          <Facebook sx={{ color: "#497ce2" }} />
-          <Twitter sx={{ color: "#1da1f2" }} />
-          <GitHub sx={{ color: "white" }} />
-          <Google sx={{ color: "#db4437" }} />
+          <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
+            <Facebook sx={{ color: "#497ce2" }} />
+            <Twitter sx={{ color: "#1da1f2" }} />
+            <GitHub sx={{ color: "text.primary" }} />
+            <Google sx={{ color: "#db4437" }} />
+          </Box>
         </Box>
       </Box>
-    </Box>
+    </ThemeProvider>
   );
 };
 
