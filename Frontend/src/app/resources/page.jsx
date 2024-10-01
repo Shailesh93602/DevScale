@@ -1,12 +1,12 @@
 "use client";
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
 import { fetchData } from "@/app/services/fetchData";
 import { toast } from "react-toastify";
-import debounce from "lodash.debounce";
+import { debounce } from "@/utils/common";
 
-export default function ResourcesPage() {
+const ResourcesPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [resources, setResources] = useState([]);
   const [page, setPage] = useState(1);
@@ -14,80 +14,73 @@ export default function ResourcesPage() {
   const [loadingMore, setLoadingMore] = useState(false);
 
   const dispatch = useDispatch();
-  const containerRef = useRef(null);
+  const observerRef = useRef(null);
 
-  const fetchResources = useCallback(
-    async (term = "", page = 1, isLoadMore = false) => {
-      if (loadingMore) return;
-      setLoadingMore(true);
-      dispatch(showLoader());
-      try {
-        const response = await fetchData(
-          "GET",
-          `/resources?search=${term}&page=${page}&limit=10`
-        );
-        const newResources = response.data.resources;
+  const fetchResources = async (searchTerm, page, isAppending = false) => {
+    if (loadingMore) return;
+    setLoadingMore(true);
+    dispatch(showLoader());
 
-        if (isLoadMore) {
-          setResources((prev) => [...prev, ...newResources]);
-        } else {
-          setResources(newResources);
-        }
+    try {
+      const response = await fetchData(
+        "GET",
+        `/resources?search=${encodeURIComponent(
+          searchTerm
+        )}&page=${page}&limit=10`
+      );
 
-        if (newResources.length === 0) {
-          setHasMore(false);
-        }
-      } catch (error) {
-        toast.error("Error fetching resources, Please try again");
-      } finally {
-        dispatch(hideLoader());
-        setLoadingMore(false);
-      }
-    },
-    [dispatch, loadingMore]
-  );
+      const newResources = response.data.resources;
 
-  const debouncedSearch = useCallback(
-    debounce((value) => {
-      setPage(1);
-      setHasMore(true);
-      fetchResources(value, 1);
-    }, 200),
-    [fetchResources]
-  );
-
-  useEffect(() => {
-    fetchResources(searchTerm, page, page > 1);
-  }, [page, searchTerm]);
-
-  const handleSearch = (e) => {
-    const value = e.target.value?.toLowerCase();
-    setSearchTerm(value);
-    debouncedSearch(value);
+      setResources((prev) =>
+        isAppending ? [...prev, ...newResources] : newResources
+      );
+      setHasMore(newResources.length > 0);
+    } catch (error) {
+      console.error("🚀 ~ file: page.jsx:35 ~ fetchResources ~ error:", error);
+      toast.error("Error fetching resources, Please try again");
+    } finally {
+      dispatch(hideLoader());
+      setLoadingMore(false);
+    }
   };
 
-  const handleScroll = useCallback(() => {
-    if (containerRef.current) {
-      const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
-      const isBottom = scrollTop + clientHeight >= scrollHeight - 500;
-
-      if (isBottom && hasMore && !loadingMore) {
-        setPage((prevPage) => prevPage + 1);
-      }
-    }
-  }, [hasMore, loadingMore]);
+  const debouncedFetchResources = useMemo(
+    () =>
+      debounce(
+        (searchTerm, page, isAppending) =>
+          fetchResources(searchTerm, page, isAppending),
+        300
+      ),
+    []
+  );
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (container) {
-      container.addEventListener("scroll", handleScroll);
+    if (page === 1) {
+      fetchResources(searchTerm, page, false);
+    } else {
+      debouncedFetchResources(searchTerm, page, true); // Append resources when page > 1
     }
-    return () => {
-      if (container) {
-        container.removeEventListener("scroll", handleScroll);
-      }
-    };
-  }, [handleScroll]);
+  }, [page]);
+
+  useEffect(() => {
+    setPage(1); // Reset page when search term changes
+    setResources([]);
+    debouncedFetchResources(searchTerm, 1, false); // Fetch fresh resources on search
+  }, [searchTerm]);
+
+  const lastResourceRef = useCallback(
+    (node) => {
+      if (loadingMore) return;
+      if (observerRef.current) observerRef.current.disconnect();
+      observerRef.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      });
+      if (node) observerRef.current.observe(node);
+    },
+    [loadingMore, hasMore]
+  );
 
   return (
     <div className="bg-white dark:bg-gray-800 mx-auto p-6">
@@ -99,16 +92,17 @@ export default function ResourcesPage() {
           type="text"
           placeholder="Search resources..."
           value={searchTerm}
-          onChange={handleSearch}
+          onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full p-3 mb-6 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
-        <div ref={containerRef} className="h-[500px] overflow-y-auto">
+        <div className="h-[500px] overflow-y-auto">
           {resources?.length > 0 ? (
             <ul className="space-y-6">
               {resources.map((resource, index) => (
                 <li
-                  key={index}
+                  key={resource.id}
+                  ref={index === resources.length - 1 ? lastResourceRef : null}
                   className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-200"
                 >
                   <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
@@ -132,7 +126,7 @@ export default function ResourcesPage() {
                     {resource.tags?.map((tag) => (
                       <span
                         key={tag}
-                        className=" bg-blue-100 dark:bg-gray-900 rounded-lg px-2"
+                        className="bg-blue-100 dark:bg-gray-900 rounded-lg px-2"
                       >
                         {tag}
                       </span>
@@ -156,4 +150,6 @@ export default function ResourcesPage() {
       </div>
     </div>
   );
-}
+};
+
+export default ResourcesPage;
