@@ -26,6 +26,7 @@ import QuizAnswer from "./quizAnswer.model.js";
 import QuizOption from "./quizOption.model.js";
 import QuizSubmission from "./quizSubmission.model.js";
 import QuizSubmissionAnswer from "./quizSubmissionAnswer.model.js";
+import Challenge from "./challenge.model.js";
 
 const sequelize = new Sequelize(
   config.database,
@@ -59,6 +60,7 @@ const db = {
   QuizSubmission: QuizSubmission(sequelize, Sequelize.DataTypes),
   QuizSubmissionAnswer: QuizSubmissionAnswer(sequelize, Sequelize.DataTypes),
   QuizOption: QuizOption(sequelize, Sequelize.DataTypes),
+  Challenge: Challenge(sequelize, Sequelize.DataTypes),
 };
 
 Object.keys(db).forEach((modelName) => {

@@ -17,7 +17,8 @@
     "seed:roadmaps": "node db/seeders/roadmap.seeder.js",
     "seed:roadmapSubjects": "node db/seeders/roadmapSubjects.seeder.js",
     "seed:roadmapSubjectTopics": "node db/seeders/roadmapSubjectTopics.seeder.js",
-    "seed:quiz": "node db/seeders/quizzes.seeder.js"
+    "seed:quiz": "node db/seeders/quizzes.seeder.js",
+    "seed:challenges": "node db/seeders/challenge.seeder.js"
   },
   "keywords": [],
   "author": "",
