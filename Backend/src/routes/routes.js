@@ -16,6 +16,7 @@ import subjectRoutes from "./subjectRoutes.js";
 import topicRoutes from "./topicRoutes.js";
 import articleRoutes from "./articleRoutes.js";
 import quizRoutes from "./quizRoutes.js";
+import challengeRoutes from "./challengeRoutes.js";
 import passport from "passport";
 import { codeRunner } from "../controllers/codeRunnerController.js";
 import { predict } from "../controllers/predictionController.js";
@@ -122,6 +123,12 @@ router.use(
   "/quiz",
   passport.authenticate("jwt", { session: false }),
   quizRoutes
+);
+
+router.use(
+  "/challenges",
+  passport.authenticate("jwt", { session: false }),
+  challengeRoutes
 );
 
 router.post("/run-code", codeRunner);
