@@ -10,6 +10,7 @@ export const getAllRoadmaps = async (req, res) => {
           attributes: ["id", "name", "description"],
         },
       ],
+      order: ["id"],
     });
     res.status(200).json(roadmaps);
   } catch (error) {
@@ -32,6 +33,7 @@ export const getMainConceptsInRoadmap = async (req, res) => {
               attributes: ["id", "name"],
             },
           ],
+          order: ["id", "asc"],
         },
       ],
     });
@@ -49,7 +51,7 @@ export const getMainConceptsInRoadmap = async (req, res) => {
 export const getRoadMap = async (req, res) => {
   try {
     const roadMapId = req.params.id;
-    const roadMap = await RoadMap.findByPk(roadMapId);
+    const roadMap = await db.RoadMap.findByPk(roadMapId);
 
     if (!roadMap) {
       return res
