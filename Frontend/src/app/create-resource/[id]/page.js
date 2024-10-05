@@ -45,6 +45,7 @@ const ResourceEditor = ({ params }) => {
           <ReactQuill
             value={content}
             onChange={setContent}
+            preserveWhitespace
             modules={{
               toolbar: [
                 [{ font: [] }, { size: [] }],
