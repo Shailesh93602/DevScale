@@ -2,8 +2,10 @@
 import React, { useState, useEffect } from "react";
 import { fetchData } from "../services/fetchData";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const ArticleListPage = () => {
+  const router = useRouter();
   const [articles, setArticles] = useState([]);
   const [filteredArticles, setFilteredArticles] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -58,6 +60,10 @@ const ArticleListPage = () => {
     } catch (error) {
       console.error(`Error updating article status:`, error);
     }
+  };
+
+  const handleEdit = (id) => {
+    router.push(`/edit-article/${id}`);
   };
 
   return (
@@ -128,7 +134,7 @@ const ArticleListPage = () => {
                   >
                     View
                   </Link>
-                  {article.status === "pending" && (
+                  {article.status === "pending" ? (
                     <>
                       <button
                         className="text-green-500 hover:underline dark:text-green-300"
@@ -147,6 +153,13 @@ const ArticleListPage = () => {
                         Reject
                       </button>
                     </>
+                  ) : (
+                    <button
+                      onClick={() => handleEdit(article.id)}
+                      className="bg-blue-500 text-white py-1 px-3 rounded-lg mr-2"
+                    >
+                      Edit
+                    </button>
                   )}
                 </td>
               </tr>
