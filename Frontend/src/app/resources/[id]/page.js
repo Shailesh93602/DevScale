@@ -201,9 +201,9 @@ const Resource = ({ params }) => {
             transition={{ duration: 0.5 }}
             className="mb-8 bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8 transition-all duration-300 hover:shadow-2xl"
           >
-            <h1 className="text-4xl font-bold mb-6 text-gray-800 dark:text-gray-200 border-b pb-2 border-gray-200 dark:border-gray-700">
+            <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-200 border-b pb-2 border-gray-200 dark:border-gray-700">
               {selectedTopic.title}
-            </h1>
+            </h2>
             <div className="flex mb-4 border-b border-gray-200 dark:border-gray-700">
               <button
                 className={`mr-4 py-2 px-4 focus:outline-none ${
