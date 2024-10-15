@@ -65,9 +65,9 @@ const ResourceEditor = ({ params }) => {
                 ["link", "image", "video"],
                 ["clean"],
               ],
-              indent: {
-                levels: [1, 2, 3, 4, 5],
-              },
+              // indent: {
+              //   levels: [1, 2, 3, 4, 5],
+              // },
             }}
           />
         </div>
