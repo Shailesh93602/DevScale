@@ -147,6 +147,131 @@ export const roadmaps = [
                 description:
                   "Exploring advanced HTML concepts like custom data attributes, inline SVG, and the `<canvas>` element for drawing graphics.",
               },
+              {
+                name: "HTML Entities",
+                description:
+                  "Understanding special characters and their HTML representations.",
+              },
+              {
+                name: "HTML Comments",
+                description:
+                  "How to write comments in HTML and their best practices.",
+              },
+              {
+                name: "Forms and Input Types",
+                description:
+                  "Detailed exploration of various form elements and input types (e.g., file, range, color).",
+              },
+              {
+                name: "HTML5 Form Validation",
+                description:
+                  "Client-side form validation techniques using HTML5 attributes (e.g., required, pattern).",
+              },
+              {
+                name: "HTML and CSS Integration",
+                description:
+                  "Best practices for integrating CSS with HTML, including inline styles, internal stylesheets, and external stylesheets.",
+              },
+              {
+                name: "HTML and JavaScript Integration",
+                description:
+                  "Understanding how to interact with JavaScript through HTML elements and events.",
+              },
+              {
+                name: "Web Accessibility (WCAG Guidelines)",
+                description:
+                  "In-depth discussion on Web Content Accessibility Guidelines (WCAG) and how to implement them in HTML.",
+              },
+              {
+                name: "Responsive Web Design",
+                description:
+                  "Techniques for building responsive web pages using HTML and CSS.",
+              },
+              {
+                name: "HTML and SEO Best Practices",
+                description:
+                  "How HTML structure affects SEO, including the use of headings, metadata, and semantic HTML.",
+              },
+              {
+                name: "Microformats",
+                description:
+                  "Overview of microformats and how they differ from microdata for adding semantic information to HTML.",
+              },
+              {
+                name: "Using SVG in HTML",
+                description:
+                  "How to embed Scalable Vector Graphics (SVG) in HTML and their advantages.",
+              },
+              {
+                name: "HTML5 Web Components",
+                description:
+                  "Understanding custom elements, shadow DOM, and HTML templates.",
+              },
+              {
+                name: "Internationalization (i18n) and Localization (l10n)",
+                description:
+                  "Techniques for making HTML documents adaptable to different languages and regions.",
+              },
+              {
+                name: "Progressive Enhancement and Graceful Degradation",
+                description:
+                  "Strategies for building web applications that work on older browsers while leveraging new features.",
+              },
+              {
+                name: "HTML and CSS Frameworks",
+                description:
+                  "Overview of popular HTML/CSS frameworks (e.g., Bootstrap, Foundation) and their usage.",
+              },
+              {
+                name: "HTML Email Design",
+                description:
+                  "Techniques and best practices for designing responsive HTML emails.",
+              },
+              {
+                name: "Server-Sent Events (SSE)",
+                description:
+                  "Understanding how to use HTML with SSE for real-time updates.",
+              },
+              {
+                name: "Browser Developer Tools",
+                description:
+                  "Utilizing browser developer tools for inspecting and debugging HTML/CSS.",
+              },
+              {
+                name: "HTML in Web Applications",
+                description:
+                  "The role of HTML in modern web applications and how it interacts with backend technologies.",
+              },
+              {
+                name: "Content Security Policy (CSP)",
+                description:
+                  "Understanding how to implement CSP in HTML to enhance security.",
+              },
+              {
+                name: "Using Meta Tags Effectively",
+                description:
+                  "Overview of essential meta tags for SEO, social sharing, and viewport settings.",
+              },
+              {
+                name: "HTML Performance Optimization",
+                description:
+                  "Techniques for optimizing HTML for performance, including minimizing HTTP requests and optimizing assets.",
+              },
+              {
+                name: "Accessibility Features for Forms",
+                description:
+                  "Detailed strategies for making forms accessible, including labeling and focus management.",
+              },
+              {
+                name: "HTML and RESTful APIs",
+                description:
+                  "How to use HTML to interact with RESTful APIs, including AJAX and fetch.",
+              },
+              {
+                name: "Static Site Generators",
+                description:
+                  "Understanding how static site generators work and their relation to HTML.",
+              },
             ],
           },
           {
@@ -306,144 +431,155 @@ export const roadmaps = [
               "Master JavaScript to create interactive and dynamic web pages.",
             topics: [
               {
-                name: "JavaScript Basics",
+                name: "JavaScript Overview",
                 description:
-                  "Introduction to JavaScript syntax, variables, data types, operators, and basic programming concepts.",
+                  "What is JavaScript?, Client-Side JavaScript, Advantages of JavaScript, Limitations, Development Tools, Current State of JavaScript",
               },
               {
-                name: "Control Structures",
+                name: "JavaScript Syntax",
                 description:
-                  "Using control flow statements like conditionals (if/else), loops (for, while), switch statements, and the ternary operator.",
+                  "Your first JavaScript Code, Whitespace, Line Breaks, Semicolons, Case Sensitivity, Comments in JavaScript",
               },
               {
-                name: "Functions",
+                name: "JavaScript Enabling",
                 description:
-                  "Defining functions, function expressions, arrow functions, higher-order functions, and IIFEs (Immediately Invoked Function Expressions).",
+                  "Enabling JavaScript in Internet Explorer, Firefox, Chrome, Opera, Warning for Non-JavaScript Browsers",
               },
               {
-                name: "Objects and Arrays",
+                name: "JavaScript Placement",
                 description:
-                  "Working with objects, arrays, their properties, methods, and common operations like iteration, filtering, and mapping.",
+                  "JavaScript in <head>...</head> Section, <body>...</body> Section, Using External Files",
               },
               {
-                name: "ES6+ Features",
+                name: "JavaScript Variables",
                 description:
-                  "Understanding modern JavaScript features such as let, const, arrow functions, template literals, destructuring, rest/spread operators, and default parameters.",
+                  "Data Types, Variables, Scope, Naming Conventions, Reserved Words",
               },
               {
-                name: "DOM Manipulation",
+                name: "JavaScript Operators",
                 description:
-                  "Selecting and modifying HTML elements using JavaScript, manipulating the DOM, and creating dynamic user interfaces.",
+                  "Arithmetic, Assignment, Comparison, Logical, String, Unary, Ternary, Bitwise, Miscellaneous Operators",
               },
               {
-                name: "Event Handling",
+                name: "JavaScript Control Structures",
                 description:
-                  "Handling user interactions like clicks, form submissions, keyboard input, and managing event listeners and delegation.",
+                  "If-Else, Switch Statements, Loops (for, while, do...while)",
               },
               {
-                name: "Asynchronous JavaScript",
+                name: "JavaScript Loop Control",
                 description:
-                  "Introduction to asynchronous programming using callbacks, promises, async/await, and managing asynchronous operations effectively.",
+                  "Break and Continue Statements, Labels for Flow Control",
               },
               {
-                name: "JavaScript Modules",
+                name: "JavaScript Functions",
                 description:
-                  "Understanding ES6 modules, import/export statements, and how to use module bundlers like Webpack or Parcel.",
+                  "Function Definition, Parameters, Return Statement, Function Literals, Nested Functions, Function Constructor",
               },
               {
-                name: "Error Handling",
+                name: "JavaScript Events",
                 description:
-                  "Using try/catch blocks for error handling, throwing custom errors, and understanding the error object.",
+                  "What is an Event?, onClick, onSubmit, onMouseover, onMouseout, HTML5 Standard Events",
               },
               {
-                name: "Closures",
+                name: "JavaScript Cookies",
                 description:
-                  "Understanding closures, lexical scoping, and how closures can be used for data privacy and maintaining state.",
+                  "What are Cookies?, Storing, Reading, Setting Expiry Date, Deleting Cookies",
               },
               {
-                name: "Prototypes and Inheritance",
+                name: "JavaScript Page Redirects",
                 description:
-                  "Introduction to JavaScript's prototype-based inheritance model, prototype chains, and using ES6 classes for object-oriented programming.",
+                  "What is Page Redirection?, JS Page Refresh, Auto Refresh, How Page Redirection Works",
               },
               {
-                name: "Hoisting",
+                name: "JavaScript Dialog Boxes",
                 description:
-                  "Understanding the concept of hoisting with variables and function declarations, and its effect on code execution.",
+                  "Alert, Confirm, Prompt Boxes, Window Methods for Alerts and Prompts",
               },
               {
-                name: "Event Loop and Concurrency",
-                description:
-                  "How the JavaScript event loop works, the call stack, and handling concurrency with asynchronous tasks and promises.",
+                name: "JavaScript Void Keyword",
+                description: "The void Keyword and Its Use",
               },
               {
-                name: "JavaScript Design Patterns",
-                description:
-                  "Exploring common design patterns in JavaScript such as Singleton, Factory, Observer, Module, and Prototype patterns.",
+                name: "JavaScript Page Printing",
+                description: "How to Print a Page Using JavaScript",
               },
               {
-                name: "JavaScript Frameworks and Libraries",
+                name: "JavaScript Objects",
                 description:
-                  "Introduction to popular JavaScript frameworks like React, Vue, Angular, and libraries like jQuery, including when and why to use them.",
+                  "Object Properties, Methods, User-Defined Objects, Defining Methods for Objects, The 'with' Keyword",
               },
               {
-                name: "JavaScript Best Practices",
+                name: "JavaScript Numbers",
                 description:
-                  "Writing clean, maintainable, and optimized code using best practices such as naming conventions, code structure, DRY principles, and performance optimization.",
+                  "Number Properties, Methods (toFixed, toExponential, etc.), Constructor, Prototype",
               },
               {
-                name: "Testing in JavaScript",
+                name: "JavaScript Boolean",
                 description:
-                  "Introduction to testing in JavaScript using frameworks like Jest, Mocha, Chai for unit, integration, and end-to-end testing.",
+                  "Boolean Properties, Methods (toString, valueOf), Constructor, Prototype",
               },
               {
-                name: "Security in JavaScript",
+                name: "JavaScript Strings",
                 description:
-                  "Understanding common JavaScript security concerns such as Cross-Site Scripting (XSS), Cross-Site Request Forgery (CSRF), and techniques for mitigating these issues.",
+                  "String Properties, Methods (charAt, indexOf, replace, slice, etc.), String HTML Wrappers (anchor, bold, italics)",
               },
               {
-                name: "Memory Management and Garbage Collection",
+                name: "JavaScript Arrays",
                 description:
-                  "Understanding how JavaScript manages memory, garbage collection, and avoiding memory leaks in your applications.",
+                  "Array Properties, Methods (concat, filter, forEach, map, push, pop, etc.), Constructor, Prototype",
               },
               {
-                name: "Working with APIs",
+                name: "JavaScript Date",
                 description:
-                  "Making HTTP requests using Fetch API or Axios, handling responses, and working with external APIs in web applications.",
+                  "Date Properties, Methods (getDate, getDay, setDate, etc.), Static Methods (Date.parse, Date.UTC)",
               },
               {
-                name: "Local Storage and Session Storage",
+                name: "JavaScript Math",
                 description:
-                  "Storing data in the browser using localStorage, sessionStorage, and cookies for managing state across page reloads.",
+                  "Math Properties (PI, E), Methods (abs, ceil, floor, pow, random, round, etc.)",
               },
               {
-                name: "Promises vs. Async/Await",
+                name: "JavaScript RegExp",
                 description:
-                  "Understanding the differences between promises and async/await, how to handle async functions, and avoiding common pitfalls.",
+                  "Regular Expressions, Modifiers, Brackets, Metacharacters, Methods (exec, test)",
+              },
+              {
+                name: "JavaScript DOM",
+                description:
+                  "The DOM (Document Object Model), W3C DOM, Legacy DOM, DOM Compatibility",
+              },
+              {
+                name: "JavaScript Errors and Exceptions",
+                description:
+                  "Syntax Errors, Runtime Errors, try...catch...finally, throw Statement, onError Method",
+              },
+              {
+                name: "JavaScript Form Validation",
+                description: "Basic Form Validation, Data Format Validation",
+              },
+              {
+                name: "JavaScript Animation",
+                description:
+                  "Manual and Automated Animation, Mouse Event Rollover",
+              },
+              {
+                name: "JavaScript Multimedia",
+                description:
+                  "Checking for Plug-Ins, Controlling Multimedia in JavaScript",
               },
               {
                 name: "JavaScript Debugging",
                 description:
-                  "Using debugging tools like the browser's Developer Tools, breakpoints, console methods, and strategies for effective debugging.",
+                  "Error Messages in Browsers, Debugging Tools and Tips for Developers",
               },
               {
-                name: "Functional Programming Concepts",
-                description:
-                  "Introduction to functional programming in JavaScript, understanding pure functions, immutability, and higher-order functions.",
+                name: "JavaScript Image Map",
+                description: "Using JavaScript for Image Maps",
               },
               {
-                name: "Version Control with Git",
+                name: "JavaScript Browsers",
                 description:
-                  "Using Git for version control, committing changes, branching, and collaborating on JavaScript projects using GitHub.",
-              },
-              {
-                name: "Modern JavaScript Tooling",
-                description:
-                  "Introduction to modern JavaScript tools like Babel for transpilation, ESLint for linting, Prettier for formatting, and NPM/Yarn for dependency management.",
-              },
-              {
-                name: "Regular Expressions in JavaScript",
-                description:
-                  "Using regular expressions (RegEx) in JavaScript for pattern matching, validation, and text manipulation.",
+                  "Navigator Properties, Methods, Browser Detection Techniques",
               },
             ],
           },

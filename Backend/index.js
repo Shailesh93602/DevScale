@@ -5,11 +5,10 @@ import routes from "./src/routes/routes.js";
 import cors from "cors";
 import { applyPassportStrategy } from "./src/middlewares/passport.js";
 import { v2 as cloudinary } from "cloudinary";
-import mongoose from "mongoose";
+// import mongoose from "mongoose";
 import db from "./db/models/index.js";
 
-db.connect;
-config();
+config(); // Ensure environment variables are loaded early
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -17,7 +16,12 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-mongoose.connect(process.env.MONGO_URL, {});
+// mongoose.connect(process.env.MONGO_URL, {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+//   useCreateIndex: true,
+//   useFindAndModify: false,
+// });
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -41,6 +45,23 @@ const startServer = async () => {
     console.error("Stack trace:", error.stack);
   }
 };
+
+// Graceful shutdown
+const shutdown = async () => {
+  console.log("Shutting down gracefully...");
+  try {
+    await db.sequelize.close();
+    await mongoose.connection.close();
+    console.log("Closed database connections.");
+    process.exit(0);
+  } catch (error) {
+    console.error("Error during shutdown:", error);
+    process.exit(1);
+  }
+};
+
+process.on("SIGINT", shutdown);
+process.on("SIGTERM", shutdown);
 
 startServer();
 
