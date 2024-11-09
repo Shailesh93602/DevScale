@@ -125,6 +125,26 @@ module.exports = {
             h2: {
               fontSize: theme("fontSize.3xl"),
             },
+            "ul li": {
+              marginLeft: theme("spacing.4"),
+              listStylePosition: "outside",
+            },
+            ".ql-indent-1": {
+              // paddingLeft: theme("spacing.8"),
+              marginLeft: theme("spacing.12"),
+            },
+            ".ql-indent-2": {
+              // paddingLeft: theme("spacing.12"),
+              marginLeft: theme("spacing.16"),
+            },
+            ".ql-indent-3": {
+              // paddingLeft: theme("spacing.16"),
+              marginLeft: theme("spacing.20"),
+            },
+            ".ql-indent-4": {
+              // paddingLeft: theme("spacing.20"),
+              marginLeft: theme("spacing.24"),
+            },
           },
         },
       }),
