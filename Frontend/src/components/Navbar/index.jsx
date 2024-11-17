@@ -7,7 +7,7 @@ import { FaAngleDown, FaRegUserCircle } from "react-icons/fa";
 import { PiSignOutFill } from "react-icons/pi";
 import { GrAchievement, GrArticle } from "react-icons/gr";
 import { useTheme } from "next-themes";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { fetchData } from "@/app/services/fetchData";
 import { useDispatch, useSelector } from "react-redux";
 

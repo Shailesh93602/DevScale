@@ -20,13 +20,13 @@ export const getAllSubjects = async (req, res) => {
 };
 
 export const getTopicsInSubject = async (req, res) => {
-  const { subjectId } = req.params;
+  const { id } = req.params;
   try {
-    const subject = await db.Subject.findByPk(subjectId, {
+    const subject = await db.Subject.findByPk(id, {
       include: [
         {
           model: db.Topic,
-          attributes: ["id", "name", "description"],
+          attributes: ["id", "title", "description"],
           order: [["createdAt", "ASC"]],
           include: [
             {

@@ -5,6 +5,10 @@ export const getBattles = async (req, res) => {
   try {
     const battles = await db.Battle.findAll({
       order: [["createdAt", "ASC"]],
+      include: {
+        model: db.Topic,
+        attributes: ["title"],
+      },
     });
     res.status(200).json({ success: true, battles });
   } catch (error) {
@@ -31,20 +35,18 @@ export const getBattle = async (req, res) => {
 
 export const createBattle = async (req, res) => {
   try {
-    const { title, description, topic, difficulty, length } = req.body;
-    if (!title || !description || !topic || !difficulty || !length) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid payload" });
-    }
+    const { title, description, topicId, difficulty, length, date, time } =
+      req.body;
 
     const newBattle = {
       title,
       description,
       userId: req.user.id,
-      topic,
+      topicId,
       difficulty,
       length,
+      date,
+      time,
     };
 
     await db.Battle.create(newBattle);
@@ -52,7 +54,6 @@ export const createBattle = async (req, res) => {
       .status(201)
       .json({ success: true, message: "Battle created successfully!" });
   } catch (error) {
-    logger.error("Error creating battle:", error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };

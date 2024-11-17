@@ -164,7 +164,7 @@ export default function CareerPathPage() {
           animate="visible"
           transition={{ staggerChildren: 0.4 }}
         >
-          {roadmap.map((section) => (
+          {roadmap?.map((section) => (
             <RoadmapSection
               key={section.id}
               name={section.name}

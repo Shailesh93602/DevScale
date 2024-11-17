@@ -1,24 +1,21 @@
 "use client";
 import { useEffect, useState } from "react";
-import BattleTopics from "../../components/BattleTopics";
 import BattleCard from "../../components/BattleCard";
-import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
-import ChallangeCard from "../../components/ChallangeCard";
+import ChallengeCard from "./components/ChallengeCard";
 import { fetchData } from "@/app/services/fetchData";
+import Modal from "@/components/Modal";
+import CreateBattle from "./Components/CreateBattle";
+import { difficulties, lengths } from "@/constants";
 
 export default function BattleZonePage() {
-  const router = useRouter();
-  const [selectedTopic, setSelectedTopic] = useState("");
   const [selectedDifficulty, setSelectedDifficulty] = useState("");
   const [selectedLength, setSelectedLength] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [battles, setBattles] = useState([]);
   const [filteredBattles, setFilteredBattles] = useState([]);
-  const topics = ["DSA", "Sorting Algorithms", "C", "JavaScript"];
-  const difficulties = ["Easy", "Medium", "Hard"];
-  const lengths = ["Short", "Medium", "Long"];
+  const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -44,11 +41,6 @@ export default function BattleZonePage() {
   useEffect(() => {
     const filterBattles = () => {
       let filtered = battles;
-      if (selectedTopic) {
-        filtered = filtered.filter((battle) =>
-          battle.topic.toLowerCase().includes(selectedTopic.toLowerCase())
-        );
-      }
       if (selectedDifficulty) {
         filtered = filtered.filter(
           (battle) =>
@@ -72,11 +64,7 @@ export default function BattleZonePage() {
     };
 
     filterBattles();
-  }, [selectedTopic, selectedDifficulty, selectedLength, searchTerm, battles]);
-
-  const handleTopicChange = (value) => {
-    setSelectedTopic(value);
-  };
+  }, [selectedDifficulty, selectedLength, searchTerm, battles]);
 
   const handleDifficultyChange = (value) => {
     setSelectedDifficulty(value);
@@ -91,22 +79,26 @@ export default function BattleZonePage() {
   };
 
   const handleCreateBattle = () => {
-    router.push("/create-battle");
+    setIsOpen(true);
   };
 
   return (
     <div className="bg-white w-full dark:bg-gray-800 mx-auto p-6">
       <div className="bg-blue-50 dark:bg-gray-900 shadow-md rounded-lg p-6">
+        {isOpen && (
+          <Modal
+            isOpen={isOpen}
+            onClose={() => setIsOpen(false)}
+            title="Create Battle"
+          >
+            <CreateBattle handleClose={() => setIsOpen(false)} />
+          </Modal>
+        )}
         <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6">
           Battle Zone
         </h1>
-        <ChallangeCard />
+        <ChallengeCard />
         <div className="flex flex-col items-center pt-7">
-          <BattleTopics
-            topics={topics}
-            selectedTopic={selectedTopic}
-            onChange={handleTopicChange}
-          />
           <div className="flex flex-col md:flex-row w-full mt-4">
             <input
               type="text"
@@ -121,7 +113,7 @@ export default function BattleZonePage() {
               className="w-full md:w-40 p-3 mb-4 md:mb-0 md:mr-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Select Difficulty</option>
-              {difficulties.map((difficulty) => (
+              {Object.values(difficulties).map((difficulty) => (
                 <option key={difficulty} value={difficulty}>
                   {difficulty}
                 </option>
@@ -133,7 +125,7 @@ export default function BattleZonePage() {
               className="w-full md:w-40 p-3 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Select Length</option>
-              {lengths.map((length) => (
+              {Object.values(lengths).map((length) => (
                 <option key={length} value={length}>
                   {length}
                 </option>
