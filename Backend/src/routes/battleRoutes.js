@@ -4,7 +4,6 @@ import {
   getBattle,
   getBattles,
 } from "../controllers/battleControllers.js";
-import { authMiddleware } from "../middlewares/authMiddleware.js";
 import { validateBattleCreation } from "../middlewares/validationMiddleware.js";
 import passport from "passport";
 

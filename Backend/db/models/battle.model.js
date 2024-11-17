@@ -44,12 +44,12 @@ export default (sequelize) => {
         type: DataTypes.ENUM("short", "medium", "long"),
         allowNull: false,
       },
-      startDate: {
+      date: {
         type: DataTypes.DATE,
         allowNull: true,
       },
-      endDate: {
-        type: DataTypes.DATE,
+      time: {
+        type: DataTypes.TIME,
         allowNull: true,
       },
     },
