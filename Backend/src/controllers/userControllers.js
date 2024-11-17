@@ -181,3 +181,75 @@ export const getUserProgress = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const getUserRoadmap = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const userRoadmap = await db.UserRoadmap.findOne({ where: { userId } });
+
+    if (!userRoadmap) {
+      return res
+        .status(200)
+        .json({ success: true, message: "No roadmap found for the user" });
+    }
+
+    res.status(200).json({ success: true, userRoadmap });
+  } catch (error) {
+    logger.error("Error fetching user roadmap:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+export const insertUserRoadmap = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const isRoadmapExists = await db.UserRoadmap.findOne({
+      where: {
+        userId,
+      },
+    });
+
+    if (isRoadmapExists) {
+      res.status(400).json({
+        success: false,
+        message:
+          "You already added a Roadmap, please remove existing Roadmap to add another Roadmap",
+      });
+    }
+
+    const { roadmapId } = req.body;
+    const userRoadmap = await db.UserRoadmap.create({ userId, roadmapId });
+
+    res.status(200).json({
+      success: true,
+      message: "User roadmap inserted successfully",
+      userRoadmap,
+    });
+  } catch (error) {
+    logger.error("Error inserting user roadmap:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+export const deleteUserRoadmap = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await db.UserRoadmap.destroy({
+      where: { id },
+    });
+
+    if (result === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User roadmap not found" });
+    }
+
+    res
+      .status(200)
+      .json({ success: true, message: "User roadmap deleted successfully" });
+  } catch (error) {
+    logger.error("Error deleting user roadmap:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
