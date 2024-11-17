@@ -5,6 +5,7 @@ const seedDatabase = async () => {
   try {
     await db.connect;
     await db.sequelize.authenticate();
+    const transaction = await db.sequelize.transaction();
 
     for (const roadmapData of roadmaps) {
       const [roadmap] = await db.RoadMap.findOrCreate({
@@ -12,6 +13,7 @@ const seedDatabase = async () => {
         defaults: {
           description: roadmapData.description,
         },
+        transaction,
       });
 
       for (const mainConceptData of roadmapData.mainConcepts) {
@@ -21,6 +23,7 @@ const seedDatabase = async () => {
             description: mainConceptData.description,
             roadmapId: roadmap.id,
           },
+          transaction,
         });
 
         for (const subjectData of mainConceptData.subjects) {
@@ -30,10 +33,14 @@ const seedDatabase = async () => {
               description: subjectData.description,
               mainConceptId: mainConcept.id,
             },
+            transaction,
           });
 
           if (!created && subject.mainConceptId !== mainConcept.id) {
-            await subject.update({ mainConceptId: mainConcept.id });
+            await subject.update(
+              { mainConceptId: mainConcept.id },
+              { transaction }
+            );
           }
 
           for (const topicData of subjectData.topics) {
@@ -43,6 +50,7 @@ const seedDatabase = async () => {
                 description: topicData.description,
                 subjectId: subject.id,
               },
+              transaction,
             });
           }
         }

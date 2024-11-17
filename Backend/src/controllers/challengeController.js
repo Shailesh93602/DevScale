@@ -42,10 +42,9 @@ export const getChallenges = async (req, res) => {
 
 export const getChallenge = async (req, res) => {
   try {
-    const { id } = req.params; // Get the challenge ID from the request parameters
+    const { id } = req.params;
     const { page = 1, limit = 10, search = "" } = req.query;
 
-    // If an ID is provided, fetch the specific challenge
     if (id) {
       const challenge = await db.Challenge.findByPk(id);
 
@@ -56,7 +55,6 @@ export const getChallenge = async (req, res) => {
       return res.status(200).json(challenge);
     }
 
-    // If no ID is provided, proceed to fetch challenges with pagination and search
     const pageNumber = parseInt(page, 10);
     const pageSize = parseInt(limit, 10);
     const offset = (pageNumber - 1) * pageSize;

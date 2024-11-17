@@ -8,6 +8,7 @@ export const getSubjectsInMainConcept = async (req, res) => {
         {
           model: db.Subject,
           attributes: ["id", "name", "description"],
+          order: [["createdAt", "ASC"]],
         },
       ],
     });

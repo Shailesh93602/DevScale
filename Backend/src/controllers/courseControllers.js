@@ -2,7 +2,9 @@ import { logger } from "./../helpers/logger.js";
 
 export const getCourses = async (req, res) => {
   try {
-    const courses = await findAllCourses();
+    const courses = await findAllCourses({
+      order: [["createdAt", "ASC"]],
+    });
     res.status(200).json({ success: true, courses });
   } catch (error) {
     logger.error("Error fetching courses:", error);

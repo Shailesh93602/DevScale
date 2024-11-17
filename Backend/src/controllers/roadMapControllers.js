@@ -8,9 +8,10 @@ export const getAllRoadmaps = async (req, res) => {
         {
           model: db.MainConcept,
           attributes: ["id", "name", "description"],
+          order: [["createdAt", "ASC"]],
         },
       ],
-      order: ["id"],
+      order: [["createdAt", "ASC"]],
     });
     res.status(200).json(roadmaps);
   } catch (error) {
@@ -19,6 +20,7 @@ export const getAllRoadmaps = async (req, res) => {
   }
 };
 
+// REMEMBER: here we can use the order by for extracting data with include
 export const getMainConceptsInRoadmap = async (req, res) => {
   const roadmapId = req.params.id;
   try {
@@ -33,8 +35,13 @@ export const getMainConceptsInRoadmap = async (req, res) => {
               attributes: ["id", "name"],
             },
           ],
-          order: ["id", "asc"],
         },
+      ],
+      order: [
+        [db.MainConcept, "createdAt", "ASC"],
+        [db.MainConcept, "updatedAt", "ASC"],
+        [db.MainConcept, db.Subject, "createdAt", "ASC"],
+        [db.MainConcept, db.Subject, "updatedAt", "ASC"],
       ],
     });
     if (roadmap) {

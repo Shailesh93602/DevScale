@@ -4,9 +4,12 @@ import {
   submitQuestionsToDB,
 } from "../services/questionService.js";
 
+// TODO: remove the controller if not required in future versions
 export const getQuestions = async (req, res) => {
   try {
-    const questions = await getQuestionsFromDB();
+    const questions = await getQuestionsFromDB({
+      order: [["createdAt", "ASC"]],
+    });
     res.status(200).json({ success: true, questions });
   } catch (error) {
     logger.error("Error fetching questions:", error);
@@ -14,6 +17,7 @@ export const getQuestions = async (req, res) => {
   }
 };
 
+// TODO: remove this controller if not required in future versions
 export const submitQuestions = async (req, res) => {
   try {
     const { questions } = req.body;

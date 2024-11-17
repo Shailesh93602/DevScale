@@ -2,7 +2,9 @@ import { logger } from "./../helpers/logger.js";
 
 export const getJobs = async (req, res) => {
   try {
-    const jobs = await findAllJobs();
+    const jobs = await findAllJobs({
+      order: [["createdAt", "ASC"]],
+    });
     res.status(200).json({ success: true, jobs });
   } catch (error) {
     logger.error("Error fetching jobs:", error);

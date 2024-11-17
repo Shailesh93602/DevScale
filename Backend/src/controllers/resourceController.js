@@ -12,7 +12,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export const getSubjects = async (req, res) => {
   try {
-    const subjects = await Subject.findAll();
+    const subjects = await Subject.findAll({
+      order: [["createdAt", "ASC"]],
+    });
     res.status(200).json({ success: true, subjects });
   } catch (err) {
     logger.error("Error fetching subjects:", err);
@@ -22,7 +24,10 @@ export const getSubjects = async (req, res) => {
 
 export const getTopics = async (req, res) => {
   try {
-    const topics = await Topic.findAll({ where: { subjectId: req.params.id } });
+    const topics = await Topic.findAll({
+      where: { subjectId: req.params.id },
+      order: [["createdAt", "ASC"]],
+    });
     res.status(200).json({ success: true, topics });
   } catch (err) {
     logger.error("Error fetching topics:", err);
@@ -78,6 +83,7 @@ export const getResources = async (req, res) => {
       },
       limit,
       offset,
+      order: [["createdAt", "ASC"]],
     });
 
     subjects = subjects.map((subject) => ({
