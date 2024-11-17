@@ -7,8 +7,10 @@ export const getAllSubjects = async (req, res) => {
         {
           model: db.MainConcept,
           attributes: ["id", "name"],
+          order: [["createdAt", "ASC"]],
         },
       ],
+      order: [["createdAt", "ASC"]],
     });
     res.status(200).json(subjects);
   } catch (error) {
@@ -25,12 +27,14 @@ export const getTopicsInSubject = async (req, res) => {
         {
           model: db.Topic,
           attributes: ["id", "name", "description"],
+          order: [["createdAt", "ASC"]],
           include: [
             {
               model: db.Article,
               attributes: ["id", "title", "content"],
               where: { status: "approved" },
               required: false,
+              order: [["createdAt", "ASC"]],
             },
           ],
         },

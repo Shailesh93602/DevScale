@@ -16,6 +16,7 @@ export const getUnpublishedTopics = async (req, res) => {
           )`),
         },
       },
+      order: [["createdAt", "ASC"]],
     });
 
     res.status(200).json({
@@ -50,6 +51,7 @@ export const getArticlesForTopic = async (req, res) => {
               },
             ],
           },
+          order: [["createdAt", "DESC"]],
           required: false,
         },
       ],
@@ -79,8 +81,10 @@ export const getQuizByTopicId = async (req, res) => {
             {
               model: db.QuizOption,
               as: "options",
+              order: [["createdAt", "ASC"]],
             },
           ],
+          order: [["createdAt", "ASC"]],
         },
       ],
     });

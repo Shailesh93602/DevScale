@@ -2,7 +2,9 @@ import { logger } from "./../helpers/logger.js";
 
 export const getForums = async (req, res) => {
   try {
-    const forums = await findAllForums();
+    const forums = await findAllForums({
+      order: [["createdAt", "ASC"]],
+    });
     res.status(200).json({ success: true, forums });
   } catch (error) {
     logger.error("Error fetching forums:", error);

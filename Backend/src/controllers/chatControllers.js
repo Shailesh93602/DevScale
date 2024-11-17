@@ -3,7 +3,9 @@ import Chat from "../../db/models/chat.model.js";
 
 export const getChats = async (req, res) => {
   try {
-    const chats = await Chat.findAll();
+    const chats = await Chat.findAll({
+      order: [["createdAt", "ASC"]],
+    });
     res.status(200).json({ success: true, chats });
   } catch (error) {
     logger.error("Error fetching chats:", error);

@@ -3,7 +3,9 @@ import { logger } from "../helpers/logger.js";
 
 export const getBattles = async (req, res) => {
   try {
-    const battles = await db.Battle.findAll();
+    const battles = await db.Battle.findAll({
+      order: [["createdAt", "ASC"]],
+    });
     res.status(200).json({ success: true, battles });
   } catch (error) {
     logger.error("Error fetching battles:", error);

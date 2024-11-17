@@ -25,6 +25,7 @@ export const getArticles = async (req, res) => {
           model: db.User,
           as: "author",
           attributes: ["username"],
+          order: [["createdAt", "ASC"]],
         },
       ],
       order: [["createdAt", "DESC"]],
@@ -112,6 +113,7 @@ export const getArticleById = async (req, res) => {
         model: db.User,
         as: "author",
         attributes: ["username"],
+        order: [["createdAt", "ASC"]],
       },
     });
 

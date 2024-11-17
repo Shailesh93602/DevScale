@@ -9,20 +9,17 @@ import { Op } from "sequelize";
 
 config();
 
-const checkUserDetailsFilled = async (id) => {
+// TODO: check if this is required in future or not
+export const checkUserDetailsFilled = async (id) => {
   try {
     const userInfo = await db.UserInfo.findOne({ where: { userId: id } });
-    if (
-      userInfo &&
-      userInfo.fullName &&
-      userInfo.dob &&
-      userInfo.gender &&
-      userInfo.mobile &&
-      userInfo.address
-    ) {
-      return true;
-    }
-    return false;
+    return (
+      userInfo?.fullName &&
+      userInfo?.dob &&
+      userInfo?.gender &&
+      userInfo?.mobile &&
+      userInfo?.address
+    );
   } catch (error) {
     logger.error("Error checking user details:", error);
     return false;
@@ -224,6 +221,7 @@ export const getAllUsers = async (req, res) => {
   try {
     const users = await db.User.findAll({
       attributes: ["id", "firstName", "lastName", "email"],
+      order: [["createdAt", "ASC"]],
     });
     res.status(200).json({
       success: true,

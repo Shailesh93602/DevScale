@@ -1,5 +1,6 @@
 import axios from "axios";
 
+// TODO: remove the controller if not required in future versions
 export const predict = async (req, res) => {
   try {
     const { data } = req.body;
