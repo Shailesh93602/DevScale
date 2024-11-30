@@ -10,12 +10,12 @@ export default function Dashboard() {
   const [username, setUsername] = useState(user.username);
 
   return (
-    <div className="p-6 bg-white  dark:bg-gray-800 text-gray-900">
+    <div className="p-6">
       <div className="max-w-7xl mx-auto">
         <header className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-4xl font-extrabold">Welcome,</h1>
-            <h2 className="text-5xl font-extrabold text-indigo-700">
+            <h2 className="text-5xl font-extrabold text-primary">
               {username &&
                 username.charAt(0).toUpperCase() +
                   username.slice(
@@ -25,9 +25,6 @@ export default function Dashboard() {
                       : username.indexOf(" ") + 1
                   )}
             </h2>
-          </div>
-          <div>
-            <button className="p-2 bg-gray-200 dark:bg-gray-700 rounded-full"></button>
           </div>
         </header>
 

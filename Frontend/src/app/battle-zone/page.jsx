@@ -44,20 +44,21 @@ export default function BattleZonePage() {
       if (selectedDifficulty) {
         filtered = filtered.filter(
           (battle) =>
-            battle.difficulty.toLowerCase() === selectedDifficulty.toLowerCase()
+            battle.difficulty?.toLowerCase() ===
+            selectedDifficulty?.toLowerCase()
         );
       }
       if (selectedLength) {
         filtered = filtered.filter(
           (battle) =>
-            battle.length.toLowerCase() === selectedLength.toLowerCase()
+            battle.length?.toLowerCase() === selectedLength?.toLowerCase()
         );
       }
       if (searchTerm) {
         filtered = filtered.filter(
           (battle) =>
-            battle.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            battle.username.toLowerCase().includes(searchTerm.toLowerCase())
+            battle.title?.toLowerCase()?.includes(searchTerm?.toLowerCase()) ||
+            battle.username?.toLowerCase()?.includes(searchTerm?.toLowerCase())
         );
       }
       setFilteredBattles(filtered);
@@ -83,8 +84,8 @@ export default function BattleZonePage() {
   };
 
   return (
-    <div className="bg-white w-full dark:bg-gray-800 mx-auto p-6">
-      <div className="bg-blue-50 dark:bg-gray-900 shadow-md rounded-lg p-6">
+    <div className="w-full mx-auto p-6">
+      <div className="bg-lightSecondary shadow-2xl rounded-lg p-6">
         {isOpen && (
           <Modal
             isOpen={isOpen}
@@ -94,23 +95,21 @@ export default function BattleZonePage() {
             <CreateBattle handleClose={() => setIsOpen(false)} />
           </Modal>
         )}
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6">
-          Battle Zone
-        </h1>
+        <h1 className="text-3xl font-bold text-dark mb-6">Battle Zone</h1>
         <ChallengeCard />
-        <div className="flex flex-col items-center pt-7">
+        <div className="flex flex-col items-center py-7">
           <div className="flex flex-col md:flex-row w-full mt-4">
             <input
               type="text"
               placeholder="Search battles by username or title..."
               value={searchTerm}
               onChange={handleSearchChange}
-              className="flex-grow p-3 mb-4 md:mb-0 md:mr-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-grow p-3 mb-4 md:mb-0 md:mr-2 border border-border rounded-md bg-light text-dark focus:outline-none focus:ring-2 focus:ring-ring"
             />
             <select
               value={selectedDifficulty}
               onChange={(e) => handleDifficultyChange(e.target.value)}
-              className="w-full md:w-40 p-3 mb-4 md:mb-0 md:mr-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full md:w-40 p-3 mb-4 md:mb-0 md:mr-2 border border-border rounded-md bg-light text-dark focus:outline-none focus:ring-2 focus:ring-ring"
             >
               <option value="">Select Difficulty</option>
               {Object.values(difficulties).map((difficulty) => (
@@ -122,7 +121,7 @@ export default function BattleZonePage() {
             <select
               value={selectedLength}
               onChange={(e) => handleLengthChange(e.target.value)}
-              className="w-full md:w-40 p-3 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full md:w-40 p-3 border border-border rounded-md bg-light text-dark focus:outline-none focus:ring-2 focus:ring-ring"
             >
               <option value="">Select Length</option>
               {Object.values(lengths).map((length) => (
@@ -140,14 +139,12 @@ export default function BattleZonePage() {
             ))}
           </ul>
         ) : (
-          <p className="text-gray-700 dark:text-gray-300">
-            No battles found for the selected filters.
-          </p>
+          <p>No battles found for the selected filters.</p>
         )}
 
         <button
           onClick={handleCreateBattle}
-          className="mt-6 py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200"
+          className="mt-6 py-2 px-4 bg-primary text-white rounded-md hover:bg-primary2 transition duration-200"
         >
           Create New Battle
         </button>

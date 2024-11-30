@@ -172,9 +172,9 @@ export default function LandingPage() {
     },
   ];
   return (
-    <main className="flex flex-col text-gray-900">
+    <main className="flex flex-col bg-light text-dark">
       <HeroParallax products={products} />
-      <section className='pt-5 bg-gray-600 py-12 md:py-20 lg:py-28"'>
+      <section className='pt-5 py-12 md:py-20 lg:py-28"'>
         <div className="pb-8">
           <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm">
             Learning Resources
