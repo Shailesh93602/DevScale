@@ -78,9 +78,9 @@ const Navbar = () => {
                 onClick={toggleDropdown}
                 className="text-gray-100 hover:text-gray-300 focus:outline-none"
               >
-                <Avatar className="bg-red-500 font-semibold text-3xl items-center justify-center">
+                <Avatar className="font-semibold text-3xl items-center justify-center">
                   <AvatarImage src={user?.profilePicture} alt="S" />
-                  <AvatarFallback>
+                  <AvatarFallback className="bg-red">
                     {user?.username?.charAt(0)?.toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
@@ -203,9 +203,11 @@ const Navbar = () => {
                 onClick={toggleDropdown}
                 className="w-full text-left px-4 py-2 text-gray-100 hover:bg-gray-100 focus:outline-none rounded-md"
               >
-                <Avatar className="bg-red-700 font-bold font-2xl">
-                  <AvatarImage src="" alt="S" />
-                  <AvatarFallback>s</AvatarFallback>
+                <Avatar className="font-semibold text-3xl items-center justify-center">
+                  <AvatarImage src={user?.profilePicture} alt="S" />
+                  <AvatarFallback className="bg-red">
+                    {user?.username?.charAt(0)?.toUpperCase()}
+                  </AvatarFallback>
                 </Avatar>
               </button>
               <div
