@@ -20,7 +20,6 @@ export default function CodingChallengesPage() {
       setIsFetching(true);
       setError(null);
 
-      // Replace with your backend endpoint
       const response = await fetchData("get", `/challenges?page=${page}`);
       const data = await response.data;
 
@@ -29,7 +28,6 @@ export default function CodingChallengesPage() {
         ...data.challenges,
       ]);
 
-      // Update the hasMore state based on the current page and total pages
       setHasMore(page < data.totalPages);
       setIsFetching(false);
     } catch (err) {
@@ -67,16 +65,14 @@ export default function CodingChallengesPage() {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="bg-blue-50 dark:bg-gray-900 shadow-md rounded-lg p-6">
-        <h1 className="text-2xl font-bold dark:text-gray-200 text-gray-900 mb-4">
-          Coding Challenges
-        </h1>
+      <div className="bg-lightSecondary shadow-md rounded-lg p-6">
+        <h1 className="text-2xl font-bold mb-4">Coding Challenges</h1>
         <input
           type="text"
           placeholder="Search challenges..."
           value={searchTerm}
           onChange={handleSearch}
-          className="w-full p-2 mb-6 border border-gray-300 rounded-md text-dark dark:bg-gray-800"
+          className="w-full p-2 mb-6 border border-border rounded-md text-dark bg-light"
         />
 
         {filteredChallenges.length > 0 ? (
@@ -84,14 +80,10 @@ export default function CodingChallengesPage() {
             {filteredChallenges.map((challenge, index) => (
               <li
                 key={challenge.id}
-                className="bg-white dark:bg-gray-800 p-4 rounded-md shadow"
+                className="bg-light p-4 rounded-md shadow-xl"
               >
-                <h2 className="text-xl font-semibold dark:text-gray-200 text-gray-900">
-                  {challenge.title}
-                </h2>
-                <p className="dark:text-gray-200 stext-gray-700">
-                  {challenge.description}
-                </p>
+                <h2 className="text-xl font-semibold">{challenge.title}</h2>
+                <p className="text-grayText">{challenge.description}</p>
                 <span
                   className={`inline-block px-2 py-1 text-sm font-semibold rounded-full ${
                     challenge.difficulty === "Easy" &&
@@ -111,7 +103,7 @@ export default function CodingChallengesPage() {
                 </span>
                 <a
                   href={"coding-challenges/" + challenge.id}
-                  className="text-blue-500 hover:underline mt-2 block"
+                  className="text-primary hover:text-primary2 hover:underline mt-2 block"
                   target="_blank"
                 >
                   View Challenge
@@ -120,7 +112,7 @@ export default function CodingChallengesPage() {
             ))}
           </ul>
         ) : (
-          <p className="text-gray-700">No challenges found.</p>
+          <p>No challenges found.</p>
         )}
 
         {isFetching && <p>Loading more challenges...</p>}

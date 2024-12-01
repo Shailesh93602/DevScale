@@ -3,20 +3,73 @@ import React, { useState, useEffect, useContext } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FiMenu, FiX, FiSun, FiMoon } from "react-icons/fi";
-import { FaAngleDown, FaRegUserCircle } from "react-icons/fa";
+import { FaRegUserCircle } from "react-icons/fa";
 import { PiSignOutFill } from "react-icons/pi";
 import { GrAchievement, GrArticle } from "react-icons/gr";
 import { useTheme } from "next-themes";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { fetchData } from "@/app/services/fetchData";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+
+const navItems = [
+  {
+    path: "/dashboard",
+    label: "Dashboard",
+  },
+  {
+    path: "/battle-zone",
+    label: "Battle Zone",
+  },
+  {
+    path: "/resources",
+    label: "Resources",
+  },
+  {
+    path: "/coding-challenges",
+    label: "Coding Challenges",
+  },
+  {
+    path: "/career-roadmap",
+    label: "Career Roadmap",
+  },
+  {
+    path: "/placement-preparation",
+    label: "Placement Preparation",
+  },
+  {
+    path: "/community",
+    label: "Community",
+  },
+];
+
+const profileItems = [
+  {
+    path: "/profile",
+    label: "Profile",
+    icon: <FaRegUserCircle />,
+  },
+  {
+    path: "/achievements",
+    label: "Achievements",
+    icon: <GrAchievement />,
+  },
+  {
+    path: "/articles",
+    label: "My Articles",
+    icon: <GrArticle />,
+  },
+  {
+    path: "/logout",
+    label: "Logout",
+    icon: <PiSignOutFill />,
+  },
+];
 
 const Navbar = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { theme, setTheme } = useTheme();
-  const [user, setUser] = useState(useSelector((state) => state.user?.user));
+  const user = useSelector((state) => state.user?.user);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -40,33 +93,23 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="text-xl font-bold">
+            <Link
+              href="/"
+              className="text-xl font-bold text-primary hover:text-primary2"
+            >
               Mr.Eng
             </Link>
           </div>
           <div className="hidden md:flex items-center space-x-4">
-            <NavItem href="/dashboard" pathname={pathname}>
-              Dashboard
-            </NavItem>
-
-            <NavItem href="/battle-zone" pathname={pathname}>
-              Battle Zone
-            </NavItem>
-            <NavItem href="/resources" pathname={pathname}>
-              Resources
-            </NavItem>
-            <NavItem href="/coding-challenges" pathname={pathname}>
-              Coding Challenges
-            </NavItem>
-            <NavItem href="/career-roadmap" pathname={pathname}>
-              Career Roadmap
-            </NavItem>
-            <NavItem href="/placement-preparation" pathname={pathname}>
-              Placement Prep
-            </NavItem>
-            <NavItem href="/community" pathname={pathname}>
-              Community
-            </NavItem>
+            {navItems.map((item, index) => (
+              <NavItem
+                key={index}
+                href={item.path}
+                activeClassName="text-blue-500 font-bold"
+              >
+                {item.label}
+              </NavItem>
+            ))}
             <button
               onClick={toggleTheme}
               className=" hover:text-gray-900 dark:hover:text-gray-300 focus:outline-none"
@@ -87,38 +130,16 @@ const Navbar = () => {
               </button>
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-800 rounded-md shadow-lg py-1">
-                  <Link
-                    href="/profile"
-                    onClick={handleLinkClick}
-                    className="flex items-center gap-2 px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-md"
-                  >
-                    <FaRegUserCircle />
-                    Profile
-                  </Link>
-                  <Link
-                    href="/achievements"
-                    onClick={handleLinkClick}
-                    className="flex items-center gap-2 px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-md"
-                  >
-                    <GrAchievement />
-                    Achievements
-                  </Link>
-                  <Link
-                    href="/articles"
-                    onClick={handleLinkClick}
-                    className="flex items-center gap-2 px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-md"
-                  >
-                    <GrArticle />
-                    My Articles
-                  </Link>
-                  <Link
-                    href="/logout"
-                    onClick={handleLinkClick}
-                    className="flex items-center gap-2 px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-md"
-                  >
-                    <PiSignOutFill />
-                    Logout
-                  </Link>
+                  {profileItems.map((profileItem, index) => (
+                    <Link
+                      href={profileItem.path}
+                      onClick={handleLinkClick}
+                      className="flex items-center gap-2 px-4 py-2 hover:bg-light rounded-md"
+                    >
+                      {profileItem.icon}
+                      {profileItem.label}
+                    </Link>
+                  ))}
                 </div>
               )}
             </div>
@@ -136,62 +157,15 @@ const Navbar = () => {
       {isOpen && (
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <NavItem
-              href="/dashboard"
-              pathname={pathname}
-              onClick={handleLinkClick}
-            >
-              Dashboard
-            </NavItem>
-            <NavItem
-              href="/battle-zone"
-              pathname={pathname}
-              onClick={handleLinkClick}
-            >
-              Battle Zone
-            </NavItem>
-            <NavItem
-              href="/profile"
-              pathname={pathname}
-              onClick={handleLinkClick}
-            >
-              Profile
-            </NavItem>
-            <NavItem
-              href="/resources"
-              pathname={pathname}
-              onClick={handleLinkClick}
-            >
-              Resources
-            </NavItem>
-            <NavItem
-              href="/coding-challenges"
-              pathname={pathname}
-              onClick={handleLinkClick}
-            >
-              Coding Challenges
-            </NavItem>
-            <NavItem
-              href="/career-roadmap"
-              pathname={pathname}
-              onClick={handleLinkClick}
-            >
-              Career Roadmap
-            </NavItem>
-            <NavItem
-              href="/placement-preparation"
-              pathname={pathname}
-              onClick={handleLinkClick}
-            >
-              Placement Prep
-            </NavItem>
-            <NavItem
-              href="/community"
-              pathname={pathname}
-              onClick={handleLinkClick}
-            >
-              Community
-            </NavItem>
+            {navItems.map((navItem, index) => (
+              <NavItem
+                key={index}
+                href={navItem.path}
+                handleClick={handleLinkClick}
+              >
+                {navItem.label}
+              </NavItem>
+            ))}
             <button
               onClick={toggleTheme}
               className="w-full text-left px-4 py-2 text-gray-100 hover:bg-gray-100 focus:outline-none rounded-md"
@@ -211,24 +185,20 @@ const Navbar = () => {
                 </Avatar>
               </button>
               <div
-                className={`absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg py-1 ${
+                className={`absolute right-0 mt-2 w-48 bg-lightSecondary border border-border rounded-md shadow-lg py-1 ${
                   !dropdownOpen && "hidden"
                 }`}
               >
-                <Link
-                  href="/profile"
-                  onClick={handleLinkClick}
-                  className="block px-4 py-2 text-gray-800 hover:bg-gray-100 rounded-md"
-                >
-                  Profile
-                </Link>
-                <Link
-                  href="/logout"
-                  onClick={handleLinkClick}
-                  className="block px-4 py-2 text-gray-800 hover:bg-gray-100 rounded-md"
-                >
-                  Logout
-                </Link>
+                {profileItems.map((profileItem, index) => (
+                  <Link
+                    key={index}
+                    href={profileItem.path}
+                    onClick={handleLinkClick}
+                    className="block px-4 py-2 rounded-md"
+                  >
+                    {profileItem.label}
+                  </Link>
+                ))}
               </div>
             </div>
           </div>
@@ -238,16 +208,22 @@ const Navbar = () => {
   );
 };
 
-const NavItem = ({ href, pathname, onClick, children }) => (
-  <Link
-    href={href}
-    onClick={onClick}
-    className={`flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium ${
-      pathname === href ? "text-blue-500 font-semibold" : ""
-    }`}
-  >
-    {children}
-  </Link>
-);
+const NavItem = ({ href, children, handleClick }) => {
+  const pathname = usePathname();
+
+  const isActive = pathname === href || pathname?.startsWith(`${href}/`);
+
+  return (
+    <Link
+      href={href}
+      onClick={handleClick}
+      className={`flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium hover:text-primary2 hover:underline ${
+        isActive ? "text-primary font-semibold" : ""
+      }`}
+    >
+      {children}
+    </Link>
+  );
+};
 
 export default Navbar;

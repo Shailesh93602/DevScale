@@ -88,7 +88,7 @@ export const getResources = async (req, res) => {
 
     subjects = subjects.map((subject) => ({
       ...subject.dataValues,
-      tags: subject.dataValues?.tags?.split(","),
+      tags: JSON.parse(subject.dataValues?.tags),
     }));
 
     res.status(200).json({ success: true, resources: subjects });
