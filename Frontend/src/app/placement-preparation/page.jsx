@@ -1,8 +1,4 @@
 "use client";
-
-import Image from "next/image";
-import { useEffect } from "react";
-
 import { useRouter } from "next/navigation";
 import { PinContainer } from "@/components/ui/3d-pin";
 import { HoverEffect } from "@/components/ui/card-hover-effect";
@@ -144,115 +140,106 @@ export default function PlacementPreparation() {
   ];
 
   return (
-    <div className="min-h-screen  dark:bg-gray-800  bg-gray-100 py-12">
-      <div className="max-w-7xl  mx-auto px-6  rounded-lg  lg:px-8 bg-blue-50 dark:bg-gray-900 ">
-        <h1 className="text-4xl font-bold dark:text-gray-200 text-gray-900 mb-6">
-          Placement Preparation
-        </h1>
+    <div className="max-w-7xl  mx-auto px-6  lg:px-8 py-5">
+      {/* <h1 className="text-4xl font-bold dark:text-gray-200 text-gray-900 mb-6"> */}
+      {/* Placement Preparation */}
+      {/* </h1> */}
 
-        <div className="bg-light rounded-lg dark:bg-gray-600 shadow p-6 mb-8">
-          <h2 className="text-2xl dark:text-gray-200 font-semibold text-gray-800 mb-4">
-            Practice Tests
-          </h2>
-          <PinContainer title="coding-challenges" href="/coding-challenges">
-            <div className="flex basis-full flex-col p-4 tracking-tight text-slate-100/50 sm:basis-1/2 w-[20rem] h-[20rem] ">
-              <h3 className="max-w-xs !pb-2 !m-0 font-bold  text-base text-slate-100">
-                Mr Engineer
-              </h3>
-              <div className="text-base !m-0 !p-0 font-normal">
-                <span className="text-slate-500 ">
-                  conqueror your dream job by solving coding questions
-                </span>
-              </div>
-              <div className="flex flex-1 w-full rounded-lg mt-4 bg-gradient-to-br from-violet-500 via-purple-500 to-blue-500" />
+      <div className="bg-lightSecondary rounded-lg shadow p-6 mb-8">
+        <h2 className="text-2xl font-semibold mb-4">Practice Tests</h2>
+        <PinContainer title="coding-challenges" href="/coding-challenges">
+          <div className="flex basis-full flex-col p-4 tracking-tight sm:basis-1/2 w-[20rem] h-[20rem] ">
+            <h3 className="max-w-xs !pb-2 !m-0 font-bold  text-base">
+              Mr Engineer
+            </h3>
+            <div className="text-base !m-0 !p-0 font-normal">
+              <span className="text-grayText">
+                conqueror your dream job by solving coding questions
+              </span>
             </div>
-          </PinContainer>
-          <p className="mt-14 dark:text-gray-200 text-gray-600">
-            Take a variety of practice tests to prepare for your placement
-            exams. These tests cover different subjects and topics that are
-            commonly seen in placement exams.
-          </p>
-          <div className="pt-5">
-            <HoverBorderGradient
-              containerClassName="rounded-full"
-              as="button"
-              className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
-            >
-              <AceternityLogo />
-              <span>Start Practice Tests</span>
-            </HoverBorderGradient>
+            <div className="flex flex-1 w-full rounded-lg mt-4 bg-gradient-to-br from-violet-500 via-purple-500 to-blue-500" />
           </div>
+        </PinContainer>
+        <p className="mt-14">
+          Take a variety of practice tests to prepare for your placement exams.
+          These tests cover different subjects and topics that are commonly seen
+          in placement exams.
+        </p>
+        <div className="pt-5">
+          <HoverBorderGradient
+            containerClassName="rounded-full"
+            as="button"
+            className="bg-primary text-white hover:bg-primary2 flex items-center space-x-2"
+          >
+            <AceternityLogo />
+            <span>Start Practice Tests</span>
+          </HoverBorderGradient>
         </div>
+      </div>
 
-        <div className="bg-light rounded-lg dark:bg-gray-600 dark:text-gray-200 shadow p-6 mb-8">
-          <h2 className="text-2xl font-semibold dark:text-gray-200 text-gray-800 mb-4">
-            Interview Tips
-          </h2>
-          <HoverEffect items={interviewTips} />
-          <p className="text-gray-600 dark:text-gray-300">
-            Learn about the best strategies and tips to succeed in interviews.
-            From understanding the company culture to practicing common
-            questions, we’ve got you covered.
-          </p>
-          <div className="pt-5">
-            <HoverBorderGradient
-              containerClassName="rounded-full"
-              as="button"
-              className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
-            >
-              <AceternityLogo />
-              <span>Read Interview Tips</span>
-            </HoverBorderGradient>
-          </div>
+      <div className="bg-lightSecondary rounded-lg shadow p-6 mb-8">
+        <h2 className="text-2xl font-semibold">Interview Tips</h2>
+        <HoverEffect items={interviewTips} />
+        <p className="">
+          Learn about the best strategies and tips to succeed in interviews.
+          From understanding the company culture to practicing common questions,
+          we’ve got you covered.
+        </p>
+        <div className="pt-5">
+          <HoverBorderGradient
+            containerClassName="rounded-full"
+            as="button"
+            className="bg-primary text-white hover:bg-primary2 flex items-center space-x-2"
+          >
+            <AceternityLogo />
+            <span>Read Interview Tips</span>
+          </HoverBorderGradient>
         </div>
+      </div>
 
-        <div className="bg-light dark:bg-gray-600 rounded-lg shadow p-6 mb-8">
-          <h2 className="text-2xl dark:text-gray-200 font-semibold text-gray-800 mb-4">
-            Resume Building
-          </h2>
-          <p className="text-gray-600 dark:text-gray-300">
-            Create a professional resume that stands out. Use our resume
-            building tools and templates to highlight your skills and
-            experiences effectively.
-          </p>
-          <div className="pt-5">
-            <HoverBorderGradient
-              containerClassName="rounded-full"
-              as="button"
-              className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
-            >
-              <AceternityLogo />
-              <span>Build your Resume</span>
-            </HoverBorderGradient>
-          </div>
+      <div className="bg-lightSecondary rounded-lg shadow p-6 mb-8">
+        <h2 className="text-2xl font-semibold mb-4">Resume Building</h2>
+        <p className="text-grayText">
+          Create a professional resume that stands out. Use our resume building
+          tools and templates to highlight your skills and experiences
+          effectively.
+        </p>
+        <div className="pt-5">
+          <HoverBorderGradient
+            containerClassName="rounded-full"
+            as="button"
+            className="bg-primary text-white hover:bg-primary2 flex items-center space-x-2"
+          >
+            <AceternityLogo />
+            <span>Build your Resume</span>
+          </HoverBorderGradient>
         </div>
+      </div>
 
-        <div className="bg-light dark:bg-gray-600 rounded-lg shadow p-6">
-          <h2 className="text-2xl font-semibold dark:text-gray-200 text-gray-800 mb-4">
-            Common Interview Questions
-          </h2>
-          <InfiniteMovingCards
-            items={interviewQuestions}
-            direction="left"
-            speed="slow"
-          />
-          <p className="text-gray-600 pt-5 dark:text-gray-300">
-            Prepare for your interviews by practicing answers to the most common
-            interview questions. This will help you to articulate your thoughts
-            and experiences clearly.
-          </p>
-          <div className="pt-5">
-            {" "}
-            <HoverBorderGradient
-              href="/interview-question"
-              containerClassName="rounded-full"
-              as="button"
-              className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
-            >
-              <AceternityLogo />
-              <span>view Questions</span>
-            </HoverBorderGradient>
-          </div>
+      <div className="bg-lightSecondary rounded-lg shadow p-6">
+        <h2 className="text-2xl font-semibold mb-4">
+          Common Interview Questions
+        </h2>
+        <InfiniteMovingCards
+          items={interviewQuestions}
+          direction="left"
+          speed="slow"
+        />
+        <p className="pt-5">
+          Prepare for your interviews by practicing answers to the most common
+          interview questions. This will help you to articulate your thoughts
+          and experiences clearly.
+        </p>
+        <div className="pt-5">
+          <HoverBorderGradient
+            href="/interview-question"
+            containerClassName="rounded-full"
+            as="button"
+            className="bg-primary text-white hover:bg-primary2 flex items-center space-x-2"
+          >
+            <AceternityLogo />
+            <span>view Questions</span>
+          </HoverBorderGradient>
         </div>
       </div>
     </div>

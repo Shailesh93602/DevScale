@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Parallax, ParallaxProvider } from "react-scroll-parallax";
 import { useInView } from "react-intersection-observer";
-import { FiCheckCircle } from "react-icons/fi";
 import { useParams } from "next/navigation";
 import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
 import { useDispatch } from "react-redux";
@@ -38,7 +37,7 @@ const ProgressCircle = ({ completed }) => {
           cy="50%"
         />
         <circle
-          className="text-indigo-600"
+          className="text-primary"
           strokeWidth="4"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
@@ -50,7 +49,7 @@ const ProgressCircle = ({ completed }) => {
           cy="50%"
         />
       </svg>
-      <div className="absolute inset-0 flex items-center justify-center text-indigo-600">
+      <div className="absolute inset-0 flex items-center justify-center text-primary">
         {completed}%
       </div>
     </div>
@@ -59,24 +58,22 @@ const ProgressCircle = ({ completed }) => {
 
 const RoadmapStep = ({ id, name, description, icon: Icon }) => (
   <motion.div
-    className="roadmap-step bg-white dark:bg-gray-800 p-4 m-2 rounded shadow-lg flex items-start"
+    className="bg-light p-4 m-2 rounded shadow-lg flex items-start"
     variants={nodeVariants}
-    whileHover={{ scale: 1.1, boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.2)" }}
+    whileHover={{ scale: 1.04, boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.2)" }}
     transition={{ duration: 0.3 }}
   >
     <div className="mr-4">
-      {Icon && <Icon className="text-indigo-600" size={24} />}
+      {Icon && <Icon className="text-primary" size={24} />}
     </div>
     <div>
-      <h4 className="text-lg font-bold text-gray-900 dark:text-gray-100">
-        {name}
-      </h4>
-      <p className="text-gray-700 dark:text-gray-300">{description}</p>
+      <h4 className="text-lg font-bold">{name}</h4>
+      <p className="text-grayText">{description}</p>
       {id && (
         <a
           href={`/resources/${id}`}
           target="_blank"
-          className="text-indigo-600 dark:text-indigo-400 mt-2 inline-block"
+          className="text-primary hover:text-primary2 hover:underline mt-2 inline-block"
         >
           Learn more
         </a>
@@ -88,40 +85,23 @@ const RoadmapStep = ({ id, name, description, icon: Icon }) => (
 const RoadmapSection = ({ name, description, subjects }) => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
-  const steps = [
-    {
-      title: "Step 1",
-      description: "Description of step 1",
-      icon: FiCheckCircle,
-      link: "/step-1",
-    },
-    {
-      title: "Step 2",
-      description: "Description of step 2",
-      icon: FiCheckCircle,
-      link: "/step-2",
-    },
-  ];
-
   const completed = 50;
 
   return (
     <Parallax className="parallax-container" y={[20, -20]}>
       <motion.div
-        className="roadmap-section p-6 m-4 bg-blue-50 dark:bg-gray-900 rounded-lg shadow-md"
+        className="p-6 m-4 bg-lightSecondary rounded-lg shadow-md"
         ref={ref}
         initial="hidden"
         animate={inView ? "visible" : "hidden"}
         variants={sectionVariants}
       >
         <div className="flex justify-between items-center">
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-            {name}
-          </h3>
+          <h3 className="text-2xl font-bold">{name}</h3>
           <ProgressCircle completed={completed} />
         </div>
-        <p className="text-gray-700 dark:text-gray-300 mb-4">{description}</p>
-        <div className="roadmap-steps ml-6">
+        <p className="mb-4">{description}</p>
+        <div className="ml-6">
           {subjects?.map((step, index) => (
             <RoadmapStep key={index} {...step} />
           ))}
@@ -156,7 +136,7 @@ export default function CareerPathPage() {
   }, [careerId, dispatch]);
 
   return (
-    <div className="roadmap-container p-6 bg-gray-100 dark:bg-gray-800 min-h-screen">
+    <div className="p-6">
       <ParallaxProvider>
         <motion.div
           className="roadmap-content"

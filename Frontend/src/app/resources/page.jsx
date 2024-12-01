@@ -115,9 +115,9 @@ const ResourcesPage = () => {
                 <div
                   key={resource.id}
                   ref={index === resources.length - 1 ? lastResourceRef : null}
-                  className="bg-light rounded-lg shadow-lg overflow-hidden transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-105"
+                  className="flex flex-col items-end justify-between bg-light rounded-lg shadow-lg overflow-hidden transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-105 p-4"
                 >
-                  <div className="p-6">
+                  <div className="self-start">
                     <h2 className="text-2xl font-semibold mb-2 flex items-center">
                       <Book className="mr-2" size={24} />
                       {resource.name}
@@ -138,17 +138,18 @@ const ResourcesPage = () => {
                       <span className="text-sm text-grayText">
                         {resource.category}
                       </span>
-                      <HoverBorderGradient
-                        href={`/resources/${resource.id}`}
-                        containerClassName="rounded-full"
-                        as="button"
-                        className="bg-primary hover:bg-primary2 text-black dark:text-white flex items-center space-x-2"
-                      >
-                        <AceternityLogo />
-                        <span>View Resource</span>
-                      </HoverBorderGradient>
                     </div>
                   </div>
+
+                  <HoverBorderGradient
+                    href={`/resources/${resource.id}`}
+                    containerClassName="rounded-full"
+                    as="button"
+                    className="bg-primary hover:bg-primary2 flex items-center self-end space-x-2"
+                  >
+                    <AceternityLogo />
+                    <span>View Resource</span>
+                  </HoverBorderGradient>
                 </div>
               ))}
             </div>
