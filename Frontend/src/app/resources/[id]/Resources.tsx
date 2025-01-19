@@ -10,11 +10,10 @@ const sanitizeContent = (content: string) => {
   return DOMPurify.sanitize(content);
 };
 
-export default function Resources({
-  resource,
-}: {
-  resource: { id: string; title: string; Articles: { content: string }[] }[];
-}) {
+export default function Resources({ id }: { id: string }) {
+  const [resource, setResource] = useState<
+    { id: string; title: string; Articles: { content: string }[] }[]
+  >([]);
   const [selectedTopic, setSelectedTopic] = useState<{
     id: string;
     title: string;
@@ -31,6 +30,28 @@ export default function Resources({
   } | null>(null);
   const [userAnswers, setUserAnswers] = useState({});
   const [activeTab, setActiveTab] = useState("content");
+
+  const fetchResource = async () => {
+    try {
+      const response = await fetchData("GET", `/resources/${id}`);
+      const data = response.data;
+      if (data?.success) {
+        setResource(data?.resource?.topics);
+        setSelectedTopic(data?.resource?.topics?.[0]);
+      } else {
+        toast.error(
+          data?.error ?? "Failed to fetch resource. Please try again!"
+        );
+      }
+    } catch (error) {
+      toast.error("Failed to fetch resource. Please try again!");
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchResource();
+  }, [id]);
 
   useEffect(() => {
     const fetchQuiz = async () => {
@@ -146,6 +167,11 @@ export default function Resources({
       </motion.div>
     );
   };
+
+  if (!resource) {
+    toast.error("Requested resource not found.");
+    return;
+  }
 
   return (
     <div className="flex flex-col md:flex-row">

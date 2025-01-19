@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { fetchData } from "@/app/services/fetchData";
 import { RoadmapSection } from "./components/RoadmapSection";
+import { Timeline } from "./components/Timeline";
 
 export default function CareerPathPage() {
   const params = useParams();
@@ -36,20 +37,10 @@ export default function CareerPathPage() {
           "GET",
           `/roadMaps/mainConcepts/${careerId}`
         );
-        console.log(
-          "🚀 --------------------------------------------------------------🚀"
-        );
-        console.log(
-          "🚀 ~ file: page.tsx:174 ~ fetchResources ~ response:",
-          response
-        );
-        console.log(
-          "🚀 --------------------------------------------------------------🚀"
-        );
         setRoadmap(response.data);
       } catch (error) {
         console.error(error);
-        toast.error("Error fetching resources, Please try again");
+        toast.error("Error fetching resources. Please try again");
       }
       dispatch(hideLoader());
     };
@@ -57,22 +48,28 @@ export default function CareerPathPage() {
   }, [careerId, dispatch]);
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-bgColor min-h-screen">
       <ParallaxProvider>
         <motion.div
-          className="roadmap-content"
+          className="roadmap-content max-w-4xl mx-auto"
           initial="hidden"
           animate="visible"
           transition={{ staggerChildren: 0.4 }}
         >
-          {roadmap?.map((section) => (
-            <RoadmapSection
-              key={section.id}
-              name={section.name}
-              description={section.description}
-              subjects={section.Subjects}
-            />
-          ))}
+          <h1 className="text-4xl font-bold text-primary mb-8 text-center">
+            Career Roadmap
+          </h1>
+          <Timeline>
+            {roadmap?.map((section, index) => (
+              <RoadmapSection
+                key={section.id}
+                name={section.name}
+                description={section.description}
+                subjects={section.Subjects}
+                index={index}
+              />
+            ))}
+          </Timeline>
         </motion.div>
       </ParallaxProvider>
     </div>

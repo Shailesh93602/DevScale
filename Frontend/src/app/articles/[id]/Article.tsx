@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { fetchData } from "@/app/services/fetchData";
 import Navbar from "@/components/Navbar";
 import { toast } from "react-toastify";
@@ -9,30 +9,22 @@ const sanitizeContent = (content: string) => {
   return DOMPurify.sanitize(content);
 };
 
-export default function Article({
-  article,
-  moderationNotes,
-}: {
-  article: {
+export default function Article({ id }: { id: string }) {
+  const [article, setArticle] = useState<{
     id: string;
     title: string;
-    author: { username?: string };
-    createdAt: string;
+    author: { username: string };
     content: string;
-  };
-  moderationNotes: string;
-}) {
+    createdAt: string;
+  }>();
+  const [moderationNotes, setModerationNotes] = useState("");
   const [newNote, setNewNote] = useState("");
 
   const handleSaveNote = async () => {
     try {
-      const response = await fetchData(
-        "post",
-        `/articles/${article.id}/moderation`,
-        {
-          moderationNotes: newNote,
-        }
-      );
+      const response = await fetchData("post", `/articles/${id}/moderation`, {
+        moderationNotes: newNote,
+      });
       if (response.data.success) {
         toast.success("Moderation note saved successfully!");
         setNewNote("");
@@ -45,6 +37,26 @@ export default function Article({
       toast.error("Error saving moderation note.");
     }
   };
+
+  const fetchResource = async () => {
+    try {
+      const response = await fetchData("GET", `/articles/${id}`);
+
+      if (response?.data?.success) {
+        setArticle(response?.data?.article);
+        setModerationNotes(response?.data?.article?.moderationNotes);
+      } else {
+        toast.error(response?.error ?? "Failed to fetch article.");
+      }
+    } catch (error) {
+      console.error("Error fetching article:", error);
+      toast.error("Error fetching article.");
+    }
+  };
+
+  useEffect(() => {
+    fetchResource();
+  }, [id]);
   return (
     <>
       <Navbar />
@@ -55,14 +67,14 @@ export default function Article({
             By {article?.author?.username}
           </p>
           <p className="text-gray-600 dark:text-gray-400">
-            {new Date(article?.createdAt).toLocaleDateString()}
+            {new Date(article?.createdAt ?? "").toLocaleDateString()}
           </p>
         </div>
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
           <p
             className="prose dark:prose-invert"
             dangerouslySetInnerHTML={{
-              __html: sanitizeContent(article.content),
+              __html: sanitizeContent(article?.content ?? ""),
             }}
           ></p>
         </div>

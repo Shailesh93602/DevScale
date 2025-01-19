@@ -1,6 +1,4 @@
 import React from "react";
-import { fetchData } from "@/app/services/fetchData";
-import { toast } from "react-toastify";
 import Article from "./Article";
 
 export default async function ArticlePage({
@@ -10,12 +8,7 @@ export default async function ArticlePage({
 }) {
   const { id } = await params;
 
-  const response = await fetchData("get", `/articles/${id}`);
+  if (!id) return;
 
-  const article = response.data.article;
-  const moderationNotes = response.data.article.moderationNodes ?? "";
-
-  toast.error("Failed to load article.");
-
-  return <Article article={article} moderationNotes={moderationNotes} />;
+  return <Article id={id} />;
 }

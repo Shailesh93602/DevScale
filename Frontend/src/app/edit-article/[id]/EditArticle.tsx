@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 // import dynamic from "next/dynamic";
 import { toast } from "react-toastify";
 // import "react-quill/dist/quill.snow.css";
@@ -10,13 +10,8 @@ import Navbar from "@/components/Navbar";
 
 // const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
-export default function EditArticle({
-  content,
-  id,
-}: {
-  id: string;
-  content: string;
-}) {
+export default function EditArticle({ id }: { id: string }) {
+  const [content, setContent] = useState<string>("");
   const dispatch = useDispatch();
 
   const updateArticle = async () => {
@@ -39,6 +34,28 @@ export default function EditArticle({
       dispatch(hideLoader());
     }
   };
+
+  const fetchArticle = async () => {
+    try {
+      dispatch(showLoader());
+      const response = await fetchData("GET", `/articles/${id}`);
+
+      if (response?.data?.success) {
+        setContent(response.data.article?.content);
+      } else {
+        toast.error(response?.data?.error ?? "Failed to fetch article.");
+      }
+    } catch (error) {
+      toast.error("Failed to fetch article.");
+      console.error(error);
+    } finally {
+      dispatch(hideLoader());
+    }
+  };
+
+  useEffect(() => {
+    fetchArticle();
+  }, [id]);
 
   return (
     <>
