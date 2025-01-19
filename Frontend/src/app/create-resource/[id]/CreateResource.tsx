@@ -1,0 +1,78 @@
+"use client";
+import { fetchData } from "@/app/services/fetchData";
+import Navbar from "@/components/Navbar";
+import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+
+export default function CreateResource({ id }: { id: string }) {
+  const [content, setContent] = useState("");
+
+  const dispatch = useDispatch();
+
+  const saveResource = async () => {
+    try {
+      dispatch(showLoader());
+      const response = await fetchData("post", `/resources/save/${id}`, {
+        content,
+      });
+
+      if (response.data.success) {
+        toast.success("Resource saved successfully!");
+        setContent("");
+        window.location.href = "/resources";
+      } else {
+        toast.error("Failed to save resource.");
+      }
+    } catch (error) {
+      toast.error("Failed to save resource.");
+      console.error(error);
+    } finally {
+      dispatch(hideLoader());
+    }
+  };
+  return (
+    <>
+      <Navbar />
+      <div className="container mx-auto p-6">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6">
+          {/* <ReactQuill
+            value={content}
+            onChange={setContent}
+            preserveWhitespace
+            modules={{
+              toolbar: [
+                [{ font: [] }, { size: [] }],
+                ["bold", "italic", "underline", "strike"],
+                [{ color: [] }, { background: [] }],
+                [{ script: "sub" }, { script: "super" }],
+                [
+                  { header: "1" },
+                  { header: "2" },
+                  { header: "3" },
+                  "blockquote",
+                  "code-block",
+                ],
+                [{ list: "ordered" }, { list: "bullet" }],
+                [{ indent: "-1" }, { indent: "+1" }],
+                [{ direction: "rtl" }, { align: [] }],
+                ["link", "image", "video"],
+                ["clean"],
+              ],
+              // indent: {
+              //   levels: [1, 2, 3, 4, 5],
+              // },
+            }}
+          /> */}
+        </div>
+        <button
+          onClick={saveResource}
+          className="bg-blue-500 text-white py-2 px-4 rounded-lg"
+        >
+          Save Resource
+        </button>
+      </div>
+    </>
+  );
+}

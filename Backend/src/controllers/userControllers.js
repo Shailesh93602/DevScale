@@ -71,22 +71,32 @@ export const getProfile = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    const userInfo = await db.UserInfo.findOne({ where: { id: userId } });
-    if (!userInfo) {
+    const user = await db.User.findByPk(userId, {
+      include: [{ model: db.UserInfo, as: "userInfo" }],
+    });
+
+    if (!user) {
       return res
-        .status(200)
-        .json({ success: true, message: "Please update your profile" });
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
-    userInfo.dob = userInfo.dob.toISOString().slice(0, 10);
-    userInfo.achievements = userInfo.achievements?.split(",");
-    userInfo.email = req.user.email;
+    const userInfo = user.userInfo || {};
+    const profile = {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      name: userInfo.fullName || "",
+      bio: userInfo.bio || "",
+      avatar: userInfo.profilePicture || "",
+      memberSince: user.createdAt,
+      botJoinDate: userInfo.createdAt,
+      note: userInfo.note || "",
+    };
 
-    const userDetails = await User.findByPk(userId);
-    res
-      .status(200)
-      .json({ success: true, userInfo: { ...userInfo, ...userDetails } });
+    res.status(200).json({ success: true, profile });
   } catch (error) {
+    console.log(error);
     logger.error("Error fetching profile:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
@@ -95,47 +105,29 @@ export const getProfile = async (req, res) => {
 export const updateProfile = async (req, res) => {
   try {
     const userId = req.user.id;
-    const {
-      fullName,
-      dob,
-      gender,
-      mobile,
-      whatsapp,
-      address,
-      university,
-      college,
-      branch,
-      semester,
-      bio,
-      achievements = [],
-    } = req.body;
+    const { name, username, email, bio, note } = req.body;
 
-    const achievementsString = achievements.join(",");
-    const userInfo = {
-      fullName,
-      dob,
-      gender,
-      mobile,
-      whatsapp,
-      address,
-      university,
-      college,
-      branch,
-      semester,
-      bio,
-      achievements: achievementsString,
-      profilePicture: req.fileUrl,
-    };
+    const [user, created] = await db.User.findOrCreate({
+      where: { id: userId },
+      defaults: { username, email },
+    });
 
-    const result = await updateUserInfoByUserId(userId, userInfo);
-
-    if (result.affectedRows === 0) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User profile not found" });
+    if (!created) {
+      await user.update({ username, email });
     }
 
-    res.status(200).json({ success: true, userInfo });
+    const [userInfo, createdInfo] = await db.UserInfo.findOrCreate({
+      where: { userId },
+      defaults: { fullName: name, bio, note },
+    });
+
+    if (!createdInfo) {
+      await userInfo.update({ fullName: name, bio, note });
+    }
+
+    res
+      .status(200)
+      .json({ success: true, message: "Profile updated successfully" });
   } catch (error) {
     logger.error("Error updating profile:", error);
     res.status(500).json({ success: false, message: "Internal server error" });

@@ -23,6 +23,18 @@ export default (sequelize) => {
         type: DataTypes.TEXT,
         allowNull: false,
       },
+      thumbnail: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      userId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+          model: "Users",
+          key: "id",
+        },
+      },
     },
     {
       sequelize,

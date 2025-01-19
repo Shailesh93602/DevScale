@@ -5,6 +5,10 @@ export default (sequelize) => {
     static associate(models) {
       this.hasMany(models.UserRoadmap, { foreignKey: "userId" });
       this.hasMany(models.UserProgress, { foreignKey: "userId" });
+      this.hasOne(models.UserInfo, {
+        foreignKey: "userId",
+        as: "userInfo",
+      });
     }
   }
 

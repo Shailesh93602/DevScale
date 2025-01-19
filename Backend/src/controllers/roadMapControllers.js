@@ -75,6 +75,7 @@ export const getRoadMap = async (req, res) => {
 
 export const createRoadMap = async (req, res) => {
   try {
+    const userId = req.user.id;
     const { title, description, content } = req.body;
 
     if (!title || !description || !content) {
@@ -84,7 +85,12 @@ export const createRoadMap = async (req, res) => {
       });
     }
 
-    const newRoadMap = await RoadMap.create({ title, description, content });
+    const newRoadMap = await RoadMap.create({
+      title,
+      description,
+      content,
+      userId,
+    });
     res.status(201).json({ success: true, roadMap: newRoadMap });
   } catch (error) {
     logger.error("Error creating roadmap:", error);
