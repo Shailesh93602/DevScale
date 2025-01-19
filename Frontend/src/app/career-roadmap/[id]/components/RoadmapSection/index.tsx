@@ -1,18 +1,18 @@
-import { Parallax } from "react-scroll-parallax";
 import { useInView } from "react-intersection-observer";
 import { motion } from "framer-motion";
 import { ProgressCircle } from "../ProgressCircle";
 import { RoadmapStep } from "../RoadmapStep";
 
 const sectionVariants = {
-  hidden: { opacity: 0, scale: 0.9 },
-  visible: { opacity: 1, scale: 1 },
+  hidden: { opacity: 0, y: 50 },
+  visible: { opacity: 1, y: 0 },
 };
 
 export const RoadmapSection = ({
   name,
   description,
   subjects,
+  index,
 }: {
   name: string;
   description: string;
@@ -22,31 +22,33 @@ export const RoadmapSection = ({
     description: string;
     icon: React.ElementType;
   }[];
+  index: number;
 }) => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
-  const completed = 50;
+  const completed = 50; // This should be calculated based on actual progress
 
   return (
-    <Parallax className="parallax-container" scaleY={[20, -20]}>
-      <motion.div
-        className="p-6 m-4 bg-lightSecondary rounded-lg shadow-md"
-        ref={ref}
-        initial="hidden"
-        animate={inView ? "visible" : "hidden"}
-        variants={sectionVariants}
-      >
-        <div className="flex justify-between items-center">
-          <h3 className="text-2xl font-bold">{name}</h3>
+    <motion.div
+      className="mb-12"
+      ref={ref}
+      initial="hidden"
+      animate={inView ? "visible" : "hidden"}
+      variants={sectionVariants}
+      transition={{ duration: 0.5, delay: index * 0.2 }}
+    >
+      <div className="bg-card rounded-lg shadow-lg p-6 border-l-4 border-primary">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-2xl font-bold text-primary">{name}</h3>
           <ProgressCircle completed={completed} />
         </div>
-        <p className="mb-4">{description}</p>
-        <div className="ml-6">
-          {subjects?.map((step) => (
-            <RoadmapStep key={step.id} {...step} />
+        <p className="mb-6 text-card-foreground">{description}</p>
+        <div className="space-y-4">
+          {subjects?.map((step, stepIndex) => (
+            <RoadmapStep key={step.id} {...step} index={stepIndex} />
           ))}
         </div>
-      </motion.div>
-    </Parallax>
+      </div>
+    </motion.div>
   );
 };

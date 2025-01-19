@@ -1,6 +1,4 @@
 import React from "react";
-import { fetchData } from "@/app/services/fetchData";
-import { toast } from "react-toastify";
 import Resources from "./Resources";
 
 export default async function Resource({
@@ -10,13 +8,7 @@ export default async function Resource({
 }) {
   const { id } = await params;
 
-  const response = await fetchData("GET", "/resources/" + id);
-  const data = response.data;
+  if (!id) return;
 
-  if (!data.success) {
-    toast.error(data.message);
-    return;
-  }
-
-  return <Resources resource={data.resource.topics} />;
+  return <Resources id={id} />;
 }
