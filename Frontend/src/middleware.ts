@@ -1,0 +1,79 @@
+import { NextRequest, NextResponse } from "next/server";
+import customAxios from "./app/services/customAxios";
+// testing
+const protectedPages = [
+  "/dashboard",
+  "/profile",
+  "/resources",
+  "/coding-challenges",
+  "/career-roadmap",
+  "/placement-preparation",
+  "/community",
+  "/achievements",
+  "/battle-zone",
+  "/create-resource",
+  "/article-listing",
+];
+
+export async function middleware(req: NextRequest) {
+  const pathname = req.nextUrl.pathname;
+
+  if (!protectedPages.includes(pathname)) {
+    return NextResponse.next();
+  }
+
+  const token = req.cookies.get("token")?.value;
+
+  if (!token) {
+    return redirectToLogin(req);
+  }
+
+  try {
+    const response = await validateToken(token);
+
+    if (response === "Unauthorized") {
+      return redirectToLogin(req);
+    }
+
+    return NextResponse.next();
+  } catch (error) {
+    console.error("Middleware error:", error);
+    return redirectToLogin(req);
+  }
+}
+
+async function validateToken(token: string) {
+  customAxios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  try {
+    const response = await customAxios.get("/profile");
+    return response.data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (error.response && error.response.status === 401) {
+      return "Unauthorized";
+    }
+    throw error;
+  }
+}
+
+function redirectToLogin(req: NextRequest) {
+  const url = req.nextUrl.clone();
+  url.pathname = "/u/login";
+  return NextResponse.redirect(url);
+}
+
+export const config = {
+  matcher: [
+    "/dashboard",
+    "/profile",
+    "/resources",
+    "/coding-challenges",
+    "/career-roadmap",
+    "/placement-preparation",
+    "/community",
+    "/achievements",
+    "/battle-zone",
+    "/create-resource",
+    "/article-listing",
+  ],
+};
