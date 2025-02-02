@@ -1,4 +1,4 @@
-"use client";
+'use client';
 // import dynamic from "next/dynamic";
 
 // const MonacoEditor = dynamic(import("@monaco-editor/react"), { ssr: false });
@@ -12,7 +12,7 @@ const EditorComponent = ({
 }) => {
   console.log(value, onChange);
   return (
-    <div style={{ height: "100vh" }}>
+    <div style={{ height: '100vh' }}>
       {/* <MonacoEditor
         height="100%"
         language="javascript"

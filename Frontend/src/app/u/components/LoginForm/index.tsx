@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { FieldValues, UseFormReturn } from "react-hook-form";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import { FieldValues, UseFormReturn } from 'react-hook-form';
 
 export default function LoginForm({
   form,
@@ -28,7 +28,7 @@ export default function LoginForm({
         <Label htmlFor="username">Email or Username</Label>
         <Input
           id="username"
-          {...register("username")}
+          {...register('username')}
           placeholder="Enter your email or username"
         />
         {errors.username && (
@@ -40,7 +40,7 @@ export default function LoginForm({
         <Input
           id="password"
           type="password"
-          {...register("password")}
+          {...register('password')}
           placeholder="Enter your password"
         />
         {errors.password && (
@@ -65,7 +65,7 @@ export default function LoginForm({
         </a>
       </div>
       <Button type="submit" className="w-full" disabled={isLoading}>
-        {isLoading ? "Signing in..." : "Sign in"}
+        {isLoading ? 'Signing in...' : 'Sign in'}
       </Button>
     </form>
   );

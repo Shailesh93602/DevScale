@@ -1,5 +1,5 @@
-import React from "react";
-import Resources from "./Resources";
+import React from 'react';
+import Resources from './Resources';
 
 export default async function Resource({
   params,

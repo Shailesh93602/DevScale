@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { FieldValues, UseFormReturn } from "react-hook-form";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import { FieldValues, UseFormReturn } from 'react-hook-form';
 
 export default function RegisterForm({
   form,
@@ -30,7 +30,7 @@ export default function RegisterForm({
         <Label htmlFor="username">Username</Label>
         <Input
           id="username"
-          {...register("username")}
+          {...register('username')}
           placeholder="Enter your Username"
         />
         {errors.username && (
@@ -41,7 +41,7 @@ export default function RegisterForm({
         <Label htmlFor="email">Email</Label>
         <Input
           id="email"
-          {...register("email")}
+          {...register('email')}
           placeholder="Enter your Email Address"
         />
         {errors.email && (
@@ -53,7 +53,7 @@ export default function RegisterForm({
         <Input
           id="password"
           type="password"
-          {...register("password")}
+          {...register('password')}
           placeholder="Enter your password"
         />
         {errors.password && (
@@ -65,7 +65,7 @@ export default function RegisterForm({
         <Input
           id="confirmPassword"
           type="password"
-          {...register("confirmPassword")}
+          {...register('confirmPassword')}
           placeholder="Enter your password again"
         />
         {errors.confirmPassword && (
@@ -92,7 +92,7 @@ export default function RegisterForm({
         </a>
       </div>
       <Button type="submit" className="w-full" disabled={isLoading}>
-        {isLoading ? "Signing up..." : "Sign up"}
+        {isLoading ? 'Signing up...' : 'Sign up'}
       </Button>
     </form>
   );

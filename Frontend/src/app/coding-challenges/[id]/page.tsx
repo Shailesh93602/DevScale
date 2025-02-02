@@ -1,4 +1,4 @@
-import CodingChallenge from "./CodingChallenge";
+import CodingChallenge from './CodingChallenge';
 
 export default async function ViewChallengePage({
   params,

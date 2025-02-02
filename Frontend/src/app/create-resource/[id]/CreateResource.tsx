@@ -1,32 +1,32 @@
-"use client";
-import { fetchData } from "@/app/services/fetchData";
-import Navbar from "@/components/Navbar";
-import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { toast } from "react-toastify";
+'use client';
+import { fetchData } from '@/app/services/fetchData';
+import Navbar from '@/components/Navbar';
+import { hideLoader, showLoader } from '@/lib/features/loader/loaderSlice';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 
 export default function CreateResource({ id }: { id: string }) {
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState('');
 
   const dispatch = useDispatch();
 
   const saveResource = async () => {
     try {
       dispatch(showLoader());
-      const response = await fetchData("post", `/resources/save/${id}`, {
+      const response = await fetchData('post', `/resources/save/${id}`, {
         content,
       });
 
       if (response.data.success) {
-        toast.success("Resource saved successfully!");
-        setContent("");
-        window.location.href = "/resources";
+        toast.success('Resource saved successfully!');
+        setContent('');
+        window.location.href = '/resources';
       } else {
-        toast.error("Failed to save resource.");
+        toast.error('Failed to save resource.');
       }
     } catch (error) {
-      toast.error("Failed to save resource.");
+      toast.error('Failed to save resource.');
       console.error(error);
     } finally {
       dispatch(hideLoader());
@@ -36,7 +36,7 @@ export default function CreateResource({ id }: { id: string }) {
     <>
       <Navbar />
       <div className="container mx-auto p-6">
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6">
+        <div className="mb-6 rounded-lg bg-white p-6 shadow-md dark:bg-gray-800">
           {/* <ReactQuill
             value={content}
             onChange={setContent}
@@ -68,7 +68,7 @@ export default function CreateResource({ id }: { id: string }) {
         </div>
         <button
           onClick={saveResource}
-          className="bg-blue-500 text-white py-2 px-4 rounded-lg"
+          className="rounded-lg bg-blue-500 px-4 py-2 text-white"
         >
           Save Resource
         </button>

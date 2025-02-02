@@ -1,5 +1,5 @@
-"use client";
-import { useState } from "react";
+'use client';
+import { useState } from 'react';
 
 const ProgressTracker = () => {
   const chapters = 10;
@@ -8,7 +8,7 @@ const ProgressTracker = () => {
   const [completedItems, setCompletedItems] = useState(25);
 
   const totalProgress = Math.round(
-    ((completedChapters + completedItems) / (chapters + items)) * 100
+    ((completedChapters + completedItems) / (chapters + items)) * 100,
   );
 
   return (

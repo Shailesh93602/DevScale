@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode } from 'react';
 
 const StatCard = ({
   title,
@@ -12,13 +12,13 @@ const StatCard = ({
   color: string;
 }) => (
   <div
-    className={`p-6 bg-${color}-500 text-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105`}
+    className={`p-6 bg-${color}-500 transform rounded-lg text-white shadow-md transition-shadow duration-300 hover:scale-105 hover:shadow-xl`}
   >
     <h3 className="text-xl font-semibold">{title}</h3>
     <div className="mt-2">{content}</div>
     {Boolean(progress) && (
       <div className="mt-4">
-        <div className="h-2 bg-gray-300 rounded-full">
+        <div className="h-2 rounded-full bg-gray-300">
           <div
             className={`h-full bg-${color}-700 rounded-full`}
             style={{ width: `${progress}%` }}

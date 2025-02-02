@@ -1,130 +1,130 @@
-import javascript from "../../public/images/landing-page/js.webp";
-import ReactImage from "../../public/images/landing-page/react-context-api.png";
-import Angular from "../../public/images/landing-page/angular.jpeg";
-import Python from "../../public/images/landing-page/Python-01.jpg";
-import Node from "../../public/images/landing-page/node.png";
-import Mongo from "../../public/images/landing-page/mongo.png";
-import PhP from "../../public/images/landing-page/php-card.webp";
-import java from "../../public/images/landing-page/java.webp";
-import Flutter from "../../public/images/landing-page/flutter.png";
-import goLang from "../../public/images/landing-page/go.jpg";
-import DsA from "../../public/images/landing-page/dsa.jpeg";
-import django from "../../public/images/landing-page/django.svg";
-import spring_boot from "../../public/images/landing-page/spring-boot.png";
-import aws from "../../public/images/landing-page/aws.jpg";
-import git from "../../public/images/landing-page/git.png";
-import Image from "next/image";
+import javascript from '../../public/images/landing-page/js.webp';
+import ReactImage from '../../public/images/landing-page/react-context-api.png';
+import Angular from '../../public/images/landing-page/angular.jpeg';
+import Python from '../../public/images/landing-page/Python-01.jpg';
+import Node from '../../public/images/landing-page/node.png';
+import Mongo from '../../public/images/landing-page/mongo.png';
+import PhP from '../../public/images/landing-page/php-card.webp';
+import java from '../../public/images/landing-page/java.webp';
+import Flutter from '../../public/images/landing-page/flutter.png';
+import goLang from '../../public/images/landing-page/go.jpg';
+import DsA from '../../public/images/landing-page/dsa.jpeg';
+import django from '../../public/images/landing-page/django.svg';
+import spring_boot from '../../public/images/landing-page/spring-boot.png';
+import aws from '../../public/images/landing-page/aws.jpg';
+import git from '../../public/images/landing-page/git.png';
+import Image from 'next/image';
 
 export const difficulties = Object.freeze({
-  EASY: "easy",
-  MEDIUM: "medium",
-  HARD: "hard",
+  EASY: 'easy',
+  MEDIUM: 'medium',
+  HARD: 'hard',
 });
 
 export const lengths = Object.freeze({
-  SHORT: "short",
-  MEDIUM: "medium",
-  LONG: "long",
+  SHORT: 'short',
+  MEDIUM: 'medium',
+  LONG: 'long',
 });
 
 export const products = [
   {
-    title: "javascript",
-    link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+    title: 'javascript',
+    link: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript',
     thumbnail: javascript,
   },
   {
-    title: "React",
-    link: "https://react.dev/",
+    title: 'React',
+    link: 'https://react.dev/',
     thumbnail: ReactImage,
   },
   {
-    title: "Angular",
-    link: "https://v17.angular.io/start",
+    title: 'Angular',
+    link: 'https://v17.angular.io/start',
     thumbnail: Angular,
   },
 
   {
-    title: "python",
-    link: "https://www.python.org",
+    title: 'python',
+    link: 'https://www.python.org',
     thumbnail: Python,
   },
   {
-    title: "Node js",
-    link: "https://nodejs.org/en",
+    title: 'Node js',
+    link: 'https://nodejs.org/en',
     thumbnail: Node,
   },
   {
-    title: "Mongo Db",
-    link: "https://www.mongodb.com/",
+    title: 'Mongo Db',
+    link: 'https://www.mongodb.com/',
     thumbnail: Mongo,
   },
 
   {
-    title: "PHP",
-    link: "https://www.php.net/",
+    title: 'PHP',
+    link: 'https://www.php.net/',
     thumbnail: PhP,
   },
   {
-    title: "java",
-    link: "https://www.java.com/en/",
+    title: 'java',
+    link: 'https://www.java.com/en/',
     thumbnail: java,
   },
   {
-    title: "Flutter",
-    link: "https://flutter.dev/",
+    title: 'Flutter',
+    link: 'https://flutter.dev/',
     thumbnail: Flutter,
   },
   {
-    title: "goLang",
-    link: "https://go.dev/",
+    title: 'goLang',
+    link: 'https://go.dev/',
     thumbnail: goLang,
   },
   {
-    title: "DsA",
-    link: "https://www.programiz.com/dsa",
+    title: 'DsA',
+    link: 'https://www.programiz.com/dsa',
     thumbnail: DsA,
   },
 
   {
-    title: "Django",
-    link: "https://www.djangoproject.com/",
+    title: 'Django',
+    link: 'https://www.djangoproject.com/',
     thumbnail: django,
   },
   {
-    title: "Spring Boot",
-    link: "https://spring.io/projects/spring-boot",
+    title: 'Spring Boot',
+    link: 'https://spring.io/projects/spring-boot',
     thumbnail: spring_boot,
   },
   {
-    title: "Git",
-    link: "https://git-scm.com/",
+    title: 'Git',
+    link: 'https://git-scm.com/',
     thumbnail: git,
   },
   {
-    title: "AWS",
-    link: "https://aws.amazon.com/",
+    title: 'AWS',
+    link: 'https://aws.amazon.com/',
     thumbnail: aws,
   },
 ];
 
 export const content = [
   {
-    title: "Interactive Coding Tutorials",
+    title: 'Interactive Coding Tutorials',
     description:
-      "Dive into our interactive coding tutorials designed for all skill levels. From beginners to advanced programmers, our platform offers hands-on learning experiences that make complex concepts easy to understand. Code in real-time, get instant feedback, and watch your skills grow with every lesson.",
+      'Dive into our interactive coding tutorials designed for all skill levels. From beginners to advanced programmers, our platform offers hands-on learning experiences that make complex concepts easy to understand. Code in real-time, get instant feedback, and watch your skills grow with every lesson.',
     content: (
-      <div className="h-full w-full bg-[linear-gradient(to_bottom_right,var(--blue-500),var(--indigo-500))] flex items-center justify-center text-white">
+      <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(to_bottom_right,var(--blue-500),var(--indigo-500))] text-white">
         Interactive Coding Tutorials
       </div>
     ),
   },
   {
-    title: "Live Coding Sessions",
+    title: 'Live Coding Sessions',
     description:
       "Join our expert instructors in live coding sessions. Watch real-world problems being solved, ask questions, and learn best practices in real-time. These sessions bridge the gap between theory and practical application, giving you insights that textbooks can't provide.",
     content: (
-      <div className="h-full w-full flex items-center justify-center text-white">
+      <div className="flex h-full w-full items-center justify-center text-white">
         <Image
           src="/skills-development.svg"
           width={300}
@@ -136,21 +136,21 @@ export const content = [
     ),
   },
   {
-    title: "Project-Based Learning",
+    title: 'Project-Based Learning',
     description:
-      "Apply your skills to real-world projects. Our project-based learning approach allows you to build a portfolio while you learn. From web applications to mobile apps, tackle projects that matter and showcase your abilities to potential employers.",
+      'Apply your skills to real-world projects. Our project-based learning approach allows you to build a portfolio while you learn. From web applications to mobile apps, tackle projects that matter and showcase your abilities to potential employers.',
     content: (
-      <div className="h-full w-full bg-[linear-gradient(to_bottom_right,var(--green-500),var(--teal-500))] flex items-center justify-center text-white">
+      <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(to_bottom_right,var(--green-500),var(--teal-500))] text-white">
         Project-Based Learning
       </div>
     ),
   },
   {
-    title: "Personalized Learning Paths",
+    title: 'Personalized Learning Paths',
     description:
       "Everyone's learning journey is unique. Our AI-powered platform creates personalized learning paths tailored to your goals, current skill level, and learning style. Stay motivated with a curriculum that adapts to your progress and challenges you at the right pace.",
     content: (
-      <div className="h-full w-full bg-[linear-gradient(to_bottom_right,var(--purple-500),var(--pink-500))] flex items-center justify-center text-white">
+      <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(to_bottom_right,var(--purple-500),var(--pink-500))] text-white">
         Personalized Learning Paths
       </div>
     ),

@@ -1,16 +1,16 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React from 'react';
+import { useSelector } from 'react-redux';
 
 export default function Loader() {
   const isLoading = useSelector(
-    (state: { loader: { isLoading: boolean } }) => state.loader.isLoading
+    (state: { loader: { isLoading: boolean } }) => state.loader.isLoading,
   );
   if (!isLoading) {
     return null;
   }
 
   return (
-    <div className="w-screen h-screen fixed z-10 flex justify-center items-center bg-white dark:bg-gray-900">
+    <div className="fixed z-10 flex h-screen w-screen items-center justify-center bg-white dark:bg-gray-900">
       <div className="loader">Mr Engineers</div>
       <style jsx>{`
         .loader {

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 const BattleTopics = ({
   topics,
@@ -10,15 +10,15 @@ const BattleTopics = ({
   onChange: (topic: string) => void;
 }) => {
   return (
-    <div className="flex flex-wrap gap-1 mb-4">
+    <div className="mb-4 flex flex-wrap gap-1">
       {topics.map((topic) => (
         <button
           key={topic}
           onClick={() => onChange(topic)}
-          className={`py-2 px-4 rounded-3xl ${
+          className={`rounded-3xl px-4 py-2 ${
             selectedTopic === topic
-              ? "bg-blue-500 text-white"
-              : "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+              ? 'bg-blue-500 text-white'
+              : 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
           }`}
         >
           {topic}

@@ -1,13 +1,13 @@
-"use client";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
-import { fetchData } from "@/app/services/fetchData";
-import { toast } from "react-toastify";
-import Navbar from "@/components/Navbar";
+'use client';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { hideLoader, showLoader } from '@/lib/features/loader/loaderSlice';
+import { fetchData } from '@/app/services/fetchData';
+import { toast } from 'react-toastify';
+import Navbar from '@/components/Navbar';
 
 export default function ResourcesPage() {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [resources, setResources] = useState<
     {
       id: string;
@@ -25,16 +25,16 @@ export default function ResourcesPage() {
   const fetchResources = async () => {
     dispatch(showLoader());
     try {
-      const response = await fetchData("GET", "/topics/unpublished");
+      const response = await fetchData('GET', '/topics/unpublished');
       const data = response.data;
       setResources(data.topics);
       setAvailableTags([
         ...new Set(
-          data.topics?.flatMap((resource: { tags: string }) => resource.tags)
+          data.topics?.flatMap((resource: { tags: string }) => resource.tags),
         ),
       ] as string[]);
     } catch (error) {
-      toast.error("Something went wrong, Please try again!");
+      toast.error('Something went wrong, Please try again!');
       console.error(error);
     }
     dispatch(hideLoader());
@@ -52,7 +52,7 @@ export default function ResourcesPage() {
     setSelectedTags((prevTags) =>
       prevTags.includes(tag)
         ? prevTags.filter((t) => t !== tag)
-        : [...prevTags, tag]
+        : [...prevTags, tag],
     );
   };
 
@@ -63,15 +63,15 @@ export default function ResourcesPage() {
           .toLowerCase()
           .includes(searchTerm.toLowerCase())) &&
       (selectedTags.length === 0 ||
-        selectedTags.some((tag) => resource.tags?.includes(tag)))
+        selectedTags.some((tag) => resource.tags?.includes(tag))),
   );
 
   return (
     <>
       <Navbar />
-      <div className="bg-white dark:bg-gray-800 mx-auto p-6 ">
-        <div className="bg-blue-50 dark:bg-gray-900 shadow-md rounded-lg p-6">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+      <div className="mx-auto bg-white p-6 dark:bg-gray-800">
+        <div className="rounded-lg bg-blue-50 p-6 shadow-md dark:bg-gray-900">
+          <h1 className="mb-6 text-3xl font-bold text-gray-900 dark:text-gray-100">
             Available Topics
           </h1>
           <input
@@ -79,17 +79,17 @@ export default function ResourcesPage() {
             placeholder="Search topics..."
             value={searchTerm}
             onChange={handleSearch}
-            className="w-full p-3 mb-6 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mb-6 w-full rounded-md border border-gray-300 bg-gray-50 p-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
           />
           <div className="mb-6">
             {availableTags.map((tag) => (
               <button
                 key={tag}
                 onClick={() => handleTagSelection(tag)}
-                className={`m-1 p-2 border rounded ${
+                className={`m-1 rounded border p-2 ${
                   selectedTags.includes(tag)
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100'
                 }`}
               >
                 {tag}
@@ -101,7 +101,7 @@ export default function ResourcesPage() {
               {filteredResources.map((resource) => (
                 <li
                   key={resource.id}
-                  className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-200"
+                  className="rounded-lg bg-gray-50 p-6 shadow transition-shadow duration-200 hover:shadow-lg dark:bg-gray-800"
                 >
                   <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
                     {resource.title}
@@ -113,7 +113,7 @@ export default function ResourcesPage() {
                     href={`/create-resource/${resource.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-500 dark:text-blue-400 hover:underline mt-2 block"
+                    className="mt-2 block text-blue-500 hover:underline dark:text-blue-400"
                   >
                     Add Article
                   </a>
@@ -124,7 +124,7 @@ export default function ResourcesPage() {
                     {resource.tags?.map((tag) => (
                       <span
                         key={tag}
-                        className="inline-block bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-xs px-2 py-1 rounded-full mr-1"
+                        className="mr-1 inline-block rounded-full bg-gray-200 px-2 py-1 text-xs text-gray-900 dark:bg-gray-700 dark:text-gray-100"
                       >
                         {tag}
                       </span>

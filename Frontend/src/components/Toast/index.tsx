@@ -1,15 +1,15 @@
-import React from "react";
-import { ToastContainer, ToastPosition, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import React from 'react';
+import { ToastContainer, ToastPosition, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Toast = ({
-  position = "top-right",
+  position = 'top-right',
   autoClose = 5000,
   hideProgressBar = false,
   closeOnClick = true,
   pauseOnHover = true,
   draggable = true,
-  theme = "light",
+  theme = 'light',
 }: {
   position?: ToastPosition;
   autoClose?: number;
@@ -17,7 +17,7 @@ const Toast = ({
   closeOnClick?: boolean;
   pauseOnHover?: boolean;
   draggable?: boolean;
-  theme?: "light" | "dark" | "colored";
+  theme?: 'light' | 'dark' | 'colored';
 }) => {
   return (
     <ToastContainer
@@ -37,19 +37,19 @@ const Toast = ({
 
 export const showToast = (
   message: string,
-  type: "success" | "info" | "warn" | "error" | "default" = "default"
+  type: 'success' | 'info' | 'warn' | 'error' | 'default' = 'default',
 ) => {
   switch (type) {
-    case "success":
+    case 'success':
       toast.success(message);
       break;
-    case "info":
+    case 'info':
       toast.info(message);
       break;
-    case "warn":
+    case 'warn':
       toast.warn(message);
       break;
-    case "error":
+    case 'error':
       toast.error(message);
       break;
     default:

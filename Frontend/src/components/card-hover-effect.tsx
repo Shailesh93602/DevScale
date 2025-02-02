@@ -1,7 +1,7 @@
-import { cn } from "@/lib/utils";
-import { AnimatePresence, motion } from "framer-motion";
-import Link from "next/link";
-import { ReactNode, useState } from "react";
+import { cn } from '@/lib/utils';
+import { AnimatePresence, motion } from 'framer-motion';
+import Link from 'next/link';
+import { ReactNode, useState } from 'react';
 
 export const HoverEffect = ({
   items,
@@ -15,22 +15,22 @@ export const HoverEffect = ({
   return (
     <div
       className={cn(
-        "grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3  py-8",
-        className
+        'grid grid-cols-1 py-8 md:grid-cols-2 lg:grid-cols-3',
+        className,
       )}
     >
       {items.map((item, idx) => (
         <Link
           href={item?.link}
           key={item?.link}
-          className="relative group block p-2 h-full w-full"
+          className="group relative block h-full w-full p-2"
           onMouseEnter={() => setHoveredIndex(idx)}
           onMouseLeave={() => setHoveredIndex(null)}
         >
           <AnimatePresence>
             {hoveredIndex === idx && (
               <motion.span
-                className="absolute inset-0 h-full w-full bg-gray-300/[0.8] dark:bg-gray-300/[0.8] block  rounded-3xl"
+                className="absolute inset-0 block h-full w-full rounded-3xl bg-gray-300/[0.8] dark:bg-gray-300/[0.8]"
                 layoutId="hoverBackground"
                 initial={{ opacity: 0 }}
                 animate={{
@@ -64,8 +64,8 @@ export const Card = ({
   return (
     <div
       className={cn(
-        "rounded-2xl h-full w-full p-4 overflow-hidden bg-blue-200 dark:bg-black border border-transparent dark:border-black/[0.2] group-hover:border-blue-700 relative z-20",
-        className
+        'relative z-20 h-full w-full overflow-hidden rounded-2xl border border-transparent bg-blue-200 p-4 group-hover:border-blue-700 dark:border-black/[0.2] dark:bg-black',
+        className,
       )}
     >
       <div className="relative z-50">
@@ -84,8 +84,8 @@ export const CardTitle = ({
   return (
     <h4
       className={cn(
-        "dark:text-zinc-100 text-black font-bold tracking-wide mt-4",
-        className
+        'mt-4 font-bold tracking-wide text-black dark:text-zinc-100',
+        className,
       )}
     >
       {children}
@@ -102,8 +102,8 @@ export const CardDescription = ({
   return (
     <p
       className={cn(
-        "mt-8 dark:text-zinc-400 text-gray-500 tracking-wide leading-relaxed text-sm",
-        className
+        'mt-8 text-sm leading-relaxed tracking-wide text-gray-500 dark:text-zinc-400',
+        className,
       )}
     >
       {children}

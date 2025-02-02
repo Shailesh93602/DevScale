@@ -1,18 +1,18 @@
-"use client";
-import React, { ReactNode } from "react";
+'use client';
+import React, { ReactNode } from 'react';
 
-import { HeroParallax } from "@/components/hero-parallax";
-import { StickyScroll } from "@/components/sticky-scroll-reveal";
-import { CardDemo } from "@/components/CardDemo";
-import { HoverBorderGradient } from "@/components/hover-border-gradient";
-import { content, products } from "@/constants";
-import { AceternityLogo } from "@/components/AceternityLogo";
+import { HeroParallax } from '@/components/hero-parallax';
+import { StickyScroll } from '@/components/sticky-scroll-reveal';
+import { CardDemo } from '@/components/CardDemo';
+import { HoverBorderGradient } from '@/components/hover-border-gradient';
+import { content, products } from '@/constants';
+import { AceternityLogo } from '@/components/AceternityLogo';
 
 export default function LandingPage() {
   return (
     <main className="flex flex-col bg-light text-dark">
       <HeroParallax products={products} />
-      <section className='pt-5 py-12 md:py-20 lg:py-28"'>
+      <section className='lg:py-28" py-12 pt-5 md:py-20'>
         <div className="pb-8">
           <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm">
             Learning Resources
@@ -49,7 +49,7 @@ export default function LandingPage() {
                   containerClassName="rounded-full"
                   href="/career-roadmap"
                   as="button"
-                  className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
+                  className="flex items-center space-x-2 bg-white text-black dark:bg-black dark:text-white"
                 >
                   <AceternityLogo />
                   <span>Get Your Roadmap</span>
@@ -81,7 +81,7 @@ export default function LandingPage() {
                   containerClassName="rounded-full"
                   as="button"
                   href="/placement-preparation"
-                  className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
+                  className="flex items-center space-x-2 bg-white text-black dark:bg-black dark:text-white"
                 >
                   <AceternityLogo />
                   <span>Explore Placement Support</span>

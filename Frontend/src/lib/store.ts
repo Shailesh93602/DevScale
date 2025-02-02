@@ -1,8 +1,8 @@
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage";
-import loaderReducer from "./features/loader/loaderSlice";
-import userSlice from "./features/user/userSlice";
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+import loaderReducer from './features/loader/loaderSlice';
+import userSlice from './features/user/userSlice';
 
 const rootReducer = combineReducers({
   loader: loaderReducer,
@@ -10,7 +10,7 @@ const rootReducer = combineReducers({
 });
 
 const persistConfig = {
-  key: "root",
+  key: 'root',
   storage,
 };
 

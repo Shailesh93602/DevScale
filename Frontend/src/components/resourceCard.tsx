@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 const icons = {
   test: (
@@ -7,7 +7,7 @@ const icons = {
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
-      className="w-12 h-12 text-blue-600 mb-4"
+      className="mb-4 h-12 w-12 text-blue-600"
     >
       <path
         strokeLinecap="round"
@@ -23,7 +23,7 @@ const icons = {
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
-      className="w-12 h-12 text-blue-600 mb-4"
+      className="mb-4 h-12 w-12 text-blue-600"
     >
       <path
         strokeLinecap="round"
@@ -39,7 +39,7 @@ const icons = {
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
-      className="w-12 h-12 text-blue-600 mb-4"
+      className="mb-4 h-12 w-12 text-blue-600"
     >
       <path
         strokeLinecap="round"
@@ -61,9 +61,9 @@ export default function ResourceCard({
   icon: string;
 }) {
   return (
-    <div className="bg-light p-6 rounded-lg shadow-lg text-center">
+    <div className="rounded-lg bg-light p-6 text-center shadow-lg">
       {icons[icon as keyof object]}
-      <h3 className="text-xl font-semibold mb-2">{title}</h3>
+      <h3 className="mb-2 text-xl font-semibold">{title}</h3>
       <p className="text-gray-700">{description}</p>
     </div>
   );

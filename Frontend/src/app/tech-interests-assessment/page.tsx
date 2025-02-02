@@ -1,5 +1,5 @@
-"use client";
-import { useState } from "react";
+'use client';
+import { useState } from 'react';
 import {
   Form,
   FormControl,
@@ -7,20 +7,20 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Control, FieldValues, useForm } from "react-hook-form";
-import Link from "next/link";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
+import { Control, FieldValues, useForm } from 'react-hook-form';
+import Link from 'next/link';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { fetchData } from "@/app/services/fetchData";
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { fetchData } from '@/app/services/fetchData';
 
 const StepOne = ({ control }: { control: Control<FieldValues> }) => (
   <>
@@ -334,7 +334,7 @@ const TechInterestAssessment = () => {
       nextStep();
       return;
     }
-    await fetchData("POST", "/predict", JSON.stringify(data));
+    await fetchData('POST', '/predict', JSON.stringify(data));
   };
 
   const renderStep = () => {
@@ -355,9 +355,9 @@ const TechInterestAssessment = () => {
   };
 
   return (
-    <section className="min-h-screen flex items-center justify-center py-12 bg-background text-foreground transition duration-300 ease-in-out">
-      <div className="w-full max-w-lg bg-card shadow-lg rounded-lg p-10 dark:bg-gray-800 dark:text-white">
-        <div className="text-center mb-8">
+    <section className="flex min-h-screen items-center justify-center bg-background py-12 text-foreground transition duration-300 ease-in-out">
+      <div className="w-full max-w-lg rounded-lg bg-card p-10 shadow-lg dark:bg-gray-800 dark:text-white">
+        <div className="mb-8 text-center">
           <Link
             href="/"
             className="text-4xl font-extrabold text-blue-700 dark:text-blue-800"
@@ -365,30 +365,30 @@ const TechInterestAssessment = () => {
             Mr. Engineers
           </Link>
         </div>
-        <h1 className="text-3xl font-semibold text-center mb-6 dark:text-gray-100">
+        <h1 className="mb-6 text-center text-3xl font-semibold dark:text-gray-100">
           Tech Interest Assessment
         </h1>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             {renderStep()}
             <div
-              className={`flex w-full mt-4 ${
-                step == 1 ? "justify-end" : "justify-between"
+              className={`mt-4 flex w-full ${
+                step == 1 ? 'justify-end' : 'justify-between'
               }`}
             >
               {step > 1 && (
                 <Button
                   type="submit"
-                  className="w-max py-3 mt-4 bg-blue-600 text-white hover:bg-blue-700 transition duration-200 ease-in-out"
+                  className="mt-4 w-max bg-blue-600 py-3 text-white transition duration-200 ease-in-out hover:bg-blue-700"
                 >
                   Previous
                 </Button>
               )}
               <Button
                 type="submit"
-                className="w-max py-3 mt-4 bg-blue-600 text-white hover:bg-blue-700 transition duration-200 ease-in-out"
+                className="mt-4 w-max bg-blue-600 py-3 text-white transition duration-200 ease-in-out hover:bg-blue-700"
               >
-                {step < 5 ? "Next" : "Submit"}
+                {step < 5 ? 'Next' : 'Submit'}
               </Button>
             </div>
           </form>

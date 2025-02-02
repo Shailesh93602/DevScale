@@ -1,6 +1,6 @@
-"use client";
-import React from "react";
-import { Progress } from "@/components/ui/progress";
+'use client';
+import React from 'react';
+import { Progress } from '@/components/ui/progress';
 
 const AchievementsCard = ({
   title,
@@ -11,24 +11,24 @@ const AchievementsCard = ({
   description: string;
   value: number;
 }) => {
-  const imageClass = value !== 100 ? "filter grayscale" : "";
+  const imageClass = value !== 100 ? 'filter grayscale' : '';
 
   let level;
   if (value >= 90) {
-    level = "complete";
+    level = 'complete';
   } else if (value >= 70) {
-    level = "Level 2";
+    level = 'Level 2';
   } else if (value >= 50) {
-    level = "Level 1";
+    level = 'Level 1';
   } else {
-    level = "Level 0";
+    level = 'Level 0';
   }
 
   return (
-    <div className="bg-white shadow-lg rounded-lg p-6 transition duration-300 ease-in-out transform hover:scale-105 hover:bg-gray-100 cursor-pointer">
+    <div className="transform cursor-pointer rounded-lg bg-white p-6 shadow-lg transition duration-300 ease-in-out hover:scale-105 hover:bg-gray-100">
       <div className="flex items-center space-x-4">
         <div
-          className={`w-12 h-12 flex items-center justify-center bg-blue-500 text-white rounded-full ${imageClass}`}
+          className={`flex h-12 w-12 items-center justify-center rounded-full bg-blue-500 text-white ${imageClass}`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -44,15 +44,15 @@ const AchievementsCard = ({
           </svg>
         </div>
 
-        <div className="flex flex-col flex-1">
-          <h2 className="text-xl font-bold text-gray-900 mb-2">{title}</h2>
+        <div className="flex flex-1 flex-col">
+          <h2 className="mb-2 text-xl font-bold text-gray-900">{title}</h2>
           <p className="text-gray-600">{description}</p>
 
           <div className="mt-4">
             <Progress value={value} />
           </div>
         </div>
-        <div className="text-sm text-blue-500 mt-2">{level}</div>
+        <div className="mt-2 text-sm text-blue-500">{level}</div>
       </div>
     </div>
   );

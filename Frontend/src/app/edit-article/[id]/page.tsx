@@ -1,5 +1,5 @@
-import React from "react";
-import EditArticle from "./EditArticle";
+import React from 'react';
+import EditArticle from './EditArticle';
 
 export default async function ArticleEditor({
   params,

@@ -5,22 +5,22 @@ import {
   FormLabel,
   FormItem,
   FormMessage,
-} from "../ui/form";
+} from '../ui/form';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Input } from "../ui/input";
-import { Control, FieldErrors } from "react-hook-form";
+} from '@/components/ui/select';
+import { Input } from '../ui/input';
+import { Control, FieldErrors } from 'react-hook-form';
 
 export default function CustomInput({
   control,
   errors,
   name,
-  type = "text",
+  type = 'text',
   label,
   placeholder,
 }: {
@@ -42,7 +42,7 @@ export default function CustomInput({
             <Input
               type={type}
               placeholder={placeholder}
-              className={`${errors && errors[name] && "border-red-600"}`}
+              className={`${errors && errors[name] && 'border-red-600'}`}
               {...field}
             />
           </FormControl>
@@ -86,7 +86,7 @@ export function CustomSelect({
           <Select onValueChange={field.onChange} defaultValue={field.value}>
             <FormControl>
               <SelectTrigger
-                className={`${errors && errors[name] && "border-red-600"}`}
+                className={`${errors && errors[name] && 'border-red-600'}`}
               >
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>

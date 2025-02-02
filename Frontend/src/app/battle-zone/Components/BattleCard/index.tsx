@@ -1,5 +1,5 @@
-import { format, parse } from "date-fns";
-import React from "react";
+import { format, parse } from 'date-fns';
+import React from 'react';
 
 const capitalize = (s: string) => {
   return s?.charAt(0)?.toUpperCase() + s?.slice(1);
@@ -19,7 +19,7 @@ export default function BattleCard(props: {
   const { title, description, Topic, difficulty, length, date, time } =
     props.battle;
   return (
-    <div className="bg-light shadow-md rounded-lg p-4 text-center">
+    <div className="rounded-lg bg-light p-4 text-center shadow-md">
       <h2 className="text-xl font-bold">{capitalize(title)}</h2>
       <p>{capitalize(description)}</p>
       <p>
@@ -33,11 +33,11 @@ export default function BattleCard(props: {
         <strong>Length:</strong> {capitalize(length)}
       </p>
       <p>
-        <strong>Date:</strong> {format(new Date(date), "yyyy-MM-dd")}
+        <strong>Date:</strong> {format(new Date(date), 'yyyy-MM-dd')}
       </p>
       <p>
-        <strong>Time:</strong>{" "}
-        {format(parse(time, "HH:mm:ss", new Date()), "HH:mm")}
+        <strong>Time:</strong>{' '}
+        {format(parse(time, 'HH:mm:ss', new Date()), 'HH:mm')}
       </p>
     </div>
   );
