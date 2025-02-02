@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 // import AchievementsCard from "./AchievementsCard";
-import { CheckIcon } from "lucide-react";
+import { CheckIcon } from 'lucide-react';
 
 const VerticalStepper = () => {
   const [steps] = useState([
-    { title: "Step 1", description: "Description of Step 1", achieved: false },
-    { title: "Step 2", description: "Description of Step 2", achieved: false },
-    { title: "Step 3", description: "Description of Step 3", achieved: false },
-    { title: "Step 4", description: "Description of Step 4", achieved: false },
-    { title: "Step 5", description: "Description of Step 5", achieved: false },
+    { title: 'Step 1', description: 'Description of Step 1', achieved: false },
+    { title: 'Step 2', description: 'Description of Step 2', achieved: false },
+    { title: 'Step 3', description: 'Description of Step 3', achieved: false },
+    { title: 'Step 4', description: 'Description of Step 4', achieved: false },
+    { title: 'Step 5', description: 'Description of Step 5', achieved: false },
   ]);
 
   // const handleAchievementUnlock = (stepIndex: number) => {
@@ -22,12 +22,12 @@ const VerticalStepper = () => {
       {steps.map((step, index) => (
         <div key={index} className="flex items-center">
           <div
-            className={`w-6 h-6 rounded-full flex items-center justify-center border-2 border-gray-300 ${
-              step.achieved ? "bg-green-500 border-green-500" : "bg-gray-300"
+            className={`flex h-6 w-6 items-center justify-center rounded-full border-2 border-gray-300 ${
+              step.achieved ? 'border-green-500 bg-green-500' : 'bg-gray-300'
             }`}
           >
             {step.achieved ? (
-              <CheckIcon className="w-4 h-4 text-white" />
+              <CheckIcon className="h-4 w-4 text-white" />
             ) : (
               index + 1
             )}
@@ -35,7 +35,7 @@ const VerticalStepper = () => {
           <div className="ml-4">
             <h3
               className={`font-bold ${
-                step.achieved ? "text-green-500" : "text-gray-900"
+                step.achieved ? 'text-green-500' : 'text-gray-900'
               }`}
             >
               {step.title}

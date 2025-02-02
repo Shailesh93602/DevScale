@@ -1,13 +1,13 @@
-import React from "react";
+import React from 'react';
 import {
   motion,
   useScroll,
   useTransform,
   useSpring,
   MotionValue,
-} from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
+} from 'framer-motion';
+import Image from 'next/image';
+import Link from 'next/link';
 
 export const HeroParallax = ({
   products,
@@ -20,39 +20,39 @@ export const HeroParallax = ({
   const ref = React.useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start start", "end start"],
+    offset: ['start start', 'end start'],
   });
 
   const springConfig = { stiffness: 300, damping: 30, bounce: 100 };
 
   const translateX = useSpring(
     useTransform(scrollYProgress, [0, 1], [0, 1000]),
-    springConfig
+    springConfig,
   );
   const translateXReverse = useSpring(
     useTransform(scrollYProgress, [0, 1], [0, -1000]),
-    springConfig
+    springConfig,
   );
   const rotateX = useSpring(
     useTransform(scrollYProgress, [0, 0.2], [15, 0]),
-    springConfig
+    springConfig,
   );
   const opacity = useSpring(
     useTransform(scrollYProgress, [0, 0.2], [0.2, 1]),
-    springConfig
+    springConfig,
   );
   const rotateZ = useSpring(
     useTransform(scrollYProgress, [0, 0.2], [20, 0]),
-    springConfig
+    springConfig,
   );
   const translateY = useSpring(
     useTransform(scrollYProgress, [0, 0.2], [-700, 500]),
-    springConfig
+    springConfig,
   );
   return (
     <div
       ref={ref}
-      className="h-[300vh] bg-black py-20 overflow-hidden antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
+      className="relative flex h-[300vh] flex-col self-auto overflow-hidden bg-black py-20 antialiased [perspective:1000px] [transform-style:preserve-3d]"
     >
       <Header />
       <motion.div
@@ -64,7 +64,7 @@ export const HeroParallax = ({
         }}
         className=""
       >
-        <motion.div className="flex flex-row-reverse space-x-reverse space-x-20 mb-10">
+        <motion.div className="mb-10 flex flex-row-reverse space-x-20 space-x-reverse">
           {firstRow.map((product) => (
             <ProductCard
               product={product}
@@ -73,7 +73,7 @@ export const HeroParallax = ({
             />
           ))}
         </motion.div>
-        <motion.div className="flex flex-row  mb-10 space-x-20 ">
+        <motion.div className="mb-10 flex flex-row space-x-20">
           {secondRow.map((product) => (
             <ProductCard
               product={product}
@@ -82,7 +82,7 @@ export const HeroParallax = ({
             />
           ))}
         </motion.div>
-        <motion.div className="flex flex-row-reverse space-x-reverse space-x-20 mb-10">
+        <motion.div className="mb-10 flex flex-row-reverse space-x-20 space-x-reverse">
           {thirdRow.map((product) => (
             <ProductCard
               product={product}
@@ -98,11 +98,11 @@ export const HeroParallax = ({
 
 export const Header = () => {
   return (
-    <div className="max-w-7xl relative mx-auto py-10 md:py-20 px-4 w-full left-0 top-0">
-      <h1 className="text-2xl md:text-7xl font-bold text-white">
+    <div className="relative left-0 top-0 mx-auto w-full max-w-7xl px-4 py-10 md:py-20">
+      <h1 className="text-2xl font-bold text-white md:text-7xl">
         Welcome To <br /> Mr Engineers
       </h1>
-      <p className="max-w-2xl text-base md:text-xl mt-8 text-white">
+      <p className="mt-8 max-w-2xl text-base text-white md:text-xl">
         Empowering the next generation of programmers with cutting-edge
         resources, expert guidance, and hands-on learning experiences to shape
         the future of technology.
@@ -127,22 +127,22 @@ export const ProductCard = ({
         y: -20,
       }}
       key={product.title}
-      className="group/product h-96 w-[30rem] relative flex-shrink-0"
+      className="group/product relative h-96 w-[30rem] flex-shrink-0"
     >
       <Link
         href={product.link}
-        className="block group-hover/product:shadow-2xl "
+        className="block group-hover/product:shadow-2xl"
       >
         <Image
           src={product.thumbnail}
           height="600"
           width="600"
-          className="object-cover object-left-top absolute h-full w-full inset-0"
+          className="absolute inset-0 h-full w-full object-cover object-left-top"
           alt={product.title}
         />
       </Link>
-      <div className="absolute inset-0 h-full w-full opacity-0 group-hover/product:opacity-80 bg-black pointer-events-none"></div>
-      <h2 className="absolute bottom-4 left-4 opacity-0 group-hover/product:opacity-100 text-white">
+      <div className="pointer-events-none absolute inset-0 h-full w-full bg-black opacity-0 group-hover/product:opacity-80"></div>
+      <h2 className="absolute bottom-4 left-4 text-white opacity-0 group-hover/product:opacity-100">
         {product.title}
       </h2>
     </motion.div>

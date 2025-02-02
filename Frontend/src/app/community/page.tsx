@@ -1,16 +1,16 @@
-"use client";
-import { HoverBorderGradient } from "@/components/hover-border-gradient";
-import Image from "next/image";
-import { AceternityLogo } from "@/components/AceternityLogo";
+'use client';
+import { HoverBorderGradient } from '@/components/hover-border-gradient';
+import Image from 'next/image';
+import { AceternityLogo } from '@/components/AceternityLogo';
 
 export default function Community() {
   return (
     <div className="py-4">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <h1 className="text-4xl font-bold mb-6">Community</h1>
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <h1 className="mb-6 text-4xl font-bold">Community</h1>
 
-        <div className="bg-lightSecondary rounded-lg shadow p-6 mb-8">
-          <h2 className="text-2xl font-semibold mb-4">Discussion Forums</h2>
+        <div className="mb-8 rounded-lg bg-lightSecondary p-6 shadow">
+          <h2 className="mb-4 text-2xl font-semibold">Discussion Forums</h2>
           <Image
             src="/community.svg"
             alt="Discussion Forums"
@@ -26,7 +26,7 @@ export default function Community() {
             <HoverBorderGradient
               containerClassName="rounded-full"
               as="button"
-              className="bg-primary text-white hover:bg-primary2 flex items-center space-x-2"
+              className="flex items-center space-x-2 bg-primary text-white hover:bg-primary2"
             >
               <AceternityLogo />
               <span> Join Discussions</span>
@@ -34,8 +34,8 @@ export default function Community() {
           </div>
         </div>
 
-        <div className="bg-lightSecondary rounded-lg shadow p-6 mb-8">
-          <h2 className="text-2xl font-semibold mb-4">Upcoming Events</h2>
+        <div className="mb-8 rounded-lg bg-lightSecondary p-6 shadow">
+          <h2 className="mb-4 text-2xl font-semibold">Upcoming Events</h2>
           <p>
             Stay updated with our upcoming events. From webinars to hackathons,
             be a part of events that enhance your learning and networking
@@ -45,7 +45,7 @@ export default function Community() {
             <HoverBorderGradient
               containerClassName="rounded-full"
               as="button"
-              className="bg-primary text-white hover:bg-primary2 flex items-center space-x-2"
+              className="flex items-center space-x-2 bg-primary text-white hover:bg-primary2"
             >
               <AceternityLogo />
               <span>View Events</span>
@@ -53,8 +53,8 @@ export default function Community() {
           </div>
         </div>
 
-        <div className="bg-lightSecondary rounded-lg shadow p-6 mb-8">
-          <h2 className="text-2xl font-semibold mb-4">Member Highlights</h2>
+        <div className="mb-8 rounded-lg bg-lightSecondary p-6 shadow">
+          <h2 className="mb-4 text-2xl font-semibold">Member Highlights</h2>
           <p>
             Discover stories and achievements of our community members. Get
             inspired by their journeys and learn from their experiences.
@@ -63,7 +63,7 @@ export default function Community() {
             <HoverBorderGradient
               containerClassName="rounded-full"
               as="button"
-              className="bg-primary text-white hover:bg-primary2 flex items-center space-x-2"
+              className="flex items-center space-x-2 bg-primary text-white hover:bg-primary2"
             >
               <AceternityLogo />
               <span>View Highlights</span>
@@ -71,8 +71,8 @@ export default function Community() {
           </div>
         </div>
 
-        <div className="bg-lightSecondary rounded-lg shadow p-6">
-          <h2 className="text-2xl font-semibold mb-4">
+        <div className="rounded-lg bg-lightSecondary p-6 shadow">
+          <h2 className="mb-4 text-2xl font-semibold">
             Collaboration Opportunities
           </h2>
           <p>
@@ -81,11 +81,11 @@ export default function Community() {
             goals.
           </p>
           <div className="pt-4">
-            {" "}
+            {' '}
             <HoverBorderGradient
               containerClassName="rounded-full"
               as="button"
-              className="bg-primary hover:bg-primary2 flex items-center space-x-2"
+              className="flex items-center space-x-2 bg-primary hover:bg-primary2"
             >
               <AceternityLogo />
               <span>Find Opportunities</span>

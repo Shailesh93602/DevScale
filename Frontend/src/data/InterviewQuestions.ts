@@ -1,28 +1,28 @@
 export const InterviewQuestions = [
   {
-    category: "React Interview Questions",
+    category: 'React Interview Questions',
     questions: [
       {
-        id: "react-1",
-        question: "What is ReactJS?",
+        id: 'react-1',
+        question: 'What is ReactJS?',
         answer: {
           introduction:
-            "ReactJS is a popular JavaScript library for building user interfaces, particularly single-page applications.",
+            'ReactJS is a popular JavaScript library for building user interfaces, particularly single-page applications.',
           points: [
             {
-              title: "Component-Based",
+              title: 'Component-Based',
               description:
-                "React allows you to build encapsulated components that manage their own state, then compose them to make complex UIs.",
+                'React allows you to build encapsulated components that manage their own state, then compose them to make complex UIs.',
             },
             {
-              title: "Declarative",
+              title: 'Declarative',
               description:
-                "React makes it painless to create interactive UIs. Design simple views for each state in your application, and React will efficiently update and render just the right components when your data changes.",
+                'React makes it painless to create interactive UIs. Design simple views for each state in your application, and React will efficiently update and render just the right components when your data changes.',
             },
             {
-              title: "Learn Once, Write Anywhere",
+              title: 'Learn Once, Write Anywhere',
               description:
-                "You can develop new features in React without rewriting existing code. React can also render on the server using Node and power mobile apps using React Native.",
+                'You can develop new features in React without rewriting existing code. React can also render on the server using Node and power mobile apps using React Native.',
             },
           ],
           conclusion:
@@ -30,182 +30,182 @@ export const InterviewQuestions = [
         },
       },
       {
-        id: "react-2",
-        question: "Explain the building blocks of React",
+        id: 'react-2',
+        question: 'Explain the building blocks of React',
         answer: {
           introduction:
-            "React applications are built using several key building blocks:",
+            'React applications are built using several key building blocks:',
           points: [
             {
-              title: "Components",
+              title: 'Components',
               description:
-                "The core building blocks of React. They are reusable pieces of the UI that combine HTML, CSS, and JavaScript.",
+                'The core building blocks of React. They are reusable pieces of the UI that combine HTML, CSS, and JavaScript.',
             },
             {
-              title: "JSX",
+              title: 'JSX',
               description:
-                "A syntax extension for JavaScript that allows you to write HTML-like code in your JavaScript files.",
+                'A syntax extension for JavaScript that allows you to write HTML-like code in your JavaScript files.',
             },
             {
-              title: "Props",
+              title: 'Props',
               description:
-                "Short for properties, props are how components receive data and configurations from their parent components.",
+                'Short for properties, props are how components receive data and configurations from their parent components.',
             },
             {
-              title: "State",
+              title: 'State',
               description:
                 "An object that holds data that may change over time and affects the component's rendering.",
             },
             {
-              title: "Hooks",
+              title: 'Hooks',
               description:
-                "Functions that let you use state and other React features in functional components.",
+                'Functions that let you use state and other React features in functional components.',
             },
           ],
           conclusion:
-            "These building blocks work together to create efficient, reusable, and maintainable React applications.",
+            'These building blocks work together to create efficient, reusable, and maintainable React applications.',
         },
       },
       {
-        id: "react-3",
-        question: "Explain props and state in React with differences",
+        id: 'react-3',
+        question: 'Explain props and state in React with differences',
         answer: {
           introduction:
-            "Props and state are both used to manage data in React, but they serve different purposes and have distinct characteristics:",
+            'Props and state are both used to manage data in React, but they serve different purposes and have distinct characteristics:',
           points: [
             {
-              title: "Props",
+              title: 'Props',
               description:
-                "Short for properties, props are used to pass data from parent to child components. They are read-only and cannot be modified by the component receiving them.",
+                'Short for properties, props are used to pass data from parent to child components. They are read-only and cannot be modified by the component receiving them.',
             },
             {
-              title: "State",
+              title: 'State',
               description:
-                "State is used to manage data within a component. It can be modified using the setState method and when it changes, it triggers a re-render of the component.",
+                'State is used to manage data within a component. It can be modified using the setState method and when it changes, it triggers a re-render of the component.',
             },
             {
-              title: "Mutability",
+              title: 'Mutability',
               description:
-                "Props are immutable (cannot be changed), while state is mutable (can be changed).",
+                'Props are immutable (cannot be changed), while state is mutable (can be changed).',
             },
             {
-              title: "Component Type",
+              title: 'Component Type',
               description:
-                "Props can be used in both functional and class components, while state traditionally was only used in class components (now functional components can use state with hooks).",
+                'Props can be used in both functional and class components, while state traditionally was only used in class components (now functional components can use state with hooks).',
             },
             {
-              title: "Data Flow",
+              title: 'Data Flow',
               description:
-                "Props facilitate top-down data flow, while state is used for internal component data management.",
+                'Props facilitate top-down data flow, while state is used for internal component data management.',
             },
           ],
           conclusion:
-            "Understanding the difference between props and state is crucial for effective data management and component communication in React applications.",
+            'Understanding the difference between props and state is crucial for effective data management and component communication in React applications.',
         },
       },
       {
-        id: "react-4",
-        question: "What is virtual DOM in React?",
+        id: 'react-4',
+        question: 'What is virtual DOM in React?',
         answer: {
           introduction:
-            "The Virtual DOM (Document Object Model) is a programming concept used in React to optimize rendering performance.",
+            'The Virtual DOM (Document Object Model) is a programming concept used in React to optimize rendering performance.',
           points: [
             {
-              title: "Definition",
+              title: 'Definition',
               description:
                 "It's a lightweight copy of the actual DOM in memory, representing the UI of your application.",
             },
             {
-              title: "Functioning",
+              title: 'Functioning',
               description:
-                "When the state of an application changes, the virtual DOM gets updated instead of the real DOM.",
+                'When the state of an application changes, the virtual DOM gets updated instead of the real DOM.',
             },
             {
-              title: "Diffing",
+              title: 'Diffing',
               description:
-                "React then compares the virtual DOM with a pre-update version to compute the minimum number of operations needed to update the real DOM.",
+                'React then compares the virtual DOM with a pre-update version to compute the minimum number of operations needed to update the real DOM.',
             },
             {
-              title: "Batching",
+              title: 'Batching',
               description:
-                "Multiple changes to the virtual DOM are batched together, reducing the number of updates to the real DOM.",
+                'Multiple changes to the virtual DOM are batched together, reducing the number of updates to the real DOM.',
             },
             {
-              title: "Performance",
+              title: 'Performance',
               description:
-                "This process significantly improves performance as manipulating the actual DOM is slower than operations on JavaScript objects.",
-            },
-          ],
-          conclusion:
-            "The Virtual DOM allows React to minimize direct manipulation of the DOM, resulting in faster updates and improved application performance.",
-        },
-      },
-      {
-        id: "react-5",
-        question: "What are components and their types in React?",
-        answer: {
-          introduction:
-            "Components are the building blocks of React applications. They are reusable pieces of code that return React elements to be rendered on the screen.",
-          points: [
-            {
-              title: "Functional Components",
-              description:
-                "Also known as stateless components, these are JavaScript functions that accept props and return React elements. With the introduction of Hooks, they can now also manage state.",
-            },
-            {
-              title: "Class Components",
-              description:
-                "These are ES6 classes that extend from React.Component. They can hold and manage local state and have access to lifecycle methods.",
-            },
-            {
-              title: "Pure Components",
-              description:
-                "Similar to class components, but they automatically implement shouldComponentUpdate() with a shallow prop and state comparison.",
-            },
-            {
-              title: "Higher-Order Components (HOC)",
-              description:
-                "These are functions that take a component and return a new component with some added functionality.",
-            },
-            {
-              title: "Render Props Components",
-              description:
-                "These components use a prop whose value is a function to share code between components.",
+                'This process significantly improves performance as manipulating the actual DOM is slower than operations on JavaScript objects.',
             },
           ],
           conclusion:
-            "Understanding these different types of components allows developers to choose the most appropriate one for their specific use case, leading to more efficient and maintainable React applications.",
+            'The Virtual DOM allows React to minimize direct manipulation of the DOM, resulting in faster updates and improved application performance.',
         },
       },
       {
-        id: "react-6",
-        question: "What is a key in React?",
+        id: 'react-5',
+        question: 'What are components and their types in React?',
         answer: {
           introduction:
-            "A key is a special attribute you need to include when creating lists of elements in React.",
+            'Components are the building blocks of React applications. They are reusable pieces of code that return React elements to be rendered on the screen.',
           points: [
             {
-              title: "Purpose",
+              title: 'Functional Components',
               description:
-                "Keys help React identify which items have changed, are added, or are removed in a list.",
+                'Also known as stateless components, these are JavaScript functions that accept props and return React elements. With the introduction of Hooks, they can now also manage state.',
             },
             {
-              title: "Uniqueness",
+              title: 'Class Components',
+              description:
+                'These are ES6 classes that extend from React.Component. They can hold and manage local state and have access to lifecycle methods.',
+            },
+            {
+              title: 'Pure Components',
+              description:
+                'Similar to class components, but they automatically implement shouldComponentUpdate() with a shallow prop and state comparison.',
+            },
+            {
+              title: 'Higher-Order Components (HOC)',
+              description:
+                'These are functions that take a component and return a new component with some added functionality.',
+            },
+            {
+              title: 'Render Props Components',
+              description:
+                'These components use a prop whose value is a function to share code between components.',
+            },
+          ],
+          conclusion:
+            'Understanding these different types of components allows developers to choose the most appropriate one for their specific use case, leading to more efficient and maintainable React applications.',
+        },
+      },
+      {
+        id: 'react-6',
+        question: 'What is a key in React?',
+        answer: {
+          introduction:
+            'A key is a special attribute you need to include when creating lists of elements in React.',
+          points: [
+            {
+              title: 'Purpose',
+              description:
+                'Keys help React identify which items have changed, are added, or are removed in a list.',
+            },
+            {
+              title: 'Uniqueness',
               description:
                 "Keys must be unique among siblings. They don't need to be globally unique.",
             },
             {
-              title: "Performance",
+              title: 'Performance',
               description:
-                "Keys give elements a stable identity, which helps in efficient updating of the user interface.",
+                'Keys give elements a stable identity, which helps in efficient updating of the user interface.',
             },
             {
-              title: "Usage",
+              title: 'Usage',
               description:
-                "Keys should be given to the elements inside the array to give the elements a stable identity.",
+                'Keys should be given to the elements inside the array to give the elements a stable identity.',
             },
             {
-              title: "Best Practice",
+              title: 'Best Practice',
               description:
                 "It's best to use a unique identifier from your data as the key, like an ID. Only use the index as a last resort if you have no stable IDs for rendered items.",
             },
@@ -215,115 +215,115 @@ export const InterviewQuestions = [
         },
       },
       {
-        id: "react-7",
-        question: "Explain the difference between React and Angular",
+        id: 'react-7',
+        question: 'Explain the difference between React and Angular',
         answer: {
           introduction:
-            "React and Angular are both popular for building web applications, but they have several key differences:",
+            'React and Angular are both popular for building web applications, but they have several key differences:',
           points: [
             {
-              title: "Type",
+              title: 'Type',
               description:
-                "React is a library focused on building UI components, while Angular is a full-fledged framework.",
+                'React is a library focused on building UI components, while Angular is a full-fledged framework.',
             },
             {
-              title: "Learning Curve",
+              title: 'Learning Curve',
               description:
-                "React has a gentler learning curve compared to Angular, which has a steeper learning curve due to its more complex architecture.",
+                'React has a gentler learning curve compared to Angular, which has a steeper learning curve due to its more complex architecture.',
             },
             {
-              title: "Language",
+              title: 'Language',
               description:
-                "React uses JavaScript with JSX, while Angular uses TypeScript.",
+                'React uses JavaScript with JSX, while Angular uses TypeScript.',
             },
             {
-              title: "DOM",
+              title: 'DOM',
               description:
-                "React uses a virtual DOM for better performance, while Angular uses a real DOM.",
+                'React uses a virtual DOM for better performance, while Angular uses a real DOM.',
             },
             {
-              title: "Data Binding",
+              title: 'Data Binding',
               description:
-                "React uses one-way data binding, while Angular supports both one-way and two-way data binding.",
+                'React uses one-way data binding, while Angular supports both one-way and two-way data binding.',
             },
             {
-              title: "Performance",
+              title: 'Performance',
               description:
-                "React generally offers better performance for larger applications due to its virtual DOM.",
+                'React generally offers better performance for larger applications due to its virtual DOM.',
             },
           ],
           conclusion:
-            "The choice between React and Angular often depends on project requirements, team expertise, and personal preference.",
+            'The choice between React and Angular often depends on project requirements, team expertise, and personal preference.',
         },
       },
       {
-        id: "react-8",
-        question: "Explain the use of render method in React",
+        id: 'react-8',
+        question: 'Explain the use of render method in React',
         answer: {
           introduction:
-            "The render method is a crucial part of React components, responsible for describing what the UI should look like.",
+            'The render method is a crucial part of React components, responsible for describing what the UI should look like.',
           points: [
             {
-              title: "Purpose",
+              title: 'Purpose',
               description:
-                "It returns the JSX (or elements) that will be rendered to the DOM.",
+                'It returns the JSX (or elements) that will be rendered to the DOM.',
             },
             {
-              title: "Pure Function",
+              title: 'Pure Function',
               description:
                 "The render method should be pure, meaning it doesn't modify component state, returns the same result each time it's invoked, and doesn't directly interact with the browser.",
             },
             {
-              title: "Frequency",
+              title: 'Frequency',
               description:
                 "It's called every time a component's state or props change.",
             },
             {
-              title: "JSX",
+              title: 'JSX',
               description:
-                "While it typically returns JSX, it can also return arrays, strings, numbers, or null.",
+                'While it typically returns JSX, it can also return arrays, strings, numbers, or null.',
             },
             {
-              title: "Conditional Rendering",
+              title: 'Conditional Rendering',
               description:
                 "You can use conditional statements inside the render method to render different elements based on the component's state or props.",
             },
           ],
           conclusion:
-            "The render method is essential for defining the structure of your React components and how they should appear based on their current state and props.",
+            'The render method is essential for defining the structure of your React components and how they should appear based on their current state and props.',
         },
       },
       {
-        id: "react-9",
-        question: "What is webpack?",
+        id: 'react-9',
+        question: 'What is webpack?',
         answer: {
           introduction:
-            "Webpack is a static module bundler for modern JavaScript applications.",
+            'Webpack is a static module bundler for modern JavaScript applications.',
           points: [
             {
-              title: "Module Bundling",
+              title: 'Module Bundling',
               description:
-                "It takes modules with dependencies and generates static assets representing those modules.",
+                'It takes modules with dependencies and generates static assets representing those modules.',
             },
             {
-              title: "Entry",
+              title: 'Entry',
               description:
-                "Webpack uses an entry point to know which module to start bundling from.",
+                'Webpack uses an entry point to know which module to start bundling from.',
             },
             {
-              title: "Output",
+              title: 'Output',
               description:
-                "It generates one or more bundles as output, which are static assets to serve your content from.",
+                'It generates one or more bundles as output, which are static assets to serve your content from.',
             },
             {
-              title: "Loaders",
+              title: 'Loaders',
               description:
-                "Webpack uses loaders to process different types of files and convert them into valid modules.",
+                'Webpack uses loaders to process different types of files and convert them into valid modules.',
             },
             {
-              title: "Plugins",
+              title: 'Plugins',
               description:
-                "Plugins can be used to perform a wider range of tasks like bundle optimization, asset management and injection of environment variables.",
+                'Plugins can be used to perform a wider range of tasks like bundle optimization, asset management and injection of environment variables.',
             },
           ],
           conclusion:
@@ -331,147 +331,147 @@ export const InterviewQuestions = [
         },
       },
       {
-        id: "react-10",
-        question: "What is higher-order component in React?",
+        id: 'react-10',
+        question: 'What is higher-order component in React?',
         answer: {
           introduction:
-            "A Higher-Order Component (HOC) is an advanced technique in React for reusing component logic.",
+            'A Higher-Order Component (HOC) is an advanced technique in React for reusing component logic.',
           points: [
             {
-              title: "Definition",
+              title: 'Definition',
               description:
                 "It's a function that takes a component and returns a new component with some additional functionality.",
             },
             {
-              title: "Purpose",
+              title: 'Purpose',
               description:
-                "HOCs allow you to reuse component logic across multiple components without modifying their implementation.",
+                'HOCs allow you to reuse component logic across multiple components without modifying their implementation.',
             },
             {
-              title: "Usage",
+              title: 'Usage',
               description:
                 "They're commonly used for cross-cutting concerns like logging, access control, or data fetching.",
             },
             {
-              title: "Pure Function",
+              title: 'Pure Function',
               description:
-                "HOCs should be pure functions with no side-effects, not modifying the input component.",
+                'HOCs should be pure functions with no side-effects, not modifying the input component.',
             },
             {
-              title: "Composition",
+              title: 'Composition',
               description:
-                "They follow the principle of composition over inheritance to extend component functionality.",
+                'They follow the principle of composition over inheritance to extend component functionality.',
             },
           ],
           conclusion:
-            "Higher-Order Components are a powerful pattern in React for sharing behavior between components, enhancing code reuse and modularity.",
+            'Higher-Order Components are a powerful pattern in React for sharing behavior between components, enhancing code reuse and modularity.',
         },
       },
       {
-        id: "react-11",
-        question: "Explain one way data binding in React",
+        id: 'react-11',
+        question: 'Explain one way data binding in React',
         answer: {
           introduction:
             "One-way data binding, also known as unidirectional data flow, is a core concept in React's design philosophy.",
           points: [
             {
-              title: "Definition",
+              title: 'Definition',
               description:
-                "It means that data in React flows in a single direction, from parent components to child components.",
+                'It means that data in React flows in a single direction, from parent components to child components.',
             },
             {
-              title: "State Management",
+              title: 'State Management',
               description:
-                "The state is usually kept in parent components and passed down to children as props.",
+                'The state is usually kept in parent components and passed down to children as props.',
             },
             {
-              title: "Updating Data",
+              title: 'Updating Data',
               description:
                 "To change data, child components don't modify props directly but can request changes through callbacks passed from parent components.",
             },
             {
-              title: "Predictability",
+              title: 'Predictability',
               description:
                 "This pattern makes the data flow more predictable and easier to understand, as it's clear where the data comes from and how it can be changed.",
             },
             {
-              title: "Debugging",
+              title: 'Debugging',
               description:
-                "One-way data binding makes it easier to track where data changes are coming from, simplifying the debugging process.",
+                'One-way data binding makes it easier to track where data changes are coming from, simplifying the debugging process.',
             },
           ],
           conclusion:
-            "One-way data binding in React promotes a clean and maintainable architecture by enforcing a clear and predictable data flow throughout the application.",
+            'One-way data binding in React promotes a clean and maintainable architecture by enforcing a clear and predictable data flow throughout the application.',
         },
       },
       {
-        id: "react-12",
-        question: "What is react router?",
+        id: 'react-12',
+        question: 'What is react router?',
         answer: {
           introduction:
-            "React Router is a standard library for routing in React applications.",
+            'React Router is a standard library for routing in React applications.',
           points: [
             {
-              title: "Purpose",
+              title: 'Purpose',
               description:
-                "It enables navigation among views in a React application, allowing for a single-page application experience.",
+                'It enables navigation among views in a React application, allowing for a single-page application experience.',
             },
             {
-              title: "Components",
+              title: 'Components',
               description:
-                "React Router provides components like BrowserRouter, Route, Link, and Switch for declarative routing.",
+                'React Router provides components like BrowserRouter, Route, Link, and Switch for declarative routing.',
             },
             {
-              title: "Dynamic Routing",
+              title: 'Dynamic Routing',
               description:
-                "It allows for dynamic route matching and can generate dynamic URLs based on parameters.",
+                'It allows for dynamic route matching and can generate dynamic URLs based on parameters.',
             },
             {
-              title: "Nested Routing",
+              title: 'Nested Routing',
               description:
-                "React Router supports nested routes, allowing for complex layouts and component hierarchies.",
+                'React Router supports nested routes, allowing for complex layouts and component hierarchies.',
             },
             {
-              title: "History Management",
+              title: 'History Management',
               description:
-                "It uses the HTML5 history API to keep the UI in sync with the URL, allowing for browser navigation features.",
+                'It uses the HTML5 history API to keep the UI in sync with the URL, allowing for browser navigation features.',
             },
           ],
           conclusion:
-            "React Router is essential for building single-page applications in React, providing a declarative way to define the routing structure of your application.",
+            'React Router is essential for building single-page applications in React, providing a declarative way to define the routing structure of your application.',
         },
       },
       {
-        id: "react-13",
-        question: "What are hooks in React?",
+        id: 'react-13',
+        question: 'What are hooks in React?',
         answer: {
           introduction:
-            "Hooks are a feature introduced in React 16.8 that allow you to use state and other React features without writing a class.",
+            'Hooks are a feature introduced in React 16.8 that allow you to use state and other React features without writing a class.',
           points: [
             {
-              title: "State in Functional Components",
+              title: 'State in Functional Components',
               description:
-                "Hooks like useState allow functional components to have local state.",
+                'Hooks like useState allow functional components to have local state.',
             },
             {
-              title: "Side Effects",
+              title: 'Side Effects',
               description:
-                "The useEffect hook allows you to perform side effects in functional components.",
+                'The useEffect hook allows you to perform side effects in functional components.',
             },
             {
-              title: "Context",
+              title: 'Context',
               description:
-                "useContext hook provides an easier way to consume context in functional components.",
+                'useContext hook provides an easier way to consume context in functional components.',
             },
             {
-              title: "Custom Hooks",
+              title: 'Custom Hooks',
               description:
-                "You can create your own hooks to reuse stateful logic between different components.",
+                'You can create your own hooks to reuse stateful logic between different components.',
             },
             {
-              title: "Rules",
+              title: 'Rules',
               description:
-                "Hooks come with rules: only call them at the top level and only call them from React functions.",
+                'Hooks come with rules: only call them at the top level and only call them from React functions.',
             },
           ],
           conclusion:
@@ -481,424 +481,424 @@ export const InterviewQuestions = [
     ],
   },
   {
-    category: "Object-Oriented Programming (OOP) Interview Questions",
+    category: 'Object-Oriented Programming (OOP) Interview Questions',
     questions: [
       {
-        id: "oop-1",
-        question: "What is the need for OOPs?",
+        id: 'oop-1',
+        question: 'What is the need for OOPs?',
         answer: {
           introduction:
-            "Object-Oriented Programming (OOP) is a programming paradigm that provides a way of structuring programs so that properties and behaviors are bundled into individual objects.",
+            'Object-Oriented Programming (OOP) is a programming paradigm that provides a way of structuring programs so that properties and behaviors are bundled into individual objects.',
           points: [
             {
-              title: "Code Organization",
+              title: 'Code Organization',
               description:
-                "OOP helps in organizing the code into reusable patterns of code, in the form of classes.",
+                'OOP helps in organizing the code into reusable patterns of code, in the form of classes.',
             },
             {
-              title: "Modularity",
+              title: 'Modularity',
               description:
-                "The source code for a class can be written and maintained independently of the source code for other classes.",
+                'The source code for a class can be written and maintained independently of the source code for other classes.',
             },
             {
-              title: "Reusability",
+              title: 'Reusability',
               description:
-                "Objects can be reused across programs, reducing development time and increasing productivity.",
+                'Objects can be reused across programs, reducing development time and increasing productivity.',
             },
             {
-              title: "Scalability",
+              title: 'Scalability',
               description:
-                "OOP systems can be easily upgraded from small to large systems.",
+                'OOP systems can be easily upgraded from small to large systems.',
             },
           ],
           conclusion:
-            "OOP is essential for creating complex and modular programs that are easier to develop, debug, and maintain.",
+            'OOP is essential for creating complex and modular programs that are easier to develop, debug, and maintain.',
         },
       },
       {
-        id: "oop-2",
-        question: "What is meant by Structured Programming?",
+        id: 'oop-2',
+        question: 'What is meant by Structured Programming?',
         answer: {
           introduction:
-            "Structured Programming is a programming paradigm that aims to improve the clarity, quality, and development time of a computer program by making extensive use of subroutines, block structures, for and while loops.",
+            'Structured Programming is a programming paradigm that aims to improve the clarity, quality, and development time of a computer program by making extensive use of subroutines, block structures, for and while loops.',
           points: [
             {
-              title: "Top-Down Approach",
-              description: "It follows a top-down approach in program design.",
+              title: 'Top-Down Approach',
+              description: 'It follows a top-down approach in program design.',
             },
             {
-              title: "Control Structures",
+              title: 'Control Structures',
               description:
-                "It uses three basic control structures: sequence, selection (if-then-else), and iteration (loops).",
+                'It uses three basic control structures: sequence, selection (if-then-else), and iteration (loops).',
             },
             {
-              title: "Modularity",
-              description: "Programs are divided into functions and modules.",
+              title: 'Modularity',
+              description: 'Programs are divided into functions and modules.',
             },
             {
-              title: "Readability",
+              title: 'Readability',
               description:
-                "It improves readability of code and makes it less complex.",
+                'It improves readability of code and makes it less complex.',
             },
           ],
           conclusion:
-            "Structured Programming provides a systematic way of designing programs that are easier to understand and maintain.",
+            'Structured Programming provides a systematic way of designing programs that are easier to understand and maintain.',
         },
       },
       {
-        id: "oop-3",
-        question: "What are the main features of OOPs?",
+        id: 'oop-3',
+        question: 'What are the main features of OOPs?',
         answer: {
           introduction:
-            "Object-Oriented Programming is characterized by several key features that define its approach to software design and implementation.",
+            'Object-Oriented Programming is characterized by several key features that define its approach to software design and implementation.',
           points: [
             {
-              title: "Encapsulation",
+              title: 'Encapsulation',
               description:
-                "The bundling of data with the methods that operate on that data.",
+                'The bundling of data with the methods that operate on that data.',
             },
             {
-              title: "Inheritance",
+              title: 'Inheritance',
               description:
-                "The ability to create new classes based on existing classes.",
+                'The ability to create new classes based on existing classes.',
             },
             {
-              title: "Polymorphism",
+              title: 'Polymorphism',
               description:
-                "The ability of different classes to respond to the same message in different ways.",
+                'The ability of different classes to respond to the same message in different ways.',
             },
             {
-              title: "Abstraction",
+              title: 'Abstraction',
               description:
-                "The process of hiding the implementation details and showing only the functionality to the user.",
+                'The process of hiding the implementation details and showing only the functionality to the user.',
             },
           ],
           conclusion:
-            "These features work together to create a powerful paradigm for organizing and structuring code in complex systems.",
+            'These features work together to create a powerful paradigm for organizing and structuring code in complex systems.',
         },
       },
       {
-        id: "oop-4",
-        question: "What are some advantages of using OOPs?",
+        id: 'oop-4',
+        question: 'What are some advantages of using OOPs?',
         answer: {
           introduction:
-            "Object-Oriented Programming offers several advantages that make it a popular choice for software development.",
+            'Object-Oriented Programming offers several advantages that make it a popular choice for software development.',
           points: [
             {
-              title: "Improved Software-Development Productivity",
+              title: 'Improved Software-Development Productivity',
               description:
-                "OOP promotes reusability through inheritance and modularity.",
+                'OOP promotes reusability through inheritance and modularity.',
             },
             {
-              title: "Improved Software Maintainability",
+              title: 'Improved Software Maintainability',
               description:
-                "The encapsulation and modular nature of OOP make the software easier to modify and maintain.",
+                'The encapsulation and modular nature of OOP make the software easier to modify and maintain.',
             },
             {
-              title: "Faster Development",
+              title: 'Faster Development',
               description:
-                "Reuse of existing classes reduces development time.",
+                'Reuse of existing classes reduces development time.',
             },
             {
-              title: "Higher-Quality Software",
+              title: 'Higher-Quality Software',
               description:
-                "OOP leads to better software design and higher-quality software.",
+                'OOP leads to better software design and higher-quality software.',
             },
           ],
           conclusion:
-            "These advantages make OOP an effective approach for developing large-scale, complex software systems.",
+            'These advantages make OOP an effective approach for developing large-scale, complex software systems.',
         },
       },
       {
-        id: "oop-5",
-        question: "What are access specifiers and what is their significance?",
+        id: 'oop-5',
+        question: 'What are access specifiers and what is their significance?',
         answer: {
           introduction:
-            "Access specifiers are keywords used in object-oriented languages to set the accessibility of classes, methods, and other members.",
+            'Access specifiers are keywords used in object-oriented languages to set the accessibility of classes, methods, and other members.',
           points: [
             {
-              title: "Public",
-              description: "Accessible from anywhere outside the class.",
+              title: 'Public',
+              description: 'Accessible from anywhere outside the class.',
             },
             {
-              title: "Private",
-              description: "Accessible only within the same class.",
+              title: 'Private',
+              description: 'Accessible only within the same class.',
             },
             {
-              title: "Protected",
+              title: 'Protected',
               description:
-                "Accessible within the same class and its subclasses.",
+                'Accessible within the same class and its subclasses.',
             },
             {
-              title: "Significance",
+              title: 'Significance',
               description:
-                "They help in implementing encapsulation and controlling access to class members.",
+                'They help in implementing encapsulation and controlling access to class members.',
             },
           ],
           conclusion:
-            "Access specifiers are crucial for maintaining encapsulation and defining the interface of a class.",
+            'Access specifiers are crucial for maintaining encapsulation and defining the interface of a class.',
         },
       },
       {
-        id: "oop-6",
-        question: "What are the various types of inheritance?",
+        id: 'oop-6',
+        question: 'What are the various types of inheritance?',
         answer: {
           introduction:
-            "Inheritance is a mechanism where a new class is derived from an existing class. There are several types of inheritance in OOP:",
+            'Inheritance is a mechanism where a new class is derived from an existing class. There are several types of inheritance in OOP:',
           points: [
             {
-              title: "Single Inheritance",
-              description: "A subclass inherits from a single superclass.",
+              title: 'Single Inheritance',
+              description: 'A subclass inherits from a single superclass.',
             },
             {
-              title: "Multiple Inheritance",
-              description: "A subclass inherits from multiple superclasses.",
+              title: 'Multiple Inheritance',
+              description: 'A subclass inherits from multiple superclasses.',
             },
             {
-              title: "Multilevel Inheritance",
+              title: 'Multilevel Inheritance',
               description:
-                "A subclass is derived from a class which is also derived from another class.",
+                'A subclass is derived from a class which is also derived from another class.',
             },
             {
-              title: "Hierarchical Inheritance",
+              title: 'Hierarchical Inheritance',
               description:
-                "Multiple subclasses inherit from a single superclass.",
+                'Multiple subclasses inherit from a single superclass.',
             },
           ],
           conclusion:
-            "These types of inheritance provide flexibility in designing class hierarchies and promoting code reuse.",
+            'These types of inheritance provide flexibility in designing class hierarchies and promoting code reuse.',
         },
       },
       {
-        id: "oop-7",
-        question: "What is a subclass?",
+        id: 'oop-7',
+        question: 'What is a subclass?',
         answer: {
           introduction:
-            "A subclass, also known as a derived class or child class, is a class that inherits properties and methods from another class.",
+            'A subclass, also known as a derived class or child class, is a class that inherits properties and methods from another class.',
           points: [
             {
-              title: "Inheritance",
-              description: "It inherits characteristics from its parent class.",
+              title: 'Inheritance',
+              description: 'It inherits characteristics from its parent class.',
             },
             {
-              title: "Specialization",
+              title: 'Specialization',
               description:
-                "It can add new properties and methods or override existing ones.",
+                'It can add new properties and methods or override existing ones.',
             },
             {
-              title: "Reusability",
+              title: 'Reusability',
               description:
-                "It promotes code reuse by inheriting functionality.",
+                'It promotes code reuse by inheriting functionality.',
             },
             {
-              title: "Polymorphism",
+              title: 'Polymorphism',
               description:
-                "It can be used polymorphically with its superclass.",
+                'It can be used polymorphically with its superclass.',
             },
           ],
           conclusion:
-            "Subclasses are fundamental to implementing inheritance and creating hierarchical relationships between classes.",
+            'Subclasses are fundamental to implementing inheritance and creating hierarchical relationships between classes.',
         },
       },
       {
-        id: "oop-8",
-        question: "Define a superclass?",
+        id: 'oop-8',
+        question: 'Define a superclass?',
         answer: {
           introduction:
-            "A superclass, also known as a base class or parent class, is a class from which other classes inherit properties and methods.",
+            'A superclass, also known as a base class or parent class, is a class from which other classes inherit properties and methods.',
           points: [
             {
-              title: "Generic Functionality",
+              title: 'Generic Functionality',
               description:
-                "It contains common attributes and behaviors shared by its subclasses.",
+                'It contains common attributes and behaviors shared by its subclasses.',
             },
             {
-              title: "Inheritance Source",
+              title: 'Inheritance Source',
               description:
-                "It serves as the source of inheritance for other classes.",
+                'It serves as the source of inheritance for other classes.',
             },
             {
-              title: "Abstraction",
+              title: 'Abstraction',
               description:
-                "It can be abstract, providing a common interface for its subclasses.",
+                'It can be abstract, providing a common interface for its subclasses.',
             },
             {
-              title: "Polymorphism Base",
+              title: 'Polymorphism Base',
               description:
-                "It allows for polymorphic behavior with its subclasses.",
+                'It allows for polymorphic behavior with its subclasses.',
             },
           ],
           conclusion:
-            "Superclasses are essential in creating class hierarchies and promoting code reuse through inheritance.",
+            'Superclasses are essential in creating class hierarchies and promoting code reuse through inheritance.',
         },
       },
       {
-        id: "oop-9",
+        id: 'oop-9',
         question:
-          "Define encapsulation, Polymorphism, Inheritance, abstraction, class, object?",
+          'Define encapsulation, Polymorphism, Inheritance, abstraction, class, object?',
         answer: {
           introduction:
-            "These are fundamental concepts in Object-Oriented Programming:",
+            'These are fundamental concepts in Object-Oriented Programming:',
           points: [
             {
-              title: "Encapsulation",
+              title: 'Encapsulation',
               description:
                 "The bundling of data with the methods that operate on that data, restricting direct access to some of an object's components.",
             },
             {
-              title: "Polymorphism",
+              title: 'Polymorphism',
               description:
-                "The ability of different classes to respond to the same message in different ways, often through method overriding.",
+                'The ability of different classes to respond to the same message in different ways, often through method overriding.',
             },
             {
-              title: "Inheritance",
+              title: 'Inheritance',
               description:
-                "A mechanism where a new class is derived from an existing class, inheriting its properties and methods.",
+                'A mechanism where a new class is derived from an existing class, inheriting its properties and methods.',
             },
             {
-              title: "Abstraction",
+              title: 'Abstraction',
               description:
-                "The process of hiding the complex implementation details and showing only the necessary features of an object.",
+                'The process of hiding the complex implementation details and showing only the necessary features of an object.',
             },
             {
-              title: "Class",
+              title: 'Class',
               description:
-                "A blueprint for creating objects, providing initial values for state and implementations of behavior.",
+                'A blueprint for creating objects, providing initial values for state and implementations of behavior.',
             },
             {
-              title: "Object",
+              title: 'Object',
               description:
-                "An instance of a class, representing a real-world entity with state and behavior.",
+                'An instance of a class, representing a real-world entity with state and behavior.',
             },
           ],
           conclusion:
-            "These concepts form the core principles of OOP, enabling the creation of modular, reusable, and maintainable code.",
+            'These concepts form the core principles of OOP, enabling the creation of modular, reusable, and maintainable code.',
         },
       },
       {
-        id: "oop-10",
-        question: "What is a constructor?",
+        id: 'oop-10',
+        question: 'What is a constructor?',
         answer: {
           introduction:
-            "A constructor is a special method of a class that is automatically called when an object of that class is created.",
+            'A constructor is a special method of a class that is automatically called when an object of that class is created.',
           points: [
             {
-              title: "Initialization",
+              title: 'Initialization',
               description: "It is used to initialize the object's state.",
             },
             {
-              title: "No Return Type",
+              title: 'No Return Type',
               description: "It doesn't have a return type, not even void.",
             },
             {
-              title: "Same Name as Class",
-              description: "It has the same name as the class it belongs to.",
+              title: 'Same Name as Class',
+              description: 'It has the same name as the class it belongs to.',
             },
             {
-              title: "Overloading",
+              title: 'Overloading',
               description:
-                "A class can have multiple constructors with different parameters.",
+                'A class can have multiple constructors with different parameters.',
             },
           ],
           conclusion:
-            "Constructors play a crucial role in object creation and initialization in OOP.",
+            'Constructors play a crucial role in object creation and initialization in OOP.',
         },
       },
       {
-        id: "oop-11",
-        question: "Is it always necessary to create objects from class?",
+        id: 'oop-11',
+        question: 'Is it always necessary to create objects from class?',
         answer: {
           introduction:
             "While creating objects is a fundamental aspect of OOP, it's not always necessary to create objects from every class.",
           points: [
             {
-              title: "Static Classes",
+              title: 'Static Classes',
               description:
                 "Some classes, like utility classes, may only contain static methods and don't require instantiation.",
             },
             {
-              title: "Abstract Classes",
+              title: 'Abstract Classes',
               description:
-                "Abstract classes cannot be instantiated directly, but serve as base classes for other classes.",
+                'Abstract classes cannot be instantiated directly, but serve as base classes for other classes.',
             },
             {
-              title: "Singleton Pattern",
+              title: 'Singleton Pattern',
               description:
-                "In some design patterns, like Singleton, only one instance of a class is created.",
+                'In some design patterns, like Singleton, only one instance of a class is created.',
             },
             {
-              title: "Interface Classes",
+              title: 'Interface Classes',
               description:
-                "Interfaces in languages like Java are not instantiated but implemented by other classes.",
+                'Interfaces in languages like Java are not instantiated but implemented by other classes.',
             },
           ],
           conclusion:
-            "While object creation is common, there are scenarios in OOP where classes are used without direct instantiation.",
+            'While object creation is common, there are scenarios in OOP where classes are used without direct instantiation.',
         },
       },
       {
-        id: "oop-12",
-        question: "What are the various types of constructors in C++?",
+        id: 'oop-12',
+        question: 'What are the various types of constructors in C++?',
         answer: {
           introduction:
-            "C++ supports several types of constructors, each serving a specific purpose in object initialization:",
+            'C++ supports several types of constructors, each serving a specific purpose in object initialization:',
           points: [
             {
-              title: "Default Constructor",
+              title: 'Default Constructor',
               description:
-                "A constructor that takes no parameters, created by the compiler if no constructor is defined.",
+                'A constructor that takes no parameters, created by the compiler if no constructor is defined.',
             },
             {
-              title: "Parameterized Constructor",
+              title: 'Parameterized Constructor',
               description:
-                "A constructor that accepts parameters to initialize object attributes.",
+                'A constructor that accepts parameters to initialize object attributes.',
             },
             {
-              title: "Copy Constructor",
+              title: 'Copy Constructor',
               description:
-                "A constructor that creates an object by copying variables from another object of the same class.",
+                'A constructor that creates an object by copying variables from another object of the same class.',
             },
             {
-              title: "Move Constructor",
+              title: 'Move Constructor',
               description:
-                "Introduced in C++11, it efficiently transfers resources from one object to another.",
+                'Introduced in C++11, it efficiently transfers resources from one object to another.',
             },
           ],
           conclusion:
-            "These different types of constructors provide flexibility in object initialization and copying in C++.",
+            'These different types of constructors provide flexibility in object initialization and copying in C++.',
         },
       },
       {
-        id: "oop-13",
+        id: 'oop-13',
         question:
-          "What is the difference between a structure and a class in C++?",
+          'What is the difference between a structure and a class in C++?',
         answer: {
           introduction:
-            "While structures and classes in C++ are similar, there are some key differences:",
+            'While structures and classes in C++ are similar, there are some key differences:',
           points: [
             {
-              title: "Default Access Specifier",
+              title: 'Default Access Specifier',
               description:
-                "Members of a structure are public by default, while class members are private by default.",
+                'Members of a structure are public by default, while class members are private by default.',
             },
             {
-              title: "Inheritance",
+              title: 'Inheritance',
               description:
-                "Structures inherit publicly by default, classes inherit privately by default.",
+                'Structures inherit publicly by default, classes inherit privately by default.',
             },
             {
-              title: "Usage",
+              title: 'Usage',
               description:
-                "Structures are typically used for passive objects with public access, while classes are used for active objects with private access.",
+                'Structures are typically used for passive objects with public access, while classes are used for active objects with private access.',
             },
             {
-              title: "Functionality",
+              title: 'Functionality',
               description:
-                "Classes are generally used when you need to add functions to the data, while structures are used for grouping data.",
+                'Classes are generally used when you need to add functions to the data, while structures are used for grouping data.',
             },
           ],
           conclusion:
-            "While the technical capabilities of structures and classes in C++ are similar, they are conventionally used for different purposes in programming.",
+            'While the technical capabilities of structures and classes in C++ are similar, they are conventionally used for different purposes in programming.',
         },
       },
     ],

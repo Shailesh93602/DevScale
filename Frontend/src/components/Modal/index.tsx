@@ -1,5 +1,5 @@
-import React, { ReactNode, useRef } from "react";
-import { createPortal } from "react-dom";
+import React, { ReactNode, useRef } from 'react';
+import { createPortal } from 'react-dom';
 
 const Modal = ({
   isOpen,
@@ -29,16 +29,16 @@ const Modal = ({
       onClick={handleClickOutside}
     >
       <div
-        className="bg-gray-900 rounded-lg shadow-lg w-full max-w-lg h-full max-h-[90vh] overflow-y-auto relative"
+        className="relative h-full max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-lg bg-gray-900 shadow-lg"
         ref={modalRef}
       >
-        <div className="flex items-center justify-between p-4 border-b border-gray-800 sticky top-0 z-999">
+        <div className="z-999 sticky top-0 flex items-center justify-between border-b border-gray-800 p-4">
           <h2 className="text-lg font-semibold text-black dark:text-white">
             {title}
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-600 hover:text-gray-800 text-2xl font-bold"
+            className="text-2xl font-bold text-gray-600 hover:text-gray-800"
             aria-label="Close"
           >
             &times;
@@ -48,7 +48,7 @@ const Modal = ({
         <div className="p-4">{children}</div>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 };
 

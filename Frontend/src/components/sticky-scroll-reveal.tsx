@@ -1,9 +1,9 @@
-"use client";
-import React, { ReactNode, useEffect, useRef, useState } from "react";
-import { useMotionValueEvent, useScroll, motion } from "framer-motion";
-import { cn } from "@/utils/cn";
-import { HoverBorderGradient } from "./hover-border-gradient";
-import { AceternityLogo } from "@/components/AceternityLogo";
+'use client';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
+import { useMotionValueEvent, useScroll, motion } from 'framer-motion';
+import { cn } from '@/utils/cn';
+import { HoverBorderGradient } from './hover-border-gradient';
+import { AceternityLogo } from '@/components/AceternityLogo';
 
 export const StickyScroll = ({
   content = [],
@@ -16,11 +16,11 @@ export const StickyScroll = ({
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     container: ref,
-    offset: ["start start", "end start"],
+    offset: ['start start', 'end start'],
   });
   const cardLength = content?.length ?? 0;
 
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+  useMotionValueEvent(scrollYProgress, 'change', (latest) => {
     const cardsBreakpoints =
       content?.map((_, index) => index / cardLength) ?? [];
     const closestBreakpointIndex = cardsBreakpoints?.reduce(
@@ -31,24 +31,24 @@ export const StickyScroll = ({
         }
         return acc;
       },
-      0
+      0,
     );
     setActiveCard(closestBreakpointIndex);
   });
 
   const backgroundColors = [
-    "var(--slate-900)",
-    "var(--black)",
-    "var(--neutral-900)",
+    'var(--slate-900)',
+    'var(--black)',
+    'var(--neutral-900)',
   ];
   const linearGradients = [
-    "linear-gradient(to bottom right, var(--cyan-500), var(--emerald-500))",
-    "linear-gradient(to bottom right, var(--pink-500), var(--indigo-500))",
-    "linear-gradient(to bottom right, var(--orange-500), var(--yellow-500))",
+    'linear-gradient(to bottom right, var(--cyan-500), var(--emerald-500))',
+    'linear-gradient(to bottom right, var(--pink-500), var(--indigo-500))',
+    'linear-gradient(to bottom right, var(--orange-500), var(--yellow-500))',
   ];
 
   const [backgroundGradient, setBackgroundGradient] = useState(
-    linearGradients[0]
+    linearGradients[0],
   );
 
   useEffect(() => {
@@ -60,7 +60,7 @@ export const StickyScroll = ({
       animate={{
         backgroundColor: backgroundColors[activeCard % backgroundColors.length],
       }}
-      className="h-[25rem] overflow-y-auto flex justify-center relative space-x-10 rounded-md "
+      className="relative flex h-[25rem] justify-center space-x-10 overflow-y-auto rounded-md"
       ref={ref}
     >
       <div className="div relative flex items-start px-4">
@@ -70,7 +70,7 @@ export const StickyScroll = ({
           </h2>
           {content.map((item, index) => (
             <>
-              <div key={(item.title ?? "") + index} className="my-10">
+              <div key={(item.title ?? '') + index} className="my-10">
                 <motion.h2
                   initial={{
                     opacity: 0,
@@ -89,7 +89,7 @@ export const StickyScroll = ({
                   animate={{
                     opacity: activeCard === index ? 1 : 0.3,
                   }}
-                  className="text-kg text-slate-300 max-w-sm mt-10"
+                  className="text-kg mt-10 max-w-sm text-slate-300"
                 >
                   {item.description}
                 </motion.p>
@@ -98,7 +98,7 @@ export const StickyScroll = ({
                 containerClassName="rounded-full"
                 as="button"
                 href="/resources"
-                className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
+                className="flex items-center space-x-2 bg-white text-black dark:bg-black dark:text-white"
               >
                 <AceternityLogo />
                 <span>Explore Resources</span>
@@ -112,8 +112,8 @@ export const StickyScroll = ({
       <div
         style={{ background: backgroundGradient }}
         className={cn(
-          "hidden lg:block h-60 w-80 rounded-md bg-white sticky top-10 overflow-hidden",
-          contentClassName
+          'sticky top-10 hidden h-60 w-80 overflow-hidden rounded-md bg-white lg:block',
+          contentClassName,
         )}
       >
         {content[activeCard].content ?? null}

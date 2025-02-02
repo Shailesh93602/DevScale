@@ -1,9 +1,9 @@
-"use client";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
-import Loader from "../../components/Loader";
-import { fetchData } from "@/app/services/fetchData";
+'use client';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
+import Loader from '../../components/Loader';
+import { fetchData } from '@/app/services/fetchData';
 
 export default function InstantBattlePage() {
   const [opponentFound, setOpponentFound] = useState(true);
@@ -14,9 +14,9 @@ export default function InstantBattlePage() {
   useEffect(() => {
     const checkForOpponent = async () => {
       try {
-        const response = await fetchData("GET", "/battles/waiting-room");
+        const response = await fetchData('GET', '/battles/waiting-room');
         if (!response.data) {
-          throw new Error("Failed to check for opponent");
+          throw new Error('Failed to check for opponent');
         }
         const data = response.data;
         if (data.success && data.opponentFound) {
@@ -25,7 +25,7 @@ export default function InstantBattlePage() {
         }
       } catch (error) {
         console.error(error);
-        toast.error("Failed to check for opponent.");
+        toast.error('Failed to check for opponent.');
       }
     };
 
@@ -39,34 +39,34 @@ export default function InstantBattlePage() {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
       return () => clearTimeout(timer);
     } else if (opponentFound) {
-      toast.success("Opponent found! Starting battle...");
+      toast.success('Opponent found! Starting battle...');
       setTimeout(() => {
         router.push(`/battles/${battleData?.id}`);
       }, 3000);
     } else if (timeLeft === 0) {
-      toast.error("No opponent found. Battle cancelled.");
-      router.push("/battle-zone");
+      toast.error('No opponent found. Battle cancelled.');
+      router.push('/battle-zone');
     }
   }, [timeLeft, opponentFound, battleData, router]);
 
   return (
-    <div className="bg-white dark:bg-gray-800 min-h-screen flex items-center justify-center">
-      <div className="bg-blue-50 dark:bg-gray-900 shadow-md rounded-lg p-6 max-w-lg w-full text-center">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+    <div className="flex min-h-screen items-center justify-center bg-white dark:bg-gray-800">
+      <div className="w-full max-w-lg rounded-lg bg-blue-50 p-6 text-center shadow-md dark:bg-gray-900">
+        <h1 className="mb-6 text-3xl font-bold text-gray-900 dark:text-gray-100">
           Waiting for Opponent
         </h1>
         {!opponentFound ? (
           <>
-            <p className="text-lg text-gray-700 dark:text-gray-300 mb-4">
+            <p className="mb-4 text-lg text-gray-700 dark:text-gray-300">
               Please wait while we find an opponent for you...
             </p>
-            <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
+            <div className="mb-4 h-2.5 w-full rounded-full bg-gray-200">
               <div
-                className="bg-blue-500 h-2.5 rounded-full transition-all duration-1000"
+                className="h-2.5 rounded-full bg-blue-500 transition-all duration-1000"
                 style={{ width: `${((60 - timeLeft) / 60) * 100}%` }}
               ></div>
             </div>
-            <p className="text-gray-700 dark:text-gray-300 mb-6">
+            <p className="mb-6 text-gray-700 dark:text-gray-300">
               Time left: {timeLeft} seconds
             </p>
             <Loader />

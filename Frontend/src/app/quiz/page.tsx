@@ -1,24 +1,24 @@
-"use client";
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+'use client';
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 
 const questions = [
   {
-    questionText: "What is the capital of France?",
+    questionText: 'What is the capital of France?',
     answerOptions: [
-      { answerText: "New York", isCorrect: false },
-      { answerText: "London", isCorrect: false },
-      { answerText: "Paris", isCorrect: true },
-      { answerText: "Dublin", isCorrect: false },
+      { answerText: 'New York', isCorrect: false },
+      { answerText: 'London', isCorrect: false },
+      { answerText: 'Paris', isCorrect: true },
+      { answerText: 'Dublin', isCorrect: false },
     ],
   },
   {
-    questionText: "Who is CEO of Tesla?",
+    questionText: 'Who is CEO of Tesla?',
     answerOptions: [
-      { answerText: "Jeff Bezos", isCorrect: false },
-      { answerText: "Elon Musk", isCorrect: true },
-      { answerText: "Bill Gates", isCorrect: false },
-      { answerText: "Tony Stark", isCorrect: false },
+      { answerText: 'Jeff Bezos', isCorrect: false },
+      { answerText: 'Elon Musk', isCorrect: true },
+      { answerText: 'Bill Gates', isCorrect: false },
+      { answerText: 'Tony Stark', isCorrect: false },
     ],
   },
 ];
@@ -42,8 +42,8 @@ const Quiz = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-xl p-8 bg-white shadow-lg rounded-lg">
+    <div className="flex min-h-screen items-center justify-center bg-gray-100">
+      <div className="w-full max-w-xl rounded-lg bg-white p-8 shadow-lg">
         {showScore ? (
           <motion.div
             className="score-section text-center text-2xl font-bold"
@@ -83,11 +83,11 @@ const Quiz = () => {
                     }
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="py-2 px-4 bg-blue-500 text-white rounded-lg focus:outline-none shadow-md"
+                    className="rounded-lg bg-blue-500 px-4 py-2 text-white shadow-md focus:outline-none"
                   >
                     {answerOption.answerText}
                   </motion.button>
-                )
+                ),
               )}
             </motion.div>
           </>

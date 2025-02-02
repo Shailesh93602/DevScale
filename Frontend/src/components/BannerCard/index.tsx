@@ -1,17 +1,17 @@
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper, SwiperSlide } from 'swiper/react';
 
-import "swiper/css";
-import "swiper/css/effect-cards";
+import 'swiper/css';
+import 'swiper/css/effect-cards';
 
-import "./styles/index.css";
+import './styles/index.css';
 
-import { EffectCards } from "swiper/modules";
+import { EffectCards } from 'swiper/modules';
 
 export const BannerCard = () => {
   return (
     <div className="banner">
       <Swiper
-        effect={"cards"}
+        effect={'cards'}
         grabCursor={true}
         modules={[EffectCards]}
         className="mySwiper"

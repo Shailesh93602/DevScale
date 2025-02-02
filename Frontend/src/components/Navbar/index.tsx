@@ -1,12 +1,12 @@
-"use client";
-import React, { ReactNode, useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { FiMenu, FiX, FiSun, FiMoon } from "react-icons/fi";
-import { useTheme } from "next-themes";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { useSelector } from "react-redux";
-import { navItems, profileItems, publicNavItems } from "./constants";
+'use client';
+import React, { ReactNode, useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { FiMenu, FiX, FiSun, FiMoon } from 'react-icons/fi';
+import { useTheme } from 'next-themes';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { useSelector } from 'react-redux';
+import { navItems, profileItems, publicNavItems } from './constants';
 
 const Navbar = ({ isPublic }: { isPublic?: boolean }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,7 +15,7 @@ const Navbar = ({ isPublic }: { isPublic?: boolean }) => {
   const user = useSelector(
     (state: {
       user: { user: { username?: string; profilePicture?: string } };
-    }) => state?.user?.user
+    }) => state?.user?.user,
   );
 
   const toggleMenu = () => {
@@ -28,7 +28,7 @@ const Navbar = ({ isPublic }: { isPublic?: boolean }) => {
   };
 
   const toggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light");
+    setTheme(theme === 'light' ? 'dark' : 'light');
   };
 
   const toggleDropdown = () => {
@@ -36,9 +36,9 @@ const Navbar = ({ isPublic }: { isPublic?: boolean }) => {
   };
 
   return (
-    <nav className="bg-lightSecondary border-b border-border shadow-lg w-full z-50 text-gray-900 dark:text-gray-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+    <nav className="z-50 w-full border-b border-border bg-lightSecondary text-gray-900 shadow-lg dark:text-gray-100">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
             <Link
               href="/"
@@ -47,7 +47,7 @@ const Navbar = ({ isPublic }: { isPublic?: boolean }) => {
               Mr.Eng
             </Link>
           </div>
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden items-center space-x-4 md:flex">
             {(isPublic ? publicNavItems : navItems).map((item, index) => (
               <NavItem key={index} href={item.path}>
                 {item.label}
@@ -55,9 +55,9 @@ const Navbar = ({ isPublic }: { isPublic?: boolean }) => {
             ))}
             <button
               onClick={toggleTheme}
-              className=" hover:text-gray-900 dark:hover:text-gray-300 focus:outline-none"
+              className="hover:text-gray-900 focus:outline-none dark:hover:text-gray-300"
             >
-              {theme === "light" ? <FiMoon size={20} /> : <FiSun size={20} />}
+              {theme === 'light' ? <FiMoon size={20} /> : <FiSun size={20} />}
             </button>
             {!isPublic && (
               <div className="relative">
@@ -65,7 +65,7 @@ const Navbar = ({ isPublic }: { isPublic?: boolean }) => {
                   onClick={toggleDropdown}
                   className="text-gray-100 hover:text-gray-300 focus:outline-none"
                 >
-                  <Avatar className="font-semibold text-3xl items-center justify-center">
+                  <Avatar className="items-center justify-center text-3xl font-semibold">
                     <AvatarImage src={user?.profilePicture} alt="S" />
                     <AvatarFallback className="bg-red">
                       {user?.username?.charAt(0)?.toUpperCase()}
@@ -73,13 +73,13 @@ const Navbar = ({ isPublic }: { isPublic?: boolean }) => {
                   </Avatar>
                 </button>
                 {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-800 rounded-md shadow-lg py-1 z-10">
+                  <div className="absolute right-0 z-10 mt-2 w-48 rounded-md border border-gray-200 bg-gray-100 py-1 text-gray-900 shadow-lg dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100">
                     {profileItems.map((profileItem) => (
                       <Link
                         key={profileItem.label}
                         href={profileItem.path}
                         onClick={handleLinkClick}
-                        className="flex items-center gap-2 px-4 py-2 hover:bg-light rounded-md"
+                        className="flex items-center gap-2 rounded-md px-4 py-2 hover:bg-light"
                       >
                         {profileItem.icon}
                         {profileItem.label}
@@ -104,7 +104,7 @@ const Navbar = ({ isPublic }: { isPublic?: boolean }) => {
       </div>
       {isOpen && (
         <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+          <div className="space-y-1 px-2 pb-3 pt-2 sm:px-3">
             {navItems.map((navItem, index) => (
               <NavItem
                 key={index}
@@ -116,16 +116,16 @@ const Navbar = ({ isPublic }: { isPublic?: boolean }) => {
             ))}
             <button
               onClick={toggleTheme}
-              className="w-full text-left px-4 py-2 text-gray-100 hover:bg-gray-100 focus:outline-none rounded-md"
+              className="w-full rounded-md px-4 py-2 text-left text-gray-100 hover:bg-gray-100 focus:outline-none"
             >
-              {theme === "light" ? "Dark Mode" : "Light Mode"}
+              {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
             </button>
             <div className="relative">
               <button
                 onClick={toggleDropdown}
-                className="w-full text-left px-4 py-2 text-gray-100 hover:bg-gray-100 focus:outline-none rounded-md"
+                className="w-full rounded-md px-4 py-2 text-left text-gray-100 hover:bg-gray-100 focus:outline-none"
               >
-                <Avatar className="font-semibold text-3xl items-center justify-center">
+                <Avatar className="items-center justify-center text-3xl font-semibold">
                   <AvatarImage src={user?.profilePicture} alt="S" />
                   <AvatarFallback className="bg-red">
                     {user?.username?.charAt(0)?.toUpperCase()}
@@ -133,8 +133,8 @@ const Navbar = ({ isPublic }: { isPublic?: boolean }) => {
                 </Avatar>
               </button>
               <div
-                className={`absolute right-0 mt-2 w-48 bg-lightSecondary border border-border rounded-md shadow-lg py-1 ${
-                  !dropdownOpen && "hidden"
+                className={`absolute right-0 mt-2 w-48 rounded-md border border-border bg-lightSecondary py-1 shadow-lg ${
+                  !dropdownOpen && 'hidden'
                 }`}
               >
                 {profileItems.map((profileItem, index) => (
@@ -142,7 +142,7 @@ const Navbar = ({ isPublic }: { isPublic?: boolean }) => {
                     key={index}
                     href={profileItem.path}
                     onClick={handleLinkClick}
-                    className="block px-4 py-2 rounded-md"
+                    className="block rounded-md px-4 py-2"
                   >
                     {profileItem.label}
                   </Link>
@@ -171,10 +171,10 @@ const NavItem = ({
 
   return (
     <Link
-      href={href ?? ""}
+      href={href ?? ''}
       onClick={handleClick}
-      className={`flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium hover:text-primary2 hover:underline ${
-        isActive ? "text-primary font-semibold" : ""
+      className={`flex items-center gap-2 rounded-md px-3 py-2 text-base font-medium hover:text-primary2 hover:underline ${
+        isActive ? 'font-semibold text-primary' : ''
       }`}
     >
       {children}

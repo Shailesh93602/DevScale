@@ -1,4 +1,4 @@
-import CreateResource from "./CreateResource";
+import CreateResource from './CreateResource';
 
 export default async function ResourceEditor({
   params,

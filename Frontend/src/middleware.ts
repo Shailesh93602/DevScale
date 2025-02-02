@@ -1,79 +1,75 @@
-import { NextRequest, NextResponse } from "next/server";
-import customAxios from "./app/services/customAxios";
-// testing
+import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+
 const protectedPages = [
-  "/dashboard",
-  "/profile",
-  "/resources",
-  "/coding-challenges",
-  "/career-roadmap",
-  "/placement-preparation",
-  "/community",
-  "/achievements",
-  "/battle-zone",
-  "/create-resource",
-  "/article-listing",
+  '/dashboard',
+  '/profile',
+  '/resources',
+  '/coding-challenges',
+  '/career-roadmap',
+  '/placement-preparation',
+  '/community',
+  '/achievements',
+  '/battle-zone',
+  '/create-resource',
+  '/article-listing',
 ];
 
 export async function middleware(req: NextRequest) {
+  const res = NextResponse.next();
+  const supabase = createMiddlewareClient({ req, res });
   const pathname = req.nextUrl.pathname;
 
   if (!protectedPages.includes(pathname)) {
-    return NextResponse.next();
+    return res;
   }
 
-  const token = req.cookies.get("token")?.value;
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
-  if (!token) {
+  if (!session) {
     return redirectToLogin(req);
   }
 
   try {
-    const response = await validateToken(token);
+    const { data: profileData, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', session.user.id)
+      .single();
 
-    if (response === "Unauthorized") {
-      return redirectToLogin(req);
+    if (error || !profileData) {
+      throw new Error('Profile not found');
     }
 
-    return NextResponse.next();
+    return res;
   } catch (error) {
-    console.error("Middleware error:", error);
+    console.error('Middleware error:', error);
     return redirectToLogin(req);
-  }
-}
-
-async function validateToken(token: string) {
-  customAxios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  try {
-    const response = await customAxios.get("/profile");
-    return response.data;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    if (error.response && error.response.status === 401) {
-      return "Unauthorized";
-    }
-    throw error;
   }
 }
 
 function redirectToLogin(req: NextRequest) {
-  const url = req.nextUrl.clone();
-  url.pathname = "/u/login";
-  return NextResponse.redirect(url);
+  const redirectUrl = req.nextUrl.clone();
+  redirectUrl.pathname = '/auth/login';
+  redirectUrl.searchParams.set(`redirectedFrom`, req.nextUrl.pathname);
+  return NextResponse.redirect(redirectUrl);
 }
 
 export const config = {
   matcher: [
-    "/dashboard",
-    "/profile",
-    "/resources",
-    "/coding-challenges",
-    "/career-roadmap",
-    "/placement-preparation",
-    "/community",
-    "/achievements",
-    "/battle-zone",
-    "/create-resource",
-    "/article-listing",
+    '/dashboard',
+    '/profile',
+    '/resources',
+    '/coding-challenges',
+    '/career-roadmap',
+    '/placement-preparation',
+    '/community',
+    '/achievements',
+    '/battle-zone',
+    '/create-resource',
+    '/article-listing',
   ],
 };

@@ -1,36 +1,36 @@
-"use client";
-import { useState } from "react";
+'use client';
+import { useState } from 'react';
 
 export default function Contact() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setName("");
-    setEmail("");
-    setMessage("");
+    setName('');
+    setEmail('');
+    setMessage('');
   };
 
   return (
     <div className="min-h-screen bg-gray-100 py-12">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-6">Contact Us</h1>
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <h1 className="mb-6 text-4xl font-bold text-gray-900">Contact Us</h1>
 
-        <p className="text-gray-600 text-lg mb-6">
+        <p className="mb-6 text-lg text-gray-600">
           Have any questions or feedback? Fill out the form below to get in
           touch with us.
         </p>
 
         <form
           onSubmit={handleSubmit}
-          className="bg-light rounded-lg shadow p-6"
+          className="rounded-lg bg-light p-6 shadow"
         >
           <div className="mb-4">
             <label
               htmlFor="name"
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="mb-2 block text-sm font-bold text-gray-700"
             >
               Name
             </label>
@@ -39,7 +39,7 @@ export default function Contact() {
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500 text-dark"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-dark focus:border-indigo-500 focus:outline-none"
               required
             />
           </div>
@@ -47,7 +47,7 @@ export default function Contact() {
           <div className="mb-4">
             <label
               htmlFor="email"
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="mb-2 block text-sm font-bold text-gray-700"
             >
               Email
             </label>
@@ -56,7 +56,7 @@ export default function Contact() {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none"
               required
             />
           </div>
@@ -64,7 +64,7 @@ export default function Contact() {
           <div className="mb-4">
             <label
               htmlFor="message"
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="mb-2 block text-sm font-bold text-gray-700"
             >
               Message
             </label>
@@ -72,7 +72,7 @@ export default function Contact() {
               id="message"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none"
               rows={5}
               required
             ></textarea>
@@ -81,7 +81,7 @@ export default function Contact() {
           <div className="flex items-center justify-between">
             <button
               type="submit"
-              className="bg-indigo-500 text-light font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:bg-indigo-600"
+              className="focus:shadow-outline rounded bg-indigo-500 px-4 py-2 font-bold text-light hover:bg-indigo-600 focus:outline-none"
             >
               Send Message
             </button>

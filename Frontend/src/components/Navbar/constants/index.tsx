@@ -1,68 +1,68 @@
-import { FaRegUserCircle } from "react-icons/fa";
-import { PiSignOutFill } from "react-icons/pi";
-import { GrAchievement, GrArticle } from "react-icons/gr";
+import { FaRegUserCircle } from 'react-icons/fa';
+import { PiSignOutFill } from 'react-icons/pi';
+import { GrAchievement, GrArticle } from 'react-icons/gr';
 
 export const publicNavItems = [
   {
-    path: "/u/login",
-    label: "Login",
+    path: '/u/login',
+    label: 'Login',
   },
   {
-    path: "/u/register",
-    label: "Register",
+    path: '/u/register',
+    label: 'Register',
   },
 ];
 
 export const navItems = [
   {
-    path: "/dashboard",
-    label: "Dashboard",
+    path: '/dashboard',
+    label: 'Dashboard',
   },
   {
-    path: "/battle-zone",
-    label: "Battle Zone",
+    path: '/battle-zone',
+    label: 'Battle Zone',
   },
   {
-    path: "/resources",
-    label: "Resources",
+    path: '/resources',
+    label: 'Resources',
   },
   {
-    path: "/coding-challenges",
-    label: "Coding Challenges",
+    path: '/coding-challenges',
+    label: 'Coding Challenges',
   },
   {
-    path: "/career-roadmap",
-    label: "Career Roadmap",
+    path: '/career-roadmap',
+    label: 'Career Roadmap',
   },
   {
-    path: "/placement-preparation",
-    label: "Placement Preparation",
+    path: '/placement-preparation',
+    label: 'Placement Preparation',
   },
   {
-    path: "/community",
-    label: "Community",
+    path: '/community',
+    label: 'Community',
   },
 ];
 
 export const profileItems = [
   {
-    path: "/profile",
-    label: "Profile",
+    path: '/profile',
+    label: 'Profile',
     icon: <FaRegUserCircle />,
   },
   {
-    path: "/achievements",
-    label: "Achievements",
+    path: '/achievements',
+    label: 'Achievements',
     icon: <GrAchievement />,
   },
   {
-    path: "/articles",
-    label: "My Articles",
+    path: '/articles',
+    label: 'My Articles',
     icon: <GrArticle />,
   },
   {
-    path: "/logout",
-    label: "Logout",
+    path: '/logout',
+    label: 'Logout',
     icon: <PiSignOutFill />,
   },
 ];

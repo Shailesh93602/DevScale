@@ -1,22 +1,22 @@
-"use client";
+'use client';
 import React, {
   useEffect,
   useState,
   useCallback,
   useRef,
   useMemo,
-} from "react";
-import { useDispatch } from "react-redux";
-import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
-import { fetchData } from "@/app/services/fetchData";
-import { toast } from "react-toastify";
-import { debounce } from "@/utils/common";
-import { Search, Book, Tag } from "lucide-react";
-import { HoverBorderGradient } from "@/components/hover-border-gradient";
-import { AceternityLogo } from "@/components/AceternityLogo";
+} from 'react';
+import { useDispatch } from 'react-redux';
+import { hideLoader, showLoader } from '@/lib/features/loader/loaderSlice';
+import { fetchData } from '@/app/services/fetchData';
+import { toast } from 'react-toastify';
+import { debounce } from '@/utils/common';
+import { Search, Book, Tag } from 'lucide-react';
+import { HoverBorderGradient } from '@/components/hover-border-gradient';
+import { AceternityLogo } from '@/components/AceternityLogo';
 
 const ResourcesPage = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [resources, setResources] = useState<
     {
       id: string;
@@ -36,7 +36,7 @@ const ResourcesPage = () => {
   const fetchResources = async (
     searchTerm: string,
     page: number,
-    isAppending = false
+    isAppending = false,
   ) => {
     if (loadingMore) return;
     setLoadingMore(true);
@@ -44,21 +44,21 @@ const ResourcesPage = () => {
 
     try {
       const response = await fetchData(
-        "GET",
+        'GET',
         `/resources?search=${encodeURIComponent(
-          searchTerm
-        )}&page=${page}&limit=10`
+          searchTerm,
+        )}&page=${page}&limit=10`,
       );
 
       const newResources = response.data.resources;
 
       setResources((prev) =>
-        isAppending ? [...prev, ...newResources] : newResources
+        isAppending ? [...prev, ...newResources] : newResources,
       );
       setHasMore(newResources.length > 0);
     } catch (error) {
-      console.error("Error fetching resources:", error);
-      toast.error("Error fetching resources. Please try again.");
+      console.error('Error fetching resources:', error);
+      toast.error('Error fetching resources. Please try again.');
     } finally {
       dispatch(hideLoader());
       setLoadingMore(false);
@@ -70,9 +70,9 @@ const ResourcesPage = () => {
       debounce(
         (searchTerm: string, page: number, isAppending?: boolean) =>
           fetchResources(searchTerm, page, isAppending),
-        300
+        300,
       ),
-    []
+    [],
   );
 
   useEffect(() => {
@@ -100,14 +100,14 @@ const ResourcesPage = () => {
       });
       if (node) observerRef.current.observe(node);
     },
-    [loadingMore, hasMore]
+    [loadingMore, hasMore],
   );
 
   return (
     <div className="">
-      <div className="p-6 min-h-screen">
-        <div className="max-w-7xl mx-auto">
-          <h1 className="text-4xl font-bold mb-8 text-center">
+      <div className="min-h-screen p-6">
+        <div className="mx-auto max-w-7xl">
+          <h1 className="mb-8 text-center text-4xl font-bold">
             Discover Resources
           </h1>
           <div className="relative mb-8">
@@ -116,9 +116,9 @@ const ResourcesPage = () => {
               placeholder="Search resources..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full p-4 pl-12 pr-4 rounded-full border border-border bg-lightSecondary focus:outline-none focus:ring-2 focus:ring-ring transition-all duration-300 ease-in-out"
+              className="w-full rounded-full border border-border bg-lightSecondary p-4 pl-12 pr-4 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-ring"
             />
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-grayText" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 transform text-grayText" />
           </div>
 
           {resources.length > 0 ? (
@@ -127,26 +127,26 @@ const ResourcesPage = () => {
                 <div
                   key={resource.id}
                   ref={index === resources.length - 1 ? lastResourceRef : null}
-                  className="flex flex-col items-end justify-between bg-lightSecondary rounded-lg shadow-lg overflow-hidden transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-105 p-4"
+                  className="flex flex-col items-end justify-between overflow-hidden rounded-lg bg-lightSecondary p-4 shadow-lg transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl"
                 >
                   <div className="self-start">
-                    <h2 className="text-2xl font-semibold mb-2 flex items-center">
+                    <h2 className="mb-2 flex items-center text-2xl font-semibold">
                       <Book className="mr-2" size={24} />
                       {resource.name}
                     </h2>
-                    <p className="text-grayText mb-4">{resource.description}</p>
-                    <div className="flex flex-wrap gap-2 mb-4">
+                    <p className="mb-4 text-grayText">{resource.description}</p>
+                    <div className="mb-4 flex flex-wrap gap-2">
                       {resource.tags?.map((tag) => (
                         <span
                           key={tag}
-                          className="bg-primaryLight text-primary rounded-full px-3 py-1 text-sm font-medium flex items-center"
+                          className="flex items-center rounded-full bg-primaryLight px-3 py-1 text-sm font-medium text-primary"
                         >
                           <Tag size={14} className="mr-1" />
                           {tag}
                         </span>
                       ))}
                     </div>
-                    <div className="flex justify-between items-center">
+                    <div className="flex items-center justify-between">
                       <span className="text-sm text-grayText">
                         {resource.category}
                       </span>
@@ -157,7 +157,7 @@ const ResourcesPage = () => {
                     href={`/resources/${resource.id}`}
                     containerClassName="rounded-full"
                     as="button"
-                    className="bg-primary hover:bg-primary2 flex items-center self-end space-x-2"
+                    className="flex items-center space-x-2 self-end bg-primary hover:bg-primary2"
                   >
                     <AceternityLogo />
                     <span>View Resource</span>
@@ -166,7 +166,7 @@ const ResourcesPage = () => {
               ))}
             </div>
           ) : (
-            <div className="bg-yellow-50 dark:bg-yellow-900 border-l-4 border-yellow-400 p-4 rounded-md">
+            <div className="rounded-md border-l-4 border-yellow-400 bg-yellow-50 p-4 dark:bg-yellow-900">
               <div className="flex">
                 <div className="flex-shrink-0">
                   <svg
@@ -198,8 +198,8 @@ const ResourcesPage = () => {
           )}
 
           {loadingMore && (
-            <div className="text-center text-gray-600 dark:text-gray-300 mt-8">
-              <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-900 dark:border-gray-100"></div>
+            <div className="mt-8 text-center text-gray-600 dark:text-gray-300">
+              <div className="inline-block h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-gray-900 dark:border-gray-100"></div>
               <p className="mt-2">Loading more resources...</p>
             </div>
           )}

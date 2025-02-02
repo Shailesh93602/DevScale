@@ -1,10 +1,10 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { fetchData } from "@/app/services/fetchData";
-import { toast } from "react-toastify";
-import DOMPurify from "dompurify";
-import { motion, AnimatePresence } from "framer-motion";
-import { FaBars, FaTimes, FaBook, FaQuestionCircle } from "react-icons/fa";
+'use client';
+import React, { useEffect, useState } from 'react';
+import { fetchData } from '@/app/services/fetchData';
+import { toast } from 'react-toastify';
+import DOMPurify from 'dompurify';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaBars, FaTimes, FaBook, FaQuestionCircle } from 'react-icons/fa';
 
 const sanitizeContent = (content: string) => {
   return DOMPurify.sanitize(content);
@@ -29,22 +29,22 @@ export default function Resources({ id }: { id: string }) {
     }[];
   } | null>(null);
   const [userAnswers, setUserAnswers] = useState({});
-  const [activeTab, setActiveTab] = useState("content");
+  const [activeTab, setActiveTab] = useState('content');
 
   const fetchResource = async () => {
     try {
-      const response = await fetchData("GET", `/resources/${id}`);
+      const response = await fetchData('GET', `/resources/${id}`);
       const data = response.data;
       if (data?.success) {
         setResource(data?.resource?.topics);
         setSelectedTopic(data?.resource?.topics?.[0]);
       } else {
         toast.error(
-          data?.error ?? "Failed to fetch resource. Please try again!"
+          data?.error ?? 'Failed to fetch resource. Please try again!',
         );
       }
     } catch (error) {
-      toast.error("Failed to fetch resource. Please try again!");
+      toast.error('Failed to fetch resource. Please try again!');
       console.error(error);
     }
   };
@@ -58,8 +58,8 @@ export default function Resources({ id }: { id: string }) {
       if (selectedTopic) {
         try {
           const response = await fetchData(
-            "GET",
-            `/topics/${selectedTopic.id}/quiz`
+            'GET',
+            `/topics/${selectedTopic.id}/quiz`,
           );
           const data = response.data;
           if (data) {
@@ -68,7 +68,7 @@ export default function Resources({ id }: { id: string }) {
             setQuiz(null);
           }
         } catch (error) {
-          toast.error("Failed to fetch quiz. Please try again!");
+          toast.error('Failed to fetch quiz. Please try again!');
           setQuiz(null);
           console.error(error);
         }
@@ -91,24 +91,24 @@ export default function Resources({ id }: { id: string }) {
     }));
 
     try {
-      const response = await fetchData("POST", "/quiz/submit", {
+      const response = await fetchData('POST', '/quiz/submit', {
         quizId: quiz?.id,
         answers,
       });
       const data = response.data;
 
       if (data.success) {
-        toast.success("Quiz submitted successfully!");
+        toast.success('Quiz submitted successfully!');
         if (data.completed) {
-          toast.success("You have passed the quiz!");
+          toast.success('You have passed the quiz!');
         } else {
-          toast.info("You did not pass the quiz.");
+          toast.info('You did not pass the quiz.');
         }
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error("Error submitting quiz. Please try again!");
+      toast.error('Error submitting quiz. Please try again!');
       console.error(error);
     }
   };
@@ -122,14 +122,14 @@ export default function Resources({ id }: { id: string }) {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.5 }}
-        className="mb-8 bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8 transition-all duration-300 hover:shadow-2xl"
+        className="mb-8 rounded-lg bg-white p-8 shadow-xl transition-all duration-300 hover:shadow-2xl dark:bg-gray-800"
       >
-        <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-200 border-b pb-2 border-gray-200 dark:border-gray-700">
+        <h2 className="mb-6 border-b border-gray-200 pb-2 text-3xl font-bold text-gray-800 dark:border-gray-700 dark:text-gray-200">
           Quiz: {selectedTopic?.title}
         </h2>
         {quiz?.questions?.map((question, index) => (
           <div key={question.id} className="mb-6">
-            <p className="font-semibold mb-2 text-lg text-gray-700 dark:text-gray-300">{`${
+            <p className="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300">{`${
               index + 1
             }. ${question.question}`}</p>
             <ul className="list-none pl-5">
@@ -147,7 +147,7 @@ export default function Resources({ id }: { id: string }) {
                       onChange={() =>
                         handleAnswerSelect(question.id, option.answerText)
                       }
-                      className="mr-2 focus:ring-2 focus:ring-blue-500 text-blue-600"
+                      className="mr-2 text-blue-600 focus:ring-2 focus:ring-blue-500"
                     />
                     <span className="text-gray-700 dark:text-gray-300">
                       {option.answerText}
@@ -160,7 +160,7 @@ export default function Resources({ id }: { id: string }) {
         ))}
         <button
           onClick={handleSubmitQuiz}
-          className="mt-4 bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+          className="mt-4 transform rounded-full bg-blue-600 px-6 py-3 text-white transition duration-300 hover:scale-105 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
         >
           Submit Quiz
         </button>
@@ -169,31 +169,31 @@ export default function Resources({ id }: { id: string }) {
   };
 
   if (!resource) {
-    toast.error("Requested resource not found.");
+    toast.error('Requested resource not found.');
     return;
   }
 
   return (
     <div className="flex flex-col md:flex-row">
       <button
-        className="md:hidden fixed top-4 right-4 z-20 bg-primary text-white p-3 rounded-full shadow-lg transition-all duration-300 hover:bg-primary2 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-opacity-50"
+        className="fixed right-4 top-4 z-20 rounded-full bg-primary p-3 text-white shadow-lg transition-all duration-300 hover:bg-primary2 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-opacity-50 md:hidden"
         onClick={() => setSidebarOpen(!sidebarOpen)}
       >
         {sidebarOpen ? (
-          <FaTimes className="w-6 h-6" />
+          <FaTimes className="h-6 w-6" />
         ) : (
-          <FaBars className="w-6 h-6" />
+          <FaBars className="h-6 w-6" />
         )}
       </button>
       <motion.div
-        initial={{ x: "0" }}
-        animate={{ x: sidebarOpen || window.innerWidth >= 768 ? 0 : "-100%" }}
+        initial={{ x: '0' }}
+        animate={{ x: sidebarOpen || window.innerWidth >= 768 ? 0 : '-100%' }}
         transition={{ duration: 0.3 }}
-        className={`w-full md:w-3/12 lg:w-2/12 bg-lightSecondary p-5 overflow-y-auto fixed inset-y-0 left-0 z-10 shadow-lg overflow-y-scroll max-h-screen ${
-          window.innerWidth >= 768 ? "relative translate-x-0" : ""
+        className={`fixed inset-y-0 left-0 z-10 max-h-screen w-full overflow-y-auto overflow-y-scroll bg-lightSecondary p-5 shadow-lg md:w-3/12 lg:w-2/12 ${
+          window.innerWidth >= 768 ? 'relative translate-x-0' : ''
         }`}
       >
-        <h2 className="text-2xl font-bold mb-6 border-b pb-2 border-border">
+        <h2 className="mb-6 border-b border-border pb-2 text-2xl font-bold">
           Topics
         </h2>
         <ul className="space-y-2">
@@ -202,10 +202,10 @@ export default function Resources({ id }: { id: string }) {
               key={topic.id}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className={`cursor-pointer p-3 rounded-lg transition duration-300 hover:bg-primary2 hover:text-white ${
+              className={`cursor-pointer rounded-lg p-3 transition duration-300 hover:bg-primary2 hover:text-white ${
                 selectedTopic?.id === topic.id
-                  ? "bg-primary text-white shadow-md"
-                  : "hover:shadow-md"
+                  ? 'bg-primary text-white shadow-md'
+                  : 'hover:shadow-md'
               }`}
               onClick={() => {
                 setSelectedTopic(topic);
@@ -218,51 +218,51 @@ export default function Resources({ id }: { id: string }) {
         </ul>
       </motion.div>
 
-      <div className="w-full md:w-9/12 lg:w-10/12 p-5 md:p-10 overflow-y-auto">
+      <div className="w-full overflow-y-auto p-5 md:w-9/12 md:p-10 lg:w-10/12">
         {selectedTopic && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mb-8 rounded-lg shadow-xl p-8 transition-all duration-300 hover:shadow-2xl bg-lightSecondary"
+            className="mb-8 rounded-lg bg-lightSecondary p-8 shadow-xl transition-all duration-300 hover:shadow-2xl"
           >
-            <h1 className="text-4xl font-bold mb-6  border-b pb-2 border-border">
+            <h1 className="mb-6 border-b border-border pb-2 text-4xl font-bold">
               {selectedTopic.title}
             </h1>
-            <div className="flex mb-4 border-b border-border">
+            <div className="mb-4 flex border-b border-border">
               <button
-                className={`mr-4 py-2 px-4 focus:outline-none hover:text-primary2 ${
-                  activeTab === "content"
-                    ? "border-b-2 border-primary text-primary"
-                    : "text-grayText"
+                className={`mr-4 px-4 py-2 hover:text-primary2 focus:outline-none ${
+                  activeTab === 'content'
+                    ? 'border-b-2 border-primary text-primary'
+                    : 'text-grayText'
                 }`}
-                onClick={() => setActiveTab("content")}
+                onClick={() => setActiveTab('content')}
               >
-                <FaBook className="inline-block mr-2" /> Content
+                <FaBook className="mr-2 inline-block" /> Content
               </button>
               <button
-                className={`py-2 px-4 focus:outline-none hover:text-primary2 ${
-                  activeTab === "quiz"
-                    ? "border-b-2 border-primary text-primary"
-                    : "text-grayText"
+                className={`px-4 py-2 hover:text-primary2 focus:outline-none ${
+                  activeTab === 'quiz'
+                    ? 'border-b-2 border-primary text-primary'
+                    : 'text-grayText'
                 }`}
-                onClick={() => setActiveTab("quiz")}
+                onClick={() => setActiveTab('quiz')}
               >
-                <FaQuestionCircle className="inline-block mr-2" /> Quiz
+                <FaQuestionCircle className="mr-2 inline-block" /> Quiz
               </button>
             </div>
             <AnimatePresence mode="wait">
-              {activeTab === "content" ? (
+              {activeTab === 'content' ? (
                 <motion.div
                   key="content"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5 }}
-                  className="prose dark:prose-invert max-w-none"
+                  className="prose max-w-none dark:prose-invert"
                   dangerouslySetInnerHTML={{
                     __html: sanitizeContent(
-                      selectedTopic.Articles[0]?.content || ""
+                      selectedTopic.Articles[0]?.content || '',
                     ),
                   }}
                 ></motion.div>

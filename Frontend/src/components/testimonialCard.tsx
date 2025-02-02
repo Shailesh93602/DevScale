@@ -1,9 +1,15 @@
 import React from 'react';
 
-export default function TestimonialCard({ text, name }: { text: string; name: string; }) {
+export default function TestimonialCard({
+  text,
+  name,
+}: {
+  text: string;
+  name: string;
+}) {
   return (
-    <div className="bg-gray-100 p-6 rounded-lg shadow-lg">
-      <p className="text-gray-700 italic mb-4">&quot;{text}&quot;</p>
+    <div className="rounded-lg bg-gray-100 p-6 shadow-lg">
+      <p className="mb-4 italic text-gray-700">&quot;{text}&quot;</p>
       <p className="font-bold text-gray-900">- {name}</p>
     </div>
   );

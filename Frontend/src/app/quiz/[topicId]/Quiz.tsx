@@ -1,8 +1,8 @@
-"use client";
-import React, { useState } from "react";
-import { fetchData } from "@/app/services/fetchData";
-import { toast } from "react-toastify";
-import { useRouter } from "next/router";
+'use client';
+import React, { useState } from 'react';
+import { fetchData } from '@/app/services/fetchData';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
 
 export default function Quiz({ topicId }: { topicId: string }) {
   const [score] = useState(0);
@@ -10,19 +10,19 @@ export default function Quiz({ topicId }: { topicId: string }) {
 
   const submitQuiz = async () => {
     try {
-      const response = await fetchData("post", `/quizzes/submit`, {
+      const response = await fetchData('post', `/quizzes/submit`, {
         topicId,
         score,
       });
 
       if (response.data.success) {
-        toast.success("Quiz submitted successfully!");
-        router.push("/profile");
+        toast.success('Quiz submitted successfully!');
+        router.push('/profile');
       } else {
-        toast.error("Failed to submit quiz.");
+        toast.error('Failed to submit quiz.');
       }
     } catch (error) {
-      toast.error("Error submitting quiz.");
+      toast.error('Error submitting quiz.');
       console.error(error);
     }
   };

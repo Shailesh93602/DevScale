@@ -1,6 +1,6 @@
-import { Facebook, Twitter, Github } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { FC, ReactNode } from "react";
+import { Facebook, Twitter, Github } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { FC, ReactNode } from 'react';
 
 const IconWrapper = ({ children }: { children: ReactNode }) => (
   <Button variant="outline" size="icon" className="h-10 w-10">

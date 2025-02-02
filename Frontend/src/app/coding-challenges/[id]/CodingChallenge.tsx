@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { fetchData } from "@/app/services/fetchData";
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { fetchData } from '@/app/services/fetchData';
+import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function CodingChallenge({ id }: { id: string }) {
   const [challenge, setChallenge] = useState<{
@@ -57,9 +57,9 @@ print("Hello, World!")`,
   };
   const router = useRouter();
 
-  router.push("/coding-challenges");
-  const [output, setOutput] = useState("");
-  const [language, setLanguage] = useState("javascript");
+  router.push('/coding-challenges');
+  const [output, setOutput] = useState('');
+  const [language, setLanguage] = useState('javascript');
   const [isRunning, setIsRunning] = useState(false);
   // const handleSolutionChange = (value: FormData) => {
   //   setSolution({ ...solution, [language]: value });
@@ -71,10 +71,10 @@ print("Hello, World!")`,
 
   const handleRunCode = async () => {
     setIsRunning(true);
-    setOutput("");
+    setOutput('');
 
     try {
-      const { data } = await fetchData("POST", "/run-code", {
+      const { data } = await fetchData('POST', '/run-code', {
         language,
         code: solution[language as keyof object],
       });
@@ -92,10 +92,10 @@ print("Hello, World!")`,
 
   const fetchChallenge = async () => {
     try {
-      const response = await fetchData("GET", `/challenges/${id}`);
+      const response = await fetchData('GET', `/challenges/${id}`);
       setChallenge(response.data);
     } catch (error) {
-      console.error("Error fetching challenge:", error);
+      console.error('Error fetching challenge:', error);
     }
   };
 
@@ -104,12 +104,12 @@ print("Hello, World!")`,
   }, [id]);
 
   return (
-    <div className="w-full mx-auto p-6">
-      <div className="bg-lightSecondary shadow-2xl rounded-lg p-6 flex flex-col md:flex-row">
-        <div className="w-full md:w-1/2 pr-4 overflow-auto border-r border-border">
+    <div className="mx-auto w-full p-6">
+      <div className="flex flex-col rounded-lg bg-lightSecondary p-6 shadow-2xl md:flex-row">
+        <div className="w-full overflow-auto border-r border-border pr-4 md:w-1/2">
           <div>
-            <h1 className="text-3xl font-bold mb-4">{challenge?.title}</h1>
-            <p className="text-gray-700 dark:text-gray-300 mb-2">
+            <h1 className="mb-4 text-3xl font-bold">{challenge?.title}</h1>
+            <p className="mb-2 text-gray-700 dark:text-gray-300">
               <strong>Description:</strong> {challenge?.description}
             </p>
             <p className="mb-2">
@@ -129,13 +129,13 @@ print("Hello, World!")`,
             </p>
           </div>
         </div>
-        <div className="w-full md:w-1/2 pl-4 flex flex-col">
+        <div className="flex w-full flex-col pl-4 md:w-1/2">
           <div className="">
-            <div className="flex justify-between mb-4">
+            <div className="mb-4 flex justify-between">
               <select
                 value={language}
                 onChange={handleLanguageChange}
-                className="border border-border rounded-md p-2 bg-light"
+                className="rounded-md border border-border bg-light p-2"
               >
                 <option value="javascript">JavaScript</option>
                 <option value="python">Python</option>
@@ -149,13 +149,13 @@ print("Hello, World!")`,
 
               <Button
                 onClick={handleRunCode}
-                className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary2"
+                className="rounded-md bg-primary px-4 py-2 text-white hover:bg-primary2"
                 disabled={isRunning}
               >
-                {isRunning ? "Running..." : "Run Code"}
+                {isRunning ? 'Running...' : 'Run Code'}
               </Button>
             </div>
-            <div className="flex-grow mb-4">
+            <div className="mb-4 flex-grow">
               {/* <Editor
                 height="calc(100vh - 20rem)"
                 language={language}
@@ -172,7 +172,7 @@ print("Hello, World!")`,
                 className="shadow-md"
               /> */}
             </div>
-            <div className="bg-light p-4 rounded-md overflow-auto">
+            <div className="overflow-auto rounded-md bg-light p-4">
               <pre>{output}</pre>
             </div>
           </div>

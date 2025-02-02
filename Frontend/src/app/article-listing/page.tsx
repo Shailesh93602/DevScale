@@ -1,8 +1,8 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import { fetchData } from "../services/fetchData";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+'use client';
+import React, { useState, useEffect } from 'react';
+import { fetchData } from '../services/fetchData';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const ArticleListPage = () => {
   const router = useRouter();
@@ -26,17 +26,17 @@ const ArticleListPage = () => {
       createdAt: string;
     }[]
   >([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
 
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await fetchData("get", "/articles/all");
+        const response = await fetchData('get', '/articles/all');
         setArticles(response.data.articles);
         setFilteredArticles(response.data.articles);
       } catch (error) {
-        console.error("Error fetching articles:", error);
+        console.error('Error fetching articles:', error);
       }
     };
 
@@ -49,7 +49,7 @@ const ArticleListPage = () => {
 
       if (statusFilter) {
         filtered = filtered.filter(
-          (article) => article.status === statusFilter
+          (article) => article.status === statusFilter,
         );
       }
 
@@ -57,7 +57,7 @@ const ArticleListPage = () => {
         filtered = filtered.filter(
           (article) =>
             article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            article.content.toLowerCase().includes(searchTerm.toLowerCase())
+            article.content.toLowerCase().includes(searchTerm.toLowerCase()),
         );
       }
 
@@ -69,11 +69,11 @@ const ArticleListPage = () => {
 
   const handleUpdateStatus = async (id: string, newStatus: string) => {
     try {
-      await fetchData("post", `/articles/status/?id=${id}&status=${newStatus}`);
+      await fetchData('post', `/articles/status/?id=${id}&status=${newStatus}`);
       setArticles(
         articles.map((article) =>
-          article.id === id ? { ...article, status: newStatus } : article
-        )
+          article.id === id ? { ...article, status: newStatus } : article,
+        ),
       );
     } catch (error) {
       console.error(`Error updating article status:`, error);
@@ -85,20 +85,20 @@ const ArticleListPage = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-100 dark:bg-gray-900 min-h-screen">
-      <h1 className="text-4xl font-bold mb-8 text-gray-900 dark:text-gray-100 text-center">
+    <div className="min-h-screen bg-gray-100 p-6 dark:bg-gray-900">
+      <h1 className="mb-8 text-center text-4xl font-bold text-gray-900 dark:text-gray-100">
         Articles List
       </h1>
       <div className="mb-6 flex items-center space-x-4">
         <input
           type="text"
           placeholder="Search articles..."
-          className="border border-gray-300 dark:border-gray-600 rounded-md p-2 flex-1 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800"
+          className="flex-1 rounded-md border border-gray-300 bg-white p-2 text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <select
-          className="border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800"
+          className="rounded-md border border-gray-300 bg-white p-2 text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
         >
@@ -108,15 +108,15 @@ const ArticleListPage = () => {
           <option value="rejected">Rejected</option>
         </select>
       </div>
-      <div className="overflow-x-auto shadow-md rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+      <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800">
         <table className="min-w-full">
           <thead className="bg-gray-100 dark:bg-gray-700">
             <tr className="text-left text-gray-900 dark:text-gray-100">
-              <th className="py-3 px-6">Title</th>
-              <th className="py-3 px-6">Author</th>
-              <th className="py-3 px-6">Status</th>
-              <th className="py-3 px-6">Date</th>
-              <th className="py-3 px-6">Actions</th>
+              <th className="px-6 py-3">Title</th>
+              <th className="px-6 py-3">Author</th>
+              <th className="px-6 py-3">Status</th>
+              <th className="px-6 py-3">Date</th>
+              <th className="px-6 py-3">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -125,46 +125,43 @@ const ArticleListPage = () => {
                 key={article.id}
                 className="border-b border-gray-200 dark:border-gray-600"
               >
-                <td className="py-3 px-6 text-gray-900 dark:text-gray-100">
+                <td className="px-6 py-3 text-gray-900 dark:text-gray-100">
                   {article.title}
                 </td>
-                <td className="py-3 px-6 text-gray-700 dark:text-gray-300">
+                <td className="px-6 py-3 text-gray-700 dark:text-gray-300">
                   {article.author.username}
                 </td>
                 <td
-                  className={`py-3 px-6 ${
-                    article.status === "approved" ? "text-green-500" : ""
-                  }
-                      ${article.status === "pending" ? "text-yellow-500" : ""}
-                      ${article.status === "rejected" ? "text-red-500" : ""}
-                  }`}
+                  className={`px-6 py-3 ${
+                    article.status === 'approved' ? 'text-green-500' : ''
+                  } ${article.status === 'pending' ? 'text-yellow-500' : ''} ${article.status === 'rejected' ? 'text-red-500' : ''} }`}
                 >
                   {article.status}
                 </td>
-                <td className="py-3 px-6 text-gray-600 dark:text-gray-400">
+                <td className="px-6 py-3 text-gray-600 dark:text-gray-400">
                   {new Date(article.createdAt).toLocaleDateString()}
                 </td>
-                <td className="py-3 px-6 flex items-center space-x-4">
+                <td className="flex items-center space-x-4 px-6 py-3">
                   <Link
                     href={`/articles/${article.id}`}
                     className="text-blue-500 hover:underline dark:text-blue-300"
                   >
                     View
                   </Link>
-                  {article.status === "pending" ? (
+                  {article.status === 'pending' ? (
                     <>
                       <button
                         className="text-green-500 hover:underline dark:text-green-300"
                         onClick={() =>
-                          handleUpdateStatus(article.id, "approved")
+                          handleUpdateStatus(article.id, 'approved')
                         }
                       >
                         Approve
                       </button>
                       <button
-                        className="text-red-500 hover:underline dark:text-red-300"
+                        className="text-red-500 dark:text-red-300 hover:underline"
                         onClick={() =>
-                          handleUpdateStatus(article.id, "rejected")
+                          handleUpdateStatus(article.id, 'rejected')
                         }
                       >
                         Reject
@@ -173,7 +170,7 @@ const ArticleListPage = () => {
                   ) : (
                     <button
                       onClick={() => handleEdit(article.id)}
-                      className="bg-blue-500 text-white py-1 px-3 rounded-lg mr-2"
+                      className="mr-2 rounded-lg bg-blue-500 px-3 py-1 text-white"
                     >
                       Edit
                     </button>

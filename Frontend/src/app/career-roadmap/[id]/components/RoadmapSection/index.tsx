@@ -1,7 +1,7 @@
-import { useInView } from "react-intersection-observer";
-import { motion } from "framer-motion";
-import { ProgressCircle } from "../ProgressCircle";
-import { RoadmapStep } from "../RoadmapStep";
+import { useInView } from 'react-intersection-observer';
+import { motion } from 'framer-motion';
+import { ProgressCircle } from '../ProgressCircle';
+import { RoadmapStep } from '../RoadmapStep';
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -33,12 +33,12 @@ export const RoadmapSection = ({
       className="mb-12"
       ref={ref}
       initial="hidden"
-      animate={inView ? "visible" : "hidden"}
+      animate={inView ? 'visible' : 'hidden'}
       variants={sectionVariants}
       transition={{ duration: 0.5, delay: index * 0.2 }}
     >
-      <div className="bg-card rounded-lg shadow-lg p-6 border-l-4 border-primary">
-        <div className="flex justify-between items-center mb-4">
+      <div className="rounded-lg border-l-4 border-primary bg-card p-6 shadow-lg">
+        <div className="mb-4 flex items-center justify-between">
           <h3 className="text-2xl font-bold text-primary">{name}</h3>
           <ProgressCircle completed={completed} />
         </div>

@@ -1,34 +1,34 @@
-"use client";
-import React, { useEffect, useState } from "react";
+'use client';
+import React, { useEffect, useState } from 'react';
 // import dynamic from "next/dynamic";
-import { toast } from "react-toastify";
+import { toast } from 'react-toastify';
 // import "react-quill/dist/quill.snow.css";
-import { useDispatch } from "react-redux";
-import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
-import { fetchData } from "@/app/services/fetchData";
-import Navbar from "@/components/Navbar";
+import { useDispatch } from 'react-redux';
+import { hideLoader, showLoader } from '@/lib/features/loader/loaderSlice';
+import { fetchData } from '@/app/services/fetchData';
+import Navbar from '@/components/Navbar';
 
 // const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 export default function EditArticle({ id }: { id: string }) {
-  const [content, setContent] = useState<string>("");
+  const [content, setContent] = useState<string>('');
   const dispatch = useDispatch();
 
   const updateArticle = async () => {
     try {
       dispatch(showLoader());
-      const response = await fetchData("post", `/articles/${id}/update`, {
+      const response = await fetchData('post', `/articles/${id}/update`, {
         content,
       });
 
       if (response.data.success) {
-        toast.success("Article updated successfully!");
+        toast.success('Article updated successfully!');
         window.location.href = `/articles/${id}`;
       } else {
-        toast.error("Failed to update article.");
+        toast.error('Failed to update article.');
       }
     } catch (error) {
-      toast.error("Failed to update article.");
+      toast.error('Failed to update article.');
       console.error(error);
     } finally {
       dispatch(hideLoader());
@@ -38,15 +38,15 @@ export default function EditArticle({ id }: { id: string }) {
   const fetchArticle = async () => {
     try {
       dispatch(showLoader());
-      const response = await fetchData("GET", `/articles/${id}`);
+      const response = await fetchData('GET', `/articles/${id}`);
 
       if (response?.data?.success) {
         setContent(response.data.article?.content);
       } else {
-        toast.error(response?.data?.error ?? "Failed to fetch article.");
+        toast.error(response?.data?.error ?? 'Failed to fetch article.');
       }
     } catch (error) {
-      toast.error("Failed to fetch article.");
+      toast.error('Failed to fetch article.');
       console.error(error);
     } finally {
       dispatch(hideLoader());
@@ -61,7 +61,7 @@ export default function EditArticle({ id }: { id: string }) {
     <>
       <Navbar />
       <div className="container mx-auto p-6">
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6">
+        <div className="mb-6 rounded-lg bg-white p-6 shadow-md dark:bg-gray-800">
           {/* <ReactQuill
             value={content}
             onChange={setContent}
@@ -87,7 +87,7 @@ export default function EditArticle({ id }: { id: string }) {
         </div>
         <button
           onClick={updateArticle}
-          className="bg-blue-500 text-white py-2 px-4 rounded-lg"
+          className="rounded-lg bg-blue-500 px-4 py-2 text-white"
         >
           Update Article
         </button>

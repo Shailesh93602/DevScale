@@ -1,8 +1,8 @@
-"use client";
-import Image from "next/image";
-import React, { useState } from "react";
-import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
+'use client';
+import Image from 'next/image';
+import React, { useState } from 'react';
+import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
 export const Card = React.memo(
   ({
@@ -23,41 +23,41 @@ export const Card = React.memo(
       onMouseLeave={() => setHovered(null)}
       onClick={() => onClick(card.title)}
       className={cn(
-        "rounded-lg relative bg-light overflow-hidden h-60 md:h-96 w-full transition-all duration-300 ease-out cursor-pointer",
-        hovered !== null && hovered !== index && "blur-sm scale-[0.98]"
+        'relative h-60 w-full cursor-pointer overflow-hidden rounded-lg bg-light transition-all duration-300 ease-out md:h-96',
+        hovered !== null && hovered !== index && 'scale-[0.98] blur-sm',
       )}
     >
       <Image
-        src={card.thumbnail ?? "/no-image.png"}
+        src={card.thumbnail ?? '/no-image.png'}
         alt={card.title}
         fill
-        className="object-cover absolute inset-0"
+        className="absolute inset-0 object-cover"
       />
       <div
         className={cn(
-          "absolute inset-0 bg-black/50 flex items-end py-8 px-4 transition-opacity duration-300",
-          hovered === index ? "opacity-0" : "opacity-100"
+          'absolute inset-0 flex items-end bg-black/50 px-4 py-8 transition-opacity duration-300',
+          hovered === index ? 'opacity-0' : 'opacity-100',
         )}
       >
-        <div className="text-xl md:text-2xl font-medium bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-200">
+        <div className="bg-gradient-to-b from-neutral-50 to-neutral-200 bg-clip-text text-xl font-medium text-transparent md:text-2xl">
           {card.title}
         </div>
       </div>
       <div
         className={cn(
-          "absolute inset-0 bg-black/50 flex items-end py-8 px-4 transition-opacity duration-300",
-          hovered === index ? "opacity-100" : "opacity-0"
+          'absolute inset-0 flex items-end bg-black/50 px-4 py-8 transition-opacity duration-300',
+          hovered === index ? 'opacity-100' : 'opacity-0',
         )}
       >
-        <div className="text-xl md:text-2xl font-medium bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-200">
+        <div className="bg-gradient-to-b from-neutral-50 to-neutral-200 bg-clip-text text-xl font-medium text-transparent md:text-2xl">
           {card.description}
         </div>
       </div>
     </div>
-  )
+  ),
 );
 
-Card.displayName = "Card";
+Card.displayName = 'Card';
 
 export function FocusCards({
   roadmaps,
@@ -72,7 +72,7 @@ export function FocusCards({
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-5xl mx-auto md:px-8 w-full">
+    <div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-10 md:grid-cols-3 md:px-8">
       {Boolean(roadmaps?.length) && (
         <>
           {roadmaps?.map((card, index) => (

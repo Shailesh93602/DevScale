@@ -4,8 +4,8 @@ export const ProgressCircle = ({ completed }: { completed: number }) => {
   const offset = circumference - (completed / 100) * circumference;
 
   return (
-    <div className="relative w-16 h-16">
-      <svg className="absolute inset-0 w-full h-full transform -rotate-90">
+    <div className="relative h-16 w-16">
+      <svg className="absolute inset-0 h-full w-full -rotate-90 transform">
         <circle
           className="text-muted"
           strokeWidth="4"
@@ -28,7 +28,7 @@ export const ProgressCircle = ({ completed }: { completed: number }) => {
           cy="50%"
         />
       </svg>
-      <div className="absolute inset-0 flex items-center justify-center text-primary font-semibold">
+      <div className="absolute inset-0 flex items-center justify-center font-semibold text-primary">
         {completed}%
       </div>
     </div>

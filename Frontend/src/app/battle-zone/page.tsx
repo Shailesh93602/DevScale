@@ -1,19 +1,19 @@
-"use client";
-import { useEffect, useState } from "react";
-import BattleCard from "./Components/BattleCard";
-import { useDispatch } from "react-redux";
-import { hideLoader, showLoader } from "@/lib/features/loader/loaderSlice";
-import ChallengeCard from "./Components/ChallengeCard";
-import { fetchData } from "@/app/services/fetchData";
-import Modal from "@/components/Modal";
-import CreateBattle from "./Components/CreateBattle";
-import { difficulties, lengths } from "@/constants";
-import { Button } from "@/components/ui/button";
+'use client';
+import { useEffect, useState } from 'react';
+import BattleCard from './Components/BattleCard';
+import { useDispatch } from 'react-redux';
+import { hideLoader, showLoader } from '@/lib/features/loader/loaderSlice';
+import ChallengeCard from './Components/ChallengeCard';
+import { fetchData } from '@/app/services/fetchData';
+import Modal from '@/components/Modal';
+import CreateBattle from './Components/CreateBattle';
+import { difficulties, lengths } from '@/constants';
+import { Button } from '@/components/ui/button';
 
 export default function BattleZonePage() {
-  const [selectedDifficulty, setSelectedDifficulty] = useState("");
-  const [selectedLength, setSelectedLength] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedDifficulty, setSelectedDifficulty] = useState('');
+  const [selectedLength, setSelectedLength] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [battles, setBattles] = useState<
     {
       id: string;
@@ -46,9 +46,9 @@ export default function BattleZonePage() {
   const fetchBattles = async () => {
     dispatch(showLoader());
     try {
-      const response = await fetchData("GET", "/battles");
+      const response = await fetchData('GET', '/battles');
       if (!response.data) {
-        throw new Error("Failed to fetch battles");
+        throw new Error('Failed to fetch battles');
       }
       const data = response.data;
       if (data.success) {
@@ -72,20 +72,20 @@ export default function BattleZonePage() {
         filtered = filtered.filter(
           (battle) =>
             battle.difficulty?.toLowerCase() ===
-            selectedDifficulty?.toLowerCase()
+            selectedDifficulty?.toLowerCase(),
         );
       }
       if (selectedLength) {
         filtered = filtered.filter(
           (battle) =>
-            battle.length?.toLowerCase() === selectedLength?.toLowerCase()
+            battle.length?.toLowerCase() === selectedLength?.toLowerCase(),
         );
       }
       if (searchTerm) {
         filtered = filtered.filter(
           (battle) =>
             battle.title?.toLowerCase()?.includes(searchTerm?.toLowerCase()) ||
-            battle.username?.toLowerCase()?.includes(searchTerm?.toLowerCase())
+            battle.username?.toLowerCase()?.includes(searchTerm?.toLowerCase()),
         );
       }
       setFilteredBattles(filtered);
@@ -121,23 +121,23 @@ export default function BattleZonePage() {
           <CreateBattle handleClose={() => setIsOpen(false)} />
         </Modal>
       )}
-      <h1 className="text-3xl font-bold text-dark mb-6">Battle Zone</h1>
-      <div className="flex mx-auto w-max">
+      <h1 className="mb-6 text-3xl font-bold text-dark">Battle Zone</h1>
+      <div className="mx-auto flex w-max">
         <ChallengeCard />
       </div>
-      <div className="flex flex-col items-center py-7 bg-lightSecondary px-8 rounded-md mt-5">
-        <div className="flex flex-col md:flex-row w-full mt-4">
+      <div className="mt-5 flex flex-col items-center rounded-md bg-lightSecondary px-8 py-7">
+        <div className="mt-4 flex w-full flex-col md:flex-row">
           <input
             type="text"
             placeholder="Search battles by username or title..."
             value={searchTerm}
             onChange={handleSearchChange}
-            className="flex-grow p-3 mb-4 md:mb-0 md:mr-2 border border-border rounded-md bg-light text-dark focus:outline-none focus:ring-2 focus:ring-ring"
+            className="mb-4 flex-grow rounded-md border border-border bg-light p-3 text-dark focus:outline-none focus:ring-2 focus:ring-ring md:mb-0 md:mr-2"
           />
           <select
             value={selectedDifficulty}
             onChange={(e) => handleDifficultyChange(e.target.value)}
-            className="w-full md:w-40 p-3 mb-4 md:mb-0 md:mr-2 border border-border rounded-md bg-light text-dark focus:outline-none focus:ring-2 focus:ring-ring"
+            className="mb-4 w-full rounded-md border border-border bg-light p-3 text-dark focus:outline-none focus:ring-2 focus:ring-ring md:mb-0 md:mr-2 md:w-40"
           >
             <option value="">Select Difficulty</option>
             {Object.values(difficulties).map((difficulty) => (
@@ -149,7 +149,7 @@ export default function BattleZonePage() {
           <select
             value={selectedLength}
             onChange={(e) => handleLengthChange(e.target.value)}
-            className="w-full md:w-40 p-3 border border-border rounded-md bg-light text-dark focus:outline-none focus:ring-2 focus:ring-ring"
+            className="w-full rounded-md border border-border bg-light p-3 text-dark focus:outline-none focus:ring-2 focus:ring-ring md:w-40"
           >
             <option value="">Select Length</option>
             {Object.values(lengths).map((length) => (
@@ -162,17 +162,17 @@ export default function BattleZonePage() {
       </div>
       {filteredBattles.length > 0 ? (
         <div className="flex flex-col bg-lightSecondary p-4">
-          <h3 className="text-xl font-bold text-center py-4">
+          <h3 className="py-4 text-center text-xl font-bold">
             Available Battles
           </h3>
-          <div className="flex gap-4 justify-center flex-wrap">
+          <div className="flex flex-wrap justify-center gap-4">
             {filteredBattles.map((battle) => (
               <BattleCard key={battle.id} battle={battle} />
             ))}
           </div>
           <Button
             onClick={handleCreateBattle}
-            className="mt-6 py-2 px-4 bg-primary text-white rounded-md hover:bg-primary2 transition duration-200 self-end"
+            className="mt-6 self-end rounded-md bg-primary px-4 py-2 text-white transition duration-200 hover:bg-primary2"
           >
             Create New Battle
           </Button>

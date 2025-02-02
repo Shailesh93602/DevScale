@@ -1,8 +1,8 @@
-"use client";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
-import { logoutUser } from "@/lib/features/user/userSlice";
+'use client';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
+import { logoutUser } from '@/lib/features/user/userSlice';
 
 export default function Logout() {
   const router = useRouter();
@@ -10,8 +10,8 @@ export default function Logout() {
 
   const logout = async () => {
     dispatch(logoutUser());
-    document.cookie = "token=; Max-Age=0; path=/;";
-    router.push("/u/login");
+    document.cookie = 'token=; Max-Age=0; path=/;';
+    router.push('/u/login');
   };
 
   useEffect(() => {

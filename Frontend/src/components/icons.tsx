@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { SVGProps } from "react";
+import React, { SVGProps } from 'react';
 
 export function BookIcon(props: SVGProps<any>) {
   return (

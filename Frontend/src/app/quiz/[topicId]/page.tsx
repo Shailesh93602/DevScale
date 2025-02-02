@@ -1,4 +1,4 @@
-import Quiz from "./Quiz";
+import Quiz from './Quiz';
 
 export default async function QuizPage({
   params,

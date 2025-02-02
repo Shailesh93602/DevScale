@@ -1,28 +1,28 @@
-"use client";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
-import { Button } from "@/components/ui/button";
-import { FieldValues, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { Form } from "@/components/ui/form";
-import CustomInput from "@/components/common/customInput";
-import { fetchData } from "@/app/services/fetchData";
+'use client';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
+import { Button } from '@/components/ui/button';
+import { FieldValues, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import { Form } from '@/components/ui/form';
+import CustomInput from '@/components/common/customInput';
+import { fetchData } from '@/app/services/fetchData';
 
 const formSchema = yup.object({
   password: yup
     .string()
     .trim()
-    .required("Password is required")
-    .min(8, "Password must be at least 8 characters"),
-  confirmPassword: yup.string().trim().required("Confirm Password is required"),
+    .required('Password is required')
+    .min(8, 'Password must be at least 8 characters'),
+  confirmPassword: yup.string().trim().required('Confirm Password is required'),
 });
 
 export default function Login() {
   const form = useForm({
     resolver: yupResolver(formSchema),
-    mode: "onChange",
+    mode: 'onChange',
   });
 
   const router = useRouter();
@@ -30,28 +30,28 @@ export default function Login() {
   const onSubmit = async (data: FieldValues) => {
     try {
       const response = await fetchData(
-        "POST",
-        "/auth/reset",
-        JSON.stringify(data)
+        'POST',
+        '/auth/reset',
+        JSON.stringify(data),
       );
       if (response?.data?.success) {
-        toast.success("Password changed Successfully!");
+        toast.success('Password changed Successfully!');
         setTimeout(() => {
-          router.push("/u/login");
+          router.push('/u/login');
         }, 1000);
       } else {
         toast.error(data.message);
       }
     } catch (error) {
       console.error(error);
-      toast.error("Something went wrong.");
+      toast.error('Something went wrong.');
     }
   };
 
   return (
-    <section className="min-h-screen flex items-center justify-center py-12 bg-background text-foreground transition duration-300 ease-in-out">
-      <div className="w-full max-w-lg bg-card shadow-lg rounded-lg p-10 dark:bg-gray-800 dark:text-white">
-        <div className="text-center mb-8">
+    <section className="flex min-h-screen items-center justify-center bg-background py-12 text-foreground transition duration-300 ease-in-out">
+      <div className="w-full max-w-lg rounded-lg bg-card p-10 shadow-lg dark:bg-gray-800 dark:text-white">
+        <div className="mb-8 text-center">
           <Link
             href="/"
             className="text-4xl font-extrabold text-blue-700 dark:text-blue-800"
@@ -59,7 +59,7 @@ export default function Login() {
             Mr. Engineers
           </Link>
         </div>
-        <h1 className="text-3xl font-semibold text-center mb-6 dark:text-gray-100">
+        <h1 className="mb-6 text-center text-3xl font-semibold dark:text-gray-100">
           Reset Password
         </h1>
         <Form {...form}>
@@ -82,13 +82,13 @@ export default function Login() {
             />
             <Button
               type="submit"
-              className="w-full py-3 mt-4 bg-blue-600 text-white hover:bg-blue-700 transition duration-200 ease-in-out"
+              className="mt-4 w-full bg-blue-600 py-3 text-white transition duration-200 ease-in-out hover:bg-blue-700"
             >
               Login
             </Button>
-            <div className="text-center mt-4 text-sm text-muted-foreground dark:text-gray-400">
+            <div className="mt-4 text-center text-sm text-muted-foreground dark:text-gray-400">
               <p>
-                Know your password?{" "}
+                Know your password?{' '}
                 <Link
                   href="/u/register"
                   className="text-blue-600 hover:underline dark:text-blue-400"

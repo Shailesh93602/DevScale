@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import React from "react";
+import React from 'react';
 import {
   BsFillArchiveFill,
   BsFillGrid3X3GapFill,
   BsPeopleFill,
   BsFillBellFill,
-} from "react-icons/bs";
+} from 'react-icons/bs';
 import {
   BarChart,
   Bar,
@@ -18,55 +18,55 @@ import {
   ResponsiveContainer,
   LineChart,
   Line,
-} from "recharts";
-import "./achievements.css";
+} from 'recharts';
+import './achievements.css';
 
 function Home() {
   const data = [
     {
-      name: "Day 1",
+      name: 'Day 1',
       webDevelopment: 100,
       appDevelopment: 40,
       ML: 24,
       DSA: 20,
     },
     {
-      name: "Day 2",
+      name: 'Day 2',
       webDevelopment: 70,
       appDevelopment: 35,
       ml: 34,
       DSA: 30,
     },
     {
-      name: "Day 3",
+      name: 'Day 3',
       webDevelopment: 50,
       appDevelopment: 45,
       ML: 44,
       DSA: 50,
     },
     {
-      name: "Day 4",
+      name: 'Day 4',
       webDevelopment: 60,
       appDevelopment: 30,
       ML: 34,
       DSA: 20,
     },
     {
-      name: "Day 5",
+      name: 'Day 5',
       webDevelopment: 56,
       appDevelopment: 46,
       ML: 24,
       DSA: 34,
     },
     {
-      name: "Day 6",
+      name: 'Day 6',
       webDevelopment: 33,
       appDevelopment: 38,
       ML: 44,
       DSA: 50,
     },
     {
-      name: "Day 7",
+      name: 'Day 7',
       webDevelopment: 25,
       appDevelopment: 23,
       ML: 38,
