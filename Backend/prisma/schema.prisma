@@ -1,0 +1,372 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Article {
+  id              String    @id @default(uuid())
+  title           String    @db.VarChar(255)
+  content         String    @db.Text
+  authorId        String
+  status          Status    @default(pending)
+  moderationNotes String?   @db.Text
+  topicId         String
+  resourceId      String? // Add this line
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+  author          User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  topic           Topic     @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  resource        Resource? @relation(fields: [resourceId], references: [id]) // Add this line
+}
+
+model Battle {
+  id          String     @id @default(uuid())
+  title       String     @db.VarChar(255)
+  description String?    @db.Text
+  topicId     String
+  userId      String
+  difficulty  Difficulty
+  length      Length
+  date        DateTime?
+  time        DateTime?
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+  topic       Topic      @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Challenge {
+  id                String     @id @default(uuid())
+  title             String
+  description       String     @db.Text
+  difficulty        Difficulty
+  inputFormat       String     @db.Text
+  outputFormat      String     @db.Text
+  exampleInput      String     @db.Text
+  exampleOutput     String     @db.Text
+  constraints       String     @db.Text
+  functionSignature String     @db.Text
+  created_at        DateTime   @default(now())
+  updated_at        DateTime   @updatedAt
+}
+
+model Chat {
+  id         String   @id @default(uuid())
+  message    String   @db.Text
+  user1Id    String
+  user2Id    String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user1      User     @relation("ChatUser1", fields: [user1Id], references: [id])
+  user2      User     @relation("ChatUser2", fields: [user2Id], references: [id])
+}
+
+model Course {
+  id          String       @id @default(uuid())
+  title       String
+  description String?      @db.Text
+  instructor  String?
+  duration    Int?
+  level       CourseLevel?
+  startDate   DateTime?
+  endDate     DateTime?
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+}
+
+model Forum {
+  id          String   @id @default(uuid())
+  title       String
+  description String?  @db.Text
+  createdBy   String
+  isActive    Boolean  @default(true)
+  tags        Json?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  user        User     @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+}
+
+model InterviewQuestion {
+  id         String      @id @default(uuid())
+  question   String      @db.Text
+  answer     String?     @db.Text
+  difficulty Difficulty?
+  topic      String?
+  tags       Json?
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  resourceId String?
+  resource   Resource?   @relation(fields: [resourceId], references: [id], onDelete: SetNull)
+}
+
+model Job {
+  id                  String    @id @default(uuid())
+  title               String
+  description         String?   @db.Text
+  company             String
+  location            String?
+  salary              Decimal?  @db.Decimal(10, 2)
+  jobType             JobType?
+  postedDate          DateTime?
+  applicationDeadline DateTime?
+  created_at          DateTime  @default(now())
+  updated_at          DateTime  @updatedAt
+}
+
+model MainConcept {
+  id          String    @id @default(uuid())
+  name        String
+  description String    @db.Text
+  roadmapId   String
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  roadmap     Roadmap   @relation(fields: [roadmapId], references: [id])
+  subjects    Subject[]
+}
+
+model Quiz {
+  id           String           @id @default(uuid())
+  passingScore Int
+  topicId      String
+  created_at   DateTime         @default(now())
+  updated_at   DateTime         @updatedAt
+  topic        Topic            @relation(fields: [topicId], references: [id])
+  questions    QuizQuestion[]
+  submissions  QuizSubmission[]
+}
+
+model QuizAnswer {
+  id          String                 @id @default(uuid())
+  answer      String                 @db.Text
+  isCorrect   Boolean                @default(false)
+  questionId  String
+  created_at  DateTime               @default(now())
+  updated_at  DateTime               @updatedAt
+  question    QuizQuestion           @relation(fields: [questionId], references: [id])
+  submissions QuizSubmissionAnswer[]
+}
+
+model QuizOption {
+  id             String       @id @default(uuid())
+  answerText     String       @db.Text
+  isCorrect      Boolean
+  quizQuestionId String
+  created_at     DateTime     @default(now())
+  updated_at     DateTime     @updatedAt
+  quizQuestion   QuizQuestion @relation(fields: [quizQuestionId], references: [id])
+}
+
+model QuizQuestion {
+  id            String                 @id @default(uuid())
+  question      String                 @db.Text
+  correctAnswer String?                @db.Text
+  quizId        String
+  created_at    DateTime               @default(now())
+  updated_at    DateTime               @updatedAt
+  quiz          Quiz                   @relation(fields: [quizId], references: [id])
+  options       QuizOption[]
+  answers       QuizAnswer[]
+  submissions   QuizSubmissionAnswer[]
+}
+
+model QuizSubmission {
+  id         String                 @id @default(uuid())
+  score      Int
+  userId     String
+  quizId     String
+  created_at DateTime               @default(now())
+  updated_at DateTime               @updatedAt
+  user       User                   @relation(fields: [userId], references: [id])
+  quiz       Quiz                   @relation(fields: [quizId], references: [id])
+  answers    QuizSubmissionAnswer[]
+}
+
+model QuizSubmissionAnswer {
+  id           String         @id @default(uuid())
+  submissionId String
+  answerId     String
+  questionId   String
+  created_at   DateTime       @default(now())
+  updated_at   DateTime       @updatedAt
+  submission   QuizSubmission @relation(fields: [submissionId], references: [id])
+  answer       QuizAnswer     @relation(fields: [answerId], references: [id])
+  question     QuizQuestion   @relation(fields: [questionId], references: [id])
+}
+
+model Resource {
+  id                 String              @id @default(uuid())
+  subject            String
+  topic              String
+  subtopic           String?
+  content            String              @db.Text
+  created_at         DateTime            @default(now())
+  updated_at         DateTime            @updatedAt
+  articles           Article[]
+  interviewQuestions InterviewQuestion[]
+}
+
+model Roadmap {
+  id              String           @id @default(uuid())
+  title           String
+  description     String           @db.Text
+  thumbnail       String?
+  userId          String
+  created_at      DateTime         @default(now())
+  updated_at      DateTime         @updatedAt
+  user            User             @relation(fields: [userId], references: [id])
+  mainConcepts    MainConcept[]
+  userRoadmaps    UserRoadmap[]
+  roadmapSubjects RoadMapSubject[] // Add this line
+}
+
+model RoadMapSubject {
+  id         String   @id @default(uuid())
+  roadmapId  String
+  subjectId  String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  roadmap    Roadmap  @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+  subject    Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  @@unique([roadmapId, subjectId])
+}
+
+model Subject {
+  id            String           @id @default(uuid())
+  name          String
+  description   String           @db.Text
+  mainConceptId String
+  tags          String
+  created_at    DateTime         @default(now())
+  updated_at    DateTime         @updatedAt
+  mainConcept   MainConcept      @relation(fields: [mainConceptId], references: [id])
+  topics        Topic[]
+  roadmaps      RoadMapSubject[]
+}
+
+model Topic {
+  id           String         @id @default(uuid())
+  title        String         @db.VarChar(255)
+  description  String?        @db.Text
+  content      String?        @db.Text
+  subjectId    String
+  created_at   DateTime       @default(now())
+  updated_at   DateTime       @updatedAt
+  subject      Subject        @relation(fields: [subjectId], references: [id])
+  articles     Article[]
+  battles      Battle[]
+  quizzes      Quiz[]
+  userProgress UserProgress[]
+}
+
+model User {
+  id              String           @id @default(uuid())
+  username        String
+  address         String?          @db.Text
+  email           String           @unique
+  password        String
+  created_at      DateTime         @default(now())
+  updated_at      DateTime         @updatedAt
+  articles        Article[]
+  chatsAsUser1    Chat[]           @relation("ChatUser1")
+  chatsAsUser2    Chat[]           @relation("ChatUser2")
+  forums          Forum[]
+  roadmaps        Roadmap[]
+  userInfo        UserInfo?
+  userPoints      UserPoints?
+  userProgress    UserProgress[]
+  userRoadmaps    UserRoadmap[]
+  quizSubmissions QuizSubmission[]
+  battles         Battle[]
+}
+
+model UserInfo {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  fullName       String
+  bio            String?  @db.Text
+  note           String?  @db.Text
+  profilePicture String?
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+  user           User     @relation(fields: [userId], references: [id])
+}
+
+model UserPoints {
+  id         String   @id @default(uuid())
+  userId     String   @unique
+  points     Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model UserProgress {
+  id          String   @id @default(uuid())
+  isCompleted Boolean  @default(false)
+  userId      String
+  topicId     String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id])
+  topic       Topic    @relation(fields: [topicId], references: [id])
+
+  @@unique([userId, topicId])
+}
+
+model UserRoadmap {
+  id         String   @id @default(uuid())
+  isCustom   Boolean  @default(false)
+  userId     String
+  roadmapId  String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id])
+  roadmap    Roadmap  @relation(fields: [roadmapId], references: [id])
+
+  @@unique([userId, roadmapId])
+}
+
+enum Status {
+  pending
+  approved
+  rejected
+}
+
+enum Difficulty {
+  easy
+  medium
+  hard
+  Easy
+  Medium
+  Hard
+}
+
+enum Length {
+  short
+  medium
+  long
+}
+
+enum CourseLevel {
+  Beginner
+  Intermediate
+  Advanced
+}
+
+enum JobType {
+  full_time
+  part_time
+  contract
+  internship
+}
