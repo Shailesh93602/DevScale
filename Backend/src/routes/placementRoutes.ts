@@ -1,9 +1,9 @@
 import express from 'express';
-import { getBooks, getResources } from '../controllers/placementControllers.js';
+import { getBooks, getResources } from '../controllers/placementControllers';
 
 const router = express.Router();
 
 router.get('/resources', getResources);
-router.get('/sessions/book', getBooks);
+router.get('/books', getBooks);
 
 export default router;

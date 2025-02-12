@@ -21,7 +21,7 @@ exports.getAllRoadmaps = (0, index_1.catchAsync)(async (req, res) => {
             },
         },
         orderBy: {
-            created_at: 'asc',
+            createdAt: 'asc',
         },
     });
     res.status(200).json(roadmaps);
@@ -39,7 +39,7 @@ exports.getMainConceptsInRoadmap = (0, index_1.catchAsync)(async (req, res) => {
                     subjects: {
                         select: {
                             id: true,
-                            name: true,
+                            title: true,
                         },
                         orderBy: {
                             created_at: 'asc',

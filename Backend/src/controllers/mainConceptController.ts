@@ -16,7 +16,7 @@ export const getSubjectsInMainConcept = catchAsync(
         subjects: {
           select: {
             id: true,
-            name: true,
+            title: true,
             description: true,
           },
           orderBy: {
@@ -30,6 +30,9 @@ export const getSubjectsInMainConcept = catchAsync(
       return res.status(404).json({ message: 'Main Concept not found' });
     }
 
-    res.status(200).json(mainConcept.subjects);
+    res.status(200).json({
+      status: 'success',
+      data: mainConcept.subjects,
+    });
   }
 );

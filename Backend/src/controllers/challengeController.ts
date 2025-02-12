@@ -1,6 +1,16 @@
-import { PrismaClient } from '@prisma/client';
+import { Difficulty, PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
+import {
+  createChallenge,
+  updateChallenge,
+  getAllChallenges,
+  submitChallenge,
+  getLeaderboard,
+} from '../services/challengeService';
+import { createAppError } from '../middlewares/errorHandler';
+import logger from '../utils/logger';
+import { getChallengeStats } from '../services/adminResourceService';
 
 const prisma = new PrismaClient();
 
@@ -115,3 +125,107 @@ export const getChallenge = catchAsync(async (req: Request, res: Response) => {
     totalChallenges: totalCount,
   });
 });
+
+export class ChallengeController {
+  static async createChallenge(req: Request, res: Response) {
+    try {
+      const challenge = await createChallenge(req.body);
+
+      res.status(201).json({
+        status: 'success',
+        data: { challenge },
+      });
+    } catch (error) {
+      logger.error('Error creating challenge:', error);
+      throw createAppError('Failed to create challenge', 400);
+    }
+  }
+
+  static async updateChallenge(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const challenge = await updateChallenge(id, req.body);
+
+      res.status(200).json({
+        status: 'success',
+        data: { challenge },
+      });
+    } catch (error) {
+      logger.error('Error updating challenge:', error);
+      throw createAppError('Failed to update challenge', 400);
+    }
+  }
+
+  static async getChallenge(req: Request, res: Response) {
+    try {
+      const challenge = await getChallengeStats();
+
+      res.status(200).json({
+        status: 'success',
+        data: { challenge },
+      });
+    } catch (error) {
+      logger.error('Error fetching challenge:', error);
+      throw createAppError('Failed to fetch challenge', 400);
+    }
+  }
+
+  static async getAllChallenges(req: Request, res: Response) {
+    try {
+      const { difficulty, category, tags } = req.query;
+      const challenges = await getAllChallenges({
+        difficulty: difficulty as Difficulty,
+        category: category as string,
+        tags: tags ? (tags as string).split(',') : undefined,
+      });
+
+      res.status(200).json({
+        status: 'success',
+        data: { challenges },
+      });
+    } catch (error) {
+      logger.error('Error fetching challenges:', error);
+      throw createAppError('Failed to fetch challenges', 400);
+    }
+  }
+
+  static async submitChallenge(req: Request, res: Response) {
+    try {
+      const userId = req.user?.id;
+      if (!userId) throw createAppError('User not found', 404);
+
+      const { challengeId } = req.params;
+      const { code, language } = req.body;
+
+      const submission = await submitChallenge({
+        code,
+        language,
+        userId,
+        challengeId,
+      });
+
+      res.status(200).json({
+        status: 'success',
+        data: { submission },
+      });
+    } catch (error) {
+      logger.error('Error submitting challenge:', error);
+      throw createAppError('Failed to submit challenge', 400);
+    }
+  }
+
+  static async getLeaderboard(req: Request, res: Response) {
+    try {
+      const { challengeId } = req.query;
+      const leaderboard = await getLeaderboard(challengeId as string);
+
+      res.status(200).json({
+        status: 'success',
+        data: { leaderboard },
+      });
+    } catch (error) {
+      logger.error('Error fetching leaderboard:', error);
+      throw createAppError('Failed to fetch leaderboard', 400);
+    }
+  }
+}

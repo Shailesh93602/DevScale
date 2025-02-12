@@ -101,7 +101,7 @@ const LoginPage = () => {
             <LoginForm form={form} onSubmit={onSubmit} isLoading={isLoading} />
             <div className="text-center text-sm text-muted-foreground">
               New on our platform?{' '}
-              <a href="/u/register" className="text-primary hover:underline">
+              <a href="/auth/register" className="text-primary hover:underline">
                 Create an account
               </a>
             </div>

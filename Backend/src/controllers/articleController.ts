@@ -6,12 +6,12 @@ const prisma = new PrismaClient();
 
 export const getArticles = catchAsync(async (req: Request, res: Response) => {
   const { status, search } = req.query as {
-    status: 'pending' | 'approved' | 'rejected';
+    status: 'PENDING' | 'APPROVED' | 'REJECTED';
     search?: string;
   };
 
   const whereCondition: {
-    status?: 'pending' | 'approved' | 'rejected';
+    status?: 'PENDING' | 'APPROVED' | 'REJECTED';
     OR?: [
       {
         title: { contains: string; mode: 'insensitive' };
@@ -54,10 +54,10 @@ export const updateArticleStatus = catchAsync(
   async (req: Request, res: Response) => {
     const { id, status } = req.query as {
       id: string;
-      status: 'approved' | 'rejected';
+      status: 'APPROVED' | 'REJECTED';
     };
 
-    if (!['approved', 'rejected'].includes(status)) {
+    if (!['APPROVED', 'REJECTED'].includes(status)) {
       return res.status(400).json({ error: 'Invalid status value' });
     }
 

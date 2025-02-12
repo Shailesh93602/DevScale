@@ -108,7 +108,7 @@ const RegisterPage = () => {
             />
             <div className="text-center text-sm text-muted-foreground">
               Already have an account?{' '}
-              <a href="/u/login" className="text-primary hover:underline">
+              <a href="/auth/login" className="text-primary hover:underline">
                 Sign in instead
               </a>
             </div>

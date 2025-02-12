@@ -1,11 +1,13 @@
+'use client';
 import { useForm, type FieldValues } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { loginSchema } from '../../validations';
+import { loginSchema } from '@/lib/validations';
 import { supabase } from '@/lib/supabaseClient';
 import Link from 'next/link';
 import PasswordInput from '@/components/PasswordInput';
+import { toast } from 'react-toastify';
 
 interface LoginFormProps {
   onSuccess: () => void;
@@ -26,7 +28,15 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
         email: data.email,
         password: data.password,
       });
-      if (error) throw error;
+      if (error) {
+        if (error.code === 'email_not_confirmed') {
+          toast.error('Please verify your email address to continue');
+          return;
+        }
+
+        toast.error('Invalid email or password');
+        return;
+      }
       onSuccess();
     } catch (error) {
       console.error('Error logging in:', error);
@@ -37,7 +47,7 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
-        <Input {...register('email')} placeholder="Email" className="w-full" />
+        <Input {...register('email')} placeholder="Email" className="w-fu" />
         {errors.email && (
           <p className="mt-1 text-sm text-destructive">
             {errors.email.message as string}

@@ -33,7 +33,7 @@ exports.getArticlesForTopic = (0, index_1.catchAsync)(async (req, res) => {
         include: {
             articles: {
                 where: {
-                    OR: [{ status: 'approved' }, { status: 'pending' }],
+                    OR: [{ status: 'APPROVED' }, { status: 'PENDING' }],
                 },
                 orderBy: {
                     created_at: 'desc',
@@ -57,7 +57,7 @@ exports.getQuizByTopicId = (0, index_1.catchAsync)(async (req, res) => {
                 include: {
                     options: {
                         orderBy: {
-                            created_at: 'asc',
+                            createdAt: 'asc',
                         },
                     },
                 },

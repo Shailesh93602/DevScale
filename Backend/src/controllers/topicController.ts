@@ -35,7 +35,7 @@ export const getArticlesForTopic = catchAsync(
       include: {
         articles: {
           where: {
-            OR: [{ status: 'approved' }, { status: 'pending' }],
+            OR: [{ status: 'APPROVED' }, { status: 'PENDING' }],
           },
           orderBy: {
             created_at: 'desc',
@@ -63,7 +63,7 @@ export const getQuizByTopicId = catchAsync(
           include: {
             options: {
               orderBy: {
-                created_at: 'asc',
+                createdAt: 'asc',
               },
             },
           },

@@ -11,7 +11,7 @@ export default function Logout() {
   const logout = async () => {
     dispatch(logoutUser());
     document.cookie = 'token=; Max-Age=0; path=/;';
-    router.push('/u/login');
+    router.push('/auth/login');
   };
 
   useEffect(() => {

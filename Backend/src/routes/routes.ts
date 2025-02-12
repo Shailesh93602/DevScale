@@ -1,25 +1,25 @@
 import express, { Request, Response } from 'express';
-import authRoutes from './authRoutes.js';
-import userRoutes from './userRoutes.js';
-import roadMapRoutes from './roadMapRoutes.js';
-import questionRoutes from './questionRoutes.js';
-import leaderBoardRoutes from './leaderBoardRoutes.js';
-import placementRoutes from './placementRoutes.js';
-import communityForumRoutes from './communityForumRoutes.js';
-import jobRoutes from './jobRoutes.js';
-import chatRoutes from './chatRoutes.js';
-import courseRoutes from './courseRoutes.js';
-import battleRoutes from './battleRoutes.js';
-import resourceRoutes from './resourceRoutes.js';
-import mainConceptRoutes from './mainConceptRoutes.js';
-import subjectRoutes from './subjectRoutes.js';
-import topicRoutes from './topicRoutes.js';
-import articleRoutes from './articleRoutes.js';
-import quizRoutes from './quizRoutes.js';
-import challengeRoutes from './challengeRoutes.js';
+import userRoutes from './userRoutes';
+import roadMapRoutes from './roadMapRoutes';
+import questionRoutes from './questionRoutes';
+import leaderBoardRoutes from './leaderBoardRoutes';
+import placementRoutes from './placementRoutes';
+import communityForumRoutes from './communityForumRoutes';
+import jobRoutes from './jobRoutes';
+import chatRoutes from './chatRoutes';
+import courseRoutes from './courseRoutes';
+import battleRoutes from './battleRoutes';
+import resourceRoutes from './resourceRoutes';
+import mainConceptRoutes from './mainConceptRoutes';
+import subjectRoutes from './subjectRoutes';
+import topicRoutes from './topicRoutes';
+import articleRoutes from './articleRoutes';
+import quizRoutes from './quizRoutes';
+import challengeRoutes from './challengeRoutes';
 import passport from 'passport';
-import { codeRunner } from '../controllers/codeRunnerController.js';
-import { predict } from '../controllers/predictionController.js';
+import { codeRunner } from '../controllers/codeRunnerController';
+import { predict } from '../controllers/predictionController';
+import healthCheckRoutes from './healthCheck';
 
 const router = express.Router();
 
@@ -28,8 +28,6 @@ router.get('/helloworld', (req: Request, res: Response) => {
 });
 
 router.post('/predict', predict);
-
-router.use('/auth', authRoutes);
 
 router.use(
   '/profile',
@@ -134,5 +132,8 @@ router.use(
 );
 
 router.post('/run-code', codeRunner);
+
+// Health Check Route
+router.use('/health', healthCheckRoutes);
 
 export default router;

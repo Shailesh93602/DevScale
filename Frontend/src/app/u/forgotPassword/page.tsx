@@ -36,7 +36,7 @@ export default function ForgotPassword() {
       if (response.data.success) {
         toast.success(data.message);
         setTimeout(() => {
-          router.push('/u/login');
+          router.push('/auth/login');
         }, 1000);
       } else {
         toast.error(data.message);
@@ -80,7 +80,7 @@ export default function ForgotPassword() {
               <p>
                 Don&apos;t have an account?{' '}
                 <Link
-                  href="/u/register"
+                  href="/auth/register"
                   className="text-blue-600 hover:underline dark:text-blue-400"
                 >
                   Create one

@@ -37,7 +37,7 @@ export default function Login() {
       if (response?.data?.success) {
         toast.success('Password changed Successfully!');
         setTimeout(() => {
-          router.push('/u/login');
+          router.push('/auth/login');
         }, 1000);
       } else {
         toast.error(data.message);
@@ -90,7 +90,7 @@ export default function Login() {
               <p>
                 Know your password?{' '}
                 <Link
-                  href="/u/register"
+                  href="/auth/register"
                   className="text-blue-600 hover:underline dark:text-blue-400"
                 >
                   Login here

@@ -3,13 +3,22 @@ import { useRouter } from 'next/navigation';
 import LoginForm from '../components/LoginForm';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { supabase } from '@/lib/supabaseClient';
+import { useDispatch } from 'react-redux';
+import { initialUser } from '@/lib/features/user/userSlice';
+import OAuthProviders from '../components/OAuthProviders';
 
 export default function LoginPage() {
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const handleAuthSuccess = async () => {
-    // Implement your logic here
-    router.push('/dashboard');
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    dispatch(initialUser(session));
+    router.push('/details');
   };
 
   return (
@@ -22,6 +31,20 @@ export default function LoginPage() {
     >
       <h1 className="text-center text-3xl font-bold">Welcome Back!</h1>
       <LoginForm onSuccess={handleAuthSuccess} />
+
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-background px-2 text-muted-foreground">
+            Or continue with
+          </span>
+        </div>
+      </div>
+
+      <OAuthProviders />
+
       <div className="text-center text-sm text-muted-foreground">
         Don&apos;t have an account?{' '}
         <Link href="/auth/register" className="text-primary hover:underline">

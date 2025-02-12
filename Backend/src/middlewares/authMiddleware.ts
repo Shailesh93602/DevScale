@@ -1,39 +1,79 @@
-import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
-import { JWT_SECRET } from '../config';
-import prisma from '../prisma';
+import { createClient } from '@supabase/supabase-js';
+import { createAppError } from '../utils/errorHandler';
+import logger from '../utils/logger';
 
-export const authMiddleware = async (
+const supabase = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_ANON_KEY!
+);
+
+export const validateSupabaseJWT = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const authHeader = req.headers.authorization;
+  const token = req.headers.authorization?.split(' ')[1];
 
-  if (!authHeader?.startsWith('Bearer ')) {
-    res.status(401).json({ success: false, message: 'No token provided' });
-    return;
+  if (!token) {
+    return next(createAppError('Authorization token required', 401));
   }
 
-  const token = authHeader.split(' ')[1];
-
   try {
-    const { email } = jwt.verify(token, JWT_SECRET) as JwtPayload;
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser(token);
 
-    const user = await prisma.user.findFirst({ where: { email } });
-
-    if (!user) {
-      res.status(403).json({ success: false, message: 'User not found' });
-      return;
+    if (error || !user) {
+      return next(createAppError('Invalid authentication token', 401));
     }
 
     req.user = user;
-
     next();
   } catch (error) {
-    console.error('Token verification error:', error);
-    res
-      .status(401)
-      .json({ success: false, message: 'Invalid or expired token' });
+    logger.error('Authentication failed', error);
+    next(createAppError('Authentication failed', 401));
+  }
+};
+
+export const authorizeRoles = (...roles: string[]) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    if (!req.user) {
+      throw createAppError('Unauthorized', 401);
+    }
+
+    const userRole = req.user.user_metadata?.role || 'user';
+    if (!roles.includes(userRole)) {
+      throw createAppError('Insufficient permissions', 403);
+    }
+
+    next();
+  };
+};
+
+export const authenticateUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const token = req.headers.authorization?.split(' ')[1];
+
+  if (!token) {
+    return next(createAppError('Authorization token required', 401));
+  }
+
+  try {
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser(token);
+
+    if (error || !user) {
+      return next(createAppError('Invalid authentication token', 401));
+    }
+  } catch (error) {
+    logger.error('Authentication failed', error);
+    next(createAppError('Authentication failed', 401));
   }
 };

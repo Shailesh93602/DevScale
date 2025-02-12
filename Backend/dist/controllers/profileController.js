@@ -3,85 +3,40 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateProfile = exports.getProfile = exports.insertProfile = void 0;
-const prisma_1 = __importDefault(require("../prisma"));
-const index_1 = require("../utils/index");
-exports.insertProfile = (0, index_1.catchAsync)(async (req, res) => {
-    const { fullName, dob, gender, mobile, whatsapp, address, university, college, branch, semester, } = req.body;
-    if (!fullName ||
-        !dob ||
-        !gender ||
-        !mobile ||
-        !address ||
-        !university ||
-        !college ||
-        !branch ||
-        !semester) {
-        return res.status(400).json({ success: false, message: 'Invalid payload' });
+exports.ProfileController = void 0;
+const userService_1 = require("../services/userService");
+const errorHandler_1 = require("../middlewares/errorHandler");
+const logger_1 = __importDefault(require("../utils/logger"));
+class ProfileController {
+    static async updateProfile(req, res) {
+        try {
+            const userId = req.user?.id;
+            const avatarFile = req.file;
+            const user = await userService_1.UserService.updateProfile(userId, req.body, avatarFile);
+            res.status(200).json({
+                status: 'success',
+                data: { user },
+            });
+        }
+        catch (error) {
+            logger_1.default.error('Profile update error:', error);
+            throw new errorHandler_1.AppError(error.message, 400);
+        }
     }
-    const userId = req.user.id;
-    const profileData = {
-        userId,
-        fullName,
-        dob: new Date(dob),
-        gender,
-        mobile,
-        whatsapp: whatsapp || mobile,
-        address,
-        university,
-        college,
-        branch,
-        semester,
-    };
-    const profile = await prisma_1.default.userInfo.create({ data: profileData });
-    res.status(201).json({
-        success: true,
-        message: 'User inserted successfully!',
-        profile,
-    });
-});
-exports.getProfile = (0, index_1.catchAsync)(async (req, res) => {
-    const userId = req.user.id;
-    const profile = await prisma_1.default.userInfo.findUnique({
-        where: { userId },
-        include: { user: true },
-    });
-    if (!profile) {
-        return res.status(404).json({ success: false, message: 'User not found' });
+    static async getProfile(req, res) {
+        try {
+            const userId = req.user?.id;
+            const user = await userService_1.UserService.getProfile(userId);
+            res.status(200).json({
+                status: 'success',
+                data: { user },
+            });
+        }
+        catch (error) {
+            logger_1.default.error('Profile fetch error:', error);
+            throw new errorHandler_1.AppError(error.message, 400);
+        }
     }
-    res.status(200).json({
-        success: true,
-        userInfo: {
-            ...profile,
-            // dob: profile.dob.toISOString().slice(0, 10),
-            // achievements: profile.achievements?.split(','),
-            email: profile.user.email,
-        },
-    });
-});
-exports.updateProfile = (0, index_1.catchAsync)(async (req, res) => {
-    const userId = req.user.id;
-    const { fullName, dob, gender, mobile, whatsapp, address, university, college, branch, semester, bio, achievements: achievementsArray, } = req.body;
-    const achievements = achievementsArray?.join(',');
-    const profileData = {
-        fullName,
-        dob: new Date(dob),
-        gender,
-        mobile,
-        whatsapp,
-        address,
-        university,
-        college,
-        branch,
-        semester,
-        bio,
-        achievements,
-        profilePicture: req.fileUrl,
-    };
-    const profile = await prisma_1.default.userInfo.update({
-        where: { userId },
-        data: profileData,
-    });
-    res.status(200).json({ success: true, userInfo: profile });
-});
+}
+exports.ProfileController = ProfileController;
 //# sourceMappingURL=profileController.js.map

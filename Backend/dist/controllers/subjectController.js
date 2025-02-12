@@ -47,7 +47,7 @@ exports.getTopicsInSubject = (0, index_1.catchAsync)(async (req, res) => {
                             content: true,
                         },
                         where: {
-                            status: 'approved',
+                            status: 'APPROVED',
                         },
                         orderBy: {
                             created_at: 'asc',

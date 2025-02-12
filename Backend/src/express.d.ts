@@ -1,14 +1,10 @@
 import 'express';
 import { File } from 'express';
-
+import { Prisma } from '@prisma/client';
 declare global {
   namespace Express {
     interface Request {
-      user: {
-        id: string;
-        name?: string;
-        email: string;
-      };
+      user: Prisma.User;
       pagination: {
         page: number;
         limit: number;
@@ -19,6 +15,7 @@ declare global {
       };
       fileUrl?: string;
       file: File;
+      apiVersion?: string;
     }
   }
 }
