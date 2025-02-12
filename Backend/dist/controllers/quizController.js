@@ -7,11 +7,14 @@ exports.getUserProgress = exports.submitQuiz = exports.createQuiz = void 0;
 const prisma_1 = __importDefault(require("../prisma"));
 const index_1 = require("../utils/index");
 exports.createQuiz = (0, index_1.catchAsync)(async (req, res) => {
-    const { topicId, passingScore, questions } = req.body;
+    const { topicId, passingScore, questions, type } = req.body;
     const quiz = await prisma_1.default.quiz.create({
         data: {
             topicId,
             passingScore,
+            title: 'Quiz',
+            description: 'Quiz',
+            type,
         },
     });
     if (questions && questions.length > 0) {
@@ -59,6 +62,11 @@ exports.submitQuiz = (0, index_1.catchAsync)(async (req, res) => {
             userId,
             quizId,
             score,
+            timeSpent: 0,
+            isPassed: completed,
+            results: score,
+            user: { connect: { id: userId } },
+            quiz: { connect: { id: quizId } },
         },
     });
     const submissionAnswers = answers.map((answer) => ({

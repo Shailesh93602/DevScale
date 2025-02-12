@@ -33,7 +33,7 @@ exports.getArticles = (0, utils_1.catchAsync)(async (req, res) => {
 });
 exports.updateArticleStatus = (0, utils_1.catchAsync)(async (req, res) => {
     const { id, status } = req.query;
-    if (!['approved', 'rejected'].includes(status)) {
+    if (!['APPROVED', 'REJECTED'].includes(status)) {
         return res.status(400).json({ error: 'Invalid status value' });
     }
     const article = await prisma.article.findUnique({

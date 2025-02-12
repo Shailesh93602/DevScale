@@ -4,18 +4,52 @@ import {
   getProfile,
   getUserProgress,
   getUserRoadmap,
-  insertProfile,
   insertUserRoadmap,
-  updateProfile,
-} from '../controllers/userControllers.js';
-import { userInsertionValidator } from '../validators/userValidators.js';
-import uploadToCloudinary from '../middlewares/uploadMiddleware.js';
+  upsertUser,
+} from '../controllers/userControllers';
+import { userInsertionValidator } from '../validators/userValidators';
+import { authenticateUser } from '../middlewares/authMiddleware';
 
 const router = express.Router();
 
-router.get('/', getProfile);
-router.post('/register', userInsertionValidator, insertProfile);
-router.put('/update', uploadToCloudinary, updateProfile);
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     tags:
+ *       - Users
+ *     summary: Get all users
+ *     description: Retrieve a list of all users
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Number of items per page
+ *     responses:
+ *       200:
+ *         description: A list of users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 users:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Unauthorized
+ */
+router.get('/', authenticateUser, getProfile);
+router.put('/', userInsertionValidator, upsertUser);
 router.get('/progress', getUserProgress);
 router.get('/roadmap', getUserRoadmap);
 router.post('/roadmap', insertUserRoadmap);

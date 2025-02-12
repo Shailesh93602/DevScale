@@ -6,7 +6,7 @@ import {
   getChat,
   getChats,
 } from '../controllers/chatControllers.js';
-import { authMiddleware } from '../middlewares/authMiddleware.js';
+import { authenticateUser } from '../middlewares/authMiddleware';
 import {
   validateChatCreation,
   validateMessageCreation,
@@ -14,15 +14,15 @@ import {
 
 const router = express.Router();
 
-router.get('/', authMiddleware, getChats);
-router.get('/:id', authMiddleware, getChat);
-router.post('/create', authMiddleware, validateChatCreation, createChat);
+router.get('/', authenticateUser, getChats);
+router.get('/:id', authenticateUser, getChat);
+router.post('/create', authenticateUser, validateChatCreation, createChat);
 router.post(
   '/message/:id',
-  authMiddleware,
+  authenticateUser,
   validateMessageCreation,
   createMessage
 );
-router.delete('/delete/:id', authMiddleware, deleteChat);
+router.delete('/delete/:id', authenticateUser, deleteChat);
 
 export default router;

@@ -1,12 +1,19 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const challengeController_js_1 = require("../controllers/challengeController.js");
-const router = express_1.default.Router();
-router.get('/', challengeController_js_1.getChallenges);
-router.get('/:id', challengeController_js_1.getChallenge);
+const express_1 = require("express");
+const challengeController_1 = require("../controllers/challengeController");
+const authMiddleware_1 = require("../middlewares/authMiddleware");
+const validateRequest_1 = require("../middlewares/validateRequest");
+const challengeValidation_1 = require("../validations/challengeValidation");
+const router = (0, express_1.Router)();
+router.use(authMiddleware_1.authenticateUser);
+// Public routes
+router.get('/', challengeController_1.ChallengeController.getAllChallenges);
+router.get('/leaderboard', challengeController_1.ChallengeController.getLeaderboard);
+router.get('/:id', challengeController_1.ChallengeController.getChallenge);
+// Protected routes
+router.post('/', (0, authMiddleware_1.authorizeRoles)('admin', 'instructor'), (0, validateRequest_1.validateRequest)(challengeValidation_1.createChallengeValidation), challengeController_1.ChallengeController.createChallenge);
+router.patch('/:id', (0, authMiddleware_1.authorizeRoles)('admin', 'instructor'), (0, validateRequest_1.validateRequest)(challengeValidation_1.createChallengeValidation), challengeController_1.ChallengeController.updateChallenge);
+router.post('/:challengeId/submit', (0, validateRequest_1.validateRequest)(challengeValidation_1.submitChallengeValidation), challengeController_1.ChallengeController.submitChallenge);
 exports.default = router;
 //# sourceMappingURL=challengeRoutes.js.map

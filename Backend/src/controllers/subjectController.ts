@@ -48,7 +48,7 @@ export const getTopicsInSubject = catchAsync(
                 content: true,
               },
               where: {
-                status: 'approved',
+                status: 'APPROVED',
               },
               orderBy: {
                 created_at: 'asc',

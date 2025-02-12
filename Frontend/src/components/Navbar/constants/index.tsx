@@ -4,11 +4,11 @@ import { GrAchievement, GrArticle } from 'react-icons/gr';
 
 export const publicNavItems = [
   {
-    path: '/u/login',
+    path: '/auth/login',
     label: 'Login',
   },
   {
-    path: '/u/register',
+    path: '/auth/register',
     label: 'Register',
   },
 ];

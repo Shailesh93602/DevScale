@@ -1,10 +1,12 @@
+'use client';
 import { useForm, type FieldValues } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { registerSchema } from '../../validations';
+import { registerSchema } from '@/lib/validations';
 import { supabase } from '@/lib/supabaseClient';
 import PasswordInput from '@/components/PasswordInput';
+import { toast } from 'react-toastify';
 
 interface RegisterFormProps {
   onSuccess: () => void;
@@ -28,13 +30,23 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
           data: {
             name: data.name,
           },
+          emailRedirectTo: `${window.location.origin}/auth/verify-email`,
         },
       });
-      if (error) throw error;
+
+      if (error) {
+        if (error.message.includes('already registered')) {
+          toast.error('User already exists with this email');
+          return;
+        }
+        throw error;
+      }
+
+      toast.success('Confirmation email sent! Please check your inbox');
       onSuccess();
     } catch (error) {
       console.error('Error registering:', error);
-      // Handle error (show toast, etc.)
+      toast.error('Registration failed. Please try again.');
     }
   };
 

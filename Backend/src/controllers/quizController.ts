@@ -3,12 +3,15 @@ import prisma from '../prisma';
 import { catchAsync } from '../utils/index';
 
 export const createQuiz = catchAsync(async (req: Request, res: Response) => {
-  const { topicId, passingScore, questions } = req.body;
+  const { topicId, passingScore, questions, type } = req.body;
 
   const quiz = await prisma.quiz.create({
     data: {
       topicId,
       passingScore,
+      title: 'Quiz',
+      description: 'Quiz',
+      type,
     },
   });
 
@@ -69,6 +72,11 @@ export const submitQuiz = catchAsync(async (req: Request, res: Response) => {
       userId,
       quizId,
       score,
+      timeSpent: 0,
+      isPassed: completed,
+      results: score,
+      user: { connect: { id: userId } },
+      quiz: { connect: { id: quizId } },
     },
   });
 

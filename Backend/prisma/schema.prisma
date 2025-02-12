@@ -14,19 +14,53 @@ datasource db {
 }
 
 model Article {
-  id              String    @id @default(uuid())
-  title           String    @db.VarChar(255)
-  content         String    @db.Text
+  id              String           @id @default(uuid())
+  title           String           @db.VarChar(255)
+  content         String           @db.Text
   authorId        String
-  status          Status    @default(pending)
-  moderationNotes String?   @db.Text
+  status          Status           @default(DRAFT)
+  moderationNotes String?          @db.Text
   topicId         String
-  resourceId      String? // Add this line
-  created_at      DateTime  @default(now())
-  updated_at      DateTime  @updatedAt
-  author          User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  topic           Topic     @relation(fields: [topicId], references: [id], onDelete: Cascade)
-  resource        Resource? @relation(fields: [resourceId], references: [id]) // Add this line
+  resourceId      String?
+  created_at      DateTime         @default(now())
+  updated_at      DateTime         @updatedAt
+  author          User             @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  topic           Topic            @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  resource        Resource?        @relation(fields: [resourceId], references: [id])
+  versions        Version[]
+  logs            SubmissionLog[]
+  likes           Like[]
+  comments        Comment[]
+  articleVersion  ArticleVersion[] @relation("ArticleVersions")
+  moderations     ContentModeration[]
+
+  @@index([authorId])
+  @@index([topicId])
+}
+
+model ArticleVersion {
+  id        String   @id @default(uuid())
+  articleId String
+  title     String
+  content   String   @db.Text
+  version   Int
+  createdAt DateTime @default(now())
+  article   Article  @relation("ArticleVersions", fields: [articleId], references: [id])
+
+  @@index([articleId])
+}
+
+model SubmissionLog {
+  id         String   @id @default(uuid())
+  authorId   String
+  articleId  String
+  type       String
+  created_at DateTime @default(now())
+  author     User     @relation(fields: [authorId], references: [id])
+  article    Article  @relation(fields: [articleId], references: [id])
+
+  @@index([authorId])
+  @@index([articleId])
 }
 
 model Battle {
@@ -46,18 +80,33 @@ model Battle {
 }
 
 model Challenge {
-  id                String     @id @default(uuid())
+  id                String                @id @default(uuid())
   title             String
-  description       String     @db.Text
+  description       String                @db.Text
+  points            Int
   difficulty        Difficulty
-  inputFormat       String     @db.Text
-  outputFormat      String     @db.Text
-  exampleInput      String     @db.Text
-  exampleOutput     String     @db.Text
-  constraints       String     @db.Text
-  functionSignature String     @db.Text
-  created_at        DateTime   @default(now())
-  updated_at        DateTime   @updatedAt
+  category          ChallengeCategory
+  inputFormat       String                @db.Text
+  outputFormat      String                @db.Text
+  exampleInput      String                @db.Text
+  exampleOutput     String                @db.Text
+  constraints       String                @db.Text
+  functionSignature String                @db.Text
+  timeLimit         Int? // in milliseconds
+  memoryLimit       Int? // in MB
+  tags              String[]
+  testCases         TestCase[]
+  solutions         Json? // Sample solutions in different languages
+  created_at        DateTime              @default(now())
+  updated_at        DateTime              @updatedAt
+  submissions       ChallengeSubmission[]
+  topicId           String // Add this field
+  topic             Topic                 @relation(fields: [topicId], references: [id]) // Add this relation
+  status            ChallengeStatus       @default(PENDING)
+
+  // @@check(points >= 0) // Ensure points are non-negative
+  @@index([difficulty, points]) // Index for difficulty-based queries
+  @@index([topicId]) // Add this index
 }
 
 model Chat {
@@ -72,28 +121,30 @@ model Chat {
 }
 
 model Course {
-  id          String       @id @default(uuid())
-  title       String
-  description String?      @db.Text
-  instructor  String?
-  duration    Int?
-  level       CourseLevel?
-  startDate   DateTime?
-  endDate     DateTime?
-  created_at  DateTime     @default(now())
-  updated_at  DateTime     @updatedAt
+  id           String        @id @default(uuid())
+  title        String
+  description  String?       @db.Text
+  instructor   String?
+  duration     Int?
+  level        CourseLevel?
+  startDate    DateTime?
+  endDate      DateTime?
+  created_at   DateTime      @default(now())
+  updated_at   DateTime      @updatedAt
+  certificates Certificate[]
 }
 
 model Forum {
-  id          String   @id @default(uuid())
+  id          String      @id @default(uuid())
   title       String
-  description String?  @db.Text
+  description String?     @db.Text
   createdBy   String
-  isActive    Boolean  @default(true)
+  isActive    Boolean     @default(true)
   tags        Json?
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
-  user        User     @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  created_at  DateTime    @default(now())
+  updated_at  DateTime    @updatedAt
+  user        User        @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  posts       ForumPost[]
 }
 
 model InterviewQuestion {
@@ -135,14 +186,43 @@ model MainConcept {
 }
 
 model Quiz {
-  id           String           @id @default(uuid())
-  passingScore Int
-  topicId      String
-  created_at   DateTime         @default(now())
-  updated_at   DateTime         @updatedAt
-  topic        Topic            @relation(fields: [topicId], references: [id])
-  questions    QuizQuestion[]
-  submissions  QuizSubmission[]
+  id            String           @id @default(uuid())
+  title         String
+  description   String
+  type          QuizType
+  timeLimit     Int? // in minutes
+  passingScore  Int
+  questions     Question[]
+  submissions   QuizSubmission[]
+  quizQuestions QuizQuestion[]
+  topicId       String?
+  subjectId     String?
+  conceptId     String?
+  topic         Topic?           @relation(fields: [topicId], references: [id])
+  subject       Subject?         @relation(fields: [subjectId], references: [id])
+  concept       Concept?         @relation(fields: [conceptId], references: [id])
+  created_at    DateTime         @default(now())
+  updated_at    DateTime         @updatedAt
+
+  @@index([topicId])
+  @@index([subjectId])
+  @@index([conceptId])
+}
+
+model Question {
+  id            String   @id @default(uuid())
+  quizId        String
+  question      String
+  type          String // multiple_choice or coding
+  correctAnswer String
+  points        Int
+  testCases     Json? // For coding questions
+  quiz          Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  options       Option[]
+
+  @@index([quizId])
 }
 
 model QuizAnswer {
@@ -166,29 +246,21 @@ model QuizOption {
   quizQuestion   QuizQuestion @relation(fields: [quizQuestionId], references: [id])
 }
 
-model QuizQuestion {
-  id            String                 @id @default(uuid())
-  question      String                 @db.Text
-  correctAnswer String?                @db.Text
-  quizId        String
-  created_at    DateTime               @default(now())
-  updated_at    DateTime               @updatedAt
-  quiz          Quiz                   @relation(fields: [quizId], references: [id])
-  options       QuizOption[]
-  answers       QuizAnswer[]
-  submissions   QuizSubmissionAnswer[]
-}
-
 model QuizSubmission {
   id         String                 @id @default(uuid())
-  score      Int
   userId     String
   quizId     String
-  created_at DateTime               @default(now())
-  updated_at DateTime               @updatedAt
+  score      Int
+  timeSpent  Int // in seconds
+  isPassed   Boolean
+  results    Json // Array of question results
   user       User                   @relation(fields: [userId], references: [id])
   quiz       Quiz                   @relation(fields: [quizId], references: [id])
+  created_at DateTime               @default(now())
   answers    QuizSubmissionAnswer[]
+
+  @@index([userId])
+  @@index([quizId])
 }
 
 model QuizSubmissionAnswer {
@@ -203,103 +275,246 @@ model QuizSubmissionAnswer {
   question     QuizQuestion   @relation(fields: [questionId], references: [id])
 }
 
+model QuizQuestion {
+  id          String                 @id @default(uuid())
+  quizId      String
+  question    String
+  type        String
+  answers     QuizAnswer[]
+  options     QuizOption[]
+  submissions QuizSubmissionAnswer[]
+  quiz        Quiz                   @relation(fields: [quizId], references: [id])
+  created_at  DateTime               @default(now())
+  updated_at  DateTime               @updatedAt
+
+  @@index([quizId])
+}
+
 model Resource {
   id                 String              @id @default(uuid())
-  subject            String
-  topic              String
-  subtopic           String?
-  content            String              @db.Text
+  title              String
+  description        String              @db.Text
+  type               String
+  url                String
+  category           String
+  tags               String[]
+  userId             String
+  content            String?             @db.Text
   created_at         DateTime            @default(now())
   updated_at         DateTime            @updatedAt
+  user               User                @relation(fields: [userId], references: [id])
   articles           Article[]
   interviewQuestions InterviewQuestion[]
+  downloadCount      Int                 @default(0)
+  rating             Decimal?            @db.Decimal(3, 2)
+  difficulty         Difficulty
+  language           String
+  versions           ResourceVersion[]
+  moderations        ContentModeration[]
+
+  @@index([userId])
+  @@index([category])
+  @@index([type])
 }
 
 model Roadmap {
-  id              String           @id @default(uuid())
-  title           String
-  description     String           @db.Text
-  thumbnail       String?
-  userId          String
-  created_at      DateTime         @default(now())
-  updated_at      DateTime         @updatedAt
-  user            User             @relation(fields: [userId], references: [id])
-  mainConcepts    MainConcept[]
-  userRoadmaps    UserRoadmap[]
-  roadmapSubjects RoadMapSubject[] // Add this line
+  id             String        @id @default(uuid())
+  title          String
+  description    String?
+  topics         Topic[]
+  userId         String
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isPublic       Boolean       @default(false)
+  progress       Progress[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  deletedAt      DateTime? // Soft delete
+  mainConcepts   MainConcept[]
+  concepts       Concept[]
+  comments       Comment[]
+  likes          Like[]
+  userRoadmaps   UserRoadmap[]
+  difficulty     Difficulty?
+  estimatedHours Int?
+  popularity     Int           @default(0)
+  version        String        @default("1.0")
+
+  @@index([userId, isPublic]) // Index for user's public roadmaps
+  @@index([deletedAt]) // Index for soft delete queries
+  @@index([title]) // Index for search queries
 }
 
-model RoadMapSubject {
-  id         String   @id @default(uuid())
-  roadmapId  String
-  subjectId  String
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  roadmap    Roadmap  @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
-  subject    Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+model Concept {
+  id          String    @id @default(uuid())
+  title       String
+  description String
+  order       Int
+  roadmapId   String
+  roadmap     Roadmap   @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+  subjects    Subject[]
+  quizzes     Quiz[]
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
 
-  @@unique([roadmapId, subjectId])
+  @@index([roadmapId])
 }
 
 model Subject {
-  id            String           @id @default(uuid())
-  name          String
-  description   String           @db.Text
-  mainConceptId String
-  tags          String
-  created_at    DateTime         @default(now())
-  updated_at    DateTime         @updatedAt
-  mainConcept   MainConcept      @relation(fields: [mainConceptId], references: [id])
-  topics        Topic[]
-  roadmaps      RoadMapSubject[]
+  id           String         @id @default(uuid())
+  title        String
+  description  String
+  order        Int
+  conceptId    String
+  concept      Concept        @relation(fields: [conceptId], references: [id], onDelete: Cascade)
+  topics       Topic[]
+  mainConcept  MainConcept[]
+  created_at   DateTime       @default(now())
+  updated_at   DateTime       @updatedAt
+  quizzes      Quiz[]
+  userProgress UserProgress[]
+  virtualLabs  VirtualLab[]
+  placementTests PlacementTest[]
+
+  @@index([conceptId])
 }
 
 model Topic {
-  id           String         @id @default(uuid())
-  title        String         @db.VarChar(255)
-  description  String?        @db.Text
-  content      String?        @db.Text
-  subjectId    String
-  created_at   DateTime       @default(now())
-  updated_at   DateTime       @updatedAt
-  subject      Subject        @relation(fields: [subjectId], references: [id])
-  articles     Article[]
-  battles      Battle[]
-  quizzes      Quiz[]
-  userProgress UserProgress[]
+  id            String         @id @default(uuid())
+  title         String
+  description   String
+  order         Int
+  content       String?
+  resources     String[]
+  prerequisites String[]
+  subjectId     String?
+  subject       Subject?        @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  articles      Article[]
+  quizzes       Quiz[]
+  challenges    Challenge[]
+  userProgress  UserProgress[]
+  battles       Battle[]
+  userRoadmaps  UserRoadmap[]
+  studyGroups   StudyGroup[]
+  dailyTopics   DailyTopic[]
+  progress      Progress[]
+  created_at    DateTime       @default(now())
+  updated_at    DateTime       @updatedAt
+  roadmaps      Roadmap[]
+  moderations   ContentModeration[]
+
+  @@index([subjectId])
 }
 
 model User {
-  id              String           @id @default(uuid())
-  username        String
-  address         String?          @db.Text
-  email           String           @unique
-  password        String
-  created_at      DateTime         @default(now())
-  updated_at      DateTime         @updatedAt
-  articles        Article[]
-  chatsAsUser1    Chat[]           @relation("ChatUser1")
-  chatsAsUser2    Chat[]           @relation("ChatUser2")
-  forums          Forum[]
-  roadmaps        Roadmap[]
-  userInfo        UserInfo?
-  userPoints      UserPoints?
-  userProgress    UserProgress[]
-  userRoadmaps    UserRoadmap[]
-  quizSubmissions QuizSubmission[]
-  battles         Battle[]
-}
+  id                        String                     @id @default(uuid())
+  supabase_id               String                     @unique
+  email                     String                     @unique
+  username                  String                     @unique
+  full_name                 String?
+  avatar_url                String?
+  bio                       String?
+  address                   String?
+  github_url                String?
+  linkedin_url              String?
+  twitter_url               String?
+  website_url               String?
+  specialization            String?
+  college                   String?
+  graduation_year           Int?
+  skills                    String[]
+  experience_level          ExperienceLevel
+  created_at                DateTime                   @default(now())
+  updated_at                DateTime                   @updatedAt
+  status                    String?                    @default("active")
+  activityLogs              ActivityLog[]
+  deletedAt                 DateTime? // Add this field for soft delete
+  learningPreferences       UserLearningPreference?    @relation("UserLearningPreferences")
+  learningRecommendations   LearningRecommendation[]
+  dailyChallengeSubmissions DailyChallengeSubmission[]
+  interviewPreps            InterviewPrep[]
+  skillAssessments          SkillAssessment[]
+  inAppPurchases            InAppPurchase[]
+  settings                  UserSettings?
+  learningAnalytics         UserLearningAnalytics? // Optional 1:1 relationship
+  note                      String?
+  sessions                  UserSession[]
+  leaderboardEntries        LeaderboardEntry[]
+  auditLogs                 AuditLog[]
+  is_active                 Boolean                        @default(true)
 
-model UserInfo {
-  id             String   @id @default(uuid())
-  userId         String   @unique
-  fullName       String
-  bio            String?  @db.Text
-  note           String?  @db.Text
-  profilePicture String?
-  created_at     DateTime @default(now())
-  updated_at     DateTime @updatedAt
-  user           User     @relation(fields: [userId], references: [id])
+  // Relations
+  articles                      Article[]
+  projects                      Project[]
+  teamProjects                  TeamProjectMember[]
+  chatsAsUser1                  Chat[]                         @relation("ChatUser1")
+  chatsAsUser2                  Chat[]                         @relation("ChatUser2")
+  forums                        Forum[]
+  forumPosts                    ForumPost[]
+  forumComments                 ForumComment[]
+  roadmaps                      Roadmap[]
+  userPoints                    UserPoints?
+  userProgress                  UserProgress[]
+  userRoadmaps                  UserRoadmap[]
+  quizSubmissions               QuizSubmission[]
+  challenges                    ChallengeSubmission[]
+  certificates                  Certificate[]
+  notifications                 Notification[]
+  studyGroups                   StudyGroupMember[]
+  battles                       Battle[]
+  mentorships                   Mentorship[]                   @relation("Mentor")
+  mentees                       Mentorship[]                   @relation("Mentee")
+  roleId                        String?
+  role                          Role?                          @relation(fields: [roleId], references: [id])
+  submissionLogs                SubmissionLog[]
+  comments                      Comment[]
+  likes                         Like[]
+  achievements                  Achievement[]
+  dailyTopicViews               DailyTopicView[]
+  dailyTopicCompletions         DailyTopicCompletion[]
+  contentReports                ContentReport[]
+  moderationLogs                ModerationLog[]
+  adminAuditLogs                AdminAuditLog[]
+  securityAuditLogs             SecurityAuditLog[]
+  changeHistory                 ChangeHistory[]
+  accessLogs                    AccessLog[]
+  supportTickets                SupportTicket[]                @relation("TicketCreator")
+  assignedTickets               SupportTicket[]                @relation("TicketAgent")
+  ticketResponses               TicketResponse[]
+  bugReports                    BugReport[]
+  assignedBugs                  BugReport[]                    @relation("BugAssignee")
+  featureRequests               FeatureRequest[]
+  featureVotes                  FeatureRequestVote[]
+  apiKeys                       ApiKey[]
+  ApprovalHistory               ApprovalHistory[]
+  resources                     Resource[]
+  githubStats                   Json?
+  leetcodeStats                 Json?
+  timezone                      String?
+  preferredLanguage             String?
+  learningStreak                Int                            @default(0)
+  accessibilityPrefs            Json? // Store custom accessibility preferences
+  isVerified                    Boolean                        @default(false)
+  followers                     Follow[]                       @relation("FollowerRelation")
+  following                     Follow[]                       @relation("FollowingRelation")
+  codingSandboxes               CodingSandbox[]
+  internshipApplications        InternshipApplication[]
+  eventRegistrations            EventRegistration[]
+  hardwareKitsSold              HardwareKit[]
+  authoredCodeReviews           CodeReview[]                   @relation("CodeAuthor")
+  reviewedCodeReviews           CodeReview[]                   @relation("CodeReviewer")
+  collaborations                ProjectCollaboration[]
+  curatedPlaylists              ContentPlaylist[]
+  subscriptions                 Subscription[]
+  iotDevices                    IoTDevice[]
+  labSessions                   LabSession[]
+  communityChallengeSubmissions CommunityChallengeSubmission[]
+  UserActivityLog               UserActivityLog[]
+  contents                      Content[]
+  moderations                   ContentModeration[]
+
+  @@index([roleId])
+  @@index([email, username]) // Composite index for common queries
+  @@index([deletedAt]) // Index for soft delete queries
 }
 
 model UserPoints {
@@ -312,16 +527,25 @@ model UserPoints {
 }
 
 model UserProgress {
-  id          String   @id @default(uuid())
-  isCompleted Boolean  @default(false)
-  userId      String
-  topicId     String
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
-  user        User     @relation(fields: [userId], references: [id])
-  topic       Topic    @relation(fields: [topicId], references: [id])
+  id                 String    @id @default(uuid())
+  userId             String
+  user               User      @relation(fields: [userId], references: [id])
+  topicId            String?
+  topic              Topic?     @relation(fields: [topicId], references: [id])
+  isCompleted        Boolean   @default(false)
+  completedAt        DateTime?
+  created_at         DateTime  @default(now())
+  updated_at         DateTime  @updatedAt
+  timeSpent          Int? // Track time spent on each topic
+  subjectId          String?
+  subject            Subject?   @relation(fields: [subjectId], references: [id])
+  confidenceLevel    Int?      @default(dbgenerated("NULL")) @db.SmallInt
+  lastReviewed       DateTime?
+  progressPercentage Int?      @default(dbgenerated("NULL")) @db.SmallInt
 
   @@unique([userId, topicId])
+  @@index([userId])
+  @@index([topicId])
 }
 
 model UserRoadmap {
@@ -329,27 +553,1115 @@ model UserRoadmap {
   isCustom   Boolean  @default(false)
   userId     String
   roadmapId  String
+  topicId    String // Add this field
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   user       User     @relation(fields: [userId], references: [id])
   roadmap    Roadmap  @relation(fields: [roadmapId], references: [id])
+  topic      Topic    @relation(fields: [topicId], references: [id]) // Add this relation
 
   @@unique([userId, roadmapId])
+  @@index([topicId]) // Add this index
+}
+
+model Project {
+  id             String                 @id @default(uuid())
+  title          String
+  description    String                 @db.Text
+  github_url     String?
+  demo_url       String?
+  tech_stack     String[]
+  image_url      String?
+  contributors   String[] // Array of contributor names
+  project_status ProjectStatus          @default(ongoing)
+  visibility     Visibility             @default(public)
+  userId         String
+  created_at     DateTime               @default(now())
+  updated_at     DateTime               @updatedAt
+  user           User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  collaborations ProjectCollaboration[]
+}
+
+model TeamProject {
+  id             String              @id @default(uuid())
+  title          String
+  description    String              @db.Text
+  github_url     String?
+  demo_url       String?
+  tech_stack     String[]
+  image_url      String?
+  project_status ProjectStatus       @default(ongoing)
+  visibility     Visibility          @default(public)
+  created_at     DateTime            @default(now())
+  updated_at     DateTime            @updatedAt
+  members        TeamProjectMember[]
+}
+
+model TeamProjectMember {
+  id            String      @id @default(uuid())
+  userId        String
+  teamProjectId String
+  role          ProjectRole @default(member)
+  created_at    DateTime    @default(now())
+  updated_at    DateTime    @updatedAt
+  user          User        @relation(fields: [userId], references: [id])
+  teamProject   TeamProject @relation(fields: [teamProjectId], references: [id])
+
+  @@unique([userId, teamProjectId])
+}
+
+model ForumPost {
+  id         String         @id @default(uuid())
+  title      String
+  content    String         @db.Text
+  userId     String
+  forumId    String
+  tags       String[]
+  upvotes    Int            @default(0)
+  created_at DateTime       @default(now())
+  updated_at DateTime       @updatedAt
+  user       User           @relation(fields: [userId], references: [id])
+  forum      Forum          @relation(fields: [forumId], references: [id])
+  comments   ForumComment[]
+}
+
+model ForumComment {
+  id         String         @id @default(uuid())
+  content    String         @db.Text
+  userId     String
+  postId     String
+  parentId   String? // For nested comments
+  upvotes    Int            @default(0)
+  created_at DateTime       @default(now())
+  updated_at DateTime       @updatedAt
+  user       User           @relation(fields: [userId], references: [id])
+  post       ForumPost      @relation(fields: [postId], references: [id])
+  parent     ForumComment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies    ForumComment[] @relation("CommentReplies")
+}
+
+model ChallengeSubmission {
+  id             String           @id @default(uuid())
+  challengeId    String
+  userId         String
+  code           String           @db.Text
+  language       String
+  status         SubmissionStatus
+  runtime_ms     Int?
+  memory_used_kb Int?
+  score          Int
+  feedback       String?          @db.Text
+  created_at     DateTime         @default(now())
+  updated_at     DateTime         @updatedAt
+  challenge      Challenge        @relation(fields: [challengeId], references: [id])
+  user           User             @relation(fields: [userId], references: [id])
+}
+
+model Certificate {
+  id             String    @id @default(uuid())
+  userId         String
+  courseId       String?
+  title          String
+  description    String    @db.Text
+  issueDate      DateTime  @default(now())
+  expiryDate     DateTime?
+  certificateUrl String
+  created_at     DateTime  @default(now())
+  updated_at     DateTime  @updatedAt
+  user           User      @relation(fields: [userId], references: [id])
+  course         Course?   @relation(fields: [courseId], references: [id])
+}
+
+model Notification {
+  id         String           @id @default(uuid())
+  userId     String
+  title      String
+  message    String           @db.Text
+  type       NotificationType
+  isRead     Boolean          @default(false)
+  link       String? // Optional link to redirect user
+  created_at DateTime         @default(now())
+  updated_at DateTime         @updatedAt
+  user       User             @relation(fields: [userId], references: [id])
+}
+
+model Mentorship {
+  id          String           @id @default(uuid())
+  mentorId    String
+  menteeId    String
+  status      MentorshipStatus @default(pending)
+  topics      String[]
+  description String?          @db.Text
+  created_at  DateTime         @default(now())
+  updated_at  DateTime         @updatedAt
+  mentor      User             @relation("Mentor", fields: [mentorId], references: [id])
+  mentee      User             @relation("Mentee", fields: [menteeId], references: [id])
+  sessions    MentorshipSession[]
+  @@unique([mentorId, menteeId])
+}
+
+model StudyGroup {
+  id              String               @id @default(uuid())
+  name            String
+  description     String               @db.Text
+  topicId         String
+  maxMembers      Int                  @default(5)
+  isPrivate       Boolean              @default(false)
+  created_at      DateTime             @default(now())
+  updated_at      DateTime             @updatedAt
+  topic           Topic                @relation(fields: [topicId], references: [id])
+  members         StudyGroupMember[]
+  weeklyGoal      String?
+  meetingSchedule String?
+  sharedResources StudyGroupResource[]
+}
+
+model StudyGroupResource {
+  id          String   @id @default(uuid())
+  groupId     String
+  title       String
+  url         String
+  description String   @db.Text
+  created_at  DateTime @default(now())
+
+  group StudyGroup @relation(fields: [groupId], references: [id])
+}
+
+model StudyGroupMember {
+  id           String     @id @default(uuid())
+  userId       String
+  studyGroupId String
+  role         GroupRole  @default(member)
+  created_at   DateTime   @default(now())
+  updated_at   DateTime   @updatedAt
+  user         User       @relation(fields: [userId], references: [id])
+  studyGroup   StudyGroup @relation(fields: [studyGroupId], references: [id])
+
+  @@unique([userId, studyGroupId])
+}
+
+model Comment {
+  id         String    @id @default(uuid())
+  content    String
+  userId     String
+  roadmapId  String?
+  articleId  String?
+  user       User      @relation(fields: [userId], references: [id])
+  roadmap    Roadmap?  @relation(fields: [roadmapId], references: [id])
+  article    Article?  @relation(fields: [articleId], references: [id])
+  parentId   String?
+  parent     Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies    Comment[] @relation("CommentReplies")
+  likes      Like[]
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([roadmapId])
+  @@index([articleId])
+  @@index([parentId])
+}
+
+model Like {
+  id        String   @id @default(uuid())
+  userId    String
+  articleId String?
+  roadmapId String?
+  commentId String?
+  user      User     @relation(fields: [userId], references: [id])
+  article   Article? @relation(fields: [articleId], references: [id])
+  roadmap   Roadmap? @relation(fields: [roadmapId], references: [id])
+  comment   Comment? @relation(fields: [commentId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, articleId])
+  @@unique([userId, roadmapId])
+  @@unique([userId, commentId])
+  @@index([articleId])
+  @@index([roadmapId])
+  @@index([commentId])
+}
+
+model Achievement {
+  id          String   @id @default(uuid())
+  userId      String
+  type        String
+  title       String
+  description String
+  criteria    Json
+  earnedAt    DateTime
+  created_at  DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model DailyTopic {
+  id          String                 @id @default(uuid())
+  topicId     String
+  date        DateTime
+  topic       Topic                  @relation(fields: [topicId], references: [id])
+  views       DailyTopicView[]
+  completions DailyTopicCompletion[]
+  created_at  DateTime               @default(now())
+
+  @@unique([date])
+  @@index([topicId])
+}
+
+model DailyTopicView {
+  id           String     @id @default(uuid())
+  userId       String
+  dailyTopicId String
+  viewCount    Int        @default(0)
+  user         User       @relation(fields: [userId], references: [id])
+  dailyTopic   DailyTopic @relation(fields: [dailyTopicId], references: [id])
+  created_at   DateTime   @default(now())
+  updated_at   DateTime   @updatedAt
+
+  @@unique([userId, dailyTopicId])
+  @@index([userId])
+  @@index([dailyTopicId])
+}
+
+model DailyTopicCompletion {
+  id           String     @id @default(uuid())
+  userId       String
+  dailyTopicId String
+  timeSpent    Int        @default(0)
+  user         User       @relation(fields: [userId], references: [id])
+  dailyTopic   DailyTopic @relation(fields: [dailyTopicId], references: [id])
+  created_at   DateTime   @default(now())
+
+  @@index([userId])
+  @@index([dailyTopicId])
+}
+
+model Role {
+  id          String       @id @default(uuid())
+  name        String       @unique
+  description String?
+  permissions Permission[]
+  users       User[]
+  parentId    String? // For role hierarchy
+  parent      Role?        @relation("RoleHierarchy", fields: [parentId], references: [id])
+  children    Role[]       @relation("RoleHierarchy")
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+
+  @@index([parentId])
+}
+
+model PermissionGroup {
+  id          String       @id @default(uuid())
+  name        String       @unique
+  description String?
+  permissions Permission[]
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+}
+
+model Permission {
+  id          String            @id @default(uuid())
+  name        String            @unique
+  description String?
+  resource    String // The resource this permission applies to
+  action      String // The action allowed (create, read, update, delete, etc.)
+  roles       Role[]
+  groups      PermissionGroup[]
+  conditions  Json? // For custom permission rules
+  created_at  DateTime          @default(now())
+  updated_at  DateTime          @updatedAt
+
+  @@unique([resource, action])
+}
+
+model UserActivityLog {
+  id        String   @id @default(uuid())
+  userId    String
+  action    String
+  details   Json?
+  timestamp DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([action])
+}
+
+model ContentReport {
+  id          String   @id @default(uuid())
+  contentId   String
+  contentType String
+  reporterId  String
+  reason      String
+  details     String?
+  status      String   @default("pending")
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  reporter    User     @relation(fields: [reporterId], references: [id])
+
+  @@index([contentId])
+  @@index([reporterId])
+}
+
+model ModerationLog {
+  id          String   @id @default(uuid())
+  contentId   String
+  contentType String
+  moderatorId String
+  action      String
+  notes       String?
+  created_at  DateTime @default(now())
+  moderator   User     @relation(fields: [moderatorId], references: [id])
+
+  @@index([contentId])
+  @@index([moderatorId])
+}
+
+model SystemConfig {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  value       Json
+  category    String
+  description String?
+  isActive    Boolean  @default(true)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  @@index([category])
+}
+
+model EmailTemplate {
+  id         String   @id @default(uuid())
+  name       String   @unique
+  subject    String
+  content    String   @db.Text
+  variables  String[] // Required template variables
+  isActive   Boolean  @default(true)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model FeatureFlag {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  isEnabled   Boolean  @default(false)
+  rules       Json? // Conditional rules for feature enabling
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+}
+
+model AdminAuditLog {
+  id         String   @id @default(uuid())
+  adminId    String
+  action     String
+  entity     String
+  entityId   String
+  details    Json?
+  ipAddress  String?
+  userAgent  String?
+  created_at DateTime @default(now())
+  admin      User     @relation(fields: [adminId], references: [id])
+
+  @@index([adminId])
+  @@index([action])
+  @@index([entity])
+}
+
+model SecurityAuditLog {
+  id          String   @id @default(uuid())
+  type        String // authentication, authorization, configuration, etc.
+  severity    String // info, warning, error, critical
+  description String
+  metadata    Json?
+  ipAddress   String?
+  userAgent   String?
+  userId      String?
+  created_at  DateTime @default(now())
+  user        User?    @relation(fields: [userId], references: [id])
+
+  @@index([type])
+  @@index([severity])
+  @@index([userId])
+}
+
+model ChangeHistory {
+  id         String   @id @default(uuid())
+  entity     String
+  entityId   String
+  action     String
+  changes    Json
+  userId     String
+  reason     String?
+  created_at DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@index([entity])
+  @@index([entityId])
+  @@index([userId])
+}
+
+model AccessLog {
+  id         String   @id @default(uuid())
+  userId     String?
+  route      String
+  method     String
+  statusCode Int
+  ipAddress  String
+  userAgent  String?
+  duration   Int // Response time in milliseconds
+  created_at DateTime @default(now())
+  user       User?    @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([route])
+  @@index([statusCode])
+}
+
+model SystemLog {
+  id         String   @id @default(uuid())
+  type       String // system, application, database, cache, etc.
+  level      String // info, warning, error, debug
+  message    String
+  metadata   Json?
+  created_at DateTime @default(now())
+
+  @@index([type])
+  @@index([level])
+}
+
+model SupportTicket {
+  id          String           @id @default(uuid())
+  title       String
+  description String           @db.Text
+  status      TicketStatus     @default(open)
+  priority    TicketPriority   @default(medium)
+  category    String
+  userId      String
+  assignedTo  String?
+  created_at  DateTime         @default(now())
+  updated_at  DateTime         @updatedAt
+  user        User             @relation("TicketCreator", fields: [userId], references: [id])
+  agent       User?            @relation("TicketAgent", fields: [assignedTo], references: [id])
+  responses   TicketResponse[]
+
+  @@index([userId])
+  @@index([assignedTo])
+  @@index([status])
+}
+
+model TicketResponse {
+  id         String        @id @default(uuid())
+  content    String        @db.Text
+  ticketId   String
+  userId     String
+  isInternal Boolean       @default(false)
+  created_at DateTime      @default(now())
+  updated_at DateTime      @updatedAt
+  ticket     SupportTicket @relation(fields: [ticketId], references: [id])
+  user       User          @relation(fields: [userId], references: [id])
+
+  @@index([ticketId])
+  @@index([userId])
+}
+
+model BugReport {
+  id               String       @id @default(uuid())
+  title            String
+  description      String       @db.Text
+  status           ReportStatus @default(pending)
+  severity         Severity     @default(medium)
+  environment      String?
+  stepsToReproduce String?      @db.Text
+  expectedBehavior String?      @db.Text
+  actualBehavior   String?      @db.Text
+  userId           String
+  assignedTo       String?
+  created_at       DateTime     @default(now())
+  updated_at       DateTime     @updatedAt
+  user             User         @relation(fields: [userId], references: [id])
+  assignee         User?        @relation("BugAssignee", fields: [assignedTo], references: [id])
+
+  @@index([userId])
+  @@index([assignedTo])
+  @@index([status])
+}
+
+model FeatureRequest {
+  id          String               @id @default(uuid())
+  title       String
+  description String               @db.Text
+  status      RequestStatus        @default(pending)
+  priority    Priority             @default(medium)
+  category    String
+  upvotes     Int                  @default(0)
+  userId      String
+  created_at  DateTime             @default(now())
+  updated_at  DateTime             @updatedAt
+  user        User                 @relation(fields: [userId], references: [id])
+  voters      FeatureRequestVote[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+model FeatureRequestVote {
+  id               String         @id @default(uuid())
+  featureRequestId String
+  userId           String
+  created_at       DateTime       @default(now())
+  featureRequest   FeatureRequest @relation(fields: [featureRequestId], references: [id])
+  user             User           @relation(fields: [userId], references: [id])
+
+  @@unique([featureRequestId, userId])
+}
+
+model HelpArticle {
+  id          String   @id @default(uuid())
+  title       String
+  content     String   @db.Text
+  category    String
+  tags        String[]
+  isPublished Boolean  @default(false)
+  views       Int      @default(0)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  @@index([category])
+  @@index([isPublished])
+}
+
+model ApiKey {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  key       String    @unique
+  scope     String[]
+  lastUsed  DateTime?
+  createdAt DateTime  @default(now())
+  expiresAt DateTime?
+
+  @@index([userId, lastUsed]) // Index for key usage queries
+  @@index([expiresAt]) // Index for expiration checks
+}
+
+model Progress {
+  id        String   @id @default(uuid())
+  userId    String
+  roadmapId String
+  topicId   String
+  status    Status   @default(PENDING)
+  roadmap   Roadmap  @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+  topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, topicId])
+  @@index([userId, status])
+  @@index([roadmapId, status])
+}
+
+model ApprovalHistory {
+  id         String   @id @default(uuid())
+  contentId  String
+  reviewerId String
+  status     Status
+  comments   String?
+  createdAt  DateTime @default(now())
+  reviewer   User     @relation(fields: [reviewerId], references: [id])
+
+  @@index([contentId])
+  @@index([reviewerId])
+}
+
+model TestCase {
+  id          String    @id @default(uuid())
+  challengeId String
+  input       String    @db.Text
+  output      String    @db.Text
+  isHidden    Boolean   @default(false)
+  challenge   Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+
+  @@index([challengeId])
+}
+
+model EmailLog {
+  id         String   @id @default(uuid())
+  recipient  String
+  subject    String
+  status     String
+  sentAt     DateTime
+  created_at DateTime @default(now())
+
+  @@index([recipient])
+  @@index([status])
+}
+
+model Version {
+  id        String   @id @default(uuid())
+  articleId String
+  title     String
+  content   String   @db.Text
+  version   Int
+  createdAt DateTime @default(now())
+  article   Article  @relation(fields: [articleId], references: [id])
+
+  @@index([articleId])
+}
+
+model Follow {
+  id          String   @id @default(uuid())
+  followerId  String
+  followingId String
+  created_at  DateTime @default(now())
+
+  follower  User @relation("FollowerRelation", fields: [followerId], references: [id])
+  following User @relation("FollowingRelation", fields: [followingId], references: [id])
+
+  @@unique([followerId, followingId])
+}
+
+model UserLearningPreference {
+  id               String   @id @default(uuid())
+  userId           String   @unique
+  interests        String[]
+  skillLevel       String
+  learningStyle    String[]
+  timeAvailability Int
+  user             User     @relation("UserLearningPreferences", fields: [userId], references: [id])
+}
+
+model CodingSandbox {
+  id         String   @id @default(uuid())
+  userId     String
+  language   String
+  code       String   @db.Text
+  output     String?
+  isPublic   Boolean  @default(false)
+  created_at DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@index([userId, language])
+}
+
+model VirtualLab {
+  id          String   @id @default(uuid())
+  title       String
+  description String   @db.Text
+  subjectId   String
+  embedUrl    String
+  simulations Json // JSON config for lab components
+  created_at  DateTime @default(now())
+  subject     Subject  @relation(fields: [subjectId], references: [id])
+}
+
+model Internship {
+  id          String                  @id @default(uuid())
+  title       String
+  company     String
+  description String                  @db.Text
+  location    String?
+  duration    String // "3 months", "6 months"
+  stipend     Decimal?                @db.Decimal(10, 2)
+  deadline    DateTime?
+  created_at  DateTime                @default(now())
+  applicants  InternshipApplication[]
+}
+
+model InternshipApplication {
+  id           String            @id @default(uuid())
+  userId       String
+  internshipId String
+  resumeUrl    String
+  status       ApplicationStatus @default(pending)
+  created_at   DateTime          @default(now())
+
+  user       User       @relation(fields: [userId], references: [id])
+  internship Internship @relation(fields: [internshipId], references: [id])
+}
+
+model TechEvent {
+  id            String              @id @default(uuid())
+  title         String
+  description   String              @db.Text
+  type          String // workshop/hackathon/webinar
+  startTime     DateTime
+  endTime       DateTime
+  venue         String // "virtual" or physical address
+  maxAttendees  Int?
+  created_at    DateTime            @default(now())
+  registrations EventRegistration[]
+}
+
+model EventRegistration {
+  id      String @id @default(uuid())
+  userId  String
+  eventId String
+  status  String @default("registered") // String with double quotes
+
+  user  User      @relation(fields: [userId], references: [id])
+  event TechEvent @relation(fields: [eventId], references: [id])
+}
+
+model LearningRecommendation {
+  id                String   @id @default(uuid())
+  userId            String
+  recommendedItemId String
+  type              String // resource/roadmap/course
+  score             Decimal  @db.Decimal(3, 2)
+  generatedAt       DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model HardwareKit {
+  id          String   @id @default(uuid())
+  title       String
+  description String   @db.Text
+  price       Decimal  @db.Decimal(10, 2)
+  components  Json // List of components
+  imageUrls   String[]
+  sellerId    String
+  created_at  DateTime @default(now())
+
+  seller User @relation(fields: [sellerId], references: [id])
+}
+
+model CodeReview {
+  id         String           @id @default(uuid())
+  code       String           @db.Text
+  language   String
+  authorId   String
+  reviewerId String
+  feedback   String           @db.Text
+  status     CodeReviewStatus @default(pending)
+  created_at DateTime         @default(now())
+  author     User             @relation("CodeAuthor", fields: [authorId], references: [id])
+  reviewer   User             @relation("CodeReviewer", fields: [reviewerId], references: [id])
+}
+
+model ProjectCollaboration {
+  id           String    @id @default(uuid())
+  projectId    String
+  userId       String
+  role         String
+  contribution String    @db.Text
+  startDate    DateTime
+  endDate      DateTime?
+  created_at   DateTime  @default(now())
+  project      Project   @relation(fields: [projectId], references: [id])
+  user         User      @relation(fields: [userId], references: [id])
+}
+
+model DailyChallenge {
+  id          String                     @id @default(uuid())
+  title       String
+  description String                     @db.Text
+  difficulty  Difficulty
+  streakBonus Int                        @default(1)
+  startTime   DateTime
+  endTime     DateTime
+  created_at  DateTime                   @default(now())
+  submissions DailyChallengeSubmission[]
+}
+
+model DailyChallengeSubmission {
+  id          String         @id @default(uuid())
+  userId      String
+  challengeId String
+  score       Int
+  user        User           @relation(fields: [userId], references: [id])
+  challenge   DailyChallenge @relation(fields: [challengeId], references: [id])
+
+  @@unique([userId, challengeId])
+}
+
+model InterviewPrep {
+  id         String   @id @default(uuid())
+  userId     String
+  company    String
+  position   String
+  progress   Json // {technical: 75%, behavioral: 60%}
+  resources  String[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model SkillAssessment {
+  id             String   @id @default(uuid())
+  userId         String
+  skill          String // "React", "Python", "CAD"
+  score          Int
+  assessmentDate DateTime
+  created_at     DateTime @default(now())
+  user           User     @relation(fields: [userId], references: [id])
+
+  @@index([skill, score])
+}
+
+model ContentPlaylist {
+  id          String   @id @default(uuid())
+  title       String
+  description String   @db.Text
+  items       Json // Ordered list of content IDs
+  curatorId   String
+  likes       Int      @default(0)
+  created_at  DateTime @default(now())
+  curator     User     @relation(fields: [curatorId], references: [id])
+}
+
+model ResourceVersion {
+  id         String   @id @default(uuid())
+  resourceId String
+  content    String   @db.Text
+  version    Int
+  changelog  String
+  created_at DateTime @default(now())
+  resource   Resource @relation(fields: [resourceId], references: [id])
+
+  @@index([resourceId])
+}
+
+model Subscription {
+  id         String   @id @default(uuid())
+  userId     String
+  tier       String // free/basic/pro
+  features   String[]
+  startDate  DateTime
+  endDate    DateTime
+  created_at DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model InAppPurchase {
+  id         String   @id @default(uuid())
+  userId     String
+  itemType   String // course/certificate/premium-content
+  itemId     String
+  amount     Decimal  @db.Decimal(10, 2)
+  created_at DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model UserSettings {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  language     String   @default("en")
+  theme        String   @default("light")
+  textSize     Int      @default(16)
+  highContrast Boolean  @default(false)
+  created_at   DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id])
+}
+
+model TranslatedContent {
+  id         String   @id @default(uuid())
+  originalId String
+  language   String
+  content    String   @db.Text
+  created_at DateTime @default(now())
+
+  @@unique([originalId, language])
+}
+
+model UserLearningAnalytics {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  weeklyHours Json // {week: "2024-01", hours: 12}
+  strengths   String[]
+  weaknesses  String[]
+  created_at  DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model AdminDashboard {
+  id          String   @id @default(uuid())
+  metrics     Json // {activeUsers: 1500, completionRate: 65%}
+  generatedAt DateTime @default(now())
+}
+
+model IoTDevice {
+  id          String       @id @default(uuid())
+  userId      String
+  deviceType  String // arduino/raspberry-pi/sensor
+  identifier  String
+  lastSeen    DateTime
+  created_at  DateTime     @default(now())
+  user        User         @relation(fields: [userId], references: [id])
+  labSessions LabSession[]
+}
+
+model LabSession {
+  id         String    @id @default(uuid())
+  userId     String
+  deviceId   String
+  sensorData Json
+  startTime  DateTime
+  endTime    DateTime
+  created_at DateTime  @default(now())
+  user       User      @relation(fields: [userId], references: [id])
+  device     IoTDevice @relation(fields: [deviceId], references: [id])
+}
+
+model CommunityChallenge {
+  id          String                         @id @default(uuid())
+  title       String
+  description String                         @db.Text
+  reward      String // badges/points/real prizes
+  startDate   DateTime
+  endDate     DateTime
+  created_at  DateTime                       @default(now())
+  submissions CommunityChallengeSubmission[]
+}
+
+model AutomatedModeration {
+  id          String   @id @default(uuid())
+  contentId   String
+  contentType String
+  decision    String // approved/rejected/flagged
+  confidence  Decimal  @db.Decimal(3, 2)
+  created_at  DateTime @default(now())
+}
+
+model CommunityChallengeSubmission {
+  id          String   @id @default(uuid())
+  challengeId String
+  userId      String
+  content     String   @db.Text
+  status      String   @default("pending")
+  created_at  DateTime @default(now())
+
+  challenge CommunityChallenge @relation(fields: [challengeId], references: [id])
+  user      User               @relation(fields: [userId], references: [id])
+
+  @@index([challengeId])
+  @@index([userId])
+}
+
+model ActivityLog {
+  id         String     @id @default(uuid())
+  userId     String
+  activity   String
+  metadata   Json?
+  timestamp  DateTime   @default(now())
+  deviceType DeviceType @default(WEB)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([timestamp])
+}
+
+model Category {
+  id          String     @id @default(uuid())
+  name        String     @unique
+  description String?
+  parentId    String?
+  parent      Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryHierarchy")
+
+
+}
+
+model MentorshipSession {
+  id           String     @id @default(uuid())
+  date         DateTime
+  duration     Int
+  notes        String?
+  objectives   Json?
+  mentorship   Mentorship @relation(fields: [mentorshipId], references: [id])
+  mentorshipId String
+  created_at   DateTime   @default(now())
+  updated_at   DateTime   @updatedAt
+}
+
+model ErrorLog {
+  id        String   @id @default(uuid())
+  message   String
+  service   String
+  timestamp DateTime @default(now())
+}
+
+model UserSession {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  startTime DateTime
+  endTime   DateTime?
+  device    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Option {
+  id         String   @id @default(uuid())
+  text       String
+  isCorrect  Boolean
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model PlacementTest {
+  id         String         @id @default(uuid())
+  userId     String
+  subjectId  String
+  status     PlacementStatus @default(PENDING)
+  results    Json?
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  subject    Subject         @relation(fields: [subjectId], references: [id])
+
+  @@index([userId])
+  @@index([subjectId])
+}
+
+model PlacementBook {
+  id          String    @id @default(uuid())
+  title       String
+  description String
+  level       String
+  subjectId   String
+  filePath    String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([subjectId])
+  @@index([level])
+}
+
+model LeaderboardEntry {
+  id         String    @id @default(uuid())
+  userId     String
+  score      Int
+  subjectId  String
+  timeTaken  Int       // in seconds
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  user       User      @relation(fields: [userId], references: [id])
+
+  @@index([subjectId])
+  @@index([score])
+  @@index([timeTaken])
 }
 
 enum Status {
-  pending
-  approved
-  rejected
+  DRAFT
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 enum Difficulty {
-  easy
-  medium
-  hard
-  Easy
-  Medium
-  Hard
+  EASY
+  MEDIUM
+  HARD
 }
 
 enum Length {
@@ -369,4 +1681,210 @@ enum JobType {
   part_time
   contract
   internship
+}
+
+enum ProjectStatus {
+  planning
+  ongoing
+  completed
+  archived
+}
+
+enum Visibility {
+  public
+  private
+  unlisted
+}
+
+enum ProjectRole {
+  owner
+  admin
+  member
+}
+
+enum SubmissionStatus {
+  pending
+  running
+  accepted
+  wrong_answer
+  time_limit_exceeded
+  memory_limit_exceeded
+  runtime_error
+  compilation_error
+}
+
+enum NotificationType {
+  system
+  achievement
+  mention
+  comment
+  follow
+  project
+  challenge
+  course
+  mentorship
+}
+
+enum MentorshipStatus {
+  pending
+  active
+  completed
+  cancelled
+}
+
+enum ExperienceLevel {
+  beginner
+  intermediate
+  advanced
+  expert
+}
+
+enum GroupRole {
+  admin
+  moderator
+  member
+}
+
+enum ChallengeCategory {
+  algorithms
+  data_structures
+  system_design
+  databases
+  web_development
+}
+
+enum QuizType {
+  multiple_choice
+  coding
+  theory
+}
+
+enum TicketStatus {
+  open
+  in_progress
+  resolved
+  closed
+}
+
+enum TicketPriority {
+  low
+  medium
+  high
+  urgent
+}
+
+enum ReportStatus {
+  pending
+  investigating
+  resolved
+  rejected
+}
+
+enum RequestStatus {
+  pending
+  approved
+  rejected
+}
+
+enum Severity {
+  low
+  medium
+  high
+  critical
+}
+
+enum Priority {
+  low
+  medium
+  high
+  critical
+}
+
+enum ApplicationStatus {
+  pending
+  reviewed
+  accepted
+  rejected
+}
+
+enum CodeReviewStatus {
+  pending
+  in_review
+  completed
+}
+
+enum DeviceType {
+  WEB
+  MOBILE
+  TABLET
+  DESKTOP
+  UNKNOWN
+}
+
+enum ChallengeStatus {
+  DRAFT
+  PENDING
+  ACTIVE
+  ARCHIVED
+  INACTIVE
+}
+
+enum PlacementStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  EVALUATED
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  action    String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  timestamp DateTime @default(now())
+  details   Json
+
+  @@index([userId])
+  @@index([timestamp])
+}
+
+model Content {
+  id          String        @id @default(uuid())
+  title       String
+  body        String
+  status      ContentStatus  @default(PENDING_REVIEW)
+  authorId    String
+  author      User          @relation(fields: [authorId], references: [id])
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @updatedAt
+  moderations ContentModeration[]
+
+  @@index([authorId])
+  @@index([status])
+}
+
+enum ContentStatus {
+  DRAFT
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+  ARCHIVED
+}
+
+model ContentModeration {
+  id        String   @id @default(uuid())
+  contentId String
+  userId    String
+  status    String
+  notes     String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  content    Content  @relation(fields: [contentId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+  resourceId String?
+  resource   Resource? @relation(fields: [resourceId], references: [id])
+  articleId String?
+  article   Article? @relation(fields: [articleId], references: [id])
+  topicId   String?
+  topic     Topic?   @relation(fields: [topicId], references: [id])
 }

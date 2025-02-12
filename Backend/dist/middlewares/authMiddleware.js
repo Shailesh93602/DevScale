@@ -3,33 +3,58 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authMiddleware = void 0;
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const config_1 = require("../config");
-const prisma_1 = __importDefault(require("../prisma"));
-const authMiddleware = async (req, res, next) => {
-    const authHeader = req.headers.authorization;
-    if (!authHeader?.startsWith('Bearer ')) {
-        res.status(401).json({ success: false, message: 'No token provided' });
-        return;
+exports.authenticateUser = exports.authorizeRoles = exports.validateSupabaseJWT = void 0;
+const supabase_js_1 = require("@supabase/supabase-js");
+const errorHandler_1 = require("../utils/errorHandler");
+const logger_1 = __importDefault(require("../utils/logger"));
+const supabase = (0, supabase_js_1.createClient)(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+const validateSupabaseJWT = async (req, res, next) => {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+        return next((0, errorHandler_1.createAppError)('Authorization token required', 401));
     }
-    const token = authHeader.split(' ')[1];
     try {
-        const { email } = jsonwebtoken_1.default.verify(token, config_1.JWT_SECRET);
-        const user = await prisma_1.default.user.findFirst({ where: { email } });
-        if (!user) {
-            res.status(403).json({ success: false, message: 'User not found' });
-            return;
+        const { data: { user }, error, } = await supabase.auth.getUser(token);
+        if (error || !user) {
+            return next((0, errorHandler_1.createAppError)('Invalid authentication token', 401));
         }
         req.user = user;
         next();
     }
     catch (error) {
-        console.error('Token verification error:', error);
-        res
-            .status(401)
-            .json({ success: false, message: 'Invalid or expired token' });
+        logger_1.default.error('Authentication failed', error);
+        next((0, errorHandler_1.createAppError)('Authentication failed', 401));
     }
 };
-exports.authMiddleware = authMiddleware;
+exports.validateSupabaseJWT = validateSupabaseJWT;
+const authorizeRoles = (...roles) => {
+    return (req, res, next) => {
+        if (!req.user) {
+            throw (0, errorHandler_1.createAppError)('Unauthorized', 401);
+        }
+        const userRole = req.user.user_metadata?.role || 'user';
+        if (!roles.includes(userRole)) {
+            throw (0, errorHandler_1.createAppError)('Insufficient permissions', 403);
+        }
+        next();
+    };
+};
+exports.authorizeRoles = authorizeRoles;
+const authenticateUser = async (req, res, next) => {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+        return next((0, errorHandler_1.createAppError)('Authorization token required', 401));
+    }
+    try {
+        const { data: { user }, error, } = await supabase.auth.getUser(token);
+        if (error || !user) {
+            return next((0, errorHandler_1.createAppError)('Invalid authentication token', 401));
+        }
+    }
+    catch (error) {
+        logger_1.default.error('Authentication failed', error);
+        next((0, errorHandler_1.createAppError)('Authentication failed', 401));
+    }
+};
+exports.authenticateUser = authenticateUser;
 //# sourceMappingURL=authMiddleware.js.map

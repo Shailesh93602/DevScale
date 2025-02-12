@@ -17,7 +17,7 @@ exports.getSubjectsInMainConcept = (0, index_1.catchAsync)(async (req, res) => {
             subjects: {
                 select: {
                     id: true,
-                    name: true,
+                    title: true,
                     description: true,
                 },
                 orderBy: {
@@ -29,6 +29,9 @@ exports.getSubjectsInMainConcept = (0, index_1.catchAsync)(async (req, res) => {
     if (!mainConcept) {
         return res.status(404).json({ message: 'Main Concept not found' });
     }
-    res.status(200).json(mainConcept.subjects);
+    res.status(200).json({
+        status: 'success',
+        data: mainConcept.subjects,
+    });
 });
 //# sourceMappingURL=mainConceptController.js.map

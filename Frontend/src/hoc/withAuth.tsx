@@ -14,7 +14,7 @@ const withAuth = <P extends object>(
           await fetchData('GET', '/isLoggedIn');
         } catch (error) {
           console.error(error);
-          router.replace('/u/login');
+          router.replace('/auth/login');
         }
       };
 

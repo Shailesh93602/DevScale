@@ -3,13 +3,14 @@ import { useRouter } from 'next/navigation';
 import RegisterForm from '../components/RegisterForm';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import OAuthProviders from '../components/OAuthProviders';
 
 export default function RegisterPage() {
   const router = useRouter();
 
   const handleAuthSuccess = async () => {
     // Implement your logic here
-    router.push('/auth/details');
+    router.push('/details');
   };
 
   return (
@@ -24,6 +25,20 @@ export default function RegisterPage() {
         Join Our Learning Community
       </h1>
       <RegisterForm onSuccess={handleAuthSuccess} />
+
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-background px-2 text-muted-foreground">
+            Or continue with
+          </span>
+        </div>
+      </div>
+
+      <OAuthProviders />
+
       <div className="text-center text-sm text-muted-foreground">
         Already have an account?{' '}
         <Link href="/auth/login" className="text-primary hover:underline">

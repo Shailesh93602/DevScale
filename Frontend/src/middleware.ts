@@ -1,6 +1,6 @@
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
+import customAxios from './app/services/customAxios';
 
 const protectedPages = [
   '/dashboard',
@@ -16,13 +16,12 @@ const protectedPages = [
   '/article-listing',
 ];
 
-export async function middleware(req: NextRequest) {
-  const res = NextResponse.next();
+export async function middleware(req: NextRequest, res: NextResponse) {
   const supabase = createMiddlewareClient({ req, res });
   const pathname = req.nextUrl.pathname;
 
   if (!protectedPages.includes(pathname)) {
-    return res;
+    return NextResponse.next();
   }
 
   const {
@@ -34,14 +33,14 @@ export async function middleware(req: NextRequest) {
   }
 
   try {
-    const { data: profileData, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', session.user.id)
-      .single();
+    const data = await customAxios.get('/get-logged-in-user', {
+      headers: {
+        Authorization: `Bearer ${session.access_token}`,
+      },
+    });
 
-    if (error || !profileData) {
-      throw new Error('Profile not found');
+    if (!data) {
+      return NextResponse.redirect((req.nextUrl.clone().pathname = '/details'));
     }
 
     return res;

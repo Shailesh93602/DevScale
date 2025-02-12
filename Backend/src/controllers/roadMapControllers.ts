@@ -18,7 +18,7 @@ export const getAllRoadmaps = catchAsync(
         },
       },
       orderBy: {
-        created_at: 'asc',
+        createdAt: 'asc',
       },
     });
     res.status(200).json(roadmaps);
@@ -39,7 +39,7 @@ export const getMainConceptsInRoadmap = catchAsync(
             subjects: {
               select: {
                 id: true,
-                name: true,
+                title: true,
               },
               orderBy: {
                 created_at: 'asc',

@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import path from 'path';
 import prisma from '../prisma';
 import { catchAsync } from '../utils';
+import Joi from 'joi';
 
 const __dirname = path.resolve();
 
@@ -25,7 +26,7 @@ export const getTopics = catchAsync(async (req: Request, res: Response) => {
 export const addTopic = catchAsync(async (req: Request, res: Response) => {
   const { title, description, subjectId } = req.body;
   const topic = await prisma.topic.create({
-    data: { title, description, subjectId },
+    data: { title, description, subjectId, order: 0 },
   });
   res.status(201).json({ success: true, topic });
 });
@@ -37,9 +38,8 @@ export const getResources = catchAsync(async (req: Request, res: Response) => {
     where: search
       ? {
           OR: [
-            { name: { contains: search, mode: 'insensitive' } },
+            { title: { contains: search, mode: 'insensitive' } },
             { description: { contains: search, mode: 'insensitive' } },
-            { tags: { contains: search, mode: 'insensitive' } },
           ],
         }
       : undefined,
@@ -51,7 +51,6 @@ export const getResources = catchAsync(async (req: Request, res: Response) => {
     success: true,
     resources: resources.map((resource) => ({
       ...resource,
-      tags: resource.tags ? JSON.parse(resource.tags) : null,
     })),
   });
 });
@@ -142,7 +141,7 @@ export const selectArticle = catchAsync(async (req: Request, res: Response) => {
   const articleId = req.params.id;
   const article = await prisma.article.update({
     where: { id: articleId },
-    data: { status: 'approved' },
+    data: { status: 'APPROVED' },
   });
   res.status(200).json({ success: true, article });
 });
@@ -170,7 +169,7 @@ export const saveResource = catchAsync(async (req: Request, res: Response) => {
       content,
       topicId: id,
       authorId: req.user.id,
-      status: 'pending',
+      status: 'PENDING',
     },
   });
   res.status(201).json({
@@ -180,14 +179,104 @@ export const saveResource = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// Resource creation validation schema
+const createResourceSchema = Joi.object({
+  title: Joi.string().required(),
+  content: Joi.string().required(),
+  type: Joi.string().required(),
+  subjectId: Joi.string().when('type', {
+    is: 'SUBJECT',
+    then: Joi.string().required(),
+    otherwise: Joi.string().optional(),
+  }),
+  topicId: Joi.string().when('type', {
+    is: 'TOPIC',
+    then: Joi.string().required(),
+    otherwise: Joi.string().optional(),
+  }),
+  authorId: Joi.string().required(),
+  filePath: Joi.string().optional(),
+});
+
+// Complete createResource controller
 export const createResource = catchAsync(
-  async (_req: Request, _res: Response) => {
-    // TODO: implement this method
+  async (req: Request, res: Response) => {
+    const { error, value } = createResourceSchema.validate(req.body);
+
+    if (error) {
+      return res.status(400).json({
+        success: false,
+        message: error.details[0].message,
+      });
+    }
+
+    const resource = await prisma.resource.create({
+      data: {
+        title: value.title,
+        content: value.content,
+        type: value.type,
+        description: value.description,
+        url: value.url,
+        category: value.category,
+        difficulty: value.difficulty,
+        created_at: value.created_at,
+        updated_at: value.updated_at,
+        language: value.language,
+        userId: value.userId,
+      },
+    });
+
+    res.status(201).json({
+      success: true,
+      data: resource,
+    });
   }
 );
 
+// Complete getResourceDetails controller
 export const getResourceDetails = catchAsync(
-  async (_req: Request, _res: Response) => {
-    // TODO: implement this method
+  async (req: Request, res: Response) => {
+    const resourceId = req.params.id;
+
+    if (!Joi.string().uuid().validate(resourceId).error) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid resource ID format',
+      });
+    }
+
+    const resource = await prisma.resource.findUnique({
+      where: { id: resourceId },
+      include: {
+        articles: {
+          select: {
+            id: true,
+            title: true,
+            content: true,
+            status: true,
+            created_at: true,
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    if (!resource) {
+      return res.status(404).json({
+        success: false,
+        message: 'Resource not found',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: resource,
+    });
   }
 );

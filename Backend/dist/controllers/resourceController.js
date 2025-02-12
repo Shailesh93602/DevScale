@@ -8,6 +8,7 @@ const promises_1 = __importDefault(require("fs/promises"));
 const path_1 = __importDefault(require("path"));
 const prisma_1 = __importDefault(require("../prisma"));
 const utils_1 = require("../utils");
+const joi_1 = __importDefault(require("joi"));
 const __dirname = path_1.default.resolve();
 exports.getSubjects = (0, utils_1.catchAsync)(async (_req, res) => {
     const subjects = await prisma_1.default.subject.findMany({
@@ -26,7 +27,7 @@ exports.getTopics = (0, utils_1.catchAsync)(async (req, res) => {
 exports.addTopic = (0, utils_1.catchAsync)(async (req, res) => {
     const { title, description, subjectId } = req.body;
     const topic = await prisma_1.default.topic.create({
-        data: { title, description, subjectId },
+        data: { title, description, subjectId, order: 0 },
     });
     res.status(201).json({ success: true, topic });
 });
@@ -37,9 +38,8 @@ exports.getResources = (0, utils_1.catchAsync)(async (req, res) => {
         where: search
             ? {
                 OR: [
-                    { name: { contains: search, mode: 'insensitive' } },
+                    { title: { contains: search, mode: 'insensitive' } },
                     { description: { contains: search, mode: 'insensitive' } },
-                    { tags: { contains: search, mode: 'insensitive' } },
                 ],
             }
             : undefined,
@@ -51,7 +51,6 @@ exports.getResources = (0, utils_1.catchAsync)(async (req, res) => {
         success: true,
         resources: resources.map((resource) => ({
             ...resource,
-            tags: resource.tags ? JSON.parse(resource.tags) : null,
         })),
     });
 });
@@ -129,7 +128,7 @@ exports.selectArticle = (0, utils_1.catchAsync)(async (req, res) => {
     const articleId = req.params.id;
     const article = await prisma_1.default.article.update({
         where: { id: articleId },
-        data: { status: 'approved' },
+        data: { status: 'APPROVED' },
     });
     res.status(200).json({ success: true, article });
 });
@@ -150,7 +149,7 @@ exports.saveResource = (0, utils_1.catchAsync)(async (req, res) => {
             content,
             topicId: id,
             authorId: req.user.id,
-            status: 'pending',
+            status: 'PENDING',
         },
     });
     res.status(201).json({
@@ -159,10 +158,92 @@ exports.saveResource = (0, utils_1.catchAsync)(async (req, res) => {
         data: article,
     });
 });
-exports.createResource = (0, utils_1.catchAsync)(async (_req, _res) => {
-    // TODO: implement this method
+// Resource creation validation schema
+const createResourceSchema = joi_1.default.object({
+    title: joi_1.default.string().required(),
+    content: joi_1.default.string().required(),
+    type: joi_1.default.string().required(),
+    subjectId: joi_1.default.string().when('type', {
+        is: 'SUBJECT',
+        then: joi_1.default.string().required(),
+        otherwise: joi_1.default.string().optional(),
+    }),
+    topicId: joi_1.default.string().when('type', {
+        is: 'TOPIC',
+        then: joi_1.default.string().required(),
+        otherwise: joi_1.default.string().optional(),
+    }),
+    authorId: joi_1.default.string().required(),
+    filePath: joi_1.default.string().optional(),
 });
-exports.getResourceDetails = (0, utils_1.catchAsync)(async (_req, _res) => {
-    // TODO: implement this method
+// Complete createResource controller
+exports.createResource = (0, utils_1.catchAsync)(async (req, res) => {
+    const { error, value } = createResourceSchema.validate(req.body);
+    if (error) {
+        return res.status(400).json({
+            success: false,
+            message: error.details[0].message,
+        });
+    }
+    const resource = await prisma_1.default.resource.create({
+        data: {
+            title: value.title,
+            content: value.content,
+            type: value.type,
+            description: value.description,
+            url: value.url,
+            category: value.category,
+            difficulty: value.difficulty,
+            created_at: value.created_at,
+            updated_at: value.updated_at,
+            language: value.language,
+            userId: value.userId,
+        },
+    });
+    res.status(201).json({
+        success: true,
+        data: resource,
+    });
+});
+// Complete getResourceDetails controller
+exports.getResourceDetails = (0, utils_1.catchAsync)(async (req, res) => {
+    const resourceId = req.params.id;
+    if (!joi_1.default.string().uuid().validate(resourceId).error) {
+        return res.status(400).json({
+            success: false,
+            message: 'Invalid resource ID format',
+        });
+    }
+    const resource = await prisma_1.default.resource.findUnique({
+        where: { id: resourceId },
+        include: {
+            articles: {
+                select: {
+                    id: true,
+                    title: true,
+                    content: true,
+                    status: true,
+                    created_at: true,
+                },
+            },
+            user: {
+                select: {
+                    id: true,
+                    username: true,
+                    email: true,
+                },
+            },
+        },
+    });
+    if (!resource) {
+        return res.status(404).json({
+            success: false,
+            message: 'Resource not found',
+        });
+    }
+    res.status(200).json({
+        success: true,
+        data: resource,
+    });
 });
 //# sourceMappingURL=resourceController.js.map

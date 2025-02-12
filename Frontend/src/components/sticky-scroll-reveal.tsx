@@ -64,7 +64,7 @@ export const StickyScroll = ({
       ref={ref}
     >
       <div className="div relative flex items-start px-4">
-        <div className="max-w-2xl">
+        <div key="1" className="max-w-2xl">
           <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
             Expand Your Knowledge
           </h2>
@@ -110,6 +110,7 @@ export const StickyScroll = ({
       </div>
 
       <div
+        key="2"
         style={{ background: backgroundGradient }}
         className={cn(
           'sticky top-10 hidden h-60 w-80 overflow-hidden rounded-md bg-white lg:block',

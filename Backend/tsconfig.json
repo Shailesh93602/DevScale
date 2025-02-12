@@ -10,7 +10,8 @@
     "skipLibCheck": true,
     "moduleResolution": "node",
     "experimentalDecorators": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "resolveJsonModule": true
   },
   "ts-node": {
     "esm": true,
