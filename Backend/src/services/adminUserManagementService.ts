@@ -7,7 +7,7 @@ interface UserSearchParams {
   query?: string;
   role?: string;
   status?: string;
-  dateRange?: {
+  date_range?: {
     start: Date;
     end: Date;
   };
@@ -22,7 +22,7 @@ export async function searchUsers(params: UserSearchParams) {
     query,
     role,
     status,
-    dateRange,
+    date_range,
     page = 1,
     limit = 10,
     sortBy = 'created_at',
@@ -42,7 +42,7 @@ export async function searchUsers(params: UserSearchParams) {
 
   // Filter by role
   if (role) {
-    where.roleId = role;
+    where.role_id = role;
   }
 
   // Filter by status (if you have a status field)
@@ -51,10 +51,10 @@ export async function searchUsers(params: UserSearchParams) {
   }
 
   // Filter by date range
-  if (dateRange) {
+  if (date_range) {
     where.created_at = {
-      gte: dateRange.start,
-      lte: dateRange.end,
+      gte: date_range.start,
+      lte: date_range.end,
     };
   }
 
@@ -63,7 +63,7 @@ export async function searchUsers(params: UserSearchParams) {
       where,
       include: {
         role: true,
-        userPoints: true,
+        user_points: true,
       },
       skip: (page - 1) * limit,
       take: limit,
@@ -86,43 +86,43 @@ export async function searchUsers(params: UserSearchParams) {
 }
 
 export async function updateUserRole(
-  userId: string,
-  roleId: string
+  user_id: string,
+  role_id: string
 ): Promise<User> {
-  const user = await assignRoleToUser(userId, roleId);
-  await logUserActivity(userId, 'ROLE_UPDATE', { roleId });
+  const user = await assignRoleToUser(user_id, role_id);
+  await logUserActivity(user_id, 'ROLE_UPDATE', { role_id });
   return user;
 }
 
 export async function updateUserStatus(
-  userId: string,
+  user_id: string,
   status: string,
   reason?: string
 ): Promise<User> {
   const user = await prisma.user.update({
-    where: { id: userId },
+    where: { id: user_id },
     data: {
       status,
     },
   });
 
-  await logUserActivity(userId, 'STATUS_UPDATE', { status, reason });
+  await logUserActivity(user_id, 'STATUS_UPDATE', { status, reason });
   return user;
 }
 
 export async function getUserActivityLogs(
-  userId: string,
+  user_id: string,
   page = 1,
   limit = 10
 ) {
   const [logs, total] = await Promise.all([
     prisma.userActivityLog.findMany({
-      where: { userId },
+      where: { user_id },
       orderBy: { timestamp: 'desc' },
       skip: (page - 1) * limit,
       take: limit,
     }),
-    prisma.userActivityLog.count({ where: { userId } }),
+    prisma.userActivityLog.count({ where: { user_id } }),
   ]);
 
   return {
@@ -137,18 +137,18 @@ export async function getUserActivityLogs(
 }
 
 export async function bulkUpdateUsers(
-  userIds: string[],
+  user_ids: string[],
   action: 'suspend' | 'activate' | 'delete' | 'changeRole',
-  params?: { roleId?: string; reason?: string }
+  params?: { role_id?: string; reason?: string }
 ): Promise<void> {
   const transaction: Prisma.PrismaPromise<unknown>[] = [];
 
-  for (const userId of userIds) {
+  for (const user_id of user_ids) {
     switch (action) {
       case 'suspend':
         transaction.push(
           prisma.user.update({
-            where: { id: userId },
+            where: { id: user_id },
             data: { status: 'suspended' },
           }) as Prisma.PrismaPromise<unknown>
         );
@@ -156,7 +156,7 @@ export async function bulkUpdateUsers(
       case 'activate':
         transaction.push(
           prisma.user.update({
-            where: { id: userId },
+            where: { id: user_id },
             data: { status: 'active' },
           }) as Prisma.PrismaPromise<unknown>
         );
@@ -164,16 +164,16 @@ export async function bulkUpdateUsers(
       case 'delete':
         transaction.push(
           prisma.user.delete({
-            where: { id: userId },
+            where: { id: user_id },
           }) as Prisma.PrismaPromise<unknown>
         );
         break;
       case 'changeRole':
-        if (params?.roleId) {
+        if (params?.role_id) {
           transaction.push(
             prisma.user.update({
-              where: { id: userId },
-              data: { roleId: params.roleId },
+              where: { id: user_id },
+              data: { role_id: params.role_id },
             }) as Prisma.PrismaPromise<unknown>
           );
         }
@@ -184,7 +184,7 @@ export async function bulkUpdateUsers(
     transaction.push(
       prisma.userActivityLog.create({
         data: {
-          userId,
+          user_id,
           action: `BULK_${action.toUpperCase()}`,
           details: params as Prisma.InputJsonValue,
           timestamp: new Date(),
@@ -197,13 +197,13 @@ export async function bulkUpdateUsers(
 }
 
 async function logUserActivity(
-  userId: string,
+  user_id: string,
   action: string,
   details: Prisma.InputJsonValue
 ): Promise<void> {
   await prisma.userActivityLog.create({
     data: {
-      userId,
+      user_id,
       action,
       details,
       timestamp: new Date(),
@@ -211,7 +211,7 @@ async function logUserActivity(
   });
 }
 
-export async function getUserStats(userId: string) {
+export async function getUserStats(user_id: string) {
   const [
     totalPosts,
     totalComments,
@@ -219,11 +219,11 @@ export async function getUserStats(userId: string) {
     totalArticles,
     userPoints,
   ] = await Promise.all([
-    prisma.forumPost.count({ where: { userId } }),
-    prisma.forumComment.count({ where: { userId } }),
-    prisma.challengeSubmission.count({ where: { userId } }),
-    prisma.article.count({ where: { authorId: userId } }),
-    prisma.userPoints.findUnique({ where: { userId } }),
+    prisma.forumPost.count({ where: { user_id: user_id } }),
+    prisma.forumComment.count({ where: { user_id: user_id } }),
+    prisma.challengeSubmission.count({ where: { user_id: user_id } }),
+    prisma.article.count({ where: { author_id: user_id } }),
+    prisma.userPoints.findUnique({ where: { user_id: user_id } }),
   ]);
 
   return {

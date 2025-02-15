@@ -47,27 +47,27 @@ interface PlatformAnalytics {
 }
 
 export const getUserAnalytics = async (
-  userId: string
+  user_id: string
 ): Promise<UserAnalytics> => {
-  if (!userId) {
+  if (!user_id) {
     throw createAppError('Invalid user ID format', 400);
   }
 
   const [progress, submissions, engagementData] = await Promise.all([
-    prisma.userProgress.findMany({ where: { userId } }),
-    prisma.challengeSubmission.findMany({ where: { userId } }),
+    prisma.userProgress.findMany({ where: { user_id } }),
+    prisma.challengeSubmission.findMany({ where: { user_id } }),
     Promise.all([
-      prisma.article.count({ where: { authorId: userId } }),
-      prisma.forumPost.count({ where: { userId } }),
-      prisma.studyGroupMember.count({ where: { userId } }),
+      prisma.article.count({ where: { author_id: user_id } }),
+      prisma.forumPost.count({ where: { user_id } }),
+      prisma.studyGroupMember.count({ where: { user_id } }),
       prisma.user.findUnique({
-        where: { id: userId },
+        where: { id: user_id },
         select: { updated_at: true },
       }),
     ]),
   ]);
 
-  const completedTopics = progress.filter((p) => p.isCompleted).length;
+  const completedTopics = progress.filter((p) => p.is_completed).length;
   const totalTopics = progress.length;
   const successfulSubmissions = submissions.filter(
     (s) => s.status === 'accepted'
@@ -121,7 +121,7 @@ export const getPlatformAnalytics = async (
       completionRates: await calculateCompletionRates(),
       popularTopics: popularTopics.map((t) => ({
         topic: t.title,
-        count: t._count.userProgress,
+        count: t._count.user_progress,
       })),
     },
     errorStats,
@@ -131,18 +131,18 @@ export const getPlatformAnalytics = async (
 const calculateAverageTimeSpent = async (): Promise<number> => {
   const sessions = await prisma.userSession.findMany({
     where: {
-      endTime: { not: null },
+      end_time: { not: null },
     },
     select: {
-      startTime: true,
-      endTime: true,
+      start_time: true,
+      end_time: true,
     },
   });
 
   if (sessions.length === 0) return 0;
 
   const totalDuration = sessions.reduce((acc, session) => {
-    const duration = session.endTime!.getTime() - session.startTime.getTime();
+    const duration = session.end_time!.getTime() - session.start_time.getTime();
     return acc + duration;
   }, 0);
 
@@ -154,12 +154,12 @@ const calculateCompletionRates = async (): Promise<Record<string, number>> => {
     include: {
       _count: {
         select: {
-          userProgress: true,
+          user_progress: true,
         },
       },
-      userProgress: {
+      user_progress: {
         where: {
-          isCompleted: true,
+          is_completed: true,
         },
       },
     },
@@ -169,8 +169,8 @@ const calculateCompletionRates = async (): Promise<Record<string, number>> => {
     (acc, topic) => ({
       ...acc,
       [topic.title]:
-        topic._count.userProgress > 0
-          ? topic.userProgress.length / topic._count.userProgress
+        topic._count.user_progress > 0
+          ? topic.user_progress.length / topic._count.user_progress
           : 0,
     }),
     {}
@@ -229,7 +229,7 @@ const getErrorStats = async (startDate?: Date, endDate?: Date) => {
 
 const TRACKING_LIMIT = 100;
 export const trackUserActivity = async (
-  userId: string,
+  user_id: string,
   activity: string,
   metadata?: Record<string, unknown>
 ): Promise<void> => {
@@ -237,7 +237,7 @@ export const trackUserActivity = async (
     // Check rate limit
     const recentActivities = await prisma.activityLog.count({
       where: {
-        userId,
+        user_id,
         timestamp: {
           gte: new Date(Date.now() - 60 * 1000), // Last minute
         },
@@ -245,17 +245,17 @@ export const trackUserActivity = async (
     });
 
     if (recentActivities >= TRACKING_LIMIT) {
-      logger.warn(`Activity tracking limit reached for user ${userId}`);
+      logger.warn(`Activity tracking limit reached for user ${user_id}`);
       return;
     }
 
     await prisma.activityLog.create({
       data: {
-        userId,
+        user_id,
         activity,
         metadata: (metadata as Prisma.InputJsonValue) ?? Prisma.DbNull,
         timestamp: new Date(),
-        deviceType: 'WEB',
+        device_type: 'WEB',
       },
     });
   } catch (error) {
@@ -339,12 +339,12 @@ async function getPopularTopics() {
       title: true,
       _count: {
         select: {
-          userProgress: true,
+          user_progress: true,
         },
       },
     },
     orderBy: {
-      userProgress: {
+      user_progress: {
         _count: 'desc',
       },
     },

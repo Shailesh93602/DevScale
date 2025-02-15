@@ -88,14 +88,14 @@ exports.getUserProgress = (0, utils_1.catchAsync)(async (req, res) => {
     // TODO: implement this method
     const roadmaps = await prisma_1.default.roadmap.findMany({
         include: {
-            mainConcepts: {
+            main_concepts: {
                 include: {
                     subjects: {
                         include: {
                             topics: {
                                 include: {
                                 // progress: {
-                                //   where: { userId },
+                                //   where: { user_id },
                                 //   select: { id: true, status: true },
                                 // },
                                 },
@@ -109,9 +109,9 @@ exports.getUserProgress = (0, utils_1.catchAsync)(async (req, res) => {
     return res.status(200).json(roadmaps);
 });
 exports.getUserRoadmap = (0, utils_1.catchAsync)(async (req, res) => {
-    const userId = req.user.id;
+    const user_id = req.user.id;
     const userRoadmap = await prisma_1.default.userRoadmap.findFirst({
-        where: { userId },
+        where: { user_id },
     });
     if (!userRoadmap) {
         return res
@@ -121,12 +121,12 @@ exports.getUserRoadmap = (0, utils_1.catchAsync)(async (req, res) => {
     res.status(200).json({ success: true, userRoadmap });
 });
 exports.insertUserRoadmap = (0, utils_1.catchAsync)(async (req, res) => {
-    const userId = req.user?.id;
-    if (!userId) {
+    const user_id = req.user?.id;
+    if (!user_id) {
         return res.status(401).json({ success: false, message: 'Unauthorized' });
     }
     const isRoadmapExists = await prisma_1.default.userRoadmap.findFirst({
-        where: { userId },
+        where: { user_id },
     });
     if (isRoadmapExists) {
         return res.status(400).json({
@@ -134,12 +134,12 @@ exports.insertUserRoadmap = (0, utils_1.catchAsync)(async (req, res) => {
             message: 'You already added a Roadmap, please remove existing Roadmap to add another Roadmap',
         });
     }
-    const { roadmapId, topicId } = req.body;
+    const { roadmap_id, topic_id } = req.body;
     const userRoadmap = await prisma_1.default.userRoadmap.create({
         data: {
-            userId,
-            roadmapId,
-            topicId,
+            user_id,
+            roadmap_id,
+            topic_id,
         },
     });
     res.status(200).json({

@@ -28,13 +28,13 @@ exports.getBattle = (0, utils_1.catchAsync)(async (req, res) => {
     res.status(200).json({ success: true, battle });
 });
 exports.createBattle = (0, utils_1.catchAsync)(async (req, res) => {
-    const { title, description, topicId, difficulty, length, date, time } = req.body;
+    const { title, description, topic_id, difficulty, length, date, time } = req.body;
     await prisma.battle.create({
         data: {
             title,
             description,
-            userId: req.user.id,
-            topicId,
+            user_id: req.user.id,
+            topic_id,
             difficulty,
             length,
             date,

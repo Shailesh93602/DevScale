@@ -8,9 +8,9 @@ const prisma = new client_1.PrismaClient();
 const requestMentorship = async (data) => {
     const existing = await prisma.mentorship.findUnique({
         where: {
-            mentorId_menteeId: {
-                mentorId: data.mentorId,
-                menteeId: data.menteeId,
+            mentor_id_mentee_id: {
+                mentor_id: data.mentor_id,
+                mentee_id: data.mentee_id,
             },
         },
     });
@@ -28,8 +28,8 @@ const requestMentorship = async (data) => {
             mentee: { select: { username: true, avatar_url: true } },
         },
     });
-    await (0, cacheService_1.deleteCache)(`mentor:${data.mentorId}:requests`);
-    await (0, cacheService_1.deleteCache)(`mentee:${data.menteeId}:requests`);
+    await (0, cacheService_1.deleteCache)(`mentor:${data.mentor_id}:requests`);
+    await (0, cacheService_1.deleteCache)(`mentee:${data.mentee_id}:requests`);
     return mentorship;
 };
 exports.requestMentorship = requestMentorship;
@@ -42,18 +42,18 @@ const updateMentorshipStatus = async (id, status) => {
             mentee: { select: { username: true, avatar_url: true } },
         },
     });
-    await (0, cacheService_1.deleteCache)(`mentor:${mentorship.mentorId}:requests`);
-    await (0, cacheService_1.deleteCache)(`mentee:${mentorship.menteeId}:requests`);
+    await (0, cacheService_1.deleteCache)(`mentor:${mentorship.mentor_id}:requests`);
+    await (0, cacheService_1.deleteCache)(`mentee:${mentorship.mentee_id}:requests`);
     return mentorship;
 };
 exports.updateMentorshipStatus = updateMentorshipStatus;
-const getMentorshipRequests = async (userId, role) => {
-    const cacheKey = `mentorship:${userId}:${role}`;
+const getMentorshipRequests = async (user_id, role) => {
+    const cacheKey = `mentorship:${user_id}:${role}`;
     const cached = await (0, cacheService_1.getCache)(cacheKey);
     if (cached)
         return cached;
     const requests = await prisma.mentorship.findMany({
-        where: role === 'mentor' ? { mentorId: userId } : { menteeId: userId },
+        where: role === 'mentor' ? { mentor_id: user_id } : { mentee_id: user_id },
         include: {
             mentor: {
                 select: { username: true, avatar_url: true, experience_level: true },
@@ -86,14 +86,14 @@ const getMentorshipDetails = async (id) => {
     return mentorship;
 };
 exports.getMentorshipDetails = getMentorshipDetails;
-const addMentorshipSession = async (mentorshipId, data) => {
+const addMentorshipSession = async (mentorship_id, data) => {
     const session = await prisma.mentorshipSession.create({
         data: {
             ...data,
-            mentorship: { connect: { id: mentorshipId } },
+            mentorship: { connect: { id: mentorship_id } },
         },
     });
-    await (0, cacheService_1.deleteCache)(`mentorship:${mentorshipId}`);
+    await (0, cacheService_1.deleteCache)(`mentorship:${mentorship_id}`);
     return session;
 };
 exports.addMentorshipSession = addMentorshipSession;

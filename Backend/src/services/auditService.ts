@@ -5,13 +5,13 @@ import logger from '../utils/logger';
 const prisma = new PrismaClient();
 
 interface AuditLogParams {
-  adminId: string;
+  admin_id: string;
   action: string;
   entity: string;
-  entityId: string;
+  entity_id: string;
   details?: Record<string, unknown>;
-  ipAddress?: string;
-  userAgent?: string;
+  ip_address?: string;
+  user_agent?: string;
 }
 
 interface SecurityLogParams {
@@ -19,17 +19,17 @@ interface SecurityLogParams {
   severity: string;
   description: string;
   metadata?: Record<string, unknown>;
-  ipAddress?: string;
-  userAgent?: string;
-  userId?: string;
+  ip_address?: string;
+  user_agent?: string;
+  user_id?: string;
 }
 
 interface ChangeHistoryParams {
   entity: string;
-  entityId: string;
+  entity_id: string;
   action: string;
   changes: Record<string, unknown>;
-  userId: string;
+  user_id: string;
   reason?: string;
 }
 
@@ -87,23 +87,23 @@ export const trackChange = async (params: ChangeHistoryParams) => {
 };
 
 export const logAccess = async (
-  userId: string | null,
+  user_id: string | null,
   route: string,
   method: string,
-  statusCode: number,
-  ipAddress: string,
-  userAgent: string | null,
+  status_code: number,
+  ip_address: string,
+  user_agent: string | null,
   duration: number
 ) => {
   try {
     await prisma.accessLog.create({
       data: {
-        userId,
+        user_id,
         route,
         method,
-        statusCode,
-        ipAddress,
-        userAgent,
+        status_code,
+        ip_address,
+        user_agent,
         duration,
       },
     });

@@ -3,12 +3,12 @@ import prisma from '../prisma';
 import { catchAsync } from '../utils/index';
 
 export const createQuiz = catchAsync(async (req: Request, res: Response) => {
-  const { topicId, passingScore, questions, type } = req.body;
+  const { topic_id, passing_score, questions, type } = req.body;
 
   const quiz = await prisma.quiz.create({
     data: {
-      topicId,
-      passingScore,
+      topic_id,
+      passing_score,
       title: 'Quiz',
       description: 'Quiz',
       type,
@@ -32,11 +32,11 @@ export const createQuiz = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const submitQuiz = catchAsync(async (req: Request, res: Response) => {
-  const userId = req.user.id;
-  const { quizId, answers } = req.body;
+  const user_id = req.user.id;
+  const { quiz_id, answers } = req.body;
 
   const quiz = await prisma.quiz.findUnique({
-    where: { id: quizId },
+    where: { id: quiz_id },
     include: {
       questions: {
         include: {
@@ -57,26 +57,26 @@ export const submitQuiz = catchAsync(async (req: Request, res: Response) => {
 
   for (const submittedAnswer of answers) {
     const question = quiz.questions.find(
-      (q) => q.id === submittedAnswer.questionId
+      (q) => q.id === submittedAnswer.question_id
     );
 
-    if (question && question.correctAnswer === submittedAnswer.answer) {
+    if (question && question.correct_answer === submittedAnswer.answer) {
       score += 1;
     }
   }
 
-  const completed = score >= quiz.passingScore;
+  const completed = score >= quiz.passing_score;
 
   const submission = await prisma.quizSubmission.create({
     data: {
-      userId,
-      quizId,
+      user_id,
+      quiz_id,
       score,
-      timeSpent: 0,
-      isPassed: completed,
+      time_spent: 0,
+      is_passed: completed,
       results: score,
-      user: { connect: { id: userId } },
-      quiz: { connect: { id: quizId } },
+      user: { connect: { id: user_id } },
+      quiz: { connect: { id: quiz_id } },
     },
   });
 
@@ -100,17 +100,17 @@ export const submitQuiz = catchAsync(async (req: Request, res: Response) => {
 
 export const getUserProgress = catchAsync(
   async (req: Request, res: Response) => {
-    const { userId } = req.params;
+    const { user_id } = req.params;
 
     const progress = await prisma.quizSubmission.findMany({
-      where: { userId },
+      where: { user_id },
       include: {
         quiz: {
           include: {
             topic: {
               select: {
                 title: true,
-                subjectId: true,
+                subject_id: true,
               },
             },
           },

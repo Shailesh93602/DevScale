@@ -30,15 +30,15 @@ export const getBattle = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const createBattle = catchAsync(async (req: Request, res: Response) => {
-  const { title, description, topicId, difficulty, length, date, time } =
+  const { title, description, topic_id, difficulty, length, date, time } =
     req.body;
 
   await prisma.battle.create({
     data: {
       title,
       description,
-      userId: req.user.id,
-      topicId,
+      user_id: req.user.id,
+      topic_id,
       difficulty,
       length,
       date,

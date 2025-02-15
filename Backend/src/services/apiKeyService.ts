@@ -5,7 +5,7 @@ import logger from '../utils/logger';
 const prisma = new PrismaClient();
 
 export const generateApiKey = async (
-  userId: string,
+  user_id: string,
   scope: string[] = ['read']
 ): Promise<string> => {
   const apiKey = crypto.randomBytes(32).toString('hex');
@@ -13,14 +13,14 @@ export const generateApiKey = async (
 
   await prisma.apiKey.create({
     data: {
-      userId,
+      user_id,
       key: hashedKey,
       scope,
-      lastUsed: new Date(),
+      last_used: new Date(),
     },
   });
 
-  logger.info(`API key generated for user ${userId}`);
+  logger.info(`API key generated for user ${user_id}`);
   return apiKey;
 };
 
@@ -32,7 +32,7 @@ export const validateApiKey = async (apiKey: string): Promise<boolean> => {
 
   await prisma.apiKey.update({
     where: { id: key.id },
-    data: { lastUsed: new Date() },
+    data: { last_used: new Date() },
   });
   return true;
 };

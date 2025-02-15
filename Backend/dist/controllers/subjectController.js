@@ -9,7 +9,7 @@ const index_1 = require("../utils/index");
 exports.getAllSubjects = (0, index_1.catchAsync)(async (req, res) => {
     const subjects = await prisma_1.default.subject.findMany({
         include: {
-            mainConcept: {
+            main_concept: {
                 select: {
                     id: true,
                     name: true,

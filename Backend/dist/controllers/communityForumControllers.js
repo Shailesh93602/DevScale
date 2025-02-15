@@ -29,7 +29,7 @@ exports.createForum = (0, utils_1.catchAsync)(async (req, res) => {
         data: {
             title,
             description,
-            createdBy: req.user.id,
+            created_by: req.user.id,
         },
     });
     res

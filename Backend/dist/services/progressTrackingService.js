@@ -8,25 +8,25 @@ const prisma = new client_1.PrismaClient();
 const trackProgress = async (data) => {
     try {
         const existing = await prisma.userProgress.findFirst({
-            where: { userId: data.userId, topicId: data.topicId },
+            where: { user_id: data.user_id, topic_id: data.topic_id },
         });
         const progress = await prisma.userProgress.upsert({
             where: { id: existing?.id ?? '' },
             create: {
-                userId: data.userId,
-                topicId: data.topicId,
-                subjectId: data.subjectId,
-                progressPercentage: data.progressPercentage,
-                isCompleted: data.isCompleted,
-                completedAt: data.isCompleted ? new Date() : null,
+                user_id: data.user_id,
+                topic_id: data.topic_id,
+                subject_id: data.subject_id,
+                progress_percentage: data.progress_percentage,
+                is_completed: data.is_completed,
+                completed_at: data.is_completed ? new Date() : null,
             },
             update: {
-                progressPercentage: data.progressPercentage,
-                isCompleted: data.isCompleted,
-                completedAt: data.isCompleted ? new Date() : null,
+                progress_percentage: data.progress_percentage,
+                is_completed: data.is_completed,
+                completed_at: data.is_completed ? new Date() : null,
             },
         });
-        await (0, cacheService_1.deleteCache)(`user:${data.userId}:progress`);
+        await (0, cacheService_1.deleteCache)(`user:${data.user_id}:progress`);
         return progress;
     }
     catch (error) {
@@ -34,36 +34,36 @@ const trackProgress = async (data) => {
     }
 };
 exports.trackProgress = trackProgress;
-const getUserProgress = async (userId) => {
-    const cached = await (0, cacheService_1.getCache)(`user:${userId}:progress`);
+const getUserProgress = async (user_id) => {
+    const cached = await (0, cacheService_1.getCache)(`user:${user_id}:progress`);
     if (cached)
         return cached;
     const progress = await prisma.userProgress.findMany({
-        where: { userId },
+        where: { user_id },
         include: { topic: true },
-        orderBy: { completedAt: 'desc' },
+        orderBy: { completed_at: 'desc' },
     });
-    await (0, cacheService_1.setCache)(`user:${userId}:progress`, progress, { ttl: 3600 });
+    await (0, cacheService_1.setCache)(`user:${user_id}:progress`, progress, { ttl: 3600 });
     return progress;
 };
 exports.getUserProgress = getUserProgress;
-const resetProgress = async (userId, topicId) => {
+const resetProgress = async (user_id, topic_id) => {
     await prisma.userProgress.deleteMany({
-        where: { userId, topicId },
+        where: { user_id, topic_id },
     });
-    await (0, cacheService_1.deleteCache)(`user:${userId}:progress`);
+    await (0, cacheService_1.deleteCache)(`user:${user_id}:progress`);
 };
 exports.resetProgress = resetProgress;
-const calculateLearningPath = async (userId) => {
-    const cacheKey = `user:${userId}:learning-path`;
+const calculateLearningPath = async (user_id) => {
+    const cacheKey = `user:${user_id}:learning-path`;
     const cached = await (0, cacheService_1.getCache)(cacheKey);
     if (cached)
         return cached;
     const progress = await prisma.userProgress.findMany({
-        where: { userId },
+        where: { user_id },
         include: { topic: true },
     });
-    const completed = progress.filter((p) => p.isCompleted);
+    const completed = progress.filter((p) => p.is_completed);
     const recommendations = await prisma.topic.findMany({
         where: {
             OR: [
@@ -71,7 +71,7 @@ const calculateLearningPath = async (userId) => {
                 {
                     prerequisites: {
                         hasEvery: completed
-                            .map((c) => c.topicId)
+                            .map((c) => c.topic_id)
                             .filter((id) => id !== null),
                     },
                 },
@@ -79,7 +79,7 @@ const calculateLearningPath = async (userId) => {
             NOT: {
                 id: {
                     in: completed
-                        .map((c) => c.topicId)
+                        .map((c) => c.topic_id)
                         .filter((id) => id !== null),
                 },
             },

@@ -3,14 +3,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getLeaderboard = getLeaderboard;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
-async function getLeaderboard(subjectId, timeRange, limit) {
-    const timeFilter = getTimeFilter(timeRange);
+async function getLeaderboard(subject_id, time_range, limit) {
+    const time_filter = getTimeFilter(time_range);
     return prisma.leaderboardEntry.findMany({
         where: {
-            subjectId,
-            createdAt: timeFilter,
+            subject_id: subject_id,
+            created_at: time_filter,
         },
-        orderBy: [{ score: 'desc' }, { timeTaken: 'asc' }],
+        orderBy: [{ score: 'desc' }, { time_taken: 'asc' }],
         take: limit,
         include: {
             user: {

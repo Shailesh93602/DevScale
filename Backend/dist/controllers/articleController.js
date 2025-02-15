@@ -93,7 +93,7 @@ exports.getArticleById = (0, utils_1.catchAsync)(async (req, res) => {
 });
 exports.updateModerationNotes = (0, utils_1.catchAsync)(async (req, res) => {
     const { id } = req.params;
-    const { moderationNotes } = req.body;
+    const { moderations } = req.body;
     const article = await prisma.article.findUnique({
         where: { id },
     });
@@ -105,7 +105,7 @@ exports.updateModerationNotes = (0, utils_1.catchAsync)(async (req, res) => {
     }
     const updatedArticle = await prisma.article.update({
         where: { id },
-        data: { moderationNotes },
+        data: { moderations },
     });
     res.status(200).json({
         success: true,
@@ -116,7 +116,7 @@ exports.updateModerationNotes = (0, utils_1.catchAsync)(async (req, res) => {
 exports.getMyArticles = (0, utils_1.catchAsync)(async (req, res) => {
     const userId = req.user?.id;
     const articles = await prisma.article.findMany({
-        where: { authorId: userId },
+        where: { author_id: userId },
         select: { id: true, title: true, status: true },
         orderBy: { created_at: 'desc' },
     });
@@ -130,7 +130,7 @@ exports.getArticleComments = (0, utils_1.catchAsync)(async (req, res) => {
     const { id } = req.params;
     const article = await prisma.article.findUnique({
         where: { id },
-        select: { id: true, moderationNotes: true },
+        select: { id: true, moderations: true },
     });
     if (!article) {
         return res.status(404).json({
@@ -141,7 +141,7 @@ exports.getArticleComments = (0, utils_1.catchAsync)(async (req, res) => {
     res.status(200).json({
         success: true,
         message: 'Comments retrieved successfully',
-        comments: article.moderationNotes,
+        comments: article.moderations,
     });
 });
 //# sourceMappingURL=articleController.js.map

@@ -9,7 +9,7 @@ const index_1 = require("../utils/index");
 exports.getAllRoadmaps = (0, index_1.catchAsync)(async (req, res) => {
     const roadmaps = await prisma_1.default.roadmap.findMany({
         include: {
-            mainConcepts: {
+            main_concepts: {
                 select: {
                     id: true,
                     name: true,
@@ -21,7 +21,7 @@ exports.getAllRoadmaps = (0, index_1.catchAsync)(async (req, res) => {
             },
         },
         orderBy: {
-            createdAt: 'asc',
+            created_at: 'asc',
         },
     });
     res.status(200).json(roadmaps);
@@ -31,7 +31,7 @@ exports.getMainConceptsInRoadmap = (0, index_1.catchAsync)(async (req, res) => {
     const roadmap = await prisma_1.default.roadmap.findUnique({
         where: { id: roadmapId },
         include: {
-            mainConcepts: {
+            main_concepts: {
                 select: {
                     id: true,
                     name: true,
@@ -55,7 +55,7 @@ exports.getMainConceptsInRoadmap = (0, index_1.catchAsync)(async (req, res) => {
     if (!roadmap) {
         return res.status(404).json({ message: 'Roadmap not found' });
     }
-    res.status(200).json(roadmap.mainConcepts);
+    res.status(200).json(roadmap.main_concepts);
 });
 exports.getRoadMap = (0, index_1.catchAsync)(async (req, res) => {
     const roadMapId = req.params.id;
@@ -70,7 +70,7 @@ exports.getRoadMap = (0, index_1.catchAsync)(async (req, res) => {
     res.status(200).json({ success: true, roadMap });
 });
 exports.createRoadMap = (0, index_1.catchAsync)(async (req, res) => {
-    const userId = req.user.id;
+    const user_id = req.user.id;
     const { title, description, content } = req.body;
     if (!title || !description || !content) {
         return res.status(400).json({
@@ -83,7 +83,7 @@ exports.createRoadMap = (0, index_1.catchAsync)(async (req, res) => {
             title,
             description,
             // content,
-            userId,
+            user_id,
         },
     });
     res.status(201).json({ success: true, roadMap: newRoadMap });

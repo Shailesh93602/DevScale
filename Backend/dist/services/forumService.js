@@ -8,6 +8,7 @@ const createForum = async (data) => {
     return prisma.forum.create({
         data: {
             ...data,
+            user: { connect: { id: data.user_id } },
             tags: data.tags || [],
         },
         include: {
@@ -141,7 +142,7 @@ const getPost = async (id) => {
                     },
                 },
                 where: {
-                    parentId: null,
+                    parent_id: null,
                 },
                 orderBy: {
                     created_at: 'desc',
@@ -175,22 +176,22 @@ const deletePost = async (id) => {
     });
 };
 exports.deletePost = deletePost;
-const upvotePost = async (postId, userId) => {
+const upvotePost = async (post_id, user_id) => {
     await prisma.forumPost.update({
-        where: { id: postId },
+        where: { id: post_id },
         data: {
             upvotes: { increment: 1 },
-            userId,
+            user_id,
         },
     });
 };
 exports.upvotePost = upvotePost;
-const upvoteComment = async (commentId, userId) => {
+const upvoteComment = async (comment_id, user_id) => {
     await prisma.forumComment.update({
-        where: { id: commentId },
+        where: { id: comment_id },
         data: {
             upvotes: { increment: 1 },
-            userId,
+            user_id,
         },
     });
 };

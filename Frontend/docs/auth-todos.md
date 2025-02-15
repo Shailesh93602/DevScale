@@ -2,16 +2,6 @@
 
 ## Frontend (Next.js 15)
 
-     ```
-
-2. **Auth Components**
-
-   - [ ] Add loading states to all auth forms
-   - [ ] Implement OAuth provider handling (Google, GitHub, etc.)
-   - [ ] Add email verification flow component
-   - [ ] Create unified error handling for auth errors
-   - [ ] Implement session refresh mechanism
-
 3. **Route Protection**
    - [ ] Create middleware for protected routes
    - [ ] Add role-based access control (if needed)

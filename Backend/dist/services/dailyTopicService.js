@@ -4,7 +4,7 @@ exports.getTopicStreak = exports.markTopicComplete = exports.getDailyTopic = voi
 const client_1 = require("@prisma/client");
 const errorHandler_1 = require("../utils/errorHandler");
 const prisma = new client_1.PrismaClient();
-const getDailyTopic = async (userId) => {
+const getDailyTopic = async (user_id) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     // Check if a daily topic is already set for today
@@ -18,7 +18,7 @@ const getDailyTopic = async (userId) => {
                 include: {
                     subject: {
                         include: {
-                            concept: true,
+                            main_concept: true,
                         },
                     },
                     articles: {
@@ -43,7 +43,7 @@ const getDailyTopic = async (userId) => {
         const topic = await selectNewDailyTopic();
         dailyTopic = await prisma.dailyTopic.create({
             data: {
-                topicId: topic.id,
+                topic_id: topic.id,
                 date: today,
             },
             include: {
@@ -51,7 +51,7 @@ const getDailyTopic = async (userId) => {
                     include: {
                         subject: {
                             include: {
-                                concept: true,
+                                main_concept: true,
                             },
                         },
                         articles: {
@@ -72,9 +72,9 @@ const getDailyTopic = async (userId) => {
             },
         });
     }
-    // Track user view if userId is provided
-    if (userId) {
-        await trackUserView(dailyTopic.id, userId);
+    // Track user view if user_id is provided
+    if (user_id) {
+        await trackUserView(dailyTopic.id, user_id);
     }
     return {
         ...dailyTopic,
@@ -90,10 +90,10 @@ const selectNewDailyTopic = async () => {
         },
         take: 30, // Don't repeat topics from the last 30 days
         select: {
-            topicId: true,
+            topic_id: true,
         },
     });
-    const recentTopicIds = recentDailyTopics.map((dt) => dt.topicId);
+    const recentTopicIds = recentDailyTopics.map((dt) => dt.topic_id);
     // Select a topic that:
     // 1. Hasn't been featured recently
     // 2. Has approved articles
@@ -125,7 +125,7 @@ const selectNewDailyTopic = async () => {
             ],
         },
         orderBy: {
-            userProgress: {
+            user_progress: {
                 _count: 'desc',
             },
         },
@@ -135,68 +135,68 @@ const selectNewDailyTopic = async () => {
     }
     return eligibleTopic;
 };
-const trackUserView = async (dailyTopicId, userId) => {
+const trackUserView = async (daily_topic_id, user_id) => {
     await prisma.dailyTopicView.upsert({
         where: {
-            userId_dailyTopicId: {
-                userId,
-                dailyTopicId,
+            user_id_daily_topic_id: {
+                user_id: user_id,
+                daily_topic_id,
             },
         },
         update: {
-            viewCount: {
+            view_count: {
                 increment: 1,
             },
         },
         create: {
-            userId,
-            dailyTopicId,
-            viewCount: 1,
+            user_id: user_id,
+            daily_topic_id,
+            view_count: 1,
         },
     });
 };
-const markTopicComplete = async (dailyTopicId, userId) => {
+const markTopicComplete = async (daily_topic_id, user_id) => {
     await prisma.dailyTopicCompletion.create({
         data: {
-            userId,
-            dailyTopicId,
-            timeSpent: 0, // You can track actual time spent if needed
+            user_id,
+            daily_topic_id,
+            time_spent: 0, // You can track actual time spent if needed
         },
     });
     // Create achievement if user completes 7 consecutive daily topics
-    const consecutiveCompletions = await getConsecutiveCompletions(userId);
+    const consecutiveCompletions = await getConsecutiveCompletions(user_id);
     if (consecutiveCompletions >= 7) {
         await prisma.achievement.create({
             data: {
-                userId,
+                user_id,
                 type: 'daily_topic',
                 title: 'Weekly Warrior',
                 description: 'Completed daily topics for 7 consecutive days!',
                 criteria: {
                     consecutiveCompletions: 7,
                 },
-                earnedAt: new Date(),
+                earned_at: new Date(),
             },
         });
     }
 };
 exports.markTopicComplete = markTopicComplete;
-const getConsecutiveCompletions = async (userId) => {
+const getConsecutiveCompletions = async (user_id) => {
     const completions = await prisma.dailyTopicCompletion.findMany({
         where: {
-            userId,
+            user_id,
         },
         orderBy: {
             created_at: 'desc',
         },
         include: {
-            dailyTopic: true,
+            daily_topic: true,
         },
     });
     let consecutive = 0;
     let lastDate = new Date();
     for (const completion of completions) {
-        const completionDate = completion.dailyTopic.date;
+        const completionDate = completion.daily_topic.date;
         const diffDays = Math.floor((lastDate.getTime() - completionDate.getTime()) / (1000 * 60 * 60 * 24));
         if (diffDays === 1) {
             consecutive++;
@@ -208,28 +208,28 @@ const getConsecutiveCompletions = async (userId) => {
     }
     return consecutive;
 };
-const getDailyTopicStats = async (dailyTopicId) => {
+const getDailyTopicStats = async (daily_topic_id) => {
     const [views, completions] = await Promise.all([
         prisma.dailyTopicView.aggregate({
             where: {
-                dailyTopicId,
+                daily_topic_id,
             },
             _sum: {
-                viewCount: true,
+                view_count: true,
             },
         }),
         prisma.dailyTopicCompletion.findMany({
             where: {
-                dailyTopicId,
+                daily_topic_id,
             },
             select: {
-                timeSpent: true,
+                time_spent: true,
             },
         }),
     ]);
-    const totalViews = views._sum.viewCount || 0;
+    const totalViews = views._sum.view_count || 0;
     const totalCompletions = completions.length;
-    const averageTimeSpent = completions.reduce((acc, c) => acc + c.timeSpent, 0) /
+    const averageTimeSpent = completions.reduce((acc, c) => acc + c.time_spent, 0) /
         (completions.length || 1);
     return {
         views: totalViews,
@@ -238,16 +238,16 @@ const getDailyTopicStats = async (dailyTopicId) => {
         engagementRate: totalViews ? totalCompletions / totalViews : 0,
     };
 };
-const getTopicStreak = async (userId) => {
+const getTopicStreak = async (user_id) => {
     const completions = await prisma.dailyTopicCompletion.findMany({
         where: {
-            userId,
+            user_id: user_id,
         },
         orderBy: {
             created_at: 'desc',
         },
         include: {
-            dailyTopic: true,
+            daily_topic: true,
         },
     });
     let currentStreak = 0;
@@ -255,7 +255,7 @@ const getTopicStreak = async (userId) => {
     let tempStreak = 0;
     let lastDate = new Date();
     for (const completion of completions) {
-        const completionDate = completion.dailyTopic.date;
+        const completionDate = completion.daily_topic.date;
         const diffDays = Math.floor((lastDate.getTime() - completionDate.getTime()) / (1000 * 60 * 60 * 24));
         if (diffDays === 1) {
             tempStreak++;

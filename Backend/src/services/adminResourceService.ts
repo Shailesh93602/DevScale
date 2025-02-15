@@ -14,7 +14,7 @@ interface ResourceStats {
 interface CategoryData {
   name: string;
   description?: string;
-  parentId?: string;
+  parent_id?: string;
 }
 
 // Add type definition at top
@@ -26,19 +26,19 @@ type CategoryTree = Prisma.CategoryGetPayload<{
 export const getRoadmapStats = async (): Promise<ResourceStats> => {
   const [total, active, pending, reported] = await Promise.all([
     prisma.roadmap.count(),
-    prisma.roadmap.count({ where: { isPublic: true } }),
-    prisma.roadmap.count({ where: { isPublic: false } }),
-    prisma.contentReport.count({ where: { contentType: 'roadmap' } }),
+    prisma.roadmap.count({ where: { is_public: true } }),
+    prisma.roadmap.count({ where: { is_public: false } }),
+    prisma.contentReport.count({ where: { content_type: 'roadmap' } }),
   ]);
 
   return { total, active, pending, reported };
 };
 
-export const manageRoadmap = async (roadmapId: string, action: string) => {
+export const manageRoadmap = async (roadmap_id: string, action: string) => {
   const roadmap = await prisma.roadmap.findUnique({
-    where: { id: roadmapId },
+    where: { id: roadmap_id },
     include: {
-      concepts: { include: { subjects: { include: { topics: true } } } },
+      topics: { include: { subject: true } },
     },
   });
 
@@ -47,24 +47,24 @@ export const manageRoadmap = async (roadmapId: string, action: string) => {
   switch (action) {
     case 'publish':
       await prisma.roadmap.update({
-        where: { id: roadmapId },
-        data: { isPublic: true },
+        where: { id: roadmap_id },
+        data: { is_public: true },
       });
       break;
     case 'unpublish':
       await prisma.roadmap.update({
-        where: { id: roadmapId },
-        data: { isPublic: false },
+        where: { id: roadmap_id },
+        data: { is_public: false },
       });
       break;
     case 'delete':
-      await prisma.roadmap.delete({ where: { id: roadmapId } });
+      await prisma.roadmap.delete({ where: { id: roadmap_id } });
       break;
     default:
       throw createAppError('Invalid action', 400);
   }
 
-  await invalidateCachePattern(`roadmap:${roadmapId}:*`);
+  await invalidateCachePattern(`roadmap:${roadmap_id}:*`);
 };
 
 // Challenge Operations
@@ -73,39 +73,39 @@ export const getChallengeStats = async (): Promise<ResourceStats> => {
     prisma.challenge.count(),
     prisma.challenge.count({ where: { status: 'ACTIVE' } }),
     prisma.challenge.count({ where: { status: 'PENDING' } }),
-    prisma.contentReport.count({ where: { contentType: 'CHALLENGE' } }),
+    prisma.contentReport.count({ where: { content_type: 'CHALLENGE' } }),
   ]);
 
   return { total, active, pending, reported };
 };
 
-export const manageChallenge = async (challengeId: string, action: string) => {
+export const manageChallenge = async (challenge_id: string, action: string) => {
   const challenge = await prisma.challenge.findUnique({
-    where: { id: challengeId },
+    where: { id: challenge_id },
   });
   if (!challenge) throw createAppError('Challenge not found', 404);
 
   switch (action) {
     case 'activate':
       await prisma.challenge.update({
-        where: { id: challengeId },
+        where: { id: challenge_id },
         data: { status: 'ACTIVE' },
       });
       break;
     case 'deactivate':
       await prisma.challenge.update({
-        where: { id: challengeId },
+        where: { id: challenge_id },
         data: { status: 'ARCHIVED' },
       });
       break;
     case 'delete':
-      await prisma.challenge.delete({ where: { id: challengeId } });
+      await prisma.challenge.delete({ where: { id: challenge_id } });
       break;
     default:
       throw createAppError('Invalid action', 400);
   }
 
-  await invalidateCachePattern(`challenge:${challengeId}:*`);
+  await invalidateCachePattern(`challenge:${challenge_id}:*`);
 };
 
 // Article Operations
@@ -114,61 +114,63 @@ export const getArticleStats = async (): Promise<ResourceStats> => {
     prisma.article.count(),
     prisma.article.count({ where: { status: Status.APPROVED } }),
     prisma.article.count({ where: { status: 'PENDING' } }),
-    prisma.contentReport.count({ where: { contentType: 'ARTICLE' } }),
+    prisma.contentReport.count({ where: { content_type: 'ARTICLE' } }),
   ]);
 
   return { total, active: approved, pending, reported };
 };
 
-export const manageArticle = async (articleId: string, action: string) => {
-  const article = await prisma.article.findUnique({ where: { id: articleId } });
+export const manageArticle = async (article_id: string, action: string) => {
+  const article = await prisma.article.findUnique({
+    where: { id: article_id },
+  });
   if (!article) throw createAppError('Article not found', 404);
 
   switch (action) {
     case 'approve':
       await prisma.article.update({
-        where: { id: articleId },
+        where: { id: article_id },
         data: { status: Status.APPROVED },
       });
       break;
     case 'reject':
       await prisma.article.update({
-        where: { id: articleId },
+        where: { id: article_id },
         data: { status: Status.REJECTED },
       });
       break;
     case 'delete':
-      await prisma.article.delete({ where: { id: articleId } });
+      await prisma.article.delete({ where: { id: article_id } });
       break;
     default:
       throw createAppError('Invalid action', 400);
   }
 
-  await invalidateCachePattern(`article:${articleId}:*`);
+  await invalidateCachePattern(`article:${article_id}:*`);
 };
 
 // Resource Allocation
 export const allocateResources = async (
-  resourceType: string,
-  resourceId: string,
+  resource_type: string,
+  resource_id: string,
   allocation: Record<string, unknown>
 ) => {
-  const model = prisma[resourceType as keyof typeof prisma] as unknown as {
+  const model = prisma[resource_type as keyof typeof prisma] as unknown as {
     update: (args: {
       where: { id: string };
       data: Record<string, unknown>;
     }) => Promise<unknown>;
   };
 
-  await model.update({ where: { id: resourceId }, data: allocation });
+  await model.update({ where: { id: resource_id }, data: allocation });
 
   await prisma.moderationLog.create({
     data: {
-      contentId: resourceId,
-      contentType: resourceType,
+      content_id: resource_id,
+      content_type: resource_type,
       action: 'resource_allocation',
       notes: JSON.stringify(allocation),
-      moderatorId: allocation.moderatorId as string,
+      moderator_id: allocation.moderator_id as string,
     },
   });
 };
@@ -190,7 +192,7 @@ export const manageCategories = async (data: CategoryData, action: string) => {
 export const getCategoryHierarchy = async () => {
   const categories = await prisma.category.findMany({
     include: { children: { include: { children: true } } },
-    where: { parentId: null },
+    where: { parent_id: null },
   });
   return buildCategoryTree(categories as CategoryTree[]);
 };

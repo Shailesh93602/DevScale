@@ -5,37 +5,37 @@ import { getCache, setCache, deleteCache } from './cacheService';
 const prisma = new PrismaClient();
 
 interface ProgressUpdate {
-  userId: string;
-  topicId: string;
-  subjectId: string;
-  progressPercentage: number;
-  isCompleted: boolean;
+  user_id: string;
+  topic_id: string;
+  subject_id: string;
+  progress_percentage: number;
+  is_completed: boolean;
 }
 
 export const trackProgress = async (data: ProgressUpdate) => {
   try {
     const existing = await prisma.userProgress.findFirst({
-      where: { userId: data.userId, topicId: data.topicId },
+      where: { user_id: data.user_id, topic_id: data.topic_id },
     });
 
     const progress = await prisma.userProgress.upsert({
       where: { id: existing?.id ?? '' },
       create: {
-        userId: data.userId,
-        topicId: data.topicId,
-        subjectId: data.subjectId,
-        progressPercentage: data.progressPercentage,
-        isCompleted: data.isCompleted,
-        completedAt: data.isCompleted ? new Date() : null,
+        user_id: data.user_id,
+        topic_id: data.topic_id,
+        subject_id: data.subject_id,
+        progress_percentage: data.progress_percentage,
+        is_completed: data.is_completed,
+        completed_at: data.is_completed ? new Date() : null,
       },
       update: {
-        progressPercentage: data.progressPercentage,
-        isCompleted: data.isCompleted,
-        completedAt: data.isCompleted ? new Date() : null,
+        progress_percentage: data.progress_percentage,
+        is_completed: data.is_completed,
+        completed_at: data.is_completed ? new Date() : null,
       },
     });
 
-    await deleteCache(`user:${data.userId}:progress`);
+    await deleteCache(`user:${data.user_id}:progress`);
     return progress;
   } catch (error) {
     throw createAppError(
@@ -46,39 +46,39 @@ export const trackProgress = async (data: ProgressUpdate) => {
   }
 };
 
-export const getUserProgress = async (userId: string) => {
-  const cached = await getCache(`user:${userId}:progress`);
+export const getUserProgress = async (user_id: string) => {
+  const cached = await getCache(`user:${user_id}:progress`);
   if (cached) return cached;
 
   const progress = await prisma.userProgress.findMany({
-    where: { userId },
+    where: { user_id },
     include: { topic: true },
-    orderBy: { completedAt: 'desc' },
+    orderBy: { completed_at: 'desc' },
   });
 
-  await setCache(`user:${userId}:progress`, progress, { ttl: 3600 });
+  await setCache(`user:${user_id}:progress`, progress, { ttl: 3600 });
   return progress;
 };
 
-export const resetProgress = async (userId: string, topicId: string) => {
+export const resetProgress = async (user_id: string, topic_id: string) => {
   await prisma.userProgress.deleteMany({
-    where: { userId, topicId },
+    where: { user_id, topic_id },
   });
 
-  await deleteCache(`user:${userId}:progress`);
+  await deleteCache(`user:${user_id}:progress`);
 };
 
-export const calculateLearningPath = async (userId: string) => {
-  const cacheKey = `user:${userId}:learning-path`;
+export const calculateLearningPath = async (user_id: string) => {
+  const cacheKey = `user:${user_id}:learning-path`;
   const cached = await getCache(cacheKey);
   if (cached) return cached;
 
   const progress = await prisma.userProgress.findMany({
-    where: { userId },
+    where: { user_id },
     include: { topic: true },
   });
 
-  const completed = progress.filter((p) => p.isCompleted);
+  const completed = progress.filter((p) => p.is_completed);
   const recommendations = await prisma.topic.findMany({
     where: {
       OR: [
@@ -86,7 +86,7 @@ export const calculateLearningPath = async (userId: string) => {
         {
           prerequisites: {
             hasEvery: completed
-              .map((c) => c.topicId)
+              .map((c) => c.topic_id)
               .filter((id): id is string => id !== null),
           },
         },
@@ -94,7 +94,7 @@ export const calculateLearningPath = async (userId: string) => {
       NOT: {
         id: {
           in: completed
-            .map((c) => c.topicId)
+            .map((c) => c.topic_id)
             .filter((id): id is string => id !== null),
         },
       },

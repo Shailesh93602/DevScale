@@ -4,9 +4,9 @@ const prisma = new PrismaClient();
 
 interface CommentData {
   content: string;
-  userId: string;
-  roadmapId: string;
-  parentId?: string;
+  user_id: string;
+  roadmap_id: string;
+  parent_id?: string;
 }
 
 export class RoadmapInteractionService {
@@ -14,9 +14,9 @@ export class RoadmapInteractionService {
     const comment = await prisma.comment.create({
       data: {
         content: data.content,
-        userId: data.userId,
-        roadmapId: data.roadmapId,
-        parentId: data.parentId,
+        user_id: data.user_id,
+        roadmap_id: data.roadmap_id,
+        parent_id: data.parent_id,
       },
       include: {
         user: {
@@ -41,11 +41,11 @@ export class RoadmapInteractionService {
     return comment;
   }
 
-  static async getRoadmapComments(roadmapId: string) {
+  static async getRoadmapComments(roadmap_id: string) {
     const comments = await prisma.comment.findMany({
       where: {
-        roadmapId,
-        parentId: null, // Get only top-level comments
+        roadmap_id,
+        parent_id: null, // Get only top-level comments
       },
       include: {
         user: {
@@ -78,12 +78,12 @@ export class RoadmapInteractionService {
     return comments;
   }
 
-  static async toggleLike(userId: string, roadmapId: string): Promise<void> {
+  static async toggleLike(user_id: string, roadmap_id: string): Promise<void> {
     const existingLike = await prisma.like.findUnique({
       where: {
-        userId_roadmapId: {
-          userId,
-          roadmapId,
+        user_id_roadmap_id: {
+          user_id,
+          roadmap_id,
         },
       },
     });
@@ -91,30 +91,30 @@ export class RoadmapInteractionService {
     if (existingLike) {
       await prisma.like.delete({
         where: {
-          userId_roadmapId: {
-            userId,
-            roadmapId,
+          user_id_roadmap_id: {
+            user_id,
+            roadmap_id,
           },
         },
       });
     } else {
       await prisma.like.create({
         data: {
-          userId,
-          roadmapId,
+          user_id,
+          roadmap_id,
         },
       });
     }
   }
 
-  static async getRecommendedRoadmaps(userId: string) {
+  static async getRecommendedRoadmaps(user_id: string) {
     // Get user's interests based on their saved roadmaps and completed topics
     const userInterests = await prisma.userRoadmap.findMany({
-      where: { userId },
+      where: { user_id },
       include: {
         roadmap: {
           include: {
-            concepts: {
+            main_concepts: {
               include: {
                 subjects: true,
               },
@@ -127,7 +127,7 @@ export class RoadmapInteractionService {
     // Extract topics and subjects of interest
     const interests = new Set<string>();
     userInterests.forEach((ur) => {
-      ur.roadmap.concepts.forEach((concept) => {
+      ur.roadmap.main_concepts.forEach((concept) => {
         concept.subjects.forEach((subject) => {
           interests.add(subject.title.toLowerCase());
         });
@@ -137,13 +137,13 @@ export class RoadmapInteractionService {
     // Find roadmaps with similar topics
     const recommendedRoadmaps = await prisma.roadmap.findMany({
       where: {
-        isPublic: true,
+        is_public: true,
         NOT: {
           id: {
-            in: userInterests.map((ur) => ur.roadmapId),
+            in: userInterests.map((ur) => ur.roadmap_id),
           },
         },
-        concepts: {
+        main_concepts: {
           some: {
             subjects: {
               some: {
@@ -181,16 +181,16 @@ export class RoadmapInteractionService {
     return recommendedRoadmaps;
   }
 
-  static async getEngagementMetrics(roadmapId: string) {
+  static async getEngagementMetrics(roadmap_id: string) {
     const [likes, comments, saves] = await Promise.all([
       prisma.like.count({
-        where: { roadmapId },
+        where: { roadmap_id },
       }),
       prisma.comment.count({
-        where: { roadmapId },
+        where: { roadmap_id },
       }),
       prisma.userRoadmap.count({
-        where: { roadmapId },
+        where: { roadmap_id },
       }),
     ]);
 

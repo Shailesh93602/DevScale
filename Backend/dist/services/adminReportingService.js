@@ -176,7 +176,7 @@ function formatPeriod(date, period) {
 // Analytics helper methods
 async function getPageViewAnalytics(start, end) {
     return prisma.dailyTopicView.aggregate({
-        _sum: { viewCount: true },
+        _sum: { view_count: true },
         where: { created_at: { gte: start, lte: end } },
     });
 }
@@ -204,17 +204,17 @@ async function getUserPathAnalytics(start, end) {
 }
 async function getApiPerformanceMetrics(start, end) {
     return prisma.accessLog.aggregate({
-        _avg: { duration: true, statusCode: true },
+        _avg: { duration: true, status_code: true },
         where: { created_at: { gte: start, lte: end } },
     });
 }
 async function getErrorRateMetrics(start, end) {
     return prisma.accessLog.groupBy({
-        by: ['statusCode'],
+        by: ['status_code'],
         _count: true,
         where: {
             created_at: { gte: start, lte: end },
-            statusCode: { gte: 400 },
+            status_code: { gte: 400 },
         },
     });
 }

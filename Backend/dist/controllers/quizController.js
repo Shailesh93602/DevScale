@@ -7,11 +7,11 @@ exports.getUserProgress = exports.submitQuiz = exports.createQuiz = void 0;
 const prisma_1 = __importDefault(require("../prisma"));
 const index_1 = require("../utils/index");
 exports.createQuiz = (0, index_1.catchAsync)(async (req, res) => {
-    const { topicId, passingScore, questions, type } = req.body;
+    const { topic_id, passing_score, questions, type } = req.body;
     const quiz = await prisma_1.default.quiz.create({
         data: {
-            topicId,
-            passingScore,
+            topic_id,
+            passing_score,
             title: 'Quiz',
             description: 'Quiz',
             type,
@@ -31,10 +31,10 @@ exports.createQuiz = (0, index_1.catchAsync)(async (req, res) => {
     });
 });
 exports.submitQuiz = (0, index_1.catchAsync)(async (req, res) => {
-    const userId = req.user.id;
-    const { quizId, answers } = req.body;
+    const user_id = req.user.id;
+    const { quiz_id, answers } = req.body;
     const quiz = await prisma_1.default.quiz.findUnique({
-        where: { id: quizId },
+        where: { id: quiz_id },
         include: {
             questions: {
                 include: {
@@ -51,22 +51,22 @@ exports.submitQuiz = (0, index_1.catchAsync)(async (req, res) => {
     }
     let score = 0;
     for (const submittedAnswer of answers) {
-        const question = quiz.questions.find((q) => q.id === submittedAnswer.questionId);
-        if (question && question.correctAnswer === submittedAnswer.answer) {
+        const question = quiz.questions.find((q) => q.id === submittedAnswer.question_id);
+        if (question && question.correct_answer === submittedAnswer.answer) {
             score += 1;
         }
     }
-    const completed = score >= quiz.passingScore;
+    const completed = score >= quiz.passing_score;
     const submission = await prisma_1.default.quizSubmission.create({
         data: {
-            userId,
-            quizId,
+            user_id,
+            quiz_id,
             score,
-            timeSpent: 0,
-            isPassed: completed,
+            time_spent: 0,
+            is_passed: completed,
             results: score,
-            user: { connect: { id: userId } },
-            quiz: { connect: { id: quizId } },
+            user: { connect: { id: user_id } },
+            quiz: { connect: { id: quiz_id } },
         },
     });
     const submissionAnswers = answers.map((answer) => ({
@@ -83,16 +83,16 @@ exports.submitQuiz = (0, index_1.catchAsync)(async (req, res) => {
     });
 });
 exports.getUserProgress = (0, index_1.catchAsync)(async (req, res) => {
-    const { userId } = req.params;
+    const { user_id } = req.params;
     const progress = await prisma_1.default.quizSubmission.findMany({
-        where: { userId },
+        where: { user_id },
         include: {
             quiz: {
                 include: {
                     topic: {
                         select: {
                             title: true,
-                            subjectId: true,
+                            subject_id: true,
                         },
                     },
                 },

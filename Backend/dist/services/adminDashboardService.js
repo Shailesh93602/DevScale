@@ -44,14 +44,14 @@ async function getUserStats() {
     const [totalUsers, newUsers, usersByRole, activeUsers] = await Promise.all([
         prisma.user.count(),
         prisma.user.count({ where: { created_at: { gte: thirtyDaysAgo } } }),
-        prisma.user.groupBy({ by: ['roleId'], _count: true }),
+        prisma.user.groupBy({ by: ['role_id'], _count: true }),
         prisma.userProgress.groupBy({
-            by: ['userId'],
-            having: { userId: { _count: { gt: 0 } } },
+            by: ['user_id'],
+            having: { user_id: { _count: { gt: 0 } } },
         }),
     ]);
     const completionRates = await prisma.userProgress.groupBy({
-        by: ['isCompleted'],
+        by: ['is_completed'],
         _count: true,
     });
     return {
@@ -60,11 +60,11 @@ async function getUserStats() {
         newUsers,
         usersByRole: usersByRole.reduce((acc, curr) => ({
             ...acc,
-            [curr.roleId ?? 'none']: curr._count,
+            [curr.role_id ?? 'none']: curr._count,
         }), {}),
         completionRates: completionRates.reduce((acc, curr) => ({
             ...acc,
-            [curr.isCompleted ? 'completed' : 'inProgress']: curr._count,
+            [curr.is_completed ? 'completed' : 'inProgress']: curr._count,
         }), { completed: 0, inProgress: 0 }),
     };
 }
@@ -74,7 +74,7 @@ async function getPlatformMetrics() {
         prisma.challenge.count(),
         prisma.article.count(),
         prisma.quiz.count(),
-        prisma.userProgress.count({ where: { isCompleted: true } }),
+        prisma.userProgress.count({ where: { is_completed: true } }),
     ]);
     const totalContent = roadmaps + challenges + articles + quizzes;
     const engagementRate = totalContent ? (engagements / totalContent) * 100 : 0;
@@ -110,11 +110,11 @@ async function getPopularContent() {
     const [roadmaps, challenges, articles] = await Promise.all([
         prisma.roadmap.findMany({
             take: 5,
-            orderBy: { userRoadmaps: { _count: 'desc' } },
+            orderBy: { user_roadmaps: { _count: 'desc' } },
             select: {
                 id: true,
                 title: true,
-                _count: { select: { userRoadmaps: true } },
+                _count: { select: { user_roadmaps: true } },
             },
         }),
         prisma.challenge.findMany({
@@ -138,7 +138,7 @@ async function getPopularContent() {
             id: r.id,
             type: 'roadmap',
             title: r.title,
-            views: r._count.userRoadmaps,
+            views: r._count.user_roadmaps,
         })),
         ...challenges.map((c) => ({
             id: c.id,
@@ -197,11 +197,11 @@ async function calculateErrorRate() {
 }
 async function searchUsers(query) {
     try {
-        const { email, roleId, page = 1, limit = 10, sortBy = 'created_at', } = query;
+        const { email, role_id, page = 1, limit = 10, sortBy = 'created_at', } = query;
         return await prisma.user.findMany({
             where: {
                 email: email ? { contains: String(email) } : undefined,
-                roleId: roleId ? String(roleId) : undefined,
+                role_id: role_id ? String(role_id) : undefined,
             },
             skip: (Number(page) - 1) * Number(limit),
             take: Number(limit),
@@ -219,12 +219,12 @@ async function searchUsers(query) {
                 linkedin_url: true,
                 twitter_url: true,
                 website_url: true,
-                roleId: true,
+                role_id: true,
                 created_at: true,
                 updated_at: true,
                 is_active: true,
                 timezone: true,
-                isVerified: true,
+                is_verified: true,
                 role: {
                     select: {
                         id: true,
@@ -232,7 +232,7 @@ async function searchUsers(query) {
                         description: true,
                         created_at: true,
                         updated_at: true,
-                        parentId: true,
+                        parent_id: true,
                     },
                 },
             },
@@ -243,19 +243,19 @@ async function searchUsers(query) {
         throw (0, errorHandler_1.createAppError)('Failed to search users', 500);
     }
 }
-async function updateUserRole(userId, roleId) {
+async function updateUserRole(user_id, role_id) {
     try {
         const [user, role] = await Promise.all([
-            prisma.user.findUnique({ where: { id: userId } }),
-            prisma.role.findUnique({ where: { id: roleId } }),
+            prisma.user.findUnique({ where: { id: user_id } }),
+            prisma.role.findUnique({ where: { id: role_id } }),
         ]);
         if (!user)
             throw (0, errorHandler_1.createAppError)('User not found', 404);
         if (!role)
             throw (0, errorHandler_1.createAppError)('Role not found', 404);
         return await prisma.user.update({
-            where: { id: userId },
-            data: { roleId },
+            where: { id: user_id },
+            data: { role_id },
             include: { role: true },
         });
     }

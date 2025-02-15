@@ -58,7 +58,7 @@ const trackEmailDelivery = async (to, subject, status) => {
                 recipient: to,
                 subject,
                 status,
-                sentAt: new Date(),
+                sent_at: new Date(),
             },
         });
     }

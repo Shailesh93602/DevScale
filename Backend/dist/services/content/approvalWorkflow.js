@@ -5,29 +5,29 @@ const client_1 = require("@prisma/client");
 const eventSystem_1 = require("../../utils/eventSystem");
 const prisma = new client_1.PrismaClient();
 class ContentApprovalWorkflow {
-    static async submitForReview(contentId) {
+    static async submitForReview(content_id) {
         await prisma.article.update({
-            where: { id: contentId },
+            where: { id: content_id },
             data: {
                 status: client_1.Status.PENDING,
             },
         });
         eventSystem_1.EventSystem.emit('content.submitted', {
             type: 'CONTENT_SUBMITTED',
-            payload: { contentId },
+            payload: { content_id },
             source: 'approval-workflow',
         });
     }
     static async processApproval(request) {
-        const { contentId, reviewerId, status, comments } = request;
+        const { content_id, reviewer_id, status, comments } = request;
         await prisma.article.update({
-            where: { id: contentId },
+            where: { id: content_id },
             data: { status },
         });
         await prisma.approvalHistory.create({
             data: {
-                contentId,
-                reviewerId,
+                content_id: content_id,
+                reviewer_id: reviewer_id,
                 status,
                 comments,
             },
@@ -38,10 +38,10 @@ class ContentApprovalWorkflow {
             source: 'approval-workflow',
         });
     }
-    static async getApprovalHistory(contentId) {
+    static async getApprovalHistory(content_id) {
         return await prisma.approvalHistory.findMany({
-            where: { contentId },
-            orderBy: { createdAt: 'desc' },
+            where: { content_id: content_id },
+            orderBy: { created_at: 'desc' },
             include: {
                 reviewer: {
                     select: {

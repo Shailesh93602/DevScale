@@ -17,7 +17,7 @@ interface TicketData {
   description: string;
   category: string;
   priority: string;
-  userId: string;
+  user_id: string;
 }
 
 interface BugReportData {
@@ -25,10 +25,10 @@ interface BugReportData {
   description: string;
   severity: string;
   environment?: string;
-  stepsToReproduce?: string;
-  expectedBehavior?: string;
-  actualBehavior?: string;
-  userId: string;
+  steps_to_reproduce?: string;
+  expected_behavior?: string;
+  actual_behavior?: string;
+  user_id: string;
 }
 
 interface FeatureRequestData {
@@ -36,7 +36,7 @@ interface FeatureRequestData {
   description: string;
   category: string;
   priority: string;
-  userId: string;
+  user_id: string;
 }
 
 interface HelpArticleData {
@@ -55,7 +55,7 @@ export class SupportService {
           description: data.description,
           category: data.category,
           priority: data.priority as TicketPriority,
-          userId: data.userId,
+          user_id: data.user_id,
         },
         include: {
           user: {
@@ -78,15 +78,15 @@ export class SupportService {
   }
 
   static async updateTicketStatus(
-    ticketId: string,
+    ticket_id: string,
     status: TicketStatus,
-    agentId: string
+    agent_id: string
   ) {
     const ticket = await prisma.supportTicket.update({
-      where: { id: ticketId },
+      where: { id: ticket_id },
       data: {
         status,
-        assignedTo: agentId,
+        assigned_to: agent_id,
       },
       include: {
         user: {
@@ -104,17 +104,17 @@ export class SupportService {
   }
 
   static async addTicketResponse(
-    ticketId: string,
-    userId: string,
+    ticket_id: string,
+    user_id: string,
     content: string,
-    isInternal: boolean = false
+    is_internal: boolean = false
   ) {
     const response = await prisma.ticketResponse.create({
       data: {
-        ticketId,
-        userId,
+        ticket_id,
+        user_id,
         content,
-        isInternal,
+        is_internal,
       },
       include: {
         ticket: {
@@ -129,7 +129,7 @@ export class SupportService {
       },
     });
 
-    if (!isInternal) {
+    if (!is_internal) {
       // Notify user of new response
       await this.notifyNewResponse(response);
     }
@@ -144,10 +144,10 @@ export class SupportService {
         description: data.description,
         severity: data.severity as Severity,
         environment: data.environment,
-        stepsToReproduce: data.stepsToReproduce,
-        expectedBehavior: data.expectedBehavior,
-        actualBehavior: data.actualBehavior,
-        userId: data.userId,
+        steps_to_reproduce: data.steps_to_reproduce,
+        expected_behavior: data.expected_behavior,
+        actual_behavior: data.actual_behavior,
+        user_id: data.user_id,
       },
     });
 
@@ -164,19 +164,19 @@ export class SupportService {
         description: data.description,
         category: data.category,
         priority: data.priority as Priority,
-        userId: data.userId,
+        user_id: data.user_id,
       },
     });
 
     return request;
   }
 
-  static async voteFeatureRequest(requestId: string, userId: string) {
+  static async voteFeatureRequest(requestId: string, user_id: string) {
     await prisma.$transaction(async (tx) => {
       await tx.featureRequestVote.create({
         data: {
-          featureRequestId: requestId,
-          userId,
+          feature_request_id: requestId,
+          user_id,
         },
       });
 
@@ -212,7 +212,7 @@ export class SupportService {
           { content: { contains: query, mode: 'insensitive' } },
           { tags: { has: query } },
         ],
-        isPublished: true,
+        is_published: true,
       },
       orderBy: {
         views: 'desc',

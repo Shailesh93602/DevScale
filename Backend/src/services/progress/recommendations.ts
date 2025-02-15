@@ -6,30 +6,30 @@ const prisma = new PrismaClient();
 
 // Add this interface for the completed topics
 interface CompletedTopic {
-  topicId: string;
+  topic_id: string;
 }
 
-export async function getLearningPathRecommendations(userId: string) {
+export async function getLearningPathRecommendations(user_id: string) {
   try {
     const [userProgress, userSkills, completedTopics] = await Promise.all([
-      getUserProgress(userId),
-      getUserSkills(userId),
-      getCompletedTopics(userId),
+      getUserProgress(user_id),
+      getUserSkills(user_id),
+      getCompletedTopics(user_id),
     ]);
 
     return {
-      nextTopics: await getNextTopics(userId, completedTopics),
+      nextTopics: await getNextTopics(user_id, completedTopics),
       relatedRoadmaps: await getRelatedRoadmaps(userSkills),
       challengeRecommendations: await getChallengeRecommendations(
-        userId,
-        userProgress.progressPercentage
+        user_id,
+        userProgress.progress_percentage
       ),
-      skillGaps: await identifySkillGaps(userId, userSkills),
+      skillGaps: await identifySkillGaps(user_id, userSkills),
       progressStats: {
-        completedTopics: userProgress.completedTopics,
-        totalTopics: userProgress.totalTopics,
-        progressPercentage: userProgress.progressPercentage,
-        recentActivity: userProgress.recentActivity,
+        completed_topics: userProgress.completed_topics,
+        total_topics: userProgress.total_topics,
+        progress_percentage: userProgress.progress_percentage,
+        recent_activity: userProgress.recent_activity,
       },
     };
   } catch (error) {
@@ -38,33 +38,33 @@ export async function getLearningPathRecommendations(userId: string) {
   }
 }
 
-async function getUserSkills(userId: string) {
+async function getUserSkills(user_id: string) {
   const profile = await prisma.user.findUnique({
-    where: { id: userId },
+    where: { id: user_id },
     select: { skills: true },
   });
   return profile?.skills || [];
 }
 
-async function getCompletedTopics(userId: string) {
+async function getCompletedTopics(user_id: string) {
   return prisma.progress.findMany({
-    where: { userId, status: Status.APPROVED },
-    select: { topicId: true },
+    where: { user_id: user_id, status: Status.APPROVED },
+    select: { topic_id: true },
   });
 }
 
 async function getNextTopics(
-  userId: string,
-  completedTopics: CompletedTopic[]
+  user_id: string,
+  completed_topics: CompletedTopic[]
 ) {
-  const completedIds = completedTopics.map((t) => t.topicId);
+  const completed_ids = completed_topics.map((t) => t.topic_id);
 
   return prisma.topic.findMany({
     where: {
-      id: { notIn: completedIds },
+      id: { notIn: completed_ids },
       roadmaps: {
         some: {
-          progress: { some: { userId, status: Status.APPROVED } },
+          progress: { some: { user_id: user_id, status: Status.APPROVED } },
         },
       },
     },
@@ -92,28 +92,28 @@ async function getRelatedRoadmaps(userSkills: string[]) {
 }
 
 async function getChallengeRecommendations(
-  userId: string,
-  progressPercentage: number
+  user_id: string,
+  progress_percentage: number
 ) {
-  const userLevel = await getUserLevel(userId);
-  const difficulty = mapProgressToDifficulty(progressPercentage, userLevel);
+  const user_level = await getUserLevel(user_id);
+  const difficulty = mapProgressToDifficulty(progress_percentage, user_level);
 
   return prisma.challenge.findMany({
     where: {
       difficulty,
-      submissions: { none: { userId } },
+      submissions: { none: { user_id } },
     },
     take: 5,
   });
 }
 
-async function identifySkillGaps(userId: string, userSkills: string[]) {
-  const popularSkills = await prisma.user.findMany({
+async function identifySkillGaps(user_id: string, user_skills: string[]) {
+  const popular_skills = await prisma.user.findMany({
     select: { skills: true },
     take: 100,
   });
 
-  const skillFrequency = popularSkills.reduce<Record<string, number>>(
+  const skill_frequency = popular_skills.reduce<Record<string, number>>(
     (acc, profile) => {
       profile.skills.forEach((skill) => {
         acc[skill] = (acc[skill] || 0) + 1;
@@ -123,25 +123,25 @@ async function identifySkillGaps(userId: string, userSkills: string[]) {
     {}
   );
 
-  return Object.entries(skillFrequency)
-    .filter(([skill]) => !userSkills.includes(skill))
-    .sort(([, a], [, b]) => b - a)
+  return Object.entries(skill_frequency)
+    .filter(([skill]) => !user_skills.includes(skill))
+    .sort(([, a], [, b]) => (b as number) - (a as number))
     .slice(0, 5)
     .map(([skill]) => skill);
 }
 
 // Helper functions
-async function getUserLevel(userId: string) {
+async function getUserLevel(user_id: string) {
   const profile = await prisma.user.findUnique({
-    where: { id: userId },
+    where: { id: user_id },
     select: { experience_level: true },
   });
   return profile?.experience_level;
 }
 
-function mapProgressToDifficulty(progressPercentage: number, level?: string) {
-  if (level === 'EXPERT' || progressPercentage > 90) return 'HARD';
-  if (level === 'ADVANCED' || progressPercentage > 70) return 'MEDIUM';
+function mapProgressToDifficulty(progress_percentage: number, level?: string) {
+  if (level === 'EXPERT' || progress_percentage > 90) return 'HARD';
+  if (level === 'ADVANCED' || progress_percentage > 70) return 'MEDIUM';
 
   return 'EASY';
 }

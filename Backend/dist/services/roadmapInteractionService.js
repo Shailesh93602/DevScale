@@ -8,9 +8,9 @@ class RoadmapInteractionService {
         const comment = await prisma.comment.create({
             data: {
                 content: data.content,
-                userId: data.userId,
-                roadmapId: data.roadmapId,
-                parentId: data.parentId,
+                user_id: data.user_id,
+                roadmap_id: data.roadmap_id,
+                parent_id: data.parent_id,
             },
             include: {
                 user: {
@@ -33,11 +33,11 @@ class RoadmapInteractionService {
         });
         return comment;
     }
-    static async getRoadmapComments(roadmapId) {
+    static async getRoadmapComments(roadmap_id) {
         const comments = await prisma.comment.findMany({
             where: {
-                roadmapId,
-                parentId: null, // Get only top-level comments
+                roadmap_id,
+                parent_id: null, // Get only top-level comments
             },
             include: {
                 user: {
@@ -68,21 +68,21 @@ class RoadmapInteractionService {
         });
         return comments;
     }
-    static async toggleLike(userId, roadmapId) {
+    static async toggleLike(user_id, roadmap_id) {
         const existingLike = await prisma.like.findUnique({
             where: {
-                userId_roadmapId: {
-                    userId,
-                    roadmapId,
+                user_id_roadmap_id: {
+                    user_id,
+                    roadmap_id,
                 },
             },
         });
         if (existingLike) {
             await prisma.like.delete({
                 where: {
-                    userId_roadmapId: {
-                        userId,
-                        roadmapId,
+                    user_id_roadmap_id: {
+                        user_id,
+                        roadmap_id,
                     },
                 },
             });
@@ -90,20 +90,20 @@ class RoadmapInteractionService {
         else {
             await prisma.like.create({
                 data: {
-                    userId,
-                    roadmapId,
+                    user_id,
+                    roadmap_id,
                 },
             });
         }
     }
-    static async getRecommendedRoadmaps(userId) {
+    static async getRecommendedRoadmaps(user_id) {
         // Get user's interests based on their saved roadmaps and completed topics
         const userInterests = await prisma.userRoadmap.findMany({
-            where: { userId },
+            where: { user_id },
             include: {
                 roadmap: {
                     include: {
-                        concepts: {
+                        main_concepts: {
                             include: {
                                 subjects: true,
                             },
@@ -115,7 +115,7 @@ class RoadmapInteractionService {
         // Extract topics and subjects of interest
         const interests = new Set();
         userInterests.forEach((ur) => {
-            ur.roadmap.concepts.forEach((concept) => {
+            ur.roadmap.main_concepts.forEach((concept) => {
                 concept.subjects.forEach((subject) => {
                     interests.add(subject.title.toLowerCase());
                 });
@@ -124,13 +124,13 @@ class RoadmapInteractionService {
         // Find roadmaps with similar topics
         const recommendedRoadmaps = await prisma.roadmap.findMany({
             where: {
-                isPublic: true,
+                is_public: true,
                 NOT: {
                     id: {
-                        in: userInterests.map((ur) => ur.roadmapId),
+                        in: userInterests.map((ur) => ur.roadmap_id),
                     },
                 },
-                concepts: {
+                main_concepts: {
                     some: {
                         subjects: {
                             some: {
@@ -166,16 +166,16 @@ class RoadmapInteractionService {
         });
         return recommendedRoadmaps;
     }
-    static async getEngagementMetrics(roadmapId) {
+    static async getEngagementMetrics(roadmap_id) {
         const [likes, comments, saves] = await Promise.all([
             prisma.like.count({
-                where: { roadmapId },
+                where: { roadmap_id },
             }),
             prisma.comment.count({
-                where: { roadmapId },
+                where: { roadmap_id },
             }),
             prisma.userRoadmap.count({
-                where: { roadmapId },
+                where: { roadmap_id },
             }),
         ]);
         return {

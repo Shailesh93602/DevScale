@@ -15,38 +15,38 @@ interface QuizData {
   title: string;
   description: string;
   type: QuizType;
-  timeLimit?: number;
-  passingScore: number;
+  time_limit?: number;
+  passing_score: number;
   questions: QuestionData[];
-  topicId?: string;
-  subjectId?: string;
-  conceptId?: string;
+  topic_id?: string;
+  subject_id?: string;
+  main_concept_id?: string;
 }
 
 interface QuestionData {
   question: string;
   type: 'multiple_choice' | 'coding';
   options?: string[];
-  correctAnswer: string;
+  correct_answer: string;
   points: number;
-  testCases?: TestCase[];
+  test_cases?: TestCase[];
 }
 
 interface TestCase {
   input: string;
-  expectedOutput: string;
-  isHidden?: boolean;
+  expected_output: string;
+  is_hidden?: boolean;
 }
 
 interface SubmissionData {
-  userId: string;
-  quizId: string;
+  user_id: string;
+  quiz_id: string;
   answers: Answer[];
-  timeSpent: number;
+  time_spent: number;
 }
 
 interface Answer {
-  questionId: string;
+  question_id: string;
   answer: string;
 }
 
@@ -56,11 +56,11 @@ export async function createQuiz(data: QuizData): Promise<Quiz> {
       title: data.title,
       description: data.description,
       type: data.type,
-      timeLimit: data.timeLimit,
-      passingScore: data.passingScore,
-      topicId: data.topicId,
-      subjectId: data.subjectId,
-      conceptId: data.conceptId,
+      time_limit: data.time_limit,
+      passing_score: data.passing_score,
+      topic_id: data.topic_id,
+      subject_id: data.subject_id,
+      main_concept_id: data.main_concept_id,
       questions: {
         create: data.questions.map((q) => ({
           question: q.question,
@@ -69,14 +69,14 @@ export async function createQuiz(data: QuizData): Promise<Quiz> {
             ? {
                 create: q.options.map((option) => ({
                   text: option,
-                  isCorrect: option === q.correctAnswer,
+                  is_correct: option === q.correct_answer,
                 })),
               }
             : undefined,
-          correctAnswer: q.correctAnswer,
+          correct_answer: q.correct_answer,
           points: q.points,
-          testCases: q.testCases
-            ? (q.testCases as unknown as Prisma.InputJsonValue)
+          test_cases: q.test_cases
+            ? (q.test_cases as unknown as Prisma.InputJsonValue)
             : Prisma.DbNull,
         })),
       },
@@ -89,7 +89,7 @@ export async function submitQuiz(
   data: SubmissionData
 ): Promise<QuizSubmission> {
   const quiz = await prisma.quiz.findUnique({
-    where: { id: data.quizId },
+    where: { id: data.quiz_id },
     include: { questions: true },
   });
 
@@ -99,7 +99,7 @@ export async function submitQuiz(
   const results = [];
 
   for (const answer of data.answers) {
-    const question = quiz.questions.find((q) => q.id === answer.questionId);
+    const question = quiz.questions.find((q) => q.id === answer.question_id);
     if (!question) continue;
 
     let isCorrect = false;
@@ -108,34 +108,34 @@ export async function submitQuiz(
     if (question.type === 'coding') {
       const testResults = await evaluateCode(
         answer.answer,
-        Array.isArray(question.testCases)
-          ? (question.testCases as unknown as TestCase[])
+        Array.isArray(question.test_cases)
+          ? (question.test_cases as unknown as TestCase[])
           : undefined
       );
       isCorrect = testResults.every((r) => r.passed);
       score = isCorrect ? question.points : 0;
     } else {
-      isCorrect = answer.answer === question.correctAnswer;
+      isCorrect = answer.answer === question.correct_answer;
       score = isCorrect ? question.points : 0;
     }
 
     totalScore += score;
-    results.push({ questionId: question.id, isCorrect, score });
+    results.push({ question_id: question.id, is_correct: isCorrect, score });
   }
 
   const submission = await prisma.quizSubmission.create({
     data: {
-      userId: data.userId,
-      quizId: data.quizId,
+      user_id: data.user_id,
+      quiz_id: data.quiz_id,
       score: totalScore,
-      timeSpent: data.timeSpent,
-      isPassed: totalScore >= quiz.passingScore,
+      time_spent: data.time_spent,
+      is_passed: totalScore >= quiz.passing_score,
       results,
     },
     include: { quiz: true },
   });
 
-  await updateProgress(data.userId, quiz, submission.isPassed);
+  await updateProgress(data.user_id, quiz, submission.is_passed);
   return submission;
 }
 
@@ -146,16 +146,16 @@ export async function getQuizzesByLevel(
   return prisma.quiz.findMany({
     where: {
       type,
-      OR: [{ topicId: id }, { subjectId: id }, { conceptId: id }],
+      OR: [{ topic_id: id }, { subject_id: id }, { main_concept_id: id }],
     },
     include: { _count: { select: { submissions: true } } },
   });
 }
 
-export async function getQuizPerformance(quizId: string) {
+export async function getQuizPerformance(quiz_id: string) {
   const submissions = await prisma.quizSubmission.findMany({
     where: {
-      quizId,
+      quiz_id: quiz_id,
     },
     include: {
       user: {
@@ -171,7 +171,7 @@ export async function getQuizPerformance(quizId: string) {
   });
 
   const totalSubmissions = submissions.length;
-  const passedSubmissions = submissions.filter((s) => s.isPassed).length;
+  const passedSubmissions = submissions.filter((s) => s.is_passed).length;
   const averageScore =
     submissions.reduce((acc, s) => acc + s.score, 0) / totalSubmissions;
 
@@ -204,15 +204,15 @@ async function evaluateCode(
       });
 
       results.push({
-        passed: output.trim() === testCase.expectedOutput.trim(),
-        input: testCase.isHidden ? '[Hidden]' : testCase.input,
+        passed: output.trim() === testCase.expected_output.trim(),
+        input: testCase.is_hidden ? '[Hidden]' : testCase.input,
         output: output.trim(),
       });
     } catch (error) {
       logger.error('Code execution error:', error);
       results.push({
         passed: false,
-        input: testCase.isHidden ? '[Hidden]' : testCase.input,
+        input: testCase.is_hidden ? '[Hidden]' : testCase.input,
         output: 'Execution error',
       });
     }
@@ -222,18 +222,18 @@ async function evaluateCode(
 }
 
 async function updateProgress(
-  userId: string,
+  user_id: string,
   quiz: Quiz,
   passed: boolean
 ): Promise<void> {
   if (!passed) return;
   try {
-    if (quiz.topicId) {
-      await updateTopicProgress(userId, quiz.topicId);
-    } else if (quiz.subjectId) {
-      await updateSubjectProgress(userId, quiz.subjectId, quiz.topicId);
-    } else if (quiz.conceptId) {
-      await updateConceptProgress(userId, quiz.conceptId);
+    if (quiz.topic_id) {
+      await updateTopicProgress(user_id, quiz.topic_id);
+    } else if (quiz.subject_id) {
+      await updateSubjectProgress(user_id, quiz.subject_id, quiz.topic_id);
+    } else if (quiz.main_concept_id) {
+      await updateConceptProgress(user_id, quiz.main_concept_id);
     }
   } catch (error) {
     logger.error('Error updating progress:', error);
@@ -241,66 +241,66 @@ async function updateProgress(
 }
 
 async function updateTopicProgress(
-  userId: string,
-  topicId: string
+  user_id: string,
+  topic_id: string
 ): Promise<void> {
   await prisma.userProgress.upsert({
-    where: { userId_topicId: { userId, topicId } },
-    update: { isCompleted: true, completedAt: new Date() },
+    where: { user_id_topic_id: { user_id, topic_id } },
+    update: { is_completed: true, completed_at: new Date() },
     create: {
-      userId,
-      topicId,
-      subjectId: '',
-      isCompleted: true,
-      completedAt: new Date(),
+      user_id,
+      topic_id,
+      subject_id: '',
+      is_completed: true,
+      completed_at: new Date(),
     },
   });
 }
 
 async function updateSubjectProgress(
-  userId: string,
-  subjectId: string,
-  topicId: string | null
+  user_id: string,
+  subject_id: string,
+  topic_id: string | null
 ): Promise<void> {
   await prisma.userProgress.upsert({
     where: {
-      userId_topicId: {
-        userId,
-        topicId: topicId ?? '',
+      user_id_topic_id: {
+        user_id,
+        topic_id: topic_id ?? '',
       },
     },
-    update: { isCompleted: true, completedAt: new Date() },
+    update: { is_completed: true, completed_at: new Date() },
     create: {
-      userId,
-      subjectId,
-      topicId: topicId ?? '',
-      isCompleted: true,
-      completedAt: new Date(),
+      user_id,
+      subject_id,
+      topic_id: topic_id ?? '',
+      is_completed: true,
+      completed_at: new Date(),
     },
   });
 }
 
 async function updateConceptProgress(
-  userId: string,
-  topicId: string
+  user_id: string,
+  topic_id: string
 ): Promise<void> {
   await prisma.userProgress.upsert({
     where: {
-      userId_topicId: {
-        userId,
-        topicId,
+      user_id_topic_id: {
+        user_id,
+        topic_id,
       },
     },
     update: {
-      isCompleted: true,
-      completedAt: new Date(),
+      is_completed: true,
+      completed_at: new Date(),
     },
     create: {
-      userId,
-      subjectId: '',
-      topicId,
-      isCompleted: true,
-      completedAt: new Date(),
+      user_id,
+      subject_id: '',
+      topic_id,
+      is_completed: true,
+      completed_at: new Date(),
     },
   });
 }

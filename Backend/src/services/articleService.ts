@@ -1,4 +1,9 @@
-import { PrismaClient, Article, Status } from '@prisma/client';
+import {
+  PrismaClient,
+  Article,
+  Status,
+  ContentModeration,
+} from '@prisma/client';
 import { createAppError } from '../utils/errorHandler';
 import { uploadToCloudinary } from '../utils/cloudinary';
 
@@ -7,11 +12,11 @@ const prisma = new PrismaClient();
 interface ArticleData {
   title: string;
   content: string;
-  authorId: string;
-  topicId: string;
-  resourceId?: string;
+  author_id: string;
+  topic_id: string;
+  resource_id?: string;
   status?: Status;
-  moderationNotes?: string;
+  moderations?: ContentModeration[];
   images?: Express.Multer.File[];
 }
 
@@ -25,11 +30,11 @@ export const createArticle = async (data: ArticleData): Promise<Article> => {
     data: {
       title: data.title,
       content: processedContent,
-      authorId: data.authorId,
-      topicId: data.topicId,
-      resourceId: data.resourceId,
+      author_id: data.author_id,
+      topic_id: data.topic_id,
+      resource_id: data.resource_id,
       status: data.status ?? Status.PENDING,
-      moderationNotes: data.moderationNotes,
+      moderations: { create: data.moderations },
     },
     include: {
       author: { select: { username: true, avatar_url: true } },
@@ -49,7 +54,15 @@ export const updateArticle = async (
 
   return prisma.article.update({
     where: { id },
-    data: { ...data, content: processedContent },
+    data: {
+      title: data.title,
+      content: processedContent,
+      author_id: data.author_id,
+      topic_id: data.topic_id,
+      resource_id: data.resource_id,
+      status: data.status,
+      moderations: data.moderations ? { set: data.moderations } : undefined,
+    },
     include: {
       author: { select: { username: true, avatar_url: true } },
       topic: true,
@@ -72,15 +85,15 @@ export const getArticle = async (id: string): Promise<Article> => {
 };
 
 export const getArticles = async (filters?: {
-  topicId?: string;
-  authorId?: string;
+  topic_id?: string;
+  author_id?: string;
   status?: Status;
   search?: string;
 }) => {
   return prisma.article.findMany({
     where: {
-      topicId: filters?.topicId,
-      authorId: filters?.authorId,
+      topic_id: filters?.topic_id,
+      author_id: filters?.author_id,
       status: filters?.status,
       title: filters?.search
         ? { contains: filters.search, mode: 'insensitive' }
@@ -101,11 +114,11 @@ export const deleteArticle = async (id: string): Promise<void> => {
 export const moderateArticle = async (
   id: string,
   status: Status,
-  moderationNotes?: string
+  moderations?: ContentModeration[]
 ): Promise<Article> => {
   return prisma.article.update({
     where: { id },
-    data: { status, moderationNotes },
+    data: { status, moderations: { set: moderations } },
   });
 };
 

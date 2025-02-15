@@ -10,12 +10,12 @@ const codeExecutor_1 = require("../utils/codeExecutor");
 const logger_1 = __importDefault(require("../utils/logger"));
 const prisma = new client_1.PrismaClient();
 const createChallenge = async (data) => {
-    const { topicId, testCases, ...challengeData } = data;
+    const { topic_id, test_cases, ...challenge_data } = data;
     return prisma.challenge.create({
         data: {
-            ...challengeData,
-            topic: { connect: { id: topicId } },
-            testCases: { create: testCases },
+            ...challenge_data,
+            topic: { connect: { id: topic_id } },
+            test_cases: { create: test_cases },
         },
     });
 };
@@ -25,8 +25,8 @@ const updateChallenge = async (id, data) => {
         where: { id },
         data: {
             ...data,
-            testCases: data.testCases
-                ? { deleteMany: {}, create: data.testCases }
+            test_cases: data.test_cases
+                ? { deleteMany: {}, create: data.test_cases }
                 : undefined,
         },
     });
@@ -35,7 +35,7 @@ exports.updateChallenge = updateChallenge;
 const getChallenge = async (id) => {
     const challenge = await prisma.challenge.findUnique({
         where: { id },
-        include: { testCases: { where: { isHidden: false } } },
+        include: { test_cases: { where: { is_hidden: false } } },
     });
     if (!challenge)
         throw (0, errorHandler_1.createAppError)('Challenge not found', 404);
@@ -56,23 +56,23 @@ const getAllChallenges = async (filters) => {
 };
 exports.getAllChallenges = getAllChallenges;
 const submitChallenge = async (data) => {
-    const challenge = await (0, exports.getChallenge)(data.challengeId);
-    const testCases = await prisma.testCase.findMany({
-        where: { challengeId: data.challengeId },
+    const challenge = await (0, exports.getChallenge)(data.challenge_id);
+    const test_cases = await prisma.testCase.findMany({
+        where: { challenge_id: data.challenge_id },
     });
-    const results = await Promise.all(testCases.map(async (testCase) => {
+    const results = await Promise.all(test_cases.map(async (test_case) => {
         try {
             const result = await (0, codeExecutor_1.executeCode)({
                 code: data.code,
                 language: data.language,
-                input: testCase.input,
-                timeLimit: challenge.timeLimit ?? 0,
-                memoryLimit: challenge.memoryLimit ?? 0,
+                input: test_case.input,
+                timeLimit: challenge.time_limit ?? 0,
+                memoryLimit: challenge.memory_limit ?? 0,
             });
             return {
-                passed: result.output.trim() === testCase.output.trim(),
-                executionTime: result.executionTime,
-                memoryUsed: result.memoryUsed,
+                passed: result.output.trim() === test_case.output.trim(),
+                execution_time: result.executionTime,
+                memory_used: result.memoryUsed,
             };
         }
         catch (error) {
@@ -81,9 +81,9 @@ const submitChallenge = async (data) => {
         }
     }));
     const allPassed = results.every((r) => r.passed);
-    const avgExecutionTime = results.reduce((acc, r) => acc + (r.executionTime || 0), 0) /
+    const avgExecutionTime = results.reduce((acc, r) => acc + (r.execution_time || 0), 0) /
         results.length;
-    const maxMemoryUsed = Math.max(...results.map((r) => r.memoryUsed || 0));
+    const maxMemoryUsed = Math.max(...results.map((r) => r.memory_used || 0));
     const submission = await prisma.challengeSubmission.create({
         data: {
             ...data,
@@ -96,10 +96,10 @@ const submitChallenge = async (data) => {
     });
     if (allPassed) {
         await prisma.userPoints.upsert({
-            where: { userId: data.userId },
+            where: { user_id: data.user_id },
             update: { points: { increment: calculatePoints(challenge.difficulty) } },
             create: {
-                userId: data.userId,
+                user_id: data.user_id,
                 points: calculatePoints(challenge.difficulty),
             },
         });
@@ -117,15 +117,15 @@ const getLeaderboard = async (challengeId) => {
         return leaderboard;
     const submissions = await prisma.challengeSubmission.findMany({
         where: {
-            challengeId,
+            challenge_id: challengeId,
             status: 'accepted',
-            userId: { in: leaderboard.map((l) => l.userId) },
+            user_id: { in: leaderboard.map((l) => l.user_id) },
         },
         orderBy: { runtime_ms: 'asc' },
     });
     return leaderboard.map((l) => ({
         ...l,
-        bestSubmission: submissions.find((s) => s.userId === l.userId),
+        bestSubmission: submissions.find((s) => s.user_id === l.user_id),
     }));
 };
 exports.getLeaderboard = getLeaderboard;

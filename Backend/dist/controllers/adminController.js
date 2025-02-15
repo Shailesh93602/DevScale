@@ -32,13 +32,13 @@ exports.getPendingContentHandler = (0, utils_1.catchAsync)(async (req, res) => {
     res.json({ success: true, data: content });
 });
 exports.moderateContent = (0, utils_1.catchAsync)(async (req, res) => {
-    const { contentId, contentType, status, moderationNotes } = req.body;
+    const { content_id, content_type, status, moderations } = req.body;
     const result = await (0, contentModerationService_1.moderateContent)({
-        contentId,
-        contentType,
+        content_id,
+        content_type,
         status,
-        moderatorId: req.user.id,
-        moderationNotes,
+        moderator_id: req.user.id,
+        moderations,
     });
     res.json({ success: true, data: result });
 });

@@ -8,7 +8,7 @@ const createJob = async (data) => {
     return prisma.job.create({
         data: {
             ...data,
-            postedDate: data.postedDate || new Date(),
+            posted_date: data.posted_date || new Date(),
         },
     });
 };
@@ -33,11 +33,11 @@ exports.getJob = getJob;
 const getJobs = async (filters) => {
     return prisma.job.findMany({
         where: {
-            jobType: filters?.jobType,
+            job_type: filters?.job_type,
             location: filters?.location
                 ? { contains: filters.location, mode: 'insensitive' }
                 : undefined,
-            salary: filters?.minSalary ? { gte: filters.minSalary } : undefined,
+            salary: filters?.min_salary ? { gte: filters.min_salary } : undefined,
             OR: filters?.search
                 ? [
                     { title: { contains: filters.search, mode: 'insensitive' } },
@@ -49,7 +49,7 @@ const getJobs = async (filters) => {
                 : undefined,
         },
         orderBy: {
-            postedDate: 'desc',
+            posted_date: 'desc',
         },
     });
 };

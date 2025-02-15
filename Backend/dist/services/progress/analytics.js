@@ -7,27 +7,27 @@ exports.getUserProgress = getUserProgress;
 const client_1 = require("@prisma/client");
 const logger_1 = __importDefault(require("../../utils/logger"));
 const prisma = new client_1.PrismaClient();
-async function getUserProgress(userId) {
+async function getUserProgress(user_id) {
     try {
-        const [totalTopics, completedTopics, recentActivity] = await Promise.all([
+        const [total_topics, completed_topics, recent_activity] = await Promise.all([
             prisma.topic.count(),
             prisma.progress.count({
-                where: { userId, status: client_1.Status.APPROVED },
+                where: { user_id: user_id, status: client_1.Status.APPROVED },
             }),
-            getUserRecentActivity(userId),
+            getUserRecentActivity(user_id),
         ]);
         logger_1.default.info('Retrieved user progress', {
-            userId,
-            completedTopics,
-            totalTopics,
+            user_id,
+            completed_topics,
+            total_topics,
         });
         return {
-            totalTopics,
-            completedTopics,
-            progressPercentage: totalTopics
-                ? (completedTopics / totalTopics) * 100
+            total_topics,
+            completed_topics,
+            progress_percentage: total_topics
+                ? (completed_topics / total_topics) * 100
                 : 0,
-            recentActivity,
+            recent_activity,
         };
     }
     catch (error) {
@@ -35,52 +35,52 @@ async function getUserProgress(userId) {
         throw error;
     }
 }
-async function getUserRecentActivity(userId) {
-    const [topicProgress, quizSubmissions, challengeSubmissions] = await Promise.all([
+async function getUserRecentActivity(user_id) {
+    const [topic_progress, quiz_submissions, challenge_submissions] = await Promise.all([
         prisma.progress.findMany({
-            where: { userId, status: client_1.Status.APPROVED },
-            orderBy: { updatedAt: 'desc' },
+            where: { user_id: user_id, status: client_1.Status.APPROVED },
+            orderBy: { updated_at: 'desc' },
             take: 10,
             include: { topic: true, roadmap: true },
         }),
         prisma.quizSubmission.findMany({
-            where: { userId, isPassed: true },
+            where: { user_id: user_id, is_passed: true },
             orderBy: { created_at: 'desc' },
             take: 10,
             include: { quiz: true },
         }),
         prisma.challengeSubmission.findMany({
-            where: { userId, status: client_1.SubmissionStatus.accepted },
+            where: { user_id: user_id, status: client_1.SubmissionStatus.accepted },
             orderBy: { created_at: 'desc' },
             take: 10,
             include: { challenge: true },
         }),
     ]);
     const activity = [
-        ...topicProgress.map((p) => ({
+        ...topic_progress.map((p) => ({
             type: 'topic_completed',
-            entityId: p.topicId,
-            timestamp: p.updatedAt,
+            entity_id: p.topic_id,
+            timestamp: p.updated_at,
             details: {
-                topicTitle: p.topic.title,
-                roadmapTitle: p.roadmap.title,
+                topic_title: p.topic.title,
+                roadmap_title: p.roadmap.title,
             },
         })),
-        ...quizSubmissions.map((q) => ({
+        ...quiz_submissions.map((q) => ({
             type: 'quiz_completed',
-            entityId: q.quizId,
+            entity_id: q.quiz_id,
             timestamp: q.created_at,
             details: {
-                quizTitle: q.quiz.title,
+                quiz_title: q.quiz.title,
                 score: q.score,
             },
         })),
-        ...challengeSubmissions.map((c) => ({
+        ...challenge_submissions.map((c) => ({
             type: 'challenge_completed',
-            entityId: c.challengeId,
+            entity_id: c.challenge_id,
             timestamp: c.created_at,
             details: {
-                challengeTitle: c.challenge.title,
+                challenge_title: c.challenge.title,
             },
         })),
     ];

@@ -9,16 +9,16 @@ interface JobData {
   company: string;
   location?: string;
   salary?: number;
-  jobType?: JobType;
-  postedDate?: Date;
-  applicationDeadline?: Date;
+  job_type?: JobType;
+  posted_date?: Date;
+  application_deadline?: Date;
 }
 
 export const createJob = async (data: JobData): Promise<Job> => {
   return prisma.job.create({
     data: {
       ...data,
-      postedDate: data.postedDate || new Date(),
+      posted_date: data.posted_date || new Date(),
     },
   });
 };
@@ -46,18 +46,18 @@ export const getJob = async (id: string): Promise<Job> => {
 };
 
 export const getJobs = async (filters?: {
-  jobType?: JobType;
+  job_type?: JobType;
   location?: string;
-  minSalary?: number;
+  min_salary?: number;
   search?: string;
 }) => {
   return prisma.job.findMany({
     where: {
-      jobType: filters?.jobType,
+      job_type: filters?.job_type,
       location: filters?.location
         ? { contains: filters.location, mode: 'insensitive' }
         : undefined,
-      salary: filters?.minSalary ? { gte: filters.minSalary } : undefined,
+      salary: filters?.min_salary ? { gte: filters.min_salary } : undefined,
       OR: filters?.search
         ? [
             { title: { contains: filters.search, mode: 'insensitive' } },
@@ -69,7 +69,7 @@ export const getJobs = async (filters?: {
         : undefined,
     },
     orderBy: {
-      postedDate: 'desc',
+      posted_date: 'desc',
     },
   });
 };

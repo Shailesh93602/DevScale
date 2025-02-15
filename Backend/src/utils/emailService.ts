@@ -72,7 +72,7 @@ const trackEmailDelivery = async (
         recipient: to,
         subject,
         status,
-        sentAt: new Date(),
+        sent_at: new Date(),
       },
     });
   } catch (error) {

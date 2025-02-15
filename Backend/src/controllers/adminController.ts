@@ -63,13 +63,13 @@ export const getPendingContentHandler = catchAsync(
 
 export const moderateContent = catchAsync(
   async (req: Request, res: Response) => {
-    const { contentId, contentType, status, moderationNotes } = req.body;
+    const { content_id, content_type, status, moderations } = req.body;
     const result = await moderateContentService({
-      contentId,
-      contentType,
+      content_id,
+      content_type,
       status,
-      moderatorId: req.user!.id,
-      moderationNotes,
+      moderator_id: req.user!.id,
+      moderations,
     });
     res.json({ success: true, data: result });
   }

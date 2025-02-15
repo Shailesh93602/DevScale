@@ -51,13 +51,13 @@ exports.getArticlesForTopic = (0, index_1.catchAsync)(async (req, res) => {
 exports.getQuizByTopicId = (0, index_1.catchAsync)(async (req, res) => {
     const { id } = req.params;
     const quiz = await prisma_1.default.quiz.findFirst({
-        where: { topicId: id },
+        where: { topic_id: id },
         include: {
             questions: {
                 include: {
                     options: {
                         orderBy: {
-                            createdAt: 'asc',
+                            created_at: 'asc',
                         },
                     },
                 },
@@ -74,9 +74,9 @@ exports.getQuizByTopicId = (0, index_1.catchAsync)(async (req, res) => {
 });
 exports.submitQuiz = (0, index_1.catchAsync)(async (req, res) => {
     const userId = req.user.id;
-    const { topicId, answers } = req.body;
+    const { topic_id, answers } = req.body;
     const quiz = await prisma_1.default.quiz.findFirst({
-        where: { topicId },
+        where: { topic_id },
         include: { questions: true },
     });
     if (!quiz) {
@@ -84,27 +84,27 @@ exports.submitQuiz = (0, index_1.catchAsync)(async (req, res) => {
     }
     let score = 0;
     quiz.questions.forEach((question, index) => {
-        if (question.correctAnswer === answers[index]) {
+        if (question.correct_answer === answers[index]) {
             score += 1;
         }
     });
-    const passingScore = quiz.passingScore || Math.ceil(quiz.questions.length * 0.7);
-    const isPassed = score >= passingScore;
-    if (isPassed) {
+    const passing_score = quiz.passing_score || Math.ceil(quiz.questions.length * 0.7);
+    const is_passed = score >= passing_score;
+    if (is_passed) {
         await prisma_1.default.userProgress.update({
             where: {
-                userId_topicId: {
-                    userId: userId,
-                    topicId,
+                user_id_topic_id: {
+                    user_id: userId,
+                    topic_id: topic_id,
                 },
             },
-            data: { isCompleted: true },
+            data: { is_completed: true },
         });
     }
     return res.status(200).json({
-        message: isPassed ? 'Quiz passed!' : 'Quiz failed',
+        message: is_passed ? 'Quiz passed!' : 'Quiz failed',
         score,
-        isPassed,
+        is_passed,
     });
 });
 //# sourceMappingURL=topicController.js.map

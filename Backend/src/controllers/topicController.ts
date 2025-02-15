@@ -57,13 +57,13 @@ export const getQuizByTopicId = catchAsync(
     const { id } = req.params;
 
     const quiz = await prisma.quiz.findFirst({
-      where: { topicId: id },
+      where: { topic_id: id },
       include: {
         questions: {
           include: {
             options: {
               orderBy: {
-                createdAt: 'asc',
+                created_at: 'asc',
               },
             },
           },
@@ -84,10 +84,10 @@ export const getQuizByTopicId = catchAsync(
 
 export const submitQuiz = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user.id;
-  const { topicId, answers } = req.body;
+  const { topic_id, answers } = req.body;
 
   const quiz = await prisma.quiz.findFirst({
-    where: { topicId },
+    where: { topic_id },
     include: { questions: true },
   });
 
@@ -97,30 +97,30 @@ export const submitQuiz = catchAsync(async (req: Request, res: Response) => {
 
   let score = 0;
   quiz.questions.forEach((question, index) => {
-    if (question.correctAnswer === answers[index]) {
+    if (question.correct_answer === answers[index]) {
       score += 1;
     }
   });
 
-  const passingScore =
-    quiz.passingScore || Math.ceil(quiz.questions.length * 0.7);
-  const isPassed = score >= passingScore;
+  const passing_score =
+    quiz.passing_score || Math.ceil(quiz.questions.length * 0.7);
+  const is_passed = score >= passing_score;
 
-  if (isPassed) {
+  if (is_passed) {
     await prisma.userProgress.update({
       where: {
-        userId_topicId: {
-          userId: userId,
-          topicId,
+        user_id_topic_id: {
+          user_id: userId,
+          topic_id: topic_id,
         },
       },
-      data: { isCompleted: true },
+      data: { is_completed: true },
     });
   }
 
   return res.status(200).json({
-    message: isPassed ? 'Quiz passed!' : 'Quiz failed',
+    message: is_passed ? 'Quiz passed!' : 'Quiz failed',
     score,
-    isPassed,
+    is_passed,
   });
 });
