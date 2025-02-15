@@ -5,12 +5,12 @@ const prisma = new PrismaClient();
 
 export class ArticleVersionControl {
   static async createVersion(
-    articleId: string,
+    article_id: string,
     content: string
   ): Promise<void> {
     await TransactionManager.execute(async (tx) => {
       const currentVersion = await tx.version.findFirst({
-        where: { articleId },
+        where: { article_id: article_id },
         orderBy: { version: 'desc' },
       });
 
@@ -18,7 +18,7 @@ export class ArticleVersionControl {
 
       await tx.version.create({
         data: {
-          articleId,
+          article_id,
           title: 'Version ' + newVersion,
           content,
           version: newVersion,
@@ -26,15 +26,15 @@ export class ArticleVersionControl {
       });
 
       await tx.article.update({
-        where: { id: articleId },
+        where: { id: article_id },
         data: { content },
       });
     }, 'Create Article Version');
   }
 
-  static async getVersionHistory(articleId: string) {
+  static async getVersionHistory(article_id: string) {
     return await prisma.version.findMany({
-      where: { articleId },
+      where: { article_id: article_id },
       orderBy: { version: 'desc' },
     });
   }
@@ -42,7 +42,7 @@ export class ArticleVersionControl {
   static async revertToVersion(articleId: string, version: number) {
     await TransactionManager.execute(async (tx) => {
       const targetVersion = await tx.version.findFirst({
-        where: { articleId, version },
+        where: { article_id: articleId, version },
       });
 
       if (!targetVersion) {

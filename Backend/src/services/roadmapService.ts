@@ -7,8 +7,8 @@ const prisma = new PrismaClient();
 interface RoadmapData {
   title: string;
   description: string;
-  authorId: string;
-  isPublic?: boolean;
+  author_id: string;
+  is_public?: boolean;
   concepts?: ConceptData[];
 }
 
@@ -36,15 +36,15 @@ interface TopicData {
 }
 
 interface SubjectOrder {
-  subjectId: string;
+  subject_id: string;
   order: number;
 }
 
 interface UserRoadmapData {
-  userId: string;
-  roadmapId: string;
-  topicId: string;
-  isCustom?: boolean;
+  user_id: string;
+  roadmap_id: string;
+  topic_id: string;
+  is_custom?: boolean;
   title?: string;
   description?: string;
 }
@@ -56,11 +56,11 @@ export class RoadmapService {
         data: {
           title: data.title,
           description: data.description,
-          user: { connect: { id: data.authorId } },
-          isPublic: data.isPublic ?? false,
-          concepts: {
+          user: { connect: { id: data.author_id } },
+          is_public: data.is_public ?? false,
+          main_concepts: {
             create: data.concepts?.map((concept) => ({
-              title: concept.title,
+              name: concept.title,
               description: concept.description,
               order: concept.order,
               subjects: {
@@ -90,7 +90,7 @@ export class RoadmapService {
               avatar_url: true,
             },
           },
-          concepts: {
+          main_concepts: {
             include: {
               subjects: {
                 include: {
@@ -126,7 +126,7 @@ export class RoadmapService {
             avatar_url: true,
           },
         },
-        concepts: {
+        main_concepts: {
           orderBy: { order: 'asc' },
           include: {
             subjects: {
@@ -167,10 +167,10 @@ export class RoadmapService {
       data: {
         title: data.title,
         description: data.description,
-        isPublic: data.isPublic,
+        is_public: data.is_public,
       },
       include: {
-        concepts: {
+        main_concepts: {
           include: {
             subjects: {
               include: {
@@ -187,13 +187,13 @@ export class RoadmapService {
     return updated;
   }
 
-  static async addConcept(roadmapId: string, data: ConceptData) {
-    const concept = await prisma.concept.create({
+  static async addConcept(roadmap_id: string, data: ConceptData) {
+    const concept = await prisma.mainConcept.create({
       data: {
-        title: data.title,
+        name: data.title,
         description: data.description,
         order: data.order,
-        roadmap: { connect: { id: roadmapId } },
+        roadmap: { connect: { id: roadmap_id } },
         subjects: data.subjects
           ? {
               create: data.subjects.map((subject) => ({
@@ -222,13 +222,13 @@ export class RoadmapService {
     return concept;
   }
 
-  static async addSubject(conceptId: string, data: SubjectData) {
+  static async addSubject(main_concept_id: string, data: SubjectData) {
     const subject = await prisma.subject.create({
       data: {
         title: data.title,
         description: data.description,
         order: data.order,
-        concept: { connect: { id: conceptId } },
+        main_concept: { connect: { id: main_concept_id } },
         topics: data.topics
           ? {
               create: data.topics.map((topic) => ({
@@ -251,11 +251,11 @@ export class RoadmapService {
     return subject;
   }
 
-  static async addTopic(subjectId: string, data: TopicData) {
+  static async addTopic(subject_id: string, data: TopicData) {
     const topic = await prisma.topic.create({
       data: {
         ...data,
-        subjectId,
+        subject_id,
       },
     });
 
@@ -319,21 +319,21 @@ export class RoadmapService {
   ) {
     const progress = await prisma.userProgress.upsert({
       where: {
-        userId_topicId: {
-          userId,
-          topicId,
+        user_id_topic_id: {
+          user_id: userId,
+          topic_id: topicId,
         },
       },
       update: {
-        isCompleted: completed,
-        completedAt: completed ? new Date() : null,
+        is_completed: completed,
+        completed_at: completed ? new Date() : null,
       },
       create: {
-        userId,
-        topicId,
-        subjectId: '',
-        isCompleted: completed,
-        completedAt: completed ? new Date() : null,
+        user_id: userId,
+        topic_id: topicId,
+        subject_id: '',
+        is_completed: completed,
+        completed_at: completed ? new Date() : null,
       },
     });
 
@@ -341,16 +341,16 @@ export class RoadmapService {
     return progress;
   }
 
-  static async getAllRoadmaps(userId?: string) {
+  static async getAllRoadmaps(user_id?: string) {
     const roadmaps = await prisma.roadmap.findMany({
       include: {
-        mainConcepts: {
+        main_concepts: {
           include: {
             subjects: true,
           },
         },
-        userRoadmaps: {
-          where: userId ? { userId } : undefined,
+        user_roadmaps: {
+          where: user_id ? { user_id } : undefined,
         },
       },
     });
@@ -367,13 +367,13 @@ export class RoadmapService {
   }
 
   static async updateSubjectsOrder(
-    roadmapId: string,
-    subjectOrders: SubjectOrder[]
+    roadmap_id: string,
+    subject_orders: SubjectOrder[]
   ): Promise<void> {
     await prisma.$transaction(
-      subjectOrders.map((order) =>
+      subject_orders.map((order) =>
         prisma.subject.update({
-          where: { id: order.subjectId },
+          where: { id: order.subject_id },
           data: { order: order.order },
         })
       )
@@ -390,8 +390,8 @@ export class RoadmapService {
         data: {
           title: data.title,
           description: data.description,
-          user: { connect: { id: data.authorId } },
-          isPublic: data.isPublic ?? false,
+          user: { connect: { id: data.author_id } },
+          is_public: data.is_public ?? false,
         },
       });
 
@@ -400,7 +400,7 @@ export class RoadmapService {
         const sourceRoadmap = await tx.roadmap.findUnique({
           where: { id: data.sourceRoadmapId },
           include: {
-            concepts: {
+            main_concepts: {
               include: {
                 subjects: {
                   include: {
@@ -417,23 +417,23 @@ export class RoadmapService {
         }
 
         // Clone concepts, subjects, and topics
-        for (const concept of sourceRoadmap.concepts) {
-          const newConcept = await tx.concept.create({
+        for (const main_concept of sourceRoadmap.main_concepts) {
+          const newMainConcept = await tx.mainConcept.create({
             data: {
-              title: concept.title,
-              description: concept.description,
-              order: concept.order,
-              roadmapId: newRoadmap.id,
+              name: main_concept.name,
+              description: main_concept.description,
+              roadmap_id: newRoadmap.id,
+              order: main_concept.order,
             },
           });
 
-          for (const subject of concept.subjects) {
+          for (const subject of main_concept.subjects) {
             const newSubject = await tx.subject.create({
               data: {
                 title: subject.title,
                 description: subject.description,
                 order: subject.order,
-                conceptId: newConcept.id,
+                main_concept_id: newMainConcept.id,
               },
             });
 
@@ -462,15 +462,15 @@ export class RoadmapService {
   static async saveRoadmap(data: UserRoadmapData) {
     const userRoadmap = await prisma.userRoadmap.create({
       data: {
-        user: { connect: { id: data.userId } },
-        roadmap: { connect: { id: data.roadmapId } },
-        isCustom: data.isCustom ?? false,
-        topic: { connect: { id: data.topicId } },
+        user: { connect: { id: data.user_id } },
+        roadmap: { connect: { id: data.roadmap_id } },
+        is_custom: data.is_custom ?? false,
+        topic: { connect: { id: data.topic_id } },
       },
       include: {
         roadmap: {
           include: {
-            concepts: {
+            main_concepts: {
               include: {
                 subjects: {
                   include: {
@@ -488,9 +488,9 @@ export class RoadmapService {
     return userRoadmap;
   }
 
-  static async getUserRoadmaps(userId: string) {
+  static async getUserRoadmaps(user_id: string) {
     const userRoadmaps = await prisma.userRoadmap.findMany({
-      where: { userId },
+      where: { user_id },
       include: {
         roadmap: {
           include: {
@@ -517,10 +517,10 @@ export class RoadmapService {
     return userRoadmaps;
   }
 
-  static async updateRoadmapPrivacy(id: string, isPublic: boolean) {
+  static async updateRoadmapPrivacy(id: string, is_public: boolean) {
     const roadmap = await prisma.roadmap.update({
       where: { id },
-      data: { isPublic },
+      data: { is_public },
     });
 
     await deleteCache('roadmaps:all');
@@ -529,13 +529,13 @@ export class RoadmapService {
 
   static async getPublicRoadmaps(filters?: {
     search?: string;
-    authorId?: string;
+    author_id?: string;
     sort?: 'popular' | 'recent';
   }) {
     const roadmaps = await prisma.roadmap.findMany({
       where: {
-        isPublic: true,
-        userId: filters?.authorId,
+        is_public: true,
+        user_id: filters?.author_id,
         OR: filters?.search
           ? [
               { title: { contains: filters.search, mode: 'insensitive' } },
@@ -556,31 +556,31 @@ export class RoadmapService {
           select: {
             likes: true,
             comments: true,
-            concepts: true,
+            main_concepts: true,
           },
         },
       },
       orderBy:
         filters?.sort === 'popular'
           ? { likes: { _count: 'desc' } }
-          : { createdAt: 'desc' },
+          : { created_at: 'desc' },
     });
 
     return roadmaps;
   }
 
-  static async getRoadmapProgress(userId: string, roadmapId: string) {
+  static async getRoadmapProgress(user_id: string, roadmap_id: string) {
     const roadmap = await prisma.roadmap.findUnique({
-      where: { id: roadmapId },
+      where: { id: roadmap_id },
       include: {
-        concepts: {
+        main_concepts: {
           include: {
             subjects: {
               include: {
                 topics: {
                   include: {
-                    userProgress: {
-                      where: { userId },
+                    user_progress: {
+                      where: { user_id },
                     },
                   },
                 },
@@ -598,11 +598,11 @@ export class RoadmapService {
     let totalTopics = 0;
     let completedTopics = 0;
 
-    roadmap.concepts.forEach((concept) => {
+    roadmap.main_concepts.forEach((concept) => {
       concept.subjects.forEach((subject) => {
         subject.topics.forEach((topic) => {
           totalTopics++;
-          if (topic.userProgress.some((p) => p.isCompleted)) {
+          if (topic.user_progress.some((p) => p.is_completed)) {
             completedTopics++;
           }
         });

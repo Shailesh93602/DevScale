@@ -146,16 +146,16 @@ class ChallengeController {
     }
     static async submitChallenge(req, res) {
         try {
-            const userId = req.user?.id;
-            if (!userId)
+            const user_id = req.user?.id;
+            if (!user_id)
                 throw (0, errorHandler_1.createAppError)('User not found', 404);
-            const { challengeId } = req.params;
+            const { challenge_id } = req.params;
             const { code, language } = req.body;
             const submission = await (0, challengeService_1.submitChallenge)({
                 code,
                 language,
-                userId,
-                challengeId,
+                user_id,
+                challenge_id,
             });
             res.status(200).json({
                 status: 'success',

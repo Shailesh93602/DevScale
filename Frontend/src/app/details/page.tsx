@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { detailsFormSchema } from '../auth/validations';
+import { profileSchema } from '@/lib/validations';
 import { supabase } from '@/lib/supabaseClient';
 import customAxios from '@/app/services/customAxios';
 import { useRouter } from 'next/navigation';
@@ -35,7 +35,19 @@ const DetailsPage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(detailsFormSchema),
+    resolver: yupResolver(profileSchema),
+    defaultValues: {
+      fullName: user?.user_metadata.full_name,
+      dob: new Date(),
+      gender: '',
+      mobile: '',
+      university: '',
+      college: '',
+      branch: '',
+      semester: '',
+      experienceLevel: '',
+      skills: [],
+    },
   });
 
   useEffect(() => {
@@ -56,7 +68,7 @@ const DetailsPage = () => {
   const onSubmit = async (data: FieldValues) => {
     try {
       const response = await customAxios.post('/user/create-profile', {
-        userId: user?.id,
+        supabaseId: user?.id,
         email: user?.email,
         ...data,
       });

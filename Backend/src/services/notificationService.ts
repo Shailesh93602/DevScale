@@ -5,7 +5,7 @@ import logger from '../utils/logger';
 const prisma = new PrismaClient();
 
 interface NotificationData {
-  userId: string;
+  user_id: string;
   title: string;
   message: string;
   type: NotificationType;
@@ -38,11 +38,11 @@ export class NotificationService {
     return notification;
   }
 
-  static async getNotifications(userId: string, includeRead = false) {
+  static async getNotifications(user_id: string, include_read = false) {
     const notifications = await prisma.notification.findMany({
       where: {
-        userId,
-        isRead: includeRead ? undefined : false,
+        user_id: user_id,
+        is_read: include_read ? undefined : false,
       },
       orderBy: {
         created_at: 'desc',
@@ -56,21 +56,21 @@ export class NotificationService {
     const notification = await prisma.notification.update({
       where: { id },
       data: {
-        isRead: true,
+        is_read: true,
       },
     });
 
     return notification;
   }
 
-  static async markAllAsRead(userId: string): Promise<void> {
+  static async markAllAsRead(user_id: string): Promise<void> {
     await prisma.notification.updateMany({
       where: {
-        userId,
-        isRead: false,
+        user_id,
+        is_read: false,
       },
       data: {
-        isRead: true,
+        is_read: true,
       },
     });
   }

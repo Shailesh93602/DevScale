@@ -6,29 +6,30 @@ const prisma = new PrismaClient();
 interface ForumData {
   title: string;
   description: string;
-  createdBy: string;
+  user_id: string;
   tags?: string[];
 }
 
 interface PostData {
   title: string;
   content: string;
-  userId: string;
-  forumId: string;
+  user_id: string;
+  forum_id: string;
   tags?: string[];
 }
 
 interface CommentData {
   content: string;
-  userId: string;
-  postId: string;
-  parentId?: string;
+  user_id: string;
+  post_id: string;
+  parent_id?: string;
 }
 
 export const createForum = async (data: ForumData): Promise<Forum> => {
   return prisma.forum.create({
     data: {
       ...data,
+      user: { connect: { id: data.user_id } },
       tags: data.tags || [],
     },
     include: {
@@ -164,7 +165,7 @@ export const getPost = async (id: string): Promise<ForumPost> => {
           },
         },
         where: {
-          parentId: null,
+          parent_id: null,
         },
         orderBy: {
           created_at: 'desc',
@@ -202,27 +203,27 @@ export const deletePost = async (id: string): Promise<void> => {
 };
 
 export const upvotePost = async (
-  postId: string,
-  userId: string
+  post_id: string,
+  user_id: string
 ): Promise<void> => {
   await prisma.forumPost.update({
-    where: { id: postId },
+    where: { id: post_id },
     data: {
       upvotes: { increment: 1 },
-      userId,
+      user_id,
     },
   });
 };
 
 export const upvoteComment = async (
-  commentId: string,
-  userId: string
+  comment_id: string,
+  user_id: string
 ): Promise<void> => {
   await prisma.forumComment.update({
-    where: { id: commentId },
+    where: { id: comment_id },
     data: {
       upvotes: { increment: 1 },
-      userId,
+      user_id,
     },
   });
 };

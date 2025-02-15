@@ -137,7 +137,7 @@ export const getArticleById = catchAsync(
 export const updateModerationNotes = catchAsync(
   async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { moderationNotes } = req.body;
+    const { moderations } = req.body;
 
     const article = await prisma.article.findUnique({
       where: { id },
@@ -152,7 +152,7 @@ export const updateModerationNotes = catchAsync(
 
     const updatedArticle = await prisma.article.update({
       where: { id },
-      data: { moderationNotes },
+      data: { moderations },
     });
 
     res.status(200).json({
@@ -167,7 +167,7 @@ export const getMyArticles = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.id;
 
   const articles = await prisma.article.findMany({
-    where: { authorId: userId },
+    where: { author_id: userId },
     select: { id: true, title: true, status: true },
     orderBy: { created_at: 'desc' },
   });
@@ -185,7 +185,7 @@ export const getArticleComments = catchAsync(
 
     const article = await prisma.article.findUnique({
       where: { id },
-      select: { id: true, moderationNotes: true },
+      select: { id: true, moderations: true },
     });
 
     if (!article) {
@@ -198,7 +198,7 @@ export const getArticleComments = catchAsync(
     res.status(200).json({
       success: true,
       message: 'Comments retrieved successfully',
-      comments: article.moderationNotes,
+      comments: article.moderations,
     });
   }
 );

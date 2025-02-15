@@ -8,24 +8,24 @@ const client_1 = require("@prisma/client");
 const errorHandler_1 = require("../utils/errorHandler");
 const logger_1 = __importDefault(require("../utils/logger"));
 const prisma = new client_1.PrismaClient();
-const getUserAnalytics = async (userId) => {
-    if (!userId) {
+const getUserAnalytics = async (user_id) => {
+    if (!user_id) {
         throw (0, errorHandler_1.createAppError)('Invalid user ID format', 400);
     }
     const [progress, submissions, engagementData] = await Promise.all([
-        prisma.userProgress.findMany({ where: { userId } }),
-        prisma.challengeSubmission.findMany({ where: { userId } }),
+        prisma.userProgress.findMany({ where: { user_id } }),
+        prisma.challengeSubmission.findMany({ where: { user_id } }),
         Promise.all([
-            prisma.article.count({ where: { authorId: userId } }),
-            prisma.forumPost.count({ where: { userId } }),
-            prisma.studyGroupMember.count({ where: { userId } }),
+            prisma.article.count({ where: { author_id: user_id } }),
+            prisma.forumPost.count({ where: { user_id } }),
+            prisma.studyGroupMember.count({ where: { user_id } }),
             prisma.user.findUnique({
-                where: { id: userId },
+                where: { id: user_id },
                 select: { updated_at: true },
             }),
         ]),
     ]);
-    const completedTopics = progress.filter((p) => p.isCompleted).length;
+    const completedTopics = progress.filter((p) => p.is_completed).length;
     const totalTopics = progress.length;
     const successfulSubmissions = submissions.filter((s) => s.status === 'accepted').length;
     return {
@@ -69,7 +69,7 @@ const getPlatformAnalytics = async (startDate, endDate) => {
             completionRates: await calculateCompletionRates(),
             popularTopics: popularTopics.map((t) => ({
                 topic: t.title,
-                count: t._count.userProgress,
+                count: t._count.user_progress,
             })),
         },
         errorStats,
@@ -79,17 +79,17 @@ exports.getPlatformAnalytics = getPlatformAnalytics;
 const calculateAverageTimeSpent = async () => {
     const sessions = await prisma.userSession.findMany({
         where: {
-            endTime: { not: null },
+            end_time: { not: null },
         },
         select: {
-            startTime: true,
-            endTime: true,
+            start_time: true,
+            end_time: true,
         },
     });
     if (sessions.length === 0)
         return 0;
     const totalDuration = sessions.reduce((acc, session) => {
-        const duration = session.endTime.getTime() - session.startTime.getTime();
+        const duration = session.end_time.getTime() - session.start_time.getTime();
         return acc + duration;
     }, 0);
     return totalDuration / sessions.length / 1000; // Return in seconds
@@ -99,20 +99,20 @@ const calculateCompletionRates = async () => {
         include: {
             _count: {
                 select: {
-                    userProgress: true,
+                    user_progress: true,
                 },
             },
-            userProgress: {
+            user_progress: {
                 where: {
-                    isCompleted: true,
+                    is_completed: true,
                 },
             },
         },
     });
     return topics.reduce((acc, topic) => ({
         ...acc,
-        [topic.title]: topic._count.userProgress > 0
-            ? topic.userProgress.length / topic._count.userProgress
+        [topic.title]: topic._count.user_progress > 0
+            ? topic.user_progress.length / topic._count.user_progress
             : 0,
     }), {});
 };
@@ -160,28 +160,28 @@ const getErrorStats = async (startDate, endDate) => {
     };
 };
 const TRACKING_LIMIT = 100;
-const trackUserActivity = async (userId, activity, metadata) => {
+const trackUserActivity = async (user_id, activity, metadata) => {
     try {
         // Check rate limit
         const recentActivities = await prisma.activityLog.count({
             where: {
-                userId,
+                user_id,
                 timestamp: {
                     gte: new Date(Date.now() - 60 * 1000), // Last minute
                 },
             },
         });
         if (recentActivities >= TRACKING_LIMIT) {
-            logger_1.default.warn(`Activity tracking limit reached for user ${userId}`);
+            logger_1.default.warn(`Activity tracking limit reached for user ${user_id}`);
             return;
         }
         await prisma.activityLog.create({
             data: {
-                userId,
+                user_id,
                 activity,
                 metadata: metadata ?? client_1.Prisma.DbNull,
                 timestamp: new Date(),
-                deviceType: 'WEB',
+                device_type: 'WEB',
             },
         });
     }
@@ -253,12 +253,12 @@ async function getPopularTopics() {
             title: true,
             _count: {
                 select: {
-                    userProgress: true,
+                    user_progress: true,
                 },
             },
         },
         orderBy: {
-            userProgress: {
+            user_progress: {
                 _count: 'desc',
             },
         },

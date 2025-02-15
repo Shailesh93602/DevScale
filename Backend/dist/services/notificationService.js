@@ -30,11 +30,11 @@ class NotificationService {
         }
         return notification;
     }
-    static async getNotifications(userId, includeRead = false) {
+    static async getNotifications(user_id, include_read = false) {
         const notifications = await prisma.notification.findMany({
             where: {
-                userId,
-                isRead: includeRead ? undefined : false,
+                user_id: user_id,
+                is_read: include_read ? undefined : false,
             },
             orderBy: {
                 created_at: 'desc',
@@ -46,19 +46,19 @@ class NotificationService {
         const notification = await prisma.notification.update({
             where: { id },
             data: {
-                isRead: true,
+                is_read: true,
             },
         });
         return notification;
     }
-    static async markAllAsRead(userId) {
+    static async markAllAsRead(user_id) {
         await prisma.notification.updateMany({
             where: {
-                userId,
-                isRead: false,
+                user_id,
+                is_read: false,
             },
             data: {
-                isRead: true,
+                is_read: true,
             },
         });
     }

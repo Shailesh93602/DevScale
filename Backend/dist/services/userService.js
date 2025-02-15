@@ -30,34 +30,34 @@ async function updateUserProfile(userId, data) {
         data,
     });
 }
-async function updateUserPoints(userId, points) {
+async function updateUserPoints(user_id, points) {
     await prisma.userPoints.upsert({
-        where: { userId },
+        where: { user_id },
         update: { points: { increment: points } },
-        create: { userId, points },
+        create: { user_id, points },
     });
 }
-async function updateUserProgress(userId, data) {
+async function updateUserProgress(user_id, data) {
     await prisma.userProgress.upsert({
-        where: { userId_topicId: { userId, topicId: data.topicId } },
+        where: { user_id_topic_id: { user_id, topic_id: data.topicId } },
         update: {
-            isCompleted: data.isCompleted,
-            completedAt: data.isCompleted ? new Date() : null,
-            timeSpent: data.timeSpent,
+            is_completed: data.isCompleted,
+            completed_at: data.isCompleted ? new Date() : null,
+            time_spent: data.timeSpent,
         },
         create: {
-            userId,
-            topicId: data.topicId,
-            isCompleted: data.isCompleted,
-            completedAt: data.isCompleted ? new Date() : null,
-            timeSpent: data.timeSpent ?? 0,
-            subjectId: '',
+            user_id,
+            topic_id: data.topicId,
+            is_completed: data.isCompleted,
+            completed_at: data.isCompleted ? new Date() : null,
+            time_spent: data.timeSpent ?? 0,
+            subject_id: '',
         },
     });
 }
-async function getUserProgress(userId) {
+async function getUserProgress(user_id) {
     const progress = await prisma.userProgress.findMany({
-        where: { userId },
+        where: { user_id },
         include: {
             topic: {
                 select: {
@@ -65,7 +65,7 @@ async function getUserProgress(userId) {
                     subject: {
                         select: {
                             title: true,
-                            mainConcept: {
+                            main_concept: {
                                 select: {
                                     name: true,
                                     roadmap: {
@@ -82,35 +82,35 @@ async function getUserProgress(userId) {
         },
     });
     const points = await prisma.userPoints.findUnique({
-        where: { userId },
+        where: { user_id },
     });
     return {
         progress,
-        totalPoints: points?.points ?? 0,
-        completedTopics: progress.filter((p) => p.isCompleted).length,
-        inProgressTopics: progress.filter((p) => !p.isCompleted).length,
+        total_points: points?.points ?? 0,
+        completed_topics: progress.filter((p) => p.is_completed).length,
+        in_progress_topics: progress.filter((p) => !p.is_completed).length,
     };
 }
 async function getAchievements(userId) {
     const progress = await getUserProgress(userId);
     const achievements = [];
     // Define achievement thresholds
-    if (progress.totalPoints >= 1000)
+    if (progress.total_points >= 1000)
         achievements.push('Points Master');
-    if (progress.completedTopics >= 10)
+    if (progress.completed_topics >= 10)
         achievements.push('Learning Explorer');
-    if (progress.completedTopics >= 50)
+    if (progress.completed_topics >= 50)
         achievements.push('Knowledge Warrior');
     // Add more achievements as needed
     return achievements;
 }
-async function calculateExperienceLevel(userId) {
-    const { totalPoints } = await getUserProgress(userId);
-    if (totalPoints >= 5000)
+async function calculateExperienceLevel(user_id) {
+    const { total_points } = await getUserProgress(user_id);
+    if (total_points >= 5000)
         return 'expert';
-    if (totalPoints >= 2000)
+    if (total_points >= 2000)
         return 'advanced';
-    if (totalPoints >= 500)
+    if (total_points >= 500)
         return 'intermediate';
     return 'beginner';
 }

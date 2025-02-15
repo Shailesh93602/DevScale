@@ -5,28 +5,28 @@ exports.getRecommendedBooks = getRecommendedBooks;
 const client_1 = require("@prisma/client");
 const errorHandler_1 = require("../utils/errorHandler");
 const prisma = new client_1.PrismaClient();
-async function getPlacementResources(userId, subjectId) {
+async function getPlacementResources(user_id, subject_id) {
     return prisma.placementTest.findMany({
         where: {
-            userId,
-            subjectId,
+            user_id,
+            subject_id,
         },
         orderBy: {
-            createdAt: 'desc',
+            created_at: 'desc',
         },
     });
 }
-async function getRecommendedBooks(subjectId, level) {
+async function getRecommendedBooks(subject_id, level) {
     const books = await prisma.placementBook.findMany({
         where: {
-            subjectId,
+            subject_id,
             level,
         },
         select: {
             id: true,
             title: true,
             description: true,
-            filePath: true,
+            file_path: true,
         },
     });
     if (books.length === 0) {

@@ -21,7 +21,7 @@ const createQuestionSchema = joi_1.default.object({
     }),
     correctAnswer: joi_1.default.string().required(),
     points: joi_1.default.number().min(1).required(),
-    quizId: joi_1.default.string().required(),
+    quiz_id: joi_1.default.string().required(),
 });
 const updateQuestionSchema = createQuestionSchema.keys({
     text: joi_1.default.string(),
@@ -47,7 +47,7 @@ exports.createQuestion = (0, utils_1.catchAsync)(async (req, res) => {
         data: {
             question: value.text,
             type: value.type,
-            quizId: value.quizId,
+            quiz_id: value.quizId,
             options: value.options
                 ? {
                     create: value.options.map((option) => ({
@@ -110,7 +110,7 @@ exports.submitQuestions = (0, utils_1.catchAsync)(async (req, res) => {
         type: question.type,
         correctAnswer: question.correctAnswer,
         points: question.points,
-        quizId: question.quizId,
+        quiz_id: question.quizId,
         options: question.options
             ? {
                 create: question.options.map((option) => ({

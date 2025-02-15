@@ -17,7 +17,7 @@ class SupportService {
                     description: data.description,
                     category: data.category,
                     priority: data.priority,
-                    userId: data.userId,
+                    user_id: data.user_id,
                 },
                 include: {
                     user: {
@@ -37,12 +37,12 @@ class SupportService {
             throw (0, errorHandler_1.createAppError)('Failed to create support ticket', 500);
         }
     }
-    static async updateTicketStatus(ticketId, status, agentId) {
+    static async updateTicketStatus(ticket_id, status, agent_id) {
         const ticket = await prisma.supportTicket.update({
-            where: { id: ticketId },
+            where: { id: ticket_id },
             data: {
                 status,
-                assignedTo: agentId,
+                assigned_to: agent_id,
             },
             include: {
                 user: {
@@ -56,13 +56,13 @@ class SupportService {
         await this.notifyTicketUpdate(ticket);
         return ticket;
     }
-    static async addTicketResponse(ticketId, userId, content, isInternal = false) {
+    static async addTicketResponse(ticket_id, user_id, content, is_internal = false) {
         const response = await prisma.ticketResponse.create({
             data: {
-                ticketId,
-                userId,
+                ticket_id,
+                user_id,
                 content,
-                isInternal,
+                is_internal,
             },
             include: {
                 ticket: {
@@ -76,7 +76,7 @@ class SupportService {
                 },
             },
         });
-        if (!isInternal) {
+        if (!is_internal) {
             // Notify user of new response
             await this.notifyNewResponse(response);
         }
@@ -89,10 +89,10 @@ class SupportService {
                 description: data.description,
                 severity: data.severity,
                 environment: data.environment,
-                stepsToReproduce: data.stepsToReproduce,
-                expectedBehavior: data.expectedBehavior,
-                actualBehavior: data.actualBehavior,
-                userId: data.userId,
+                steps_to_reproduce: data.steps_to_reproduce,
+                expected_behavior: data.expected_behavior,
+                actual_behavior: data.actual_behavior,
+                user_id: data.user_id,
             },
         });
         // Notify development team
@@ -106,17 +106,17 @@ class SupportService {
                 description: data.description,
                 category: data.category,
                 priority: data.priority,
-                userId: data.userId,
+                user_id: data.user_id,
             },
         });
         return request;
     }
-    static async voteFeatureRequest(requestId, userId) {
+    static async voteFeatureRequest(requestId, user_id) {
         await prisma.$transaction(async (tx) => {
             await tx.featureRequestVote.create({
                 data: {
-                    featureRequestId: requestId,
-                    userId,
+                    feature_request_id: requestId,
+                    user_id,
                 },
             });
             await tx.featureRequest.update({
@@ -148,7 +148,7 @@ class SupportService {
                     { content: { contains: query, mode: 'insensitive' } },
                     { tags: { has: query } },
                 ],
-                isPublished: true,
+                is_published: true,
             },
             orderBy: {
                 views: 'desc',

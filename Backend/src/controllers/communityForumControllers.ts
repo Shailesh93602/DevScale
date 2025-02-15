@@ -32,7 +32,7 @@ export const createForum = catchAsync(async (req: Request, res: Response) => {
     data: {
       title,
       description,
-      createdBy: req.user.id,
+      created_by: req.user.id,
     },
   });
   res

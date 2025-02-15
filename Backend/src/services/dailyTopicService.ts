@@ -10,7 +10,7 @@ export interface DailyTopicStats {
   engagementRate: number;
 }
 
-export const getDailyTopic = async (userId?: string) => {
+export const getDailyTopic = async (user_id?: string) => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -25,7 +25,7 @@ export const getDailyTopic = async (userId?: string) => {
         include: {
           subject: {
             include: {
-              concept: true,
+              main_concept: true,
             },
           },
           articles: {
@@ -51,7 +51,7 @@ export const getDailyTopic = async (userId?: string) => {
     const topic = await selectNewDailyTopic();
     dailyTopic = await prisma.dailyTopic.create({
       data: {
-        topicId: topic.id,
+        topic_id: topic.id,
         date: today,
       },
       include: {
@@ -59,7 +59,7 @@ export const getDailyTopic = async (userId?: string) => {
           include: {
             subject: {
               include: {
-                concept: true,
+                main_concept: true,
               },
             },
             articles: {
@@ -81,9 +81,9 @@ export const getDailyTopic = async (userId?: string) => {
     });
   }
 
-  // Track user view if userId is provided
-  if (userId) {
-    await trackUserView(dailyTopic.id, userId);
+  // Track user view if user_id is provided
+  if (user_id) {
+    await trackUserView(dailyTopic.id, user_id);
   }
 
   return {
@@ -100,11 +100,11 @@ const selectNewDailyTopic = async (): Promise<Topic> => {
     },
     take: 30, // Don't repeat topics from the last 30 days
     select: {
-      topicId: true,
+      topic_id: true,
     },
   });
 
-  const recentTopicIds = recentDailyTopics.map((dt) => dt.topicId);
+  const recentTopicIds = recentDailyTopics.map((dt) => dt.topic_id);
 
   // Select a topic that:
   // 1. Hasn't been featured recently
@@ -137,7 +137,7 @@ const selectNewDailyTopic = async (): Promise<Topic> => {
       ],
     },
     orderBy: {
-      userProgress: {
+      user_progress: {
         _count: 'desc',
       },
     },
@@ -151,69 +151,69 @@ const selectNewDailyTopic = async (): Promise<Topic> => {
 };
 
 const trackUserView = async (
-  dailyTopicId: string,
-  userId: string
+  daily_topic_id: string,
+  user_id: string
 ): Promise<void> => {
   await prisma.dailyTopicView.upsert({
     where: {
-      userId_dailyTopicId: {
-        userId,
-        dailyTopicId,
+      user_id_daily_topic_id: {
+        user_id: user_id,
+        daily_topic_id,
       },
     },
     update: {
-      viewCount: {
+      view_count: {
         increment: 1,
       },
     },
     create: {
-      userId,
-      dailyTopicId,
-      viewCount: 1,
+      user_id: user_id,
+      daily_topic_id,
+      view_count: 1,
     },
   });
 };
 
 export const markTopicComplete = async (
-  dailyTopicId: string,
-  userId: string
+  daily_topic_id: string,
+  user_id: string
 ): Promise<void> => {
   await prisma.dailyTopicCompletion.create({
     data: {
-      userId,
-      dailyTopicId,
-      timeSpent: 0, // You can track actual time spent if needed
+      user_id,
+      daily_topic_id,
+      time_spent: 0, // You can track actual time spent if needed
     },
   });
 
   // Create achievement if user completes 7 consecutive daily topics
-  const consecutiveCompletions = await getConsecutiveCompletions(userId);
+  const consecutiveCompletions = await getConsecutiveCompletions(user_id);
   if (consecutiveCompletions >= 7) {
     await prisma.achievement.create({
       data: {
-        userId,
+        user_id,
         type: 'daily_topic',
         title: 'Weekly Warrior',
         description: 'Completed daily topics for 7 consecutive days!',
         criteria: {
           consecutiveCompletions: 7,
         },
-        earnedAt: new Date(),
+        earned_at: new Date(),
       },
     });
   }
 };
 
-const getConsecutiveCompletions = async (userId: string): Promise<number> => {
+const getConsecutiveCompletions = async (user_id: string): Promise<number> => {
   const completions = await prisma.dailyTopicCompletion.findMany({
     where: {
-      userId,
+      user_id,
     },
     orderBy: {
       created_at: 'desc',
     },
     include: {
-      dailyTopic: true,
+      daily_topic: true,
     },
   });
 
@@ -221,7 +221,7 @@ const getConsecutiveCompletions = async (userId: string): Promise<number> => {
   let lastDate = new Date();
 
   for (const completion of completions) {
-    const completionDate = completion.dailyTopic.date;
+    const completionDate = completion.daily_topic.date;
     const diffDays = Math.floor(
       (lastDate.getTime() - completionDate.getTime()) / (1000 * 60 * 60 * 24)
     );
@@ -238,31 +238,31 @@ const getConsecutiveCompletions = async (userId: string): Promise<number> => {
 };
 
 const getDailyTopicStats = async (
-  dailyTopicId: string
+  daily_topic_id: string
 ): Promise<DailyTopicStats> => {
   const [views, completions] = await Promise.all([
     prisma.dailyTopicView.aggregate({
       where: {
-        dailyTopicId,
+        daily_topic_id,
       },
       _sum: {
-        viewCount: true,
+        view_count: true,
       },
     }),
     prisma.dailyTopicCompletion.findMany({
       where: {
-        dailyTopicId,
+        daily_topic_id,
       },
       select: {
-        timeSpent: true,
+        time_spent: true,
       },
     }),
   ]);
 
-  const totalViews = views._sum.viewCount || 0;
+  const totalViews = views._sum.view_count || 0;
   const totalCompletions = completions.length;
   const averageTimeSpent =
-    completions.reduce((acc, c) => acc + c.timeSpent, 0) /
+    completions.reduce((acc, c) => acc + c.time_spent, 0) /
     (completions.length || 1);
 
   return {
@@ -274,20 +274,20 @@ const getDailyTopicStats = async (
 };
 
 export const getTopicStreak = async (
-  userId: string
+  user_id: string
 ): Promise<{
   currentStreak: number;
   longestStreak: number;
 }> => {
   const completions = await prisma.dailyTopicCompletion.findMany({
     where: {
-      userId,
+      user_id: user_id,
     },
     orderBy: {
       created_at: 'desc',
     },
     include: {
-      dailyTopic: true,
+      daily_topic: true,
     },
   });
 
@@ -297,7 +297,7 @@ export const getTopicStreak = async (
   let lastDate = new Date();
 
   for (const completion of completions) {
-    const completionDate = completion.dailyTopic.date;
+    const completionDate = completion.daily_topic.date;
     const diffDays = Math.floor(
       (lastDate.getTime() - completionDate.getTime()) / (1000 * 60 * 60 * 24)
     );

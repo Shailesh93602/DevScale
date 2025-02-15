@@ -1,6 +1,6 @@
-import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
-import { NextResponse, NextRequest } from 'next/server';
-import customAxios from './app/services/customAxios';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
 
 const protectedPages = [
   '/dashboard',
@@ -16,45 +16,40 @@ const protectedPages = [
   '/article-listing',
 ];
 
-export async function middleware(req: NextRequest, res: NextResponse) {
-  const supabase = createMiddlewareClient({ req, res });
-  const pathname = req.nextUrl.pathname;
+export async function middleware(request: NextRequest) {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  );
+
+  const accessToken = request.cookies.get('sb-access-token')?.value;
+
+  if (!accessToken && !request.nextUrl.pathname.startsWith('/auth')) {
+    return NextResponse.redirect(new URL('/auth/login', request.url));
+  }
+
+  if (accessToken) {
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser(accessToken);
+
+    if (error || !user) {
+      return NextResponse.redirect(new URL('/auth/login', request.url));
+    }
+
+    if (request.nextUrl.pathname.startsWith('/auth')) {
+      return NextResponse.redirect(new URL('/', request.url));
+    }
+  }
+
+  const pathname = request.nextUrl.pathname;
 
   if (!protectedPages.includes(pathname)) {
     return NextResponse.next();
   }
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  if (!session) {
-    return redirectToLogin(req);
-  }
-
-  try {
-    const data = await customAxios.get('/get-logged-in-user', {
-      headers: {
-        Authorization: `Bearer ${session.access_token}`,
-      },
-    });
-
-    if (!data) {
-      return NextResponse.redirect((req.nextUrl.clone().pathname = '/details'));
-    }
-
-    return res;
-  } catch (error) {
-    console.error('Middleware error:', error);
-    return redirectToLogin(req);
-  }
-}
-
-function redirectToLogin(req: NextRequest) {
-  const redirectUrl = req.nextUrl.clone();
-  redirectUrl.pathname = '/auth/login';
-  redirectUrl.searchParams.set(`redirectedFrom`, req.nextUrl.pathname);
-  return NextResponse.redirect(redirectUrl);
+  return NextResponse.next();
 }
 
 export const config = {

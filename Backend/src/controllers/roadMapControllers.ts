@@ -6,7 +6,7 @@ export const getAllRoadmaps = catchAsync(
   async (req: Request, res: Response) => {
     const roadmaps = await prisma.roadmap.findMany({
       include: {
-        mainConcepts: {
+        main_concepts: {
           select: {
             id: true,
             name: true,
@@ -18,7 +18,7 @@ export const getAllRoadmaps = catchAsync(
         },
       },
       orderBy: {
-        createdAt: 'asc',
+        created_at: 'asc',
       },
     });
     res.status(200).json(roadmaps);
@@ -31,7 +31,7 @@ export const getMainConceptsInRoadmap = catchAsync(
     const roadmap = await prisma.roadmap.findUnique({
       where: { id: roadmapId },
       include: {
-        mainConcepts: {
+        main_concepts: {
           select: {
             id: true,
             name: true,
@@ -57,7 +57,7 @@ export const getMainConceptsInRoadmap = catchAsync(
       return res.status(404).json({ message: 'Roadmap not found' });
     }
 
-    res.status(200).json(roadmap.mainConcepts);
+    res.status(200).json(roadmap.main_concepts);
   }
 );
 
@@ -77,7 +77,7 @@ export const getRoadMap = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const createRoadMap = catchAsync(async (req: Request, res: Response) => {
-  const userId = req.user.id;
+  const user_id = req.user.id;
   const { title, description, content } = req.body;
 
   if (!title || !description || !content) {
@@ -92,7 +92,7 @@ export const createRoadMap = catchAsync(async (req: Request, res: Response) => {
       title,
       description,
       // content,
-      userId,
+      user_id,
     },
   });
 

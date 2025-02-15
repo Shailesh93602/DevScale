@@ -22,7 +22,7 @@ interface EmailTemplateData {
 interface FeatureFlagData {
   name: string;
   description?: string;
-  isEnabled: boolean;
+  is_enabled: boolean;
   rules?: Record<string, Prisma.JsonValue>;
 }
 
@@ -109,13 +109,13 @@ export async function setFeatureFlag(data: FeatureFlagData) {
   const flag = await prisma.featureFlag.upsert({
     where: { name: data.name },
     update: {
-      isEnabled: data.isEnabled,
+      is_enabled: data.is_enabled,
       description: data.description,
       rules: data.rules,
     },
     create: {
       name: data.name,
-      isEnabled: data.isEnabled,
+      is_enabled: data.is_enabled,
       description: data.description,
       rules: data.rules,
     },
@@ -140,14 +140,14 @@ export async function isFeatureEnabled(
     return false;
   }
 
-  let isEnabled = flag.isEnabled;
+  let is_enabled = flag.is_enabled;
 
-  if (isEnabled && context && flag.rules) {
-    isEnabled = evaluateFeatureRules(flag.rules as Prisma.JsonValue, context);
+  if (is_enabled && context && flag.rules) {
+    is_enabled = evaluateFeatureRules(flag.rules as Prisma.JsonValue, context);
   }
 
-    await setCache(`feature:${name}`, isEnabled, { ttl: 300 });
-  return isEnabled;
+  await setCache(`feature:${name}`, is_enabled, { ttl: 300 });
+  return is_enabled;
 }
 
 export async function getNotificationSettings() {

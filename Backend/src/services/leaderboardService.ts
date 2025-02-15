@@ -3,18 +3,18 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export async function getLeaderboard(
-  subjectId: string,
-  timeRange: string,
+  subject_id: string,
+  time_range: string,
   limit: number
 ) {
-  const timeFilter = getTimeFilter(timeRange);
+  const time_filter = getTimeFilter(time_range);
 
   return prisma.leaderboardEntry.findMany({
     where: {
-      subjectId,
-      createdAt: timeFilter,
+      subject_id: subject_id,
+      created_at: time_filter,
     },
-    orderBy: [{ score: 'desc' }, { timeTaken: 'asc' }],
+    orderBy: [{ score: 'desc' }, { time_taken: 'asc' }],
     take: limit,
     include: {
       user: {

@@ -36,7 +36,7 @@ async function cleanupData() {
 
     await prisma.user.deleteMany({
       where: {
-        deletedAt: {
+        deleted_at: { 
           lt: thirtyDaysAgo,
         },
       },

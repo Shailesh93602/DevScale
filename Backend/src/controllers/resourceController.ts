@@ -17,16 +17,16 @@ export const getSubjects = catchAsync(async (_req: Request, res: Response) => {
 // Topics
 export const getTopics = catchAsync(async (req: Request, res: Response) => {
   const topics = await prisma.topic.findMany({
-    where: { subjectId: req.params.id },
+    where: { subject_id: req.params.id },
     orderBy: { created_at: 'asc' },
   });
   res.status(200).json({ success: true, topics });
 });
 
 export const addTopic = catchAsync(async (req: Request, res: Response) => {
-  const { title, description, subjectId } = req.body;
+  const { title, description, subject_id } = req.body;
   const topic = await prisma.topic.create({
-    data: { title, description, subjectId, order: 0 },
+    data: { title, description, subject_id, order: 0 },
   });
   res.status(201).json({ success: true, topic });
 });
@@ -57,8 +57,10 @@ export const getResources = catchAsync(async (req: Request, res: Response) => {
 
 // Resource by ID
 export const getResource = catchAsync(async (req: Request, res: Response) => {
-  const subjectId = req.params.id;
-  const subject = await prisma.subject.findUnique({ where: { id: subjectId } });
+  const subject_id = req.params.id;
+  const subject = await prisma.subject.findUnique({
+    where: { id: subject_id },
+  });
 
   if (!subject) {
     return res
@@ -67,7 +69,7 @@ export const getResource = catchAsync(async (req: Request, res: Response) => {
   }
 
   const topics = await prisma.topic.findMany({
-    where: { subjectId },
+    where: { subject_id },
     include: {
       articles: {
         select: { id: true, title: true, content: true, status: true },
@@ -119,21 +121,21 @@ export const deleteSubjects = catchAsync(
 
 // Articles
 export const createArticle = catchAsync(async (req: Request, res: Response) => {
-  const { title, content, author, topicId } = req.body;
+  const { title, content, author_id, topic_id } = req.body;
   const article = await prisma.article.create({
     data: {
       title,
       content,
-      authorId: author,
-      topicId,
+      author_id: author_id,
+      topic_id: topic_id,
     },
   });
   res.status(201).json({ success: true, article });
 });
 
 export const getArticle = catchAsync(async (req: Request, res: Response) => {
-  const topicId = req.params.id;
-  const articles = await prisma.article.findMany({ where: { topicId } });
+  const topic_id = req.params.id;
+  const articles = await prisma.article.findMany({ where: { topic_id } });
   res.status(200).json({ success: true, articles });
 });
 
@@ -167,8 +169,8 @@ export const saveResource = catchAsync(async (req: Request, res: Response) => {
     data: {
       title: `General Resource`,
       content,
-      topicId: id,
-      authorId: req.user.id,
+      topic_id: id,
+      author_id: req.user.id,
       status: 'PENDING',
     },
   });
@@ -222,7 +224,7 @@ export const createResource = catchAsync(
         created_at: value.created_at,
         updated_at: value.updated_at,
         language: value.language,
-        userId: value.userId,
+        user_id: value.user_id,
       },
     });
 

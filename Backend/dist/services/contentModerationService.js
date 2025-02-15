@@ -49,28 +49,31 @@ async function getPendingContent(type, page = 1, limit = 10) {
     };
 }
 async function moderateContent(params) {
-    const { contentId, contentType, status, moderatorId, moderationNotes } = params;
+    const { content_id, content_type, status, moderations, moderator_id } = params;
     const result = await prisma.$transaction(async (tx) => {
         let content;
-        switch (contentType) {
+        switch (content_type) {
             case 'article':
                 content = await tx.article.update({
-                    where: { id: contentId },
-                    data: { status, moderationNotes },
+                    where: { id: content_id },
+                    data: {
+                        status,
+                        moderations: { set: moderations },
+                    },
                     include: { author: { select: { id: true, email: true } } },
                 });
                 break;
             case 'comment':
                 content = await tx.comment.update({
-                    where: { id: contentId },
-                    data: { content: moderationNotes },
+                    where: { id: content_id },
+                    data: { content: moderations.map((m) => m.notes).join('\n') },
                     include: { user: { select: { id: true, email: true } } },
                 });
                 break;
             case 'forumPost':
                 content = await tx.forumPost.update({
-                    where: { id: contentId },
-                    data: { content: moderationNotes },
+                    where: { id: content_id },
+                    data: { content: moderations.map((m) => m.notes).join('\n') },
                     include: { user: { select: { id: true, email: true } } },
                 });
                 break;
@@ -79,11 +82,11 @@ async function moderateContent(params) {
         }
         await tx.moderationLog.create({
             data: {
-                contentId,
-                contentType,
-                moderatorId,
+                content_id,
+                content_type,
+                moderator_id,
                 action: status,
-                notes: moderationNotes,
+                notes: moderations.map((m) => m.notes).join('\n'),
             },
         });
         return content;
@@ -91,12 +94,12 @@ async function moderateContent(params) {
     return result;
 }
 async function reportContent(params) {
-    const { contentId, contentType, reporterId, reason, details } = params;
+    const { content_id, content_type, reporter_id, reason, details } = params;
     const report = await prisma.contentReport.create({
         data: {
-            contentId,
-            contentType,
-            reporterId,
+            content_id,
+            content_type,
+            reporter_id,
             reason,
             details,
             status: 'pending',
@@ -104,10 +107,10 @@ async function reportContent(params) {
         include: { reporter: { select: { username: true } } },
     });
     const reportsCount = await prisma.contentReport.count({
-        where: { contentId, contentType },
+        where: { content_id, content_type },
     });
     if (reportsCount >= 3) {
-        await escalateContent(contentId, contentType);
+        await escalateContent(content_id, content_type);
     }
     return report;
 }
@@ -133,8 +136,8 @@ async function getReportedContent(status, page = 1, limit = 10) {
         },
     };
 }
-async function getModerationLogs(contentId, page = 1, limit = 10) {
-    const where = contentId ? { contentId } : {};
+async function getModerationLogs(content_id, page = 1, limit = 10) {
+    const where = content_id ? { content_id } : {};
     const [logs, total] = await Promise.all([
         prisma.moderationLog.findMany({
             where,

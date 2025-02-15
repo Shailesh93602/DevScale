@@ -64,3 +64,31 @@
 [2024-06-22 07:27:33.497 PM] error: Error: Column 'whatsapp' cannot be null
 [2024-06-22 07:46:21.029 PM] error: ReferenceError: re is not defined
 [2024-06-23 12:30:43.959 PM] error: TypeError: Cannot read properties of undefined (reading 'join')
+{"level":"error","status":500,"timestamp":"2025-02-13T02:57:30.510Z"}
+{"level":"error","message":"Internal server error","name":"InternalServerError","statusCode":500,"timestamp":"2025-02-13T02:57:30.512Z"}
+{"level":"error","status":500,"timestamp":"2025-02-13T02:57:30.520Z"}
+{"level":"error","message":"Internal server error","name":"InternalServerError","statusCode":500,"timestamp":"2025-02-13T02:57:30.521Z"}
+{"level":"error","status":500,"timestamp":"2025-02-13T02:57:30.523Z"}
+{"level":"error","message":"Internal server error","name":"InternalServerError","statusCode":500,"timestamp":"2025-02-13T02:57:30.523Z"}
+{"level":"error","status":500,"timestamp":"2025-02-13T02:57:33.757Z"}
+{"level":"error","message":"Internal server error","name":"InternalServerError","statusCode":500,"timestamp":"2025-02-13T02:57:33.757Z"}
+{"level":"error","status":500,"timestamp":"2025-02-13T02:57:33.764Z"}
+{"level":"error","message":"Internal server error","name":"InternalServerError","statusCode":500,"timestamp":"2025-02-13T02:57:33.764Z"}
+{"level":"error","status":500,"timestamp":"2025-02-13T02:57:33.769Z"}
+{"level":"error","message":"Internal server error","name":"InternalServerError","statusCode":500,"timestamp":"2025-02-13T02:57:33.769Z"}
+{"level":"error","status":500,"timestamp":"2025-02-13T02:57:34.054Z"}
+{"level":"error","message":"Internal server error","name":"InternalServerError","statusCode":500,"timestamp":"2025-02-13T02:57:34.054Z"}
+{"level":"error","status":500,"timestamp":"2025-02-13T02:57:40.512Z"}
+{"level":"error","message":"Internal server error","name":"InternalServerError","statusCode":500,"timestamp":"2025-02-13T02:57:40.512Z"}
+{"level":"error","status":500,"timestamp":"2025-02-13T02:57:40.517Z"}
+{"level":"error","message":"Internal server error","name":"InternalServerError","statusCode":500,"timestamp":"2025-02-13T02:57:40.517Z"}
+{"level":"error","status":500,"timestamp":"2025-02-13T02:57:40.536Z"}
+{"level":"error","message":"Internal server error","name":"InternalServerError","statusCode":500,"timestamp":"2025-02-13T02:57:40.536Z"}
+{"level":"error","status":500,"timestamp":"2025-02-13T02:58:39.916Z"}
+{"level":"error","message":"Internal server error","name":"InternalServerError","statusCode":500,"timestamp":"2025-02-13T02:58:39.916Z"}
+{"level":"error","status":500,"timestamp":"2025-02-13T02:58:39.919Z"}
+{"level":"error","message":"Internal server error","name":"InternalServerError","statusCode":500,"timestamp":"2025-02-13T02:58:39.920Z"}
+{"level":"error","status":500,"timestamp":"2025-02-13T02:58:39.923Z"}
+{"level":"error","message":"Internal server error","name":"InternalServerError","statusCode":500,"timestamp":"2025-02-13T02:58:39.923Z"}
+{"level":"error","status":500,"timestamp":"2025-02-13T02:58:40.213Z"}
+{"level":"error","message":"Internal server error","name":"InternalServerError","statusCode":500,"timestamp":"2025-02-13T02:58:40.214Z"}

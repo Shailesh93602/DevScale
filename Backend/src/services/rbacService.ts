@@ -49,16 +49,18 @@ export async function createRole(data: {
   name: string;
   description?: string;
   permissions?: string[];
-  parentId?: string;
+  parent_id?: string;
 }): Promise<Role> {
-  const existing = await prisma.role.findUnique({ where: { name: data.name } });
+  const existing = await prisma.role.findUnique({
+    where: { name: data.name },
+  });
   if (existing) throw createAppError('Role already exists', 400);
 
   return prisma.role.create({
     data: {
       name: data.name,
       description: data.description,
-      parentId: data.parentId,
+      parent_id: data.parent_id,
       permissions: data.permissions
         ? { connect: data.permissions.map((id) => ({ id })) }
         : undefined,
@@ -89,16 +91,16 @@ export async function createPermission(data: {
 }
 
 export async function assignRoleToUser(
-  userId: string,
-  roleId: string
+  user_id: string,
+  role_id: string
 ): Promise<User> {
   const user = await prisma.user.update({
-    where: { id: userId },
-    data: { roleId },
+    where: { id: user_id },
+    data: { role_id },
     include: { role: { include: { permissions: true } } },
   });
 
-  await deleteCache(`user:${userId}:permissions`);
+  await deleteCache(`user:${user_id}:permissions`);
   return user;
 }
 
@@ -332,27 +334,27 @@ export async function checkRole(
 }
 
 export async function updateRole(
-  roleId: string,
+  role_id: string,
   data: {
     name?: string;
     description?: string;
-    parentId?: string | null;
+    parent_id?: string | null;
     permissions?: string[];
   }
 ): Promise<Role> {
   const existingRole = await prisma.role.findUnique({
-    where: { id: roleId },
+    where: { id: role_id },
     include: { permissions: true },
   });
 
   if (!existingRole) throw createAppError('Role not found', 404);
 
   return prisma.role.update({
-    where: { id: roleId },
+    where: { id: role_id },
     data: {
       name: data.name,
       description: data.description,
-      parentId: data.parentId,
+      parent_id: data.parent_id,
       permissions: data.permissions
         ? {
             disconnect: existingRole.permissions.map((p) => ({ id: p.id })),
@@ -364,9 +366,9 @@ export async function updateRole(
   });
 }
 
-export async function deleteRole(roleId: string): Promise<void> {
+export async function deleteRole(role_id: string): Promise<void> {
   const usersWithRole = await prisma.user.count({
-    where: { roleId },
+    where: { role_id },
   });
 
   if (usersWithRole > 0) {
@@ -374,7 +376,7 @@ export async function deleteRole(roleId: string): Promise<void> {
   }
 
   await prisma.role.delete({
-    where: { id: roleId },
+    where: { id: role_id },
   });
 }
 

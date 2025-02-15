@@ -113,14 +113,14 @@ export const getUserProgress = catchAsync(
     // TODO: implement this method
     const roadmaps = await prisma.roadmap.findMany({
       include: {
-        mainConcepts: {
+        main_concepts: {
           include: {
             subjects: {
               include: {
                 topics: {
                   include: {
                     // progress: {
-                    //   where: { userId },
+                    //   where: { user_id },
                     //   select: { id: true, status: true },
                     // },
                   },
@@ -138,9 +138,9 @@ export const getUserProgress = catchAsync(
 
 export const getUserRoadmap = catchAsync(
   async (req: Request, res: Response) => {
-    const userId = req.user.id;
+    const user_id = req.user.id;
     const userRoadmap = await prisma.userRoadmap.findFirst({
-      where: { userId },
+      where: { user_id },
     });
 
     if (!userRoadmap) {
@@ -155,13 +155,13 @@ export const getUserRoadmap = catchAsync(
 
 export const insertUserRoadmap = catchAsync(
   async (req: Request, res: Response) => {
-    const userId = req.user?.id;
-    if (!userId) {
+    const user_id = req.user?.id;
+    if (!user_id) {
       return res.status(401).json({ success: false, message: 'Unauthorized' });
     }
 
     const isRoadmapExists = await prisma.userRoadmap.findFirst({
-      where: { userId },
+      where: { user_id },
     });
 
     if (isRoadmapExists) {
@@ -172,12 +172,12 @@ export const insertUserRoadmap = catchAsync(
       });
     }
 
-    const { roadmapId, topicId } = req.body;
+    const { roadmap_id, topic_id } = req.body;
     const userRoadmap = await prisma.userRoadmap.create({
       data: {
-        userId,
-        roadmapId,
-        topicId,
+        user_id,
+        roadmap_id,
+        topic_id,
       },
     });
 

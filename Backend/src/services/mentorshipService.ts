@@ -5,8 +5,8 @@ import { getCache, setCache, deleteCache } from './cacheService';
 const prisma = new PrismaClient();
 
 interface MentorshipRequestData {
-  mentorId: string;
-  menteeId: string;
+  mentor_id: string;
+  mentee_id: string;
   topics: string[];
   description?: string;
 }
@@ -16,9 +16,9 @@ export const requestMentorship = async (
 ): Promise<Mentorship> => {
   const existing = await prisma.mentorship.findUnique({
     where: {
-      mentorId_menteeId: {
-        mentorId: data.mentorId,
-        menteeId: data.menteeId,
+      mentor_id_mentee_id: {
+        mentor_id: data.mentor_id,
+        mentee_id: data.mentee_id,
       },
     },
   });
@@ -38,8 +38,8 @@ export const requestMentorship = async (
     },
   });
 
-  await deleteCache(`mentor:${data.mentorId}:requests`);
-  await deleteCache(`mentee:${data.menteeId}:requests`);
+  await deleteCache(`mentor:${data.mentor_id}:requests`);
+  await deleteCache(`mentee:${data.mentee_id}:requests`);
   return mentorship;
 };
 
@@ -56,21 +56,21 @@ export const updateMentorshipStatus = async (
     },
   });
 
-  await deleteCache(`mentor:${mentorship.mentorId}:requests`);
-  await deleteCache(`mentee:${mentorship.menteeId}:requests`);
+  await deleteCache(`mentor:${mentorship.mentor_id}:requests`);
+  await deleteCache(`mentee:${mentorship.mentee_id}:requests`);
   return mentorship;
 };
 
 export const getMentorshipRequests = async (
-  userId: string,
+  user_id: string,
   role: 'mentor' | 'mentee'
 ) => {
-  const cacheKey = `mentorship:${userId}:${role}`;
+  const cacheKey = `mentorship:${user_id}:${role}`;
   const cached = await getCache(cacheKey);
   if (cached) return cached;
 
   const requests = await prisma.mentorship.findMany({
-    where: role === 'mentor' ? { mentorId: userId } : { menteeId: userId },
+    where: role === 'mentor' ? { mentor_id: user_id } : { mentee_id: user_id },
     include: {
       mentor: {
         select: { username: true, avatar_url: true, experience_level: true },
@@ -106,7 +106,7 @@ export const getMentorshipDetails = async (id: string) => {
 };
 
 export const addMentorshipSession = async (
-  mentorshipId: string,
+  mentorship_id: string,
   data: {
     date: Date;
     duration: number;
@@ -117,10 +117,10 @@ export const addMentorshipSession = async (
   const session = await prisma.mentorshipSession.create({
     data: {
       ...data,
-      mentorship: { connect: { id: mentorshipId } },
+      mentorship: { connect: { id: mentorship_id } },
     },
   });
 
-  await deleteCache(`mentorship:${mentorshipId}`);
+  await deleteCache(`mentorship:${mentorship_id}`);
   return session;
 };

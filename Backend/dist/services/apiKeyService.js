@@ -8,18 +8,18 @@ const client_1 = require("@prisma/client");
 const crypto_1 = __importDefault(require("crypto"));
 const logger_1 = __importDefault(require("../utils/logger"));
 const prisma = new client_1.PrismaClient();
-const generateApiKey = async (userId, scope = ['read']) => {
+const generateApiKey = async (user_id, scope = ['read']) => {
     const apiKey = crypto_1.default.randomBytes(32).toString('hex');
     const hashedKey = crypto_1.default.createHash('sha256').update(apiKey).digest('hex');
     await prisma.apiKey.create({
         data: {
-            userId,
+            user_id,
             key: hashedKey,
             scope,
-            lastUsed: new Date(),
+            last_used: new Date(),
         },
     });
-    logger_1.default.info(`API key generated for user ${userId}`);
+    logger_1.default.info(`API key generated for user ${user_id}`);
     return apiKey;
 };
 exports.generateApiKey = generateApiKey;
@@ -30,7 +30,7 @@ const validateApiKey = async (apiKey) => {
         return false;
     await prisma.apiKey.update({
         where: { id: key.id },
-        data: { lastUsed: new Date() },
+        data: { last_used: new Date() },
     });
     return true;
 };

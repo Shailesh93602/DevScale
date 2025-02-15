@@ -79,13 +79,13 @@ async function setFeatureFlag(data) {
     const flag = await prisma.featureFlag.upsert({
         where: { name: data.name },
         update: {
-            isEnabled: data.isEnabled,
+            is_enabled: data.is_enabled,
             description: data.description,
             rules: data.rules,
         },
         create: {
             name: data.name,
-            isEnabled: data.isEnabled,
+            is_enabled: data.is_enabled,
             description: data.description,
             rules: data.rules,
         },
@@ -103,12 +103,12 @@ async function isFeatureEnabled(name, context) {
     if (!flag) {
         return false;
     }
-    let isEnabled = flag.isEnabled;
-    if (isEnabled && context && flag.rules) {
-        isEnabled = evaluateFeatureRules(flag.rules, context);
+    let is_enabled = flag.is_enabled;
+    if (is_enabled && context && flag.rules) {
+        is_enabled = evaluateFeatureRules(flag.rules, context);
     }
-    await (0, cacheService_1.setCache)(`feature:${name}`, isEnabled, { ttl: 300 });
-    return isEnabled;
+    await (0, cacheService_1.setCache)(`feature:${name}`, is_enabled, { ttl: 300 });
+    return is_enabled;
 }
 async function getNotificationSettings() {
     const settings = await getConfigsByCategory('notifications');

@@ -1,4 +1,4 @@
-import { PrismaClient, Status } from '@prisma/client';
+import { ContentModeration, PrismaClient, Status } from '@prisma/client';
 import { createAppError } from '../utils/errorHandler';
 import logger from '../utils/logger';
 import { ContentFilter } from '../utils/contentFilter';
@@ -6,17 +6,17 @@ import { ContentFilter } from '../utils/contentFilter';
 const prisma = new PrismaClient();
 
 export interface ModerateContentParams {
-  contentId: string;
-  contentType: 'article' | 'comment' | 'forumPost';
+  content_id: string;
+  content_type: 'article' | 'comment' | 'forumPost';
   status: Status;
-  moderatorId: string;
-  moderationNotes?: string;
+  moderator_id: string;
+  moderations: ContentModeration[];
 }
 
 export interface ReportedContentParams {
-  contentId: string;
-  contentType: string;
-  reporterId: string;
+  content_id: string;
+  content_type: string;
+  reporter_id: string;
   reason: string;
   details?: string;
 }
@@ -59,31 +59,34 @@ export async function getPendingContent(type?: string, page = 1, limit = 10) {
 }
 
 export async function moderateContent(params: ModerateContentParams) {
-  const { contentId, contentType, status, moderatorId, moderationNotes } =
+  const { content_id, content_type, status, moderations, moderator_id } =
     params;
 
   const result = await prisma.$transaction(async (tx) => {
     let content;
 
-    switch (contentType) {
+    switch (content_type) {
       case 'article':
         content = await tx.article.update({
-          where: { id: contentId },
-          data: { status, moderationNotes },
+          where: { id: content_id },
+          data: {
+            status,
+            moderations: { set: moderations },
+          },
           include: { author: { select: { id: true, email: true } } },
         });
         break;
       case 'comment':
         content = await tx.comment.update({
-          where: { id: contentId },
-          data: { content: moderationNotes },
+          where: { id: content_id },
+          data: { content: moderations.map((m) => m.notes).join('\n') },
           include: { user: { select: { id: true, email: true } } },
         });
         break;
       case 'forumPost':
         content = await tx.forumPost.update({
-          where: { id: contentId },
-          data: { content: moderationNotes },
+          where: { id: content_id },
+          data: { content: moderations.map((m) => m.notes).join('\n') },
           include: { user: { select: { id: true, email: true } } },
         });
         break;
@@ -93,11 +96,11 @@ export async function moderateContent(params: ModerateContentParams) {
 
     await tx.moderationLog.create({
       data: {
-        contentId,
-        contentType,
-        moderatorId,
+        content_id,
+        content_type,
+        moderator_id,
         action: status,
-        notes: moderationNotes,
+        notes: moderations.map((m) => m.notes).join('\n'),
       },
     });
 
@@ -108,13 +111,13 @@ export async function moderateContent(params: ModerateContentParams) {
 }
 
 export async function reportContent(params: ReportedContentParams) {
-  const { contentId, contentType, reporterId, reason, details } = params;
+  const { content_id, content_type, reporter_id, reason, details } = params;
 
   const report = await prisma.contentReport.create({
     data: {
-      contentId,
-      contentType,
-      reporterId,
+      content_id,
+      content_type,
+      reporter_id,
       reason,
       details,
       status: 'pending',
@@ -123,11 +126,11 @@ export async function reportContent(params: ReportedContentParams) {
   });
 
   const reportsCount = await prisma.contentReport.count({
-    where: { contentId, contentType },
+    where: { content_id, content_type },
   });
 
   if (reportsCount >= 3) {
-    await escalateContent(contentId, contentType);
+    await escalateContent(content_id, content_type);
   }
 
   return report;
@@ -163,11 +166,11 @@ export async function getReportedContent(
 }
 
 export async function getModerationLogs(
-  contentId?: string,
+  content_id?: string,
   page = 1,
   limit = 10
 ) {
-  const where = contentId ? { contentId } : {};
+  const where = content_id ? { content_id } : {};
 
   const [logs, total] = await Promise.all([
     prisma.moderationLog.findMany({

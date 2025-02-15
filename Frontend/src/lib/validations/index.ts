@@ -67,10 +67,6 @@ export const registerSchema = yup.object({
     .string()
     .required('Confirm Password is required')
     .oneOf([yup.ref('password')], 'Passwords must match'),
-  acceptTerms: yup
-    .boolean()
-    .required('You must accept the terms and conditions')
-    .oneOf([true], 'You must accept the terms and conditions'),
 });
 
 export const forgotPasswordSchema = yup.object({
@@ -86,10 +82,28 @@ export const resetPasswordSchema = yup.object({
 });
 
 export const profileSchema = yup.object({
+  fullName: yup.string().required('Full name is required'),
+  dob: yup.date().required('Date of birth is required'),
+  gender: yup.string().required('Gender is required'),
   mobile: mobileSchema,
   university: yup.string().when('$isStudent', {
     is: true,
     then: (schema) => schema.required('University is required'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  college: yup.string().when('$isStudent', {
+    is: true,
+    then: (schema) => schema.required('College is required'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  branch: yup.string().when('$isStudent', {
+    is: true,
+    then: (schema) => schema.required('Branch is required'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  semester: yup.string().when('$isStudent', {
+    is: true,
+    then: (schema) => schema.required('Semester is required'),
     otherwise: (schema) => schema.notRequired(),
   }),
   experienceLevel: yup.string().required('Experience level is required'),

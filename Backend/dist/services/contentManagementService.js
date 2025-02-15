@@ -18,8 +18,8 @@ const submitArticle = async (data) => {
         data: {
             title: data.title,
             content: processedContent,
-            authorId: data.authorId,
-            topicId: data.topicId,
+            author_id: data.author_id,
+            topic_id: data.topic_id,
             status: client_1.Status.PENDING,
         },
         include: {
@@ -27,23 +27,26 @@ const submitArticle = async (data) => {
             topic: true,
         },
     });
-    await trackSubmission(data.authorId, article.id);
+    await trackSubmission(data.author_id, article.id);
     return article;
 };
 exports.submitArticle = submitArticle;
 const reviewArticle = async (data) => {
     const article = await prisma.article.update({
-        where: { id: data.articleId },
-        data: { status: data.status, moderationNotes: data.moderationNotes },
+        where: { id: data.article_id },
+        data: {
+            status: data.status,
+            moderations: { set: data.moderations },
+        },
         include: { author: { select: { username: true, email: true } } },
     });
     await notifyAuthor(article);
     return article;
 };
 exports.reviewArticle = reviewArticle;
-const getArticlesByTopic = async (topicId) => {
+const getArticlesByTopic = async (topic_id) => {
     return prisma.article.findMany({
-        where: { topicId, status: client_1.Status.APPROVED },
+        where: { topic_id: topic_id, status: client_1.Status.APPROVED },
         include: {
             author: { select: { username: true, avatar_url: true } },
             _count: { select: { likes: true, comments: true } },
@@ -63,9 +66,9 @@ const getPendingArticles = async () => {
     });
 };
 exports.getPendingArticles = getPendingArticles;
-const getArticleVersions = async (articleId) => {
-    return prisma.articleVersion.findMany({
-        where: { articleId },
+const getArticleVersions = async (article_id) => {
+    return prisma.version.findMany({
+        where: { article_id: article_id },
         orderBy: { version: 'desc' },
     });
 };
@@ -74,9 +77,9 @@ const updateArticle = async (id, data) => {
     const currentArticle = await prisma.article.findUnique({ where: { id } });
     if (!currentArticle)
         throw (0, errorHandler_1.createAppError)('Article not found', 404);
-    await prisma.articleVersion.create({
+    await prisma.version.create({
         data: {
-            articleId: id,
+            article_id: id,
             content: currentArticle.content,
             title: currentArticle.title,
             version: (await getLatestVersion(id)) + 1,
@@ -109,17 +112,17 @@ const processArticleImages = async (content, images) => {
     }
     return processedContent;
 };
-const getLatestVersion = async (articleId) => {
-    const latestVersion = await prisma.articleVersion.findFirst({
-        where: { articleId },
+const getLatestVersion = async (article_id) => {
+    const latestVersion = await prisma.version.findFirst({
+        where: { article_id: article_id },
         orderBy: { version: 'desc' },
     });
     return latestVersion?.version ?? 0;
 };
-const trackSubmission = async (authorId, articleId) => {
+const trackSubmission = async (author_id, article_id) => {
     try {
         await prisma.submissionLog.create({
-            data: { authorId, articleId, type: 'article' },
+            data: { author_id: author_id, article_id: article_id, type: 'article' },
         });
     }
     catch (error) {
@@ -130,7 +133,7 @@ const notifyAuthor = async (article) => {
     try {
         await prisma.notification.create({
             data: {
-                userId: article.authorId,
+                user_id: article.author_id,
                 title: 'Article Review Update',
                 message: `Your article "${article.title}" has been ${article.status}`,
                 type: 'system',

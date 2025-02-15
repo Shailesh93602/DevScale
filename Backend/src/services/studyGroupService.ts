@@ -6,10 +6,10 @@ const prisma = new PrismaClient();
 interface StudyGroupData {
   name: string;
   description: string;
-  topicId: string;
-  maxMembers?: number;
-  isPrivate?: boolean;
-  createdBy: string;
+  topic_id: string;
+  max_members?: number;
+  is_private?: boolean;
+  created_by: string;
 }
 
 export const createStudyGroup = async (
@@ -21,7 +21,7 @@ export const createStudyGroup = async (
         ...data,
         members: {
           create: {
-            userId: data.createdBy,
+            user_id: data.created_by,
             role: GroupRole.admin,
           },
         },
@@ -48,22 +48,22 @@ export const joinStudyGroup = async (
   });
 
   if (!group) throw createAppError('Study group not found', 404);
-  if (group.maxMembers && group._count.members >= group.maxMembers) {
+  if (group.max_members && group._count.members >= group.max_members) {
     throw createAppError('Study group is full', 400);
   }
 
   await prisma.studyGroupMember.create({
-    data: { userId, studyGroupId: groupId, role },
+    data: { user_id: userId, study_group_id: groupId, role },
   });
 };
 
 export const getStudyGroups = async (filters?: {
-  topicId?: string;
+  topic_id?: string;
   search?: string;
 }): Promise<StudyGroup[]> => {
   return prisma.studyGroup.findMany({
     where: {
-      topicId: filters?.topicId,
+      topic_id: filters?.topic_id,
       name: filters?.search
         ? { contains: filters.search, mode: 'insensitive' }
         : undefined,
@@ -99,7 +99,9 @@ export const removeStudyGroupMember = async (
   userId: string
 ): Promise<void> => {
   await prisma.studyGroupMember.delete({
-    where: { userId_studyGroupId: { userId, studyGroupId: groupId } },
+    where: {
+      user_id_study_group_id: { user_id: userId, study_group_id: groupId },
+    },
   });
 };
 
@@ -109,7 +111,9 @@ export const updateStudyGroupMemberRole = async (
   role: GroupRole
 ): Promise<void> => {
   await prisma.studyGroupMember.update({
-    where: { userId_studyGroupId: { userId, studyGroupId: groupId } },
+    where: {
+      user_id_study_group_id: { user_id: userId, study_group_id: groupId },
+    },
     data: { role },
   });
 };

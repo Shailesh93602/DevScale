@@ -11,11 +11,11 @@ const createArticle = async (data) => {
         data: {
             title: data.title,
             content: processedContent,
-            authorId: data.authorId,
-            topicId: data.topicId,
-            resourceId: data.resourceId,
+            author_id: data.author_id,
+            topic_id: data.topic_id,
+            resource_id: data.resource_id,
             status: data.status ?? client_1.Status.PENDING,
-            moderationNotes: data.moderationNotes,
+            moderations: { create: data.moderations },
         },
         include: {
             author: { select: { username: true, avatar_url: true } },
@@ -31,7 +31,15 @@ const updateArticle = async (id, data) => {
     }
     return prisma.article.update({
         where: { id },
-        data: { ...data, content: processedContent },
+        data: {
+            title: data.title,
+            content: processedContent,
+            author_id: data.author_id,
+            topic_id: data.topic_id,
+            resource_id: data.resource_id,
+            status: data.status,
+            moderations: data.moderations ? { set: data.moderations } : undefined,
+        },
         include: {
             author: { select: { username: true, avatar_url: true } },
             topic: true,
@@ -56,8 +64,8 @@ exports.getArticle = getArticle;
 const getArticles = async (filters) => {
     return prisma.article.findMany({
         where: {
-            topicId: filters?.topicId,
-            authorId: filters?.authorId,
+            topic_id: filters?.topic_id,
+            author_id: filters?.author_id,
             status: filters?.status,
             title: filters?.search
                 ? { contains: filters.search, mode: 'insensitive' }
@@ -75,10 +83,10 @@ const deleteArticle = async (id) => {
     await prisma.article.delete({ where: { id } });
 };
 exports.deleteArticle = deleteArticle;
-const moderateArticle = async (id, status, moderationNotes) => {
+const moderateArticle = async (id, status, moderations) => {
     return prisma.article.update({
         where: { id },
-        data: { status, moderationNotes },
+        data: { status, moderations: { set: moderations } },
     });
 };
 exports.moderateArticle = moderateArticle;

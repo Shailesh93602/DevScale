@@ -18,14 +18,16 @@ const errorHandler_1 = require("../utils/errorHandler");
 const cacheService_1 = require("./cacheService");
 const prisma = new client_1.PrismaClient();
 async function createRole(data) {
-    const existing = await prisma.role.findUnique({ where: { name: data.name } });
+    const existing = await prisma.role.findUnique({
+        where: { name: data.name },
+    });
     if (existing)
         throw (0, errorHandler_1.createAppError)('Role already exists', 400);
     return prisma.role.create({
         data: {
             name: data.name,
             description: data.description,
-            parentId: data.parentId,
+            parent_id: data.parent_id,
             permissions: data.permissions
                 ? { connect: data.permissions.map((id) => ({ id })) }
                 : undefined,
@@ -48,13 +50,13 @@ async function createPermission(data) {
         },
     });
 }
-async function assignRoleToUser(userId, roleId) {
+async function assignRoleToUser(user_id, role_id) {
     const user = await prisma.user.update({
-        where: { id: userId },
-        data: { roleId },
+        where: { id: user_id },
+        data: { role_id },
         include: { role: { include: { permissions: true } } },
     });
-    await (0, cacheService_1.deleteCache)(`user:${userId}:permissions`);
+    await (0, cacheService_1.deleteCache)(`user:${user_id}:permissions`);
     return user;
 }
 async function checkPermission(userId, resource, action) {
@@ -214,19 +216,19 @@ async function checkRole(userId, role) {
     });
     return user?.role?.name === role;
 }
-async function updateRole(roleId, data) {
+async function updateRole(role_id, data) {
     const existingRole = await prisma.role.findUnique({
-        where: { id: roleId },
+        where: { id: role_id },
         include: { permissions: true },
     });
     if (!existingRole)
         throw (0, errorHandler_1.createAppError)('Role not found', 404);
     return prisma.role.update({
-        where: { id: roleId },
+        where: { id: role_id },
         data: {
             name: data.name,
             description: data.description,
-            parentId: data.parentId,
+            parent_id: data.parent_id,
             permissions: data.permissions
                 ? {
                     disconnect: existingRole.permissions.map((p) => ({ id: p.id })),
@@ -237,15 +239,15 @@ async function updateRole(roleId, data) {
         include: { permissions: true, parent: true },
     });
 }
-async function deleteRole(roleId) {
+async function deleteRole(role_id) {
     const usersWithRole = await prisma.user.count({
-        where: { roleId },
+        where: { role_id },
     });
     if (usersWithRole > 0) {
         throw (0, errorHandler_1.createAppError)('Cannot delete role assigned to users', 400);
     }
     await prisma.role.delete({
-        where: { id: roleId },
+        where: { id: role_id },
     });
 }
 async function updatePermission(permissionId, data) {

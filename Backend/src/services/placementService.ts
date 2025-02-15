@@ -4,31 +4,31 @@ import { createAppError } from '../utils/errorHandler';
 const prisma = new PrismaClient();
 
 export async function getPlacementResources(
-  userId: string,
-  subjectId?: string
+  user_id: string,
+  subject_id?: string
 ) {
   return prisma.placementTest.findMany({
     where: {
-      userId,
-      subjectId,
+      user_id,
+      subject_id,
     },
     orderBy: {
-      createdAt: 'desc',
+      created_at: 'desc',
     },
   });
 }
 
-export async function getRecommendedBooks(subjectId: string, level: string) {
+export async function getRecommendedBooks(subject_id: string, level: string) {
   const books = await prisma.placementBook.findMany({
     where: {
-      subjectId,
+      subject_id,
       level,
     },
     select: {
       id: true,
       title: true,
       description: true,
-      filePath: true,
+      file_path: true,
     },
   });
 

@@ -63,16 +63,16 @@ const trackChange = async (params) => {
     }
 };
 exports.trackChange = trackChange;
-const logAccess = async (userId, route, method, statusCode, ipAddress, userAgent, duration) => {
+const logAccess = async (user_id, route, method, status_code, ip_address, user_agent, duration) => {
     try {
         await prisma.accessLog.create({
             data: {
-                userId,
+                user_id,
                 route,
                 method,
-                statusCode,
-                ipAddress,
-                userAgent,
+                status_code,
+                ip_address,
+                user_agent,
                 duration,
             },
         });

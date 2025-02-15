@@ -4,42 +4,44 @@ import logger from '../../utils/logger';
 const prisma = new PrismaClient();
 
 interface ProgressStats {
-  totalTopics: number;
-  completedTopics: number;
-  progressPercentage: number;
-  recentActivity: ActivityLog[];
+  total_topics: number;
+  completed_topics: number;
+  progress_percentage: number;
+  recent_activity: ActivityLog[];
 }
 
 interface ActivityLog {
   type: 'topic_completed' | 'quiz_completed' | 'challenge_completed';
-  entityId: string;
+  entity_id: string;
   timestamp: Date;
   details: Record<string, unknown>;
 }
 
-export async function getUserProgress(userId: string): Promise<ProgressStats> {
+export async function getUserProgress(user_id: string): Promise<ProgressStats> {
   try {
-    const [totalTopics, completedTopics, recentActivity] = await Promise.all([
-      prisma.topic.count(),
-      prisma.progress.count({
-        where: { userId, status: Status.APPROVED },
-      }),
-      getUserRecentActivity(userId),
-    ]);
+    const [total_topics, completed_topics, recent_activity] = await Promise.all(
+      [
+        prisma.topic.count(),
+        prisma.progress.count({
+          where: { user_id: user_id, status: Status.APPROVED },
+        }),
+        getUserRecentActivity(user_id),
+      ]
+    );
 
     logger.info('Retrieved user progress', {
-      userId,
-      completedTopics,
-      totalTopics,
+      user_id,
+      completed_topics,
+      total_topics,
     });
 
     return {
-      totalTopics,
-      completedTopics,
-      progressPercentage: totalTopics
-        ? (completedTopics / totalTopics) * 100
+      total_topics,
+      completed_topics,
+      progress_percentage: total_topics
+        ? (completed_topics / total_topics) * 100
         : 0,
-      recentActivity,
+      recent_activity,
     };
   } catch (error) {
     logger.error('Error getting user progress:', error);
@@ -47,23 +49,23 @@ export async function getUserProgress(userId: string): Promise<ProgressStats> {
   }
 }
 
-async function getUserRecentActivity(userId: string): Promise<ActivityLog[]> {
-  const [topicProgress, quizSubmissions, challengeSubmissions] =
+async function getUserRecentActivity(user_id: string): Promise<ActivityLog[]> {
+  const [topic_progress, quiz_submissions, challenge_submissions] =
     await Promise.all([
       prisma.progress.findMany({
-        where: { userId, status: Status.APPROVED },
-        orderBy: { updatedAt: 'desc' },
+        where: { user_id: user_id, status: Status.APPROVED },
+        orderBy: { updated_at: 'desc' },
         take: 10,
         include: { topic: true, roadmap: true },
       }),
       prisma.quizSubmission.findMany({
-        where: { userId, isPassed: true },
+        where: { user_id: user_id, is_passed: true },
         orderBy: { created_at: 'desc' },
         take: 10,
         include: { quiz: true },
       }),
       prisma.challengeSubmission.findMany({
-        where: { userId, status: SubmissionStatus.accepted },
+        where: { user_id: user_id, status: SubmissionStatus.accepted },
         orderBy: { created_at: 'desc' },
         take: 10,
         include: { challenge: true },
@@ -71,35 +73,35 @@ async function getUserRecentActivity(userId: string): Promise<ActivityLog[]> {
     ]);
 
   const activity = [
-    ...topicProgress.map(
+    ...topic_progress.map(
       (p): ActivityLog => ({
         type: 'topic_completed',
-        entityId: p.topicId,
-        timestamp: p.updatedAt,
+        entity_id: p.topic_id,
+        timestamp: p.updated_at,
         details: {
-          topicTitle: p.topic.title,
-          roadmapTitle: p.roadmap.title,
+          topic_title: p.topic.title,
+          roadmap_title: p.roadmap.title,
         },
       })
     ),
-    ...quizSubmissions.map(
+    ...quiz_submissions.map(
       (q): ActivityLog => ({
         type: 'quiz_completed',
-        entityId: q.quizId,
+        entity_id: q.quiz_id,
         timestamp: q.created_at,
         details: {
-          quizTitle: q.quiz.title,
+          quiz_title: q.quiz.title,
           score: q.score,
         },
       })
     ),
-    ...challengeSubmissions.map(
+    ...challenge_submissions.map(
       (c): ActivityLog => ({
         type: 'challenge_completed',
-        entityId: c.challengeId,
+        entity_id: c.challenge_id,
         timestamp: c.created_at,
         details: {
-          challengeTitle: c.challenge.title,
+          challenge_title: c.challenge.title,
         },
       })
     ),

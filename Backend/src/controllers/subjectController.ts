@@ -6,7 +6,7 @@ export const getAllSubjects = catchAsync(
   async (req: Request, res: Response) => {
     const subjects = await prisma.subject.findMany({
       include: {
-        mainConcept: {
+        main_concept: {
           select: {
             id: true,
             name: true,

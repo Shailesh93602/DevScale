@@ -15,19 +15,19 @@ interface ChallengeData {
   title: string;
   description: string;
   points: number;
-  topicId: string;
+  topic_id: string;
   difficulty: Difficulty;
   category: ChallengeCategory;
-  inputFormat: string;
-  outputFormat: string;
-  exampleInput: string;
-  exampleOutput: string;
+  input_format: string;
+  output_format: string;
+  example_input: string;
+  example_output: string;
   constraints: string;
-  functionSignature: string;
-  timeLimit?: number;
-  memoryLimit?: number;
+  function_signature: string;
+  time_limit?: number;
+  memory_limit?: number;
   tags: string[];
-  testCases: TestCase[];
+  test_cases: TestCase[];
   solutions?: Record<string, string>;
 }
 
@@ -40,19 +40,19 @@ interface TestCase {
 interface SubmissionData {
   code: string;
   language: string;
-  userId: string;
-  challengeId: string;
+  user_id: string;
+  challenge_id: string;
 }
 
 export const createChallenge = async (
   data: ChallengeData
 ): Promise<Challenge> => {
-  const { topicId, testCases, ...challengeData } = data;
+  const { topic_id, test_cases, ...challenge_data } = data;
   return prisma.challenge.create({
     data: {
-      ...challengeData,
-      topic: { connect: { id: topicId } },
-      testCases: { create: testCases },
+      ...challenge_data,
+      topic: { connect: { id: topic_id } },
+      test_cases: { create: test_cases },
     },
   });
 };
@@ -65,8 +65,8 @@ export const updateChallenge = async (
     where: { id },
     data: {
       ...data,
-      testCases: data.testCases
-        ? { deleteMany: {}, create: data.testCases }
+      test_cases: data.test_cases
+        ? { deleteMany: {}, create: data.test_cases }
         : undefined,
     },
   });
@@ -75,7 +75,7 @@ export const updateChallenge = async (
 export const getChallenge = async (id: string): Promise<Challenge> => {
   const challenge = await prisma.challenge.findUnique({
     where: { id },
-    include: { testCases: { where: { isHidden: false } } },
+    include: { test_cases: { where: { is_hidden: false } } },
   });
 
   if (!challenge) throw createAppError('Challenge not found', 404);
@@ -102,26 +102,26 @@ export const getAllChallenges = async (filters?: {
 export const submitChallenge = async (
   data: SubmissionData
 ): Promise<ChallengeSubmission> => {
-  const challenge = await getChallenge(data.challengeId);
-  const testCases = await prisma.testCase.findMany({
-    where: { challengeId: data.challengeId },
+  const challenge = await getChallenge(data.challenge_id);
+  const test_cases = await prisma.testCase.findMany({
+    where: { challenge_id: data.challenge_id },
   });
 
   const results = await Promise.all(
-    testCases.map(async (testCase) => {
+    test_cases.map(async (test_case) => {
       try {
         const result = await executeCode({
           code: data.code,
           language: data.language,
-          input: testCase.input,
-          timeLimit: challenge.timeLimit ?? 0,
-          memoryLimit: challenge.memoryLimit ?? 0,
+          input: test_case.input,
+          timeLimit: challenge.time_limit ?? 0,
+          memoryLimit: challenge.memory_limit ?? 0,
         });
 
         return {
-          passed: result.output.trim() === testCase.output.trim(),
-          executionTime: result.executionTime,
-          memoryUsed: result.memoryUsed,
+          passed: result.output.trim() === test_case.output.trim(),
+          execution_time: result.executionTime,
+          memory_used: result.memoryUsed,
         };
       } catch (error) {
         logger.error('Code execution error:', error);
@@ -132,9 +132,9 @@ export const submitChallenge = async (
 
   const allPassed = results.every((r) => r.passed);
   const avgExecutionTime =
-    results.reduce((acc, r) => acc + (r.executionTime || 0), 0) /
+    results.reduce((acc, r) => acc + (r.execution_time || 0), 0) /
     results.length;
-  const maxMemoryUsed = Math.max(...results.map((r) => r.memoryUsed || 0));
+  const maxMemoryUsed = Math.max(...results.map((r) => r.memory_used || 0));
 
   const submission = await prisma.challengeSubmission.create({
     data: {
@@ -149,10 +149,10 @@ export const submitChallenge = async (
 
   if (allPassed) {
     await prisma.userPoints.upsert({
-      where: { userId: data.userId },
+      where: { user_id: data.user_id },
       update: { points: { increment: calculatePoints(challenge.difficulty) } },
       create: {
-        userId: data.userId,
+        user_id: data.user_id,
         points: calculatePoints(challenge.difficulty),
       },
     });
@@ -172,16 +172,16 @@ export const getLeaderboard = async (challengeId?: string) => {
 
   const submissions = await prisma.challengeSubmission.findMany({
     where: {
-      challengeId,
+      challenge_id: challengeId,
       status: 'accepted',
-      userId: { in: leaderboard.map((l) => l.userId) },
+      user_id: { in: leaderboard.map((l) => l.user_id) },
     },
     orderBy: { runtime_ms: 'asc' },
   });
 
   return leaderboard.map((l) => ({
     ...l,
-    bestSubmission: submissions.find((s) => s.userId === l.userId),
+    bestSubmission: submissions.find((s) => s.user_id === l.user_id),
   }));
 };
 
