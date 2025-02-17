@@ -6,8 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.upsertUser = exports.deleteUserRoadmap = exports.insertUserRoadmap = exports.getUserRoadmap = exports.getUserProgress = exports.updateProfile = exports.getProfile = exports.insertProfile = void 0;
 const prisma_1 = __importDefault(require("../prisma"));
 const utils_1 = require("../utils");
+const apiResponse_1 = require("../utils/apiResponse");
 exports.insertProfile = (0, utils_1.catchAsync)(async (req, res) => {
-    const { fullName, dob, gender, mobile, whatsapp, address, university, college, branch, semester, } = req.body;
+    const { fullName, dob, gender, mobile, whatsapp, address, university, college, branch, semester, graduation_year, skills, github_url, linkedin_url, twitter_url, website_url, specialization, username, } = req.body;
     if (!fullName ||
         !dob ||
         !gender ||
@@ -16,15 +17,18 @@ exports.insertProfile = (0, utils_1.catchAsync)(async (req, res) => {
         !university ||
         !college ||
         !branch ||
-        !semester) {
-        return res
-            .status(400)
-            .json({ success: false, message: 'All fields are required' });
+        !semester ||
+        !graduation_year ||
+        !skills ||
+        !specialization) {
+        return (0, apiResponse_1.sendResponse)(res, 'BAD_REQUEST', {
+            message: 'Required fields: fullName, dob, gender, mobile, address, college, specialization',
+        });
     }
     const userInfo = {
-        userId: req.user.id,
+        supabase_id: req.user?.id,
         fullName,
-        dob,
+        dob: new Date(dob),
         gender,
         mobile,
         whatsapp: whatsapp || mobile,
@@ -33,55 +37,63 @@ exports.insertProfile = (0, utils_1.catchAsync)(async (req, res) => {
         college,
         branch,
         semester,
+        graduation_year: parseInt(graduation_year),
+        skills: Array.isArray(skills) ? skills : [skills],
+        github_url,
+        linkedin_url,
+        twitter_url,
+        website_url,
+        specialization,
+        experience_level: 'beginner',
+        username,
+        email: req.user.email ?? '',
+        full_name: fullName,
     };
     await prisma_1.default.user.create({
-        data: {
-            ...userInfo,
-            supabase_id: req.user.supabase_id,
-            email: req.user.email,
-            username: req.user.username,
-            experience_level: 'beginner',
-        },
+        data: userInfo,
     });
-    res
-        .status(201)
-        .json({ success: true, message: 'User profile inserted successfully' });
+    return (0, apiResponse_1.sendResponse)(res, 'CREATED', {
+        message: 'User profile inserted successfully',
+    });
 });
 exports.getProfile = (0, utils_1.catchAsync)(async (req, res) => {
-    const userId = req.user.id;
     const user = await prisma_1.default.user.findUnique({
-        where: { id: userId },
+        where: { id: req.user.id },
     });
     if (!user) {
-        return res.status(404).json({ success: false, message: 'User not found' });
+        return (0, apiResponse_1.sendResponse)(res, 'NOT_FOUND', {
+            message: 'User not found',
+        });
     }
-    const profile = {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        name: user?.full_name ?? '',
-        bio: user?.bio ?? '',
-        avatar: user?.avatar_url ?? '',
-        memberSince: user.created_at,
-        botJoinDate: user?.created_at,
-        note: user?.note ?? '',
-    };
-    res.status(200).json({ success: true, profile });
+    (0, apiResponse_1.sendResponse)(res, 'SUCCESS', {
+        message: 'User profile retrieved successfully',
+        data: { user: (0, utils_1.parse)(user) },
+    });
 });
 exports.updateProfile = (0, utils_1.catchAsync)(async (req, res) => {
     const userId = req.user.id;
-    const { name, username, email, bio, note } = req.body;
+    const { name, username, email, bio, note, specialization, college, graduation_year, skills, github_url, linkedin_url, twitter_url, website_url, } = req.body;
     await prisma_1.default.user.update({
         where: { id: userId },
-        data: { username, email },
+        data: {
+            username,
+            email,
+            full_name: name,
+            bio,
+            note,
+            specialization,
+            college,
+            graduation_year: graduation_year ? parseInt(graduation_year) : undefined,
+            skills: skills ? (Array.isArray(skills) ? skills : [skills]) : undefined,
+            github_url,
+            linkedin_url,
+            twitter_url,
+            website_url,
+        },
     });
-    await prisma_1.default.user.update({
-        where: { id: userId },
-        data: { full_name: name, bio, note },
+    (0, apiResponse_1.sendResponse)(res, 'SUCCESS', {
+        message: 'Profile updated successfully',
     });
-    res
-        .status(200)
-        .json({ success: true, message: 'Profile updated successfully' });
 });
 exports.getUserProgress = (0, utils_1.catchAsync)(async (req, res) => {
     // const userId = req.user.id;
@@ -106,7 +118,10 @@ exports.getUserProgress = (0, utils_1.catchAsync)(async (req, res) => {
             },
         },
     });
-    return res.status(200).json(roadmaps);
+    (0, apiResponse_1.sendResponse)(res, 'SUCCESS', {
+        message: 'User progress retrieved successfully',
+        data: { roadmaps },
+    });
 });
 exports.getUserRoadmap = (0, utils_1.catchAsync)(async (req, res) => {
     const user_id = req.user.id;
@@ -163,12 +178,11 @@ exports.deleteUserRoadmap = (0, utils_1.catchAsync)(async (req, res) => {
         .json({ success: true, message: 'User roadmap deleted successfully' });
 });
 exports.upsertUser = (0, utils_1.catchAsync)(async (req, res) => {
-    const { userId, email, username, password, ...profileData } = req.body;
-    // Required fields check
-    if (!email || !username) {
-        return res.status(400).json({
-            success: false,
-            message: 'Email and username are required fields',
+    const { userId, email, username, specialization, college, graduation_year, skills, github_url, linkedin_url, twitter_url, website_url, ...profileData } = req.body;
+    // Add validation for new required fields
+    if (!email || !username || !college || !specialization) {
+        return (0, apiResponse_1.sendResponse)(res, 'BAD_REQUEST', {
+            message: 'Email, username, college, and specialization are required',
         });
     }
     // Check for existing user
@@ -179,43 +193,66 @@ exports.upsertUser = (0, utils_1.catchAsync)(async (req, res) => {
     });
     // Update existing user
     if (existingUser) {
-        if (existingUser.id !== userId) {
-            return res.status(409).json({
-                success: false,
-                message: 'Email or username already exists',
-            });
-        }
         const updatedUser = await prisma_1.default.user.update({
             where: { id: userId },
-            data: { ...profileData },
-            select: { id: true, email: true, username: true, role: true },
+            data: {
+                ...profileData,
+                specialization,
+                college,
+                graduation_year: graduation_year
+                    ? parseInt(graduation_year)
+                    : undefined,
+                skills: skills
+                    ? Array.isArray(skills)
+                        ? skills
+                        : [skills]
+                    : undefined,
+                github_url,
+                linkedin_url,
+                twitter_url,
+                website_url,
+            },
+            select: {
+                id: true,
+                email: true,
+                username: true,
+                role: true,
+                specialization: true,
+                college: true,
+            },
         });
-        return res.status(200).json({
-            success: true,
+        return (0, apiResponse_1.sendResponse)(res, 'SUCCESS', {
             message: 'User updated successfully',
-            data: updatedUser,
+            data: { user: (0, utils_1.parse)(updatedUser) },
         });
     }
     // Create new user
-    if (!password) {
-        return res.status(400).json({
-            success: false,
-            message: 'Password is required for new users',
-        });
-    }
     const newUser = await prisma_1.default.user.create({
         data: {
             email,
             username,
             role: 'USER',
+            specialization,
+            college,
+            graduation_year: graduation_year ? parseInt(graduation_year) : undefined,
+            skills: skills ? (Array.isArray(skills) ? skills : [skills]) : undefined,
+            github_url,
+            linkedin_url,
+            twitter_url,
+            website_url,
             ...profileData,
         },
-        select: { id: true, email: true, username: true, role: true },
+        select: {
+            id: true,
+            email: true,
+            username: true,
+            role: true,
+            specialization: true,
+            college: true,
+        },
     });
-    res.status(201).json({
-        success: true,
-        message: 'User created successfully',
-        data: newUser,
+    (0, apiResponse_1.sendResponse)(res, 'USER_CREATED', {
+        data: { user: newUser },
     });
 });
 //# sourceMappingURL=userControllers.js.map

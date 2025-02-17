@@ -15,7 +15,7 @@ import { errorHandler } from './middlewares/errorHandler';
 import { applyPassportStrategy } from './middlewares/passport';
 import logger from './utils/logger';
 import { v2 as cloudinary } from 'cloudinary';
-// import mongoose from "mongoose";
+import { PrismaClient } from '@prisma/client';
 
 // Cloudinary Configuration
 cloudinary.config({
@@ -24,12 +24,7 @@ cloudinary.config({
   api_secret: CLOUDINARY_API_SECRET,
 });
 
-// mongoose.connect(process.env.MONGO_URL, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-//   useCreateIndex: true,
-//   useFindAndModify: false,
-// });
+const prisma = new PrismaClient();
 
 const app = express();
 
@@ -59,35 +54,39 @@ app.use(
 applyPassportStrategy();
 
 // Routes
-app.use('/api', routes);
+app.use('/api/v1', routes);
 
 // Error Handler
 app.use(errorHandler);
 
 const startServer = async () => {
   try {
-    app.listen(PORT, () => {
-      logger.info(`Server is running on port: ${PORT}`);
+    // Database Connection Check
+    await prisma.$connect();
+    logger.info('Connected to PostgreSQL database');
+
+    // Server Startup
+    const server = app.listen(PORT, () => {
+      logger.info(`Server running on port ${PORT}`);
     });
+
+    // Graceful Shutdown
+    const shutdown = async (signal: string) => {
+      logger.info(`${signal} received: closing server`);
+      server.close(async () => {
+        await prisma.$disconnect();
+        logger.info('Server closed');
+        process.exit(0);
+      });
+    };
+
+    process.on('SIGINT', shutdown);
+    process.on('SIGTERM', shutdown);
   } catch (error) {
-    logger.error('Error starting server:', error);
+    logger.error('Failed to start server:', error);
     process.exit(1);
   }
 };
-
-// Graceful shutdown
-const shutdown = async () => {
-  logger.info('Shutting down gracefully...');
-  try {
-    process.exit(0);
-  } catch (error) {
-    logger.error('Error during shutdown:', error);
-    process.exit(1);
-  }
-};
-
-process.on('SIGINT', shutdown);
-process.on('SIGTERM', shutdown);
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (error) => {
@@ -101,6 +100,7 @@ process.on('unhandledRejection', (error) => {
   process.exit(1);
 });
 
+// Start the application
 startServer();
 
 export default app;

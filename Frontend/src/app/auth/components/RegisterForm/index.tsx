@@ -1,57 +1,57 @@
 'use client';
-import { useForm, type FieldValues } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { registerSchema } from '@/lib/validations';
-import { supabase } from '@/lib/supabaseClient';
 import PasswordInput from '@/components/PasswordInput';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
+import { signup } from '@/app/auth/actions';
 
-interface RegisterFormProps {
-  onSuccess: () => void;
-}
+// interface RegisterFormProps {
+//   onSuccess: () => void;
+// }
 
-const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
+const RegisterForm = () => {
   const {
     register,
-    handleSubmit,
+    // handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(registerSchema),
   });
 
-  const onSubmit = async (data: FieldValues) => {
-    try {
-      const { error } = await supabase.auth.signUp({
-        email: data.email,
-        password: data.password,
-        options: {
-          data: {
-            name: data.name,
-          },
-          emailRedirectTo: `${window.location.origin}/auth/verify-email`,
-        },
-      });
+  // const onSubmit = async (data: FieldValues) => {
+  //   try {
+  //     const { error } = await supabase.auth.signUp({
+  //       email: data.email,
+  //       password: data.password,
+  //       options: {
+  //         data: {
+  //           name: data.name,
+  //         },
+  //         emailRedirectTo: `${window.location.origin}/auth/verify-email`,
+  //       },
+  //     });
 
-      if (error) {
-        if (error.message.includes('already registered')) {
-          toast.error('User already exists with this email');
-          return;
-        }
-        throw error;
-      }
+  //     if (error) {
+  //       if (error.message.includes('already registered')) {
+  //         toast.error('User already exists with this email');
+  //         return;
+  //       }
+  //       throw error;
+  //     }
 
-      toast.success('Confirmation email sent! Please check your inbox');
-      onSuccess();
-    } catch (error) {
-      console.error('Error registering:', error);
-      toast.error('Registration failed. Please try again.');
-    }
-  };
+  //     toast.success('Confirmation email sent! Please check your inbox');
+  //     onSuccess();
+  //   } catch (error) {
+  //     console.error('Error registering:', error);
+  //     toast.error('Registration failed. Please try again.');
+  //   }
+  // };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form className="space-y-4">
       <div>
         <Input
           {...register('name')}
@@ -88,7 +88,7 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
           error={errors.confirmPassword?.message as string}
         />
       </div>
-      <Button type="submit" className="w-full">
+      <Button type="submit" className="w-full" formAction={signup}>
         Sign up
       </Button>
     </form>

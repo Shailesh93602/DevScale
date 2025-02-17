@@ -1,25 +1,55 @@
 'use client';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import LoginForm from '../components/LoginForm';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { supabase } from '@/lib/supabaseClient';
-import { useDispatch } from 'react-redux';
-import { initialUser } from '@/lib/features/user/userSlice';
+// import { useDispatch } from 'react-redux';
+// import { setUser } from '@/lib/features/user/userSlice';
 import OAuthProviders from '../components/OAuthProviders';
+// import { useAxiosGet } from '@/hooks/useAxios';
+// import { useEffect } from 'react';
+// import { User } from '@supabase/supabase-js';
 
 export default function LoginPage() {
-  const router = useRouter();
-  const dispatch = useDispatch();
+  // const router = useRouter();
+  // const dispatch = useDispatch();
+  // const { execute: getDetails, data } = useAxiosGet<{ user: User }>(
+  //   '/users/me',
+  // );
 
-  const handleAuthSuccess = async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
+  // const handleAuthSuccess = async () => {
+  //   const {
+  //     data: { session },
+  //   } = await supabase.auth.getSession();
 
-    dispatch(initialUser(session));
-    router.push('/details');
-  };
+  //   if (session) {
+  //     dispatch(
+  //       setUser({
+  //         username: session.user?.email ?? 'Unknown',
+  //         email: session.user?.email ?? '',
+  //         detailsComplete: false,
+  //       }),
+  //     );
+  //     await getDetails();
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (data) {
+  //     if (data?.user) {
+  //       dispatch(
+  //         setUser({
+  //           email: data.user.email ?? '',
+  //           detailsComplete: true,
+  //           username: data.user.email ?? '',
+  //         }),
+  //       );
+  //       router.push('/dashboard');
+  //     } else {
+  //       router.push('/details');
+  //     }
+  //   }
+  // }, [data]);
 
   return (
     <motion.div
@@ -30,7 +60,7 @@ export default function LoginPage() {
       className="mx-auto w-full max-w-md space-y-6"
     >
       <h1 className="text-center text-3xl font-bold">Welcome Back!</h1>
-      <LoginForm onSuccess={handleAuthSuccess} />
+      <LoginForm />
 
       <div className="relative">
         <div className="absolute inset-0 flex items-center">

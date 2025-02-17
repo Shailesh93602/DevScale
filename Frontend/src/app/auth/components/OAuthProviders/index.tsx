@@ -1,11 +1,12 @@
 import { Button } from '@/components/ui/button';
+import { createClient } from '@/utils/supabase/client';
 import { useState } from 'react';
 import { FaGoogle, FaGithub, FaSpinner } from 'react-icons/fa';
-import { supabase } from '@/lib/supabaseClient';
 
 type Provider = 'google' | 'github' | 'azure';
 
 export default function OAuthProviders() {
+  const supabase = createClient();
   const [loadingProvider, setLoadingProvider] = useState<Provider | null>(null);
 
   const handleOAuth = async (provider: Provider) => {

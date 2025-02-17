@@ -3,9 +3,9 @@ import { useForm, type FieldValues } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { forgotPasswordSchema } from '../validations';
-import { supabase } from '@/lib/supabaseClient';
+import { forgotPasswordSchema } from '@/lib/validations';
 import Link from 'next/link';
+import { createClient } from '@/utils/supabase/client';
 
 export default function ForgotPasswordPage() {
   const {
@@ -15,6 +15,7 @@ export default function ForgotPasswordPage() {
   } = useForm({
     resolver: yupResolver(forgotPasswordSchema),
   });
+  const supabase = createClient();
 
   const onSubmit = async (data: FieldValues) => {
     try {

@@ -4,6 +4,7 @@ import StatCard from '@/components/StatCard';
 import CourseCard from '@/components/CourseCard';
 import Section from '@/components/Section';
 import { useSelector } from 'react-redux';
+import ProgressWidget from '@/components/ProgressWidget';
 
 export default function Dashboard() {
   const user = useSelector(
@@ -58,6 +59,15 @@ export default function Dashboard() {
             color="blue"
           />
         </div>
+
+        <ProgressWidget
+          initialData={{
+            chapters: 10,
+            items: 100,
+            completedChapters: 5,
+            completedItems: 25,
+          }}
+        />
 
         <Section title="Continue Previous:">
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">

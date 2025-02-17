@@ -16,7 +16,7 @@ export default function EditArticle({ id }: { id: string }) {
 
   const updateArticle = async () => {
     try {
-      dispatch(showLoader());
+      dispatch(showLoader('updating article'));
       const response = await fetchData('post', `/articles/${id}/update`, {
         content,
       });
@@ -31,13 +31,13 @@ export default function EditArticle({ id }: { id: string }) {
       toast.error('Failed to update article.');
       console.error(error);
     } finally {
-      dispatch(hideLoader());
+      dispatch(hideLoader('updating article'));
     }
   };
 
   const fetchArticle = async () => {
     try {
-      dispatch(showLoader());
+      dispatch(showLoader('fetching article'));
       const response = await fetchData('GET', `/articles/${id}`);
 
       if (response?.data?.success) {
@@ -49,7 +49,7 @@ export default function EditArticle({ id }: { id: string }) {
       toast.error('Failed to fetch article.');
       console.error(error);
     } finally {
-      dispatch(hideLoader());
+      dispatch(hideLoader('fetching article'));
     }
   };
 

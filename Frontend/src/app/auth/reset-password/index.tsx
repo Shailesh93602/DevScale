@@ -2,13 +2,14 @@
 import { useForm, type FieldValues } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button } from '@/components/ui/button';
-import { resetPasswordSchema } from '../validations';
-import { supabase } from '@/lib/supabaseClient';
+import { resetPasswordSchema } from '@/lib/validations';
 import PasswordInput from '@/components/PasswordInput';
 import { useRouter } from 'next/navigation';
+import { createClient } from '@/utils/supabase/client';
 
 export default function ResetPasswordPage() {
   const router = useRouter();
+  const supabase = createClient();
   const {
     register,
     handleSubmit,

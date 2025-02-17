@@ -1,4 +1,4 @@
-import { ErrorRequestHandler, Request, Response } from 'express';
+import { ErrorRequestHandler, Request, Response, NextFunction } from 'express';
 import { sendError } from '../utils/apiResponse';
 import logger from '../utils/logger';
 
@@ -11,7 +11,8 @@ export interface AppError extends Error {
 export const errorHandler: ErrorRequestHandler = (
   err,
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
   logger.error(err.message, {
     stack: err.stack,
@@ -29,11 +30,13 @@ export const errorHandler: ErrorRequestHandler = (
   }
 
   // Handle unexpected errors
-  sendError(res, {
-    message: 'Internal server error',
-    statusCode: 500,
-    name: 'InternalServerError',
-  } as AppError);
+  if (!res.headersSent) {
+    sendError(res, {
+      message: 'Internal server error',
+      statusCode: 500,
+      name: 'InternalServerError',
+    } as AppError);
+  }
 };
 
 export const createAppError = (

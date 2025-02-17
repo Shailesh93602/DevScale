@@ -35,3 +35,172 @@
 {"level":"error","message":"Internal server error","name":"InternalServerError","statusCode":500,"timestamp":"2025-02-13T02:58:39.923Z"}
 {"level":"error","status":500,"timestamp":"2025-02-13T02:58:40.213Z"}
 {"level":"error","message":"Internal server error","name":"InternalServerError","statusCode":500,"timestamp":"2025-02-13T02:58:40.214Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T05:50:08.464Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T05:50:15.035Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T05:50:34.827Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T05:50:50.549Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T05:50:51.984Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T05:50:52.762Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T05:50:54.093Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T06:49:20.501Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T06:58:10.901Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T06:58:48.085Z"}
+{"level":"error","status":500,"timestamp":"2025-02-16T07:02:57.852Z"}
+{"level":"error","message":"Internal server error","name":"InternalServerError","statusCode":500,"timestamp":"2025-02-16T07:02:57.873Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T07:06:36.334Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T07:06:57.595Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T07:07:47.353Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T07:08:21.685Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T07:09:51.895Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T07:10:01.027Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T07:10:19.423Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T07:10:24.743Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T07:10:35.845Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T07:10:50.590Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T07:11:46.287Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T07:11:48.626Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T07:12:11.342Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T07:12:25.800Z"}
+{"level":"error","status":500,"timestamp":"2025-02-16T07:12:38.889Z"}
+{"level":"error","message":"Internal server error","name":"InternalServerError","statusCode":500,"timestamp":"2025-02-16T07:12:38.890Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T07:12:53.632Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T07:15:03.609Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T07:15:24.425Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T07:16:25.304Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T07:16:40.772Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T07:17:09.311Z"}
+{"level":"info","message":"Server is running on port: 4000","timestamp":"2025-02-16T07:20:30.165Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:21:44.753Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:21:44.756Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:22:00.370Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:22:00.374Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:22:47.546Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:22:47.550Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:23:10.578Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:23:10.580Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:25:38.736Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:25:38.739Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:26:02.412Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:26:02.416Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:29:58.553Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:29:58.557Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:31:31.628Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:31:31.632Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:33:04.185Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:33:04.189Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:33:50.206Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:33:50.209Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:34:12.142Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:34:12.145Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:34:14.254Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:34:14.266Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:40:09.052Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:40:09.054Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:40:26.362Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:40:26.364Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:46:42.170Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:46:42.177Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:47:03.011Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:47:03.014Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:48:12.356Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:48:12.362Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:48:25.514Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:48:25.516Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:49:57.157Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:49:57.159Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:50:21.758Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:50:21.760Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:55:09.493Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:55:09.496Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:55:59.948Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:55:59.951Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:56:19.049Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:56:19.054Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:56:29.739Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:56:29.744Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:57:32.782Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:57:32.787Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:58:08.271Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:58:08.274Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:58:18.019Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:58:18.021Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:58:29.067Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:58:29.070Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:58:32.791Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:58:32.796Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:58:42.229Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:58:42.236Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T07:59:42.543Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T07:59:42.546Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T08:00:22.389Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T08:00:22.392Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T08:01:19.566Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T08:01:19.569Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T08:03:15.651Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T08:03:15.655Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T08:03:27.786Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T08:03:27.788Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T08:03:36.195Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T08:03:36.198Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T08:04:13.774Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T08:04:13.785Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T08:05:28.171Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T08:05:28.173Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T08:05:39.513Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T08:05:39.516Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T08:06:00.323Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T08:06:00.326Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T08:06:33.685Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T08:06:33.688Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T08:07:03.702Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T08:07:03.705Z"}
+{"level":"error","status":500,"timestamp":"2025-02-16T08:08:27.184Z"}
+{"level":"error","message":"Internal server error","name":"InternalServerError","statusCode":500,"timestamp":"2025-02-16T08:08:27.186Z"}
+{"level":"info","message":"SIGINT received: closing server","timestamp":"2025-02-16T08:11:38.147Z"}
+{"level":"info","message":"Server closed","timestamp":"2025-02-16T08:11:38.157Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T08:11:43.631Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T08:11:43.634Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T08:12:01.040Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T08:12:01.042Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T08:15:21.668Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T08:15:21.671Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T08:16:56.831Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T08:16:56.833Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T08:19:10.696Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T08:19:10.699Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T08:19:19.426Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T08:19:19.431Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T08:20:32.680Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T08:20:32.688Z"}
+{"level":"error","message":"Authorization token required","method":"GET","path":"/api/v1/users/me","stack":"AppError: Authorization token required\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/MrEngineer/Backend/src/utils/errorHandler.ts:45:17)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/MrEngineer/Backend/src/middlewares/authMiddleware.ts:19:17)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/MrEngineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/Users/shaileshchaudhary/Desktop/Coding/MrEngineer/Backend/node_modules/express/lib/router/index.js:328:13)\n    at /Users/shaileshchaudhary/Desktop/Coding/MrEngineer/Backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/Users/shaileshchaudhary/Desktop/Coding/MrEngineer/Backend/node_modules/express/lib/router/index.js:346:12)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/MrEngineer/Backend/node_modules/express/lib/router/index.js:280:10)\n    at Function.handle (/Users/shaileshchaudhary/Desktop/Coding/MrEngineer/Backend/node_modules/express/lib/router/index.js:175:3)\n    at router (/Users/shaileshchaudhary/Desktop/Coding/MrEngineer/Backend/node_modules/express/lib/router/index.js:47:12)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/MrEngineer/Backend/node_modules/express/lib/router/layer.js:95:5)","status":401,"timestamp":"2025-02-16T08:21:01.024Z"}
+{"level":"error","message":"Authorization token required","name":"AppError","timestamp":"2025-02-16T08:21:01.025Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T08:35:54.470Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T08:35:54.473Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T08:55:38.789Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T08:55:38.791Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T08:57:21.862Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T08:57:21.867Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T08:57:39.821Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T08:57:39.823Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T08:58:12.425Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T08:58:12.427Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T08:58:44.305Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T08:58:44.310Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T09:01:58.660Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T09:01:58.663Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T09:19:00.590Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T09:19:00.596Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T10:05:52.056Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T10:05:52.062Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T10:29:07.089Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T10:29:07.093Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T10:29:25.724Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T10:29:25.729Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T10:57:55.650Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T10:57:55.654Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-16T14:21:29.123Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-16T14:21:29.129Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-02-17T02:56:03.268Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-02-17T02:56:03.273Z"}
+{"level":"info","message":"SIGINT received: closing server","timestamp":"2025-02-17T03:53:52.814Z"}
+{"level":"info","message":"Server closed","timestamp":"2025-02-17T03:53:52.831Z"}

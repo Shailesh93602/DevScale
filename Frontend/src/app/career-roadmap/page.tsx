@@ -11,7 +11,7 @@ const Roadmap = () => {
   const [roadmaps, setRoadmaps] = useState<{ id: string; title: string }[]>([]);
 
   const fetchRoadmaps = async () => {
-    dispatch(showLoader());
+    dispatch(showLoader('fetching roadmaps'));
     try {
       const response = await fetchData('GET', '/roadMaps');
       setRoadmaps(response.data);
@@ -19,7 +19,7 @@ const Roadmap = () => {
       toast.error('Error fetching resources, Please try again');
       console.error((error as { message: string }).message);
     }
-    dispatch(hideLoader());
+    dispatch(hideLoader('fetching roadmaps'));
   };
 
   useEffect(() => {

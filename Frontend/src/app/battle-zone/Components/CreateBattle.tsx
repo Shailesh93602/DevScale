@@ -32,7 +32,6 @@ export default function CreateBattle({
         date,
         time,
       });
-      console.log(response);
       if (!response.data) {
         return;
       }

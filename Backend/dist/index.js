@@ -14,19 +14,14 @@ const errorHandler_1 = require("./middlewares/errorHandler");
 const passport_1 = require("./middlewares/passport");
 const logger_1 = __importDefault(require("./utils/logger"));
 const cloudinary_1 = require("cloudinary");
-// import mongoose from "mongoose";
+const client_1 = require("@prisma/client");
 // Cloudinary Configuration
 cloudinary_1.v2.config({
     cloud_name: config_1.CLOUDINARY_CLOUD_NAME,
     api_key: config_1.CLOUDINARY_API_KEY,
     api_secret: config_1.CLOUDINARY_API_SECRET,
 });
-// mongoose.connect(process.env.MONGO_URL, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-//   useCreateIndex: true,
-//   useFindAndModify: false,
-// });
+const prisma = new client_1.PrismaClient();
 const app = (0, express_1.default)();
 // Security Middlewares
 app.use((0, helmet_1.default)());
@@ -46,33 +41,35 @@ app.use((0, cors_1.default)({
 // Passport Configuration
 (0, passport_1.applyPassportStrategy)();
 // Routes
-app.use('/api', routes_1.default);
+app.use('/api/v1', routes_1.default);
 // Error Handler
 app.use(errorHandler_1.errorHandler);
 const startServer = async () => {
     try {
-        app.listen(config_1.PORT, () => {
-            logger_1.default.info(`Server is running on port: ${config_1.PORT}`);
+        // Database Connection Check
+        await prisma.$connect();
+        logger_1.default.info('Connected to PostgreSQL database');
+        // Server Startup
+        const server = app.listen(config_1.PORT, () => {
+            logger_1.default.info(`Server running on port ${config_1.PORT}`);
         });
+        // Graceful Shutdown
+        const shutdown = async (signal) => {
+            logger_1.default.info(`${signal} received: closing server`);
+            server.close(async () => {
+                await prisma.$disconnect();
+                logger_1.default.info('Server closed');
+                process.exit(0);
+            });
+        };
+        process.on('SIGINT', shutdown);
+        process.on('SIGTERM', shutdown);
     }
     catch (error) {
-        logger_1.default.error('Error starting server:', error);
+        logger_1.default.error('Failed to start server:', error);
         process.exit(1);
     }
 };
-// Graceful shutdown
-const shutdown = async () => {
-    logger_1.default.info('Shutting down gracefully...');
-    try {
-        process.exit(0);
-    }
-    catch (error) {
-        logger_1.default.error('Error during shutdown:', error);
-        process.exit(1);
-    }
-};
-process.on('SIGINT', shutdown);
-process.on('SIGTERM', shutdown);
 // Handle uncaught exceptions
 process.on('uncaughtException', (error) => {
     logger_1.default.error('Uncaught Exception:', error);
@@ -83,6 +80,7 @@ process.on('unhandledRejection', (error) => {
     logger_1.default.error('Unhandled Rejection:', error);
     process.exit(1);
 });
+// Start the application
 startServer();
 exports.default = app;
 //# sourceMappingURL=index.js.map

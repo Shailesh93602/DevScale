@@ -40,7 +40,7 @@ const ResourcesPage = () => {
   ) => {
     if (loadingMore) return;
     setLoadingMore(true);
-    dispatch(showLoader());
+    dispatch(showLoader('fetching resources'));
 
     try {
       const response = await fetchData(
@@ -60,7 +60,7 @@ const ResourcesPage = () => {
       console.error('Error fetching resources:', error);
       toast.error('Error fetching resources. Please try again.');
     } finally {
-      dispatch(hideLoader());
+      dispatch(hideLoader('fetching resources'));
       setLoadingMore(false);
     }
   };
