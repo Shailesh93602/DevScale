@@ -44,7 +44,7 @@ export default function BattleZonePage() {
   const dispatch = useDispatch();
 
   const fetchBattles = async () => {
-    dispatch(showLoader());
+    dispatch(showLoader('fetching battles'));
     try {
       const response = await fetchData('GET', '/battles');
       if (!response.data) {
@@ -58,7 +58,7 @@ export default function BattleZonePage() {
     } catch (error) {
       console.error(error);
     }
-    dispatch(hideLoader());
+    dispatch(hideLoader('fetching battles'));
   };
 
   useEffect(() => {

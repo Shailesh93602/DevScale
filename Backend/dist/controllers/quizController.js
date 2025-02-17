@@ -31,7 +31,7 @@ exports.createQuiz = (0, index_1.catchAsync)(async (req, res) => {
     });
 });
 exports.submitQuiz = (0, index_1.catchAsync)(async (req, res) => {
-    const user_id = req.user.id;
+    const user_id = req.user?.id;
     const { quiz_id, answers } = req.body;
     const quiz = await prisma_1.default.quiz.findUnique({
         where: { id: quiz_id },
@@ -65,8 +65,6 @@ exports.submitQuiz = (0, index_1.catchAsync)(async (req, res) => {
             time_spent: 0,
             is_passed: completed,
             results: score,
-            user: { connect: { id: user_id } },
-            quiz: { connect: { id: quiz_id } },
         },
     });
     const submissionAnswers = answers.map((answer) => ({

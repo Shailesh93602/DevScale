@@ -13,7 +13,7 @@ export default function CreateResource({ id }: { id: string }) {
 
   const saveResource = async () => {
     try {
-      dispatch(showLoader());
+      dispatch(showLoader('saving resource'));
       const response = await fetchData('post', `/resources/save/${id}`, {
         content,
       });
@@ -29,7 +29,7 @@ export default function CreateResource({ id }: { id: string }) {
       toast.error('Failed to save resource.');
       console.error(error);
     } finally {
-      dispatch(hideLoader());
+      dispatch(hideLoader('saving resource'));
     }
   };
   return (

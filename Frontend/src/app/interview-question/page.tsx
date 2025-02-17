@@ -32,13 +32,13 @@ const Page = () => {
 
   const fetchInterviewQuestions = async () => {
     try {
-      dispatch(showLoader());
+      dispatch(showLoader('fetching interview questions'));
       const response = await fetchData('GET', '/resources/interview-questions');
-      dispatch(hideLoader());
+      dispatch(hideLoader('fetching interview questions'));
       setInterviewQuestions(response.data.resource);
     } catch (error) {
       console.error(error);
-      dispatch(hideLoader());
+      dispatch(hideLoader('fetching interview questions'));
     }
   };
 

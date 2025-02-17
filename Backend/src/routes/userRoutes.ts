@@ -8,7 +8,7 @@ import {
   upsertUser,
 } from '../controllers/userControllers';
 import { userInsertionValidator } from '../validators/userValidators';
-import { authenticateUser } from '../middlewares/authMiddleware';
+import { authMiddleware } from '../middlewares/authMiddleware';
 
 const router = express.Router();
 
@@ -48,8 +48,8 @@ const router = express.Router();
  *       401:
  *         description: Unauthorized
  */
-router.get('/', authenticateUser, getProfile);
-router.put('/', userInsertionValidator, upsertUser);
+router.get('/me', authMiddleware, getProfile);
+router.put('/me', userInsertionValidator, upsertUser);
 router.get('/progress', getUserProgress);
 router.get('/roadmap', getUserRoadmap);
 router.post('/roadmap', insertUserRoadmap);

@@ -32,7 +32,7 @@ export const createQuiz = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const submitQuiz = catchAsync(async (req: Request, res: Response) => {
-  const user_id = req.user.id;
+  const user_id = req.user?.id;
   const { quiz_id, answers } = req.body;
 
   const quiz = await prisma.quiz.findUnique({
@@ -75,8 +75,6 @@ export const submitQuiz = catchAsync(async (req: Request, res: Response) => {
       time_spent: 0,
       is_passed: completed,
       results: score,
-      user: { connect: { id: user_id } },
-      quiz: { connect: { id: quiz_id } },
     },
   });
 

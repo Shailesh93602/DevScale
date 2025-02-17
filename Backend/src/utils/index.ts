@@ -12,3 +12,8 @@ export const catchAsync = (fn: AsyncHandler) => {
     fn(req, res, next).catch(next);
   };
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const parse = (obj: any) => {
+  return JSON.parse(JSON.stringify(obj));
+};

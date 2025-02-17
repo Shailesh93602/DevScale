@@ -81,6 +81,12 @@ const messages: Record<string, ResponseMessage> = {
     defaultMessage: 'Email verified successfully',
     toast: true,
   },
+  NOT_CREATED: {
+    statusCode: 201,
+    defaultMessage: 'User not created',
+    toast: false,
+    error: false,
+  },
 };
 
 export const sendResponse = (

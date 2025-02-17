@@ -49,11 +49,11 @@ const seedQuizzes = async () => {
                 answerText: option.answerText,
               },
             },
-            update: { isCorrect: option.isCorrect },
+            update: { is_correct: option.isCorrect },
             create: {
-              quizQuestionId: question.id,
-              answerText: option.answerText,
-              isCorrect: option.isCorrect,
+              quiz_question_id: question.id,
+              answer_text: option.answerText,
+              is_correct: option.isCorrect,
             },
           });
         }

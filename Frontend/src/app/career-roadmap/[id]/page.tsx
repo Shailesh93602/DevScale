@@ -31,7 +31,7 @@ export default function CareerPathPage() {
 
   useEffect(() => {
     const fetchResources = async () => {
-      dispatch(showLoader());
+      dispatch(showLoader('fetching roadmap'));
       try {
         const response = await fetchData(
           'GET',
@@ -42,7 +42,7 @@ export default function CareerPathPage() {
         console.error(error);
         toast.error('Error fetching resources. Please try again');
       }
-      dispatch(hideLoader());
+      dispatch(hideLoader('fetching roadmap'));
     };
     fetchResources();
   }, [careerId, dispatch]);

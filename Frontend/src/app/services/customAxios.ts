@@ -7,8 +7,8 @@ const customAxios = axios.create({
 });
 
 customAxios.interceptors.request.use(
-  (config) => {
-    const token = Cookies.get('token');
+  async (config) => {
+    const token = await Cookies.get('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

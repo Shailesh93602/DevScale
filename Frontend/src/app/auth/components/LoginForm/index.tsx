@@ -1,51 +1,51 @@
 'use client';
-import { useForm, type FieldValues } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { loginSchema } from '@/lib/validations';
-import { supabase } from '@/lib/supabaseClient';
 import Link from 'next/link';
 import PasswordInput from '@/components/PasswordInput';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
+import { login } from '@/app/auth/actions';
 
-interface LoginFormProps {
-  onSuccess: () => void;
-}
+// interface LoginFormProps {
+//   onSuccess: () => void;
+// }
 
-const LoginForm = ({ onSuccess }: LoginFormProps) => {
+const LoginForm = () => {
   const {
     register,
-    handleSubmit,
+    // handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(loginSchema),
   });
 
-  const onSubmit = async (data: FieldValues) => {
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: data.email,
-        password: data.password,
-      });
-      if (error) {
-        if (error.code === 'email_not_confirmed') {
-          toast.error('Please verify your email address to continue');
-          return;
-        }
+  // const onSubmit = async (data: FieldValues) => {
+  //   try {
+  //     const { error } = await supabase.auth.signInWithPassword({
+  //       email: data.email,
+  //       password: data.password,
+  //     });
+  //     if (error) {
+  //       if (error.code === 'email_not_confirmed') {
+  //         toast.error('Please verify your email address to continue');
+  //         return;
+  //       }
 
-        toast.error('Invalid email or password');
-        return;
-      }
-      onSuccess();
-    } catch (error) {
-      console.error('Error logging in:', error);
-      // Handle error (show toast, etc.)
-    }
-  };
+  //       toast.error('Invalid email or password');
+  //       return;
+  //     }
+  //     // onSuccess();
+  //   } catch (error) {
+  //     console.error('Error logging in:', error);
+  //     // Handle error (show toast, etc.)
+  //   }
+  // };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form className="space-y-4">
       <div>
         <Input {...register('email')} placeholder="Email" className="w-fu" />
         {errors.email && (
@@ -70,7 +70,7 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
           Forgot password?
         </Link>
       </div>
-      <Button type="submit" className="w-full">
+      <Button type="submit" className="w-full" formAction={login}>
         Log in
       </Button>
     </form>

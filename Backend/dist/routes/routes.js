@@ -30,7 +30,7 @@ router.get('/helloworld', (req, res) => {
     res.send('Hello World!');
 });
 router.post('/predict', predictionController_1.predict);
-router.use('/profile', passport_1.default.authenticate('jwt', { session: false }), userRoutes_1.default);
+router.use('/users', passport_1.default.authenticate('jwt', { session: false }), userRoutes_1.default);
 router.use('/roadMaps', passport_1.default.authenticate('jwt', { session: false }), roadMapRoutes_1.default);
 router.use('/questions', passport_1.default.authenticate('jwt', { session: false }), questionRoutes_1.default);
 router.use('/leaderBoard', passport_1.default.authenticate('jwt', { session: false }), leaderBoardRoutes_1.default);

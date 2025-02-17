@@ -7,7 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
-import { initialUser } from '@/lib/features/user/userSlice';
+import { setUser } from '@/lib/features/user/userSlice';
 import LoginForm from '../components/LoginForm';
 import { loginSchema } from '../validations';
 import customAxios from '@/app/services/customAxios';
@@ -30,7 +30,7 @@ const LoginPage = () => {
     try {
       const response = await customAxios.post('/auth/login', data);
       if (response.data?.success) {
-        dispatch(initialUser(response.data.user));
+        dispatch(setUser(response.data.user));
         toast.success('Logged In Successfully!');
         document.cookie = `token=${response.data.token};expires=${new Date(
           Date.now() + 100 * 60 * 60 * 1000,

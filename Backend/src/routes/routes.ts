@@ -20,7 +20,7 @@ import passport from 'passport';
 import { codeRunner } from '../controllers/codeRunnerController';
 import { predict } from '../controllers/predictionController';
 import healthCheckRoutes from './healthCheck';
-
+import { authMiddleware } from '../middlewares/authMiddleware';
 const router = express.Router();
 
 router.get('/helloworld', (req: Request, res: Response) => {
@@ -29,11 +29,7 @@ router.get('/helloworld', (req: Request, res: Response) => {
 
 router.post('/predict', predict);
 
-router.use(
-  '/profile',
-  passport.authenticate('jwt', { session: false }),
-  userRoutes
-);
+router.use('/users', authMiddleware, userRoutes);
 
 router.use(
   '/roadMaps',

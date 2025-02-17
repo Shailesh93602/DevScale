@@ -44,8 +44,8 @@ const router = express_1.default.Router();
  *       401:
  *         description: Unauthorized
  */
-router.get('/', authMiddleware_1.authenticateUser, userControllers_1.getProfile);
-router.put('/', userValidators_1.userInsertionValidator, userControllers_1.upsertUser);
+router.get('/me', authMiddleware_1.authenticateUser, userControllers_1.getProfile);
+router.put('/me', userValidators_1.userInsertionValidator, userControllers_1.upsertUser);
 router.get('/progress', userControllers_1.getUserProgress);
 router.get('/roadmap', userControllers_1.getUserRoadmap);
 router.post('/roadmap', userControllers_1.insertUserRoadmap);

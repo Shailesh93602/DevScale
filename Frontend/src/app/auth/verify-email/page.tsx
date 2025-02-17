@@ -1,11 +1,12 @@
 'use client';
 import { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { supabase } from '@/lib/supabaseClient';
 import { toast } from 'react-toastify';
+import { createClient } from '@/utils/supabase/client';
 
 export default function VerifyEmailPage() {
   const params = useSearchParams();
+  const supabase = createClient();
 
   useEffect(() => {
     const verifyEmail = async () => {

@@ -5,6 +5,8 @@ import App from './App';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ReactNode } from 'react';
+import { WebSocketProvider } from '@/contexts/WebSocketContext';
+import { ReduxProvider } from '@/contexts/ReduxContext';
 
 const inter = Inter({ subsets: ['latin'], fallback: [] });
 
@@ -24,7 +26,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           disableTransitionOnChange
         >
           <ToastContainer />
-          <App>{children}</App>
+          <WebSocketProvider>
+            <ReduxProvider>
+              <App>{children}</App>
+            </ReduxProvider>
+          </WebSocketProvider>
         </ThemeProvider>
       </body>
     </html>

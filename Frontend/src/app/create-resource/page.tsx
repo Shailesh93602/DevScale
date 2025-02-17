@@ -23,7 +23,7 @@ export default function ResourcesPage() {
   const dispatch = useDispatch();
 
   const fetchResources = async () => {
-    dispatch(showLoader());
+    dispatch(showLoader('fetching resources'));
     try {
       const response = await fetchData('GET', '/topics/unpublished');
       const data = response.data;
@@ -37,7 +37,7 @@ export default function ResourcesPage() {
       toast.error('Something went wrong, Please try again!');
       console.error(error);
     }
-    dispatch(hideLoader());
+    dispatch(hideLoader('fetching resources'));
   };
 
   useEffect(() => {

@@ -1,9 +1,6 @@
 import { Router } from 'express';
 import { ChallengeController } from '../controllers/challengeController';
-import {
-  authenticateUser,
-  authorizeRoles,
-} from '../middlewares/authMiddleware';
+import { authMiddleware, authorizeRoles } from '../middlewares/authMiddleware';
 import { validateRequest } from '../middlewares/validateRequest';
 import {
   createChallengeValidation,
@@ -12,7 +9,7 @@ import {
 
 const router = Router();
 
-router.use(authenticateUser);
+router.use(authMiddleware);
 
 // Public routes
 router.get('/', ChallengeController.getAllChallenges);

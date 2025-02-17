@@ -5,7 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
-import { initialUser } from '@/lib/features/user/userSlice';
+import { setUser } from '@/lib/features/user/userSlice';
 import Image from 'next/image';
 import { registerSchema } from '../validations';
 import RegisterForm from '../components/RegistrationForm';
@@ -33,7 +33,7 @@ const RegisterPage = () => {
       const response = await customAxios.post('/auth/register', data);
 
       if (response.data?.success) {
-        dispatch(initialUser(response.data.user));
+        dispatch(setUser(response.data.user));
         toast.success('Registered Successfully!');
 
         document.cookie = `token=${response.data.token};expires=${new Date(
