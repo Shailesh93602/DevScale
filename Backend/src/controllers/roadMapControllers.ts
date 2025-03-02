@@ -8,9 +8,13 @@ export const getAllRoadmaps = catchAsync(
       include: {
         main_concepts: {
           select: {
-            id: true,
-            name: true,
-            description: true,
+            main_concept: {
+              select: {
+                id: true,
+                name: true,
+                description: true,
+              },
+            },
           },
           orderBy: {
             created_at: 'asc',
@@ -33,16 +37,24 @@ export const getMainConceptsInRoadmap = catchAsync(
       include: {
         main_concepts: {
           select: {
-            id: true,
-            name: true,
-            description: true,
-            subjects: {
+            main_concept: {
               select: {
                 id: true,
-                title: true,
-              },
-              orderBy: {
-                created_at: 'asc',
+                name: true,
+                description: true,
+                subjects: {
+                  select: {
+                    subject: {
+                      select: {
+                        id: true,
+                        title: true,
+                      },
+                    },
+                  },
+                  orderBy: {
+                    created_at: 'asc',
+                  },
+                },
               },
             },
           },

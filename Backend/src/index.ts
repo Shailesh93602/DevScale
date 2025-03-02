@@ -12,7 +12,6 @@ import {
 } from './config';
 import routes from './routes/routes';
 import { errorHandler } from './middlewares/errorHandler';
-import { applyPassportStrategy } from './middlewares/passport';
 import logger from './utils/logger';
 import { v2 as cloudinary } from 'cloudinary';
 import { PrismaClient } from '@prisma/client';
@@ -49,9 +48,6 @@ app.use(
     credentials: true,
   })
 );
-
-// Passport Configuration
-applyPassportStrategy();
 
 // Routes
 app.use('/api/v1', routes);

@@ -1,0 +1,54 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const userRoutes_1 = __importDefault(require("./userRoutes"));
+const roadMapRoutes_1 = __importDefault(require("./roadMapRoutes"));
+const questionRoutes_1 = __importDefault(require("./questionRoutes"));
+const leaderBoardRoutes_1 = __importDefault(require("./leaderBoardRoutes"));
+const placementRoutes_1 = __importDefault(require("./placementRoutes"));
+const communityForumRoutes_1 = __importDefault(require("./communityForumRoutes"));
+const jobRoutes_1 = __importDefault(require("./jobRoutes"));
+const chatRoutes_1 = __importDefault(require("./chatRoutes"));
+const courseRoutes_1 = __importDefault(require("./courseRoutes"));
+const battleRoutes_1 = __importDefault(require("./battleRoutes"));
+const resourceRoutes_1 = __importDefault(require("./resourceRoutes"));
+const mainConceptRoutes_1 = __importDefault(require("./mainConceptRoutes"));
+const subjectRoutes_1 = __importDefault(require("./subjectRoutes"));
+const topicRoutes_1 = __importDefault(require("./topicRoutes"));
+const articleRoutes_1 = __importDefault(require("./articleRoutes"));
+const quizRoutes_1 = __importDefault(require("./quizRoutes"));
+const challengeRoutes_1 = __importDefault(require("./challengeRoutes"));
+const codeRunnerController_1 = require("../controllers/codeRunnerController");
+const predictionController_1 = require("../controllers/predictionController");
+const healthCheck_1 = __importDefault(require("./healthCheck"));
+const authMiddleware_1 = require("../middlewares/authMiddleware");
+const router = express_1.default.Router();
+router.get('/helloworld', (req, res) => {
+    res.send('Hello World!');
+});
+router.post('/predict', predictionController_1.predict);
+router.use('/users', authMiddleware_1.authMiddleware, userRoutes_1.default);
+router.use('/roadMaps', authMiddleware_1.authMiddleware, roadMapRoutes_1.default);
+router.use('/questions', authMiddleware_1.authMiddleware, questionRoutes_1.default);
+router.use('/leaderBoard', authMiddleware_1.authMiddleware, leaderBoardRoutes_1.default);
+router.use('/placements', authMiddleware_1.authMiddleware, placementRoutes_1.default);
+router.use('/community/forums', authMiddleware_1.authMiddleware, communityForumRoutes_1.default);
+router.use('/jobs', authMiddleware_1.authMiddleware, jobRoutes_1.default);
+router.use('/chats', authMiddleware_1.authMiddleware, chatRoutes_1.default);
+router.use('/courses', authMiddleware_1.authMiddleware, courseRoutes_1.default);
+router.use('/battles', authMiddleware_1.authMiddleware, battleRoutes_1.default);
+router.use('/resources', authMiddleware_1.authMiddleware, resourceRoutes_1.default);
+router.use('/main-concepts', authMiddleware_1.authMiddleware, mainConceptRoutes_1.default);
+router.use('/subjects', authMiddleware_1.authMiddleware, subjectRoutes_1.default);
+router.use('/topics', authMiddleware_1.authMiddleware, topicRoutes_1.default);
+router.use('/articles', authMiddleware_1.authMiddleware, articleRoutes_1.default);
+router.use('/quiz', authMiddleware_1.authMiddleware, quizRoutes_1.default);
+router.use('/challenges', authMiddleware_1.authMiddleware, challengeRoutes_1.default);
+router.post('/run-code', authMiddleware_1.authMiddleware, codeRunnerController_1.codeRunner);
+// Health Check Route
+router.use('/health', authMiddleware_1.authMiddleware, healthCheck_1.default);
+exports.default = router;
+//# sourceMappingURL=routes.js.map

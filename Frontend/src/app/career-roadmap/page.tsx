@@ -1,20 +1,26 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { FocusCards } from '@/components/focus-cards';
+import { FocusCards } from '@/components/FocusCards';
 import { useDispatch } from 'react-redux';
 import { hideLoader, showLoader } from '@/lib/features/loader/loaderSlice';
-import { fetchData } from '../services/fetchData';
 import { toast } from 'react-toastify';
+import { useAxiosGet } from '@/hooks/useAxios';
+
+interface IRoadmap {
+  id: string;
+  title: string;
+}
 
 const Roadmap = () => {
   const dispatch = useDispatch();
-  const [roadmaps, setRoadmaps] = useState<{ id: string; title: string }[]>([]);
+  const [roadmaps, setRoadmaps] = useState<IRoadmap[]>([]);
+  const [getRoadmaps] = useAxiosGet<IRoadmap[]>('/roadmaps');
 
   const fetchRoadmaps = async () => {
     dispatch(showLoader('fetching roadmaps'));
     try {
-      const response = await fetchData('GET', '/roadMaps');
-      setRoadmaps(response.data);
+      const response = await getRoadmaps();
+      setRoadmaps(response.data ?? []);
     } catch (error: unknown) {
       toast.error('Error fetching resources, Please try again');
       console.error((error as { message: string }).message);

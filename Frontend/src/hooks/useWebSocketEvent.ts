@@ -1,5 +1,5 @@
 import { useWebSocket } from '@/contexts/WebSocketContext';
-import { isValidEventData } from '@/lib/validation/helpers';
+import { isValidEventData } from '@/lib/validations/helpers';
 import { RealTimeEventMap } from '@/types/websocket';
 import { useEffect } from 'react';
 

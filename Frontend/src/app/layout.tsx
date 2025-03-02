@@ -1,12 +1,13 @@
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { ThemeProvider } from '@/components/theme-provider';
+import { ThemeProvider } from '@/components/ThemeProvider';
 import App from './App';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { ReactNode } from 'react';
+import { ReactNode, Suspense } from 'react';
 import { WebSocketProvider } from '@/contexts/WebSocketContext';
 import { ReduxProvider } from '@/contexts/ReduxContext';
+import Loader from '@/components/Loader';
 
 const inter = Inter({ subsets: ['latin'], fallback: [] });
 
@@ -28,7 +29,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <ToastContainer />
           <WebSocketProvider>
             <ReduxProvider>
-              <App>{children}</App>
+              <App>
+                <Suspense fallback={<Loader type="SiteLoader" />}>
+                  {children}
+                </Suspense>
+              </App>
             </ReduxProvider>
           </WebSocketProvider>
         </ThemeProvider>

@@ -1,9 +1,9 @@
 'use client';
 // import { useRouter } from "next/navigation";
-import { PinContainer } from '@/components/3d-pin';
-import { HoverEffect } from '@/components/card-hover-effect';
-import { InfiniteMovingCards } from '@/components/infinite-moving-cards';
-import { HoverBorderGradient } from '@/components/hover-border-gradient';
+import { PinContainer } from '@/components/3dPin';
+import { HoverEffect } from '@/components/CardHoverEffect';
+import { InfiniteMovingCards } from '@/components/InfiniteMovingCards';
+import { HoverBorderGradient } from '@/components/HoverBorderGradient';
 import { AceternityLogo } from '@/components/AceternityLogo';
 
 export default function PlacementPreparation() {

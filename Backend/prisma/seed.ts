@@ -9,6 +9,7 @@ async function main() {
   await import('./seeders/quiz.seeder');
   await import('./seeders/challenge.seeder');
   await import('./seeders/topic.seeder');
+  await import('./seeders/role.seeder');
 }
 
 main()

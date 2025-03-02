@@ -11,7 +11,7 @@ import {
   updateConfig,
   updateUserRoleController,
 } from '../controllers/adminController';
-import { authenticateUser } from '../middlewares/authMiddleware';
+import { authMiddleware } from '../middlewares/authMiddleware';
 import { requirePermission } from '../middlewares/rbacMiddleware';
 
 const router = Router();
@@ -19,7 +19,7 @@ const router = Router();
 // Dashboard Routes
 router.get(
   '/dashboard/metrics',
-  authenticateUser,
+  authMiddleware,
   requirePermission('dashboard', 'read'),
   getDashboardMetricsHandler
 );
@@ -27,14 +27,14 @@ router.get(
 // User Management Routes
 router.get(
   '/users',
-  authenticateUser,
+  authMiddleware,
   requirePermission('users', 'read'),
   searchUsersController
 );
 
 router.patch(
   '/users/role',
-  authenticateUser,
+  authMiddleware,
   requirePermission('users', 'update'),
   updateUserRoleController
 );
@@ -42,14 +42,14 @@ router.patch(
 // Content Moderation Routes
 router.get(
   '/moderation/pending',
-  authenticateUser,
+  authMiddleware,
   requirePermission('moderation', 'read'),
   getPendingContentHandler
 );
 
 router.post(
   '/moderation/moderate',
-  authenticateUser,
+  authMiddleware,
   requirePermission('moderation', 'update'),
   moderateContent
 );
@@ -57,14 +57,14 @@ router.post(
 // System Configuration Routes
 router.patch(
   '/config',
-  authenticateUser,
+  authMiddleware,
   requirePermission('config', 'update'),
   updateConfig
 );
 
 router.get(
   '/config/:category',
-  authenticateUser,
+  authMiddleware,
   requirePermission('config', 'read'),
   getConfigsByCategory
 );
@@ -72,7 +72,7 @@ router.get(
 // Resource Management Routes
 router.post(
   '/resources/allocate',
-  authenticateUser,
+  authMiddleware,
   requirePermission('resources', 'update'),
   allocateResources
 );
@@ -80,7 +80,7 @@ router.post(
 // Analytics Routes
 router.post(
   '/analytics/reports',
-  authenticateUser,
+  authMiddleware,
   requirePermission('analytics', 'read'),
   generateReport
 );
@@ -88,7 +88,7 @@ router.post(
 // Audit System Routes
 router.get(
   '/audit/logs',
-  authenticateUser,
+  authMiddleware,
   requirePermission('audit', 'read'),
   getAuditLogs
 );

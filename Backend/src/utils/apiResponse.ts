@@ -1,120 +1,149 @@
 import { Response } from 'express';
 import logger from './logger';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-interface ResponsePayload {
-  data?: any;
-  message?: string;
-  status?: number;
-  toast?: boolean;
-  error?: boolean;
-  meta?: Record<string, any>;
+
+type ResponseType =
+  | 'TOPICS_FETCHED'
+  | 'TOPIC_NOT_FOUND'
+  | 'ARTICLE_FETCHED'
+  | 'ARTICLE_NOT_FOUND'
+  | 'ARTICLES_FETCHED'
+  | 'QUIZ_FETCHED'
+  | 'QUIZ_NOT_FOUND'
+  | 'QUIZ_SUBMITTED'
+  | 'QUIZ_PASSED'
+  | 'QUIZ_FAILED'
+  | 'SUBJECTS_FETCHED'
+  | 'TOPICS_NOT_FOUND'
+  | 'SUBJECT_NOT_FOUND'
+  | 'USER_NOT_CREATED'
+  | 'PROFILE_FETCHED'
+  | 'PROGRESS_FETCHED'
+  | 'USER_CREATED'
+  | 'USER_UPDATED'
+  | 'USERNAME_CHECKED';
+
+interface ResponseConfig {
+  status: number;
+  success: boolean;
+  message: string;
 }
 
-interface ResponseMessage {
-  statusCode: number;
-  defaultMessage: string;
-  toast?: boolean;
-  error?: boolean;
-}
-
-const messages: Record<string, ResponseMessage> = {
-  // Success Messages
-  SUCCESS: { statusCode: 200, defaultMessage: 'Request successful' },
-  CREATED: { statusCode: 201, defaultMessage: 'Resource created successfully' },
-
-  // Error Messages
-  BAD_REQUEST: {
-    statusCode: 400,
-    defaultMessage: 'Invalid request',
-    error: true,
-    toast: true,
+const RESPONSE_MESSAGES: Record<ResponseType, ResponseConfig> = {
+  TOPICS_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Unpublished topics retrieved successfully',
   },
-  UNAUTHORIZED: {
-    statusCode: 401,
-    defaultMessage: 'Authentication required',
-    error: true,
-    toast: true,
+  TOPIC_NOT_FOUND: {
+    status: 404,
+    success: false,
+    message: 'Topic not found',
   },
-  FORBIDDEN: {
-    statusCode: 403,
-    defaultMessage: 'Permission denied',
-    error: true,
-    toast: true,
+  ARTICLE_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Article retrieved successfully',
   },
-  NOT_FOUND: {
-    statusCode: 404,
-    defaultMessage: 'Resource not found',
-    error: true,
-    toast: true,
+  ARTICLE_NOT_FOUND: {
+    status: 404,
+    success: false,
+    message: 'Article not found',
   },
-  CONFLICT: {
-    statusCode: 409,
-    defaultMessage: 'Resource conflict',
-    error: true,
-    toast: true,
+  ARTICLES_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Articles retrieved successfully',
   },
-  SERVER_ERROR: {
-    statusCode: 500,
-    defaultMessage: 'Internal server error',
-    error: true,
-    toast: false,
+  QUIZ_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Quiz retrieved successfully',
   },
-
-  // Custom Messages
+  QUIZ_NOT_FOUND: {
+    status: 404,
+    success: false,
+    message: 'Quiz not found',
+  },
+  QUIZ_SUBMITTED: {
+    status: 200,
+    success: true,
+    message: 'Quiz submitted successfully',
+  },
+  QUIZ_PASSED: {
+    status: 200,
+    success: true,
+    message: 'Quiz passed!',
+  },
+  QUIZ_FAILED: {
+    status: 200,
+    success: false,
+    message: 'Quiz failed',
+  },
+  SUBJECTS_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Subjects retrieved successfully',
+  },
+  SUBJECT_NOT_FOUND: {
+    status: 404,
+    success: false,
+    message: 'Subject not found',
+  },
+  TOPICS_NOT_FOUND: {
+    status: 404,
+    success: false,
+    message: 'Topic not found',
+  },
+  USER_NOT_CREATED: {
+    status: 500,
+    success: false,
+    message: 'User not created',
+  },
+  PROFILE_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Profile retrieved successfully',
+  },
+  PROGRESS_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Progress retrieved successfully',
+  },
   USER_CREATED: {
-    statusCode: 201,
-    defaultMessage: 'User registered successfully',
-    toast: true,
+    status: 201,
+    success: true,
+    message: 'User created successfully',
   },
-  LOGIN_SUCCESS: {
-    statusCode: 200,
-    defaultMessage: 'Logged in successfully',
-    toast: true,
+  USER_UPDATED: {
+    status: 200,
+    success: true,
+    message: 'User updated successfully',
   },
-  USER_SYNCED: {
-    statusCode: 200,
-    defaultMessage: 'User profile synchronized',
-    toast: true,
-  },
-  EMAIL_VERIFIED: {
-    statusCode: 200,
-    defaultMessage: 'Email verified successfully',
-    toast: true,
-  },
-  NOT_CREATED: {
-    statusCode: 201,
-    defaultMessage: 'User not created',
-    toast: false,
-    error: false,
+  USERNAME_CHECKED: {
+    status: 200,
+    success: true,
+    message: 'Username checked successfully',
   },
 };
 
 export const sendResponse = (
   res: Response,
-  messageKey: keyof typeof messages,
-  options?: Partial<ResponsePayload>
-) => {
-  const messageConfig = messages[messageKey];
-  if (!messageConfig) {
-    throw new Error(`Invalid message key: ${messageKey}`);
+  type: ResponseType,
+  options?: {
+    data?: any;
+    error?: any;
+    meta?: any;
   }
-
-  const response: ResponsePayload = {
-    status: messageConfig.statusCode,
-    message: options?.message || messageConfig.defaultMessage,
-    toast: messageConfig.toast,
-    error: messageConfig.error,
-    data: options?.data,
-    meta: options?.meta,
-  };
-
-  // Filter out undefined values
-  const filteredResponse = Object.fromEntries(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    Object.entries(response).filter(([key, value]) => value !== undefined)
-  );
-
-  res.status(messageConfig.statusCode).json(filteredResponse);
+) => {
+  const config = RESPONSE_MESSAGES[type];
+  return res.status(config.status).json({
+    success: config.success,
+    message: config.message,
+    data: options?.data || null,
+    error: options?.error || null,
+    meta: options?.meta || null,
+  });
 };
 
 // Add type guard for error object

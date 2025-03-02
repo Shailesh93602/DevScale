@@ -2,35 +2,34 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { hideLoader, showLoader } from '@/lib/features/loader/loaderSlice';
-import { fetchData } from '@/app/services/fetchData';
 import { toast } from 'react-toastify';
 import Navbar from '@/components/Navbar';
+import { IResource } from '@/constants';
+import { useAxiosGet } from '@/hooks/useAxios';
 
 export default function ResourcesPage() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [resources, setResources] = useState<
-    {
-      id: string;
-      title: string;
-      description: string;
-      tags: string[];
-      category: string;
-    }[]
-  >([]);
+  const [resources, setResources] = useState<IResource[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [availableTags, setAvailableTags] = useState<string[]>([]);
+
+  const [getUnpublishedTopics] = useAxiosGet<{ topics: IResource[] }>(
+    '/topics/unpublished',
+  );
 
   const dispatch = useDispatch();
 
   const fetchResources = async () => {
     dispatch(showLoader('fetching resources'));
     try {
-      const response = await fetchData('GET', '/topics/unpublished');
+      const response = await getUnpublishedTopics();
       const data = response.data;
-      setResources(data.topics);
+      setResources(data?.topics ?? []);
       setAvailableTags([
         ...new Set(
-          data.topics?.flatMap((resource: { tags: string }) => resource.tags),
+          data?.topics?.flatMap(
+            (resource: { tags: string[] }) => resource.tags,
+          ),
         ),
       ] as string[]);
     } catch (error) {

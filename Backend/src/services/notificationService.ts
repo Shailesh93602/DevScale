@@ -88,7 +88,7 @@ export class NotificationService {
   ): Promise<void> {
     const emailTemplate = await this.getEmailTemplate(notification.type);
     const emailContent = this.processTemplate(emailTemplate, {
-      username: notification.user.username,
+      username: notification?.user?.username,
       title: notification.title,
       message: notification.message,
       link: notification.link ?? undefined,

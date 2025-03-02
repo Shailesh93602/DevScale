@@ -1,21 +1,26 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { fetchData } from '@/app/services/fetchData';
 import Navbar from '@/components/Navbar';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
+import { useAxiosGet } from '@/hooks/useAxios';
 
 const MyArticles = () => {
   const [articles, setArticles] = useState<
     { id: string; title: string; status: string }[]
   >([]);
   const router = useRouter();
+  const [getArticles] = useAxiosGet<{
+    success?: boolean;
+    articles: { id: string; title: string; status: string }[];
+    message?: string;
+  }>('/articles/my-articles');
 
   useEffect(() => {
     const fetchMyArticles = async () => {
       try {
-        const response = await fetchData('get', `/articles/my-articles`);
-        if (response.data.success) {
+        const response = await getArticles();
+        if (response.data?.success) {
           setArticles(response.data.articles);
         } else {
           toast.error('Failed to load articles.');

@@ -1,17 +1,26 @@
 'use client';
 import { useEffect, useState } from 'react';
 import './styles.css';
-import { fetchData } from '../services/fetchData';
+import { useAxiosGet } from '@/hooks/useAxios';
 
+interface IChallenge {
+  id: string;
+  title: string;
+  description: string;
+  difficulty: string;
+}
 export default function CodingChallengesPage() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [challenges, setChallenges] = useState<
-    { id: string; title: string; description: string; difficulty: string }[]
-  >([]);
+  const [challenges, setChallenges] = useState<IChallenge[]>([]);
   const [page, setPage] = useState(1);
   const [isFetching, setIsFetching] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [getChallenges] = useAxiosGet<{
+    challenges: IChallenge[];
+    totalPages: number;
+  }>('/challenges');
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -22,15 +31,19 @@ export default function CodingChallengesPage() {
       setIsFetching(true);
       setError(null);
 
-      const response = await fetchData('get', `/challenges?page=${page}`);
+      const response = await getChallenges({
+        params: {
+          page,
+        },
+      });
       const data = await response.data;
 
       setChallenges((prevChallenges) => [
         ...prevChallenges,
-        ...data.challenges,
+        ...(data?.challenges ?? []),
       ]);
 
-      setHasMore(page < data.totalPages);
+      setHasMore(page < (data?.totalPages ?? 0));
       setIsFetching(false);
     } catch (error) {
       setIsFetching(false);

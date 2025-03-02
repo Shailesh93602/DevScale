@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { Input } from '@/components/ui/input';
-import { fetchData } from '@/app/services/fetchData';
+import { useAxiosPost } from '@/hooks/useAxios';
 
 const majorTopics = ['DSA', 'OOPs', 'JavaScript', 'Python', 'Java'];
 const difficulties = ['easy', 'medium', 'hard'];
@@ -18,10 +18,14 @@ export default function CreateBattlePage() {
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const router = useRouter();
+  const [createBattle] = useAxiosPost<{
+    success?: boolean;
+    message?: string;
+  }>('/battles/create');
 
   const handleCreate = async () => {
     try {
-      const response = await fetchData('POST', '/battles/create', {
+      const response = await createBattle({
         title,
         description,
         topic: selectedMajorTopic,
