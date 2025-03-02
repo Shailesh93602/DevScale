@@ -1,21 +1,21 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { fetchData } from '../services/fetchData';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useAxiosGet, useAxiosPost } from '@/hooks/useAxios';
+
+interface IArticle {
+  id: string;
+  status: string;
+  title: string;
+  content: string;
+  author: { username: string };
+  createdAt: string;
+}
 
 const ArticleListPage = () => {
   const router = useRouter();
-  const [articles, setArticles] = useState<
-    {
-      id: string;
-      status: string;
-      title: string;
-      content: string;
-      author: { username: string };
-      createdAt: string;
-    }[]
-  >([]);
+  const [articles, setArticles] = useState<IArticle[]>([]);
   const [filteredArticles, setFilteredArticles] = useState<
     {
       id: string;
@@ -29,12 +29,20 @@ const ArticleListPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
 
+  const [getAllArticles] = useAxiosGet<{
+    articles: typeof articles;
+  }>('/articles/all');
+  const [updateArticleStatus] = useAxiosPost<{
+    id: string;
+    status: string;
+  }>('/articles/status');
+
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await fetchData('get', '/articles/all');
-        setArticles(response.data.articles);
-        setFilteredArticles(response.data.articles);
+        const { data } = await getAllArticles();
+        setArticles(data?.articles ?? []);
+        setFilteredArticles(data?.articles ?? []);
       } catch (error) {
         console.error('Error fetching articles:', error);
       }
@@ -69,7 +77,7 @@ const ArticleListPage = () => {
 
   const handleUpdateStatus = async (id: string, newStatus: string) => {
     try {
-      await fetchData('post', `/articles/status/?id=${id}&status=${newStatus}`);
+      await updateArticleStatus({ id, status: newStatus });
       setArticles(
         articles.map((article) =>
           article.id === id ? { ...article, status: newStatus } : article,

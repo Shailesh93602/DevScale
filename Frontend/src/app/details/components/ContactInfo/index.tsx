@@ -11,15 +11,6 @@ export function ContactInfo() {
   return (
     <div className="space-y-4">
       <div>
-        <Label htmlFor="email">Email</Label>
-        <Input id="email" type="email" {...register('email')} />
-        {errors.email && (
-          <p className="mt-1 text-sm text-destructive">
-            {errors.email.message as string}
-          </p>
-        )}
-      </div>
-      <div>
         <Label htmlFor="address">Address</Label>
         <Input id="address" {...register('address')} />
         {errors.address && (

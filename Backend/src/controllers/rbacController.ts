@@ -15,7 +15,7 @@ import {
   roleSchema,
   permissionSchema,
   roleAssignmentSchema,
-} from '../validators/rbacValidators';
+} from '../validations/rbacValidations';
 
 export class RBACController {
   static async createRole(req: Request, res: Response, next: NextFunction) {

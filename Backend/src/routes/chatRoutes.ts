@@ -7,20 +7,26 @@ import {
   getChats,
 } from '../controllers/chatControllers.js';
 import { authMiddleware } from '../middlewares/authMiddleware';
+import { validateRequest } from '../middlewares/validateRequest.js';
 import {
-  validateChatCreation,
-  validateMessageCreation,
-} from '../middlewares/validationMiddleware.js';
+  createChatValidationSchema,
+  messageValidationSchema,
+} from '../validations/chatValidations.js';
 
 const router = express.Router();
 
 router.get('/', authMiddleware, getChats);
 router.get('/:id', authMiddleware, getChat);
-router.post('/create', authMiddleware, validateChatCreation, createChat);
+router.post(
+  '/create',
+  authMiddleware,
+  validateRequest(createChatValidationSchema),
+  createChat
+);
 router.post(
   '/message/:id',
   authMiddleware,
-  validateMessageCreation,
+  validateRequest(messageValidationSchema),
   createMessage
 );
 router.delete('/delete/:id', authMiddleware, deleteChat);

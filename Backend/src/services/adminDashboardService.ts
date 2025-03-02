@@ -313,7 +313,6 @@ export async function searchUsers(query: Record<string, unknown>) {
             description: true,
             created_at: true,
             updated_at: true,
-            parent_id: true,
           },
         },
       },

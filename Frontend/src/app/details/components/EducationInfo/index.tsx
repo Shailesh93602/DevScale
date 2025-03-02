@@ -24,7 +24,9 @@ export function EducationInfo() {
         <Input
           id="graduationYear"
           type="number"
-          {...register('graduationYear')}
+          {...register('graduationYear', {
+            setValueAs: (v) => parseInt(v, 10) || new Date().getFullYear(),
+          })}
         />
         {errors.graduationYear && (
           <p className="mt-1 text-sm text-destructive">

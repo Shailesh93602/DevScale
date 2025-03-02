@@ -6,43 +6,15 @@ import { Button } from '@/components/ui/button';
 import { loginSchema } from '@/lib/validations';
 import Link from 'next/link';
 import PasswordInput from '@/components/PasswordInput';
-// import { toast } from 'react-toastify';
 import { login } from '@/app/auth/actions';
-
-// interface LoginFormProps {
-//   onSuccess: () => void;
-// }
 
 const LoginForm = () => {
   const {
     register,
-    // handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(loginSchema),
   });
-
-  // const onSubmit = async (data: FieldValues) => {
-  //   try {
-  //     const { error } = await supabase.auth.signInWithPassword({
-  //       email: data.email,
-  //       password: data.password,
-  //     });
-  //     if (error) {
-  //       if (error.code === 'email_not_confirmed') {
-  //         toast.error('Please verify your email address to continue');
-  //         return;
-  //       }
-
-  //       toast.error('Invalid email or password');
-  //       return;
-  //     }
-  //     // onSuccess();
-  //   } catch (error) {
-  //     console.error('Error logging in:', error);
-  //     // Handle error (show toast, etc.)
-  //   }
-  // };
 
   return (
     <form className="space-y-4">

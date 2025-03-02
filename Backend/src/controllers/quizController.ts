@@ -108,7 +108,16 @@ export const getUserProgress = catchAsync(
             topic: {
               select: {
                 title: true,
-                subject_id: true,
+                subjects: {
+                  select: {
+                    subject_id: true,
+                    subject: {
+                      select: {
+                        title: true,
+                      },
+                    },
+                  },
+                },
               },
             },
           },

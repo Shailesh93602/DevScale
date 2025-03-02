@@ -21,7 +21,7 @@ import {
   configUpdateSchema,
   resourceAllocationSchema,
   reportConfigSchema,
-} from '../validators/adminValidators';
+} from '../validations/adminValidations';
 import { catchAsync } from '../utils';
 
 // Dashboard Controllers

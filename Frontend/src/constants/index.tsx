@@ -156,3 +156,12 @@ export const content = [
     ),
   },
 ];
+
+export interface IResource {
+  id: string;
+  title: string;
+  description: string;
+  tags: string[];
+  category: string;
+  Articles: { content: string }[];
+}

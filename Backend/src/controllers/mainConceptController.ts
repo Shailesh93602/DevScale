@@ -15,9 +15,12 @@ export const getSubjectsInMainConcept = catchAsync(
       include: {
         subjects: {
           select: {
-            id: true,
-            title: true,
-            description: true,
+            subject: {
+              select: {
+                title: true,
+                description: true,
+              },
+            },
           },
           orderBy: {
             created_at: 'asc',

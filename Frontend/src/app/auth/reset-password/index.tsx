@@ -6,6 +6,7 @@ import { resetPasswordSchema } from '@/lib/validations';
 import PasswordInput from '@/components/PasswordInput';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
+import { toast } from 'react-toastify';
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -24,11 +25,11 @@ export default function ResetPasswordPage() {
         password: data.password,
       });
       if (error) throw error;
-      // Handle success (e.g., show success message, redirect to login)
       router.push('/auth/login');
+      toast.success('Password updated successfully!');
     } catch (error) {
       console.error('Error updating password:', error);
-      // Handle error (show toast, etc.)
+      toast.error('Error updating password. Please try again.');
     }
   };
 

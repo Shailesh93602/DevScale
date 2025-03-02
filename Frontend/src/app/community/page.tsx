@@ -1,5 +1,5 @@
 'use client';
-import { HoverBorderGradient } from '@/components/hover-border-gradient';
+import { HoverBorderGradient } from '@/components/HoverBorderGradient';
 import Image from 'next/image';
 import { AceternityLogo } from '@/components/AceternityLogo';
 

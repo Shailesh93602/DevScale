@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { createClient } from '@/utils/supabase/client';
 import { useState } from 'react';
 import { FaGoogle, FaGithub, FaSpinner } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 type Provider = 'google' | 'github' | 'azure';
 
@@ -27,6 +28,7 @@ export default function OAuthProviders() {
     } catch (error) {
       console.error('OAuth error:', error);
       setLoadingProvider(null);
+      toast.error('Error logging in. Please try again.');
     }
   };
 
@@ -62,5 +64,3 @@ export default function OAuthProviders() {
     </div>
   );
 }
-
-// Add similar implementations for other providers

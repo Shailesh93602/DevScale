@@ -7,9 +7,9 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 
-import { fetchData } from '../services/fetchData';
 import { useDispatch } from 'react-redux';
 import { hideLoader, showLoader } from '@/lib/features/loader/loaderSlice';
+import { useAxiosGet } from '@/hooks/useAxios';
 
 const Page = () => {
   const [interviewQuestions, setInterviewQuestions] = useState<
@@ -29,13 +29,28 @@ const Page = () => {
   >([]);
 
   const dispatch = useDispatch();
+  const [getInterviewQuestions] = useAxiosGet<{
+    resource: {
+      category: string;
+      questions: {
+        id: string;
+        question: string;
+        answer: {
+          introduction: string;
+          description: string;
+          conclusion: string;
+          points: { id: string; title: string; description: string }[];
+        };
+      }[];
+    }[];
+  }>('/resources/interview-questions');
 
   const fetchInterviewQuestions = async () => {
     try {
       dispatch(showLoader('fetching interview questions'));
-      const response = await fetchData('GET', '/resources/interview-questions');
+      const response = await getInterviewQuestions();
       dispatch(hideLoader('fetching interview questions'));
-      setInterviewQuestions(response.data.resource);
+      setInterviewQuestions(response.data?.resource ?? []);
     } catch (error) {
       console.error(error);
       dispatch(hideLoader('fetching interview questions'));

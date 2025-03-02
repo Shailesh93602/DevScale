@@ -1,4 +1,4 @@
-import { PrismaClient, ExperienceLevel } from '@prisma/client';
+import { PrismaClient, ExperienceLevel, Prisma } from '@prisma/client';
 import type { UserProfileData, UserProgressData } from '../types/userTypes';
 
 const prisma = new PrismaClient();
@@ -69,15 +69,27 @@ export async function getUserProgress(user_id: string) {
       topic: {
         select: {
           title: true,
-          subject: {
+          subjects: {
             select: {
-              title: true,
-              main_concept: {
+              subject: {
                 select: {
-                  name: true,
-                  roadmap: {
+                  title: true,
+                  main_concepts: {
                     select: {
-                      title: true,
+                      main_concept: {
+                        select: {
+                          name: true,
+                          roadmaps: {
+                            select: {
+                              roadmap: {
+                                select: {
+                                  title: true,
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
                     },
                   },
                 },
@@ -123,4 +135,35 @@ export async function calculateExperienceLevel(
   if (total_points >= 2000) return 'advanced';
   if (total_points >= 500) return 'intermediate';
   return 'beginner';
+}
+
+export async function upsertUserProfile(
+  data: {
+    supabase_id: string;
+    email: string;
+    username: string;
+    graduation_year?: number;
+    skills?: string[];
+  } & Prisma.UserCreateInput
+) {
+  return prisma.user.upsert({
+    where: { supabase_id: data.supabase_id },
+    create: {
+      ...data,
+      role: { connect: { name: 'STUDENT' } },
+    },
+    update: {
+      ...data,
+      role: { connect: { name: 'STUDENT' } },
+      updated_at: new Date(),
+    },
+    select: {
+      id: true,
+      email: true,
+      username: true,
+      role: true,
+      specialization: true,
+      college: true,
+    },
+  });
 }

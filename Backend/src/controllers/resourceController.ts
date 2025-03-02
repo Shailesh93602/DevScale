@@ -17,7 +17,13 @@ export const getSubjects = catchAsync(async (_req: Request, res: Response) => {
 // Topics
 export const getTopics = catchAsync(async (req: Request, res: Response) => {
   const topics = await prisma.topic.findMany({
-    where: { subject_id: req.params.id },
+    where: {
+      subjects: {
+        some: {
+          id: req.params.id,
+        },
+      },
+    },
     orderBy: { created_at: 'asc' },
   });
   res.status(200).json({ success: true, topics });
@@ -26,7 +32,14 @@ export const getTopics = catchAsync(async (req: Request, res: Response) => {
 export const addTopic = catchAsync(async (req: Request, res: Response) => {
   const { title, description, subject_id } = req.body;
   const topic = await prisma.topic.create({
-    data: { title, description, subject_id, order: 0 },
+    data: {
+      title,
+      description,
+      subjects: {
+        connect: { id: subject_id },
+      },
+      order: 0,
+    },
   });
   res.status(201).json({ success: true, topic });
 });
@@ -69,7 +82,13 @@ export const getResource = catchAsync(async (req: Request, res: Response) => {
   }
 
   const topics = await prisma.topic.findMany({
-    where: { subject_id },
+    where: {
+      subjects: {
+        some: {
+          id: subject_id,
+        },
+      },
+    },
     include: {
       articles: {
         select: { id: true, title: true, content: true, status: true },

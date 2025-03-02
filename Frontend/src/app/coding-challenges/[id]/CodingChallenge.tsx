@@ -1,20 +1,22 @@
 'use client';
 
-import { fetchData } from '@/app/services/fetchData';
 import { Button } from '@/components/ui/button';
+import { useAxiosGet, useAxiosPost } from '@/hooks/useAxios';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+interface IChallenge {
+  title: string;
+  description: string;
+  difficulty: string;
+  inputFormat: string;
+  outputFormat: string;
+  exampleInput: string;
+  exampleOutput: string;
+}
+
 export default function CodingChallenge({ id }: { id: string }) {
-  const [challenge, setChallenge] = useState<{
-    title: string;
-    description: string;
-    difficulty: string;
-    inputFormat: string;
-    outputFormat: string;
-    exampleInput: string;
-    exampleOutput: string;
-  }>();
+  const [challenge, setChallenge] = useState<IChallenge>();
   const solution = {
     javascript: `// JavaScript boilerplate
 function main() {
@@ -64,6 +66,11 @@ print("Hello, World!")`,
   // const handleSolutionChange = (value: FormData) => {
   //   setSolution({ ...solution, [language]: value });
   // };
+  const [runCode] = useAxiosPost<{
+    error?: string;
+    output?: string;
+  }>('/run-code');
+  const [getChallenge] = useAxiosGet<IChallenge>('/challenges/{{id}}');
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setLanguage(e.target.value);
@@ -74,14 +81,14 @@ print("Hello, World!")`,
     setOutput('');
 
     try {
-      const { data } = await fetchData('POST', '/run-code', {
+      const { data } = await runCode({
         language,
         code: solution[language as keyof object],
       });
       if (data?.error) {
         setOutput(data.error);
       } else {
-        setOutput(data?.output);
+        setOutput(data?.output ?? '');
       }
     } catch (error) {
       setOutput(`Error: ${(error as { message: string }).message}`);
@@ -92,8 +99,8 @@ print("Hello, World!")`,
 
   const fetchChallenge = async () => {
     try {
-      const response = await fetchData('GET', `/challenges/${id}`);
-      setChallenge(response.data);
+      const response = await getChallenge();
+      setChallenge(response.data ?? undefined);
     } catch (error) {
       console.error('Error fetching challenge:', error);
     }

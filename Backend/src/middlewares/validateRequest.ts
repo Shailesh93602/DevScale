@@ -12,12 +12,21 @@ export const validateRequest = (schema: Schema, type: RequestPart = 'body') => {
       allowUnknown: false,
     });
 
+    console.log('🚀 ---------------------------🚀');
+    console.log('🚀 ~ return ~ value:', value);
+    console.log('🚀 ---------------------------🚀');
+
+    console.log('🚀 ---------------------------🚀');
+    console.log('🚀 ~ return ~ error:', error);
+    console.log('🚀 ---------------------------🚀');
+
     if (error) {
       const errors = error.details.map((detail) => ({
         field: detail.path.join('.'),
         message: detail.message.replace(/['"]/g, ''),
       }));
 
+      console.error('Validation errors:', errors);
       return next(createAppError('Validation failed', 400, { errors }));
     }
 

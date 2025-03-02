@@ -5,50 +5,15 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { registerSchema } from '@/lib/validations';
 import PasswordInput from '@/components/PasswordInput';
-// import { toast } from 'react-toastify';
 import { signup } from '@/app/auth/actions';
-
-// interface RegisterFormProps {
-//   onSuccess: () => void;
-// }
 
 const RegisterForm = () => {
   const {
     register,
-    // handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(registerSchema),
   });
-
-  // const onSubmit = async (data: FieldValues) => {
-  //   try {
-  //     const { error } = await supabase.auth.signUp({
-  //       email: data.email,
-  //       password: data.password,
-  //       options: {
-  //         data: {
-  //           name: data.name,
-  //         },
-  //         emailRedirectTo: `${window.location.origin}/auth/verify-email`,
-  //       },
-  //     });
-
-  //     if (error) {
-  //       if (error.message.includes('already registered')) {
-  //         toast.error('User already exists with this email');
-  //         return;
-  //       }
-  //       throw error;
-  //     }
-
-  //     toast.success('Confirmation email sent! Please check your inbox');
-  //     onSuccess();
-  //   } catch (error) {
-  //     console.error('Error registering:', error);
-  //     toast.error('Registration failed. Please try again.');
-  //   }
-  // };
 
   return (
     <form className="space-y-4">

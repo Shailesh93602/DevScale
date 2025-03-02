@@ -2,26 +2,31 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
-import Loader from '../../components/Loader';
-import { fetchData } from '@/app/services/fetchData';
+import Loader from '../../components/Loader/temp';
+import { useAxiosGet } from '@/hooks/useAxios';
 
 export default function InstantBattlePage() {
   const [opponentFound, setOpponentFound] = useState(true);
   const [timeLeft, setTimeLeft] = useState(60);
   const [battleData, setBattleData] = useState<{ id: string } | null>(null);
   const router = useRouter();
+  const [getWaitingRoom] = useAxiosGet<{
+    success?: boolean;
+    opponentFound?: boolean;
+    battleData?: { id: string };
+  }>('/battles/waiting-room');
 
   useEffect(() => {
     const checkForOpponent = async () => {
       try {
-        const response = await fetchData('GET', '/battles/waiting-room');
+        const response = await getWaitingRoom();
         if (!response.data) {
           throw new Error('Failed to check for opponent');
         }
         const data = response.data;
         if (data.success && data.opponentFound) {
           setOpponentFound(true);
-          setBattleData(data.battleData);
+          setBattleData(data.battleData ?? null);
         }
       } catch (error) {
         console.error(error);

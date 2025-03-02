@@ -4,8 +4,9 @@ import {
   getBattle,
   getBattles,
 } from '../controllers/battleControllers.js';
-import { validateBattleCreation } from '../middlewares/validationMiddleware.js';
-import passport from 'passport';
+import { validateRequest } from '../middlewares/validateRequest.js';
+import { createBattleValidationSchema } from '../validations/battleValidations.js';
+import { authMiddleware } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
@@ -13,8 +14,8 @@ router.get('/', getBattles);
 router.get('/:id', getBattle);
 router.post(
   '/create',
-  passport.authenticate('jwt', { session: false }),
-  validateBattleCreation,
+  authMiddleware,
+  validateRequest(createBattleValidationSchema),
   createBattle
 );
 

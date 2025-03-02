@@ -1,6 +1,6 @@
 'use client';
-import { fetchData } from '@/app/services/fetchData';
 import Navbar from '@/components/Navbar';
+import { useAxiosPost } from '@/hooks/useAxios';
 import { hideLoader, showLoader } from '@/lib/features/loader/loaderSlice';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -10,15 +10,20 @@ export default function CreateResource({ id }: { id: string }) {
   const [content, setContent] = useState('');
 
   const dispatch = useDispatch();
+  const [updateResource] = useAxiosPost<{ success?: boolean }>(
+    '/resources/save/{{resourceId}}',
+  );
 
   const saveResource = async () => {
     try {
       dispatch(showLoader('saving resource'));
-      const response = await fetchData('post', `/resources/save/${id}`, {
-        content,
-      });
+      const response = await updateResource(
+        { content },
+        {},
+        { resourceId: id },
+      );
 
-      if (response.data.success) {
+      if (response.data?.success) {
         toast.success('Resource saved successfully!');
         setContent('');
         window.location.href = '/resources';

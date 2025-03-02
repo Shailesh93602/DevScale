@@ -1,56 +1,10 @@
 'use client';
-// import { useRouter } from 'next/navigation';
 import LoginForm from '../components/LoginForm';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-// import { useDispatch } from 'react-redux';
-// import { setUser } from '@/lib/features/user/userSlice';
 import OAuthProviders from '../components/OAuthProviders';
-// import { useAxiosGet } from '@/hooks/useAxios';
-// import { useEffect } from 'react';
-// import { User } from '@supabase/supabase-js';
 
 export default function LoginPage() {
-  // const router = useRouter();
-  // const dispatch = useDispatch();
-  // const { execute: getDetails, data } = useAxiosGet<{ user: User }>(
-  //   '/users/me',
-  // );
-
-  // const handleAuthSuccess = async () => {
-  //   const {
-  //     data: { session },
-  //   } = await supabase.auth.getSession();
-
-  //   if (session) {
-  //     dispatch(
-  //       setUser({
-  //         username: session.user?.email ?? 'Unknown',
-  //         email: session.user?.email ?? '',
-  //         detailsComplete: false,
-  //       }),
-  //     );
-  //     await getDetails();
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (data) {
-  //     if (data?.user) {
-  //       dispatch(
-  //         setUser({
-  //           email: data.user.email ?? '',
-  //           detailsComplete: true,
-  //           username: data.user.email ?? '',
-  //         }),
-  //       );
-  //       router.push('/dashboard');
-  //     } else {
-  //       router.push('/details');
-  //     }
-  //   }
-  // }, [data]);
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

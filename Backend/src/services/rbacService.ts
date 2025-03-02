@@ -1,49 +1,50 @@
 import {
   PrismaClient,
   Role,
-  Permission,
   User,
-  PermissionGroup,
-  Prisma,
+  Permission,
+  // Prisma,
+  RolePermission,
 } from '@prisma/client';
 import { createAppError } from '../utils/errorHandler';
-import { deleteCache, getCache, setCache } from './cacheService';
+import { deleteCache, getCache } from './cacheService';
 
+// TODO: review this file and complete the pending functions
 const prisma = new PrismaClient();
 
-type JsonValue = Prisma.InputJsonValue;
-type ResourceParams = {
-  resourceType: string;
-  [key: string]: JsonValue;
-};
+// type JsonValue = Prisma.InputJsonValue;
+// type ResourceParams = {
+//   resourceType: string;
+//   [key: string]: JsonValue;
+// };
 
-interface CustomPermissionRule {
-  condition: string;
-  params: ResourceParams;
-}
+// interface CustomPermissionRule {
+//   condition: string;
+//   params: ResourceParams;
+// }
 
-type PrismaModels = {
-  [K in keyof PrismaClient]: PrismaClient[K] extends { findFirst: () => void }
-    ? K
-    : never;
-}[keyof PrismaClient];
+// type PrismaModels = {
+//   [K in keyof PrismaClient]: PrismaClient[K] extends { findFirst: () => void }
+//     ? K
+//     : never;
+// }[keyof PrismaClient];
 
-interface TimeBasedParams extends ResourceParams {
-  startTime: string | Date;
-  endTime: string | Date;
-}
+// interface TimeBasedParams extends ResourceParams {
+//   startTime: string | Date;
+//   endTime: string | Date;
+// }
 
-interface QuotaParams extends ResourceParams {
-  limit: number;
-  period: number;
-  resource: string;
-}
+// interface QuotaParams extends ResourceParams {
+//   limit: number;
+//   period: number;
+//   resource: string;
+// }
 
 // Update role type to include full parent hierarchy
-type RoleWithHierarchy = Role & {
-  permissions: Permission[];
-  parent: RoleWithHierarchy | null;
-};
+// type RoleWithHierarchy = Role & {
+//   permissions: Permission[];
+//   parent: RoleWithHierarchy | null;
+// };
 
 export async function createRole(data: {
   name: string;
@@ -60,20 +61,18 @@ export async function createRole(data: {
     data: {
       name: data.name,
       description: data.description,
-      parent_id: data.parent_id,
       permissions: data.permissions
         ? { connect: data.permissions.map((id) => ({ id })) }
         : undefined,
     },
-    include: { permissions: true, parent: true },
+    include: { permissions: true },
   });
 }
 
 export async function createPermission(data: {
+  key: string;
   name: string;
   description?: string;
-  resource: string;
-  action: string;
 }): Promise<Permission> {
   const existing = await prisma.permission.findUnique({
     where: { name: data.name },
@@ -82,10 +81,9 @@ export async function createPermission(data: {
 
   return prisma.permission.create({
     data: {
+      key: data.key,
       name: data.name,
       description: data.description,
-      resource: data.resource,
-      action: data.action,
     },
   });
 }
@@ -119,7 +117,6 @@ export async function checkPermission(
       role: {
         include: {
           permissions: true,
-          parent: { include: { permissions: true, parent: true } },
         },
       },
     },
@@ -127,38 +124,34 @@ export async function checkPermission(
 
   if (!user?.role) return false;
 
-  const hasPermission = checkHierarchyPermissions(
-    user.role as RoleWithHierarchy,
-    resource,
-    action
-  );
+  // const hasPermission = checkHierarchyPermissions(user.role, resource, action);
 
-  await setCache(cacheKey, hasPermission, { ttl: 300 });
-  return hasPermission;
+  // await setCache(cacheKey, hasPermission, { ttl: 300 });
+  // return hasPermission;
+
+  return true;
 }
 
-function checkHierarchyPermissions(
-  role: RoleWithHierarchy,
-  resource: string,
-  action: string
-): boolean {
-  if (
-    role.permissions.some((p) => p.resource === resource && p.action === action)
-  ) {
-    return true;
-  }
-  return role.parent
-    ? checkHierarchyPermissions(role.parent, resource, action)
-    : false;
-}
+// function checkHierarchyPermissions(
+//   role: RoleWithHierarchy,
+//   resource: string,
+//   action: string
+// ): boolean {
+//   if (
+//     role.permissions.some((p) => p.resource === resource && p.action === action)
+//   ) {
+//     return true;
+//   }
+//   return role.parent
+//     ? checkHierarchyPermissions(role.parent, resource, action)
+//     : false;
+// }
 
 export async function getRoleHierarchy(roleId: string): Promise<Role> {
   const role = await prisma.role.findUnique({
     where: { id: roleId },
     include: {
       permissions: true,
-      children: { include: { permissions: true } },
-      parent: { include: { permissions: true } },
     },
   });
 
@@ -166,38 +159,40 @@ export async function getRoleHierarchy(roleId: string): Promise<Role> {
   return role;
 }
 
-export async function createPermissionGroup(data: {
-  name: string;
-  description?: string;
-  permissions?: string[];
-}): Promise<PermissionGroup> {
-  const existing = await prisma.permissionGroup.findUnique({
-    where: { name: data.name },
-  });
-  if (existing) throw createAppError('Permission group exists', 400);
+export async function createPermissionGroup(): Promise<RolePermission> {
+// data: {
+// name: string;
+// description?: string;
+// permissions?: string[];
+// }
+  // const existing = await prisma.RolePermission.findUnique({
+  //   where: { name: data.name },
+  // });
+  // if (existing) throw createAppError('Permission group exists', 400);
 
-  return prisma.permissionGroup.create({
-    data: {
-      name: data.name,
-      description: data.description,
-      permissions: data.permissions
-        ? { connect: data.permissions.map((id) => ({ id })) }
-        : undefined,
-    },
-    include: { permissions: true },
-  });
+  // return prisma.permissionGroup.create({
+  //   data: {
+  //     name: data.name,
+  //     description: data.description,
+  //     permissions: data.permissions
+  //       ? { connect: data.permissions.map((id) => ({ id })) }
+  //       : undefined,
+  //   },
+  //   include: { permissions: true },
+  // });
+  return {} as RolePermission;
 }
 
 export async function addCustomPermissionRule(
-  permissionId: string,
-  rule: CustomPermissionRule
+  permissionId: string
+  // rule: CustomPermissionRule
 ): Promise<Permission> {
   const permission = await prisma.permission.update({
     where: { id: permissionId },
     data: {
-      conditions: rule as unknown as
-        | Prisma.NullableJsonNullValueInput
-        | Prisma.InputJsonValue,
+      // conditions: rule as unknown as
+      //   | Prisma.NullableJsonNullValueInput
+      //   | Prisma.InputJsonValue,
     },
   });
 
@@ -205,10 +200,10 @@ export async function addCustomPermissionRule(
 }
 
 export async function checkResourcePermission(
-  userId: string,
-  resource: string,
-  action: string,
-  resourceId?: string
+  userId: string
+  // resource: string,
+  // action: string,
+  // resourceId?: string
 ): Promise<boolean> {
   const user = await prisma.user.findUnique({
     where: { id: userId },
@@ -216,13 +211,13 @@ export async function checkResourcePermission(
       role: {
         include: {
           permissions: {
-            include: {
-              groups: {
-                include: {
-                  permissions: true,
-                },
-              },
-            },
+            // include: {
+            //   groups: {
+            //     include: {
+            //       permissions: true,
+            //     },
+            //   },
+            // },
           },
         },
       },
@@ -232,95 +227,97 @@ export async function checkResourcePermission(
   if (!user?.role) return false;
 
   // Check direct permissions
-  const directPermission = user.role.permissions.find(
-    (p) => p.resource === resource && p.action === action
-  );
+  // const directPermission = user.role.permissions.find(
+  //   (p) => p.resource === resource && p.action === action
+  // );
 
-  if (directPermission) {
-    // Check custom rules if they exist
-    if (directPermission.conditions) {
-      const rule =
-        directPermission.conditions as unknown as CustomPermissionRule;
-      return await evaluateCustomRule(rule, userId, resourceId);
-    }
-    return true;
-  }
+  // if (directPermission) {
+  //   // Check custom rules if they exist
+  //   if (directPermission.conditions) {
+  //     const rule =
+  //       directPermission.conditions as unknown as CustomPermissionRule;
+  //     return await evaluateCustomRule(rule, userId, resourceId);
+  //   }
+  //   return true;
+  // }
 
   // Check group permissions
-  const hasGroupPermission = user.role.permissions.some((p) =>
-    p.groups.some((g) =>
-      g.permissions.some(
-        (gp) => gp.resource === resource && gp.action === action
-      )
-    )
-  );
+  // const hasGroupPermission = user.role.permissions.some((p) =>
+  //   p.groups.some((g) =>
+  //     g.permissions.some(
+  //       (gp) => gp.resource === resource && gp.action === action
+  //     )
+  //   )
+  // );
 
-  return hasGroupPermission;
+  // return hasGroupPermission;
+
+  return true;
 }
 
-async function evaluateCustomRule(
-  rule: CustomPermissionRule,
-  userId: string,
-  resourceId?: string
-): Promise<boolean> {
-  switch (rule.condition) {
-    case 'ownership':
-      return await checkResourceOwnership(userId, resourceId, rule.params);
-    case 'time_based':
-      return checkTimeBasedAccess(rule.params as TimeBasedParams);
-    case 'quota':
-      return await checkQuotaLimit(userId, rule.params as QuotaParams);
-    default:
-      return false;
-  }
-}
+// async function evaluateCustomRule(
+//   rule: CustomPermissionRule,
+//   userId: string,
+//   resourceId?: string
+// ): Promise<boolean> {
+//   switch (rule.condition) {
+//     case 'ownership':
+//       return await checkResourceOwnership(userId, resourceId, rule.params);
+//     case 'time_based':
+//       return checkTimeBasedAccess(rule.params as TimeBasedParams);
+//     case 'quota':
+//       return await checkQuotaLimit(userId, rule.params as QuotaParams);
+//     default:
+//       return false;
+//   }
+// }
 
-async function checkResourceOwnership(
-  userId: string,
-  resourceId?: string,
-  params?: ResourceParams
-): Promise<boolean> {
-  if (!resourceId || !params?.resourceType) return false;
+// async function checkResourceOwnership(
+//   userId: string,
+//   resourceId?: string,
+//   params?: ResourceParams
+// ): Promise<boolean> {
+//   if (!resourceId || !params?.resourceType) return false;
 
-  const resourceType = params.resourceType as PrismaModels;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const resource = await (prisma[resourceType] as any).findFirst({
-    where: {
-      id: resourceId,
-      authorId: userId,
-    },
-  });
+//   const resourceType = params.resourceType as PrismaModels;
+//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//   const resource = await (prisma[resourceType] as any).findFirst({
+//     where: {
+//       id: resourceId,
+//       authorId: userId,
+//     },
+//   });
 
-  return !!resource;
-}
+//   return !!resource;
+// }
 
-function checkTimeBasedAccess(params: TimeBasedParams): boolean {
-  const { startTime, endTime } = params;
-  const currentTime = new Date();
-  return currentTime >= new Date(startTime) && currentTime <= new Date(endTime);
-}
+// function checkTimeBasedAccess(params: TimeBasedParams): boolean {
+//   const { startTime, endTime } = params;
+//   const currentTime = new Date();
+//   return currentTime >= new Date(startTime) && currentTime <= new Date(endTime);
+// }
 
-async function checkQuotaLimit(
-  userId: string,
-  params: QuotaParams
-): Promise<boolean> {
-  const { limit, period, resource } = params;
-  const startDate = new Date();
-  startDate.setDate(startDate.getDate() - period);
+// async function checkQuotaLimit(
+//   userId: string,
+//   params: QuotaParams
+// ): Promise<boolean> {
+//   const { limit, period, resource } = params;
+//   const startDate = new Date();
+//   startDate.setDate(startDate.getDate() - period);
 
-  const resourceType = resource as PrismaModels;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const count = await (prisma[resourceType] as any).count({
-    where: {
-      authorId: userId,
-      created_at: {
-        gte: startDate,
-      },
-    },
-  });
+//   const resourceType = resource as PrismaModels;
+//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//   const count = await (prisma[resourceType] as any).count({
+//     where: {
+//       authorId: userId,
+//       created_at: {
+//         gte: startDate,
+//       },
+//     },
+//   });
 
-  return count < limit;
-}
+//   return count < limit;
+// }
 
 export async function checkRole(
   userId: string,
@@ -354,7 +351,6 @@ export async function updateRole(
     data: {
       name: data.name,
       description: data.description,
-      parent_id: data.parent_id,
       permissions: data.permissions
         ? {
             disconnect: existingRole.permissions.map((p) => ({ id: p.id })),
@@ -362,7 +358,7 @@ export async function updateRole(
           }
         : undefined,
     },
-    include: { permissions: true, parent: true },
+    include: { permissions: true },
   });
 }
 
@@ -400,32 +396,30 @@ export async function updatePermission(
     data: {
       name: data.name,
       description: data.description,
-      resource: data.resource,
-      action: data.action,
     },
   });
 }
 
 export async function deletePermission(permissionId: string): Promise<void> {
-  const inUse = await prisma.role.count({
-    where: {
-      permissions: {
-        some: { id: permissionId },
-      },
-    },
-  });
+  // const inUse = await prisma.role.count({
+  //   where: {
+  //     permissions: {
+  //       some: { id: permissionId },
+  //     },
+  //   },
+  // });
 
-  const inGroups = await prisma.permissionGroup.count({
-    where: {
-      permissions: {
-        some: { id: permissionId },
-      },
-    },
-  });
+  // const inGroups = await prisma.RolePermission.count({
+  //   where: {
+  //     permissions: {
+  //       some: { id: permissionId },
+  //     },
+  //   },
+  // });
 
-  if (inUse > 0 || inGroups > 0) {
-    throw createAppError('Permission is in use and cannot be deleted', 400);
-  }
+  // if (inUse > 0 || inGroups > 0) {
+  //   throw createAppError('Permission is in use and cannot be deleted', 400);
+  // }
 
   await prisma.permission.delete({
     where: { id: permissionId },

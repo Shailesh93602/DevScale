@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { forgotPasswordSchema } from '@/lib/validations';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
+import { toast } from 'react-toastify';
 
 export default function ForgotPasswordPage() {
   const {
@@ -23,10 +24,10 @@ export default function ForgotPasswordPage() {
         redirectTo: `${window.location.origin}/auth/reset-password`,
       });
       if (error) throw error;
-      // Handle success (e.g., show success message)
+      toast.success('Password reset email sent! Please check your inbox.');
     } catch (error) {
       console.error('Error resetting password:', error);
-      // Handle error (show toast, etc.)
+      toast.error('Error resetting password. Please try again.');
     }
   };
 

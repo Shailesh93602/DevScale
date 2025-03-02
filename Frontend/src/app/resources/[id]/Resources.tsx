@@ -1,24 +1,37 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { fetchData } from '@/app/services/fetchData';
 import { toast } from 'react-toastify';
 import DOMPurify from 'dompurify';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaBars, FaTimes, FaBook, FaQuestionCircle } from 'react-icons/fa';
+import { useAxiosGet, useAxiosPost } from '@/hooks/useAxios';
+import { IResource } from '@/constants';
 
 const sanitizeContent = (content: string) => {
   return DOMPurify.sanitize(content);
 };
 
-export default function Resources({ id }: { id: string }) {
-  const [resource, setResource] = useState<
-    { id: string; title: string; Articles: { content: string }[] }[]
-  >([]);
-  const [selectedTopic, setSelectedTopic] = useState<{
+interface ResourceType {
+  id: string;
+  title: string;
+}
+
+interface ITopic {
+  id: string;
+  order: number;
+  topic: {
     id: string;
     title: string;
-    Articles: { content: string }[];
-  }>(resource?.[0] ?? undefined);
+    description: string;
+  };
+}
+
+export default function Resources({ id }: { id: string }) {
+  const [resource, setResource] = useState<ResourceType[]>([]);
+  const [selectedTopic, setSelectedTopic] = useState<ResourceType>();
+  const [currentArticle, setCurrentArticle] = useState<{
+    content: string;
+  } | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [quiz, setQuiz] = useState<{
     id: string;
@@ -30,21 +43,71 @@ export default function Resources({ id }: { id: string }) {
   } | null>(null);
   const [userAnswers, setUserAnswers] = useState({});
   const [activeTab, setActiveTab] = useState('content');
+  const [getResource] = useAxiosGet<ITopic[]>('/subjects/{{subjectId}}/topics');
+  const [getQuiz] = useAxiosGet<{
+    success?: boolean;
+    quiz?: {
+      id: string;
+      questions?: {
+        id: string;
+        question: string;
+        options: { id: string; answerText: string }[];
+      }[];
+    };
+  }>('/topics/{{topicId}}/quiz');
+  const [submitQuiz] = useAxiosPost<{
+    success?: boolean;
+    completed?: boolean;
+    message?: string;
+  }>('/quiz/submit');
+  const [getArticle] = useAxiosGet<{
+    success?: boolean;
+    article?: { content: string };
+  }>('/topics/{{topicId}}/article');
 
   const fetchResource = async () => {
     try {
-      const response = await fetchData('GET', `/resources/${id}`);
-      const data = response.data;
-      if (data?.success) {
-        setResource(data?.resource?.topics);
-        setSelectedTopic(data?.resource?.topics?.[0]);
+      const response = await getResource({}, { subjectId: id });
+
+      console.log('🚀 ----------------------------------------🚀');
+      console.log('🚀 ~ fetchResource ~ response:', response);
+      console.log('🚀 ----------------------------------------🚀');
+
+      if (!response?.error) {
+        const topics =
+          response?.data
+            ?.sort((a, b) => a.order - b.order)
+            ?.map((item) => item.topic) ?? [];
+        setResource(topics);
+        setSelectedTopic(
+          topics[0] ?? {
+            id: '',
+            title: '',
+          },
+        );
       } else {
         toast.error(
-          data?.error ?? 'Failed to fetch resource. Please try again!',
+          response?.message ?? 'Failed to fetch resource. Please try again!',
         );
       }
     } catch (error) {
       toast.error('Failed to fetch resource. Please try again!');
+      console.error(error);
+    }
+  };
+
+  const fetchArticle = async (topicId: string) => {
+    try {
+      const response = await getArticle({}, { topicId });
+      if (response.data?.success) {
+        setCurrentArticle(response.data.article || null);
+      } else {
+        setCurrentArticle(null);
+        toast.error('Failed to fetch article content');
+      }
+    } catch (error) {
+      setCurrentArticle(null);
+      toast.error('Failed to fetch article content');
       console.error(error);
     }
   };
@@ -54,16 +117,19 @@ export default function Resources({ id }: { id: string }) {
   }, [id]);
 
   useEffect(() => {
+    if (selectedTopic?.id) {
+      fetchArticle(selectedTopic.id);
+    }
+  }, [selectedTopic]);
+
+  useEffect(() => {
     const fetchQuiz = async () => {
       if (selectedTopic) {
         try {
-          const response = await fetchData(
-            'GET',
-            `/topics/${selectedTopic.id}/quiz`,
-          );
+          const response = await getQuiz({}, { topicId: selectedTopic.id });
           const data = response.data;
           if (data) {
-            setQuiz(data);
+            setQuiz(data?.quiz ?? null);
           } else {
             setQuiz(null);
           }
@@ -91,21 +157,21 @@ export default function Resources({ id }: { id: string }) {
     }));
 
     try {
-      const response = await fetchData('POST', '/quiz/submit', {
+      const response = await submitQuiz({
         quizId: quiz?.id,
         answers,
       });
       const data = response.data;
 
-      if (data.success) {
+      if (data?.success) {
         toast.success('Quiz submitted successfully!');
-        if (data.completed) {
+        if (data?.completed) {
           toast.success('You have passed the quiz!');
         } else {
           toast.info('You did not pass the quiz.');
         }
       } else {
-        toast.error(data.message);
+        toast.error(data?.message);
       }
     } catch (error) {
       toast.error('Error submitting quiz. Please try again!');
@@ -261,9 +327,7 @@ export default function Resources({ id }: { id: string }) {
                   transition={{ duration: 0.5 }}
                   className="prose max-w-none dark:prose-invert"
                   dangerouslySetInnerHTML={{
-                    __html: sanitizeContent(
-                      selectedTopic.Articles[0]?.content || '',
-                    ),
+                    __html: sanitizeContent(currentArticle?.content || ''),
                   }}
                 ></motion.div>
               ) : (
