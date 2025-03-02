@@ -52,58 +52,88 @@ interface UserRoadmapData {
 export class RoadmapService {
   static async createRoadmap(data: RoadmapData) {
     try {
-      const roadmap = await prisma.roadmap.create({
-        data: {
-          title: data.title,
-          description: data.description,
-          user: { connect: { id: data.author_id } },
-          is_public: data.is_public ?? false,
-          main_concepts: {
-            create: data.concepts?.map((concept) => ({
-              name: concept.title,
-              description: concept.description,
-              order: concept.order,
-              subjects: {
-                create: concept.subjects?.map((subject) => ({
-                  title: subject.title,
-                  description: subject.description,
-                  order: subject.order,
-                  topics: {
-                    create: subject.topics?.map((topic) => ({
-                      title: topic.title,
-                      description: topic.description,
-                      order: topic.order,
-                      content: topic.content,
-                      resources: topic.resources,
-                      prerequisites: topic.prerequisites,
-                    })),
-                  },
-                })),
-              },
-            })),
+      return await prisma.$transaction(async (tx) => {
+        // Create the roadmap
+        const roadmap = await tx.roadmap.create({
+          data: {
+            title: data.title,
+            description: data.description,
+            user: { connect: { id: data.author_id } },
+            is_public: data.is_public ?? false,
           },
-        },
-        include: {
-          user: {
-            select: {
-              username: true,
-              avatar_url: true,
-            },
-          },
-          main_concepts: {
-            include: {
-              subjects: {
-                include: {
-                  topics: true,
-                },
-              },
-            },
-          },
-        },
-      });
+        });
 
-      await deleteCache('roadmaps:all');
-      return roadmap;
+        // Create and connect main concepts
+        if (data.concepts) {
+          for (const concept of data.concepts) {
+            const mainConcept = await tx.mainConcept.create({
+              data: {
+                name: concept.title,
+                description: concept.description,
+                order: concept.order,
+              },
+            });
+
+            // Connect main concept to roadmap
+            await tx.roadmapMainConcept.create({
+              data: {
+                roadmap_id: roadmap.id,
+                main_concept_id: mainConcept.id,
+                order: concept.order,
+              },
+            });
+
+            // Create and connect subjects
+            if (concept.subjects) {
+              for (const subjectData of concept.subjects) {
+                const subject = await tx.subject.create({
+                  data: {
+                    title: subjectData.title,
+                    description: subjectData.description,
+                    order: subjectData.order,
+                  },
+                });
+
+                // Connect subject to main concept
+                await tx.mainConceptSubject.create({
+                  data: {
+                    main_concept_id: mainConcept.id,
+                    subject_id: subject.id,
+                    order: subjectData.order,
+                  },
+                });
+
+                // Create and connect topics
+                if (subjectData.topics) {
+                  for (const topicData of subjectData.topics) {
+                    const topic = await tx.topic.create({
+                      data: {
+                        title: topicData.title,
+                        description: topicData.description,
+                        order: topicData.order,
+                        content: topicData.content,
+                        resources: topicData.resources,
+                        prerequisites: topicData.prerequisites,
+                      },
+                    });
+
+                    // Connect topic to subject
+                    await tx.subjectTopic.create({
+                      data: {
+                        subject_id: subject.id,
+                        topic_id: topic.id,
+                        order: topicData.order,
+                      },
+                    });
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        return roadmap;
+      });
     } catch (error) {
       throw createAppError(
         'Failed to create roadmap',
@@ -129,15 +159,27 @@ export class RoadmapService {
         main_concepts: {
           orderBy: { order: 'asc' },
           include: {
-            subjects: {
-              orderBy: { order: 'asc' },
+            main_concept: {
               include: {
-                topics: {
+                subjects: {
                   orderBy: { order: 'asc' },
                   include: {
-                    articles: true,
-                    quizzes: true,
-                    challenges: true,
+                    subject: {
+                      include: {
+                        topics: {
+                          orderBy: { order: 'asc' },
+                          include: {
+                            topic: {
+                              include: {
+                                articles: true,
+                                quizzes: true,
+                                challenges: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
                   },
                 },
               },
@@ -171,10 +213,18 @@ export class RoadmapService {
       },
       include: {
         main_concepts: {
-          include: {
-            subjects: {
+          select: {
+            main_concept: {
               include: {
-                topics: true,
+                subjects: {
+                  select: {
+                    subject: {
+                      include: {
+                        topics: true,
+                      },
+                    },
+                  },
+                },
               },
             },
           },
@@ -188,77 +238,134 @@ export class RoadmapService {
   }
 
   static async addConcept(roadmap_id: string, data: ConceptData) {
-    const concept = await prisma.mainConcept.create({
-      data: {
-        name: data.title,
-        description: data.description,
-        order: data.order,
-        roadmap: { connect: { id: roadmap_id } },
-        subjects: data.subjects
-          ? {
-              create: data.subjects.map((subject) => ({
-                title: subject.title,
-                description: subject.description,
-                order: subject.order,
-                topics: subject.topics
-                  ? {
-                      create: subject.topics,
-                    }
-                  : undefined,
-              })),
-            }
-          : undefined,
-      },
-      include: {
-        subjects: {
-          include: {
-            topics: true,
-          },
+    return await prisma.$transaction(async (tx) => {
+      // Create main concept
+      const mainConcept = await tx.mainConcept.create({
+        data: {
+          name: data.title,
+          description: data.description,
+          order: data.order,
         },
-      },
-    });
+      });
 
-    await deleteCache('roadmaps:all');
-    return concept;
+      // Connect to roadmap
+      await tx.roadmapMainConcept.create({
+        data: {
+          roadmap_id,
+          main_concept_id: mainConcept.id,
+          order: data.order,
+        },
+      });
+
+      // Add subjects if provided
+      if (data.subjects) {
+        for (const subjectData of data.subjects) {
+          const subject = await tx.subject.create({
+            data: {
+              title: subjectData.title,
+              description: subjectData.description,
+              order: subjectData.order,
+            },
+          });
+
+          // Connect subject to main concept
+          await tx.mainConceptSubject.create({
+            data: {
+              main_concept_id: mainConcept.id,
+              subject_id: subject.id,
+              order: subjectData.order,
+            },
+          });
+
+          // Add topics if provided
+          if (subjectData.topics) {
+            for (const topicData of subjectData.topics) {
+              const topic = await tx.topic.create({
+                data: {
+                  title: topicData.title,
+                  description: topicData.description,
+                  order: topicData.order,
+                  content: topicData.content,
+                  resources: topicData.resources,
+                  prerequisites: topicData.prerequisites,
+                },
+              });
+
+              // Connect topic to subject
+              await tx.subjectTopic.create({
+                data: {
+                  subject_id: subject.id,
+                  topic_id: topic.id,
+                  order: topicData.order,
+                },
+              });
+            }
+          }
+        }
+      }
+
+      return mainConcept;
+    });
   }
 
   static async addSubject(main_concept_id: string, data: SubjectData) {
-    const subject = await prisma.subject.create({
-      data: {
-        title: data.title,
-        description: data.description,
-        order: data.order,
-        main_concept: { connect: { id: main_concept_id } },
-        topics: data.topics
-          ? {
-              create: data.topics.map((topic) => ({
-                title: topic.title,
-                description: topic.description,
-                order: topic.order,
-                content: topic.content,
-                resources: topic.resources,
-                prerequisites: topic.prerequisites,
-              })),
-            }
-          : undefined,
-      },
-      include: {
-        topics: true,
-      },
+    const result = await prisma.$transaction(async (tx) => {
+      const subject = await tx.subject.create({
+        data: {
+          title: data.title,
+          description: data.description,
+          order: data.order,
+          main_concepts: { connect: { id: main_concept_id } },
+        },
+      });
+
+      if (data.topics) {
+        for (const topicData of data.topics) {
+          const topic = await tx.topic.create({
+            data: {
+              title: topicData.title,
+              description: topicData.description,
+              order: topicData.order,
+              content: topicData.content,
+              resources: topicData.resources,
+              prerequisites: topicData.prerequisites,
+            },
+          });
+
+          await tx.subjectTopic.create({
+            data: {
+              subject_id: subject.id,
+              topic_id: topic.id,
+              order: topicData.order,
+            },
+          });
+        }
+      }
+
+      await deleteCache('roadmaps:all');
+      return subject;
     });
 
-    await deleteCache('roadmaps:all');
-    return subject;
+    return result;
   }
 
   static async addTopic(subject_id: string, data: TopicData) {
     const topic = await prisma.topic.create({
       data: {
-        ...data,
-        subject_id,
+        title: data.title,
+        description: data.description,
+        order: data.order,
+        content: data.content,
+        resources: data.resources,
+        prerequisites: data.prerequisites,
+        subjects: {
+          create: {
+            subject_id: subject_id,
+            order: data.order,
+          },
+        },
       },
     });
-
     await deleteCache('roadmaps:all');
     return topic;
   }
@@ -345,8 +452,12 @@ export class RoadmapService {
     const roadmaps = await prisma.roadmap.findMany({
       include: {
         main_concepts: {
-          include: {
-            subjects: true,
+          select: {
+            main_concept: {
+              include: {
+                subjects: true,
+              },
+            },
           },
         },
         user_roadmaps: {
@@ -372,8 +483,8 @@ export class RoadmapService {
   ): Promise<void> {
     await prisma.$transaction(
       subject_orders.map((order) =>
-        prisma.subject.update({
-          where: { id: order.subject_id },
+        prisma.mainConceptSubject.updateMany({
+          where: { subject_id: order.subject_id },
           data: { order: order.order },
         })
       )
@@ -401,10 +512,22 @@ export class RoadmapService {
           where: { id: data.sourceRoadmapId },
           include: {
             main_concepts: {
-              include: {
-                subjects: {
+              select: {
+                main_concept: {
                   include: {
-                    topics: true,
+                    subjects: {
+                      select: {
+                        subject: {
+                          include: {
+                            topics: {
+                              select: {
+                                topic: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
                   },
                 },
               },
@@ -418,34 +541,31 @@ export class RoadmapService {
 
         // Clone concepts, subjects, and topics
         for (const main_concept of sourceRoadmap.main_concepts) {
-          const newMainConcept = await tx.mainConcept.create({
+          await tx.mainConcept.create({
             data: {
-              name: main_concept.name,
-              description: main_concept.description,
-              roadmap_id: newRoadmap.id,
-              order: main_concept.order,
+              name: main_concept.main_concept?.name,
+              description: main_concept.main_concept?.description,
+              order: main_concept.main_concept?.order,
             },
           });
 
-          for (const subject of main_concept.subjects) {
-            const newSubject = await tx.subject.create({
+          for (const subject of main_concept.main_concept?.subjects ?? []) {
+            await tx.subject.create({
               data: {
-                title: subject.title,
-                description: subject.description,
-                order: subject.order,
-                main_concept_id: newMainConcept.id,
+                title: subject.subject?.title,
+                description: subject.subject?.description,
+                order: subject.subject?.order,
               },
             });
 
             await tx.topic.createMany({
-              data: subject.topics.map((topic) => ({
-                title: topic.title,
-                description: topic.description,
-                order: topic.order,
-                content: topic.content,
-                resources: topic.resources,
-                prerequisites: topic.prerequisites,
-                subjectId: newSubject.id,
+              data: subject.subject?.topics?.map((topic) => ({
+                title: topic.topic?.title,
+                description: topic.topic?.description,
+                order: topic.topic?.order,
+                content: topic.topic?.content,
+                resources: topic.topic?.resources,
+                prerequisites: topic.topic?.prerequisites,
               })),
             });
           }
@@ -471,10 +591,18 @@ export class RoadmapService {
         roadmap: {
           include: {
             main_concepts: {
-              include: {
-                subjects: {
+              select: {
+                main_concept: {
                   include: {
-                    topics: true,
+                    subjects: {
+                      select: {
+                        subject: {
+                          include: {
+                            topics: true,
+                          },
+                        },
+                      },
+                    },
                   },
                 },
               },
@@ -574,13 +702,25 @@ export class RoadmapService {
       where: { id: roadmap_id },
       include: {
         main_concepts: {
-          include: {
-            subjects: {
+          select: {
+            main_concept: {
               include: {
-                topics: {
-                  include: {
-                    user_progress: {
-                      where: { user_id },
+                subjects: {
+                  select: {
+                    subject: {
+                      include: {
+                        topics: {
+                          select: {
+                            topic: {
+                              include: {
+                                user_progress: {
+                                  where: { user_id },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
                     },
                   },
                 },
@@ -599,10 +739,10 @@ export class RoadmapService {
     let completedTopics = 0;
 
     roadmap.main_concepts.forEach((concept) => {
-      concept.subjects.forEach((subject) => {
-        subject.topics.forEach((topic) => {
+      concept.main_concept?.subjects.forEach((subject) => {
+        subject.subject?.topics.forEach((topic) => {
           totalTopics++;
-          if (topic.user_progress.some((p) => p.is_completed)) {
+          if (topic.topic?.user_progress.some((p) => p.is_completed)) {
             completedTopics++;
           }
         });

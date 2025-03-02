@@ -2,51 +2,65 @@ import { ErrorRequestHandler, Request, Response, NextFunction } from 'express';
 import { sendError } from '../utils/apiResponse';
 import logger from '../utils/logger';
 
-// Export the AppError interface
-export interface AppError extends Error {
-  statusCode: number;
-  details?: Record<string, unknown>;
+// Proper AppError interface and implementation
+export class AppError extends Error {
+  constructor(
+    public message: string,
+    public statusCode: number = 500,
+    public details?: Record<string, unknown>
+  ) {
+    super(message);
+    this.name = this.constructor.name;
+    Error.captureStackTrace(this, this.constructor);
+  }
+}
+
+interface ErrorWithStatusCode extends Error {
+  statusCode?: number;
 }
 
 export const errorHandler: ErrorRequestHandler = (
-  err,
+  err: ErrorWithStatusCode,
   req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
-  logger.error(err.message, {
-    stack: err.stack,
-    path: req.path,
-    method: req.method,
-    status: err.statusCode || 500,
-  });
-
-  // Handle operational errors
-  if (err.statusCode && err.statusCode < 500) {
-    return sendError(res, {
+  // Structured logging with logger
+  if (err instanceof AppError) {
+    logger.error('Application Error', {
+      status: err.statusCode,
+      path: `${req.method} ${req.originalUrl}`,
       message: err.message,
-      name: err.name,
+      details: err.details,
+      stack: err.stack,
+    });
+  } else {
+    logger.error('Unexpected Error', {
+      status: 500,
+      path: `${req.method} ${req.originalUrl}`,
+      message: err.message,
+      stack: err.stack,
     });
   }
 
-  // Handle unexpected errors
-  if (!res.headersSent) {
-    sendError(res, {
-      message: 'Internal server error',
-      statusCode: 500,
-      name: 'InternalServerError',
-    } as AppError);
-  }
+  // Error response handling
+  const statusCode = err.statusCode || 500;
+  const message = statusCode === 500 ? 'Internal server error' : err.message;
+
+  // Create a proper Error object
+  const errorResponse = new Error(message);
+  errorResponse.name = err.name || 'AppError';
+  Object.assign(errorResponse, {
+    statusCode,
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+  });
+
+  sendError(res, errorResponse);
 };
 
+// Utility function to create errors
 export const createAppError = (
   message: string,
   statusCode: number,
   details?: Record<string, unknown>
-): AppError => {
-  const error = new Error(message) as AppError;
-  error.statusCode = statusCode;
-  error.details = details;
-  error.name = 'AppError';
-  return error;
-};
+) => new AppError(message, statusCode, details);

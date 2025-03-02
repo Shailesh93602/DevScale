@@ -16,7 +16,6 @@ import topicRoutes from './topicRoutes';
 import articleRoutes from './articleRoutes';
 import quizRoutes from './quizRoutes';
 import challengeRoutes from './challengeRoutes';
-import passport from 'passport';
 import { codeRunner } from '../controllers/codeRunnerController';
 import { predict } from '../controllers/predictionController';
 import healthCheckRoutes from './healthCheck';
@@ -31,105 +30,46 @@ router.post('/predict', predict);
 
 router.use('/users', authMiddleware, userRoutes);
 
-router.use(
-  '/roadMaps',
-  passport.authenticate('jwt', { session: false }),
-  roadMapRoutes
-);
+router.use('/roadMaps', authMiddleware, roadMapRoutes);
 
-router.use(
-  '/questions',
-  passport.authenticate('jwt', { session: false }),
-  questionRoutes
-);
+router.use('/questions', authMiddleware, questionRoutes);
 
-router.use(
-  '/leaderBoard',
-  passport.authenticate('jwt', { session: false }),
-  leaderBoardRoutes
-);
+router.use('/leaderBoard', authMiddleware, leaderBoardRoutes);
 
-router.use(
-  '/placements',
-  passport.authenticate('jwt', { session: false }),
-  placementRoutes
-);
+router.use('/placements', authMiddleware, placementRoutes);
 
-router.use(
-  '/community/forums',
-  passport.authenticate('jwt', { session: false }),
-  communityForumRoutes
-);
+router.use('/community/forums', authMiddleware, communityForumRoutes);
 
-router.use(
-  '/jobs',
-  passport.authenticate('jwt', { session: false }),
-  jobRoutes
-);
+router.use('/jobs', authMiddleware, jobRoutes);
 
-router.use(
-  '/chats',
-  passport.authenticate('jwt', { session: false }),
-  chatRoutes
-);
+router.use('/chats', authMiddleware, chatRoutes);
 
-router.use(
-  '/courses',
-  passport.authenticate('jwt', { session: false }),
-  courseRoutes
-);
+router.use('/courses', authMiddleware, courseRoutes);
 
-router.use(
-  '/battles',
-  passport.authenticate('jwt', { session: false }),
-  battleRoutes
-);
+router.use('/battles', authMiddleware, battleRoutes);
 
-router.use(
-  '/resources',
-  passport.authenticate('jwt', { session: false }),
-  resourceRoutes
-);
+router.use('/resources', authMiddleware, resourceRoutes);
 
-router.use(
-  '/main-concepts',
-  passport.authenticate('jwt', { session: false }),
-  mainConceptRoutes
-);
+router.use('/main-concepts', authMiddleware, mainConceptRoutes);
 
-router.use(
-  '/subjects',
-  passport.authenticate('jwt', { session: false }),
-  subjectRoutes
-);
+router.use('/subjects', authMiddleware, subjectRoutes);
 
-router.use(
-  '/topics',
-  passport.authenticate('jwt', { session: false }),
-  topicRoutes
-);
+router.use('/topics', authMiddleware, topicRoutes);
 
-router.use(
-  '/articles',
-  passport.authenticate('jwt', { session: false }),
-  articleRoutes
-);
+router.use('/articles', authMiddleware, articleRoutes);
 
-router.use(
-  '/quiz',
-  passport.authenticate('jwt', { session: false }),
-  quizRoutes
-);
+router.use('/quiz', authMiddleware, quizRoutes);
 
-router.use(
-  '/challenges',
-  passport.authenticate('jwt', { session: false }),
-  challengeRoutes
-);
+router.use('/challenges', authMiddleware, challengeRoutes);
 
-router.post('/run-code', codeRunner);
+router.post('/run-code', authMiddleware, codeRunner);
 
 // Health Check Route
-router.use('/health', healthCheckRoutes);
+router.use(
+  '/health',
+  authMiddleware,
+
+  healthCheckRoutes
+);
 
 export default router;

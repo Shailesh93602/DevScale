@@ -7,7 +7,7 @@ import {
   bugReportSchema,
   featureRequestSchema,
   helpArticleSchema,
-} from '../validators/supportValidators';
+} from '../validations/supportValidations';
 
 export const createTicket = async (
   req: Request,

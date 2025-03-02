@@ -6,38 +6,41 @@ import { useParams } from 'next/navigation';
 import { hideLoader, showLoader } from '@/lib/features/loader/loaderSlice';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
-import { fetchData } from '@/app/services/fetchData';
 import { RoadmapSection } from './components/RoadmapSection';
 import { Timeline } from './components/Timeline';
+import { useAxiosGet } from '@/hooks/useAxios';
+
+interface IRoadmap {
+  id: string;
+  name: string;
+  description: string;
+  Subjects: {
+    id: string;
+    name: string;
+    description: string;
+    icon: React.ElementType;
+  }[];
+}
 
 export default function CareerPathPage() {
   const params = useParams();
-  const careerId = params?.id || '';
+  const careerId = (params?.id as string) || '';
   const dispatch = useDispatch();
 
-  const [roadmap, setRoadmap] = useState<
+  const [roadmap, setRoadmap] = useState<IRoadmap[]>([]);
+  const [getRoadmaps] = useAxiosGet<
     {
-      id: string;
-      name: string;
-      description: string;
-      Subjects: {
-        id: string;
-        name: string;
-        description: string;
-        icon: React.ElementType;
-      }[];
-    }[]
-  >([]);
+      success?: boolean;
+      message?: string;
+    } & IRoadmap[]
+  >('road_maps/main_concepts/{{careerId}}');
 
   useEffect(() => {
     const fetchResources = async () => {
       dispatch(showLoader('fetching roadmap'));
       try {
-        const response = await fetchData(
-          'GET',
-          `/roadMaps/mainConcepts/${careerId}`,
-        );
-        setRoadmap(response.data);
+        const response = await getRoadmaps({}, { careerId });
+        setRoadmap(response.data ?? []);
       } catch (error) {
         console.error(error);
         toast.error('Error fetching resources. Please try again');

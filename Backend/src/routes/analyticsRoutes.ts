@@ -1,8 +1,5 @@
 import { Router } from 'express';
-import {
-  authenticateUser,
-  authorizeRoles,
-} from '../middlewares/authMiddleware';
+import { authMiddleware, authorizeRoles } from '../middlewares/authMiddleware';
 import {
   getPlatformAnalyticsController,
   getUserAnalyticsController,
@@ -15,7 +12,7 @@ import Joi from 'joi';
 
 const router = Router();
 
-router.use(authenticateUser);
+router.use(authMiddleware);
 
 // User analytics routes
 router.get(

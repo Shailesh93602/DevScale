@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { fetchData } from '@/app/services/fetchData';
+import { useAxiosPost } from '@/hooks/useAxios';
 
 const StepOne = ({ control }: { control: Control<FieldValues> }) => (
   <>
@@ -324,6 +324,7 @@ const StepFive = ({ control }: { control: Control<FieldValues> }) => (
 const TechInterestAssessment = () => {
   const [step, setStep] = useState(1);
   const form = useForm();
+  const [predict] = useAxiosPost('/predict');
 
   const nextStep = () => {
     setStep((prevStep) => prevStep + 1);
@@ -334,7 +335,7 @@ const TechInterestAssessment = () => {
       nextStep();
       return;
     }
-    await fetchData('POST', '/predict', JSON.stringify(data));
+    await predict(data);
   };
 
   const renderStep = () => {

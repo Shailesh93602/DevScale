@@ -5,23 +5,35 @@ import { toast } from 'react-toastify';
 // import "react-quill/dist/quill.snow.css";
 import { useDispatch } from 'react-redux';
 import { hideLoader, showLoader } from '@/lib/features/loader/loaderSlice';
-import { fetchData } from '@/app/services/fetchData';
 import Navbar from '@/components/Navbar';
+import { useAxiosGet, useAxiosPost } from '@/hooks/useAxios';
 
 // const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 export default function EditArticle({ id }: { id: string }) {
   const [content, setContent] = useState<string>('');
   const dispatch = useDispatch();
+  const [updateArticle] = useAxiosPost<{ success?: boolean }>(
+    '/articles/{{articleId}}/update',
+  );
+  const [getArticle] = useAxiosGet<{
+    success?: boolean;
+    article: { id: string; content: string };
+    message?: string;
+  }>('/articles/{{articleId}}');
 
-  const updateArticle = async () => {
+  const handleUpdateArticle = async () => {
     try {
       dispatch(showLoader('updating article'));
-      const response = await fetchData('post', `/articles/${id}/update`, {
-        content,
-      });
+      const response = await updateArticle(
+        {
+          content,
+        },
+        {},
+        { articleId: id },
+      );
 
-      if (response.data.success) {
+      if (response.data?.success) {
         toast.success('Article updated successfully!');
         window.location.href = `/articles/${id}`;
       } else {
@@ -38,12 +50,12 @@ export default function EditArticle({ id }: { id: string }) {
   const fetchArticle = async () => {
     try {
       dispatch(showLoader('fetching article'));
-      const response = await fetchData('GET', `/articles/${id}`);
+      const response = await getArticle({}, { articleId: id });
 
       if (response?.data?.success) {
         setContent(response.data.article?.content);
       } else {
-        toast.error(response?.data?.error ?? 'Failed to fetch article.');
+        toast.error(response?.data?.message ?? 'Failed to fetch article.');
       }
     } catch (error) {
       toast.error('Failed to fetch article.');
@@ -86,7 +98,7 @@ export default function EditArticle({ id }: { id: string }) {
           /> */}
         </div>
         <button
-          onClick={updateArticle}
+          onClick={handleUpdateArticle}
           className="rounded-lg bg-blue-500 px-4 py-2 text-white"
         >
           Update Article

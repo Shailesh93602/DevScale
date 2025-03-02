@@ -116,7 +116,15 @@ export class RoadmapInteractionService {
           include: {
             main_concepts: {
               include: {
-                subjects: true,
+                main_concept: {
+                  include: {
+                    subjects: {
+                      include: {
+                        subject: true,
+                      },
+                    },
+                  },
+                },
               },
             },
           },
@@ -128,8 +136,8 @@ export class RoadmapInteractionService {
     const interests = new Set<string>();
     userInterests.forEach((ur) => {
       ur.roadmap.main_concepts.forEach((concept) => {
-        concept.subjects.forEach((subject) => {
-          interests.add(subject.title.toLowerCase());
+        concept.main_concept.subjects.forEach((subject) => {
+          interests.add(subject.subject.title.toLowerCase());
         });
       });
     });
@@ -145,11 +153,15 @@ export class RoadmapInteractionService {
         },
         main_concepts: {
           some: {
-            subjects: {
-              some: {
-                title: {
-                  in: Array.from(interests),
-                  mode: 'insensitive',
+            main_concept: {
+              subjects: {
+                some: {
+                  subject: {
+                    title: {
+                      in: Array.from(interests),
+                      mode: 'insensitive',
+                    },
+                  },
                 },
               },
             },

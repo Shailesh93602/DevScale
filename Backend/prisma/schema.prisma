@@ -160,16 +160,15 @@ model Job {
 }
 
 model MainConcept {
-  id          String    @id @default(uuid())
-  name        String
-  description String    @db.Text
-  roadmap_id  String
-  created_at  DateTime  @default(now())
-  updated_at  DateTime  @updatedAt
-  roadmap     Roadmap   @relation(fields: [roadmap_id], references: [id])
+  id          String               @id @default(uuid())
+  name        String               @unique
+  description String               @db.Text
+  created_at  DateTime             @default(now())
+  updated_at  DateTime             @updatedAt
   order       Int
-  subjects    Subject[]
   quizzes     Quiz[]
+  roadmaps    RoadmapMainConcept[]
+  subjects    MainConceptSubject[]
 }
 
 model Quiz {
@@ -305,47 +304,46 @@ model Resource {
 }
 
 model Roadmap {
-  id             String        @id @default(uuid())
-  title          String
+  id             String               @id @default(uuid())
+  title          String               @unique
   description    String?
-  topics         Topic[]
   user_id        String
-  user           User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  is_public      Boolean       @default(false)
+  user           User                 @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  is_public      Boolean              @default(false)
   progress       Progress[]
-  created_at     DateTime      @default(now())
-  updated_at     DateTime      @updatedAt
-  deleted_at     DateTime? // Soft delete
-  main_concepts  MainConcept[]
+  created_at     DateTime             @default(now())
+  updated_at     DateTime             @updatedAt
+  deleted_at     DateTime?
   comments       Comment[]
   likes          Like[]
   user_roadmaps  UserRoadmap[]
   difficulty     Difficulty?
   estimatedHours Int?
-  popularity     Int           @default(0)
-  version        String        @default("1.0")
+  popularity     Int                  @default(0)
+  version        String               @default("1.0")
+  main_concepts  RoadmapMainConcept[]
+  topics         RoadmapTopic[]
 
-  @@index([user_id, is_public]) // Index for user's public roadmaps
-  @@index([deleted_at]) // Index for soft delete queries
-  @@index([title]) // Index for search queries
+  @@index([user_id, is_public])
+  @@index([deleted_at])
+  @@index([title])
 }
 
 model Subject {
-  id              String          @id @default(uuid())
-  title           String
+  id              String               @id @default(uuid())
+  title           String               @unique
   description     String
   order           Int
-  main_concept_id String?
-  topics          Topic[]
-  main_concept    MainConcept[]
-  created_at      DateTime        @default(now())
-  updated_at      DateTime        @updatedAt
+  created_at      DateTime             @default(now())
+  updated_at      DateTime             @default(now())
   quizzes         Quiz[]
   user_progress   UserProgress[]
   virtual_labs    VirtualLab[]
   placement_tests PlacementTest[]
+  main_concepts   MainConceptSubject[]
+  topics          SubjectTopic[]
 
-  @@index([main_concept_id])
+  @@index([id])
 }
 
 model Topic {
@@ -356,8 +354,8 @@ model Topic {
   content       String?
   resources     String[]
   prerequisites String[]
-  subject_id    String?
-  subject       Subject?            @relation(fields: [subject_id], references: [id], onDelete: Cascade)
+  created_at    DateTime            @default(now())
+  updated_at    DateTime            @default(now())
   articles      Article[]
   quizzes       Quiz[]
   challenges    Challenge[]
@@ -367,12 +365,68 @@ model Topic {
   study_groups  StudyGroup[]
   daily_topics  DailyTopic[]
   progress      Progress[]
-  created_at    DateTime            @default(now())
-  updated_at    DateTime            @updatedAt
-  roadmaps      Roadmap[]
   moderations   ContentModeration[]
+  subjects      SubjectTopic[]
+  roadmaps      RoadmapTopic[]
 
+  @@index([id])
+}
+
+// Junction Tables
+model RoadmapMainConcept {
+  id              String      @id @default(uuid())
+  roadmap_id      String
+  main_concept_id String
+  order           Int
+  created_at      DateTime    @default(now())
+  roadmap         Roadmap     @relation(fields: [roadmap_id], references: [id])
+  main_concept    MainConcept @relation(fields: [main_concept_id], references: [id])
+
+  @@unique([roadmap_id, main_concept_id])
+  @@index([roadmap_id])
+  @@index([main_concept_id])
+}
+
+model MainConceptSubject {
+  id              String      @id @default(uuid())
+  main_concept_id String
+  subject_id      String
+  order           Int
+  created_at      DateTime    @default(now())
+  main_concept    MainConcept @relation(fields: [main_concept_id], references: [id])
+  subject         Subject     @relation(fields: [subject_id], references: [id])
+
+  @@unique([main_concept_id, subject_id])
+  @@index([main_concept_id])
   @@index([subject_id])
+}
+
+model SubjectTopic {
+  id         String   @id @default(uuid())
+  subject_id String
+  topic_id   String
+  order      Int
+  created_at DateTime @default(now())
+  subject    Subject  @relation(fields: [subject_id], references: [id])
+  topic      Topic    @relation(fields: [topic_id], references: [id])
+
+  @@unique([subject_id, topic_id])
+  @@index([subject_id])
+  @@index([topic_id])
+}
+
+model RoadmapTopic {
+  id         String   @id @default(uuid())
+  roadmap_id String
+  topic_id   String
+  order      Int
+  created_at DateTime @default(now())
+  roadmap    Roadmap  @relation(fields: [roadmap_id], references: [id])
+  topic      Topic    @relation(fields: [topic_id], references: [id])
+
+  @@unique([roadmap_id, topic_id])
+  @@index([roadmap_id])
+  @@index([topic_id])
 }
 
 model User {
@@ -392,7 +446,7 @@ model User {
   college                     String?
   graduation_year             Int?
   skills                      String[]
-  experience_level            ExperienceLevel
+  experience_level            ExperienceLevel?
   created_at                  DateTime                   @default(now())
   updated_at                  DateTime                   @updatedAt
   status                      String?                    @default("active")
@@ -411,6 +465,7 @@ model User {
   leaderboard_entries         LeaderboardEntry[]
   audit_logs                  AuditLog[]
   is_active                   Boolean                    @default(true)
+  user_permissions            UserPermission[]
 
   // Relations
   articles                        Article[]
@@ -563,7 +618,7 @@ model TeamProject {
   project_status ProjectStatus       @default(ongoing)
   visibility     Visibility          @default(public)
   created_at     DateTime            @default(now())
-  updated_at     DateTime            @updatedAt
+  updated_at     DateTime            @default(now())
   members        TeamProjectMember[]
 }
 
@@ -573,7 +628,7 @@ model TeamProjectMember {
   team_project_id String
   role            ProjectRole @default(member)
   created_at      DateTime    @default(now())
-  updated_at      DateTime    @updatedAt
+  updated_at      DateTime    @default(now())
   user            User        @relation(fields: [user_id], references: [id])
   team_project    TeamProject @relation(fields: [team_project_id], references: [id])
 
@@ -589,7 +644,7 @@ model ForumPost {
   tags       String[]
   upvotes    Int            @default(0)
   created_at DateTime       @default(now())
-  updated_at DateTime       @updatedAt
+  updated_at DateTime       @default(now())
   user       User           @relation(fields: [user_id], references: [id])
   forum      Forum          @relation(fields: [forum_id], references: [id])
   comments   ForumComment[]
@@ -603,7 +658,7 @@ model ForumComment {
   parent_id  String? // For nested comments
   upvotes    Int            @default(0)
   created_at DateTime       @default(now())
-  updated_at DateTime       @updatedAt
+  updated_at DateTime       @default(now())
   user       User           @relation(fields: [user_id], references: [id])
   post       ForumPost      @relation(fields: [post_id], references: [id])
   parent     ForumComment?  @relation("CommentReplies", fields: [parent_id], references: [id])
@@ -679,7 +734,7 @@ model StudyGroup {
   max_members      Int                  @default(5)
   is_private       Boolean              @default(false)
   created_at       DateTime             @default(now())
-  updated_at       DateTime             @updatedAt
+  updated_at       DateTime             @default(now())
   topic            Topic                @relation(fields: [topic_id], references: [id])
   members          StudyGroupMember[]
   weekly_goal      String?
@@ -704,7 +759,7 @@ model StudyGroupMember {
   study_group_id String
   role           GroupRole  @default(member)
   created_at     DateTime   @default(now())
-  updated_at     DateTime   @updatedAt
+  updated_at     DateTime   @default(now())
   user           User       @relation(fields: [user_id], references: [id])
   study_group    StudyGroup @relation(fields: [study_group_id], references: [id])
 
@@ -809,42 +864,66 @@ model DailyTopicCompletion {
 }
 
 model Role {
-  id          String       @id @default(uuid())
-  name        String       @unique
+  id          String           @id @default(uuid())
+  name        String           @unique
   description String?
-  permissions Permission[]
   users       User[]
-  parent_id   String? // For role hierarchy
-  parent      Role?        @relation("RoleHierarchy", fields: [parent_id], references: [id])
-  children    Role[]       @relation("RoleHierarchy")
-  created_at  DateTime     @default(now())
-  updated_at  DateTime     @updatedAt
+  permissions RolePermission[]
+  created_at  DateTime         @default(now()) @map("created_at")
+  updated_at  DateTime         @updatedAt @map("updated_at")
 
-  @@index([parent_id])
-}
-
-model PermissionGroup {
-  id          String       @id @default(uuid())
-  name        String       @unique
-  description String?
-  permissions Permission[]
-  created_at  DateTime     @default(now())
-  updated_at  DateTime     @updatedAt
+  @@map("roles")
 }
 
 model Permission {
-  id          String            @id @default(uuid())
-  name        String            @unique
+  id          String           @id @default(uuid())
+  name        String           @unique
   description String?
-  resource    String // The resource this permission applies to
-  action      String // The action allowed (create, read, update, delete, etc.)
-  roles       Role[]
-  groups      PermissionGroup[]
-  conditions  Json? // For custom permission rules
-  created_at  DateTime          @default(now())
-  updated_at  DateTime          @updatedAt
+  key         String           @unique
+  roles       RolePermission[]
+  users       UserPermission[]
+  features    Feature[]
+  created_at  DateTime         @default(now()) @map("created_at")
+  updated_at  DateTime         @updatedAt @map("updated_at")
 
-  @@unique([resource, action])
+  @@map("permissions")
+}
+
+model Feature {
+  id          String       @id @default(uuid())
+  name        String       @unique
+  description String?
+  permissions Permission[]
+  created_at  DateTime     @default(now()) @map("created_at")
+  updated_at  DateTime     @updatedAt @map("updated_at")
+
+  @@map("features")
+}
+
+model RolePermission {
+  id            String     @id @default(uuid())
+  role          Role       @relation(fields: [role_id], references: [id])
+  role_id       String
+  permission    Permission @relation(fields: [permission_id], references: [id])
+  permission_id String
+  created_at    DateTime   @default(now()) @map("created_at")
+  updated_at    DateTime   @updatedAt @map("updated_at")
+
+  @@unique([role_id, permission_id])
+  @@map("role_permissions")
+}
+
+model UserPermission {
+  id            String     @id @default(uuid())
+  user          User       @relation(fields: [user_id], references: [id])
+  user_id       String
+  permission    Permission @relation(fields: [permission_id], references: [id])
+  permission_id String
+  created_at    DateTime   @default(now()) @map("created_at")
+  updated_at    DateTime   @updatedAt @map("updated_at")
+
+  @@unique([user_id, permission_id])
+  @@map("user_permissions")
 }
 
 model UserActivityLog {
@@ -1841,19 +1920,25 @@ enum ContentStatus {
 }
 
 model ContentModeration {
-  id          String    @id @default(uuid())
-  content_id  String
-  user_id     String
-  status      String
-  notes       String
-  created_at  DateTime  @default(now())
-  updated_at  DateTime  @updatedAt
-  content     Content   @relation(fields: [content_id], references: [id])
-  user        User      @relation(fields: [user_id], references: [id])
-  resource_id String?
-  resource    Resource? @relation(fields: [resource_id], references: [id])
-  article_id  String?
-  article     Article?  @relation(fields: [article_id], references: [id])
-  topic_id    String?
-  topic       Topic?    @relation(fields: [topic_id], references: [id])
+  id           String    @id @default(uuid())
+  content_type String
+  action       String
+  notes        String?
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+  moderator    User      @relation(fields: [moderator_id], references: [id])
+  moderator_id String
+  content      Content?  @relation(fields: [content_id], references: [id])
+  content_id   String?
+  topic        Topic?    @relation(fields: [topic_id], references: [id])
+  topic_id     String?
+  article      Article?  @relation(fields: [article_id], references: [id])
+  article_id   String?
+  resource     Resource? @relation(fields: [resource_id], references: [id])
+  resource_id  String?
+
+  @@index([content_id])
+  @@index([article_id])
+  @@index([resource_id])
+  @@index([moderator_id])
 }

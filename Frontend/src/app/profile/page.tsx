@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/card';
 import { CalendarIcon, EnvelopeClosedIcon } from '@radix-ui/react-icons';
 import EditProfileModal from './components/EditProfile';
-import customAxios from '../services/customAxios';
+import { useAxiosGet, useAxiosPut } from '@/hooks/useAxios';
 
 export default function ProfilePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,6 +28,23 @@ export default function ProfilePage() {
   } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [getProfile] = useAxiosGet<{
+    success?: boolean;
+    profile: {
+      name: string;
+      avatar: string;
+      username: string;
+      email: string;
+      bio: string;
+      note: string;
+      memberSince: string;
+    };
+    message?: string;
+  }>('/profile');
+  const [updateProfile] = useAxiosPut<{ success?: boolean; message?: string }>(
+    '/profile/update',
+  );
+
   useEffect(() => {
     fetchProfile();
   }, []);
@@ -35,7 +52,8 @@ export default function ProfilePage() {
   const fetchProfile = async () => {
     setIsLoading(true);
     try {
-      const response = await customAxios.get('/profile');
+      const response = await getProfile();
+
       if (response.data?.success) {
         setProfile(response.data.profile);
       } else {
@@ -51,9 +69,9 @@ export default function ProfilePage() {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const updateProfile = async (newProfile: typeof profile) => {
+  const handleProfile = async (newProfile: typeof profile) => {
     try {
-      const response = await customAxios.put('/profile/update', newProfile);
+      const response = await updateProfile(newProfile);
       if (response?.data?.success) {
         setProfile(newProfile);
         closeModal();
@@ -122,7 +140,7 @@ export default function ProfilePage() {
         isOpen={isModalOpen}
         onClose={closeModal}
         profile={profile}
-        updateProfile={updateProfile}
+        updateProfile={handleProfile}
       />
     </div>
   );

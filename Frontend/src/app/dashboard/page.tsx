@@ -10,7 +10,7 @@ export default function Dashboard() {
   const user = useSelector(
     (state: { user: { user: { username: string } } }) => state.user?.user,
   );
-  const [username] = useState(user.username);
+  const [username] = useState(user?.username);
 
   return (
     <div className="p-6">
@@ -105,7 +105,7 @@ export default function Dashboard() {
 const courses = [
   {
     id: 1,
-    thumbnail: '/images/dsa.jpeg',
+    thumbnail: '/images/DSA.png',
     title: 'Data Structures and Algorithms',
     description: "LeetCode's Interview Crash Course",
     chapters: 13,

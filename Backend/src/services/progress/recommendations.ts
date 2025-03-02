@@ -64,7 +64,9 @@ async function getNextTopics(
       id: { notIn: completed_ids },
       roadmaps: {
         some: {
-          progress: { some: { user_id: user_id, status: Status.APPROVED } },
+          roadmap: {
+            progress: { some: { user_id: user_id, status: Status.APPROVED } },
+          },
         },
       },
     },
@@ -78,12 +80,14 @@ async function getRelatedRoadmaps(userSkills: string[]) {
     where: {
       topics: {
         some: {
-          OR: [
-            { content: { contains: userSkills[0] } },
-            ...userSkills.slice(1).map((skill) => ({
-              content: { contains: skill },
-            })),
-          ],
+          topic: {
+            OR: [
+              { title: { contains: userSkills[0] } },
+              ...userSkills.slice(1).map((skill) => ({
+                title: { contains: skill },
+              })),
+            ],
+          },
         },
       },
     },
@@ -96,7 +100,10 @@ async function getChallengeRecommendations(
   progress_percentage: number
 ) {
   const user_level = await getUserLevel(user_id);
-  const difficulty = mapProgressToDifficulty(progress_percentage, user_level);
+  const difficulty = mapProgressToDifficulty(
+    progress_percentage,
+    user_level ?? 'Beginner'
+  );
 
   return prisma.challenge.findMany({
     where: {

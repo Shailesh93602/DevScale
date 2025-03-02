@@ -15,6 +15,10 @@ export const authMiddleware = async (
 ) => {
   const token = req.headers.authorization?.split(' ')[1];
 
+  console.log('🚀 ------------------🚀');
+  console.log('🚀 ~ token:', token);
+  console.log('🚀 ------------------🚀');
+
   if (!token) {
     return next(createAppError('Authorization token required', 401));
   }
@@ -24,6 +28,10 @@ export const authMiddleware = async (
       data: { user },
       error,
     } = await supabase.auth.getUser(token);
+
+    console.log('🚀 ----------------🚀');
+    console.log('🚀 ~ user:', user);
+    console.log('🚀 ----------------🚀');
 
     if (error || !user) {
       return next(createAppError('Invalid authentication token', 401));

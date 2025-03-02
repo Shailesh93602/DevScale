@@ -1,10 +1,10 @@
 'use client';
 import React, { ReactNode } from 'react';
 
-import { HeroParallax } from '@/components/hero-parallax';
-import { StickyScroll } from '@/components/sticky-scroll-reveal';
+import { HeroParallax } from '@/components/HeroParallax';
+import { StickyScroll } from '@/components/StickyScrollReveal';
 import { CardDemo } from '@/components/CardDemo';
-import { HoverBorderGradient } from '@/components/hover-border-gradient';
+import { HoverBorderGradient } from '@/components/HoverBorderGradient';
 import { content, products } from '@/constants';
 import { AceternityLogo } from '@/components/AceternityLogo';
 

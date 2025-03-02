@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { RBACController } from '../controllers/rbacController';
-import { authenticateUser } from '../middlewares/authMiddleware';
+import { authMiddleware } from '../middlewares/authMiddleware';
 import { requirePermission } from '../middlewares/rbacMiddleware';
 
 const router = Router();
@@ -8,28 +8,28 @@ const router = Router();
 // Role Management Routes
 router.post(
   '/roles',
-  authenticateUser,
+  authMiddleware,
   requirePermission('roles', 'create'),
   RBACController.createRole
 );
 
 router.patch(
   '/roles/:roleId',
-  authenticateUser,
+  authMiddleware,
   requirePermission('roles', 'update'),
   RBACController.updateRole
 );
 
 router.delete(
   '/roles/:roleId',
-  authenticateUser,
+  authMiddleware,
   requirePermission('roles', 'delete'),
   RBACController.deleteRole
 );
 
 router.get(
   '/roles/:roleId/hierarchy',
-  authenticateUser,
+  authMiddleware,
   requirePermission('roles', 'read'),
   RBACController.getRoleHierarchy
 );
@@ -37,21 +37,21 @@ router.get(
 // Permission Management Routes
 router.post(
   '/permissions',
-  authenticateUser,
+  authMiddleware,
   requirePermission('permissions', 'create'),
   RBACController.createPermission
 );
 
 router.patch(
   '/permissions/:permissionId',
-  authenticateUser,
+  authMiddleware,
   requirePermission('permissions', 'update'),
   RBACController.updatePermission
 );
 
 router.delete(
   '/permissions/:permissionId',
-  authenticateUser,
+  authMiddleware,
   requirePermission('permissions', 'delete'),
   RBACController.deletePermission
 );
@@ -59,15 +59,11 @@ router.delete(
 // Access Control Routes
 router.post(
   '/users/role',
-  authenticateUser,
+  authMiddleware,
   requirePermission('roles', 'assign'),
   RBACController.assignRoleToUser
 );
 
-router.get(
-  '/check-permission',
-  authenticateUser,
-  RBACController.checkPermission
-);
+router.get('/check-permission', authMiddleware, RBACController.checkPermission);
 
 export default router;

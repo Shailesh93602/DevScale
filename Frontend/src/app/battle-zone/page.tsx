@@ -4,49 +4,53 @@ import BattleCard from './Components/BattleCard';
 import { useDispatch } from 'react-redux';
 import { hideLoader, showLoader } from '@/lib/features/loader/loaderSlice';
 import ChallengeCard from './Components/ChallengeCard';
-import { fetchData } from '@/app/services/fetchData';
 import Modal from '@/components/Modal';
 import CreateBattle from './Components/CreateBattle';
 import { difficulties, lengths } from '@/constants';
 import { Button } from '@/components/ui/button';
+import { useAxiosGet } from '@/hooks/useAxios';
+
+interface IBattle {
+  id: string;
+  username: string;
+  title: string;
+  description: string;
+  Topic: { title: string };
+  difficulty: string;
+  length: string;
+  date: string;
+  time: string;
+}
 
 export default function BattleZonePage() {
   const [selectedDifficulty, setSelectedDifficulty] = useState('');
   const [selectedLength, setSelectedLength] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-  const [battles, setBattles] = useState<
-    {
-      id: string;
-      username: string;
-      title: string;
-      description: string;
-      Topic: { title: string };
-      difficulty: string;
-      length: string;
-      date: string;
-      time: string;
-    }[]
-  >([]);
-  const [filteredBattles, setFilteredBattles] = useState<
-    {
-      id: string;
-      username: string;
-      title: string;
-      description: string;
-      Topic: { title: string };
-      difficulty: string;
-      length: string;
-      date: string;
-      time: string;
-    }[]
-  >([]);
+  const [battles, setBattles] = useState<IBattle[]>([]);
+  const [filteredBattles, setFilteredBattles] = useState<IBattle[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
+  const [getBattles] = useAxiosGet<{
+    success?: boolean;
+    battles: {
+      id: string;
+      username: string;
+      title: string;
+      description: string;
+      Topic: { title: string };
+      difficulty: string;
+      length: string;
+      date: string;
+      time: string;
+    }[];
+    message?: string;
+  }>('/battles');
 
   const fetchBattles = async () => {
     dispatch(showLoader('fetching battles'));
     try {
-      const response = await fetchData('GET', '/battles');
+      const response = await getBattles();
+
       if (!response.data) {
         throw new Error('Failed to fetch battles');
       }

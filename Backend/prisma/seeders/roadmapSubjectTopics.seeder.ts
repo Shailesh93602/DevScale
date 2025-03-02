@@ -2,12 +2,22 @@ import { PrismaClient } from '@prisma/client';
 import { roadmaps } from '../../resources/roadmaps/roadmap';
 
 const prisma = new PrismaClient();
+const admin = 'shailesh@mrengineers.com';
 
 const seedDatabase = async () => {
   try {
-    await prisma.$transaction(async (prismaTransaction: PrismaClient) => {
+    await prisma.$transaction(async (prismaTransaction) => {
+      const user = await prismaTransaction.user.findFirst({
+        where: { email: admin },
+      });
+
+      if (!user) {
+        throw new Error('Admin user not found');
+      }
+
       for (const roadmapData of roadmaps) {
-        const roadmap = await prismaTransaction.roadMap.upsert({
+        // Create or update roadmap
+        const roadmap = await prismaTransaction.roadmap.upsert({
           where: { title: roadmapData.title },
           update: {
             description: roadmapData.description,
@@ -15,50 +25,147 @@ const seedDatabase = async () => {
           create: {
             title: roadmapData.title,
             description: roadmapData.description,
+            user_id: user.id,
           },
         });
 
-        for (const mainConceptData of roadmapData.mainConcepts) {
+        for (const [
+          mcIndex,
+          mainConceptData,
+        ] of roadmapData.mainConcepts.entries()) {
+          // Create or update main concept
           const mainConcept = await prismaTransaction.mainConcept.upsert({
             where: { name: mainConceptData.name },
             update: {
               description: mainConceptData.description,
-              roadmapId: roadmap.id,
+              order: mainConceptData.order,
             },
             create: {
               name: mainConceptData.name,
               description: mainConceptData.description,
-              roadmapId: roadmap.id,
+              order: mainConceptData.order,
             },
           });
 
-          for (const subjectData of mainConceptData.subjects) {
+          // Connect main concept to roadmap
+          await prismaTransaction.roadmapMainConcept.upsert({
+            where: {
+              roadmap_id_main_concept_id: {
+                roadmap_id: roadmap.id,
+                main_concept_id: mainConcept.id,
+              },
+            },
+            update: {
+              order: mcIndex + 1,
+            },
+            create: {
+              roadmap_id: roadmap.id,
+              main_concept_id: mainConcept.id,
+              order: mcIndex + 1,
+            },
+          });
+
+          for (const [
+            sIndex,
+            subjectData,
+          ] of mainConceptData.subjects.entries()) {
+            // Create or update subject
             const subject = await prismaTransaction.subject.upsert({
-              where: { name: subjectData.name },
+              where: { title: subjectData.name },
               update: {
                 description: subjectData.description,
-                mainConceptId: mainConcept.id,
+                order: subjectData.order,
               },
               create: {
-                name: subjectData.name,
+                title: subjectData.name,
                 description: subjectData.description,
-                mainConceptId: mainConcept.id,
+                order: subjectData.order,
               },
             });
 
-            for (const topicData of subjectData.topics) {
-              await prismaTransaction.topic.upsert({
-                where: { title: topicData.name },
-                update: {
-                  description: topicData.description,
-                  subjectId: subject.id,
+            // Connect subject to main concept
+            await prismaTransaction.mainConceptSubject.upsert({
+              where: {
+                main_concept_id_subject_id: {
+                  main_concept_id: mainConcept.id,
+                  subject_id: subject.id,
                 },
-                create: {
+              },
+              update: {
+                order: sIndex + 1,
+              },
+              create: {
+                main_concept_id: mainConcept.id,
+                subject_id: subject.id,
+                order: sIndex + 1,
+              },
+            });
+
+            for (const [tIndex, topicData] of subjectData.topics.entries()) {
+              // Find existing topic for this subject
+              const existingTopic = await prismaTransaction.topic.findFirst({
+                where: {
                   title: topicData.name,
-                  description: topicData.description,
-                  subjectId: subject.id,
+                  subjects: {
+                    some: {
+                      subject_id: subject.id,
+                    },
+                  },
                 },
               });
+
+              // Create new topic or use existing one
+              const topic =
+                existingTopic ||
+                (await prismaTransaction.topic.create({
+                  data: {
+                    title: topicData.name,
+                    description: topicData.description,
+                    order: topicData.order,
+                  },
+                }));
+
+              // Connect topic to subject if not already connected
+              const existingSubjectTopic =
+                await prismaTransaction.subjectTopic.findUnique({
+                  where: {
+                    subject_id_topic_id: {
+                      subject_id: subject.id,
+                      topic_id: topic.id,
+                    },
+                  },
+                });
+
+              if (!existingSubjectTopic) {
+                await prismaTransaction.subjectTopic.create({
+                  data: {
+                    subject_id: subject.id,
+                    topic_id: topic.id,
+                    order: tIndex + 1,
+                  },
+                });
+              }
+
+              // Connect topic to roadmap if not already connected
+              const existingRoadmapTopic =
+                await prismaTransaction.roadmapTopic.findUnique({
+                  where: {
+                    roadmap_id_topic_id: {
+                      roadmap_id: roadmap.id,
+                      topic_id: topic.id,
+                    },
+                  },
+                });
+
+              if (!existingRoadmapTopic) {
+                await prismaTransaction.roadmapTopic.create({
+                  data: {
+                    roadmap_id: roadmap.id,
+                    topic_id: topic.id,
+                    order: tIndex + 1,
+                  },
+                });
+              }
             }
           }
         }

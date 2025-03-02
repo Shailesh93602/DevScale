@@ -23,9 +23,13 @@ export const getDailyTopic = async (user_id?: string) => {
     include: {
       topic: {
         include: {
-          subject: {
-            include: {
-              main_concept: true,
+          subjects: {
+            select: {
+              subject: {
+                select: {
+                  id: true,
+                },
+              },
             },
           },
           articles: {
@@ -57,9 +61,13 @@ export const getDailyTopic = async (user_id?: string) => {
       include: {
         topic: {
           include: {
-            subject: {
+            subjects: {
               include: {
-                main_concept: true,
+                subject: {
+                  include: {
+                    main_concepts: true,
+                  },
+                },
               },
             },
             articles: {

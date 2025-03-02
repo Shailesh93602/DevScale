@@ -2,82 +2,7 @@ import { Request, Response } from 'express';
 import prisma from '../prisma';
 import { catchAsync, parse } from '../utils';
 import { sendResponse } from '../utils/apiResponse';
-
-export const insertProfile = catchAsync(async (req: Request, res: Response) => {
-  const {
-    fullName,
-    dob,
-    gender,
-    mobile,
-    whatsapp,
-    address,
-    university,
-    college,
-    branch,
-    semester,
-    graduation_year,
-    skills,
-    github_url,
-    linkedin_url,
-    twitter_url,
-    website_url,
-    specialization,
-    username,
-  } = req.body;
-
-  if (
-    !fullName ||
-    !dob ||
-    !gender ||
-    !mobile ||
-    !address ||
-    !university ||
-    !college ||
-    !branch ||
-    !semester ||
-    !graduation_year ||
-    !skills ||
-    !specialization
-  ) {
-    return sendResponse(res, 'BAD_REQUEST', {
-      message:
-        'Required fields: fullName, dob, gender, mobile, address, college, specialization',
-    });
-  }
-
-  const userInfo = {
-    supabase_id: req.user?.id,
-    fullName,
-    dob: new Date(dob),
-    gender,
-    mobile,
-    whatsapp: whatsapp || mobile,
-    address,
-    university,
-    college,
-    branch,
-    semester,
-    graduation_year: parseInt(graduation_year),
-    skills: Array.isArray(skills) ? skills : [skills],
-    github_url,
-    linkedin_url,
-    twitter_url,
-    website_url,
-    specialization,
-    experience_level: 'beginner' as const,
-    username,
-    email: req.user.email ?? '',
-    full_name: fullName,
-  };
-
-  await prisma.user.create({
-    data: userInfo,
-  });
-
-  return sendResponse(res, 'CREATED', {
-    message: 'User profile inserted successfully',
-  });
-});
+import * as userService from '../services/userService';
 
 export const getProfile = catchAsync(async (req: Request, res: Response) => {
   const user = await prisma.user.findUnique({
@@ -85,76 +10,43 @@ export const getProfile = catchAsync(async (req: Request, res: Response) => {
   });
 
   if (!user) {
-    return sendResponse(res, 'NOT_CREATED', {
-      message: 'User not cerated',
-    });
+    return sendResponse(res, 'USER_NOT_CREATED');
   }
 
-  sendResponse(res, 'SUCCESS', {
-    message: 'User profile retrieved successfully',
+  sendResponse(res, 'PROFILE_FETCHED', {
     data: { user: parse(user) },
-  });
-});
-
-export const updateProfile = catchAsync(async (req: Request, res: Response) => {
-  const userId = req.user.id;
-  const {
-    name,
-    username,
-    email,
-    bio,
-    note,
-    specialization,
-    college,
-    graduation_year,
-    skills,
-    github_url,
-    linkedin_url,
-    twitter_url,
-    website_url,
-  } = req.body;
-
-  await prisma.user.update({
-    where: { supabase_id: userId },
-    data: {
-      username,
-      email,
-      full_name: name,
-      bio,
-      note,
-      specialization,
-      college,
-      graduation_year: graduation_year ? parseInt(graduation_year) : undefined,
-      skills: skills ? (Array.isArray(skills) ? skills : [skills]) : undefined,
-      github_url,
-      linkedin_url,
-      twitter_url,
-      website_url,
-    },
-  });
-
-  sendResponse(res, 'SUCCESS', {
-    message: 'Profile updated successfully',
   });
 });
 
 export const getUserProgress = catchAsync(
   async (req: Request, res: Response) => {
-    // const userId = req.user.id;
+    const user_id = req.user.id;
 
     // TODO: implement this method
     const roadmaps = await prisma.roadmap.findMany({
       include: {
         main_concepts: {
-          include: {
-            subjects: {
+          select: {
+            main_concept: {
               include: {
-                topics: {
-                  include: {
-                    // progress: {
-                    //   where: { user_id },
-                    //   select: { id: true, status: true },
-                    // },
+                subjects: {
+                  select: {
+                    subject: {
+                      include: {
+                        topics: {
+                          select: {
+                            topic: {
+                              include: {
+                                progress: {
+                                  where: { user_id },
+                                  select: { id: true, status: true },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
                   },
                 },
               },
@@ -164,8 +56,7 @@ export const getUserProgress = catchAsync(
       },
     });
 
-    sendResponse(res, 'SUCCESS', {
-      message: 'User progress retrieved successfully',
+    sendResponse(res, 'PROGRESS_FETCHED', {
       data: { roadmaps },
     });
   }
@@ -244,99 +135,33 @@ export const deleteUserRoadmap = catchAsync(
 );
 
 export const upsertUser = catchAsync(async (req: Request, res: Response) => {
-  const {
-    userId,
+  const { id: supabase_id, email } = req.user;
+  const updateData = req.body;
+
+  const user = await userService.upsertUserProfile({
+    supabase_id,
     email,
-    username,
-    specialization,
-    college,
-    graduation_year,
-    skills,
-    github_url,
-    linkedin_url,
-    twitter_url,
-    website_url,
-    ...profileData
-  } = req.body;
-
-  // Add validation for new required fields
-  if (!email || !username || !college || !specialization) {
-    return sendResponse(res, 'BAD_REQUEST', {
-      message: 'Email, username, college, and specialization are required',
-    });
-  }
-
-  // Check for existing user
-  const existingUser = await prisma.user.findFirst({
-    where: {
-      OR: [{ email }, { username }, ...(userId ? [{ id: userId }] : [])],
-    },
+    ...updateData,
+    graduation_year: updateData.graduation_year
+      ? parseInt(updateData.graduation_year)
+      : undefined,
+    skills: Array.isArray(updateData.skills)
+      ? updateData.skills
+      : [updateData.skills],
   });
 
-  // Update existing user
-  if (existingUser) {
-    const updatedUser = await prisma.user.update({
-      where: { id: userId },
-      data: {
-        ...profileData,
-        specialization,
-        college,
-        graduation_year: graduation_year
-          ? parseInt(graduation_year)
-          : undefined,
-        skills: skills
-          ? Array.isArray(skills)
-            ? skills
-            : [skills]
-          : undefined,
-        github_url,
-        linkedin_url,
-        twitter_url,
-        website_url,
-      },
-      select: {
-        id: true,
-        email: true,
-        username: true,
-        role: true,
-        specialization: true,
-        college: true,
-      },
-    });
+  return sendResponse(res, user ? 'USER_UPDATED' : 'USER_CREATED', {
+    data: { user: parse(user) },
+  });
+});
 
-    return sendResponse(res, 'SUCCESS', {
-      message: 'User updated successfully',
-      data: { user: parse(updatedUser) },
-    });
-  }
-
-  // Create new user
-  const newUser = await prisma.user.create({
-    data: {
-      email,
-      username,
-      role: 'USER',
-      specialization,
-      college,
-      graduation_year: graduation_year ? parseInt(graduation_year) : undefined,
-      skills: skills ? (Array.isArray(skills) ? skills : [skills]) : undefined,
-      github_url,
-      linkedin_url,
-      twitter_url,
-      website_url,
-      ...profileData,
-    },
-    select: {
-      id: true,
-      email: true,
-      username: true,
-      role: true,
-      specialization: true,
-      college: true,
-    },
+export const checkUsername = catchAsync(async (req: Request, res: Response) => {
+  const { username } = req.params;
+  const isAvailable = await prisma.user.findFirst({
+    where: { username },
   });
 
-  sendResponse(res, 'USER_CREATED', {
-    data: { user: newUser },
+  sendResponse(res, 'USERNAME_CHECKED', {
+    data: { available: !isAvailable },
   });
 });

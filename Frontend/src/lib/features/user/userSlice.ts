@@ -1,30 +1,32 @@
+import { IUser } from '@/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface UserState {
-  username: string;
-  email: string;
-  // Add other user fields as needed
-  detailsComplete: boolean;
-}
-
 interface AuthState {
-  user: UserState | null;
+  user: IUser | null;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
+  detailsComplete: boolean;
+  isAuthenticated: boolean;
 }
 
 const initialState: AuthState = {
   user: null,
   status: 'idle',
   error: null,
+  detailsComplete: false,
+  isAuthenticated: false,
 };
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<UserState>) => {
-      state.user = action.payload;
+    setUser: (
+      state,
+      action: PayloadAction<{ user: IUser; detailsComplete?: boolean }>,
+    ) => {
+      state.user = action.payload.user;
+      state.detailsComplete = Boolean(action.payload.detailsComplete);
       state.status = 'succeeded';
     },
     clearUser: (state) => {
@@ -36,13 +38,21 @@ const userSlice = createSlice({
     },
     completeUserDetails: (state) => {
       if (state.user) {
-        state.user.detailsComplete = true;
+        state.detailsComplete = true;
       }
+    },
+    setAuthenticated: (state, action: PayloadAction<boolean>) => {
+      state.isAuthenticated = action.payload;
     },
   },
   // Add extraReducers for async operations if needed
 });
 
-export const { setUser, clearUser, setLoading, completeUserDetails } =
-  userSlice.actions;
+export const {
+  setUser,
+  clearUser,
+  setLoading,
+  completeUserDetails,
+  setAuthenticated,
+} = userSlice.actions;
 export default userSlice.reducer;

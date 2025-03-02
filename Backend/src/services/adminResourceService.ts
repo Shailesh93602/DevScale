@@ -38,7 +38,7 @@ export const manageRoadmap = async (roadmap_id: string, action: string) => {
   const roadmap = await prisma.roadmap.findUnique({
     where: { id: roadmap_id },
     include: {
-      topics: { include: { subject: true } },
+      topics: true,
     },
   });
 

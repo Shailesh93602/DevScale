@@ -8,30 +8,24 @@ import React, {
 } from 'react';
 import { useDispatch } from 'react-redux';
 import { hideLoader, showLoader } from '@/lib/features/loader/loaderSlice';
-import { fetchData } from '@/app/services/fetchData';
 import { toast } from 'react-toastify';
 import { debounce } from '@/utils/common';
 import { Search, Book, Tag } from 'lucide-react';
-import { HoverBorderGradient } from '@/components/hover-border-gradient';
+import { HoverBorderGradient } from '@/components/HoverBorderGradient';
 import { AceternityLogo } from '@/components/AceternityLogo';
+import { useAxiosGet } from '@/hooks/useAxios';
+import { IResource } from '@/constants';
 
 const ResourcesPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [resources, setResources] = useState<
-    {
-      id: string;
-      name: string;
-      description: string;
-      category: string;
-      tags: string[];
-    }[]
-  >([]);
+  const [resources, setResources] = useState<IResource[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
 
   const dispatch = useDispatch();
   const observerRef = useRef<IntersectionObserver>(null);
+  const [getResources] = useAxiosGet<{ data: IResource[] }>('/subjects');
 
   const fetchResources = async (
     searchTerm: string,
@@ -43,14 +37,15 @@ const ResourcesPage = () => {
     dispatch(showLoader('fetching resources'));
 
     try {
-      const response = await fetchData(
-        'GET',
-        `/resources?search=${encodeURIComponent(
-          searchTerm,
-        )}&page=${page}&limit=10`,
-      );
+      const response = await getResources({
+        params: {
+          search: searchTerm,
+          page: page,
+          limit: 10,
+        },
+      });
 
-      const newResources = response.data.resources;
+      const newResources: IResource[] = response.data?.data ?? [];
 
       setResources((prev) =>
         isAppending ? [...prev, ...newResources] : newResources,
@@ -132,7 +127,7 @@ const ResourcesPage = () => {
                   <div className="self-start">
                     <h2 className="mb-2 flex items-center text-2xl font-semibold">
                       <Book className="mr-2" size={24} />
-                      {resource.name}
+                      {resource.title}
                     </h2>
                     <p className="mb-4 text-grayText">{resource.description}</p>
                     <div className="mb-4 flex flex-wrap gap-2">

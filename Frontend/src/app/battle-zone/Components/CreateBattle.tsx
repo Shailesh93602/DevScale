@@ -1,7 +1,17 @@
-import { fetchData } from '@/app/services/fetchData';
 import { difficulties, lengths } from '@/constants';
+import { useAxiosGet, useAxiosPost } from '@/hooks/useAxios';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+
+interface ISubject {
+  id: string;
+  name: string;
+}
+
+interface ITopic {
+  id: string;
+  title: string;
+}
 
 export default function CreateBattle({
   handleClose,
@@ -10,9 +20,9 @@ export default function CreateBattle({
 }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [subjects, setSubjects] = useState<{ id: string; name: string }[]>([]);
+  const [subjects, setSubjects] = useState<ISubject[]>([]);
   const [selectedSubject, setSelectedSubject] = useState('');
-  const [topics, setTopics] = useState<{ id: string; title: string }[]>([]);
+  const [topics, setTopics] = useState<ITopic[]>([]);
   const [selectedTopic, setSelectedTopic] = useState('');
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>(
     difficulties.MEDIUM,
@@ -20,10 +30,20 @@ export default function CreateBattle({
   const [selectedLength, setSelectedLength] = useState<string>(lengths.MEDIUM);
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
+  const [createBattle] = useAxiosPost<{
+    success?: boolean;
+    message?: string;
+  }>('/battles/create');
+  const [getSubjects] = useAxiosGet<
+    { success?: boolean; message?: string } & ISubject[]
+  >('/subjects');
+  const [getTopicsBySubjectId] = useAxiosGet<
+    { success?: boolean; message?: string } & ITopic[]
+  >('/subjects/{{subjectId}}/topics');
 
   const handleCreate = async () => {
     try {
-      const response = await fetchData('POST', '/battles/create', {
+      const response = await createBattle({
         title,
         description,
         topicId: selectedTopic,
@@ -53,7 +73,7 @@ export default function CreateBattle({
 
   useEffect(() => {
     const fetchSubjects = async () => {
-      const response = await fetchData('GET', '/subjects');
+      const response = await getSubjects();
       setSubjects(response.data || []);
     };
     fetchSubjects();
@@ -61,10 +81,11 @@ export default function CreateBattle({
 
   useEffect(() => {
     const fetchTopics = async () => {
-      const response = await fetchData(
-        'GET',
-        `/subjects/${selectedSubject}/topics`,
+      const response = await getTopicsBySubjectId(
+        {},
+        { subjectId: selectedSubject },
       );
+
       setTopics(response.data || []);
     };
     if (selectedSubject) fetchTopics();

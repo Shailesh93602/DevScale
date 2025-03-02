@@ -1,21 +1,19 @@
 'use client';
 import React, { useState } from 'react';
-import { fetchData } from '@/app/services/fetchData';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
+import { useAxiosPost } from '@/hooks/useAxios';
 
 export default function Quiz({ topicId }: { topicId: string }) {
   const [score] = useState(0);
   const router = useRouter();
+  const [submitQuiz] = useAxiosPost<{ success?: boolean }>('/quizzes/submit');
 
-  const submitQuiz = async () => {
+  const handleQuizSubmit = async () => {
     try {
-      const response = await fetchData('post', `/quizzes/submit`, {
-        topicId,
-        score,
-      });
+      const response = await submitQuiz({ topicId, score });
 
-      if (response.data.success) {
+      if (response.data?.success) {
         toast.success('Quiz submitted successfully!');
         router.push('/profile');
       } else {
@@ -29,7 +27,7 @@ export default function Quiz({ topicId }: { topicId: string }) {
   return (
     <div>
       <h1>Quiz for Topic {topicId}</h1>
-      <button onClick={submitQuiz}>Submit Quiz</button>
+      <button onClick={handleQuizSubmit}>Submit Quiz</button>
     </div>
   );
 }

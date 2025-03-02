@@ -1,4 +1,5 @@
 import { createServerClient } from '@supabase/ssr';
+import axios from 'axios';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export async function updateSession(request: NextRequest) {
@@ -36,15 +37,34 @@ export async function updateSession(request: NextRequest) {
   // IMPORTANT: DO NOT REMOVE auth.getUser()
 
   const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user && !request.nextUrl.pathname.startsWith('/auth')) {
-    // no user, potentially respond by redirecting the user to the login page
-    const url = request.nextUrl.clone();
-
-    url.pathname = '/auth/login';
-    return NextResponse.redirect(url);
+  if (!user) {
+    if (request.nextUrl.pathname.startsWith('/auth')) {
+      return supabaseResponse;
+    } else {
+      const url = request.nextUrl.clone();
+      url.pathname = '/auth/login';
+      return NextResponse.redirect(url);
+    }
+  }
+  // Redirect to details page if not authenticated
+  if (request.nextUrl.pathname !== '/details') {
+    const { data } = await axios.get('http://localhost:4000/api/v1/users/me', {
+      headers: {
+        Authorization: `Bearer ${session?.access_token}`,
+      },
+    });
+    if (!data?.data?.user) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/details';
+      return NextResponse.redirect(url);
+    }
   }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.

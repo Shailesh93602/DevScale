@@ -9,7 +9,7 @@ import {
   useCallback,
 } from 'react';
 import { getCookie } from 'cookies-next';
-import { validateWebSocketEvent } from '@/lib/validation/helpers';
+import { validateWebSocketEvent } from '@/lib/validations/helpers';
 
 type WebSocketEvent = {
   type: string;

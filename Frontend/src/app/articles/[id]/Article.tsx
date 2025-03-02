@@ -1,31 +1,43 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { fetchData } from '@/app/services/fetchData';
 import Navbar from '@/components/Navbar';
 import { toast } from 'react-toastify';
 import DOMPurify from 'dompurify';
+import { useAxiosGet, useAxiosPost } from '@/hooks/useAxios';
 
+interface IArticle {
+  id: string;
+  title: string;
+  author: { username: string };
+  content: string;
+  createdAt: string;
+  moderationNotes: string;
+}
 const sanitizeContent = (content: string) => {
   return DOMPurify.sanitize(content);
 };
 
 export default function Article({ id }: { id: string }) {
-  const [article, setArticle] = useState<{
-    id: string;
-    title: string;
-    author: { username: string };
-    content: string;
-    createdAt: string;
-  }>();
+  const [article, setArticle] = useState<IArticle>();
   const [moderationNotes, setModerationNotes] = useState('');
   const [newNote, setNewNote] = useState('');
+  const [updateArticle] = useAxiosPost<{ success?: boolean }>(
+    '/articles/{{articleId}}/moderation',
+  );
+
+  const [getArticle] = useAxiosGet<{
+    success?: boolean;
+    article: IArticle;
+    message?: string;
+  }>('/articles/{{articleId}}');
 
   const handleSaveNote = async () => {
     try {
-      const response = await fetchData('post', `/articles/${id}/moderation`, {
+      const response = await updateArticle({
         moderationNotes: newNote,
       });
-      if (response.data.success) {
+
+      if (response.data?.success) {
         toast.success('Moderation note saved successfully!');
         setNewNote('');
         window.location.href = '/article-listing';
@@ -40,13 +52,13 @@ export default function Article({ id }: { id: string }) {
 
   const fetchResource = async () => {
     try {
-      const response = await fetchData('GET', `/articles/${id}`);
+      const response = await getArticle({}, { articleId: id });
 
       if (response?.data?.success) {
         setArticle(response?.data?.article);
         setModerationNotes(response?.data?.article?.moderationNotes);
       } else {
-        toast.error(response?.error ?? 'Failed to fetch article.');
+        toast.error(response?.data?.message ?? 'Failed to fetch article.');
       }
     } catch (error) {
       console.error('Error fetching article:', error);

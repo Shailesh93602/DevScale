@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": "./",
     "module": "commonjs",
     "target": "ESNext",
     "esModuleInterop": true,
@@ -15,8 +15,14 @@
   },
   "ts-node": {
     "esm": true,
-    "experimentalSpecifierResolution": "node"
+    "experimentalSpecifierResolution": "node",
+    "transpileOnly": true,
+    "require": ["tsconfig-paths/register"],
+    "compilerOptions": {
+      "module": "commonjs"
+    },
+    "files": true
   },
-  "include": ["src/**/*", "src/express.d.ts"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules"]
 }

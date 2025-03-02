@@ -1,45 +1,10 @@
 'use client';
-// import { useRouter } from 'next/navigation';
 import RegisterForm from '../../auth/components/RegisterForm';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import OAuthProviders from '../../auth/components/OAuthProviders';
-// import { setUser } from '@/lib/features/user/userSlice';
-// import { supabase } from '@/lib/supabaseClient';
-// import { useDispatch } from 'react-redux';
-// import { useAxiosPost } from '@/hooks/useAxios';
 
 export default function RegisterPage() {
-  // const router = useRouter();
-  // const dispatch = useDispatch();
-  // const {
-  //   data,
-  //   isSuccess,
-  //   execute: register,
-  // } = useAxiosPost<{ detailsComplete: boolean }>('/auth/register');
-
-  // const handleAuthSuccess = async () => {
-  //   const {
-  //     data: { session },
-  //   } = await supabase.auth.getSession();
-
-  //   if (session) {
-  //     dispatch(
-  //       setUser({
-  //         username: session.user?.email ?? 'Unknown',
-  //         email: session.user?.email ?? '',
-  //         detailsComplete: false,
-  //       }),
-  //     );
-  //     await register({
-  //       email: session.user?.email ?? '',
-  //     });
-  //     if (isSuccess && data) {
-  //       router.push(data.detailsComplete ? '/dashboard' : '/details');
-  //     }
-  //   }
-  // };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
