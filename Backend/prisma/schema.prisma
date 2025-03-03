@@ -303,6 +303,15 @@ model Resource {
   @@index([type])
 }
 
+model RoadmapCategory {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  description String?
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  roadmaps    Roadmap[]
+}
+
 model Roadmap {
   id             String               @id @default(uuid())
   title          String               @unique
@@ -323,6 +332,9 @@ model Roadmap {
   version        String               @default("1.0")
   main_concepts  RoadmapMainConcept[]
   topics         RoadmapTopic[]
+  tags           String?
+  category_id    String?
+  category       RoadmapCategory?     @relation(fields: [category_id], references: [id])
 
   @@index([user_id, is_public])
   @@index([deleted_at])

@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { roadmaps } from '../../resources/roadmaps/roadmap';
+import { roadmapCategories, roadmaps } from '../../resources/roadmaps/roadmap';
 
 const prisma = new PrismaClient();
 const admin = 'shailesh@mrengineers.com';
@@ -14,10 +14,21 @@ const seedDatabase = async () => {
       throw new Error('Admin user not found');
     }
 
+    for (const category of roadmapCategories) {
+      await prisma.roadmapCategory.upsert({
+        where: { name: category },
+        update: {},
+        create: {
+          name: category,
+        },
+      });
+    }
+
     for (const roadmapData of roadmaps) {
       const roadmap = await prisma.roadmap.upsert({
         where: { title: roadmapData.title },
         update: {
+          tags: roadmapData.tags,
           description: roadmapData.description,
         },
         create: {
