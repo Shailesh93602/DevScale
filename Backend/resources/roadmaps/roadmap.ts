@@ -1,6 +1,7 @@
 export type RoadmapData = {
   title: string;
   description: string;
+  tags: string;
   mainConcepts: {
     name: string;
     description: string;
@@ -18,11 +19,23 @@ export type RoadmapData = {
   }[];
 };
 
+export const roadmapCategories = [
+  'Frontend',
+  'Backend',
+  'FullStack',
+  'Node',
+  'React',
+  'Python',
+  'MachineLearning',
+  'DataAnalysis',
+];
+
 export const roadmaps: RoadmapData[] = [
   {
     title: 'Full Stack Web Development',
     description:
       'A comprehensive roadmap to become a Full Stack Web Developer.',
+    tags: 'Frontend,Backend,FullStack,Node,Rea',
     mainConcepts: [
       {
         name: 'Frontend Development',
@@ -3686,6 +3699,7 @@ export const roadmaps: RoadmapData[] = [
   {
     title: 'Data Science',
     description: 'A detailed roadmap to excel in Data Science.',
+    tags: 'DataScience,Python,MachineLearning,DataAnalysis',
     mainConcepts: [
       {
         name: 'Data Analysis',

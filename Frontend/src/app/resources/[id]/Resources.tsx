@@ -5,8 +5,6 @@ import DOMPurify from 'dompurify';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaBars, FaTimes, FaBook, FaQuestionCircle } from 'react-icons/fa';
 import { useAxiosGet, useAxiosPost } from '@/hooks/useAxios';
-import { IResource } from '@/constants';
-
 const sanitizeContent = (content: string) => {
   return DOMPurify.sanitize(content);
 };
@@ -68,10 +66,6 @@ export default function Resources({ id }: { id: string }) {
   const fetchResource = async () => {
     try {
       const response = await getResource({}, { subjectId: id });
-
-      console.log('🚀 ----------------------------------------🚀');
-      console.log('🚀 ~ fetchResource ~ response:', response);
-      console.log('🚀 ----------------------------------------🚀');
 
       if (!response?.error) {
         const topics =
