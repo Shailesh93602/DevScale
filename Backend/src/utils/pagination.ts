@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // utils/pagination.ts
 
+import { PrismaClient } from '@prisma/client';
+import { Request } from 'express';
+
 // Add this interface for parsed query parameters
 export interface PaginationParams {
   page: number;
@@ -44,64 +47,80 @@ export function parsePaginationQuery(
 }
 
 // Modified paginate function signature
-export async function paginate<T>(
-  model: any,
-  options: PaginationParams,
-  searchFields?: string[],
-  selectFields?: string[]
-): Promise<PaginatedResult<T>> {
+export async function paginate<K extends keyof PrismaClient, T = any>({
+  req,
+  model,
+  options,
+  searchFields,
+  selection,
+  whereClause = {},
+}: {
+  req: Request;
+  model: PrismaClient[K];
+  options?: PaginationParams;
+  searchFields?: string[];
+  selection?: {
+    include?: Record<string, any>;
+    select?: Record<string, any>;
+  };
+  whereClause?: Record<string, any>;
+}): Promise<PaginatedResult<T>> {
+  if (!options) {
+    options = parsePaginationQuery(req.query);
+  }
+
   const page = options.page || 1;
   const limit = options.limit || 10;
   const skip = (page - 1) * limit;
 
-  const where: any = {};
+  let finalWhere = { ...whereClause };
 
   // Search functionality
   if (options.search && searchFields && searchFields.length > 0) {
-    where.OR = searchFields.map((field) => ({
+    const searchConditions = searchFields.map((field) => ({
       [field]: {
         contains: options.search,
         mode: 'insensitive',
       },
     }));
+    finalWhere = {
+      ...finalWhere,
+      OR: searchConditions,
+    };
   }
 
   // Filtering
   if (options.filter) {
-    where.AND = Object.keys(options.filter).map((key) => ({
-      [key]: options.filter?.[key],
-    }));
+    finalWhere = {
+      ...finalWhere,
+      AND: [
+        ...(finalWhere.AND || []),
+        ...Object.entries(options.filter).map(([key, value]) => ({
+          [key]: value,
+        })),
+      ],
+    };
   }
 
-  // Sorting
-  const orderBy = options.sort
-    ? {
-        [options.sort.field]: options.sort.direction,
-      }
-    : undefined;
-
   const [total, data] = await Promise.all([
-    model.count({ where }),
-    model.findMany({
-      where,
+    (model as any).count({
+      where: finalWhere,
+    }),
+    (model as any).findMany({
+      where: finalWhere,
       skip,
       take: limit,
-      orderBy,
-
-      ...(selectFields?.length
-        ? {
-            select: {
-              ...selectFields.map((field) => ({ [field]: true })),
-            },
-          }
-        : {}),
+      orderBy: options.sort
+        ? { [options.sort.field]: options.sort.direction }
+        : undefined,
+      ...selection,
     }),
   ]);
 
   const totalPages = Math.ceil(total / limit);
 
   return {
-    data: data as T[],
+    data,
     meta: {
       total,
       currentPage: page,

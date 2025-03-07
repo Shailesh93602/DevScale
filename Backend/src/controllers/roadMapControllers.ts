@@ -1,31 +1,68 @@
 import { Request, Response } from 'express';
 import prisma from '../prisma';
 import { catchAsync } from '../utils/index';
+import { paginate } from '../utils/pagination';
+import { sendResponse } from '../utils/apiResponse';
 
 export const getAllRoadmaps = catchAsync(
   async (req: Request, res: Response) => {
-    const roadmaps = await prisma.roadmap.findMany({
-      include: {
-        main_concepts: {
-          select: {
-            main_concept: {
-              select: {
-                id: true,
-                name: true,
-                description: true,
-              },
+    const { type } = req.query;
+    const userId = req.user?.id;
+
+    const whereClause: {
+      where?: {
+        user_id?: string | { not: string };
+        user_roadmaps?: {
+          none?: { user_id: string };
+          some?: { user_id: string };
+        };
+      };
+    } = {};
+
+    if (userId) {
+      switch (type) {
+        case 'featured':
+          whereClause.where = {
+            user_id: { not: userId },
+            user_roadmaps: {
+              none: { user_id: userId },
             },
-          },
-          orderBy: {
-            created_at: 'asc',
+          };
+          break;
+        case 'my-roadmaps':
+          whereClause.where = {
+            user_id: userId,
+          };
+          break;
+        case 'enrolled':
+          whereClause.where = {
+            user_roadmaps: {
+              some: { user_id: userId },
+            },
+          };
+          break;
+      }
+    }
+
+    const roadmaps = await paginate({
+      req,
+      model: prisma.roadmap,
+      searchFields: ['title', 'description'],
+      whereClause: whereClause.where, // Pass only the where conditions
+      selection: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              username: true, // Changed from 'name' to 'username'
+              full_name: true, // Added full_name as an option
+            },
           },
         },
       },
-      orderBy: {
-        created_at: 'asc',
-      },
     });
-    res.status(200).json(roadmaps);
+
+    return sendResponse(res, 'ROADMAPS_FETCHED', { data: roadmaps });
   }
 );
 
@@ -66,10 +103,12 @@ export const getMainConceptsInRoadmap = catchAsync(
     });
 
     if (!roadmap) {
-      return res.status(404).json({ message: 'Roadmap not found' });
+      return sendResponse(res, 'ROADMAP_NOT_FOUND');
     }
 
-    res.status(200).json(roadmap.main_concepts);
+    return sendResponse(res, 'MAIN_CONCEPTS_FETCHED', {
+      data: roadmap.main_concepts,
+    });
   }
 );
 
@@ -157,4 +196,55 @@ export const deleteRoadMap = catchAsync(async (req: Request, res: Response) => {
   res
     .status(200)
     .json({ success: true, message: 'Roadmap deleted successfully' });
+});
+
+export const updateSubjectsOrder = catchAsync(
+  async (req: Request, res: Response) => {
+    // const { id } = req.params;
+    // const { subjectOrders } = req.body;
+
+    // TODO: implement logic to update the order
+    // await updateSubjectsOrder(id, subjectOrders);
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Subject order updated successfully',
+    });
+  }
+);
+
+export const enrollRoadMap = catchAsync(async (req: Request, res: Response) => {
+  // TODO: implement logic to use actual user id instead of supabase id
+  const userId = req.user.id;
+  const { roadmapId } = req.body;
+
+  if (!roadmapId) {
+    return sendResponse(res, 'INVALID_ROADMAP_ID');
+  }
+
+  const roadmap = await prisma.roadmap.findUnique({
+    where: { id: roadmapId },
+    include: {
+      user_roadmaps: {
+        where: { user_id: userId },
+      },
+    },
+  });
+
+  if (!roadmap) {
+    return sendResponse(res, 'ROADMAP_NOT_FOUND');
+  }
+
+  if (roadmap.user_roadmaps.some((ur) => ur.user_id === userId)) {
+    return sendResponse(res, 'ROADMAP_ALREADY_ENROLLED');
+  }
+
+  await prisma.userRoadmap.create({
+    data: {
+      user_id: userId,
+      roadmap_id: roadmapId,
+    },
+  });
+
+  return sendResponse(res, 'ROADMAP_ENROLLED');
 });

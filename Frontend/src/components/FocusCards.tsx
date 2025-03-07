@@ -17,6 +17,8 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { formatDistanceToNow } from 'date-fns';
+import { toast } from 'react-toastify';
+import { useAxiosPost } from '@/hooks/useAxios';
 
 interface FocusCardsProps {
   roadmaps: {
@@ -33,6 +35,22 @@ interface FocusCardsProps {
 }
 
 export const FocusCards: React.FC<FocusCardsProps> = ({ roadmaps }) => {
+  const [enrollInRoadmap] = useAxiosPost('/roadmaps/enroll');
+
+  // Enroll in roadmap
+  const enroll = async (roadmapId: string) => {
+    try {
+      const response = await enrollInRoadmap({ roadmapId });
+      if (response.success) {
+        toast.success('Enrolled in roadmap successfully');
+      } else {
+        toast.error('Error enrolling in roadmap');
+      }
+    } catch (error: unknown) {
+      toast.error('Error enrolling in roadmap');
+      console.error((error as { message: string }).message);
+    }
+  };
   return (
     <>
       {roadmaps?.map((roadmap) => (
@@ -124,6 +142,11 @@ export const FocusCards: React.FC<FocusCardsProps> = ({ roadmaps }) => {
               size="sm"
               className="hover:bg-primary/90 bg-primary"
               disabled={!roadmap?.id}
+              onClick={() => {
+                if (!roadmap?.isEnrolled) {
+                  enroll(roadmap?.id);
+                }
+              }}
             >
               {roadmap?.isEnrolled ? (
                 <>
