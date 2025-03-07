@@ -373,7 +373,6 @@ model Topic {
   challenges    Challenge[]
   user_progress UserProgress[]
   battles       Battle[]
-  user_roadmaps UserRoadmap[]
   study_groups  StudyGroup[]
   daily_topics  DailyTopic[]
   progress      Progress[]
@@ -590,15 +589,12 @@ model UserRoadmap {
   is_custom  Boolean  @default(false)
   user_id    String
   roadmap_id String
-  topic_id   String // Add this field
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   user       User     @relation(fields: [user_id], references: [id])
   roadmap    Roadmap  @relation(fields: [roadmap_id], references: [id])
-  topic      Topic    @relation(fields: [topic_id], references: [id]) // Add this relation
 
   @@unique([user_id, roadmap_id])
-  @@index([topic_id]) // Add this index
 }
 
 model Project {

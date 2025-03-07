@@ -41,3 +41,9 @@ export const updateSubjectsOrderValidation = Joi.object({
       'any.custom': 'Invalid subject order format',
     }),
 });
+
+export const enrollRoadmapValidation = Joi.object({
+  roadmapId: Joi.string().required().messages({
+    'any.required': 'Roadmap ID is required',
+  }),
+});
