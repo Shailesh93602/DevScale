@@ -21,7 +21,14 @@ type ResponseType =
   | 'PROGRESS_FETCHED'
   | 'USER_CREATED'
   | 'USER_UPDATED'
-  | 'USERNAME_CHECKED';
+  | 'USERNAME_CHECKED'
+  | 'INVALID_PAGE_NUMBER'
+  | 'ROADMAPS_FETCHED'
+  | 'MAIN_CONCEPTS_FETCHED'
+  | 'ROADMAP_NOT_FOUND'
+  | 'ROADMAP_ENROLLED'
+  | 'INVALID_ROADMAP_ID'
+  | 'ROADMAP_ALREADY_ENROLLED';
 
 interface ResponseConfig {
   status: number;
@@ -125,6 +132,41 @@ const RESPONSE_MESSAGES: Record<ResponseType, ResponseConfig> = {
     success: true,
     message: 'Username checked successfully',
   },
+  INVALID_PAGE_NUMBER: {
+    status: 400,
+    success: false,
+    message: 'Invalid page number',
+  },
+  ROADMAPS_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Roadmaps retrieved successfully',
+  },
+  MAIN_CONCEPTS_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Main concepts retrieved successfully',
+  },
+  ROADMAP_NOT_FOUND: {
+    status: 404,
+    success: false,
+    message: 'Roadmap not found',
+  },
+  ROADMAP_ENROLLED: {
+    status: 200,
+    success: true,
+    message: 'Roadmap enrolled successfully',
+  },
+  INVALID_ROADMAP_ID: {
+    status: 400,
+    success: false,
+    message: 'Invalid roadmap ID',
+  },
+  ROADMAP_ALREADY_ENROLLED: {
+    status: 200,
+    success: true,
+    message: 'Roadmap already enrolled',
+  },
 };
 
 export const sendResponse = (
@@ -159,7 +201,7 @@ export const sendError = (res: Response, error: Error) => {
   const statusCode = isAppError(error) ? error.statusCode : 500;
   const message = isAppError(error) ? error.message : 'Internal server error';
 
-  res.status(statusCode as number).json({
+  res.status(statusCode).json({
     status: statusCode,
     message,
     error: true,

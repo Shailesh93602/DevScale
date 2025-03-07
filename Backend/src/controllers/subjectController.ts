@@ -3,7 +3,7 @@ import { catchAsync } from '../utils/index';
 import { sendResponse } from '../utils/apiResponse';
 import { getTopicsBySubjectId } from '../services/topicService';
 import { paginate, parsePaginationQuery } from '../utils/pagination';
-import { Prisma, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -13,15 +13,14 @@ export const getAllSubjects = catchAsync(
 
     // Add your custom validations here if needed
     if (params.page < 1) {
-      return res.status(400).json({ error: 'Invalid page number' });
+      return sendResponse(res, 'INVALID_PAGE_NUMBER');
     }
 
     // Execute pagination
-    const subjects = await paginate<Prisma.SubjectDelegate>(
-      prisma.subject,
-      params,
-      ['title', 'description']
-    );
+    const subjects = await paginate<'subject'>(prisma.subject, params, [
+      'title',
+      'description',
+    ]);
     return sendResponse(res, 'SUBJECTS_FETCHED', { data: subjects });
   }
 );

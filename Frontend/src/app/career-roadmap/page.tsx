@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { FocusCards } from '@/components/FocusCards';
 import { toast } from 'react-toastify';
-import { useAxiosGet } from '@/hooks/useAxios';
+import { useAxiosGet, useAxiosPost } from '@/hooks/useAxios';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -28,9 +28,15 @@ interface IRoadmap {
 }
 
 interface PaginatedResponse {
-  roadmaps: IRoadmap[];
-  hasMore: boolean;
-  total: number;
+  data: IRoadmap[];
+  meta: {
+    total: number;
+    currentPage: number;
+    totalPages: number;
+    limit: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+  };
 }
 
 const ITEMS_PER_PAGE = 9;
@@ -105,12 +111,12 @@ const Roadmap = () => {
         });
 
         const response = await getRoadmaps({ params });
-        const newRoadmaps = response?.data?.roadmaps ?? [];
+        const newRoadmaps = response?.data?.data ?? [];
 
         setRoadmaps((prev) =>
           isNewSearch ? newRoadmaps : [...prev, ...newRoadmaps],
         );
-        setHasMore(response?.data?.hasMore ?? false);
+        setHasMore(response?.data?.meta?.hasNextPage ?? false);
       } catch (error: unknown) {
         toast.error('Error fetching roadmaps');
         console.error((error as { message: string }).message);
