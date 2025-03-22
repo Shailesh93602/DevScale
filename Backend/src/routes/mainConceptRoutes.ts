@@ -1,23 +1,23 @@
 import { Router } from 'express';
 import {
-  getAllMainConcepts,
-  getMainConceptById,
-  createMainConcept,
-  updateMainConcept,
-  deleteMainConcept,
-  getSubjectsInMainConcept,
+  getAllMainConceptsController,
+  getMainConceptByIdController,
+  createMainConceptController,
+  updateMainConceptController,
+  deleteMainConceptController,
+  getSubjectsInMainConceptController,
 } from '../controllers/mainConceptController';
 
 const router = Router();
 
 // Public routes
-router.get('/', getAllMainConcepts);
-router.get('/:id', getMainConceptById);
-router.get('/:id/subjects', getSubjectsInMainConcept);
+router.get('/', getAllMainConceptsController);
+router.get('/:id', getMainConceptByIdController);
+router.get('/:id/subjects', getSubjectsInMainConceptController);
 
 // Protected routes
-router.post('/', createMainConcept);
-router.put('/:id', updateMainConcept);
-router.delete('/:id', deleteMainConcept);
+router.post('/', createMainConceptController);
+router.put('/:id', updateMainConceptController);
+router.delete('/:id', deleteMainConceptController);
 
 export default router;

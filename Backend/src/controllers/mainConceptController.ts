@@ -1,31 +1,18 @@
 import { Request, Response } from 'express';
-import prisma from '../prisma';
 import { catchAsync } from '../utils/index';
 import { sendResponse } from '../utils/apiResponse';
+import {
+  getAllMainConcepts,
+  getMainConceptById,
+  createMainConcept,
+  updateMainConcept,
+  deleteMainConcept,
+} from '../services/mainConceptService';
 
 // Get all main concepts
-export const getAllMainConcepts = catchAsync(
+export const getAllMainConceptsController = catchAsync(
   async (req: Request, res: Response) => {
-    const mainConcepts = await prisma.mainConcept.findMany({
-      include: {
-        subjects: {
-          include: {
-            subject: {
-              select: {
-                title: true,
-                description: true,
-              },
-            },
-          },
-          orderBy: {
-            order: 'asc',
-          },
-        },
-      },
-      orderBy: {
-        order: 'asc',
-      },
-    });
+    const mainConcepts = await getAllMainConcepts();
 
     return sendResponse(res, 'MAIN_CONCEPTS_FETCHED', {
       data: mainConcepts,
@@ -34,28 +21,11 @@ export const getAllMainConcepts = catchAsync(
 );
 
 // Get a single main concept by ID
-export const getMainConceptById = catchAsync(
+export const getMainConceptByIdController = catchAsync(
   async (req: Request, res: Response) => {
     const { id } = req.params;
 
-    const mainConcept = await prisma.mainConcept.findUnique({
-      where: { id },
-      include: {
-        subjects: {
-          include: {
-            subject: {
-              select: {
-                title: true,
-                description: true,
-              },
-            },
-          },
-          orderBy: {
-            order: 'asc',
-          },
-        },
-      },
-    });
+    const mainConcept = await getMainConceptById(id);
 
     if (!mainConcept) {
       return sendResponse(res, 'MAIN_CONCEPT_NOT_FOUND', {
@@ -70,23 +40,22 @@ export const getMainConceptById = catchAsync(
 );
 
 // Create a new main concept
-export const createMainConcept = catchAsync(
+export const createMainConceptController = catchAsync(
   async (req: Request, res: Response) => {
-    const { name, description, order, roadmapId } = req.body;
+    const { name, description, order, roadmapId, subjectId } = req.body;
 
-    const mainConcept = await prisma.mainConcept.create({
-      data: {
-        name,
-        description,
-        order: order || 0,
-        roadmaps: {
-          connect: { id: roadmapId },
-        },
+    const mainConcept = await createMainConcept({
+      name,
+      description,
+      order: order || 0,
+      roadmaps: {
+        connect: { id: roadmapId },
       },
-      include: {
-        subjects: {
-          include: {
-            subject: true,
+      subjects: {
+        create: {
+          order: 1,
+          subject: {
+            connect: { id: subjectId },
           },
         },
       },
@@ -99,14 +68,12 @@ export const createMainConcept = catchAsync(
 );
 
 // Update a main concept
-export const updateMainConcept = catchAsync(
+export const updateMainConceptController = catchAsync(
   async (req: Request, res: Response) => {
     const { id } = req.params;
     const { name, description, order } = req.body;
 
-    const mainConcept = await prisma.mainConcept.findUnique({
-      where: { id },
-    });
+    const mainConcept = await getMainConceptById(id);
 
     if (!mainConcept) {
       return sendResponse(res, 'MAIN_CONCEPT_NOT_FOUND', {
@@ -114,20 +81,10 @@ export const updateMainConcept = catchAsync(
       });
     }
 
-    const updatedMainConcept = await prisma.mainConcept.update({
-      where: { id },
-      data: {
-        name,
-        description,
-        order: order || mainConcept.order,
-      },
-      include: {
-        subjects: {
-          include: {
-            subject: true,
-          },
-        },
-      },
+    const updatedMainConcept = await updateMainConcept(id, {
+      name,
+      description,
+      order: order || mainConcept.order,
     });
 
     return sendResponse(res, 'MAIN_CONCEPT_UPDATED', {
@@ -137,13 +94,11 @@ export const updateMainConcept = catchAsync(
 );
 
 // Delete a main concept
-export const deleteMainConcept = catchAsync(
+export const deleteMainConceptController = catchAsync(
   async (req: Request, res: Response) => {
     const { id } = req.params;
 
-    const mainConcept = await prisma.mainConcept.findUnique({
-      where: { id },
-    });
+    const mainConcept = await getMainConceptById(id);
 
     if (!mainConcept) {
       return sendResponse(res, 'MAIN_CONCEPT_NOT_FOUND', {
@@ -151,9 +106,7 @@ export const deleteMainConcept = catchAsync(
       });
     }
 
-    await prisma.mainConcept.delete({
-      where: { id },
-    });
+    await deleteMainConcept(id);
 
     return sendResponse(res, 'MAIN_CONCEPT_DELETED', {
       data: { id },
@@ -162,28 +115,11 @@ export const deleteMainConcept = catchAsync(
 );
 
 // Get subjects in a main concept
-export const getSubjectsInMainConcept = catchAsync(
+export const getSubjectsInMainConceptController = catchAsync(
   async (req: Request, res: Response) => {
     const { id } = req.params;
 
-    const mainConcept = await prisma.mainConcept.findUnique({
-      where: { id },
-      include: {
-        subjects: {
-          include: {
-            subject: {
-              select: {
-                title: true,
-                description: true,
-              },
-            },
-          },
-          orderBy: {
-            order: 'asc',
-          },
-        },
-      },
-    });
+    const mainConcept = await getMainConceptById(id);
 
     if (!mainConcept) {
       return sendResponse(res, 'MAIN_CONCEPT_NOT_FOUND', {

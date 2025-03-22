@@ -1,6 +1,7 @@
 {
   "tabnine.cloudHost": "",
   "cSpell.words": [
+    "axios",
     "cloudinary",
     "dbgenerated",
     "deque",
@@ -27,6 +28,7 @@
     "prefs",
     "reduxjs",
     "roadmaps",
+    "Shadcn",
     "stdc",
     "subproblems",
     "supabase",
