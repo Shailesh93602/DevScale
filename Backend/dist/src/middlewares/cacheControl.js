@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.clearCache = exports.cacheResponse = void 0;
 const cacheService_1 = require("../services/cacheService");
 const logger_1 = __importDefault(require("../utils/logger"));
+const apiResponse_1 = require("../utils/apiResponse");
 const cacheResponse = (options) => {
     return async (req, res, next) => {
         try {
@@ -20,15 +21,20 @@ const cacheResponse = (options) => {
             // Try to get from cache
             const cachedData = await (0, cacheService_1.getCache)(cacheKey);
             if (cachedData) {
-                return res.json(typeof cachedData === 'string' ? JSON.parse(cachedData) : cachedData);
+                return (0, apiResponse_1.sendResponse)(res, 'CACHE_HIT', {
+                    data: typeof cachedData === 'string'
+                        ? JSON.parse(cachedData)
+                        : cachedData,
+                });
             }
             // Store original send function
-            const originalSend = res.json;
             // Override send function to cache response
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             res.json = function (body) {
-                (0, cacheService_1.setCache)(cacheKey, JSON.stringify(body), { ttl: options.duration }).catch((error) => logger_1.default.error('Cache set failed:', error));
-                return originalSend.call(this, body);
+                (0, cacheService_1.setCache)(cacheKey, JSON.stringify(body), {
+                    ttl: options.duration,
+                }).catch((error) => logger_1.default.error('Cache set failed:', error));
+                return (0, apiResponse_1.sendResponse)(res, 'CACHE_SET', { data: body });
             };
             next();
         }
@@ -43,7 +49,7 @@ const clearCache = (pattern) => {
     return async (_req, _res, next) => {
         try {
             await (0, cacheService_1.deleteCache)(pattern);
-            next();
+            (0, apiResponse_1.sendResponse)(_res, 'CACHE_CLEARED');
         }
         catch (error) {
             logger_1.default.error('Cache clear failed:', error);

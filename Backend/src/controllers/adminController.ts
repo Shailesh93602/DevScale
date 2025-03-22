@@ -23,12 +23,13 @@ import {
   reportConfigSchema,
 } from '../validations/adminValidations';
 import { catchAsync } from '../utils';
+import { sendResponse } from '../utils/apiResponse';
 
 // Dashboard Controllers
 export const getDashboardMetricsHandler = catchAsync(
   async (req: Request, res: Response) => {
     const metrics = await getDashboardMetrics();
-    res.json({ success: true, data: metrics });
+    sendResponse(res, 'METRICS_FETCHED', { data: metrics });
   }
 );
 
@@ -37,7 +38,7 @@ export const searchUsersController = catchAsync(
   async (req: Request, res: Response) => {
     validateRequest(userSearchSchema, 'query');
     const users = await searchUsers(req.query);
-    res.json({ success: true, data: users });
+    sendResponse(res, 'USERS_FETCHED', { data: users });
   }
 );
 
@@ -45,7 +46,7 @@ export const updateUserRoleController = catchAsync(
   async (req: Request, res: Response) => {
     const { userId, roleId } = req.body;
     const user = await updateUserRole(userId, roleId);
-    res.json({ success: true, data: user });
+    sendResponse(res, 'USER_ROLE_UPDATED', { data: user });
   }
 );
 
@@ -57,7 +58,7 @@ export const getPendingContentHandler = catchAsync(
       Number(req.query.page),
       Number(req.query.limit)
     );
-    res.json({ success: true, data: content });
+    sendResponse(res, 'PENDING_CONTENT_FETCHED', { data: content });
   }
 );
 
@@ -68,10 +69,10 @@ export const moderateContent = catchAsync(
       content_id,
       content_type,
       status,
-      moderator_id: req.user!.id,
+      moderator_id: req.user?.id,
       moderations,
     });
-    res.json({ success: true, data: result });
+    sendResponse(res, 'CONTENT_MODERATED', { data: result });
   }
 );
 
@@ -79,14 +80,14 @@ export const moderateContent = catchAsync(
 export const updateConfig = catchAsync(async (req: Request, res: Response) => {
   validateRequest(configUpdateSchema, req.body);
   const config = await setConfig(req.body);
-  res.json({ success: true, data: config });
+  sendResponse(res, 'CONFIG_UPDATED', { data: config });
 });
 
 export const getConfigsByCategory = catchAsync(
   async (req: Request, res: Response) => {
     const { category } = req.params;
     const configs = await getConfigsByCategoryService(category);
-    res.json({ success: true, data: configs });
+    sendResponse(res, 'CONFIGS_FETCHED', { data: configs });
   }
 );
 
@@ -96,7 +97,7 @@ export const allocateResources = catchAsync(
     validateRequest(resourceAllocationSchema, req.body);
     const { resourceType, resourceId, allocation } = req.body;
     await allocateResourcesService(resourceType, resourceId, allocation);
-    res.json({ success: true });
+    sendResponse(res, 'RESOURCES_ALLOCATED');
   }
 );
 
@@ -105,7 +106,7 @@ export const generateReport = catchAsync(
   async (req: Request, res: Response) => {
     validateRequest(reportConfigSchema, req.body);
     const report = await generateCustomReport(req.body);
-    res.json({ success: true, data: report });
+    sendResponse(res, 'REPORT_GENERATED', { data: report });
   }
 );
 
@@ -116,7 +117,7 @@ export const getAuditLogs = catchAsync(async (req: Request, res: Response) => {
     Number(req.query.page),
     Number(req.query.limit)
   );
-  res.json({ success: true, data: logs });
+  sendResponse(res, 'AUDIT_LOGS_FETCHED', { data: logs });
 });
 
 // Export all handlers

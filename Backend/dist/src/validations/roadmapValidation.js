@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateSubjectsOrderValidation = exports.createRoadmapValidation = void 0;
+exports.enrollRoadmapValidation = exports.updateSubjectsOrderValidation = exports.createRoadmapValidation = void 0;
 const joi_1 = __importDefault(require("joi"));
 exports.createRoadmapValidation = joi_1.default.object({
     title: joi_1.default.string().required().messages({
@@ -40,6 +40,11 @@ exports.updateSubjectsOrderValidation = joi_1.default.object({
     })
         .messages({
         'any.custom': 'Invalid subject order format',
+    }),
+});
+exports.enrollRoadmapValidation = joi_1.default.object({
+    roadmapId: joi_1.default.string().required().messages({
+        'any.required': 'Roadmap ID is required',
     }),
 });
 //# sourceMappingURL=roadmapValidation.js.map

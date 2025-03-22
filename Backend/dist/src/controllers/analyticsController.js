@@ -4,21 +4,22 @@ exports.generateReportController = exports.getPlatformAnalyticsController = expo
 const errorHandler_1 = require("./../utils/errorHandler");
 const utils_1 = require("../utils");
 const analyticsService_1 = require("../services/analyticsService");
+const apiResponse_1 = require("../utils/apiResponse");
 exports.getUserAnalyticsController = (0, utils_1.catchAsync)(async (req, res) => {
     const userId = req.params.userId;
     const analyticsData = await (0, analyticsService_1.getUserAnalytics)(userId);
-    res.json(analyticsData);
+    (0, apiResponse_1.sendResponse)(res, 'USER_ANALYTICS_FETCHED', { data: analyticsData });
 });
 exports.getCurrentUserAnalyticsController = (0, utils_1.catchAsync)(async (req, res) => {
     const userId = req.user.id;
     const analyticsData = await (0, analyticsService_1.getUserAnalytics)(userId);
-    res.json(analyticsData);
+    (0, apiResponse_1.sendResponse)(res, 'USER_ANALYTICS_FETCHED', { data: analyticsData });
 });
 const getPlatformAnalyticsController = async (req, res) => {
     try {
         const { startDate, endDate } = validateDateRange(req.query.startDate?.toString(), req.query.endDate?.toString());
         const analytics = await (0, analyticsService_1.getPlatformAnalytics)(startDate, endDate);
-        res.json(analytics);
+        (0, apiResponse_1.sendResponse)(res, 'PLATFORM_ANALYTICS_FETCHED', { data: analytics });
     }
     catch (error) {
         (0, errorHandler_1.createAppError)(error, 500);
@@ -37,6 +38,6 @@ const validateDateRange = (start, end) => {
 };
 exports.generateReportController = (0, utils_1.catchAsync)(async (req, res) => {
     const reportData = await (0, analyticsService_1.generateReport)('user', req.params.userId);
-    res.json(reportData);
+    (0, apiResponse_1.sendResponse)(res, 'REPORT_FETCHED', { data: reportData });
 });
 //# sourceMappingURL=analyticsController.js.map

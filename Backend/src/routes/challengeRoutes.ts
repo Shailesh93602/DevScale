@@ -1,5 +1,12 @@
 import { Router } from 'express';
-import { ChallengeController } from '../controllers/challengeController';
+import {
+  getChallenges,
+  getChallengeLeaderboard,
+  getChallenge,
+  createNewChallenge,
+  submitChallengeAttempt,
+  updateExistingChallenge,
+} from '../controllers/challengeController';
 import { authMiddleware, authorizeRoles } from '../middlewares/authMiddleware';
 import { validateRequest } from '../middlewares/validateRequest';
 import {
@@ -12,29 +19,29 @@ const router = Router();
 router.use(authMiddleware);
 
 // Public routes
-router.get('/', ChallengeController.getAllChallenges);
-router.get('/leaderboard', ChallengeController.getLeaderboard);
-router.get('/:id', ChallengeController.getChallenge);
+router.get('/', getChallenges);
+router.get('/leaderboard', getChallengeLeaderboard);
+router.get('/:id', getChallenge);
 
 // Protected routes
 router.post(
   '/',
   authorizeRoles('admin', 'instructor'),
   validateRequest(createChallengeValidation),
-  ChallengeController.createChallenge
+  createNewChallenge
 );
 
 router.patch(
   '/:id',
   authorizeRoles('admin', 'instructor'),
   validateRequest(createChallengeValidation),
-  ChallengeController.updateChallenge
+  updateExistingChallenge
 );
 
 router.post(
   '/:challengeId/submit',
   validateRequest(submitChallengeValidation),
-  ChallengeController.submitChallenge
+  submitChallengeAttempt
 );
 
 export default router;

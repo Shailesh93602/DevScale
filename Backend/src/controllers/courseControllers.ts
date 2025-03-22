@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
+import { sendResponse } from '../utils/apiResponse';
 
 const prisma = new PrismaClient();
 
@@ -8,7 +9,7 @@ export const getCourses = catchAsync(async (req: Request, res: Response) => {
   const courses = await prisma.course.findMany({
     orderBy: { created_at: 'asc' },
   });
-  res.status(200).json({ success: true, courses });
+  return sendResponse(res, 'COURSES_FETCHED', { data: { courses } });
 });
 
 export const getCourse = catchAsync(async (req: Request, res: Response) => {
@@ -16,17 +17,16 @@ export const getCourse = catchAsync(async (req: Request, res: Response) => {
   const course = await prisma.course.findUnique({
     where: { id: courseId },
   });
+
   if (!course) {
-    return res
-      .status(404)
-      .json({ success: false, message: 'Course not found' });
+    return sendResponse(res, 'COURSE_NOT_FOUND');
   }
-  res.status(200).json({ success: true, course });
+
+  return sendResponse(res, 'COURSE_FETCHED', { data: { course } });
 });
 
 export const enrollCourse = catchAsync(async (req: Request, res: Response) => {
   // TODO: implement this method
-
   // const courseId = req.params.id;
   // const userId = req.user.id;
 
@@ -35,16 +35,12 @@ export const enrollCourse = catchAsync(async (req: Request, res: Response) => {
   // });
 
   // if (enrollment) {
-  //   return res
-  //     .status(400)
-  //     .json({ success: false, message: 'Already enrolled in this course' });
+  //   return sendResponse(res, 'COURSE_ALREADY_ENROLLED');
   // }
 
   // await prisma.enrollment.create({
   //   data: { userId, courseId },
   // });
 
-  res
-    .status(201)
-    .json({ success: true, message: 'Enrolled in course successfully!' });
+  return sendResponse(res, 'COURSE_ENROLLED');
 });

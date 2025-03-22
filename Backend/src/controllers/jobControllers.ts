@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
+import { sendResponse } from '../utils/apiResponse';
 
 const prisma = new PrismaClient();
 
@@ -8,7 +9,7 @@ export const getJobs = catchAsync(async (req: Request, res: Response) => {
   const jobs = await prisma.job.findMany({
     orderBy: { created_at: 'asc' },
   });
-  res.status(200).json({ success: true, jobs });
+  return sendResponse(res, 'JOBS_FETCHED', { data: { jobs } });
 });
 
 export const getJob = catchAsync(async (req: Request, res: Response) => {
@@ -16,22 +17,26 @@ export const getJob = catchAsync(async (req: Request, res: Response) => {
   const job = await prisma.job.findUnique({
     where: { id: jobId },
   });
+
   if (!job) {
-    return res.status(404).json({ success: false, message: 'Job not found' });
+    return sendResponse(res, 'JOB_NOT_FOUND');
   }
-  res.status(200).json({ success: true, job });
+
+  return sendResponse(res, 'JOB_FETCHED', { data: { job } });
 });
 
 export const createJob = catchAsync(async (req: Request, res: Response) => {
   const { title, description, company, location } = req.body;
+
   if (!title || !description || !company || !location) {
-    return res.status(400).json({ success: false, message: 'Invalid payload' });
+    return sendResponse(res, 'INVALID_PAYLOAD');
   }
 
-  await prisma.job.create({
+  const job = await prisma.job.create({
     data: { title, description, company, location },
   });
-  res.status(201).json({ success: true, message: 'Job created successfully!' });
+
+  return sendResponse(res, 'JOB_CREATED', { data: { job } });
 });
 
 export const updateJob = catchAsync(async (req: Request, res: Response) => {
@@ -39,17 +44,19 @@ export const updateJob = catchAsync(async (req: Request, res: Response) => {
   const { title, description, company, location } = req.body;
 
   if (!title || !description || !company || !location) {
-    return res.status(400).json({ success: false, message: 'Invalid payload' });
+    return sendResponse(res, 'INVALID_PAYLOAD');
   }
 
   const updatedJob = await prisma.job.update({
     where: { id: jobId },
     data: { title, description, company, location },
   });
+
   if (!updatedJob) {
-    return res.status(404).json({ success: false, message: 'Job not found' });
+    return sendResponse(res, 'JOB_NOT_FOUND');
   }
-  res.status(200).json({ success: true, message: 'Job updated successfully!' });
+
+  return sendResponse(res, 'JOB_UPDATED', { data: { job: updatedJob } });
 });
 
 export const deleteJob = catchAsync(async (req: Request, res: Response) => {
@@ -57,8 +64,10 @@ export const deleteJob = catchAsync(async (req: Request, res: Response) => {
   const deletedJob = await prisma.job.delete({
     where: { id: jobId },
   });
+
   if (!deletedJob) {
-    return res.status(404).json({ success: false, message: 'Job not found' });
+    return sendResponse(res, 'JOB_NOT_FOUND');
   }
-  res.status(200).json({ success: true, message: 'Job deleted successfully!' });
+
+  return sendResponse(res, 'JOB_DELETED');
 });
