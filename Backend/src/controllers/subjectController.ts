@@ -17,10 +17,7 @@ export const getAllSubjects = catchAsync(
     }
 
     // Execute pagination
-    const subjects = await paginate<'subject'>(prisma.subject, params, [
-      'title',
-      'description',
-    ]);
+    const subjects = await paginate<'subject'>({ req, model: prisma.subject });
     return sendResponse(res, 'SUBJECTS_FETCHED', { data: subjects });
   }
 );

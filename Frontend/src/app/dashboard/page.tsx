@@ -1,16 +1,78 @@
 'use client';
 import React, { useState } from 'react';
-import StatCard from '@/components/StatCard';
 import CourseCard from '@/components/CourseCard';
 import Section from '@/components/Section';
 import { useSelector } from 'react-redux';
 import ProgressWidget from '@/components/ProgressWidget';
+import { Clock, CheckCircle, Star, BookOpen } from 'lucide-react';
+
+interface EnrolledRoadmap {
+  id: string;
+  title: string;
+  author: string;
+  progress: number;
+  lastAccessed: string;
+  topics: number;
+  completed: number;
+}
+
+interface FeaturedRoadmap {
+  id: string;
+  title: string;
+  author: string;
+  enrollments: number;
+  rating: number;
+  topics: number;
+}
 
 export default function Dashboard() {
   const user = useSelector(
     (state: { user: { user: { username: string } } }) => state.user?.user,
   );
   const [username] = useState(user?.username);
+
+  // Sample data for enrolled roadmaps
+  const enrolledRoadmaps: EnrolledRoadmap[] = [{
+    id: '1',
+    title: 'Full Stack Web Development',
+    author: 'Tech Academy',
+    progress: 65,
+    lastAccessed: '2 days ago',
+    topics: 42,
+    completed: 27
+  }, {
+    id: '2',
+    title: 'Machine Learning Fundamentals',
+    author: 'AI Research Group',
+    progress: 30,
+    lastAccessed: 'Yesterday',
+    topics: 36,
+    completed: 11
+  }];
+
+  // Sample data for featured roadmaps
+  const featuredRoadmaps: FeaturedRoadmap[] = [{
+    id: '4',
+    title: 'Cybersecurity Essentials',
+    author: 'Security Pros',
+    enrollments: 2456,
+    rating: 4.8,
+    topics: 38
+  }, {
+    id: '5',
+    title: 'Data Science for Engineers',
+    author: 'Data Analysis Group',
+    enrollments: 1872,
+    rating: 4.7,
+    topics: 45
+  }];
+
+  // Calculate stats
+  const stats = {
+    enrolledCount: enrolledRoadmaps.length,
+    completedTopics: enrolledRoadmaps.reduce((sum, r) => sum + r.completed, 0),
+    averageProgress: Math.round(enrolledRoadmaps.reduce((sum, r) => sum + r.progress, 0) / enrolledRoadmaps.length)
+  };
 
   return (
     <div className="p-6">
@@ -31,58 +93,106 @@ export default function Dashboard() {
           </div>
         </header>
 
-        <div className="mb-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          <StatCard
-            title="Progress Overview"
-            content="You've completed 40% of your roadmap."
-            progress={40}
-            color="blue"
-          />
-          <StatCard
-            title="Upcoming Events"
-            content={
-              <ul>
-                <li>- JavaScript Quiz on June 10</li>
-                <li>- HTML Webinar on June 12</li>
-              </ul>
-            }
-            color="green"
-          />
-          <StatCard
-            title="Recent Achievements"
-            content={
-              <ul>
-                <li>- Completed &quot;JavaScript Basics&quot; course</li>
-                <li>- Scored 95% on &quot;HTML Quiz&quot;</li>
-              </ul>
-            }
-            color="blue"
-          />
+        {/* Progress Stats */}
+        <div className="mb-12 grid grid-cols-1 gap-8 md:grid-cols-3">
+          <div className="bg-blue-50 rounded-lg p-6">
+            <div className="text-blue-600 font-medium">Enrolled Roadmaps</div>
+            <div className="text-3xl font-bold mt-2">{stats.enrolledCount}</div>
+          </div>
+          <div className="bg-green-50 rounded-lg p-6">
+            <div className="text-green-600 font-medium">Topics Completed</div>
+            <div className="text-3xl font-bold mt-2">{stats.completedTopics}</div>
+          </div>
+          <div className="bg-purple-50 rounded-lg p-6">
+            <div className="text-purple-600 font-medium">Average Progress</div>
+            <div className="text-3xl font-bold mt-2">{stats.averageProgress}%</div>
+          </div>
         </div>
 
+        {/* Progress Widget */}
         <ProgressWidget
           initialData={{
-            chapters: 10,
+            chapters: enrolledRoadmaps.reduce((sum, r) => sum + r.topics, 0),
             items: 100,
-            completedChapters: 5,
+            completedChapters: enrolledRoadmaps.reduce((sum, r) => sum + r.completed, 0),
             completedItems: 25,
           }}
         />
 
-        <Section title="Continue Previous:">
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            <CourseCard
-              title="Dynamic Programming"
-              description="Detailed Explanation of"
-              thumbnail="/images/dp.jpeg"
-              chapters={6}
-              items={55}
-              completed={7}
-            />
+        {/* Enrolled Roadmaps */}
+        <Section title="Your Enrolled Roadmaps">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {enrolledRoadmaps.map((roadmap) => (
+              <div key={roadmap.id} className="border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition-colors">
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-800">{roadmap.title}</h3>
+                    <p className="text-sm text-gray-600">By {roadmap.author}</p>
+                  </div>
+                  <div className="flex items-center space-x-4 text-sm">
+                    <div className="flex items-center text-gray-500">
+                      <Clock className="w-4 h-4 mr-1" />
+                      <span>{roadmap.lastAccessed}</span>
+                    </div>
+                    <div className="flex items-center text-gray-500">
+                      <CheckCircle className="w-4 h-4 mr-1" />
+                      <span>{roadmap.completed}/{roadmap.topics} topics</span>
+                    </div>
+                  </div>
+                  <div className="w-full">
+                    <div className="flex items-center">
+                      <div className="flex-1 mr-2">
+                        <div className="h-2 bg-gray-200 rounded-full">
+                          <div
+                            className="h-2 bg-blue-600 rounded-full"
+                            style={{ width: `${roadmap.progress}%` }}
+                          />
+                        </div>
+                      </div>
+                      <div className="text-sm font-medium text-gray-700">
+                        {roadmap.progress}%
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </Section>
 
-        <Section title="Featured">
+        {/* Featured Roadmaps */}
+        <Section title="Featured Roadmaps">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {featuredRoadmaps.map((roadmap) => (
+              <div key={roadmap.id} className="border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition-colors">
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-800">{roadmap.title}</h3>
+                    <p className="text-sm text-gray-600">By {roadmap.author}</p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4 text-sm">
+                      <div className="flex items-center text-amber-500">
+                        <Star className="w-4 h-4 mr-1 fill-current" />
+                        <span>{roadmap.rating}</span>
+                      </div>
+                      <div className="flex items-center text-gray-500">
+                        <BookOpen className="w-4 h-4 mr-1" />
+                        <span>{roadmap.topics} topics</span>
+                      </div>
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      {roadmap.enrollments.toLocaleString()} enrolled
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        {/* Featured Courses */}
+        <Section title="Featured Courses">
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {courses.map((course) => (
               <CourseCard

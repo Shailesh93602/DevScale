@@ -98,12 +98,11 @@ export const insertUserRoadmap = catchAsync(
       });
     }
 
-    const { roadmap_id, topic_id } = req.body;
+    const { roadmap_id } = req.body;
     const userRoadmap = await prisma.userRoadmap.create({
       data: {
         user_id,
         roadmap_id,
-        topic_id,
       },
     });
 

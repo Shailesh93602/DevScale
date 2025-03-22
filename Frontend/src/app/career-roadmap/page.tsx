@@ -1,169 +1,184 @@
 'use client';
-import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { FocusCards } from '@/components/FocusCards';
-import { toast } from 'react-toastify';
-import { useAxiosGet, useAxiosPost } from '@/hooks/useAxios';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/input';
+
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
-import { Plus, Search } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import {
   Select,
-  SelectTrigger,
-  SelectValue,
   SelectContent,
   SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select';
-import { debounce } from '@/lib/utils';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Plus, Search } from 'lucide-react';
+import { useAxiosGet } from '@/hooks/useAxios';
+import { toast } from 'react-toastify';
+import { debounce } from 'lodash';
 import { useIntersection } from '@/hooks/useIntersection';
+import { CreateRoadmap } from './create-roadmap';
 
 interface IRoadmap {
   id: string;
   title: string;
-  description?: string;
-  enrolledCount?: number;
-  author?: string;
+  description: string;
+  author: string;
   isEnrolled?: boolean;
-  comments?: number;
+}
+
+interface RoadmapCategory {
+  id: string;
+  name: string;
 }
 
 interface PaginatedResponse {
   data: IRoadmap[];
   meta: {
-    total: number;
-    currentPage: number;
-    totalPages: number;
-    limit: number;
     hasNextPage: boolean;
-    hasPreviousPage: boolean;
   };
 }
 
-const ITEMS_PER_PAGE = 9;
+const ITEMS_PER_PAGE = 10;
 
-const TabContent = ({
-  roadmaps,
-  isLoading,
-  hasMore,
-  searchQuery,
-  loadMoreRef,
-}: {
-  roadmaps: IRoadmap[];
-  isLoading: boolean;
-  hasMore: boolean;
-  searchQuery: string;
-  loadMoreRef: React.RefObject<HTMLDivElement | null>;
-}) => {
+interface RoadmapCardProps {
+  roadmap: IRoadmap;
+}
+
+const RoadmapCard = ({ roadmap }: RoadmapCardProps) => {
   return (
-    <>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <FocusCards roadmaps={roadmaps} />
-      </div>
-
-      {/* Load more trigger */}
-      <div ref={loadMoreRef} className="mt-8 flex justify-center">
-        {isLoading && (
-          <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-primary" />
-        )}
-      </div>
-
-      {!isLoading && !hasMore && roadmaps.length > 0 && (
-        <p className="mt-8 text-center text-muted-foreground">
-          No more roadmaps to load
-        </p>
-      )}
-
-      {!isLoading && roadmaps.length === 0 && (
-        <div className="flex flex-col items-center justify-center rounded-xl border bg-card p-16">
-          <div className="text-lg text-muted-foreground">No roadmaps found</div>
-          <p className="text-sm text-muted-foreground/80">
-            {searchQuery
-              ? 'Try different search terms'
-              : 'Be the first to create a roadmap'}
-          </p>
+    <div
+      key={roadmap.id}
+      className="group relative overflow-hidden rounded-lg border bg-background p-6 shadow-sm transition-shadow hover:shadow-md"
+    >
+      <div className="flex justify-between">
+        <div>
+          <h3 className="font-semibold leading-none tracking-tight">
+            {roadmap.title}
+          </h3>
+          <p className="text-sm text-muted-foreground">{roadmap.description}</p>
         </div>
-      )}
-    </>
+      </div>
+    </div>
+  );
+};
+
+interface RoadmapGridProps {
+  roadmaps: IRoadmap[];
+}
+
+const RoadmapGrid = ({ roadmaps }: RoadmapGridProps) => {
+  return (
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {roadmaps.map((roadmap) => (
+        <RoadmapCard key={roadmap.id} roadmap={roadmap} />
+      ))}
+    </div>
   );
 };
 
 const Roadmap = () => {
-  const [roadmaps, setRoadmaps] = useState<IRoadmap[]>([]);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [categories, setCategories] = useState<RoadmapCategory[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState('featured');
-  const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [getRoadmaps] = useAxiosGet<PaginatedResponse>('/roadmaps');
+  const [hasMore, setHasMore] = useState(false);
+  const [roadmaps, setRoadmaps] = useState<IRoadmap[]>([]);
+  const [activeTab, setActiveTab] = useState('all');
+
+  const [getRoadmaps, { isLoading }] =
+    useAxiosGet<PaginatedResponse>('/roadmaps');
+  const [getCategories] = useAxiosGet<RoadmapCategory[]>(
+    '/roadMaps/categories',
+  );
 
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const isIntersecting = useIntersection(loadMoreRef);
 
-  const fetchRoadmaps = useCallback(
-    async (pageNumber: number, isNewSearch = false) => {
-      try {
-        setIsLoading(true);
-        const params = new URLSearchParams({
-          page: pageNumber.toString(),
-          limit: ITEMS_PER_PAGE.toString(),
-          search: searchQuery,
-          type: activeTab,
-        });
-
-        const response = await getRoadmaps({ params });
-        const newRoadmaps = response?.data?.data ?? [];
-
-        setRoadmaps((prev) =>
-          isNewSearch ? newRoadmaps : [...prev, ...newRoadmaps],
-        );
-        setHasMore(response?.data?.meta?.hasNextPage ?? false);
-      } catch (error: unknown) {
-        toast.error('Error fetching roadmaps');
-        console.error((error as { message: string }).message);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [searchQuery, activeTab, getRoadmaps],
-  );
-
-  // Debounced search handler
-  const debouncedSearch = useCallback(
-    debounce((query: string) => {
-      setPage(1);
-      setSearchQuery(query);
-      fetchRoadmaps(1, true);
-    }, 500),
-    [fetchRoadmaps],
-  );
-
-  // Handle search input
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const query = e.target.value;
-    setSearchQuery(query);
-    debouncedSearch(query);
-  };
-
-  // Handle tab change
-  const handleTabChange = (value: string) => {
-    setActiveTab(value);
-    setPage(1);
-    setRoadmaps([]);
-    fetchRoadmaps(1, true);
-  };
-
-  // Load more when scrolling to bottom
-  useEffect(() => {
-    if (isIntersecting && hasMore && !isLoading) {
-      setPage((prev) => prev + 1);
-      fetchRoadmaps(page + 1);
+  const fetchCategories = useCallback(async () => {
+    try {
+      const response = await getCategories();
+      setCategories(response?.data ?? []);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      toast.error('Failed to fetch categories');
     }
-  }, [isIntersecting, hasMore, isLoading, page, fetchRoadmaps]);
+  }, [getCategories]);
 
-  // Initial load
   useEffect(() => {
-    fetchRoadmaps(1, true);
-  }, [fetchRoadmaps]);
+    fetchCategories();
+  }, [fetchCategories]);
+
+  useEffect(() => {
+    if (isIntersecting && hasMore) {
+      setPage((prev) => prev + 1);
+    }
+  }, [isIntersecting, hasMore, activeTab]);
+
+  const handleSearch = debounce((value: string) => {
+    setSearchQuery(value);
+    setPage(1);
+    setRoadmaps([]); // Clear existing roadmaps when search changes
+  }, 500);
+
+  const handleCategoryChange = (value: string) => {
+    setSelectedCategory(value);
+    setPage(1);
+    setRoadmaps([]); // Clear existing roadmaps when category changes
+  };
+
+  const handleCreateSuccess = () => {
+    setPage(1);
+    setRoadmaps([]); // Clear existing roadmaps when new roadmap is created
+    fetchRoadmaps();
+  };
+
+  const fetchRoadmaps = useCallback(async () => {
+    try {
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: ITEMS_PER_PAGE.toString(),
+      });
+
+      if (searchQuery) {
+        params.append('search', searchQuery);
+      }
+
+      if (selectedCategory && selectedCategory !== 'all') {
+        params.append('category', selectedCategory);
+      }
+
+      const response = await getRoadmaps({ params });
+      const { data, meta } = response.data;
+
+      if (page === 1) {
+        setRoadmaps(data);
+      } else {
+        setRoadmaps((prev) => [...prev, ...data]);
+      }
+
+      setHasMore(meta.hasNextPage);
+    } catch (error) {
+      console.error('Error fetching roadmaps:', error);
+      toast.error('Failed to fetch roadmaps');
+    }
+  }, [page, searchQuery, selectedCategory, getRoadmaps]);
+
+  useEffect(() => {
+    if (activeTab === 'all') {
+      fetchRoadmaps();
+    }
+  }, [fetchRoadmaps, activeTab]);
+
+  const filteredRoadmaps = useMemo(() => {
+    if (activeTab === 'enrolled') {
+      return roadmaps.filter((roadmap) => roadmap.isEnrolled);
+    }
+    if (activeTab === 'created') {
+      return roadmaps.filter((roadmap) => roadmap.author === 'me');
+    }
+    return roadmaps;
+  }, [roadmaps, activeTab]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -193,23 +208,30 @@ const Roadmap = () => {
             <Input
               placeholder="Search roadmaps..."
               className="bg-gray-50/50 pl-10"
-              value={searchQuery}
-              onChange={handleSearch}
+              onChange={(e) => handleSearch(e.target.value)}
             />
           </div>
           <div className="flex w-full items-center gap-4 sm:w-auto">
-            <Select defaultValue="all">
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Category" />
+            <Select
+              value={selectedCategory}
+              onValueChange={handleCategoryChange}
+            >
+              <SelectTrigger className="w-full sm:w-[200px]">
+                <SelectValue placeholder="All Categories" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Categories</SelectItem>
-                <SelectItem value="frontend">Frontend</SelectItem>
-                <SelectItem value="backend">Backend</SelectItem>
-                <SelectItem value="fullstack">Full Stack</SelectItem>
+                {categories.map((category) => (
+                  <SelectItem key={category.id} value={category.id}>
+                    {category.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
-            <Button className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700">
+            <Button
+              className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700"
+              onClick={() => setIsCreateModalOpen(true)}
+            >
               <Plus size={16} /> Create Roadmap
             </Button>
           </div>
@@ -217,35 +239,57 @@ const Roadmap = () => {
 
         <div className="mt-8">
           <Tabs
-            defaultValue="featured"
+            defaultValue="all"
             className="space-y-8"
-            onValueChange={handleTabChange}
+            onValueChange={(value) => {
+              setActiveTab(value);
+              setPage(1);
+              if (value === 'all') {
+                setRoadmaps([]);
+                fetchRoadmaps();
+              }
+            }}
           >
             <TabsList className="inline-flex h-10 items-center justify-center rounded-lg bg-muted p-1">
-              <TabsTrigger value="featured" className="rounded-sm px-6">
-                Featured
-              </TabsTrigger>
-              <TabsTrigger value="my-roadmaps" className="rounded-sm px-6">
-                My Roadmaps
+              <TabsTrigger value="all" className="rounded-sm px-6">
+                All Roadmaps
               </TabsTrigger>
               <TabsTrigger value="enrolled" className="rounded-sm px-6">
                 Enrolled
               </TabsTrigger>
+              <TabsTrigger value="created" className="rounded-sm px-6">
+                Created by Me
+              </TabsTrigger>
             </TabsList>
 
-            {['featured', 'my-roadmaps', 'enrolled'].map((tab) => (
-              <TabsContent key={tab} value={tab}>
-                <TabContent
-                  roadmaps={roadmaps}
-                  isLoading={isLoading}
-                  hasMore={hasMore}
-                  searchQuery={searchQuery}
-                  loadMoreRef={loadMoreRef}
-                />
-              </TabsContent>
-            ))}
+            <TabsContent value="all" className="mt-6">
+              <RoadmapGrid roadmaps={filteredRoadmaps} />
+              {isLoading && (
+                <div className="mt-8 flex justify-center">
+                  <div className="h-8 w-8 animate-spin rounded-full border-4 border-purple-200 border-t-purple-600" />
+                </div>
+              )}
+              {hasMore && activeTab === 'all' && (
+                <div ref={loadMoreRef} className="h-4" />
+              )}
+            </TabsContent>
+
+            <TabsContent value="enrolled" className="mt-6">
+              <RoadmapGrid roadmaps={filteredRoadmaps} />
+            </TabsContent>
+
+            <TabsContent value="created" className="mt-6">
+              <RoadmapGrid roadmaps={filteredRoadmaps} />
+            </TabsContent>
           </Tabs>
         </div>
+
+        <CreateRoadmap
+          isOpen={isCreateModalOpen}
+          onClose={() => setIsCreateModalOpen(false)}
+          onSuccess={handleCreateSuccess}
+          categories={categories}
+        />
       </div>
     </div>
   );

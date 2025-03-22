@@ -470,7 +470,6 @@ class RoadmapService {
                 user: { connect: { id: data.user_id } },
                 roadmap: { connect: { id: data.roadmap_id } },
                 is_custom: data.is_custom ?? false,
-                topic: { connect: { id: data.topic_id } },
             },
             include: {
                 roadmap: {

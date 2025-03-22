@@ -14,15 +14,19 @@ import {
   deleteRoadMap,
   updateSubjectsOrder,
   enrollRoadMap,
+  getRoadmapCategories,
+  getMainConceptsInRoadmap,
 } from '../controllers/roadMapControllers';
 
 const router = Router();
 
 router.use(authMiddleware);
 
+router.get('/categories', getRoadmapCategories);
 // Public routes
 router.get('/', getAllRoadmaps);
 router.get('/:id', getRoadMap);
+router.get('/:id/main-concepts', getMainConceptsInRoadmap);
 
 // Protected routes
 router.post(
@@ -34,7 +38,7 @@ router.post(
 
 router.post('/enroll', validateRequest(enrollRoadmapValidation), enrollRoadMap);
 
-router.patch(
+router.put(
   '/:id',
   authorizeRoles('admin', 'instructor'),
   validateRequest(createRoadmapValidation),

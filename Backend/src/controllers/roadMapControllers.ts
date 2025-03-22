@@ -3,6 +3,36 @@ import prisma from '../prisma';
 import { catchAsync } from '../utils/index';
 import { paginate } from '../utils/pagination';
 import { sendResponse } from '../utils/apiResponse';
+import { Difficulty, Prisma } from '@prisma/client';
+
+interface RoadmapTopic {
+  topic_id: string;
+  order: number;
+}
+
+interface RoadmapSubject {
+  subject_id: string;
+  order: number;
+  topics: RoadmapTopic[];
+}
+
+interface RoadmapMainConcept {
+  main_concept_id: string;
+  order: number;
+  subjects: RoadmapSubject[];
+}
+
+interface CreateRoadmapBody {
+  title: string;
+  description: string;
+  categoryId: string;
+  difficulty: Difficulty;
+  estimatedHours: number;
+  isPublic: boolean;
+  version: string;
+  tags: string[];
+  mainConcepts: RoadmapMainConcept[];
+}
 
 export const getAllRoadmaps = catchAsync(
   async (req: Request, res: Response) => {
@@ -16,6 +46,7 @@ export const getAllRoadmaps = catchAsync(
           none?: { user_id: string };
           some?: { user_id: string };
         };
+        is_public?: boolean;
       };
     } = {};
 
@@ -27,6 +58,7 @@ export const getAllRoadmaps = catchAsync(
             user_roadmaps: {
               none: { user_id: userId },
             },
+            // is_public: true,
           };
           break;
         case 'my-roadmaps':
@@ -62,7 +94,9 @@ export const getAllRoadmaps = catchAsync(
       },
     });
 
-    return sendResponse(res, 'ROADMAPS_FETCHED', { data: roadmaps });
+    return sendResponse(res, 'ROADMAPS_FETCHED', {
+      data: roadmaps,
+    });
   }
 );
 
@@ -103,7 +137,9 @@ export const getMainConceptsInRoadmap = catchAsync(
     });
 
     if (!roadmap) {
-      return sendResponse(res, 'ROADMAP_NOT_FOUND');
+      return sendResponse(res, 'ROADMAP_NOT_FOUND', {
+        error: 'Roadmap not found',
+      });
     }
 
     return sendResponse(res, 'MAIN_CONCEPTS_FETCHED', {
@@ -119,12 +155,12 @@ export const getRoadMap = catchAsync(async (req: Request, res: Response) => {
   });
 
   if (!roadMap) {
-    return res
-      .status(404)
-      .json({ success: false, message: 'Roadmap not found' });
+    return sendResponse(res, 'ROADMAP_NOT_FOUND', {
+      error: 'Roadmap not found',
+    });
   }
 
-  res.status(200).json({ success: true, roadMap });
+  sendResponse(res, 'ROADMAP_FETCHED', { data: { roadMap } });
 });
 
 export const createRoadMap = catchAsync(async (req: Request, res: Response) => {
@@ -132,9 +168,8 @@ export const createRoadMap = catchAsync(async (req: Request, res: Response) => {
   const { title, description, content } = req.body;
 
   if (!title || !description || !content) {
-    return res.status(400).json({
-      success: false,
-      message: 'Title, description, and content are required',
+    return sendResponse(res, 'INVALID_PAYLOAD', {
+      error: 'Invalid payload',
     });
   }
 
@@ -147,7 +182,90 @@ export const createRoadMap = catchAsync(async (req: Request, res: Response) => {
     },
   });
 
-  res.status(201).json({ success: true, roadMap: newRoadMap });
+  sendResponse(res, 'ROADMAP_CREATED', { data: newRoadMap });
+});
+
+export const createRoadmap = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+  if (!userId) {
+    return sendResponse(res, 'UNAUTHORIZED', {
+      error: 'User not authenticated',
+    });
+  }
+
+  const {
+    title,
+    description,
+    categoryId,
+    difficulty,
+    estimatedHours,
+    isPublic,
+    version,
+    tags,
+    mainConcepts,
+  } = req.body as CreateRoadmapBody;
+
+  const createInput: Prisma.RoadmapCreateInput = {
+    title,
+    description,
+    category: categoryId ? { connect: { id: categoryId } } : undefined,
+    difficulty,
+    estimatedHours,
+    is_public: isPublic,
+    version,
+    tags: tags.join(','), // Convert array to comma-separated string
+    user: {
+      connect: { id: userId },
+    },
+    main_concepts: {
+      create: mainConcepts.map((concept, index) => ({
+        order: index,
+        main_concept: {
+          connect: { id: concept.main_concept_id },
+        },
+      })),
+    },
+    topics: {
+      create: mainConcepts.flatMap((concept, conceptIndex) =>
+        concept.subjects.flatMap((subject, subjectIndex) =>
+          subject.topics.map((topic, topicIndex) => ({
+            topic: {
+              connect: { id: topic.topic_id },
+            },
+            order: conceptIndex * 1000 + subjectIndex * 100 + topicIndex,
+          }))
+        )
+      ),
+    },
+  };
+
+  // Create the roadmap
+  const roadmap = await prisma.roadmap.create({
+    data: createInput,
+    include: {
+      user: {
+        select: {
+          id: true,
+          username: true,
+          full_name: true,
+        },
+      },
+      main_concepts: {
+        include: {
+          main_concept: true,
+        },
+      },
+      topics: {
+        include: {
+          topic: true,
+        },
+      },
+    },
+  });
+
+  return sendResponse(res, 'ROADMAP_CREATED', {
+    data: roadmap,
+  });
 });
 
 export const updateRoadMap = catchAsync(async (req: Request, res: Response) => {
@@ -159,9 +277,9 @@ export const updateRoadMap = catchAsync(async (req: Request, res: Response) => {
   });
 
   if (!roadMap) {
-    return res
-      .status(404)
-      .json({ success: false, message: 'Roadmap not found' });
+    return sendResponse(res, 'ROADMAP_NOT_FOUND', {
+      error: 'Roadmap not found',
+    });
   }
 
   const updatedRoadMap = await prisma.roadmap.update({
@@ -173,7 +291,9 @@ export const updateRoadMap = catchAsync(async (req: Request, res: Response) => {
     },
   });
 
-  res.status(200).json({ success: true, roadMap: updatedRoadMap });
+  return sendResponse(res, 'ROADMAP_UPDATED', {
+    data: updatedRoadMap,
+  });
 });
 
 export const deleteRoadMap = catchAsync(async (req: Request, res: Response) => {
@@ -184,42 +304,37 @@ export const deleteRoadMap = catchAsync(async (req: Request, res: Response) => {
   });
 
   if (!roadMap) {
-    return res
-      .status(404)
-      .json({ success: false, message: 'Roadmap not found' });
+    return sendResponse(res, 'ROADMAP_NOT_FOUND', {
+      error: 'Roadmap not found',
+    });
   }
 
   await prisma.roadmap.delete({
     where: { id: roadMapId },
   });
 
-  res
-    .status(200)
-    .json({ success: true, message: 'Roadmap deleted successfully' });
+  return sendResponse(res, 'ROADMAP_DELETED', {
+    data: { id: roadMapId },
+  });
 });
 
 export const updateSubjectsOrder = catchAsync(
   async (req: Request, res: Response) => {
-    // const { id } = req.params;
-    // const { subjectOrders } = req.body;
-
     // TODO: implement logic to update the order
-    // await updateSubjectsOrder(id, subjectOrders);
-
-    res.status(200).json({
-      status: 'success',
-      message: 'Subject order updated successfully',
+    return sendResponse(res, 'SUBJECT_ORDER_UPDATED', {
+      data: null,
     });
   }
 );
 
 export const enrollRoadMap = catchAsync(async (req: Request, res: Response) => {
-  // TODO: implement logic to use actual user id instead of supabase id
-  const userId = req.user.id;
+  const userId = req.user?.id;
   const { roadmapId } = req.body;
 
   if (!roadmapId) {
-    return sendResponse(res, 'INVALID_ROADMAP_ID');
+    return sendResponse(res, 'INVALID_ROADMAP_ID', {
+      error: 'Invalid roadmap ID',
+    });
   }
 
   const roadmap = await prisma.roadmap.findUnique({
@@ -232,11 +347,15 @@ export const enrollRoadMap = catchAsync(async (req: Request, res: Response) => {
   });
 
   if (!roadmap) {
-    return sendResponse(res, 'ROADMAP_NOT_FOUND');
+    return sendResponse(res, 'ROADMAP_NOT_FOUND', {
+      error: 'Roadmap not found',
+    });
   }
 
   if (roadmap.user_roadmaps.some((ur) => ur.user_id === userId)) {
-    return sendResponse(res, 'ROADMAP_ALREADY_ENROLLED');
+    return sendResponse(res, 'ROADMAP_ALREADY_ENROLLED', {
+      error: 'Already enrolled',
+    });
   }
 
   await prisma.userRoadmap.create({
@@ -246,5 +365,14 @@ export const enrollRoadMap = catchAsync(async (req: Request, res: Response) => {
     },
   });
 
-  return sendResponse(res, 'ROADMAP_ENROLLED');
+  return sendResponse(res, 'ROADMAP_ENROLLED', { data: null });
 });
+
+export const getRoadmapCategories = catchAsync(
+  async (req: Request, res: Response) => {
+    const categories = await prisma.roadmapCategory.findMany();
+    return sendResponse(res, 'ROADMAP_CATEGORIES_FETCHED', {
+      data: categories,
+    });
+  }
+);

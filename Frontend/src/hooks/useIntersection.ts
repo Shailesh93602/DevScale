@@ -1,23 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-export const useIntersection = (
-  element: React.RefObject<HTMLElement | null>,
-) => {
-  const [isIntersecting, setIsIntersecting] = useState(false);
+export function useIntersection(element: React.RefObject<Element | null>) {
+  const [isIntersecting, setIsIntersecting] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!element?.current) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsIntersecting(entry.isIntersecting);
+    });
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsIntersecting(entry.isIntersecting);
-      },
-      {
-        rootMargin: '100px',
-      },
-    );
-
-    observer.observe(element.current);
+    if (element.current) {
+      observer.observe(element.current);
+    }
 
     return () => {
       if (element.current) {
@@ -27,4 +20,4 @@ export const useIntersection = (
   }, [element]);
 
   return isIntersecting;
-};
+}

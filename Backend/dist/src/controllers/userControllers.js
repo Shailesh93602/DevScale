@@ -117,12 +117,11 @@ exports.insertUserRoadmap = (0, utils_1.catchAsync)(async (req, res) => {
             message: 'You already added a Roadmap, please remove existing Roadmap to add another Roadmap',
         });
     }
-    const { roadmap_id, topic_id } = req.body;
+    const { roadmap_id } = req.body;
     const userRoadmap = await prisma_1.default.userRoadmap.create({
         data: {
             user_id,
             roadmap_id,
-            topic_id,
         },
     });
     res.status(200).json({
