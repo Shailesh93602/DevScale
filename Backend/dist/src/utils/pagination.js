@@ -20,51 +20,56 @@ query) {
     };
 }
 // Modified paginate function signature
-async function paginate(model, options, searchFields, selectFields) {
+async function paginate({ req, model, options, searchFields, selection, whereClause = {}, }) {
+    if (!options) {
+        options = parsePaginationQuery(req.query);
+    }
     const page = options.page || 1;
     const limit = options.limit || 10;
     const skip = (page - 1) * limit;
-    const where = {};
+    let finalWhere = { ...whereClause };
     // Search functionality
     if (options.search && searchFields && searchFields.length > 0) {
-        where.OR = searchFields.map((field) => ({
+        const searchConditions = searchFields.map((field) => ({
             [field]: {
                 contains: options.search,
                 mode: 'insensitive',
             },
         }));
+        finalWhere = {
+            ...finalWhere,
+            OR: searchConditions,
+        };
     }
     // Filtering
     if (options.filter) {
-        where.AND = Object.keys(options.filter).map((key) => ({
-            [key]: options.filter?.[key],
-        }));
+        finalWhere = {
+            ...finalWhere,
+            AND: [
+                ...(finalWhere.AND || []),
+                ...Object.entries(options.filter).map(([key, value]) => ({
+                    [key]: value,
+                })),
+            ],
+        };
     }
-    // Sorting
-    const orderBy = options.sort
-        ? {
-            [options.sort.field]: options.sort.direction,
-        }
-        : undefined;
     const [total, data] = await Promise.all([
-        model.count({ where }),
+        model.count({
+            where: finalWhere,
+        }),
         model.findMany({
-            where,
+            where: finalWhere,
             skip,
             take: limit,
-            orderBy,
-            ...(selectFields?.length
-                ? {
-                    select: {
-                        ...selectFields.map((field) => ({ [field]: true })),
-                    },
-                }
-                : {}),
+            orderBy: options.sort
+                ? { [options.sort.field]: options.sort.direction }
+                : undefined,
+            ...selection,
         }),
     ]);
     const totalPages = Math.ceil(total / limit);
     return {
-        data: data,
+        data,
         meta: {
             total,
             currentPage: page,

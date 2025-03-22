@@ -4,6 +4,7 @@ exports.searchHelpArticles = exports.createHelpArticle = exports.voteFeatureRequ
 const supportService_1 = require("../services/supportService");
 const errorHandler_1 = require("../middlewares/errorHandler");
 const validateRequest_1 = require("../middlewares/validateRequest");
+const apiResponse_1 = require("../utils/apiResponse");
 const supportValidations_1 = require("../validations/supportValidations");
 const createTicket = async (req, res, next) => {
     try {
@@ -24,7 +25,7 @@ const updateTicketStatus = async (req, res, next) => {
         const { ticketId } = req.params;
         const { status } = req.body;
         const ticket = await supportService_1.SupportService.updateTicketStatus(ticketId, status, req.user.id);
-        res.json({ success: true, data: ticket });
+        (0, apiResponse_1.sendResponse)(res, 'TICKET_STATUS_UPDATED', { data: ticket });
     }
     catch (error) {
         next(error);
@@ -75,7 +76,7 @@ const voteFeatureRequest = async (req, res, next) => {
     try {
         const { requestId } = req.params;
         await supportService_1.SupportService.voteFeatureRequest(requestId, req.user.id);
-        res.json({ success: true });
+        (0, apiResponse_1.sendResponse)(res, 'FEATURE_REQUEST_VOTED');
     }
     catch (error) {
         next(error);
@@ -100,7 +101,7 @@ const searchHelpArticles = async (req, res, next) => {
             throw (0, errorHandler_1.createAppError)('Invalid query parameter', 400);
         }
         const articles = await supportService_1.SupportService.searchHelpArticles(query);
-        res.json({ success: true, data: articles });
+        (0, apiResponse_1.sendResponse)(res, 'HELP_ARTICLES_FETCHED', { data: articles });
     }
     catch (error) {
         next(error);

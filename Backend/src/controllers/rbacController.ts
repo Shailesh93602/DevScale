@@ -16,13 +16,14 @@ import {
   permissionSchema,
   roleAssignmentSchema,
 } from '../validations/rbacValidations';
+import { sendResponse } from '../utils/apiResponse';
 
 export class RBACController {
   static async createRole(req: Request, res: Response, next: NextFunction) {
     try {
       validateRequest(roleSchema, req.body);
       const role = await createRole(req.body);
-      res.status(201).json({ success: true, data: role });
+      sendResponse(res, 'ROLE_CREATED', { data: role });
     } catch (error) {
       next(error);
     }
@@ -33,7 +34,7 @@ export class RBACController {
       const { roleId } = req.params;
       validateRequest(roleSchema, req.body);
       const role = await updateRole(roleId, req.body);
-      res.json({ success: true, data: role });
+      sendResponse(res, 'ROLE_UPDATED', { data: role });
     } catch (error) {
       next(error);
     }
@@ -43,7 +44,7 @@ export class RBACController {
     try {
       const { roleId } = req.params;
       await deleteRole(roleId);
-      res.json({ success: true, message: 'Role deleted successfully' });
+      sendResponse(res, 'ROLE_DELETED');
     } catch (error) {
       next(error);
     }
@@ -57,7 +58,7 @@ export class RBACController {
     try {
       const { roleId } = req.params;
       const hierarchy = await getRoleHierarchy(roleId);
-      res.json({ success: true, data: hierarchy });
+      sendResponse(res, 'ROLE_HIERARCHY_FETCHED', { data: hierarchy });
     } catch (error) {
       next(error);
     }
@@ -71,7 +72,7 @@ export class RBACController {
     try {
       validateRequest(permissionSchema, req.body);
       const permission = await createPermission(req.body);
-      res.status(201).json({ success: true, data: permission });
+      sendResponse(res, 'PERMISSION_CREATED', { data: permission });
     } catch (error) {
       next(error);
     }
@@ -86,7 +87,7 @@ export class RBACController {
       const { permissionId } = req.params;
       validateRequest(permissionSchema, req.body);
       const permission = await updatePermission(permissionId, req.body);
-      res.json({ success: true, data: permission });
+      sendResponse(res, 'PERMISSION_UPDATED', { data: permission });
     } catch (error) {
       next(error);
     }
@@ -100,7 +101,7 @@ export class RBACController {
     try {
       const { permissionId } = req.params;
       await deletePermission(permissionId);
-      res.json({ success: true, message: 'Permission deleted successfully' });
+      sendResponse(res, 'PERMISSION_DELETED');
     } catch (error) {
       next(error);
     }
@@ -115,7 +116,7 @@ export class RBACController {
       validateRequest(roleAssignmentSchema, req.body);
       const { userId, roleId } = req.body;
       const user = await assignRoleToUser(userId, roleId);
-      res.json({ success: true, data: user });
+      sendResponse(res, 'ROLE_ASSIGNED', { data: user });
     } catch (error) {
       next(error);
     }
@@ -136,7 +137,7 @@ export class RBACController {
         resource as string,
         action as string
       );
-      res.json({ success: true, data: { hasPermission } });
+      sendResponse(res, 'PERMISSION_CHECKED', { data: { hasPermission } });
     } catch (error) {
       next(error);
     }

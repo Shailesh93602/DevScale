@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { SupportService } from '../services/supportService';
 import { createAppError } from '../middlewares/errorHandler';
 import { validateRequest } from '../middlewares/validateRequest';
+import { sendResponse } from '../utils/apiResponse';
 import {
   ticketSchema,
   bugReportSchema,
@@ -39,7 +40,7 @@ export const updateTicketStatus = async (
       status,
       req.user!.id
     );
-    res.json({ success: true, data: ticket });
+    sendResponse(res, 'TICKET_STATUS_UPDATED', { data: ticket });
   } catch (error) {
     next(error);
   }
@@ -107,7 +108,7 @@ export const voteFeatureRequest = async (
   try {
     const { requestId } = req.params;
     await SupportService.voteFeatureRequest(requestId, req.user!.id);
-    res.json({ success: true });
+    sendResponse(res, 'FEATURE_REQUEST_VOTED');
   } catch (error) {
     next(error);
   }
@@ -138,7 +139,7 @@ export const searchHelpArticles = async (
       throw createAppError('Invalid query parameter', 400);
     }
     const articles = await SupportService.searchHelpArticles(query);
-    res.json({ success: true, data: articles });
+    sendResponse(res, 'HELP_ARTICLES_FETCHED', { data: articles });
   } catch (error) {
     next(error);
   }

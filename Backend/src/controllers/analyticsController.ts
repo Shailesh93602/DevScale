@@ -6,12 +6,13 @@ import {
   getPlatformAnalytics,
   generateReport,
 } from '../services/analyticsService';
+import { sendResponse } from '../utils/apiResponse';
 
 export const getUserAnalyticsController = catchAsync(
   async (req: Request, res: Response) => {
     const userId = req.params.userId;
     const analyticsData = await getUserAnalytics(userId);
-    res.json(analyticsData);
+    sendResponse(res, 'USER_ANALYTICS_FETCHED', { data: analyticsData });
   }
 );
 
@@ -19,7 +20,7 @@ export const getCurrentUserAnalyticsController = catchAsync(
   async (req: Request, res: Response) => {
     const userId = req.user.id;
     const analyticsData = await getUserAnalytics(userId);
-    res.json(analyticsData);
+    sendResponse(res, 'USER_ANALYTICS_FETCHED', { data: analyticsData });
   }
 );
 
@@ -34,7 +35,7 @@ export const getPlatformAnalyticsController: RequestHandler = async (
     );
 
     const analytics = await getPlatformAnalytics(startDate, endDate);
-    res.json(analytics);
+    sendResponse(res, 'PLATFORM_ANALYTICS_FETCHED', { data: analytics });
   } catch (error) {
     createAppError(error as string, 500);
   }
@@ -58,6 +59,6 @@ const validateDateRange = (start?: string, end?: string) => {
 export const generateReportController = catchAsync(
   async (req: Request, res: Response) => {
     const reportData = await generateReport('user', req.params.userId);
-    res.json(reportData);
+    sendResponse(res, 'REPORT_FETCHED', { data: reportData });
   }
 );

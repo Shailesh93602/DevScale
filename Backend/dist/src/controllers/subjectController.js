@@ -11,10 +11,10 @@ exports.getAllSubjects = (0, index_1.catchAsync)(async (req, res) => {
     const params = (0, pagination_1.parsePaginationQuery)(req.query);
     // Add your custom validations here if needed
     if (params.page < 1) {
-        return res.status(400).json({ error: 'Invalid page number' });
+        return (0, apiResponse_1.sendResponse)(res, 'INVALID_PAGE_NUMBER');
     }
     // Execute pagination
-    const subjects = await (0, pagination_1.paginate)(prisma.subject, params, ['title', 'description']);
+    const subjects = await (0, pagination_1.paginate)({ req, model: prisma.subject });
     return (0, apiResponse_1.sendResponse)(res, 'SUBJECTS_FETCHED', { data: subjects });
 });
 exports.getTopicsInSubject = (0, index_1.catchAsync)(async (req, res) => {

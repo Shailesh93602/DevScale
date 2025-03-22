@@ -2,6 +2,7 @@ import { config } from 'dotenv';
 import { PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
+import { sendResponse } from '../utils/apiResponse';
 
 config();
 
@@ -17,9 +18,5 @@ export const getAllUsers = catchAsync(async (req: Request, res: Response) => {
     orderBy: { created_at: 'asc' },
   });
 
-  res.status(200).json({
-    success: true,
-    message: 'Users retrieved successfully',
-    data: users,
-  });
+  return sendResponse(res, 'USERS_FETCHED', { data: { users } });
 });

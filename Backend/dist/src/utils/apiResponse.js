@@ -101,15 +101,834 @@ const RESPONSE_MESSAGES = {
         success: true,
         message: 'Username checked successfully',
     },
+    INVALID_PAGE_NUMBER: {
+        status: 400,
+        success: false,
+        message: 'Invalid page number',
+    },
+    ROADMAPS_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Roadmaps retrieved successfully',
+    },
+    MAIN_CONCEPTS_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Main concepts retrieved successfully',
+    },
+    ROADMAP_NOT_FOUND: {
+        status: 404,
+        success: false,
+        message: 'Roadmap not found',
+    },
+    ROADMAP_ENROLLED: {
+        status: 200,
+        success: true,
+        message: 'Roadmap enrolled successfully',
+    },
+    INVALID_ROADMAP_ID: {
+        status: 400,
+        success: false,
+        message: 'Invalid roadmap ID',
+    },
+    ROADMAP_ALREADY_ENROLLED: {
+        status: 200,
+        success: true,
+        message: 'Roadmap already enrolled',
+    },
+    USERS_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Users fetched successfully',
+    },
+    USER_ROLE_UPDATED: {
+        status: 200,
+        success: true,
+        message: 'User role updated successfully',
+    },
+    PENDING_CONTENT_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Pending content fetched successfully',
+    },
+    CONTENT_MODERATED: {
+        status: 200,
+        success: true,
+        message: 'Content moderated successfully',
+    },
+    CONFIG_UPDATED: {
+        status: 200,
+        success: true,
+        message: 'Configuration updated successfully',
+    },
+    CONFIGS_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Configurations fetched successfully',
+    },
+    RESOURCES_ALLOCATED: {
+        status: 200,
+        success: true,
+        message: 'Resources allocated successfully',
+    },
+    REPORT_GENERATED: {
+        status: 200,
+        success: true,
+        message: 'Report generated successfully',
+    },
+    AUDIT_LOGS_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Audit logs fetched successfully',
+    },
+    FORUMS_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Forums fetched successfully',
+    },
+    FORUM_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Forum fetched successfully',
+    },
+    FORUM_NOT_FOUND: {
+        status: 404,
+        success: false,
+        message: 'Forum not found',
+    },
+    INVALID_PAYLOAD: {
+        status: 400,
+        success: false,
+        message: 'Invalid payload provided',
+    },
+    FORUM_CREATED: {
+        status: 201,
+        success: true,
+        message: 'Forum created successfully',
+    },
+    FORUM_UPDATED: {
+        status: 200,
+        success: true,
+        message: 'Forum updated successfully',
+    },
+    FORUM_DELETED: {
+        status: 200,
+        success: true,
+        message: 'Forum deleted successfully',
+    },
+    COURSES_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Courses retrieved successfully',
+    },
+    COURSE_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Course retrieved successfully',
+    },
+    COURSE_NOT_FOUND: {
+        status: 404,
+        success: false,
+        message: 'Course not found',
+    },
+    COURSE_ENROLLED: {
+        status: 201,
+        success: true,
+        message: 'Enrolled in course successfully',
+    },
+    COURSE_ALREADY_ENROLLED: {
+        status: 400,
+        success: false,
+        message: 'Already enrolled in this course',
+    },
+    USER_NOT_FOUND: {
+        status: 404,
+        success: false,
+        message: 'User not found',
+    },
+    JOBS_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Jobs retrieved successfully',
+    },
+    JOB_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Job retrieved successfully',
+    },
+    JOB_NOT_FOUND: {
+        status: 404,
+        success: false,
+        message: 'Job not found',
+    },
+    JOB_CREATED: {
+        status: 201,
+        success: true,
+        message: 'Job created successfully',
+    },
+    JOB_UPDATED: {
+        status: 200,
+        success: true,
+        message: 'Job updated successfully',
+    },
+    JOB_DELETED: {
+        status: 200,
+        success: true,
+        message: 'Job deleted successfully',
+    },
+    CHALLENGES_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Challenges retrieved successfully',
+    },
+    CHALLENGE_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Challenge retrieved successfully',
+    },
+    CHALLENGE_NOT_FOUND: {
+        status: 404,
+        success: false,
+        message: 'Challenge not found',
+    },
+    CHALLENGE_CREATED: {
+        status: 201,
+        success: true,
+        message: 'Challenge created successfully',
+    },
+    CHALLENGE_UPDATED: {
+        status: 200,
+        success: true,
+        message: 'Challenge updated successfully',
+    },
+    CHALLENGE_SUBMITTED: {
+        status: 200,
+        success: true,
+        message: 'Challenge submitted successfully',
+    },
+    LEADERBOARD_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Leaderboard retrieved successfully',
+    },
+    ROADMAP_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Roadmap retrieved successfully',
+    },
+    ROADMAP_CREATED: {
+        status: 201,
+        success: true,
+        message: 'Roadmap created successfully',
+    },
+    SUBJECT_ORDER_UPDATED: {
+        status: 200,
+        success: true,
+        message: 'Subject order updated successfully',
+    },
+    ROADMAP_UPDATED: {
+        status: 200,
+        success: true,
+        message: 'Roadmap updated successfully',
+    },
+    METRICS_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Metrics fetched successfully',
+    },
+    ANALYTICS_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Analytics data retrieved successfully',
+    },
+    USER_ANALYTICS_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'User analytics retrieved successfully',
+    },
+    PLATFORM_ANALYTICS_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Platform analytics retrieved successfully',
+    },
+    REPORT_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Report data retrieved successfully',
+    },
+    ROLE_CREATED: {
+        status: 201,
+        success: true,
+        message: 'Role created successfully',
+    },
+    ROLE_UPDATED: {
+        status: 200,
+        success: true,
+        message: 'Role updated successfully',
+    },
+    ROLE_DELETED: {
+        status: 200,
+        success: true,
+        message: 'Role deleted successfully',
+    },
+    ROLE_HIERARCHY_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Role hierarchy fetched successfully',
+    },
+    PERMISSION_CREATED: {
+        status: 201,
+        success: true,
+        message: 'Permission created successfully',
+    },
+    PERMISSION_UPDATED: {
+        status: 200,
+        success: true,
+        message: 'Permission updated successfully',
+    },
+    PERMISSION_DELETED: {
+        status: 200,
+        success: true,
+        message: 'Permission deleted successfully',
+    },
+    ROLE_ASSIGNED: {
+        status: 200,
+        success: true,
+        message: 'Role assigned successfully',
+    },
+    PERMISSION_CHECKED: {
+        status: 200,
+        success: true,
+        message: 'Permission checked successfully',
+    },
+    TICKET_STATUS_UPDATED: {
+        status: 200,
+        success: true,
+        message: 'Ticket status updated successfully',
+    },
+    FEATURE_REQUEST_VOTED: {
+        status: 200,
+        success: true,
+        message: 'Feature request voted successfully',
+    },
+    HELP_ARTICLES_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Help articles fetched successfully',
+    },
+    CACHE_HIT: {
+        status: 200,
+        success: true,
+        message: 'Cache hit: Data retrieved from cache',
+    },
+    CACHE_SET: {
+        status: 200,
+        success: true,
+        message: 'Cache set: Data stored successfully',
+    },
+    CACHE_CLEARED: {
+        status: 200,
+        success: true,
+        message: 'Cache cleared successfully',
+    },
+    ROADMAP_CATEGORIES_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Roadmap categories fetched successfully',
+    },
+    UNAUTHORIZED: {
+        status: 401,
+        success: false,
+        message: 'Unauthorized',
+    },
+    ROADMAP_DELETED: {
+        status: 200,
+        success: true,
+        message: 'Roadmap deleted successfully',
+    },
+    MAIN_CONCEPT_CREATED: {
+        status: 201,
+        success: true,
+        message: 'Main concept created successfully',
+    },
+    MAIN_CONCEPT_UPDATED: {
+        status: 200,
+        success: true,
+        message: 'Main concept updated successfully',
+    },
+    MAIN_CONCEPT_DELETED: {
+        status: 200,
+        success: true,
+        message: 'Main concept deleted successfully',
+    },
+    MAIN_CONCEPT_NOT_FOUND: {
+        status: 404,
+        success: false,
+        message: 'Main concept not found',
+    },
+    MAIN_CONCEPT_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Main concept retrieved successfully',
+    },
+    ARTICLE_CREATED: {
+        status: 200,
+        success: true,
+        message: 'Article created successfully',
+    },
+    ARTICLE_UPDATED: {
+        status: 200,
+        success: true,
+        message: 'Article updated successfully',
+    },
+    ARTICLE_DELETED: {
+        status: 200,
+        success: true,
+        message: 'Article deleted successfully',
+    },
+    ARTICLE_LIKED: {
+        status: 200,
+        success: true,
+        message: 'Article liked successfully',
+    },
+    ARTICLE_UNLIKED: {
+        status: 200,
+        success: true,
+        message: 'Article unliked successfully',
+    },
+    ARTICLE_BOOKMARKED: {
+        status: 200,
+        success: true,
+        message: 'Article bookmarked successfully',
+    },
+    ARTICLE_UNBOOKMARKED: {
+        status: 200,
+        success: true,
+        message: 'Article unbookmarked successfully',
+    },
+    ARTICLE_COMMENTED: {
+        status: 200,
+        success: true,
+        message: 'Article commented successfully',
+    },
+    COMMENT_DELETED: {
+        status: 200,
+        success: true,
+        message: 'Comment deleted successfully',
+    },
+    COMMENT_UPDATED: {
+        status: 200,
+        success: true,
+        message: 'Comment updated successfully',
+    },
+    COMMENT_LIKED: {
+        status: 200,
+        success: true,
+        message: 'Comment liked successfully',
+    },
+    COMMENT_UNLIKED: {
+        status: 200,
+        success: true,
+        message: 'Comment unliked successfully',
+    },
+    COMMENT_REPLIED: {
+        status: 200,
+        success: true,
+        message: 'Comment replied successfully',
+    },
+    COMMENT_REPLY_DELETED: {
+        status: 200,
+        success: true,
+        message: 'Comment reply deleted successfully',
+    },
+    COMMENT_REPLY_UPDATED: {
+        status: 200,
+        success: true,
+        message: 'Comment reply updated successfully',
+    },
+    COMMENT_REPLY_LIKED: {
+        status: 200,
+        success: true,
+        message: 'Comment reply liked successfully',
+    },
+    COMMENT_REPLY_UNLIKED: {
+        status: 200,
+        success: true,
+        message: 'Comment reply unliked successfully',
+    },
+    USER_PROFILE_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'User profile retrieved successfully',
+    },
+    USER_PROFILE_UPDATED: {
+        status: 200,
+        success: true,
+        message: 'User profile updated successfully',
+    },
+    USER_ARTICLES_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'User articles retrieved successfully',
+    },
+    USER_BOOKMARKS_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'User bookmarks retrieved successfully',
+    },
+    USER_LIKES_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'User likes retrieved successfully',
+    },
+    USER_COMMENTS_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'User comments retrieved successfully',
+    },
+    USER_REPLIES_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'User replies retrieved successfully',
+    },
+    USER_NOTIFICATIONS_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'User notifications retrieved successfully',
+    },
+    USER_NOTIFICATION_READ: {
+        status: 200,
+        success: true,
+        message: 'User notification read successfully',
+    },
+    USER_NOTIFICATION_DELETED: {
+        status: 200,
+        success: true,
+        message: 'User notification deleted successfully',
+    },
+    USER_NOTIFICATION_CLEARED: {
+        status: 200,
+        success: true,
+        message: 'User notifications cleared successfully',
+    },
+    USER_SETTINGS_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'User settings retrieved successfully',
+    },
+    USER_SETTINGS_UPDATED: {
+        status: 200,
+        success: true,
+        message: 'User settings updated successfully',
+    },
+    USER_PASSWORD_UPDATED: {
+        status: 200,
+        success: true,
+        message: 'User password updated successfully',
+    },
+    USER_EMAIL_UPDATED: {
+        status: 200,
+        success: true,
+        message: 'User email updated successfully',
+    },
+    USER_DELETED: {
+        status: 200,
+        success: true,
+        message: 'User deleted successfully',
+    },
+    USER_LOGGED_OUT: {
+        status: 200,
+        success: true,
+        message: 'User logged out successfully',
+    },
+    USER_LOGGED_IN: {
+        status: 200,
+        success: true,
+        message: 'User logged in successfully',
+    },
+    USER_REGISTERED: {
+        status: 200,
+        success: true,
+        message: 'User registered successfully',
+    },
+    USER_VERIFIED: {
+        status: 200,
+        success: true,
+        message: 'User verified successfully',
+    },
+    USER_PASSWORD_RESET: {
+        status: 200,
+        success: true,
+        message: 'User password reset successfully',
+    },
+    USER_PASSWORD_RESET_REQUESTED: {
+        status: 200,
+        success: true,
+        message: 'User password reset requested successfully',
+    },
+    USER_EMAIL_VERIFICATION_SENT: {
+        status: 200,
+        success: true,
+        message: 'User email verification sent successfully',
+    },
+    USER_EMAIL_VERIFICATION_RESENT: {
+        status: 200,
+        success: true,
+        message: 'User email verification resent successfully',
+    },
+    USER_EMAIL_VERIFICATION_FAILED: {
+        status: 200,
+        success: true,
+        message: 'User email verification failed',
+    },
+    USER_PASSWORD_RESET_FAILED: {
+        status: 200,
+        success: true,
+        message: 'User password reset failed',
+    },
+    USER_LOGIN_FAILED: {
+        status: 200,
+        success: true,
+        message: 'User login failed',
+    },
+    USER_REGISTRATION_FAILED: {
+        status: 400,
+        success: false,
+        message: 'User registration failed',
+    },
+    USER_VERIFICATION_FAILED: {
+        status: 400,
+        success: false,
+        message: 'User verification failed',
+    },
+    INVALID_TOKEN: {
+        status: 400,
+        success: false,
+        message: 'Invalid token',
+    },
+    INVALID_CREDENTIALS: {
+        status: 400,
+        success: false,
+        message: 'Invalid credentials',
+    },
+    INVALID_EMAIL: {
+        status: 400,
+        success: false,
+        message: 'Invalid email',
+    },
+    INVALID_PASSWORD: {
+        status: 400,
+        success: false,
+        message: 'Invalid password',
+    },
+    INVALID_CODE: {
+        status: 400,
+        success: false,
+        message: 'Invalid code',
+    },
+    INVALID_REQUEST: {
+        status: 400,
+        success: false,
+        message: 'Invalid request',
+    },
+    INVALID_RESPONSE: {
+        status: 400,
+        success: false,
+        message: 'Invalid response',
+    },
+    INVALID_STATE: {
+        status: 400,
+        success: false,
+        message: 'Invalid state',
+    },
+    INVALID_STATUS: {
+        status: 400,
+        success: false,
+        message: 'Invalid status',
+    },
+    INVALID_TYPE: {
+        status: 400,
+        success: false,
+        message: 'Invalid type',
+    },
+    INVALID_VALUE: {
+        status: 400,
+        success: false,
+        message: 'Invalid value',
+    },
+    INVALID_VERSION: {
+        status: 400,
+        success: false,
+        message: 'Invalid version',
+    },
+    FORBIDDEN: {
+        status: 403,
+        success: false,
+        message: 'Forbidden',
+    },
+    NOT_FOUND: {
+        status: 404,
+        success: false,
+        message: 'Not found',
+    },
+    CONFLICT: {
+        status: 409,
+        success: false,
+        message: 'Conflict',
+    },
+    TOO_MANY_REQUESTS: {
+        status: 429,
+        success: false,
+        message: 'Too many requests',
+    },
+    INTERNAL_SERVER_ERROR: {
+        status: 500,
+        success: false,
+        message: 'Internal server error',
+    },
+    SERVICE_UNAVAILABLE: {
+        status: 503,
+        success: false,
+        message: 'Service unavailable',
+    },
+    GATEWAY_TIMEOUT: {
+        status: 504,
+        success: false,
+        message: 'Gateway timeout',
+    },
+    BAD_GATEWAY: {
+        status: 502,
+        success: false,
+        message: 'Bad gateway',
+    },
+    NETWORK_ERROR: {
+        status: 500,
+        success: false,
+        message: 'Network error',
+    },
+    TIMEOUT_ERROR: {
+        status: 500,
+        success: false,
+        message: 'Timeout error',
+    },
+    CONNECTION_ERROR: {
+        status: 500,
+        success: false,
+        message: 'Connection error',
+    },
+    REQUEST_ERROR: {
+        status: 500,
+        success: false,
+        message: 'Request error',
+    },
+    RESPONSE_ERROR: {
+        status: 500,
+        success: false,
+        message: 'Response error',
+    },
+    PARSE_ERROR: {
+        status: 500,
+        success: false,
+        message: 'Parse error',
+    },
+    ENCODE_ERROR: {
+        status: 500,
+        success: false,
+        message: 'Encode error',
+    },
+    DECODE_ERROR: {
+        status: 500,
+        success: false,
+        message: 'Decode error',
+    },
+    VALIDATION_ERROR: {
+        status: 500,
+        success: false,
+        message: 'Validation error',
+    },
+    AUTHENTICATION_ERROR: {
+        status: 401,
+        success: false,
+        message: 'Authentication error',
+    },
+    AUTHORIZATION_ERROR: {
+        status: 401,
+        success: false,
+        message: 'Authorization error',
+    },
+    PERMISSION_ERROR: {
+        status: 401,
+        success: false,
+        message: 'Permission error',
+    },
+    ACCESS_DENIED: {
+        status: 401,
+        success: false,
+        message: 'Access denied',
+    },
+    RATE_LIMIT_EXCEEDED: {
+        status: 429,
+        success: false,
+        message: 'Rate limit exceeded',
+    },
+    QUOTA_EXCEEDED: {
+        status: 403,
+        success: false,
+        message: 'Quota exceeded',
+    },
+    RESOURCE_EXHAUSTED: {
+        status: 403,
+        success: false,
+        message: 'Resource exhausted',
+    },
+    RESOURCE_NOT_FOUND: {
+        status: 404,
+        success: false,
+        message: 'Resource not found',
+    },
+    RESOURCE_EXISTS: {
+        status: 409,
+        success: false,
+        message: 'Resource exists',
+    },
+    RESOURCE_GONE: {
+        status: 410,
+        success: false,
+        message: 'Resource gone',
+    },
+    RESOURCE_EXPIRED: {
+        status: 410,
+        success: false,
+        message: 'Resource expired',
+    },
+    RESOURCE_LOCKED: {
+        status: 423,
+        success: false,
+        message: 'Resource locked',
+    },
+    RESOURCE_MOVED: {
+        status: 301,
+        success: false,
+        message: 'Resource moved',
+    },
+    RESOURCE_TEMPORARY_MOVED: {
+        status: 302,
+        success: false,
+        message: 'Resource temporarily moved',
+    },
+    RESOURCE_UNAVAILABLE: {
+        status: 503,
+        success: false,
+        message: 'Resource unavailable',
+    },
 };
-const sendResponse = (res, type, options) => {
+const sendResponse = (res, type, response = {}) => {
     const config = RESPONSE_MESSAGES[type];
     return res.status(config.status).json({
+        type,
         success: config.success,
         message: config.message,
-        data: options?.data || null,
-        error: options?.error || null,
-        meta: options?.meta || null,
+        ...response,
     });
 };
 exports.sendResponse = sendResponse;
