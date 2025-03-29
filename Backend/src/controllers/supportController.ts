@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
-import { SupportService } from '../services/supportService';
+import { Request, Response } from 'express';
+import SupportRepository from '../repositories/supportRepository';
 import { createAppError } from '../middlewares/errorHandler';
 import { validateRequest } from '../middlewares/validateRequest';
 import { sendResponse } from '../utils/apiResponse';
@@ -9,138 +9,91 @@ import {
   featureRequestSchema,
   helpArticleSchema,
 } from '../validations/supportValidations';
+import { catchAsync } from '@/utils';
 
-export const createTicket = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export default class SupportController {
+  private readonly supportRepo: SupportRepository;
+
+  constructor() {
+    this.supportRepo = new SupportRepository();
+  }
+
+  public createTicket = catchAsync(async (req: Request, res: Response) => {
     validateRequest(ticketSchema, req.body);
-    const ticket = await SupportService.createTicket({
+    const ticket = await this.supportRepo.createTicket({
       ...req.body,
-      userId: req.user!.id,
+      userId: req.user?.id,
     });
-    res.status(201).json({ success: true, data: ticket });
-  } catch (error) {
-    next(error);
-  }
-};
+    sendResponse(res, 'TICKET_CREATED', { data: ticket });
+  });
 
-export const updateTicketStatus = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const { ticketId } = req.params;
-    const { status } = req.body;
-    const ticket = await SupportService.updateTicketStatus(
-      ticketId,
-      status,
-      req.user!.id
-    );
-    sendResponse(res, 'TICKET_STATUS_UPDATED', { data: ticket });
-  } catch (error) {
-    next(error);
-  }
-};
+  public updateTicketStatus = catchAsync(
+    async (req: Request, res: Response) => {
+      const { ticketId } = req.params;
+      const { status } = req.body;
+      const ticket = await this.supportRepo.updateTicketStatus(
+        ticketId,
+        status,
+        req.user?.id
+      );
+      sendResponse(res, 'TICKET_STATUS_UPDATED', { data: ticket });
+    }
+  );
 
-export const addTicketResponse = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+  public addTicketResponse = catchAsync(async (req: Request, res: Response) => {
     const { ticketId } = req.params;
     const { content, isInternal } = req.body;
-    const response = await SupportService.addTicketResponse(
+    const response = await this.supportRepo.addTicketResponse(
       ticketId,
-      req.user!.id,
+      req.user?.id,
       content,
       isInternal
     );
-    res.status(201).json({ success: true, data: response });
-  } catch (error) {
-    next(error);
-  }
-};
+    sendResponse(res, 'TICKET_RESPONSE_ADDED', { data: response });
+  });
 
-export const createBugReport = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+  public createBugReport = catchAsync(async (req: Request, res: Response) => {
     validateRequest(bugReportSchema, req.body);
-    const report = await SupportService.createBugReport({
+    const report = await this.supportRepo.createBugReport({
       ...req.body,
-      userId: req.user!.id,
+      userId: req.user?.id,
     });
-    res.status(201).json({ success: true, data: report });
-  } catch (error) {
-    next(error);
-  }
-};
+    sendResponse(res, 'BUG_REPORT_CREATED', { data: report });
+  });
 
-export const createFeatureRequest = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    validateRequest(featureRequestSchema, req.body);
-    const request = await SupportService.createFeatureRequest({
-      ...req.body,
-      userId: req.user!.id,
-    });
-    res.status(201).json({ success: true, data: request });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const voteFeatureRequest = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const { requestId } = req.params;
-    await SupportService.voteFeatureRequest(requestId, req.user!.id);
-    sendResponse(res, 'FEATURE_REQUEST_VOTED');
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const createHelpArticle = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    validateRequest(helpArticleSchema, req.body);
-    const article = await SupportService.createHelpArticle(req.body);
-    res.status(201).json({ success: true, data: article });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const searchHelpArticles = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const { query } = req.query;
-    if (typeof query !== 'string') {
-      throw createAppError('Invalid query parameter', 400);
+  public createFeatureRequest = catchAsync(
+    async (req: Request, res: Response) => {
+      validateRequest(featureRequestSchema, req.body);
+      const request = await this.supportRepo.createFeatureRequest({
+        ...req.body,
+        userId: req.user?.id,
+      });
+      sendResponse(res, 'FEATURE_REQUEST_CREATED', { data: request });
     }
-    const articles = await SupportService.searchHelpArticles(query);
-    sendResponse(res, 'HELP_ARTICLES_FETCHED', { data: articles });
-  } catch (error) {
-    next(error);
-  }
-};
+  );
+
+  public voteFeatureRequest = catchAsync(
+    async (req: Request, res: Response) => {
+      const { requestId } = req.params;
+      await this.supportRepo.voteFeatureRequest(requestId, req.user?.id);
+      sendResponse(res, 'FEATURE_REQUEST_VOTED');
+    }
+  );
+
+  public createHelpArticle = catchAsync(async (req: Request, res: Response) => {
+    validateRequest(helpArticleSchema, req.body);
+    const article = await this.supportRepo.createHelpArticle(req.body);
+    sendResponse(res, 'HELP_ARTICLE_CREATED', { data: article });
+  });
+
+  public searchHelpArticles = catchAsync(
+    async (req: Request, res: Response) => {
+      const { query } = req.query;
+      if (typeof query !== 'string') {
+        throw createAppError('Invalid query parameter', 400);
+      }
+      const articles = await this.supportRepo.searchHelpArticles(query);
+      sendResponse(res, 'HELP_ARTICLES_FETCHED', { data: articles });
+    }
+  );
+}

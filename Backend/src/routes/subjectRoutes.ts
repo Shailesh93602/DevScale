@@ -1,12 +1,18 @@
-import express from 'express';
-import {
-  getAllSubjects,
-  getTopicsInSubject,
-} from '../controllers/subjectController.js';
+import { BaseRouter } from './BaseRouter';
+import SubjectController from '../controllers/subjectController';
+import { authMiddleware } from '../middlewares/authMiddleware';
 
-const router = express.Router();
+export class SubjectRoutes extends BaseRouter {
+  private readonly subjectController: SubjectController;
 
-router.get('/', getAllSubjects);
-router.get('/:id/topics', getTopicsInSubject);
+  constructor() {
+    super();
+    this.subjectController = new SubjectController();
+    this.router.use(authMiddleware);
+  }
 
-export default router;
+  protected initializeRoutes(): void {
+    this.router.get('/', this.subjectController.getAllSubjects);
+    this.router.get('/:id/topics', this.subjectController.getTopicsInSubject);
+  }
+}

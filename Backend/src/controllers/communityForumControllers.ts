@@ -1,86 +1,91 @@
-import { PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
 import { sendResponse } from '../utils/apiResponse';
+import { ForumRepository } from '@/repositories/forumRepository';
+export default class CommunityForumController {
+  private readonly forumRepo: ForumRepository;
 
-const prisma = new PrismaClient();
-
-export const getForums = catchAsync(async (req: Request, res: Response) => {
-  const forums = await prisma.forum.findMany({
-    orderBy: { created_at: 'asc' },
-  });
-  return sendResponse(res, 'FORUMS_FETCHED', { data: forums });
-});
-
-export const getForum = catchAsync(async (req: Request, res: Response) => {
-  const forumId = req.params.id;
-  const forum = await prisma.forum.findUnique({
-    where: { id: forumId },
-  });
-
-  if (!forum) {
-    return sendResponse(res, 'FORUM_NOT_FOUND');
+  constructor() {
+    this.forumRepo = new ForumRepository();
   }
 
-  return sendResponse(res, 'FORUM_FETCHED', { data: forum });
-});
-
-export const createForum = catchAsync(async (req: Request, res: Response) => {
-  const { title, description } = req.body;
-
-  if (!title || !description) {
-    return sendResponse(res, 'INVALID_PAYLOAD');
-  }
-
-  const forum = await prisma.forum.create({
-    data: {
-      title,
-      description,
-      created_by: req.user.id,
-    },
+  public getForums = catchAsync(async (req: Request, res: Response) => {
+    const forums = await this.forumRepo.findMany({
+      orderBy: { created_at: 'asc' },
+    });
+    return sendResponse(res, 'FORUMS_FETCHED', { data: forums });
   });
 
-  return sendResponse(res, 'FORUM_CREATED', { data: forum });
-});
+  public getForum = catchAsync(async (req: Request, res: Response) => {
+    const forumId = req.params.id;
+    const forum = await this.forumRepo.findUnique({
+      where: { id: forumId },
+    });
 
-export const updateForum = catchAsync(async (req: Request, res: Response) => {
-  const forumId = req.params.id;
-  const { title, description } = req.body;
+    if (!forum) {
+      return sendResponse(res, 'FORUM_NOT_FOUND');
+    }
 
-  if (!title || !description) {
-    return sendResponse(res, 'INVALID_PAYLOAD');
-  }
-
-  const forum = await prisma.forum.findUnique({
-    where: { id: forumId },
+    return sendResponse(res, 'FORUM_FETCHED', { data: forum });
   });
 
-  if (!forum) {
-    return sendResponse(res, 'FORUM_NOT_FOUND');
-  }
+  public createForum = catchAsync(async (req: Request, res: Response) => {
+    const { title, description } = req.body;
 
-  const updatedForum = await prisma.forum.update({
-    where: { id: forumId },
-    data: { title, description },
+    if (!title || !description) {
+      return sendResponse(res, 'INVALID_PAYLOAD');
+    }
+
+    const forum = await this.forumRepo.create({
+      data: {
+        title,
+        description,
+        created_by: req.user.id,
+      },
+    });
+
+    return sendResponse(res, 'FORUM_CREATED', { data: forum });
   });
 
-  return sendResponse(res, 'FORUM_UPDATED', { data: updatedForum });
-});
+  public updateForum = catchAsync(async (req: Request, res: Response) => {
+    const forumId = req.params.id;
+    const { title, description } = req.body;
 
-export const deleteForum = catchAsync(async (req: Request, res: Response) => {
-  const forumId = req.params.id;
+    if (!title || !description) {
+      return sendResponse(res, 'INVALID_PAYLOAD');
+    }
 
-  const forum = await prisma.forum.findUnique({
-    where: { id: forumId },
+    const forum = await this.forumRepo.findUnique({
+      where: { id: forumId },
+    });
+
+    if (!forum) {
+      return sendResponse(res, 'FORUM_NOT_FOUND');
+    }
+
+    const updatedForum = await this.forumRepo.update({
+      where: { id: forumId },
+      data: { title, description },
+    });
+
+    return sendResponse(res, 'FORUM_UPDATED', { data: updatedForum });
   });
 
-  if (!forum) {
-    return sendResponse(res, 'FORUM_NOT_FOUND');
-  }
+  public deleteForum = catchAsync(async (req: Request, res: Response) => {
+    const forumId = req.params.id;
 
-  await prisma.forum.delete({
-    where: { id: forumId },
+    const forum = await this.forumRepo.findUnique({
+      where: { id: forumId },
+    });
+
+    if (!forum) {
+      return sendResponse(res, 'FORUM_NOT_FOUND');
+    }
+
+    await this.forumRepo.delete({
+      where: { id: forumId },
+    });
+
+    return sendResponse(res, 'FORUM_DELETED');
   });
-
-  return sendResponse(res, 'FORUM_DELETED');
-});
+}

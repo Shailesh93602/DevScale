@@ -3,10 +3,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const subjectController_js_1 = require("../controllers/subjectController.js");
-const router = express_1.default.Router();
-router.get('/', subjectController_js_1.getAllSubjects);
-router.get('/:id/topics', subjectController_js_1.getTopicsInSubject);
-exports.default = router;
+exports.SubjectRoutes = void 0;
+const BaseRouter_1 = require("./BaseRouter");
+const subjectController_1 = __importDefault(require("../controllers/subjectController"));
+const authMiddleware_1 = require("../middlewares/authMiddleware");
+class SubjectRoutes extends BaseRouter_1.BaseRouter {
+    subjectController;
+    constructor() {
+        super();
+        this.subjectController = new subjectController_1.default();
+        this.router.use(authMiddleware_1.authMiddleware);
+    }
+    initializeRoutes() {
+        this.router.get('/', this.subjectController.getAllSubjects);
+        this.router.get('/:id/topics', this.subjectController.getTopicsInSubject);
+    }
+}
+exports.SubjectRoutes = SubjectRoutes;
 //# sourceMappingURL=subjectRoutes.js.map

@@ -1,204 +1,210 @@
-import { PrismaClient } from '@prisma/client';
+import { Prisma, Status } from '@prisma/client';
 import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
+import { sendResponse } from '../utils/apiResponse';
+import logger from '@/utils/logger';
+import { ArticleRepository } from '@/repositories/articleRepository';
 
-const prisma = new PrismaClient();
+export default class ArticleController {
+  private readonly articleRepository: ArticleRepository;
 
-export const getArticles = catchAsync(async (req: Request, res: Response) => {
-  const { status, search } = req.query as {
-    status: 'PENDING' | 'APPROVED' | 'REJECTED';
-    search?: string;
-  };
-
-  const whereCondition: {
-    status?: 'PENDING' | 'APPROVED' | 'REJECTED';
-    OR?: [
-      {
-        title: { contains: string; mode: 'insensitive' };
-      },
-      {
-        content: { contains: string; mode: 'insensitive' };
-      },
-    ];
-  } = {};
-
-  if (status) {
-    whereCondition.status = status;
+  constructor() {
+    this.articleRepository = new ArticleRepository();
   }
 
-  if (search) {
-    whereCondition.OR = [
-      { title: { contains: search, mode: 'insensitive' } },
-      { content: { contains: search, mode: 'insensitive' } },
-    ];
-  }
+  public getArticles = catchAsync(async (req: Request, res: Response) => {
+    try {
+      const { status, search } = req.query as {
+        status?: Status;
+        search?: string;
+      };
 
-  const articles = await prisma.article.findMany({
-    where: whereCondition,
-    include: {
-      author: {
-        select: { username: true },
-      },
-    },
-    orderBy: { created_at: 'desc' },
-  });
-
-  res.status(200).json({
-    success: true,
-    message: 'Articles fetched successfully',
-    articles,
-  });
-});
-
-export const updateArticleStatus = catchAsync(
-  async (req: Request, res: Response) => {
-    const { id, status } = req.query as {
-      id: string;
-      status: 'APPROVED' | 'REJECTED';
-    };
-
-    if (!['APPROVED', 'REJECTED'].includes(status)) {
-      return res.status(400).json({ error: 'Invalid status value' });
-    }
-
-    const article = await prisma.article.findUnique({
-      where: { id },
-    });
-
-    if (!article) {
-      return res.status(404).json({ error: 'Article not found' });
-    }
-
-    const updatedArticle = await prisma.article.update({
-      where: { id },
-      data: { status },
-    });
-
-    res
-      .status(200)
-      .json({ message: 'Article status updated successfully', updatedArticle });
-  }
-);
-
-export const updateArticleContent = catchAsync(
-  async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const { title, content } = req.body;
-
-    if (!title && !content) {
-      return res
-        .status(400)
-        .json({ error: 'Please provide title or content to update' });
-    }
-
-    const article = await prisma.article.findUnique({
-      where: { id },
-    });
-
-    if (!article) {
-      return res.status(404).json({ error: 'Article not found' });
-    }
-
-    const updatedArticle = await prisma.article.update({
-      where: { id },
-      data: { title, content },
-    });
-
-    res.status(200).json({
-      success: true,
-      message: 'Article content updated successfully',
-      updatedArticle,
-    });
-  }
-);
-
-export const getArticleById = catchAsync(
-  async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const article = await prisma.article.findUnique({
-      where: { id },
-      include: {
-        author: {
-          select: { username: true },
-        },
-      },
-    });
-
-    if (!article) {
-      return res
-        .status(404)
-        .json({ success: false, message: 'Article not found.' });
-    }
-
-    res.status(200).json({ success: true, article });
-  }
-);
-
-export const updateModerationNotes = catchAsync(
-  async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const { moderations } = req.body;
-
-    const article = await prisma.article.findUnique({
-      where: { id },
-    });
-
-    if (!article) {
-      return res.status(404).json({
-        success: false,
-        message: 'Article not found',
+      const articles = await this.articleRepository.getArticles({
+        status,
+        search,
+      });
+      sendResponse(res, 'ARTICLE_FETCHED', { data: articles });
+    } catch (error) {
+      logger.error('Failed to retrieve articles:', error);
+      sendResponse(res, 'ARTICLE_NOT_FOUND', {
+        error: 'Failed to retrieve articles',
       });
     }
-
-    const updatedArticle = await prisma.article.update({
-      where: { id },
-      data: { moderations },
-    });
-
-    res.status(200).json({
-      success: true,
-      message: 'Moderation notes updated successfully',
-      updatedArticle,
-    });
-  }
-);
-
-export const getMyArticles = catchAsync(async (req: Request, res: Response) => {
-  const userId = req.user?.id;
-
-  const articles = await prisma.article.findMany({
-    where: { author_id: userId },
-    select: { id: true, title: true, status: true },
-    orderBy: { created_at: 'desc' },
   });
 
-  res.status(200).json({
-    success: true,
-    message: 'Articles retrieved successfully',
-    articles,
-  });
-});
+  public updateArticleStatus = catchAsync(
+    async (req: Request, res: Response) => {
+      try {
+        const { id, status } = req.query as {
+          id: string;
+          status: Status;
+        };
 
-export const getArticleComments = catchAsync(
-  async (req: Request, res: Response) => {
-    const { id } = req.params;
+        if (!['APPROVED', 'REJECTED'].includes(status)) {
+          return sendResponse(res, 'ARTICLE_NOT_FOUND', {
+            error: 'Invalid status value. Please use APPROVED or REJECTED.',
+          });
+        }
 
-    const article = await prisma.article.findUnique({
-      where: { id },
-      select: { id: true, moderations: true },
-    });
+        const article = await this.articleRepository.getArticleById(id);
+        if (!article) {
+          return sendResponse(res, 'ARTICLE_NOT_FOUND', {
+            error: 'Article not found',
+          });
+        }
 
-    if (!article) {
-      return res.status(404).json({
-        success: false,
-        message: 'Article not found',
+        const updatedArticle = await this.articleRepository.updateArticle(id, {
+          status,
+        });
+        sendResponse(res, 'ARTICLE_UPDATED', { data: updatedArticle });
+      } catch (error) {
+        logger.error('Failed to update article status:', error);
+        sendResponse(res, 'ARTICLE_NOT_FOUND', {
+          error: 'Failed to update article status',
+        });
+      }
+    }
+  );
+
+  public updateArticleContent = catchAsync(
+    async (req: Request, res: Response) => {
+      try {
+        const { id } = req.params;
+        const { title, content } = req.body;
+
+        if (!title && !content) {
+          return sendResponse(res, 'ARTICLE_NOT_FOUND', {
+            error: 'Please provide either title or content to update.',
+          });
+        }
+
+        const article = await this.articleRepository.getArticleById(id);
+        if (!article) {
+          return sendResponse(res, 'ARTICLE_NOT_FOUND', {
+            error: 'Article not found',
+          });
+        }
+
+        const updatedArticle = await this.articleRepository.updateArticle(id, {
+          title,
+          content,
+        });
+        sendResponse(res, 'ARTICLE_UPDATED', { data: updatedArticle });
+      } catch (error) {
+        logger.error('Failed to update article content:', error);
+        sendResponse(res, 'ARTICLE_NOT_FOUND', {
+          error: 'Failed to update article content',
+        });
+      }
+    }
+  );
+
+  public getArticleById = catchAsync(async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const article = await this.articleRepository.getArticleById(id);
+      if (!article) {
+        return sendResponse(res, 'ARTICLE_NOT_FOUND', {
+          error: 'Article not found',
+        });
+      }
+      sendResponse(res, 'ARTICLE_FETCHED', { data: article });
+    } catch (error) {
+      logger.error('Failed to retrieve article:', error);
+      sendResponse(res, 'ARTICLE_NOT_FOUND', {
+        error: 'Failed to retrieve article',
       });
     }
+  });
 
-    res.status(200).json({
-      success: true,
-      message: 'Comments retrieved successfully',
-      comments: article.moderations,
-    });
-  }
-);
+  public updateModerationNotes = catchAsync(
+    async (req: Request, res: Response) => {
+      try {
+        const { id } = req.params;
+        const { notes, action } = req.body;
+        const moderator_id = req.user?.id;
+
+        if (!notes || !action) {
+          return sendResponse(res, 'ARTICLE_NOT_FOUND', {
+            error: 'Notes and action are required',
+          });
+        }
+
+        if (!moderator_id) {
+          return sendResponse(res, 'ARTICLE_NOT_FOUND', {
+            error: 'Moderator ID is required',
+          });
+        }
+
+        const article = await this.articleRepository.getArticleById(id);
+        if (!article) {
+          return sendResponse(res, 'ARTICLE_NOT_FOUND', {
+            error: 'Article not found',
+          });
+        }
+
+        const updatedArticle = await this.articleRepository.updateArticle(id, {
+          moderations: {
+            create: [
+              {
+                content_type: 'ARTICLE',
+                action,
+                notes,
+                moderator_id,
+              },
+            ],
+          },
+        });
+
+        sendResponse(res, 'ARTICLE_UPDATED', { data: updatedArticle });
+      } catch (error) {
+        logger.error('Failed to update moderation notes:', error);
+        sendResponse(res, 'ARTICLE_NOT_FOUND', {
+          error: 'Failed to update moderation notes',
+        });
+      }
+    }
+  );
+
+  public getMyArticles = catchAsync(async (req: Request, res: Response) => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        return sendResponse(res, 'ARTICLE_NOT_FOUND', {
+          error: 'User ID not found',
+        });
+      }
+      const articles = await this.articleRepository.getArticles({
+        author_id: userId,
+      });
+      sendResponse(res, 'ARTICLE_FETCHED', { data: articles });
+    } catch (error) {
+      logger.error('Failed to retrieve articles:', error);
+      sendResponse(res, 'ARTICLE_NOT_FOUND', {
+        error: 'Failed to retrieve articles',
+      });
+    }
+  });
+
+  public getArticleComments = catchAsync(
+    async (req: Request, res: Response) => {
+      try {
+        const { id } = req.params;
+        const article = (await this.articleRepository.getArticleById(
+          id
+        )) as Prisma.ArticleInclude;
+        if (!article) {
+          return sendResponse(res, 'ARTICLE_NOT_FOUND', {
+            error: 'Article not found',
+          });
+        }
+        sendResponse(res, 'ARTICLE_FETCHED', { data: article.moderations });
+      } catch (error) {
+        logger.error('Failed to retrieve article comments:', error);
+        sendResponse(res, 'ARTICLE_NOT_FOUND', {
+          error: 'Failed to retrieve article comments',
+        });
+      }
+    }
+  );
+}

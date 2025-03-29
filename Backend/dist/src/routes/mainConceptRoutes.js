@@ -1,15 +1,27 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
+exports.MainConceptRoutes = void 0;
+const BaseRouter_1 = require("./BaseRouter");
 const mainConceptController_1 = require("../controllers/mainConceptController");
-const router = (0, express_1.Router)();
-// Public routes
-router.get('/', mainConceptController_1.getAllMainConcepts);
-router.get('/:id', mainConceptController_1.getMainConceptById);
-router.get('/:id/subjects', mainConceptController_1.getSubjectsInMainConcept);
-// Protected routes
-router.post('/', mainConceptController_1.createMainConcept);
-router.put('/:id', mainConceptController_1.updateMainConcept);
-router.delete('/:id', mainConceptController_1.deleteMainConcept);
-exports.default = router;
+class MainConceptRoutes extends BaseRouter_1.BaseRouter {
+    mainConceptController;
+    constructor() {
+        super();
+        this.mainConceptController = new mainConceptController_1.MainConceptController();
+        this.initializeRoutes();
+    }
+    initializeRoutes() {
+        // Public routes
+        this.router.get('/', this.mainConceptController.getAllMainConcepts);
+        this.router.get('/:id', this.mainConceptController.getMainConceptById);
+        // Protected routes
+        this.router.post('/', this.mainConceptController.createMainConcept);
+        this.router.post('/with-subjects', this.mainConceptController.createMainConceptWithSubjects);
+        this.router.put('/:id', this.mainConceptController.updateMainConcept);
+        this.router.delete('/:id', this.mainConceptController.deleteMainConcept);
+    }
+}
+exports.MainConceptRoutes = MainConceptRoutes;
+// Create and export an instance of the routes
+exports.default = new MainConceptRoutes().getRouter();
 //# sourceMappingURL=mainConceptRoutes.js.map

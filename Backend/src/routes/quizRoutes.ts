@@ -1,8 +1,19 @@
-import express from 'express';
-import { createQuiz, submitQuiz } from '../controllers/quizController.js';
-const router = express.Router();
+import { BaseRouter } from './BaseRouter';
+import QuizController from '../controllers/quizController';
 
-router.post('/create', createQuiz);
-router.post('/submit', submitQuiz);
+export class QuizRouter extends BaseRouter {
+  private readonly quizController: QuizController;
 
-export default router;
+  constructor() {
+    super();
+    this.quizController = new QuizController();
+    this.initializeRoutes();
+  }
+
+  protected initializeRoutes(): void {
+    this.router.post('/create', this.quizController.createQuiz);
+    this.router.post('/submit', this.quizController.submitQuiz);
+  }
+}
+
+export default new QuizRouter().getRouter();

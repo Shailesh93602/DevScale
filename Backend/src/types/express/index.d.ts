@@ -14,5 +14,6 @@ declare module 'express-serve-static-core' {
     fileUrl?: string;
     file: File;
     apiVersion?: string;
+    timezone?: string;
   }
 }

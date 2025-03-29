@@ -1,4 +1,5 @@
-import { Router } from 'express';
+import { BaseRouter } from './BaseRouter';
+import RoadMapController from '../controllers/roadMapControllers';
 import { authMiddleware, authorizeRoles } from '../middlewares/authMiddleware';
 import { validateRequest } from '../middlewares/validateRequest';
 import {
@@ -6,52 +7,94 @@ import {
   enrollRoadmapValidation,
   updateSubjectsOrderValidation,
 } from '../validations/roadmapValidation';
-import {
-  getAllRoadmaps,
-  getRoadMap,
-  createRoadMap,
-  updateRoadMap,
-  deleteRoadMap,
-  updateSubjectsOrder,
-  enrollRoadMap,
-  getRoadmapCategories,
-  getMainConceptsInRoadmap,
-} from '../controllers/roadMapControllers';
+import { Request, Response, NextFunction, RequestHandler } from 'express';
 
-const router = Router();
+export class RoadMapRoutes extends BaseRouter {
+  private readonly roadMapController: RoadMapController;
 
-router.use(authMiddleware);
+  constructor() {
+    super();
+    this.roadMapController = new RoadMapController();
+  }
 
-router.get('/categories', getRoadmapCategories);
-// Public routes
-router.get('/', getAllRoadmaps);
-router.get('/:id', getRoadMap);
-router.get('/:id/main-concepts', getMainConceptsInRoadmap);
+  protected initializeRoutes(): void {
+    // Categories
+    this.router.get(
+      '/categories',
+      authMiddleware,
+      this.bindRoute(this.roadMapController.getRoadmapCategories)
+    );
 
-// Protected routes
-router.post(
-  '/',
-  authorizeRoles('admin', 'instructor'),
-  validateRequest(createRoadmapValidation),
-  createRoadMap
-);
+    // Public routes
+    this.router.get(
+      '/',
+      authMiddleware,
+      this.bindRoute(this.roadMapController.getAllRoadmaps)
+    );
 
-router.post('/enroll', validateRequest(enrollRoadmapValidation), enrollRoadMap);
+    this.router.get(
+      '/:id',
+      authMiddleware,
+      this.bindRoute(this.roadMapController.getRoadMap)
+    );
 
-router.put(
-  '/:id',
-  authorizeRoles('admin', 'instructor'),
-  validateRequest(createRoadmapValidation),
-  updateRoadMap
-);
+    this.router.get(
+      '/:id/main_concepts',
+      authMiddleware,
+      this.bindRoute(this.roadMapController.getMainConceptsInRoadmap)
+    );
 
-router.delete('/:id', authorizeRoles('admin'), deleteRoadMap);
+    // Protected routes
+    this.router.post(
+      '/',
+      authMiddleware,
+      // authorizeRoles('admin', 'instructor'),
+      validateRequest(createRoadmapValidation),
+      this.bindRoute(this.roadMapController.createRoadMap)
+    );
 
-router.patch(
-  '/:id/subjects-order',
-  authorizeRoles('admin', 'instructor'),
-  validateRequest(updateSubjectsOrderValidation),
-  updateSubjectsOrder
-);
+    this.router.post(
+      '/enroll',
+      authMiddleware,
+      validateRequest(enrollRoadmapValidation),
+      this.bindRoute(this.roadMapController.enrollRoadMap)
+    );
 
-export default router;
+    this.router.put(
+      '/:id',
+      authMiddleware,
+      // authorizeRoles('admin', 'instructor'),
+      validateRequest(createRoadmapValidation),
+      this.bindRoute(this.roadMapController.updateRoadMap)
+    );
+
+    this.router.delete(
+      '/:id',
+      authMiddleware,
+      authorizeRoles('admin'),
+      this.bindRoute(this.roadMapController.deleteRoadMap)
+    );
+
+    this.router.patch(
+      '/:id/subjects-order',
+      authMiddleware,
+      // authorizeRoles('admin', 'instructor'),
+      validateRequest(updateSubjectsOrderValidation),
+      this.bindRoute(this.roadMapController.updateSubjectsOrder)
+    );
+  }
+
+  private bindRoute(
+    routeHandler: (
+      req: Request,
+      res: Response,
+      next: NextFunction
+    ) => Promise<void> | void
+  ): RequestHandler {
+    return (req: Request, res: Response, next: NextFunction) => {
+      return routeHandler.call(this.roadMapController, req, res, next);
+    };
+  }
+}
+
+export default new RoadMapRoutes().getRouter();

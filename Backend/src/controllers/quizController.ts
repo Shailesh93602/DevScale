@@ -1,106 +1,123 @@
 import { Request, Response } from 'express';
-import prisma from '../prisma';
 import { catchAsync } from '../utils/index';
+import QuizRepository from '@/repositories/quizRepository';
+import QuizQuestionsRepository from '@/repositories/quizQuestionsRepository';
+import { Prisma } from '@prisma/client';
+import QuizAnswerRepository from '@/repositories/quizAnswerRepository';
+import QuizSubmissionRepository from '@/repositories/quizSubmissionRepository';
+import { sendResponse } from '@/utils/apiResponse';
+import { createAppError } from '@/utils/errorHandler';
 
-export const createQuiz = catchAsync(async (req: Request, res: Response) => {
-  const { topic_id, passing_score, questions, type } = req.body;
+export default class QuizController {
+  private readonly quizRepo: QuizRepository;
+  private readonly quizQuestionRepo: QuizQuestionsRepository;
+  private readonly quizAnswerRepo: QuizAnswerRepository;
+  private readonly quizSubmissionRepo: QuizSubmissionRepository;
 
-  const quiz = await prisma.quiz.create({
-    data: {
-      topic_id,
-      passing_score,
-      title: 'Quiz',
-      description: 'Quiz',
-      type,
-    },
-  });
-
-  if (questions && questions.length > 0) {
-    const quizQuestions = questions.map((question: { question: string }) => ({
-      quizId: quiz.id,
-      question: question.question,
-    }));
-
-    await prisma.quizQuestion.createMany({ data: quizQuestions });
+  constructor() {
+    this.quizRepo = new QuizRepository();
+    this.quizQuestionRepo = new QuizQuestionsRepository();
+    this.quizAnswerRepo = new QuizAnswerRepository();
+    this.quizSubmissionRepo = new QuizSubmissionRepository();
   }
 
-  res.status(201).json({
-    success: true,
-    message: 'Quiz created successfully',
-    quiz,
+  public createQuiz = catchAsync(async (req: Request, res: Response) => {
+    const { topic_id, passing_score, questions, type } = req.body;
+
+    const quiz = await this.quizRepo.create({
+      data: {
+        topic_id,
+        passing_score,
+        title: 'Quiz',
+        description: 'Quiz',
+        type,
+      },
+    });
+
+    if (questions && questions.length > 0) {
+      const quizQuestions = questions.map((question: { question: string }) => ({
+        quizId: quiz.id,
+        question: question.question,
+      }));
+
+      await this.quizQuestionRepo.createMany({ data: quizQuestions });
+    }
+
+    sendResponse(res, 'QUIZ_CREATED', {
+      data: {
+        quiz,
+      },
+    });
   });
-});
 
-export const submitQuiz = catchAsync(async (req: Request, res: Response) => {
-  const user_id = req.user?.id;
-  const { quiz_id, answers } = req.body;
+  public submitQuiz = catchAsync(async (req: Request, res: Response) => {
+    const user_id = req.user?.id;
+    const { quiz_id, answers } = req.body;
 
-  const quiz = await prisma.quiz.findUnique({
-    where: { id: quiz_id },
-    include: {
-      questions: {
-        include: {
-          options: true,
+    const quiz = (await this.quizRepo.findUnique({
+      where: { id: quiz_id },
+      include: {
+        questions: {
+          include: {
+            options: true,
+          },
         },
       },
-    },
-  });
+    })) as Prisma.QuizInclude;
 
-  if (!quiz) {
-    return res.status(404).json({
-      success: false,
-      message: 'Quiz not found',
+    if (!quiz) {
+      throw createAppError('Quiz not found', 404);
+    }
+
+    let score = 0;
+
+    for (const submittedAnswer of answers) {
+      const question =
+        quiz.questions && Array.isArray(quiz.questions)
+          ? quiz.questions.find((q) => q.id === submittedAnswer.question_id)
+          : null;
+
+      if (question && question.correct_answer === submittedAnswer.answer) {
+        score += 1;
+      }
+    }
+
+    const completed =
+      score >= (quiz as { passing_score: number }).passing_score;
+
+    const submission = await this.quizSubmissionRepo.create({
+      data: {
+        user_id,
+        quiz_id,
+        score,
+        time_spent: 0,
+        is_passed: completed,
+        results: score,
+      },
     });
-  }
 
-  let score = 0;
-
-  for (const submittedAnswer of answers) {
-    const question = quiz.questions.find(
-      (q) => q.id === submittedAnswer.question_id
+    const submissionAnswers = answers.map(
+      (answer: { questionId: number; answer: string }) => ({
+        submissionId: submission.id,
+        questionId: answer.questionId,
+        answer: answer.answer,
+      })
     );
 
-    if (question && question.correct_answer === submittedAnswer.answer) {
-      score += 1;
-    }
-  }
+    await this.quizAnswerRepo.createMany({ data: submissionAnswers });
 
-  const completed = score >= quiz.passing_score;
-
-  const submission = await prisma.quizSubmission.create({
-    data: {
-      user_id,
-      quiz_id,
-      score,
-      time_spent: 0,
-      is_passed: completed,
-      results: score,
-    },
+    sendResponse(res, 'QUIZ_SUBMITTED', {
+      data: {
+        submission,
+        completed,
+      },
+    });
   });
 
-  const submissionAnswers = answers.map(
-    (answer: { questionId: number; answer: string }) => ({
-      submissionId: submission.id,
-      questionId: answer.questionId,
-      answer: answer.answer,
-    })
-  );
-
-  await prisma.quizAnswer.createMany({ data: submissionAnswers });
-
-  res.status(201).json({
-    success: true,
-    message: 'Quiz submitted successfully',
-    submission,
-    completed,
-  });
-});
-
-export const getUserProgress = catchAsync(
-  async (req: Request, res: Response) => {
+  public getUserProgress = catchAsync(async (req: Request, res: Response) => {
     const { user_id } = req.params;
 
-    const progress = await prisma.quizSubmission.findMany({
+    const progress = await this.quizSubmissionRepo.findMany({
       where: { user_id },
       include: {
         quiz: {
@@ -125,9 +142,10 @@ export const getUserProgress = catchAsync(
       },
     });
 
-    res.status(200).json({
-      success: true,
-      progress,
+    sendResponse(res, 'USER_PROGRESS_FETCHED', {
+      data: {
+        progress,
+      },
     });
-  }
-);
+  });
+}

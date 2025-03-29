@@ -1,135 +1,110 @@
 import { Request, Response } from 'express';
-import {
-  getDashboardMetrics,
-  searchUsers,
-  updateUserRole,
-} from '../services/adminDashboardService';
-import {
-  getPendingContent,
-  moderateContent as moderateContentService,
-} from '../services/contentModerationService';
-import {
-  setConfig,
-  getConfigsByCategory as getConfigsByCategoryService,
-} from '../services/systemConfigService';
-import { allocateResources as allocateResourcesService } from '../services/adminResourceService';
-import { generateCustomReport } from '../services/adminReportingService';
-import { getAdminAuditLogs } from '../services/auditService';
-import { validateRequest } from '../middlewares/validateRequest';
-import {
-  userSearchSchema,
-  configUpdateSchema,
-  resourceAllocationSchema,
-  reportConfigSchema,
-} from '../validations/adminValidations';
-import { catchAsync } from '../utils';
-import { sendResponse } from '../utils/apiResponse';
+import { ResponseType } from '../types/response';
+import AdminDashboardRepository from '../repositories/adminDashboardRepository';
+import { catchAsync } from '../utils/catchAsync';
+import { createAppError } from '../utils/createAppError';
+import { sendResponse } from '../utils/sendResponse';
+import UserRepository from '@/repositories/userRepository';
+import SystemConfigRepository from '@/repositories/systemConfigRepository';
 
-// Dashboard Controllers
-export const getDashboardMetricsHandler = catchAsync(
-  async (req: Request, res: Response) => {
-    const metrics = await getDashboardMetrics();
-    sendResponse(res, 'METRICS_FETCHED', { data: metrics });
+export default class AdminController {
+  private readonly adminDashboardRepo: AdminDashboardRepository;
+  private readonly userRepo: UserRepository;
+  private readonly systemConfigRepo: SystemConfigRepository;
+
+  constructor() {
+    this.adminDashboardRepo = new AdminDashboardRepository();
+    this.userRepo = new UserRepository();
+    this.systemConfigRepo = new SystemConfigRepository();
   }
-);
 
-// User Management Controllers
-export const searchUsersController = catchAsync(
-  async (req: Request, res: Response) => {
-    validateRequest(userSearchSchema, 'query');
-    const users = await searchUsers(req.query);
-    sendResponse(res, 'USERS_FETCHED', { data: users });
-  }
-);
+  // Dashboard and Metrics
+  getDashboardMetrics = catchAsync(async (req: Request, res: Response) => {
+    const metrics = await this.adminDashboardRepo.getDashboardMetrics();
+    sendResponse(res, ResponseType.METRICS_FETCHED, metrics);
+  });
 
-export const updateUserRoleController = catchAsync(
-  async (req: Request, res: Response) => {
-    const { userId, roleId } = req.body;
-    const user = await updateUserRole(userId, roleId);
-    sendResponse(res, 'USER_ROLE_UPDATED', { data: user });
-  }
-);
+  // User Management
+  searchUsers = catchAsync(async (req: Request, res: Response) => {
+    const users = await this.userRepo.searchUsers(req.query);
+    sendResponse(res, ResponseType.USERS_FETCHED, users);
+  });
 
-// Content Moderation Controllers
-export const getPendingContentHandler = catchAsync(
-  async (req: Request, res: Response) => {
-    const content = await getPendingContent(
-      req.query.type as string,
-      Number(req.query.page),
-      Number(req.query.limit)
-    );
-    sendResponse(res, 'PENDING_CONTENT_FETCHED', { data: content });
-  }
-);
+  updateUserRole = catchAsync(async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const { roleId } = req.body;
+    const user = await this.userRepo.updateUserRole(userId, roleId);
+    sendResponse(res, ResponseType.USER_UPDATED, user);
+  });
 
-export const moderateContent = catchAsync(
-  async (req: Request, res: Response) => {
-    const { content_id, content_type, status, moderations } = req.body;
-    const result = await moderateContentService({
-      content_id,
-      content_type,
-      status,
-      moderator_id: req.user?.id,
-      moderations,
+  // Configuration Management
+  setConfig = catchAsync(async (req: Request, res: Response) => {
+    const { category, key, value } = req.body;
+    const config = await this.systemConfigRepo.setConfig({
+      category,
+      key,
+      value,
     });
-    sendResponse(res, 'CONTENT_MODERATED', { data: result });
-  }
-);
+    sendResponse(res, ResponseType.CONFIG_UPDATED, config);
+  });
 
-// System Configuration Controllers
-export const updateConfig = catchAsync(async (req: Request, res: Response) => {
-  validateRequest(configUpdateSchema, req.body);
-  const config = await setConfig(req.body);
-  sendResponse(res, 'CONFIG_UPDATED', { data: config });
-});
-
-export const getConfigsByCategory = catchAsync(
-  async (req: Request, res: Response) => {
+  getConfigsByCategory = catchAsync(async (req: Request, res: Response) => {
     const { category } = req.params;
-    const configs = await getConfigsByCategoryService(category);
-    sendResponse(res, 'CONFIGS_FETCHED', { data: configs });
-  }
-);
+    const configs = await this.systemConfigRepo.findFirst({
+      where: { category },
+    });
+    sendResponse(res, ResponseType.CONFIGS_FETCHED, configs);
+  });
 
-// Resource Management Controllers
-export const allocateResources = catchAsync(
-  async (req: Request, res: Response) => {
-    validateRequest(resourceAllocationSchema, req.body);
-    const { resourceType, resourceId, allocation } = req.body;
-    await allocateResourcesService(resourceType, resourceId, allocation);
-    sendResponse(res, 'RESOURCES_ALLOCATED');
-  }
-);
+  // Resource Allocation
+  allocateResources = catchAsync(async (req: Request, res: Response) => {
+    const allocation = await this.adminDashboardRepo.allocateResources(
+      req.body
+    );
+    sendResponse(res, ResponseType.RESOURCES_ALLOCATED, allocation);
+  });
 
-// Analytics Controllers
-export const generateReport = catchAsync(
-  async (req: Request, res: Response) => {
-    validateRequest(reportConfigSchema, req.body);
-    const report = await generateCustomReport(req.body);
-    sendResponse(res, 'REPORT_GENERATED', { data: report });
-  }
-);
+  // Reporting
+  generateCustomReport = catchAsync(async (req: Request, res: Response) => {
+    const report = await this.adminDashboardRepo.generateCustomReport(req.body);
+    if (req.body.format === 'csv') {
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', 'attachment; filename=report.csv');
+      res.send(report);
+    } else {
+      sendResponse(res, ResponseType.REPORT_GENERATED, report);
+    }
+  });
 
-// Audit System Controllers
-export const getAuditLogs = catchAsync(async (req: Request, res: Response) => {
-  const logs = await getAdminAuditLogs(
-    req.query,
-    Number(req.query.page),
-    Number(req.query.limit)
+  // Auditing and Logging
+  getSystemAuditLogs = catchAsync(async (req: Request, res: Response) => {
+    const logs = await this.adminDashboardRepo.getSystemAuditLogs();
+    sendResponse(res, ResponseType.AUDIT_LOGS_FETCHED, logs);
+  });
+
+  // Content Moderation
+  getContentModerationQueue = catchAsync(
+    async (req: Request, res: Response) => {
+      const queue = await this.adminDashboardRepo.getContentModerationQueue();
+      sendResponse(res, ResponseType.MODERATION_QUEUE_FETCHED, queue);
+    }
   );
-  sendResponse(res, 'AUDIT_LOGS_FETCHED', { data: logs });
-});
 
-// Export all handlers
-export const adminControllers = {
-  getDashboardMetricsHandler,
-  searchUsers,
-  updateUserRole,
-  getPendingContent: getPendingContentHandler,
-  moderateContent,
-  updateConfig,
-  getConfigsByCategory,
-  allocateResources,
-  generateReport,
-  getAuditLogs,
-};
+  moderateContentItem = catchAsync(async (req: Request, res: Response) => {
+    const { contentId } = req.params;
+    const { action, reason } = req.body;
+    const moderatorId = req.user?.id;
+
+    if (!moderatorId) {
+      throw createAppError('Unauthorized: Moderator ID is required', 401);
+    }
+
+    const content = await this.adminDashboardRepo.moderateContentItem(
+      contentId,
+      action,
+      reason,
+      moderatorId
+    );
+    sendResponse(res, ResponseType.CONTENT_MODERATED, content);
+  });
+}

@@ -1,24 +1,51 @@
-import express from 'express';
-import {
-  deleteUserRoadmap,
-  getProfile,
-  getUserProgress,
-  getUserRoadmap,
-  insertUserRoadmap,
-  upsertUser,
-  checkUsername,
-} from '../controllers/userControllers';
+import UserController from '../controllers/userControllers';
 import { userInsertionSchema } from '../validations/userValidations';
 import { validateRequest } from '../middlewares/validateRequest';
 
-const router = express.Router();
+import { BaseRouter } from './BaseRouter';
+import { authMiddleware } from '../middlewares/authMiddleware';
+export class UserRoutes extends BaseRouter {
+  private readonly userController: UserController;
 
-router.get('/me', getProfile);
-router.put('/me', validateRequest(userInsertionSchema), upsertUser);
-router.get('/progress', getUserProgress);
-router.get('/roadmap', getUserRoadmap);
-router.post('/roadmap', insertUserRoadmap);
-router.delete('/roadmap/:id', deleteUserRoadmap);
-router.get('/check-username', checkUsername);
+  constructor() {
+    super();
+    this.userController = new UserController();
+  }
 
-export default router;
+  protected initializeRoutes(): void {
+    this.router.get('/me', authMiddleware, this.userController.getProfile);
+
+    this.router.put(
+      '/me',
+      authMiddleware,
+      validateRequest(userInsertionSchema),
+      this.userController.upsertUser
+    );
+
+    this.router.get(
+      '/progress',
+      authMiddleware,
+      this.userController.getUserProgress
+    );
+    this.router.get(
+      '/roadmap',
+      authMiddleware,
+      this.userController.getUserRoadmap
+    );
+    this.router.post(
+      '/roadmap',
+      authMiddleware,
+      this.userController.insertUserRoadmap
+    );
+    this.router.delete(
+      '/roadmap/:id',
+      authMiddleware,
+      this.userController.deleteUserRoadmap
+    );
+    this.router.get(
+      '/check-username',
+      authMiddleware,
+      this.userController.checkUsername
+    );
+  }
+}

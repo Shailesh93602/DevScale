@@ -4,19 +4,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.requireRole = exports.requirePermission = void 0;
-const rbacService_1 = require("../services/rbacService");
 const errorHandler_1 = require("../utils/errorHandler");
 const logger_1 = __importDefault(require("../utils/logger"));
-const requirePermission = (resource, action) => {
+const requirePermission = () => {
     return async (req, res, next) => {
         try {
             if (!req.user) {
                 throw (0, errorHandler_1.createAppError)('Unauthorized', 401);
             }
-            const hasPermission = await (0, rbacService_1.checkPermission)(req.user.id, resource, action);
-            if (!hasPermission) {
-                throw (0, errorHandler_1.createAppError)('Forbidden', 403);
-            }
+            // TODO: Implement this function
+            // const hasPermission = await checkPermission(
+            //   req.user.id,
+            //   resource,
+            //   action
+            // );
+            // if (!hasPermission) {
+            //   throw createAppError('Forbidden', 403);
+            // }
             next();
         }
         catch (error) {
@@ -26,16 +30,17 @@ const requirePermission = (resource, action) => {
     };
 };
 exports.requirePermission = requirePermission;
-const requireRole = (role) => {
+const requireRole = () => {
     return async (req, res, next) => {
         try {
             if (!req.user) {
                 throw (0, errorHandler_1.createAppError)('Unauthorized', 401);
             }
-            const hasRole = await (0, rbacService_1.checkRole)(req.user.id, role);
-            if (!hasRole) {
-                throw (0, errorHandler_1.createAppError)('Forbidden', 403);
-            }
+            // TODO: Implement this function
+            // const hasRole = await checkRole(req.user.id, role);
+            // if (!hasRole) {
+            //   throw createAppError('Forbidden', 403);
+            // }
             next();
         }
         catch (error) {

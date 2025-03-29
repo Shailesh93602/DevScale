@@ -1,23 +1,30 @@
-import { Router } from 'express';
-import {
-  getAllMainConceptsController,
-  getMainConceptByIdController,
-  createMainConceptController,
-  updateMainConceptController,
-  deleteMainConceptController,
-  getSubjectsInMainConceptController,
-} from '../controllers/mainConceptController';
+import { BaseRouter } from './BaseRouter';
+import { MainConceptController } from '../controllers/mainConceptController';
 
-const router = Router();
+export class MainConceptRoutes extends BaseRouter {
+  private readonly mainConceptController: MainConceptController;
 
-// Public routes
-router.get('/', getAllMainConceptsController);
-router.get('/:id', getMainConceptByIdController);
-router.get('/:id/subjects', getSubjectsInMainConceptController);
+  constructor() {
+    super();
+    this.mainConceptController = new MainConceptController();
+    this.initializeRoutes();
+  }
 
-// Protected routes
-router.post('/', createMainConceptController);
-router.put('/:id', updateMainConceptController);
-router.delete('/:id', deleteMainConceptController);
+  public initializeRoutes(): void {
+    // Public routes
+    this.router.get('/', this.mainConceptController.getAllMainConcepts);
+    this.router.get('/:id', this.mainConceptController.getMainConceptById);
 
-export default router;
+    // Protected routes
+    this.router.post('/', this.mainConceptController.createMainConcept);
+    this.router.post(
+      '/with-subjects',
+      this.mainConceptController.createMainConceptWithSubjects
+    );
+    this.router.put('/:id', this.mainConceptController.updateMainConcept);
+    this.router.delete('/:id', this.mainConceptController.deleteMainConcept);
+  }
+}
+
+// Create and export an instance of the routes
+export default new MainConceptRoutes().getRouter();

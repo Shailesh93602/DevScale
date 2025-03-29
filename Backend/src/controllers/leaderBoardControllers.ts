@@ -1,23 +1,33 @@
 import { Request, Response } from 'express';
-import { getLeaderboard } from '../services/leaderboardService';
-import { leaderboardQuerySchema } from '../validations/leaderboardValidation';
-import { createAppError } from '../utils/errorHandler';
 import { catchAsync } from '../utils';
+import LeaderboardRepository from '@/repositories/leaderboardRepository';
+import { sendResponse } from '@/utils/apiResponse';
 
-export const getLeaderboardEntries = catchAsync(
-  async (req: Request, res: Response) => {
-    const { error, value } = leaderboardQuerySchema.validate(req.query);
-    if (error) throw createAppError(error.message, 400);
+export default class LeaderboardController {
+  private readonly leaderboardRepo: LeaderboardRepository;
 
-    const entries = await getLeaderboard(
-      value.subjectId,
-      value.timeRange,
-      value.limit
-    );
-
-    res.status(200).json({
-      status: 'success',
-      data: entries,
-    });
+  constructor() {
+    this.leaderboardRepo = new LeaderboardRepository();
   }
-);
+
+  public getLeaderboardEntries = catchAsync(
+    async (req: Request, res: Response) => {
+      const { user_id, subject_id, limit } = req.query;
+
+      const entries = await this.leaderboardRepo.findMany({
+        where: {
+          user_id: String(user_id),
+          subject_id: String(subject_id),
+        },
+        orderBy: {
+          score: 'desc',
+        },
+        take: Number(limit),
+      });
+
+      sendResponse(res, 'LEADERBOARD_FETCHED', {
+        data: entries,
+      });
+    }
+  );
+}

@@ -1,31 +1,27 @@
 import { Request, Response } from 'express';
 import { catchAsync } from '../utils/index';
 import { sendResponse } from '../utils/apiResponse';
-import {
-  getAllMainConcepts,
-  getMainConceptById,
-  createMainConcept,
-  updateMainConcept,
-  deleteMainConcept,
-} from '../services/mainConceptService';
+import { MainConceptRepository } from '../repositories/mainConceptRepository';
 
-// Get all main concepts
-export const getAllMainConceptsController = catchAsync(
-  async (req: Request, res: Response) => {
-    const mainConcepts = await getAllMainConcepts();
+export class MainConceptController {
+  private readonly mainConceptRepo: MainConceptRepository;
+
+  constructor() {
+    this.mainConceptRepo = new MainConceptRepository();
+  }
+
+  getAllMainConcepts = catchAsync(async (req: Request, res: Response) => {
+    const mainConcepts = await this.mainConceptRepo.findMany();
 
     return sendResponse(res, 'MAIN_CONCEPTS_FETCHED', {
       data: mainConcepts,
     });
-  }
-);
+  });
 
-// Get a single main concept by ID
-export const getMainConceptByIdController = catchAsync(
-  async (req: Request, res: Response) => {
+  getMainConceptById = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
 
-    const mainConcept = await getMainConceptById(id);
+    const mainConcept = await this.mainConceptRepo.getMainConceptById(id);
 
     if (!mainConcept) {
       return sendResponse(res, 'MAIN_CONCEPT_NOT_FOUND', {
@@ -36,99 +32,46 @@ export const getMainConceptByIdController = catchAsync(
     return sendResponse(res, 'MAIN_CONCEPT_FETCHED', {
       data: mainConcept,
     });
-  }
-);
+  });
 
-// Create a new main concept
-export const createMainConceptController = catchAsync(
-  async (req: Request, res: Response) => {
-    const { name, description, order, roadmapId, subjectId } = req.body;
-
-    const mainConcept = await createMainConcept({
-      name,
-      description,
-      order: order || 0,
-      roadmaps: {
-        connect: { id: roadmapId },
-      },
-      subjects: {
-        create: {
-          order: 1,
-          subject: {
-            connect: { id: subjectId },
-          },
-        },
-      },
-    });
+  createMainConcept = catchAsync(async (req: Request, res: Response) => {
+    const mainConcept = await this.mainConceptRepo.create(req.body);
 
     return sendResponse(res, 'MAIN_CONCEPT_CREATED', {
       data: mainConcept,
     });
-  }
-);
+  });
 
-// Update a main concept
-export const updateMainConceptController = catchAsync(
-  async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const { name, description, order } = req.body;
+  createMainConceptWithSubjects = catchAsync(
+    async (req: Request, res: Response) => {
+      const mainConcept = await this.mainConceptRepo.createWithSubjects(
+        req.body
+      );
 
-    const mainConcept = await getMainConceptById(id);
-
-    if (!mainConcept) {
-      return sendResponse(res, 'MAIN_CONCEPT_NOT_FOUND', {
-        error: 'Main concept not found',
+      return sendResponse(res, 'MAIN_CONCEPT_CREATED', {
+        data: mainConcept,
       });
     }
+  );
 
-    const updatedMainConcept = await updateMainConcept(id, {
-      name,
-      description,
-      order: order || mainConcept.order,
-    });
+  updateMainConcept = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const mainConcept = await this.mainConceptRepo.updateMainConcept(
+      id,
+      req.body
+    );
 
     return sendResponse(res, 'MAIN_CONCEPT_UPDATED', {
-      data: updatedMainConcept,
+      data: mainConcept,
     });
-  }
-);
+  });
 
-// Delete a main concept
-export const deleteMainConceptController = catchAsync(
-  async (req: Request, res: Response) => {
+  deleteMainConcept = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
-
-    const mainConcept = await getMainConceptById(id);
-
-    if (!mainConcept) {
-      return sendResponse(res, 'MAIN_CONCEPT_NOT_FOUND', {
-        error: 'Main concept not found',
-      });
-    }
-
-    await deleteMainConcept(id);
+    const mainConcept = await this.mainConceptRepo.deleteMainConcept(id);
 
     return sendResponse(res, 'MAIN_CONCEPT_DELETED', {
-      data: { id },
+      data: mainConcept,
     });
-  }
-);
-
-// Get subjects in a main concept
-export const getSubjectsInMainConceptController = catchAsync(
-  async (req: Request, res: Response) => {
-    const { id } = req.params;
-
-    const mainConcept = await getMainConceptById(id);
-
-    if (!mainConcept) {
-      return sendResponse(res, 'MAIN_CONCEPT_NOT_FOUND', {
-        error: 'Main concept not found',
-      });
-    }
-
-    return sendResponse(res, 'SUBJECTS_FETCHED', {
-      data: mainConcept.subjects,
-    });
-  }
-);
+  });
+}

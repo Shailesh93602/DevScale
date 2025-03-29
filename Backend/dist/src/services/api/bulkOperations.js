@@ -1,10 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BulkOperationsService = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 class BulkOperationsService {
-    static async bulkCreateUsers(users) {
+    async bulkCreateUsers(users) {
         return this.executeBulkOperation(users, async (userData, tx) => {
             return tx.user.create({ data: userData });
         }, {
@@ -64,5 +63,5 @@ class BulkOperationsService {
         return results;
     }
 }
-exports.BulkOperationsService = BulkOperationsService;
+exports.default = BulkOperationsService;
 //# sourceMappingURL=bulkOperations.js.map
