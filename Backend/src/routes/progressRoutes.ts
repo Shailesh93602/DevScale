@@ -1,21 +1,26 @@
-import { Router } from 'express';
-import {
-  getProgress,
-  updateProgress,
-} from '../controllers/userProgressController';
+import { BaseRouter } from './BaseRouter';
+import UserProgressController from '../controllers/userProgressController';
 import { authMiddleware } from '../middlewares/authMiddleware';
 import { validateRequest } from '../middlewares/validateRequest';
 import { updateProgressValidation } from '../validations/progressValidation';
 
-const router = Router();
+export class ProgressRoutes extends BaseRouter {
+  private readonly progressController: UserProgressController;
 
-router.use(authMiddleware);
+  constructor() {
+    super();
+    this.progressController = new UserProgressController();
+    this.router.use(authMiddleware);
+  }
 
-router.get('/', getProgress);
-router.post(
-  '/update',
-  validateRequest(updateProgressValidation),
-  updateProgress
-);
+  protected initializeRoutes(): void {
+    this.router.get('/', this.progressController.getProgress);
+    this.router.post(
+      '/update',
+      validateRequest(updateProgressValidation),
+      this.progressController.updateProgress
+    );
+  }
+}
 
-export default router;
+export default new ProgressRoutes().getRouter();

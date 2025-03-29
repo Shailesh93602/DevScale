@@ -1,48 +1,50 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createBattle = exports.getBattle = exports.getBattles = void 0;
-const client_1 = require("@prisma/client");
 const utils_1 = require("../utils");
-const prisma = new client_1.PrismaClient();
-exports.getBattles = (0, utils_1.catchAsync)(async (req, res) => {
-    const battles = await prisma.battle.findMany({
-        orderBy: { created_at: 'asc' },
-        include: {
-            topic: {
-                select: { title: true },
-            },
-        },
-    });
-    res.status(200).json({ success: true, battles });
-});
-exports.getBattle = (0, utils_1.catchAsync)(async (req, res) => {
-    const battleId = req.params.id;
-    const battle = await prisma.battle.findUnique({
-        where: { id: battleId },
-    });
-    if (!battle) {
-        return res
-            .status(404)
-            .json({ success: false, message: 'Battle not found' });
+const battleRepository_1 = require("@/repositories/battleRepository");
+const logger_1 = __importDefault(require("@/utils/logger"));
+const apiResponse_1 = require("@/utils/apiResponse");
+const errorHandler_1 = require("@/utils/errorHandler");
+class BattleController {
+    battleRepo;
+    constructor() {
+        this.battleRepo = new battleRepository_1.BattleRepository();
     }
-    res.status(200).json({ success: true, battle });
-});
-exports.createBattle = (0, utils_1.catchAsync)(async (req, res) => {
-    const { title, description, topic_id, difficulty, length, date, time } = req.body;
-    await prisma.battle.create({
-        data: {
-            title,
-            description,
-            user_id: req.user.id,
-            topic_id,
-            difficulty,
-            length,
-            date,
-            time,
-        },
+    getBattles = (0, utils_1.catchAsync)(async (req, res) => {
+        const battles = await this.battleRepo.findMany();
+        (0, apiResponse_1.sendResponse)(res, 'BATTLES_FETCHED', { data: battles });
     });
-    res
-        .status(201)
-        .json({ success: true, message: 'Battle created successfully!' });
-});
+    getBattle = (0, utils_1.catchAsync)(async (req, res) => {
+        try {
+            const battle = await this.battleRepo.findUnique({
+                where: { id: req.params.id },
+            });
+            (0, apiResponse_1.sendResponse)(res, 'BATTLES_FETCHED', { data: battle });
+        }
+        catch (error) {
+            logger_1.default.error('Error: ', error);
+            (0, errorHandler_1.createAppError)('Battle not found', 404);
+        }
+    });
+    createBattle = (0, utils_1.catchAsync)(async (req, res) => {
+        const { title, description, topic_id, difficulty, length, date, time } = req.body;
+        await this.battleRepo.create({
+            data: {
+                title,
+                description,
+                topic_id,
+                difficulty,
+                length,
+                date,
+                time,
+                user_id: req.user.id,
+            },
+        });
+        (0, apiResponse_1.sendResponse)(res, 'BATTLE_CREATED');
+    });
+}
+exports.default = BattleController;
 //# sourceMappingURL=battleControllers.js.map

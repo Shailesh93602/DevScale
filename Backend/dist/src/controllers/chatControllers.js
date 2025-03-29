@@ -1,78 +1,83 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteChat = exports.createMessage = exports.createChat = exports.getChat = exports.getChats = void 0;
-const client_1 = require("@prisma/client");
 const utils_1 = require("../utils");
-const prisma = new client_1.PrismaClient();
-// TODO: implement this feature
-exports.getChats = (0, utils_1.catchAsync)(async (req, res) => {
-    const chats = await prisma.chat.findMany({
-        orderBy: { created_at: 'asc' },
-    });
-    res.status(200).json({ success: true, chats });
-});
-exports.getChat = (0, utils_1.catchAsync)(async (req, res) => {
-    const chatId = req.params.id;
-    const chat = await prisma.chat.findUnique({
-        where: { id: chatId },
-    });
-    if (!chat) {
-        return res.status(404).json({ success: false, message: 'Chat not found' });
+const apiResponse_1 = require("@/utils/apiResponse");
+const errorHandler_1 = require("@/utils/errorHandler");
+const chatRepository_1 = __importDefault(require("@/repositories/chatRepository"));
+class ChatController {
+    chatRepo;
+    constructor() {
+        this.chatRepo = new chatRepository_1.default();
     }
-    res.status(200).json({ success: true, chat });
-});
-exports.createChat = (0, utils_1.catchAsync)(async (req, res) => {
-    const { participants } = req.body;
-    if (!participants || participants.length < 2) {
-        return res.status(400).json({ success: false, message: 'Invalid payload' });
-    }
-    // TODO: implement this method
-    // const newChat = await prisma.chat.create({
-    // data: { user2Id: participants },
-    // });
-    res.status(201).json({
-        success: true,
-        message: 'Chat created successfully!',
-        // chat: newChat,
+    getChats = (0, utils_1.catchAsync)(async (req, res) => {
+        const chats = await this.chatRepo.findMany({
+            orderBy: { created_at: 'asc' },
+        });
+        (0, apiResponse_1.sendResponse)(res, 'CHATS_FETCHED', { data: chats });
     });
-});
-exports.createMessage = (0, utils_1.catchAsync)(async (req, res) => {
-    const chatId = req.params.id;
-    const { message, sender } = req.body;
-    if (!message || !sender) {
-        return res.status(400).json({ success: false, message: 'Invalid payload' });
-    }
-    const chat = await prisma.chat.findUnique({
-        where: { id: chatId },
+    getChat = (0, utils_1.catchAsync)(async (req, res) => {
+        const chatId = req.params.id;
+        const chat = await this.chatRepo.findUnique({
+            where: { id: chatId },
+        });
+        if (!chat) {
+            throw (0, errorHandler_1.createAppError)('Chat not found', 404);
+        }
+        (0, apiResponse_1.sendResponse)(res, 'CHATS_FETCHED', { data: chat });
     });
-    if (!chat) {
-        return res.status(404).json({ success: false, message: 'Chat not found' });
-    }
-    // await prisma.chat.update({
-    //   where: { id: chatId },
-    //   data: {
-    //     messages: {
-    //       push: { message, sender },
-    //     },
-    //   },
-    // });
-    res
-        .status(201)
-        .json({ success: true, message: 'Message sent successfully!' });
-});
-exports.deleteChat = (0, utils_1.catchAsync)(async (req, res) => {
-    const chatId = req.params.id;
-    const chat = await prisma.chat.findUnique({
-        where: { id: chatId },
+    createChat = (0, utils_1.catchAsync)(async (req, res) => {
+        const { participants } = req.body;
+        if (!participants || participants.length < 2) {
+            throw (0, errorHandler_1.createAppError)('Invalid payload', 400);
+        }
+        // TODO: implement this method
+        const newChat = await this.chatRepo.create({
+            data: {
+                message: '',
+                user1: { connect: { id: participants[0] } },
+                user2: { connect: { id: participants[1] } },
+            },
+        });
+        (0, apiResponse_1.sendResponse)(res, 'CHAT_CREATED', { data: newChat });
     });
-    if (!chat) {
-        return res.status(404).json({ success: false, message: 'Chat not found' });
-    }
-    await prisma.chat.delete({
-        where: { id: chatId },
+    createMessage = (0, utils_1.catchAsync)(async (req, res) => {
+        const chatId = req.params.id;
+        const { message, sender } = req.body;
+        if (!message || !sender) {
+            throw (0, errorHandler_1.createAppError)('Invalid payload', 400);
+        }
+        const chat = await this.chatRepo.findUnique({
+            where: { id: chatId },
+        });
+        if (!chat) {
+            throw (0, errorHandler_1.createAppError)('Chat not found', 404);
+        }
+        // await this.chatRepo.update({
+        //   where: { id: chatId },
+        //   data: {
+        //     messages: {
+        //       push: { message, sender },
+        //     },
+        //   },
+        // });
+        (0, apiResponse_1.sendResponse)(res, 'CHAT_MESSAGE_SENT');
     });
-    res
-        .status(200)
-        .json({ success: true, message: 'Chat deleted successfully!' });
-});
+    deleteChat = (0, utils_1.catchAsync)(async (req, res) => {
+        const chatId = req.params.id;
+        const chat = await this.chatRepo.findUnique({
+            where: { id: chatId },
+        });
+        if (!chat) {
+            throw (0, errorHandler_1.createAppError)('Chat not found', 404);
+        }
+        await this.chatRepo.delete({
+            where: { id: chatId },
+        });
+        (0, apiResponse_1.sendResponse)(res, 'CHAT_DELETED');
+    });
+}
+exports.default = ChatController;
 //# sourceMappingURL=chatControllers.js.map

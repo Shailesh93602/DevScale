@@ -1,18 +1,23 @@
-import express from 'express';
-import {
-  createJob,
-  deleteJob,
-  getJob,
-  getJobs,
-  updateJob,
-} from '../controllers/jobControllers.js';
+import { BaseRouter } from './BaseRouter';
+import JobController from '../controllers/jobControllers';
+import { authMiddleware } from '@/middlewares/authMiddleware';
 
-const router = express.Router();
+export class JobRoutes extends BaseRouter {
+  private readonly jobController: JobController;
 
-router.get('/', getJobs);
-router.get('/:id', getJob);
-router.post('/create', createJob);
-router.put('/update/:id', updateJob);
-router.delete('/delete/:id', deleteJob);
+  constructor() {
+    super();
+    this.jobController = new JobController();
+    this.router.use(authMiddleware);
+  }
 
-export default router;
+  protected initializeRoutes(): void {
+    this.router.get('/', this.jobController.getJobs);
+    this.router.get('/:id', this.jobController.getJob);
+    this.router.post('/create', this.jobController.createJob);
+    this.router.put('/update/:id', this.jobController.updateJob);
+    this.router.delete('/delete/:id', this.jobController.deleteJob);
+  }
+}
+
+export default new JobRoutes().getRouter();

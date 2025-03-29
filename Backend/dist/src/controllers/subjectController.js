@@ -1,28 +1,47 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getTopicsInSubject = exports.getAllSubjects = void 0;
 const index_1 = require("../utils/index");
 const apiResponse_1 = require("../utils/apiResponse");
-const topicService_1 = require("../services/topicService");
-const pagination_1 = require("../utils/pagination");
-const client_1 = require("@prisma/client");
-const prisma = new client_1.PrismaClient();
-exports.getAllSubjects = (0, index_1.catchAsync)(async (req, res) => {
-    const params = (0, pagination_1.parsePaginationQuery)(req.query);
-    // Add your custom validations here if needed
-    if (params.page < 1) {
-        return (0, apiResponse_1.sendResponse)(res, 'INVALID_PAGE_NUMBER');
+const subjectRepository_1 = __importDefault(require("../repositories/subjectRepository"));
+class SubjectController {
+    subjectRepository;
+    constructor() {
+        this.subjectRepository = new subjectRepository_1.default();
     }
-    // Execute pagination
-    const subjects = await (0, pagination_1.paginate)({ req, model: prisma.subject });
-    return (0, apiResponse_1.sendResponse)(res, 'SUBJECTS_FETCHED', { data: subjects });
-});
-exports.getTopicsInSubject = (0, index_1.catchAsync)(async (req, res) => {
-    const { id } = req.params;
-    const topics = await (0, topicService_1.getTopicsBySubjectId)(id);
-    if (topics) {
-        return (0, apiResponse_1.sendResponse)(res, 'TOPICS_FETCHED', { data: topics });
-    }
-    return (0, apiResponse_1.sendResponse)(res, 'TOPICS_NOT_FOUND');
-});
+    getAllSubjects = (0, index_1.catchAsync)(async (_req, res) => {
+        const subjects = await this.subjectRepository.findMany();
+        return (0, apiResponse_1.sendResponse)(res, 'SUBJECTS_FETCHED', { data: subjects });
+    });
+    getTopicsInSubject = (0, index_1.catchAsync)(async (req, res) => {
+        const { id } = req.params;
+        const subject = await this.subjectRepository.findUnique({
+            where: { id },
+        });
+        if (!subject) {
+            return (0, apiResponse_1.sendResponse)(res, 'SUBJECT_NOT_FOUND');
+        }
+        return (0, apiResponse_1.sendResponse)(res, 'TOPICS_FETCHED', { data: subject });
+    });
+    createSubject = (0, index_1.catchAsync)(async (req, res) => {
+        const subject = await this.subjectRepository.create(req.body);
+        return (0, apiResponse_1.sendResponse)(res, 'SUBJECT_CREATED', { data: subject });
+    });
+    updateSubject = (0, index_1.catchAsync)(async (req, res) => {
+        const { id } = req.params;
+        const subject = await this.subjectRepository.update({
+            where: { id },
+            data: req.body,
+        });
+        return (0, apiResponse_1.sendResponse)(res, 'SUBJECT_UPDATED', { data: subject });
+    });
+    deleteSubject = (0, index_1.catchAsync)(async (req, res) => {
+        const { id } = req.params;
+        const subject = await this.subjectRepository.delete({ where: { id } });
+        return (0, apiResponse_1.sendResponse)(res, 'SUBJECT_DELETED', { data: subject });
+    });
+}
+exports.default = SubjectController;
 //# sourceMappingURL=subjectController.js.map

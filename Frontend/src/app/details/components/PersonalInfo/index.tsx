@@ -16,7 +16,7 @@ export function PersonalInfo() {
   } = useFormContext();
   const [isChecking, setIsChecking] = useState(false);
   const usernameValue = watch('username');
-  const [checkUsernameAvailability] = useAxiosGet<{ available: boolean }>(
+  const [checkUsernameAvailability] = useAxiosGet<{ isAvailable: boolean }>(
     '/users/check-username',
   );
 
@@ -31,7 +31,7 @@ export function PersonalInfo() {
           params: { username },
         });
 
-        if (!data?.available) {
+        if (!data?.isAvailable) {
           setError('username', {
             type: 'manual',
             message: 'Username is not available',

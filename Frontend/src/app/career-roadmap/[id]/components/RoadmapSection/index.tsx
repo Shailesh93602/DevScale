@@ -18,9 +18,12 @@ export const RoadmapSection = ({
   description: string;
   subjects: {
     id: string;
-    name: string;
-    description: string;
-    icon: React.ElementType;
+    subject: {
+      id: string;
+      name: string;
+      description: string;
+      icon: React.ElementType;
+    };
   }[];
   index: number;
 }) => {
@@ -45,7 +48,14 @@ export const RoadmapSection = ({
         <p className="mb-6 text-card-foreground">{description}</p>
         <div className="space-y-4">
           {subjects?.map((step, stepIndex) => (
-            <RoadmapStep key={step.id} {...step} index={stepIndex} />
+            <RoadmapStep
+              key={step.id}
+              id={step.id}
+              name={step.subject.name}
+              description={step.subject.description}
+              icon={step.subject.icon}
+              index={stepIndex}
+            />
           ))}
         </div>
       </div>

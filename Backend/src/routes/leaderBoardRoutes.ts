@@ -1,8 +1,19 @@
-import express from 'express';
-import { getLeaderboardEntries } from '../controllers/leaderBoardControllers';
+import { BaseRouter } from './BaseRouter';
+import loaderBoardController from '../controllers/leaderBoardControllers';
+import { authMiddleware } from '../middlewares/authMiddleware';
 
-const router = express.Router();
+export class LeaderboardRoutes extends BaseRouter {
+  private readonly loaderBoardController: loaderBoardController;
 
-router.get('/', getLeaderboardEntries);
+  constructor() {
+    super();
+    this.loaderBoardController = new loaderBoardController();
+    this.router.use(authMiddleware);
+  }
 
-export default router;
+  protected initializeRoutes(): void {
+    this.router.get('/', this.loaderBoardController.getLeaderboardEntries);
+  }
+}
+
+export default new LeaderboardRoutes().getRouter();

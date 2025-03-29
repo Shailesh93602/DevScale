@@ -55,12 +55,17 @@ export async function updateSession(request: NextRequest) {
   }
   // Redirect to details page if not authenticated
   if (request.nextUrl.pathname !== '/details') {
-    const { data } = await axios.get('http://localhost:4000/api/v1/users/me', {
+    const response = await axios.get('http://localhost:4000/api/v1/users/me', {
       headers: {
         Authorization: `Bearer ${session?.access_token}`,
       },
     });
-    if (!data?.data?.user) {
+
+    console.log('🚀 --------------------------------🚀');
+    console.log('🚀 ~ updateSession ~ data:', response);
+    console.log('🚀 --------------------------------🚀');
+
+    if (!response?.data?.data?.user) {
       const url = request.nextUrl.clone();
       url.pathname = '/details';
       return NextResponse.redirect(url);

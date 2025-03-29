@@ -1,88 +1,90 @@
-import { PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
+import { sendResponse } from '@/utils/apiResponse';
+import { createAppError } from '@/utils/errorHandler';
+import ChatRepository from '@/repositories/chatRepository';
 
-const prisma = new PrismaClient();
+export default class ChatController {
+  private readonly chatRepo: ChatRepository;
 
-// TODO: implement this feature
-
-export const getChats = catchAsync(async (req: Request, res: Response) => {
-  const chats = await prisma.chat.findMany({
-    orderBy: { created_at: 'asc' },
-  });
-  res.status(200).json({ success: true, chats });
-});
-
-export const getChat = catchAsync(async (req: Request, res: Response) => {
-  const chatId = req.params.id;
-  const chat = await prisma.chat.findUnique({
-    where: { id: chatId },
-  });
-  if (!chat) {
-    return res.status(404).json({ success: false, message: 'Chat not found' });
+  constructor() {
+    this.chatRepo = new ChatRepository();
   }
-  res.status(200).json({ success: true, chat });
-});
-
-export const createChat = catchAsync(async (req: Request, res: Response) => {
-  const { participants } = req.body;
-  if (!participants || participants.length < 2) {
-    return res.status(400).json({ success: false, message: 'Invalid payload' });
-  }
-
-  // TODO: implement this method
-
-  // const newChat = await prisma.chat.create({
-  // data: { user2Id: participants },
-  // });
-  res.status(201).json({
-    success: true,
-    message: 'Chat created successfully!',
-    // chat: newChat,
+  public getChats = catchAsync(async (req: Request, res: Response) => {
+    const chats = await this.chatRepo.findMany({
+      orderBy: { created_at: 'asc' },
+    });
+    sendResponse(res, 'CHATS_FETCHED', { data: chats });
   });
-});
 
-export const createMessage = catchAsync(async (req: Request, res: Response) => {
-  const chatId = req.params.id;
-  const { message, sender } = req.body;
-  if (!message || !sender) {
-    return res.status(400).json({ success: false, message: 'Invalid payload' });
-  }
+  public getChat = catchAsync(async (req: Request, res: Response) => {
+    const chatId = req.params.id;
+    const chat = await this.chatRepo.findUnique({
+      where: { id: chatId },
+    });
+    if (!chat) {
+      throw createAppError('Chat not found', 404);
+    }
 
-  const chat = await prisma.chat.findUnique({
-    where: { id: chatId },
+    sendResponse(res, 'CHATS_FETCHED', { data: chat });
   });
-  if (!chat) {
-    return res.status(404).json({ success: false, message: 'Chat not found' });
-  }
 
-  // await prisma.chat.update({
-  //   where: { id: chatId },
-  //   data: {
-  //     messages: {
-  //       push: { message, sender },
-  //     },
-  //   },
-  // });
+  public createChat = catchAsync(async (req: Request, res: Response) => {
+    const { participants } = req.body;
+    if (!participants || participants.length < 2) {
+      throw createAppError('Invalid payload', 400);
+    }
 
-  res
-    .status(201)
-    .json({ success: true, message: 'Message sent successfully!' });
-});
+    // TODO: implement this method
 
-export const deleteChat = catchAsync(async (req: Request, res: Response) => {
-  const chatId = req.params.id;
-  const chat = await prisma.chat.findUnique({
-    where: { id: chatId },
+    const newChat = await this.chatRepo.create({
+      data: {
+        message: '',
+        user1: { connect: { id: participants[0] } },
+        user2: { connect: { id: participants[1] } },
+      },
+    });
+    sendResponse(res, 'CHAT_CREATED', { data: newChat });
   });
-  if (!chat) {
-    return res.status(404).json({ success: false, message: 'Chat not found' });
-  }
 
-  await prisma.chat.delete({
-    where: { id: chatId },
+  public createMessage = catchAsync(async (req: Request, res: Response) => {
+    const chatId = req.params.id;
+    const { message, sender } = req.body;
+    if (!message || !sender) {
+      throw createAppError('Invalid payload', 400);
+    }
+
+    const chat = await this.chatRepo.findUnique({
+      where: { id: chatId },
+    });
+    if (!chat) {
+      throw createAppError('Chat not found', 404);
+    }
+
+    // await this.chatRepo.update({
+    //   where: { id: chatId },
+    //   data: {
+    //     messages: {
+    //       push: { message, sender },
+    //     },
+    //   },
+    // });
+    sendResponse(res, 'CHAT_MESSAGE_SENT');
   });
-  res
-    .status(200)
-    .json({ success: true, message: 'Chat deleted successfully!' });
-});
+
+  public deleteChat = catchAsync(async (req: Request, res: Response) => {
+    const chatId = req.params.id;
+    const chat = await this.chatRepo.findUnique({
+      where: { id: chatId },
+    });
+    if (!chat) {
+      throw createAppError('Chat not found', 404);
+    }
+
+    await this.chatRepo.delete({
+      where: { id: chatId },
+    });
+
+    sendResponse(res, 'CHAT_DELETED');
+  });
+}

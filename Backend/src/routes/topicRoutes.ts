@@ -1,17 +1,21 @@
-import express from 'express';
-import {
-  getArticlesForTopic,
-  getQuizByTopicId,
-  getUnpublishedTopics,
-  submitQuiz,
-} from '../controllers/topicController.js';
+import { BaseRouter } from './BaseRouter';
+import { authMiddleware } from '../middlewares/authMiddleware';
+import TopicController from '@/controllers/topicController';
 
-const router = express.Router();
+export class TopicRoutes extends BaseRouter {
+  private readonly topicController: TopicController;
 
-router.get('/:id/articles', getArticlesForTopic);
-router.get('/:id/article', getArticlesForTopic);
-router.get('/:id/quiz', getQuizByTopicId);
-router.post('/quiz/submit', submitQuiz);
-router.get('/unpublished', getUnpublishedTopics);
+  constructor() {
+    super();
+    this.topicController = new TopicController();
+    this.router.use(authMiddleware);
+  }
 
-export default router;
+  protected initializeRoutes(): void {
+    this.router.get('/:id/articles', this.topicController.getArticlesForTopic);
+    this.router.get('/:id/article', this.topicController.getArticlesForTopic);
+    this.router.get('/:id/quiz', this.topicController.getQuizByTopicId);
+    this.router.post('/quiz/submit', this.topicController.submitQuiz);
+    this.router.get('/unpublished', this.topicController.getUnpublishedTopics);
+  }
+}

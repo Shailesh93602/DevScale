@@ -1,64 +1,201 @@
-import { createAppError } from './../utils/errorHandler';
-import { Request, Response, RequestHandler } from 'express';
+import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
-import {
-  getUserAnalytics,
-  getPlatformAnalytics,
-  generateReport,
-} from '../services/analyticsService';
 import { sendResponse } from '../utils/apiResponse';
+import { ChallengeStatus, PrismaClient } from '@prisma/client';
+import UserRepository from '@/repositories/userRepository';
+import UserProgressRepository from '@/repositories/userProgressRepository';
+import ResourceRepository from '@/repositories/resourceRepository';
+import { ChallengeRepository } from '@/repositories/challengeRepository';
+import { createAppError } from '@/utils/errorHandler';
 
-export const getUserAnalyticsController = catchAsync(
-  async (req: Request, res: Response) => {
-    const userId = req.params.userId;
-    const analyticsData = await getUserAnalytics(userId);
-    sendResponse(res, 'USER_ANALYTICS_FETCHED', { data: analyticsData });
-  }
-);
+const prisma = new PrismaClient();
+export default class AnalyticsController {
+  private readonly defaultStartDate: Date;
+  private readonly userRepo: UserRepository;
+  private readonly userProgressRepo: UserProgressRepository;
+  private readonly resourceRepo: ResourceRepository;
+  private readonly challengeRepo: ChallengeRepository;
 
-export const getCurrentUserAnalyticsController = catchAsync(
-  async (req: Request, res: Response) => {
-    const userId = req.user.id;
-    const analyticsData = await getUserAnalytics(userId);
-    sendResponse(res, 'USER_ANALYTICS_FETCHED', { data: analyticsData });
-  }
-);
+  constructor() {
+    this.defaultStartDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); // 30 days ago
+    this.userRepo = new UserRepository();
+    this.userProgressRepo = new UserProgressRepository();
+    this.resourceRepo = new ResourceRepository();
 
-export const getPlatformAnalyticsController: RequestHandler = async (
-  req,
-  res
-) => {
-  try {
-    const { startDate, endDate } = validateDateRange(
-      req.query.startDate?.toString(),
-      req.query.endDate?.toString()
-    );
-
-    const analytics = await getPlatformAnalytics(startDate, endDate);
-    sendResponse(res, 'PLATFORM_ANALYTICS_FETCHED', { data: analytics });
-  } catch (error) {
-    createAppError(error as string, 500);
-  }
-};
-
-// Add validation helper
-const validateDateRange = (start?: string, end?: string) => {
-  const startDate = start ? new Date(start) : undefined;
-  const endDate = end ? new Date(end) : undefined;
-
-  if (
-    (startDate && isNaN(startDate.getTime())) ||
-    (endDate && isNaN(endDate.getTime()))
-  ) {
-    throw createAppError('Invalid date format', 400);
+    this.challengeRepo = new ChallengeRepository();
   }
 
-  return { startDate, endDate };
-};
+  public getUserAnalytics = catchAsync(async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const analytics = await this.userProgressRepo.getUserAnalytics(userId);
+    sendResponse(res, 'USER_ANALYTICS_FETCHED', { data: analytics });
+  });
 
-export const generateReportController = catchAsync(
-  async (req: Request, res: Response) => {
-    const reportData = await generateReport('user', req.params.userId);
-    sendResponse(res, 'REPORT_FETCHED', { data: reportData });
-  }
-);
+  public getCurrentUserAnalytics = catchAsync(
+    async (req: Request, res: Response) => {
+      const userId = req.user.id;
+      const analytics = await this.userProgressRepo.getUserAnalytics(userId);
+      sendResponse(res, 'USER_ANALYTICS_FETCHED', { data: analytics });
+    }
+  );
+
+  public getPlatformAnalytics = catchAsync(
+    async (req: Request, res: Response) => {
+      const startDate = req.query.startDate
+        ? new Date(req.query.startDate as string)
+        : this.defaultStartDate;
+      const endDate = req.query.endDate
+        ? new Date(req.query.endDate as string)
+        : new Date();
+
+      const [
+        userGrowth,
+        contentEngagement,
+        challengeCompletion,
+        resourceUsage,
+      ] = await Promise.all([
+        this.userRepo.groupBy({
+          by: ['created_at'],
+          where: {
+            created_at: {
+              gte: startDate,
+              lte: endDate,
+            },
+          },
+          _count: true,
+          orderBy: {
+            created_at: 'asc',
+          },
+        }),
+        this.resourceRepo.groupBy({
+          by: ['type'],
+          where: {
+            created_at: {
+              gte: startDate,
+              lte: endDate,
+            },
+          },
+          _count: true,
+          _avg: {
+            rating: true,
+          },
+          orderBy: {
+            type: 'asc',
+          },
+        }),
+        this.challengeRepo.groupBy({
+          by: ['status'],
+          where: {
+            created_at: {
+              gte: startDate,
+              lte: endDate,
+            },
+          },
+          _count: true,
+          orderBy: {
+            status: 'asc',
+          },
+        }),
+        this.resourceRepo.groupBy({
+          by: ['type'],
+          where: {
+            created_at: {
+              gte: startDate,
+              lte: endDate,
+            },
+          },
+          _count: true,
+          orderBy: {
+            type: 'asc',
+          },
+        }),
+      ]);
+
+      sendResponse(res, 'PLATFORM_ANALYTICS_FETCHED', {
+        data: {
+          userGrowth,
+          contentEngagement,
+          challengeCompletion,
+          resourceUsage,
+        },
+      });
+    }
+  );
+
+  public generateReport = catchAsync(async (req: Request, res: Response) => {
+    const { reportType } = req.params;
+    const filters = {
+      startDate: req.query.startDate
+        ? new Date(req.query.startDate as string)
+        : this.defaultStartDate,
+      endDate: req.query.endDate
+        ? new Date(req.query.endDate as string)
+        : new Date(),
+      userId: req.query.userId as string,
+      type: req.query.type as string,
+      status: (req.query.status as string)?.toUpperCase() as ChallengeStatus,
+    };
+
+    let reportData;
+
+    switch (reportType) {
+      case 'user_activity':
+        // TODO: update this method if required in future
+        reportData = await prisma.userActivityLog.findMany({
+          where: {
+            timestamp: {
+              gte: filters.startDate,
+              lte: filters.endDate,
+            },
+            user_id: filters.userId,
+          },
+          include: {
+            user: {
+              select: {
+                username: true,
+                email: true,
+              },
+            },
+          },
+        });
+        break;
+
+      case 'resource_usage':
+        reportData = await this.resourceRepo.findMany({
+          where: {
+            created_at: {
+              gte: filters.startDate,
+              lte: filters.endDate,
+            },
+            type: filters.type,
+            user_id: filters.userId,
+          },
+          include: {
+            user: {
+              select: {
+                username: true,
+                email: true,
+              },
+            },
+          },
+        });
+        break;
+
+      case 'challenge_submissions':
+        reportData = await this.challengeRepo.findMany({
+          where: {
+            created_at: {
+              gte: filters.startDate,
+              lte: filters.endDate,
+            },
+            status: filters.status,
+          },
+        });
+        break;
+
+      default:
+        throw createAppError('Invalid report type', 400);
+    }
+    sendResponse(res, 'REPORT_GENERATED', { data: reportData });
+  });
+}

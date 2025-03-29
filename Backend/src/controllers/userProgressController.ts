@@ -1,58 +1,50 @@
 import { Request, Response } from 'express';
-import {
-  getUserProgress,
-  getAchievements,
-  calculateExperienceLevel,
-  updateUserProgress,
-  updateUserPoints,
-} from '../services/userService';
 import { createAppError } from '../middlewares/errorHandler';
-import logger from '../utils/logger';
+import UserProgressRepository from '../repositories/userProgressRepository';
+import UserPointsRepository from '@/repositories/userPointsRepository';
+import { catchAsync } from '@/utils';
+import { sendResponse } from '@/utils/apiResponse';
 
-export const getProgress = async (req: Request, res: Response) => {
-  try {
+export default class UserProgressController {
+  private readonly userProgressRepo: UserProgressRepository;
+  private readonly userPointsRepo: UserPointsRepository;
+
+  constructor() {
+    this.userProgressRepo = new UserProgressRepository();
+    this.userPointsRepo = new UserPointsRepository();
+  }
+
+  public getProgress = catchAsync(async (req: Request, res: Response) => {
     const userId = req.user?.id;
     if (!userId) throw createAppError('User not found', 404);
 
     const [progress, achievements, experienceLevel] = await Promise.all([
-      getUserProgress(userId),
-      getAchievements(userId),
-      calculateExperienceLevel(userId),
+      this.userProgressRepo.getUserProgress(userId),
+      this.userProgressRepo.getAchievements(userId),
+      this.userProgressRepo.calculateExperienceLevel(userId),
     ]);
 
-    res.status(200).json({
-      status: 'success',
+    sendResponse(res, 'PROGRESS_FETCHED', {
       data: { ...progress, achievements, experienceLevel },
     });
-  } catch (error) {
-    logger.error('Error fetching user progress:', error);
-    throw createAppError('Failed to fetch user progress', 400);
-  }
-};
+  });
 
-export const updateProgress = async (req: Request, res: Response) => {
-  try {
+  public updateProgress = catchAsync(async (req: Request, res: Response) => {
     const userId = req.user?.id;
     if (!userId) throw createAppError('User not found', 404);
 
     const { topicId, status, score } = req.body;
 
-    await updateUserProgress(userId, {
-      topicId,
-      isCompleted: status === 'completed',
+    await this.userProgressRepo.updateUserProgress(userId, {
+      topic_id: topicId,
+      is_completed: status === 'completed',
       timeSpent: 0,
     });
 
     if (status === 'completed') {
-      await updateUserPoints(userId, score || 10);
+      await this.userPointsRepo.updateUserPoints(userId, score || 10);
     }
 
-    res.status(200).json({
-      status: 'success',
-      message: 'Progress updated successfully',
-    });
-  } catch (error) {
-    logger.error('Error updating user progress:', error);
-    throw createAppError('Failed to update progress', 400);
-  }
-};
+    sendResponse(res, 'PROGRESS_UPDATED');
+  });
+}

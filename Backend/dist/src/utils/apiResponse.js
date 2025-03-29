@@ -431,20 +431,60 @@ const RESPONSE_MESSAGES = {
         success: true,
         message: 'Cache cleared successfully',
     },
-    ROADMAP_CATEGORIES_FETCHED: {
+    ARTICLE_UPDATED: {
         status: 200,
         success: true,
-        message: 'Roadmap categories fetched successfully',
+        message: 'Article updated successfully',
     },
-    UNAUTHORIZED: {
-        status: 401,
+    BATTLES_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Battles retrieved successfully',
+    },
+    BATTLE_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Battle retrieved successfully',
+    },
+    BATTLE_NOT_FOUND: {
+        status: 404,
         success: false,
-        message: 'Unauthorized',
+        message: 'Battle not found',
     },
-    ROADMAP_DELETED: {
+    BATTLE_CREATED: {
+        status: 201,
+        success: true,
+        message: 'Battle created successfully',
+    },
+    CHATS_FETCHED: {
         status: 200,
         success: true,
-        message: 'Roadmap deleted successfully',
+        message: 'Chats retrieved successfully',
+    },
+    CHAT_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Chat retrieved successfully',
+    },
+    CHAT_NOT_FOUND: {
+        status: 404,
+        success: false,
+        message: 'Chat not found',
+    },
+    CHAT_CREATED: {
+        status: 201,
+        success: true,
+        message: 'Chat created successfully',
+    },
+    CHAT_MESSAGE_SENT: {
+        status: 201,
+        success: true,
+        message: 'Message sent successfully',
+    },
+    CHAT_DELETED: {
+        status: 200,
+        success: true,
+        message: 'Chat deleted successfully',
     },
     MAIN_CONCEPT_CREATED: {
         status: 201,
@@ -469,297 +509,152 @@ const RESPONSE_MESSAGES = {
     MAIN_CONCEPT_FETCHED: {
         status: 200,
         success: true,
-        message: 'Main concept retrieved successfully',
+        message: 'Main concept fetched successfully',
+    },
+    RESOURCES_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Resources fetched successfully',
+    },
+    BOOKS_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Books fetched successfully',
+    },
+    PREDICTED: {
+        status: 200,
+        success: true,
+        message: 'Prediction made successfully',
+    },
+    QUESTIONS_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Questions fetched successfully',
+    },
+    QUESTION_CREATED: {
+        status: 201,
+        success: true,
+        message: 'Question created successfully',
+    },
+    QUESTION_UPDATED: {
+        status: 200,
+        success: true,
+        message: 'Question updated successfully',
+    },
+    QUESTION_DELETED: {
+        status: 200,
+        success: true,
+        message: 'Question deleted successfully',
+    },
+    QUESTIONS_SUBMITTED: {
+        status: 200,
+        success: true,
+        message: 'Questions submitted successfully',
+    },
+    QUIZ_CREATED: {
+        status: 201,
+        success: true,
+        message: 'Quiz created successfully',
+    },
+    QUIZ_UPDATED: {
+        status: 200,
+        success: true,
+        message: 'Quiz updated successfully',
+    },
+    QUIZ_DELETED: {
+        status: 200,
+        success: true,
+        message: 'Quiz deleted successfully',
+    },
+    USER_PROGRESS_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'User progress fetched successfully',
+    },
+    TOPIC_ADDED: {
+        status: 201,
+        success: true,
+        message: 'Topic added successfully',
+    },
+    TOPIC_UPDATED: {
+        status: 200,
+        success: true,
+        message: 'Topic updated successfully',
+    },
+    TOPIC_DELETED: {
+        status: 200,
+        success: true,
+        message: 'Topic deleted successfully',
+    },
+    RESOURCE_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Resource fetched successfully',
+    },
+    SUBJECTS_CREATED: {
+        status: 201,
+        success: true,
+        message: 'Subjects created successfully',
+    },
+    SUBJECTS_UPDATED: {
+        status: 200,
+        success: true,
+        message: 'Subjects updated successfully',
+    },
+    SUBJECTS_DELETED: {
+        status: 200,
+        success: true,
+        message: 'Subjects deleted successfully',
     },
     ARTICLE_CREATED: {
-        status: 200,
+        status: 201,
         success: true,
         message: 'Article created successfully',
-    },
-    ARTICLE_UPDATED: {
-        status: 200,
-        success: true,
-        message: 'Article updated successfully',
     },
     ARTICLE_DELETED: {
         status: 200,
         success: true,
         message: 'Article deleted successfully',
     },
-    ARTICLE_LIKED: {
+    INTERVIEW_QUESTIONS_FETCHED: {
         status: 200,
         success: true,
-        message: 'Article liked successfully',
+        message: 'Interview questions fetched successfully',
     },
-    ARTICLE_UNLIKED: {
+    INTERVIEW_QUESTION_CREATED: {
+        status: 201,
+        success: true,
+        message: 'Interview question created successfully',
+    },
+    INTERVIEW_QUESTION_UPDATED: {
         status: 200,
         success: true,
-        message: 'Article unliked successfully',
+        message: 'Interview question updated successfully',
     },
-    ARTICLE_BOOKMARKED: {
+    SUBJECT_UPDATED: {
         status: 200,
         success: true,
-        message: 'Article bookmarked successfully',
+        message: 'Subject updated successfully',
     },
-    ARTICLE_UNBOOKMARKED: {
+    SUBJECT_DELETED: {
         status: 200,
         success: true,
-        message: 'Article unbookmarked successfully',
+        message: 'Subject deleted successfully',
     },
-    ARTICLE_COMMENTED: {
+    RESOURCE_CREATED: {
+        status: 201,
+        success: true,
+        message: 'Resource created successfully',
+    },
+    RESOURCE_DETAILS_FETCHED: {
         status: 200,
         success: true,
-        message: 'Article commented successfully',
+        message: 'Resource details fetched successfully',
     },
-    COMMENT_DELETED: {
-        status: 200,
-        success: true,
-        message: 'Comment deleted successfully',
-    },
-    COMMENT_UPDATED: {
-        status: 200,
-        success: true,
-        message: 'Comment updated successfully',
-    },
-    COMMENT_LIKED: {
-        status: 200,
-        success: true,
-        message: 'Comment liked successfully',
-    },
-    COMMENT_UNLIKED: {
-        status: 200,
-        success: true,
-        message: 'Comment unliked successfully',
-    },
-    COMMENT_REPLIED: {
-        status: 200,
-        success: true,
-        message: 'Comment replied successfully',
-    },
-    COMMENT_REPLY_DELETED: {
-        status: 200,
-        success: true,
-        message: 'Comment reply deleted successfully',
-    },
-    COMMENT_REPLY_UPDATED: {
-        status: 200,
-        success: true,
-        message: 'Comment reply updated successfully',
-    },
-    COMMENT_REPLY_LIKED: {
-        status: 200,
-        success: true,
-        message: 'Comment reply liked successfully',
-    },
-    COMMENT_REPLY_UNLIKED: {
-        status: 200,
-        success: true,
-        message: 'Comment reply unliked successfully',
-    },
-    USER_PROFILE_FETCHED: {
-        status: 200,
-        success: true,
-        message: 'User profile retrieved successfully',
-    },
-    USER_PROFILE_UPDATED: {
-        status: 200,
-        success: true,
-        message: 'User profile updated successfully',
-    },
-    USER_ARTICLES_FETCHED: {
-        status: 200,
-        success: true,
-        message: 'User articles retrieved successfully',
-    },
-    USER_BOOKMARKS_FETCHED: {
-        status: 200,
-        success: true,
-        message: 'User bookmarks retrieved successfully',
-    },
-    USER_LIKES_FETCHED: {
-        status: 200,
-        success: true,
-        message: 'User likes retrieved successfully',
-    },
-    USER_COMMENTS_FETCHED: {
-        status: 200,
-        success: true,
-        message: 'User comments retrieved successfully',
-    },
-    USER_REPLIES_FETCHED: {
-        status: 200,
-        success: true,
-        message: 'User replies retrieved successfully',
-    },
-    USER_NOTIFICATIONS_FETCHED: {
-        status: 200,
-        success: true,
-        message: 'User notifications retrieved successfully',
-    },
-    USER_NOTIFICATION_READ: {
-        status: 200,
-        success: true,
-        message: 'User notification read successfully',
-    },
-    USER_NOTIFICATION_DELETED: {
-        status: 200,
-        success: true,
-        message: 'User notification deleted successfully',
-    },
-    USER_NOTIFICATION_CLEARED: {
-        status: 200,
-        success: true,
-        message: 'User notifications cleared successfully',
-    },
-    USER_SETTINGS_FETCHED: {
-        status: 200,
-        success: true,
-        message: 'User settings retrieved successfully',
-    },
-    USER_SETTINGS_UPDATED: {
-        status: 200,
-        success: true,
-        message: 'User settings updated successfully',
-    },
-    USER_PASSWORD_UPDATED: {
-        status: 200,
-        success: true,
-        message: 'User password updated successfully',
-    },
-    USER_EMAIL_UPDATED: {
-        status: 200,
-        success: true,
-        message: 'User email updated successfully',
-    },
-    USER_DELETED: {
-        status: 200,
-        success: true,
-        message: 'User deleted successfully',
-    },
-    USER_LOGGED_OUT: {
-        status: 200,
-        success: true,
-        message: 'User logged out successfully',
-    },
-    USER_LOGGED_IN: {
-        status: 200,
-        success: true,
-        message: 'User logged in successfully',
-    },
-    USER_REGISTERED: {
-        status: 200,
-        success: true,
-        message: 'User registered successfully',
-    },
-    USER_VERIFIED: {
-        status: 200,
-        success: true,
-        message: 'User verified successfully',
-    },
-    USER_PASSWORD_RESET: {
-        status: 200,
-        success: true,
-        message: 'User password reset successfully',
-    },
-    USER_PASSWORD_RESET_REQUESTED: {
-        status: 200,
-        success: true,
-        message: 'User password reset requested successfully',
-    },
-    USER_EMAIL_VERIFICATION_SENT: {
-        status: 200,
-        success: true,
-        message: 'User email verification sent successfully',
-    },
-    USER_EMAIL_VERIFICATION_RESENT: {
-        status: 200,
-        success: true,
-        message: 'User email verification resent successfully',
-    },
-    USER_EMAIL_VERIFICATION_FAILED: {
-        status: 200,
-        success: true,
-        message: 'User email verification failed',
-    },
-    USER_PASSWORD_RESET_FAILED: {
-        status: 200,
-        success: true,
-        message: 'User password reset failed',
-    },
-    USER_LOGIN_FAILED: {
-        status: 200,
-        success: true,
-        message: 'User login failed',
-    },
-    USER_REGISTRATION_FAILED: {
-        status: 400,
+    UNAUTHORIZED: {
+        status: 401,
         success: false,
-        message: 'User registration failed',
-    },
-    USER_VERIFICATION_FAILED: {
-        status: 400,
-        success: false,
-        message: 'User verification failed',
-    },
-    INVALID_TOKEN: {
-        status: 400,
-        success: false,
-        message: 'Invalid token',
-    },
-    INVALID_CREDENTIALS: {
-        status: 400,
-        success: false,
-        message: 'Invalid credentials',
-    },
-    INVALID_EMAIL: {
-        status: 400,
-        success: false,
-        message: 'Invalid email',
-    },
-    INVALID_PASSWORD: {
-        status: 400,
-        success: false,
-        message: 'Invalid password',
-    },
-    INVALID_CODE: {
-        status: 400,
-        success: false,
-        message: 'Invalid code',
-    },
-    INVALID_REQUEST: {
-        status: 400,
-        success: false,
-        message: 'Invalid request',
-    },
-    INVALID_RESPONSE: {
-        status: 400,
-        success: false,
-        message: 'Invalid response',
-    },
-    INVALID_STATE: {
-        status: 400,
-        success: false,
-        message: 'Invalid state',
-    },
-    INVALID_STATUS: {
-        status: 400,
-        success: false,
-        message: 'Invalid status',
-    },
-    INVALID_TYPE: {
-        status: 400,
-        success: false,
-        message: 'Invalid type',
-    },
-    INVALID_VALUE: {
-        status: 400,
-        success: false,
-        message: 'Invalid value',
-    },
-    INVALID_VERSION: {
-        status: 400,
-        success: false,
-        message: 'Invalid version',
+        message: 'Unauthorized',
     },
     FORBIDDEN: {
         status: 403,
@@ -771,164 +666,75 @@ const RESPONSE_MESSAGES = {
         success: false,
         message: 'Not found',
     },
-    CONFLICT: {
-        status: 409,
-        success: false,
-        message: 'Conflict',
+    ROADMAP_DELETED: {
+        status: 200,
+        success: true,
+        message: 'Roadmap deleted successfully',
     },
-    TOO_MANY_REQUESTS: {
-        status: 429,
-        success: false,
-        message: 'Too many requests',
+    ROADMAP_CATEGORIES_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Roadmap categories fetched successfully',
     },
-    INTERNAL_SERVER_ERROR: {
+    SUBJECT_CREATED: {
+        status: 201,
+        success: true,
+        message: 'Subject created successfully',
+    },
+    TICKET_CREATED: {
+        status: 201,
+        success: true,
+        message: 'Ticket created successfully',
+    },
+    TICKET_RESPONSE_ADDED: {
+        status: 200,
+        success: true,
+        message: 'Ticket response added successfully',
+    },
+    BUG_REPORT_CREATED: {
+        status: 201,
+        success: true,
+        message: 'Bug report created successfully',
+    },
+    FEATURE_REQUEST_CREATED: {
+        status: 201,
+        success: true,
+        message: 'Feature request created successfully',
+    },
+    HELP_ARTICLE_CREATED: {
+        status: 201,
+        success: true,
+        message: 'Help article created successfully',
+    },
+    USERNAME_AVAILABILITY_CHECKED: {
+        status: 200,
+        success: true,
+        message: 'Username availability checked successfully',
+    },
+    ROADMAP_REMOVED: {
+        status: 200,
+        success: true,
+        message: 'Roadmap removed successfully',
+    },
+    PROGRESS_UPDATED: {
+        status: 200,
+        success: true,
+        message: 'Progress updated successfully',
+    },
+    SOMETHING_WRONG: {
         status: 500,
         success: false,
-        message: 'Internal server error',
-    },
-    SERVICE_UNAVAILABLE: {
-        status: 503,
-        success: false,
-        message: 'Service unavailable',
-    },
-    GATEWAY_TIMEOUT: {
-        status: 504,
-        success: false,
-        message: 'Gateway timeout',
-    },
-    BAD_GATEWAY: {
-        status: 502,
-        success: false,
-        message: 'Bad gateway',
-    },
-    NETWORK_ERROR: {
-        status: 500,
-        success: false,
-        message: 'Network error',
-    },
-    TIMEOUT_ERROR: {
-        status: 500,
-        success: false,
-        message: 'Timeout error',
-    },
-    CONNECTION_ERROR: {
-        status: 500,
-        success: false,
-        message: 'Connection error',
-    },
-    REQUEST_ERROR: {
-        status: 500,
-        success: false,
-        message: 'Request error',
-    },
-    RESPONSE_ERROR: {
-        status: 500,
-        success: false,
-        message: 'Response error',
-    },
-    PARSE_ERROR: {
-        status: 500,
-        success: false,
-        message: 'Parse error',
-    },
-    ENCODE_ERROR: {
-        status: 500,
-        success: false,
-        message: 'Encode error',
-    },
-    DECODE_ERROR: {
-        status: 500,
-        success: false,
-        message: 'Decode error',
-    },
-    VALIDATION_ERROR: {
-        status: 500,
-        success: false,
-        message: 'Validation error',
-    },
-    AUTHENTICATION_ERROR: {
-        status: 401,
-        success: false,
-        message: 'Authentication error',
-    },
-    AUTHORIZATION_ERROR: {
-        status: 401,
-        success: false,
-        message: 'Authorization error',
-    },
-    PERMISSION_ERROR: {
-        status: 401,
-        success: false,
-        message: 'Permission error',
-    },
-    ACCESS_DENIED: {
-        status: 401,
-        success: false,
-        message: 'Access denied',
-    },
-    RATE_LIMIT_EXCEEDED: {
-        status: 429,
-        success: false,
-        message: 'Rate limit exceeded',
-    },
-    QUOTA_EXCEEDED: {
-        status: 403,
-        success: false,
-        message: 'Quota exceeded',
-    },
-    RESOURCE_EXHAUSTED: {
-        status: 403,
-        success: false,
-        message: 'Resource exhausted',
-    },
-    RESOURCE_NOT_FOUND: {
-        status: 404,
-        success: false,
-        message: 'Resource not found',
-    },
-    RESOURCE_EXISTS: {
-        status: 409,
-        success: false,
-        message: 'Resource exists',
-    },
-    RESOURCE_GONE: {
-        status: 410,
-        success: false,
-        message: 'Resource gone',
-    },
-    RESOURCE_EXPIRED: {
-        status: 410,
-        success: false,
-        message: 'Resource expired',
-    },
-    RESOURCE_LOCKED: {
-        status: 423,
-        success: false,
-        message: 'Resource locked',
-    },
-    RESOURCE_MOVED: {
-        status: 301,
-        success: false,
-        message: 'Resource moved',
-    },
-    RESOURCE_TEMPORARY_MOVED: {
-        status: 302,
-        success: false,
-        message: 'Resource temporarily moved',
-    },
-    RESOURCE_UNAVAILABLE: {
-        status: 503,
-        success: false,
-        message: 'Resource unavailable',
-    },
+        message: "Something went wrong",
+    }
 };
-const sendResponse = (res, type, response = {}) => {
+const sendResponse = (res, type, options) => {
     const config = RESPONSE_MESSAGES[type];
     return res.status(config.status).json({
-        type,
         success: config.success,
         message: config.message,
-        ...response,
+        data: options?.data || null,
+        error: options?.error || null,
+        meta: options?.meta || null,
     });
 };
 exports.sendResponse = sendResponse;

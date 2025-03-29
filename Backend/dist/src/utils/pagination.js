@@ -5,6 +5,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.parsePaginationQuery = parsePaginationQuery;
 exports.paginate = paginate;
 exports.parseSortQuery = parseSortQuery;
+// Add this interface for parsed query parameters
 // Add this query parser helper
 function parsePaginationQuery(
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -11,16 +11,11 @@ const sanitizeContent = (content: string) => {
 
 interface ResourceType {
   id: string;
-  title: string;
-}
-
-interface ITopic {
-  id: string;
-  order: number;
   topic: {
     id: string;
     title: string;
     description: string;
+    order: number;
   };
 }
 
@@ -41,7 +36,9 @@ export default function Resources({ id }: { id: string }) {
   } | null>(null);
   const [userAnswers, setUserAnswers] = useState({});
   const [activeTab, setActiveTab] = useState('content');
-  const [getResource] = useAxiosGet<ITopic[]>('/subjects/{{subjectId}}/topics');
+  const [getResource] = useAxiosGet<{
+    topics: ResourceType[];
+  }>('/subjects/{{subjectId}}/topics');
   const [getQuiz] = useAxiosGet<{
     success?: boolean;
     quiz?: {
@@ -69,9 +66,9 @@ export default function Resources({ id }: { id: string }) {
 
       if (!response?.error) {
         const topics =
-          response?.data
-            ?.sort((a, b) => a.order - b.order)
-            ?.map((item) => item.topic) ?? [];
+          response?.data?.topics?.sort(
+            (a, b) => a?.topic?.order - b?.topic?.order,
+          ) ?? [];
         setResource(topics);
         setSelectedTopic(
           topics[0] ?? {
@@ -185,7 +182,7 @@ export default function Resources({ id }: { id: string }) {
         className="mb-8 rounded-lg bg-white p-8 shadow-xl transition-all duration-300 hover:shadow-2xl dark:bg-gray-800"
       >
         <h2 className="mb-6 border-b border-gray-200 pb-2 text-3xl font-bold text-gray-800 dark:border-gray-700 dark:text-gray-200">
-          Quiz: {selectedTopic?.title}
+          Quiz: {selectedTopic?.topic?.title}
         </h2>
         {quiz?.questions?.map((question, index) => (
           <div key={question.id} className="mb-6">
@@ -259,11 +256,11 @@ export default function Resources({ id }: { id: string }) {
         <ul className="space-y-2">
           {resource.map((topic) => (
             <motion.li
-              key={topic.id}
+              key={topic?.id}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className={`cursor-pointer rounded-lg p-3 transition duration-300 hover:bg-primary2 hover:text-white ${
-                selectedTopic?.id === topic.id
+                selectedTopic?.topic?.id === topic?.topic?.id
                   ? 'bg-primary text-white shadow-md'
                   : 'hover:shadow-md'
               }`}
@@ -272,7 +269,7 @@ export default function Resources({ id }: { id: string }) {
                 setSidebarOpen(false);
               }}
             >
-              {topic.title}
+              {topic?.topic?.title}
             </motion.li>
           ))}
         </ul>
@@ -287,7 +284,7 @@ export default function Resources({ id }: { id: string }) {
             className="mb-8 rounded-lg bg-lightSecondary p-8 shadow-xl transition-all duration-300 hover:shadow-2xl"
           >
             <h1 className="mb-6 border-b border-border pb-2 text-4xl font-bold">
-              {selectedTopic.title}
+              {selectedTopic?.topic?.title}
             </h1>
             <div className="mb-4 flex border-b border-border">
               <button

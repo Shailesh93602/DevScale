@@ -3,16 +3,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const resourceController_js_1 = require("../controllers/resourceController.js");
-const paginationMiddleware_js_1 = __importDefault(require("../middlewares/paginationMiddleware.js"));
-const router = express_1.default.Router();
-router.get('/', paginationMiddleware_js_1.default, resourceController_js_1.getResources);
-router.get('/:id', resourceController_js_1.getResource);
-router.post('/create-subject', resourceController_js_1.createSubjects);
-router.post('/delete-subjects', resourceController_js_1.deleteSubjects);
-router.get('/details/:id', resourceController_js_1.getResourceDetails);
-router.post('/create', resourceController_js_1.createResource);
-router.post('/save/:id', resourceController_js_1.saveResource);
-exports.default = router;
+exports.ResourceRoutes = void 0;
+const BaseRouter_1 = require("./BaseRouter");
+const resourceController_1 = __importDefault(require("../controllers/resourceController"));
+const paginationMiddleware_1 = __importDefault(require("../middlewares/paginationMiddleware"));
+const authMiddleware_1 = require("@/middlewares/authMiddleware");
+class ResourceRoutes extends BaseRouter_1.BaseRouter {
+    resourceController;
+    constructor() {
+        super();
+        this.resourceController = new resourceController_1.default();
+        this.router.use(authMiddleware_1.authMiddleware);
+    }
+    initializeRoutes() {
+        this.router.get('/', paginationMiddleware_1.default, this.resourceController.getResources);
+        this.router.get('/:id', this.resourceController.getResource);
+        this.router.post('/create-subject', this.resourceController.createSubjects);
+        this.router.post('/delete-subjects', this.resourceController.deleteSubjects);
+        this.router.get('/details/:id', this.resourceController.getResourceDetails);
+        this.router.post('/create', this.resourceController.createResource);
+        this.router.post('/save/:id', this.resourceController.saveResource);
+    }
+}
+exports.ResourceRoutes = ResourceRoutes;
 //# sourceMappingURL=resourceRoutes.js.map

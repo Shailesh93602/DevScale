@@ -12,14 +12,20 @@ import { useAxiosGet } from '@/hooks/useAxios';
 
 interface IRoadmap {
   id: string;
-  name: string;
-  description: string;
-  Subjects: {
+  main_concept: {
     id: string;
     name: string;
     description: string;
-    icon: React.ElementType;
-  }[];
+    subjects: {
+      id: string;
+      subject: {
+        id: string;
+        name: string;
+        description: string;
+        icon: React.ElementType;
+      };
+    }[];
+  };
 }
 
 export default function CareerPathPage() {
@@ -33,7 +39,7 @@ export default function CareerPathPage() {
       success?: boolean;
       message?: string;
     } & IRoadmap[]
-  >('road_maps/main_concepts/{{careerId}}');
+  >('roadmaps/{{careerId}}/main_concepts');
 
   useEffect(() => {
     const fetchResources = async () => {
@@ -66,9 +72,9 @@ export default function CareerPathPage() {
             {roadmap?.map((section, index) => (
               <RoadmapSection
                 key={section.id}
-                name={section.name}
-                description={section.description}
-                subjects={section.Subjects}
+                name={section.main_concept?.name}
+                description={section.main_concept?.description}
+                subjects={section.main_concept?.subjects}
                 index={index}
               />
             ))}

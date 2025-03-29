@@ -40,7 +40,7 @@ const ResourcesPage = () => {
       const response = await getResources({
         params: {
           search: searchTerm,
-          page: page,
+          page,
           limit: 10,
         },
       });
