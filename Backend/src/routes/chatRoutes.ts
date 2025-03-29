@@ -1,34 +1,41 @@
-import express from 'express';
-import {
-  createChat,
-  createMessage,
-  deleteChat,
-  getChat,
-  getChats,
-} from '../controllers/chatControllers.js';
+import { BaseRouter } from './BaseRouter';
+import ChatController from '../controllers/chatControllers';
 import { authMiddleware } from '../middlewares/authMiddleware';
-import { validateRequest } from '../middlewares/validateRequest.js';
+import { validateRequest } from '../middlewares/validateRequest';
 import {
   createChatValidationSchema,
   messageValidationSchema,
-} from '../validations/chatValidations.js';
+} from '../validations/chatValidations';
 
-const router = express.Router();
+export class ChatRoutes extends BaseRouter {
+  private readonly chatController: ChatController;
 
-router.get('/', authMiddleware, getChats);
-router.get('/:id', authMiddleware, getChat);
-router.post(
-  '/create',
-  authMiddleware,
-  validateRequest(createChatValidationSchema),
-  createChat
-);
-router.post(
-  '/message/:id',
-  authMiddleware,
-  validateRequest(messageValidationSchema),
-  createMessage
-);
-router.delete('/delete/:id', authMiddleware, deleteChat);
+  constructor() {
+    super();
+    this.chatController = new ChatController();
+  }
 
-export default router;
+  protected initializeRoutes(): void {
+    this.router.get('/', authMiddleware, this.chatController.getChats);
+    this.router.get('/:id', authMiddleware, this.chatController.getChat);
+    this.router.post(
+      '/create',
+      authMiddleware,
+      validateRequest(createChatValidationSchema),
+      this.chatController.createChat
+    );
+    this.router.post(
+      '/message/:id',
+      authMiddleware,
+      validateRequest(messageValidationSchema),
+      this.chatController.createMessage
+    );
+    this.router.delete(
+      '/delete/:id',
+      authMiddleware,
+      this.chatController.deleteChat
+    );
+  }
+}
+
+export default new ChatRoutes().getRouter();

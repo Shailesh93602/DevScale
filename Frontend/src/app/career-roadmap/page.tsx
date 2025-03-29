@@ -17,6 +17,7 @@ import { toast } from 'react-toastify';
 import { debounce } from 'lodash';
 import { useIntersection } from '@/hooks/useIntersection';
 import { CreateRoadmap } from './create-roadmap';
+import { useRouter } from 'next/navigation';
 
 interface IRoadmap {
   id: string;
@@ -45,10 +46,12 @@ interface RoadmapCardProps {
 }
 
 const RoadmapCard = ({ roadmap }: RoadmapCardProps) => {
+  const router = useRouter();
   return (
     <div
       key={roadmap.id}
       className="group relative overflow-hidden rounded-lg border bg-background p-6 shadow-sm transition-shadow hover:shadow-md"
+      onClick={() => router.push(`/career-roadmap/${roadmap.id}`)}
     >
       <div className="flex justify-between">
         <div>

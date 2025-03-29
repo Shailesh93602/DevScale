@@ -1,52 +1,50 @@
-import { PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
+import { BattleRepository } from '@/repositories/battleRepository';
+import logger from '@/utils/logger';
+import { sendResponse } from '@/utils/apiResponse';
+import { createAppError } from '@/utils/errorHandler';
 
-const prisma = new PrismaClient();
+export default class BattleController {
+  private readonly battleRepo: BattleRepository;
 
-export const getBattles = catchAsync(async (req: Request, res: Response) => {
-  const battles = await prisma.battle.findMany({
-    orderBy: { created_at: 'asc' },
-    include: {
-      topic: {
-        select: { title: true },
-      },
-    },
-  });
-  res.status(200).json({ success: true, battles });
-});
-
-export const getBattle = catchAsync(async (req: Request, res: Response) => {
-  const battleId = req.params.id;
-  const battle = await prisma.battle.findUnique({
-    where: { id: battleId },
-  });
-  if (!battle) {
-    return res
-      .status(404)
-      .json({ success: false, message: 'Battle not found' });
+  constructor() {
+    this.battleRepo = new BattleRepository();
   }
-  res.status(200).json({ success: true, battle });
-});
-
-export const createBattle = catchAsync(async (req: Request, res: Response) => {
-  const { title, description, topic_id, difficulty, length, date, time } =
-    req.body;
-
-  await prisma.battle.create({
-    data: {
-      title,
-      description,
-      user_id: req.user.id,
-      topic_id,
-      difficulty,
-      length,
-      date,
-      time,
-    },
+  public getBattles = catchAsync(async (req: Request, res: Response) => {
+    const battles = await this.battleRepo.findMany();
+    sendResponse(res, 'BATTLES_FETCHED', { data: battles });
   });
 
-  res
-    .status(201)
-    .json({ success: true, message: 'Battle created successfully!' });
-});
+  public getBattle = catchAsync(async (req: Request, res: Response) => {
+    try {
+      const battle = await this.battleRepo.findUnique({
+        where: { id: req.params.id },
+      });
+      sendResponse(res, 'BATTLES_FETCHED', { data: battle });
+    } catch (error) {
+      logger.error('Error: ', error);
+      createAppError('Battle not found', 404);
+    }
+  });
+
+  public createBattle = catchAsync(async (req: Request, res: Response) => {
+    const { title, description, topic_id, difficulty, length, date, time } =
+      req.body;
+
+    await this.battleRepo.create({
+      data: {
+        title,
+        description,
+        topic_id,
+        difficulty,
+        length,
+        date,
+        time,
+        user_id: req.user.id,
+      },
+    });
+
+    sendResponse(res, 'BATTLE_CREATED');
+  });
+}

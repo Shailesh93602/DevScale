@@ -18,6 +18,7 @@ import { createClient } from '@/utils/supabase/client';
 import { User } from '@supabase/supabase-js';
 import { detailsSchema } from '@/lib/validations';
 import { toast } from 'react-toastify';
+import Loader from '@/components/Loader';
 
 const steps = [
   'Personal Info',
@@ -56,7 +57,9 @@ const stepFields: (keyof FormValues)[][] = [
 const isLastStep = (step: number) => step === stepFields.length - 1;
 
 export default function ProfilePage() {
-  const [getUser, { data }] = useAxiosGet<{ user: IUser }>('/users/me');
+  const [getUser, { data, isLoading: isGetUserLoading }] = useAxiosGet<{
+    user: IUser;
+  }>('/users/me');
   const router = useRouter();
   const dispatch = useDispatch();
   const supabase = createClient();
@@ -183,6 +186,10 @@ export default function ProfilePage() {
       setCurrentStep((prev) => prev + 1);
     }
   };
+
+  if (isGetUserLoading && !data?.user) {
+    return <Loader type="SiteLoader" />;
+  }
 
   return (
     <div className="container mx-auto w-full max-w-4xl rounded-lg bg-lightSecondary py-8 shadow-lg">

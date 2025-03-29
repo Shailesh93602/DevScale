@@ -1,9 +1,19 @@
-import express from 'express';
-import { getBooks, getResources } from '../controllers/placementControllers';
+import { BaseRouter } from './BaseRouter';
+import PlacementController from '../controllers/placementControllers';
 
-const router = express.Router();
+export class PlacementRoutes extends BaseRouter {
+  private readonly placementController: PlacementController;
 
-router.get('/resources', getResources);
-router.get('/books', getBooks);
+  constructor() {
+    super();
+    this.placementController = new PlacementController();
+    this.initializeRoutes();
+  }
 
-export default router;
+  protected initializeRoutes(): void {
+    this.router.get('/resources', this.placementController.getResources);
+    this.router.get('/books', this.placementController.getBooks);
+  }
+}
+
+export default new PlacementRoutes().getRouter();

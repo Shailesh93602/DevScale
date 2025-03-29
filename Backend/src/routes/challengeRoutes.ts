@@ -1,12 +1,5 @@
-import { Router } from 'express';
-import {
-  getChallenges,
-  getChallengeLeaderboard,
-  getChallenge,
-  createNewChallenge,
-  submitChallengeAttempt,
-  updateExistingChallenge,
-} from '../controllers/challengeController';
+import { BaseRouter } from './BaseRouter';
+import ChallengeController from '../controllers/challengeController';
 import { authMiddleware, authorizeRoles } from '../middlewares/authMiddleware';
 import { validateRequest } from '../middlewares/validateRequest';
 import {
@@ -14,34 +7,45 @@ import {
   submitChallengeValidation,
 } from '../validations/challengeValidation';
 
-const router = Router();
+export class ChallengeRoutes extends BaseRouter {
+  private readonly challengeController: ChallengeController;
 
-router.use(authMiddleware);
+  constructor() {
+    super();
+    this.challengeController = new ChallengeController();
+    this.router.use(authMiddleware);
+  }
 
-// Public routes
-router.get('/', getChallenges);
-router.get('/leaderboard', getChallengeLeaderboard);
-router.get('/:id', getChallenge);
+  protected initializeRoutes(): void {
+    // Public routes
+    this.router.get('/', this.challengeController.getChallenges);
+    this.router.get(
+      '/leaderboard',
+      this.challengeController.getChallengeLeaderboard
+    );
+    this.router.get('/:id', this.challengeController.getChallenge);
 
-// Protected routes
-router.post(
-  '/',
-  authorizeRoles('admin', 'instructor'),
-  validateRequest(createChallengeValidation),
-  createNewChallenge
-);
+    // Protected routes
+    this.router.post(
+      '/',
+      authorizeRoles('admin', 'instructor'),
+      validateRequest(createChallengeValidation),
+      this.challengeController.createNewChallenge
+    );
 
-router.patch(
-  '/:id',
-  authorizeRoles('admin', 'instructor'),
-  validateRequest(createChallengeValidation),
-  updateExistingChallenge
-);
+    this.router.patch(
+      '/:id',
+      authorizeRoles('admin', 'instructor'),
+      validateRequest(createChallengeValidation),
+      this.challengeController.updateExistingChallenge
+    );
 
-router.post(
-  '/:challengeId/submit',
-  validateRequest(submitChallengeValidation),
-  submitChallengeAttempt
-);
+    this.router.post(
+      '/:challengeId/submit',
+      validateRequest(submitChallengeValidation),
+      this.challengeController.submitChallengeAttempt
+    );
+  }
+}
 
-export default router;
+export default new ChallengeRoutes().getRouter();

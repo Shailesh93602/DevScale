@@ -1,14 +1,19 @@
-import express from 'express';
-import {
-  enrollCourse,
-  getCourse,
-  getCourses,
-} from '../controllers/courseControllers.js';
+import { BaseRouter } from './BaseRouter';
+import CourseController from '../controllers/courseControllers';
 
-const router = express.Router();
+export class CourseRoutes extends BaseRouter {
+  private readonly courseController: CourseController;
 
-router.get('/', getCourses);
-router.get('/:id', getCourse);
-router.post('/enroll', enrollCourse);
+  constructor() {
+    super();
+    this.courseController = new CourseController();
+  }
 
-export default router;
+  protected initializeRoutes(): void {
+    this.router.get('/', this.courseController.getCourses);
+    this.router.get('/:id', this.courseController.getCourse);
+    this.router.post('/enroll', this.courseController.enrollCourse);
+  }
+}
+
+export default new CourseRoutes().getRouter();

@@ -1,22 +1,27 @@
-import express from 'express';
-import {
-  createBattle,
-  getBattle,
-  getBattles,
-} from '../controllers/battleControllers.js';
-import { validateRequest } from '../middlewares/validateRequest.js';
-import { createBattleValidationSchema } from '../validations/battleValidations.js';
-import { authMiddleware } from '../middlewares/authMiddleware.js';
+import { BaseRouter } from './BaseRouter';
+import BattleController from '../controllers/battleControllers';
+import { validateRequest } from '../middlewares/validateRequest';
+import { createBattleValidationSchema } from '../validations/battleValidations';
+import { authMiddleware } from '../middlewares/authMiddleware';
 
-const router = express.Router();
+export class BattleRoutes extends BaseRouter {
+  private readonly battleController: BattleController;
 
-router.get('/', getBattles);
-router.get('/:id', getBattle);
-router.post(
-  '/create',
-  authMiddleware,
-  validateRequest(createBattleValidationSchema),
-  createBattle
-);
+  constructor() {
+    super();
+    this.battleController = new BattleController();
+  }
 
-export default router;
+  protected initializeRoutes(): void {
+    this.router.get('/', this.battleController.getBattles);
+    this.router.get('/:id', this.battleController.getBattle);
+    this.router.post(
+      '/create',
+      authMiddleware,
+      validateRequest(createBattleValidationSchema),
+      this.battleController.createBattle
+    );
+  }
+}
+
+export default new BattleRoutes().getRouter();

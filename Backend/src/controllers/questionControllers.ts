@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
-import prisma from '../prisma';
 import { catchAsync } from '../utils';
 import { createAppError } from '../utils/errorHandler';
 import Joi from 'joi';
+import QuizQuestionsRepository from '@/repositories/quizQuestionsRepository';
+import { sendResponse } from '@/utils/apiResponse';
 
 // Validation schemas
 const createQuestionSchema = Joi.object({
@@ -25,28 +26,33 @@ const updateQuestionSchema = createQuestionSchema.keys({
   points: Joi.number().min(1),
 });
 
-// Get all questions
-export const getQuestions = catchAsync(async (req: Request, res: Response) => {
-  const questions = await prisma.quizQuestion.findMany({
-    include: {
-      options: true,
-    },
-    orderBy: { created_at: 'asc' },
+export default class QuestionController {
+  private readonly quizQuestionsRepo: QuizQuestionsRepository;
+  constructor() {
+    this.quizQuestionsRepo = new QuizQuestionsRepository();
+  }
+
+  // Get all questions
+  public getQuestions = catchAsync(async (req: Request, res: Response) => {
+    const questions = await this.quizQuestionsRepo.findMany({
+      include: {
+        options: true,
+      },
+      orderBy: { created_at: 'asc' },
+    });
+
+    sendResponse(res, 'QUESTIONS_FETCHED', { data: questions });
   });
 
-  res.status(200).json({ success: true, data: questions });
-});
-
-// Create new question
-export const createQuestion = catchAsync(
-  async (req: Request, res: Response) => {
+  // Create new question
+  public createQuestion = catchAsync(async (req: Request, res: Response) => {
     const { error, value } = createQuestionSchema.validate(req.body);
 
     if (error) {
       throw createAppError(error.details[0].message, 400);
     }
 
-    const question = await prisma.quizQuestion.create({
+    const question = await this.quizQuestionsRepo.create({
       data: {
         question: value.text,
         type: value.type,
@@ -65,13 +71,11 @@ export const createQuestion = catchAsync(
       },
     });
 
-    res.status(201).json({ success: true, data: question });
-  }
-);
+    sendResponse(res, 'QUESTION_CREATED', { data: question });
+  });
 
-// Update existing question
-export const updateQuestion = catchAsync(
-  async (req: Request, res: Response) => {
+  // Update existing question
+  public updateQuestion = catchAsync(async (req: Request, res: Response) => {
     const questionId = req.params.id;
     const { error, value } = updateQuestionSchema.validate(req.body);
 
@@ -79,7 +83,7 @@ export const updateQuestion = catchAsync(
       throw createAppError(error.details[0].message, 400);
     }
 
-    const question = await prisma.quizQuestion.update({
+    const question = await this.quizQuestionsRepo.update({
       where: { id: questionId },
       data: {
         question: value.text,
@@ -99,26 +103,22 @@ export const updateQuestion = catchAsync(
       },
     });
 
-    res.status(200).json({ success: true, data: question });
-  }
-);
+    sendResponse(res, 'QUESTION_UPDATED', { data: question });
+  });
 
-// Delete question
-export const deleteQuestion = catchAsync(
-  async (req: Request, res: Response) => {
+  // Delete question
+  public deleteQuestion = catchAsync(async (req: Request, res: Response) => {
     const questionId = req.params.id;
 
-    await prisma.quizQuestion.delete({
+    await this.quizQuestionsRepo.delete({
       where: { id: questionId },
     });
 
-    res.status(204).json({ success: true, data: null });
-  }
-);
+    sendResponse(res, 'QUESTION_DELETED', { data: null });
+  });
 
-// Submit multiple questions (existing implementation)
-export const submitQuestions = catchAsync(
-  async (req: Request, res: Response) => {
+  // Submit multiple questions (existing implementation)
+  public submitQuestions = catchAsync(async (req: Request, res: Response) => {
     const { questions } = req.body;
 
     if (!questions || !Array.isArray(questions) || questions.length === 0) {
@@ -146,13 +146,11 @@ export const submitQuestions = catchAsync(
         : undefined,
     }));
 
-    await prisma.quizQuestion.createMany({
+    await this.quizQuestionsRepo.createMany({
       data: questionData,
       skipDuplicates: true,
     });
 
-    res
-      .status(201)
-      .json({ success: true, message: 'Questions submitted successfully' });
-  }
-);
+    sendResponse(res, 'QUESTIONS_SUBMITTED', { data: null });
+  });
+}

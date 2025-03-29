@@ -1,51 +1,70 @@
-import { Router } from 'express';
-import {
-  updateTicketStatus,
-  addTicketResponse,
-  createTicket,
-  createBugReport,
-  createFeatureRequest,
-  voteFeatureRequest,
-  createHelpArticle,
-  searchHelpArticles,
-} from '../controllers/supportController';
+import SupportController from '../controllers/supportController';
 import { authMiddleware } from '../middlewares/authMiddleware';
-import { requirePermission } from '../middlewares/rbacMiddleware';
+// import { requirePermission } from '../middlewares/rbacMiddleware';
+import { BaseRouter } from './BaseRouter';
 
-const router = Router();
+export class SupportRoutes extends BaseRouter {
+  private readonly supportController: SupportController;
 
-// Support Ticket Routes
-router.post('/tickets', authMiddleware, createTicket);
+  constructor() {
+    super();
+    this.supportController = new SupportController();
+  }
 
-router.patch(
-  '/tickets/:ticketId/status',
-  authMiddleware,
-  requirePermission('tickets', 'update'),
-  updateTicketStatus
-);
+  protected initializeRoutes(): void {
+    // Support Ticket Routes
+    this.router.post(
+      '/tickets',
+      authMiddleware,
+      this.supportController.createTicket
+    );
 
-router.post('/tickets/:ticketId/responses', authMiddleware, addTicketResponse);
+    this.router.patch(
+      '/tickets/:ticketId/status',
+      authMiddleware,
+      // requirePermission('tickets', 'update'),
+      this.supportController.updateTicketStatus
+    );
 
-// Bug Report Routes
-router.post('/bug-reports', authMiddleware, createBugReport);
+    this.router.post(
+      '/tickets/:ticketId/responses',
+      authMiddleware,
+      this.supportController.addTicketResponse
+    );
 
-// Feature Request Routes
-router.post('/feature-requests', authMiddleware, createFeatureRequest);
+    // Bug Report Routes
+    this.router.post(
+      '/bug-reports',
+      authMiddleware,
+      this.supportController.createBugReport
+    );
 
-router.post(
-  '/feature-requests/:requestId/vote',
-  authMiddleware,
-  voteFeatureRequest
-);
+    // Feature Request Routes
+    this.router.post(
+      '/feature-requests',
+      authMiddleware,
+      this.supportController.createFeatureRequest
+    );
 
-// Help Center Routes
-router.post(
-  '/help-articles',
-  authMiddleware,
-  requirePermission('help', 'create'),
-  createHelpArticle
-);
+    this.router.post(
+      '/feature-requests/:requestId/vote',
+      authMiddleware,
+      this.supportController.voteFeatureRequest
+    );
 
-router.get('/help-articles/search', searchHelpArticles);
+    // Help Center Routes
+    this.router.post(
+      '/help-articles',
+      authMiddleware,
+      // requirePermission('help', 'create'),
+      this.supportController.createHelpArticle
+    );
 
-export default router;
+    this.router.get(
+      '/help-articles/search',
+      this.supportController.searchHelpArticles
+    );
+  }
+}
+
+export default new SupportRoutes().getRouter();

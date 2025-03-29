@@ -1,166 +1,108 @@
 import { Request, Response } from 'express';
-import prisma from '../prisma';
 import { catchAsync, parse } from '../utils';
 import { sendResponse } from '../utils/apiResponse';
-import * as userService from '../services/userService';
+import UserRepository from '../repositories/userRepository';
+import { createAppError } from '@/utils/errorHandler';
+import UserRoadmapRepository from '@/repositories/userRoadmapRepository';
 
-export const getProfile = catchAsync(async (req: Request, res: Response) => {
-  const user = await prisma.user.findUnique({
-    where: { supabase_id: req.user.id },
-  });
+export default class UserController {
+  private readonly userRepo: UserRepository;
+  private readonly userRoadmapRepo: UserRoadmapRepository;
 
-  if (!user) {
-    return sendResponse(res, 'USER_NOT_CREATED');
+  constructor() {
+    this.userRepo = new UserRepository();
+    this.userRoadmapRepo = new UserRoadmapRepository();
   }
 
-  sendResponse(res, 'PROFILE_FETCHED', {
-    data: { user: parse(user) },
+  public getProfile = catchAsync(async (req: Request, res: Response) => {
+    const user = await this.userRepo.findUnique({
+      where: { supabase_id: req.user?.id },
+    });
+
+    if (!user) {
+      return sendResponse(res, 'USER_NOT_CREATED');
+    }
+
+    sendResponse(res, 'PROFILE_FETCHED', {
+      data: { user: parse(user) },
+    });
   });
-});
 
-export const getUserProgress = catchAsync(
-  async (req: Request, res: Response) => {
+  public getUserProgress = catchAsync(async (req: Request, res: Response) => {
+    // TODO: Implement logic to fetch user progress
+
+    sendResponse(res, 'PROGRESS_FETCHED', {
+      data: { progress: 0 },
+    });
+  });
+
+  public getUserRoadmap = catchAsync(async (req: Request, res: Response) => {
     const user_id = req.user.id;
-
-    // TODO: implement this method
-    const roadmaps = await prisma.roadmap.findMany({
+    const userRoadmap = await this.userRepo.findUnique({
+      where: {
+        id: user_id,
+      },
       include: {
-        main_concepts: {
-          select: {
-            main_concept: {
-              include: {
-                subjects: {
-                  select: {
-                    subject: {
-                      include: {
-                        topics: {
-                          select: {
-                            topic: {
-                              include: {
-                                progress: {
-                                  where: { user_id },
-                                  select: { id: true, status: true },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
+        user_roadmaps: {
+          include: {
+            roadmap: true,
           },
         },
       },
     });
 
-    sendResponse(res, 'PROGRESS_FETCHED', {
-      data: { roadmaps },
-    });
-  }
-);
-
-export const getUserRoadmap = catchAsync(
-  async (req: Request, res: Response) => {
-    const user_id = req.user.id;
-    const userRoadmap = await prisma.userRoadmap.findFirst({
-      where: { user_id },
-    });
-
     if (!userRoadmap) {
-      return res
-        .status(200)
-        .json({ success: true, message: 'No roadmap found for the user' });
+      throw createAppError('You are not enrolled in any roadmap', 404);
     }
 
-    res.status(200).json({ success: true, userRoadmap });
-  }
-);
-
-export const insertUserRoadmap = catchAsync(
-  async (req: Request, res: Response) => {
-    const user_id = req.user?.id;
-    if (!user_id) {
-      return res.status(401).json({ success: false, message: 'Unauthorized' });
-    }
-
-    const isRoadmapExists = await prisma.userRoadmap.findFirst({
-      where: { user_id },
+    sendResponse(res, 'ROADMAP_FETCHED', {
+      data: { userRoadmap },
     });
+  });
 
-    if (isRoadmapExists) {
-      return res.status(400).json({
-        success: false,
-        message:
-          'You already added a Roadmap, please remove existing Roadmap to add another Roadmap',
-      });
-    }
-
-    const { roadmap_id } = req.body;
-    const userRoadmap = await prisma.userRoadmap.create({
+  public insertUserRoadmap = catchAsync(async (req: Request, res: Response) => {
+    const userRoadmap = await this.userRoadmapRepo.create({
       data: {
-        user_id,
-        roadmap_id,
+        user_id: req.user.id,
+        roadmap_id: req.body.roadmap_id,
       },
     });
 
-    res.status(200).json({
-      success: true,
-      message: 'User roadmap inserted successfully',
-      userRoadmap,
-    });
-  }
-);
+    sendResponse(res, 'ROADMAP_ENROLLED', { data: userRoadmap });
+  });
 
-export const deleteUserRoadmap = catchAsync(
-  async (req: Request, res: Response) => {
+  public deleteUserRoadmap = catchAsync(async (req: Request, res: Response) => {
+    const user_id = req.user.id;
     const { id } = req.params;
-    const result = await prisma.userRoadmap.delete({
-      where: { id },
-    });
 
-    if (!result) {
-      return res
-        .status(404)
-        .json({ success: false, message: 'User roadmap not found' });
+    await this.userRoadmapRepo.delete({ where: { id, user_id } });
+
+    sendResponse(res, 'ROADMAP_REMOVED');
+  });
+
+  public upsertUser = catchAsync(async (req: Request, res: Response) => {
+    const user = await this.userRepo.upsertUserProfile({
+      supabase_id: req.user.id,
+      ...req.body,
+    });
+    sendResponse(res, 'USER_UPDATED', { data: { user } });
+  });
+
+  public checkUsername = catchAsync(async (req: Request, res: Response) => {
+    const { username } = req.query;
+
+    if (!username || typeof username !== 'string') {
+      throw createAppError('Invalid username', 400);
     }
 
-    res
-      .status(200)
-      .json({ success: true, message: 'User roadmap deleted successfully' });
-  }
-);
+    const isAvailable = await this.userRepo.findFirst({ where: { username } });
 
-export const upsertUser = catchAsync(async (req: Request, res: Response) => {
-  const { id: supabase_id, email } = req.user;
-  const updateData = req.body;
+    console.log(
+      '🚀 --------------------------------------------------------------------------🚀'
+    );
 
-  const user = await userService.upsertUserProfile({
-    supabase_id,
-    email,
-    ...updateData,
-    graduation_year: updateData.graduation_year
-      ? parseInt(updateData.graduation_year)
-      : undefined,
-    skills: Array.isArray(updateData.skills)
-      ? updateData.skills
-      : [updateData.skills],
+    sendResponse(res, 'USERNAME_AVAILABILITY_CHECKED', {
+      data: { isAvailable: !isAvailable },
+    });
   });
-
-  return sendResponse(res, user ? 'USER_UPDATED' : 'USER_CREATED', {
-    data: { user: parse(user) },
-  });
-});
-
-export const checkUsername = catchAsync(async (req: Request, res: Response) => {
-  const { username } = req.params;
-  const isAvailable = await prisma.user.findFirst({
-    where: { username },
-  });
-
-  sendResponse(res, 'USERNAME_CHECKED', {
-    data: { available: !isAvailable },
-  });
-});
+}

@@ -1,23 +1,31 @@
-import express from 'express';
-import {
-  createResource,
-  createSubjects,
-  deleteSubjects,
-  getResource,
-  getResourceDetails,
-  getResources,
-  saveResource,
-} from '../controllers/resourceController.js';
-import paginationMiddleware from '../middlewares/paginationMiddleware.js';
+import { BaseRouter } from './BaseRouter';
+import ResourceController from '../controllers/resourceController';
+import paginationMiddleware from '../middlewares/paginationMiddleware';
+import { authMiddleware } from '../middlewares/authMiddleware';
 
-const router = express.Router();
+export class ResourceRoutes extends BaseRouter {
+  private readonly resourceController: ResourceController;
 
-router.get('/', paginationMiddleware, getResources);
-router.get('/:id', getResource);
-router.post('/create-subject', createSubjects);
-router.post('/delete-subjects', deleteSubjects);
-router.get('/details/:id', getResourceDetails);
-router.post('/create', createResource);
-router.post('/save/:id', saveResource);
+  constructor() {
+    super();
+    this.resourceController = new ResourceController();
+    this.router.use(authMiddleware);
+  }
 
-export default router;
+  protected initializeRoutes(): void {
+    this.router.get(
+      '/',
+      paginationMiddleware,
+      this.resourceController.getResources
+    );
+    this.router.get('/:id', this.resourceController.getResource);
+    this.router.post('/create-subject', this.resourceController.createSubjects);
+    this.router.post(
+      '/delete-subjects',
+      this.resourceController.deleteSubjects
+    );
+    this.router.get('/details/:id', this.resourceController.getResourceDetails);
+    this.router.post('/create', this.resourceController.createResource);
+    this.router.post('/save/:id', this.resourceController.saveResource);
+  }
+}

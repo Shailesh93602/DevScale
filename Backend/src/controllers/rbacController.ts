@@ -1,15 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
-import {
-  createRole,
-  updateRole,
-  deleteRole,
-  getRoleHierarchy,
-  createPermission,
-  updatePermission,
-  deletePermission,
-  assignRoleToUser,
-  checkPermission,
-} from '../services/rbacService';
+import { Request, Response } from 'express';
+import { RBACRepository } from '../repositories/rbacRepository';
 import { validateRequest } from '../middlewares/validateRequest';
 import {
   roleSchema,
@@ -17,129 +7,82 @@ import {
   roleAssignmentSchema,
 } from '../validations/rbacValidations';
 import { sendResponse } from '../utils/apiResponse';
+import { catchAsync } from '@/utils';
+import UserRepository from '@/repositories/userRepository';
 
-export class RBACController {
-  static async createRole(req: Request, res: Response, next: NextFunction) {
-    try {
-      validateRequest(roleSchema, req.body);
-      const role = await createRole(req.body);
-      sendResponse(res, 'ROLE_CREATED', { data: role });
-    } catch (error) {
-      next(error);
-    }
+export default class RBACController {
+  private readonly rbacRepository: RBACRepository;
+  private readonly userRepository: UserRepository;
+
+  constructor() {
+    this.rbacRepository = new RBACRepository();
+    this.userRepository = new UserRepository();
   }
 
-  static async updateRole(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { roleId } = req.params;
-      validateRequest(roleSchema, req.body);
-      const role = await updateRole(roleId, req.body);
-      sendResponse(res, 'ROLE_UPDATED', { data: role });
-    } catch (error) {
-      next(error);
-    }
-  }
+  public createRole = catchAsync(async (req: Request, res: Response) => {
+    validateRequest(roleSchema, req.body);
+    const role = await this.rbacRepository.createRole(req.body);
+    sendResponse(res, 'ROLE_CREATED', { data: role });
+  });
 
-  static async deleteRole(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { roleId } = req.params;
-      await deleteRole(roleId);
-      sendResponse(res, 'ROLE_DELETED');
-    } catch (error) {
-      next(error);
-    }
-  }
+  public updateRole = catchAsync(async (req: Request, res: Response) => {
+    const { roleId } = req.params;
+    validateRequest(roleSchema, req.body);
+    const role = await this.rbacRepository.updateRole(roleId, req.body);
+    sendResponse(res, 'ROLE_UPDATED', { data: role });
+  });
 
-  static async getRoleHierarchy(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    try {
-      const { roleId } = req.params;
-      const hierarchy = await getRoleHierarchy(roleId);
-      sendResponse(res, 'ROLE_HIERARCHY_FETCHED', { data: hierarchy });
-    } catch (error) {
-      next(error);
-    }
-  }
+  public deleteRole = catchAsync(async (req: Request, res: Response) => {
+    const { roleId } = req.params;
+    await this.rbacRepository.delete({ where: { id: roleId } });
+    sendResponse(res, 'ROLE_DELETED');
+  });
 
-  static async createPermission(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    try {
-      validateRequest(permissionSchema, req.body);
-      const permission = await createPermission(req.body);
-      sendResponse(res, 'PERMISSION_CREATED', { data: permission });
-    } catch (error) {
-      next(error);
-    }
-  }
+  public getRoleHierarchy = catchAsync(async (req: Request, res: Response) => {
+    const { roleId } = req.params;
+    const hierarchy = await this.rbacRepository.getRoleHierarchy(roleId);
+    sendResponse(res, 'ROLE_HIERARCHY_FETCHED', { data: hierarchy });
+  });
 
-  static async updatePermission(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    try {
-      const { permissionId } = req.params;
-      validateRequest(permissionSchema, req.body);
-      const permission = await updatePermission(permissionId, req.body);
-      sendResponse(res, 'PERMISSION_UPDATED', { data: permission });
-    } catch (error) {
-      next(error);
-    }
-  }
+  public createPermission = catchAsync(async (req: Request, res: Response) => {
+    validateRequest(permissionSchema, req.body);
+    const permission = await this.rbacRepository.createPermission(req.body);
+    sendResponse(res, 'PERMISSION_CREATED', { data: permission });
+  });
 
-  static async deletePermission(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    try {
-      const { permissionId } = req.params;
-      await deletePermission(permissionId);
-      sendResponse(res, 'PERMISSION_DELETED');
-    } catch (error) {
-      next(error);
-    }
-  }
+  public updatePermission = catchAsync(async (req: Request, res: Response) => {
+    const { permissionId } = req.params;
+    validateRequest(permissionSchema, req.body);
+    const permission = await this.rbacRepository.updatePermission(
+      permissionId,
+      req.body
+    );
+    sendResponse(res, 'PERMISSION_UPDATED', { data: permission });
+  });
 
-  static async assignRoleToUser(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    try {
-      validateRequest(roleAssignmentSchema, req.body);
-      const { userId, roleId } = req.body;
-      const user = await assignRoleToUser(userId, roleId);
-      sendResponse(res, 'ROLE_ASSIGNED', { data: user });
-    } catch (error) {
-      next(error);
-    }
-  }
+  public deletePermission = catchAsync(async (req: Request, res: Response) => {
+    const { permissionId } = req.params;
+    await this.rbacRepository.deletePermission(permissionId);
+    sendResponse(res, 'PERMISSION_DELETED');
+  });
 
-  static async checkPermission(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    try {
-      const { userId, resource, action } = req.query;
-      if (!userId || !resource || !action) {
-        throw new Error('Missing required parameters');
-      }
-      const hasPermission = await checkPermission(
-        userId as string,
-        resource as string,
-        action as string
-      );
-      sendResponse(res, 'PERMISSION_CHECKED', { data: { hasPermission } });
-    } catch (error) {
-      next(error);
+  public assignRoleToUser = catchAsync(async (req: Request, res: Response) => {
+    validateRequest(roleAssignmentSchema, req.body);
+    const { userId, roleId } = req.body;
+    const user = await this.userRepository.assignRole(userId, roleId);
+    sendResponse(res, 'ROLE_ASSIGNED', { data: user });
+  });
+
+  public checkPermission = catchAsync(async (req: Request, res: Response) => {
+    const { userId, resource, action } = req.query;
+    if (!userId || !resource || !action) {
+      throw new Error('Missing required parameters');
     }
-  }
+    const hasPermission = await this.rbacRepository.checkPermission(
+      userId as string,
+      resource as string,
+      action as string
+    );
+    sendResponse(res, 'PERMISSION_CHECKED', { data: { hasPermission } });
+  });
 }
