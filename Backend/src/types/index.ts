@@ -283,3 +283,10 @@ export interface CreateRoadmapBody {
   tags: string[];
   mainConcepts: RoadmapMainConcept[];
 }
+
+export interface DashboardStats {
+  enrolledRoadmaps: number;
+  totalTopics: number;
+  totalTopicsCompleted: number;
+  totalHoursSpent: number;
+}

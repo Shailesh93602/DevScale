@@ -6,12 +6,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getUserProgress = getUserProgress;
 const client_1 = require("@prisma/client");
 const logger_1 = __importDefault(require("../../utils/logger"));
-const prisma = new client_1.PrismaClient();
+const prisma_1 = __importDefault(require("@/lib/prisma"));
 async function getUserProgress(user_id) {
     try {
         const [total_topics, completed_topics, recent_activity] = await Promise.all([
-            prisma.topic.count(),
-            prisma.progress.count({
+            prisma_1.default.topic.count(),
+            prisma_1.default.progress.count({
                 where: { user_id: user_id, status: client_1.Status.APPROVED },
             }),
             getUserRecentActivity(user_id),
@@ -37,19 +37,19 @@ async function getUserProgress(user_id) {
 }
 async function getUserRecentActivity(user_id) {
     const [topic_progress, quiz_submissions, challenge_submissions] = await Promise.all([
-        prisma.progress.findMany({
+        prisma_1.default.progress.findMany({
             where: { user_id: user_id, status: client_1.Status.APPROVED },
             orderBy: { updated_at: 'desc' },
             take: 10,
             include: { topic: true, roadmap: true },
         }),
-        prisma.quizSubmission.findMany({
+        prisma_1.default.quizSubmission.findMany({
             where: { user_id: user_id, is_passed: true },
             orderBy: { created_at: 'desc' },
             take: 10,
             include: { quiz: true },
         }),
-        prisma.challengeSubmission.findMany({
+        prisma_1.default.challengeSubmission.findMany({
             where: { user_id: user_id, status: client_1.SubmissionStatus.accepted },
             orderBy: { created_at: 'desc' },
             take: 10,

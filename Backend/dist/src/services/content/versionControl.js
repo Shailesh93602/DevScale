@@ -1,12 +1,14 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ArticleVersionControl = void 0;
-const client_1 = require("@prisma/client");
 const transactionManager_1 = require("../../utils/transactionManager");
-const prisma = new client_1.PrismaClient();
+const prisma_1 = __importDefault(require("../../lib/prisma"));
 class ArticleVersionControl {
     static async createVersion(article_id, content) {
-        await transactionManager_1.TransactionManager.execute(async (tx) => {
+        await transactionManager_1.TransactionManager.transaction(async (tx) => {
             const currentVersion = await tx.version.findFirst({
                 where: { article_id: article_id },
                 orderBy: { version: 'desc' },
@@ -24,16 +26,16 @@ class ArticleVersionControl {
                 where: { id: article_id },
                 data: { content },
             });
-        }, 'Create Article Version');
+        }, { maxRetries: 3, timeout: 5000 });
     }
     static async getVersionHistory(article_id) {
-        return await prisma.version.findMany({
+        return await prisma_1.default.version.findMany({
             where: { article_id: article_id },
             orderBy: { version: 'desc' },
         });
     }
     static async revertToVersion(articleId, version) {
-        await transactionManager_1.TransactionManager.execute(async (tx) => {
+        await transactionManager_1.TransactionManager.transaction(async (tx) => {
             const targetVersion = await tx.version.findFirst({
                 where: { article_id: articleId, version },
             });
@@ -45,7 +47,7 @@ class ArticleVersionControl {
                 data: { content: targetVersion.content },
             });
             await this.createVersion(articleId, targetVersion.content);
-        }, 'Revert Article Version');
+        }, { maxRetries: 3, timeout: 5000 });
     }
 }
 exports.ArticleVersionControl = ArticleVersionControl;

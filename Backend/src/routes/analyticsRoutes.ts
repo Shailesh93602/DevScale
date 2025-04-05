@@ -22,7 +22,7 @@ export class AnalyticsRoutes {
     // User analytics routes
     this.router.get(
       '/user/:userId',
-      authorizeRoles('admin', 'instructor'),
+      // authorizeRoles('admin', 'instructor'),
       this.analyticsController.getUserAnalytics
     );
 

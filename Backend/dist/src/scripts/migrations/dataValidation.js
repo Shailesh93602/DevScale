@@ -4,14 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateData = validateData;
-const client_1 = require("@prisma/client");
 const logger_1 = __importDefault(require("../../utils/logger"));
-const prisma = new client_1.PrismaClient();
+const prisma_1 = __importDefault(require("@/lib/prisma"));
 async function validateData() {
     const errors = [];
     try {
         // Validate user data
-        const users = await prisma.user.findMany();
+        const users = await prisma_1.default.user.findMany();
         for (const user of users) {
             // Check required fields
             if (!user.email) {
@@ -33,7 +32,7 @@ async function validateData() {
             }
         }
         // Validate roadmap data
-        const roadmaps = await prisma.roadmap.findMany();
+        const roadmaps = await prisma_1.default.roadmap.findMany();
         for (const roadmap of roadmaps) {
             if (!roadmap.title) {
                 errors.push({

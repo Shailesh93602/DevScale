@@ -2,7 +2,7 @@ import { PrismaClient, Status, Topic } from '@prisma/client';
 import { createAppError } from '../utils/errorHandler';
 import BaseRepository from './baseRepository';
 
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 interface DailyTopicStats {
   views: number;

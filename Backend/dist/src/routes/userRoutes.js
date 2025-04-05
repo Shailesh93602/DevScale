@@ -8,6 +8,7 @@ const userControllers_1 = __importDefault(require("../controllers/userController
 const userValidations_1 = require("../validations/userValidations");
 const validateRequest_1 = require("../middlewares/validateRequest");
 const BaseRouter_1 = require("./BaseRouter");
+const authMiddleware_1 = require("../middlewares/authMiddleware");
 class UserRoutes extends BaseRouter_1.BaseRouter {
     userController;
     constructor() {
@@ -15,13 +16,13 @@ class UserRoutes extends BaseRouter_1.BaseRouter {
         this.userController = new userControllers_1.default();
     }
     initializeRoutes() {
-        this.router.get('/me', this.userController.getProfile);
-        this.router.put('/me', (0, validateRequest_1.validateRequest)(userValidations_1.userInsertionSchema), this.userController.upsertUser);
-        this.router.get('/progress', this.userController.getUserProgress);
-        this.router.get('/roadmap', this.userController.getUserRoadmap);
-        this.router.post('/roadmap', this.userController.insertUserRoadmap);
-        this.router.delete('/roadmap/:id', this.userController.deleteUserRoadmap);
-        this.router.get('/check-username', this.userController.checkUsername);
+        this.router.get('/me', authMiddleware_1.authMiddleware, this.userController.getProfile);
+        this.router.put('/me', authMiddleware_1.authMiddleware, (0, validateRequest_1.validateRequest)(userValidations_1.userInsertionSchema), this.userController.upsertUser);
+        this.router.get('/progress', authMiddleware_1.authMiddleware, this.userController.getUserProgress);
+        this.router.get('/roadmap', authMiddleware_1.authMiddleware, this.userController.getUserRoadmap);
+        this.router.post('/roadmap', authMiddleware_1.authMiddleware, this.userController.insertUserRoadmap);
+        this.router.delete('/roadmap/:id', authMiddleware_1.authMiddleware, this.userController.deleteUserRoadmap);
+        this.router.get('/check-username', authMiddleware_1.authMiddleware, this.userController.checkUsername);
     }
 }
 exports.UserRoutes = UserRoutes;

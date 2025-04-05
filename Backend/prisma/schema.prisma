@@ -547,6 +547,8 @@ model User {
   user_activity_logs              UserActivityLog[]
   contents                        Content[]
   moderations                     ContentModeration[]
+  user_streak                     UserStreak?
+  daily_activities                UserDailyActivity[]
 
   @@index([role_id])
   @@index([email, username]) // Composite index for common queries
@@ -1949,4 +1951,38 @@ model ContentModeration {
   @@index([article_id])
   @@index([resource_id])
   @@index([moderator_id])
+}
+
+enum ActivityType {
+  TOPIC_COMPLETION
+  QUIZ_COMPLETION
+  CODE_CHALLENGE
+  RESOURCE_STUDY
+  PRACTICE_SESSION
+}
+
+model UserStreak {
+  id                String             @id @default(uuid())
+  user_id          String             @unique
+  current_streak   Int                @default(0)
+  longest_streak   Int                @default(0)
+  last_activity_date DateTime?
+  streak_start_date  DateTime?
+  timezone         String             @default("UTC")
+  user             User               @relation(fields: [user_id], references: [id], map: "user_streaks_user_id_fkey")
+  daily_activities UserDailyActivity[]
+
+  @@map("user_streaks")
+}
+
+model UserDailyActivity {
+  id            String       @id @default(uuid())
+  user_id       String
+  activity_type ActivityType
+  minutes_spent Int
+  created_at    DateTime    @default(now())
+  user          User        @relation(fields: [user_id], references: [id], map: "user_daily_activities_user_id_fkey")
+  streak        UserStreak  @relation(fields: [user_id], references: [user_id], map: "user_daily_activities_streak_id_fkey")
+
+  @@map("user_daily_activities")
 }

@@ -1,11 +1,10 @@
 import { Request, Response } from 'express';
-import { ResponseType } from '../types/response';
 import AdminDashboardRepository from '../repositories/adminDashboardRepository';
 import { catchAsync } from '../utils/catchAsync';
 import { createAppError } from '../utils/createAppError';
-import { sendResponse } from '../utils/sendResponse';
 import UserRepository from '@/repositories/userRepository';
 import SystemConfigRepository from '@/repositories/systemConfigRepository';
+import { sendResponse } from '@/utils/apiResponse';
 
 export default class AdminController {
   private readonly adminDashboardRepo: AdminDashboardRepository;
@@ -21,20 +20,20 @@ export default class AdminController {
   // Dashboard and Metrics
   getDashboardMetrics = catchAsync(async (req: Request, res: Response) => {
     const metrics = await this.adminDashboardRepo.getDashboardMetrics();
-    sendResponse(res, ResponseType.METRICS_FETCHED, metrics);
+    sendResponse(res, 'METRICS_FETCHED', { data: metrics });
   });
 
   // User Management
   searchUsers = catchAsync(async (req: Request, res: Response) => {
     const users = await this.userRepo.searchUsers(req.query);
-    sendResponse(res, ResponseType.USERS_FETCHED, users);
+    sendResponse(res, 'USERS_FETCHED', { data: users });
   });
 
   updateUserRole = catchAsync(async (req: Request, res: Response) => {
     const { userId } = req.params;
     const { roleId } = req.body;
     const user = await this.userRepo.updateUserRole(userId, roleId);
-    sendResponse(res, ResponseType.USER_UPDATED, user);
+    sendResponse(res, 'USER_UPDATED', { data: user });
   });
 
   // Configuration Management
@@ -45,7 +44,7 @@ export default class AdminController {
       key,
       value,
     });
-    sendResponse(res, ResponseType.CONFIG_UPDATED, config);
+    sendResponse(res, 'CONFIG_UPDATED', { data: config });
   });
 
   getConfigsByCategory = catchAsync(async (req: Request, res: Response) => {
@@ -53,7 +52,7 @@ export default class AdminController {
     const configs = await this.systemConfigRepo.findFirst({
       where: { category },
     });
-    sendResponse(res, ResponseType.CONFIGS_FETCHED, configs);
+    sendResponse(res, 'CONFIGS_FETCHED', { data: configs });
   });
 
   // Resource Allocation
@@ -61,7 +60,7 @@ export default class AdminController {
     const allocation = await this.adminDashboardRepo.allocateResources(
       req.body
     );
-    sendResponse(res, ResponseType.RESOURCES_ALLOCATED, allocation);
+    sendResponse(res, 'RESOURCES_ALLOCATED', { data: allocation });
   });
 
   // Reporting
@@ -72,21 +71,21 @@ export default class AdminController {
       res.setHeader('Content-Disposition', 'attachment; filename=report.csv');
       res.send(report);
     } else {
-      sendResponse(res, ResponseType.REPORT_GENERATED, report);
+      sendResponse(res, 'REPORT_GENERATED', { data: report });
     }
   });
 
   // Auditing and Logging
   getSystemAuditLogs = catchAsync(async (req: Request, res: Response) => {
     const logs = await this.adminDashboardRepo.getSystemAuditLogs();
-    sendResponse(res, ResponseType.AUDIT_LOGS_FETCHED, logs);
+    sendResponse(res, 'AUDIT_LOGS_FETCHED', { data: logs });
   });
 
   // Content Moderation
   getContentModerationQueue = catchAsync(
     async (req: Request, res: Response) => {
       const queue = await this.adminDashboardRepo.getContentModerationQueue();
-      sendResponse(res, ResponseType.MODERATION_QUEUE_FETCHED, queue);
+      sendResponse(res, 'MODERATION_QUEUE_FETCHED', { data: queue });
     }
   );
 
@@ -105,6 +104,6 @@ export default class AdminController {
       reason,
       moderatorId
     );
-    sendResponse(res, ResponseType.CONTENT_MODERATED, content);
+    sendResponse(res, 'CONTENT_MODERATED', { data: content });
   });
 }

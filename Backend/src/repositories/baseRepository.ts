@@ -1,27 +1,31 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { PaginatedResult, PaginationParams } from '@/types';
+import { PrismaClient } from '@prisma/client';
+import prisma from '../lib/prisma';
+
+type PrismaDelegate = {
+  findUnique: (args: any) => Promise<any>;
+  findMany: (args?: any) => Promise<any[]>;
+  create: (args: any) => Promise<any>;
+  update: (args: any) => Promise<any>;
+  delete: (args: any) => Promise<any>;
+  upsert: (args: any) => Promise<any>;
+  count: (args?: any) => Promise<number>;
+  groupBy: (args?: any) => Promise<any>;
+  findFirst: (args?: any) => Promise<any>;
+  createMany: (args?: any) => Promise<any>;
+  updateMany: (args: any) => Promise<any>;
+  deleteMany: (args: any) => Promise<any>;
+};
 
 // src/repositories/base.repository.ts
-export default abstract class BaseRepository<
-  D extends {
-    findUnique: (args: any) => Promise<any>;
-    findMany: (args?: any) => Promise<any[]>;
-    create: (args: any) => Promise<any>;
-    update: (args: any) => Promise<any>;
-    delete: (args: any) => Promise<any>;
-    upsert: (args: any) => Promise<any>;
-    count: (args?: any) => Promise<number>;
-    groupBy: (args?: any) => Promise<any>;
-    findFirst: (args?: any) => Promise<any>;
-    createMany: (args?: any) => Promise<any>;
-    updateMany: (args: any) => Promise<any>;
-    deleteMany: (args: any) => Promise<any>;
-  },
-> {
+export default abstract class BaseRepository<D extends PrismaDelegate> {
+  protected prismaClient: PrismaClient;
   protected delegate: D;
 
   constructor(delegate: D) {
+    this.prismaClient = prisma;
     this.delegate = delegate;
   }
 

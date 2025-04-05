@@ -11,83 +11,230 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, Search } from 'lucide-react';
+import {
+  Plus,
+  Search,
+  ChevronRight,
+  Award,
+  CheckCircle2,
+  Filter,
+  BookOpen,
+  Sparkles,
+  Bookmark,
+  Settings,
+  FolderTree,
+} from 'lucide-react';
 import { useAxiosGet } from '@/hooks/useAxios';
 import { toast } from 'react-toastify';
 import { debounce } from 'lodash';
 import { useIntersection } from '@/hooks/useIntersection';
 import { CreateRoadmap } from './create-roadmap';
+import { motion } from 'framer-motion';
+import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { useRouter } from 'next/navigation';
+import { useRoadmapSocial } from '@/hooks/useRoadmapSocial';
 
-interface IRoadmap {
-  id: string;
-  title: string;
-  description: string;
-  author: string;
-  isEnrolled?: boolean;
-}
+// Import the shared RoadmapCard component
+import RoadmapCard, {
+  RoadmapType,
+  RoadmapCardSkeleton,
+} from '@/components/Roadmap/RoadmapCard';
+
+// Use the shared type
+type IRoadmap = RoadmapType;
 
 interface RoadmapCategory {
   id: string;
   name: string;
+  icon?: string;
+  description?: string;
 }
 
 interface PaginatedResponse {
   data: IRoadmap[];
   meta: {
     hasNextPage: boolean;
+    total: number;
+    page: number;
+    lastPage: number;
   };
 }
 
-const ITEMS_PER_PAGE = 10;
-
-interface RoadmapCardProps {
-  roadmap: IRoadmap;
-}
-
-const RoadmapCard = ({ roadmap }: RoadmapCardProps) => {
-  const router = useRouter();
-  return (
-    <div
-      key={roadmap.id}
-      className="group relative overflow-hidden rounded-lg border bg-background p-6 shadow-sm transition-shadow hover:shadow-md"
-      onClick={() => router.push(`/career-roadmap/${roadmap.id}`)}
-    >
-      <div className="flex justify-between">
-        <div>
-          <h3 className="font-semibold leading-none tracking-tight">
-            {roadmap.title}
-          </h3>
-          <p className="text-sm text-muted-foreground">{roadmap.description}</p>
-        </div>
-      </div>
-    </div>
-  );
-};
+const ITEMS_PER_PAGE = 9;
 
 interface RoadmapGridProps {
   roadmaps: IRoadmap[];
 }
 
 const RoadmapGrid = ({ roadmaps }: RoadmapGridProps) => {
+  const { handleLike, handleBookmark } = useRoadmapSocial();
+
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {roadmaps.map((roadmap) => (
-        <RoadmapCard key={roadmap.id} roadmap={roadmap} />
+      {roadmaps.map((roadmap, index) => (
+        <RoadmapCard
+          key={roadmap.id}
+          roadmap={roadmap}
+          index={index}
+          onLike={handleLike}
+          onBookmark={handleBookmark}
+        />
       ))}
     </div>
   );
 };
 
-const Roadmap = () => {
+const FeaturedRoadmaps = ({ roadmaps }: { roadmaps: IRoadmap[] }) => {
+  const router = useRouter();
+  const showViewAll = roadmaps?.length >= 6;
+
+  return (
+    <div className="mb-12">
+      <div className="mb-6 flex items-center justify-between">
+        <h2 className="text-2xl font-bold">Featured Roadmaps</h2>
+        {showViewAll && (
+          <Button
+            variant="ghost"
+            className="text-primary"
+            onClick={() =>
+              router.push('/career-roadmap/roadmaps?type=featured')
+            }
+          >
+            View All <ChevronRight className="ml-1 h-4 w-4" />
+          </Button>
+        )}
+      </div>
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {roadmaps?.map((roadmap, index) => (
+          <RoadmapCard key={roadmap?.id} roadmap={roadmap} index={index} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const TrendingRoadmaps = ({ roadmaps }: { roadmaps: IRoadmap[] }) => {
+  const router = useRouter();
+  const showViewAll = roadmaps?.length >= 6;
+
+  return (
+    <div className="mb-12">
+      <div className="mb-6 flex items-center justify-between">
+        <h2 className="text-2xl font-bold">Trending Now</h2>
+        {showViewAll && (
+          <Button
+            variant="ghost"
+            className="text-primary"
+            onClick={() =>
+              router.push('/career-roadmap/roadmaps?type=trending')
+            }
+          >
+            View All <ChevronRight className="ml-1 h-4 w-4" />
+          </Button>
+        )}
+      </div>
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {roadmaps?.map((roadmap, index) => (
+          <RoadmapCard key={roadmap?.id} roadmap={roadmap} index={index} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const CategoryList = ({
+  categories,
+  selectedCategories,
+  setSelectedCategories,
+}: {
+  categories: RoadmapCategory[];
+  selectedCategories: string[];
+  setSelectedCategories: React.Dispatch<React.SetStateAction<string[]>>;
+}) => {
+  return (
+    <ScrollArea className="h-[calc(100vh-12rem)] px-1">
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold">Categories</h3>
+          {selectedCategories.length > 0 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setSelectedCategories([])}
+              className="h-8 px-2 text-xs"
+            >
+              Clear All
+            </Button>
+          )}
+        </div>
+        <div className="space-y-2">
+          {categories.map((category) => (
+            <div
+              key={category.id}
+              className={`group flex cursor-pointer items-center justify-between rounded-lg p-2 hover:bg-accent ${
+                selectedCategories.includes(category.id)
+                  ? 'bg-primary/10 text-primary'
+                  : ''
+              }`}
+              onClick={() =>
+                setSelectedCategories((prev) =>
+                  prev.includes(category.id)
+                    ? prev.filter((id) => id !== category.id)
+                    : [...prev, category.id],
+                )
+              }
+            >
+              <div className="flex items-center gap-2">
+                {category.icon && (
+                  <div className="bg-primary/10 flex h-8 w-8 items-center justify-center rounded-full">
+                    <i className={category.icon} />
+                  </div>
+                )}
+                <div>
+                  <p className="font-medium">{category.name}</p>
+                  {category.description && (
+                    <p className="text-xs text-muted-foreground">
+                      {category.description}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <CheckCircle2
+                className={`h-4 w-4 ${
+                  selectedCategories.includes(category.id)
+                    ? 'text-primary'
+                    : 'invisible group-hover:visible'
+                }`}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </ScrollArea>
+  );
+};
+
+const RoadmapPage = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [categories, setCategories] = useState<RoadmapCategory[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [roadmaps, setRoadmaps] = useState<IRoadmap[]>([]);
-  const [activeTab, setActiveTab] = useState('all');
+  const [featuredRoadmaps, setFeaturedRoadmaps] = useState<IRoadmap[]>([]);
+  const [trendingRoadmaps, setTrendingRoadmaps] = useState<IRoadmap[]>([]);
+  const [activeTab, setActiveTab] = useState('discover');
+  const [isFilterExpanded, setIsFilterExpanded] = useState(true);
+  const [difficultyFilter, setDifficultyFilter] = useState<string>('all');
+  const [sortBy, setSortBy] = useState<string>('popular');
 
   const [getRoadmaps, { isLoading }] =
     useAxiosGet<PaginatedResponse>('/roadmaps');
@@ -97,6 +244,8 @@ const Roadmap = () => {
 
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const isIntersecting = useIntersection(loadMoreRef);
+
+  const router = useRouter();
 
   const fetchCategories = useCallback(async () => {
     try {
@@ -108,32 +257,76 @@ const Roadmap = () => {
     }
   }, [getCategories]);
 
+  const fetchFeaturedRoadmaps = useCallback(async () => {
+    try {
+      const params = new URLSearchParams({
+        limit: '6',
+        type: 'featured',
+      });
+      const response = await getRoadmaps({ params });
+      const { data } = response.data;
+      setFeaturedRoadmaps(data);
+    } catch (error) {
+      console.error('Error fetching featured roadmaps:', error);
+    }
+  }, [getRoadmaps]);
+
+  const fetchTrendingRoadmaps = useCallback(async () => {
+    try {
+      const params = new URLSearchParams({
+        limit: '6',
+        type: 'trending',
+      });
+      const response = await getRoadmaps({ params });
+      const { data } = response.data;
+      setTrendingRoadmaps(data);
+    } catch (error) {
+      console.error('Error fetching trending roadmaps:', error);
+    }
+  }, [getRoadmaps]);
+
   useEffect(() => {
     fetchCategories();
-  }, [fetchCategories]);
+    if (activeTab === 'discover') {
+      fetchFeaturedRoadmaps();
+      fetchTrendingRoadmaps();
+    }
+  }, [
+    fetchCategories,
+    fetchFeaturedRoadmaps,
+    fetchTrendingRoadmaps,
+    activeTab,
+  ]);
 
   useEffect(() => {
     if (isIntersecting && hasMore) {
       setPage((prev) => prev + 1);
     }
-  }, [isIntersecting, hasMore, activeTab]);
+  }, [isIntersecting, hasMore]);
 
   const handleSearch = debounce((value: string) => {
     setSearchQuery(value);
     setPage(1);
-    setRoadmaps([]); // Clear existing roadmaps when search changes
+    setRoadmaps([]);
   }, 500);
 
-  const handleCategoryChange = (value: string) => {
-    setSelectedCategory(value);
+  const handleDifficultyChange = (value: string) => {
+    setDifficultyFilter(value);
     setPage(1);
-    setRoadmaps([]); // Clear existing roadmaps when category changes
+    setRoadmaps([]);
+  };
+
+  const handleSortChange = (value: string) => {
+    setSortBy(value);
+    setPage(1);
+    setRoadmaps([]);
   };
 
   const handleCreateSuccess = () => {
     setPage(1);
-    setRoadmaps([]); // Clear existing roadmaps when new roadmap is created
+    setRoadmaps([]);
     fetchRoadmaps();
+    toast.success('Roadmap created successfully!');
   };
 
   const fetchRoadmaps = useCallback(async () => {
@@ -141,14 +334,21 @@ const Roadmap = () => {
       const params = new URLSearchParams({
         page: page.toString(),
         limit: ITEMS_PER_PAGE.toString(),
+        sort: sortBy,
       });
 
       if (searchQuery) {
         params.append('search', searchQuery);
       }
 
-      if (selectedCategory && selectedCategory !== 'all') {
-        params.append('category', selectedCategory);
+      if (selectedCategories.length > 0) {
+        selectedCategories.forEach((categoryId) => {
+          params.append('categories', categoryId);
+        });
+      }
+
+      if (difficultyFilter && difficultyFilter !== 'all') {
+        params.append('difficulty', difficultyFilter);
       }
 
       const response = await getRoadmaps({ params });
@@ -165,20 +365,32 @@ const Roadmap = () => {
       console.error('Error fetching roadmaps:', error);
       toast.error('Failed to fetch roadmaps');
     }
-  }, [page, searchQuery, selectedCategory, getRoadmaps]);
+  }, [
+    page,
+    searchQuery,
+    selectedCategories,
+    difficultyFilter,
+    sortBy,
+    getRoadmaps,
+  ]);
 
   useEffect(() => {
-    if (activeTab === 'all') {
+    if (activeTab !== 'discover') {
       fetchRoadmaps();
     }
   }, [fetchRoadmaps, activeTab]);
 
   const filteredRoadmaps = useMemo(() => {
     if (activeTab === 'enrolled') {
-      return roadmaps.filter((roadmap) => roadmap.isEnrolled);
+      return roadmaps?.filter((roadmap) => roadmap?.isEnrolled);
     }
     if (activeTab === 'created') {
-      return roadmaps.filter((roadmap) => roadmap.author === 'me');
+      return roadmaps?.filter(
+        (roadmap) => roadmap?.author?.id === 'current_user_id',
+      );
+    }
+    if (activeTab === 'bookmarked') {
+      return roadmaps?.filter((roadmap) => roadmap?.isBookmarked);
     }
     return roadmaps;
   }, [roadmaps, activeTab]);
@@ -186,105 +398,264 @@ const Roadmap = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <div className="relative overflow-hidden px-6 py-24 sm:py-32 lg:px-8">
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute inset-0 bg-gradient-to-b from-background to-background/80" />
-          <div className="absolute inset-y-0 right-1/2 -z-10 mr-16 w-[200%] origin-bottom-left skew-x-[-30deg] bg-background/10 shadow-xl shadow-indigo-600/10 ring-1 ring-indigo-50/20" />
-        </div>
+      <div className="from-primary/10 relative overflow-hidden bg-gradient-to-b to-background px-6 py-16 sm:py-24 lg:px-8">
+        <div className="shadow-primary/10 ring-primary/10 absolute inset-y-0 right-1/2 -z-10 mr-16 w-[200%] origin-bottom-left skew-x-[-30deg] bg-background/10 shadow-xl ring-1" />
 
         <div className="mx-auto max-w-2xl text-center">
-          <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
-            Choose Your Path
-          </h1>
-          <p className="mt-6 text-lg leading-8 text-muted-foreground">
-            Expert-curated roadmaps to guide your learning journey in tech.
-            Start, track, and achieve your career goals.
-          </p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <Badge variant="outline" className="mb-4 px-3 py-1 text-primary">
+              <Award className="mr-1 h-4 w-4" /> Engineering Career Growth
+            </Badge>
+            <h1 className="bg-gradient-to-br from-foreground to-foreground/80 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-6xl">
+              Master Your <span className="text-primary">Engineering Path</span>
+            </h1>
+            <p className="mt-6 text-lg leading-8 text-muted-foreground">
+              Expert-curated roadmaps to guide your engineering journey. Start,
+              track, and achieve your career goals with step-by-step guidance
+              from industry professionals.
+            </p>
+
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+              <Button
+                className="hover:bg-primary/90 group flex items-center gap-2 bg-primary"
+                onClick={() => setIsCreateModalOpen(true)}
+              >
+                <Plus size={16} /> Create Roadmap
+              </Button>
+              <Button
+                variant="outline"
+                className="group flex items-center gap-2"
+                onClick={() => router.push('/career-roadmap/roadmaps')}
+              >
+                Explore Popular Paths
+                <ChevronRight className="transition-transform group-hover:translate-x-1" />
+              </Button>
+            </div>
+          </motion.div>
         </div>
       </div>
 
       {/* Main Content */}
       <div className="mx-auto max-w-7xl px-6 pb-16 lg:px-8">
-        <div className="flex flex-col items-center gap-4 rounded-xl border bg-card p-4 shadow-sm backdrop-blur-sm sm:flex-row">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
-            <Input
-              placeholder="Search roadmaps..."
-              className="bg-gray-50/50 pl-10"
-              onChange={(e) => handleSearch(e.target.value)}
-            />
-          </div>
-          <div className="flex w-full items-center gap-4 sm:w-auto">
-            <Select
-              value={selectedCategory}
-              onValueChange={handleCategoryChange}
+        <div className="mt-8 flex gap-8">
+          {/* Sidebar */}
+          {isFilterExpanded && (
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="hidden w-64 shrink-0 lg:block"
             >
-              <SelectTrigger className="w-full sm:w-[200px]">
-                <SelectValue placeholder="All Categories" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                {categories.map((category) => (
-                  <SelectItem key={category.id} value={category.id}>
-                    {category.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Button
-              className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700"
-              onClick={() => setIsCreateModalOpen(true)}
-            >
-              <Plus size={16} /> Create Roadmap
-            </Button>
-          </div>
-        </div>
+              <CategoryList
+                categories={categories}
+                selectedCategories={selectedCategories}
+                setSelectedCategories={setSelectedCategories}
+              />
+            </motion.div>
+          )}
 
-        <div className="mt-8">
-          <Tabs
-            defaultValue="all"
-            className="space-y-8"
-            onValueChange={(value) => {
-              setActiveTab(value);
-              setPage(1);
-              if (value === 'all') {
-                setRoadmaps([]);
-                fetchRoadmaps();
-              }
-            }}
-          >
-            <TabsList className="inline-flex h-10 items-center justify-center rounded-lg bg-muted p-1">
-              <TabsTrigger value="all" className="rounded-sm px-6">
-                All Roadmaps
-              </TabsTrigger>
-              <TabsTrigger value="enrolled" className="rounded-sm px-6">
-                Enrolled
-              </TabsTrigger>
-              <TabsTrigger value="created" className="rounded-sm px-6">
-                Created by Me
-              </TabsTrigger>
-            </TabsList>
+          {/* Main Content */}
+          <div className="flex-1">
+            <div className="mb-8 flex items-center justify-between">
+              <Tabs
+                value={activeTab}
+                className="w-full"
+                onValueChange={setActiveTab}
+              >
+                <div className="flex items-center justify-between">
+                  <TabsList>
+                    <TabsTrigger value="discover" className="gap-2">
+                      <Sparkles size={16} />
+                      Discover
+                    </TabsTrigger>
+                    <TabsTrigger value="enrolled" className="gap-2">
+                      <BookOpen size={16} />
+                      Enrolled
+                    </TabsTrigger>
+                    <TabsTrigger value="created" className="gap-2">
+                      <FolderTree size={16} />
+                      Created
+                    </TabsTrigger>
+                    <TabsTrigger value="bookmarked" className="gap-2">
+                      <Bookmark size={16} />
+                      Bookmarked
+                    </TabsTrigger>
+                  </TabsList>
 
-            <TabsContent value="all" className="mt-6">
-              <RoadmapGrid roadmaps={filteredRoadmaps} />
-              {isLoading && (
-                <div className="mt-8 flex justify-center">
-                  <div className="h-8 w-8 animate-spin rounded-full border-4 border-purple-200 border-t-purple-600" />
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setIsFilterExpanded(!isFilterExpanded)}
+                      className="lg:hidden"
+                    >
+                      <Filter size={16} />
+                    </Button>
+                    <Select value={sortBy} onValueChange={handleSortChange}>
+                      <SelectTrigger className="w-[140px]">
+                        <SelectValue placeholder="Sort by" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="popular">Most Popular</SelectItem>
+                        <SelectItem value="recent">Recently Added</SelectItem>
+                        <SelectItem value="rating">Highest Rated</SelectItem>
+                        <SelectItem value="enrolled">Most Enrolled</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                          <Settings size={16} />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem>Grid View</DropdownMenuItem>
+                        <DropdownMenuItem>List View</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
                 </div>
-              )}
-              {hasMore && activeTab === 'all' && (
-                <div ref={loadMoreRef} className="h-4" />
-              )}
-            </TabsContent>
 
-            <TabsContent value="enrolled" className="mt-6">
-              <RoadmapGrid roadmaps={filteredRoadmaps} />
-            </TabsContent>
+                <div className="my-4 flex items-center gap-4">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      placeholder="Search roadmaps..."
+                      className="pl-10"
+                      onChange={(e) => handleSearch(e.target.value)}
+                    />
+                  </div>
+                  <Select
+                    value={difficultyFilter}
+                    onValueChange={handleDifficultyChange}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="All Difficulties" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Difficulties</SelectItem>
+                      <SelectItem value="beginner">Beginner</SelectItem>
+                      <SelectItem value="intermediate">Intermediate</SelectItem>
+                      <SelectItem value="advanced">Advanced</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
-            <TabsContent value="created" className="mt-6">
-              <RoadmapGrid roadmaps={filteredRoadmaps} />
-            </TabsContent>
-          </Tabs>
+                <TabsContent value="discover" className="mt-6">
+                  <FeaturedRoadmaps roadmaps={featuredRoadmaps} />
+                  <TrendingRoadmaps roadmaps={trendingRoadmaps} />
+                </TabsContent>
+
+                <TabsContent value="enrolled" className="mt-6">
+                  {isLoading ? (
+                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                      {Array(6)
+                        .fill(0)
+                        .map((_, index) => (
+                          <RoadmapCardSkeleton key={index} />
+                        ))}
+                    </div>
+                  ) : filteredRoadmaps?.length > 0 ? (
+                    <RoadmapGrid roadmaps={filteredRoadmaps} />
+                  ) : (
+                    <div className="flex h-60 flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
+                      <BookOpen
+                        size={48}
+                        className="mb-4 text-muted-foreground"
+                      />
+                      <h3 className="mb-2 text-xl font-medium">
+                        No enrolled roadmaps
+                      </h3>
+                      <p className="mb-4 text-muted-foreground">
+                        Explore and enroll in roadmaps to track your progress.
+                      </p>
+                      <Button
+                        variant="outline"
+                        onClick={() => setActiveTab('discover')}
+                      >
+                        Explore Roadmaps
+                      </Button>
+                    </div>
+                  )}
+                </TabsContent>
+
+                <TabsContent value="created" className="mt-6">
+                  {isLoading ? (
+                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                      {Array(6)
+                        .fill(0)
+                        .map((_, index) => (
+                          <RoadmapCardSkeleton key={index} />
+                        ))}
+                    </div>
+                  ) : filteredRoadmaps?.length > 0 ? (
+                    <RoadmapGrid roadmaps={filteredRoadmaps} />
+                  ) : (
+                    <div className="flex h-60 flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
+                      <FolderTree
+                        size={48}
+                        className="mb-4 text-muted-foreground"
+                      />
+                      <h3 className="mb-2 text-xl font-medium">
+                        No created roadmaps
+                      </h3>
+                      <p className="mb-4 text-muted-foreground">
+                        Create your first roadmap to share your knowledge with
+                        others.
+                      </p>
+                      <Button onClick={() => setIsCreateModalOpen(true)}>
+                        <Plus size={16} className="mr-2" /> Create Roadmap
+                      </Button>
+                    </div>
+                  )}
+                </TabsContent>
+
+                <TabsContent value="bookmarked" className="mt-6">
+                  {isLoading ? (
+                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                      {Array(6)
+                        .fill(0)
+                        .map((_, index) => (
+                          <RoadmapCardSkeleton key={index} />
+                        ))}
+                    </div>
+                  ) : filteredRoadmaps?.length > 0 ? (
+                    <RoadmapGrid roadmaps={filteredRoadmaps} />
+                  ) : (
+                    <div className="flex h-60 flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
+                      <Bookmark
+                        size={48}
+                        className="mb-4 text-muted-foreground"
+                      />
+                      <h3 className="mb-2 text-xl font-medium">
+                        No bookmarked roadmaps
+                      </h3>
+                      <p className="mb-4 text-muted-foreground">
+                        Bookmark roadmaps to save them for later.
+                      </p>
+                      <Button
+                        variant="outline"
+                        onClick={() => setActiveTab('discover')}
+                      >
+                        Explore Roadmaps
+                      </Button>
+                    </div>
+                  )}
+                </TabsContent>
+              </Tabs>
+            </div>
+
+            {hasMore && (
+              <div ref={loadMoreRef} className="mt-8 flex justify-center">
+                <Button variant="outline" onClick={() => setPage((p) => p + 1)}>
+                  Load More
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
 
         <CreateRoadmap
@@ -298,4 +669,4 @@ const Roadmap = () => {
   );
 };
 
-export default Roadmap;
+export default RoadmapPage;

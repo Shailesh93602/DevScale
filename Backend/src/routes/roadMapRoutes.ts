@@ -44,6 +44,19 @@ export class RoadMapRoutes extends BaseRouter {
       this.bindRoute(this.roadMapController.getMainConceptsInRoadmap)
     );
 
+    // Social interaction routes
+    this.router.post(
+      '/:id/like',
+      authMiddleware,
+      this.bindRoute(this.roadMapController.likeRoadmap)
+    );
+
+    this.router.post(
+      '/:id/bookmark',
+      authMiddleware,
+      this.bindRoute(this.roadMapController.bookmarkRoadmap)
+    );
+
     // Protected routes
     this.router.post(
       '/',

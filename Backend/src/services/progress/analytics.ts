@@ -1,7 +1,7 @@
-import { PrismaClient, Status, SubmissionStatus } from '@prisma/client';
+import { Status, SubmissionStatus } from '@prisma/client';
 import logger from '../../utils/logger';
 
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 interface ProgressStats {
   total_topics: number;

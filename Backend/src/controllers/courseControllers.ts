@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
 import { sendResponse } from '../utils/apiResponse';
 
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 export default class CourseController {
   public getCourses = catchAsync(async (req: Request, res: Response) => {

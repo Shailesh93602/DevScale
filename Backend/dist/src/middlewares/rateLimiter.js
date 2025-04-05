@@ -1,65 +1,73 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.uploadLimiter = exports.apiLimiter = exports.authLimiter = exports.createRateLimiter = void 0;
-const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
-const rate_limit_redis_1 = __importDefault(require("rate-limit-redis"));
-const ioredis_1 = __importStar(require("ioredis"));
+const ioredis_1 = __importDefault(require("ioredis"));
 const config_1 = require("../config");
-const redis = new ioredis_1.default(config_1.REDIS_URL);
+const logger_1 = __importDefault(require("../utils/logger"));
+let redisClient = null;
+try {
+    redisClient = new ioredis_1.default(config_1.REDIS_URL || 'redis://localhost:6379', {
+        enableOfflineQueue: false,
+        maxRetriesPerRequest: 3,
+    });
+    redisClient.on('error', (err) => {
+        logger_1.default.error('Redis connection error:', err);
+        redisClient = null;
+    });
+    redisClient.on('connect', () => {
+        logger_1.default.info('Redis connected successfully');
+    });
+}
+catch (err) {
+    logger_1.default.error('Failed to initialize Redis:', err);
+}
 const createRateLimiter = (options = {}) => {
     const { windowMs = 15 * 60 * 1000, // 15 minutes
     max = 100, // 100 requests per window
     message = 'Too many requests, please try again later', } = options;
-    return (0, express_rate_limit_1.default)({
-        store: new rate_limit_redis_1.default({
-            sendCommand: (command, ...args) => redis.sendCommand(new ioredis_1.Command(command, args)),
-            prefix: 'rate-limit:',
-        }),
-        windowMs,
-        max,
-        message: {
-            status: 429,
-            message,
-        },
-        standardHeaders: true,
-        legacyHeaders: false,
-    });
+    return (req, res, next) => {
+        if (!redisClient) {
+            next();
+            return;
+        }
+        const key = `rate-limit:${req.ip}`;
+        const windowInSeconds = Math.floor(windowMs / 1000);
+        redisClient
+            .multi()
+            .incr(key)
+            .expire(key, windowInSeconds)
+            .exec()
+            .then((result) => {
+            if (!result) {
+                next();
+                return;
+            }
+            const [[incrErr, requestCount], [expireErr]] = result;
+            if (incrErr || expireErr) {
+                logger_1.default.error('Redis operation error:', { incrErr, expireErr });
+                next();
+                return;
+            }
+            const count = typeof requestCount === 'number' ? requestCount : 1;
+            res.setHeader('X-RateLimit-Limit', max.toString());
+            res.setHeader('X-RateLimit-Remaining', Math.max(0, max - count).toString());
+            if (count > max) {
+                res.status(429).json({
+                    status: 429,
+                    message,
+                });
+                return;
+            }
+            next();
+        })
+            .catch((err) => {
+            logger_1.default.error('Rate limiting error:', err);
+            next();
+        });
+    };
 };
 exports.createRateLimiter = createRateLimiter;
 // Different rate limits for different routes

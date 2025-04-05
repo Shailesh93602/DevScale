@@ -1,3 +1,13 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Your rule content
+
+- You can @ files here
+- You can use markdown but dont have to
 1. Use typescript only
 2. Follow linting standards and type safety
 3. Use Next js for Frontend

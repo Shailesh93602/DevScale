@@ -3,7 +3,7 @@ import { createAppError } from '../utils/errorHandler';
 import { getCache, setCache, deleteCache } from '@/services/cacheService';
 import BaseRepository from './baseRepository';
 
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 export default class ResourceRepository extends BaseRepository<
   PrismaClient['resource']

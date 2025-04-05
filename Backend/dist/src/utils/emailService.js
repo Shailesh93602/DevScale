@@ -8,8 +8,7 @@ const nodemailer_1 = __importDefault(require("nodemailer"));
 const bull_1 = __importDefault(require("bull"));
 const config_1 = require("../config");
 const logger_1 = __importDefault(require("./logger"));
-const client_1 = require("@prisma/client");
-const prisma = new client_1.PrismaClient();
+const prisma_1 = __importDefault(require("@/lib/prisma"));
 // Create email queue
 const emailQueue = new bull_1.default('email-queue', config_1.REDIS_URL);
 const transporter = nodemailer_1.default.createTransport({
@@ -53,7 +52,7 @@ emailQueue.process(async (job) => {
 // Track email delivery status
 const trackEmailDelivery = async (to, subject, status) => {
     try {
-        await prisma.emailLog.create({
+        await prisma_1.default.emailLog.create({
             data: {
                 recipient: to,
                 subject,

@@ -1,7 +1,7 @@
 import { PrismaClient, Notification } from '@prisma/client';
 import BaseRepository from './baseRepository';
 
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 export default class NotificationRepository extends BaseRepository<
   PrismaClient['notification']
