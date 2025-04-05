@@ -1,13 +1,53 @@
-import { PrismaClient, Prisma, User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import BaseRepository from './baseRepository';
 import { createAppError } from '@/utils/errorHandler';
 import logger from '@/utils/logger';
+import prisma from '../lib/prisma';
 
-const prisma = new PrismaClient();
-
-export default class UserRepository extends BaseRepository<PrismaClient['user']> {
+export default class UserRepository extends BaseRepository<typeof prisma.user> {
   constructor() {
     super(prisma.user);
+  }
+
+  async findByEmail(email: string): Promise<User | null> {
+    return this.prismaClient.user.findUnique({
+      where: { email },
+    });
+  }
+
+  async findByUsername(username: string): Promise<User | null> {
+    return this.prismaClient.user.findUnique({
+      where: { username },
+    });
+  }
+
+  async createUser(data: Prisma.UserCreateInput): Promise<User> {
+    return this.prismaClient.user.create({
+      data,
+    });
+  }
+
+  async updateUser(id: string, data: Prisma.UserUpdateInput): Promise<User> {
+    return this.prismaClient.user.update({
+      where: { id },
+      data,
+    });
+  }
+
+  async deleteUser(id: string): Promise<void> {
+    await this.prismaClient.user.delete({
+      where: { id },
+    });
+  }
+
+  async getUserProfile(id: string): Promise<User | null> {
+    return this.prismaClient.user.findUnique({
+      where: { id },
+      include: {
+        role: true,
+        user_permissions: true,
+      },
+    });
   }
 
   async upsertUserProfile(
@@ -284,12 +324,6 @@ export default class UserRepository extends BaseRepository<PrismaClient['user']>
 
   async getUserById(id: string) {
     await this.findUnique({
-      where: { id },
-    });
-  }
-
-  async deleteUser(id: string) {
-    await this.delete({
       where: { id },
     });
   }

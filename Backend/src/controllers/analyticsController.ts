@@ -8,7 +8,7 @@ import ResourceRepository from '@/repositories/resourceRepository';
 import { ChallengeRepository } from '@/repositories/challengeRepository';
 import { createAppError } from '@/utils/errorHandler';
 
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 export default class AnalyticsController {
   private readonly defaultStartDate: Date;
   private readonly userRepo: UserRepository;

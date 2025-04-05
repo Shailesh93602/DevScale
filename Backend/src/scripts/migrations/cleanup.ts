@@ -1,7 +1,6 @@
-import { PrismaClient } from '@prisma/client';
 import logger from '../../utils/logger';
 
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 async function cleanupData() {
   try {
@@ -36,7 +35,7 @@ async function cleanupData() {
 
     await prisma.user.deleteMany({
       where: {
-        deleted_at: { 
+        deleted_at: {
           lt: thirtyDaysAgo,
         },
       },

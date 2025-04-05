@@ -1,7 +1,7 @@
-import { PrismaClient, Status } from '@prisma/client';
+import { Status } from '@prisma/client';
 import { EventSystem } from '../../utils/eventSystem';
 
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 interface ApprovalRequest {
   content_id: string;

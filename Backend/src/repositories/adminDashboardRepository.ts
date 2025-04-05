@@ -24,7 +24,7 @@ import { Parser } from 'json2csv';
 import BaseRepository from './baseRepository';
 import UserRepository from './userRepository';
 
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 // TODO: Review this file
 export default class AdminDashboardRepository extends BaseRepository<

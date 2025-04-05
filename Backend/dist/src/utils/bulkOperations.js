@@ -1,16 +1,18 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BulkOperations = void 0;
-const client_1 = require("@prisma/client");
-const prisma = new client_1.PrismaClient();
+const prisma_1 = __importDefault(require("@/lib/prisma"));
 class BulkOperations {
     prismaClient;
-    constructor(prismaClient = prisma) {
+    constructor(prismaClient = prisma_1.default) {
         this.prismaClient = prismaClient;
     }
     static async bulkCreateUsers(users) {
         try {
-            return await prisma.user.createMany({
+            return await prisma_1.default.user.createMany({
                 data: users,
                 skipDuplicates: true,
             });
@@ -21,7 +23,7 @@ class BulkOperations {
     }
     static async bulkUpdateResources(updates) {
         try {
-            return await prisma.$transaction(updates.map(({ id, data }) => prisma.resource.update({
+            return await prisma_1.default.$transaction(updates.map(({ id, data }) => prisma_1.default.resource.update({
                 where: { id },
                 data,
             })));
@@ -32,7 +34,7 @@ class BulkOperations {
     }
     static async bulkDeleteChallenges(ids) {
         try {
-            return await prisma.challenge.deleteMany({
+            return await prisma_1.default.challenge.deleteMany({
                 where: { id: { in: ids } },
             });
         }

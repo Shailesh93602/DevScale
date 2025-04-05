@@ -4,14 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DbOptimizer = void 0;
-const client_1 = require("@prisma/client");
 const logger_1 = __importDefault(require("./logger"));
-const prisma = new client_1.PrismaClient();
+const prisma_1 = __importDefault(require("@/lib/prisma"));
 class DbOptimizer {
     static async analyzeQueries() {
         try {
             // Enable query logging
-            prisma.$use(async (params, next) => {
+            prisma_1.default.$use(async (params, next) => {
                 const start = Date.now();
                 const result = await next(params);
                 const duration = Date.now() - start;
@@ -34,7 +33,7 @@ class DbOptimizer {
     static async vacuum() {
         try {
             // Run VACUUM ANALYZE on PostgreSQL
-            await prisma.$executeRawUnsafe('VACUUM ANALYZE');
+            await prisma_1.default.$executeRawUnsafe('VACUUM ANALYZE');
         }
         catch (error) {
             logger_1.default.error('Vacuum error:', error);
@@ -43,7 +42,7 @@ class DbOptimizer {
     static async reindex() {
         try {
             // Reindex database
-            await prisma.$executeRawUnsafe('REINDEX DATABASE current_database()');
+            await prisma_1.default.$executeRawUnsafe('REINDEX DATABASE current_database()');
         }
         catch (error) {
             logger_1.default.error('Reindex error:', error);
@@ -52,7 +51,7 @@ class DbOptimizer {
     static async optimizeIndexes() {
         try {
             // Analyze index usage
-            const unusedIndexes = await prisma.$queryRaw `
+            const unusedIndexes = await prisma_1.default.$queryRaw `
         SELECT schemaname, tablename, indexname, idx_scan
         FROM pg_stat_user_indexes
         WHERE idx_scan = 0

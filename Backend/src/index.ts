@@ -14,15 +14,13 @@ import { AppRoutes } from './routes/routes';
 import { errorHandler } from './middlewares/errorHandler';
 import logger from './utils/logger';
 import { v2 as cloudinary } from 'cloudinary';
-import { PrismaClient } from '@prisma/client';
+import prisma from './lib/prisma';
 
 export class App {
   private readonly app: Application;
-  private readonly prisma: PrismaClient;
 
   constructor() {
     this.app = express();
-    this.prisma = new PrismaClient();
     this.initializeCloudinary();
     this.initializeMiddlewares();
     this.initializeRoutes();
@@ -38,15 +36,8 @@ export class App {
   }
 
   private initializeMiddlewares(): void {
-    this.app.use(helmet());
-    this.app.use(
-      rateLimit({
-        windowMs: 15 * 60 * 1000,
-        max: 100,
-      })
-    );
-    this.app.use(express.json({ limit: '50mb' }));
-    this.app.use(express.urlencoded({ limit: '50mb', extended: true }));
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
     this.app.use(
       cors({
@@ -54,20 +45,48 @@ export class App {
         credentials: true,
       })
     );
+    this.app.use(helmet());
+
+    // Rate limiting
+    const limiter = rateLimit({
+      windowMs: 15 * 60 * 1000, // 15 minutes
+      max: 100, // Limit each IP to 100 requests per windowMs
+    });
+    this.app.use(limiter);
   }
 
   private initializeRoutes(): void {
     const appRoutes = new AppRoutes();
-    this.app.use('/api/v1', appRoutes.getRouter());
+    this.app.use('/', appRoutes.getRouter());
   }
 
   private initializeErrorHandling(): void {
     this.app.use(errorHandler);
   }
 
+  private setupGracefulShutdown(server: any): void {
+    process.on('SIGTERM', () => {
+      logger.info('SIGTERM signal received.');
+      server.close(async () => {
+        logger.info('HTTP server closed.');
+        await prisma.$disconnect();
+        process.exit(0);
+      });
+    });
+
+    process.on('SIGINT', () => {
+      logger.info('SIGINT signal received.');
+      server.close(async () => {
+        logger.info('HTTP server closed.');
+        await prisma.$disconnect();
+        process.exit(0);
+      });
+    });
+  }
+
   public async start(): Promise<void> {
     try {
-      await this.prisma.$connect();
+      await prisma.$connect();
       logger.info('Connected to PostgreSQL database');
 
       const server = this.app.listen(PORT, () => {
@@ -79,28 +98,6 @@ export class App {
       logger.error('Failed to start server:', error);
       process.exit(1);
     }
-  }
-
-  private setupGracefulShutdown(server: any): void {
-    const shutdown = async (signal: string) => {
-      logger.info(`${signal} received: closing server`);
-      server.close(async () => {
-        await this.prisma.$disconnect();
-        logger.info('Server closed');
-        process.exit(0);
-      });
-    };
-
-    process.on('SIGINT', () => shutdown('SIGINT'));
-    process.on('SIGTERM', () => shutdown('SIGTERM'));
-    process.on('uncaughtException', (error) => {
-      logger.error('Uncaught Exception:', error);
-      process.exit(1);
-    });
-    process.on('unhandledRejection', (error) => {
-      logger.error('Unhandled Rejection:', error);
-      process.exit(1);
-    });
   }
 }
 

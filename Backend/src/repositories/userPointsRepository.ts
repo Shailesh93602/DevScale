@@ -1,7 +1,7 @@
 import BaseRepository from './baseRepository';
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 export default class UserPointsRepository extends BaseRepository<
   PrismaClient['userPoints']

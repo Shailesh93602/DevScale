@@ -25,21 +25,7 @@ export default function App({ children }: { children: ReactNode }) {
     '/users/me',
   );
 
-  const routes = [
-    '/dashboard',
-    '/profile',
-    '/resources',
-    '/coding-challenges',
-    '/career-roadmap',
-    '/placement-preparation',
-    '/community',
-    '/achievements',
-    '/battle-zone',
-  ];
-
-  const isPublic = !routes.some(
-    (route) => route === path || path.startsWith(route + '/'),
-  );
+  const isPublic = path === '/' || path?.startsWith('/auth');
 
   useEffect(() => {
     setIsClient(true);

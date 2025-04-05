@@ -22,8 +22,12 @@ class ChallengeRoutes extends BaseRouter_1.BaseRouter {
         this.router.get('/leaderboard', this.challengeController.getChallengeLeaderboard);
         this.router.get('/:id', this.challengeController.getChallenge);
         // Protected routes
-        this.router.post('/', (0, authMiddleware_1.authorizeRoles)('admin', 'instructor'), (0, validateRequest_1.validateRequest)(challengeValidation_1.createChallengeValidation), this.challengeController.createNewChallenge);
-        this.router.patch('/:id', (0, authMiddleware_1.authorizeRoles)('admin', 'instructor'), (0, validateRequest_1.validateRequest)(challengeValidation_1.createChallengeValidation), this.challengeController.updateExistingChallenge);
+        this.router.post('/', 
+        // authorizeRoles('admin', 'instructor'),
+        (0, validateRequest_1.validateRequest)(challengeValidation_1.createChallengeValidation), this.challengeController.createNewChallenge);
+        this.router.patch('/:id', 
+        // authorizeRoles('admin', 'instructor'),
+        (0, validateRequest_1.validateRequest)(challengeValidation_1.createChallengeValidation), this.challengeController.updateExistingChallenge);
         this.router.post('/:challengeId/submit', (0, validateRequest_1.validateRequest)(challengeValidation_1.submitChallengeValidation), this.challengeController.submitChallengeAttempt);
     }
 }

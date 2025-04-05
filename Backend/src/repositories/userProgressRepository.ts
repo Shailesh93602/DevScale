@@ -4,7 +4,7 @@ import logger from '@/utils/logger';
 import { createAppError } from '@/utils/errorHandler';
 import { deleteCache, getCache, setCache } from '@/services/cacheService';
 
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 export default class UserProgressRepository extends BaseRepository<
   PrismaClient['userProgress']

@@ -12,7 +12,7 @@ import { executeCode } from '@/utils/codeExecutor';
 import { ChallengeData, ResourceStats, SubmissionData } from '@/types';
 import { invalidateCachePattern } from '@/services/cacheService';
 
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 export class ChallengeRepository extends BaseRepository<
   PrismaClient['challenge']

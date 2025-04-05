@@ -1,280 +1,439 @@
 'use client';
-import React, { useState } from 'react';
-import CourseCard from '@/components/CourseCard';
-import Section from '@/components/Section';
+
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { BookOpen, Award, Hourglass, Flame } from 'lucide-react';
+import StatCard from '@/components/dashboard/StatCard';
+import RoadmapCard, { RoadmapType } from '@/components/Roadmap/RoadmapCard';
+import StreakCalendar from '@/components/dashboard/StreakCalendar';
+import ActivityItem, {
+  ActivityItemProps,
+} from '@/components/dashboard/ActivityItem';
+import AchievementItem, {
+  AchievementItemProps,
+} from '@/components/dashboard/AchievementItem';
+import { DashboardSkeleton } from '@/components/dashboard/DashboardSkeletons';
+import { useDashboard } from '@/hooks/useDashboard';
+import { useStreak } from '@/hooks/useStreak';
+import { useAxiosGet } from '@/hooks/useAxios';
+import {
+  DashboardStats,
+  Roadmap,
+  EnrolledRoadmap,
+  RecommendedRoadmap,
+} from '@/hooks/useDashboard';
+import { WeeklyActivity } from '@/hooks/useStreak';
 import { useSelector } from 'react-redux';
-import ProgressWidget from '@/components/ProgressWidget';
-import { Clock, CheckCircle, Star, BookOpen } from 'lucide-react';
-import { EnrolledRoadmap, FeaturedRoadmap } from './types';
+import { getLoggedInUser } from '@/lib/features/user/userSlice';
 
-export default function Dashboard() {
-  const user = useSelector(
-    (state: { user: { user: { username: string } } }) => state.user?.user,
-  );
-  const [username] = useState(user?.username);
+interface User {
+  id: string;
+  username: string;
+  fullName: string;
+  profileImage?: string;
+  email: string;
+}
 
-  // Sample data for enrolled roadmaps
-  const enrolledRoadmaps: EnrolledRoadmap[] = [
-    {
-      id: '1',
-      title: 'Full Stack Web Development',
-      author: 'Tech Academy',
-      progress: 65,
-      lastAccessed: '2 days ago',
-      topics: 42,
-      completed: 27,
-    },
-    {
-      id: '2',
-      title: 'Machine Learning Fundamentals',
-      author: 'AI Research Group',
-      progress: 30,
-      lastAccessed: 'Yesterday',
-      topics: 36,
-      completed: 11,
-    },
-  ];
+interface DashboardState {
+  stats: DashboardStats | null;
+  enrolledRoadmaps: Roadmap[];
+  recommendedRoadmaps: Roadmap[];
+  streakData: {
+    currentStreak: number;
+    longestStreak: number;
+    thisWeek: WeeklyActivity[];
+  } | null;
+}
 
-  // Sample data for featured roadmaps
-  const featuredRoadmaps: FeaturedRoadmap[] = [
-    {
-      id: '4',
-      title: 'Cybersecurity Essentials',
-      author: 'Security Pros',
-      enrollments: 2456,
-      rating: 4.8,
-      topics: 38,
-    },
-    {
-      id: '5',
-      title: 'Data Science for Engineers',
-      author: 'Data Analysis Group',
-      enrollments: 1872,
-      rating: 4.7,
-      topics: 45,
-    },
-  ];
+const isEnrolledRoadmap = (roadmap: Roadmap): roadmap is EnrolledRoadmap => {
+  return 'progress' in roadmap;
+};
 
-  // Calculate stats
-  const stats = {
-    enrolledCount: enrolledRoadmaps.length,
-    completedTopics: enrolledRoadmaps.reduce((sum, r) => sum + r.completed, 0),
-    averageProgress: Math.round(
-      enrolledRoadmaps.reduce((sum, r) => sum + r.progress, 0) /
-        enrolledRoadmaps.length,
-    ),
+const isRecommendedRoadmap = (
+  roadmap: Roadmap,
+): roadmap is RecommendedRoadmap => {
+  return 'description' in roadmap;
+};
+
+const mapToRoadmapType = (
+  roadmap: Roadmap,
+  isEnrolled: boolean,
+): RoadmapType => {
+  const baseRoadmapData = {
+    id: roadmap?.id,
+    title: roadmap?.title,
+    author: {
+      id: roadmap?.author?.id || 'anonymous',
+      name: roadmap?.author?.name || 'Anonymous',
+      avatar: roadmap?.author?.profileImage,
+    },
+    thumbnail: roadmap?.thumbnail,
+    isEnrolled,
+    likesCount: roadmap?.likesCount || 0,
+    commentsCount: roadmap?.commentsCount || 0,
+    bookmarksCount: roadmap?.bookmarksCount || 0,
+    isLiked: roadmap?.isLiked || false,
+    isBookmarked: roadmap?.isBookmarked || false,
   };
 
-  return (
-    <div className="p-6">
-      <div className="mx-auto max-w-7xl">
-        <header className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="text-4xl font-extrabold">Welcome,</h1>
-            <h2 className="text-5xl font-extrabold text-primary">
-              {username &&
-                username.charAt(0).toUpperCase() +
-                  username.slice(
-                    1,
-                    username.indexOf(' ') == -1
-                      ? username.length
-                      : username.indexOf(' ') + 1,
-                  )}
-            </h2>
-          </div>
-        </header>
+  if (isEnrolledRoadmap(roadmap)) {
+    return {
+      ...baseRoadmapData,
+      description: 'Track your progress in this roadmap',
+      enrollmentCount: 0,
+      rating: 0,
+      progress: roadmap.progress,
+      steps: roadmap.totalTopics,
+      estimatedTime: roadmap.nextTopic?.estimatedTime || '2-3 hours',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      difficulty: 'beginner' as const,
+    };
+  } else {
+    return {
+      ...baseRoadmapData,
+      description: roadmap.description,
+      enrollmentCount: roadmap.enrollmentCount,
+      rating: roadmap.rating,
+      steps: roadmap.topics,
+      estimatedTime: '2-3 hours',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      difficulty: 'beginner' as const,
+    };
+  }
+};
 
-        {/* Progress Stats */}
-        <div className="mb-12 grid grid-cols-1 gap-8 md:grid-cols-3">
-          <div className="rounded-lg bg-blue-50 p-6">
-            <div className="font-medium text-blue-600">Enrolled Roadmaps</div>
-            <div className="mt-2 text-3xl font-bold">{stats.enrolledCount}</div>
-          </div>
-          <div className="rounded-lg bg-green-50 p-6">
-            <div className="font-medium text-green-600">Topics Completed</div>
-            <div className="mt-2 text-3xl font-bold">
-              {stats.completedTopics}
-            </div>
-          </div>
-          <div className="rounded-lg bg-purple-50 p-6">
-            <div className="font-medium text-purple-600">Average Progress</div>
-            <div className="mt-2 text-3xl font-bold">
-              {stats.averageProgress}%
-            </div>
-          </div>
+const DashboardPage: React.FC = () => {
+  const { getDashboardStats, getRoadmaps, getActivities, getAchievements } =
+    useDashboard();
+
+  const { getStreakStats, getWeeklyActivity } = useStreak();
+  const [fetchUser] = useAxiosGet<User>('/user');
+  const user = useSelector(getLoggedInUser);
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [enrolledRoadmaps, setEnrolledRoadmaps] = useState<Roadmap[]>([]);
+  const [recommendedRoadmaps, setRecommendedRoadmaps] = useState<Roadmap[]>([]);
+  const [activities, setActivities] = useState<ActivityItemProps[]>([]);
+  const [achievements, setAchievements] = useState<AchievementItemProps[]>([]);
+  const [streakData, setStreakData] =
+    useState<DashboardState['streakData']>(null);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setIsLoading(true);
+        const [
+          statsResponse,
+          enrolledResponse,
+          recommendedResponse,
+          activitiesResponse,
+          achievementsResponse,
+          streakStatsResponse,
+          weeklyActivityResponse,
+        ] = await Promise.all([
+          getDashboardStats(),
+          getRoadmaps({ params: { type: 'enrolled' } }),
+          getRoadmaps({ params: { type: 'recommended' } }),
+          getActivities(),
+          getAchievements(),
+          getStreakStats(),
+          getWeeklyActivity(),
+        ]);
+
+        setStats(statsResponse?.data);
+        setEnrolledRoadmaps(enrolledResponse?.data?.data || []);
+        setRecommendedRoadmaps(recommendedResponse?.data?.data || []);
+        setActivities(activitiesResponse?.data?.data || []);
+        setAchievements(achievementsResponse?.data?.data || []);
+
+        // Format streak data
+        const weeklyActivity = weeklyActivityResponse?.data?.data;
+
+        setStreakData({
+          currentStreak: streakStatsResponse?.data?.currentStreak,
+          longestStreak: streakStatsResponse?.data?.longestStreak,
+          thisWeek: weeklyActivity,
+        });
+      } catch (err) {
+        console.error('Error fetching dashboard data:', err);
+        setError('Failed to load dashboard data. Please try again later.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, [
+    fetchUser,
+    getDashboardStats,
+    getRoadmaps,
+    getActivities,
+    getAchievements,
+    getStreakStats,
+    getWeeklyActivity,
+  ]);
+
+  if (isLoading) {
+    return <DashboardSkeleton />;
+  }
+
+  if (error) {
+    return (
+      <div className="flex h-[50vh] items-center justify-center">
+        <div className="text-center">
+          <h2 className="mb-2 text-xl font-semibold text-gray-900 dark:text-white">
+            Oops! Something went wrong
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 md:px-8">
+      {/* Page Header */}
+      <div className="mb-8">
+        <motion.h1
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="text-2xl font-bold text-foreground"
+        >
+          Dashboard
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+          className="text-muted-foreground"
+        >
+          Welcome back, {user?.fullName}! Track your progress and continue
+          learning.
+        </motion.p>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        {/* Stats Row */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:col-span-3 xl:grid-cols-4">
+          <StatCard
+            title="Enrolled Roadmaps"
+            value={stats?.enrolledRoadmaps || 0}
+            icon={BookOpen}
+            color="blue"
+          />
+          <StatCard
+            title="Topics Completed"
+            value={stats?.totalTopicsCompleted || 0}
+            description={`out of ${stats?.totalTopics || 0} total topics`}
+            icon={Award}
+            color="green"
+          />
+          <StatCard
+            title="Current Streak"
+            value={`${streakData?.currentStreak || 0} days`}
+            description={`Longest: ${streakData?.longestStreak || 0} days`}
+            icon={Flame}
+            color="orange"
+          />
+          <StatCard
+            title="Learning Time"
+            value={`${stats?.totalHoursSpent || 0}h`}
+            description="Total time spent learning"
+            icon={Hourglass}
+            color="purple"
+          />
         </div>
 
-        {/* Progress Widget */}
-        <ProgressWidget
-          initialData={{
-            chapters: enrolledRoadmaps.reduce((sum, r) => sum + r.topics, 0),
-            items: 100,
-            completedChapters: enrolledRoadmaps.reduce(
-              (sum, r) => sum + r.completed,
-              0,
-            ),
-            completedItems: 25,
-          }}
-        />
-
-        {/* Enrolled Roadmaps */}
-        <Section title="Your Enrolled Roadmaps">
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {enrolledRoadmaps.map((roadmap) => (
-              <div
-                key={roadmap.id}
-                className="rounded-lg border border-gray-200 p-4 transition-colors hover:border-blue-300"
+        {/* Main Content Column */}
+        <div className="space-y-6 lg:col-span-2">
+          {/* Enrolled Roadmaps Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="rounded-lg bg-card p-6 shadow-md"
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-xl font-bold text-foreground">
+                Your Learning Progress
+              </h2>
+              <Link
+                href="/career-roadmap"
+                className="hover:text-primary/80 text-sm font-medium text-primary"
               >
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-800">
-                      {roadmap.title}
-                    </h3>
-                    <p className="text-sm text-gray-600">By {roadmap.author}</p>
-                  </div>
-                  <div className="flex items-center space-x-4 text-sm">
-                    <div className="flex items-center text-gray-500">
-                      <Clock className="mr-1 h-4 w-4" />
-                      <span>{roadmap.lastAccessed}</span>
-                    </div>
-                    <div className="flex items-center text-gray-500">
-                      <CheckCircle className="mr-1 h-4 w-4" />
-                      <span>
-                        {roadmap.completed}/{roadmap.topics} topics
-                      </span>
-                    </div>
-                  </div>
-                  <div className="w-full">
-                    <div className="flex items-center">
-                      <div className="mr-2 flex-1">
-                        <div className="h-2 rounded-full bg-gray-200">
-                          <div
-                            className="h-2 rounded-full bg-blue-600"
-                            style={{ width: `${roadmap.progress}%` }}
-                          />
-                        </div>
-                      </div>
-                      <div className="text-sm font-medium text-gray-700">
-                        {roadmap.progress}%
-                      </div>
-                    </div>
-                  </div>
+                View All
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 gap-6">
+              {enrolledRoadmaps
+                ?.filter(isEnrolledRoadmap)
+                .slice(0, 2)
+                .map((roadmap, index) => (
+                  <RoadmapCard
+                    key={roadmap.id}
+                    roadmap={mapToRoadmapType(roadmap, true)}
+                    index={index}
+                  />
+                ))}
+              {enrolledRoadmaps?.length === 0 && (
+                <div className="flex min-h-[200px] flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted p-8 text-center">
+                  <BookOpen className="mb-4 h-8 w-8 text-muted-foreground" />
+                  <h3 className="mb-1 text-lg font-medium">
+                    No Enrolled Roadmaps
+                  </h3>
+                  <p className="mb-4 text-sm text-muted-foreground">
+                    Start your learning journey by enrolling in a roadmap
+                  </p>
+                  <Link
+                    href="/explore"
+                    className="hover:text-primary/80 text-sm font-medium text-primary"
+                  >
+                    Browse Roadmaps
+                  </Link>
                 </div>
-              </div>
-            ))}
-          </div>
-        </Section>
+              )}
+            </div>
+          </motion.div>
 
-        {/* Featured Roadmaps */}
-        <Section title="Featured Roadmaps">
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {featuredRoadmaps.map((roadmap) => (
-              <div
-                key={roadmap.id}
-                className="rounded-lg border border-gray-200 p-4 transition-colors hover:border-blue-300"
+          {/* Recommended Roadmaps Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="rounded-lg bg-card p-6 shadow-md"
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-xl font-bold text-foreground">
+                Recommended For You
+              </h2>
+              <Link
+                href="/explore"
+                className="hover:text-primary/80 text-sm font-medium text-primary"
               >
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-800">
-                      {roadmap.title}
-                    </h3>
-                    <p className="text-sm text-gray-600">By {roadmap.author}</p>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4 text-sm">
-                      <div className="flex items-center text-amber-500">
-                        <Star className="mr-1 h-4 w-4 fill-current" />
-                        <span>{roadmap.rating}</span>
-                      </div>
-                      <div className="flex items-center text-gray-500">
-                        <BookOpen className="mr-1 h-4 w-4" />
-                        <span>{roadmap.topics} topics</span>
-                      </div>
-                    </div>
-                    <div className="text-sm text-gray-600">
-                      {roadmap.enrollments.toLocaleString()} enrolled
-                    </div>
-                  </div>
+                Explore More
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 gap-6">
+              {recommendedRoadmaps
+                ?.filter(isRecommendedRoadmap)
+                .slice(0, 2)
+                .map((roadmap, index) => (
+                  <RoadmapCard
+                    key={roadmap.id}
+                    roadmap={mapToRoadmapType(roadmap, false)}
+                    index={index}
+                  />
+                ))}
+              {recommendedRoadmaps?.length === 0 && (
+                <div className="flex min-h-[200px] flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted p-8 text-center">
+                  <Flame className="mb-4 h-8 w-8 text-muted-foreground" />
+                  <h3 className="mb-1 text-lg font-medium">
+                    No Recommendations Yet
+                  </h3>
+                  <p className="mb-4 text-sm text-muted-foreground">
+                    We&apos;ll suggest roadmaps based on your interests soon
+                  </p>
+                  <Link
+                    href="/explore"
+                    className="hover:text-primary/80 text-sm font-medium text-primary"
+                  >
+                    Browse All Roadmaps
+                  </Link>
                 </div>
-              </div>
-            ))}
-          </div>
-        </Section>
+              )}
+            </div>
+          </motion.div>
+        </div>
 
-        {/* Featured Courses */}
-        <Section title="Featured Courses">
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {courses.map((course) => (
-              <CourseCard
-                key={course.id}
-                title={course.title}
-                description={course.description}
-                thumbnail={course.thumbnail}
-                chapters={course.chapters}
-                items={course.items}
-                completed={course.completed}
-              />
-            ))}
-          </div>
-        </Section>
+        {/* Sidebar Column */}
+        <div className="space-y-6">
+          {/* Learning Streak Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <StreakCalendar
+              currentStreak={streakData?.currentStreak || 0}
+              longestStreak={streakData?.longestStreak || 0}
+              thisWeek={
+                streakData?.thisWeek?.map((day: WeeklyActivity) => ({
+                  date: day.date,
+                  minutesSpent: day.minutesLearned,
+                })) || []
+              }
+            />
+          </motion.div>
+
+          {/* Recent Activity Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="rounded-lg bg-card p-4 shadow-md"
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-lg font-medium text-foreground">
+                Recent Activity
+              </h3>
+              <Link
+                href="/activity"
+                className="hover:text-primary/80 text-sm font-medium text-primary"
+              >
+                See All
+              </Link>
+            </div>
+            <div className="space-y-1">
+              {activities?.map((activity) => (
+                <ActivityItem key={activity.id} {...activity} />
+              ))}
+              {activities?.length === 0 && (
+                <div className="py-8 text-center text-sm text-muted-foreground">
+                  No recent activity
+                </div>
+              )}
+            </div>
+          </motion.div>
+
+          {/* Achievements Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+            className="rounded-lg bg-card p-4 shadow-md"
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-lg font-medium text-foreground">
+                Your Achievements
+              </h3>
+              <Link
+                href="/achievements"
+                className="hover:text-primary/80 text-sm font-medium text-primary"
+              >
+                View All
+              </Link>
+            </div>
+            <div className="space-y-3">
+              {achievements?.map((achievement) => (
+                <AchievementItem key={achievement.id} {...achievement} />
+              ))}
+              {achievements?.length === 0 && (
+                <div className="py-8 text-center text-sm text-muted-foreground">
+                  No achievements yet
+                </div>
+              )}
+            </div>
+          </motion.div>
+        </div>
       </div>
     </div>
   );
-}
+};
 
-const courses = [
-  {
-    id: 1,
-    thumbnail: '/images/DSA.png',
-    title: 'Data Structures and Algorithms',
-    description: "LeetCode's Interview Crash Course",
-    chapters: 13,
-    items: 149,
-    completed: 0,
-  },
-  {
-    id: 2,
-    thumbnail: '/images/sd.jpeg',
-    title: 'System Design for Interviews and Beyond',
-    description: "LeetCode's Interview Crash Course",
-    chapters: 16,
-    items: 81,
-    completed: 25,
-  },
-  {
-    id: 4,
-    thumbnail: '/images/interview.jpeg',
-    title: 'Top Interview Questions',
-    description: 'Easy Collection',
-    chapters: 9,
-    items: 48,
-    completed: 50,
-  },
-  {
-    id: 5,
-    thumbnail: '/images/dp.jpeg',
-    title: 'Dynamic Programming',
-    description: 'Detailed Explanation of',
-    chapters: 6,
-    items: 55,
-    completed: 75,
-  },
-  {
-    id: 6,
-    thumbnail: '/images/array.png',
-    title: 'Arrays 101',
-    description: 'Introduction to Data Structure',
-    chapters: 6,
-    items: 31,
-    completed: 90,
-  },
-  {
-    id: 7,
-    thumbnail: '/images/google_interview.png',
-    title: 'Google Interview',
-    description: 'Get Well Prepared for',
-    chapters: 9,
-    items: 85,
-    completed: 100,
-  },
-];
+export default DashboardPage;

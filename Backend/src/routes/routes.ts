@@ -10,7 +10,8 @@ import { TopicRoutes } from './topicRoutes';
 import { SubjectRoutes } from './subjectRoutes';
 import { MainConceptRoutes } from './mainConceptRoutes';
 import { HealthCheckRoutes } from './healthCheckRoutes';
-
+import { StreakRoutes } from './streakRoutes';
+import { DashboardRoutes } from './dashboardRoutes';
 export class AppRoutes {
   private readonly router: Router;
 
@@ -34,6 +35,8 @@ export class AppRoutes {
     this.router.use('/topics', new TopicRoutes().getRouter());
     this.router.use('/subjects', new SubjectRoutes().getRouter());
     this.router.use('/mainConcepts', new MainConceptRoutes().getRouter());
+    this.router.use('/streak', new StreakRoutes().getRouter());
+    this.router.use('/dashboard', new DashboardRoutes().getRouter());
   }
 
   public getRouter(): Router {

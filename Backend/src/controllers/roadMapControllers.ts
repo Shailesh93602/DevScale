@@ -6,6 +6,8 @@ import { Prisma } from '@prisma/client';
 import UserRoadmapRepository from '@/repositories/userRoadmapRepository';
 import RoadmapCategoryRepository from '@/repositories/roadmapCategoryRepository';
 
+import prisma from '@/lib/prisma';
+
 export default class RoadmapController {
   private readonly roadmapRepo: RoadmapRepository;
   private readonly userRoadmapRepo: UserRoadmapRepository;
@@ -40,7 +42,6 @@ export default class RoadmapController {
             user_roadmaps: {
               none: { user_id: userId },
             },
-            // is_public: true,
           };
           break;
         case 'my-roadmaps':
@@ -87,7 +88,9 @@ export default class RoadmapController {
 
   public getRoadMap = catchAsync(async (req: Request, res: Response) => {
     const roadMapId = req.params.id;
-    const roadMap = await this.roadmapRepo.getRoadmap(roadMapId);
+    const userId = req.user?.id;
+
+    const roadMap = await this.roadmapRepo.getRoadmap(roadMapId, userId);
 
     if (!roadMap) {
       return sendResponse(res, 'ROADMAP_NOT_FOUND', {
@@ -303,4 +306,76 @@ export default class RoadmapController {
       });
     }
   );
+
+  public likeRoadmap = catchAsync(async (req: Request, res: Response) => {
+    const userId = req.user?.id;
+    const roadmapId = req.params.id;
+
+    if (!userId) {
+      return sendResponse(res, 'UNAUTHORIZED', {
+        error: 'User not authenticated',
+      });
+    }
+
+    const existingLike = await prisma.like.findFirst({
+      where: {
+        user_id: userId,
+        roadmap_id: roadmapId,
+      },
+    });
+
+    if (existingLike) {
+      await prisma.like.delete({
+        where: {
+          id: existingLike.id,
+        },
+      });
+      return sendResponse(res, 'ROADMAP_UNLIKED', { data: null });
+    }
+
+    await prisma.like.create({
+      data: {
+        user_id: userId,
+        roadmap_id: roadmapId,
+      },
+    });
+
+    return sendResponse(res, 'ROADMAP_LIKED', { data: null });
+  });
+
+  public bookmarkRoadmap = catchAsync(async (req: Request, res: Response) => {
+    const userId = req.user?.id;
+    const roadmapId = req.params.id;
+
+    if (!userId) {
+      return sendResponse(res, 'UNAUTHORIZED', {
+        error: 'User not authenticated',
+      });
+    }
+
+    const existingBookmark = await prisma.userRoadmap.findFirst({
+      where: {
+        user_id: userId,
+        roadmap_id: roadmapId,
+      },
+    });
+
+    if (existingBookmark) {
+      await prisma.userRoadmap.delete({
+        where: {
+          id: existingBookmark.id,
+        },
+      });
+      return sendResponse(res, 'ROADMAP_UNBOOKMARKED', { data: null });
+    }
+
+    await prisma.userRoadmap.create({
+      data: {
+        user_id: userId,
+        roadmap_id: roadmapId,
+      },
+    });
+
+    return sendResponse(res, 'ROADMAP_BOOKMARKED', { data: null });
+  });
 }

@@ -16,7 +16,9 @@ class UserController {
         this.userRoadmapRepo = new userRoadmapRepository_1.default();
     }
     getProfile = (0, utils_1.catchAsync)(async (req, res) => {
-        const user = await this.userRepo.findUnique({ where: { id: req.user.id } });
+        const user = await this.userRepo.findUnique({
+            where: { supabase_id: req.user?.id },
+        });
         if (!user) {
             return (0, apiResponse_1.sendResponse)(res, 'USER_NOT_CREATED');
         }
@@ -79,6 +81,7 @@ class UserController {
             throw (0, errorHandler_1.createAppError)('Invalid username', 400);
         }
         const isAvailable = await this.userRepo.findFirst({ where: { username } });
+        console.log('🚀 --------------------------------------------------------------------------🚀');
         (0, apiResponse_1.sendResponse)(res, 'USERNAME_AVAILABILITY_CHECKED', {
             data: { isAvailable: !isAvailable },
         });

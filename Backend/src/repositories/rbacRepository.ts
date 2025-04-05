@@ -1,7 +1,7 @@
 import { PrismaClient, Role, Permission } from '@prisma/client';
 import BaseRepository from './baseRepository';
 
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 export class RBACRepository extends BaseRepository<PrismaClient['role']> {
   constructor() {

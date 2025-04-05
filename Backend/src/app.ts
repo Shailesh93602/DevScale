@@ -24,6 +24,7 @@ import fsPromise from 'fs/promises';
 import errorMiddleware, {
   notFoundMiddleware,
 } from './middlewares/errorMiddleware';
+import { StreakRoutes } from './routes/streakRoutes';
 
 const app: Application = express();
 const env: string = NODE_ENV || 'development';

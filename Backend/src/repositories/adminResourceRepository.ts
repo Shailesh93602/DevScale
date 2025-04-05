@@ -1,6 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 // TODO: Remove this file and   move the function to relevant reo
 export class AdminResourceRepository {

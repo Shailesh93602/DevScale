@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer';
 import Queue from 'bull';
 import { MAIL_ADDRESS, MAIL_PASSWORD, REDIS_URL } from '../config';
 import logger from './logger';
-import { PrismaClient } from '@prisma/client';
+import prisma from '@/lib/prisma';
 
 interface EmailData {
   to: string;
@@ -13,8 +13,6 @@ interface EmailData {
     path: string;
   }>;
 }
-
-const prisma = new PrismaClient();
 
 // Create email queue
 const emailQueue = new Queue('email-queue', REDIS_URL);

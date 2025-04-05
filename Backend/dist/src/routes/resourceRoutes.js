@@ -7,7 +7,7 @@ exports.ResourceRoutes = void 0;
 const BaseRouter_1 = require("./BaseRouter");
 const resourceController_1 = __importDefault(require("../controllers/resourceController"));
 const paginationMiddleware_1 = __importDefault(require("../middlewares/paginationMiddleware"));
-const authMiddleware_1 = require("@/middlewares/authMiddleware");
+const authMiddleware_1 = require("../middlewares/authMiddleware");
 class ResourceRoutes extends BaseRouter_1.BaseRouter {
     resourceController;
     constructor() {

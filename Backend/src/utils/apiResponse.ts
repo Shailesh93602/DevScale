@@ -146,7 +146,21 @@ type ResponseType =
   | 'USERNAME_AVAILABILITY_CHECKED'
   | 'ROADMAP_REMOVED'
   | 'PROGRESS_UPDATED'
-  | 'SOMETHING_WRONG';
+  | 'ROADMAP_LIKED'
+  | 'ROADMAP_UNLIKED'
+  | 'ROADMAP_BOOKMARKED'
+  | 'ROADMAP_UNBOOKMARKED'
+  | 'SOMETHING_WRONG'
+  | 'MODERATION_QUEUE_FETCHED'
+  | 'AUDIT_LOGS_FETCHED'
+  | 'CONTENT_MODERATED'
+  | 'DASHBOARD_STATS_FETCHED'
+  | 'RECENT_ACTIVITIES_FETCHED'
+  | 'LEARNING_PROGRESS_FETCHED'
+  | 'ACHIEVEMENTS_FETCHED'
+  | 'STREAK_UPDATED'
+  | 'STREAK_STATS_FETCHED'
+  | 'WEEKLY_ACTIVITY_FETCHED';
 
 interface ResponseConfig {
   status: number;
@@ -871,10 +885,70 @@ const RESPONSE_MESSAGES: Record<ResponseType, ResponseConfig> = {
     success: true,
     message: 'Progress updated successfully',
   },
+  ROADMAP_LIKED: {
+    status: 200,
+    success: true,
+    message: 'Roadmap liked successfully',
+  },
+  ROADMAP_UNLIKED: {
+    status: 200,
+    success: true,
+    message: 'Roadmap unliked successfully',
+  },
+  ROADMAP_BOOKMARKED: {
+    status: 200,
+    success: true,
+    message: 'Roadmap bookmarked successfully',
+  },
+  ROADMAP_UNBOOKMARKED: {
+    status: 200,
+    success: true,
+    message: 'Roadmap unbookmarked successfully',
+  },
   SOMETHING_WRONG: {
     status: 500,
     success: false,
     message: 'Something went wrong',
+  },
+  MODERATION_QUEUE_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Moderation queue fetched successfully',
+  },
+  DASHBOARD_STATS_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Dashboard stats fetched successfully',
+  },
+  RECENT_ACTIVITIES_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Recent activities fetched successfully',
+  },
+  LEARNING_PROGRESS_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Learning progress fetched successfully',
+  },
+  ACHIEVEMENTS_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Achievements fetched successfully',
+  },
+  STREAK_UPDATED: {
+    status: 200,
+    success: true,
+    message: 'Streak updated successfully',
+  },
+  STREAK_STATS_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Streak stats fetched successfully',
+  },
+  WEEKLY_ACTIVITY_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Weekly activity fetched successfully',
   },
 };
 

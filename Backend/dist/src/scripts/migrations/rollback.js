@@ -5,11 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createRollbackPoint = createRollbackPoint;
 exports.rollback = rollback;
-const client_1 = require("@prisma/client");
 const logger_1 = __importDefault(require("../../utils/logger"));
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
-const prisma = new client_1.PrismaClient();
+const prisma_1 = __importDefault(require("@/lib/prisma"));
 async function createRollbackPoint() {
     const timestamp = new Date().toISOString();
     const rollbackData = {
@@ -17,8 +16,8 @@ async function createRollbackPoint() {
         changes: [],
     };
     // Save current state for potential rollback
-    const users = await prisma.user.findMany();
-    const roadmaps = await prisma.roadmap.findMany();
+    const users = await prisma_1.default.user.findMany();
+    const roadmaps = await prisma_1.default.roadmap.findMany();
     rollbackData.changes = [
         { table: 'user', operation: 'INSERT', data: users },
         { table: 'roadmap', operation: 'INSERT', data: roadmaps },
@@ -39,14 +38,14 @@ async function rollback(timestamp) {
         for (const change of rollbackData.changes.reverse()) {
             switch (change.table) {
                 case 'user':
-                    await prisma.user.deleteMany();
-                    await prisma.user.createMany({
+                    await prisma_1.default.user.deleteMany();
+                    await prisma_1.default.user.createMany({
                         data: change.data,
                     });
                     break;
                 case 'roadmap':
-                    await prisma.roadmap.deleteMany();
-                    await prisma.roadmap.createMany({
+                    await prisma_1.default.roadmap.deleteMany();
+                    await prisma_1.default.roadmap.createMany({
                         data: change.data,
                     });
                     break;

@@ -7,7 +7,7 @@ exports.getLearningPathRecommendations = getLearningPathRecommendations;
 const client_1 = require("@prisma/client");
 const logger_1 = __importDefault(require("../../utils/logger"));
 const analytics_1 = require("./analytics");
-const prisma = new client_1.PrismaClient();
+const prisma_1 = __importDefault(require("@/lib/prisma"));
 async function getLearningPathRecommendations(user_id) {
     try {
         const [userProgress, userSkills, completedTopics] = await Promise.all([
@@ -34,21 +34,21 @@ async function getLearningPathRecommendations(user_id) {
     }
 }
 async function getUserSkills(user_id) {
-    const profile = await prisma.user.findUnique({
+    const profile = await prisma_1.default.user.findUnique({
         where: { id: user_id },
         select: { skills: true },
     });
     return profile?.skills || [];
 }
 async function getCompletedTopics(user_id) {
-    return prisma.progress.findMany({
+    return prisma_1.default.progress.findMany({
         where: { user_id: user_id, status: client_1.Status.APPROVED },
         select: { topic_id: true },
     });
 }
 async function getNextTopics(user_id, completed_topics) {
     const completed_ids = completed_topics.map((t) => t.topic_id);
-    return prisma.topic.findMany({
+    return prisma_1.default.topic.findMany({
         where: {
             id: { notIn: completed_ids },
             roadmaps: {
@@ -64,7 +64,7 @@ async function getNextTopics(user_id, completed_topics) {
     });
 }
 async function getRelatedRoadmaps(userSkills) {
-    return prisma.roadmap.findMany({
+    return prisma_1.default.roadmap.findMany({
         where: {
             topics: {
                 some: {
@@ -85,7 +85,7 @@ async function getRelatedRoadmaps(userSkills) {
 async function getChallengeRecommendations(user_id, progress_percentage) {
     const user_level = await getUserLevel(user_id);
     const difficulty = mapProgressToDifficulty(progress_percentage, user_level ?? 'Beginner');
-    return prisma.challenge.findMany({
+    return prisma_1.default.challenge.findMany({
         where: {
             difficulty,
             submissions: { none: { user_id } },
@@ -94,7 +94,7 @@ async function getChallengeRecommendations(user_id, progress_percentage) {
     });
 }
 async function identifySkillGaps(user_id, user_skills) {
-    const popular_skills = await prisma.user.findMany({
+    const popular_skills = await prisma_1.default.user.findMany({
         select: { skills: true },
         take: 100,
     });
@@ -112,7 +112,7 @@ async function identifySkillGaps(user_id, user_skills) {
 }
 // Helper functions
 async function getUserLevel(user_id) {
-    const profile = await prisma.user.findUnique({
+    const profile = await prisma_1.default.user.findUnique({
         where: { id: user_id },
         select: { experience_level: true },
     });
