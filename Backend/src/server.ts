@@ -1,9 +1,10 @@
 import { initializeApp } from '@/app';
 
 import { UserRoutes } from './routes/userRoutes';
+import { StreakRoutes } from './routes/streakRoutes';
 import logger from './utils/logger';
 
-const routes = [new UserRoutes().getRouter()];
+const routes = [new UserRoutes().getRouter(), new StreakRoutes().getRouter()];
 
 const main = async () => {
   try {

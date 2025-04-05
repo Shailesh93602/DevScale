@@ -22,7 +22,9 @@ class AnalyticsRoutes {
         // Apply auth middleware to all routes
         this.router.use(authMiddleware_1.authMiddleware);
         // User analytics routes
-        this.router.get('/user/:userId', (0, authMiddleware_1.authorizeRoles)('admin', 'instructor'), this.analyticsController.getUserAnalytics);
+        this.router.get('/user/:userId', 
+        // authorizeRoles('admin', 'instructor'),
+        this.analyticsController.getUserAnalytics);
         this.router.get('/user/me', this.analyticsController.getCurrentUserAnalytics);
         // Platform analytics routes
         this.router.get('/platform', (0, authMiddleware_1.authorizeRoles)('admin'), [

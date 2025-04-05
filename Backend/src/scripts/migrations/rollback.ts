@@ -1,9 +1,9 @@
-import { PrismaClient, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import logger from '../../utils/logger';
 import fs from 'fs';
 import path from 'path';
 
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 interface RollbackPoint {
   timestamp: string;

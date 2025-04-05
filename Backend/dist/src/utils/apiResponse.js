@@ -72,7 +72,7 @@ const RESPONSE_MESSAGES = {
         message: 'Topic not found',
     },
     USER_NOT_CREATED: {
-        status: 500,
+        status: 200,
         success: false,
         message: 'User not created',
     },
@@ -721,11 +721,71 @@ const RESPONSE_MESSAGES = {
         success: true,
         message: 'Progress updated successfully',
     },
+    ROADMAP_LIKED: {
+        status: 200,
+        success: true,
+        message: 'Roadmap liked successfully',
+    },
+    ROADMAP_UNLIKED: {
+        status: 200,
+        success: true,
+        message: 'Roadmap unliked successfully',
+    },
+    ROADMAP_BOOKMARKED: {
+        status: 200,
+        success: true,
+        message: 'Roadmap bookmarked successfully',
+    },
+    ROADMAP_UNBOOKMARKED: {
+        status: 200,
+        success: true,
+        message: 'Roadmap unbookmarked successfully',
+    },
     SOMETHING_WRONG: {
         status: 500,
         success: false,
-        message: "Something went wrong",
-    }
+        message: 'Something went wrong',
+    },
+    MODERATION_QUEUE_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Moderation queue fetched successfully',
+    },
+    DASHBOARD_STATS_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Dashboard stats fetched successfully',
+    },
+    RECENT_ACTIVITIES_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Recent activities fetched successfully',
+    },
+    LEARNING_PROGRESS_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Learning progress fetched successfully',
+    },
+    ACHIEVEMENTS_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Achievements fetched successfully',
+    },
+    STREAK_UPDATED: {
+        status: 200,
+        success: true,
+        message: 'Streak updated successfully',
+    },
+    STREAK_STATS_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Streak stats fetched successfully',
+    },
+    WEEKLY_ACTIVITY_FETCHED: {
+        status: 200,
+        success: true,
+        message: 'Weekly activity fetched successfully',
+    },
 };
 const sendResponse = (res, type, options) => {
     const config = RESPONSE_MESSAGES[type];

@@ -2,7 +2,7 @@ import { PrismaClient, Forum, ForumPost, ForumComment } from '@prisma/client';
 import { createAppError } from '../utils/errorHandler';
 import BaseRepository from './baseRepository';
 
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 export class ForumRepository extends BaseRepository<PrismaClient['forum']> {
   constructor() {

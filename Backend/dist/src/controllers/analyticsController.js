@@ -5,13 +5,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const utils_1 = require("../utils");
 const apiResponse_1 = require("../utils/apiResponse");
-const client_1 = require("@prisma/client");
 const userRepository_1 = __importDefault(require("@/repositories/userRepository"));
 const userProgressRepository_1 = __importDefault(require("@/repositories/userProgressRepository"));
 const resourceRepository_1 = __importDefault(require("@/repositories/resourceRepository"));
 const challengeRepository_1 = require("@/repositories/challengeRepository");
 const errorHandler_1 = require("@/utils/errorHandler");
-const prisma = new client_1.PrismaClient();
+const prisma_1 = __importDefault(require("@/lib/prisma"));
 class AnalyticsController {
     defaultStartDate;
     userRepo;
@@ -125,7 +124,7 @@ class AnalyticsController {
         switch (reportType) {
             case 'user_activity':
                 // TODO: update this method if required in future
-                reportData = await prisma.userActivityLog.findMany({
+                reportData = await prisma_1.default.userActivityLog.findMany({
                     where: {
                         timestamp: {
                             gte: filters.startDate,

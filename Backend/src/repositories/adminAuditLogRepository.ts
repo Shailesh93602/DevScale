@@ -1,33 +1,36 @@
-import { PrismaClient, SecurityAuditLog, Prisma } from '@prisma/client';
+import { SecurityAuditLog, Prisma } from '@prisma/client';
 import { createAppError } from '../utils/errorHandler';
 import logger from '../utils/logger';
 import BaseRepository from './baseRepository';
+import prisma from '../lib/prisma';
 import {
   AuditLogParams,
   ChangeHistoryParams,
   SecurityLogParams,
 } from '@/types';
 
-const prisma = new PrismaClient();
-
 export default class AdminAuditLogRepository extends BaseRepository<
-  PrismaClient['adminAuditLog']
+  typeof prisma.adminAuditLog
 > {
   constructor() {
     super(prisma.adminAuditLog);
   }
+
   async logAdminAction(params: AuditLogParams) {
     try {
-      const log = await this.create({
+      return await this.prismaClient.adminAuditLog.create({
         data: {
-          ...params,
+          admin_id: params.admin_id,
+          action: params.action,
+          entity: params.entity,
+          entity_id: params.entity_id,
           details: params.details
-            ? (params.details as Prisma.InputJsonValue)
-            : Prisma.DbNull,
+            ? (params.details as unknown as Prisma.InputJsonValue)
+            : Prisma.JsonNull,
+          ip_address: params.ip_address,
+          user_agent: params.user_agent,
         },
       });
-      logger.info('Admin action logged', { logId: log.id, ...params });
-      return log;
     } catch (error) {
       logger.error('Failed to log admin action:', error);
       throw createAppError('Failed to log admin action', 500);
@@ -36,133 +39,92 @@ export default class AdminAuditLogRepository extends BaseRepository<
 
   async logSecurityEvent(params: SecurityLogParams) {
     try {
-      // TODO: Review this and replace it if required
-      const log = await prisma.securityAuditLog.create({
+      return await this.prismaClient.securityAuditLog.create({
         data: {
-          ...params,
-          metadata: params.metadata as Prisma.InputJsonValue | undefined,
+          type: params.type,
+          severity: params.severity,
+          description: params.description,
+          metadata: params.metadata
+            ? (params.metadata as unknown as Prisma.InputJsonValue)
+            : Prisma.JsonNull,
+          ip_address: params.ip_address,
+          user_agent: params.user_agent,
+          user_id: params.user_id,
         },
       });
-
-      if (params.severity === 'critical') {
-        await this.notifyCriticalSecurityEvent(log);
-      }
-      return log;
     } catch (error) {
       logger.error('Failed to log security event:', error);
       throw createAppError('Failed to log security event', 500);
     }
   }
 
-  async trackChange(params: ChangeHistoryParams) {
+  async logChangeHistory(params: ChangeHistoryParams) {
     try {
-      return await prisma.changeHistory.create({
+      return await this.prismaClient.changeHistory.create({
         data: {
-          ...params,
-          changes: params.changes
-            ? (params.changes as Prisma.InputJsonValue)
-            : Prisma.JsonNull,
+          entity: params.entity,
+          entity_id: params.entity_id,
+          action: params.action,
+          changes: params.changes as unknown as Prisma.InputJsonValue,
+          user_id: params.user_id,
+          reason: params.reason,
         },
       });
     } catch (error) {
-      logger.error('Failed to track change:', error);
-      throw createAppError('Failed to track change', 500);
+      logger.error('Failed to log change history:', error);
+      throw createAppError('Failed to log change history', 500);
     }
   }
 
-  async logAccess(
-    user_id: string | null,
-    route: string,
-    method: string,
-    status_code: number,
-    ip_address: string,
-    user_agent: string | null,
-    duration: number
-  ) {
+  async getSecurityLogs(
+    startDate?: Date,
+    endDate?: Date,
+    type?: string,
+    severity?: string
+  ): Promise<SecurityAuditLog[]> {
     try {
-      await prisma.accessLog.create({
-        data: {
-          user_id,
-          route,
-          method,
-          status_code,
-          ip_address,
-          user_agent,
-          duration,
+      return await this.prismaClient.securityAuditLog.findMany({
+        where: {
+          created_at: {
+            gte: startDate,
+            lte: endDate,
+          },
+          type: type ? { equals: type } : undefined,
+          severity: severity ? { equals: severity } : undefined,
+        },
+        orderBy: {
+          created_at: 'desc',
         },
       });
     } catch (error) {
-      logger.error('Failed to log access:', error);
+      logger.error('Failed to get security logs:', error);
+      throw createAppError('Failed to get security logs', 500);
     }
-  }
-
-  async logSystemEvent(
-    type: string,
-    level: string,
-    message: string,
-    metadata?: Record<string, unknown>
-  ) {
-    try {
-      await prisma.systemLog.create({
-        data: {
-          type,
-          level,
-          message,
-          metadata: metadata as Prisma.InputJsonValue | undefined,
-        },
-      });
-    } catch (error) {
-      logger.error('Failed to log system event:', error);
-    }
-  }
-
-  async getAdminAuditLogs(
-    filters: Record<string, unknown>,
-    page = 1,
-    limit = 10
-  ) {
-    const where = this.buildWhereClause(filters);
-    return this.paginate({ page, limit }, [], {}, where);
-  }
-
-  async getSecurityAuditLogs(
-    filters: Record<string, unknown>,
-    page = 1,
-    limit = 10
-  ) {
-    const where = this.buildWhereClause(filters);
-    return this.paginate({ page, limit }, [], {}, where);
   }
 
   async getChangeHistory(
-    filters: Record<string, unknown>,
-    page = 1,
-    limit = 10
-  ) {
-    const where = this.buildWhereClause(filters);
-    return this.paginate({ page, limit }, [], {}, where);
-  }
+    entity: string,
+    entityId: string
+  ): Promise<ChangeHistoryParams[]> {
+    try {
+      const history = await this.prismaClient.changeHistory.findMany({
+        where: {
+          entity,
+          entity_id: entityId,
+        },
+        orderBy: {
+          created_at: 'desc',
+        },
+      });
 
-  async getAccessLogs(filters: Record<string, unknown>, page = 1, limit = 10) {
-    const where = this.buildWhereClause(filters);
-    return this.paginate({ page, limit }, [], {}, where);
-  }
-
-  async getSystemLogs(filters: Record<string, unknown>, page = 1, limit = 10) {
-    const where = this.buildWhereClause(filters);
-    return this.paginate({ page, limit }, [], {}, where);
-  }
-
-  private buildWhereClause(filters: Record<string, unknown>) {
-    const where: Record<string, unknown> = {};
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) where[key] = value;
-    });
-    return where;
-  }
-
-  private async notifyCriticalSecurityEvent(log: SecurityAuditLog) {
-    logger.warn('Critical security event:', log);
-    // Implement notification logic
+      return history.map((record) => ({
+        ...record,
+        changes: record.changes as Record<string, unknown>,
+        reason: record.reason || undefined,
+      }));
+    } catch (error) {
+      logger.error('Failed to get change history:', error);
+      throw createAppError('Failed to get change history', 500);
+    }
   }
 }

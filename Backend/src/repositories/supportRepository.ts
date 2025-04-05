@@ -15,7 +15,7 @@ import {
 } from '@/types';
 import BaseRepository from './baseRepository';
 
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 export default class SupportRepository extends BaseRepository<
   PrismaClient['supportTicket']

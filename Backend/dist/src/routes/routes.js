@@ -13,6 +13,8 @@ const topicRoutes_1 = require("./topicRoutes");
 const subjectRoutes_1 = require("./subjectRoutes");
 const mainConceptRoutes_1 = require("./mainConceptRoutes");
 const healthCheckRoutes_1 = require("./healthCheckRoutes");
+const streakRoutes_1 = require("./streakRoutes");
+const dashboardRoutes_1 = require("./dashboardRoutes");
 class AppRoutes {
     router;
     constructor() {
@@ -33,6 +35,8 @@ class AppRoutes {
         this.router.use('/topics', new topicRoutes_1.TopicRoutes().getRouter());
         this.router.use('/subjects', new subjectRoutes_1.SubjectRoutes().getRouter());
         this.router.use('/mainConcepts', new mainConceptRoutes_1.MainConceptRoutes().getRouter());
+        this.router.use('/streak', new streakRoutes_1.StreakRoutes().getRouter());
+        this.router.use('/dashboard', new dashboardRoutes_1.DashboardRoutes().getRouter());
     }
     getRouter() {
         return this.router;

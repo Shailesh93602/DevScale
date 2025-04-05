@@ -1,6 +1,7 @@
-import { Prisma, PrismaClient } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { createAppError } from '../middlewares/errorHandler';
 import BaseRepository from './baseRepository';
+import prisma from '../lib/prisma';
 import {
   CommentData,
   ConceptData,
@@ -13,17 +14,16 @@ import {
 import { invalidateCachePattern } from '@/services/cacheService';
 import { Request } from 'express';
 
-const prisma = new PrismaClient();
-
 export default class RoadmapRepository extends BaseRepository<
-  PrismaClient['roadmap']
+  typeof prisma.roadmap
 > {
   constructor() {
     super(prisma.roadmap);
   }
+
   async createRoadmap(data: RoadmapData) {
     try {
-      return await prisma.$transaction(async (tx) => {
+      return await this.prismaClient.$transaction(async (tx) => {
         const roadmap = await tx.roadmap.create({
           data: {
             title: data.title,
@@ -107,8 +107,8 @@ export default class RoadmapRepository extends BaseRepository<
     }
   }
 
-  async getRoadmap(id: string) {
-    const roadmap = await prisma.roadmap.findUnique({
+  async getRoadmap(id: string, userId?: string) {
+    const roadmap = await this.prismaClient.roadmap.findUnique({
       where: { id },
       include: {
         user: {
@@ -151,8 +151,29 @@ export default class RoadmapRepository extends BaseRepository<
           select: {
             likes: true,
             comments: true,
+            user_roadmaps: true,
           },
         },
+        likes: userId
+          ? {
+              where: {
+                user_id: userId,
+              },
+              select: {
+                id: true,
+              },
+            }
+          : false,
+        user_roadmaps: userId
+          ? {
+              where: {
+                user_id: userId,
+              },
+              select: {
+                id: true,
+              },
+            }
+          : false,
       },
     });
 
@@ -160,11 +181,18 @@ export default class RoadmapRepository extends BaseRepository<
       throw createAppError('Roadmap not found', 404);
     }
 
-    return roadmap;
+    return {
+      ...roadmap,
+      likesCount: roadmap._count.likes,
+      commentsCount: roadmap._count.comments,
+      bookmarksCount: roadmap._count.user_roadmaps,
+      isLiked: Boolean(roadmap.likes?.length),
+      isBookmarked: Boolean(roadmap.user_roadmaps?.length),
+    };
   }
 
   async getUserRoadmap(id: string, user_id: string) {
-    const roadmap = await prisma.roadmap.findUnique({
+    const roadmap = await this.prismaClient.roadmap.findUnique({
       where: { id },
       include: {
         user_roadmaps: {
@@ -183,7 +211,7 @@ export default class RoadmapRepository extends BaseRepository<
   }
 
   async updateRoadmap(id: string, data: Partial<RoadmapData>) {
-    const updated = await prisma.roadmap.update({
+    const updated = await this.prismaClient.roadmap.update({
       where: { id },
       data: {
         title: data.title,
@@ -215,7 +243,7 @@ export default class RoadmapRepository extends BaseRepository<
   }
 
   async addConcept(roadmap_id: string, data: ConceptData) {
-    return await prisma.$transaction(async (tx) => {
+    return await this.prismaClient.$transaction(async (tx) => {
       const mainConcept = await tx.mainConcept.create({
         data: {
           name: data.title,
@@ -280,7 +308,7 @@ export default class RoadmapRepository extends BaseRepository<
   }
 
   async addSubject(main_concept_id: string, data: SubjectData) {
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await this.prismaClient.$transaction(async (tx) => {
       const subject = await tx.subject.create({
         data: {
           title: data.title,
@@ -320,7 +348,7 @@ export default class RoadmapRepository extends BaseRepository<
   }
 
   async addTopic(subject_id: string, data: TopicData) {
-    const topic = await prisma.topic.create({
+    const topic = await this.prismaClient.topic.create({
       data: {
         title: data.title,
         description: data.description,
@@ -345,7 +373,7 @@ export default class RoadmapRepository extends BaseRepository<
     content: string,
     resources?: string[]
   ) {
-    const topic = await prisma.topic.update({
+    const topic = await this.prismaClient.topic.update({
       where: { id: topicId },
       data: {
         content,
@@ -364,7 +392,7 @@ export default class RoadmapRepository extends BaseRepository<
       challengeIds?: string[];
     }
   ) {
-    const topic = await prisma.topic.update({
+    const topic = await this.prismaClient.topic.update({
       where: { id: topicId },
       data: {
         articles: {
@@ -388,7 +416,7 @@ export default class RoadmapRepository extends BaseRepository<
   }
 
   async trackProgress(userId: string, topicId: string, completed: boolean) {
-    const progress = await prisma.userProgress.upsert({
+    const progress = await this.prismaClient.userProgress.upsert({
       where: {
         user_id_topic_id: {
           user_id: userId,
@@ -413,7 +441,9 @@ export default class RoadmapRepository extends BaseRepository<
 
   async getAllRoadmaps(req: Request, where?: Prisma.RoadmapWhereInput) {
     const { limit = 10, page = 1, search = '' } = req.query;
-    const roadmaps = await this.paginate(
+    const userId = req.user?.id;
+
+    const roadmaps = (await this.paginate(
       {
         limit: Number(limit),
         page: Number(page),
@@ -431,16 +461,62 @@ export default class RoadmapRepository extends BaseRepository<
               },
             },
           },
+          _count: {
+            select: {
+              likes: true,
+              comments: true,
+              user_roadmaps: true,
+            },
+          },
+          likes: userId
+            ? {
+                where: {
+                  user_id: userId,
+                },
+                select: {
+                  id: true,
+                },
+              }
+            : false,
+          user_roadmaps: userId
+            ? {
+                where: {
+                  user_id: userId,
+                },
+                select: {
+                  id: true,
+                },
+              }
+            : false,
         },
       },
       where
-    );
+    )) as unknown as {
+      data: Array<
+        any & {
+          _count: { likes: number; comments: number; user_roadmaps: number };
+          likes?: Array<{ id: string }>;
+          user_roadmaps?: Array<{ id: string }>;
+        }
+      >;
+      meta: any;
+    };
 
-    return roadmaps;
+    return {
+      ...roadmaps,
+      data: roadmaps.data.map((roadmap) => ({
+        ...roadmap,
+        likesCount: roadmap._count.likes,
+        commentsCount: roadmap._count.comments,
+        bookmarksCount: roadmap._count.user_roadmaps,
+        isLiked: Boolean(roadmap.likes?.length),
+        isBookmarked: Boolean(roadmap.user_roadmaps?.length),
+      })),
+    };
   }
 
   async deleteRoadmap(id: string): Promise<void> {
-    await prisma.roadmap.delete({
+    await this.prismaClient.roadmap.delete({
       where: { id },
     });
   }
@@ -449,9 +525,9 @@ export default class RoadmapRepository extends BaseRepository<
     roadmap_id: string,
     subject_orders: SubjectOrder[]
   ): Promise<void> {
-    await prisma.$transaction(
+    await this.prismaClient.$transaction(
       subject_orders.map((order) =>
-        prisma.mainConceptSubject.updateMany({
+        this.prismaClient.mainConceptSubject.updateMany({
           where: { subject_id: order.subject_id },
           data: { order: order.order },
         })
@@ -460,7 +536,7 @@ export default class RoadmapRepository extends BaseRepository<
   }
 
   async createCustomRoadmap(data: RoadmapData & { sourceRoadmapId?: string }) {
-    const roadmap = await prisma.$transaction(async (tx) => {
+    const roadmap = await this.prismaClient.$transaction(async (tx) => {
       const newRoadmap = await tx.roadmap.create({
         data: {
           title: data.title,
@@ -578,17 +654,19 @@ export default class RoadmapRepository extends BaseRepository<
 
   async getRoadmapStats(): Promise<ResourceStats> {
     const [total, active, pending, reported] = await Promise.all([
-      prisma.roadmap.count(),
-      prisma.roadmap.count({ where: { is_public: true } }),
-      prisma.roadmap.count({ where: { is_public: false } }),
-      prisma.contentReport.count({ where: { content_type: 'roadmap' } }),
+      this.prismaClient.roadmap.count(),
+      this.prismaClient.roadmap.count({ where: { is_public: true } }),
+      this.prismaClient.roadmap.count({ where: { is_public: false } }),
+      this.prismaClient.contentReport.count({
+        where: { content_type: 'roadmap' },
+      }),
     ]);
 
     return { total, active, pending, reported };
   }
 
   async addComment(data: CommentData) {
-    return prisma.comment.create({
+    return this.prismaClient.comment.create({
       data: {
         content: data.content,
         user_id: data.user_id,
@@ -617,7 +695,7 @@ export default class RoadmapRepository extends BaseRepository<
   }
 
   async getRoadmapComments(roadmap_id: string) {
-    return prisma.comment.findMany({
+    return this.prismaClient.comment.findMany({
       where: {
         roadmap_id,
         parent_id: null,
@@ -652,7 +730,7 @@ export default class RoadmapRepository extends BaseRepository<
   }
 
   async toggleLike(user_id: string, roadmap_id: string): Promise<void> {
-    const existingLike = await prisma.like.findUnique({
+    const existingLike = await this.prismaClient.like.findUnique({
       where: {
         user_id_roadmap_id: {
           user_id,
@@ -662,7 +740,7 @@ export default class RoadmapRepository extends BaseRepository<
     });
 
     if (existingLike) {
-      await prisma.like.delete({
+      await this.prismaClient.like.delete({
         where: {
           user_id_roadmap_id: {
             user_id,
@@ -671,7 +749,7 @@ export default class RoadmapRepository extends BaseRepository<
         },
       });
     } else {
-      await prisma.like.create({
+      await this.prismaClient.like.create({
         data: {
           user_id,
           roadmap_id,
@@ -681,7 +759,7 @@ export default class RoadmapRepository extends BaseRepository<
   }
 
   async getRecommendedRoadmaps(user_id: string) {
-    const userInterests = await prisma.userRoadmap.findMany({
+    const userInterests = await this.prismaClient.userRoadmap.findMany({
       where: { user_id },
       include: {
         roadmap: {
@@ -763,13 +841,13 @@ export default class RoadmapRepository extends BaseRepository<
 
   async getEngagementMetrics(roadmap_id: string) {
     const [likes, comments, saves] = await Promise.all([
-      prisma.like.count({
+      this.prismaClient.like.count({
         where: { roadmap_id },
       }),
-      prisma.comment.count({
+      this.prismaClient.comment.count({
         where: { roadmap_id },
       }),
-      prisma.userRoadmap.count({
+      this.prismaClient.userRoadmap.count({
         where: { roadmap_id },
       }),
     ]);

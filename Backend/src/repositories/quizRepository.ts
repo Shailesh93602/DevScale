@@ -11,7 +11,7 @@ import { executeCode } from '@/utils/codeExecutor';
 import logger from '@/utils/logger';
 import { createAppError } from '@/utils/errorHandler';
 
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 export default class QuizRepository extends BaseRepository<
   PrismaClient['quiz']

@@ -21,13 +21,22 @@ class RoadMapRoutes extends BaseRouter_1.BaseRouter {
         // Public routes
         this.router.get('/', authMiddleware_1.authMiddleware, this.bindRoute(this.roadMapController.getAllRoadmaps));
         this.router.get('/:id', authMiddleware_1.authMiddleware, this.bindRoute(this.roadMapController.getRoadMap));
-        this.router.get('/:id/main-concepts', authMiddleware_1.authMiddleware, this.bindRoute(this.roadMapController.getMainConceptsInRoadmap));
+        this.router.get('/:id/main_concepts', authMiddleware_1.authMiddleware, this.bindRoute(this.roadMapController.getMainConceptsInRoadmap));
+        // Social interaction routes
+        this.router.post('/:id/like', authMiddleware_1.authMiddleware, this.bindRoute(this.roadMapController.likeRoadmap));
+        this.router.post('/:id/bookmark', authMiddleware_1.authMiddleware, this.bindRoute(this.roadMapController.bookmarkRoadmap));
         // Protected routes
-        this.router.post('/', authMiddleware_1.authMiddleware, (0, authMiddleware_1.authorizeRoles)('admin', 'instructor'), (0, validateRequest_1.validateRequest)(roadmapValidation_1.createRoadmapValidation), this.bindRoute(this.roadMapController.createRoadMap));
+        this.router.post('/', authMiddleware_1.authMiddleware, 
+        // authorizeRoles('admin', 'instructor'),
+        (0, validateRequest_1.validateRequest)(roadmapValidation_1.createRoadmapValidation), this.bindRoute(this.roadMapController.createRoadMap));
         this.router.post('/enroll', authMiddleware_1.authMiddleware, (0, validateRequest_1.validateRequest)(roadmapValidation_1.enrollRoadmapValidation), this.bindRoute(this.roadMapController.enrollRoadMap));
-        this.router.put('/:id', authMiddleware_1.authMiddleware, (0, authMiddleware_1.authorizeRoles)('admin', 'instructor'), (0, validateRequest_1.validateRequest)(roadmapValidation_1.createRoadmapValidation), this.bindRoute(this.roadMapController.updateRoadMap));
+        this.router.put('/:id', authMiddleware_1.authMiddleware, 
+        // authorizeRoles('admin', 'instructor'),
+        (0, validateRequest_1.validateRequest)(roadmapValidation_1.createRoadmapValidation), this.bindRoute(this.roadMapController.updateRoadMap));
         this.router.delete('/:id', authMiddleware_1.authMiddleware, (0, authMiddleware_1.authorizeRoles)('admin'), this.bindRoute(this.roadMapController.deleteRoadMap));
-        this.router.patch('/:id/subjects-order', authMiddleware_1.authMiddleware, (0, authMiddleware_1.authorizeRoles)('admin', 'instructor'), (0, validateRequest_1.validateRequest)(roadmapValidation_1.updateSubjectsOrderValidation), this.bindRoute(this.roadMapController.updateSubjectsOrder));
+        this.router.patch('/:id/subjects-order', authMiddleware_1.authMiddleware, 
+        // authorizeRoles('admin', 'instructor'),
+        (0, validateRequest_1.validateRequest)(roadmapValidation_1.updateSubjectsOrderValidation), this.bindRoute(this.roadMapController.updateSubjectsOrder));
     }
     bindRoute(routeHandler) {
         return (req, res, next) => {

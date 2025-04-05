@@ -8,6 +8,7 @@ const apiResponse_1 = require("../utils/apiResponse");
 const roadmapRepository_1 = __importDefault(require("../repositories/roadmapRepository"));
 const userRoadmapRepository_1 = __importDefault(require("@/repositories/userRoadmapRepository"));
 const roadmapCategoryRepository_1 = __importDefault(require("@/repositories/roadmapCategoryRepository"));
+const prisma_1 = __importDefault(require("@/lib/prisma"));
 class RoadmapController {
     roadmapRepo;
     userRoadmapRepo;
@@ -29,7 +30,6 @@ class RoadmapController {
                         user_roadmaps: {
                             none: { user_id: userId },
                         },
-                        // is_public: true,
                     };
                     break;
                 case 'my-roadmaps':
@@ -46,7 +46,7 @@ class RoadmapController {
                     break;
             }
         }
-        const roadmaps = await this.roadmapRepo.getAllRoadmaps(whereClause.where);
+        const roadmaps = await this.roadmapRepo.getAllRoadmaps(req, whereClause.where);
         return (0, apiResponse_1.sendResponse)(res, 'ROADMAPS_FETCHED', {
             data: roadmaps,
         });
@@ -65,7 +65,8 @@ class RoadmapController {
     });
     getRoadMap = (0, index_1.catchAsync)(async (req, res) => {
         const roadMapId = req.params.id;
-        const roadMap = await this.roadmapRepo.getRoadmap(roadMapId);
+        const userId = req.user?.id;
+        const roadMap = await this.roadmapRepo.getRoadmap(roadMapId, userId);
         if (!roadMap) {
             return (0, apiResponse_1.sendResponse)(res, 'ROADMAP_NOT_FOUND', {
                 error: 'Roadmap not found',
@@ -226,6 +227,66 @@ class RoadmapController {
         return (0, apiResponse_1.sendResponse)(res, 'ROADMAP_CATEGORIES_FETCHED', {
             data: categories,
         });
+    });
+    likeRoadmap = (0, index_1.catchAsync)(async (req, res) => {
+        const userId = req.user?.id;
+        const roadmapId = req.params.id;
+        if (!userId) {
+            return (0, apiResponse_1.sendResponse)(res, 'UNAUTHORIZED', {
+                error: 'User not authenticated',
+            });
+        }
+        const existingLike = await prisma_1.default.like.findFirst({
+            where: {
+                user_id: userId,
+                roadmap_id: roadmapId,
+            },
+        });
+        if (existingLike) {
+            await prisma_1.default.like.delete({
+                where: {
+                    id: existingLike.id,
+                },
+            });
+            return (0, apiResponse_1.sendResponse)(res, 'ROADMAP_UNLIKED', { data: null });
+        }
+        await prisma_1.default.like.create({
+            data: {
+                user_id: userId,
+                roadmap_id: roadmapId,
+            },
+        });
+        return (0, apiResponse_1.sendResponse)(res, 'ROADMAP_LIKED', { data: null });
+    });
+    bookmarkRoadmap = (0, index_1.catchAsync)(async (req, res) => {
+        const userId = req.user?.id;
+        const roadmapId = req.params.id;
+        if (!userId) {
+            return (0, apiResponse_1.sendResponse)(res, 'UNAUTHORIZED', {
+                error: 'User not authenticated',
+            });
+        }
+        const existingBookmark = await prisma_1.default.userRoadmap.findFirst({
+            where: {
+                user_id: userId,
+                roadmap_id: roadmapId,
+            },
+        });
+        if (existingBookmark) {
+            await prisma_1.default.userRoadmap.delete({
+                where: {
+                    id: existingBookmark.id,
+                },
+            });
+            return (0, apiResponse_1.sendResponse)(res, 'ROADMAP_UNBOOKMARKED', { data: null });
+        }
+        await prisma_1.default.userRoadmap.create({
+            data: {
+                user_id: userId,
+                roadmap_id: roadmapId,
+            },
+        });
+        return (0, apiResponse_1.sendResponse)(res, 'ROADMAP_BOOKMARKED', { data: null });
     });
 }
 exports.default = RoadmapController;

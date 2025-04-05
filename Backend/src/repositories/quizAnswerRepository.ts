@@ -1,10 +1,10 @@
-import { PrismaClient } from "@prisma/client"
-import BaseRepository from "./baseRepository"
+import { PrismaClient } from '@prisma/client';
+import BaseRepository from './baseRepository';
 
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 export default class QuizAnswerRepository extends BaseRepository<
-  PrismaClient["quizAnswer"]
+  PrismaClient['quizAnswer']
 > {
   constructor() {
     super(prisma.quizAnswer);

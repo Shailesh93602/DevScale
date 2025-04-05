@@ -11,14 +11,26 @@ class SubjectController {
     constructor() {
         this.subjectRepository = new subjectRepository_1.default();
     }
-    getAllSubjects = (0, index_1.catchAsync)(async (_req, res) => {
-        const subjects = await this.subjectRepository.findMany();
+    getAllSubjects = (0, index_1.catchAsync)(async (req, res) => {
+        const { limit = 10, page = 1, search = '' } = req.query;
+        const subjects = await this.subjectRepository.paginate({
+            limit: Number(limit),
+            page: Number(page),
+            search: String(search),
+        }, ['title']);
         return (0, apiResponse_1.sendResponse)(res, 'SUBJECTS_FETCHED', { data: subjects });
     });
     getTopicsInSubject = (0, index_1.catchAsync)(async (req, res) => {
         const { id } = req.params;
         const subject = await this.subjectRepository.findUnique({
             where: { id },
+            include: {
+                topics: {
+                    select: {
+                        topic: true,
+                    },
+                },
+            },
         });
         if (!subject) {
             return (0, apiResponse_1.sendResponse)(res, 'SUBJECT_NOT_FOUND');

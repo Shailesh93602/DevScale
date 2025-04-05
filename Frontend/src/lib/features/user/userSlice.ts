@@ -1,3 +1,4 @@
+import { RootState } from '@/lib/store';
 import { IUser } from '@/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
@@ -47,6 +48,8 @@ const userSlice = createSlice({
   },
   // Add extraReducers for async operations if needed
 });
+
+export const getLoggedInUser = (state: RootState) => state.user.user;
 
 export const {
   setUser,

@@ -57,15 +57,15 @@ const ArticleListPage = () => {
 
       if (statusFilter) {
         filtered = filtered.filter(
-          (article) => article.status === statusFilter,
+          (article) => article?.status === statusFilter,
         );
       }
 
       if (searchTerm) {
         filtered = filtered.filter(
           (article) =>
-            article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            article.content.toLowerCase().includes(searchTerm.toLowerCase()),
+            article?.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            article?.content.toLowerCase().includes(searchTerm.toLowerCase()),
         );
       }
 
@@ -79,8 +79,8 @@ const ArticleListPage = () => {
     try {
       await updateArticleStatus({ id, status: newStatus });
       setArticles(
-        articles.map((article) =>
-          article.id === id ? { ...article, status: newStatus } : article,
+        articles?.map((article) =>
+          article?.id === id ? { ...article, status: newStatus } : article,
         ),
       );
     } catch (error) {
@@ -130,38 +130,38 @@ const ArticleListPage = () => {
           <tbody>
             {filteredArticles?.map((article) => (
               <tr
-                key={article.id}
+                key={article?.id}
                 className="border-b border-gray-200 dark:border-gray-600"
               >
                 <td className="px-6 py-3 text-gray-900 dark:text-gray-100">
-                  {article.title}
+                  {article?.title}
                 </td>
                 <td className="px-6 py-3 text-gray-700 dark:text-gray-300">
-                  {article.author.username}
+                  {article?.author?.username}
                 </td>
                 <td
                   className={`px-6 py-3 ${
-                    article.status === 'approved' ? 'text-green-500' : ''
-                  } ${article.status === 'pending' ? 'text-yellow-500' : ''} ${article.status === 'rejected' ? 'text-red-500' : ''} }`}
+                    article?.status === 'approved' ? 'text-green-500' : ''
+                  } ${article?.status === 'pending' ? 'text-yellow-500' : ''} ${article?.status === 'rejected' ? 'text-red-500' : ''} }`}
                 >
-                  {article.status}
+                  {article?.status}
                 </td>
                 <td className="px-6 py-3 text-gray-600 dark:text-gray-400">
-                  {new Date(article.createdAt).toLocaleDateString()}
+                  {new Date(article?.createdAt).toLocaleDateString()}
                 </td>
                 <td className="flex items-center space-x-4 px-6 py-3">
                   <Link
-                    href={`/articles/${article.id}`}
+                    href={`/articles/${article?.id}`}
                     className="text-blue-500 hover:underline dark:text-blue-300"
                   >
                     View
                   </Link>
-                  {article.status === 'pending' ? (
+                  {article?.status === 'pending' ? (
                     <>
                       <button
                         className="text-green-500 hover:underline dark:text-green-300"
                         onClick={() =>
-                          handleUpdateStatus(article.id, 'approved')
+                          handleUpdateStatus(article?.id, 'approved')
                         }
                       >
                         Approve
@@ -169,7 +169,7 @@ const ArticleListPage = () => {
                       <button
                         className="text-red-500 dark:text-red-300 hover:underline"
                         onClick={() =>
-                          handleUpdateStatus(article.id, 'rejected')
+                          handleUpdateStatus(article?.id, 'rejected')
                         }
                       >
                         Reject
@@ -177,7 +177,7 @@ const ArticleListPage = () => {
                     </>
                   ) : (
                     <button
-                      onClick={() => handleEdit(article.id)}
+                      onClick={() => handleEdit(article?.id)}
                       className="mr-2 rounded-lg bg-blue-500 px-3 py-1 text-white"
                     >
                       Edit

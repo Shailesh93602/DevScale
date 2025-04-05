@@ -1,38 +1,94 @@
-import rateLimit from 'express-rate-limit';
-import RedisStore, { RedisReply } from 'rate-limit-redis';
-import Redis, { Command } from 'ioredis';
+import { Request, Response, NextFunction } from 'express';
+import Redis from 'ioredis';
 import { REDIS_URL } from '../config';
+import logger from '../utils/logger';
+import { RequestHandler } from 'express';
 
-const redis = new Redis(REDIS_URL);
+let redisClient: Redis | null = null;
+try {
+  redisClient = new Redis(REDIS_URL || 'redis://localhost:6379', {
+    enableOfflineQueue: false,
+    maxRetriesPerRequest: 3,
+  });
 
-interface RateLimitOptions {
-  windowMs?: number; // Time window in milliseconds
-  max?: number; // Max requests per window
-  message?: string; // Error message
+  redisClient.on('error', (err) => {
+    logger.error('Redis connection error:', err);
+    redisClient = null;
+  });
+
+  redisClient.on('connect', () => {
+    logger.info('Redis connected successfully');
+  });
+} catch (err) {
+  logger.error('Failed to initialize Redis:', err);
 }
 
-export const createRateLimiter = (options: RateLimitOptions = {}) => {
+interface RateLimitOptions {
+  windowMs?: number;
+  max?: number;
+  message?: string;
+}
+
+export const createRateLimiter = (
+  options: RateLimitOptions = {}
+): RequestHandler => {
   const {
     windowMs = 15 * 60 * 1000, // 15 minutes
     max = 100, // 100 requests per window
     message = 'Too many requests, please try again later',
   } = options;
 
-  return rateLimit({
-    store: new RedisStore({
-      sendCommand: (command: string, ...args: string[]): Promise<RedisReply> =>
-        redis.sendCommand(new Command(command, args)) as Promise<RedisReply>,
-      prefix: 'rate-limit:',
-    }),
-    windowMs,
-    max,
-    message: {
-      status: 429,
-      message,
-    },
-    standardHeaders: true,
-    legacyHeaders: false,
-  });
+  return (req: Request, res: Response, next: NextFunction): void => {
+    if (!redisClient) {
+      next();
+      return;
+    }
+
+    const key = `rate-limit:${req.ip}`;
+    const windowInSeconds = Math.floor(windowMs / 1000);
+
+    redisClient
+      .multi()
+      .incr(key)
+      .expire(key, windowInSeconds)
+      .exec()
+      .then((result) => {
+        if (!result) {
+          next();
+          return;
+        }
+
+        const [[incrErr, requestCount], [expireErr]] = result;
+
+        if (incrErr || expireErr) {
+          logger.error('Redis operation error:', { incrErr, expireErr });
+          next();
+          return;
+        }
+
+        const count = typeof requestCount === 'number' ? requestCount : 1;
+
+        res.setHeader('X-RateLimit-Limit', max.toString());
+        res.setHeader(
+          'X-RateLimit-Remaining',
+          Math.max(0, max - count).toString()
+        );
+
+        if (count > max) {
+          res.status(429).json({
+            status: 429,
+            message,
+          });
+          return;
+        }
+
+        next();
+      })
+      .catch((err) => {
+        logger.error('Rate limiting error:', err);
+        next();
+      });
+  };
 };
 
 // Different rate limits for different routes

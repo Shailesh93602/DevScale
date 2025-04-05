@@ -13,7 +13,7 @@ import { ArticleFilters } from '@/types';
 import { uploadToCloudinary } from '@/utils/cloudinary';
 import { ContentFilter } from '@/utils/contentFilter';
 
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 export class ArticleRepository extends BaseRepository<PrismaClient['article']> {
   constructor() {

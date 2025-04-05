@@ -1,8 +1,8 @@
-import { PrismaClient, Status } from '@prisma/client';
+import { Status } from '@prisma/client';
 import logger from '../../utils/logger';
 import { getUserProgress } from './analytics';
 
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 // Add this interface for the completed topics
 interface CompletedTopic {

@@ -3,7 +3,7 @@ import BaseRepository from './baseRepository';
 import { createAppError } from '@/utils/errorHandler';
 import { CategoryData } from '@/types';
 
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 export default class CategoryRepository extends BaseRepository<
   PrismaClient['category']
