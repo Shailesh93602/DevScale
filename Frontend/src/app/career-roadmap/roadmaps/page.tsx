@@ -136,9 +136,9 @@ const RoadmapGrid = ({ roadmaps, viewMode }: RoadmapGridProps) => {
                 {roadmap?.description}
               </p>
               <div className="mt-2 flex items-center gap-2">
-                {roadmap.author && (
+                {roadmap.user && (
                   <span className="text-sm text-muted-foreground">
-                    By {roadmap?.author?.name}
+                    By {roadmap?.user?.full_name}
                   </span>
                 )}
                 {roadmap.difficulty && (

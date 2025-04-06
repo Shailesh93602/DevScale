@@ -17,7 +17,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
-import { BaseRoadmap } from '@/hooks/useRoadmapApi';
+import { BaseRoadmap, RoadmapAuthor } from '@/hooks/useRoadmapApi';
 import { useRoadmapSocial } from '@/hooks/useRoadmapSocial';
 
 export type RoadmapType = BaseRoadmap & {
@@ -29,6 +29,12 @@ export type RoadmapType = BaseRoadmap & {
   progress?: number;
   isEnrolled?: boolean;
   isFeatured?: boolean;
+  tags?: string;
+  user?: {
+    username: string;
+    full_name: string | null;
+    avatar_url: string | null;
+  } & RoadmapAuthor;
 };
 
 // Create a skeleton loader component for RoadmapCard
@@ -81,6 +87,8 @@ export interface RoadmapCardProps {
   index: number;
   onLike?: (roadmapId: string) => Promise<void>;
   onBookmark?: (roadmapId: string) => Promise<void>;
+  onCommentClick?: () => void;
+  showViewButton?: boolean;
 }
 
 export const getDifficultyColor = (level?: string) => {
@@ -101,7 +109,13 @@ export const RoadmapCard = ({
   index = 0,
   onLike,
   onBookmark,
+  onCommentClick,
+  showViewButton = true,
 }: RoadmapCardProps) => {
+  console.log('🚀 ----------------------🚀');
+  console.log('🚀 ~ roadmap:', roadmap);
+  console.log('🚀 ----------------------🚀');
+
   const router = useRouter();
   const [isLiked, setIsLiked] = useState(roadmap.isLiked);
   const [isBookmarked, setIsBookmarked] = useState(roadmap.isBookmarked);
@@ -137,7 +151,11 @@ export const RoadmapCard = ({
 
   const handleComment = (e: React.MouseEvent) => {
     e.stopPropagation();
-    router.push(`/career-roadmap/${roadmap.id}?comments=open`);
+    if (onCommentClick) {
+      onCommentClick();
+    } else {
+      router.push(`/career-roadmap/${roadmap.id}?comments=open`);
+    }
   };
 
   const handleBookmarkClick = async (e: React.MouseEvent) => {
@@ -276,77 +294,103 @@ export const RoadmapCard = ({
 
       {/* Card footer with author info and actions */}
       <div className="border-t px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Avatar className="h-6 w-6">
-              <AvatarImage
-                src={`https://api.dicebear.com/6.x/initials/svg?seed=${roadmap?.author?.name}`}
-              />
-              <AvatarFallback>
-                {roadmap?.author?.name?.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
-            <span className="text-xs text-muted-foreground">
-              {roadmap?.author?.name}
-            </span>
-          </div>
+        <div className="flex flex-col space-y-3">
+          {/* Tags Section */}
+          {roadmap.tags && (
+            <div className="flex flex-wrap gap-2">
+              {roadmap.tags.split(',').map((tag) => (
+                <Badge
+                  key={tag}
+                  variant="secondary"
+                  className="bg-primary/10 hover:bg-primary/20 text-primary"
+                >
+                  {tag.trim()}
+                </Badge>
+              ))}
+            </div>
+          )}
 
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleLikeClick}
-              disabled={isLoading}
-              className={cn(
-                'flex items-center gap-1.5 rounded-full px-3 transition-colors',
-                isLiked &&
-                  'bg-rose-50 text-rose-500 hover:bg-rose-100 dark:bg-rose-900/20 dark:hover:bg-rose-900/30',
-              )}
-            >
-              <Heart className={cn('h-4 w-4', isLiked && 'fill-current')} />
-              <span className="text-xs font-medium">{likeCount}</span>
-            </Button>
-
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleComment}
-              className="flex items-center gap-1.5 rounded-full px-3 hover:bg-muted"
-            >
-              <MessageCircle className="h-4 w-4" />
-              <span className="text-xs font-medium">
-                {roadmap.commentsCount || 0}
+          {/* Author and Actions */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Avatar className="h-6 w-6">
+                {roadmap?.user?.avatar_url ? (
+                  <AvatarImage
+                    src={roadmap?.user?.avatar_url}
+                    alt={roadmap?.user?.full_name || roadmap?.user?.username}
+                  />
+                ) : (
+                  <AvatarFallback className="bg-primary/10 text-primary">
+                    {(roadmap?.user?.full_name || roadmap?.user?.username)
+                      ?.charAt(0)
+                      ?.toUpperCase()}
+                  </AvatarFallback>
+                )}
+              </Avatar>
+              <span className="text-xs text-muted-foreground">
+                {roadmap?.user?.full_name || roadmap?.user?.username}
               </span>
-            </Button>
+            </div>
 
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleBookmarkClick}
-              disabled={isLoading}
-              className={cn(
-                'flex items-center gap-1.5 rounded-full px-3 transition-colors',
-                isBookmarked &&
-                  'bg-blue-50 text-blue-500 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30',
-              )}
-            >
-              <Bookmark
-                className={cn('h-4 w-4', isBookmarked && 'fill-current')}
-              />
-              <span className="text-xs font-medium">{bookmarkCount}</span>
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleLikeClick}
+                disabled={isLoading}
+                className={cn(
+                  'flex items-center gap-1.5 rounded-full px-3 transition-colors',
+                  isLiked &&
+                    'bg-rose-50 text-rose-500 hover:bg-rose-100 dark:bg-rose-900/20 dark:hover:bg-rose-900/30',
+                )}
+              >
+                <Heart className={cn('h-4 w-4', isLiked && 'fill-current')} />
+                <span className="text-xs font-medium">{likeCount}</span>
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleComment}
+                className="flex items-center gap-1.5 rounded-full px-3 hover:bg-muted"
+              >
+                <MessageCircle className="h-4 w-4" />
+                <span className="text-xs font-medium">
+                  {roadmap.commentsCount || 0}
+                </span>
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleBookmarkClick}
+                disabled={isLoading}
+                className={cn(
+                  'flex items-center gap-1.5 rounded-full px-3 transition-colors',
+                  isBookmarked &&
+                    'bg-blue-50 text-blue-500 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30',
+                )}
+              >
+                <Bookmark
+                  className={cn('h-4 w-4', isBookmarked && 'fill-current')}
+                />
+                <span className="text-xs font-medium">{bookmarkCount}</span>
+              </Button>
+            </div>
           </div>
         </div>
 
-        <div className="mt-3 flex justify-end">
-          <Button
-            size="sm"
-            className="hover:bg-primary/90 bg-primary"
-            onClick={handleViewRoadmap}
-          >
-            View Roadmap <ChevronRight className="ml-1 h-4 w-4" />
-          </Button>
-        </div>
+        {showViewButton && (
+          <div className="mt-3 flex justify-end">
+            <Button
+              size="sm"
+              className="hover:bg-primary/90 bg-primary"
+              onClick={handleViewRoadmap}
+            >
+              View Roadmap <ChevronRight className="ml-1 h-4 w-4" />
+            </Button>
+          </div>
+        )}
       </div>
     </motion.div>
   );
