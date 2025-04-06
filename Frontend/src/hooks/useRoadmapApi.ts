@@ -36,6 +36,11 @@ export interface EnrolledRoadmap extends BaseRoadmap {
   totalTopics: number;
   completedTopics: number;
   nextTopic?: NextTopic;
+  user?: {
+    full_name?: string | null;
+    avatar_url?: string | null;
+    username?: string;
+  };
 }
 
 export interface RecommendedRoadmap extends BaseRoadmap {
