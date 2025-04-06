@@ -3,7 +3,7 @@ import { catchAsync } from '../utils/index';
 import { sendResponse } from '../utils/apiResponse';
 import { MainConceptRepository } from '../repositories/mainConceptRepository';
 
-export class MainConceptController {
+export default class MainConceptController {
   private readonly mainConceptRepo: MainConceptRepository;
 
   constructor() {

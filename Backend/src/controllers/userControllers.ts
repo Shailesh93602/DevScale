@@ -16,7 +16,7 @@ export default class UserController {
 
   public getProfile = catchAsync(async (req: Request, res: Response) => {
     const user = await this.userRepo.findUnique({
-      where: { supabase_id: req.user?.id },
+      where: { id: req.user?.id ?? '' },
     });
 
     if (!user) {
@@ -37,7 +37,7 @@ export default class UserController {
   });
 
   public getUserRoadmap = catchAsync(async (req: Request, res: Response) => {
-    const user_id = req.user.id;
+    const user_id = req.user?.id ?? '';
     const userRoadmap = await this.userRepo.findUnique({
       where: {
         id: user_id,
@@ -63,7 +63,7 @@ export default class UserController {
   public insertUserRoadmap = catchAsync(async (req: Request, res: Response) => {
     const userRoadmap = await this.userRoadmapRepo.create({
       data: {
-        user_id: req.user.id,
+        user_id: req.user?.id ?? '',
         roadmap_id: req.body.roadmap_id,
       },
     });
@@ -72,7 +72,7 @@ export default class UserController {
   });
 
   public deleteUserRoadmap = catchAsync(async (req: Request, res: Response) => {
-    const user_id = req.user.id;
+    const user_id = req.user?.id ?? '';
     const { id } = req.params;
 
     await this.userRoadmapRepo.delete({ where: { id, user_id } });
@@ -82,7 +82,7 @@ export default class UserController {
 
   public upsertUser = catchAsync(async (req: Request, res: Response) => {
     const user = await this.userRepo.upsertUserProfile({
-      supabase_id: req.user.id,
+      id: req.user?.id ?? '',
       ...req.body,
     });
     sendResponse(res, 'USER_UPDATED', { data: { user } });
@@ -96,10 +96,6 @@ export default class UserController {
     }
 
     const isAvailable = await this.userRepo.findFirst({ where: { username } });
-
-    console.log(
-      '🚀 --------------------------------------------------------------------------🚀'
-    );
 
     sendResponse(res, 'USERNAME_AVAILABILITY_CHECKED', {
       data: { isAvailable: !isAvailable },

@@ -87,7 +87,7 @@ export default class QuizController {
 
     const submission = await this.quizSubmissionRepo.create({
       data: {
-        user_id,
+        user_id: user_id ?? '',
         quiz_id,
         score,
         time_spent: 0,

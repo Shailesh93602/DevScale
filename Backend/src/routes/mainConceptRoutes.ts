@@ -1,5 +1,5 @@
 import { BaseRouter } from './BaseRouter';
-import { MainConceptController } from '../controllers/mainConceptController';
+import MainConceptController from '@/controllers/mainConceptController';
 
 export class MainConceptRoutes extends BaseRouter {
   private readonly mainConceptController: MainConceptController;
