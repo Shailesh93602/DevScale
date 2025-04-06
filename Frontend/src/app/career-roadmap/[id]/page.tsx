@@ -2,13 +2,15 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ParallaxProvider } from 'react-scroll-parallax';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { hideLoader, showLoader } from '@/lib/features/loader/loaderSlice';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { RoadmapSection } from './components/RoadmapSection';
 import { Timeline } from './components/Timeline';
 import { useAxiosGet } from '@/hooks/useAxios';
+import { CommentSection } from './components/CommentSection';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface IRoadmap {
   id: string;
@@ -30,8 +32,10 @@ interface IRoadmap {
 
 export default function CareerPathPage() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const careerId = (params?.id as string) || '';
   const dispatch = useDispatch();
+  const showComments = searchParams.get('comments') === 'open';
 
   const [roadmap, setRoadmap] = useState<IRoadmap[]>([]);
   const [getRoadmaps] = useAxiosGet<
@@ -68,17 +72,31 @@ export default function CareerPathPage() {
           <h1 className="mb-8 text-center text-4xl font-bold text-primary">
             Career Roadmap
           </h1>
-          <Timeline>
-            {roadmap?.map((section, index) => (
-              <RoadmapSection
-                key={section.id}
-                name={section.main_concept?.name}
-                description={section.main_concept?.description}
-                subjects={section.main_concept?.subjects}
-                index={index}
-              />
-            ))}
-          </Timeline>
+
+          <Tabs defaultValue={showComments ? 'comments' : 'content'}>
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="content">Content</TabsTrigger>
+              <TabsTrigger value="comments">Comments</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="content">
+              <Timeline>
+                {roadmap?.map((section, index) => (
+                  <RoadmapSection
+                    key={section.id}
+                    name={section.main_concept?.name}
+                    description={section.main_concept?.description}
+                    subjects={section.main_concept?.subjects}
+                    index={index}
+                  />
+                ))}
+              </Timeline>
+            </TabsContent>
+
+            <TabsContent value="comments">
+              <CommentSection roadmapId={careerId} />
+            </TabsContent>
+          </Tabs>
         </motion.div>
       </ParallaxProvider>
     </div>
