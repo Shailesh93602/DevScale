@@ -45,7 +45,6 @@ const MyArticles = () => {
   if (articles.length === 0) {
     return (
       <>
-        <Navbar />
         <div className="container mx-auto p-6">
           <p>No articles found.</p>
         </div>
@@ -55,7 +54,6 @@ const MyArticles = () => {
 
   return (
     <>
-      <Navbar />
       <div className="container mx-auto p-6">
         <h1 className="mb-6 text-3xl font-bold">My Articles</h1>
         <table className="w-full table-auto rounded-lg bg-white shadow-md dark:bg-gray-800">
