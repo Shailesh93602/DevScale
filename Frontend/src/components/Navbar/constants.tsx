@@ -14,7 +14,7 @@ export const navItems: NavItem[] = [
   { path: '/dashboard', label: 'Dashboard' },
   { path: '/career-roadmap', label: 'Career Roadmap' },
   { path: '/coding-challenges', label: 'Challenges' },
-  { path: '/articles', label: 'Articles' },
+  { path: '/battle-zone', label: 'Battle Zone' },
   { path: '/community', label: 'Community' },
 ];
 
