@@ -11,7 +11,7 @@ export const useRoadmapSocial = () => {
 
   const handleLike = async (roadmapId: string): Promise<void> => {
     try {
-      const response = await executeLike(null, undefined, { id: roadmapId });
+      const response = await executeLike({}, undefined, { id: roadmapId });
       if (!response.success) {
         throw new Error(response.message || 'Failed to update like status');
       }
@@ -24,7 +24,7 @@ export const useRoadmapSocial = () => {
 
   const handleBookmark = async (roadmapId: string): Promise<void> => {
     try {
-      const response = await executeBookmark(null, undefined, {
+      const response = await executeBookmark({}, undefined, {
         id: roadmapId,
       });
       if (!response.success) {
