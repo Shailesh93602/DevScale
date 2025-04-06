@@ -20,7 +20,7 @@ export const EnrolledRoadmapCard: React.FC<EnrolledRoadmapCardProps> = ({
         <div className="flex-1">
           <h3 className="text-lg font-semibold">{roadmap.title}</h3>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            By {roadmap.author.name}
+            By {roadmap?.user?.full_name}
           </p>
           <div className="mt-4">
             <div className="h-2 w-full rounded-full bg-gray-200 dark:bg-gray-700">
