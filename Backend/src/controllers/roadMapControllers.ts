@@ -6,6 +6,7 @@ import { Prisma } from '@prisma/client';
 import UserRoadmapRepository from '@/repositories/userRoadmapRepository';
 import RoadmapCategoryRepository from '@/repositories/roadmapCategoryRepository';
 import prisma from '@/lib/prisma';
+import { createAppError } from '@/utils/errorHandler';
 
 export default class RoadmapController {
   private readonly roadmapRepo: RoadmapRepository;
@@ -394,5 +395,184 @@ export default class RoadmapController {
     });
 
     return sendResponse(res, 'ROADMAP_BOOKMARKED', { data: null });
+  });
+
+  public getRoadmapComments = catchAsync(
+    async (req: Request, res: Response) => {
+      const { id: roadmapId } = req.params;
+      const { page = 1, limit = 10 } = req.query;
+      const userId = req.user?.id;
+
+      const { data: comments, meta } =
+        await this.roadmapRepo.getRoadmapComments(
+          roadmapId,
+          Number(page),
+          Number(limit)
+        );
+
+      // Add isLiked field to each comment and its replies
+      const commentsWithLikes = await Promise.all(
+        comments.map(async (comment) => {
+          const [commentIsLiked, repliesWithLikes] = await Promise.all([
+            userId
+              ? prisma.like.findFirst({
+                  where: {
+                    user_id: userId,
+                    comment_id: comment.id,
+                  },
+                })
+              : Promise.resolve(false),
+            Promise.all(
+              (comment.replies || []).map(async (reply) => {
+                const replyIsLiked = userId
+                  ? await prisma.like.findFirst({
+                      where: {
+                        user_id: userId,
+                        comment_id: reply.id,
+                      },
+                    })
+                  : false;
+
+                return {
+                  ...reply,
+                  isLiked: Boolean(replyIsLiked),
+                };
+              })
+            ),
+          ]);
+
+          return {
+            ...comment,
+            isLiked: Boolean(commentIsLiked),
+            replies: repliesWithLikes,
+          };
+        })
+      );
+
+      return sendResponse(res, 'COMMENTS_FETCHED', {
+        data: commentsWithLikes,
+        meta,
+      });
+    }
+  );
+
+  public addComment = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user) {
+      return sendResponse(res, 'UNAUTHORIZED', {
+        error: 'User not authenticated',
+      });
+    }
+
+    const { id: roadmapId } = req.params;
+    const { content, parent_id } = req.body;
+    const userId = req.user.id;
+
+    const comment = await this.roadmapRepo.addComment({
+      content,
+      user_id: userId,
+      roadmap_id: roadmapId,
+      parent_id,
+    });
+
+    return sendResponse(res, 'COMMENT_ADDED', {
+      data: {
+        ...comment,
+        isLiked: false,
+      },
+    });
+  });
+
+  public toggleCommentLike = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user) {
+      return sendResponse(res, 'UNAUTHORIZED', {
+        error: 'User not authenticated',
+      });
+    }
+
+    const { commentId } = req.params;
+    const userId = req.user.id;
+
+    const existingLike = await prisma.like.findFirst({
+      where: {
+        user_id: userId,
+        comment_id: commentId,
+      },
+    });
+
+    if (existingLike) {
+      await prisma.like.delete({
+        where: {
+          id: existingLike.id,
+        },
+      });
+    } else {
+      await prisma.like.create({
+        data: {
+          user_id: userId,
+          comment_id: commentId,
+        },
+      });
+    }
+
+    // Get updated comment data
+    const updatedComment = await prisma.comment.findUnique({
+      where: { id: commentId },
+      include: {
+        user: {
+          select: {
+            id: true,
+            username: true,
+            full_name: true,
+            avatar_url: true,
+          },
+        },
+        replies: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                username: true,
+                full_name: true,
+                avatar_url: true,
+              },
+            },
+            _count: {
+              select: {
+                likes: true,
+              },
+            },
+          },
+        },
+        _count: {
+          select: {
+            likes: true,
+            replies: true,
+          },
+        },
+      },
+    });
+
+    if (!updatedComment) {
+      throw createAppError('Comment not found', 404);
+    }
+
+    // Check if the user has liked the comment
+    const isLiked = await prisma.like.findFirst({
+      where: {
+        user_id: userId,
+        comment_id: commentId,
+      },
+    });
+
+    return sendResponse(
+      res,
+      existingLike ? 'COMMENT_UNLIKED' : 'COMMENT_LIKED',
+      {
+        data: {
+          ...updatedComment,
+          isLiked: Boolean(isLiked),
+        },
+      }
+    );
   });
 }

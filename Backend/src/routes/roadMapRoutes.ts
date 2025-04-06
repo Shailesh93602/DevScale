@@ -6,6 +6,7 @@ import {
   createRoadmapValidation,
   enrollRoadmapValidation,
   updateSubjectsOrderValidation,
+  addCommentValidation,
 } from '../validations/roadmapValidation';
 import { Request, Response, NextFunction, RequestHandler } from 'express';
 
@@ -55,6 +56,26 @@ export class RoadMapRoutes extends BaseRouter {
       '/:id/bookmark',
       authMiddleware,
       this.bindRoute(this.roadMapController.bookmarkRoadmap)
+    );
+
+    // Comment routes
+    this.router.get(
+      '/:id/comments',
+      authMiddleware,
+      this.bindRoute(this.roadMapController.getRoadmapComments)
+    );
+
+    this.router.post(
+      '/:id/comments',
+      authMiddleware,
+      validateRequest(addCommentValidation),
+      this.bindRoute(this.roadMapController.addComment)
+    );
+
+    this.router.post(
+      '/:roadmapId/comments/:commentId/like',
+      authMiddleware,
+      this.bindRoute(this.roadMapController.toggleCommentLike)
     );
 
     // Protected routes

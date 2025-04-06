@@ -10,6 +10,7 @@ import {
   SubjectData,
   SubjectOrder,
   TopicData,
+  PaginatedResult,
 } from '@/types';
 import { invalidateCachePattern } from '@/services/cacheService';
 import { Request } from 'express';
@@ -676,7 +677,9 @@ export default class RoadmapRepository extends BaseRepository<
       include: {
         user: {
           select: {
+            id: true,
             username: true,
+            full_name: true,
             avatar_url: true,
           },
         },
@@ -684,34 +687,9 @@ export default class RoadmapRepository extends BaseRepository<
           include: {
             user: {
               select: {
+                id: true,
                 username: true,
-                avatar_url: true,
-              },
-            },
-          },
-        },
-      },
-    });
-  }
-
-  async getRoadmapComments(roadmap_id: string) {
-    return this.prismaClient.comment.findMany({
-      where: {
-        roadmap_id,
-        parent_id: null,
-      },
-      include: {
-        user: {
-          select: {
-            username: true,
-            avatar_url: true,
-          },
-        },
-        replies: {
-          include: {
-            user: {
-              select: {
-                username: true,
+                full_name: true,
                 avatar_url: true,
               },
             },
@@ -720,13 +698,81 @@ export default class RoadmapRepository extends BaseRepository<
         _count: {
           select: {
             likes: true,
+            replies: true,
           },
         },
       },
-      orderBy: {
-        created_at: 'desc',
-      },
     });
+  }
+
+  async getRoadmapComments(roadmap_id: string, page = 1, limit = 10) {
+    const skip = (page - 1) * limit;
+    const [total, comments] = await Promise.all([
+      this.prismaClient.comment.count({
+        where: {
+          roadmap_id,
+          parent_id: null,
+        },
+      }),
+      this.prismaClient.comment.findMany({
+        where: {
+          roadmap_id,
+          parent_id: null,
+        },
+        include: {
+          user: {
+            select: {
+              id: true,
+              username: true,
+              full_name: true,
+              avatar_url: true,
+            },
+          },
+          replies: {
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  username: true,
+                  full_name: true,
+                  avatar_url: true,
+                },
+              },
+              _count: {
+                select: {
+                  likes: true,
+                },
+              },
+            },
+          },
+          _count: {
+            select: {
+              likes: true,
+              replies: true,
+            },
+          },
+        },
+        orderBy: {
+          created_at: 'desc',
+        },
+        skip,
+        take: limit,
+      }),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      data: comments,
+      meta: {
+        total,
+        currentPage: page,
+        totalPages,
+        limit,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
+      },
+    };
   }
 
   async toggleLike(user_id: string, roadmap_id: string): Promise<void> {
