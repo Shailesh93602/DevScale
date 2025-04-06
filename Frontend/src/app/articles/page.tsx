@@ -1,6 +1,5 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import Navbar from '@/components/Navbar';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useAxiosGet } from '@/hooks/useAxios';

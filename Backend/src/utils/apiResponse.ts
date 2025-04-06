@@ -160,7 +160,11 @@ type ResponseType =
   | 'ACHIEVEMENTS_FETCHED'
   | 'STREAK_UPDATED'
   | 'STREAK_STATS_FETCHED'
-  | 'WEEKLY_ACTIVITY_FETCHED';
+  | 'WEEKLY_ACTIVITY_FETCHED'
+  | 'COMMENTS_FETCHED'
+  | 'COMMENT_ADDED'
+  | 'COMMENT_LIKED'
+  | 'COMMENT_UNLIKED';
 
 interface ResponseConfig {
   status: number;
@@ -949,6 +953,26 @@ const RESPONSE_MESSAGES: Record<ResponseType, ResponseConfig> = {
     status: 200,
     success: true,
     message: 'Weekly activity fetched successfully',
+  },
+  COMMENTS_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Comments fetched successfully',
+  },
+  COMMENT_ADDED: {
+    status: 200,
+    success: true,
+    message: 'Comment added successfully',
+  },
+  COMMENT_LIKED: {
+    status: 200,
+    success: true,
+    message: 'Comment liked successfully',
+  },
+  COMMENT_UNLIKED: {
+    status: 200,
+    success: true,
+    message: 'Comment unliked successfully',
   },
 };
 

@@ -32,6 +32,7 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^6.5.0",
+    "@radix-ui/react-separator": "^1.1.2",
     "@sentry/node": "^9.9.0",
     "@supabase/supabase-js": "^2.48.1",
     "@types/compression": "^1.7.5",
@@ -46,6 +47,7 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "csurf": "^1.11.0",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.4.5",
     "email-validator": "^2.0.4",
     "express": "^4.21.2",
@@ -53,6 +55,7 @@
     "express-rate-limit": "^7.5.0",
     "express-session": "^1.18.0",
     "express-validator": "^7.1.0",
+    "framer-motion": "^12.6.3",
     "helmet": "^8.0.0",
     "hpp": "^0.2.3",
     "ioredis": "^5.4.2",
