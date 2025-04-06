@@ -2,18 +2,14 @@ import { Request, Response, NextFunction } from 'express';
 import { createClient, User } from '@supabase/supabase-js';
 import { createAppError } from '../utils/errorHandler';
 import logger from '../utils/logger';
-
+import prisma from '@/lib/prisma';
 const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_ANON_KEY!
 );
 
-interface AuthenticatedRequest extends Request {
-  user: User;
-}
-
 export const authMiddleware = async (
-  req: AuthenticatedRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
@@ -29,20 +25,20 @@ export const authMiddleware = async (
       error,
     } = await supabase.auth.getUser(token);
 
-    console.log('🚀 ----------------🚀');
-    console.log('🚀 ~ user:', user);
-    console.log('🚀 ----------------🚀');
-
-    console.log('🚀 ------------------🚀');
-    console.log('🚀 ~ await:', error);
-    console.log('🚀 ------------------🚀');
-
     if (error || !user) {
       logger.warn('Invalid authentication attempt', { error });
       return next(createAppError('Invalid authentication token', 401));
     }
 
-    req.user = user;
+    const userData = await prisma?.user.findUnique({
+      where: { supabase_id: user.id },
+    });
+
+    if (!userData) {
+      return next(createAppError('User not found', 401));
+    }
+
+    req.user = userData;
     next();
   } catch (error) {
     logger.error('Authentication failed', { error });
@@ -53,12 +49,16 @@ export const authMiddleware = async (
 type UserRole = 'admin' | 'moderator' | 'user';
 
 export const authorizeRoles = (...allowedRoles: UserRole[]) => {
-  return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  return (req: Request, res: Response, next: NextFunction) => {
     if (!req.user) {
       return next(createAppError('Unauthorized', 401));
     }
 
-    const userRole = (req.user.user_metadata?.role as UserRole) || 'user';
+    const userRole = req.user?.role;
+
+    if (!userRole) {
+      return next(createAppError('User role not found', 401));
+    }
 
     if (!allowedRoles.includes(userRole)) {
       logger.warn('Insufficient permissions', {

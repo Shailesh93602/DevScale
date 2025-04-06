@@ -52,7 +52,7 @@ export default class UserRepository extends BaseRepository<typeof prisma.user> {
 
   async upsertUserProfile(
     data: {
-      supabase_id: string;
+      id: string;
       email: string;
       username: string;
       graduation_year?: number;
@@ -60,7 +60,7 @@ export default class UserRepository extends BaseRepository<typeof prisma.user> {
     } & Prisma.UserCreateInput
   ) {
     return this.upsert({
-      where: { supabase_id: data.supabase_id },
+      where: { id: data.id },
       create: {
         ...data,
         role: { connect: { name: 'STUDENT' } },

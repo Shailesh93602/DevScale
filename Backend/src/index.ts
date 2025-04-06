@@ -57,7 +57,7 @@ export class App {
 
   private initializeRoutes(): void {
     const appRoutes = new AppRoutes();
-    this.app.use('/', appRoutes.getRouter());
+    this.app.use('/api/v1', appRoutes.getRouter());
   }
 
   private initializeErrorHandling(): void {

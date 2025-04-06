@@ -5,7 +5,6 @@ import RoadmapRepository from '../repositories/roadmapRepository';
 import { Prisma } from '@prisma/client';
 import UserRoadmapRepository from '@/repositories/userRoadmapRepository';
 import RoadmapCategoryRepository from '@/repositories/roadmapCategoryRepository';
-
 import prisma from '@/lib/prisma';
 
 export default class RoadmapController {
@@ -102,6 +101,12 @@ export default class RoadmapController {
   });
 
   public createRoadMap = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user) {
+      return sendResponse(res, 'UNAUTHORIZED', {
+        error: 'User not authenticated',
+      });
+    }
+
     const user_id = req.user.id;
     const { title, description, content } = req.body;
 
@@ -121,12 +126,13 @@ export default class RoadmapController {
   });
 
   public createRoadmap = catchAsync(async (req: Request, res: Response) => {
-    const userId = req.user?.id;
-    if (!userId) {
+    if (!req.user) {
       return sendResponse(res, 'UNAUTHORIZED', {
         error: 'User not authenticated',
       });
     }
+
+    const userId = req.user.id;
 
     const {
       title,
@@ -148,7 +154,7 @@ export default class RoadmapController {
       estimatedHours,
       is_public: isPublic,
       version,
-      tags: tags.join(','), // Convert array to comma-separated string
+      tags: tags.join(','),
       user: {
         connect: { id: userId },
       },
@@ -180,7 +186,6 @@ export default class RoadmapController {
       },
     };
 
-    // Create the roadmap
     const roadmap = await this.roadmapRepo.create({
       data: createInput,
       include: {
@@ -226,7 +231,6 @@ export default class RoadmapController {
       data: {
         title: title ?? roadMap.title,
         description: description ?? roadMap.description,
-        // content: content ?? roadMap.content,
       },
     });
 
@@ -257,7 +261,6 @@ export default class RoadmapController {
 
   public updateSubjectsOrder = catchAsync(
     async (req: Request, res: Response) => {
-      // TODO: implement logic to update the order
       return sendResponse(res, 'SUBJECT_ORDER_UPDATED', {
         data: null,
       });
@@ -265,7 +268,13 @@ export default class RoadmapController {
   );
 
   public enrollRoadMap = catchAsync(async (req: Request, res: Response) => {
-    const userId = req.user?.id;
+    if (!req.user) {
+      return sendResponse(res, 'UNAUTHORIZED', {
+        error: 'User not authenticated',
+      });
+    }
+
+    const userId = req.user.id;
     const { roadmapId } = req.body;
 
     if (!roadmapId) {
@@ -308,12 +317,20 @@ export default class RoadmapController {
   );
 
   public likeRoadmap = catchAsync(async (req: Request, res: Response) => {
-    const userId = req.user?.id;
-    const roadmapId = req.params.id;
-
-    if (!userId) {
+    if (!req.user) {
       return sendResponse(res, 'UNAUTHORIZED', {
         error: 'User not authenticated',
+      });
+    }
+
+    const userId = req.user.id;
+    const roadmapId = req.params.id;
+
+    // Check if roadmap exists
+    const roadmap = await this.roadmapRepo.getRoadmap(roadmapId);
+    if (!roadmap) {
+      return sendResponse(res, 'ROADMAP_NOT_FOUND', {
+        error: 'Roadmap not found',
       });
     }
 
@@ -344,14 +361,14 @@ export default class RoadmapController {
   });
 
   public bookmarkRoadmap = catchAsync(async (req: Request, res: Response) => {
-    const userId = req.user?.id;
-    const roadmapId = req.params.id;
-
-    if (!userId) {
+    if (!req.user) {
       return sendResponse(res, 'UNAUTHORIZED', {
         error: 'User not authenticated',
       });
     }
+
+    const userId = req.user.id;
+    const roadmapId = req.params.id;
 
     const existingBookmark = await prisma.userRoadmap.findFirst({
       where: {

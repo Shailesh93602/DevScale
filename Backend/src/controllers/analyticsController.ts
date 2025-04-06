@@ -33,7 +33,11 @@ export default class AnalyticsController {
 
   public getCurrentUserAnalytics = catchAsync(
     async (req: Request, res: Response) => {
-      const userId = req.user.id;
+      const userId = req.user?.id;
+
+      if (!userId) {
+        throw createAppError('User not found', 404);
+      }
       const analytics = await this.userProgressRepo.getUserAnalytics(userId);
       sendResponse(res, 'USER_ANALYTICS_FETCHED', { data: analytics });
     }
