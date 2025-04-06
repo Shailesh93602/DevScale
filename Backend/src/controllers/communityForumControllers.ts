@@ -40,7 +40,7 @@ export default class CommunityForumController {
       data: {
         title,
         description,
-        created_by: req.user.id,
+        created_by: req.user?.id ?? '',
       },
     });
 

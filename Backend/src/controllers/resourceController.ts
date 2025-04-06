@@ -173,7 +173,7 @@ export default class ResourceController {
         title: `General Resource`,
         content,
         topic_id: id,
-        author_id: req.user.id,
+        author_id: req.user?.id ?? '',
         status: 'PENDING',
       },
     });
@@ -223,7 +223,7 @@ export default class ResourceController {
         category,
         difficulty,
         language,
-        user_id: req?.user?.id,
+        user_id: req?.user?.id ?? '',
       },
     });
 

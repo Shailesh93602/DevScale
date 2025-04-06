@@ -41,7 +41,7 @@ export default class BattleController {
         length,
         date,
         time,
-        user_id: req.user.id,
+        user_id: req.user?.id ?? '',
       },
     });
 
