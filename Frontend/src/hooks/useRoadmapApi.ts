@@ -1,4 +1,6 @@
 import { useAxiosGet } from './useAxios';
+import { toast } from 'sonner';
+import { AxiosError } from 'axios';
 
 export interface RoadmapAuthor {
   id: string;
@@ -63,14 +65,124 @@ export interface ApiResponse<T> {
   status: number;
 }
 
-export const useRoadmaps = () => {
+export interface RoadmapFilters {
+  categories?: string[];
+  difficulty?: 'beginner' | 'intermediate' | 'advanced' | 'all';
+  sortBy?: 'popular' | 'recent' | 'rating' | 'enrolled';
+  search?: string;
+  page?: number;
+  limit?: number;
+  type?: 'featured' | 'trending' | 'all';
+}
+
+export const useRoadmaps = (filters?: RoadmapFilters) => {
   const [execute, state] =
     useAxiosGet<ApiResponse<RoadmapsResponse>>('/roadmaps');
+
+  const fetchRoadmaps = async () => {
+    try {
+      // Convert filters to URLSearchParams format
+      const params = new URLSearchParams();
+
+      if (filters) {
+        if (filters.categories && filters.categories.length > 0) {
+          filters.categories.forEach((category) => {
+            params.append('categories', category);
+          });
+        }
+
+        if (filters.difficulty && filters.difficulty !== 'all') {
+          params.append('difficulty', filters.difficulty);
+        }
+
+        if (filters.sortBy) {
+          params.append('sort', filters.sortBy);
+        }
+
+        if (filters.search) {
+          params.append('search', filters.search);
+        }
+
+        if (filters.page) {
+          params.append('page', filters.page.toString());
+        }
+
+        if (filters.limit) {
+          params.append('limit', filters.limit.toString());
+        }
+
+        if (filters.type) {
+          params.append('type', filters.type);
+        }
+      }
+
+      const response = await execute({ params });
+      return response;
+    } catch (error) {
+      const axiosError = error as AxiosError<ApiResponse<unknown>>;
+      toast.error(
+        axiosError.response?.data?.message || 'Failed to fetch roadmaps',
+      );
+      throw error;
+    }
+  };
 
   return {
     data: state.data,
     isLoading: state.isLoading,
     error: state.error,
-    refetch: execute,
+    refetch: fetchRoadmaps,
+  };
+};
+
+export const useRoadmapById = (id: string) => {
+  const [execute, state] = useAxiosGet<ApiResponse<BaseRoadmap>>(
+    `/roadmaps/${id}`,
+  );
+
+  const fetchRoadmap = async () => {
+    try {
+      const response = await execute();
+      return response;
+    } catch (error) {
+      const axiosError = error as AxiosError<ApiResponse<unknown>>;
+      toast.error(
+        axiosError.response?.data?.message || 'Failed to fetch roadmap',
+      );
+      throw error;
+    }
+  };
+
+  return {
+    data: state.data,
+    isLoading: state.isLoading,
+    error: state.error,
+    refetch: fetchRoadmap,
+  };
+};
+
+export const useRoadmapCategories = () => {
+  const [execute, state] = useAxiosGet<ApiResponse<string[]>>(
+    '/roadmaps/categories',
+  );
+
+  const fetchCategories = async () => {
+    try {
+      const response = await execute();
+      return response;
+    } catch (error) {
+      const axiosError = error as AxiosError<ApiResponse<unknown>>;
+      toast.error(
+        axiosError.response?.data?.message || 'Failed to fetch categories',
+      );
+      throw error;
+    }
+  };
+
+  return {
+    data: state.data,
+    isLoading: state.isLoading,
+    error: state.error,
+    refetch: fetchCategories,
   };
 };

@@ -10,10 +10,6 @@ interface ActivityTimelineProps {
 export const ActivityTimeline: React.FC<ActivityTimelineProps> = ({
   activities,
 }) => {
-  console.log('🚀 ----------------------------🚀');
-  console.log('🚀 ~ activities: 124', activities);
-  console.log('🚀 ----------------------------🚀');
-
   const sortedActivities = [...(activities || [])].sort(
     (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
   );

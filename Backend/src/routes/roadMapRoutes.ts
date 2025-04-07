@@ -1,21 +1,30 @@
 import { BaseRouter } from './BaseRouter';
 import RoadMapController from '../controllers/roadMapControllers';
 import { authMiddleware, authorizeRoles } from '../middlewares/authMiddleware';
-import { validateRequest } from '../middlewares/validateRequest';
+import { validateRequest, validateQuery } from '../middlewares/validateRequest';
 import {
   createRoadmapValidation,
   enrollRoadmapValidation,
   updateSubjectsOrderValidation,
   addCommentValidation,
+  roadmapQueryValidation,
 } from '../validations/roadmapValidation';
 import { Request, Response, NextFunction, RequestHandler } from 'express';
+import { createRateLimiter } from '../middlewares/rateLimiter';
+import { cacheResponse } from '../middlewares/cacheControl';
 
 export class RoadMapRoutes extends BaseRouter {
   private readonly roadMapController: RoadMapController;
+  private readonly roadmapLimiter: ReturnType<typeof createRateLimiter>;
 
   constructor() {
     super();
     this.roadMapController = new RoadMapController();
+    this.roadmapLimiter = createRateLimiter({
+      windowMs: 60 * 1000, // 1 minute
+      max: 30, // 30 requests per minute
+      message: 'Too many roadmap requests, please try again later',
+    });
   }
 
   protected initializeRoutes(): void {
@@ -30,6 +39,12 @@ export class RoadMapRoutes extends BaseRouter {
     this.router.get(
       '/',
       authMiddleware,
+      validateQuery(roadmapQueryValidation),
+      this.roadmapLimiter,
+      (req: Request, res: Response, next: NextFunction) => {
+        const cacheMiddleware = cacheResponse({ duration: 60 });
+        cacheMiddleware(req, res, next).catch(next);
+      },
       this.bindRoute(this.roadMapController.getAllRoadmaps)
     );
 

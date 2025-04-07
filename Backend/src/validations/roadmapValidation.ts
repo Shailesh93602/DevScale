@@ -57,3 +57,18 @@ export const addCommentValidation = Joi.object({
   }),
   parent_id: Joi.string().optional(),
 });
+
+export const roadmapQueryValidation = Joi.object({
+  limit: Joi.number().integer().min(1).max(100).default(10),
+  page: Joi.number().integer().min(1).default(1),
+  search: Joi.string().allow('').default(''),
+  category: Joi.string().allow('').default(''),
+  difficulty: Joi.string()
+    .valid('EASY', 'MEDIUM', 'HARD')
+    .allow('')
+    .default(''),
+  sort: Joi.string().valid('popular', 'recent', 'rating').allow('').default(''),
+  type: Joi.string()
+    .valid('all', 'featured', 'my-roadmaps', 'enrolled')
+    .default('all'),
+});

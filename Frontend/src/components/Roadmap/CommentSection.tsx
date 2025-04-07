@@ -63,15 +63,12 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
 
   useEffect(() => {
     if (isOpen) {
-      console.log('Fetching comments...');
       fetchComments();
     }
   }, [isOpen, fetchComments]);
 
   useEffect(() => {
-    console.log('Fetched comments response:', fetchedComments);
     if (fetchedComments?.success && fetchedComments?.data) {
-      console.log('Setting comments to:', fetchedComments.data);
       setComments(fetchedComments.data);
     }
   }, [fetchedComments]);
@@ -110,8 +107,6 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
 
   if (!isOpen) return null;
 
-  console.log('Current comments state:', comments);
-
   return (
     <div className="space-y-6 border-t pt-6">
       <h3 className="text-lg font-semibold">Comments</h3>
@@ -144,7 +139,6 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
           </div>
         ) : comments && comments.length > 0 ? (
           comments.map((comment) => {
-            console.log('Rendering comment:', comment);
             return (
               <CommentItem
                 key={comment.id}
