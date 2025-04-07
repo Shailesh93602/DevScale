@@ -177,15 +177,11 @@ export default function CareerPathPage() {
     null,
   );
 
-  const [getRoadmaps] = useAxiosGet<
-    {
-      success?: boolean;
-      message?: string;
-    } & IRoadmap[]
-  >('roadmaps/{{careerId}}/main_concepts');
-  const [getRoadmapDetails] = useAxiosGet<{ roadMap: RoadmapDetails }>(
-    'roadmaps/{{careerId}}',
-  );
+  const [getRoadmapDetails] = useAxiosGet<{
+    roadMap: RoadmapDetails & {
+      main_concepts: IRoadmap[];
+    };
+  }>('roadmaps/{{careerId}}');
 
   const [socialActionLoading, setSocialActionLoading] = useState<{
     like: boolean;
@@ -217,12 +213,13 @@ export default function CareerPathPage() {
     setIsLoading(true);
     dispatch(showLoader('fetching roadmap'));
     try {
-      const [roadmapResponse, detailsResponse] = await Promise.all([
-        getRoadmaps({}, { careerId }),
-        getRoadmapDetails({}, { careerId }),
-      ]);
-      setRoadmap(roadmapResponse.data ?? []);
-      setRoadmapDetails(detailsResponse.data?.roadMap ?? null);
+      const detailsResponse = await getRoadmapDetails({}, { careerId });
+      const roadmapData = detailsResponse.data?.roadMap;
+
+      if (roadmapData) {
+        setRoadmapDetails(roadmapData);
+        setRoadmap(roadmapData.main_concepts || []);
+      }
 
       if (showComments) {
         setActiveTab('comments');
@@ -281,7 +278,13 @@ export default function CareerPathPage() {
 
       await action(careerId);
       const detailsResponse = await getRoadmapDetails({}, { careerId });
-      setRoadmapDetails(detailsResponse.data?.roadMap ?? null);
+      const roadmapData = detailsResponse.data?.roadMap;
+
+      if (roadmapData) {
+        setRoadmapDetails(roadmapData);
+        // Maintain the roadmap state from the main_concepts in the response
+        setRoadmap(roadmapData.main_concepts || []);
+      }
     } catch {
       // Revert optimistic update on error
       if (roadmapDetails) {
