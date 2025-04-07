@@ -20,7 +20,7 @@ export const RoadmapSection = ({
     id: string;
     subject: {
       id: string;
-      name: string;
+      title: string;
       description: string;
       icon: React.ElementType;
     };
@@ -51,9 +51,9 @@ export const RoadmapSection = ({
             <RoadmapStep
               key={step.id}
               id={step.id}
-              name={step.subject.name}
-              description={step.subject.description}
-              icon={step.subject.icon}
+              name={step.subject?.title}
+              description={step.subject?.description}
+              icon={step.subject?.icon}
               index={stepIndex}
             />
           ))}
