@@ -20,53 +20,51 @@ export default class RoadmapController {
   }
 
   public getAllRoadmaps = catchAsync(async (req: Request, res: Response) => {
-    const { type } = req.query;
-    const userId = req.user?.id;
+    try {
+      const { type = 'all' } = req.query;
+      const userId = req.user?.id;
 
-    const whereClause: {
-      where?: {
-        user_id?: string | { not: string };
-        user_roadmaps?: {
-          none?: { user_id: string };
-          some?: { user_id: string };
-        };
-        is_public?: boolean;
+      let whereClause: Prisma.RoadmapWhereInput = {
+        is_public: true,
       };
-    } = {};
 
-    if (userId) {
-      switch (type) {
-        case 'featured':
-          whereClause.where = {
-            user_id: { not: userId },
-            user_roadmaps: {
-              none: { user_id: userId },
-            },
-          };
-          break;
-        case 'my-roadmaps':
-          whereClause.where = {
-            user_id: userId,
-          };
-          break;
-        case 'enrolled':
-          whereClause.where = {
-            user_roadmaps: {
-              some: { user_id: userId },
-            },
-          };
-          break;
+      if (userId) {
+        switch (type) {
+          case 'featured':
+            whereClause = {
+              ...whereClause,
+              popularity: {
+                gt: 100,
+              },
+            };
+            break;
+          case 'my-roadmaps':
+            whereClause = {
+              ...whereClause,
+              user_id: userId,
+            };
+            break;
+          case 'enrolled':
+            whereClause = {
+              ...whereClause,
+              user_roadmaps: {
+                some: {
+                  user_id: userId,
+                },
+              },
+            };
+            break;
+          default:
+            // For 'all' type, we keep the default whereClause
+            break;
+        }
       }
+
+      const roadmaps = await this.roadmapRepo.getAllRoadmaps(req, whereClause);
+      return sendResponse(res, 'ROADMAPS_FETCHED', { data: roadmaps });
+    } catch (error) {
+      return sendResponse(res, 'ROADMAP_NOT_FOUND', { error: error as Error });
     }
-
-    const roadmaps = await this.roadmapRepo.getAllRoadmaps(
-      req,
-      whereClause.where
-    );
-
-    return sendResponse(res, 'ROADMAPS_FETCHED', {
-      data: roadmaps,
-    });
   });
 
   public getMainConceptsInRoadmap = catchAsync(

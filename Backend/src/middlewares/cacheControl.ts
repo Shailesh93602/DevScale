@@ -9,6 +9,20 @@ interface CacheOptions {
   condition?: (req: Request) => boolean;
 }
 
+// Helper function to safely stringify objects with circular references
+const safeStringify = (obj: any): string => {
+  const seen = new WeakSet();
+  return JSON.stringify(obj, (key, value) => {
+    if (typeof value === 'object' && value !== null) {
+      if (seen.has(value)) {
+        return '[Circular]';
+      }
+      seen.add(value);
+    }
+    return value;
+  });
+};
+
 export const cacheResponse = (options: CacheOptions) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -34,15 +48,23 @@ export const cacheResponse = (options: CacheOptions) => {
         });
       }
 
-      // Store original send function
+      // Store original json function
+      const originalJson = res.json;
 
-      // Override send function to cache response
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // Override json function to cache response
       res.json = function (body: any) {
-        setCache(cacheKey, JSON.stringify(body), {
-          ttl: options.duration,
-        }).catch((error) => logger.error('Cache set failed:', error));
-        return sendResponse(res, 'CACHE_SET', { data: body });
+        try {
+          // Only cache if body is not null/undefined
+          if (body) {
+            const stringifiedBody = safeStringify(body);
+            setCache(cacheKey, stringifiedBody, {
+              ttl: options.duration,
+            }).catch((error) => logger.error('Cache set failed:', error));
+          }
+        } catch (error) {
+          logger.error('Failed to cache response:', error);
+        }
+        return originalJson.call(this, body);
       };
 
       next();

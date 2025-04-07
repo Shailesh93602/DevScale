@@ -30,6 +30,10 @@ export type RoadmapType = BaseRoadmap & {
   isEnrolled?: boolean;
   isFeatured?: boolean;
   tags?: string;
+  difficulty?: string;
+  estimatedHours?: number;
+  popularity?: number;
+  version?: string;
   user?: {
     username: string;
     full_name: string | null;
@@ -92,7 +96,13 @@ export interface RoadmapCardProps {
 }
 
 export const getDifficultyColor = (level?: string) => {
-  switch (level) {
+  switch (level?.toLowerCase()) {
+    case 'easy':
+      return 'bg-green-100 text-green-800';
+    case 'medium':
+      return 'bg-blue-100 text-blue-800';
+    case 'hard':
+      return 'bg-purple-100 text-purple-800';
     case 'beginner':
       return 'bg-green-100 text-green-800';
     case 'intermediate':
@@ -112,10 +122,6 @@ export const RoadmapCard = ({
   onCommentClick,
   showViewButton = true,
 }: RoadmapCardProps) => {
-  console.log('🚀 ----------------------🚀');
-  console.log('🚀 ~ roadmap:', roadmap);
-  console.log('🚀 ----------------------🚀');
-
   const router = useRouter();
   const [isLiked, setIsLiked] = useState(roadmap.isLiked);
   const [isBookmarked, setIsBookmarked] = useState(roadmap.isBookmarked);
@@ -210,32 +216,43 @@ export const RoadmapCard = ({
       <div className="relative p-6 pb-4">
         <div className="to-primary/5 absolute inset-0 bg-gradient-to-br from-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
-        {roadmap.difficulty && (
+        {roadmap.difficulty ? (
           <Badge
             variant="outline"
             className={`absolute right-6 top-6 ${getDifficultyColor(roadmap.difficulty)}`}
           >
             {roadmap.difficulty}
           </Badge>
-        )}
+        ) : null}
 
         <div className="flex items-start justify-between">
           <div className="bg-primary/10 mb-4 flex h-12 w-12 items-center justify-center rounded-full text-primary">
             <Route size={24} />
           </div>
 
-          {roadmap.isEnrolled && (
-            <Badge className="bg-primary/80">Enrolled</Badge>
-          )}
+          <div className="flex gap-2">
+            {roadmap.isEnrolled ? (
+              <Badge className="bg-primary/80">Enrolled</Badge>
+            ) : null}
 
-          {roadmap.isFeatured && (
-            <Badge
-              variant="secondary"
-              className="border-yellow-200 bg-yellow-100 text-yellow-800"
-            >
-              Featured
-            </Badge>
-          )}
+            {roadmap.isFeatured ? (
+              <Badge
+                variant="secondary"
+                className="border-yellow-200 bg-yellow-100 text-yellow-800"
+              >
+                Featured
+              </Badge>
+            ) : null}
+
+            {roadmap.popularity && roadmap.popularity > 100 ? (
+              <Badge
+                variant="secondary"
+                className="border-orange-200 bg-orange-100 text-orange-800"
+              >
+                Popular
+              </Badge>
+            ) : null}
+          </div>
         </div>
 
         <h3 className="mb-3 text-lg font-semibold leading-tight tracking-tight">
@@ -250,7 +267,7 @@ export const RoadmapCard = ({
       {/* Metadata section */}
       <div className="flex-grow px-6 py-2">
         <div className="mb-3 flex flex-wrap items-center gap-3">
-          {roadmap.steps && (
+          {roadmap.steps && roadmap.steps > 0 ? (
             <Badge
               variant="outline"
               className="flex items-center gap-1 font-normal"
@@ -258,9 +275,9 @@ export const RoadmapCard = ({
               <Map className="h-3 w-3" />
               {roadmap.steps} steps
             </Badge>
-          )}
+          ) : null}
 
-          {roadmap.estimatedTime && (
+          {roadmap.estimatedTime ? (
             <Badge
               variant="outline"
               className="flex items-center gap-1 font-normal"
@@ -268,9 +285,19 @@ export const RoadmapCard = ({
               <Clock className="h-3 w-3" />
               {roadmap.estimatedTime}
             </Badge>
-          )}
+          ) : null}
 
-          {roadmap.enrollmentCount && (
+          {roadmap.estimatedHours && roadmap.estimatedHours > 0 ? (
+            <Badge
+              variant="outline"
+              className="flex items-center gap-1 font-normal"
+            >
+              <Clock className="h-3 w-3" />
+              {roadmap.estimatedHours} hours
+            </Badge>
+          ) : null}
+
+          {roadmap.enrollmentCount && roadmap.enrollmentCount > 0 ? (
             <Badge
               variant="outline"
               className="flex items-center gap-1 font-normal"
@@ -278,10 +305,19 @@ export const RoadmapCard = ({
               <Users className="h-3 w-3" />
               {roadmap.enrollmentCount.toLocaleString()} enrolled
             </Badge>
-          )}
+          ) : null}
+
+          {roadmap.version ? (
+            <Badge
+              variant="outline"
+              className="flex items-center gap-1 font-normal"
+            >
+              v{roadmap.version}
+            </Badge>
+          ) : null}
         </div>
 
-        {roadmap.progress !== undefined && (
+        {roadmap.progress !== undefined && roadmap.progress > 0 ? (
           <div className="mb-4">
             <div className="mb-1 flex items-center justify-between">
               <span className="text-xs text-muted-foreground">Progress</span>
@@ -289,14 +325,14 @@ export const RoadmapCard = ({
             </div>
             <Progress value={roadmap.progress} className="h-1.5" />
           </div>
-        )}
+        ) : null}
       </div>
 
       {/* Card footer with author info and actions */}
       <div className="border-t px-6 py-4">
         <div className="flex flex-col space-y-3">
           {/* Tags Section */}
-          {roadmap.tags && (
+          {roadmap.tags && roadmap.tags.length > 0 ? (
             <div className="flex flex-wrap gap-2">
               {roadmap.tags.split(',').map((tag) => (
                 <Badge
@@ -308,7 +344,7 @@ export const RoadmapCard = ({
                 </Badge>
               ))}
             </div>
-          )}
+          ) : null}
 
           {/* Author and Actions */}
           <div className="flex items-center justify-between">
@@ -340,11 +376,14 @@ export const RoadmapCard = ({
                 disabled={isLoading}
                 className={cn(
                   'flex items-center gap-1.5 rounded-full px-3 transition-colors',
-                  isLiked &&
-                    'bg-rose-50 text-rose-500 hover:bg-rose-100 dark:bg-rose-900/20 dark:hover:bg-rose-900/30',
+                  isLiked
+                    ? 'bg-rose-50 text-rose-500 hover:bg-rose-100 dark:bg-rose-900/20 dark:hover:bg-rose-900/30'
+                    : '',
                 )}
               >
-                <Heart className={cn('h-4 w-4', isLiked && 'fill-current')} />
+                <Heart
+                  className={cn('h-4 w-4', isLiked ? 'fill-current' : '')}
+                />
                 <span className="text-xs font-medium">{likeCount}</span>
               </Button>
 
@@ -356,7 +395,7 @@ export const RoadmapCard = ({
               >
                 <MessageCircle className="h-4 w-4" />
                 <span className="text-xs font-medium">
-                  {roadmap.commentsCount || 0}
+                  {roadmap.commentsCount > 0 ? roadmap.commentsCount : ''}
                 </span>
               </Button>
 
@@ -367,12 +406,13 @@ export const RoadmapCard = ({
                 disabled={isLoading}
                 className={cn(
                   'flex items-center gap-1.5 rounded-full px-3 transition-colors',
-                  isBookmarked &&
-                    'bg-blue-50 text-blue-500 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30',
+                  isBookmarked
+                    ? 'bg-blue-50 text-blue-500 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30'
+                    : '',
                 )}
               >
                 <Bookmark
-                  className={cn('h-4 w-4', isBookmarked && 'fill-current')}
+                  className={cn('h-4 w-4', isBookmarked ? 'fill-current' : '')}
                 />
                 <span className="text-xs font-medium">{bookmarkCount}</span>
               </Button>
@@ -380,7 +420,7 @@ export const RoadmapCard = ({
           </div>
         </div>
 
-        {showViewButton && (
+        {showViewButton ? (
           <div className="mt-3 flex justify-end">
             <Button
               size="sm"
@@ -390,7 +430,7 @@ export const RoadmapCard = ({
               View Roadmap <ChevronRight className="ml-1 h-4 w-4" />
             </Button>
           </div>
-        )}
+        ) : null}
       </div>
     </motion.div>
   );
