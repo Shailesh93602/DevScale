@@ -469,7 +469,11 @@ export default class RoadmapRepository extends BaseRepository<
           _count: {
             select: {
               likes: true,
-              comments: true,
+              comments: {
+                where: {
+                  parent_id: null,
+                },
+              },
               user_roadmaps: true,
             },
           },
