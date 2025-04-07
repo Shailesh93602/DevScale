@@ -114,8 +114,16 @@ export default class RoadmapRepository extends BaseRepository<
       include: {
         user: {
           select: {
+            id: true,
             username: true,
+            full_name: true,
             avatar_url: true,
+          },
+        },
+        category: {
+          select: {
+            id: true,
+            name: true,
           },
         },
         main_concepts: {
@@ -148,6 +156,16 @@ export default class RoadmapRepository extends BaseRepository<
             },
           },
         },
+        topics: {
+          select: {
+            topic: {
+              select: {
+                id: true,
+                title: true,
+              },
+            },
+          },
+        },
         _count: {
           select: {
             likes: true,
@@ -157,6 +175,7 @@ export default class RoadmapRepository extends BaseRepository<
               },
             },
             user_roadmaps: true,
+            topics: true,
           },
         },
         likes: userId
@@ -186,6 +205,29 @@ export default class RoadmapRepository extends BaseRepository<
       throw createAppError('Roadmap not found', 404);
     }
 
+    // Calculate progress based on user's progress in topics
+    let progress = 0;
+    if (userId && roadmap.user_roadmaps && roadmap.user_roadmaps.length > 0) {
+      // Get user's progress for this roadmap's topics
+      const userProgress = await this.prismaClient.userProgress.findMany({
+        where: {
+          user_id: userId,
+          topic_id: {
+            in: roadmap.topics.map((t) => t.topic.id),
+          },
+        },
+        select: {
+          is_completed: true,
+        },
+      });
+
+      const completedTopics = userProgress.filter((p) => p.is_completed).length;
+      progress =
+        roadmap.topics.length > 0
+          ? Math.round((completedTopics / roadmap.topics.length) * 100)
+          : 0;
+    }
+
     return {
       ...roadmap,
       likesCount: roadmap._count.likes,
@@ -193,6 +235,13 @@ export default class RoadmapRepository extends BaseRepository<
       bookmarksCount: roadmap._count.user_roadmaps,
       isLiked: Boolean(roadmap.likes?.length),
       isBookmarked: Boolean(roadmap.user_roadmaps?.length),
+      steps: roadmap._count.topics,
+      isEnrolled: Boolean(roadmap.user_roadmaps?.length),
+      progress: progress,
+      estimatedTime: roadmap.estimatedHours
+        ? `${roadmap.estimatedHours} hours`
+        : undefined,
+      isFeatured: roadmap.popularity > 100,
     };
   }
 
@@ -445,23 +494,88 @@ export default class RoadmapRepository extends BaseRepository<
   }
 
   async getAllRoadmaps(req: Request, where?: Prisma.RoadmapWhereInput) {
-    const { limit = 10, page = 1, search = '' } = req.query;
+    const {
+      limit = 10,
+      page = 1,
+      search = '',
+      category,
+      difficulty,
+      sort = 'popular', // Default sort
+    } = req.query;
     const userId = req.user?.id;
+
+    // Build where clause with additional filters
+    const whereClause: Prisma.RoadmapWhereInput = {
+      ...where,
+      ...(category ? { category_id: String(category) } : {}),
+      ...(difficulty
+        ? { difficulty: String(difficulty) as 'EASY' | 'MEDIUM' | 'HARD' }
+        : {}),
+    };
+
+    // Combine the where clause with the existing where parameter
+    const combinedWhere: Prisma.RoadmapWhereInput = {
+      ...where,
+      ...whereClause,
+    };
+
+    // Determine sort options based on sort parameter
+    let sortOptions: { field: string; direction: 'asc' | 'desc' } | undefined;
+    switch (sort) {
+      case 'popular':
+        sortOptions = { field: 'popularity', direction: 'desc' };
+        break;
+      case 'recent':
+        sortOptions = { field: 'created_at', direction: 'desc' };
+        break;
+      case 'rating':
+        // For rating, we'll need to handle this differently as it's a relation
+        // We'll use popularity as a fallback
+        sortOptions = { field: 'popularity', direction: 'desc' };
+        break;
+      default:
+        sortOptions = { field: 'popularity', direction: 'desc' };
+    }
 
     const roadmaps = (await this.paginate(
       {
         limit: Number(limit),
         page: Number(page),
         search: String(search),
+        sort: sortOptions,
       },
       ['title'],
       {
         include: {
+          user: {
+            select: {
+              id: true,
+              username: true,
+              full_name: true,
+              avatar_url: true,
+            },
+          },
+          category: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
           main_concepts: {
             select: {
               main_concept: {
                 include: {
                   subjects: true,
+                },
+              },
+            },
+          },
+          topics: {
+            select: {
+              topic: {
+                select: {
+                  id: true,
+                  title: true,
                 },
               },
             },
@@ -475,6 +589,7 @@ export default class RoadmapRepository extends BaseRepository<
                 },
               },
               user_roadmaps: true,
+              topics: true,
             },
           },
           likes: userId
@@ -499,17 +614,75 @@ export default class RoadmapRepository extends BaseRepository<
             : false,
         },
       },
-      where
+      combinedWhere
     )) as unknown as {
       data: Array<
         any & {
-          _count: { likes: number; comments: number; user_roadmaps: number };
+          id: string;
+          _count: {
+            likes: number;
+            comments: number;
+            user_roadmaps: number;
+            topics: number;
+          };
           likes?: Array<{ id: string }>;
           user_roadmaps?: Array<{ id: string }>;
+          topics: Array<{ topic: { id: string; title: string } }>;
         }
       >;
       meta: any;
     };
+
+    // If user is logged in, get progress for all roadmaps
+    let userProgressMap: Record<string, number> = {};
+    if (userId) {
+      // Get all roadmap IDs
+      const roadmapIds = roadmaps.data.map((roadmap) => roadmap.id);
+
+      // Get all topic IDs for these roadmaps
+      const roadmapTopicIds = roadmaps.data.flatMap((roadmap) =>
+        roadmap.topics.map((t: { topic: { id: string } }) => t.topic.id)
+      );
+
+      // Get user's progress for all topics
+      const userProgress = await this.prismaClient.userProgress.findMany({
+        where: {
+          user_id: userId,
+          topic_id: {
+            in: roadmapTopicIds,
+          },
+        },
+        select: {
+          topic_id: true,
+          is_completed: true,
+        },
+      });
+
+      // Create a map of topic ID to completion status
+      const topicCompletionMap: Record<string, boolean> = {};
+      userProgress.forEach((progress) => {
+        if (progress.topic_id) {
+          topicCompletionMap[progress.topic_id] = progress.is_completed;
+        }
+      });
+
+      // Calculate progress for each roadmap
+      roadmaps.data.forEach((roadmap) => {
+        if (roadmap.id) {
+          const roadmapTopics = roadmap.topics.map(
+            (t: { topic: { id: string } }) => t.topic.id
+          );
+          const completedTopics = roadmapTopics.filter(
+            (topicId: string) => topicCompletionMap[topicId] === true
+          ).length;
+
+          userProgressMap[roadmap.id] =
+            roadmapTopics.length > 0
+              ? Math.round((completedTopics / roadmapTopics.length) * 100)
+              : 0;
+        }
+      });
+    }
 
     return {
       ...roadmaps,
@@ -520,6 +693,13 @@ export default class RoadmapRepository extends BaseRepository<
         bookmarksCount: roadmap._count.user_roadmaps,
         isLiked: Boolean(roadmap.likes?.length),
         isBookmarked: Boolean(roadmap.user_roadmaps?.length),
+        steps: roadmap._count.topics,
+        isEnrolled: Boolean(roadmap.user_roadmaps?.length),
+        progress: roadmap.id ? userProgressMap[roadmap.id] || 0 : 0,
+        estimatedTime: roadmap.estimatedHours
+          ? `${roadmap.estimatedHours} hours`
+          : undefined,
+        isFeatured: roadmap.popularity > 100,
       })),
     };
   }

@@ -61,10 +61,6 @@ export async function updateSession(request: NextRequest) {
       },
     });
 
-    console.log('🚀 --------------------------------🚀');
-    console.log('🚀 ~ updateSession ~ data:', response);
-    console.log('🚀 --------------------------------🚀');
-
     if (!response?.data?.data?.user) {
       const url = request.nextUrl.clone();
       url.pathname = '/details';
