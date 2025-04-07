@@ -34,7 +34,7 @@ export class AppRoutes {
     this.router.use('/challenges', new ChallengeRoutes().getRouter());
     this.router.use('/topics', new TopicRoutes().getRouter());
     this.router.use('/subjects', new SubjectRoutes().getRouter());
-    this.router.use('/mainConcepts', new MainConceptRoutes().getRouter());
+    this.router.use('/main-concepts', new MainConceptRoutes().getRouter());
     this.router.use('/streak', new StreakRoutes().getRouter());
     this.router.use('/dashboard', new DashboardRoutes().getRouter());
   }

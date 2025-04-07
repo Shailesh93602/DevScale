@@ -221,6 +221,81 @@ const CategoryList = ({
   );
 };
 
+// Add skeleton components for the page
+const FeaturedRoadmapsSkeleton = () => (
+  <div className="mb-12">
+    <div className="mb-6 flex items-center justify-between">
+      <div className="h-8 w-48 animate-pulse rounded bg-gray-200"></div>
+      <div className="h-8 w-24 animate-pulse rounded bg-gray-200"></div>
+    </div>
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {Array(6)
+        .fill(0)
+        .map((_, index) => (
+          <RoadmapCardSkeleton key={index} />
+        ))}
+    </div>
+  </div>
+);
+
+const TrendingRoadmapsSkeleton = () => (
+  <div className="mb-12">
+    <div className="mb-6 flex items-center justify-between">
+      <div className="h-8 w-48 animate-pulse rounded bg-gray-200"></div>
+      <div className="h-8 w-24 animate-pulse rounded bg-gray-200"></div>
+    </div>
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {Array(6)
+        .fill(0)
+        .map((_, index) => (
+          <RoadmapCardSkeleton key={index} />
+        ))}
+    </div>
+  </div>
+);
+
+const CategoryListSkeleton = () => (
+  <ScrollArea className="h-[calc(100vh-12rem)] px-1">
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div className="h-6 w-24 animate-pulse rounded bg-gray-200"></div>
+        <div className="h-6 w-16 animate-pulse rounded bg-gray-200"></div>
+      </div>
+      <div className="space-y-2">
+        {Array(8)
+          .fill(0)
+          .map((_, index) => (
+            <div
+              key={index}
+              className="flex items-center justify-between rounded-lg p-2"
+            >
+              <div className="flex items-center gap-2">
+                <div className="h-8 w-8 animate-pulse rounded-full bg-gray-200"></div>
+                <div>
+                  <div className="h-4 w-32 animate-pulse rounded bg-gray-200"></div>
+                  <div className="mt-1 h-3 w-24 animate-pulse rounded bg-gray-200"></div>
+                </div>
+              </div>
+              <div className="h-4 w-4 animate-pulse rounded bg-gray-200"></div>
+            </div>
+          ))}
+      </div>
+    </div>
+  </ScrollArea>
+);
+
+const SearchAndFilterSkeleton = () => (
+  <div className="my-4 flex items-center gap-4">
+    <div className="relative flex-1">
+      <div className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground">
+        <Search size={16} />
+      </div>
+      <div className="h-10 w-full animate-pulse rounded-md bg-gray-200 pl-10"></div>
+    </div>
+    <div className="h-10 w-[180px] animate-pulse rounded-md bg-gray-200"></div>
+  </div>
+);
+
 const RoadmapPage = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [categories, setCategories] = useState<RoadmapCategory[]>([]);
@@ -235,6 +310,9 @@ const RoadmapPage = () => {
   const [isFilterExpanded, setIsFilterExpanded] = useState(true);
   const [difficultyFilter, setDifficultyFilter] = useState<string>('all');
   const [sortBy, setSortBy] = useState<string>('popular');
+  const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
+  const [isFeaturedLoading, setIsFeaturedLoading] = useState(true);
+  const [isTrendingLoading, setIsTrendingLoading] = useState(true);
 
   const [getRoadmaps, { isLoading }] =
     useAxiosGet<PaginatedResponse>('/roadmaps');
@@ -248,16 +326,20 @@ const RoadmapPage = () => {
   const router = useRouter();
 
   const fetchCategories = useCallback(async () => {
+    setIsCategoriesLoading(true);
     try {
       const response = await getCategories();
       setCategories(response?.data ?? []);
     } catch (error) {
       console.error('Error fetching categories:', error);
       toast.error('Failed to fetch categories');
+    } finally {
+      setIsCategoriesLoading(false);
     }
   }, [getCategories]);
 
   const fetchFeaturedRoadmaps = useCallback(async () => {
+    setIsFeaturedLoading(true);
     try {
       const params = new URLSearchParams({
         limit: '6',
@@ -268,10 +350,13 @@ const RoadmapPage = () => {
       setFeaturedRoadmaps(data);
     } catch (error) {
       console.error('Error fetching featured roadmaps:', error);
+    } finally {
+      setIsFeaturedLoading(false);
     }
   }, [getRoadmaps]);
 
   const fetchTrendingRoadmaps = useCallback(async () => {
+    setIsTrendingLoading(true);
     try {
       const params = new URLSearchParams({
         limit: '6',
@@ -282,6 +367,8 @@ const RoadmapPage = () => {
       setTrendingRoadmaps(data);
     } catch (error) {
       console.error('Error fetching trending roadmaps:', error);
+    } finally {
+      setIsTrendingLoading(false);
     }
   }, [getRoadmaps]);
 
@@ -397,18 +484,24 @@ const RoadmapPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <div className="from-primary/10 relative overflow-hidden bg-gradient-to-b to-background px-6 py-16 sm:py-24 lg:px-8">
+      {/* Enhanced Hero Section */}
+      <div className="from-primary/10 relative overflow-hidden bg-gradient-to-b to-background px-6 py-20 sm:py-28 lg:px-8">
         <div className="shadow-primary/10 ring-primary/10 absolute inset-y-0 right-1/2 -z-10 mr-16 w-[200%] origin-bottom-left skew-x-[-30deg] bg-background/10 shadow-xl ring-1" />
 
-        <div className="mx-auto max-w-2xl text-center">
+        {/* Decorative elements */}
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+          <div className="bg-primary/10 absolute -right-40 -top-40 h-80 w-80 rounded-full blur-3xl" />
+          <div className="bg-primary/10 absolute -bottom-40 -left-40 h-80 w-80 rounded-full blur-3xl" />
+        </div>
+
+        <div className="mx-auto max-w-3xl text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Badge variant="outline" className="mb-4 px-3 py-1 text-primary">
-              <Award className="mr-1 h-4 w-4" /> Engineering Career Growth
+            <Badge variant="outline" className="mb-6 px-4 py-1.5 text-primary">
+              <Award className="mr-2 h-4 w-4" /> Engineering Career Growth
             </Badge>
             <h1 className="bg-gradient-to-br from-foreground to-foreground/80 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-6xl">
               Master Your <span className="text-primary">Engineering Path</span>
@@ -419,16 +512,16 @@ const RoadmapPage = () => {
               from industry professionals.
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
               <Button
-                className="hover:bg-primary/90 group flex items-center gap-2 bg-primary"
+                className="hover:bg-primary/90 group flex items-center gap-2 bg-primary px-6 py-6 text-base"
                 onClick={() => setIsCreateModalOpen(true)}
               >
-                <Plus size={16} /> Create Roadmap
+                <Plus size={18} /> Create Roadmap
               </Button>
               <Button
                 variant="outline"
-                className="group flex items-center gap-2"
+                className="group flex items-center gap-2 px-6 py-6 text-base"
                 onClick={() => router.push('/career-roadmap/roadmaps')}
               >
                 Explore Popular Paths
@@ -439,34 +532,52 @@ const RoadmapPage = () => {
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="mx-auto max-w-7xl px-6 pb-16 lg:px-8">
-        <div className="mt-8 flex gap-8">
-          {/* Sidebar */}
+      {/* Main Content with Enhanced Layout */}
+      <div className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+        <div className="mt-8 flex flex-col gap-8 lg:flex-row">
+          {/* Enhanced Sidebar */}
           {isFilterExpanded && (
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="hidden w-64 shrink-0 lg:block"
+              className="w-full shrink-0 lg:w-72"
             >
-              <CategoryList
-                categories={categories}
-                selectedCategories={selectedCategories}
-                setSelectedCategories={setSelectedCategories}
-              />
+              <div className="sticky top-24 rounded-xl border bg-card p-4 shadow-sm">
+                <div className="mb-4 flex items-center justify-between">
+                  <h3 className="text-lg font-semibold">Filters</h3>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setIsFilterExpanded(!isFilterExpanded)}
+                    className="lg:hidden"
+                  >
+                    <Filter size={16} />
+                  </Button>
+                </div>
+
+                {isCategoriesLoading ? (
+                  <CategoryListSkeleton />
+                ) : (
+                  <CategoryList
+                    categories={categories}
+                    selectedCategories={selectedCategories}
+                    setSelectedCategories={setSelectedCategories}
+                  />
+                )}
+              </div>
             </motion.div>
           )}
 
-          {/* Main Content */}
+          {/* Enhanced Main Content */}
           <div className="flex-1">
-            <div className="mb-8 flex items-center justify-between">
+            <div className="mb-8">
               <Tabs
                 value={activeTab}
                 className="w-full"
                 onValueChange={setActiveTab}
               >
-                <div className="flex items-center justify-between">
-                  <TabsList>
+                <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                  <TabsList className="w-full sm:w-auto">
                     <TabsTrigger value="discover" className="gap-2">
                       <Sparkles size={16} />
                       Discover
@@ -519,34 +630,49 @@ const RoadmapPage = () => {
                   </div>
                 </div>
 
-                <div className="my-4 flex items-center gap-4">
-                  <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                      placeholder="Search roadmaps..."
-                      className="pl-10"
-                      onChange={(e) => handleSearch(e.target.value)}
-                    />
+                {isLoading ? (
+                  <SearchAndFilterSkeleton />
+                ) : (
+                  <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
+                    <div className="relative flex-1">
+                      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <Input
+                        placeholder="Search roadmaps..."
+                        className="pl-10"
+                        onChange={(e) => handleSearch(e.target.value)}
+                      />
+                    </div>
+                    <Select
+                      value={difficultyFilter}
+                      onValueChange={handleDifficultyChange}
+                    >
+                      <SelectTrigger className="w-full sm:w-[180px]">
+                        <SelectValue placeholder="All Difficulties" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Difficulties</SelectItem>
+                        <SelectItem value="beginner">Beginner</SelectItem>
+                        <SelectItem value="intermediate">
+                          Intermediate
+                        </SelectItem>
+                        <SelectItem value="advanced">Advanced</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
-                  <Select
-                    value={difficultyFilter}
-                    onValueChange={handleDifficultyChange}
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="All Difficulties" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Difficulties</SelectItem>
-                      <SelectItem value="beginner">Beginner</SelectItem>
-                      <SelectItem value="intermediate">Intermediate</SelectItem>
-                      <SelectItem value="advanced">Advanced</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                )}
 
                 <TabsContent value="discover" className="mt-6">
-                  <FeaturedRoadmaps roadmaps={featuredRoadmaps} />
-                  <TrendingRoadmaps roadmaps={trendingRoadmaps} />
+                  {isFeaturedLoading ? (
+                    <FeaturedRoadmapsSkeleton />
+                  ) : (
+                    <FeaturedRoadmaps roadmaps={featuredRoadmaps} />
+                  )}
+
+                  {isTrendingLoading ? (
+                    <TrendingRoadmapsSkeleton />
+                  ) : (
+                    <TrendingRoadmaps roadmaps={trendingRoadmaps} />
+                  )}
                 </TabsContent>
 
                 <TabsContent value="enrolled" className="mt-6">

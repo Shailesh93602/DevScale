@@ -11,12 +11,6 @@ interface CommentSectionProps {
   roadmapId: string;
 }
 
-interface ApiResponse<T> {
-  success?: boolean;
-  message?: string;
-  data: T;
-}
-
 export const CommentSection = ({ roadmapId }: CommentSectionProps) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
@@ -27,7 +21,7 @@ export const CommentSection = ({ roadmapId }: CommentSectionProps) => {
     `/roadmaps/${roadmapId}/comments`,
   );
 
-  const [postComment] = useAxiosPost<ApiResponse<Comment>>(
+  const [postComment] = useAxiosPost<Comment>(
     `/roadmaps/${roadmapId}/comments`,
   );
 
@@ -57,7 +51,7 @@ export const CommentSection = ({ roadmapId }: CommentSectionProps) => {
     try {
       const response = await postComment({ content: newComment });
       if (response?.success && response.data) {
-        setComments((prev) => [response.data.data, ...prev]);
+        setComments((prev) => [response.data, ...prev]);
         setNewComment('');
         toast.success('Comment added successfully');
       }

@@ -174,7 +174,10 @@ const RoadmapsPage = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [isFilterExpanded, setIsFilterExpanded] = useState(true);
 
-  const [getRoadmaps, { isLoading }] = useAxiosGet('/roadmaps');
+  const [getRoadmaps, { isLoading }] = useAxiosGet<{
+    data: APIRoadmap[];
+    meta: APIResponseMeta;
+  }>('/roadmaps');
 
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const isIntersecting = useIntersection(loadMoreRef);
@@ -200,16 +203,9 @@ const RoadmapsPage = () => {
       }
 
       const response = await getRoadmaps({ params });
-      const responseData = response.data as {
-        success: boolean;
-        message: string;
-        data: {
-          data: APIRoadmap[];
-          meta: APIResponseMeta;
-        };
-      };
+      const responseData = response.data;
 
-      const { data: apiData, meta } = responseData.data;
+      const { data: apiData, meta } = responseData;
       const transformedRoadmaps = apiData.map(transformRoadmap);
 
       if (page === 1) {

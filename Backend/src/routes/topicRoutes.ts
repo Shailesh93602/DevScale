@@ -12,6 +12,7 @@ export class TopicRoutes extends BaseRouter {
   }
 
   protected initializeRoutes(): void {
+    this.router.get('/', this.topicController.getAllTopics);
     this.router.get('/:id/articles', this.topicController.getArticlesForTopic);
     this.router.get('/:id/article', this.topicController.getArticlesForTopic);
     this.router.get('/:id/quiz', this.topicController.getQuizByTopicId);
