@@ -49,20 +49,115 @@ model SubmissionLog {
   @@index([article_id])
 }
 
+enum BattleType {
+  INSTANT
+  SCHEDULED
+  TOURNAMENT
+  PRACTICE
+}
+
+enum BattleStatus {
+  UPCOMING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
 model Battle {
-  id          String     @id @default(uuid())
-  title       String     @db.VarChar(255)
-  description String?    @db.Text
-  topic_id    String
+  id                   String              @id @default(uuid())
+  title                String              @db.VarChar(255)
+  description          String?             @db.Text
+  type                 BattleType
+  status               BattleStatus        @default(UPCOMING)
+  topic_id             String
+  user_id              String
+  difficulty           Difficulty
+  length               Length
+  max_participants     Int                 @default(2)
+  current_participants Int                 @default(0)
+  start_time           DateTime?
+  end_time             DateTime?
+  points_per_question  Int                 @default(10)
+  time_per_question    Int                 @default(30) // in seconds
+  total_questions      Int                 @default(10)
+  created_at           DateTime            @default(now())
+  updated_at           DateTime            @updatedAt
+  topic                Topic               @relation(fields: [topic_id], references: [id], onDelete: Cascade)
+  user                 User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  participants         BattleParticipant[]
+  questions            BattleQuestion[]
+  leaderboard          BattleLeaderboard[]
+
+  @@index([topic_id])
+  @@index([user_id])
+  @@index([status])
+  @@index([type])
+}
+
+model BattleParticipant {
+  id           String    @id @default(uuid())
+  battle_id    String
+  user_id      String
+  score        Int       @default(0)
+  rank         Int?
+  joined_at    DateTime  @default(now())
+  completed_at DateTime?
+  battle       Battle    @relation(fields: [battle_id], references: [id], onDelete: Cascade)
+  user         User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([battle_id, user_id])
+  @@index([battle_id])
+  @@index([user_id])
+}
+
+model BattleQuestion {
+  id             String         @id @default(uuid())
+  battle_id      String
+  question       String         @db.Text
+  options        Json // Array of options
+  correct_answer String
+  points         Int            @default(10)
+  time_limit     Int            @default(30) // in seconds
+  order          Int // Question order in battle
+  created_at     DateTime       @default(now())
+  battle         Battle         @relation(fields: [battle_id], references: [id], onDelete: Cascade)
+  answers        BattleAnswer[]
+
+  @@index([battle_id])
+}
+
+model BattleAnswer {
+  id          String         @id @default(uuid())
+  question_id String
   user_id     String
-  difficulty  Difficulty
-  length      Length
-  date        DateTime?
-  time        DateTime?
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
-  topic       Topic      @relation(fields: [topic_id], references: [id], onDelete: Cascade)
-  user        User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  answer      String
+  is_correct  Boolean
+  time_taken  Int // in seconds
+  created_at  DateTime       @default(now())
+  question    BattleQuestion @relation(fields: [question_id], references: [id], onDelete: Cascade)
+  user        User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([question_id, user_id])
+  @@index([question_id])
+  @@index([user_id])
+}
+
+model BattleLeaderboard {
+  id         String   @id @default(uuid())
+  battle_id  String
+  user_id    String
+  score      Int      @default(0)
+  rank       Int
+  time_taken Int // Total time taken in seconds
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  battle     Battle   @relation(fields: [battle_id], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([battle_id, user_id])
+  @@index([battle_id])
+  @@index([user_id])
+  @@index([score])
 }
 
 model Challenge {
@@ -497,6 +592,9 @@ model User {
   notifications                   Notification[]
   study_groups                    StudyGroupMember[]
   battles                         Battle[]
+  battle_participations           BattleParticipant[]
+  battle_answers                  BattleAnswer[]
+  battle_leaderboard_entries      BattleLeaderboard[]
   mentorships                     Mentorship[]                   @relation("Mentor")
   mentees                         Mentorship[]                   @relation("Mentee")
   role_id                         String?
@@ -1962,15 +2060,15 @@ enum ActivityType {
 }
 
 model UserStreak {
-  id                String             @id @default(uuid())
-  user_id          String             @unique
-  current_streak   Int                @default(0)
-  longest_streak   Int                @default(0)
+  id                 String              @id @default(uuid())
+  user_id            String              @unique
+  current_streak     Int                 @default(0)
+  longest_streak     Int                 @default(0)
   last_activity_date DateTime?
   streak_start_date  DateTime?
-  timezone         String             @default("UTC")
-  user             User               @relation(fields: [user_id], references: [id], map: "user_streaks_user_id_fkey")
-  daily_activities UserDailyActivity[]
+  timezone           String              @default("UTC")
+  user               User                @relation(fields: [user_id], references: [id], map: "user_streaks_user_id_fkey")
+  daily_activities   UserDailyActivity[]
 
   @@map("user_streaks")
 }
@@ -1980,9 +2078,9 @@ model UserDailyActivity {
   user_id       String
   activity_type ActivityType
   minutes_spent Int
-  created_at    DateTime    @default(now())
-  user          User        @relation(fields: [user_id], references: [id], map: "user_daily_activities_user_id_fkey")
-  streak        UserStreak  @relation(fields: [user_id], references: [user_id], map: "user_daily_activities_streak_id_fkey")
+  created_at    DateTime     @default(now())
+  user          User         @relation(fields: [user_id], references: [id], map: "user_daily_activities_user_id_fkey")
+  streak        UserStreak   @relation(fields: [user_id], references: [user_id], map: "user_daily_activities_streak_id_fkey")
 
   @@map("user_daily_activities")
 }
