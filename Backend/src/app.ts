@@ -25,6 +25,7 @@ import errorMiddleware, {
   notFoundMiddleware,
 } from './middlewares/errorMiddleware';
 import { StreakRoutes } from './routes/streakRoutes';
+import socketService from './services/socket';
 
 const app: Application = express();
 const env: string = NODE_ENV || 'development';
@@ -150,7 +151,10 @@ export const initializeApp = async (apiRoutes: Router[]) => {
   Sentry.setupExpressErrorHandler(app);
   const server = http.createServer(app);
   //invoiceMigration()
-  // socket.connect(server);
+
+  // Initialize WebSocket server
+  socketService.initialize(server);
+
   server.listen(port, () => {
     logger.info(`=================================`);
     logger.info(`======= ENV: ${env} ========`);

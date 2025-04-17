@@ -93,6 +93,10 @@ type ResponseType =
   | 'BATTLE_FETCHED'
   | 'BATTLE_NOT_FOUND'
   | 'BATTLE_CREATED'
+  | 'BATTLE_UPDATED'
+  | 'BATTLE_DELETED'
+  | 'BATTLE_JOINED'
+  | 'ANSWER_SUBMITTED'
   | 'CHATS_FETCHED'
   | 'CHAT_FETCHED'
   | 'CHAT_NOT_FOUND'
@@ -164,7 +168,9 @@ type ResponseType =
   | 'COMMENTS_FETCHED'
   | 'COMMENT_ADDED'
   | 'COMMENT_LIKED'
-  | 'COMMENT_UNLIKED';
+  | 'COMMENT_UNLIKED'
+  | 'BATTLE_STATUS_UPDATED'
+  | 'BATTLE_ARCHIVED';
 
 interface ResponseConfig {
   status: number;
@@ -623,6 +629,26 @@ const RESPONSE_MESSAGES: Record<ResponseType, ResponseConfig> = {
     success: true,
     message: 'Battle created successfully',
   },
+  BATTLE_UPDATED: {
+    status: 200,
+    success: true,
+    message: 'Battle updated successfully',
+  },
+  BATTLE_DELETED: {
+    status: 200,
+    success: true,
+    message: 'Battle deleted successfully',
+  },
+  BATTLE_JOINED: {
+    status: 200,
+    success: true,
+    message: 'Battle joined successfully',
+  },
+  ANSWER_SUBMITTED: {
+    status: 200,
+    success: true,
+    message: 'Answer submitted successfully',
+  },
   CHATS_FETCHED: {
     status: 200,
     success: true,
@@ -973,6 +999,16 @@ const RESPONSE_MESSAGES: Record<ResponseType, ResponseConfig> = {
     status: 200,
     success: true,
     message: 'Comment unliked successfully',
+  },
+  BATTLE_STATUS_UPDATED: {
+    status: 200,
+    success: true,
+    message: 'Battle status updated successfully',
+  },
+  BATTLE_ARCHIVED: {
+    status: 200,
+    success: true,
+    message: 'Battle archived successfully',
   },
 };
 

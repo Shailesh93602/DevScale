@@ -2,15 +2,22 @@
 import React, { ReactNode, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FiMenu, FiX, FiSun, FiMoon } from 'react-icons/fi';
+import { FiMenu, FiX, FiSun, FiMoon, FiChevronDown } from 'react-icons/fi';
 import { useTheme } from 'next-themes';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useSelector } from 'react-redux';
-import { navItems, profileItems, publicNavItems } from './constants';
+import {
+  navItems,
+  profileItems,
+  publicNavItems,
+  battleZoneItems,
+} from './constants';
+import { cn } from '@/lib/utils';
 
 const Navbar = ({ isPublic }: { isPublic?: boolean }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [battleZoneOpen, setBattleZoneOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const user = useSelector(
     (state: {
@@ -35,6 +42,10 @@ const Navbar = ({ isPublic }: { isPublic?: boolean }) => {
     setDropdownOpen(!dropdownOpen);
   };
 
+  const toggleBattleZone = () => {
+    setBattleZoneOpen(!battleZoneOpen);
+  };
+
   return (
     <nav className="z-50 w-full border-b border-border bg-lightSecondary text-gray-900 shadow-lg dark:text-gray-100">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -48,11 +59,45 @@ const Navbar = ({ isPublic }: { isPublic?: boolean }) => {
             </Link>
           </div>
           <div className="hidden items-center space-x-4 md:flex">
-            {(isPublic ? publicNavItems : navItems).map((item, index) => (
-              <NavItem key={index} href={item.path}>
-                {item.label}
-              </NavItem>
-            ))}
+            {(isPublic ? publicNavItems : navItems).map((item, index) =>
+              item.path === '/battle-zone' ? (
+                <div key={index} className="relative">
+                  <button
+                    onClick={toggleBattleZone}
+                    className={cn(
+                      'flex items-center gap-2 rounded-md px-3 py-2 text-base font-medium hover:text-primary2 hover:underline',
+                      battleZoneOpen && 'font-semibold text-primary',
+                    )}
+                  >
+                    {item.label}
+                    <FiChevronDown
+                      className={cn(
+                        'h-4 w-4 transition-transform',
+                        battleZoneOpen && 'rotate-180',
+                      )}
+                    />
+                  </button>
+                  {battleZoneOpen && (
+                    <div className="absolute left-0 top-full mt-1 w-56 rounded-md border border-border bg-lightSecondary py-1 shadow-lg">
+                      {battleZoneItems.map((battleItem) => (
+                        <Link
+                          key={battleItem.path}
+                          href={battleItem.path}
+                          className="flex items-center gap-2 px-4 py-2 hover:bg-muted"
+                        >
+                          {battleItem.icon}
+                          {battleItem.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <NavItem key={index} href={item.path}>
+                  {item.label}
+                </NavItem>
+              ),
+            )}
             <button
               onClick={toggleTheme}
               className="hover:text-gray-900 focus:outline-none dark:hover:text-gray-300"
@@ -105,15 +150,45 @@ const Navbar = ({ isPublic }: { isPublic?: boolean }) => {
       {isOpen && (
         <div className="md:hidden">
           <div className="space-y-1 px-2 pb-3 pt-2 sm:px-3">
-            {navItems.map((navItem, index) => (
-              <NavItem
-                key={index}
-                href={navItem.path}
-                handleClick={handleLinkClick}
-              >
-                {navItem.label}
-              </NavItem>
-            ))}
+            {navItems.map((navItem, index) =>
+              navItem.path === '/battle-zone' ? (
+                <div key={index} className="relative">
+                  <button
+                    onClick={toggleBattleZone}
+                    className="w-full rounded-md px-4 py-2 text-left text-gray-100 hover:bg-gray-100 focus:outline-none"
+                  >
+                    {navItem.label}
+                    <FiChevronDown
+                      className={cn(
+                        'float-right h-4 w-4 transition-transform',
+                        battleZoneOpen && 'rotate-180',
+                      )}
+                    />
+                  </button>
+                  {battleZoneOpen && (
+                    <div className="pl-4">
+                      {battleZoneItems.map((battleItem) => (
+                        <Link
+                          key={battleItem.path}
+                          href={battleItem.path}
+                          className="block rounded-md px-4 py-2 text-gray-100 hover:bg-gray-100"
+                        >
+                          {battleItem.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <NavItem
+                  key={index}
+                  href={navItem.path}
+                  handleClick={handleLinkClick}
+                >
+                  {navItem.label}
+                </NavItem>
+              ),
+            )}
             <button
               onClick={toggleTheme}
               className="w-full rounded-md px-4 py-2 text-left text-gray-100 hover:bg-gray-100 focus:outline-none"
