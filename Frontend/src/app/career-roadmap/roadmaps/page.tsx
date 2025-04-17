@@ -30,6 +30,7 @@ import RoadmapCard, {
   RoadmapType,
   RoadmapCardSkeleton,
 } from '@/components/Roadmap/RoadmapCard';
+import Image from 'next/image';
 
 // Use the shared type
 type IRoadmap = RoadmapType;
@@ -123,10 +124,12 @@ const RoadmapGrid = ({ roadmaps, viewMode }: RoadmapGridProps) => {
           >
             <div className="aspect-video w-48 overflow-hidden rounded-md">
               {roadmap?.thumbnail && (
-                <img
+                <Image
                   src={roadmap.thumbnail}
                   alt={roadmap.title}
                   className="h-full w-full object-cover"
+                  width={500}
+                  height={500}
                 />
               )}
             </div>

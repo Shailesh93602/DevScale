@@ -45,7 +45,7 @@ export type Roadmap = EnrolledRoadmap | RecommendedRoadmap;
 
 export const useDashboard = () => {
   const [getDashboardStats] = useAxiosGet<DashboardStats>('/dashboard/stats');
-  const [getRoadmaps] = useAxiosGet<{ data: Roadmap[] }>('/roadmaps');
+  const [getRoadmaps] = useAxiosGet<{ data: { data: Roadmap[] } }>('/roadmaps');
   const [getActivities] = useAxiosGet<{ data: ActivityItemProps[] }>(
     '/activities',
   );

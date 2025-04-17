@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { ChevronRight, Clock } from 'lucide-react';
 import Avatar from '@/components/Avatar';
 import { calculateProgressPercentage } from '@/lib/utils';
+import Image from 'next/image';
 
 export interface EnrolledRoadmapCardProps {
   id: string;
@@ -58,10 +59,12 @@ const EnrolledRoadmapCard: React.FC<EnrolledRoadmapCardProps> = ({
     >
       <div className="h-32 bg-gray-200 dark:bg-gray-700">
         {thumbnail ? (
-          <img
+          <Image
             src={thumbnail}
             alt={title}
             className="h-full w-full object-cover"
+            width={500}
+            height={500}
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-blue-500/20 to-purple-500/20 dark:from-blue-900/20 dark:to-purple-900/20">
