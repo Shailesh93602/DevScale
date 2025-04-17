@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Star, Users } from 'lucide-react';
 import { formatNumber, truncateText } from '@/lib/utils';
+import Image from 'next/image';
 
 export interface RecommendedRoadmapCardProps {
   id: string;
@@ -41,10 +42,12 @@ const RecommendedRoadmapCard: React.FC<RecommendedRoadmapCardProps> = ({
     >
       <div className="relative h-40 bg-gray-200 dark:bg-gray-700">
         {thumbnail ? (
-          <img
+          <Image
             src={thumbnail}
             alt={title}
             className="h-full w-full object-cover"
+            width={500}
+            height={500}
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-indigo-500/20 to-pink-500/20 dark:from-indigo-900/20 dark:to-pink-900/20">

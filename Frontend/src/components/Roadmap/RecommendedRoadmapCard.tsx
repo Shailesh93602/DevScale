@@ -1,4 +1,5 @@
 import { RecommendedRoadmap } from '@/hooks/useRoadmapApi';
+import Image from 'next/image';
 
 export interface RecommendedRoadmapCardProps {
   roadmap: RecommendedRoadmap;
@@ -11,10 +12,12 @@ export const RecommendedRoadmapCard: React.FC<RecommendedRoadmapCardProps> = ({
     <div className="rounded-lg border p-4 hover:bg-gray-50 dark:hover:bg-gray-800">
       <div className="flex items-start gap-4">
         {roadmap?.thumbnail && (
-          <img
+          <Image
             src={roadmap?.thumbnail}
             alt={roadmap?.title}
             className="h-16 w-16 rounded-lg object-cover"
+            width={500}
+            height={500}
           />
         )}
         <div className="flex-1">

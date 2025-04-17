@@ -145,9 +145,11 @@ const DashboardPage: React.FC = () => {
           getWeeklyActivity(),
         ]);
 
+        console.log('here ===========', enrolledResponse);
+
         setStats(statsResponse?.data);
-        setEnrolledRoadmaps(enrolledResponse?.data?.data || []);
-        setRecommendedRoadmaps(recommendedResponse?.data?.data || []);
+        setEnrolledRoadmaps(enrolledResponse?.data?.data?.data || []);
+        setRecommendedRoadmaps(recommendedResponse?.data?.data?.data || []);
         setActivities(activitiesResponse?.data?.data || []);
         setAchievements(achievementsResponse?.data?.data || []);
 

@@ -33,48 +33,79 @@ export default function CreateBattle({
   const [createBattle] = useAxiosPost<{
     success?: boolean;
     message?: string;
-  }>('/battles/create');
-  const [getSubjects] = useAxiosGet<
-    { success?: boolean; message?: string } & ISubject[]
-  >('/subjects');
-  const [getTopicsBySubjectId] = useAxiosGet<
-    { success?: boolean; message?: string } & ITopic[]
-  >('/subjects/{{subjectId}}/topics');
+    data?: {
+      id: string;
+    };
+  }>('/api/v1/api/battles/create');
+  const [getSubjects] = useAxiosGet<{ data: ISubject[] }>('/api/subjects');
+  const [getTopicsBySubjectId] = useAxiosGet<{ data: ITopic[] }>(
+    '/api/subjects/{{subjectId}}/topics',
+  );
 
   const handleCreate = async () => {
+    if (!title || !description || !selectedTopic || !date || !time) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+
     try {
       const response = await createBattle({
         title,
         description,
-        topicId: selectedTopic,
+        topic_id: selectedTopic,
         difficulty: selectedDifficulty.toLowerCase(),
         length: selectedLength.toLowerCase(),
-        date,
-        time,
+        start_time: combineDateTime(date, time),
+        end_time: calculateEndTime(date, time),
+        max_participants: 10, // Default value
+        points_per_question: 10, // Default value
+        time_per_question: 30, // Default value
+        total_questions: 10, // Default value
+        type: 'SCHEDULED',
       });
+
       if (!response.data) {
-        return;
+        throw new Error('No response data received');
       }
 
       const data = response.data;
-      if (data.success) {
-        toast.success(data.message);
+      if (data.success && data.data?.id) {
+        toast.success(data.message || 'Battle created successfully!');
+        handleClose();
       } else {
-        toast.error(data.message || 'Something went wrong, please try again.');
+        throw new Error(data.message || 'Failed to create battle');
       }
-      handleClose();
     } catch (error) {
-      toast.error(
-        (error as { message: string }).message ??
-          'Something went wrong, Please try again!',
-      );
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Something went wrong, please try again.';
+      toast.error(errorMessage);
+      console.error('Battle creation error:', error);
     }
+  };
+
+  // Helper function to combine date and time
+  const combineDateTime = (dateStr: string, timeStr: string): string => {
+    if (!dateStr || !timeStr) return '';
+    const [hours, minutes] = timeStr.split(':');
+    const date = new Date(dateStr);
+    date.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
+    return date.toISOString();
+  };
+
+  // Helper function to calculate end time
+  const calculateEndTime = (dateStr: string, timeStr: string): string => {
+    const startTime = new Date(combineDateTime(dateStr, timeStr));
+    // Default battle duration: 1 hour
+    startTime.setHours(startTime.getHours() + 1);
+    return startTime.toISOString();
   };
 
   useEffect(() => {
     const fetchSubjects = async () => {
       const response = await getSubjects();
-      setSubjects(response.data || []);
+      setSubjects(response?.data?.data || []);
     };
     fetchSubjects();
   }, []);
@@ -86,7 +117,7 @@ export default function CreateBattle({
         { subjectId: selectedSubject },
       );
 
-      setTopics(response.data || []);
+      setTopics(response?.data?.data || []);
     };
     if (selectedSubject) fetchTopics();
     else setTopics([]);

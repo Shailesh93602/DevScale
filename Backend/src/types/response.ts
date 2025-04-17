@@ -15,7 +15,8 @@ export type ResponseType =
   | 'REPORT_GENERATED'
   | 'AUDIT_LOGS_FETCHED'
   | 'MODERATION_QUEUE_FETCHED'
-  | 'CONTENT_MODERATED';
+  | 'CONTENT_MODERATED'
+  | 'BATTLE_STATUS_UPDATED';
 
 export interface ApiResponse<T = any> {
   status: ResponseType;

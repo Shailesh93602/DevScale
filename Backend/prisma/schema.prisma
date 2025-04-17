@@ -61,6 +61,7 @@ enum BattleStatus {
   IN_PROGRESS
   COMPLETED
   CANCELLED
+  ARCHIVED
 }
 
 model Battle {
