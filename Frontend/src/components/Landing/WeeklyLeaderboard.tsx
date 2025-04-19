@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { FaTrophy, FaMedal, FaAward, FaArrowRight } from 'react-icons/fa';
 import Link from 'next/link';
+import { ctaLinks } from '@/constants';
 
 // Sample leaderboard data
 const leaderboardData = [
@@ -140,10 +141,10 @@ export default function WeeklyLeaderboard({
   // Only show the top 3
   const toppers = leaderboardData.slice(0, 3);
 
-  // Heights for podium bars (center tallest) - adjust based on embedding
+  // Heights for podium bars (1st tallest, 2nd medium, 3rd shortest) - adjust based on embedding
   const heights = isEmbedded
-    ? ['h-28', 'h-20', 'h-16']
-    : ['h-40', 'h-32', 'h-24'];
+    ? ['h-32', 'h-24', 'h-16']
+    : ['h-48', 'h-36', 'h-24'];
 
   // Widths for podium bars - make them wider
   const widths = isEmbedded
@@ -192,7 +193,7 @@ export default function WeeklyLeaderboard({
 
         <div className="mx-auto flex max-w-3xl flex-col items-center">
           {/* Enhanced 3D Podium display */}
-          <div className="relative mb-8 flex w-full items-end justify-center gap-8 md:gap-12">
+          <div className="relative mb-8 flex h-64 w-full items-end justify-center gap-8 md:gap-12">
             {podiumOrder.map((podiumIdx, i) => {
               const user = toppers[podiumIdx];
               let barHeight = '';
@@ -234,7 +235,7 @@ export default function WeeklyLeaderboard({
               return (
                 <motion.div
                   key={user.rank}
-                  className={`relative flex ${isEmbedded ? 'w-20 md:w-24' : 'w-24 md:w-28'} flex-col items-center`}
+                  className={`relative flex ${isEmbedded ? 'w-20 md:w-24' : 'w-24 md:w-28'} h-full flex-col items-center justify-end`}
                   initial={{ opacity: 0, y: 60 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -247,7 +248,7 @@ export default function WeeklyLeaderboard({
                 >
                   {/* User avatar positioned above the podium */}
                   <motion.div
-                    className={`absolute ${isEmbedded ? '-top-16' : '-top-20'} z-20`}
+                    className={`absolute ${isEmbedded ? '-top-16' : '-top-24'} z-20`}
                     initial={{ scale: 0.8, y: 10 }}
                     whileInView={{ scale: 1, y: 0 }}
                     transition={{
@@ -262,7 +263,7 @@ export default function WeeklyLeaderboard({
 
                   {/* Medal icon */}
                   <motion.div
-                    className={`absolute ${isEmbedded ? '-top-28' : '-top-32'} z-10`}
+                    className={`absolute ${isEmbedded ? '-top-28' : '-top-36'} z-10`}
                     initial={{ scale: 0, rotate: -30 }}
                     whileInView={{ scale: 1, rotate: 0 }}
                     transition={{
@@ -276,7 +277,7 @@ export default function WeeklyLeaderboard({
                   </motion.div>
 
                   {/* 3D Podium with perspective */}
-                  <div className="relative">
+                  <div className="relative self-end">
                     {/* Top face */}
                     <div
                       className={`${widths[podiumIdx]} ${barHeight} relative ${colors.top} rounded-t-md ${colors.shadow}`}
@@ -396,10 +397,10 @@ export default function WeeklyLeaderboard({
             transition={{ duration: 0.5, delay: 1.4 }}
           >
             <Link
-              href="/battle-zone"
+              href={ctaLinks.battleZone.href}
               className="inline-flex items-center text-sm text-primary transition-colors hover:text-primary2"
             >
-              Will you make it to the top?{' '}
+              {ctaLinks.battleZone.name}{' '}
               <FaArrowRight className="ml-1" size={12} />
             </Link>
           </motion.div>
