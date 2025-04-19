@@ -3,20 +3,10 @@
   "buildCommand": "npm run prisma:generate && npm run build",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
-  "builds": [
+  "rewrites": [
     {
-      "src": "vercel-entry.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "vercel-entry.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "vercel-entry.js"
+      "source": "/(.*)",
+      "destination": "/api"
     }
   ],
   "env": {
