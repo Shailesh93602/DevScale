@@ -47,7 +47,12 @@ const Navbar = ({ isPublic }: { isPublic?: boolean }) => {
   };
 
   return (
-    <nav className="z-50 w-full border-b border-border bg-lightSecondary text-gray-900 shadow-lg dark:text-gray-100">
+    <nav
+      className={cn(
+        'z-50 w-full border-b border-border bg-lightSecondary text-gray-900 shadow-lg dark:text-gray-100',
+        isPublic && 'sticky top-0 transition-all duration-300',
+      )}
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">

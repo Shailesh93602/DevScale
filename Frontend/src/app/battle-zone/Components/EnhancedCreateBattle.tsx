@@ -678,19 +678,15 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
                                     align="start"
                                   >
                                     <Calendar
-                                      mode="single"
                                       selected={
                                         field.value
                                           ? new Date(field.value)
                                           : undefined
                                       }
-                                      onSelect={(date: Date | undefined) =>
+                                      onChange={(date: Date | null) =>
                                         field.onChange(date?.toISOString())
                                       }
-                                      disabled={(date: Date) =>
-                                        date < new Date()
-                                      }
-                                      initialFocus
+                                      minDate={new Date()}
                                     />
                                   </PopoverContent>
                                 </Popover>
