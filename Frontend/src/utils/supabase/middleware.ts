@@ -44,27 +44,56 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // Handle non-authenticated users
   if (!user) {
-    if (request.nextUrl.pathname.startsWith('/auth')) {
+    // Allow access to landing page and auth pages
+    if (
+      request.nextUrl.pathname === '/' ||
+      request.nextUrl.pathname.startsWith('/auth')
+    ) {
       return supabaseResponse;
     } else {
+      // Redirect to login for all other routes
       const url = request.nextUrl.clone();
       url.pathname = '/auth/login';
       return NextResponse.redirect(url);
     }
   }
-  // Redirect to details page if not authenticated
-  if (request.nextUrl.pathname !== '/details') {
-    const response = await axios.get('http://localhost:4000/api/v1/users/me', {
-      headers: {
-        Authorization: `Bearer ${session?.access_token}`,
-      },
-    });
 
-    if (!response?.data?.data?.user) {
-      const url = request.nextUrl.clone();
-      url.pathname = '/details';
-      return NextResponse.redirect(url);
+  // Handle authenticated users
+  // Redirect from landing page to dashboard
+  if (request.nextUrl.pathname === '/') {
+    const url = request.nextUrl.clone();
+    url.pathname = '/dashboard';
+    return NextResponse.redirect(url);
+  }
+
+  // Prevent authenticated users from accessing auth pages
+  if (request.nextUrl.pathname.startsWith('/auth')) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/dashboard';
+    return NextResponse.redirect(url);
+  }
+  // Redirect to details page if user data is incomplete
+  if (request.nextUrl.pathname !== '/details') {
+    try {
+      const response = await axios.get(
+        'http://localhost:4000/api/v1/users/me',
+        {
+          headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+        },
+      );
+
+      if (!response?.data?.data?.user) {
+        const url = request.nextUrl.clone();
+        url.pathname = '/details';
+        return NextResponse.redirect(url);
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      // If API call fails, still allow the user to continue
     }
   }
 

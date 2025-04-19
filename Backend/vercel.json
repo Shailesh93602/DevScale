@@ -1,18 +1,25 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
+  "buildCommand": "npm run prisma:generate && npm run build",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "builds": [
     {
-      "src": "index.js",
+      "src": "vercel-entry.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
+      "src": "/api/(.*)",
+      "dest": "vercel-entry.js"
+    },
+    {
       "src": "/(.*)",
-      "dest": "index.js"
+      "dest": "vercel-entry.js"
     }
-  ]
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
 }
