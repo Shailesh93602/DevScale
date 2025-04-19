@@ -69,6 +69,8 @@ export const useBattleState = (battleId: string) => {
           username: 'Current User', // This should be the current user's username
           avatar_url: '', // This should be the current user's avatar URL
           is_ready: isReady,
+          status: isReady ? 'joined' : 'left',
+          battle_id: battleId,
         });
         toast({
           title: 'Success',
@@ -95,6 +97,7 @@ export const useBattleState = (battleId: string) => {
           answer,
           is_correct: true, // This should be determined by the server
           time_taken: timeTaken,
+          battle_id: battleId,
         });
         toast({
           title: 'Success',
@@ -118,6 +121,8 @@ export const useBattleState = (battleId: string) => {
         user_id: battleId, // This should be the current user's ID
         username: 'Current User', // This should be the current user's username
         avatar_url: '', // This should be the current user's avatar URL
+        status: 'left',
+        battle_id: battleId,
       });
       toast({
         title: 'Success',

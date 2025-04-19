@@ -1,7 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { io, Socket } from 'socket.io-client';
-import { BattleEventMap as ImportedBattleEventMap } from '@/types/battleWebsocket';
 
 interface LocalBattleEventMap {
   'battle:state_update': BattleStateUpdateEvent;
@@ -14,6 +13,7 @@ interface LocalBattleEventMap {
   'battle:complete': BattleCompleteEvent;
   'chat:message': ChatMessageEvent;
   'battle:timer_sync': TimerSyncEvent;
+  'battle:join': { battle_id: string };
 }
 
 interface BattleStateUpdateEvent {
@@ -47,6 +47,7 @@ interface BattleParticipantEvent {
   username: string;
   avatar_url: string;
   is_ready?: boolean;
+  status: string;
 }
 
 interface BattleScoreEvent {
@@ -54,6 +55,7 @@ interface BattleScoreEvent {
   user_id: string;
   score: number;
   rank: number;
+  username: string;
 }
 
 interface BattleCompleteEvent {
@@ -71,6 +73,9 @@ interface ChatMessageEvent {
   battle_id: string;
   message: string;
   timestamp: number;
+  username: string;
+  avatar_url: string;
+  user_id: string;
 }
 
 interface TimerSyncEvent {
@@ -123,7 +128,8 @@ export const useBattleWebSocket = <T extends keyof LocalBattleEventMap>(
       });
     });
 
-    socket.on(event, callback);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    socket.on(event, callback as any);
 
     socketRef.current = socket;
   }, [battleId, event, callback, toast]);
@@ -217,6 +223,10 @@ export const useBattleChat = (battleId: string) => {
     sendToBattle('chat:message', {
       message: message.trim(),
       timestamp: Date.now(),
+      battle_id: battleId,
+      username: 'current_user',
+      avatar_url: 'current_user_avatar',
+      user_id: 'current_user',
     });
   };
 

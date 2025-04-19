@@ -28,11 +28,11 @@ const ReadyStatusButton: React.FC<ReadyStatusButtonProps> = ({
     (data) => {
       // Handle ready status updates from other participants
       if (data.user_id === userId) {
-        setIsReady(data.is_ready);
+        setIsReady(!!data.is_ready);
         setIsLoading(false);
 
         if (onStatusChange) {
-          onStatusChange(data.is_ready);
+          onStatusChange(!!data.is_ready);
         }
       }
     },
@@ -49,6 +49,10 @@ const ReadyStatusButton: React.FC<ReadyStatusButtonProps> = ({
       sendToBattle('battle:participant_ready', {
         user_id: userId,
         is_ready: !isReady,
+        status: !isReady ? 'joined' : 'left',
+        username: '',
+        avatar_url: '',
+        battle_id: battleId,
       });
 
       // Optimistically update local state
@@ -76,6 +80,10 @@ const ReadyStatusButton: React.FC<ReadyStatusButtonProps> = ({
       sendToBattle('battle:participant_ready', {
         user_id: userId,
         is_ready: true,
+        status: 'joined',
+        username: '',
+        avatar_url: '',
+        battle_id: battleId,
       });
     }
   }, [isCreator, isConnected, isReady, userId, sendToBattle, onStatusChange]);
