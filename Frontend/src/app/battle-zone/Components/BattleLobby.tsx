@@ -200,15 +200,15 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, translateY: 20 }}
+      animate={{ opacity: 1, translateY: 0 }}
       transition={{ duration: 0.3 }}
       className="space-y-6"
     >
       {/* Header */}
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, translateY: -20 }}
+        animate={{ opacity: 1, translateY: 0 }}
         transition={{ duration: 0.3, delay: 0.1 }}
         className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center"
       >
@@ -285,9 +285,9 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
       <AnimatePresence>
         {battle.status === 'UPCOMING' && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, translateY: 20 }}
+            animate={{ opacity: 1, translateY: 0 }}
+            exit={{ opacity: 0, translateY: -20 }}
             transition={{ duration: 0.2 }}
           >
             <Alert>

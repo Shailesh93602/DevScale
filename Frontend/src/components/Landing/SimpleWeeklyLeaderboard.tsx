@@ -1,56 +1,47 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { FaTrophy, FaMedal, FaAward } from 'react-icons/fa';
 import Link from 'next/link';
+import { ctaLinks } from '@/constants';
 
 // Sample leaderboard data
 const leaderboardData = [
   {
     rank: 1,
-    name: 'Sarthak Sharma',
+    name: 'Shaileshbhai Chaudhari',
     points: 2890,
     college: 'IIT Bombay',
     avatar: 'https://i.pravatar.cc/150?img=1', // Using pravatar.cc for placeholder avatars
   },
   {
     rank: 2,
-    name: 'Pranav Agarwal',
+    name: 'Shailesh Chaudhari',
     points: 2780,
     college: 'IIT Kharagpur',
     avatar: 'https://i.pravatar.cc/150?img=2',
   },
   {
     rank: 3,
-    name: 'Aman Singh',
+    name: 'Shaileshbhai',
     points: 2690,
     college: 'BITS Pilani',
     avatar: 'https://i.pravatar.cc/150?img=3',
   },
   {
     rank: 4,
-    name: 'Priya M.',
+    name: 'Shailesh',
     points: 2610,
     college: 'IIT Delhi',
     avatar: 'https://i.pravatar.cc/150?img=4',
   },
   {
     rank: 5,
-    name: 'Shailesh Chaudhari',
+    name: 'Shailesh P. Chaudhari',
     points: 2580,
     college: 'VIT Vellore',
     avatar: 'https://i.pravatar.cc/150?img=5',
   },
 ];
-
-// Helper function to get initials from name
-const getInitials = (name: string) => {
-  return name
-    .split(' ')
-    .map((n) => n[0])
-    .join('')
-    .toUpperCase();
-};
 
 // Medal icon component
 const MedalIcon = ({ rank }: { rank: number }) => {
@@ -68,9 +59,7 @@ interface WeeklyLeaderboardProps {
   isEmbedded?: boolean;
 }
 
-const SimpleWeeklyLeaderboard: React.FC<WeeklyLeaderboardProps> = ({
-  isEmbedded = false,
-}) => {
+const SimpleWeeklyLeaderboard: React.FC<WeeklyLeaderboardProps> = () => {
   // Top 3 users for podium
   const toppers = leaderboardData.slice(0, 3);
 
@@ -202,10 +191,10 @@ const SimpleWeeklyLeaderboard: React.FC<WeeklyLeaderboardProps> = ({
       {/* Call to action */}
       <div className="relative z-10 mt-4 text-center">
         <Link
-          href="/battle-zone"
+          href={ctaLinks.battleZone.href}
           className="dark:text-primary-light text-sm font-medium text-primary hover:text-primary2 dark:hover:text-primary"
         >
-          Will you make it to the top? →
+          {ctaLinks.battleZone.name} →
         </Link>
       </div>
     </div>

@@ -2,15 +2,20 @@
 
 import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import Link from 'next/link';
 import HeroSection from '@/components/Landing/HeroSection';
-import StatsSection from '@/components/Landing/StatsSection';
+import ModernStatsSection from '@/components/Landing/ModernStatsSection';
 import CommunitySection from '@/components/Landing/CommunitySection';
 import FeaturesSection from '@/components/Landing/FeaturesSection';
-import FooterSection from '@/components/Landing/FooterSection';
 import RoadmapSection from '@/components/Landing/RoadmapSection';
 import CTASection from '@/components/Landing/CTASection';
 import SimpleWeeklyLeaderboard from '@/components/Landing/SimpleWeeklyLeaderboard';
+
+// Import new animation components
+import { AnimatedGradientBorder } from '@/components/ui/animated-gradient-border';
+import { ThreeDCard } from '@/components/ui/3d-card';
+import { FloatingElements } from '@/components/ui/floating-elements';
+import { AnimatedBattleCard } from '@/components/ui/animated-battle-card';
+import { MagneticButton } from '@/components/ui/magnetic-button';
 
 export default function Home() {
   // Enhanced parallax effect for hero section
@@ -31,8 +36,8 @@ export default function Home() {
         <motion.div
           className="bg-primary/20 absolute -top-1/2 left-0 h-[1000px] w-[1000px] rounded-full blur-3xl"
           animate={{
-            x: [0, 100, 0],
-            y: [0, 50, 0],
+            translateX: [0, 100, 0],
+            translateY: [0, 50, 0],
             scale: [1, 1.05, 1],
           }}
           transition={{
@@ -44,8 +49,8 @@ export default function Home() {
         <motion.div
           className="bg-primary2/20 absolute -bottom-1/4 right-0 h-[800px] w-[800px] rounded-full blur-3xl"
           animate={{
-            x: [0, -100, 0],
-            y: [0, -50, 0],
+            translateX: [0, -100, 0],
+            translateY: [0, -50, 0],
             scale: [1, 1.1, 1],
           }}
           transition={{
@@ -57,8 +62,8 @@ export default function Home() {
         <motion.div
           className="bg-primaryLight/40 absolute left-1/4 top-1/3 h-[600px] w-[600px] rounded-full blur-3xl"
           animate={{
-            x: [0, -50, 0],
-            y: [0, 100, 0],
+            translateX: [0, -50, 0],
+            translateY: [0, 100, 0],
             opacity: [0.6, 0.8, 0.6],
           }}
           transition={{
@@ -151,7 +156,7 @@ export default function Home() {
       />
 
       {/* Stats Section */}
-      <StatsSection />
+      <ModernStatsSection />
 
       {/* Features Section */}
       <FeaturesSection />
@@ -161,117 +166,81 @@ export default function Home() {
 
       {/* Battle Zone Section */}
       <section className="relative z-10 overflow-hidden py-20">
-        <div className="container mx-auto px-4">
+        {/* Floating elements in background */}
+        <FloatingElements
+          className="absolute inset-0 z-0"
+          count={10}
+          minSize={20}
+          maxSize={80}
+          shapes={['circle', 'square']}
+          opacityRange={[0.03, 0.08]}
+        />
+
+        <div className="container relative z-10 mx-auto px-4">
           <div className="flex flex-col items-center gap-16 lg:flex-row-reverse lg:items-start">
             <motion.div
               className="w-full lg:w-1/2"
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, translateX: 50 }}
+              whileInView={{ opacity: 1, translateX: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <h2 className="mb-6 text-4xl font-extrabold text-primary md:text-5xl">
+              <motion.h2
+                className="mb-6 text-4xl font-extrabold text-primary md:text-5xl"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ duration: 0.8 }}
+              >
                 Test Your Skills in Battle Zone
-              </h2>
-              <p className="mb-8 text-lg text-foreground/90">
-                Challenge yourself with coding competitions, problem-solving
-                battles, and technical quizzes. Climb the leaderboard, earn
-                achievements, and showcase your expertise.
-              </p>
+              </motion.h2>
 
-              <div className="mb-8 space-y-4">
-                <div className="flex items-start">
-                  <div className="bg-primary/20 mr-4 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-primary">
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path d="M12 15l-2-2h4l-2 2z" />
-                      <path d="M10 7l2 2 2-2" />
-                      <path d="M8 9l2 2-2 2" />
-                      <path d="M16 9l-2 2 2 2" />
-                      <path d="M19 6.873a2 2 0 011 1.747v6.536a2 2 0 01-1.029 1.748l-6 3.833a2 2 0 01-1.942 0l-6-3.833A2 2 0 014 15.157V8.62a2 2 0 011.029-1.748l6-3.572a2.056 2.056 0 012 0l6 3.573z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-foreground">
-                      Weekly Challenges
-                    </h3>
-                    <p className="text-foreground/60">
-                      New problems and competitions released every week to keep
-                      you engaged.
-                    </p>
-                  </div>
-                </div>
+              <ThreeDCard
+                depth={20}
+                layers={3}
+                className="mb-8 p-6"
+                rotationIntensity={5}
+                glareIntensity={0.1}
+                shadowIntensity={0.3}
+              >
+                <p className="text-lg text-foreground/90">
+                  Challenge yourself with coding competitions, problem-solving
+                  battles, and technical quizzes. Climb the leaderboard, earn
+                  achievements, and showcase your expertise.
+                </p>
+              </ThreeDCard>
 
-                <div className="flex items-start">
-                  <div className="bg-primary2/20 mr-4 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-primary2">
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z" />
-                      <path d="M6 1v3M10 1v3M14 1v3" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-foreground">
-                      Live Competitions
-                    </h3>
-                    <p className="text-foreground/60">
-                      Participate in real-time battles against peers to test
-                      your speed and accuracy.
-                    </p>
-                  </div>
-                </div>
+              <div className="mb-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <AnimatedBattleCard
+                  title="Weekly Challenges"
+                  description="New problems and competitions released every week to keep you engaged."
+                  className="h-full"
+                />
 
-                <div className="flex items-start">
-                  <div className="bg-primaryLight/50 mr-4 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-primary">
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path d="M12 15l-2-2h4l-2 2z" />
-                      <path d="M10 7l2 2 2-2" />
-                      <path d="M8 9l2 2-2 2" />
-                      <path d="M16 9l-2 2 2 2" />
-                      <path d="M19 6.873a2 2 0 011 1.747v6.536a2 2 0 01-1.029 1.748l-6 3.833a2 2 0 01-1.942 0l-6-3.833A2 2 0 014 15.157V8.62a2 2 0 011.029-1.748l6-3.572a2.056 2.056 0 012 0l6 3.573z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-foreground">
-                      Difficulty Levels
-                    </h3>
-                    <p className="text-foreground/60">
-                      Challenges for every skill level, from beginner to
-                      advanced expert.
-                    </p>
-                  </div>
-                </div>
+                <AnimatedBattleCard
+                  title="Live Competitions"
+                  description="Participate in real-time battles against peers to test your speed and accuracy."
+                  className="h-full"
+                />
+
+                <AnimatedBattleCard
+                  title="Difficulty Levels"
+                  description="Challenges for every skill level, from beginner to advanced expert."
+                  className="h-full"
+                />
               </div>
 
-              <Link
+              <MagneticButton
                 href="/battle-zone"
-                className="hover:shadow-primary/30 inline-flex items-center rounded-full bg-gradient-to-r from-primary to-primary2 px-6 py-3 text-lg font-semibold text-white transition-all duration-300 hover:shadow-lg"
+                variant="primary"
+                strength={20}
+                className="group px-8 py-4 text-lg font-semibold"
               >
                 Enter Battle Zone
                 <motion.svg
                   className="ml-2 h-5 w-5"
                   viewBox="0 0 20 20"
                   fill="currentColor"
-                  animate={{ x: [0, 5, 0] }}
+                  animate={{ translateX: [0, 5, 0] }}
                   transition={{
                     repeat: Infinity,
                     duration: 1.5,
@@ -284,20 +253,28 @@ export default function Home() {
                     clipRule="evenodd"
                   />
                 </motion.svg>
-              </Link>
+              </MagneticButton>
             </motion.div>
 
             <motion.div
               className="relative w-full lg:w-1/2"
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, translateX: -50 }}
+              whileInView={{ opacity: 1, translateX: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               {/* Battle Zone visualization - Enhanced Leaderboard */}
-              <div className="relative w-full overflow-hidden rounded-2xl bg-[#1e293b] shadow-xl">
-                <SimpleWeeklyLeaderboard isEmbedded={true} />
-              </div>
+              <AnimatedGradientBorder
+                borderWidth={2}
+                duration={8}
+                borderRadius="1rem"
+                gradientColors={['#8300b8', '#690091', '#8300b826', '#690091']}
+                containerClassName="w-full"
+              >
+                <div className="relative w-full overflow-hidden rounded-2xl bg-[#1e293b] shadow-xl">
+                  <SimpleWeeklyLeaderboard isEmbedded={true} />
+                </div>
+              </AnimatedGradientBorder>
             </motion.div>
           </div>
         </div>
@@ -305,9 +282,6 @@ export default function Home() {
 
       {/* Call to Action Section */}
       <CTASection />
-
-      {/* Footer */}
-      <FooterSection />
 
       {/* Scroll to top button */}
       <motion.div
@@ -318,7 +292,7 @@ export default function Home() {
         onClick={scrollToTop}
       >
         <motion.div
-          animate={{ y: [0, 10, 0] }}
+          animate={{ translateY: [0, 10, 0] }}
           transition={{ repeat: Infinity, duration: 1.5 }}
           className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-primary text-white hover:bg-primary2"
           whileHover={{ scale: 1.1 }}

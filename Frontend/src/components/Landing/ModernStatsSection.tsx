@@ -1,8 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { PlatformStatsShowcaseDark } from '@/components/ui/platform-stats-showcase-dark';
+import { StatsShowcase } from '@/components/ui/stats-showcase';
 
-const StatsSection: React.FC = () => (
+const ModernStatsSection: React.FC = () => (
   <section className="relative z-10 py-16">
     <div className="container mx-auto px-4">
       {/* Full-width Platform Stats Showcase */}
@@ -14,11 +14,11 @@ const StatsSection: React.FC = () => (
         transition={{ duration: 0.6 }}
       >
         <div className="relative w-full overflow-hidden rounded-xl shadow-xl">
-          <PlatformStatsShowcaseDark className="h-full w-full" />
+          <StatsShowcase className="h-full w-full" />
         </div>
       </motion.div>
     </div>
   </section>
 );
 
-export default StatsSection;
+export default ModernStatsSection;

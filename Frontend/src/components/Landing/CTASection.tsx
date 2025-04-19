@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { ctaLinks, companyInfo } from '@/constants';
 
 const CTASection: React.FC = () => (
   <section className="relative z-10 bg-gradient-to-r from-gray-100 via-white to-gray-50 py-20 dark:from-[#1e293b] dark:via-[#232946] dark:to-[#18181b]">
@@ -27,7 +28,8 @@ const CTASection: React.FC = () => (
         viewport={{ once: true }}
         transition={{ duration: 0.6, delay: 0.3 }}
       >
-        Join thousands of engineering students who are already using MrEngineers
+        Join thousands of engineering students who are already using{' '}
+        {companyInfo.name}
         to accelerate their learning, prepare for placements, and build a
         successful career.
       </motion.p>
@@ -39,17 +41,17 @@ const CTASection: React.FC = () => (
         transition={{ duration: 0.6, delay: 0.4 }}
       >
         <Link
-          href="/signup"
+          href={ctaLinks.getStarted.href}
           className="hover:shadow-primary/30 group relative inline-flex items-center overflow-hidden rounded-full bg-gradient-to-r from-primary to-primary2 px-8 py-4 text-lg font-bold text-white transition-all duration-300 hover:shadow-lg"
         >
-          <span className="relative z-10">Get Started Free</span>
+          <span className="relative z-10">{ctaLinks.getStarted.name}</span>
           <span className="absolute inset-0 z-0 bg-gradient-to-r from-primary2 to-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100"></span>
         </Link>
         <Link
-          href="/about"
+          href={ctaLinks.learnMore.href}
           className="flex items-center rounded-full border border-gray-300 bg-white/80 px-6 py-4 text-lg font-medium text-gray-700 backdrop-blur-sm transition-all duration-300 hover:border-gray-400 hover:bg-white/90 dark:border-gray-700/30 dark:bg-white/5 dark:text-white dark:hover:border-gray-600 dark:hover:bg-white/10"
         >
-          Learn More
+          {ctaLinks.learnMore.name}
           <svg className="ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
             <path
               fillRule="evenodd"

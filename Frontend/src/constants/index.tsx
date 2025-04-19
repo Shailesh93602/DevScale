@@ -165,3 +165,133 @@ export interface IResource {
   category: string;
   Articles: { content: string }[];
 }
+
+// Navigation and footer links organized by category
+
+// Quick Links
+export const quickLinks = [
+  {
+    name: 'Roadmaps',
+    href: '/career-roadmap',
+  },
+  {
+    name: 'Community',
+    href: '/community',
+  },
+  {
+    name: 'Interview Prep',
+    href: '/interview-prep',
+  },
+  {
+    name: 'Battle Zone',
+    href: '/battle-zone',
+  },
+  {
+    name: 'Resources',
+    href: '/resources',
+  },
+];
+
+// Resource Links
+export const resourceLinks = [
+  {
+    name: 'Blog',
+    href: '/blog',
+  },
+  {
+    name: 'Tutorials',
+    href: '/tutorials',
+  },
+  {
+    name: 'FAQ',
+    href: '/faq',
+  },
+  {
+    name: 'Support',
+    href: '/support',
+  },
+];
+
+// Footer Links
+export const footerLinks = [
+  {
+    name: 'FAQ',
+    href: '/faq',
+  },
+  {
+    name: 'About Us',
+    href: '/about-us',
+  },
+  {
+    name: 'Contact Us',
+    href: '/contact-us',
+  },
+  {
+    name: 'Blogs',
+    href: '/blogs',
+  },
+  {
+    name: 'Discussion Forums',
+    href: '/discussion-forums',
+  },
+];
+
+// Social Media Links
+export const socialLinks = [
+  {
+    name: 'Twitter',
+    href: 'https://x.com/shaileshwork',
+    icon: 'FaTwitter',
+  },
+  {
+    name: 'LinkedIn',
+    href: 'https://www.linkedin.com/in/shaileshbhaichaudhari/',
+    icon: 'FaLinkedin',
+  },
+  {
+    name: 'GitHub',
+    href: 'https://github.com/shailesh93602',
+    icon: 'FaGithub',
+  },
+  {
+    name: 'Discord',
+    href: '#',
+    icon: 'FaDiscord',
+  },
+];
+
+// Contact Information
+export const contactInfo = [
+  {
+    text: 'contact@mrengineers.com',
+  },
+  {
+    text: '+91 9313026530',
+  },
+  {
+    text: 'Ahmedabad, India',
+  },
+];
+
+// Company Information
+export const companyInfo = {
+  name: 'MrEngineers',
+  description:
+    'The all-in-one platform for engineering students to learn, grow, and succeed.',
+};
+
+// CTA Links
+export const ctaLinks = {
+  getStarted: {
+    name: 'Get Started Free',
+    href: '/auth/register',
+  },
+  learnMore: {
+    name: 'Learn More',
+    href: '/about-us',
+  },
+  battleZone: {
+    name: 'Will you make it to the top?',
+    href: '/battle-zone',
+  },
+};
