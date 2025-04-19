@@ -199,7 +199,7 @@ export const AnimatedFeatureCard = ({
               {[...Array(5)].map((_, i) => (
                 <motion.div
                   key={i}
-                  className="pointer-events-none absolute h-2 w-2 rounded-full bg-primary/30"
+                  className="bg-primary/30 pointer-events-none absolute h-2 w-2 rounded-full"
                   initial={{
                     translateX: mousePosition.x,
                     translateY: mousePosition.y,
