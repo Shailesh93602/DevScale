@@ -122,8 +122,8 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
           <div className="space-y-8">
             {/* Welcome Section for New Users */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, translateY: 20 }}
+              animate={{ opacity: 1, translateY: 0 }}
               className="rounded-lg border bg-card p-6 shadow-sm"
             >
               <div className="flex items-center justify-between">
@@ -150,8 +150,8 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
               {quickStats.map((stat) => (
                 <motion.div
                   key={stat.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, translateY: 20 }}
+                  animate={{ opacity: 1, translateY: 0 }}
                   transition={{ delay: 0.1 }}
                 >
                   <Card className="h-full">

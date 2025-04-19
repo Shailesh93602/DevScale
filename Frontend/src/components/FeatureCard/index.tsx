@@ -59,12 +59,12 @@ const FeatureCard = ({
       <p className="text-center text-muted-foreground">{description}</p>
       <motion.div
         className="mt-6 flex items-center text-[var(--primary)] transition-all duration-300 group-hover:text-[var(--primary2)]"
-        initial={{ x: 0 }}
-        whileHover={{ x: 5 }}
+        initial={{ translateX: 0 }}
+        whileHover={{ translateX: 5 }}
       >
         <span className="font-medium">Learn more</span>
         <motion.div
-          animate={{ x: [0, 5, 0] }}
+          animate={{ translateX: [0, 5, 0] }}
           transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
         >
           <FaArrowRight className="ml-2" />

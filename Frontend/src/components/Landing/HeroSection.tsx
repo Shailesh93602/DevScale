@@ -26,8 +26,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 
     <div className="container relative z-10 mx-auto max-w-6xl">
       <motion.h1
-        initial={{ y: 30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
+        initial={{ translateY: 30, opacity: 0 }}
+        animate={{ translateY: 0, opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.3 }}
         className="mb-6 text-5xl font-extrabold tracking-tight text-primary md:text-7xl"
       >
@@ -36,8 +36,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({
       </motion.h1>
 
       <motion.p
-        initial={{ y: 30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
+        initial={{ translateY: 30, opacity: 0 }}
+        animate={{ translateY: 0, opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.5 }}
         className="mx-auto mb-10 max-w-3xl text-lg text-foreground/90 md:text-xl"
       >
@@ -48,8 +48,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({
       </motion.p>
 
       <motion.div
-        initial={{ y: 30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
+        initial={{ translateY: 30, opacity: 0 }}
+        animate={{ translateY: 0, opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.7 }}
         className="flex flex-col items-center justify-center gap-4 sm:flex-row"
       >
@@ -70,7 +70,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
         >
           Explore Features
           <motion.span
-            animate={{ x: [0, 5, 0] }}
+            animate={{ translateX: [0, 5, 0] }}
             transition={{ repeat: Infinity, duration: 1.5 }}
             className="ml-2 text-primary"
           >
@@ -115,7 +115,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
       className="absolute bottom-10 left-1/2 -translate-x-1/2"
     >
       <motion.div
-        animate={{ y: [0, 10, 0] }}
+        animate={{ translateY: [0, 10, 0] }}
         transition={{ repeat: Infinity, duration: 1.5 }}
         className="bg-primary/20 flex h-12 w-12 items-center justify-center rounded-full backdrop-blur-sm"
         whileHover={{ scale: 1.1 }}
