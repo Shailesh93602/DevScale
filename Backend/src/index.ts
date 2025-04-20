@@ -16,6 +16,7 @@ import logger from './utils/logger';
 import { v2 as cloudinary } from 'cloudinary';
 import prisma from './lib/prisma';
 import 'module-alias/register';
+import 'tsconfig-paths/register';
 
 declare const require: any;
 

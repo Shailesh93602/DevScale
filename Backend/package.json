@@ -22,7 +22,8 @@
     "seed:features": "tsx ./prisma/seeders/feature.seeder.ts",
     "seed:permissions": "tsx ./prisma/seeders/permission.seeder.ts",
     "seed:user": "tsx ./prisma/seeders/user.seeder.ts",
-    "seed:roadmapMainConceptSubjectTopics": "tsx ./prisma/seeders/roadmapMainConceptSubjectTopics.seeder.ts"
+    "seed:roadmapMainConceptSubjectTopics": "tsx ./prisma/seeders/roadmapMainConceptSubjectTopics.seeder.ts",
+    "postinstall": "prisma generate"
   },
   "prisma": {
     "seed": "tsx ./prisma/seeders/role.seeder.ts && tsx ./prisma/seeders/feature.seeder.ts && tsx ./prisma/seeders/feature.seeder.ts && tsx ./prisma/seeders/user.seeder.ts && tsx ./prisma/seeders/roadmapMainConceptSubjectTopics.seeder.ts"
