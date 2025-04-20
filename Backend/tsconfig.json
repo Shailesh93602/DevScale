@@ -18,14 +18,16 @@
       "@utils/*": ["utils/*"],
       "@types/*": ["types/*"],
       "@controllers/*": ["controllers/*"],
-      "@repositories/*": ["repositories/*"]
+      "@repositories/*": ["repositories/*"],
+      "@middlewares/*": ["middlewares/*"],
+      "@services/*": ["services/*"]
     }
   },
   "ts-node": {
     "esm": true,
     "experimentalSpecifierResolution": "node",
     "transpileOnly": true,
-    "require": ["tsconfig-pa  ths/register"],
+    "require": ["tsconfig-paths/register"],
     "compilerOptions": {
       "module": "commonjs"
     },
