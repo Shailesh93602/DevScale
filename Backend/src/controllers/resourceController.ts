@@ -7,7 +7,8 @@ import Joi from 'joi';
 import { sendResponse } from '@/utils/apiResponse';
 import { createAppError } from '@/utils/errorHandler';
 
-const __dirname = path.resolve();
+// Root directory of the project (for resource file paths)
+const projectRoot = process.cwd();
 
 export default class ResourceController {
   public getSubjects = catchAsync(async (_req: Request, res: Response) => {
@@ -20,13 +21,7 @@ export default class ResourceController {
   // Topics
   public getTopics = catchAsync(async (req: Request, res: Response) => {
     const topics = await prisma.topic.findMany({
-      where: {
-        subjects: {
-          some: {
-            id: req.params.id,
-          },
-        },
-      },
+      where: { subjects: { some: { id: req.params.id } } },
       orderBy: { created_at: 'asc' },
     });
     sendResponse(res, 'TOPICS_FETCHED', { data: { topics } });
@@ -38,16 +33,14 @@ export default class ResourceController {
       data: {
         title,
         description,
-        subjects: {
-          connect: { id: subject_id },
-        },
+        subjects: { connect: { id: subject_id } },
         order: 0,
       },
     });
     sendResponse(res, 'TOPIC_ADDED', { data: { topic } });
   });
 
-  // Resources
+  // Resources Listing
   public getResources = catchAsync(async (req: Request, res: Response) => {
     const { limit, offset, search } = req.pagination ?? {};
     const resources = await prisma.subject.findMany({
@@ -66,25 +59,16 @@ export default class ResourceController {
     sendResponse(res, 'RESOURCES_FETCHED', { data: { resources } });
   });
 
-  // Resource by ID
+  // Specific Resource by ID
   public getResource = catchAsync(async (req: Request, res: Response) => {
     const subject_id = req.params.id;
     const subject = await prisma.subject.findUnique({
       where: { id: subject_id },
     });
-
-    if (!subject) {
-      throw createAppError('Subject not found', 404);
-    }
+    if (!subject) throw createAppError('Subject not found', 404);
 
     const topics = await prisma.topic.findMany({
-      where: {
-        subjects: {
-          some: {
-            id: subject_id,
-          },
-        },
-      },
+      where: { subjects: { some: { id: subject_id } } },
       include: {
         articles: {
           select: { id: true, title: true, content: true, status: true },
@@ -95,28 +79,23 @@ export default class ResourceController {
     sendResponse(res, 'RESOURCE_FETCHED', { data: { subject, topics } });
   });
 
-  // Create Subjects
+  // Bulk Create Subjects
   public createSubjects = catchAsync(async (req: Request, res: Response) => {
     const subjects = req.body;
     if (!Array.isArray(subjects) || subjects.length === 0) {
       throw createAppError('Invalid subjects array', 400);
     }
-    const createdSubjects = await prisma.subject.createMany({ data: subjects });
-    sendResponse(res, 'SUBJECTS_CREATED', {
-      data: { subjects: createdSubjects },
-    });
+    const created = await prisma.subject.createMany({ data: subjects });
+    sendResponse(res, 'SUBJECTS_CREATED', { data: { subjects: created } });
   });
 
-  // Delete Subjects
+  // Bulk Delete Subjects
   public deleteSubjects = catchAsync(async (req: Request, res: Response) => {
     const { ids } = req.body;
     if (!Array.isArray(ids) || ids.length === 0) {
       throw createAppError('Invalid subject IDs array', 400);
     }
-    await prisma.subject.deleteMany({
-      where: { id: { in: ids } },
-    });
-
+    await prisma.subject.deleteMany({ where: { id: { in: ids } } });
     sendResponse(res, 'SUBJECTS_DELETED');
   });
 
@@ -124,12 +103,7 @@ export default class ResourceController {
   public createArticle = catchAsync(async (req: Request, res: Response) => {
     const { title, content, author_id, topic_id } = req.body;
     const article = await prisma.article.create({
-      data: {
-        title,
-        content,
-        author_id: author_id,
-        topic_id: topic_id,
-      },
+      data: { title, content, author_id, topic_id },
     });
     sendResponse(res, 'ARTICLE_CREATED', { data: { article } });
   });
@@ -149,14 +123,15 @@ export default class ResourceController {
     sendResponse(res, 'ARTICLE_UPDATED', { data: { articles: article } });
   });
 
-  // Interview Questions
+  // Interview Questions from JSON file
   public getInterviewQuestions = catchAsync(
     async (_req: Request, res: Response) => {
-      const interviewQuestionsPath = path.join(
-        __dirname,
-        '../../resources/interviewquestions.json'
+      const filePath = path.join(
+        projectRoot,
+        'resources',
+        'interviewquestions.json'
       );
-      const data = await fs.readFile(interviewQuestionsPath, 'utf8');
+      const data = await fs.readFile(filePath, 'utf8');
       const interviewQuestions = JSON.parse(data);
       sendResponse(res, 'INTERVIEW_QUESTIONS_FETCHED', {
         data: { interviewQuestions },
@@ -164,43 +139,40 @@ export default class ResourceController {
     }
   );
 
-  // Save Resource
+  // Save a new resource article
   public saveResource = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
     const { content } = req.body;
     const article = await prisma.article.create({
       data: {
-        title: `General Resource`,
+        title: 'General Resource',
         content,
         topic_id: id,
-        author_id: req.user?.id ?? '',
+        author_id: req.user?.id || '',
         status: 'PENDING',
       },
     });
-
     sendResponse(res, 'RESOURCE_CREATED', { data: { article } });
   });
 
-  // Resource creation validation schema
-  createResourceSchema = Joi.object({
+  // Validation schema for resource creation
+  private createResourceSchema = Joi.object({
     title: Joi.string().required(),
     content: Joi.string().required(),
     type: Joi.string().required(),
     subjectId: Joi.string().when('type', {
       is: 'SUBJECT',
       then: Joi.string().required(),
-      otherwise: Joi.string().optional(),
     }),
     topicId: Joi.string().when('type', {
       is: 'TOPIC',
       then: Joi.string().required(),
-      otherwise: Joi.string().optional(),
     }),
     authorId: Joi.string().required(),
     filePath: Joi.string().optional(),
   });
 
-  // Complete createResource controller
+  // Create Resource (generic)
   public createResource = catchAsync(async (req: Request, res: Response) => {
     const {
       title,
@@ -212,7 +184,6 @@ export default class ResourceController {
       difficulty,
       language,
     } = req.body;
-
     const resource = await prisma.resource.create({
       data: {
         title,
@@ -223,21 +194,18 @@ export default class ResourceController {
         category,
         difficulty,
         language,
-        user_id: req?.user?.id ?? '',
+        user_id: req.user?.id || '',
       },
     });
-
     sendResponse(res, 'RESOURCE_CREATED', { data: resource });
   });
 
-  // Complete getResourceDetails controller
+  // Detailed Resource by ID
   public getResourceDetails = catchAsync(
     async (req: Request, res: Response) => {
       const resourceId = req.params.id;
-
-      if (!Joi.string().uuid().validate(resourceId).error) {
-        throw createAppError('Invalid resource ID format', 400);
-      }
+      const { error } = Joi.string().uuid().validate(resourceId);
+      if (error) throw createAppError('Invalid resource ID format', 400);
 
       const resource = await prisma.resource.findUnique({
         where: { id: resourceId },
@@ -251,20 +219,11 @@ export default class ResourceController {
               created_at: true,
             },
           },
-          user: {
-            select: {
-              id: true,
-              username: true,
-              email: true,
-            },
-          },
+          user: { select: { id: true, username: true, email: true } },
         },
       });
 
-      if (!resource) {
-        throw createAppError('Resource not found', 404);
-      }
-
+      if (!resource) throw createAppError('Resource not found', 404);
       sendResponse(res, 'RESOURCE_DETAILS_FETCHED', { data: resource });
     }
   );
