@@ -1,41 +1,56 @@
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import winston from 'winston';
+import TransportStream from 'winston-transport';
 import { NODE_ENV } from '../config';
 
-const logDir = path.join(process.cwd(), 'logs');
+// Determine base directory for logs
+const isServerless = !!process.env.VERCEL;
+const baseDir = isServerless
+  ? path.join(os.tmpdir(), 'logs')
+  : path.join(process.cwd(), 'logs');
 
-// Create the logs directory if it doesn't exist
-if (!fs.existsSync(logDir)) {
-  fs.mkdirSync(logDir, { recursive: true });
+// Ensure local log directory exists
+if (!isServerless && !fs.existsSync(baseDir)) {
+  fs.mkdirSync(baseDir, { recursive: true });
 }
 
+// Define file transports
+const fileTransports: TransportStream[] = [
+  new winston.transports.File({
+    filename: path.join(baseDir, 'error.log'),
+    level: 'error',
+  }),
+  new winston.transports.File({
+    filename: path.join(baseDir, 'combined.log'),
+  }),
+];
+
+// Define console transport
+const consoleTransport: TransportStream = new winston.transports.Console({
+  format: winston.format.combine(
+    winston.format.colorize(),
+    winston.format.simple()
+  ),
+});
+
+// Choose transports based on environment
+const transports: TransportStream[] =
+  NODE_ENV === 'production'
+    ? isServerless
+      ? [] // Skip file transports on Vercel, rely on console
+      : fileTransports
+    : [...fileTransports, consoleTransport];
+
+// Create logger
 const logger = winston.createLogger({
   level: NODE_ENV === 'production' ? 'info' : 'debug',
   format: winston.format.combine(
     winston.format.timestamp(),
     winston.format.json()
   ),
-  transports: [
-    new winston.transports.File({
-      filename: path.join(logDir, 'error.log'),
-      level: 'error',
-    }),
-    new winston.transports.File({
-      filename: path.join(logDir, 'combined.log'),
-    }),
-  ],
+  transports,
 });
-
-if (NODE_ENV !== 'production') {
-  logger.add(
-    new winston.transports.Console({
-      format: winston.format.combine(
-        winston.format.colorize(),
-        winston.format.simple()
-      ),
-    })
-  );
-}
 
 export default logger;
