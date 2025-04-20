@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
+import compression from 'compression';
 import {
   CLOUDINARY_API_KEY,
   CLOUDINARY_API_SECRET,
@@ -42,6 +43,7 @@ export class App {
   }
 
   private initializeMiddlewares(): void {
+    this.app.use(compression()); // Add compression
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
@@ -51,11 +53,21 @@ export class App {
         credentials: true,
       })
     );
-    this.app.use(helmet());
+    this.app.use(
+      helmet({
+        contentSecurityPolicy:
+          process.env.NODE_ENV === 'production' ? undefined : false,
+        crossOriginEmbedderPolicy:
+          process.env.NODE_ENV === 'production' ? undefined : false,
+      })
+    );
 
     const limiter = rateLimit({
       windowMs: 15 * 60 * 1000,
       max: 100,
+      standardHeaders: true,
+      legacyHeaders: false,
+      message: 'Too many requests from this IP, please try again later.',
     });
     this.app.use(limiter);
   }
@@ -66,6 +78,12 @@ export class App {
   }
 
   private initializeErrorHandling(): void {
+    // Add default 404 handler
+    this.app.use((req, res, next) => {
+      res.status(404).json({ message: 'Route not found' });
+    });
+
+    // Add existing error handler
     this.app.use(errorHandler);
   }
 

@@ -23,13 +23,29 @@
     "seed:permissions": "tsx ./prisma/seeders/permission.seeder.ts",
     "seed:user": "tsx ./prisma/seeders/user.seeder.ts",
     "seed:roadmapMainConceptSubjectTopics": "tsx ./prisma/seeders/roadmapMainConceptSubjectTopics.seeder.ts",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "start:prod": "node -r module-alias/register -r dotenv/config dist/index.js",
+    "build:clean": "rm -rf dist && npm run build",
+    "prisma:reset": "prisma migrate reset && npm run seed:all",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "verify": "npm run lint && npm run test",
+    "deploy:prepare": "npm run build:clean && npm run verify"
   },
   "prisma": {
-    "seed": "tsx ./prisma/seeders/role.seeder.ts && tsx ./prisma/seeders/feature.seeder.ts && tsx ./prisma/seeders/feature.seeder.ts && tsx ./prisma/seeders/user.seeder.ts && tsx ./prisma/seeders/roadmapMainConceptSubjectTopics.seeder.ts"
+    "seed": "tsx prisma/seed.ts"
   },
   "_moduleAliases": {
-    "@": "dist"
+    "@": "dist",
+    "@utils": "dist/utils",
+    "@types": "dist/types",
+    "@controllers": "dist/controllers",
+    "@repositories": "dist/repositories",
+    "@middlewares": "dist/middlewares",
+    "@services": "dist/services",
+    "@config": "dist/config",
+    "@lib": "dist/lib",
+    "@routes": "dist/routes"
   },
   "keywords": [],
   "author": "",
@@ -90,7 +106,8 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "winston": "^3.13.0",
-    "xss-clean": "^0.1.4"
+    "xss-clean": "^0.1.4",
+    "tsconfig-paths": "^4.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.18.0",
