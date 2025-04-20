@@ -15,6 +15,7 @@ import { errorHandler } from './middlewares/errorHandler';
 import logger from './utils/logger';
 import { v2 as cloudinary } from 'cloudinary';
 import prisma from './lib/prisma';
+import 'module-alias/register';
 
 declare const require: any;
 

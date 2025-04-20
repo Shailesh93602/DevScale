@@ -14,18 +14,18 @@
     "resolveJsonModule": true,
     "baseUrl": "./src",
     "paths": {
-      "@/*": ["./*"],
-      "@utils/*": ["./utils/*"],
-      "@types/*": ["./types/*"],
-      "@controllers/*": ["./controllers/*"],
-      "@repositories/*": ["./repositories/*"]
+      "@/*": ["*"],
+      "@utils/*": ["utils/*"],
+      "@types/*": ["types/*"],
+      "@controllers/*": ["controllers/*"],
+      "@repositories/*": ["repositories/*"]
     }
   },
   "ts-node": {
     "esm": true,
     "experimentalSpecifierResolution": "node",
     "transpileOnly": true,
-    "require": ["tsconfig-paths/register"],
+    "require": ["tsconfig-pa  ths/register"],
     "compilerOptions": {
       "module": "commonjs"
     },
