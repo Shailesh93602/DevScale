@@ -16,8 +16,12 @@ import logger from './utils/logger';
 import { v2 as cloudinary } from 'cloudinary';
 import prisma from './lib/prisma';
 
+declare const require: any;
+
+type MaybeServer = ReturnType<Application['listen']>;
+
 export class App {
-  private readonly app: Application;
+  public readonly app: Application;
 
   constructor() {
     this.app = express();
@@ -47,10 +51,9 @@ export class App {
     );
     this.app.use(helmet());
 
-    // Rate limiting
     const limiter = rateLimit({
-      windowMs: 15 * 60 * 1000, // 15 minutes
-      max: 100, // Limit each IP to 100 requests per windowMs
+      windowMs: 15 * 60 * 1000,
+      max: 100,
     });
     this.app.use(limiter);
   }
@@ -64,24 +67,20 @@ export class App {
     this.app.use(errorHandler);
   }
 
-  private setupGracefulShutdown(server: any): void {
-    process.on('SIGTERM', () => {
-      logger.info('SIGTERM signal received.');
+  private setupGracefulShutdown(server: MaybeServer): void {
+    const shutdown = () => {
+      logger.info(
+        'Shutdown signal received. Closing server and database connections.'
+      );
       server.close(async () => {
         logger.info('HTTP server closed.');
         await prisma.$disconnect();
         process.exit(0);
       });
-    });
+    };
 
-    process.on('SIGINT', () => {
-      logger.info('SIGINT signal received.');
-      server.close(async () => {
-        logger.info('HTTP server closed.');
-        await prisma.$disconnect();
-        process.exit(0);
-      });
-    });
+    process.on('SIGTERM', shutdown);
+    process.on('SIGINT', shutdown);
   }
 
   public async start(): Promise<void> {
@@ -101,7 +100,12 @@ export class App {
   }
 }
 
-const app = new App();
-app.start();
+// Instantiate and conditionally start server
+const appInstance = new App();
 
-export default app;
+if (require.main === module) {
+  appInstance.start();
+}
+
+// Export the Express application for serverless (Vercel) or testing
+export default appInstance.app;
