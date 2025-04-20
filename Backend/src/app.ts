@@ -34,7 +34,7 @@ const swaggerFile: string = `${process.cwd()}/swagger/index.json`;
 const swaggerData: string = fs.readFileSync(swaggerFile, 'utf8');
 const swaggerJSON = JSON.parse(swaggerData);
 import bodyParser from 'body-parser';
-import logger from './utils/logger.js';
+import logger from './utils/logger';
 export type RoutesType = () => Router;
 
 const preventPrototypePollution = (
