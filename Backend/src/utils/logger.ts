@@ -1,5 +1,14 @@
+import fs from 'fs';
+import path from 'path';
 import winston from 'winston';
 import { NODE_ENV } from '../config';
+
+const logDir = path.join(process.cwd(), 'logs');
+
+// Create the logs directory if it doesn't exist
+if (!fs.existsSync(logDir)) {
+  fs.mkdirSync(logDir, { recursive: true });
+}
 
 const logger = winston.createLogger({
   level: NODE_ENV === 'production' ? 'info' : 'debug',
@@ -8,8 +17,13 @@ const logger = winston.createLogger({
     winston.format.json()
   ),
   transports: [
-    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'logs/combined.log' }),
+    new winston.transports.File({
+      filename: path.join(logDir, 'error.log'),
+      level: 'error',
+    }),
+    new winston.transports.File({
+      filename: path.join(logDir, 'combined.log'),
+    }),
   ],
 });
 
