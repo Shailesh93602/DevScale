@@ -14,13 +14,7 @@
     "resolveJsonModule": true,
     "baseUrl": "./src",
     "paths": {
-      "@/*": ["*"],
-      "@utils/*": ["utils/*"],
-      "@types/*": ["types/*"],
-      "@controllers/*": ["controllers/*"],
-      "@repositories/*": ["repositories/*"],
-      "@middlewares/*": ["middlewares/*"],
-      "@services/*": ["services/*"]
+      "@/*": ["*"]
     }
   },
   "ts-node": {
