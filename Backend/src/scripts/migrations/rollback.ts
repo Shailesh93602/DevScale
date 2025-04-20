@@ -14,12 +14,13 @@ interface RollbackPoint {
   }[];
 }
 
+// Project root for file system operations
+const projectRoot = process.cwd();
+const rollbacksDir = path.join(projectRoot, 'backups', 'rollbacks');
+
 async function createRollbackPoint(): Promise<void> {
   const timestamp = new Date().toISOString();
-  const rollbackData: RollbackPoint = {
-    timestamp,
-    changes: [],
-  };
+  const rollbackData: RollbackPoint = { timestamp, changes: [] };
 
   // Save current state for potential rollback
   const users = await prisma.user.findMany();
@@ -30,29 +31,23 @@ async function createRollbackPoint(): Promise<void> {
     { table: 'roadmap', operation: 'INSERT', data: roadmaps },
   ];
 
-  // Save rollback point to file
-  const rollbackDir = path.join(__dirname, '../../../backups/rollbacks');
-  if (!fs.existsSync(rollbackDir)) {
-    fs.mkdirSync(rollbackDir, { recursive: true });
+  // Ensure rollback directory exists
+  if (!fs.existsSync(rollbacksDir)) {
+    fs.mkdirSync(rollbacksDir, { recursive: true });
   }
 
-  fs.writeFileSync(
-    path.join(rollbackDir, `rollback_${timestamp}.json`),
-    JSON.stringify(rollbackData, null, 2)
-  );
+  // Save rollback point to file
+  const filePath = path.join(rollbacksDir, `rollback_${timestamp}.json`);
+  fs.writeFileSync(filePath, JSON.stringify(rollbackData, null, 2));
 
   logger.info(`Created rollback point: ${timestamp}`);
 }
 
 async function rollback(timestamp: string): Promise<void> {
   try {
-    const rollbackFile = path.join(
-      __dirname,
-      `../../../backups/rollbacks/rollback_${timestamp}.json`
-    );
-    const rollbackData: RollbackPoint = JSON.parse(
-      fs.readFileSync(rollbackFile, 'utf-8')
-    );
+    const rollbackFile = path.join(rollbacksDir, `rollback_${timestamp}.json`);
+    const raw = fs.readFileSync(rollbackFile, 'utf-8');
+    const rollbackData: RollbackPoint = JSON.parse(raw);
 
     // Perform rollback operations in reverse order
     for (const change of rollbackData.changes.reverse()) {
