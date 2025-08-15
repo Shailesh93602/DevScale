@@ -1,3 +1,3 @@
 # MrEngineer
 
-## All in one platform for Engineering students all at once
+## All in one platform for Engineering students
