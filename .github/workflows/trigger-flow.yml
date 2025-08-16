@@ -24,10 +24,10 @@ jobs:
           echo "🚀 Triggering ContextQA automated tests with dynamic configuration..."
 
           # Send contextual info to start testing workflow
-          RESPONSE=$(curl --fail -sS -X POST "$FLOW_URL/github/start-test" \
-            -H "Authorization: Bearer $FLOW_TOKEN" \
-            -H "Content-Type: application/json" \
-            --data-raw '{"repo":"${{ github.repository }}","commit":"${{ github.sha }}","branch":"${{ github.ref_name }}","actor":"${{ github.actor }}","event":"${{ github.event_name }}","run_id":"${{ github.run_id }}"}')
+                                RESPONSE=$(curl --fail -sS -X POST "$FLOW_URL/github/start-test" \
+                        -H "Authorization: Bearer $FLOW_TOKEN" \
+                        -H "Content-Type: application/json" \
+                        --data-raw '{"repo":"${{ github.repository }}","commit":"${{ github.sha }}","branch":"${{ github.ref_name }}","actor":"${{ github.actor }}","event":"${{ github.event_name }}","run_id":"${{ github.run_id }}","CQA_PROJECT_TITLE":"${{ secrets.CQA_PROJECT_TITLE }}","CQA_DEPLOYMENT_URL":"${{ secrets.CQA_DEPLOYMENT_URL }}","CQA_AGENT_ID":"${{ secrets.CQA_AGENT_ID }}","CQA_ACCEPTANCE_RATE":"${{ secrets.CQA_ACCEPTANCE_RATE }}","CQA_MAX_STEPS":"${{ secrets.CQA_MAX_STEPS }}","CQA_TIMEOUT":"${{ secrets.CQA_TIMEOUT }}","CQA_TEST_FOCUS":"${{ secrets.CQA_TEST_FOCUS }}","CQA_EMAIL":"${{ secrets.CQA_EMAIL }}"}')
 
           echo "📡 ContextQA Response: $RESPONSE"
 
