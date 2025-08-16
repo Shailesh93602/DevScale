@@ -13,8 +13,8 @@ jobs:
     steps:
       - name: Trigger external flow
         env:
-          FLOW_URL: ${{ secrets.FLOW_URL }}
-          FLOW_TOKEN: ${{ secrets.FLOW_TOKEN }}
+          FLOW_URL: ${{ secrets.CQA_API_URL }}
+          FLOW_TOKEN: ${{ secrets.CQA_API_SECRET }}
         run: |
           set -euo pipefail
           if [ -z "${FLOW_URL:-}" ] || [ -z "${FLOW_TOKEN:-}" ]; then
