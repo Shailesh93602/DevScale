@@ -163,4 +163,4 @@ jobs:
           echo "🧠 Knowledge base and test case were created dynamically"
           echo "🔄 No stored configuration required - everything is created on-demand"
           echo ""
-          echo "📊 Current mode: $(if [ "$KNOWLEDGE_BASE_ID" = "kb_mock_"* ]; then echo "Mock Mode (no real API calls)"; else echo "Real API Mode"; fi)"
+          echo "📊 Current mode: Real API Mode (static authentication)"
