@@ -11,6 +11,10 @@ on:
         description: "ContextQA API Secret"
         required: true
         type: string
+      cqa_branch:
+        description: "Branch name for testing"
+        required: true
+        type: string
       cqa_project_title:
         description: "Project title for testing"
         required: false
@@ -74,7 +78,7 @@ jobs:
           RESPONSE=$(curl --fail -sS --max-time 60 -X POST "$FLOW_URL/github/start-test" \
                   -H "Authorization: Bearer $FLOW_TOKEN" \
                   -H "Content-Type: application/json" \
-                  --data-raw '{"repo":"${{ github.repository }}","commit":"${{ github.sha }}","branch":"${{ github.ref_name }}","actor":"${{ github.actor }}","event":"${{ github.event_name }}","run_id":"${{ github.run_id }}","CQA_PROJECT_TITLE":"${{ inputs.cqa_project_title }}","CQA_DEPLOYMENT_URL":"${{ inputs.cqa_deployment_url }}","CQA_AGENT_ID":"${{ inputs.cqa_agent_id }}","CQA_ACCEPTANCE_RATE":"${{ inputs.cqa_acceptance_rate }}","CQA_MAX_STEPS":"${{ inputs.cqa_max_steps }}","CQA_TIMEOUT":"${{ inputs.cqa_timeout }}","CQA_TEST_FOCUS":"${{ inputs.cqa_test_focus }}","CQA_EMAIL":"${{ inputs.cqa_email }}"}')
+                  --data-raw '{"repo":"${{ github.repository }}","commit":"${{ github.sha }}","branch":"${{ inputs.cqa_branch }}","actor":"${{ github.actor }}","event":"${{ github.event_name }}","run_id":"${{ github.run_id }}","CQA_PROJECT_TITLE":"${{ inputs.cqa_project_title }}","CQA_DEPLOYMENT_URL":"${{ inputs.cqa_deployment_url }}","CQA_AGENT_ID":"${{ inputs.cqa_agent_id }}","CQA_ACCEPTANCE_RATE":"${{ inputs.cqa_acceptance_rate }}","CQA_MAX_STEPS":"${{ inputs.cqa_max_steps }}","CQA_TIMEOUT":"${{ inputs.cqa_timeout }}","CQA_TEST_FOCUS":"${{ inputs.cqa_test_focus }}","CQA_EMAIL":"${{ inputs.cqa_email }}"}')
 
           echo "📡 ContextQA Response: $RESPONSE"
 
