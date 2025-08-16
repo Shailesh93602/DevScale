@@ -7,7 +7,7 @@ on:
 
 jobs:
   contextqa-testing:
-    uses: ./.github/workflows/contextqa-workflow.yml
+    uses: ./contextqa-workflow.yml
     with:
       cqa_api_url: ${{ secrets.CQA_API_URL }}
       cqa_api_secret: ${{ secrets.CQA_API_SECRET }}
