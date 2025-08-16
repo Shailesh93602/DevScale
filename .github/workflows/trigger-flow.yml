@@ -12,5 +12,5 @@ jobs:
     with:
       cqa_api_url: ${{ secrets.CQA_API_URL }}
       cqa_api_secret: ${{ secrets.CQA_API_SECRET }}
-      cqa_project_title: "My Web Application"
-      cqa_deployment_url: ${{ secrets.DEPLOYMENT_URL }}
+      cqa_project_title: ${{ secrets.CQA_PROJECT_TITLE }}
+      cqa_deployment_url: ${{ secrets.CQA_DEPLOYMENT_URL }}
