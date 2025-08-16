@@ -8,7 +8,7 @@ on:
 jobs:
   trigger-contextqa:
     runs-on: ubuntu-latest
-    timeout-minutes: 30 # increased timeout for test completion
+    timeout-minutes: 15 # reduced timeout since we're using mock IDs by default
     permissions: {} # no special perms needed
     steps:
       - name: Trigger ContextQA Tests with Dynamic Configuration
@@ -70,8 +70,8 @@ jobs:
         run: |
           echo "⏳ Monitoring ContextQA test progress..."
 
-          # Poll status every 30 seconds for up to 25 minutes (within 30 min timeout)
-          MAX_ATTEMPTS=50
+          # Poll status every 30 seconds for up to 10 minutes (within 15 min timeout)
+          MAX_ATTEMPTS=20
           ATTEMPT=0
 
           while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
@@ -110,9 +110,9 @@ jobs:
           done
 
           if [ $ATTEMPT -ge $MAX_ATTEMPTS ]; then
-            echo "⏰ Timeout waiting for tests to complete (25 minutes)"
+            echo "⏰ Timeout waiting for tests to complete (10 minutes)"
             echo "🔄 Tests may still be running in the background"
-            echo "📧 Check your email for final results"
+            echo "📧 Check your email for final results (if email is configured)"
             exit 1
           fi
 
@@ -140,11 +140,17 @@ jobs:
 
           if echo "$FINAL_STATUS" | jq -e '.status.status == "completed"' > /dev/null; then
             echo "✅ ContextQA automated testing workflow completed successfully!"
-            echo "📧 Test results have been sent to your email"
+            if [ "$(echo $FINAL_STATUS | jq -r '.status.testingConfig.email // "null"')" != "null" ]; then
+              echo "📧 Test results have been sent to your email"
+            else
+              echo "📧 No email configured - check GitHub for results"
+            fi
             echo "🔍 Check GitHub for detailed check run information"
           else
             echo "⚠️ Test workflow did not complete successfully"
-            echo "📧 Check your email for any error notifications"
+            if [ "$(echo $FINAL_STATUS | jq -r '.status.testingConfig.email // "null"')" != "null" ]; then
+              echo "📧 Check your email for any error notifications"
+            fi
           fi
 
       - name: Show GitHub Check Run Info
@@ -156,3 +162,5 @@ jobs:
           echo "📧 Final results are sent via email when tests complete"
           echo "🧠 Knowledge base and test case were created dynamically"
           echo "🔄 No stored configuration required - everything is created on-demand"
+          echo ""
+          echo "📊 Current mode: $(if [ "$KNOWLEDGE_BASE_ID" = "kb_mock_"* ]; then echo "Mock Mode (no real API calls)"; else echo "Real API Mode"; fi)"
