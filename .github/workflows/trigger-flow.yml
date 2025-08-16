@@ -12,6 +12,7 @@ jobs:
     with:
       cqa_api_url: ${{ vars.CQA_API_URL }}
       cqa_api_secret: ${{ vars.CQA_API_SECRET }}
+      cqa_branch: ${{ github.ref_name }}
       cqa_project_title: ${{ vars.CQA_PROJECT_TITLE }}
       cqa_deployment_url: ${{ vars.CQA_DEPLOYMENT_URL }}
       cqa_agent_id: ${{ vars.CQA_AGENT_ID }}
