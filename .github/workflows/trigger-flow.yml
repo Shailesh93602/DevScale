@@ -1,16 +1,16 @@
-# ==========================================
-# CONTEXTQA TESTING WORKFLOW - COPY BELOW
-# ==========================================
+name: ContextQA Testing Workflow
 
-# ContextQA Testing - Call the reusable workflow from same repo
-contextqa-testing:
-  uses: ./.github/workflows/contextqa-workflow.yml
-  needs: build # Change this to match your job dependencies
-  with:
-    cqa_api_url: ${{ secrets.CQA_API_URL }}
-    cqa_api_secret: ${{ secrets.CQA_API_SECRET }}
-    cqa_project_title: "My Web Application"
-    cqa_deployment_url: ${{ secrets.DEPLOYMENT_URL }}
-# ==========================================
-# CONTEXTQA TESTING WORKFLOW - COPY ABOVE
-# ==========================================
+on:
+  push:
+    branches: [main, develop]
+  workflow_dispatch:
+
+jobs:
+  # ContextQA Testing - Call the reusable workflow from same repo
+  contextqa-testing:
+    uses: ./.github/workflows/contextqa-workflow.yml
+    with:
+      cqa_api_url: ${{ secrets.CQA_API_URL }}
+      cqa_api_secret: ${{ secrets.CQA_API_SECRET }}
+      cqa_project_title: "My Web Application"
+      cqa_deployment_url: ${{ secrets.DEPLOYMENT_URL }}
