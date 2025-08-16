@@ -6,7 +6,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  # ContextQA Testing - Call the reusable workflow from same repo
   contextqa-testing:
     uses: ./.github/workflows/contextqa-workflow.yml
     with:
