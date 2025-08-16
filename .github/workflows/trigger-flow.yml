@@ -78,8 +78,8 @@ jobs:
             ATTEMPT=$((ATTEMPT + 1))
             echo "📊 Checking status (attempt $ATTEMPT/$MAX_ATTEMPTS)..."
             
-            # Get workflow status using the CORRECT endpoint
-            STATUS_RESPONSE=$(curl --fail -sS "$FLOW_URL/api/github/workflow-status/$DEPLOYMENT_ID")
+            # Get workflow status using the GitHub Actions specific endpoint (no auth required)
+            STATUS_RESPONSE=$(curl --fail -sS "$FLOW_URL/github/workflow-status/$DEPLOYMENT_ID")
             
             # Extract status and message
             WORKFLOW_STATUS=$(echo $STATUS_RESPONSE | jq -r '.status.status')
@@ -123,7 +123,7 @@ jobs:
         run: |
           echo "📋 Getting final test results..."
 
-          FINAL_STATUS=$(curl --fail -sS "$FLOW_URL/api/github/workflow-status/$DEPLOYMENT_ID")
+          FINAL_STATUS=$(curl --fail -sS "$FLOW_URL/github/workflow-status/$DEPLOYMENT_ID")
 
           # Extract relevant information
           PROJECT_TITLE=$(echo $FINAL_STATUS | jq -r '.status.testingConfig.projectTitle // "Unknown"')
