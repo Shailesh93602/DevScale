@@ -1,17 +1,17 @@
-name: Trigger ContextQA Tests
+name: ContextQA Dynamic Testing
 
 on:
   push:
-    branches: [ main ]   # change if you want a different branch
-  workflow_dispatch:      # optional: manual run from Actions tab
+    branches: [main, develop] # change if you want different branches
+  workflow_dispatch: # optional: manual run from Actions tab
 
 jobs:
   trigger-contextqa:
     runs-on: ubuntu-latest
-    timeout-minutes: 30  # increased timeout for test completion
-    permissions: {}       # no special perms needed
+    timeout-minutes: 30 # increased timeout for test completion
+    permissions: {} # no special perms needed
     steps:
-      - name: Trigger ContextQA Tests
+      - name: Trigger ContextQA Tests with Dynamic Configuration
         env:
           FLOW_URL: ${{ secrets.CQA_API_URL }}
           FLOW_TOKEN: ${{ secrets.CQA_API_SECRET }}
@@ -21,31 +21,43 @@ jobs:
             echo "Missing FLOW_URL or FLOW_TOKEN secrets"; exit 1
           fi
 
-          echo "�� Triggering ContextQA automated tests..."
-          
+          echo "🚀 Triggering ContextQA automated tests with dynamic configuration..."
+
           # Send contextual info to start testing workflow
           RESPONSE=$(curl --fail -sS -X POST "$FLOW_URL/github/start-test" \
             -H "Authorization: Bearer $FLOW_TOKEN" \
             -H "Content-Type: application/json" \
             --data-raw '{"repo":"${{ github.repository }}","commit":"${{ github.sha }}","branch":"${{ github.ref_name }}","actor":"${{ github.actor }}","event":"${{ github.event_name }}","run_id":"${{ github.run_id }}"}')
-          
-          echo "�� ContextQA Response: $RESPONSE"
-          
+
+          echo "📡 ContextQA Response: $RESPONSE"
+
           # Extract deployment ID from response
           DEPLOYMENT_ID=$(echo $RESPONSE | jq -r '.data.deployment.id')
           if [ "$DEPLOYMENT_ID" = "null" ] || [ -z "$DEPLOYMENT_ID" ]; then
             echo "❌ Failed to extract deployment ID from response"
             exit 1
           fi
-          
+
+          # Extract knowledge base and test case IDs
+          KNOWLEDGE_BASE_ID=$(echo $RESPONSE | jq -r '.data.testingConfig.knowledgeBaseId')
+          TEST_CASE_ID=$(echo $RESPONSE | jq -r '.data.testingConfig.testCaseId')
+
           echo "🎯 Deployment ID: $DEPLOYMENT_ID"
+          echo "🧠 Knowledge Base ID: $KNOWLEDGE_BASE_ID"
+          echo "🧪 Test Case ID: $TEST_CASE_ID"
+
+          # Store IDs for next steps
           echo "DEPLOYMENT_ID=$DEPLOYMENT_ID" >> $GITHUB_ENV
-          
+          echo "KNOWLEDGE_BASE_ID=$KNOWLEDGE_BASE_ID" >> $GITHUB_ENV
+          echo "TEST_CASE_ID=$TEST_CASE_ID" >> $GITHUB_ENV
+
           # Check if workflow started successfully
           if echo "$RESPONSE" | jq -e '.ok == true' > /dev/null; then
             echo "✅ ContextQA testing workflow started successfully"
             echo "📋 Project: $(echo $RESPONSE | jq -r '.data.testingConfig.projectTitle')"
-            echo "�� Agent ID: $(echo $RESPONSE | jq -r '.data.testingConfig.agentId')"
+            echo "🤖 Agent ID: $(echo $RESPONSE | jq -r '.data.testingConfig.agentId')"
+            echo "🔗 Deployment URL: $(echo $RESPONSE | jq -r '.data.creationDetails.deploymentUrl')"
+            echo "🎯 Test Focus: $(echo $RESPONSE | jq -r '.data.creationDetails.testFocus')"
           else
             echo "❌ Failed to start ContextQA testing workflow"
             echo "Error: $(echo $RESPONSE | jq -r '.error // "Unknown error"')"
@@ -57,11 +69,11 @@ jobs:
           FLOW_URL: ${{ secrets.CQA_API_URL }}
         run: |
           echo "⏳ Monitoring ContextQA test progress..."
-          
+
           # Poll status every 30 seconds for up to 25 minutes (within 30 min timeout)
           MAX_ATTEMPTS=50
           ATTEMPT=0
-          
+
           while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
             ATTEMPT=$((ATTEMPT + 1))
             echo "📊 Checking status (attempt $ATTEMPT/$MAX_ATTEMPTS)..."
@@ -83,7 +95,7 @@ jobs:
                 ;;
               "failed")
                 echo "❌ ContextQA tests failed!"
-                echo "�� Check the detailed report for failure details"
+                echo "🔍 Check the detailed report for failure details"
                 exit 1
                 ;;
               "queued"|"running")
@@ -96,10 +108,10 @@ jobs:
                 ;;
             esac
           done
-          
+
           if [ $ATTEMPT -ge $MAX_ATTEMPTS ]; then
             echo "⏰ Timeout waiting for tests to complete (25 minutes)"
-            echo "�� Tests may still be running in the background"
+            echo "🔄 Tests may still be running in the background"
             echo "📧 Check your email for final results"
             exit 1
           fi
@@ -109,21 +121,23 @@ jobs:
           FLOW_URL: ${{ secrets.CQA_API_URL }}
         if: always()
         run: |
-          echo "�� Getting final test results..."
-          
+          echo "📋 Getting final test results..."
+
           FINAL_STATUS=$(curl --fail -sS "$FLOW_URL/api/github/workflow-status/$DEPLOYMENT_ID")
-          
+
           # Extract relevant information
           PROJECT_TITLE=$(echo $FINAL_STATUS | jq -r '.status.testingConfig.projectTitle // "Unknown"')
           REPOSITORY=$(echo $FINAL_STATUS | jq -r '.status.repository.full_name // "Unknown"')
           EXECUTION_ID=$(echo $FINAL_STATUS | jq -r '.status.executionId // "N/A"')
           CREATED_AT=$(echo $FINAL_STATUS | jq -r '.status.createdAt // "Unknown"')
-          
+
           echo "🎯 Project: $PROJECT_TITLE"
-          echo "�� Repository: $REPOSITORY"
+          echo "📁 Repository: $REPOSITORY"
           echo "🆔 Execution ID: $EXECUTION_ID"
           echo "⏰ Started: $CREATED_AT"
-          
+          echo "🧠 Knowledge Base ID: $KNOWLEDGE_BASE_ID"
+          echo "🧪 Test Case ID: $TEST_CASE_ID"
+
           if echo "$FINAL_STATUS" | jq -e '.status.status == "completed"' > /dev/null; then
             echo "✅ ContextQA automated testing workflow completed successfully!"
             echo "📧 Test results have been sent to your email"
@@ -140,3 +154,5 @@ jobs:
           echo "📱 Check runs are automatically created and updated during testing"
           echo "👀 View progress in the GitHub Actions tab or repository checks"
           echo "📧 Final results are sent via email when tests complete"
+          echo "🧠 Knowledge base and test case were created dynamically"
+          echo "🔄 No stored configuration required - everything is created on-demand"
