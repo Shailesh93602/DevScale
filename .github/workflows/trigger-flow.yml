@@ -1,0 +1,28 @@
+name: Trigger Flow
+
+on:
+  push:
+    branches: [ main ]   # change if you want a different branch
+  workflow_dispatch:      # optional: manual run from Actions tab
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions: {}       # no special perms needed
+    steps:
+      - name: Trigger external flow
+        env:
+          FLOW_URL: ${{ secrets.FLOW_URL }}
+          FLOW_TOKEN: ${{ secrets.FLOW_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${FLOW_URL:-}" ] || [ -z "${FLOW_TOKEN:-}" ]; then
+            echo "Missing FLOW_URL or FLOW_TOKEN secrets"; exit 1
+          fi
+
+          # send contextual info so your backend knows what triggered this
+          curl --fail -sS -X POST "$FLOW_URL" \
+            -H "Authorization: Bearer $FLOW_TOKEN" \
+            -H "Content-Type: application/json" \
+            --data-raw '{"repo":"${{ github.repository }}","commit":"${{ github.sha }}","branch":"${{ github.ref_name }}","actor":"${{ github.actor }}","event":"${{ github.event_name }}","run_id":"${{ github.run_id }}"}'
