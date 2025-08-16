@@ -1,8 +1,5 @@
 name: Reusable ContextQA Testing Workflow
 
-# This reusable workflow is designed for manual triggers via workflow_dispatch
-# It sends all configuration data in the request body and bypasses stored configuration
-# No branch validation or stored config lookup is performed
 on:
   workflow_call:
     inputs:
