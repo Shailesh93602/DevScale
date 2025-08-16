@@ -222,7 +222,7 @@ jobs:
           echo "🎉 Manual trigger workflow completed successfully!"
           echo "📋 Summary: No stored configuration or branch validation required"
 
-        - name: Show GitHub Check Run Info
+      - name: Show GitHub Check Run Info
         if: always()
         run: |
           echo "🔍 GitHub Check Run Information:"
