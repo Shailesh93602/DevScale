@@ -1,3 +1,15 @@
+name: Get Code Diff and Upload Artifact 🚀
+
+on:
+  push:
+    branches:
+      - main
+      - feature/** # Triggers on pushes to 'main' and any 'feature' branches
+  pull_request:
+    branches:
+      - main
+      - feature/** # Triggers on PRs to 'main' and 'feature' branches
+
 jobs:
   get_diff:
     runs-on: ubuntu-latest
@@ -9,15 +21,13 @@ jobs:
 
       - name: Get code changes
         id: code-changes
-        # The 'git diff' command generates the full diff content.
-        # We redirect the output to a file named 'code_diff.txt'
         run: |
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
             git diff ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} > code_diff.txt
           else
             git diff ${{ github.event.before }} ${{ github.event.after }} > code_diff.txt
           fi
-
+          
       - name: Upload diff as an artifact
         uses: actions/upload-artifact@v4
         with:
