@@ -17,6 +17,8 @@ import { FloatingElements } from '@/components/ui/floating-elements';
 import { AnimatedBattleCard } from '@/components/ui/animated-battle-card';
 import { MagneticButton } from '@/components/ui/magnetic-button';
 
+// TODO: this comment is ony for testing workflow, remove after testing is done
+
 export default function Home() {
   // Enhanced parallax effect for hero section
   const { scrollY } = useScroll();
