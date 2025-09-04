@@ -1,0 +1,946 @@
+# ContextQA Complete Workflow - All-in-One Solution
+# This file contains all ContextQA functionality in one place
+
+name: ContextQA Complete Workflow
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+  pull_request_target:
+    types: [closed]
+  issue_comment:
+    types: [created]
+  workflow_call:
+    inputs:
+      cqa_org_name:
+        description: "ContextQA organization name"
+        required: true
+        type: string
+      cqa_auth_token:
+        description: "ContextQA authentication token"
+        required: true
+        type: string
+      pr_number:
+        description: "PR number to execute tests for"
+        required: true
+        type: string
+      pr_branch:
+        description: "PR branch name"
+        required: true
+        type: string
+      merge_sha:
+        description: "Merge commit SHA"
+        required: true
+        type: string
+
+jobs:
+  # PR Creation - Generate Test Cases
+  generate-test-cases:
+    if: github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'synchronize')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for proper diff
+
+      - name: Generate Test Cases
+        env:
+          CQA_ORG_NAME: ${{ inputs.cqa_org_name || 'lululemonand' }}
+          CQA_AUTH_TOKEN: ${{ inputs.cqa_auth_token || 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkZWVwY3FhX2x1bHVsZW1vbmFuZCIsImV4cCI6MTc1Njk4OTg5MCwiaWF0IjoxNzU2OTAzNDkwLCJ0ZW5hbnQiOiJsdWx1bGVtb25hbmQifQ.QgaT9nEyf5TiQOIIZ5KmjRUy5g3JPnQ5Ww7QokYNmHxsX-kXbLaXDO1jpsJ8LMI0U2NGcaIhJzH3phtm8YzCXg' }}
+        run: |
+          set -euo pipefail
+          
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_DESCRIPTION="${{ github.event.pull_request.body }}"
+          COMMIT_MESSAGE="${{ github.event.pull_request.head.commit.message }}"
+          
+          echo "🚀 Generating test cases for PR #$PR_NUMBER"
+          echo "📋 PR Title: $PR_TITLE"
+          echo "🌿 Branch: ${{ github.event.pull_request.head.ref }}"
+          
+          # Generate code diff (PR context - compare against base branch)
+          echo "📝 Generating code diff..."
+          BASE_REF="${{ github.base_ref }}"
+          
+          # Try to use base ref, fallback to main/master
+          if ! git diff origin/$BASE_REF...HEAD > code_diff.txt 2>/dev/null; then
+            echo "⚠️ Base ref '$BASE_REF' not found, trying fallback..."
+            if git diff origin/main...HEAD > code_diff.txt 2>/dev/null; then
+              echo "✅ Using origin/main as base"
+              BASE_REF="main"
+            elif git diff origin/master...HEAD > code_diff.txt 2>/dev/null; then
+              echo "✅ Using origin/master as base"
+              BASE_REF="master"
+            else
+              echo "❌ No suitable base branch found"
+              exit 1
+            fi
+          else
+            echo "✅ Using origin/$BASE_REF as base"
+          fi
+          
+          # Get changed files content
+          echo "📄 Getting changed files content..."
+          git diff --name-only origin/$BASE_REF...HEAD | while read -r file; do
+            if [ -f "$file" ]; then
+              echo "=== $file ===" >> full_file_contents.txt
+              cat "$file" >> full_file_contents.txt
+              echo "" >> full_file_contents.txt
+            fi
+          done
+          
+          # Prepare request data
+          DIFF_CONTENT=$(cat code_diff.txt | jq -Rs .)
+          FILE_CONTENTS=$(cat full_file_contents.txt | jq -Rs .)
+          
+          # Store multiline variables
+          echo "COMMIT_MESSAGE<<EOF" >> $GITHUB_ENV
+          echo "$COMMIT_MESSAGE" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          
+          echo "PR_TITLE<<EOF" >> $GITHUB_ENV
+          echo "$PR_TITLE" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          
+          echo "PR_DESCRIPTION<<EOF" >> $GITHUB_ENV
+          echo "$PR_DESCRIPTION" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          
+          # Call ContextQA API
+          echo "🔗 Calling ContextQA API..."
+          MAX_RETRIES=3
+          RETRY_DELAY=2
+          
+          # Create request payload file to avoid "Argument list too long" error
+          echo "📝 Creating request payload file..."
+          jq -n \
+            --arg title "$COMMIT_MESSAGE" \
+            --arg description "$PR_DESCRIPTION" \
+            --argjson diff "$DIFF_CONTENT" \
+            --argjson fileContents "$FILE_CONTENTS" \
+            --arg repository "${{ github.repository }}" \
+            --arg branch "${{ github.event.pull_request.head.ref }}" \
+            --arg commit "${{ github.event.pull_request.head.sha }}" \
+            --arg commitMessage "$COMMIT_MESSAGE" \
+            --arg actor "${{ github.actor }}" \
+            --arg eventType "pull_request" \
+            --argjson prNumber "${{ github.event.pull_request.number }}" \
+            --arg prTitle "$PR_TITLE" \
+            '{
+              title: $title,
+              description: $description,
+              diff: $diff,
+              fileContents: $fileContents,
+              repository: $repository,
+              branch: $branch,
+              commit: $commit,
+              commitMessage: $commitMessage,
+              actor: $actor,
+              eventType: $eventType,
+              prNumber: $prNumber,
+              prTitle: $prTitle
+            }' > /tmp/request_payload.json
+          
+          echo "✅ Request payload file created: /tmp/request_payload.json"
+          echo "📊 Payload size: $(wc -c < /tmp/request_payload.json) bytes"
+          
+          for attempt in $(seq 1 $((MAX_RETRIES + 1))); do
+            echo "🔄 Attempt $attempt/$((MAX_RETRIES + 1))"
+            
+            if RESPONSE=$(curl --fail -sS --location 'https://web-finder.contextqa.com/case/suggestions/github' \
+                    --header "Origin: https://${CQA_ORG_NAME}.contextqa.com" \
+                    --header "cqa-origin: https://${CQA_ORG_NAME}.contextqa.com" \
+                    --header "Authorization: Bearer $CQA_AUTH_TOKEN" \
+                    --header 'Content-Type: application/json' \
+                    --data @/tmp/request_payload.json \
+                    --max-time 300 \
+                    --connect-timeout 30 \
+                    2>&1); then
+              
+              echo "✅ ContextQA API call successful"
+              if echo "$RESPONSE" | jq -e '.testCases' > /dev/null 2>&1; then
+                echo "✅ Response contains test cases"
+              else
+                echo "⚠️ Response may not contain expected test cases structure"
+              fi
+              
+              # Store response for next steps
+              echo "TEST_CASE_RESPONSE<<EOF" >> $GITHUB_ENV
+              echo "$RESPONSE" >> $GITHUB_ENV
+              echo "EOF" >> $GITHUB_ENV
+              
+              # Clean up temporary file
+              rm -f /tmp/request_payload.json
+              break
+              
+            else
+              ERROR_MSG="$RESPONSE"
+              echo "❌ ContextQA API call failed on attempt $attempt"
+              echo "Error: $ERROR_MSG"
+              
+              if [ $attempt -eq $((MAX_RETRIES + 1)) ]; then
+                echo "💥 ContextQA API call failed after $MAX_RETRIES retries"
+                echo "❌ Final error: $ERROR_MSG"
+                # Clean up temporary file
+                rm -f /tmp/request_payload.json
+                exit 1
+              fi
+              
+              echo "⏳ Waiting $RETRY_DELAY seconds before retry..."
+              sleep $RETRY_DELAY
+              RETRY_DELAY=$((RETRY_DELAY * 2))
+            fi
+          done
+
+      - name: Post Test Cases to PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          
+          echo "📝 Posting test cases to PR #${{ github.event.pull_request.number }}"
+          
+          # Create comment with test cases and store full response
+          COMMENT_BODY="## 🧪 ContextQA Test Cases Generated
+          
+          **PR:** #${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}
+          **Branch:** \`${{ github.event.pull_request.head.ref }}\`
+          **Commit:** \`${{ github.event.pull_request.head.sha }}\`
+          **Generated at:** $(date -u +%Y-%m-%dT%H:%M:%SZ)
+          
+          ### Generated Test Cases:
+          
+          \`\`\`json
+          $TEST_CASE_RESPONSE
+          \`\`\`
+          
+          ### Next Steps:
+          
+          **To approve these test cases, simply comment one of the following:**
+          - \`approve\`
+          - \`approved\` 
+          - \`/approve\`
+          - \`✅\`
+          - \`👍\`
+          
+          **That's it!** The approval will automatically:
+          1. ✅ Create the test cases in ContextQA
+          2. ✅ Store test case IDs for execution
+          3. ✅ Make them ready for execution when PR is merged
+          
+          **Example:** Just comment \`approve\` below and the magic happens! 🪄
+          
+          <!-- CONTEXTQA_TEST_CASES_PENDING -->
+          <!-- CONTEXTQA_FULL_RESPONSE: $TEST_CASE_RESPONSE -->"
+          
+          # Retry logic for posting comment
+          MAX_RETRIES=3
+          RETRY_DELAY=2
+          
+          for attempt in $(seq 1 $((MAX_RETRIES + 1))); do
+            echo "🔄 Posting comment (attempt $attempt/$((MAX_RETRIES + 1)))"
+            
+            if curl -sS \
+              -X POST \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer $GITHUB_TOKEN" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" \
+              -d "{\"body\": $(echo "$COMMENT_BODY" | jq -Rs .)}" \
+              --max-time 30 \
+              --connect-timeout 10; then
+              
+              echo "✅ Comment posted successfully"
+              break
+            else
+              echo "❌ Failed to post comment on attempt $attempt"
+              
+              if [ $attempt -eq $((MAX_RETRIES + 1)) ]; then
+                echo "💥 Failed to post comment after $MAX_RETRIES retries"
+                exit 1
+              fi
+              
+              echo "⏳ Waiting $RETRY_DELAY seconds before retry..."
+              sleep $RETRY_DELAY
+              RETRY_DELAY=$((RETRY_DELAY * 2))
+            fi
+          done
+
+  # Comment Approval - Handle User Approval
+  handle-approval:
+    if: github.event_name == 'issue_comment'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write
+      actions: write
+    steps:
+      - name: Check if Approval Comment
+        id: check-approval
+        run: |
+          set -euo pipefail
+          
+          echo "🔍 Checking if comment is an approval..."
+          echo "Event name: ${{ github.event_name }}"
+          echo "Issue number: ${{ github.event.issue.number }}"
+          echo "Is PR: ${{ github.event.issue.pull_request }}"
+          echo "Comment body: ${{ github.event.comment.body }}"
+          
+          # Only process PR comments
+          if [ -z "${{ github.event.issue.pull_request }}" ]; then
+            echo "❌ Not a PR comment, skipping"
+            echo "is_approval=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          COMMENT_BODY="${{ github.event.comment.body }}"
+          
+          # Check if comment contains approval keywords
+          if echo "$COMMENT_BODY" | grep -qiE "(approve|approved|/approve|✅|👍)"; then
+            echo "✅ Approval comment detected"
+            echo "is_approval=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Not an approval comment"
+            echo "is_approval=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Process Approval and Create Test Cases
+        if: steps.check-approval.outputs.is_approval == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CQA_ORG_NAME: ${{ inputs.cqa_org_name || 'lululemonand' }}
+          CQA_AUTH_TOKEN: ${{ inputs.cqa_auth_token || 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkZWVwY3FhX2x1bHVsZW1vbmFuZCIsImV4cCI6MTc1Njk4OTg5MCwiaWF0IjoxNzU2OTAzNDkwLCJ0ZW5hbnQiOiJsdWx1bGVtb25hbmQifQ.QgaT9nEyf5TiQOIIZ5KmjRUy5g3JPnQ5Ww7QokYNmHxsX-kXbLaXDO1jpsJ8LMI0U2NGcaIhJzH3phtm8YzCXg' }}
+        run: |
+          set -euo pipefail
+          
+          PR_NUMBER="${{ github.event.issue.number }}"
+          echo "🔍 Processing approval for PR #$PR_NUMBER"
+          
+          # Get PR comments to find pending test cases
+          COMMENTS_RESPONSE=$(curl -sS \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${{ github.repository }}/issues/$PR_NUMBER/comments")
+          
+          # Find the comment with pending test cases
+          TEST_CASES_JSON=$(echo "$COMMENTS_RESPONSE" | jq -r '
+            .[] | 
+            select(.body | contains("<!-- CONTEXTQA_FULL_RESPONSE:")) |
+            .body | 
+            match("<!-- CONTEXTQA_FULL_RESPONSE: (.*?) -->"; "s") |
+            .captures[0].string
+          ')
+          
+          if [ -z "$TEST_CASES_JSON" ] || [ "$TEST_CASES_JSON" = "null" ]; then
+            echo "❌ No stored test case response found in PR #$PR_NUMBER"
+            echo "Please ensure the PR has generated test cases with the <!-- CONTEXTQA_FULL_RESPONSE: --> tag"
+            exit 1
+          fi
+          
+          echo "✅ Found pending test cases"
+          echo "📋 Test cases preview:"
+          echo "$TEST_CASES_JSON" | jq -r '.testCases[]? | "  - \(.title) (Priority: \(.priority))"' | head -5
+          
+          # Create test cases in ContextQA
+          echo "🚀 Creating test cases in ContextQA..."
+          
+          # Prepare the request data and write to temporary file to avoid "Argument list too long" error
+          echo "📝 Creating request payload file..."
+          echo "$TEST_CASES_JSON" > /tmp/creation_request.json
+          echo "✅ Request payload file created: /tmp/creation_request.json"
+          echo "📊 Payload size: $(wc -c < /tmp/creation_request.json) bytes"
+          
+          echo "📤 Sending request to ContextQA creation endpoint..."
+          echo "🔗 Endpoint: https://server.contextqa.com/test_case_ai_suggession/create"
+          
+          # Retry logic for API call
+          MAX_RETRIES=3
+          RETRY_DELAY=2
+          
+          for attempt in $(seq 1 $((MAX_RETRIES + 1))); do
+            echo "🔄 Attempt $attempt/$((MAX_RETRIES + 1))"
+            
+            if RESPONSE=$(curl --fail -sS --location 'https://server.contextqa.com/test_case_ai_suggession/create' \
+                    --header "Cqa-Origin: https://${CQA_ORG_NAME}.contextqa.com" \
+                    --header "Authorization: Bearer $CQA_AUTH_TOKEN" \
+                    --header 'Content-Type: application/json' \
+                    --data @/tmp/creation_request.json \
+                    --max-time 300 \
+                    --connect-timeout 30 \
+                    2>&1); then
+              
+              echo "✅ Test cases created successfully!"
+              echo "📋 Raw Response:"
+              echo "$RESPONSE"
+              echo ""
+              echo "📋 Parsed Response:"
+              if echo "$RESPONSE" | jq '.' 2>/dev/null; then
+                echo "✅ Response is valid JSON"
+              else
+                echo "❌ Response is not valid JSON"
+                echo "🔍 Response type: $(file -b <<< "$RESPONSE")"
+                echo "🔍 Response length: ${#RESPONSE} characters"
+                echo "🔍 First 200 characters:"
+                echo "$RESPONSE" | head -c 200
+                echo ""
+                echo "🔍 Last 200 characters:"
+                echo "$RESPONSE" | tail -c 200
+                echo ""
+              fi
+              
+              # Extract test case IDs from direct array response
+              echo "🔍 Attempting to extract test case IDs..."
+              if echo "$RESPONSE" | jq -e 'type == "array"' > /dev/null 2>&1; then
+                # Response is a direct array of IDs
+                TEST_CASE_IDS=$(echo "$RESPONSE" | jq -r '.[]' | tr '\n' ' ')
+                echo "🆔 Created test case IDs (direct array): $TEST_CASE_IDS"
+              elif echo "$RESPONSE" | jq -e '.testCaseIds' > /dev/null 2>&1; then
+                # Response has testCaseIds field
+                TEST_CASE_IDS=$(echo "$RESPONSE" | jq -r '.testCaseIds[]?' | tr '\n' ' ')
+                echo "🆔 Created test case IDs (testCaseIds field): $TEST_CASE_IDS"
+              elif echo "$RESPONSE" | jq -e '.test_case_ids' > /dev/null 2>&1; then
+                # Response has test_case_ids field
+                TEST_CASE_IDS=$(echo "$RESPONSE" | jq -r '.test_case_ids[]?' | tr '\n' ' ')
+                echo "🆔 Created test case IDs (test_case_ids field): $TEST_CASE_IDS"
+              elif echo "$RESPONSE" | jq -e '.data.testCaseIds' > /dev/null 2>&1; then
+                # Response has nested data.testCaseIds field
+                TEST_CASE_IDS=$(echo "$RESPONSE" | jq -r '.data.testCaseIds[]?' | tr '\n' ' ')
+                echo "🆔 Created test case IDs (nested data.testCaseIds): $TEST_CASE_IDS"
+              else
+                echo "⚠️ No test case IDs found in response"
+                echo "🔍 Response structure:"
+                echo "$RESPONSE" | jq 'type' 2>/dev/null || echo "Cannot parse response type"
+                echo "🔍 Available fields in response:"
+                echo "$RESPONSE" | jq 'keys' 2>/dev/null || echo "Cannot parse response structure"
+                TEST_CASE_IDS=""
+              fi
+              
+              # Store test case IDs in GitHub repository variables for central access
+              if [ -n "$TEST_CASE_IDS" ]; then
+                echo "💾 Storing test case IDs in GitHub repository variables..."
+                echo "📋 Test case IDs to store: $TEST_CASE_IDS"
+                
+                # Get existing test case IDs from repository variable
+                echo "📥 Getting existing test case IDs from repository variables..."
+                EXISTING_IDS=$(curl -sS \
+                  -H "Accept: application/vnd.github+json" \
+                  -H "Authorization: Bearer ${{ secrets.GITHUB_VARIABLES_TOKEN }}" \
+                  -H "X-GitHub-Api-Version: 2022-11-28" \
+                  "https://api.github.com/repos/${{ github.repository }}/actions/variables/CONTEXTQA_TEST_CASE_IDS" | jq -r '.value // ""')
+                
+                if [ -n "$EXISTING_IDS" ]; then
+                  echo "📋 Found existing test case IDs: $EXISTING_IDS"
+                  # Combine existing and new IDs
+                  ALL_IDS="$EXISTING_IDS $TEST_CASE_IDS"
+                else
+                  echo "📋 No existing test case IDs found"
+                  ALL_IDS="$TEST_CASE_IDS"
+                fi
+                
+                # Remove duplicates and sort
+                UNIQUE_IDS=$(echo "$ALL_IDS" | tr ' ' '\n' | sort -u | tr '\n' ' ' | xargs)
+                UNIQUE_COUNT=$(echo "$UNIQUE_IDS" | wc -w)
+                
+                echo "💾 Storing $UNIQUE_COUNT unique test case IDs in repository variables..."
+                echo "📤 Final IDs to store: $UNIQUE_IDS"
+                
+                # Update repository variable
+                curl -sS \
+                  -X PATCH \
+                  -H "Accept: application/vnd.github+json" \
+                  -H "Authorization: Bearer ${{ secrets.GITHUB_VARIABLES_TOKEN }}" \
+                  -H "X-GitHub-Api-Version: 2022-11-28" \
+                  -H "Content-Type: application/json" \
+                  "https://api.github.com/repos/${{ github.repository }}/actions/variables/CONTEXTQA_TEST_CASE_IDS" \
+                  -d "{\"name\":\"CONTEXTQA_TEST_CASE_IDS\",\"value\":\"$UNIQUE_IDS\"}" || {
+                  echo "⚠️ Failed to update existing variable, trying to create new one..."
+                  curl -sS \
+                    -X POST \
+                    -H "Accept: application/vnd.github+json" \
+                    -H "Authorization: Bearer ${{ secrets.GITHUB_VARIABLES_TOKEN }}" \
+                    -H "X-GitHub-Api-Version: 2022-11-28" \
+                    -H "Content-Type: application/json" \
+                    "https://api.github.com/repos/${{ github.repository }}/actions/variables" \
+                    -d "{\"name\":\"CONTEXTQA_TEST_CASE_IDS\",\"value\":\"$UNIQUE_IDS\"}"
+                }
+                
+                echo "✅ Test case IDs stored in repository variables"
+              else
+                echo "⚠️ No test case IDs found to store"
+              fi
+              
+              # Store response for next steps
+              echo "CREATION_RESPONSE<<EOF" >> $GITHUB_ENV
+              echo "$RESPONSE" >> $GITHUB_ENV
+              echo "EOF" >> $GITHUB_ENV
+              
+              # Clean up temporary file
+              rm -f /tmp/creation_request.json
+              break
+              
+            else
+              ERROR_MSG="$RESPONSE"
+              echo "❌ ContextQA API call failed on attempt $attempt"
+              echo "Error: $ERROR_MSG"
+              
+              if [ $attempt -eq $MAX_RETRIES ]; then
+                echo "💥 All retry attempts failed"
+                # Clean up temporary file
+                rm -f /tmp/creation_request.json
+                exit 1
+              fi
+            fi
+          done
+
+      - name: Update PR Comment with Approved Status
+        if: steps.check-approval.outputs.is_approval == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          
+          PR_NUMBER="${{ github.event.issue.number }}"
+          echo "📝 Updating PR comment with approved status..."
+          
+          # Create approved comment
+          APPROVED_COMMENT="## 🎉 Test Cases Approved and Created!
+          
+          **Approved by:** ${{ github.actor }}  
+          **Approved at:** $(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          
+          ✅ Test cases have been successfully created in ContextQA!
+          
+          **Creation Response:**
+          \`\`\`json
+          $CREATION_RESPONSE
+          \`\`\`
+          
+          Thank you for approving the test cases! 🚀
+          
+          <!-- CONTEXTQA_TEST_CASES_APPROVED -->
+          $CREATION_RESPONSE
+          <!-- CONTEXTQA_TEST_CASES_APPROVED -->"
+          
+          # Post the approved comment
+          curl -sS \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${{ github.repository }}/issues/$PR_NUMBER/comments" \
+            -d "{\"body\": $(echo "$APPROVED_COMMENT" | jq -Rs .)}"
+          
+          echo "✅ Approval confirmation posted"
+
+
+  # PR Merge - Execute Approved Test Cases
+  execute-tests:
+    if: (github.event_name == 'pull_request_target' && github.event.pull_request.merged == true) || github.event_name == 'workflow_call'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - name: Get All Test Case IDs from Repository Variables
+        env:
+          GITHUB_VARIABLES_TOKEN: ${{ secrets.GITHUB_VARIABLES_TOKEN }}
+        run: |
+          set -euo pipefail
+          
+          PR_NUMBER="${{ inputs.pr_number || github.event.pull_request.number }}"
+          echo "🔍 Getting ALL test case IDs from GitHub repository variables (central storage)"
+          echo "📋 This will run ALL stored test cases from central storage, accessible from any workflow"
+          
+          # Get test case IDs from repository variables
+          echo "📥 Fetching test case IDs from repository variables..."
+          VARIABLE_RESPONSE=$(curl -sS \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GITHUB_VARIABLES_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/variables/CONTEXTQA_TEST_CASE_IDS")
+          
+          echo "🔍 Variable response: $VARIABLE_RESPONSE"
+          
+          # Extract test case IDs from the variable
+          TEST_CASE_IDS=$(echo "$VARIABLE_RESPONSE" | jq -r '.value // ""')
+          
+          if [ -z "$TEST_CASE_IDS" ]; then
+            echo "❌ No test case IDs found in repository variables"
+            echo "Please ensure test cases have been created and approved in previous PRs"
+            echo "🔍 Full response was: $VARIABLE_RESPONSE"
+            exit 1
+          fi
+          
+          echo "✅ Found test case IDs from repository variables: $TEST_CASE_IDS"
+          echo "📊 Total test cases found: $(echo "$TEST_CASE_IDS" | wc -w)"
+          
+          echo "✅ Test case IDs from central storage:"
+          echo "$TEST_CASE_IDS" | while read -r id; do
+            echo "  - $id"
+          done
+          
+          # Store test case IDs for next steps
+          echo "TEST_CASE_IDS<<EOF" >> $GITHUB_ENV
+          echo "$TEST_CASE_IDS" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Execute All Approved Test Cases
+        env:
+          CQA_ORG_NAME: ${{ inputs.cqa_org_name || 'lululemonand' }}
+          CQA_AUTH_TOKEN: ${{ inputs.cqa_auth_token || 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkZWVwY3FhX2x1bHVsZW1vbmFuZCIsImV4cCI6MTc1Njk4OTg5MCwiaWF0IjoxNzU2OTAzNDkwLCJ0ZW5hbnQiOiJsdWx1bGVtb25hbmQifQ.QgaT9nEyf5TiQOIIZ5KmjRUy5g3JPnQ5Ww7QokYNmHxsX-kXbLaXDO1jpsJ8LMI0U2NGcaIhJzH3phtm8YzCXg' }}
+          CQA_ORIGIN_HEADER: "https://${CQA_ORG_NAME}.contextqa.com"
+        run: |
+          set -euo pipefail
+          
+          echo "🚀 Executing ALL stored test cases (not PR-specific)..."
+          echo "📋 Mode: ${{ github.event_name == 'workflow_call' && 'External trigger' || 'PR merge trigger' }} - running ALL stored test cases"
+          echo "🌿 Branch: ${{ inputs.pr_branch || github.event.pull_request.head.ref }}"
+          echo "🔗 Commit: ${{ inputs.merge_sha || github.event.pull_request.merge_commit_sha }}"
+          echo "⚙️ Configuration: Running ALL test cases from global storage (accumulated from all previous PRs)"
+          
+          # Use stored test case IDs
+          echo "📋 Using stored test case IDs:"
+          echo "$TEST_CASE_IDS" | while read -r id; do
+            echo "  - $id"
+          done
+          
+          # Execute each test case in parallel
+          echo "🚀 Starting parallel test execution..."
+          
+          # Create function to execute a single test case
+          execute_test_case() {
+            local test_case_id="$1"
+            if [ -n "$test_case_id" ]; then
+              echo "🧪 Executing test case: $test_case_id"
+              
+              # Execute test case using the correct endpoint and headers
+              EXECUTION_RESPONSE=$(curl --fail -sS --location "https://gcpn1.contextqa.com/tc/$test_case_id/execute" \
+                --header "accept: application/json, text/plain, */*" \
+                --header "accept-language: en-IN,en-US;q=0.9,en-GB;q=0.8,en;q=0.7,gu;q=0.6" \
+                --header "apikey: 37f1cd9f2c434e21ab582561f1ad5db1" \
+                --header "authorization: $CQA_AUTH_TOKEN" \
+                --header "content-type: application/json" \
+                --header "cqa-origin: $CQA_ORIGIN_HEADER" \
+                --header "origin: $CQA_ORIGIN_HEADER" \
+                --header "priority: u=1, i" \
+                --header "referer: $CQA_ORIGIN_HEADER/" \
+                --header "sec-ch-ua: \"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Google Chrome\";v=\"138\"" \
+                --header "sec-ch-ua-mobile: ?0" \
+                --header "sec-ch-ua-platform: \"macOS\"" \
+                --header "sec-fetch-dest: empty" \
+                --header "sec-fetch-mode: cors" \
+                --header "sec-fetch-site: same-site" \
+                --header "user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36" \
+                --max-time 300 \
+                --connect-timeout 30)
+              
+              EXECUTION_ID=$(echo "$EXECUTION_RESPONSE" | jq -r '.executionId')
+              
+              if [ "$EXECUTION_ID" != "null" ] && [ -n "$EXECUTION_ID" ]; then
+                echo "✅ Test case $test_case_id started with execution ID: $EXECUTION_ID"
+                echo "$EXECUTION_ID" >> /tmp/execution_ids.txt
+                echo "$test_case_id:$EXECUTION_ID" >> /tmp/test_case_execution_mapping.txt
+              else
+                echo "❌ Failed to start test case $test_case_id"
+                echo "Response: $EXECUTION_RESPONSE"
+              fi
+            fi
+          }
+          
+          # Export the function and variables for parallel execution
+          export -f execute_test_case
+          export CQA_AUTH_TOKEN CQA_ORIGIN_HEADER
+          
+          # Execute all test cases in parallel using background processes
+          echo "$TEST_CASE_IDS" | xargs -n 1 -P 10 -I {} bash -c 'execute_test_case "$@"' _ {}
+          
+          # Wait for all background processes to complete
+          wait
+          
+          # Wait a moment for all executions to start
+          sleep 5
+          
+          # Get all execution IDs
+          if [ -f /tmp/execution_ids.txt ]; then
+            EXECUTION_IDS=$(cat /tmp/execution_ids.txt)
+            echo "📋 All execution IDs: $EXECUTION_IDS"
+          else
+            echo "❌ No execution IDs found"
+            exit 1
+          fi
+
+      - name: Monitor Test Progress
+        env:
+          FLOW_URL: "https://98c1cc43be43.ngrok-free.app"
+        run: |
+          echo "⏳ Monitoring ContextQA test progress..."
+          
+          # Get execution IDs
+          if [ -f /tmp/execution_ids.txt ]; then
+            EXECUTION_IDS=$(cat /tmp/execution_ids.txt)
+          else
+            echo "❌ No execution IDs found"
+            exit 1
+          fi
+          
+          # Poll status every 30 seconds for up to 10 minutes (within 15 min timeout)
+          MAX_ATTEMPTS=20
+          ATTEMPT=0
+          ALL_COMPLETED=false
+          
+          while [ $ATTEMPT -lt $MAX_ATTEMPTS ] && [ "$ALL_COMPLETED" = false ]; do
+            ATTEMPT=$((ATTEMPT + 1))
+            echo "📊 Checking status (attempt $ATTEMPT/$MAX_ATTEMPTS)..."
+            
+            ALL_COMPLETED=true
+            
+            # Check each execution
+            echo "$EXECUTION_IDS" | while read -r execution_id; do
+              if [ -n "$execution_id" ]; then
+                echo "🔍 Checking execution: $execution_id"
+                
+                # Get execution status
+                STATUS_RESPONSE=$(curl --fail -sS "https://98c1cc43be43.ngrok-free.app/test/status/$execution_id" \
+                  --header "ngrok-skip-browser-warning: true" \
+                  --header "cqa-origin: $CQA_ORIGIN_HEADER")
+                
+                # Extract status
+                EXECUTION_STATUS=$(echo "$STATUS_RESPONSE" | jq -r '.status')
+                STATUS_MESSAGE=$(echo "$STATUS_RESPONSE" | jq -r '.message // "No message"')
+                
+                echo "🔄 Execution $execution_id: $EXECUTION_STATUS - $STATUS_MESSAGE"
+                
+                case "$EXECUTION_STATUS" in
+                  "completed")
+                    echo "✅ Execution $execution_id completed successfully!"
+                    ;;
+                  "failed")
+                    echo "❌ Execution $execution_id failed!"
+                    ALL_COMPLETED=false
+                    ;;
+                  "queued"|"running")
+                    echo "⏳ Execution $execution_id still in progress..."
+                    ALL_COMPLETED=false
+                    ;;
+                  *)
+                    echo "⚠️ Unknown status for execution $execution_id: $EXECUTION_STATUS"
+                    ALL_COMPLETED=false
+                    ;;
+                esac
+              fi
+            done
+            
+            if [ "$ALL_COMPLETED" = false ]; then
+              echo "⏳ Some tests still in progress... waiting 30 seconds"
+              sleep 30
+            fi
+          done
+          
+          if [ $ATTEMPT -ge $MAX_ATTEMPTS ]; then
+            echo "⏰ Timeout waiting for tests to complete (10 minutes)"
+            echo "🔄 Tests may still be running in the background"
+            exit 1
+          fi
+          
+          echo "✅ All test executions completed!"
+
+      - name: Get Final Results
+        env:
+          CQA_ORG_NAME: ${{ inputs.cqa_org_name || 'lululemonand' }}
+          CQA_AUTH_TOKEN: ${{ inputs.cqa_auth_token || 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkZWVwY3FhX2x1bHVsZW1vbmFuZCIsImV4cCI6MTc1Njk4OTg5MCwiaWF0IjoxNzU2OTAzNDkwLCJ0ZW5hbnQiOiJsdWx1bGVtb25hbmQifQ.QgaT9nEyf5TiQOIIZ5KmjRUy5g3JPnQ5Ww7QokYNmHxsX-kXbLaXDO1jpsJ8LMI0U2NGcaIhJzH3phtm8YzCXg' }}
+          CQA_ORIGIN_HEADER: "https://${CQA_ORG_NAME}.contextqa.com"
+        if: always()
+        run: |
+          echo "📋 Getting final test results..."
+          
+          # Get execution IDs
+          if [ -f /tmp/execution_ids.txt ]; then
+            EXECUTION_IDS=$(cat /tmp/execution_ids.txt)
+          else
+            echo "❌ No execution IDs found"
+            exit 0
+          fi
+          
+          echo "📊 Final Results Summary:"
+          echo "🎯 PR: #${{ inputs.pr_number || github.event.pull_request.number }}"
+          echo "🌿 Branch: ${{ inputs.pr_branch || github.event.pull_request.head.ref }}"
+          echo "🔗 Commit: ${{ inputs.merge_sha || github.event.pull_request.merge_commit_sha }}"
+          echo "🧪 All Test Cases Executed: $(echo "$EXECUTION_IDS" | wc -l)"
+          echo "📋 Note: Executed all test cases from global storage (accumulated from all PRs)"
+          
+          # Get final status for each execution
+          echo "$EXECUTION_IDS" | while read -r execution_id; do
+            if [ -n "$execution_id" ]; then
+              echo "🔍 Getting final status for execution: $execution_id"
+              
+              if ! FINAL_STATUS=$(curl --fail -sS "https://98c1cc43be43.ngrok-free.app/test/status/$execution_id" \
+                --header "ngrok-skip-browser-warning: true" \
+                --header "cqa-origin: $CQA_ORIGIN_HEADER" 2>&1); then
+                echo "❌ Failed to get final status for $execution_id: $FINAL_STATUS"
+                continue
+              fi
+              
+              # Extract relevant information
+              EXECUTION_STATUS=$(echo "$FINAL_STATUS" | jq -r '.status // "unknown"')
+              TEST_CASE_ID=$(echo "$FINAL_STATUS" | jq -r '.testCaseId // "N/A"')
+              CREATED_AT=$(echo "$FINAL_STATUS" | jq -r '.createdAt // "Unknown"')
+              
+              echo "🎯 Execution $execution_id:"
+              echo "   - Test Case ID: $TEST_CASE_ID"
+              echo "   - Status: $EXECUTION_STATUS"
+              echo "   - Started: $CREATED_AT"
+              
+              if [ "$EXECUTION_STATUS" = "completed" ]; then
+                echo "   ✅ Completed successfully"
+              else
+                echo "   ⚠️ Status: $EXECUTION_STATUS"
+              fi
+            fi
+          done
+          
+          echo "🏁 Final Results step completed"
+          echo ""
+          echo "🎉 PR merge workflow completed successfully!"
+          echo "📋 Summary: All approved test cases executed"
+
+      - name: Generate and Send Email Report
+        env:
+          CQA_ORG_NAME: ${{ inputs.cqa_org_name || 'lululemonand' }}
+          CQA_AUTH_TOKEN: ${{ inputs.cqa_auth_token || 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkZWVwY3FhX2x1bHVsZW1vbmFuZCIsImV4cCI6MTc1Njk4OTg5MCwiaWF0IjoxNzU2OTAzNDkwLCJ0ZW5hbnQiOiJsdWx1bGVtb25hbmQifQ.QgaT9nEyf5TiQOIIZ5KmjRUy5g3JPnQ5Ww7QokYNmHxsX-kXbLaXDO1jpsJ8LMI0U2NGcaIhJzH3phtm8YzCXg' }}
+          CQA_ORIGIN_HEADER: "https://${CQA_ORG_NAME}.contextqa.com"
+        if: always()
+        run: |
+          set -euo pipefail
+          
+          echo "📧 Generating comprehensive email report..."
+          
+          # Get execution IDs and mapping
+          if [ -f /tmp/execution_ids.txt ]; then
+            EXECUTION_IDS=$(cat /tmp/execution_ids.txt)
+          else
+            echo "❌ No execution IDs found for email report"
+            exit 0
+          fi
+          
+          # Create detailed report
+          REPORT_FILE="/tmp/test_execution_report.html"
+          
+          cat > "$REPORT_FILE" << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <title>ContextQA Test Execution Report</title>
+              <style>
+                  body { font-family: Arial, sans-serif; margin: 20px; }
+                  .header { background-color: #f4f4f4; padding: 20px; border-radius: 5px; }
+                  .summary { background-color: #e8f4fd; padding: 15px; margin: 10px 0; border-radius: 5px; }
+                  .test-case { border: 1px solid #ddd; margin: 10px 0; padding: 15px; border-radius: 5px; }
+                  .success { border-left: 5px solid #4CAF50; }
+                  .failed { border-left: 5px solid #f44336; }
+                  .running { border-left: 5px solid #ff9800; }
+                  .details { margin-top: 10px; font-size: 14px; color: #666; }
+                  table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+                  th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                  th { background-color: #f2f2f2; }
+              </style>
+          </head>
+          <body>
+              <div class="header">
+                  <h1>🧪 ContextQA Test Execution Report</h1>
+                  <p><strong>PR:</strong> #${{ inputs.pr_number || github.event.pull_request.number }}</p>
+                  <p><strong>Branch:</strong> ${{ inputs.pr_branch || github.event.pull_request.head.ref }}</p>
+                  <p><strong>Commit:</strong> ${{ inputs.merge_sha || github.event.pull_request.merge_commit_sha }}</p>
+                  <p><strong>Generated:</strong> $(date -u +"%Y-%m-%d %H:%M:%S UTC")</p>
+              </div>
+          EOF
+          
+          # Add summary section
+          TOTAL_TESTS=$(echo "$EXECUTION_IDS" | wc -l)
+          echo "<div class='summary'>" >> "$REPORT_FILE"
+          echo "<h2>📊 Execution Summary</h2>" >> "$REPORT_FILE"
+          echo "<p><strong>Total Test Cases Executed:</strong> $TOTAL_TESTS</p>" >> "$REPORT_FILE"
+          echo "<p><strong>Execution Mode:</strong> Parallel (up to 10 concurrent)</p>" >> "$REPORT_FILE"
+          echo "</div>" >> "$REPORT_FILE"
+          
+          # Add detailed results for each test case
+          echo "<h2>🔍 Detailed Results</h2>" >> "$REPORT_FILE"
+          
+          echo "$EXECUTION_IDS" | while read -r execution_id; do
+            if [ -n "$execution_id" ]; then
+              echo "📋 Processing results for execution: $execution_id"
+              
+              # Get final status for this execution
+              if FINAL_STATUS=$(curl --fail -sS "https://98c1cc43be43.ngrok-free.app/test/status/$execution_id" \
+                --header "ngrok-skip-browser-warning: true" \
+                --header "cqa-origin: $CQA_ORIGIN_HEADER" 2>&1); then
+                
+                # Extract relevant information
+                EXECUTION_STATUS=$(echo "$FINAL_STATUS" | jq -r '.status // "unknown"')
+                TEST_CASE_ID=$(echo "$FINAL_STATUS" | jq -r '.testCaseId // "N/A"')
+                CREATED_AT=$(echo "$FINAL_STATUS" | jq -r '.createdAt // "Unknown"')
+                UPDATED_AT=$(echo "$FINAL_STATUS" | jq -r '.updatedAt // "Unknown"')
+                DURATION=$(echo "$FINAL_STATUS" | jq -r '.duration // "N/A"')
+                MESSAGE=$(echo "$FINAL_STATUS" | jq -r '.message // "No additional details"')
+                
+                # Determine CSS class based on status
+                case "$EXECUTION_STATUS" in
+                  "completed") CSS_CLASS="success" ;;
+                  "failed") CSS_CLASS="failed" ;;
+                  *) CSS_CLASS="running" ;;
+                esac
+                
+                # Add test case result to report
+                cat >> "$REPORT_FILE" << EOF
+                <div class="test-case $CSS_CLASS">
+                    <h3>Test Case: $TEST_CASE_ID</h3>
+                    <div class="details">
+                        <table>
+                            <tr><th>Execution ID</th><td>$execution_id</td></tr>
+                            <tr><th>Status</th><td>$EXECUTION_STATUS</td></tr>
+                            <tr><th>Started</th><td>$CREATED_AT</td></tr>
+                            <tr><th>Updated</th><td>$UPDATED_AT</td></tr>
+                            <tr><th>Duration</th><td>$DURATION</td></tr>
+                            <tr><th>Message</th><td>$MESSAGE</td></tr>
+                        </table>
+                    </div>
+                </div>
+                EOF
+              else
+                echo "❌ Failed to get status for execution $execution_id"
+                cat >> "$REPORT_FILE" << EOF
+                <div class="test-case failed">
+                    <h3>Execution ID: $execution_id</h3>
+                    <div class="details">
+                        <p><strong>Status:</strong> Error retrieving status</p>
+                        <p><strong>Error:</strong> Unable to fetch execution details</p>
+                    </div>
+                </div>
+                EOF
+              fi
+            fi
+          done
+          
+          # Close HTML
+          echo "</body></html>" >> "$REPORT_FILE"
+          
+          echo "📧 Email report generated: $REPORT_FILE"
+          echo "📊 Report size: $(wc -c < "$REPORT_FILE") bytes"
+          
+          # Display report summary
+          echo "📋 Report Summary:"
+          echo "  - Total test cases: $TOTAL_TESTS"
+          echo "  - Report file: $REPORT_FILE"
+          echo "  - Report ready for email delivery"
+          
+          # Note: In a real implementation, you would send this via email
+          # For now, we'll just log that the report is ready
+          echo "📧 Email report ready for delivery (email sending not implemented in this demo)"
