@@ -16,11 +16,11 @@ export async function login(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword(data);
 
   if (error) {
-    redirect('/error');
+    return { success: false, error: 'Invalid credentials' };
   }
 
   revalidatePath('/', 'layout');
-  redirect('/');
+  return { success: true };
 }
 
 export async function signup(formData: FormData) {
