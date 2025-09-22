@@ -220,14 +220,14 @@ const RoadmapPage = () => {
   } = useRoadmaps(activeTab !== 'discover' ? filters : undefined);
 
   const [getCategories] = useAxiosGet<RoadmapCategory[]>(
-    '/roadmaps/categories',
+    '/api/roadmaps/categories',
   );
 
   // Create separate API hooks for featured and trending roadmaps
   const [getFeaturedRoadmaps] =
-    useAxiosGet<ApiResponse<RoadmapsResponse>>('/roadmaps');
+    useAxiosGet<ApiResponse<RoadmapsResponse>>('/api/roadmaps');
   const [getTrendingRoadmaps] =
-    useAxiosGet<ApiResponse<RoadmapsResponse>>('/roadmaps');
+    useAxiosGet<ApiResponse<RoadmapsResponse>>('/api/roadmaps');
 
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const isIntersecting = useIntersection(loadMoreRef);
