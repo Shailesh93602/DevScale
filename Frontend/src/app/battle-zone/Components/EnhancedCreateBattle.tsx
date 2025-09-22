@@ -110,11 +110,11 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
   // API hooks
   const [getSubjects] = useAxiosGet<
     { success?: boolean; message?: string } & ISubject[]
-  >('/subjects');
+  >('/api/subjects');
 
   const [getTopicsBySubjectId] = useAxiosGet<
     { success?: boolean; message?: string } & ITopic[]
-  >('/subjects/{{subjectId}}/topics');
+  >('/api/subjects/{{subjectId}}/topics');
 
   // Form setup with validation
   const form = useForm<BattleFormValues>({
