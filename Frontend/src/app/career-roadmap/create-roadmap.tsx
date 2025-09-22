@@ -360,12 +360,12 @@ export function CreateRoadmap({
   const [topics, setTopics] = useState<Topic[]>([]);
   const [tagInput, setTagInput] = useState('');
 
-  const [createRoadmap] = useAxiosPost('/roadmaps');
+  const [createRoadmap] = useAxiosPost('/api/roadmaps');
   const [getMainConcepts] = useAxiosGet<{ data: MainConcept[] }>(
-    '/main-concepts',
+    '/api/main-concepts',
   );
-  const [getSubjects] = useAxiosGet<{ data: Subject[] }>('/subjects');
-  const [getTopics] = useAxiosGet<{ data: Topic[] }>('/topics');
+  const [getSubjects] = useAxiosGet<{ data: Subject[] }>('/api/subjects');
+  const [getTopics] = useAxiosGet<{ data: Topic[] }>('/api/topics');
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
