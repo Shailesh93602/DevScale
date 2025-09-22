@@ -14,16 +14,15 @@ import AchievementItem, {
   AchievementItemProps,
 } from '@/components/dashboard/AchievementItem';
 import { DashboardSkeleton } from '@/components/dashboard/DashboardSkeletons';
-import { useDashboard } from '@/hooks/useDashboard';
-import { useStreak } from '@/hooks/useStreak';
 import { useAxiosGet } from '@/hooks/useAxios';
 import {
+  useDashboard,
   DashboardStats,
   Roadmap,
   EnrolledRoadmap,
   RecommendedRoadmap,
 } from '@/hooks/useDashboard';
-import { WeeklyActivity } from '@/hooks/useStreak';
+import { useStreak, WeeklyActivity } from '@/hooks/useStreak';
 import { useSelector } from 'react-redux';
 import { getLoggedInUser } from '@/lib/features/user/userSlice';
 
@@ -293,7 +292,7 @@ const DashboardPage: React.FC = () => {
                     Start your learning journey by enrolling in a roadmap
                   </p>
                   <Link
-                    href="/explore"
+                    href="/career-roadmap"
                     className="hover:text-primary/80 text-sm font-medium text-primary"
                   >
                     Browse Roadmaps
@@ -342,7 +341,7 @@ const DashboardPage: React.FC = () => {
                     We&apos;ll suggest roadmaps based on your interests soon
                   </p>
                   <Link
-                    href="/explore"
+                    href="/career-roadmap"
                     className="hover:text-primary/80 text-sm font-medium text-primary"
                   >
                     Browse All Roadmaps
