@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Flame } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 interface StreakCalendarProps {
   currentStreak: number;
@@ -94,7 +95,7 @@ const StreakCalendar: React.FC<StreakCalendarProps> = ({
               </p>
             </div>
             <Button variant="secondary" size="sm" asChild>
-              <a href="/career-roadmap">Start Learning</a>
+              <Link href="/career-roadmap">Start Learning</Link>
             </Button>
           </div>
         )}
