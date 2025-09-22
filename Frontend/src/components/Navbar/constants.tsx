@@ -28,8 +28,8 @@ export const navItems: NavItem[] = [
 ];
 
 export const publicNavItems: NavItem[] = [
-  { path: '/about-us', label: 'About Us' },
-  { path: '/contact-us', label: 'Contact' },
+  { path: '/about', label: 'About Us' },
+  { path: '/contact', label: 'Contact' },
   { path: '/auth/login', label: 'Login' },
 ];
 
