@@ -590,7 +590,6 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
                                 value={field.value}
                                 onValueChange={(value) => {
                                   field.onChange(value);
-                                  setSelectedSubject(value);
                                 }}
                                 disabled={
                                   !selectedSubject || topics.length === 0
