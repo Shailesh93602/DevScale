@@ -15,14 +15,15 @@ const LoginForm = () => {
   const [serverError, setServerError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: yupResolver(loginSchema),
   });
 
-  const onSubmit = async (data: {
-    email: string;
-    password: string;
-  }) => {
+  const onSubmit = async (data: { email: string; password: string }) => {
     setServerError(null);
     setIsLoading(true);
     const formData = new FormData();
@@ -56,9 +57,7 @@ const LoginForm = () => {
           error={errors.password?.message as string}
         />
       </div>
-      {serverError && (
-        <p className="text-sm text-destructive">{serverError}</p>
-      )}
+      {serverError && <p className="text-sm text-destructive">{serverError}</p>}
       <div className="flex items-center justify-between">
         <Link
           href="/auth/forgot-password"
