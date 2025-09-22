@@ -242,7 +242,9 @@ const RoadmapPage = () => {
         setCategories(response?.data ?? []);
       } catch (error) {
         console.error('Error fetching categories:', error);
-        toast.error('Unable to load roadmap categories. Please check your internet connection and refresh the page.');
+        toast.error(
+          'Unable to load roadmap categories. Please check your internet connection and refresh the page.',
+        );
       } finally {
         setIsCategoriesLoading(false);
       }
