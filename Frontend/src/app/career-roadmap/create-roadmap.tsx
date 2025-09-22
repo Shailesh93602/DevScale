@@ -393,7 +393,7 @@ export function CreateRoadmap({
         setTopics(topicsResponse.data.data);
       } catch (error) {
         console.error('Error fetching data:', error);
-        toast.error('Failed to fetch required data');
+        toast.error('Unable to load form data. Please check your internet connection and try reopening the modal.');
       }
     };
 
@@ -687,7 +687,7 @@ export function CreateRoadmap({
             <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type="submit" disabled={isSubmitting || !form.formState.isValid}>
               {isSubmitting ? 'Creating...' : 'Create Roadmap'}
             </Button>
           </div>
