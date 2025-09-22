@@ -1,5 +1,4 @@
 import { createServerClient } from '@supabase/ssr';
-import axios from 'axios';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export async function updateSession(request: NextRequest) {
@@ -37,19 +36,17 @@ export async function updateSession(request: NextRequest) {
   // IMPORTANT: DO NOT REMOVE auth.getUser()
 
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  const {
     data: { user },
   } = await supabase.auth.getUser();
 
   // Handle non-authenticated users
   if (!user) {
-    // Allow access to landing page and auth pages
+    // Allow access to landing page, auth pages, and public pages
     if (
       request.nextUrl.pathname === '/' ||
-      request.nextUrl.pathname.startsWith('/auth')
+      request.nextUrl.pathname.startsWith('/auth') ||
+      request.nextUrl.pathname === '/about' ||
+      request.nextUrl.pathname === '/contact'
     ) {
       return supabaseResponse;
     } else {
@@ -73,28 +70,6 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = '/dashboard';
     return NextResponse.redirect(url);
-  }
-  // Redirect to details page if user data is incomplete
-  if (request.nextUrl.pathname !== '/details') {
-    try {
-      const response = await axios.get(
-        'http://localhost:4000/api/v1/users/me',
-        {
-          headers: {
-            Authorization: `Bearer ${session?.access_token}`,
-          },
-        },
-      );
-
-      if (!response?.data?.data?.user) {
-        const url = request.nextUrl.clone();
-        url.pathname = '/details';
-        return NextResponse.redirect(url);
-      }
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-      // If API call fails, still allow the user to continue
-    }
   }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
