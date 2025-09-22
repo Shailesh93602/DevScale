@@ -40,9 +40,9 @@ export default function ProfilePage() {
       memberSince: string;
     };
     message?: string;
-  }>('/profile');
+  }>('/api/profile');
   const [updateProfile] = useAxiosPut<{ success?: boolean; message?: string }>(
-    '/profile/update',
+    '/api/profile/update',
   );
 
   useEffect(() => {
