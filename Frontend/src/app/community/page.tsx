@@ -2,8 +2,10 @@
 import { HoverBorderGradient } from '@/components/HoverBorderGradient';
 import Image from 'next/image';
 import { AceternityLogo } from '@/components/AceternityLogo';
+import { useToast } from '@/hooks/use-toast';
 
 export default function Community() {
+  const { toast } = useToast();
   return (
     <div className="py-4">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -27,6 +29,10 @@ export default function Community() {
               containerClassName="rounded-full"
               as="button"
               className="flex items-center space-x-2 bg-primary text-white hover:bg-primary2"
+              onClick={() => toast({
+                title: "Coming Soon",
+                description: "Discussion forums are under development.",
+              })}
             >
               <AceternityLogo />
               <span> Join Discussions</span>
@@ -46,6 +52,10 @@ export default function Community() {
               containerClassName="rounded-full"
               as="button"
               className="flex items-center space-x-2 bg-primary text-white hover:bg-primary2"
+              onClick={() => toast({
+                title: "Coming Soon",
+                description: "Event calendar is under development.",
+              })}
             >
               <AceternityLogo />
               <span>View Events</span>
@@ -64,6 +74,10 @@ export default function Community() {
               containerClassName="rounded-full"
               as="button"
               className="flex items-center space-x-2 bg-primary text-white hover:bg-primary2"
+              onClick={() => toast({
+                title: "Coming Soon",
+                description: "Member highlights are under development.",
+              })}
             >
               <AceternityLogo />
               <span>View Highlights</span>
@@ -86,6 +100,10 @@ export default function Community() {
               containerClassName="rounded-full"
               as="button"
               className="flex items-center space-x-2 bg-primary hover:bg-primary2"
+              onClick={() => toast({
+                title: "Coming Soon",
+                description: "Collaboration opportunities are under development.",
+              })}
             >
               <AceternityLogo />
               <span>Find Opportunities</span>
