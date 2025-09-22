@@ -94,7 +94,7 @@ const StreakCalendar: React.FC<StreakCalendarProps> = ({
               </p>
             </div>
             <Button variant="secondary" size="sm" asChild>
-              <a href="/explore">Start Learning</a>
+              <a href="/career-roadmap">Start Learning</a>
             </Button>
           </div>
         )}
