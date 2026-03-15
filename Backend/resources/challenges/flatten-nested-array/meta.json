@@ -1,0 +1,19 @@
+{
+  "title": "Flatten a Nested Array",
+  "slug": "flatten-nested-array",
+  "difficulty": "Easy",
+  "category": "frontend",
+  "points": 50,
+  "tags": ["javascript", "arrays", "recursion"],
+  "company_tags": ["Google", "Meta", "Amazon", "Apple"],
+  "topic_tags": ["Recursion", "Arrays", "Iteration"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "A nested array `arr` and an optional `depth` parameter",
+  "output_format": "A flattened array with nesting reduced by the specified depth (or fully flattened if no depth given)",
+  "example_input": "flatten([1, [2, [3, [4]]]], 2)",
+  "example_output": "[1, 2, 3, [4]]",
+  "constraints": "Array can contain any values including nested arrays. 0 <= depth <= Infinity",
+  "function_signature": "function flatten(arr: any[], depth?: number): any[]",
+  "status": "ACTIVE"
+}

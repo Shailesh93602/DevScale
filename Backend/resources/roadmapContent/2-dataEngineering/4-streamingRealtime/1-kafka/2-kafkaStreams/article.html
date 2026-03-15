@@ -1,0 +1,42 @@
+<h1>Kafka Streams</h1>
+<p><strong>Kafka Streams</strong> is a client library for building applications and microservices where the input and output data are stored in Kafka clusters. It allows you to do stateful or stateless stream processing directly in your Java/Scala application without needing a separate processing cluster (like Spark or Flink).</p>
+
+<h2>Why Kafka Streams?</h2>
+<ul>
+  <li><strong>No extra cluster needed:</strong> It’s just a library you bundle into your microservice. You run standard containers/pods.</li>
+  <li><strong>Exactly-once processing:</strong> Built-in support to guarantee records are processed exactly once, even during failures.</li>
+  <li><strong>Stateful operations:</strong> It uses RocksDB locally to store intermediate state (like running totals or windowed aggregates), backed up automatically to internal Kafka topics.</li>
+</ul>
+
+<h2>Core Abstractions</h2>
+<ul>
+  <li><strong>KStream:</strong> Represents a stream of records. Every data record represents a self-contained insert. (e.g., A stream of financial transactions).</li>
+  <li><strong>KTable:</strong> Represents a changelog stream (like a database table). Every record represents an update or insert based on the key. (e.g., A stream of user profile updates where the key is <code>user_id</code>).</li>
+  <li><strong>GlobalKTable:</strong> Like a KTable, but fully replicated to every Kafka Streams application instance. Perfect for joining small lookup tables (e.g., country codes) to massive streams without shuffling data over the network.</li>
+</ul>
+
+<h2>Basic Topology Example (Java)</h2>
+<pre><code>StreamsBuilder builder = new StreamsBuilder();
+
+// 1. Read from the input topic
+KStream&lt;String, String&gt; textLines = builder.stream("TextLinesTopic");
+
+// 2. Process: count words using stateful operations
+KTable&lt;String, Long&gt; wordCounts = textLines
+    .flatMapValues(textLine -> Arrays.asList(textLine.toLowerCase().split("\\W+")))
+    .groupBy((key, word) -> word)   // re-keys the stream by 'word'
+    .count(Materialized.as("Counts")); // stores state locally in RocksDB
+
+// 3. Write back to output topic
+wordCounts.toStream().to("WordsWithCountsTopic", Produced.with(Serdes.String(), Serdes.Long()));</code></pre>
+
+<h2>Joins in Kafka Streams</h2>
+<p>Kafka Streams supports joining KStreams to KTables, KStreams to KStreams, and KTables to KTables. To join them, they must be <strong>co-partitioned</strong> (meaning both topics must have the exact same number of partitions and use the same partitioning strategy on the join key).</p>
+
+<h2>Time & Windowing</h2>
+<p>You can aggregate events inside time brackets using windows:</p>
+<ul>
+  <li><strong>Tumbling Windows:</strong> Fixed size, non-overlapping. (e.g., hourly aggregates: 1:00-2:00, 2:00-3:00).</li>
+  <li><strong>Hopping (Sliding) Windows:</strong> Fixed size, overlapping. (e.g., a 1-hour window that advances every 5 minutes).</li>
+  <li><strong>Session Windows:</strong> Based on periods of activity separated by gaps of inactivity. (e.g., user session tracking).</li>
+</ul>

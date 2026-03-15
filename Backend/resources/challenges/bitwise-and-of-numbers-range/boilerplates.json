@@ -1,0 +1,27 @@
+[
+  {
+    "language": "typescript",
+    "slug": "typescript",
+    "code": "function rangeBitwiseAnd(left: number, right: number): number {\n  \n};"
+  },
+  {
+    "language": "javascript",
+    "slug": "javascript",
+    "code": "/**\n * @param {number} left\n * @param {number} right\n * @return {number}\n */\nvar rangeBitwiseAnd = function(left, right) {\n    \n};"
+  },
+  {
+    "language": "python",
+    "slug": "python",
+    "code": "class Solution:\n    def rangeBitwiseAnd(self, left: int, right: int) -> int:\n        "
+  },
+  {
+    "language": "java",
+    "slug": "java",
+    "code": "class Solution {\n    public int rangeBitwiseAnd(int left, int right) {\n        \n    }\n}"
+  },
+  {
+    "language": "cpp",
+    "slug": "cpp",
+    "code": "class Solution {\npublic:\n    int rangeBitwiseAnd(int left, int right) {\n        \n    }\n};"
+  }
+]

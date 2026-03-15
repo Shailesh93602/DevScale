@@ -1,0 +1,95 @@
+<h1>Docker & Cloud Deployment</h1>
+<p>Docker packages your application and all its dependencies into a <strong>container</strong> — a portable, consistent environment that runs the same on your laptop, CI, and production server.</p>
+
+<h2>Key Concepts</h2>
+<ul>
+  <li><strong>Image</strong> — A read-only snapshot of your application (like a class).</li>
+  <li><strong>Container</strong> — A running instance of an image (like an object).</li>
+  <li><strong>Dockerfile</strong> — Instructions to build an image.</li>
+  <li><strong>Docker Hub</strong> — Registry for sharing images.</li>
+</ul>
+
+<h2>Production Dockerfile (Multi-stage Build)</h2>
+<pre><code># Stage 1: Build
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+# Stage 2: Production (smaller final image)
+FROM node:20-alpine AS production
+WORKDIR /app
+ENV NODE_ENV=production
+
+COPY package*.json ./
+RUN npm ci --only=production
+
+COPY --from=builder /app/dist ./dist
+
+EXPOSE 3000
+USER node           # Run as non-root for security
+CMD ["node", "dist/index.js"]</code></pre>
+
+<h2>Docker Compose — Multi-Container Apps</h2>
+<pre><code># docker-compose.yml
+version: "3.9"
+services:
+  api:
+    build: .
+    ports: ["3000:3000"]
+    environment:
+      DATABASE_URL: postgresql://postgres:password@db:5432/myapp
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./src:/app/src  # Hot reload in dev
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: myapp
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+
+# Commands:
+# docker compose up -d      — Start in background
+# docker compose logs -f    — Watch logs
+# docker compose down       — Stop everything</code></pre>
+
+<h2>Deployment Platforms</h2>
+<pre><code># Railway (great for Node + Postgres — free tier)
+# 1. Connect GitHub repo
+# 2. Add DATABASE_URL service
+# 3. Deploy automatically on push
+
+# Render
+# render.yaml
+services:
+  - type: web
+    name: my-api
+    runtime: node
+    buildCommand: npm install &amp;&amp; npm run build
+    startCommand: npm start
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: my-db
+          property: connectionString</code></pre>
+
+<h2>Environment Management</h2>
+<pre><code>NODE_ENV=production     # Tell app it's in production
+PORT=3000               # Injected by host platform automatically
+DATABASE_URL=...        # Set via platform's secret manager
+JWT_SECRET=...          # Never hardcode secrets — always env vars</code></pre>

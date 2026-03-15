@@ -1,0 +1,6 @@
+[
+  "Use a Map or object to store cached results. The key should uniquely represent the arguments.",
+  "JSON.stringify(args) creates a string key from the arguments array — simple and effective for primitives.",
+  "Before calling the original function, check if the cache already has a result for the current arguments.",
+  "Remember to store the result in the cache after computing it, then return it."
+]

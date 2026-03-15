@@ -1,0 +1,6 @@
+[
+  "Model as a state machine with 3 states: holding stock, just sold, resting (cooldown).",
+  "held = max(held, rest - price): buy from rest state or keep holding.",
+  "sold = held + price: sell what you're holding.",
+  "rest = max(rest, sold): after cooldown from sold, or keep resting. Answer = max(sold, rest)."
+]

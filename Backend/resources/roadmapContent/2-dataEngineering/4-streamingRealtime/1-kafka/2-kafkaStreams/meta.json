@@ -1,0 +1,4 @@
+{
+    "name": "Kafka Streams",
+    "description": "Lightweight stream processing directly inside the Kafka ecosystem."
+}

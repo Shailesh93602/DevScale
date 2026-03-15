@@ -1,0 +1,127 @@
+<h1>WebSockets & Real-Time Features</h1>
+<p>WebSockets provide a persistent, bidirectional connection between the mobile app and server — enabling features like live chat, real-time notifications, collaborative editing, and live sports scores without the overhead of repeated HTTP polling.</p>
+
+<h2>Native WebSocket API</h2>
+<pre><code class="language-jsx">import { useEffect, useRef, useState } from 'react';
+import { AppState } from 'react-native';
+
+function useWebSocket(url, userId) {
+  const ws = useRef(null);
+  const [messages, setMessages] = useState([]);
+  const [isConnected, setIsConnected] = useState(false);
+  const reconnectTimeout = useRef(null);
+
+  function connect() {
+    ws.current = new WebSocket(`${url}?userId=${userId}`);
+
+    ws.current.onopen = () => {
+      setIsConnected(true);
+      console.log('WebSocket connected');
+      // Clear any pending reconnect
+      if (reconnectTimeout.current) clearTimeout(reconnectTimeout.current);
+    };
+
+    ws.current.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      setMessages((prev) => [...prev, data]);
+    };
+
+    ws.current.onerror = (error) => {
+      console.error('WebSocket error:', error.message);
+    };
+
+    ws.current.onclose = (event) => {
+      setIsConnected(false);
+      // Auto-reconnect with exponential backoff (unless intentional close)
+      if (event.code !== 1000) {
+        reconnectTimeout.current = setTimeout(connect, 3000);
+      }
+    };
+  }
+
+  function sendMessage(chatId, content) {
+    if (ws.current?.readyState === WebSocket.OPEN) {
+      ws.current.send(JSON.stringify({ type: 'message', chatId, content }));
+    } else {
+      console.warn('Cannot send — WebSocket not connected');
+    }
+  }
+
+  useEffect(() => {
+    connect();
+
+    // Handle app going to background: iOS kills WebSocket connections
+    const subscription = AppState.addEventListener('change', (nextState) => {
+      if (nextState === 'active' && !isConnected) {
+        connect();  // Reconnect when app resumes from background
+      }
+    });
+
+    return () => {
+      ws.current?.close(1000, 'Component unmounted');
+      subscription.remove();
+      if (reconnectTimeout.current) clearTimeout(reconnectTimeout.current);
+    };
+  }, []);
+
+  return { messages, isConnected, sendMessage };
+}
+</code></pre>
+
+<h2>Socket.io Client</h2>
+<pre><code class="language-jsx">import { io } from 'socket.io-client';
+
+const socket = io('https://api.myapp.com', {
+  auth: { token: userToken },   // Send JWT on connection
+  transports: ['websocket'],    // Force WebSocket (skip polling fallback)
+  reconnection: true,
+  reconnectionAttempts: 10,
+  reconnectionDelay: 1000,
+  reconnectionDelayMax: 5000,   // Max 5 second delay between retries
+});
+
+socket.on('connect', () => console.log('Connected:', socket.id));
+socket.on('disconnect', (reason) => console.log('Disconnected:', reason));
+
+// Listen for events
+socket.on('new_message', (message) => {
+  setMessages((prev) => [...prev, message]);
+});
+
+socket.on('user_typing', ({ userId, chatId }) => {
+  setTypingUsers((prev) => ({ ...prev, [chatId]: userId }));
+});
+
+// Emit events
+socket.emit('join_chat', { chatId });
+socket.emit('send_message', { chatId, content: 'Hello!' });
+socket.emit('start_typing', { chatId });
+</code></pre>
+
+<h2>Supabase Realtime (Managed WebSockets)</h2>
+<pre><code class="language-jsx">import { supabase } from './supabase';
+
+// Subscribe to database changes — no WebSocket server needed!
+function useLiveMessages(chatId) {
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    // Subscribe to INSERT events on messages table
+    const channel = supabase
+      .channel(`chat:${chatId}`)
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'messages',
+        filter: `chat_id=eq.${chatId}`,
+      }, (payload) => {
+        setMessages((prev) => [...prev, payload.new]);
+      })
+      .subscribe();
+
+    return () => supabase.removeChannel(channel);
+  }, [chatId]);
+
+  return messages;
+}
+</code></pre>

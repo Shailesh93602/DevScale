@@ -1,0 +1,4 @@
+{
+    "name": "React 18 Concurrent Features",
+    "description": "Deep dive into concurrent rendering: useTransition for non-blocking UI, useDeferredValue for expensive computations, and streaming SSR with Suspense."
+}

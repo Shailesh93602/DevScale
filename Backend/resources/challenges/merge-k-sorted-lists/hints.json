@@ -1,0 +1,6 @@
+[
+  "A naive approach: repeatedly pick the minimum head among all k lists and append it. This is O(N*k) which is too slow for large k.",
+  "Think divide and conquer: you already know how to merge 2 sorted lists. Can you use that to merge k lists?",
+  "Pair up the k lists and merge each pair. After the first round, you have k/2 lists. Repeat until you have 1 list. This is O(N log k).",
+  "Alternatively, use a Min-Heap (Priority Queue). Insert all list heads into the heap. Repeatedly extract the minimum node, append it to the result, and insert that node's next into the heap. This is also O(N log k)."
+]

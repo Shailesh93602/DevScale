@@ -1,0 +1,118 @@
+{
+    "title": "Redis Caching Quiz",
+    "description": "Test your knowledge of Redis data structures, commands, and caching patterns.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What type of storage does Redis use for its data?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Disk-based (SSD)",
+                    "isCorrect": false
+                },
+                {
+                    "text": "In-memory (RAM)",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Cloud object storage",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Distributed file system",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which Redis command atomically increments a number?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "ADD",
+                    "isCorrect": false
+                },
+                {
+                    "text": "INCREASE",
+                    "isCorrect": false
+                },
+                {
+                    "text": "INCR",
+                    "isCorrect": true
+                },
+                {
+                    "text": "SET +1",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which Redis data structure is best suited for a leaderboard?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Hash",
+                    "isCorrect": false
+                },
+                {
+                    "text": "List",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Set",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Sorted Set",
+                    "isCorrect": true
+                }
+            ]
+        },
+        {
+            "question": "What does setting EX 3600 on a Redis key do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Executes the key 3600 times",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Sets the key expiry to 3600 seconds (1 hour)",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Extends the key to 3600 bytes",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Exports the key to disk",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In the cache-aside pattern, when is the cache populated?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "When the app starts up",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Only when a write occurs",
+                    "isCorrect": false
+                },
+                {
+                    "text": "On a cache miss, after fetching from the DB",
+                    "isCorrect": true
+                },
+                {
+                    "text": "By a background scheduler",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

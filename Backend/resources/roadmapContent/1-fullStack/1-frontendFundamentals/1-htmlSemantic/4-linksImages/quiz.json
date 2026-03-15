@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What security attribute should always accompany target='_blank' on anchor tags?",
+            "options": [
+                "rel='noreferrer'",
+                "rel='noopener noreferrer'",
+                "rel='nofollow'",
+                "rel='external'"
+            ],
+            "answer": "rel='noopener noreferrer'",
+            "explanation": "rel='noopener noreferrer' prevents tab-napping attacks where the opened page can access the opener's window object."
+        },
+        {
+            "question": "Which attribute on <img> prevents Cumulative Layout Shift (CLS)?",
+            "options": [
+                "loading='lazy'",
+                "decoding='async'",
+                "Specifying width and height attributes",
+                "alt text"
+            ],
+            "answer": "Specifying width and height attributes",
+            "explanation": "Setting explicit width and height lets the browser reserve space before the image loads, preventing CLS."
+        },
+        {
+            "question": "Which HTML element is used to provide multiple image formats for browser selection?",
+            "options": [
+                "<img srcset>",
+                "<picture>",
+                "<figure>",
+                "<source>"
+            ],
+            "answer": "<picture>",
+            "explanation": "The <picture> element wraps multiple <source> elements with media queries, letting the browser pick the best match."
+        },
+        {
+            "question": "What modern image format offers the best compression for the web?",
+            "options": [
+                "JPEG",
+                "PNG",
+                "GIF",
+                "AVIF"
+            ],
+            "answer": "AVIF",
+            "explanation": "AVIF provides superior compression compared to WebP, JPEG, and PNG, with near-lossless quality at smaller file sizes."
+        },
+        {
+            "question": "What is the correct alt text for a purely decorative image?",
+            "options": [
+                "alt='decorative'",
+                "alt='image'",
+                "alt=''",
+                "Omit the alt attribute entirely"
+            ],
+            "answer": "alt=''",
+            "explanation": "An empty alt attribute (alt='') signals to screen readers that the image is decorative and should be skipped."
+        }
+    ]
+}

@@ -1,0 +1,4 @@
+{
+    "name": "AWS Storage: S3, EBS & EFS",
+    "description": "Choosing the right AWS storage service for every workload. Understanding S3 object storage (storage classes, lifecycle policies, versioning), EBS block storage for EC2, and EFS shared file systems for containers and Lambda."
+}

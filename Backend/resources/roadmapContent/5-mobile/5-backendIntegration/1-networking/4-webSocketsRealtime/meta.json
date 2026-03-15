@@ -1,0 +1,4 @@
+{
+    "name": "WebSockets & Real-Time Features",
+    "description": "Building live, real-time features in React Native apps. Implementing WebSocket connections with the native WebSocket API and socket.io-client, managing connection state and automatic reconnection, real-time chat with read receipts, live location sharing on a map, handling background/foreground connection lifecycle, and using Supabase Realtime as a managed WebSocket alternative."
+}

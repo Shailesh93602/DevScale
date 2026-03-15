@@ -1,0 +1,4 @@
+{
+    "name": "Structural Patterns",
+    "description": "Connecting incompatible interfaces gracefully. Understanding how the Adapter, Decorator, and Facade patterns simplify class structures and add behaviors without modifying original code."
+}

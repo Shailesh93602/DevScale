@@ -1,0 +1,4 @@
+{
+    "name": "Form State Management",
+    "description": "Building complex forms with React Hook Form, Zod validation, field arrays, conditional fields, and controlled vs uncontrolled inputs."
+}

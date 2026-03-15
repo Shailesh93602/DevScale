@@ -1,0 +1,5 @@
+[
+  "Consider a recursive approach. Two trees are the same if their roots have the same value, AND their left subtrees are the same, AND their right subtrees are the same.",
+  "Consider the base cases: what if both roots are null? What if one root is null and the other isn't?",
+  "An iterative approach using a queue or stack to traverse both trees simultaneously is also possible."
+]

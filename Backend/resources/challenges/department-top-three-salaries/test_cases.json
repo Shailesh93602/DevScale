@@ -1,0 +1,32 @@
+[
+  {
+    "input": "{\"Employee\": [{\"id\": 1, \"name\": \"Joe\", \"salary\": 85000, \"departmentId\": 1}, {\"id\": 2, \"name\": \"Henry\", \"salary\": 80000, \"departmentId\": 2}, {\"id\": 3, \"name\": \"Sam\", \"salary\": 60000, \"departmentId\": 2}, {\"id\": 4, \"name\": \"Max\", \"salary\": 90000, \"departmentId\": 1}, {\"id\": 5, \"name\": \"Janet\", \"salary\": 69000, \"departmentId\": 1}, {\"id\": 6, \"name\": \"Randy\", \"salary\": 85000, \"departmentId\": 1}, {\"id\": 7, \"name\": \"Will\", \"salary\": 70000, \"departmentId\": 1}], \"Department\": [{\"id\": 1, \"name\": \"IT\"}, {\"id\": 2, \"name\": \"Sales\"}]}",
+    "output": "[{\"Department\": \"IT\", \"Employee\": \"Max\", \"Salary\": 90000}, {\"Department\": \"IT\", \"Employee\": \"Joe\", \"Salary\": 85000}, {\"Department\": \"IT\", \"Employee\": \"Randy\", \"Salary\": 85000}, {\"Department\": \"IT\", \"Employee\": \"Will\", \"Salary\": 70000}, {\"Department\": \"Sales\", \"Employee\": \"Henry\", \"Salary\": 80000}, {\"Department\": \"Sales\", \"Employee\": \"Sam\", \"Salary\": 60000}]",
+    "explanation": "IT top 3 unique salaries: 90000, 85000, 70000. Janet's 69000 is 4th. Sales has only 2 employees.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Employee\": [{\"id\": 1, \"name\": \"A\", \"salary\": 100, \"departmentId\": 1}, {\"id\": 2, \"name\": \"B\", \"salary\": 100, \"departmentId\": 1}, {\"id\": 3, \"name\": \"C\", \"salary\": 100, \"departmentId\": 1}], \"Department\": [{\"id\": 1, \"name\": \"D1\"}]}",
+    "output": "[{\"Department\": \"D1\", \"Employee\": \"A\", \"Salary\": 100}, {\"Department\": \"D1\", \"Employee\": \"B\", \"Salary\": 100}, {\"Department\": \"D1\", \"Employee\": \"C\", \"Salary\": 100}]",
+    "explanation": "All have the same salary — only 1 unique salary, so all are in top 3.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Employee\": [{\"id\": 1, \"name\": \"A\", \"salary\": 50, \"departmentId\": 1}, {\"id\": 2, \"name\": \"B\", \"salary\": 40, \"departmentId\": 1}, {\"id\": 3, \"name\": \"C\", \"salary\": 30, \"departmentId\": 1}, {\"id\": 4, \"name\": \"D\", \"salary\": 20, \"departmentId\": 1}], \"Department\": [{\"id\": 1, \"name\": \"Eng\"}]}",
+    "output": "[{\"Department\": \"Eng\", \"Employee\": \"A\", \"Salary\": 50}, {\"Department\": \"Eng\", \"Employee\": \"B\", \"Salary\": 40}, {\"Department\": \"Eng\", \"Employee\": \"C\", \"Salary\": 30}]",
+    "explanation": "Top 3 unique salaries are 50, 40, 30. D with 20 is excluded.",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"Employee\": [{\"id\": 1, \"name\": \"Solo\", \"salary\": 75000, \"departmentId\": 1}], \"Department\": [{\"id\": 1, \"name\": \"Finance\"}]}",
+    "output": "[{\"Department\": \"Finance\", \"Employee\": \"Solo\", \"Salary\": 75000}]",
+    "explanation": "Single employee is trivially in top 3.",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"Employee\": [{\"id\": 1, \"name\": \"A\", \"salary\": 100, \"departmentId\": 1}, {\"id\": 2, \"name\": \"B\", \"salary\": 90, \"departmentId\": 1}, {\"id\": 3, \"name\": \"C\", \"salary\": 90, \"departmentId\": 1}, {\"id\": 4, \"name\": \"D\", \"salary\": 80, \"departmentId\": 1}, {\"id\": 5, \"name\": \"E\", \"salary\": 70, \"departmentId\": 1}], \"Department\": [{\"id\": 1, \"name\": \"X\"}]}",
+    "output": "[{\"Department\": \"X\", \"Employee\": \"A\", \"Salary\": 100}, {\"Department\": \"X\", \"Employee\": \"B\", \"Salary\": 90}, {\"Department\": \"X\", \"Employee\": \"C\", \"Salary\": 90}, {\"Department\": \"X\", \"Employee\": \"D\", \"Salary\": 80}]",
+    "explanation": "Top 3 unique: 100, 90, 80. B and C share rank 2. E with 70 is excluded.",
+    "is_hidden": true
+  }
+]

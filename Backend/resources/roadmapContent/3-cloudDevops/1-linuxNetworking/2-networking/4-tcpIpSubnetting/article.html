@@ -1,0 +1,48 @@
+<h1>TCP/IP & Subnetting</h1>
+<p>Every piece of data that travels across a network — from a web page request to a database query — follows the <strong>TCP/IP protocol suite</strong>. Understanding how this model works is fundamental for any DevOps engineer, SRE, or cloud architect diagnosing network issues or designing VPC architectures.</p>
+
+<h2>The OSI Model (Simplified)</h2>
+<p>The OSI (Open Systems Interconnection) model describes how data moves from an application on one machine to an application on another, passing through 7 logical layers. In practice, the TCP/IP model collapses this into 4 layers:</p>
+<ul>
+  <li><strong>Application Layer (Layer 7):</strong> HTTP, DNS, SMTP, SSH — protocols applications use directly</li>
+  <li><strong>Transport Layer (Layer 4):</strong> TCP and UDP — provides end-to-end communication between processes</li>
+  <li><strong>Internet Layer (Layer 3):</strong> IP — handles logical addressing and routing packets across networks</li>
+  <li><strong>Network Access Layer (Layer 2/1):</strong> Ethernet, Wi-Fi — handles physical transmission of bits</li>
+</ul>
+
+<h2>TCP vs UDP</h2>
+<ul>
+  <li><strong>TCP (Transmission Control Protocol):</strong> Connection-oriented. Before data is sent, a <strong>3-way handshake</strong> establishes a reliable connection (SYN → SYN-ACK → ACK). TCP guarantees that all packets arrive in order and retransmits lost packets. Used by HTTP, HTTPS, SSH, PostgreSQL. The reliability comes at a cost: higher latency.</li>
+  <li><strong>UDP (User Datagram Protocol):</strong> Connectionless. Packets are fired off with no handshake and no guarantee of delivery or ordering. Used for DNS queries, VoIP, video streaming, and gaming — applications where speed trumps guaranteed delivery.</li>
+</ul>
+
+<h2>IPv4 Addressing</h2>
+<p>An IPv4 address is 32 bits, written as 4 octets in decimal: <code>192.168.1.100</code>. Every device on a network needs a unique IP address.</p>
+<p>Private IP ranges (used internally in VPCs, home networks, not routable on the internet):</p>
+<ul>
+  <li><code>10.0.0.0/8</code> — used by AWS VPCs, large corporate networks</li>
+  <li><code>172.16.0.0/12</code> — used by Docker by default</li>
+  <li><code>192.168.0.0/16</code> — used by home routers</li>
+</ul>
+
+<h2>CIDR Notation & Subnetting</h2>
+<p>CIDR (Classless Inter-Domain Routing) notation like <code>10.0.1.0/24</code> defines a range of IP addresses. The number after the slash indicates how many bits are the "network prefix" (fixed), while the remaining bits identify individual hosts.</p>
+<pre><code class="language-text">10.0.1.0/24 breakdown:
+- Network bits: 24 (the first 3 octets are fixed: 10.0.1)
+- Host bits: 32 - 24 = 8 bits remaining
+- Total addresses: 2^8 = 256 (10.0.1.0 — 10.0.1.255)
+- Usable hosts: 254 (first = network address, last = broadcast)
+
+10.0.0.0/16 → 65,536 addresses (entire 10.0.x.x range)
+10.0.0.0/32 → 1 address (exactly one specific IP — used for single-host rules)
+0.0.0.0/0   → All addresses (used in routing tables as "default route")
+</code></pre>
+
+<h2>In AWS: Designing VPC Subnets</h2>
+<pre><code class="language-text">VPC CIDR: 10.0.0.0/16 (65,536 IPs total)
+├─ Public Subnet (us-east-1a):  10.0.1.0/24  (254 hosts, internet-facing)
+├─ Public Subnet (us-east-1b):  10.0.2.0/24  (254 hosts, internet-facing)
+├─ Private Subnet (us-east-1a): 10.0.10.0/24 (254 hosts, no direct internet)
+└─ Private Subnet (us-east-1b): 10.0.11.0/24 (254 hosts, no direct internet)
+</code></pre>
+<p>Splitting the larger <code>/16</code> into smaller <code>/24</code> subnets is called subnetting. Public subnets have an Internet Gateway attached and are used for load balancers. Private subnets house your databases and application servers with no direct internet access.</p>

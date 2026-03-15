@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "In a multi-stage Dockerfile for a Node.js/TypeScript app, why MUST you copy package.json BEFORE the source code, and what happens to build times if you don't?",
+            "options": [
+                "Docker requires package.json to be copied first to validate the Node.js version compatibility.",
+                "Docker caches each layer (RUN instruction). A cache layer is invalidated if any instruction or its inputs change. If you COPY . . before RUN npm ci: any source code change (fixing a typo in a .ts file) invalidates the COPY layer and all subsequent layers, forcing npm ci to re-run (3-5 minutes). By doing COPY package*.json ./ first, then RUN npm ci, then COPY . .: the npm ci layer is only invalidated when package.json changes (rarely). Source code changes only invalidate from the COPY . . layer onward (seconds). Result: 95% of builds use the cached node_modules layer.",
+                "Copying package.json first ensures the correct npm version is used during the build.",
+                "Docker processes Dockerfile instructions alphabetically — copy comes before run."
+            ],
+            "answer": "Docker caches each layer (RUN instruction). A cache layer is invalidated if any instruction or its inputs change. If you COPY . . before RUN npm ci: any source code change (fixing a typo in a .ts file) invalidates the COPY layer and all subsequent layers, forcing npm ci to re-run (3-5 minutes). By doing COPY package*.json ./ first, then RUN npm ci, then COPY . .: the npm ci layer is only invalidated when package.json changes (rarely). Source code changes only invalidate from the COPY . . layer onward (seconds). Result: 95% of builds use the cached node_modules layer.",
+            "explanation": "Real impact: a team building 20 times/day with 4-minute builds = 80 minutes of waiting. With proper layer ordering (npm ci cached): 20 × 10 seconds = 3.3 minutes total. Layer ordering is the single most impactful Dockerfile optimization. Rule: order instructions from least-changing (OS setup, apt-get) to most-changing (config files, source code)."
+        },
+        {
+            "question": "What does the condition: service_healthy option in Docker Compose depends_on do that depends_on: [db] alone does not?",
+            "options": [
+                "service_healthy waits for the database to be fully populated with seed data.",
+                "depends_on: [db] only waits for the db CONTAINER to start (the process begins) — not for PostgreSQL to be ready to accept connections. PostgreSQL takes 1-3 seconds to initialize after the container starts. Without health checks, your API container starts immediately after db container starts, tries to connect before PostgreSQL is ready, and crashes with 'ECONNREFUSED'. condition: service_healthy waits for the db container's healthcheck to PASS (e.g., pg_isready -U postgres returns successfully) before starting the dependent service — ensuring the database is fully ready.",
+                "service_healthy enables health monitoring dashboards in Docker Desktop.",
+                "condition: service_healthy is only supported in Docker Compose v3 — v2 uses wait-for-it."
+            ],
+            "answer": "depends_on: [db] only waits for the db CONTAINER to start (the process begins) — not for PostgreSQL to be ready to accept connections. PostgreSQL takes 1-3 seconds to initialize after the container starts. Without health checks, your API container starts immediately after db container starts, tries to connect before PostgreSQL is ready, and crashes with 'ECONNREFUSED'. condition: service_healthy waits for the db container's healthcheck to PASS (e.g., pg_isready -U postgres returns successfully) before starting the dependent service — ensuring the database is fully ready.",
+            "explanation": "Common frustration: 'docker compose up works sometimes but fails randomly.' The root cause is almost always this race condition. Solution: add healthcheck to your db service + condition: service_healthy to dependent services. pg_isready is a lightweight PostgreSQL utility that returns 0 (healthy) when the server is accepting connections and 1 (unhealthy) when not."
+        },
+        {
+            "question": "Why must you NEVER include secrets (API keys, database passwords) in a Dockerfile ENV instruction or in an image layer, even if you subsequently delete them?",
+            "options": [
+                "Docker ENV instructions are not encrypted and are visible to docker inspect.",
+                "Docker images are built in layers — every instruction creates an immutable layer that persists in the image's history. Even if you do ENV API_KEY=secret in layer 5 and RUN unset API_KEY in layer 6: layer 5 still exists in the image's layer history. Anyone who runs docker history myimage or docker save myimage | extracts layers can see API_KEY=secret from layer 5. The secret is permanently embedded. Correct approach: never inject secrets at build time. Inject at RUNTIME via: docker run -e API_KEY=$API_KEY, orchestration platform secrets (Kubernetes Secrets, AWS Secrets Manager, Docker Swarm secrets).",
+                "ENV secrets are only visible to root users — non-root containers are safe.",
+                "Secrets in ENV are fine as long as the image is stored in a private registry."
+            ],
+            "answer": "Docker images are built in layers — every instruction creates an immutable layer that persists in the image's history. Even if you do ENV API_KEY=secret in layer 5 and RUN unset API_KEY in layer 6: layer 5 still exists in the image's layer history. Anyone who runs docker history myimage or docker save myimage | extracts layers can see API_KEY=secret from layer 5. The secret is permanently embedded. Correct approach: never inject secrets at build time. Inject at RUNTIME via: docker run -e API_KEY=$API_KEY, orchestration platform secrets (Kubernetes Secrets, AWS Secrets Manager, Docker Swarm secrets).",
+            "explanation": "Real breach pattern: developer hardcodes AWS secret key in Dockerfile during a test, pushes to Docker Hub (even a private repo has security risks), secret is in the image layer history, image is compromised, AWS account is crypto-mined within hours. Build-time secrets that truly MUST be present during build (npm install from private registry): use Docker BuildKit's --secret flag which mounts secrets without creating a layer."
+        }
+    ]
+}

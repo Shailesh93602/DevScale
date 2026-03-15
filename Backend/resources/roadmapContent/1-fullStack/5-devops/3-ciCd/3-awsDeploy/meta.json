@@ -1,0 +1,4 @@
+{
+    "name": "AWS EC2 & Nginx",
+    "description": "Deploying to raw virtual machines. Setting up an AWS EC2 instance, utilizing PM2 to keep Node.js alive, configuring an Nginx Reverse Proxy, and securing the server with Let's Encrypt SSL/TLS."
+}

@@ -1,0 +1,4 @@
+{
+    "name": "Performance, Scaling & PM2",
+    "description": "Taking Node.js to production. Utilizing the native Cluster module, managing process daemonization with PM2, reverse proxying with Nginx, and implementing Redis caching."
+}

@@ -1,0 +1,118 @@
+{
+    "title": "Model Serving Strategies Quiz",
+    "description": "Test your knowledge of real-time vs batch inference, serving frameworks, and production deployment patterns.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "A fraud detection system must block a transaction before it completes. Which inference mode is appropriate?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Batch inference — schedule it to run nightly",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Real-time inference — respond within milliseconds to the API call",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Streaming inference — publish to Kafka and consume later",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Shadow mode — run both and compare results offline",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the primary advantage of batch inference over real-time inference?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Lower latency for the end user",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It can run on much larger datasets at lower cost per prediction",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It requires less memory",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It is more accurate than real-time models",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does ONNX (Open Neural Network Exchange) primarily enable?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Training models faster using distributed computing",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Converting models from any framework into a unified format runnable by optimized runtimes",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Storing model weights in a compressed database",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Managing model experiments with version control",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "NVIDIA's Triton Inference Server uses 'dynamic batching'. What problem does this solve?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It trains a new model version every time a request arrives",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It groups multiple incoming individual requests together to maximize GPU utilization",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It caches identical requests in Redis to avoid hitting the model",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It splits a single large model across multiple GPUs",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "You deploy a new model version but want to validate it on real traffic before fully switching over. What strategy should you use?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Immediately replace the old model with the new one and monitor for complaints",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Only test the new model on synthetic data, then deploy",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Use shadow mode — send a copy of live traffic to the new model without exposing its results to users",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Disable the old endpoint and ask users to use the new one manually",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

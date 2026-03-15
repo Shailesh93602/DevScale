@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary benefit of executing business logic via an SQL Stored Procedure/Function (e.g. using PL/pgSQL) compared to executing it inside a Node.js controller?",
+            "options": [
+                "Stored procedures automatically encrypt the database upon completion",
+                "It eliminates network latency between the backend API and the database since everything is executed directly on the DB server, turning 15 back-and-forth network queries into exactly 1 HTTP call",
+                "Stored procedures prevent all forms of DDOS attacks",
+                "Stored procedures make the database completely untyped for faster speed"
+            ],
+            "answer": "It eliminates network latency between the backend API and the database since everything is executed directly on the DB server, turning 15 back-and-forth network queries into exactly 1 HTTP call",
+            "explanation": "If Node loops over an array hitting the database repeatedly, latency compounds. A function living inside the database acts like a highly optimized script running precisely where the data is stored physically."
+        },
+        {
+            "question": "What is a Database Trigger?",
+            "options": [
+                "A mechanism that halts the database entirely if memory limits are exceeded",
+                "A specialized script or function that executes absolutely automatically before or after an INSERT, UPDATE, or DELETE operation occurs on a designated table indefinitely",
+                "An API endpoint built directly into MongoDB",
+                "A command used to instantly drop all rows within a table"
+            ],
+            "answer": "A specialized script or function that executes absolutely automatically before or after an INSERT, UPDATE, or DELETE operation occurs on a designated table indefinitely",
+            "explanation": "Triggers act identically to webhooks, but locally within the database. You define 'Before Update on Users, execute this function'. It executes 100% of the time, whether the UPDATE came from Node, Python, or a manual developer console."
+        },
+        {
+            "question": "If you are writing a Postgres trigger to monitor a record update (for example, to write an audit log), which two highly specialized local variables exist inherently inside the Trigger's execution block?",
+            "options": [
+                "REQ and RES",
+                "LOCAL and REMOTE",
+                "OLD (representing the state of the row before the update) and NEW (representing the state of the row the database is about to save into)",
+                "SELECT and INSERT"
+            ],
+            "answer": "OLD (representing the state of the row before the update) and NEW (representing the state of the row the database is about to save into)",
+            "explanation": "By comparing `IF NEW.email !== OLD.email`, the database handles all the diff-checking natively. You can insert `OLD.email` directly into an audit table perfectly."
+        },
+        {
+            "question": "What is a significant architectural drawback of placing massive amounts of core application business logic into Database Triggers and Stored Procedures?",
+            "options": [
+                "It prevents the use of Primary Keys completely",
+                "It hides business logic deep inside the database infrastructure which is notoriously difficult to version control, write automated unit tests for, debug, or scale compared to plain JavaScript in a Node API",
+                "It crashes Prisma ORM entirely upon boot",
+                "It forces the database to downgrade to HTTP/1.1"
+            ],
+            "answer": "It hides business logic deep inside the database infrastructure which is notoriously difficult to version control, write automated unit tests for, debug, or scale compared to plain JavaScript in a Node API",
+            "explanation": "In 2010, writing massive PL/pgSQL architectures was common. Today, modern engineering advises against tying logic to the database server specifically because you cannot easily scale 'Compute' power on a relational database compared to scaling Node microservices on AWS."
+        },
+        {
+            "question": "What is the defining characteristic of a 'Materialized View' compared to a standard, regular SQL View?",
+            "options": [
+                "A materialized view encrypts data visually for analysts",
+                "A standard view creates a live webhook, while a materialized view creates a REST API natively",
+                "A standard view acts as a macro that reruns the complex query every time you hit it. A Materialized View executes the complex query once, and physically saves the computed results to the hard drive cache, allowing for instant retrieval on massive data analysis",
+                "A materialized view requires you to explicitly use NoSQL structures"
+            ],
+            "answer": "A standard view acts as a macro that reruns the complex query every time you hit it. A Materialized View executes the complex query once, and physically saves the computed results to the hard drive cache, allowing for instant retrieval on massive data analysis",
+            "explanation": "If aggregating $1B in sales takes 50 seconds, a standard View will still take 50 seconds to run. A Materialized View does it once, stores the output as essentially a 'fake table', and returns the exact data next time in 1 millisecond. You just refresh it periodically."
+        }
+    ]
+}

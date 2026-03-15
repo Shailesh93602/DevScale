@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What specific engineering challenge does GDPR's 'Right to Erasure' (Article 17) create for Data Engineers working with immutable data stores?",
+            "options": [
+                "It requires re-indexing all database tables monthly.",
+                "It requires physically deleting a specific user's data from all systems including immutable stores like historical Kafka topics and Parquet files in S3 — which don't support simple row-level deletion — forcing Data Engineers to design deletion-safe architectures from the start.",
+                "It requires all data to be encrypted with RSA-4096 algorithms.",
+                "It requires storing all data within the European Union only."
+            ],
+            "answer": "It requires physically deleting a specific user's data from all systems including immutable stores like historical Kafka topics and Parquet files in S3 — which don't support simple row-level deletion — forcing Data Engineers to design deletion-safe architectures from the start.",
+            "explanation": "Deleting from a transactional DB is a single SQL DELETE. Deleting from a Kafka topic with billions of events, or from 10TB of Parquet files, requires architectural solutions like Cryptographic Erasure."
+        },
+        {
+            "question": "How does 'Cryptographic Erasure' technically satisfy GDPR deletion requirements for immutable data stores like Kafka?",
+            "options": [
+                "It physically removes the message from the Kafka partition log.",
+                "Instead of storing raw PII, it stores encrypted PII. Each user's data is encrypted with their own unique key. To 'erase' a user, you simply delete their encryption key. The encrypted blobs become permanently unreadable without needing to touch the immutable data store.",
+                "It overwrites the Kafka partition with random bytes.",
+                "It converts the PII to an anonymized UUID in S3."
+            ],
+            "answer": "Instead of storing raw PII, it stores encrypted PII. Each user's data is encrypted with their own unique key. To 'erase' a user, you simply delete their encryption key. The encrypted blobs become permanently unreadable without needing to touch the immutable data store.",
+            "explanation": "Without the key, ciphertext is theoretically useless garbage. Deleting the key is legally equivalent to deleting the data itself under GDPR."
+        },
+        {
+            "question": "What is the purpose of 'Dynamic Data Masking' applied at the Data Warehouse column level?",
+            "options": [
+                "It compresses sensitive column data automatically.",
+                "It enforces role-based access control at the data level. Different user roles see different versions of the same column — a Data Analyst might see a masked 'XXXX-1234' credit card number, while a privileged Data Engineer with the right role sees the full, unmasked number.",
+                "It converts column data types from VARCHAR to INTEGER.",
+                "It encrypts column data using AES-256 before disk storage."
+            ],
+            "answer": "It enforces role-based access control at the data level. Different user roles see different versions of the same column — a Data Analyst might see a masked 'XXXX-1234' credit card number, while a privileged Data Engineer with the right role sees the full, unmasked number.",
+            "explanation": "Masking is applied transparently at query time. The underlying data is unchanged — only what specific roles are allowed to see changes."
+        }
+    ]
+}

@@ -1,0 +1,112 @@
+<h1>Testing Node APIs (Jest & Supertest)</h1>
+<p>Testing backend APIs ensures that business logic works correctly, database integrations are stable, and updates to the code don't silently break existing features. The industry standard toolset is <strong>Jest</strong> (the test runner and assertion library) paired with <strong>Supertest</strong> (an HTTP mocking library for Express).</p>
+
+<h2>Setting Up for Testing</h2>
+<p>When testing an Express application, it is crucial to separate the Express <code>app</code> initialization from the <code>app.listen()</code> network call. If your main file calls <code>listen()</code>, Jest will start a real server on port 3000, causing "EADDRINUSE (Port already in use)" errors if you run tests in parallel or if the real dev server is running.</p>
+
+<pre><code>// app.js (Exports the app, DOES NOT call listen)
+const express = require('express');
+const app = express();
+app.use(express.json());
+
+app.get('/api/users', (req, res) =&gt; {
+  res.status(200).json([{ id: 1, name: 'Alice' }]);
+});
+
+module.exports = app;
+
+// server.js (The file you actually run for production)
+const app = require('./app');
+app.listen(3000, () =&gt; console.log('Server running'));</code></pre>
+
+<h2>Integration Testing with Supertest</h2>
+<p>Supertest allows you to pass your Express <code>app</code> object directly into it. It simulates HTTP requests against your routes entirely in memory without ever opening a real network port. This makes integration testing incredibly fast and reliable.</p>
+
+<pre><code>// user.test.js
+const request = require('supertest');
+const app = require('../app'); // Import the Express app
+
+describe('GET /api/users', () =&gt; {
+  
+  it('should return a 200 status and a list of users', async () =&gt; {
+    // 1. Simulate the HTTP GET request
+    const response = await request(app).get('/api/users');
+
+    // 2. Assert the HTTP Status Code using Jest
+    expect(response.status).toBe(200);
+    
+    // 3. Assert the Headers
+    expect(response.headers['content-type']).toMatch(/json/);
+
+    // 4. Assert the Body payload
+    expect(Array.isArray(response.body)).toBeTruthy();
+    expect(response.body[0].name).toBe('Alice');
+  });
+
+});</code></pre>
+
+<h2>Testing Authenticated Routes (POST/PUT)</h2>
+<p>When testing routes that require authorization, you must simulate sending headers and JSON body payloads.</p>
+
+<pre><code>describe('POST /api/posts', () =&gt; {
+  
+  it('should create a new post when authenticated', async () =&gt; {
+    const mockToken = 'mock-jwt-token-123';
+    const newPost = { title: 'Hello World', content: 'Testing is great' };
+
+    const response = await request(app)
+      .post('/api/posts')
+      .set('Authorization', `Bearer ${mockToken}`) // Set HTTP Headers
+      .send(newPost);                              // Set req.body
+
+    expect(response.status).toBe(201);
+    expect(response.body.post.title).toBe('Hello World');
+  });
+
+  it('should reject requests without a token (401)', async () =&gt; {
+    const response = await request(app)
+      .post('/api/posts')
+      .send({ title: 'Hacked' }); // No .set('Authorization') used!
+
+    expect(response.status).toBe(401);
+    expect(response.body.error).toBe('Unauthorized');
+  });
+
+});</code></pre>
+
+<h2>Mocking the Database</h2>
+<p>If your routes read/write to a database (like MongoDB/Mongoose or PostgreSQL/Prisma), running tests will write dummy data into your real database, polluting it. You must either use a separate Test Database (like an in-memory SQLite or MongoDB-Memory-Server), or use Jest to <strong>Mock</strong> the database layer completely so the test runs instantly without needing a DB connection.</p>
+
+<pre><code>// We want to test the controller, not the actual database connection
+const User = require('../models/User'); // Mongoose model
+const request = require('supertest');
+const app = require('../app');
+
+// Tell Jest to replace all functions in the User model with fake dummy functions
+jest.mock('../models/User');
+
+describe('GET /api/users/:id', () =&gt; {
+  it('returns a specific user', async () =&gt; {
+    const fakeData = { id: 99, name: 'Bob' };
+    
+    // Configure the fake function to return what we want
+    User.findById.mockResolvedValue(fakeData);
+
+    const res = await request(app).get('/api/users/99');
+
+    // Supertest queries the route, the route calls User.findById(), 
+    // it gets fakeData instantly, and returns it.
+    expect(res.status).toBe(200);
+    expect(res.body.name).toBe('Bob');
+    
+    // Ensure the route actually tried to query the DB with the right ID
+    expect(User.findById).toHaveBeenCalledWith('99'); 
+  });
+});</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always use a dedicated <code>.env.test</code> configuration. Your tests should never connect to a production or development database!</li>
+  <li>Write teardown scripts (<code>afterAll</code>) to close database connections accurately. If you don't, Jest will hang indefinitely saying "Jest did not exit one second after the test run has completed."</li>
+  <li>Organize tests matching your folder structure (e.g., controllers, services, algorithms). Stick primarily to Integration tests (testing the route via Supertest) as they provide the highest confidence that the API actually works.</li>
+</ul>

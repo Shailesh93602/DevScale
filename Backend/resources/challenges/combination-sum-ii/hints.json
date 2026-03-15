@@ -1,0 +1,5 @@
+[
+  "The main difference from Combination Sum I is that each number can be used only once.",
+  "Sort the input array first. This helps in skipping duplicates easily during backtracking.",
+  "When iterating through candidates at the same recursion level, if `candidates[i] == candidates[i-1]`, skip it to avoid duplicate combinations."
+]

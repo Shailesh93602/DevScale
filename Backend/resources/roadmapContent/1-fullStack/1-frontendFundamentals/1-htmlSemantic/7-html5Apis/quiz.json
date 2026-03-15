@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the key difference between localStorage and sessionStorage?",
+            "options": [
+                "localStorage stores more data than sessionStorage",
+                "localStorage persists indefinitely while sessionStorage is cleared when the tab closes",
+                "sessionStorage works across all tabs while localStorage is tab-specific",
+                "localStorage is faster than sessionStorage"
+            ],
+            "answer": "localStorage persists indefinitely while sessionStorage is cleared when the tab closes",
+            "explanation": "localStorage data survives browser restarts and persists until explicitly cleared. sessionStorage is cleared when the browser tab is closed."
+        },
+        {
+            "question": "Why are Web Workers useful?",
+            "options": [
+                "They allow server-side JavaScript execution",
+                "They share the same memory as the main thread",
+                "They run heavy computation in a background thread without blocking the UI",
+                "They speed up DOM manipulation"
+            ],
+            "answer": "They run heavy computation in a background thread without blocking the UI",
+            "explanation": "Web Workers run JavaScript in a separate thread, keeping the main UI thread responsive during CPU-intensive tasks like sorting large datasets."
+        },
+        {
+            "question": "Which History API method navigates to a new URL without triggering a page reload?",
+            "options": [
+                "history.go()",
+                "history.replace()",
+                "history.pushState()",
+                "history.navigate()"
+            ],
+            "answer": "history.pushState()",
+            "explanation": "history.pushState() adds a new entry to the browser's history stack and updates the URL without reloading the page — the foundation of client-side routing."
+        },
+        {
+            "question": "What does the Intersection Observer API allow you to do?",
+            "options": [
+                "Observe network requests",
+                "Detect when DOM elements enter or leave the viewport",
+                "Monitor mouse intersection with elements",
+                "Watch for DOM mutations"
+            ],
+            "answer": "Detect when DOM elements enter or leave the viewport",
+            "explanation": "Intersection Observer efficiently detects viewport visibility, enabling lazy loading, infinite scroll, and scroll-based animations without expensive scroll event listeners."
+        },
+        {
+            "question": "What must you call in a dragover event handler to enable dropping?",
+            "options": [
+                "e.stopPropagation()",
+                "e.preventDefault()",
+                "e.dataTransfer.allow()",
+                "e.target.setDropzone(true)"
+            ],
+            "answer": "e.preventDefault()",
+            "explanation": "By default, browsers prevent dropping on most elements. Calling e.preventDefault() in the dragover event handler enables drop behavior."
+        }
+    ]
+}

@@ -1,0 +1,26 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary goal of a Unit Test?",
+            "options": [
+                "To test the entire system flow",
+                "To verify that individual components work in isolation",
+                "To test database performance",
+                "To ensure security compliance"
+            ],
+            "correctAnswer": 1,
+            "explanation": "Unit tests focus on the smallest testable parts of an application."
+        },
+        {
+            "question": "What does AAA stand for in unit testing?",
+            "options": [
+                "Always Apply Algorithms",
+                "Advanced Automation Ally",
+                "Arrange, Act, Assert",
+                "Analyze, Apply, Adjust"
+            ],
+            "correctAnswer": 2,
+            "explanation": "Arrange (setup), Act (execution), Assert (verification)."
+        }
+    ]
+}

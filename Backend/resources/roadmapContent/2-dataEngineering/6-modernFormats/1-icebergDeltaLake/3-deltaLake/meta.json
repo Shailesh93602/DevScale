@@ -1,0 +1,4 @@
+{
+    "name": "Delta Lake & Databricks",
+    "description": "Exploring the Databricks-originated Delta Lake format natively. Understanding the Delta Log transaction log architecture, merge operations (upserts), and the Change Data Feed for streaming downstream consumers."
+}

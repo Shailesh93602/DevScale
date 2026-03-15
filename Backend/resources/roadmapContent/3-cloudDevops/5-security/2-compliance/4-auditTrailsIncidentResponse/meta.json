@@ -1,0 +1,4 @@
+{
+    "name": "Audit Trails & Incident Response",
+    "description": "Building the evidence trail required for security audits and responding effectively to production security incidents. Implementing immutable audit logs with AWS CloudTrail, designing runbooks for common security incidents (credential leak, data exfiltration, unauthorized access), and conducting blameless post-incident reviews."
+}

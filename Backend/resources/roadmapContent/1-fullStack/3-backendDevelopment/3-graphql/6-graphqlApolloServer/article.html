@@ -1,0 +1,85 @@
+<h1>Apollo Server Integration</h1>
+<p>While you can use raw <code>graphql-js</code> and <code>express-graphql</code> to build an engine, the industry standard for production GraphQL APIs is <strong>Apollo Server</strong>. It provides extensive tooling, easy Express integration, error formatting, and a beautiful web-based IDE (Apollo Sandbox).</p>
+
+<h2>Setting Up Apollo Server with Express</h2>
+<p>Apollo Server v4 utilizes a modular approach. While it can run standalone, it is almost always integrated directly into an existing Express application as a middleware. This enables you to combine REST endpoints (e.g. for simple file uploads or webhooks) and GraphQL simultaneously.</p>
+
+<pre><code>// 1. Install dependencies
+// npm install @apollo/server express graphql cors
+
+const express = require('express');
+const { ApolloServer } = require('@apollo/server');
+const { expressMiddleware } = require('@apollo/server/express4');
+const cors = require('cors');
+
+// Import your schema and resolvers
+const { typeDefs } = require('./schema');
+const { resolvers } = require('./resolvers');
+
+async function startServer() {
+  const app = express();
+
+  // 2. Initialize Apollo Server
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    // Optional configuration
+    formatError: (formattedError, error) =&gt; {
+      // Intercept and format errors before they leave the server
+      if (formattedError.message.startsWith("Database Error: ")) {
+        return { message: 'Internal server error' };
+      }
+      return formattedError;
+    },
+  });
+
+  // 3. You MUST await server.start() before applying middleware in v4!
+  await server.start();
+
+  // 4. Apply Apollo Middleware to a generic Express route
+  app.use(
+    '/graphql',
+    cors(),
+    express.json(), // Body parsing is required for Apollo to read the query strings
+    expressMiddleware(server, {
+      // The context function (For JWT Auth, DataLoaders, etc.)
+      context: async ({ req }) =&gt; {
+        return { token: req.headers.authorization };
+      },
+    })
+  );
+
+  // You can still have traditional REST endpoints!
+  app.get('/health', (req, res) =&gt; res.send("OK"));
+
+  app.listen(4000, () =&gt; {
+    console.log(`🚀 GraphQL API ready at http://localhost:4000/graphql`);
+  });
+}
+
+startServer();</code></pre>
+
+<h2>Apollo Sandbox & GraphQL Explorer</h2>
+<p>In older versions, Apollo utilized a tool called GraphQL Playground. In v4, going to <code>http://localhost:4000/graphql</code> in your browser automatically launches the <strong>Apollo Sandbox</strong>.</p>
+<p>Because your server supports <strong>Introspection</strong> (the ability for the schema to advertise its own structure), the Sandbox automatically generates advanced documentation, auto-completion, and a UI to execute Queries and Mutations graphically without writing a frontend app.</p>
+<p><em>Security Note:</em> You should disable introspection in production so hackers cannot map your entire database schema natively.</p>
+
+<pre><code>const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  // Disable Introspection in Prod!
+  introspection: process.env.NODE_ENV !== 'production'
+});</code></pre>
+
+<h2>Schema Stitching vs Apollo Federation</h2>
+<p>As your company grows into a microservices architecture, having exactly one massive GraphQL server becomes messy (a monolithic schema). There are two ways to scale a GraphQL architecture:</p>
+<ol>
+  <li><strong>Schema Stitching:</strong> Programmatically combining multiple smaller GraphQL schemas together. (Older technique)</li>
+  <li><strong>Apollo Federation:</strong> The modern industry standard. A <code>Gateway</code> server sits in front of multiple smaller "Subgraph" APIs. The Gateway intelligently distributes queries to the correct microservice (e.g. <code>User Microservice</code> and <code>Inventory Microservice</code>) and automatically merges the results into a single object for the client.</li>
+</ol>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Place the <code>expressMiddleware(server)</code> function specifically on the <code>/graphql</code> path. Doing this allows you to serve standard REST webhooks (like Stripe) on <code>/webhooks</code> without interference.</li>
+  <li>Leverage custom Apollo Error classes (e.g. <code>GraphQLError</code>) for typed error handling (Unauthenticated, BadInput) so the Apollo Client frontend can easily interpret them rather than just returning 500 crashes.</li>
+</ul>

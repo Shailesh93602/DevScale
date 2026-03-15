@@ -1,0 +1,19 @@
+{
+  "title": "Consecutive Numbers",
+  "slug": "consecutive-numbers",
+  "difficulty": "Medium",
+  "category": "databases",
+  "points": 100,
+  "tags": ["sql", "self-join", "window-functions"],
+  "company_tags": ["Amazon", "Facebook", "Google", "Microsoft"],
+  "topic_tags": ["SQL", "Self Join", "Window Functions"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Table: Logs with columns id (int, primary key, auto-increment), num (varchar)",
+  "output_format": "Result table with column ConsecutiveNums containing all numbers that appear at least three times consecutively",
+  "example_input": "Table: Logs\n| id | num |\n| 1  | 1   |\n| 2  | 1   |\n| 3  | 1   |\n| 4  | 2   |\n| 5  | 1   |\n| 6  | 2   |\n| 7  | 2   |",
+  "example_output": "| ConsecutiveNums |\n| 1               |",
+  "constraints": "- 1 <= id <= 10^6\n- id is an auto-increment column starting from 1\n- num is a varchar",
+  "function_signature": "-- Write your SQL query below",
+  "status": "ACTIVE"
+}

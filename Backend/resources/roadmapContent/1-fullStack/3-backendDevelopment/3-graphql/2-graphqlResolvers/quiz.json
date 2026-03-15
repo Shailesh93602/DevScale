@@ -1,0 +1,118 @@
+{
+    "title": "GraphQL Resolvers Quiz",
+    "description": "Test your knowledge of resolver functions, context, and the DataLoader pattern.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the third argument passed to every GraphQL resolver?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "args",
+                    "isCorrect": false
+                },
+                {
+                    "text": "parent",
+                    "isCorrect": false
+                },
+                {
+                    "text": "context",
+                    "isCorrect": true
+                },
+                {
+                    "text": "info",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What problem does DataLoader solve in GraphQL APIs?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Schema type mismatches",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The N+1 query problem by batching DB requests",
+                    "isCorrect": true
+                },
+                {
+                    "text": "WebSocket reconnections",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Slow mutation response times",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Where should authentication checks ideally be placed in GraphQL?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "In the SDL type definitions",
+                    "isCorrect": false
+                },
+                {
+                    "text": "In individual resolver functions using context",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Only in the client-side code",
+                    "isCorrect": false
+                },
+                {
+                    "text": "In the database schema",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which error code should you use for unauthenticated GraphQL requests?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "FORBIDDEN",
+                    "isCorrect": false
+                },
+                {
+                    "text": "NOT_FOUND",
+                    "isCorrect": false
+                },
+                {
+                    "text": "UNAUTHENTICATED",
+                    "isCorrect": true
+                },
+                {
+                    "text": "BAD_USER_INPUT",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What contains the result from the parent resolver in a nested resolver?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "args",
+                    "isCorrect": false
+                },
+                {
+                    "text": "context",
+                    "isCorrect": false
+                },
+                {
+                    "text": "info",
+                    "isCorrect": false
+                },
+                {
+                    "text": "parent",
+                    "isCorrect": true
+                }
+            ]
+        }
+    ]
+}

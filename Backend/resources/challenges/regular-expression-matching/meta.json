@@ -1,0 +1,19 @@
+{
+  "title": "Regular Expression Matching",
+  "slug": "regular-expression-matching",
+  "difficulty": "Hard",
+  "category": "algorithms",
+  "points": 150,
+  "tags": ["dynamic-programming", "string", "recursion"],
+  "company_tags": ["Google", "Facebook", "Amazon", "Microsoft", "Apple"],
+  "topic_tags": ["dynamic programming", "string matching", "regex"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "A string `s` and a pattern `p` with support for `.` and `*`.",
+  "output_format": "Return `true` if the pattern matches the entire input string.",
+  "example_input": "s = \"aa\", p = \"a*\"",
+  "example_output": "true",
+  "constraints": "- `1 <= s.length <= 20`\n- `1 <= p.length <= 20`\n- `s` contains only lowercase English letters.\n- `p` contains only lowercase English letters, `.`, and `*`.\n- It is guaranteed for each `*`, there is a previous valid character to match.",
+  "function_signature": "function isMatch(s: string, p: string): boolean {}",
+  "status": "ACTIVE"
+}

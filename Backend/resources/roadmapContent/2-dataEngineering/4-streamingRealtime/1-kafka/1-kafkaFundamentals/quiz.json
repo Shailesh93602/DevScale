@@ -1,0 +1,118 @@
+{
+    "title": "Kafka Fundamentals Quiz",
+    "description": "Test your basic knowledge of Kafka topics, partitions, and consumer groups.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "In Kafka, what guarantees the strict ordering of messages?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Messages are globally ordered across the entire topic.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Messages are ordered only within a single partition.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Messages are ordered by the consumer group.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Messages are ordered by the Zookeeper node.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What happens in a Consumer Group if there are 5 partitions but 6 consumers?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The 6th consumer sits idle.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Kafka automatically creates a 6th partition.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Two consumers share the load of one partition.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "An error is thrown and the consumer group crashes.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "When does Kafka delete a message from a topic?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Immediately after it has been read by all consumer groups.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "When the topic's retention time or size limit is reached.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "When a producer sends a 'delete' signal.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Kafka never deletes messages.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How does Kafka decide which partition a message goes to if a message Key is provided?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It uses Round-Robin assignment.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It hashes the Key to assign it consistently to a specific partition.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It sends it to the partition with the least amount of data.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It broadcasts it to all partitions.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is an Offset in Kafka?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A unique, sequential ID assigned to each message within a partition.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The time difference between producing and consuming a message.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A pointer to the next broker in the cluster.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The byte array size of a serialized message.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

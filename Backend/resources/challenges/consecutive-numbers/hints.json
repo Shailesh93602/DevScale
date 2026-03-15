@@ -1,0 +1,6 @@
+[
+  "Think about how you can look at three consecutive rows at the same time.",
+  "You could join the table with itself on consecutive id values (id, id+1, id+2).",
+  "Alternatively, use LAG() and LEAD() window functions to access the previous and next row's value.",
+  "Use DISTINCT in your result since a number appearing 4+ times consecutively would otherwise produce duplicates."
+]

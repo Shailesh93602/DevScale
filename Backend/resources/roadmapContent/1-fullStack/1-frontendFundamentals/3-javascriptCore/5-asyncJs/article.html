@@ -1,0 +1,82 @@
+<h1>Async JavaScript — Promises & Async/Await</h1>
+<p>JavaScript is single-threaded, but handles async operations (network requests, timers, file reading) without blocking via an <strong>event loop</strong>.</p>
+
+<h2>The Problem: Callback Hell</h2>
+<pre><code>// Hard to read, maintain, and handle errors
+fetchUser(id, function(user) {
+  fetchPosts(user.id, function(posts) {
+    fetchComments(posts[0].id, function(comments) {
+      // Deeply nested, error-prone — "Pyramid of Doom"
+    });
+  });
+});</code></pre>
+
+<h2>Promises</h2>
+<p>A Promise is an object representing an eventual value — either <strong>resolved</strong> (success) or <strong>rejected</strong> (failure).</p>
+<pre><code>const fetchData = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    const success = true;
+    if (success) resolve({ data: "Hello!" });
+    else reject(new Error("Network error"));
+  }, 1000);
+});
+
+fetchData
+  .then(result => console.log(result.data))  // "Hello!" after 1s
+  .catch(err => console.error(err.message))
+  .finally(() => console.log("Request complete"));</code></pre>
+
+<h2>Async/Await — Clean Async Code</h2>
+<pre><code>async function loadDashboard(userId) {
+  try {
+    const user = await fetchUser(userId);      // Wait for user
+    const posts = await fetchPosts(user.id);   // Then fetch posts
+    const comments = await fetchComments(posts[0].id);
+    return { user, posts, comments };
+  } catch (error) {
+    console.error("Failed:", error.message);
+    throw error; // Re-throw so the caller can handle it
+  }
+}</code></pre>
+
+<h2>Promise Combinators</h2>
+<pre><code>// Run ALL in parallel — fails fast if any fails
+const [user, posts, settings] = await Promise.all([
+  fetchUser(id),
+  fetchPosts(id),
+  fetchSettings(id),
+]);
+
+// First one to settle (resolve OR reject) wins
+const fastest = await Promise.race([fetchA(), fetchB()]);
+
+// Wait for ALL to settle — gets results including failures
+const results = await Promise.allSettled([fetchA(), fetchB()]);
+results.forEach(r => {
+  if (r.status === "fulfilled") console.log(r.value);
+  else console.error(r.reason);
+});</code></pre>
+
+<h2>Fetching Data from APIs</h2>
+<pre><code>async function getUser(id) {
+  const response = await fetch(`https://api.example.com/users/${id}`, {
+    headers: { "Authorization": `Bearer ${token}` }
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+  }
+
+  return response.json(); // Also returns a Promise
+}
+
+// Usage
+const user = await getUser(42);</code></pre>
+
+<h2>The Event Loop (How It Works)</h2>
+<ol>
+  <li><strong>Call Stack</strong> — executes synchronous code line by line.</li>
+  <li><strong>Web APIs</strong> (browser) handle async tasks (setTimeout, fetch).</li>
+  <li><strong>Microtask Queue</strong> — resolved Promises are queued here (processed FIRST).</li>
+  <li><strong>Macrotask Queue</strong> — setTimeout, setInterval callbacks queued here (processed after microtasks).</li>
+</ol>

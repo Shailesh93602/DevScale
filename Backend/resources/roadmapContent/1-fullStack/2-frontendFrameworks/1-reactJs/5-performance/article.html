@@ -1,0 +1,97 @@
+<h1>React Performance Optimization</h1>
+<p>React is fast by default, but as apps grow, unnecessary re-renders can slow things down. These tools let you surgically optimize performance.</p>
+
+<h2>When Does React Re-render?</h2>
+<p>A component re-renders when: (1) its state changes, (2) its parent re-renders, or (3) its context changes. The goal is to prevent #2 when the props haven't actually changed.</p>
+
+<h2>React.memo — Skip Re-renders for Same Props</h2>
+<pre><code>// Without memo: re-renders every time parent re-renders
+function ExpensiveList({ items }: { items: string[] }) {
+  return &lt;ul&gt;{items.map(i =&gt; &lt;li key={i}&gt;{i}&lt;/li&gt;)}&lt;/ul&gt;;
+}
+
+// With memo: only re-renders if items actually changed
+const ExpensiveList = React.memo(function({ items }) {
+  return &lt;ul&gt;{items.map(i =&gt; &lt;li key={i}&gt;{i}&lt;/li&gt;)}&lt;/ul&gt;;
+});</code></pre>
+
+<h2>useMemo — Cache Expensive Calculations</h2>
+<pre><code>function ProductList({ products, filter }: Props) {
+  // Without useMemo: recalculates on EVERY render
+  // With useMemo: recalculates only when products or filter changes
+  const filteredProducts = useMemo(() =&gt;
+    products.filter(p =&gt; p.category === filter),
+    [products, filter]
+  );
+
+  return &lt;ul&gt;{filteredProducts.map(p =&gt; &lt;li key={p.id}&gt;{p.name}&lt;/li&gt;)}&lt;/ul&gt;;
+}</code></pre>
+
+<h2>useCallback — Stable Function References</h2>
+<pre><code>function Parent() {
+  const [count, setCount] = useState(0);
+
+  // Without useCallback: new function reference on every render
+  // → breaks React.memo on child!
+  const handleClick = useCallback(() =&gt; {
+    console.log("clicked");
+  }, []); // Stable reference unless deps change
+
+  return (
+    &lt;&gt;
+      &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;{count}&lt;/button&gt;
+      &lt;MemoizedChild onClick={handleClick} /&gt;
+    &lt;/&gt;
+  );
+}</code></pre>
+
+<h2>Code Splitting & Lazy Loading</h2>
+<pre><code>import { lazy, Suspense } from "react";
+
+// Load component only when it's needed (not in initial bundle)
+const Dashboard = lazy(() =&gt; import("./pages/Dashboard"));
+const Analytics = lazy(() =&gt; import("./pages/Analytics"));
+
+function App() {
+  return (
+    &lt;Suspense fallback={&lt;div&gt;Loading...&lt;/div&gt;}&gt;
+      &lt;Routes&gt;
+        &lt;Route path="/dashboard" element={&lt;Dashboard /&gt;} /&gt;
+        &lt;Route path="/analytics" element={&lt;Analytics /&gt;} /&gt;
+      &lt;/Routes&gt;
+    &lt;/Suspense&gt;
+  );
+}</code></pre>
+
+<h2>Virtualization — Render Large Lists Efficiently</h2>
+<pre><code>// Install: npm install @tanstack/react-virtual
+import { useVirtualizer } from "@tanstack/react-virtual";
+
+function VirtualList({ items }: { items: string[] }) {
+  const parentRef = useRef&lt;HTMLDivElement&gt;(null);
+  const virtualizer = useVirtualizer({
+    count: items.length,
+    getScrollElement: () =&gt; parentRef.current,
+    estimateSize: () =&gt; 35,
+  });
+
+  return (
+    &lt;div ref={parentRef} style={{ height: "500px", overflow: "auto" }}&gt;
+      &lt;div style={{ height: virtualizer.getTotalSize() }}&gt;
+        {virtualizer.getVirtualItems().map(vi =&gt; (
+          &lt;div key={vi.key} style={{ transform: `translateY(${vi.start}px)` }}&gt;
+            {items[vi.index]}
+          &lt;/div&gt;
+        ))}
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+<h2>Quick Wins Checklist</h2>
+<ul>
+  <li>Profile first with React DevTools Profiler — don't optimize blindly.</li>
+  <li>Use <code>key</code> correctly in lists to avoid unnecessary unmounts.</li>
+  <li>Avoid creating objects/arrays inline in JSX (they create new references every render).</li>
+  <li>Move static data outside of components.</li>
+</ul>

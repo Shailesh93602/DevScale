@@ -1,0 +1,4 @@
+{
+    "name": "Authentication & JWT",
+    "description": "Implementing secure authentication workflows. Hashing passwords with bcrypt, issuing JSON Web Tokens (JWTs), managing refresh tokens, and protecting API routes."
+}

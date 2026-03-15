@@ -1,0 +1,135 @@
+<h1>Microservices with Node.js & Message Queues</h1>
+<p>Microservices decompose a monolithic application into independent, deployable services — each owning its data and communicating via APIs or message queues. This architecture solves scaling, team independence, and fault isolation problems at the cost of operational complexity.</p>
+
+<h2>When Microservices Make Sense</h2>
+<pre><code class="language-text">Monolith first: build as monolith → extract services when you feel the pain.
+
+Extract a service when:
+  - Different parts need different scaling (payment service: 1 instance, image processing: 20)
+  - Different deployment cadences (marketing site deploys 10x/day, billing deploys monthly)
+  - Different technology needs (ML service in Python while main app is Node.js)
+  - Team boundaries: 2 teams working on the same codebase constantly conflict
+
+Don't extract when:
+  - Team is small (&lt;5 engineers)
+  - Business domain isn't well understood yet (premature decomposition)
+  - You don't have DevOps maturity (container orchestration, service discovery, observability)
+</code></pre>
+
+<h2>Event-Driven Communication with BullMQ + Redis</h2>
+<pre><code class="language-javascript">// shared/queues.ts — shared queue definitions
+import { Queue, Worker } from 'bullmq';
+import { redisConnection } from './redis';
+
+// Order Service: produces events
+const emailQueue = new Queue('email-notifications', { connection: redisConnection });
+
+// When an order is placed:
+async function onOrderCreated(order) {
+  // Non-blocking: adds job to Redis queue and returns immediately
+  // EmailService processes it asynchronously
+  await emailQueue.add('order-confirmation', {
+    to: order.user.email,
+    orderId: order.id,
+    items: order.items,
+  }, {
+    attempts: 3,           // Retry up to 3 times on failure
+    backoff: { type: 'exponential', delay: 2000 },
+    removeOnComplete: true,
+  });
+}
+
+// Email Service: consumes events (separate Node.js process/container)
+const emailWorker = new Worker('email-notifications', async (job) => {
+  const { to, orderId, items } = job.data;
+
+  await sendEmail({
+    to,
+    subject: `Order #${orderId} Confirmed!`,
+    html: renderOrderEmail(items),
+  });
+
+  console.log(`Email sent for order ${orderId}`);
+}, { connection: redisConnection, concurrency: 5 });
+
+emailWorker.on('failed', (job, err) => {
+  console.error(`Email job ${job.id} failed:`, err.message);
+  // After all retries exhausted: job moves to "failed" state in Redis
+  // Use BullMQ Dashboard or Bull Board UI to inspect and retry failed jobs
+});
+</code></pre>
+
+<h2>Service-to-Service HTTP with Circuit Breaker</h2>
+<pre><code class="language-javascript">import Axios from 'axios';
+import axiosRetry from 'axios-retry';
+
+// Create a dedicated axios instance for each downstream service
+const inventoryService = Axios.create({
+  baseURL: process.env.INVENTORY_SERVICE_URL,
+  timeout: 3000,   // Hard 3s timeout — never wait forever for another service
+});
+
+// Auto-retry idempotent requests on transient failures
+axiosRetry(inventoryService, {
+  retries: 2,
+  retryDelay: axiosRetry.exponentialDelay,
+  retryCondition: (error) =>
+    error.code === 'ECONNREFUSED' || error.response?.status >= 500,
+});
+
+// Simple circuit breaker pattern
+let circuitOpen = false;
+let failureCount = 0;
+const FAILURE_THRESHOLD = 5;
+
+async function checkInventory(productId: string) {
+  // Circuit is open → fail fast, don't call the broken service
+  if (circuitOpen) {
+    throw new Error('Inventory service unavailable (circuit open)');
+  }
+
+  try {
+    const { data } = await inventoryService.get(`/products/${productId}/stock`);
+    failureCount = 0;  // Reset on success
+    return data;
+  } catch (err) {
+    failureCount++;
+    if (failureCount >= FAILURE_THRESHOLD) {
+      circuitOpen = true;
+      // Auto-reset after 30s to allow the service to recover
+      setTimeout(() => { circuitOpen = false; failureCount = 0; }, 30000);
+    }
+    throw err;
+  }
+}
+</code></pre>
+
+<h2>The Saga Pattern for Distributed Transactions</h2>
+<pre><code class="language-javascript">// Order processing saga — choreography style (event-driven)
+// Each service subscribes to events and publishes result events
+
+// Step 1: Order Service creates pending order
+async function createOrder(orderData) {
+  const order = await prisma.order.create({
+    data: { ...orderData, status: 'PENDING' }
+  });
+  // Publish event → triggers inventory service
+  await orderQueue.add('order-created', { orderId: order.id, items: order.items });
+  return order;
+}
+
+// Step 2: Inventory Service reserves stock
+const inventoryWorker = new Worker('order-created', async (job) => {
+  const { orderId, items } = job.data;
+  try {
+    await reserveInventory(items);           // Reserve stock in inventory DB
+    await fulfillmentQueue.add('inventory-reserved', { orderId });
+  } catch {
+    // Compensation: tell Order Service to cancel the order
+    await orderQueue.add('inventory-failed', { orderId });
+  }
+});
+
+// Step 3a: Payment Service charges customer (on inventory-reserved)
+// Step 3b: Order Service cancels if payment fails (compensation transaction)
+</code></pre>

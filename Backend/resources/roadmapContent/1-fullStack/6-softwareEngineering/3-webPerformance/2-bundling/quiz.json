@@ -1,0 +1,26 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary benefit of Tree Shaking?",
+            "options": [
+                "Better image compression",
+                "Removing unused code from the final bundle",
+                "Speeding up local compilation",
+                "Automating accessibility checks"
+            ],
+            "correctAnswer": 1,
+            "explanation": "Tree shaking analyzes the import/export graph to exclude code that is never used."
+        },
+        {
+            "question": "Which tool uses native ES modules to provide an extremely fast development server?",
+            "options": [
+                "Apache",
+                "Vite",
+                "Grunt",
+                "Gulp"
+            ],
+            "correctAnswer": 1,
+            "explanation": "Vite is known for its speed by serving native ESM during development."
+        }
+    ]
+}

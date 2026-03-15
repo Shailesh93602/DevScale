@@ -1,0 +1,6 @@
+[
+  "A naive way is to use a special separator like '#' to join the strings, but what if the strings themselves contain '#'?",
+  "You need a way to know exactly where a string ends. Storing the length of the string before the string itself guarantees this.",
+  "What if the string starts with a number? A length like '4' followed by 'lint' could be confused if the first character of 'lint' is a number.",
+  "Combine ideas: Use length, followed by a fixed separator (like '#'), followed by the string itself. Example: '4#lint'. During decoding, parse the number until '#', then grab exactly that many characters."
+]

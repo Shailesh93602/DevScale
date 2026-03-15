@@ -1,0 +1,10 @@
+[
+  { "input": { "arr": [1, 2, 3], "callback": "x => x * 2" }, "output": [2, 4, 6], "explanation": "Double each element", "is_hidden": false },
+  { "input": { "arr": ["a", "b", "c"], "callback": "(c, i) => i + ':' + c" }, "output": ["0:a", "1:b", "2:c"], "explanation": "Index passed correctly", "is_hidden": false },
+  { "input": { "arr": [], "callback": "x => x" }, "output": [], "explanation": "Empty array returns empty", "is_hidden": false },
+  { "input": { "arr": [1], "callback": "x => x * x" }, "output": [1], "explanation": "Single element", "is_hidden": true },
+  { "input": { "arr": [true, false], "callback": "x => !x" }, "output": [false, true], "explanation": "Boolean negation", "is_hidden": true },
+  { "input": { "arr": [1, 2, 3, 4, 5], "callback": "x => x > 3" }, "output": [false, false, false, true, true], "explanation": "Mapping to booleans", "is_hidden": true },
+  { "input": { "arr": ["hello", "world"], "callback": "s => s.length" }, "output": [5, 5], "explanation": "String to number mapping", "is_hidden": true },
+  { "input": { "arr": [1, 2, 3], "callback": "(v, i, a) => a.length" }, "output": [3, 3, 3], "explanation": "Third arg is the original array", "is_hidden": true }
+]

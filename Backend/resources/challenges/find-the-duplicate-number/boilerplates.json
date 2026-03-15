@@ -1,0 +1,10 @@
+{
+  "typescript": "function findDuplicate(nums: number[]): number {\n    \n};",
+  "javascript": "/**\n * @param {number[]} nums\n * @return {number}\n */\nvar findDuplicate = function(nums) {\n    \n};",
+  "python": "class Solution:\n    def findDuplicate(self, nums: List[int]) -> int:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public int findDuplicate(int[] nums) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int findDuplicate(vector<int>& nums) {\n        \n    }\n};",
+  "go": "func findDuplicate(nums []int) int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn find_duplicate(nums: Vec<i32>) -> i32 {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int FindDuplicate(int[] nums) {\n        \n    }\n}"
+}

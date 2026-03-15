@@ -1,0 +1,62 @@
+[
+  {
+    "input": { "arr": [1, [2, 3], [4, [5]]] },
+    "output": [1, 2, 3, 4, 5],
+    "explanation": "Fully flattened nested array",
+    "is_hidden": false
+  },
+  {
+    "input": { "arr": [1, [2, [3, [4]]]], "depth": 1 },
+    "output": [1, 2, [3, [4]]],
+    "explanation": "Flatten one level only",
+    "is_hidden": false
+  },
+  {
+    "input": { "arr": [1, 2, 3] },
+    "output": [1, 2, 3],
+    "explanation": "Already flat — returned as-is",
+    "is_hidden": false
+  },
+  {
+    "input": { "arr": [] },
+    "output": [],
+    "explanation": "Empty array returns empty",
+    "is_hidden": true
+  },
+  {
+    "input": { "arr": [1, [2, [3, [4]]]], "depth": 2 },
+    "output": [1, 2, 3, [4]],
+    "explanation": "Flatten two levels",
+    "is_hidden": true
+  },
+  {
+    "input": { "arr": [1, [2, [3, [4]]]], "depth": 0 },
+    "output": [1, [2, [3, [4]]]],
+    "explanation": "Depth 0 — no flattening",
+    "is_hidden": true
+  },
+  {
+    "input": { "arr": [[[[1]]]] },
+    "output": [1],
+    "explanation": "Deeply nested single element",
+    "is_hidden": true
+  },
+  {
+    "input": { "arr": [1, "hello", [true, [null, [null]]]] },
+    "output": [1, "hello", true, null, null],
+    "explanation": "Mixed types are preserved",
+    "is_hidden": true
+  },
+  {
+    "input": { "arr": [[1, 2], [3, 4], [5, 6]] },
+    "output": [1, 2, 3, 4, 5, 6],
+    "explanation": "Array of arrays, single level",
+    "is_hidden": true
+  },
+  {
+    "input": { "arr": [1, [], [2, [], [3, []]]] },
+    "output": [1, 2, 3],
+    "explanation": "Empty nested arrays are removed",
+    "is_hidden": true
+  }
+]

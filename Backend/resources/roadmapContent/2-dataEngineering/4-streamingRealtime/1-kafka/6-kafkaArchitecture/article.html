@@ -1,0 +1,25 @@
+<h1>Kafka Architecture & ZooKeeper</h1>
+<p>To truly understand how Apache Kafka achieves its legendary reliability and fault tolerance, you need to understand the internal components that make up a production Kafka cluster.</p>
+
+<h2>Brokers</h2>
+<p>A Kafka <strong>Broker</strong> is simply a server. A production Kafka cluster typically consists of 3, 5, or more Broker servers running together as a cluster. Each Broker is responsible for persistently writing incoming messages to its local hard drive (called a "log segment") and serving those messages to consumers upon request.</p>
+<p>One Broker in the cluster is elected as the <strong>Controller Broker</strong>. The Controller is responsible for managing the cluster's metadata: which partitions exist, which broker is the leader for each partition, and reassigning partitions when a broker crashes.</p>
+
+<h2>Leaders and Replicas</h2>
+<p>For fault tolerance, each Partition has one <strong>Leader Broker</strong> and multiple <strong>Replica Brokers</strong>. All Producers write to the Leader, and the Leader synchronously replicates the data to the Replica Brokers.</p>
+<p>If the Leader Broker crashes, Kafka automatically elects one of the in-sync Replicas as the new Leader. Because the Replica already has an exact copy of all data, there is zero data loss, and the switchover happens within seconds without any manual intervention.</p>
+<pre><code class="language-bash"># Creating a topic with 3 partitions and a replication factor of 3
+# This means each partition will have 1 leader + 2 replicas across the cluster
+bin/kafka-topics.sh --create \
+  --topic payment-events \
+  --partitions 3 \
+  --replication-factor 3 \
+  --bootstrap-server localhost:9092
+</code></pre>
+
+<h2>ZooKeeper's Role (Legacy)</h2>
+<p>In older versions of Kafka (pre 2.8), <strong>Apache ZooKeeper</strong> was an external, mandatory dependency. ZooKeeper acted as the central brain of the cluster, storing all critical metadata: which Brokers are alive, who the elected Controller is, and what the current partition leader assignments are.</p>
+<p>This created significant operational complexity. Data Engineering teams had to maintain and scale two complete distributed systems (Kafka AND ZooKeeper) simultaneously.</p>
+
+<h2>KRaft: The ZooKeeper Replacement</h2>
+<p>Starting with Kafka 3.3+, Kafka introduced <strong>KRaft (Kafka Raft)</strong>, a complete internal replacement for ZooKeeper. With KRaft, Kafka manages its own metadata internally using the Raft consensus algorithm, eliminating the operational burden of an external ZooKeeper cluster entirely. All modern Kafka deployments should use KRaft mode.</p>

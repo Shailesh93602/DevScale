@@ -1,0 +1,4 @@
+{
+    "name": "Cross-Validation & Hyperparameter Tuning",
+    "description": "Building models that generalize reliably. Understanding k-fold cross-validation, stratified k-fold for imbalanced data, time-series cross-validation to prevent leakage, and implementing grid search, random search, and Bayesian optimization for hyperparameter tuning. Learning to read learning curves to diagnose bias vs variance."
+}

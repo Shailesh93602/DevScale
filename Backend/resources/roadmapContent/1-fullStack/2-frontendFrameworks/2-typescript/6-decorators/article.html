@@ -1,0 +1,144 @@
+<h1>TypeScript Decorators & Metadata</h1>
+<p>Decorators are special syntax that allow you to annotate and modify classes and their members at design time. They are widely used in frameworks like NestJS, TypeORM, and Angular.</p>
+
+<h2>Enabling Decorators</h2>
+<pre><code>// tsconfig.json
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  }
+}</code></pre>
+
+<h2>Class Decorators</h2>
+<pre><code>// Decorator factory (function that returns decorator)
+function Injectable(): ClassDecorator {
+  return function(constructor: Function) {
+    Reflect.defineMetadata('injectable', true, constructor);
+  };
+}
+
+function Controller(path: string): ClassDecorator {
+  return function(constructor: Function) {
+    Reflect.defineMetadata('path', path, constructor);
+  };
+}
+
+@Injectable()
+@Controller('/users')
+class UsersController {
+  // ...
+}</code></pre>
+
+<h2>Method Decorators</h2>
+<pre><code>// Logging decorator
+function Log(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+  const originalMethod = descriptor.value;
+
+  descriptor.value = function(...args: any[]) {
+    console.log(`Calling ${propertyKey} with`, args);
+    const result = originalMethod.apply(this, args);
+    console.log(`${propertyKey} returned`, result);
+    return result;
+  };
+
+  return descriptor;
+}
+
+// Memoize decorator
+function Memoize(target: any, key: string, descriptor: PropertyDescriptor) {
+  const cache = new Map();
+  const original = descriptor.value;
+
+  descriptor.value = function(...args: any[]) {
+    const cacheKey = JSON.stringify(args);
+    if (cache.has(cacheKey)) return cache.get(cacheKey);
+    const result = original.apply(this, args);
+    cache.set(cacheKey, result);
+    return result;
+  };
+}
+
+class MathService {
+  @Log
+  @Memoize
+  fibonacci(n: number): number {
+    if (n &lt;= 1) return n;
+    return this.fibonacci(n - 1) + this.fibonacci(n - 2);
+  }
+}</code></pre>
+
+<h2>Property Decorators for Validation</h2>
+<pre><code>function MinLength(min: number) {
+  return function(target: any, propertyKey: string) {
+    let value: string;
+
+    Object.defineProperty(target, propertyKey, {
+      get() { return value; },
+      set(newValue: string) {
+        if (newValue.length &lt; min) {
+          throw new Error(`${propertyKey} must be at least ${min} characters`);
+        }
+        value = newValue;
+      }
+    });
+  };
+}
+
+function IsEmail() {
+  return function(target: any, propertyKey: string) {
+    let value: string;
+
+    Object.defineProperty(target, propertyKey, {
+      get() { return value; },
+      set(newValue: string) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(newValue)) {
+          throw new Error(`${propertyKey} must be a valid email`);
+        }
+        value = newValue;
+      }
+    });
+  };
+}
+
+class CreateUserDto {
+  @MinLength(2)
+  name: string;
+
+  @IsEmail()
+  email: string;
+}</code></pre>
+
+<h2>NestJS — Decorators in Practice</h2>
+<p>NestJS is a TypeScript framework that uses decorators extensively for dependency injection, routing, validation, and middleware:</p>
+<pre><code>import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
+
+@Controller('users')
+@UseGuards(AuthGuard)
+export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
+
+  @Get()
+  findAll() {
+    return this.usersService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.usersService.findOne(+id);
+  }
+
+  @Post()
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
+  }
+}</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Only use decorators in frameworks/environments designed for them (NestJS, TypeORM, Angular).</li>
+  <li>Note that decorators are a stage 3 TC39 proposal — the TypeScript implementation uses an older draft.</li>
+  <li>Keep decorators focused on cross-cutting concerns: logging, caching, validation, authorization.</li>
+  <li>Enable <code>emitDecoratorMetadata</code> to capture type information at runtime with reflect-metadata.</li>
+</ul>

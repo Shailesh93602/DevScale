@@ -1,0 +1,6 @@
+[
+  "Build hash maps of local and remote items keyed by ID for O(1) lookups.",
+  "An item is 'modified' if its timestamp is greater than lastSync. Check this for both local and remote versions.",
+  "When both sides modified the same item, it is a conflict. Use last-write-wins: the item with the higher timestamp is the winner.",
+  "Track toUpload (local changes to push) and toDownload (remote changes to pull) separately from the merged result."
+]

@@ -1,0 +1,92 @@
+<h1>Kubernetes Fundamentals</h1>
+<p>Kubernetes (K8s) is the industry-standard platform for deploying, scaling, and managing containerised applications.</p>
+
+<h2>Core Architecture</h2>
+<ul>
+  <li><strong>Control Plane</strong> — API server, scheduler, etcd (cluster state)</li>
+  <li><strong>Node</strong> — Worker machine running pods (kubelet + container runtime)</li>
+  <li><strong>Pod</strong> — Smallest deployable unit; one or more containers</li>
+  <li><strong>Deployment</strong> — Manages replicas of a pod; handles rolling updates</li>
+  <li><strong>Service</strong> — Stable network endpoint to access pods</li>
+  <li><strong>Ingress</strong> — HTTP routing / load balancer / TLS termination</li>
+</ul>
+
+<h2>Deployment Manifest</h2>
+<pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-server
+  labels:
+    app: api
+spec:
+  replicas: 3                          # 3 pods running
+  selector:
+    matchLabels: { app: api }
+  strategy:
+    type: RollingUpdate
+    rollingUpdate: { maxUnavailable: 1, maxSurge: 1 }
+  template:
+    metadata:
+      labels: { app: api }
+    spec:
+      containers:
+      - name: api
+        image: myorg/api:v1.2.3        # Always use specific tags!
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: url
+        resources:
+          requests: { cpu: "100m", memory: "128Mi" }
+          limits:   { cpu: "500m", memory: "512Mi" }
+        livenessProbe:
+          httpGet: { path: /health, port: 3000 }
+          initialDelaySeconds: 30
+        readinessProbe:
+          httpGet: { path: /ready, port: 3000 }</code></pre>
+
+<h2>Service & Ingress</h2>
+<pre><code>kind: Service
+spec:
+  selector: { app: api }
+  type: ClusterIP           # Internal only; use LoadBalancer for external
+  ports:
+  - port: 80, targetPort: 3000
+
+---
+kind: Ingress
+spec:
+  rules:
+  - host: api.myapp.com
+    http:
+      paths:
+      - path: /api
+        pathType: Prefix
+        backend:
+          service: { name: api-server, port: { number: 80 } }</code></pre>
+
+<h2>Essential kubectl Commands</h2>
+<pre><code>kubectl get pods               # List pods
+kubectl get pods -o wide       # With node info
+kubectl describe pod api-xyz   # Full pod details
+kubectl logs api-xyz -f        # Follow logs
+kubectl exec -it api-xyz -- sh # Shell into pod
+kubectl apply -f deployment.yaml
+kubectl rollout status deployment/api-server
+kubectl rollout undo deployment/api-server   # Rollback!
+kubectl scale deployment/api-server --replicas=5</code></pre>
+
+<h2>ConfigMaps & Secrets</h2>
+<pre><code>kubectl create configmap app-config --from-file=config.yaml
+kubectl create secret generic db-secret --from-literal=url='postgresql://...'
+
+# Or declarative:
+apiVersion: v1
+kind: Secret
+type: Opaque
+data:
+  DATABASE_URL: cG9zdGdyZXNxbDovLw==  # base64 encoded</code></pre>

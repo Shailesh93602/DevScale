@@ -1,0 +1,96 @@
+{
+    "title": "Accessibility & ARIA Quiz",
+    "description": "Test your knowledge of web accessibility principles and ARIA attributes.",
+    "passingScore": 80,
+    "timeLimit": 8,
+    "questions": [
+        {
+            "question": "What does ARIA stand for?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Automated Responsive Interface Attributes",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Accessible Rich Internet Applications",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Advanced React Interface Architecture",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Accessible Rendering in Applications",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What attribute provides a text alternative for images?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "title",
+                    "isCorrect": false
+                },
+                {
+                    "text": "aria-label",
+                    "isCorrect": false
+                },
+                {
+                    "text": "alt",
+                    "isCorrect": true
+                },
+                {
+                    "text": "caption",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What WCAG contrast ratio is required for normal-sized body text (AA standard)?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "2:1",
+                    "isCorrect": false
+                },
+                {
+                    "text": "3:1",
+                    "isCorrect": false
+                },
+                {
+                    "text": "4.5:1",
+                    "isCorrect": true
+                },
+                {
+                    "text": "7:1",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does aria-live=\"polite\" do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Makes the element draggable",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Announces content changes to screen readers when the user is idle",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Hides the element from all users",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Marks the element as a form control",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

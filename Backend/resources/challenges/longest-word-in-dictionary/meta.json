@@ -1,0 +1,20 @@
+{
+  "title": "Longest Word in Dictionary",
+  "slug": "longest-word-in-dictionary",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["array","hash-table","string","trie","sorting"],
+  "company_tags": ["Amazon","Google","Microsoft"],
+  "topic_tags": ["tries","strings","sorting"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An array of strings `words`.",
+  "output_format": "The longest string in the dictionary that can be built one character at a time.",
+  "example_input": "words = [\"a\",\"banana\",\"app\",\"appl\",\"ap\",\"apply\",\"apple\"]",
+  "example_output": "\"apple\"",
+  "constraints": "- `1 <= words.length <= 1000`\n- `1 <= words[i].length <= 30`\n- `words[i]` consists of lowercase English letters.",
+  "function_signature": "function longestWord(words: string[]): string {}",
+  "status": "ACTIVE"
+}

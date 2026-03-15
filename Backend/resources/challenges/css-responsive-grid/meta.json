@@ -1,0 +1,19 @@
+{
+  "title": "CSS: Responsive Grid System",
+  "slug": "css-responsive-grid",
+  "difficulty": "Medium",
+  "category": "frontend",
+  "points": 100,
+  "tags": ["css", "grid", "responsive", "layout"],
+  "company_tags": ["Google", "Meta", "Amazon", "Airbnb"],
+  "topic_tags": ["CSS Grid", "Responsive Design", "Media Queries"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "A configuration object with columns, gap, and breakpoints",
+  "output_format": "A function that generates CSS grid styles for a responsive grid system",
+  "example_input": "createGrid({ columns: 12, gap: '16px', breakpoints: { sm: 640, md: 768, lg: 1024 } })",
+  "example_output": "CSS string for a 12-column responsive grid",
+  "constraints": "1 <= columns <= 24, breakpoints must be valid pixel values",
+  "function_signature": "function createGrid(config: GridConfig): string",
+  "status": "ACTIVE"
+}

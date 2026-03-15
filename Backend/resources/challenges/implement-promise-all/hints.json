@@ -1,0 +1,6 @@
+[
+  "Return a new Promise. Inside its executor, iterate over all input promises.",
+  "Wrap each value with Promise.resolve() to handle both promises and plain values uniformly.",
+  "Use an index to store each result in the correct position: results[index] = value.",
+  "Keep a counter of resolved promises. When it equals the total count, resolve the outer promise with the results array."
+]

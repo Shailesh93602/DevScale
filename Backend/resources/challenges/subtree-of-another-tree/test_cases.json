@@ -1,0 +1,12 @@
+[
+  { "input": "{\"root\":[3,4,5,1,2], \"subRoot\":[4,1,2]}", "output": "true", "explanation": "Standard subtree match", "is_hidden": false },
+  { "input": "{\"root\":[3,4,5,1,2,null,null,null,null,0], \"subRoot\":[4,1,2]}", "output": "false", "explanation": "Not a match due to extra leaf", "is_hidden": false },
+  { "input": "{\"root\":[1,2,3], \"subRoot\":[1,2,3]}", "output": "true", "explanation": "Identical trees", "is_hidden": true },
+  { "input": "{\"root\":[1], \"subRoot\":[1]}", "output": "true", "explanation": "Single nodes match", "is_hidden": true },
+  { "input": "{\"root\":[1], \"subRoot\":[2]}", "output": "false", "explanation": "Single nodes differ", "is_hidden": true },
+  { "input": "{\"root\":[1,2], \"subRoot\":[2]}", "output": "true", "explanation": "Subtree is a single leaf", "is_hidden": true },
+  { "input": "{\"root\":[1,null,2], \"subRoot\":[2]}", "output": "true", "explanation": "Subtree on right", "is_hidden": true },
+  { "input": "{\"root\":[3,4,5,1,2], \"subRoot\":[3,4,5]}", "output": "false", "explanation": "Missing leaves in subtree", "is_hidden": true },
+  { "input": "{\"root\":[1,1,1,1,1,null,1], \"subRoot\":[1,1,null]}", "output": "false", "explanation": "Many same values, structural mismatch at bottom", "is_hidden": true },
+  { "input": "{\"root\":[1,1,1,1,1,null,1,null,null,1,1,null,null,null,null,2], \"subRoot\":[1,1,null,1,1]}", "output": "false", "explanation": "Deep matching required", "is_hidden": true }
+]

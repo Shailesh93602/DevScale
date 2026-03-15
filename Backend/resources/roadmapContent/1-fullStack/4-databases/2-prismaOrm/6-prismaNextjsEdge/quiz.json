@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "Why does Next.js create hundreds of Prisma Client instances during development without the global singleton pattern, and what exact symptom does this cause?",
+            "options": [
+                "Without the singleton, Prisma runs in read-only mode during development.",
+                "Next.js uses Hot Module Replacement (HMR) to apply code changes without a full server restart. Each time you save a file, the affected modules are re-evaluated. If lib/prisma.ts runs new PrismaClient() at module level without the global singleton, each HMR cycle creates a new PrismaClient instance with its own connection pool (typically 10 connections). After 10-15 saves, you hit PostgreSQL's max_connections limit (default 100). Symptom: 'too many connections' error from PostgreSQL — your API endpoints start returning 500 errors until you restart the dev server.",
+                "Without the singleton, Prisma uses SQLite instead of PostgreSQL in development.",
+                "HMR causes queries to be duplicated — results are returned twice without the singleton."
+            ],
+            "answer": "Next.js uses Hot Module Replacement (HMR) to apply code changes without a full server restart. Each time you save a file, the affected modules are re-evaluated. If lib/prisma.ts runs new PrismaClient() at module level without the global singleton, each HMR cycle creates a new PrismaClient instance with its own connection pool (typically 10 connections). After 10-15 saves, you hit PostgreSQL's max_connections limit (default 100). Symptom: 'too many connections' error from PostgreSQL — your API endpoints start returning 500 errors until you restart the dev server.",
+            "explanation": "The fix works because globalThis survives HMR — it's not reset between cycles. globalThis.prisma ?? new PrismaClient() returns the existing instance on subsequent evaluations. This is only needed in development; in production, Next.js never hot-reloads, so each serverless function instance creates exactly one PrismaClient in its lifecycle."
+        },
+        {
+            "question": "Prisma Client cannot run on Vercel Edge Runtime (Edge Functions, Middleware). What is the fundamental reason, and what is Prisma's solution?",
+            "options": [
+                "Edge Runtime doesn't support TypeScript which Prisma requires.",
+                "Prisma Client requires Node.js-specific APIs (net.createConnection, tcp sockets) to establish a direct TCP connection to PostgreSQL. Edge Runtime (Cloudflare Workers, Vercel Edge) is a stripped-down V8 environment with NO Node.js APIs — it only has fetch, WebCrypto, and Web APIs. Direct TCP from Edge is impossible. Prisma Accelerate is the solution: it runs a global connection pooler as a cloud service reachable via HTTPS/fetch. Prisma Client communicates with Accelerate over HTTP instead of raw TCP, making it compatible with any fetch-capable environment including Edge Runtime.",
+                "Edge Runtime prohibits database connections because edge functions run on CDN nodes.",
+                "Prisma requires a UNIX socket connection which is unavailable on Edge Runtime."
+            ],
+            "answer": "Prisma Client requires Node.js-specific APIs (net.createConnection, tcp sockets) to establish a direct TCP connection to PostgreSQL. Edge Runtime (Cloudflare Workers, Vercel Edge) is a stripped-down V8 environment with NO Node.js APIs — it only has fetch, WebCrypto, and Web APIs. Direct TCP from Edge is impossible. Prisma Accelerate is the solution: it runs a global connection pooler as a cloud service reachable via HTTPS/fetch. Prisma Client communicates with Accelerate over HTTP instead of raw TCP, making it compatible with any fetch-capable environment including Edge Runtime.",
+            "explanation": "Alternative to Prisma Accelerate for Edge: use a Supabase client (communicates via REST/HTTP), or PlanetScale serverless driver (HTTP-based MySQL), or Neon serverless driver (HTTP-based PostgreSQL). These are all HTTP-native database drivers designed specifically for Edge environments."
+        },
+        {
+            "question": "What is the stale-while-revalidate (swr) cache strategy in Prisma Accelerate, and how does it improve perceived performance?",
+            "options": [
+                "SWR makes Prisma only cache writes, not reads — reads always go to the database.",
+                "With ttl=60 only: data is served from cache for 60s, then the next request is slow (waits for fresh data from DB). With swr=30 added (on top of ttl): after the ttl expires, serve the STALE data immediately to the user (still fast!) while simultaneously fetching fresh data in the background for future requests. Users never see a slow response — only ever cache hits or stale-but-fast data. The background fetch updates the cache without blocking any user. This creates a 'always fast, eventually consistent' experience.",
+                "SWR (stale-while-revalidate) prevents caching of queries that include WHERE clauses.",
+                "SWR in Prisma Accelerate is identical to the swr option in React Query — they share the same mechanism."
+            ],
+            "answer": "With ttl=60 only: data is served from cache for 60s, then the next request is slow (waits for fresh data from DB). With swr=30 added (on top of ttl): after the ttl expires, serve the STALE data immediately to the user (still fast!) while simultaneously fetching fresh data in the background for future requests. Users never see a slow response — only ever cache hits or stale-but-fast data. The background fetch updates the cache without blocking any user. This creates a 'always fast, eventually consistent' experience.",
+            "explanation": "SWR timing example: cache set at t=0. At t=60 (ttl expired): next request gets stale data (instant) + background DB query starts. At t=60+200ms: background query completes, cache updated. Requests at t=61 to t=90 (swr window): get refreshed data. At t=91 (ttl+swr exceeded): next request triggers another background refresh. Ideal for: product listings, user profiles, any data where millisecond-perfect freshness isn't required."
+        }
+    ]
+}

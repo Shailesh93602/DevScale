@@ -1,0 +1,19 @@
+{
+  "title": "Build a Simple Recommendation Engine",
+  "slug": "build-recommendation-engine",
+  "difficulty": "Hard",
+  "category": "machine_learning",
+  "points": 150,
+  "tags": ["recommendation", "collaborative-filtering", "cosine-similarity"],
+  "company_tags": ["Netflix", "Amazon", "Spotify"],
+  "topic_tags": ["Machine Learning", "Recommendation Systems", "Similarity"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "User-item rating matrix and target user ID, number of recommendations",
+  "output_format": "List of recommended item indices sorted by predicted rating",
+  "example_input": "{\"ratings\": [[5,3,0,1],[4,0,0,1],[1,1,0,5],[1,0,0,4],[0,1,5,4]], \"userId\": 0, \"numRecs\": 2}",
+  "example_output": "{\"recommendations\": [2, 3]}",
+  "constraints": "1 <= users <= 1000, 1 <= items <= 1000, ratings are 0-5 where 0 means unrated",
+  "function_signature": "function recommend(ratings: number[][], userId: number, numRecs: number): { recommendations: number[] }",
+  "status": "ACTIVE"
+}

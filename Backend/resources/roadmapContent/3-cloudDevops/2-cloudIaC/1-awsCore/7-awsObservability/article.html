@@ -1,0 +1,55 @@
+<h1>AWS Observability: CloudWatch & X-Ray</h1>
+<p>Deploying to production without proper monitoring is like flying blind — you won't know something is wrong until a customer tweets about it. AWS provides a native observability stack that covers metrics, logs, and distributed tracing.</p>
+
+<h2>Amazon CloudWatch: Metrics & Alarms</h2>
+<p><strong>Amazon CloudWatch</strong> is the central metrics and monitoring service for all AWS resources. Every AWS service automatically publishes metrics to CloudWatch: EC2 instance CPU, RDS query latency, Lambda error rates, ECS memory usage, and hundreds more.</p>
+
+<h3>CloudWatch Alarms</h3>
+<pre><code class="language-bash"># Create an alarm that alerts when RDS CPU exceeds 80% for 5 consecutive minutes
+aws cloudwatch put-metric-alarm \
+  --alarm-name "RDS-High-CPU" \
+  --metric-name CPUUtilization \
+  --namespace AWS/RDS \
+  --dimensions Name=DBInstanceIdentifier,Value=production-db \
+  --statistic Average \
+  --period 300 \
+  --threshold 80 \
+  --comparison-operator GreaterThanThreshold \
+  --evaluation-periods 2 \
+  --alarm-actions arn:aws:sns:us-east-1:123456789:ops-alerts  # SNS topic → Slack/PagerDuty
+</code></pre>
+
+<h3>CloudWatch Logs & Logs Insights</h3>
+<p>All application and infrastructure logs should ship to CloudWatch Logs. From there, <strong>CloudWatch Logs Insights</strong> provides a SQL-like query language to analyze petabytes of logs interactively:</p>
+<pre><code class="language-sql">-- Find the top 10 API endpoints generating the most errors in the last hour
+fields @timestamp, @message
+| parse @message /level=(?&lt;level&gt;\w+) path=(?&lt;path&gt;[\S]+) status=(?&lt;status&gt;\d+)/
+| filter level = "ERROR"
+| stats count(*) as error_count by path
+| sort error_count desc
+| limit 10
+</code></pre>
+
+<h3>CloudWatch Dashboards</h3>
+<p>Build real-time operational dashboards by combining metrics from multiple AWS services into a single view. A production dashboard typically shows: EC2 CPU + Memory, RDS query latency + connections, Lambda error rate + duration P99, ALB request count + 5xx rate, and cost trends.</p>
+
+<h2>AWS X-Ray: Distributed Tracing</h2>
+<p>When your application consists of 15 microservices and a single user request traverses 8 of them, a CloudWatch alarm saying "high latency" tells you <em>that</em> there's a problem but not <em>where</em>. That's where <strong>AWS X-Ray</strong> provides distributed tracing — it tracks a single request as it flows through every service, showing exactly where time is spent:</p>
+<pre><code class="language-python">from aws_xray_sdk.core import xray_recorder, patch_all
+
+# Automatically instrument boto3, requests, sqlalchemy calls
+patch_all()
+
+@xray_recorder.capture('process_payment')
+def process_payment(order_id: str):
+    # X-Ray automatically creates a subsegment for each outgoing call:
+    # - Database query: 45ms
+    # - Call to Fraud Detection Service: 120ms  ← THIS is the bottleneck!
+    # - Call to Payment Gateway: 230ms
+    # Total: 395ms
+    ...
+</code></pre>
+<p>The X-Ray Service Map provides a visual graph showing all services, their dependencies, error rates, and latency. When a customer reports a slow checkout, you open X-Ray, find the specific trace for their request, and see exactly which service call took 2 seconds too long.</p>
+
+<h2>CloudWatch Container Insights</h2>
+<p>For ECS and EKS workloads, <strong>Container Insights</strong> provides automatic collection of CPU, memory, disk, and network metrics per container — without any custom instrumentation. It also integrates with CloudWatch Logs to correlate container performance metrics with application logs from the same time window.</p>

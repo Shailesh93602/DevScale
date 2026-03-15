@@ -1,0 +1,29 @@
+<h1>Airflow Architecture & Scaling</h1>
+<p>Understanding how Airflow physically operates under the hood is critical for deploying it in a production environment. A production Airflow cluster consists of four core components working together harmoniously.</p>
+
+<h2>The Four Core Components</h2>
+<ul>
+  <li><strong>The Webserver:</strong> A Flask application that provides the familiar Airflow UI. It allows data engineers to visually inspect DAGs, trigger manual runs, and review task logs.</li>
+  <li><strong>The Metadata Database:</strong> The central brain of Airflow, usually a PostgreSQL or MySQL instance. It stores immediately everything: DAG schedules, task states (success, running, failed), XComs, and connection credentials.</li>
+  <li><strong>The Scheduler:</strong> The heart of Airflow. A deeply complex daemon process that constantly polls the Metadata Database. When it sees that a DAG is scheduled to run at 5:00 PM, it creates "Task Instances" in the database and queues them up to be executed.</li>
+  <li><strong>The Executor (and Workers):</strong> The muscle of Airflow. The Executor explicitly reads the queue created by the Scheduler and assigns those tasks to actual computing Workers to perform the heavy Python logic.</li>
+</ul>
+
+<h2>The Sequential and Local Executors</h2>
+<p>When you install Airflow locally on your laptop using SQLite, it strictly utilizes the <strong>Sequential Executor</strong>. It can only run one single task at a time. If Task A takes 5 hours, Task B cannot start, even if they are in different DAGs.</p>
+<p>If you upgrade your laptop to PostgreSQL, you can unlock the <strong>Local Executor</strong>. This allows Airflow to spawn multiple Python processes locally, allowing parallelism on a single machine.</p>
+
+<h2>Scaling with the Celery Executor</h2>
+<p>If you have 1,000 DAGs containing 50,000 daily tasks, a single server running a Local Executor will burst into flames. You must scale horizontally utilizing the <strong>Celery Executor</strong>.</p>
+<p>Celery is an asynchronous task queue architecture.</p>
+<ol>
+  <li>The Scheduler identifies 100 tasks that need to run immediately.</li>
+  <li>Instead of executing them locally, the Celery Executor pushes 100 "messages" into a Message Broker queue (usually Redis or RabbitMQ).</li>
+  <li>You provision 50 separate Worker Nodes (virtual machines). These workers constantly poll the Redis queue.</li>
+  <li>Whenever a worker finishes a task, it pulls the next message off the queue and begins executing it.</li>
+</ol>
+<p>This distributed architecture ensures that if 1 worker crashes due to a memory leak, the other 49 workers continue processing the queue flawlessly, drastically increasing the fault tolerance of your data platform.</p>
+
+<h2>The Kubernetes Executor</h2>
+<p>Modern enterprises increasingly prefer the <strong>Kubernetes Executor</strong>. Instead of maintaining 50 permanent worker machines (which costs thousands of dollars even when they sit idle at night), the Kubernetes Executor dynamically spins up a brand new, isolated Docker container for every single individual task.</p>
+<p>When the task finishes successfully, the Kubernetes container is instantly destroyed and the resources are aggressively reclaimed by the cloud provider, optimizing infrastructure costs massively.</p>

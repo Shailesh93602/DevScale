@@ -1,0 +1,19 @@
+{
+  "title": "Convert Sorted Array to Binary Search Tree",
+  "slug": "convert-sorted-array-to-bst",
+  "difficulty": "Easy",
+  "category": "algorithms",
+  "points": 50,
+  "tags": ["array", "divide-and-conquer", "tree", "binary-search-tree", "binary-tree"],
+  "company_tags": ["Amazon", "Google", "Microsoft", "Apple", "Airbnb"],
+  "topic_tags": ["trees", "binary search trees", "divide and conquer"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer array `nums` sorted in ascending order.",
+  "output_format": "A height-balanced BST.",
+  "example_input": "nums = [-10,-3,0,5,9]",
+  "example_output": "[0,-3,9,-10,null,5]",
+  "constraints": "- `1 <= nums.length <= 10^4`\n- `-10^4 <= nums[i] <= 10^4`\n- `nums` is sorted in strictly increasing order.",
+  "function_signature": "function sortedArrayToBST(nums: number[]): TreeNode | null {}",
+  "status": "ACTIVE"
+}

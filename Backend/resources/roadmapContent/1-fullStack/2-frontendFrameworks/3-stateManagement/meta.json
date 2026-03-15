@@ -1,0 +1,4 @@
+{
+    "name": "State Management",
+    "description": "Managing complex application state with Redux Toolkit and React Query."
+}

@@ -1,0 +1,4 @@
+{
+    "name": "Volumes & Data Persistence",
+    "description": "Preventing catastrophic data loss natively. Understanding how containers are inherently ephemeral, and utilizing Docker Volumes to permanently persist PostgreSQL data when the container restarts."
+}

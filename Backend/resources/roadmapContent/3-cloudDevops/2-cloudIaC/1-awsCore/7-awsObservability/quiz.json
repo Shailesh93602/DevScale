@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What specific operational limitation does AWS X-Ray solve that Amazon CloudWatch metrics and alarms alone cannot address?",
+            "options": [
+                "CloudWatch cannot collect logs from EC2 instances; X-Ray fills this gap.",
+                "CloudWatch metrics can tell you THAT latency is high across your system, but X-Ray shows you exactly WHERE the latency originates — tracing a single request as it flows through all microservices and pinpointing which specific service call, database query, or external API is the bottleneck.",
+                "X-Ray provides lower-cost metric storage than CloudWatch.",
+                "CloudWatch cannot alert when error rates exceed thresholds; X-Ray provides this."
+            ],
+            "answer": "CloudWatch metrics can tell you THAT latency is high across your system, but X-Ray shows you exactly WHERE the latency originates — tracing a single request as it flows through all microservices and pinpointing which specific service call, database query, or external API is the bottleneck.",
+            "explanation": "In a microservices architecture with 15 services, a CloudWatch alarm saying 'P99 latency is 3 seconds' is useless without knowing which of the 15 services is causing it. X-Ray's trace waterfall diagram answers this instantly."
+        },
+        {
+            "question": "What is the correct sequence for a CloudWatch Alarm to automatically notify the engineering team via Slack when RDS CPU exceeds 80%?",
+            "options": [
+                "CloudWatch Alarm → EC2 Auto Scaling → CloudWatch Dashboard → Email.",
+                "CloudWatch Alarm monitors the RDS CPUUtilization metric → when threshold is breached, triggers an SNS Topic → SNS Topic delivers the notification to an HTTP endpoint (e.g., a Lambda function that posts to Slack, or PagerDuty).",
+                "CloudWatch Alarm → directly sends email without additional services.",
+                "CloudWatch Alarm → EventBridge → Direct Lambda → Slack, bypassing SNS."
+            ],
+            "answer": "CloudWatch Alarm monitors the RDS CPUUtilization metric → when threshold is breached, triggers an SNS Topic → SNS Topic delivers the notification to an HTTP endpoint (e.g., a Lambda function that posts to Slack, or PagerDuty).",
+            "explanation": "SNS (Simple Notification Service) is the glue between CloudWatch Alarms and actual notification channels. SNS can fan out to email, SMS, Lambda, SQS, and HTTPS endpoints simultaneously."
+        },
+        {
+            "question": "Why is CloudWatch Logs Insights significantly more valuable than searching raw CloudWatch Logs for debugging production incidents?",
+            "options": [
+                "Logs Insights automatically fixes bugs in the logs it analyzes.",
+                "Logs Insights provides a SQL-like query language that can aggregate, filter, and analyze petabytes of log data across all log streams and time ranges in seconds — turning raw text logs into structured insights, finding error patterns, and identifying root causes in minutes instead of hours of manual grep.",
+                "Logs Insights stores logs more cheaply than standard CloudWatch Logs.",
+                "Logs Insights automatically creates CloudWatch alarms based on log patterns."
+            ],
+            "answer": "Logs Insights provides a SQL-like query language that can aggregate, filter, and analyze petabytes of log data across all log streams and time ranges in seconds — turning raw text logs into structured insights, finding error patterns, and identifying root causes in minutes instead of hours of manual grep.",
+            "explanation": "Without Logs Insights, finding the 50 error log lines in 10 million lines of logs requires downloading and grepping locally. With Insights, you write a query with filter + stats + sort and get the answer in 10 seconds."
+        }
+    ]
+}

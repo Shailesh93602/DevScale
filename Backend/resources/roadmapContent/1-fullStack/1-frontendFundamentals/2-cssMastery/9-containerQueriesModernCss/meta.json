@@ -1,0 +1,4 @@
+{
+    "name": "CSS Container Queries, Cascade Layers & Modern CSS",
+    "description": "The CSS features that are changing how we write component-level responsive design. Container queries (@container) for components that respond to their container size rather than the viewport, cascade layers (@layer) for managing specificity without !important wars, the :has() parent selector and what it enables, logical properties for internationalization support, and the subgrid feature that finally solves nested grid alignment."
+}

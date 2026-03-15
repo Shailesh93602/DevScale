@@ -1,0 +1,14 @@
+{
+    "title": "Full Stack Web Development",
+    "description": "Master the complete modern stack: HTML, CSS, JavaScript, React, Node.js, Databases, and DevOps to build production-ready web applications from scratch.",
+    "tags": "Frontend,Backend,FullStack,Node,React,SoftwareEngineering",
+    "difficulty": "EASY",
+    "main_concepts": [
+        "1-frontendFundamentals",
+        "2-frontendFrameworks",
+        "3-backendDevelopment",
+        "4-databases",
+        "5-devops",
+        "6-softwareEngineering"
+    ]
+}

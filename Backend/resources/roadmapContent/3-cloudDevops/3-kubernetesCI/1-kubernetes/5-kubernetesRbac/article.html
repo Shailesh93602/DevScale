@@ -1,0 +1,81 @@
+<h1>Kubernetes RBAC & Security Contexts</h1>
+<p>By default, a Kubernetes cluster is a shared environment where any pod could potentially access the Kubernetes API and do anything — list all secrets cluster-wide, modify other deployments, or read another team's configuration. RBAC (Role-Based Access Control) and Security Contexts close these attack surfaces.</p>
+
+<h2>Kubernetes RBAC</h2>
+<p>RBAC in Kubernetes controls <em>who</em> (human users, service accounts) can perform <em>what actions</em> (get, list, create, delete) on <em>which resources</em> (pods, secrets, deployments).</p>
+<pre><code class="language-yaml"># Role — namespaced permissions (only within 'monitoring' namespace)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: pod-reader
+  namespace: monitoring
+rules:
+- apiGroups: [""]
+  resources: ["pods", "pods/logs"]
+  verbs: ["get", "list", "watch"]  # Read-only — cannot delete or create
+---
+# ClusterRole — cluster-wide permissions (all namespaces)
+kind: ClusterRole
+metadata:
+  name: node-reader
+rules:
+- apiGroups: [""]
+  resources: ["nodes"]
+  verbs: ["get", "list"]
+---
+# RoleBinding — grant the Role to a specific ServiceAccount
+kind: RoleBinding
+metadata:
+  name: monitoring-pod-reader
+  namespace: monitoring
+subjects:
+- kind: ServiceAccount
+  name: prometheus         # The ServiceAccount used by Prometheus pods
+  namespace: monitoring
+roleRef:
+  kind: Role
+  name: pod-reader
+  apiGroup: rbac.authorization.k8s.io
+</code></pre>
+
+<h2>Pod Security Contexts</h2>
+<p>By default, containers run as root (UID 0) — if an attacker exploits a vulnerability in your application, they gain root access inside the container and potentially beyond. Security Contexts enforce runtime security policies:</p>
+<pre><code class="language-yaml">spec:
+  securityContext:
+    runAsNonRoot: true         # Pod-level: all containers must not run as root
+    runAsUser: 1000            # Run as UID 1000 (non-privileged user)
+    fsGroup: 2000              # Files created in volumes owned by GID 2000
+  containers:
+  - name: api
+    image: myapp:v2
+    securityContext:
+      allowPrivilegeEscalation: false   # Cannot gain more privileges than parent process
+      readOnlyRootFilesystem: true      # Container filesystem is read-only (malware can't write)
+      capabilities:
+        drop: ["ALL"]                   # Drop ALL Linux capabilities (e.g., SETUID, NET_RAW)
+        add: ["NET_BIND_SERVICE"]       # Add back only what's strictly required
+</code></pre>
+
+<h2>Network Policies</h2>
+<p>By default, all pods can talk to all other pods in all namespaces — a compromised pod could reach your production database pod directly. <strong>Network Policies</strong> define firewall rules at the pod level:</p>
+<pre><code class="language-yaml"># Only allow the 'api' pods in the 'production' namespace to reach the database pods
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: database-isolation
+  namespace: production
+spec:
+  podSelector:
+    matchLabels:
+      app: postgres
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: api-server    # ONLY api-server pods can connect to postgres
+    ports:
+    - protocol: TCP
+      port: 5432
+  policyTypes:
+  - Ingress
+</code></pre>

@@ -1,0 +1,4 @@
+{
+    "name": "Terraform Workspaces & Remote Backends",
+    "description": "Managing multiple deployment environments with Terraform. Understanding Workspaces for dev/staging/prod isolation, configuring remote backends (S3 + DynamoDB state locking), and avoiding the 'works on my machine' state file problem."
+}

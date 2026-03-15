@@ -1,0 +1,4 @@
+{
+    "name": "Text Classification & Sentiment Analysis",
+    "description": "Building modern NLP classification systems. Comparing traditional approaches (TF-IDF + Logistic Regression) with transformer-based fine-tuning (BERT), implementing sentiment analysis, multi-label text classification, and zero-shot classification with pretrained models. Handling long documents, multilingual text, and class imbalance in NLP tasks."
+}

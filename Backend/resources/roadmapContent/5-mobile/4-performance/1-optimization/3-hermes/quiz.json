@@ -1,0 +1,118 @@
+{
+    "title": "Hermes JavaScript Engine Quiz",
+    "description": "Test your knowledge of Hermes, AOT compilation, and its impact on React Native performance.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What fundamental difference distinguishes Hermes from JavaScriptCore (JSC) in how it processes JavaScript?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Hermes uses a multi-threaded approach while JSC is single-threaded",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Hermes compiles JavaScript to bytecode at build time (AOT), while JSC compiles at runtime (JIT), reducing app startup cost",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Hermes runs JavaScript natively without compilation; JSC always interprets it",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Hermes only runs on Android; JSC runs on both Android and iOS",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How do you verify that Hermes is the active JavaScript engine at runtime in React Native?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Check if navigator.userAgent includes 'Hermes'",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Check if `global.HermesInternal` is defined — it only exists when Hermes is active",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Call `Platform.getEngine()` from react-native",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Read the engine name from `process.env.JS_ENGINE`",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which app performance metric is most significantly improved by Hermes's AOT bytecode approach?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Frame rate during animations (FPS)",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Network request latency",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Time to Interactive (TTI) / app startup time — bytecode loads directly without compile time",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Battery consumption during idle backgrounding",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "A third-party library breaks your app after switching to Hermes. What is the most likely cause?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Hermes does not support TypeScript",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The library uses eval() or new Function(), which Hermes does not support for security reasons",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Hermes requires all imports to use CommonJS require() syntax",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The library uses async/await which is not supported by Hermes",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How do you enable Hermes in an Expo managed workflow project (SDK 48+)?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Add `hermes: true` to the `ios` section of app.json",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Install the `hermes-engine` npm package and import it in App.js",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Set `\"jsEngine\": \"hermes\"` in the expo section of app.json — it is already the default in SDK 48+",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Edit the metro.config.js to use the hermes transformer",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

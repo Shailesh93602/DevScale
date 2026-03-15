@@ -1,0 +1,35 @@
+<h1>Kubernetes Networking (Services)</h1>
+<p>Pods are mortal. They die, they are scaled up, they are recreated across different nodes. Because of this, <strong>Pod IP addresses are entirely ephemeral (temporary)</strong>. If a Frontend application hardcodes the IP address of a Backend Pod, the entire app breaks the moment that Backend Pod is restarted.</p>
+<p>To solve this, Kubernetes uses <strong>Services</strong>.</p>
+
+<h2>What is a Service?</h2>
+<p>A Service provides a stable, permanent IP address and DNS name that routes traffic to a set of underlying Pods. It acts as an internal Load Balancer.</p>
+
+<h2>Types of Services</h2>
+<ol>
+  <li><strong>ClusterIP (Default):</strong> Provides an internal IP accessible <em>only</em> from inside the Kubernetes cluster. Use this for backend systems (like a database or an internal API) that should never be directly accessible from the internet.</li>
+  <li><strong>NodePort:</strong> Opens a specific port (between 30000-32767) on <em>every single physical Server Node</em> in the cluster, forwarding traffic to the underlying pods. It is primarily used for primitive external access or local development (minikube).</li>
+  <li><strong>LoadBalancer:</strong> Used in cloud environments (AWS, GCP, Azure). When you create this service, Kubernetes tells AWS to automatically provision a real AWS Application Load Balancer, assigns it a public IP, and links it to your cluster. This is the standard way to expose an app to the public internet.</li>
+</ol>
+
+<h2>How Services find Pods</h2>
+<p>Services use <strong>Label Selectors</strong> to know which Pods to route traffic to.</p>
+<pre><code>apiVersion: v1
+kind: Service
+metadata:
+  name: my-backend-service
+spec:
+  type: ClusterIP
+  selector:
+    app: backend-api  # Routes traffic to ANY pod with this exact label
+  ports:
+    - port: 80        # The port the Service listens on
+      targetPort: 8080 # The exact port the container inside the Pod is running on</code></pre>
+<p>Kubernetes automatically updates the internal DNS. Now, your frontend container can simply make an HTTP request to <code>http://my-backend-service:80</code>, and Kubernetes will handle dynamically routing it to an alive backend pod.</p>
+
+<h2>Ingress Controllers</h2>
+<p>If you have 50 microservices and use a <code>LoadBalancer</code> service for each, AWS will bill you for 50 expensive Load Balancers. An <strong>Ingress</strong> solves this.</p>
+<p>An Ingress is a single entry-point Load Balancer that routes traffic based on URL paths. Example rule:<br>
+- <code>/api/*</code> routes to the <code>api-service</code> (ClusterIP)<br>
+- <code>/auth/*</code> routes to the <code>auth-service</code> (ClusterIP)<br>
+- <code>/*</code> routes to the <code>frontend-service</code> (ClusterIP)</p>

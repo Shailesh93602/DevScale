@@ -1,0 +1,4 @@
+{
+    "name": "Apollo Client & GraphQL State",
+    "description": "Managing remote state and local state simultaneously with Apollo Client. Using useQuery, useMutation, type policies, and the normalized cache."
+}

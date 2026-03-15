@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What happens if a middleware function neither sends a response (e.g., res.send()) nor calls next()?",
+            "options": [
+                "Express automatically sends a 404 Not Found",
+                "Express throws an 'Unresolved Request' error",
+                "The client request will hang indefinitely until the browser network times out",
+                "Express executes the next middleware implicitly after 5 seconds"
+            ],
+            "answer": "The client request will hang indefinitely until the browser network times out",
+            "explanation": "Express expects every middleware to explicitly pass control downstream via next() or terminate the cycle by returning a response. Failing to do either leaves the request pending forever."
+        },
+        {
+            "question": "How does Express determine that a specific middleware is an Error-Handling Middleware?",
+            "options": [
+                "It must be named 'errorHandler'",
+                "It must be registered using app.error() instead of app.use()",
+                "It must be defined with exactly four arguments: (err, req, res, next)",
+                "It must throw an Error explicitly inside the function block"
+            ],
+            "answer": "It must be defined with exactly four arguments: (err, req, res, next)",
+            "explanation": "Express reads the function signature length (function.length === 4). Even if you don't use 'next' inside the error handler, you MUST include it in the signature for Express to recognize it as an error catcher."
+        },
+        {
+            "question": "How do you trigger the global error handler from within a normal routed middleware?",
+            "options": [
+                "return res.status(500)",
+                "Pass an error object into the next function: next(new Error('Failed'))",
+                "Call the globalErrorHandler() function directly",
+                "Console.error('Failed')"
+            ],
+            "answer": "Pass an error object into the next function: next(new Error('Failed'))",
+            "explanation": "Calling next() with ANY argument (e.g., next('route') or next(err)) tells Express to skip all subsequent normal middleware and routing, and go directly to the first error-handling middleware."
+        },
+        {
+            "question": "In Express 4.x, what happens if an error is thrown inside an `async` route handler but is not caught in a try/catch block?",
+            "options": [
+                "Express automatically passes it to the global error handler",
+                "The server instantly restarts",
+                "It results in an Unhandled Promise Rejection, bypassing the Express error handler completely",
+                "The client receives an HTML stack trace natively"
+            ],
+            "answer": "It results in an Unhandled Promise Rejection, bypassing the Express error handler completely",
+            "explanation": "Express 4 was designed before async/await. It cannot natively catch rejected promises tossed from an async function. You must use a wrapper function (like express-async-handler) or try/catch blocks."
+        },
+        {
+            "question": "Where should the global Error Handling middleware be placed in the main server file?",
+            "options": [
+                "At the very top, before resolving process.env",
+                "Immediately after the body parser middleware",
+                "Dead last, after all app.use() and app.get/post route definitions",
+                "Inside the database connection callback"
+            ],
+            "answer": "Dead last, after all app.use() and app.get/post route definitions",
+            "explanation": "Middleware runs in the order it is defined. If an error is passed via next(err), it traverses down the file looking for the error handler. If the handler is placed at the top, errors thrown in routes below it will never reach it."
+        }
+    ]
+}

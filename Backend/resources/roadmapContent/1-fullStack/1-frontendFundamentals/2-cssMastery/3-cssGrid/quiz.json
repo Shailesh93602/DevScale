@@ -1,0 +1,74 @@
+{
+    "title": "CSS Grid Quiz",
+    "description": "Test your CSS Grid layout knowledge.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What does the fr unit represent in CSS Grid?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Fixed row height",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A fraction of the available space",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Font-relative unit",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Full row width",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which property defines named regions in a CSS Grid layout?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "grid-column",
+                    "isCorrect": false
+                },
+                {
+                    "text": "grid-template-areas",
+                    "isCorrect": true
+                },
+                {
+                    "text": "grid-area",
+                    "isCorrect": false
+                },
+                {
+                    "text": "grid-region",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does grid-column: 1 / -1 do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Spans from column 1 to 1 (one column only)",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Spans from the first line to the last line (full width)",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Sets the column gap to -1px",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Removes the element from the grid",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

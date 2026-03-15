@@ -1,0 +1,5 @@
+[
+  "Perform a BFS (level order traversal). At each level, the last node you encounter is the rightmost one — that's what you want.",
+  "Before starting each level's processing, snapshot the queue size. Process all nodes in the level, and add the LAST node's value to your result.",
+  "Alternatively, you can do a DFS where you visit the right child before the left child, and track what depth you're at."
+]

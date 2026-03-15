@@ -1,0 +1,6 @@
+[
+  "First count the frequency of each element using a HashMap.",
+  "One approach: sort the unique elements by frequency and take the top k. Time: O(n log n).",
+  "A better approach: Bucket Sort! Create an array of n+1 buckets, where bucket[i] holds all elements with frequency i. Then read buckets from the end.",
+  "This gives O(n) time since frequencies range from 1 to n."
+]

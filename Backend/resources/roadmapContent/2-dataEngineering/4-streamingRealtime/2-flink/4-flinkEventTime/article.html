@@ -1,0 +1,22 @@
+<h1>Flink Event Time & Watermarks</h1>
+<p>In the real world, the time an event <em>happened</em> and the time the event <em>arrives</em> at your streaming system are almost never the same. A mobile app user might generate a click event at 3:00:00 PM, but due to a poor network connection on their phone, that event doesn't actually reach your Kafka cluster until 3:00:45 PM — 45 seconds after it occurred.</p>
+<p>This creates a fundamental challenge for stream processing: if you're computing a "1-minute tumbling window" counting all clicks from 3:00 PM to 3:01 PM, should that late event (which happened at 3:00 PM but arrived at 3:00:45) be included in the window, or was the window already closed?</p>
+
+<h2>Event Time vs Processing Time</h2>
+<p>Flink distinguishes between two very different concepts of time:</p>
+<ul>
+  <li><strong>Processing Time:</strong> The system wall-clock time when an event is received and processed by the Flink application. This is simple but inherently unreliable. Because data can arrive late, aggregations based on Processing Time are often incorrect and unreproducible.</li>
+  <li><strong>Event Time:</strong> The timestamp embedded directly inside the event payload itself — the time the event was generated at the source. This is what you almost always want for accurate, reproducible analytics. All serious production stream processing pipelines operate in Event Time mode.</li>
+</ul>
+
+<h2>The Watermark: Triggering Windows with Confidence</h2>
+<p>But if you use Event Time, Flink faces a new problem: how does it know when it's "safe" to close a window and emit the result? If you're waiting for all events between 3:00 PM and 3:01 PM, Flink could wait forever since late data may arrive 10 minutes later.</p>
+<p>The solution is the <strong>Watermark</strong>. A Watermark is a declaration to Flink: <em>"I am confident that no events with a timestamp earlier than time T will arrive in the future."</em></p>
+<pre><code class="language-java">// Configure a Watermark strategy allowing up to 10 seconds of late arrivals
+WatermarkStrategy.&lt;ClickEvent&gt;forBoundedOutOfOrderness(Duration.ofSeconds(10))
+    .withTimestampAssigner((event, timestamp) -&gt; event.getTimestampMillis());
+</code></pre>
+<p>With a 10-second lateness tolerance, Flink will wait for 10 extra seconds after the theoretical end of a window before closing it and computing the result. An event that arrived 45 seconds late for the 3:00-3:01 PM window would be considered "too late" and handled separately.</p>
+
+<h2>Handling Late Data with Side Outputs</h2>
+<p>Rather than simply discarding late events, Flink can route them to a <strong>Side Output</strong> — a secondary, separate stream. Your Flink job can then process this side-output stream separately, perhaps inserting a correction into the Data Warehouse to update previously emitted aggregations.</p>

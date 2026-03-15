@@ -1,0 +1,4 @@
+{
+    "name": "Managing Secrets in CI/CD",
+    "description": "Securely storing and passing cloud credentials, API keys, and environment variables."
+}

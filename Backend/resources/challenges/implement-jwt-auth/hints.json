@@ -1,0 +1,6 @@
+[
+  "Use bcrypt with at least 10 salt rounds for password hashing. Never store plain-text passwords. The compare function handles salt extraction automatically.",
+  "Generate two types of tokens: a short-lived access token (1 hour) for API requests and a long-lived refresh token (7 days) for getting new access tokens. Use different secrets for each.",
+  "Create an authentication middleware that extracts the token from the Authorization header (Bearer scheme), verifies it with jwt.verify(), and attaches the decoded payload to the request object.",
+  "Implement refresh token rotation: when a refresh token is used, invalidate it and issue a brand new pair. Store refresh token IDs in a database or Set to enable revocation on logout."
+]

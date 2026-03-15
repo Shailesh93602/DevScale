@@ -1,0 +1,6 @@
+[
+  "Consider what makes this problem harder than Two Sum. It's the requirement to find unique triplets. To help identify uniqueness, what preprocessing step might be useful?",
+  "Try sorting the array first. Sorting makes it much easier to skip duplicate elements because they will be adjacent.",
+  "Once sorted, you can iterate through the array, fixing one element at index `i`. Then, the problem reduces to a Two Sum problem on the remaining elements from `i+1` to the end of the array, looking for a target of `-nums[i]`.",
+  "Since the remainder of the array is sorted, you can solve the Two Sum subproblem optimally using a Two Pointer approach (one pointer at `i+1`, the other at the end of the array), moving them inwards based on whether the sum is too small or too large."
+]

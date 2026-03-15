@@ -1,0 +1,62 @@
+[
+  {
+    "input": "Single transaction: read account (balance: 1000), write (balance: 900), commit",
+    "output": "Committed. Account balance: 900, version: 2",
+    "explanation": "A simple transaction reads, modifies, and commits successfully. Version increments.",
+    "is_hidden": false
+  },
+  {
+    "input": "T1 reads account (v1), T2 reads account (v1), T1 commits (v2), T2 tries to commit",
+    "output": "T1: committed. T2: conflict detected on account key",
+    "explanation": "Optimistic locking detects that account was modified between T2's read and commit.",
+    "is_hidden": false
+  },
+  {
+    "input": "withTransaction: read A (1000), read B (500), write A (900), write B (600), commit",
+    "output": "Both accounts updated atomically. A: 900, B: 600",
+    "explanation": "Money transfer is atomic - both writes succeed or both are rolled back.",
+    "is_hidden": false
+  },
+  {
+    "input": "Transaction throws 'Insufficient funds' error midway",
+    "output": "Transaction rolled back. No changes applied to data store.",
+    "explanation": "Application errors trigger automatic rollback, undoing all pending writes.",
+    "is_hidden": false
+  },
+  {
+    "input": "Conflicting transaction with automatic retry (maxRetries: 3)",
+    "output": "First attempt: conflict. Second attempt: succeeds with fresh data.",
+    "explanation": "withTransaction automatically retries on conflict, reading fresh data on each attempt.",
+    "is_hidden": false
+  },
+  {
+    "input": "Read-only transaction (no writes) on data being modified by another transaction",
+    "output": "Read-only transaction commits successfully, no conflict",
+    "explanation": "Transactions with empty writeSets always commit since they don't modify data.",
+    "is_hidden": true
+  },
+  {
+    "input": "Write to a key not yet in the store (new record creation)",
+    "output": "Record created with version 1",
+    "explanation": "Writing to a non-existent key creates a new record with initial version.",
+    "is_hidden": true
+  },
+  {
+    "input": "Transaction exceeds 5-second timeout",
+    "output": "Error: Transaction timeout",
+    "explanation": "Long-running transactions are aborted to prevent holding resources indefinitely.",
+    "is_hidden": true
+  },
+  {
+    "input": "Read same key twice within one transaction (consistency check)",
+    "output": "Both reads return the same value (snapshot consistency)",
+    "explanation": "Within a transaction, reads are consistent - a key always returns the same snapshot.",
+    "is_hidden": true
+  },
+  {
+    "input": "3 concurrent transactions all conflict, maxRetries: 3",
+    "output": "All eventually succeed after retries (serialized at commit time)",
+    "explanation": "The commit lock serializes validation, ensuring each retry sees the latest committed data.",
+    "is_hidden": true
+  }
+]

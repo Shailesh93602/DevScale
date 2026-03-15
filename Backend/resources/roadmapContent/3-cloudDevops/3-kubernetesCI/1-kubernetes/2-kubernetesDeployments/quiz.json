@@ -1,0 +1,118 @@
+{
+    "title": "Kubernetes Deployments Quiz",
+    "description": "Test your knowledge on Pod self-healing, ReplicaSets, and zero-downtime updates.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Why is it considered a bad practice to create standalone Pods directly in Kubernetes?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Because they cannot be deleted once created.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because they cannot have labels attached to them.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because if the Pod or its Node crashes, Kubernetes will not automatically restart or replace it.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Because they can only run a single container.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which Kubernetes object sits directly beneath a Deployment and actively ensures that the specified number of Pod replicas are running at all times?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "LoadBalancer",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Ingress",
+                    "isCorrect": false
+                },
+                {
+                    "text": "ReplicaSet",
+                    "isCorrect": true
+                },
+                {
+                    "text": "VolumeClaim",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How does a Kubernetes Deployment achieve 'Zero-Downtime' when updating a container image from v1 to v2?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "By executing a 'Rolling Update', replacing old pods with new ones one at a time, ensuring health checks pass before terminating the old ones.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "By instantly killing all v1 pods and instantly starting all v2 pods simultaneously.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By redirecting DNS queries to an entirely new cluster.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By merging the v1 and v2 codebases automatically.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "If a newly deployed image (v2) causes your API pods to crash continuously, which command instantly reverts the infrastructure back to the stable v1?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "kubectl delete pods --all",
+                    "isCorrect": false
+                },
+                {
+                    "text": "kubectl rollout undo deployment/<name>",
+                    "isCorrect": true
+                },
+                {
+                    "text": "kubectl apply -f v1.yaml --force",
+                    "isCorrect": false
+                },
+                {
+                    "text": "kubectl reset cluster",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In a Deployment YAML file, what is the 'selector.matchLabels' field used for?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "To tell the ReplicaSet which specific Pods it is responsible for managing based on their labels.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "To select which physical servers the pods should run on.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To map incoming HTTP requests to specific URLs.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To link the Deployment to a specific GitHub repository.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

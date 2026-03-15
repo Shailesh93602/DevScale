@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary architectural purpose of utilizing a Message Queue (like RabbitMQ) in a high-traffic backend ecosystem?",
+            "options": [
+                "To compile frontend React bundles lazily.",
+                "To securely buffer massive traffic spikes by decoupling heavy background tasks entirely from the synchronous HTTP request-response cycle, protecting the main servers from crashing.",
+                "To explicitly query relational PostgreSQL databases directly.",
+                "To compress static 4K image file formats natively."
+            ],
+            "answer": "To securely buffer massive traffic spikes by decoupling heavy background tasks entirely from the synchronous HTTP request-response cycle, protecting the main servers from crashing.",
+            "explanation": "If 5,000 users trigger a massive task simultaneously, the queue safely holds the 5,000 requests in memory while your dedicated backend generic worker nodes slowly process them sequentially."
+        },
+        {
+            "question": "In a distributed 'Pub-Sub' ecosystem, what exactly is the structural role of the 'Consumer' (Subscriber) Node?",
+            "options": [
+                "It generates HTML responses and serves them directly to the client browser frontend.",
+                "It constantly polls the Message Queue, pulling tasks off one by one, performing the heavy processing logic natively, and finally confirming to the queue that the specific task was completed securely.",
+                "It actively routes load balancer traffic intelligently.",
+                "It generates SSL encryption keys securely."
+            ],
+            "answer": "It constantly polls the Message Queue, pulling tasks off one by one, performing the heavy processing logic natively, and finally confirming to the queue that the specific task was completed securely.",
+            "explanation": "The 'Producer' is the web server rapidly pushing messages onto the Queue. The 'Consumer' is the worker doing the actual heavy lifting in the background."
+        },
+        {
+            "question": "What specifically is a fundamental architectural capability found strictly in Apache Kafka that is not natively present in traditional brokers like standard RabbitMQ deployments?",
+            "options": [
+                "Kafka mathematically routes network traffic automatically geographically.",
+                "Kafka securely persists historical messages permanently on a distributed disk log. This allows brand new consumers to connect and mathematically 'replay' every historic event perfectly from the beginning of time.",
+                "Kafka perfectly compresses JSON payloads seamlessly natively.",
+                "Kafka completely rewrites complex SQL natively cleanly."
+            ],
+            "answer": "Kafka securely persists historical messages permanently on a distributed disk log. This allows brand new consumers to connect and mathematically 'replay' every historic event perfectly from the beginning of time.",
+            "explanation": "RabbitMQ aggressively deletes the message from the generic queue the instant a consumer successfully processes it. Kafka persists the generic log data forever natively."
+        }
+    ]
+}

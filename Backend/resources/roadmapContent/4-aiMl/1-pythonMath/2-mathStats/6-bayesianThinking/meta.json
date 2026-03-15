@@ -1,0 +1,4 @@
+{
+    "name": "Bayesian Thinking & Probabilistic Models",
+    "description": "Applying Bayesian reasoning to machine learning. Understanding Bayes' theorem and its practical application, the difference between frequentist and Bayesian statistics, Bayesian updating with new evidence, prior and posterior distributions, and how Bayesian approaches to hyperparameter optimization (Bayesian search) compare to grid and random search."
+}

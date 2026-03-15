@@ -1,0 +1,6 @@
+[
+  "Cosine similarity between two vectors is: dot(a,b) / (|a| * |b|). Compute this for each user pair.",
+  "For predicting a rating, only use users with positive similarity who have actually rated that item (rating > 0).",
+  "The predicted rating is a weighted average: sum(similarity[u] * rating[u][item]) / sum(similarity[u]).",
+  "Sort predictions by score descending, break ties by item index ascending, then take the top N."
+]

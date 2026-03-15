@@ -1,0 +1,20 @@
+{
+  "title": "Subsets II",
+  "slug": "subsets-ii",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["array","backtracking","sorting"],
+  "company_tags": ["Amazon","Microsoft","Meta"],
+  "topic_tags": ["backtracking","recursion","sorting"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer array `nums` that may contain duplicates.",
+  "output_format": "An array of all possible subsets.",
+  "example_input": "nums = [1,2,2]",
+  "example_output": "[[],[1],[1,2],[1,2,2],[2],[2,2]]",
+  "constraints": "- `1 <= nums.length <= 10`\n- `-10 <= nums[i] <= 10`",
+  "function_signature": "function subsetsWithDup(nums: number[]): number[][] {}",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,4 @@
+{
+    "name": "Networking & Security",
+    "description": "Connecting containers securely. Mapping internal ports to the host machine, establishing private bridge networks between microservices seamlessly, and injecting runtime environment variables safely."
+}

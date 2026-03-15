@@ -1,0 +1,83 @@
+<h1>Async Patterns & Event Loop</h1>
+<p>Node.js is famous for being "single-threaded" yet highly concurrent. It achieves this non-blocking I/O through the V8 engine combined with the <strong>libuv</strong> library, which implements the Event Loop.</p>
+
+<h2>The Node.js Event Loop Phases</h2>
+<p>Understanding the strict order of event loop phases is critical for advanced performance profiling. When Node.js starts, it initializes the event loop, processes the provided input script, and then enters the loop.</p>
+<ol>
+  <li><strong>Timers:</strong> Executes callbacks scheduled by <code>setTimeout()</code> and <code>setInterval()</code>.</li>
+  <li><strong>Pending Callbacks:</strong> Executes I/O callbacks deferred to the next loop iteration (rare internal OS errors).</li>
+  <li><strong>Idle, Prepare:</strong> Internal use only.</li>
+  <li><strong>Poll:</strong> Retrieves new I/O events (file reading, network requests); executes I/O related callbacks. <em>(This is where the loop spends most of its time)</em>.</li>
+  <li><strong>Check:</strong> Executes callbacks registered via <code>setImmediate()</code>.</li>
+  <li><strong>Close Callbacks:</strong> Executes close events, e.g., <code>socket.on('close', ...)</code>.</li>
+</ol>
+
+<h2>Microtasks vs Macrotasks</h2>
+<p>Between every single phase of the event loop, Node.js empties the <strong>Microtask Queue</strong>. Microtasks are given the highest priority.</p>
+<ul>
+  <li><strong>Microtasks:</strong> <code>process.nextTick()</code> (highest priority), and Promise callbacks (<code>.then()</code>/<code>.catch()</code>).</li>
+  <li><strong>Macrotasks:</strong> Everything in the main phases (<code>setTimeout</code>, <code>setImmediate</code>, I/O callbacks).</li>
+</ul>
+
+<pre><code>console.log('1. Start');
+
+setTimeout(() =&gt; console.log('2. setTimeout (Timers Phase)'), 0);
+setImmediate(() =&gt; console.log('3. setImmediate (Check Phase)'));
+
+Promise.resolve().then(() =&gt; console.log('4. Promise (Microtask)'));
+
+process.nextTick(() =&gt; console.log('5. nextTick (Highest Priority Microtask)'));
+
+console.log('6. End');
+
+/* Execution Order:
+1. Start (Main thread)
+6. End (Main thread ending)
+5. nextTick (Microtask queue processed immediately after main thread)
+4. Promise (Microtask queue processed)
+2. setTimeout (Timers Phase - Macrotask)
+3. setImmediate (Check Phase - Macrotask)
+*/</code></pre>
+
+<h2>setImmediate vs setTimeout(0)</h2>
+<p>They sound similar, but their execution order differs depending on context.</p>
+<ul>
+  <li>If called in the main module (globally), the order is non-deterministic (depends on machine performance).</li>
+  <li>If called <strong>inside an I/O callback</strong> (like inside <code>fs.readFile</code>), <code>setImmediate</code> will ALWAYS run before <code>setTimeout</code>. Why? Because the event loop is currently in the <em>Poll</em> phase. The next phase is the <em>Check</em> phase (where <code>setImmediate</code> sits), while the <em>Timers</em> phase has already passed and won't be reached until the next full loop.</li>
+</ul>
+
+<h2>Don't Block the Event Loop</h2>
+<p>Because there is only one V8 thread executing JavaScript, expensive synchronous operations will freeze the entire server. E.g., computing a massive array loop, synchronous cryptography (<code>bcrypt.hashSync()</code>), or reading huge JSON files via <code>JSON.parse()</code>.</p>
+
+<pre><code>app.get('/hash', (req, res) =&gt; {
+  // ❌ EVIL: Blocks the entire server for 500ms. No other users can connect!
+  const hash = crypto.pbkdf2Sync('password', 'salt', 100000, 512, 'sha512');
+  res.send(hash);
+});
+
+app.get('/hash-safe', async (req, res) =&gt; {
+  // ✅ GOOD: Offloads work to the thread pool (libuv) via async. Main thread is free!
+  crypto.pbkdf2('password', 'salt', 100000, 512, 'sha512', (err, hash) =&gt; {
+    res.send(hash);
+  });
+});</code></pre>
+
+<h2>Worker Threads for CPU Bound Tasks</h2>
+<p>If you absolutely must process heavy CPU tasks (image resizing, machine learning, heavy math), do not do it in the main event loop. Node 10+ introduced Worker Threads to spin up completely separate V8 isolates.</p>
+<pre><code>const { Worker, isMainThread, parentPort } = require('worker_threads');
+
+if (isMainThread) {
+  // We are in the main server loop
+  app.get('/heavy-math', (req, res) =&gt; {
+    const worker = new Worker(__filename); // Pass this file to the worker
+    worker.on('message', (msg) =&gt; res.json({ result: msg }));
+    worker.postMessage('start'); // Trigger the worker
+  });
+} else {
+  // We are running inside the Worker entirely separate from the web server!
+  parentPort.on('message', () =&gt; {
+    let count = 0;
+    for (let i = 0; i &lt; 10000000000; i++) count++;
+    parentPort.postMessage(count); // Send back to main thread
+  });
+}</code></pre>

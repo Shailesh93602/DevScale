@@ -1,0 +1,6 @@
+[
+  "Since an anagram is just a string with the same character frequencies, this problem is about finding all substrings of Length P that have the exact same character frequencies as P.",
+  "Consider using a sliding window of fixed length `p.length`.",
+  "Instead of recalculating the frequencies of the substring in the window every time, incrementally update the frequencies as the window slides (add the new character on the right, remove the old character on the left).",
+  "Compare the window frequency array/map with `p`'s frequency array/map."
+]

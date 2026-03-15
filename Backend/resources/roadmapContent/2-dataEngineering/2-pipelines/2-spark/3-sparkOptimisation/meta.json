@@ -1,0 +1,4 @@
+{
+    "name": "Spark Optimisation",
+    "description": "Partitioning, caching, broadcast joins, Tungsten/Catalyst optimisations, and monitoring Spark jobs."
+}

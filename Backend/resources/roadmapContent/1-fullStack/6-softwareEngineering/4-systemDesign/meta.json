@@ -1,0 +1,7 @@
+{
+  "id": "4-systemDesign",
+  "title": "System Design",
+  "description": "Architecting scalable and highly available distributed systems.",
+  "order": 4,
+  "topics": ["1-scalability", "2-caching"]
+}

@@ -1,0 +1,40 @@
+{
+  "title": "Set Matrix Zeroes",
+  "slug": "set-matrix-zeroes",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": [
+    "array",
+    "hash-table",
+    "matrix"
+  ],
+  "company_tags": [
+    "Amazon",
+    "Microsoft",
+    "Facebook"
+  ],
+  "topic_tags": [
+    "arrays",
+    "matrix"
+  ],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An `m x n` integer matrix.",
+  "output_format": "The modified matrix with entire row and column set to 0 for each 0 cell (in-place).",
+  "example_input": "matrix = [[1,1,1],[1,0,1],[1,1,1]]",
+  "example_output": "[[1,0,1],[0,0,0],[1,0,1]]",
+  "constraints": "- `m == matrix.length`\n- `n == matrix[0].length`\n- `1 <= m, n <= 200`\n- `-2^31 <= matrix[i][j] <= 2^31 - 1`",
+  "function_signature": "function setZeroes(matrix: number[][]): void {}",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "input": "{\"region\": \"us-east-1\", \"vpcCidr\": \"10.0.0.0/16\", \"azCount\": 3, \"instanceType\": \"t3.medium\", \"dbEngine\": \"postgres\"}",
+    "output": "VPC with 10.0.0.0/16, 3 public and 3 private subnets, NAT gateway, ASG with t3.medium, PostgreSQL RDS with multi_az=true",
+    "explanation": "Standard 3-AZ infrastructure with PostgreSQL",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"region\": \"eu-west-1\", \"vpcCidr\": \"172.16.0.0/16\", \"azCount\": 2, \"instanceType\": \"t3.large\", \"dbEngine\": \"mysql\"}",
+    "output": "VPC with 172.16.0.0/16, 2 AZs, MySQL RDS with port 3306, t3.large instances",
+    "explanation": "EU region with MySQL and 2 AZs",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"region\": \"us-east-1\", \"vpcCidr\": \"10.0.0.0/16\", \"azCount\": 3, \"instanceType\": \"t3.medium\", \"dbEngine\": \"postgres\"}",
+    "output": "Contains required_providers block, variable blocks, data source for AZs, output blocks for vpc_id/subnet_ids/db_endpoint",
+    "explanation": "Verify Terraform best practices: provider version, variables, data sources, outputs",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"region\": \"us-east-1\", \"vpcCidr\": \"10.0.0.0/16\", \"azCount\": 3, \"instanceType\": \"t3.medium\", \"dbEngine\": \"postgres\"}",
+    "output": "DB security group references app SG (not CIDR), RDS publicly_accessible=false, subnets use cidrsubnet()",
+    "explanation": "Security: least-privilege SG, private DB, dynamic subnet CIDRs",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"region\": \"us-east-1\", \"vpcCidr\": \"10.0.0.0/16\", \"azCount\": 3, \"instanceType\": \"t3.medium\", \"dbEngine\": \"postgres\"}",
+    "output": "All resources tagged with Environment and ManagedBy, uses locals for common_tags, count for subnet creation",
+    "explanation": "Verify DRY principles: common tags, count-based resource creation",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"region\": \"us-east-1\", \"vpcCidr\": \"10.0.0.0/16\", \"azCount\": 3, \"instanceType\": \"t3.medium\", \"dbEngine\": \"postgres\"}",
+    "output": "Internet Gateway for public subnets, NAT Gateway in public subnet for private subnet outbound, separate route tables",
+    "explanation": "Verify networking: IGW for public, NAT for private, proper routing",
+    "is_hidden": true
+  }
+]

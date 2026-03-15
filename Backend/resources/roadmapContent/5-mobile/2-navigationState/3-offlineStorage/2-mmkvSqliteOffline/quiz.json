@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "Why is AsyncStorage a poor choice for storing sensitive data like auth tokens or personal information in a React Native app?",
+            "options": [
+                "AsyncStorage is too slow for repeated token access during API calls.",
+                "AsyncStorage stores data as plain text in an unencrypted SQLite database file on the device filesystem. On Android, this file is world-readable if the device is rooted. On iOS, it's readable without Keychain protection if the device backup is accessed. Auth tokens in AsyncStorage can be extracted from a compromised or backed-up device. SecureStore uses iOS Keychain and Android Keystore — hardware-backed encryption that survives factory-reset attacks and is not accessible even to other apps.",
+                "AsyncStorage is deprecated and no longer maintained by the React Native community.",
+                "AsyncStorage has a 100KB size limit that makes token storage impractical."
+            ],
+            "answer": "AsyncStorage stores data as plain text in an unencrypted SQLite database file on the device filesystem. On Android, this file is world-readable if the device is rooted. On iOS, it's readable without Keychain protection if the device backup is accessed. Auth tokens in AsyncStorage can be extracted from a compromised or backed-up device. SecureStore uses iOS Keychain and Android Keystore — hardware-backed encryption that survives factory-reset attacks and is not accessible even to other apps.",
+            "explanation": "Security rule: AsyncStorage = user preferences (theme, language, last tab). SecureStore = credentials, tokens, PII. MMKV default = same risk profile as AsyncStorage. You can enable MMKV encryption for sensitive data, but SecureStore uses platform-native credential storage purpose-built for this use case."
+        },
+        {
+            "question": "In offline-first architecture, you save messages locally with synced=0 before attempting server sync, then set synced=1 after success. Why is this order critical?",
+            "options": [
+                "Setting synced=0 first is a UI convention only — the operation order doesn't affect correctness.",
+                "If you attempt server sync FIRST without saving locally and the network times out or fails, the message is lost — the user typed it and pressed send but it disappeared. Save-locally-first guarantees the message exists on the device regardless of network outcome. The sync operation is then a best-effort upgrade from 'stored locally' to 'confirmed by server'. Even if sync fails 10 times, the message persists until a retry succeeds.",
+                "synced=0 first prevents duplicate messages from appearing if the app crashes.",
+                "The SQLite write must happen before the network call for transaction isolation purposes."
+            ],
+            "answer": "If you attempt server sync FIRST without saving locally and the network times out or fails, the message is lost — the user typed it and pressed send but it disappeared. Save-locally-first guarantees the message exists on the device regardless of network outcome. The sync operation is then a best-effort upgrade from 'stored locally' to 'confirmed by server'. Even if sync fails 10 times, the message persists until a retry succeeds.",
+            "explanation": "iMessage uses exactly this pattern: when you send a message with no signal, the message appears immediately with a 'Sending...' indicator. It retries in the background. If delivery succeeds later, the indicator changes to 'Delivered'. The message is NEVER lost. This is the standard behavior users expect from quality messaging apps."
+        },
+        {
+            "question": "What is the primary advantage of MMKV over AsyncStorage for reading frequently accessed key-value data like user preferences?",
+            "options": [
+                "MMKV automatically replicates data to the cloud while AsyncStorage is device-local only.",
+                "MMKV provides a synchronous API backed by a high-performance C++ memory-mapped storage engine, with no bridge overhead (JSI direct access). AsyncStorage requires async/await for every read because it crosses the JS bridge to native, incurring ~2-10ms overhead per call. For settings accessed on every render (theme, language, user preferences), MMKV synchronous reads are effectively free vs AsyncStorage's async overhead accumulating across many reads.",
+                "MMKV supports larger values than AsyncStorage which has a 1MB limit.",
+                "MMKV automatically compresses stored values, reducing storage footprint by 50%."
+            ],
+            "answer": "MMKV provides a synchronous API backed by a high-performance C++ memory-mapped storage engine, with no bridge overhead (JSI direct access). AsyncStorage requires async/await for every read because it crosses the JS bridge to native, incurring ~2-10ms overhead per call. For settings accessed on every render (theme, language, user preferences), MMKV synchronous reads are effectively free vs AsyncStorage's async overhead accumulating across many reads.",
+            "explanation": "WeChat's RN team benchmarked MMKV at ~10x faster reads than AsyncStorage in a cold-read scenario (first read after app start). The synchronous API is also more ergonomic — no async/await needed: const isDark = storage.getBoolean('darkMode') ?? false can be called anywhere, even in synchronous Zustand store initialization."
+        }
+    ]
+}

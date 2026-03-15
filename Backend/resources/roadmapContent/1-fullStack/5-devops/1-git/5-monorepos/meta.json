@@ -1,0 +1,4 @@
+{
+    "name": "Monorepo Architecture",
+    "description": "Scaling codebases. Structuring multiple interconnected applications inside a single Git repository, and utilizing Turborepo or npm workspaces to orchestrate shared dependencies seamlessly."
+}

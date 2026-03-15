@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "Why does hybrid search (combining dense vector retrieval + BM25 sparse retrieval) outperform either method alone for a technical documentation RAG system?",
+            "options": [
+                "Hybrid search runs both methods in parallel, making it twice as fast as either alone.",
+                "Dense vector retrieval excels at semantic similarity (finding conceptually related content even with different wording) but fails at exact keyword matches (error codes, function names, version numbers). BM25 excels at exact keyword matching but misses semantic relationships. A technical docs RAG system has both: users ask semantic questions ('how do I handle authentication errors?') AND need exact matches ('CVE-2024-1234', 'ConfigException'). Hybrid search handles both cases with Reciprocal Rank Fusion combining the scores.",
+                "Hybrid search generates better query embeddings by averaging dense and sparse representations.",
+                "BM25 filters irrelevant documents before dense retrieval, reducing the vector search space."
+            ],
+            "answer": "Dense vector retrieval excels at semantic similarity (finding conceptually related content even with different wording) but fails at exact keyword matches (error codes, function names, version numbers). BM25 excels at exact keyword matching but misses semantic relationships. A technical docs RAG system has both: users ask semantic questions ('how do I handle authentication errors?') AND need exact matches ('CVE-2024-1234', 'ConfigException'). Hybrid search handles both cases with Reciprocal Rank Fusion combining the scores.",
+            "explanation": "Benchmark on MS-MARCO retrieval: BM25 MRR@10=0.184, Dense ANCE=0.330, Hybrid BM25+ANCE=0.382. Hybrid beats both by a significant margin because the retrieval signals are complementary and RRF effectively de-noises noisy individual retrievers."
+        },
+        {
+            "question": "A RAG system's RAGAS evaluation shows: faithfulness=0.63, answer_relevancy=0.89. What specific problem does faithfulness=0.63 reveal?",
+            "options": [
+                "63% of retrieved documents are relevant to the query.",
+                "Faithfulness=0.63 means 37% of statements in the generated answers contain information NOT present in the retrieved context — the LLM is hallucinating, adding facts from its parametric memory that aren't grounded in the retrieved documents. This is dangerous for enterprise RAG where accuracy matters. Fixes: stronger system prompts ('only answer using the provided context'), using smaller context windows to reduce LLM confusion, or adding output verification steps.",
+                "63% of queries receive a relevant answer from the RAG system.",
+                "The retrieval step correctly finds the right context 63% of the time."
+            ],
+            "answer": "Faithfulness=0.63 means 37% of statements in the generated answers contain information NOT present in the retrieved context — the LLM is hallucinating, adding facts from its parametric memory that aren't grounded in the retrieved documents. This is dangerous for enterprise RAG where accuracy matters. Fixes: stronger system prompts ('only answer using the provided context'), using smaller context windows to reduce LLM confusion, or adding output verification steps.",
+            "explanation": "A legal document RAG with faithfulness=0.63 means 37% of legal statements could be hallucinated. This is unacceptable for legal/medical applications. The fix hierarchy: (1) stronger prompting, (2) post-generation fact-checking with NLI models, (3) switch to a more instruction-following model."
+        },
+        {
+            "question": "What does the cross-encoder reranker provide in the two-stage retrieval pipeline, and why is it not used as the first-stage retriever despite being more accurate?",
+            "options": [
+                "The cross-encoder provides GPU acceleration for the embedding computation in the first stage.",
+                "A cross-encoder reads BOTH the query and each candidate document together in one forward pass, enabling much richer relevance modeling — but it cannot be pre-computed or indexed (it must process every (query, document) pair freshly at query time). For a corpus of 1M documents, cross-encoding all pairs is O(N) at query time — too slow. Bi-encoder retrieval first narrows to 50 candidates (using pre-computed embeddings), then the cross-encoder reranks only these 50 pairs (manageable latency).",
+                "Cross-encoders require labeled training data; bi-encoders work with unlabeled corpora.",
+                "The cross-encoder is used as the first stage to produce exact match candidates for the bi-encoder."
+            ],
+            "answer": "A cross-encoder reads BOTH the query and each candidate document together in one forward pass, enabling much richer relevance modeling — but it cannot be pre-computed or indexed (it must process every (query, document) pair freshly at query time). For a corpus of 1M documents, cross-encoding all pairs is O(N) at query time — too slow. Bi-encoder retrieval first narrows to 50 candidates (using pre-computed embeddings), then the cross-encoder reranks only these 50 pairs (manageable latency).",
+            "explanation": "Latency math: Cross-encoding 1M documents × 50ms each = 50,000 seconds. Cross-encoding 50 candidates × 50ms = 2.5 seconds (acceptable). Bi-encoder ANN search × 1M embeddings = 10ms. Total two-stage: 10ms + 2.5s = 2.51s — fast enough for most RAG applications."
+        }
+    ]
+}

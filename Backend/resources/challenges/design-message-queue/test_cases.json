@@ -1,0 +1,8 @@
+[
+  {
+    "input": "produce('t1', 'm1'), consume('t1')",
+    "output": "['m1']",
+    "explanation": "Produce and consume a single message",
+    "is_hidden": false
+  }
+]

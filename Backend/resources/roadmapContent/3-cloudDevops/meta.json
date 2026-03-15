@@ -1,0 +1,13 @@
+{
+    "title": "Cloud & DevOps",
+    "description": "Master AWS/GCP, Infrastructure as Code, Kubernetes, CI/CD pipelines, and site reliability engineering.",
+    "tags": "DevOps,Cloud,Backend,Monitoring,Security",
+    "difficulty": "MEDIUM",
+    "main_concepts": [
+        "1-linuxNetworking",
+        "2-cloudIaC",
+        "3-kubernetesCI",
+        "4-monitoring",
+        "5-security"
+    ]
+}

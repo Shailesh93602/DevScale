@@ -1,0 +1,10 @@
+{
+  "typescript": "function findRedundantConnection(edges: number[][]): number[] {\n    \n};",
+  "javascript": "/**\n * @param {number[][]} edges\n * @return {number[]}\n */\nvar findRedundantConnection = function(edges) {\n    \n};",
+  "python": "class Solution:\n    def findRedundantConnection(self, edges: List[List[int]]) -> List[int]:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public int[] findRedundantConnection(int[][] edges) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> findRedundantConnection(vector<vector<int>>& edges) {\n        \n    }\n};",
+  "go": "func findRedundantConnection(edges [][]int) []int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn find_redundant_connection(edges: Vec<Vec<i32>>) -> Vec<i32> {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int[] FindRedundantConnection(int[][] edges) {\n        \n    }\n}"
+}

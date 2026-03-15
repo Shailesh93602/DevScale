@@ -1,0 +1,19 @@
+{
+  "title": "Department Highest Salary",
+  "slug": "department-highest-salary",
+  "difficulty": "Medium",
+  "category": "databases",
+  "points": 100,
+  "tags": ["sql", "joins", "subquery", "aggregation"],
+  "company_tags": ["Amazon", "Facebook", "Google", "Microsoft", "Bloomberg"],
+  "topic_tags": ["SQL", "JOIN", "Aggregation"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Table: Employee with columns id (int), name (varchar), salary (int), departmentId (int). Table: Department with columns id (int), name (varchar).",
+  "output_format": "Result table with columns Department, Employee, Salary showing the highest salary employee(s) in each department",
+  "example_input": "Table: Employee\n| id | name  | salary | departmentId |\n| 1  | Joe   | 70000  | 1            |\n| 2  | Jim   | 90000  | 1            |\n| 3  | Henry | 80000  | 2            |\n| 4  | Sam   | 60000  | 2            |\n| 5  | Max   | 90000  | 1            |",
+  "example_output": "| Department | Employee | Salary |\n| IT         | Jim      | 90000  |\n| IT         | Max      | 90000  |\n| Sales      | Henry    | 80000  |",
+  "constraints": "- 1 <= Employee.id <= 10^4\n- 1 <= Department.id <= 10^4\n- departmentId references Department.id",
+  "function_signature": "-- Write your SQL query below",
+  "status": "ACTIVE"
+}

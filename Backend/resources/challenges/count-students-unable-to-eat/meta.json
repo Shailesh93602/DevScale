@@ -1,0 +1,19 @@
+{
+  "title": "Students Unable to Eat Lunch",
+  "slug": "count-students-unable-to-eat",
+  "difficulty": "Easy",
+  "category": "databases",
+  "points": 50,
+  "tags": ["sql", "aggregation", "subquery"],
+  "company_tags": ["Amazon", "Google", "Bloomberg"],
+  "topic_tags": ["SQL", "Aggregation"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Table: Students with columns student_id (int), preference (int, 0 or 1). Table: Sandwiches with columns sandwich_id (int), type (int, 0 or 1), position (int).",
+  "output_format": "Result table with column count showing the number of students unable to eat",
+  "example_input": "Table: Students\n| student_id | preference |\n| 1          | 0          |\n| 2          | 1          |\n| 3          | 0          |\n| 4          | 1          |",
+  "example_output": "| count |\n| 0     |",
+  "constraints": "- 1 <= number of students <= 100\n- preference is 0 or 1\n- type is 0 or 1",
+  "function_signature": "-- Write your SQL query below",
+  "status": "ACTIVE"
+}

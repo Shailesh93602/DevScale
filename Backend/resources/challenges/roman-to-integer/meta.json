@@ -1,0 +1,42 @@
+{
+  "title": "Roman to Integer",
+  "slug": "roman-to-integer",
+  "difficulty": "Easy",
+  "category": "algorithms",
+  "points": 50,
+  "tags": [
+    "hash-table",
+    "math",
+    "string"
+  ],
+  "company_tags": [
+    "Amazon",
+    "Microsoft",
+    "Apple",
+    "Google",
+    "Facebook"
+  ],
+  "topic_tags": [
+    "math",
+    "strings"
+  ],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "A string `s` representing a valid Roman numeral.",
+  "output_format": "The parsed integer value.",
+  "example_input": "s = \"MCMXCIV\"",
+  "example_output": "1994",
+  "constraints": "- `1 <= s.length <= 15`\n- `s` contains only the characters `('I', 'V', 'X', 'L', 'C', 'D', 'M')`.\n- It is **guaranteed** that `s` is a valid roman numeral in the range `[1, 3999]`.",
+  "function_signature": "function romanToInt(s: string): number {}",
+  "status": "ACTIVE"
+}

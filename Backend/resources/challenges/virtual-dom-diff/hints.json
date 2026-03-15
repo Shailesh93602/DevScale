@@ -1,0 +1,6 @@
+[
+  "Handle the base cases first: null->node (CREATE), node->null (REMOVE), different types (REPLACE).",
+  "For same-type nodes, separately diff the props and recursively diff the children array.",
+  "Props diffing: iterate over all keys from both old and new props. If values differ, add a PropPatch.",
+  "Children diffing: iterate to max(old.length, new.length). Use null for missing children to generate CREATE/REMOVE patches."
+]

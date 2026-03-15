@@ -1,0 +1,62 @@
+[
+  {
+    "input": "POST /api/posts { \"title\": \"Hello World\", \"content\": \"My first blog post\", \"author\": \"john\" }",
+    "output": "{ \"id\": 1, \"title\": \"Hello World\", \"content\": \"My first blog post\", \"author\": \"john\", \"tags\": [], \"createdAt\": \"...\", \"updatedAt\": \"...\" }",
+    "explanation": "Creating a post returns the full post object with generated id and timestamps. Status: 201 Created.",
+    "is_hidden": false
+  },
+  {
+    "input": "GET /api/posts/1",
+    "output": "{ \"id\": 1, \"title\": \"Hello World\", \"content\": \"My first blog post\", \"author\": \"john\", \"tags\": [], \"createdAt\": \"...\", \"updatedAt\": \"...\" }",
+    "explanation": "Fetching a post by ID returns the complete post object. Status: 200 OK.",
+    "is_hidden": false
+  },
+  {
+    "input": "GET /api/posts/999",
+    "output": "{ \"error\": \"Post with id 999 not found\", \"statusCode\": 404 }",
+    "explanation": "Requesting a non-existent post returns a 404 error with descriptive message.",
+    "is_hidden": false
+  },
+  {
+    "input": "PUT /api/posts/1 { \"title\": \"Updated Title\" }",
+    "output": "{ \"id\": 1, \"title\": \"Updated Title\", \"content\": \"My first blog post\", \"author\": \"john\", \"tags\": [], \"createdAt\": \"...\", \"updatedAt\": \"...\" }",
+    "explanation": "Updating a post changes only the specified fields and updates the updatedAt timestamp. Status: 200 OK.",
+    "is_hidden": false
+  },
+  {
+    "input": "POST /api/posts { \"content\": \"No title post\" }",
+    "output": "{ \"error\": \"Invalid post data\", \"statusCode\": 400, \"details\": [\"Title is required and must be 1-200 characters\", \"Author is required\"] }",
+    "explanation": "Missing required fields return a 400 error with details about what is missing.",
+    "is_hidden": false
+  },
+  {
+    "input": "GET /api/posts?page=1&limit=2",
+    "output": "{ \"data\": [...], \"pagination\": { \"page\": 1, \"limit\": 2, \"total\": 5, \"totalPages\": 3 } }",
+    "explanation": "List endpoint returns paginated results with metadata about total count and pages.",
+    "is_hidden": false
+  },
+  {
+    "input": "DELETE /api/posts/1",
+    "output": "(empty body)",
+    "explanation": "Successful deletion returns status 204 No Content with no response body.",
+    "is_hidden": true
+  },
+  {
+    "input": "POST /api/posts/1/comments { \"author\": \"jane\", \"content\": \"Great post!\" }",
+    "output": "{ \"id\": 1, \"postId\": 1, \"author\": \"jane\", \"content\": \"Great post!\", \"createdAt\": \"...\" }",
+    "explanation": "Adding a comment to a post returns the comment with generated id and timestamp. Status: 201 Created.",
+    "is_hidden": true
+  },
+  {
+    "input": "GET /api/posts/1/comments",
+    "output": "[{ \"id\": 1, \"postId\": 1, \"author\": \"jane\", \"content\": \"Great post!\", \"createdAt\": \"...\" }]",
+    "explanation": "Listing comments returns all comments for the specified post.",
+    "is_hidden": true
+  },
+  {
+    "input": "GET /api/posts?author=jane",
+    "output": "{ \"data\": [{...posts by jane...}], \"pagination\": { \"page\": 1, \"limit\": 10, \"total\": 2, \"totalPages\": 1 } }",
+    "explanation": "Filtering posts by author returns only posts from that author with correct pagination.",
+    "is_hidden": true
+  }
+]

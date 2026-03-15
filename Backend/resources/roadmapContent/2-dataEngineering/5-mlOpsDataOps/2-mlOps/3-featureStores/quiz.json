@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What fundamental ML engineering problem does a Feature Store primarily eliminate?",
+            "options": [
+                "The cost of training large language models on GPU clusters.",
+                "Feature duplication across ML teams and Train/Serve Skew — where different teams independently re-implement the same feature with subtle differences, and the feature computation used during model training is inconsistent with the computation used during real-time serving.",
+                "The need to tune model hyperparameters during training.",
+                "The latency of PostgreSQL join operations during batch training."
+            ],
+            "answer": "Feature duplication across ML teams and Train/Serve Skew — where different teams independently re-implement the same feature with subtle differences, and the feature computation used during model training is inconsistent with the computation used during real-time serving.",
+            "explanation": "The Feature Store is the single source of truth for all feature logic. Both training and serving call the same function, guaranteeing identical results."
+        },
+        {
+            "question": "What is 'Train/Serve Skew' and why is it considered one of the most dangerous silent failures in production ML systems?",
+            "options": [
+                "When the training dataset is larger than the serving dataset.",
+                "When the feature computation logic used during offline model training is subtly different from the feature computation logic used during real-time inference, causing the model to be evaluated on data that looks different from what it was trained on, silently degrading its performance.",
+                "When training takes longer than the deployment SLA.",
+                "When model weights exceed 4GB and can't be loaded into memory."
+            ],
+            "answer": "When the feature computation logic used during offline model training is subtly different from the feature computation logic used during real-time inference, causing the model to be evaluated on data that looks different from what it was trained on, silently degrading its performance.",
+            "explanation": "A fraud model trained with '30-day rolling average' using a specific SQL window function, but served with a different Python implementation that uses a slightly different window, will consistently underperform."
+        },
+        {
+            "question": "A Feature Store maintains both an 'Offline Store' and an 'Online Store'. What is the key architectural difference between these two components?",
+            "options": [
+                "The Offline Store uses Python; the Online Store uses Java.",
+                "The Offline Store is a Data Warehouse (like Snowflake) used for batch training, providing large-scale historical point-in-time feature retrieval. The Online Store is a low-latency key-value database (like Redis) used for real-time inference, providing millisecond feature lookups for live requests.",
+                "The Offline Store is encrypted; the Online Store is not.",
+                "The Offline Store holds raw data; the Online Store holds final model weights."
+            ],
+            "answer": "The Offline Store is a Data Warehouse (like Snowflake) used for batch training, providing large-scale historical point-in-time feature retrieval. The Online Store is a low-latency key-value database (like Redis) used for real-time inference, providing millisecond feature lookups for live requests.",
+            "explanation": "Training needs petabytes of historical data with complex joins. Serving needs the current feature value for a single user in under 10ms. These are two completely different performance requirements."
+        }
+    ]
+}

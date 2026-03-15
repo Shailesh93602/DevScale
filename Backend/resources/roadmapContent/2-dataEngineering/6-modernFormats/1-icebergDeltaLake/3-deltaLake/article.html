@@ -1,0 +1,33 @@
+<h1>Delta Lake & Databricks</h1>
+<p><strong>Delta Lake</strong> is an open-source table storage format developed and open-sourced by Databricks in 2019. It serves the same fundamental purpose as Apache Iceberg — bringing ACID transactions and reliable SQL operations to raw Parquet files on cloud object stores — but with a different internal architecture optimized specifically for integration with Apache Spark and the Databricks platform.</p>
+
+<h2>The Delta Log: The Transaction Journal</h2>
+<p>Delta Lake's central architectural component is the <strong>Delta Log</strong> (stored in a <code>_delta_log/</code> folder alongside your Parquet data files). The Delta Log is a series of ordered JSON files, each representing one committed transaction to the table.</p>
+<pre><code class="language-bash">s3://my-data-lake/customer_orders/
+├── _delta_log/
+│   ├── 00000000000000000000.json  # Initial table creation
+│   ├── 00000000000000000001.json  # First INSERT batch
+│   ├── 00000000000000000002.json  # UPDATE operation (GDPR delete)
+│   └── 00000000000000000010.checkpoint.parquet  # Periodic checkpoint
+├── part-00001.snappy.parquet
+├── part-00002.snappy.parquet
+</code></pre>
+<p>When you perform any DML operation (INSERT, UPDATE, DELETE, MERGE), Delta Lake writes a new JSON log entry recording exactly which Parquet files were added and which were removed. Time travel is achieved by replaying or stopping at specific log entries.</p>
+
+<h2>The MERGE (Upsert) Operation</h2>
+<p>MERGE is one of the most powerful and commonly used operations in Data Engineering — it allows you to efficiently update existing rows while inserting new ones in a single atomic operation. This is essential for implementing CDC (Change Data Capture) pipelines:</p>
+<pre><code class="language-python">from delta.tables import DeltaTable
+
+target_table = DeltaTable.forPath(spark, "s3://lake/customers")
+
+# Atomically upsert CDC changes from source into the target
+target_table.alias("target").merge(
+    source_df.alias("source"),
+    "target.customer_id = source.customer_id"
+).whenMatchedUpdate(set={"email": "source.email", "city": "source.city"}) \
+ .whenNotMatchedInsert(values={"customer_id": "source.customer_id", "email": "source.email"}) \
+ .execute()
+</code></pre>
+
+<h2>Change Data Feed</h2>
+<p>Delta Lake's <strong>Change Data Feed (CDF)</strong> is a particularly powerful feature for streaming architectures. When enabled on a table, Delta Lake automatically tracks the row-level changes (inserts, updates, deletes) made by each transaction. Downstream consumers — like Flink jobs or BI tools — can subscribe to these changes incrementally rather than re-processing the entire table on every run, dramatically reducing compute costs for downstream processing.</p>

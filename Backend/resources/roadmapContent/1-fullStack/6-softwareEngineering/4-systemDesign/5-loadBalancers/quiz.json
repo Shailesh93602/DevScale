@@ -1,0 +1,48 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary architectural function of a Load Balancer (like Nginx or AWS ALB) in a distributed backend system?",
+            "options": [
+                "To explicitly compress static images globally.",
+                "To intercept all incoming internet traffic securely and strictly distribute those billions of requests evenly across a massive hidden cluster of identical backend servers.",
+                "To compile Typescript algorithms gracefully.",
+                "To manage Kubernetes orchestrated Docker deployments natively."
+            ],
+            "answer": "To intercept all incoming internet traffic securely and strictly distribute those billions of requests evenly across a massive hidden cluster of identical backend servers.",
+            "explanation": "Clients only talk directly to the Load Balancer public IP. They never know the private IP addresses of your actual internal web servers."
+        },
+        {
+            "question": "If your application relies heavily on 'Server-Side Sessions' directly mapped to RAM, which Load Balancer Routing Algorithm must you strictly consistently utilize?",
+            "options": [
+                "Simple Round Robin scheduling logic natively.",
+                "IP Hashing natively, ensuring a specific client's IP mathematically mathematically perfectly routes them to the exact same dedicated physical server reliably.",
+                "Least Connection algorithmic routing dynamically.",
+                "Randomized selection efficiently."
+            ],
+            "answer": "IP Hashing natively, ensuring a specific client's IP mathematically mathematically perfectly routes them to the exact same dedicated physical server reliably.",
+            "explanation": "If User A logs into Server 1 via Round Robin, but request 2 routes them to Server 2, Server 2 won't have their RAM session, instantly logging them out."
+        },
+        {
+            "question": "What specifically separates a 'Layer 7' (Application) Load Balancer from a 'Layer 4' (Transport) Load Balancer in System Design Architecture?",
+            "options": [
+                "Layer 7 only routes raw Database connections safely.",
+                "A Layer 7 Balancer decrypts SSL completely and cleanly reads the specific HTTP URI patterns and custom Headers intelligently, allowing highly complex intelligent routing (e.g. routing `/video` requests to Video Servers natively).",
+                "A Layer 7 Balancer encrypts passwords natively securely.",
+                "A Layer 7 natively bypasses standard TCP networking."
+            ],
+            "answer": "A Layer 7 Balancer decrypts SSL completely and cleanly reads the specific HTTP URI patterns and custom Headers intelligently, allowing highly complex intelligent routing (e.g. routing `/video` requests to Video Servers natively).",
+            "explanation": "A Layer 4 LB is blind; it just passes TCP packets. A Layer 7 LB is smart; it can read cookies, headers, and specific URL paths."
+        },
+        {
+            "question": "What massive architectural catastrophe does 'Consistent Hashing' prevent when routing data across a distributed cluster of Cache Servers?",
+            "options": [
+                "Memory leaks in Nginx.",
+                "A severe domino-effect 'Cache Miss Storm' natively, ensuring that if 1 out of 5 cache servers crashes suddenly, only 20% of users gracefully get temporarily reassigned, correctly explicitly keeping the other 80% flawlessly mapped to their exact same original servers safely.",
+                "A global Domain Name System securely.",
+                "A SQL database safely completely."
+            ],
+            "answer": "A severe domino-effect 'Cache Miss Storm' natively, ensuring that if 1 out of 5 cache servers crashes suddenly, only 20% of users gracefully get temporarily reassigned, correctly explicitly keeping the other 80% flawlessly mapped to their exact same original servers safely.",
+            "explanation": "With basic Modulo hashing, removing 1 server reorganizes the entire mathematical formula, completely shuffling 100% of all data unpredictably."
+        }
+    ]
+}

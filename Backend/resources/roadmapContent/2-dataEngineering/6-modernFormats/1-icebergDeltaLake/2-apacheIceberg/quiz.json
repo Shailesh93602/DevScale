@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What was the fundamental architectural limitation of traditional Hive-style Parquet Data Lakes that Apache Iceberg was designed to solve?",
+            "options": [
+                "Parquet files cannot store string data types efficiently.",
+                "Without a transactional metadata layer, concurrent reads and writes had no isolation (a reader could see partially written data), schema changes required expensive full rewrites, and GDPR row-level deletes required rewriting entire files.",
+                "Parquet files on S3 are limited to 1TB in size.",
+                "Hive Metastore cannot track more than 1,000 partitions per table."
+            ],
+            "answer": "Without a transactional metadata layer, concurrent reads and writes had no isolation (a reader could see partially written data), schema changes required expensive full rewrites, and GDPR row-level deletes required rewriting entire files.",
+            "explanation": "Iceberg's immutable snapshot model solved all three: atomic writes, schema evolution without rewriting data, and targeted row-level deletes via Position Delete Files."
+        },
+        {
+            "question": "How does Apache Iceberg's snapshot-based model enable ACID Isolation for concurrent read and write operations?",
+            "options": [
+                "Iceberg locks all Parquet files during any write operation, blocking readers.",
+                "Instead of modifying existing files in place, each write operation creates a new immutable snapshot. Concurrent readers always read a specific, consistent snapshot while a writer is atomically committing a new snapshot — no reader ever sees partially written data.",
+                "Iceberg uses a distributed lock manager backed by ZooKeeper.",
+                "Iceberg buffers all writes in memory and flushes them to S3 in bulk."
+            ],
+            "answer": "Instead of modifying existing files in place, each write operation creates a new immutable snapshot. Concurrent readers always read a specific, consistent snapshot while a writer is atomically committing a new snapshot — no reader ever sees partially written data.",
+            "explanation": "This is identical to how MVCC (Multi-Version Concurrency Control) works in PostgreSQL — readers see a consistent version of the data without blocking writers."
+        },
+        {
+            "question": "What specific business problem does Iceberg's 'Time Travel' feature directly solve for Data Engineers?",
+            "options": [
+                "It allows Flink to process historical Kafka events in Event Time.",
+                "It allows instantly querying the exact state of a table at any past point in time — enabling instant recovery from accidental row deletions, reproducible historical analyses weeks after the fact, and root-cause debugging by comparing table states before and after a suspicious pipeline run.",
+                "It automatically rewinds Airflow DAG failures to the last successful task.",
+                "It compresses old Parquet files into a more efficient archive format."
+            ],
+            "answer": "It allows instantly querying the exact state of a table at any past point in time — enabling instant recovery from accidental row deletions, reproducible historical analyses weeks after the fact, and root-cause debugging by comparing table states before and after a suspicious pipeline run.",
+            "explanation": "An analyst accidentally ran `DELETE FROM fact_sales` without a WHERE clause. With Time Travel, you query the table as of 2 minutes before the accident and instantly restore a full snapshot."
+        }
+    ]
+}

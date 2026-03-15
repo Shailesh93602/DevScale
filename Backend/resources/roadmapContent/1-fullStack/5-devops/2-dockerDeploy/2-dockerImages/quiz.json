@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary architectural purpose of a `Dockerfile` objectively?",
+            "options": [
+                "It establishes a native WebSocket connection securely between microservices",
+                "It acts as a literal mathematical recipe defining exactly how to package your application code, alongside a micro-Operating System and strict system dependencies natively, into a standardized, immutable 'Image' file locally",
+                "It compiles Markdown into React natively",
+                "It permanently enforces linting boundaries exclusively"
+            ],
+            "answer": "It acts as a literal mathematical recipe defining exactly how to package your application code, alongside a micro-Operating System and strict system dependencies natively, into a standardized, immutable 'Image' file locally",
+            "explanation": "Instead of writing a 10-page Word Document instructing a junior developer how to install Node 18, set environment variables, and run `npm start`, the Dockerfile automates that entire process cryptographically."
+        },
+        {
+            "question": "In a Node.js Dockerfile natively, why is it considered the absolute industry standard mathematically to copy `package.json` and execute `npm install` BEFORE explicitly copying the rest of the application source code?",
+            "options": [
+                "Because NPM mathematically requires strict network prioritization locally",
+                "To explicitly leverage Docker's native Layer Caching mechanism. Since the package.json file rarely mathematically changes, Docker automatically caches the massive `node_modules` installation layer entirely, skipping it and saving 5 minutes every time you casually re-build the image after modifying a JavaScript file",
+                "Because `npm install` inherently deletes source code securely",
+                "Because Docker inherently executes the file randomly otherwise"
+            ],
+            "answer": "To explicitly leverage Docker's native Layer Caching mechanism. Since the package.json file rarely mathematically changes, Docker automatically caches the massive `node_modules` installation layer entirely, skipping it and saving 5 minutes every time you casually re-build the image after modifying a JavaScript file",
+            "explanation": "If you do `COPY . .` first, Docker detects that `server.js` changed, mathematically invalidating that entire layer and everything below it, forcing it to violently re-download all 500MB of `node_modules` literally every single build."
+        },
+        {
+            "question": "When defining the base operating system image specifically (e.g., `FROM node:18`), why is appending `-alpine` (e.g., `FROM node:18-alpine`) almost universally recommended natively?",
+            "options": [
+                "Alpine fundamentally overrides global JavaScript errors dynamically",
+                "Alpine inherently installs Python 3 natively",
+                "Alpine explicitly utilizes a highly stripped-down minimalist Linux distribution locally that is often under 5MB radically natively, massively reducing network transfer durations, storage costs, and severe security vulnerabilities dynamically",
+                "Alpine enables TypeScript explicitly"
+            ],
+            "answer": "Alpine explicitly utilizes a highly stripped-down minimalist Linux distribution locally that is often under 5MB radically natively, massively reducing network transfer durations, storage costs, and severe security vulnerabilities dynamically",
+            "explanation": "A standard Ubuntu-based `node:18` image contains bash processors, graphical utilities, and text editors amounting to 1 Gigabyte natively. If a hacker exploits your app, having those tools available is deadly. Alpine ships entirely without them."
+        },
+        {
+            "question": "What explicitly is a 'Multi-Stage Build' locally in the context of creating a Dockerfile specifically for a React frontend natively?",
+            "options": [
+                "A script that runs Docker inside of a virtual machine directly",
+                "A structural technique where an initial 'Builder' image installs massive compiling dependencies securely, executes `npm run build`, and then entirely discards that heavy environment directly, literally copying exactly only the final static `.js` files natively into a radically tiny production web server image",
+                "A method mathematically ensuring Redis caches strictly",
+                "A system specifically orchestrating Git branches locally"
+            ],
+            "answer": "A structural technique where an initial 'Builder' image installs massive compiling dependencies securely, executes `npm run build`, and then entirely discards that heavy environment directly, literally copying exactly only the final static `.js` files natively into a radically tiny production web server image",
+            "explanation": "A React development environment contains Webpack and Babel taking up 800MB. But production React just needs an Nginx server streaming a 2MB index.html file. Multi-stage physically discards the 800MB bloat perfectly."
+        },
+        {
+            "question": "What is precisely the architectural difference mathematically between a Docker 'Image' and a Docker 'Container' globally?",
+            "options": [
+                "An image mathematically rests in AWS primarily, a container is strictly local exclusively",
+                "An Image natively contains exclusively database logic directly",
+                "An Image is explicitly the static, completely immutable, packaged artifact file template strictly resting on your hard drive. A Container explicitly is the mathematically live, running process explicitly executing that template completely entirely isolated from your host OS natively.",
+                "An Image specifically compiles Markdown dynamically natively"
+            ],
+            "answer": "An Image is explicitly the static, completely immutable, packaged artifact file template strictly resting on your hard drive. A Container explicitly is the mathematically live, running process explicitly executing that template completely entirely isolated from your host OS natively.",
+            "explanation": "Think of an Image as the generic compiled `.exe` or `.app` physical file uniquely resting on your disk. Think of the Container mathematically as the actual live application running perfectly inside your Task Manager taking up RAM."
+        }
+    ]
+}

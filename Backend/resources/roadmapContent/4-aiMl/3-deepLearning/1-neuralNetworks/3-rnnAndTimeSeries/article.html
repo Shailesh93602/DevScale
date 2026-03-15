@@ -1,0 +1,149 @@
+<h1>RNNs, LSTMs &amp; Time Series with PyTorch</h1>
+<p>Standard neural networks process fixed-size inputs independently — they have no memory of previous inputs. <strong>Recurrent Neural Networks (RNNs)</strong> introduce a hidden state that persists across time steps, making them architecturally suited for sequential data: time series, text, audio, and any data where order matters. LSTMs extend RNNs with gating mechanisms that solve the vanishing gradient problem, enabling learning of long-term dependencies.</p>
+
+<h2>The Recurrent Architecture</h2>
+<p>At each time step t, an RNN receives the current input <code>x_t</code> and the previous hidden state <code>h_{t-1}</code>, producing a new hidden state <code>h_t</code>:</p>
+<pre><code># h_t = tanh(W_hh · h_{t-1} + W_xh · x_t + b)
+# This "unrolls" over T time steps, sharing the same weights at every step
+
+import torch
+import torch.nn as nn
+import numpy as np
+
+# Simple test: process a sequence of 10 time steps
+seq_len = 10
+batch_size = 32
+input_size = 8    # Features per time step
+hidden_size = 64  # Size of hidden state
+
+rnn = nn.RNN(input_size=input_size, hidden_size=hidden_size, batch_first=True)
+x = torch.randn(batch_size, seq_len, input_size)       # (batch, seq, features)
+output, h_n = rnn(x)
+print(f"Output shape: {output.shape}")   # (32, 10, 64) — hidden state at every step
+print(f"h_n shape: {h_n.shape}")         # (1, 32, 64) — final hidden state only</code></pre>
+
+<h2>The Vanishing Gradient Problem</h2>
+<p>During backpropagation through time (BPTT), gradients are multiplied by the RNN weight matrix at every time step. Over 100+ steps, these repeated multiplications cause gradients to vanish (shrink to zero) or explode (grow to infinity), making it impossible to learn long-range dependencies (e.g., connecting a word at position 1 to a word at position 200).</p>
+
+<h2>LSTMs — Long Short-Term Memory</h2>
+<p>LSTMs solve this by introducing a <strong>cell state</strong> (the long-term memory) that flows through time with only additive (not multiplicative) interactions, controlled by three <strong>gates</strong>:</p>
+<ul>
+  <li><strong>Forget gate (f_t)</strong>: What to erase from the cell state? (sigmoid → 0 means forget, 1 means keep)</li>
+  <li><strong>Input gate (i_t)</strong>: What new information to write to the cell state?</li>
+  <li><strong>Output gate (o_t)</strong>: What part of the cell state to output as h_t?</li>
+</ul>
+<pre><code># LSTM layer in PyTorch
+lstm = nn.LSTM(
+    input_size=input_size,
+    hidden_size=hidden_size,
+    num_layers=2,         # Stack 2 LSTM layers
+    batch_first=True,
+    dropout=0.3,          # Dropout between stacked layers (not on last layer)
+    bidirectional=False   # True = processes sequence forward AND backward
+)
+
+h_0 = torch.zeros(2, batch_size, hidden_size)   # num_layers × batch × hidden
+c_0 = torch.zeros(2, batch_size, hidden_size)   # Cell state initialization
+
+output, (h_n, c_n) = lstm(x, (h_0, c_0))
+print(f"LSTM output: {output.shape}")  # (32, 10, 64)</code></pre>
+
+<h2>Time Series Forecasting with LSTM</h2>
+<pre><code># ─── Univariate time series forecasting (e.g., stock price prediction) ──────
+import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
+
+def create_sequences(data, seq_len, forecast_horizon=1):
+    """Create (input_sequence, target) pairs for supervised learning"""
+    X, y = [], []
+    for i in range(len(data) - seq_len - forecast_horizon + 1):
+        X.append(data[i:i + seq_len])
+        y.append(data[i + seq_len:i + seq_len + forecast_horizon])
+    return np.array(X), np.array(y)
+
+# Generate synthetic time series (replace with real data)
+t = np.linspace(0, 100, 2000)
+data = np.sin(0.3 * t) + 0.5 * np.sin(0.7 * t) + 0.1 * np.random.randn(len(t))
+
+# Normalize to [0, 1]
+scaler = MinMaxScaler()
+data_scaled = scaler.fit_transform(data.reshape(-1, 1)).flatten()
+
+SEQ_LEN = 50       # Use last 50 timesteps to predict...
+HORIZON = 5        # ...the next 5 timesteps
+
+X, y = create_sequences(data_scaled, SEQ_LEN, HORIZON)
+# Train-test split (time series: no shuffling!)
+split = int(len(X) * 0.8)
+X_train, X_test = X[:split], X[split:]
+y_train, y_test = y[:split], y[split:]
+
+# Convert to PyTorch tensors
+X_train_t = torch.FloatTensor(X_train).unsqueeze(-1)  # (n_samples, seq_len, 1)
+y_train_t = torch.FloatTensor(y_train)                 # (n_samples, horizon)
+
+class LSTMForecaster(nn.Module):
+    def __init__(self, input_size=1, hidden_size=64, num_layers=2, forecast_horizon=5):
+        super().__init__()
+        self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True, dropout=0.2)
+        self.head = nn.Sequential(
+            nn.Linear(hidden_size, 32),
+            nn.ReLU(),
+            nn.Linear(32, forecast_horizon)
+        )
+
+    def forward(self, x):
+        out, (h_n, c_n) = self.lstm(x)
+        return self.head(out[:, -1, :])  # Use only the final time step's hidden state</code></pre>
+
+<h2>GRU — Gated Recurrent Unit (Simplified LSTM)</h2>
+<pre><code># GRU merges cell and hidden state → only 2 gates (reset + update)
+# ~10% fewer parameters than LSTM, similar performance, faster training
+gru = nn.GRU(input_size=input_size, hidden_size=hidden_size, num_layers=2,
+             batch_first=True, dropout=0.2)
+output, h_n = gru(x)   # Simpler: no separate cell state</code></pre>
+
+<h2>Sequence Classification</h2>
+<pre><code>class SentimentLSTM(nn.Module):
+    """Binary sentiment classification (positive/negative review)"""
+    def __init__(self, vocab_size, embed_dim=128, hidden_size=256, num_layers=2):
+        super().__init__()
+        self.embedding = nn.Embedding(vocab_size, embed_dim, padding_idx=0)
+        self.lstm = nn.LSTM(embed_dim, hidden_size, num_layers, batch_first=True,
+                            bidirectional=True, dropout=0.3)
+        # Bidirectional doubles the output size
+        self.classifier = nn.Sequential(
+            nn.Linear(hidden_size * 2, 64),
+            nn.ReLU(),
+            nn.Dropout(0.4),
+            nn.Linear(64, 1)   # Binary: positive or negative
+        )
+
+    def forward(self, x):
+        embedded = self.embedding(x)
+        output, (h_n, _) = self.lstm(embedded)
+        # For bidirectional LSTM, concatenate forward and backward final states
+        h_fwd = h_n[-2, :, :]   # Last layer, forward direction
+        h_bwd = h_n[-1, :, :]   # Last layer, backward direction
+        combined = torch.cat([h_fwd, h_bwd], dim=1)
+        return self.classifier(combined).squeeze(1)</code></pre>
+
+<h2>When to Use RNNs vs. Transformers</h2>
+<table>
+  <thead><tr><th></th><th>LSTM/GRU</th><th>Transformer</th></tr></thead>
+  <tbody>
+    <tr><td>Sequence length</td><td>Degrades &gt;500 steps</td><td>Scales to 100K+ tokens</td></tr>
+    <tr><td>Parallelization</td><td>Sequential (slow to train)</td><td>Fully parallel (fast)</td></tr>
+    <tr><td>Short time series (&lt;500 points)</td><td>✅ Often better</td><td>Overkill</td></tr>
+    <tr><td>NLP tasks</td><td>Legacy approach</td><td>✅ Dominant (GPT, BERT)</td></tr>
+    <tr><td>Streaming/real-time</td><td>✅ Natural fit</td><td>Requires full window</td></tr>
+  </tbody>
+</table>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always normalize time series data before feeding to LSTM — it trains dramatically faster and more stably on [0,1] or standardized inputs.</li>
+  <li>Use GRU instead of LSTM when training speed is critical — nearly equal performance with fewer parameters.</li>
+  <li>Clip gradients during BPTT with <code>torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)</code> to prevent exploding gradients.</li>
+  <li>For modern NLP, prefer Transformers (BERT, GPT). Reserve LSTMs for streaming sensors, financial time series, and other domains with genuinely sequential, online data patterns.</li>
+</ul>

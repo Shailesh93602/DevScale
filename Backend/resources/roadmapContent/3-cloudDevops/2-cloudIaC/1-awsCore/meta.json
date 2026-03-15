@@ -1,0 +1,4 @@
+{
+    "name": "AWS Core Services",
+    "description": "EC2, S3, RDS, VPC, IAM, Lambda — the essential AWS building blocks."
+}

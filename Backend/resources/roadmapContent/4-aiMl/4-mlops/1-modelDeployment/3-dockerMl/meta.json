@@ -1,0 +1,6 @@
+{
+    "id": "3-dockerMl",
+    "title": "Containerizing Machine Learning Models",
+    "description": "Using Docker to ensure consistent and reproducible environments for ML inference.",
+    "order": 3
+}

@@ -1,0 +1,4 @@
+{
+    "name": "Kubernetes Autoscaling: HPA, VPA & KEDA",
+    "description": "Dynamically right-sizing Kubernetes workloads. Configuring Horizontal Pod Autoscaler (HPA) for CPU/memory scaling, Vertical Pod Autoscaler (VPA) for resource recommendation, and event-driven autoscaling with KEDA (Kubernetes Event-Driven Autoscaling) for queue-depth-based scaling."
+}

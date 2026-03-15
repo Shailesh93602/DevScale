@@ -1,0 +1,19 @@
+{
+  "title": "Interleaving String",
+  "slug": "interleaving-string",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["dynamic-programming", "string"],
+  "company_tags": ["Google", "Amazon", "Microsoft", "Facebook", "Uber"],
+  "topic_tags": ["dynamic programming", "string"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Three strings `s1`, `s2`, and `s3`.",
+  "output_format": "Return `true` if `s3` is formed by an interleaving of `s1` and `s2`.",
+  "example_input": "s1 = \"aabcc\", s2 = \"dbbca\", s3 = \"aadbbcbcac\"",
+  "example_output": "true",
+  "constraints": "- `0 <= s1.length, s2.length <= 100`\n- `0 <= s3.length <= 200`\n- `s1`, `s2`, and `s3` consist of lowercase English letters.",
+  "function_signature": "function isInterleave(s1: string, s2: string, s3: string): boolean {}",
+  "status": "ACTIVE"
+}

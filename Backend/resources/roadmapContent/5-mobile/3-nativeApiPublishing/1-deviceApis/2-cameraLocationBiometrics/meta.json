@@ -1,0 +1,4 @@
+{
+    "name": "Camera, Location & Biometrics",
+    "description": "Integrating the most-used device hardware APIs in production apps. Implementing camera capture with expo-camera and image picker, accessing GPS location with expo-location (foreground and background), adding biometric authentication (Face ID / Fingerprint) with expo-local-authentication, handling permissions lifecycle properly on both iOS and Android, and common pitfalls with each API."
+}

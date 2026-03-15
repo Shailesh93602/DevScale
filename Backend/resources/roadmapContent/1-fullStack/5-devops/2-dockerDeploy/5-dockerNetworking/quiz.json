@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary function of Port Mapping when running a Docker container?",
+            "options": [
+                "To encrypt physical storage files",
+                "To punch a specific hole in Docker's isolation firewall, allowing traffic to flow from an external Host port into a specific internal Container port.",
+                "To download Node modules faster",
+                "To connect multiple AWS servers"
+            ],
+            "answer": "To punch a specific hole in Docker's isolation firewall, allowing traffic to flow from an external Host port into a specific internal Container port.",
+            "explanation": "Without a port mapping like `3000:8080`, your container is completely disconnected from the public internet and cannot fulfill HTTP requests."
+        },
+        {
+            "question": "What is considered a critical security mistake when deploying Docker containers to production?",
+            "options": [
+                "Using an Alpine Linux base image",
+                "Exposing internal database ports directly to the public Host network (e.g., `5432:5432`).",
+                "Using `.env` files for runtime configuration",
+                "Deploying the container using `docker compose`"
+            ],
+            "answer": "Exposing internal database ports directly to the public Host network (e.g., `5432:5432`).",
+            "explanation": "If you expose port 5432 globally, anyone on the internet can attempt to connect to your database. You should only expose your API server, keeping the database hidden."
+        },
+        {
+            "question": "How do two isolated containers securely communicate with each other if neither has exposed their ports to the public internet?",
+            "options": [
+                "They communicate via an external API service",
+                "Docker places both containers on an isolated, private 'Bridge Network', allowing them to route traffic to one another using internal DNS.",
+                "They use an FTP server to share text files",
+                "They parse data through the Host Mac OS directly"
+            ],
+            "answer": "Docker places both containers on an isolated, private 'Bridge Network', allowing them to route traffic to one another using internal DNS.",
+            "explanation": "A Bridge Network acts like a private Wi-Fi router inside your computer. Only devices connected to that router can ping each other, ensuring maximum internal security."
+        },
+        {
+            "question": "Why is it mathematically dangerous to use the `ENV` command inside a Dockerfile to define a production Database Password?",
+            "options": [
+                "Because `ENV` causes the image to exceed 5 Gigabytes",
+                "Because variables defined natively in the Dockerfile become permanently baked into the final Image file history, exposing the secret to anyone who downloads the image.",
+                "Because `ENV` disables NPM caching",
+                "Because it triggers a compilation warning"
+            ],
+            "answer": "Because variables defined natively in the Dockerfile become permanently baked into the final Image file history, exposing the secret to anyone who downloads the image.",
+            "explanation": "A Dockerfile creates an immutable artifact. If you type a password in the Dockerfile, the password belongs to the artifact. Secrets must be dynamically injected into the running Container, not the static Image."
+        },
+        {
+            "question": "What is the optimal method for securely passing 15 different API keys into a Docker Container at runtime?",
+            "options": [
+                "Hardcoding them in the `server.js` file",
+                "Defining them in a local `.env` file on the Host machine and using the `env_file:` directive in `docker-compose.yml` to inject them dynamically.",
+                "Pushing the keys to a public GitHub repository",
+                "Writing a shell script inside the container"
+            ],
+            "answer": "Defining them in a local `.env` file on the Host machine and using the `env_file:` directive in `docker-compose.yml` to inject them dynamically.",
+            "explanation": "This guarantees that the actual secret values are kept strictly on the host server's secure hard drive, and completely out of version control and the Docker Image history."
+        }
+    ]
+}

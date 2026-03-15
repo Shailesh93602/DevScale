@@ -1,0 +1,74 @@
+{
+    "title": "Apache Airflow Quiz",
+    "description": "Test your Airflow pipeline orchestration knowledge.",
+    "passingScore": 80,
+    "timeLimit": 8,
+    "questions": [
+        {
+            "question": "What does DAG stand for in Apache Airflow?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Data Aggregation Graph",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Directed Acyclic Graph — a pipeline with no circular dependencies",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Dynamic Application Generator",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Data Action Group",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is XCom in Airflow used for?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Cross-cluster communication between different Airflow instances",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Passing small amounts of data (metadata, counts) between tasks",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Storing large DataFrames in shared memory",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Scheduling tasks across time zones",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does 'catchup=False' do when creating an Airflow DAG?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Prevents the DAG from running more than once",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Disables backfilling — missed runs since start_date are not executed",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Catches and ignores all task errors",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Stops the DAG from retrying failed tasks",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

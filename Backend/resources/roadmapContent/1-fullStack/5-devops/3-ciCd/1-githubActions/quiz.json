@@ -1,0 +1,118 @@
+{
+    "title": "GitHub Actions CI/CD Quiz",
+    "description": "Test your understanding of automated workflows with GitHub Actions.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Where are GitHub Actions workflow files stored?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "/src/workflows/",
+                    "isCorrect": false
+                },
+                {
+                    "text": ".github/workflows/",
+                    "isCorrect": true
+                },
+                {
+                    "text": "/actions/",
+                    "isCorrect": false
+                },
+                {
+                    "text": "/ci/",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does the `needs` keyword do in a GitHub Actions job?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Lists required environment variables",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Makes a job depend on another job completing first",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Installs npm packages",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Defines the runner OS",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which command gives a reproducible install from package-lock.json?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "npm install",
+                    "isCorrect": false
+                },
+                {
+                    "text": "npm update",
+                    "isCorrect": false
+                },
+                {
+                    "text": "npm ci",
+                    "isCorrect": true
+                },
+                {
+                    "text": "npm install --frozen-lockfile",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How do you access a GitHub Secret in a workflow step?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "process.env.SECRET_NAME",
+                    "isCorrect": false
+                },
+                {
+                    "text": "${{ secrets.SECRET_NAME }}",
+                    "isCorrect": true
+                },
+                {
+                    "text": "${{ env.SECRET_NAME }}",
+                    "isCorrect": false
+                },
+                {
+                    "text": "secrets[SECRET_NAME]",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is a `matrix` strategy used for in GitHub Actions?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Running a job only on specific branches",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Testing against multiple OS or version combinations",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Storing build artifacts",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Sending deployment notifications",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

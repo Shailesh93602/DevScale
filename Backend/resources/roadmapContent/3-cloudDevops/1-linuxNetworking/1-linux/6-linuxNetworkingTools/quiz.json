@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "A junior engineer reports that the application on port 8080 isn't responding. Which command gives you the fastest way to confirm whether the process is actually listening on port 8080 at all?",
+            "options": [
+                "ping localhost:8080",
+                "ss -tlnp | grep 8080 — this shows all listening TCP ports with process names and immediately confirms whether anything is bound to port 8080 or not.",
+                "curl -v localhost:8080 — this tests if the HTTP response is correct.",
+                "nmap -p 8080 localhost — this scans the port from an external perspective."
+            ],
+            "answer": "ss -tlnp | grep 8080 — this shows all listening TCP ports with process names and immediately confirms whether anything is bound to port 8080 or not.",
+            "explanation": "curl will time out if nothing is listening. nmap works externally. 'ss -tlnp' directly queries the kernel's socket table — it's instantaneous and tells you the process name."
+        },
+        {
+            "question": "What does the command 'ssh -L 5433:database.internal:5432 user@bastion.example.com' accomplish?",
+            "options": [
+                "It copies the database to the local machine on port 5433.",
+                "It creates an SSH Local Port Forward tunnel. Any connection to localhost:5433 on your machine is transparently forwarded through the SSH connection to bastion.example.com, which then connects to database.internal:5432 — effectively making a private DB accessible from your laptop.",
+                "It exposes port 5432 on your localhost to the remote bastion server.",
+                "It creates a VPN between your machine and database.internal."
+            ],
+            "answer": "It creates an SSH Local Port Forward tunnel. Any connection to localhost:5433 on your machine is transparently forwarded through the SSH connection to bastion.example.com, which then connects to database.internal:5432 — effectively making a private DB accessible from your laptop.",
+            "explanation": "The DB is behind a firewall and only reachable from bastion. The SSH tunnel uses bastion as a relay, letting you run psql -h localhost -p 5433 from your local machine."
+        },
+        {
+            "question": "When would you use tcpdump instead of curl or ss to debug a networking issue?",
+            "options": [
+                "When you need to check if a specific port is in a listening state.",
+                "When you need to inspect the actual raw bytes being sent over the network at the packet level — for example, to confirm a TLS handshake is completing, to detect malformed HTTP headers that curl isn't showing, or to debug why a service is sending RST/FIN packets unexpectedly.",
+                "When you need to test the HTTP response code of a REST API.",
+                "When you need to scan all open ports on a remote server."
+            ],
+            "answer": "When you need to inspect the actual raw bytes being sent over the network at the packet level — for example, to confirm a TLS handshake is completing, to detect malformed HTTP headers that curl isn't showing, or to debug why a service is sending RST/FIN packets unexpectedly.",
+            "explanation": "tcpdump operates below the application layer. It sees the raw TCP segments before TLS decryption, making it essential for diagnosing connection establishment issues, TCP timeouts, and RST packets."
+        }
+    ]
+}

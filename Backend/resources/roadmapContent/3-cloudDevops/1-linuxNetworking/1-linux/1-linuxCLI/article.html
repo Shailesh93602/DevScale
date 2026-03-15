@@ -1,0 +1,79 @@
+<h1>Linux Command Line Mastery</h1>
+<p>Linux is the operating system of production servers, containers, and cloud infrastructure. Mastering the command line is non-negotiable for DevOps engineers.</p>
+
+<h2>File System Navigation</h2>
+<pre><code>ls -la                  # List all files with permissions
+cd /var/log             # Change directory
+pwd                     # Print current directory
+find / -name "*.conf"   # Find files by name
+find . -mtime -1        # Files modified in last 24h
+locate nginx.conf       # Fast file search (uses index)
+
+# File operations
+cp -r src/ dest/        # Copy directory recursively
+mv old.txt new.txt      # Move/rename
+rm -rf directory/       # Delete recursively (⚠️ irreversible!)
+ln -s /etc/nginx /etc/nginx-link  # Symbolic link</code></pre>
+
+<h2>File Permissions</h2>
+<pre><code># Permission format: -rwxrwxrwx (type)(owner)(group)(others)
+# r=4, w=2, x=1
+
+chmod 755 script.sh     # rwxr-xr-x
+chmod +x script.sh      # Add execute permission
+chown user:group file   # Change owner
+
+# Common permissions:
+# 644 — rw-r--r-- (files)
+# 755 — rwxr-xr-x (executables/dirs)
+# 600 — rw------- (SSH keys, secret files)</code></pre>
+
+<h2>Process Management</h2>
+<pre><code>ps aux                          # All running processes
+top / htop                      # Live process monitor
+kill 1234                       # Send SIGTERM (graceful)
+kill -9 1234                    # Send SIGKILL (force)
+pkill nginx                     # Kill by name
+
+# Background processes
+./server &amp;                      # Run in background
+nohup ./server &gt; server.log &amp;  # Persist after logout
+jobs                            # List background jobs
+fg 1                            # Bring job to foreground</code></pre>
+
+<h2>System Information</h2>
+<pre><code>df -h                   # Disk usage
+du -sh /var/log/*       # Directory sizes
+free -h                 # RAM usage
+uname -a                # Kernel info
+uptime                  # System uptime + load average
+systemctl status nginx  # Service status
+journalctl -f           # Follow system logs</code></pre>
+
+<h2>Bash Scripting</h2>
+<pre><code>#!/bin/bash
+set -euo pipefail      # Exit on error, unset vars, pipe failures
+
+BACKUP_DIR="/backups/$(date +%Y-%m-%d)"
+mkdir -p "$BACKUP_DIR"
+
+# Variables and conditionals
+if [ -f "/data/db.sql" ]; then
+  cp /data/db.sql "$BACKUP_DIR/"
+  echo "✅ Backup completed"
+else
+  echo "❌ Source file not found" &gt;&amp;2
+  exit 1
+fi
+
+# Loops
+for file in /logs/*.log; do
+  gzip "$file"
+done
+
+# Functions
+check_service() {
+  systemctl is-active --quiet "$1" || { echo "$1 is down!"; exit 1; }
+}
+check_service nginx
+check_service postgresql</code></pre>

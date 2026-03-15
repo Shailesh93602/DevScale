@@ -1,0 +1,19 @@
+{
+  "title": "Min Stack",
+  "slug": "min-stack",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["stack", "design"],
+  "company_tags": ["Amazon", "Google", "Microsoft", "Bloomberg"],
+  "topic_tags": ["stack", "design"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "A sequence of operations: push(val), pop(), top(), getMin().",
+  "output_format": "Results of top() and getMin() operations.",
+  "example_input": "[\"MinStack\",\"push\",\"push\",\"push\",\"getMin\",\"pop\",\"top\",\"getMin\"]\n[[],[-2],[0],[-3],[],[],[],[]]",
+  "example_output": "[null,null,null,null,-3,null,0,-2]",
+  "constraints": "- `-2^31 <= val <= 2^31 - 1`\n- Methods `pop`, `top` and `getMin` will always be called on non-empty stacks.\n- At most `3 * 10^4` calls to push, pop, top, and getMin.",
+  "function_signature": "class MinStack { push(val: number): void; pop(): void; top(): number; getMin(): number; }",
+  "status": "ACTIVE"
+}

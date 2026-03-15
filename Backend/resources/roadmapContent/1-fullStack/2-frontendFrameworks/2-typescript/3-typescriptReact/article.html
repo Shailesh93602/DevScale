@@ -1,0 +1,152 @@
+<h1>TypeScript with React</h1>
+<p>TypeScript dramatically improves React development by catching prop mismatches, invalid event handlers, and incorrect hook usage at compile time rather than at runtime.</p>
+
+<h2>Typing Component Props</h2>
+<pre><code>interface ButtonProps {
+  variant?: 'primary' | 'secondary' | 'danger';
+  size?: 'sm' | 'md' | 'lg';
+  disabled?: boolean;
+  onClick?: (event: React.MouseEvent&lt;HTMLButtonElement&gt;) => void;
+  children: React.ReactNode;
+  className?: string;
+}
+
+function Button({ variant = 'primary', size = 'md', children, onClick, disabled }: ButtonProps) {
+  return (
+    &lt;button
+      className={`btn btn--${variant} btn--${size}`}
+      onClick={onClick}
+      disabled={disabled}
+    &gt;
+      {children}
+    &lt;/button&gt;
+  );
+}
+
+// TypeScript catches mistakes at compile time:
+&lt;Button variant="invalid" /&gt; // ❌ Error: not assignable to 'primary' | 'secondary' | 'danger'
+&lt;Button&gt;&lt;/Button&gt;           // ❌ Error: 'children' is required</code></pre>
+
+<h2>Typing useState and useReducer</h2>
+<pre><code>// Explicit type when TS can't infer
+const [user, setUser] = useState&lt;User | null&gt;(null);
+
+// useReducer with discriminated union actions
+type Action =
+  | { type: 'INCREMENT' }
+  | { type: 'DECREMENT' }
+  | { type: 'RESET'; payload: number };
+
+function reducer(state: number, action: Action): number {
+  switch (action.type) {
+    case 'INCREMENT': return state + 1;
+    case 'DECREMENT': return state - 1;
+    case 'RESET':     return action.payload;  // TS knows payload exists here
+  }
+}</code></pre>
+
+<h2>Typing Event Handlers</h2>
+<pre><code>// Input change
+const handleChange = (event: React.ChangeEvent&lt;HTMLInputElement&gt;) =&gt; {
+  setValue(event.target.value);
+};
+
+// Form submit
+const handleSubmit = (event: React.FormEvent&lt;HTMLFormElement&gt;) =&gt; {
+  event.preventDefault();
+  // handle form data
+};
+
+// Button click
+const handleClick = (event: React.MouseEvent&lt;HTMLButtonElement&gt;) =&gt; {
+  // handle click
+};
+
+// Select change
+const handleSelect = (event: React.ChangeEvent&lt;HTMLSelectElement&gt;) =&gt; {
+  setOption(event.target.value);
+};</code></pre>
+
+<h2>Typing useRef</h2>
+<pre><code>// DOM element ref
+const inputRef = useRef&lt;HTMLInputElement&gt;(null);
+
+// Safe access with optional chaining
+const focusInput = () =&gt; inputRef.current?.focus();
+
+// Mutable ref (not a DOM element)
+const timerRef = useRef&lt;ReturnType&lt;typeof setTimeout&gt; | null&gt;(null);</code></pre>
+
+<h2>Typing Context</h2>
+<pre><code>interface AuthContextType {
+  user: User | null;
+  login: (credentials: LoginCredentials) =&gt; Promise&lt;void&gt;;
+  logout: () =&gt; void;
+  isLoading: boolean;
+}
+
+// Non-null assertion because we always use this within the Provider
+const AuthContext = createContext&lt;AuthContextType&gt;({} as AuthContextType);
+
+// Typed consumer hook with guard
+function useAuth(): AuthContextType {
+  const context = useContext(AuthContext);
+  if (!context) throw new Error('useAuth must be used within AuthProvider');
+  return context;
+}</code></pre>
+
+<h2>Generic Components</h2>
+<pre><code>// A reusable list component that works with any data type
+interface ListProps&lt;T&gt; {
+  items: T[];
+  renderItem: (item: T, index: number) =&gt; React.ReactNode;
+  keyExtractor: (item: T) =&gt; string | number;
+  emptyMessage?: string;
+}
+
+function List&lt;T&gt;({ items, renderItem, keyExtractor, emptyMessage = 'No items' }: ListProps&lt;T&gt;) {
+  if (!items.length) return &lt;p&gt;{emptyMessage}&lt;/p&gt;;
+  return (
+    &lt;ul&gt;
+      {items.map((item, index) =&gt; (
+        &lt;li key={keyExtractor(item)}&gt;{renderItem(item, index)}&lt;/li&gt;
+      ))}
+    &lt;/ul&gt;
+  );
+}
+
+// Usage
+&lt;List
+  items={users}
+  keyExtractor={u =&gt; u.id}
+  renderItem={user =&gt; &lt;UserCard user={user} /&gt;}
+/&gt;</code></pre>
+
+<h2>Typing Custom Hooks</h2>
+<pre><code>interface FetchState&lt;T&gt; {
+  data: T | null;
+  loading: boolean;
+  error: string | null;
+}
+
+function useFetch&lt;T&gt;(url: string): FetchState&lt;T&gt; {
+  const [state, setState] = useState&lt;FetchState&lt;T&gt;&gt;({
+    data: null,
+    loading: true,
+    error: null
+  });
+  // ...effect
+  return state;
+}
+
+// Usage — TS infers the type from the generic
+const { data, loading } = useFetch&lt;Product[]&gt;('/api/products');</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Use <code>interface</code> for component props and object shapes; <code>type</code> for unions and aliases.</li>
+  <li>Use discriminated unions for <code>useReducer</code> actions — TypeScript narrows the type in each case.</li>
+  <li>Enable <code>"strict": true</code> in tsconfig for maximum safety.</li>
+  <li>Avoid <code>any</code> — use <code>unknown</code> and type guard functions instead.</li>
+  <li>Make custom hooks generic when they work with multiple data types.</li>
+</ul>

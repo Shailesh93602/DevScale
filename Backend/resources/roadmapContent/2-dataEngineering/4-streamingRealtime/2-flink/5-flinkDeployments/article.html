@@ -1,0 +1,34 @@
+<h1>Flink Deployments & Connectors</h1>
+<p>Writing a Flink job locally is one thing; running it reliably in a production environment 24/7 is another challenge entirely. Flink supports several deployment modes and provides a rich ecosystem of Connectors for integrating with other systems in your data stack.</p>
+
+<h2>Flink Deployment Modes</h2>
+<p>Flink can be deployed across several strategies, each with different trade-offs:</p>
+<ul>
+  <li><strong>Session Mode:</strong> A single long-running Flink cluster is pre-provisioned (like a shared server). You submit multiple jobs to it, and all jobs share the available cluster resources. This is efficient for development and test environments but can cause resource contention — one memory-hungry job can steal resources from all other jobs running on the same cluster.</li>
+  <li><strong>Application Mode:</strong> The recommended mode for serious production deployments. Each Flink job gets its completely own dedicated, isolated cluster. The cluster is automatically created when the job is submitted and destroyed when the job completes. This provides complete resource isolation and is the cleanest approach on Kubernetes or YARN.</li>
+  <li><strong>Per-Job Mode:</strong> Similar to Application Mode, but the cluster lifecycle is managed by an external resource manager like YARN or Mesos rather than Flink itself.</li>
+</ul>
+
+<h2>Flink Connectors (Sources and Sinks)</h2>
+<p>A Flink streaming application has a <strong>Source</strong> (where data comes in) and a <strong>Sink</strong> (where results go out). Flink provides official, high-performance connectors for all major systems in the data engineering ecosystem:</p>
+
+<pre><code class="language-java">// Source: Read a real-time stream from a Kafka Topic
+KafkaSource&lt;String&gt; kafkaSource = KafkaSource.&lt;String&gt;builder()
+    .setBootstrapServers("kafka:9092")
+    .setTopics("payment-events")
+    .setGroupId("flink-processor")
+    .setStartingOffsets(OffsetsInitializer.latest())
+    .setValueOnlyDeserializer(new SimpleStringSchema())
+    .build();
+
+// Sink: Write the processed results to a JDBC-compatible database
+JdbcSink.sink(
+    "INSERT INTO aggregated_payments (user_id, total) VALUES (?, ?)",
+    (statement, row) -&gt; { /* set parameters */ },
+    JdbcExecutionOptions.defaults(),
+    new JdbcConnectionOptions.Builder().withUrl("jdbc:postgresql://...").build()
+);
+</code></pre>
+
+<h2>The Kafka-Flink-Iceberg Pipeline</h2>
+<p>The most powerful modern Data Engineering pattern is the <strong>Kafka → Flink → Apache Iceberg → Data Warehouse</strong> pipeline. Real-time events flow from Kafka into Flink for stateful enrichment and windowed aggregations. The results are then written to an Apache Iceberg table on S3, which is immediately queryable by Snowflake or BigQuery without any loading process. This architecture provides both real-time stream processing and batch analytics on the same data store, eliminating the need for separate Lambda architecture pipelines entirely.</p>

@@ -1,0 +1,6 @@
+[
+  "Think about what information you need to find the complement. For each element `x`, you need to find `target - x`.",
+  "A brute force approach checks every pair — that's O(n²). Can you reduce the lookup of the complement to O(1)?",
+  "A HashMap can store the numbers you've already seen (value → index). For each new number, check if its complement already exists in the map.",
+  "Iterate once (single pass): for each index `i`, check if `target - nums[i]` is in your map. If yes, return. If no, add `nums[i]` to the map."
+]

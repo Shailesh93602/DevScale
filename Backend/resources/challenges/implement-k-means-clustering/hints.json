@@ -1,0 +1,6 @@
+[
+  "Initialize centroids by picking the first K data points. You can also try random initialization.",
+  "In the assignment step, compute Euclidean distance from each point to every centroid and assign to the closest one.",
+  "In the update step, compute the mean of all points assigned to each cluster to get new centroids.",
+  "Check for convergence by comparing old and new assignments. If nothing changed, you can stop early."
+]

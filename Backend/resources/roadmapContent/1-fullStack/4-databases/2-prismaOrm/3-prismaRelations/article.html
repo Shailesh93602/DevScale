@@ -1,0 +1,106 @@
+<h1>Modeling Relations in Prisma</h1>
+<p>Relational databases thrive on relationships. Defining how your tables connect (One-to-One, One-to-Many, Many-to-Many) is the most critical part of architecting your <code>schema.prisma</code> file. Prisma's schema syntax makes defining these relations highly readable compared to raw SQL.</p>
+
+<h2>The Two Sides of a Relation</h2>
+<p>Every relationship has two sides. If a <strong>User</strong> has many <strong>Posts</strong> (1-to-N):</p>
+<ol>
+  <li>The <strong>User</strong> side has an array: <code>posts Post[]</code></li>
+  <li>The <strong>Post</strong> side has a singular object: <code>author User</code> <em>and</em> it must explicitly declare the Foreign Key mapping using the <code>@relation</code> attribute!</li>
+</ol>
+
+<h2>One-to-Many (1-to-n)</h2>
+<p>The most common relationship. A single User creates multiple Posts.</p>
+
+<pre><code>model User {
+  id    Int    @id @default(autoincrement())
+  email String @unique
+  
+  // A User can have an array of many Posts
+  posts Post[] 
+}
+
+model Post {
+  id       Int    @id @default(autoincrement())
+  title    String
+  
+  // 1. The typed Prisma property. This points to the User model.
+  author   User   @relation(fields: [authorId], references: [id])
+  
+  // 2. The physical database Foreign Key column!
+  authorId Int    
+}</code></pre>
+<p>Notice that <code>author</code> isn't a column in PostgreSQL; it's a Prisma-only mapping that allows you to do <code>include: { author: true }</code>. The actual column physically existing in SQL is exactly <code>authorId</code>.</p>
+
+<h2>One-to-One (1-to-1)</h2>
+<p>Often used when splitting out massive data into a separate table to keep queries fast (e.g., splitting a User Profile from the core User credentials).</p>
+<p>The syntax is nearly identical to a One-to-Many, but the parent side uses a singular object (<code>Profile?</code>) instead of an array (<code>Profile[]</code>), and crucially, the Foreign Key on the child is forced to be <code>@unique</code>!</p>
+
+<pre><code>model User {
+  id      Int      @id @default(autoincrement())
+  
+  // Singular! A user can only have ONE profile (or null)
+  profile Profile? 
+}
+
+model Profile {
+  id     Int    @id @default(autoincrement())
+  bio    String
+  
+  user   User   @relation(fields: [userId], references: [id])
+  
+  // Must be unique! If not unique, it becomes a 1-to-Many relation!
+  userId Int    @unique 
+}</code></pre>
+
+<h2>Many-to-Many (m-to-n)</h2>
+<p>A classic example: <strong>Posts</strong> and <strong>Tags</strong>. A Post can have many Tags ("tech", "news"). A Tag can be attached to many Posts.</p>
+<p>In standard SQL, mapping this requires you to manually build a third "Join Table" (e.g., <code>PostTag</code>) containing two foreign keys. Prisma brilliantly simplifies this using <strong>Implicit Many-to-Many Relations</strong>. You just define an array on both sides, and Prisma automatically generates and manages the join table behind the scenes invisibly!</p>
+
+<pre><code>model Post {
+  id    Int    @id @default(autoincrement())
+  title String
+  
+  // Array!
+  tags  Tag[] 
+}
+
+model Tag {
+  id    Int    @id @default(autoincrement())
+  name  String
+  
+  // Array!
+  posts Post[] 
+}</code></pre>
+
+<p>When you run <code>prisma migrate dev</code>, Prisma will automatically execute SQL to create a hidden table named <code>_PostToTag</code>. You never have to manually query it!</p>
+
+<h3>Explicit Many-to-Many</h3>
+<p>If you need to store extra information <em>on the relationship itself</em> (e.g., storing the exact timestamp someone joined a group, or an employee's specific role within a specific department), you cannot use an Implicit relation. You must explicitly model the Join Table so you can add columns to it.</p>
+
+<pre><code>model User {
+  id       Int             @id @default(autoincrement())
+  // The User points to the Join Table array
+  memberships GroupMembership[] 
+}
+
+model Group {
+  id       Int             @id @default(autoincrement())
+  // The Group points to the Join Table array
+  memberships GroupMembership[]
+}
+
+// The Explicit Join Table!
+model GroupMembership {
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  
+  group      Group    @relation(fields: [groupId], references: [id])
+  groupId    Int
+  
+  // The extra data!
+  role       String   @default("MEMBER")
+  joinedAt   DateTime @default(now())
+
+  // The Primary Key is a combination of both foreign keys
+  @@id([userId, groupId]) 
+}</code></pre>

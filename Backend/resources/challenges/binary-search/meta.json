@@ -1,0 +1,19 @@
+{
+  "title": "Binary Search",
+  "slug": "binary-search",
+  "difficulty": "Easy",
+  "category": "algorithms",
+  "points": 50,
+  "tags": ["binary-search", "array"],
+  "company_tags": ["Google", "Amazon", "Microsoft", "Apple", "Facebook"],
+  "topic_tags": ["binary search", "arrays"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "A sorted integer array `nums` in ascending order and an integer `target`.",
+  "output_format": "Return the index of `target` if it exists, otherwise return `-1`.",
+  "example_input": "nums = [-1,0,3,5,9,12], target = 9",
+  "example_output": "4",
+  "constraints": "- `1 <= nums.length <= 10^4`\n- `-10^4 < nums[i], target < 10^4`\n- All integers in `nums` are unique.\n- `nums` is sorted in ascending order.",
+  "function_signature": "function search(nums: number[], target: number): number {}",
+  "status": "ACTIVE"
+}

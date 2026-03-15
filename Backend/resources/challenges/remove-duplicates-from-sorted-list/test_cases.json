@@ -1,0 +1,12 @@
+[
+  { "input": "{\"head\":[1,1,2]}", "output": "[1,2]", "explanation": "One duplicate at beginning", "is_hidden": false },
+  { "input": "{\"head\":[1,1,2,3,3]}", "output": "[1,2,3]", "explanation": "Two sets of duplicates", "is_hidden": false },
+  { "input": "{\"head\":[]}", "output": "[]", "explanation": "Empty list", "is_hidden": true },
+  { "input": "{\"head\":[1]}", "output": "[1]", "explanation": "Single node", "is_hidden": true },
+  { "input": "{\"head\":[1,1,1,1,1]}", "output": "[1]", "explanation": "All same", "is_hidden": true },
+  { "input": "{\"head\":[1,2,3,4,5]}", "output": "[1,2,3,4,5]", "explanation": "No duplicates", "is_hidden": true },
+  { "input": "{\"head\":[-3,-1,-1,0,0,0,1]}", "output": "[-3,-1,0,1]", "explanation": "Negative numbers with duplicates", "is_hidden": true },
+  { "input": "{\"head\":[1,1,2,2,3,3]}", "output": "[1,2,3]", "explanation": "All elements appear twice", "is_hidden": true },
+  { "input": "{\"head\":[0,0]}", "output": "[0]", "explanation": "Two zeroes", "is_hidden": true },
+  { "input": "{\"head\":[1,2,2,3,3,4,4,5]}", "output": "[1,2,3,4,5]", "explanation": "Mixed duplicates", "is_hidden": true }
+]

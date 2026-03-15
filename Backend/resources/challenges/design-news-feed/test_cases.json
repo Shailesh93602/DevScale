@@ -1,0 +1,8 @@
+[
+  {
+    "input": "userId='u1', friends=['u2', 'u3']",
+    "output": "['post_from_u3', 'post_from_u2']",
+    "explanation": "Feed displays posts from followed users in reverse chronological order",
+    "is_hidden": false
+  }
+]

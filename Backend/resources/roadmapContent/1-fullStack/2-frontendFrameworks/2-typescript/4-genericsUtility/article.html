@@ -1,0 +1,115 @@
+<h1>TypeScript Generics & Utility Types</h1>
+<p>Generics allow you to write <strong>reusable, type-safe code</strong> that works with multiple types without sacrificing type information. TypeScript's built-in utility types solve common type transformation problems without manual work.</p>
+
+<h2>Generic Functions</h2>
+<pre><code>// Without generics — loses type information
+function first(arr: any[]): any { return arr[0]; }
+
+// With generics — type is preserved
+function first&lt;T&gt;(arr: T[]): T | undefined { return arr[0]; }
+
+const n = first([1, 2, 3]);         // n: number
+const s = first(['a', 'b', 'c']);   // s: string
+
+// Multiple type parameters
+function pair&lt;T, U&gt;(first: T, second: U): [T, U] {
+  return [first, second];
+}
+
+const result = pair('key', 42); // result: [string, number]</code></pre>
+
+<h2>Generic Constraints</h2>
+<pre><code>// Constrain T to objects with a specific shape
+function getProperty&lt;T, K extends keyof T&gt;(obj: T, key: K): T[K] {
+  return obj[key];
+}
+
+const user = { name: 'Alice', age: 30 };
+const name = getProperty(user, 'name');  // string
+const age  = getProperty(user, 'age');   // number
+getProperty(user, 'email');              // ❌ Error: not a key of user
+
+// Constraint with interface
+interface HasId { id: number | string; }
+function findById&lt;T extends HasId&gt;(items: T[], id: T['id']): T | undefined {
+  return items.find(item =&gt; item.id === id);
+}</code></pre>
+
+<h2>Built-in Utility Types</h2>
+<pre><code>interface User {
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+  role: 'admin' | 'user';
+  createdAt: Date;
+}
+
+// Partial — all fields optional
+type UpdateUserDto = Partial&lt;User&gt;;
+
+// Required — all fields required (opposite of Partial)
+type StrictUser = Required&lt;Partial&lt;User&gt;&gt;;
+
+// Pick — select specific fields
+type PublicUser = Pick&lt;User, 'id' | 'name' | 'email' | 'role'&gt;;
+
+// Omit — exclude specific fields
+type CreateUserDto = Omit&lt;User, 'id' | 'createdAt'&gt;;
+
+// Record — map keys to value type
+type RolePermissions = Record&lt;User['role'], string[]&gt;;
+
+// ReturnType — extract return type of a function
+type GetUsersResult = ReturnType&lt;typeof getUsers&gt;;
+
+// Parameters — extract parameter types
+type GetUserParams = Parameters&lt;typeof getUser&gt;;
+
+// Readonly — prevent mutation
+type ImmutableUser = Readonly&lt;User&gt;;</code></pre>
+
+<h2>Conditional Types</h2>
+<pre><code>// T extends condition ? TrueType : FalseType
+type IsArray&lt;T&gt; = T extends any[] ? true : false;
+
+type A = IsArray&lt;number[]&gt;;  // true
+type B = IsArray&lt;string&gt;;    // false
+
+// infer — extract a type from within a conditional type
+type ArrayElement&lt;T&gt; = T extends (infer E)[] ? E : never;
+type StringElement = ArrayElement&lt;string[]&gt;;  // string
+type NumberElement = ArrayElement&lt;number[]&gt;;  // number
+
+// Exclude / Extract (built on conditional types)
+type Shape = 'circle' | 'square' | 'triangle';
+type Rounded = Extract&lt;Shape, 'circle'&gt;;   // 'circle'
+type Flat    = Exclude&lt;Shape, 'circle'&gt;;   // 'square' | 'triangle'</code></pre>
+
+<h2>Mapped Types</h2>
+<pre><code>// Create a new type by transforming each property
+type Nullable&lt;T&gt; = {
+  [K in keyof T]: T[K] | null;
+};
+
+type Getters&lt;T&gt; = {
+  [K in keyof T as `get${Capitalize&lt;string &amp; K&gt;}`]: () =&gt; T[K];
+};
+
+type UserGetters = Getters&lt;User&gt;;
+// { getName: () =&gt; string; getEmail: () =&gt; string; ... }</code></pre>
+
+<h2>Template Literal Types</h2>
+<pre><code>type EventName = 'click' | 'focus' | 'blur';
+type Handler = `on${Capitalize&lt;EventName&gt;}`;  // 'onClick' | 'onFocus' | 'onBlur'
+
+type CSSProperty = `${string}-${string}`;  // matches 'font-size', 'background-color', etc.</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Use generics instead of <code>any</code> when a function works with multiple types.</li>
+  <li>Leverage utility types (<code>Partial</code>, <code>Pick</code>, <code>Omit</code>) instead of duplicating interfaces.</li>
+  <li>Use <code>unknown</code> for truly unknown types and narrow with type guards.</li>
+  <li>Combine mapped types with conditional types for advanced type transformations.</li>
+  <li>Use <code>ReturnType&lt;typeof fn&gt;</code> instead of manually typing the return of complex functions.</li>
+</ul>

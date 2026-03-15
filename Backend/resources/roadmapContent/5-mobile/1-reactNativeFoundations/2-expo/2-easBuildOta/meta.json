@@ -1,0 +1,4 @@
+{
+    "name": "EAS Build, OTA Updates & App Configuration",
+    "description": "Professional build and deployment with Expo Application Services. Setting up EAS Build for iOS and Android, managing build profiles (development, preview, production), implementing Over-The-Air updates with expo-updates for instant JS-layer patches without App Store review, config plugins for native module configuration, and environment variables management with eas.json."
+}

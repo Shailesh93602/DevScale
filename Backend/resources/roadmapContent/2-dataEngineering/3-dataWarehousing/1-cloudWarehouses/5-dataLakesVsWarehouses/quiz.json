@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary architectural difference between a strict traditional 'Data Warehouse' and a modern massive 'Data Lake'?",
+            "options": [
+                "A Data Warehouse requires Javascript APIs exclusively.",
+                "A Data Warehouse strictly enforces a highly organized, relational 'Schema-on-Write' format natively optimized for SQL speed. A Data Lake physically acts as a massive cheap repository for raw, chaotic, entirely unstructured files (JSON, CSV, Audio, Images) utilizing logical 'Schema-on-Read'.",
+                "A Data Lake inherently runs native CSS parsing.",
+                "A Data Lake securely encrypts all external web traffic efficiently."
+            ],
+            "answer": "A Data Warehouse strictly enforces a highly organized, relational 'Schema-on-Write' format natively optimized for SQL speed. A Data Lake physically acts as a massive cheap repository for raw, chaotic, entirely unstructured files (JSON, CSV, Audio, Images) utilizing logical 'Schema-on-Read'.",
+            "explanation": "You cannot store raw audio recordings or massive chaotic nested JSON logs directly efficiently in a highly structured Postgres table. You dump them in the AWS S3 Lake."
+        },
+        {
+            "question": "What is the severe operational danger known inherently as a 'Data Swamp' natively?",
+            "options": [
+                "When the network load balancer strictly fails.",
+                "When a Data Lake fundamentally lacks governance, strict testing, and proper metadata validation structurally, causing it to blindly fill up with terabytes of completely corrupted, undocumented, and useless file garbage.",
+                "When CSS files fail to logically compress properly.",
+                "When a Node API successfully overrides memory leaks."
+            ],
+            "answer": "When a Data Lake fundamentally lacks governance, strict testing, and proper metadata validation structurally, causing it to blindly fill up with terabytes of completely corrupted, undocumented, and useless file garbage.",
+            "explanation": "Because anyone can dump any file into the Lake, without rules, it becomes a completely un-queryable disaster."
+        },
+        {
+            "question": "How does the modern 'Data Lakehouse' (like Databricks Delta Lake) natively architecturally bridge the gap securely seamlessly between Lakes and Warehouses?",
+            "options": [
+                "It translates Python natively directly efficiently into native SQL statements.",
+                "It provides rigid ACID transaction guarantees, schema enforcement, and SQL table structures explicitly directly securely on top of the cheap raw Parquet files residing inside the underlying unstructured Data Lake.",
+                "It restricts all database access cleanly efficiently.",
+                "It securely bypasses explicit server authentication rationally."
+            ],
+            "answer": "It provides rigid ACID transaction guarantees, schema enforcement, and SQL table structures explicitly directly securely on top of the cheap raw Parquet files residing inside the underlying unstructured Data Lake.",
+            "explanation": "The Lakehouse gives you the raw cheap file storage of the Lake alongside the reliability, UPDATEs, and ACID properties of the Warehouse securely."
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+[
+  { "input": "{\"prices\": [1,3,2,8,4,9], \"fee\": 2}", "output": "8", "explanation": "Two transactions with fee=2 each", "is_hidden": false },
+  { "input": "{\"prices\": [1,3,7,5,10,3], \"fee\": 3}", "output": "6", "explanation": "One transaction: 10-1-3=6", "is_hidden": false },
+  { "input": "{\"prices\": [1,2], \"fee\": 1}", "output": "0", "explanation": "Profit=1 minus fee=1 equals 0", "is_hidden": false },
+  { "input": "{\"prices\": [1]}", "output": "0", "explanation": "Single day", "is_hidden": true },
+  { "input": "{\"prices\": [1,5], \"fee\": 1}", "output": "3", "explanation": "5-1-1=3", "is_hidden": true },
+  { "input": "{\"prices\": [9,8,7,1,2], \"fee\": 3}", "output": "0", "explanation": "No profitable trade after fee", "is_hidden": true },
+  { "input": "{\"prices\": [2,2,1,1,5,5,3,1,5,4], \"fee\": 1}", "output": "6", "explanation": "Optimal with fee", "is_hidden": true },
+  { "input": "{\"prices\": [4,5,2,4,3,3,1,2,5,4], \"fee\": 1}", "output": "4", "explanation": "Multiple small transactions", "is_hidden": true }
+]

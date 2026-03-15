@@ -1,0 +1,74 @@
+{
+    "title": "TypeScript Fundamentals Quiz",
+    "description": "Test your TypeScript type system knowledge.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the difference between 'interface' and 'type' in TypeScript?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "They are completely identical with no differences",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Interfaces can be merged (declaration merging) and extended; types can use unions and intersections more flexibly",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Types are for primitives only; interfaces are for objects only",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Interfaces are slower to compile",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does the ? operator mean when used on an interface property (e.g., role?: string)?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The property can be null",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The property is read-only",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The property is optional — it may or may not be present",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Optional chaining on the property",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is a union type in TypeScript?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A type that combines all properties of two types",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A type that can be one of several specified types",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A type for database entities",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A type that excludes certain values",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

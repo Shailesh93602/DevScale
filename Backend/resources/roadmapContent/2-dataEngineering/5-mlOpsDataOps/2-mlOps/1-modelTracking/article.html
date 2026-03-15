@@ -1,0 +1,49 @@
+<h1>Model Tracking & MLflow</h1>
+<p>In traditional software engineering, tracking code changes via Git is standard. In Machine Learning, the performance of a model depends on <strong>three</strong> axes: Code, Data, and Hyperparameters.</p>
+<p>If you run an experiment today that achieves 95% accuracy, but a month from now you can't recreate it because you forgot which learning rate you used or what the dataset looked like, you have a major problem. <strong>Model Tracking</strong> solves this.</p>
+
+<h2>What is MLflow?</h2>
+<p>MLflow is an open-source platform tailored strictly for managing the machine learning lifecycle. It is framework agnostic, supporting Scikit-Learn, PyTorch, TensorFlow, XGBoost, and more.</p>
+
+<h3>Core Components of MLflow</h3>
+<ul>
+  <li><strong>MLflow Tracking:</strong> An API and UI to log parameters, code versions, metrics, and output files when running your machine learning code.</li>
+  <li><strong>MLflow Projects:</strong> A standard format for packaging reusable data science code. You define the dependencies (like a conda <code>environment.yaml</code>) so that another developer can run your project perfectly on their machine.</li>
+  <li><strong>MLflow Models:</strong> A standard format for packaging an ML model (like a ZIP file containing the weights and a generic <code>predict()</code> wrapper function) so it can be easily deployed to a generic REST API server or Apache Spark for batch scoring.</li>
+  <li><strong>MLflow Model Registry:</strong> A centralized store to collaboratively manage the full lifecycle of an MLflow Model. It provides chronological model lineage, model versioning, stage transitions (Staging &#8594; Production), and annotations.</li>
+</ul>
+
+<h2>Tracking Experiments in Python</h2>
+<p>Adding MLflow to a training script is straightforward:</p>
+<pre><code>import mlflow
+import mlflow.sklearn
+from sklearn.ensemble import RandomForestRegressor
+
+# Wrap training inside an mlflow run block
+with mlflow.start_run():
+    # 1. Log Hyperparameters
+    n_estimators = 100
+    mlflow.log_param("n_estimators", n_estimators)
+
+    model = RandomForestRegressor(n_estimators=n_estimators)
+    model.fit(X_train, y_train)
+    predictions = model.predict(X_test)
+
+    # 2. Log Metrics (Accuracy, MSE, F1)
+    rmse = mean_squared_error(y_test, predictions, squared=False)
+    mlflow.log_metric("rmse", rmse)
+
+    # 3. Log the Model Artifact itself
+    mlflow.sklearn.log_model(model, "rf_model")</code></pre>
+
+<h2>The Autologging Feature</h2>
+<p>MLflow provides <code>autolog()</code> integration for major frameworks. It automatically logs parameters and metrics without needing explicit <code>mlflow.log_param()</code> calls.</p>
+<pre><code>import mlflow.xgboost
+
+# One line handles everything!
+mlflow.xgboost.autolog()
+
+model = xgb.train(params, dtrain)</code></pre>
+
+<h2>Why Is This Part of Data Engineering?</h2>
+<p>Machine Learning Engineers build the models, but Data Engineers build the pipelines that constantly retrain these models with fresh batches of structured data. Understanding how to pull the latest "Production" model from the MLflow Registry via an Airflow DAG to perform batch predictions on a Spark cluster is a core Data Engineering responsibility.</p>

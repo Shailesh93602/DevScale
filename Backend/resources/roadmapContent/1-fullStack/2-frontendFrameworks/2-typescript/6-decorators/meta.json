@@ -1,0 +1,4 @@
+{
+    "name": "TypeScript Decorators & Metadata",
+    "description": "Using decorators for class enhancement, property validation, dependency injection, and the reflect-metadata API."
+}

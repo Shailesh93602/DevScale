@@ -1,0 +1,58 @@
+<h1>dbt Deployment & CI/CD</h1>
+<p>Deploying a dbt project requires managing environments, scheduling pipeline runs, ensuring artifacts like <code>manifest.json</code> are tracked, and validating changes on pull requests using CI/CD methodologies.</p>
+
+<h2>Managing Environments</h2>
+<p>Most dbt setups use at least two environments (development and production) mapped to separate profiles in <code>profiles.yml</code>.</p>
+<pre><code>my_project:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      dataset: dbt_alice # Personal dev dataset
+      ...
+    prod:
+      type: bigquery
+      dataset: analytics # Prod dataset
+      ...</code></pre>
+
+<h2>Scheduling dbt Runs</h2>
+<p>You can run dbt in production via the CLI (dbt Core) on a scheduled Airflow task or GitHub Action, or use dbt Cloud to manage the orchestration for you.</p>
+
+<h3>Airflow Integration</h3>
+<p>The <code>BashOperator</code> is often used to execute dbt commands:</p>
+<pre><code>from airflow.operators.bash import BashOperator
+
+dbt_build = BashOperator(
+    task_id='dbt_build',
+    bash_command='dbt build --target prod',
+    dag=dag
+)</code></pre>
+<p>Alternatively, packages like <code>astronomer-cosmos</code> can parse the <code>manifest.json</code> to turn individual dbt models into separate Airflow tasks, showing the full DAG line-by-line in the Airflow UI.</p>
+
+<h2>Continuous Integration (CI) and Slim CI</h2>
+<p>When someone opens a Pull Request, running <code>dbt build</code> over the entire warehouse can be expensive and slow. dbt provides state comparison (Slim CI) to build only what changed.</p>
+
+<pre><code># Download the manifest.json from the latest prod run
+# Compare current state to prod state, run only modified models and their downstream dependencies
+
+dbt build --select state:modified+ --defer --state path/to/prod/artifacts</code></pre>
+
+<p>The <code>--defer</code> flag tells dbt to resolve unchanged upstream models using the production tables, saving money and time.</p>
+
+<h2>dbt Cloud Features</h2>
+<p>dbt Cloud provides a managed environment that simplifies deployment:</p>
+<ul>
+  <li>Native GitHub/GitLab integration for automatic PR builds (Slim CI built-in).</li>
+  <li>Job scheduler with cron integration to run the pipelines.</li>
+  <li>Web-based IDE for development without local setup.</li>
+  <li>Hosted documentation and model lineage graph.</li>
+</ul>
+
+<h2>Generating & Hosting Documentation</h2>
+<p>dbt generates a static website documenting your DAG, models, and columns descriptions.</p>
+<pre><code># Resolves descriptions and generates catalog.json
+dbt docs generate
+
+# Serves the static site locally
+dbt docs serve</code></pre>
+<p>In production, you can deploy the generated <code>target/</code> folder (specifically <code>index.html</code>, <code>manifest.json</code>, and <code>catalog.json</code>) to an S3 bucket or Vercel to host the internal company data dictionary.</p>

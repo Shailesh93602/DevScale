@@ -1,0 +1,122 @@
+<h1>Expo Setup & Build Tools</h1>
+<p>Setting up and configuring the React Native development environment is often the most frustrating step for newcomers. <strong>Expo</strong> eliminates most of that friction by providing a managed workflow, pre-configured native modules, and cloud build services — letting you focus on building your app, not configuring Xcode or Android Studio.</p>
+
+<h2>Expo Managed Workflow vs. Bare Workflow</h2>
+<table>
+  <thead>
+    <tr><th></th><th>Managed Workflow</th><th>Bare Workflow</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Setup</td><td>Zero native configuration</td><td>Standard React Native setup (Xcode + Android Studio)</td></tr>
+    <tr><td>Native code</td><td>Expo handles all native code</td><td>Full access to iOS/Android source</td></tr>
+    <tr><td>Custom native modules</td><td>Only Expo-compatible packages</td><td>Any npm package including custom native bridges</td></tr>
+    <tr><td>EAS Build</td><td>✅ Fully supported</td><td>✅ Fully supported</td></tr>
+    <tr><td>Best for</td><td>85% of projects</td><td>Projects needing deep native customization</td></tr>
+  </tbody>
+</table>
+
+<h2>Creating a New Expo Project</h2>
+<pre><code># Create a new project using Expo's TypeScript template (recommended)
+npx create-expo-app@latest MyApp --template blank-typescript
+
+# Navigate into it
+cd MyApp
+
+# Start the Metro bundler and Expo Go development server
+npx expo start</code></pre>
+<p>Scan the QR code with the <strong>Expo Go</strong> app on your phone. Your app loads instantly on your physical device over Wi-Fi — no USB cable, no simulators needed. Every time you save a file, Expo instantly hot-reloads the changes on your device via Fast Refresh.</p>
+
+<h2>Project Structure</h2>
+<pre><code>MyApp/
+├── app/                # File-based routing (Expo Router)
+│   ├── _layout.tsx    # Root navigator configuration
+│   ├── index.tsx      # Home screen (maps to "/" route)
+│   └── profile.tsx    # Profile screen (maps to "/profile" route)
+├── assets/            # Static files: images, fonts, icons
+├── components/        # Reusable UI components
+├── app.json           # Expo configuration: app name, icon, splash screen
+├── eas.json           # EAS Build configuration (production, preview profiles)
+└── package.json</code></pre>
+
+<h2>app.json — The Expo Configuration File</h2>
+<p><code>app.json</code> is the single source of truth for your app's identity and native settings. You never touch <code>Info.plist</code> (iOS) or <code>AndroidManifest.xml</code> (Android) directly in the managed workflow:</p>
+<pre><code>{
+  "expo": {
+    "name": "MyApp",
+    "slug": "my-app",
+    "version": "1.0.0",
+    "icon": "./assets/icon.png",        // 1024x1024 PNG, no transparency
+    "splash": {
+      "image": "./assets/splash.png",  // Shown while app loads
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "bundleIdentifier": "com.yourcompany.myapp",  // Unique Apple ID
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.yourcompany.myapp",            // Unique Google ID
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "plugins": [
+      // Config plugins automatically inject native permissions
+      ["expo-camera", { "cameraPermission": "Allow MyApp to access your camera." }],
+      ["expo-location", { "locationAlwaysAndWhenInUsePermission": "..." }]
+    ]
+  }
+}</code></pre>
+
+<h2>Installing Expo-Compatible Packages</h2>
+<p>Use <code>npx expo install</code> instead of <code>npm install</code> — it automatically selects the version of the package that is compatible with your current Expo SDK version:</p>
+<pre><code># Always use this for Expo packages:
+npx expo install expo-image-picker expo-location expo-camera
+
+# For third-party packages without a native layer, npm/yarn is fine:
+npm install lodash date-fns</code></pre>
+
+<h2>Expo Router — File-Based Navigation</h2>
+<p>Expo Router brings Next.js-style file-based routing to mobile. Create a file → it becomes a screen:</p>
+<pre><code>// app/(tabs)/index.tsx — Home tab
+export default function HomeScreen() {
+  return <Text>Home</Text>;
+}
+
+// app/(tabs)/profile.tsx — Profile tab (automatically gets a tab item)
+export default function ProfileScreen() {
+  return <Text>Profile</Text>;
+}
+
+// app/[id].tsx — Dynamic route (like /post/123)
+import { useLocalSearchParams } from 'expo-router';
+export default function PostScreen() {
+  const { id } = useLocalSearchParams();
+  return <Text>Post: {id}</Text>;
+}</code></pre>
+
+<h2>Development Builds vs. Expo Go</h2>
+<p><strong>Expo Go</strong> is a sandbox — it works for most development, but cannot run packages with custom native code (like <code>react-native-vision-camera</code>). For those, use a <strong>Development Build</strong>:</p>
+<pre><code># Install expo-dev-client
+npx expo install expo-dev-client
+
+# Build a dev client for your physical iOS device
+eas build --profile development --platform ios
+
+# Then start the dev server (your custom client app connects to it)
+npx expo start --dev-client</code></pre>
+
+<h2>Expo SDK Updates</h2>
+<p>Expo releases major SDK versions every ~3 months. To upgrade:</p>
+<pre><code>npx expo install expo@latest
+npx expo-doctor  # Diagnoses version mismatches in your dependencies</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Keep your Expo SDK version consistent — mixing SDK 50 and SDK 51 packages causes hard-to-debug native crashes.</li>
+  <li>Use <code>npx expo-doctor</code> weekly during active development to catch incompatible package versions early.</li>
+  <li>Commit <code>eas.json</code> to Git, but never commit your <code>.env</code> file — use EAS Secrets for production environment variables.</li>
+  <li>For complex animations or custom native features, consider ejecting to the bare workflow rather than fighting Expo's constraints.</li>
+</ul>

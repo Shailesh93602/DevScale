@@ -1,0 +1,99 @@
+<h1>Passwordless Auth & WebAuthn</h1>
+<p>Passwords are fundamentally insecure. Users reuse them, forget them, and fall for phishing attacks. Modern applications are moving towards a <strong>Passwordless</strong> future using technologies like Magic Links, OTPs (One-Time Passwords), and WebAuthn (Passkeys).</p>
+
+<h2>1. Magic Links (Email Authentication)</h2>
+<p>A magic link is a unique, one-time-use URL sent to a user's email. Clicking the link authenticates the user. This removes the need for a password entirely and relies on the security of the user's email provider.</p>
+
+<h3>How to Implement Magic Links</h3>
+<ol>
+  <li>User enters their email into the login form.</li>
+  <li>The backend generates a secure, random Token (e.g., <code>crypto.randomBytes(32)</code>) and stores it in the database with a short expiration time (e.g., 15 minutes).</li>
+  <li>The backend uses a service like SendGrid or AWS SES to email the link: <code>https://myapp.com/verify?token=abc123XYZ</code></li>
+  <li>When the user clicks the link, the backend verifies the token exists in the database. If valid, the backend deletes the token (so it cannot be reused) and logs the user in (issues a JWT or Session Cookie).</li>
+</ol>
+
+<pre><code>// 1. Generate and Email the Token
+app.post('/auth/magic-link', async (req, res) =&gt; {
+  const { email } = req.body;
+  const user = await db.users.findOne({ email });
+  
+  if (!user) return res.status(404).json({ error: "User not found" });
+
+  const token = crypto.randomBytes(32).toString('hex');
+  const expiresAt = Date.now() + 15 * 60 * 1000; // 15 mins
+
+  await db.magicTokens.create({ userId: user.id, token, expiresAt });
+
+  // Send email (Pseudo-code)
+  await mailer.send(email, `Click here: https://myapp.com/verify?token=${token}`);
+  res.json({ message: "Check your email!" });
+});
+
+// 2. Verify the Token and Login
+app.get('/verify', async (req, res) =&gt; {
+  const { token } = req.query;
+  const magicToken = await db.magicTokens.findOne({ token });
+
+  if (!magicToken || magicToken.expiresAt &lt; Date.now()) {
+    return res.status(401).send("Invalid or expired link");
+  }
+
+  // Found it! Log them in and DESTROY the token immediately.
+  await db.magicTokens.deleteOne({ _id: magicToken._id });
+  
+  // Issue your real session cookie / JWT here
+  res.redirect('/dashboard'); 
+});</code></pre>
+
+<h2>2. OTPs via SMS (One-Time Passwords)</h2>
+<p>Used widely in FinTech and mobile apps. Instead of an email link, the user receives a 6-digit code via SMS (usually via Twilio or an equivalent service). The backend stores the hashed 6-digit code with an expiration. When the user submits the code in the UI, the backend verifies it.</p>
+<p><em>Security Note:</em> SMS is vulnerable to SIM-swapping attacks. Authenticator Apps (like Google Authenticator using TOTP) are much more secure for highly sensitive data.</p>
+
+<h2>3. WebAuthn & Passkeys (The Future)</h2>
+<p>WebAuthn is a web standard allowing servers to register and authenticate users using public-key cryptography instead of passwords. It delegates authentication to the user's device (e.g., Apple FaceID, Windows Hello, Android Fingerprint, or YubiKey physical tokens). A "Passkey" is an implemention of this standard that syncs across the user's devices (like their iCloud Keychain).</p>
+
+<h3>The WebAuthn Architecture</h3>
+<ol>
+  <li><strong>Registration:</strong> The server sends a "challenge" to the browser. The browser prompts the user for their fingerprint. The device generates a private/public key pair securely inside its hardware enclave. The browser sends the Public Key back to the backend. The backend stores it. The Private Key NEVER leaves the user's phone.</li>
+  <li><strong>Login:</strong> The server sends a new "challenge". The browser prompts the user for their fingerprint. The device uses its hidden Private Key to cryptographically sign the challenge. The server receives the signature and verifies it mathematically using the stored Public Key.</li>
+</ol>
+
+<p>Because the Private Key never leaves the phone's secure hardware chip, <strong>Phishing is mathematically impossible!</strong> Even if a user visits a fake website, the device will refuse to sign the challenge for the wrong domain.</p>
+
+<h3>Implementing WebAuthn in Node.js</h3>
+<p>Implementation is highly complex, utilizing libraries like <code>@simplewebauthn/server</code>. You must manage challenges on the server and use the <code>navigator.credentials.create()</code> API on the frontend.</p>
+
+<pre><code>// High level overview using simplewebauthn
+const { generateAuthenticationOptions, verifyAuthenticationResponse } = require('@simplewebauthn/server');
+
+// 1. Get Login Options
+app.get('/generate-authentication-options', async (req, res) =&gt; {
+  // Generate a random challenge and fetch the user's stored Public Key
+  const options = await generateAuthenticationOptions({
+    allowCredentials: [{ id: user.publicKeyId, type: 'public-key' }],
+    userVerification: 'preferred',
+  });
+  
+  // Save challenge to the session to verify later
+  req.session.currentChallenge = options.challenge;
+  res.json(options);
+});
+
+// 2. Verify the Signed Assertion
+app.post('/verify-authentication', async (req, res) =&gt; {
+  // The frontend sends the signed payload back
+  const body = req.body;
+  const expectedChallenge = req.session.currentChallenge;
+
+  const verification = await verifyAuthenticationResponse({
+    response: body,
+    expectedChallenge,
+    expectedOrigin: 'https://myapp.com', // Prevents Phishing perfectly!
+    authenticator: user.savedAuthenticator,
+  });
+
+  if (verification.verified) {
+    req.session.loggedIn = true;
+    return res.json({ success: true });
+  }
+});</code></pre>

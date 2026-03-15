@@ -1,0 +1,19 @@
+{
+  "title": "Insert into a Binary Search Tree",
+  "slug": "insert-into-bst",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["tree", "binary-search-tree", "binary-tree"],
+  "company_tags": ["Amazon", "Google", "Microsoft", "LinkedIn"],
+  "topic_tags": ["trees", "binary search trees"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "The root of a BST and an integer value `val` to insert.",
+  "output_format": "The root of the BST after inserting the new value.",
+  "example_input": "root = [4,2,7,1,3], val = 5",
+  "example_output": "[4,2,7,1,3,5]",
+  "constraints": "- The number of nodes in the tree is in the range `[0, 10^4]`.\n- `-10^8 <= Node.val <= 10^8`\n- All values in the BST are unique.\n- `val` is guaranteed not to exist in the original BST.",
+  "function_signature": "function insertIntoBST(root: TreeNode | null, val: number): TreeNode | null {}",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,20 @@
+{
+  "title": "Alien Dictionary",
+  "slug": "alien-dictionary",
+  "difficulty": "Hard",
+  "category": "algorithms",
+  "points": 150,
+  "tags": ["array","string","depth-first-search","breadth-first-search","graph","topological-sort"],
+  "company_tags": ["Facebook","Amazon","Google","Microsoft","Airbnb"],
+  "topic_tags": ["graphs","topological sort","string"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An array of strings `words` representing a dictionary in a new alien language.",
+  "output_format": "A string containing the unique letters in the new alien language sorted in lexicographically increasing order by the new language's rules. If there is no valid ordering, return `\"\"`.",
+  "example_input": "words = [\"wrt\",\"wrf\",\"er\",\"ett\",\"rftt\"]",
+  "example_output": "\"wertf\"",
+  "constraints": "- `1 <= words.length <= 100`\n- `1 <= words[i].length <= 100`\n- `words[i]` consists of only lowercase English letters.",
+  "function_signature": "function alienOrder(words: string[]): string {}",
+  "status": "ACTIVE"
+}

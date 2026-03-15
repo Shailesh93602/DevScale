@@ -1,0 +1,20 @@
+<h1>Separating Compute and Storage</h1>
+<p>In traditional, on-premise Data Warehouses (like Oracle Exadata or legacy Teradata), the physical hard drives (Storage) and the CPU processors (Compute) are permanently bonded together inside the exact same physical server rack. This is called a tightly-coupled architecture.</p>
+<p>This creates a massive financial and scaling nightmare for Data Engineering teams.</p>
+
+<h2>The Tightly-Coupled Dilemma</h2>
+<p>If your company stores 500 Terabytes of historical log data, but you only query it once a month, you must buy 500 Terabytes of expensive hard drives. However, because the hardware is tightly-coupled, buying the hard drives forces you to simultaneously purchase the massive, ultra-expensive CPUS attached to them, even though you don't need the processing power.</p>
+<p>Conversely, if you have only 10 Gigabytes of data, but you run incredibly complex, CPU-melting Machine Learning algorithms on it every minute, you are forced to buy massive hard drives just to get your hands on the powerful CPUs.</p>
+
+<h2>The Cloud Data Warehouse Revolution</h2>
+<p>Modern cloud data warehouses like <strong>Snowflake</strong> and <strong>BigQuery</strong> completely revolutionize this model by structurally decoupling Compute from Storage.</p>
+<p><strong>Storage is Cheap:</strong> In Snowflake, all your physical data is saved into cheap cloud buckets (like AWS S3). You pay pennies per gigabyte, infinitely scaling without ever thinking about hardware constraints.</p>
+<p><strong>Compute is Elastic:</strong> The CPU clusters (known as "Virtual Warehouses") sit entirely separate from the S3 storage layer. When an Analyst executes a massive query, Snowflake spins up a heavy CPU cluster, downloads the required data instantly from S3 over the blazing fast AWS network, crunches the numbers, and shuts the CPU cluster down.</p>
+
+<h2>Zero-Copy Cloning & Concurrency</h2>
+<p>Because the physical Storage layer is completely decoupled from the CPU Compute layer, modern architectures unlock seemingly magical capabilities.</p>
+<ul>
+  <li><strong>Instant Scaling:</strong> If the Marketing team suddenly submits 5,000 queries, Snowflake can instantly spin up 50 new Compute clusters. Every cluster can independently read the exact same centralized S3 data without any data duplication whatsoever.</li>
+  <li><strong>Zero-Copy Cloning:</strong> If a developer needs a full copy of the Petabyte Production Database to test a new script, they click a button. Snowflake creates a "Clone" in seconds. Because Storage is decoupled, Snowflake doesn't actually copy a Petabyte of data; it simply creates a cheap metadata pointer to the original S3 files, completely free of charge.</li>
+  <li><strong>Auto-Suspend:</strong> When queries finish, the expensive Compute cluster automatically suspends itself after 5 minutes. You only pay for the exact seconds the CPU was actively crunching numbers.</li>
+</ul>

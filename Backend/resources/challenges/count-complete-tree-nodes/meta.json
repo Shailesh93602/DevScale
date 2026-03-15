@@ -1,0 +1,20 @@
+{
+  "title": "Count Complete Tree Nodes",
+  "slug": "count-complete-tree-nodes",
+  "difficulty": "Easy",
+  "category": "algorithms",
+  "points": 50,
+  "tags": ["binary-search","bit-manipulation","tree","binary-tree","depth-first-search"],
+  "company_tags": ["Amazon","Google","Microsoft"],
+  "topic_tags": ["trees","binary search"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "The root of a complete binary tree.",
+  "output_format": "The number of nodes in the tree.",
+  "example_input": "root = [1,2,3,4,5,6]",
+  "example_output": "6",
+  "constraints": "- The number of nodes in the tree is in the range `[0, 5 * 10^4]`.\n- `0 <= Node.val <= 5 * 10^4`\n- The tree is guaranteed to be **complete**.",
+  "function_signature": "function countNodes(root: TreeNode | null): number {}",
+  "status": "ACTIVE"
+}

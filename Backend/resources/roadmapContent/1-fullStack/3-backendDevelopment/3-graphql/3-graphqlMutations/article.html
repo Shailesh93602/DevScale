@@ -1,0 +1,103 @@
+<h1>Mutations & Input Types</h1>
+<p>While <code>Query</code> in GraphQL is equivalent to a REST <code>GET</code> request, <strong>Mutations</strong> act as your <code>POST</code>, <code>PUT</code>, and <code>DELETE</code>. Mutations modify data on the server and then return a value, all within the exact same HTTP request.</p>
+
+<h2>Defining a Mutation</h2>
+<p>In your GraphQL schema, Mutations are defined under a special root type called <code>Mutation</code>. Just like queries, mutations define what they accept as arguments and what they return.</p>
+
+<pre><code># The Schema (TypeDefs)
+type Mutation {
+  # Accepts two string arguments, and returns the modified User object
+  updateUserName(id: ID!, newName: String!): User
+}</code></pre>
+
+<p>The resolver for this mutation looks identical to a query resolver, handling the database logic.</p>
+
+<pre><code>// The Resolvers
+const resolvers = {
+  Mutation: {
+    // parent, args, context, info
+    updateUserName: async (_, args) =&gt; {
+      const user = await db.users.findById(args.id);
+      if (!user) throw new Error("User not found");
+      
+      user.name = args.newName;
+      await user.save();
+      
+      // Return the updated object so the frontend UI can refresh instantly
+      return user; 
+    }
+  }
+};</code></pre>
+
+<h2>Input Types (The Clean Way)</h2>
+<p>When creating a complex object (like a new User), passing 10 arguments directly into the mutation signature (<code>createUser(name: String, email: String, age: Int...)</code>) becomes messy and unreadable.</p>
+<p>GraphQL solves this with <strong>Input Types</strong>. An <code>input</code> is a special object type strictly used for passing complex data as an argument.</p>
+
+<pre><code># The Schema
+input CreateUserInput {
+  name: String!
+  email: String!
+  age: Int
+  role: String = "USER" # Default value
+}
+
+type Mutation {
+  # Now the mutation accepts a single clean object argument
+  createUser(input: CreateUserInput!): User!
+}</code></pre>
+
+<pre><code>// The Resolver
+const resolvers = {
+  Mutation: {
+    createUser: async (_, { input }) =&gt; {
+      // { input } is perfectly formatted as { name, email, age, role }
+      const newUser = await db.users.create(input);
+      return newUser;
+    }
+  }
+};</code></pre>
+
+<h2>Standardized Mutation Payload Patterns</h2>
+<p>Returning just the modified `User` object works, but what if the mutation fails? Returning `null` isn't very helpful for the frontend to display an error. A best practice in Enterprise GraphQL is returning a <strong>Payload Object</strong> that contains a status, an error message, AND the modified data.</p>
+
+<pre><code># The Schema
+type UserPayload {
+  success: Boolean!
+  message: String
+  user: User
+}
+
+type Mutation {
+  deleteUser(id: ID!): UserPayload!
+}</code></pre>
+
+<pre><code>// The Resolver
+deleteUser: async (_, { id }) =&gt; {
+  try {
+    const deletedUser = await db.users.findByIdAndDelete(id);
+    if (!deletedUser) {
+      return { success: false, message: "User not found", user: null };
+    }
+    return { success: true, message: "Successfully deleted", user: deletedUser };
+  } catch (err) {
+    return { success: false, message: err.message, user: null };
+  }
+}</code></pre>
+
+<h2>Executing Mutations on the Client</h2>
+<p>When executing mutations from the frontend (using a library like Apollo Client or fetch), you write a GraphQL Document specifying exactly what data you want back after the mutation succeeds.</p>
+
+<pre><code>mutation CreateNewUser($userData: CreateUserInput!) {
+  createUser(input: $userData) {
+    # What I want the server to return after creating
+    id
+    name
+    email
+  }
+}</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always use <code>Input Types</code> when a mutation takes more than 2 or 3 arguments to keep your schema readable.</li>
+  <li>Always return the newly modified object (with its ID) from a mutation. Apollo Client uses this ID to automatically update its local cache, preventing you from having to write manual Redux state updates!</li>
+</ul>

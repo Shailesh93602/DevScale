@@ -1,0 +1,6 @@
+[
+  "Use a Sliding Window where you keep track of the count of each character.",
+  "At any time in the window, finding the most frequent character is key. The number of characters to change is equal to the size of the window minus the count of the most frequent character.",
+  "If the characters to change exceeds `k`, you must shrink the window from the left.",
+  "Fun optimization: you don't even need to update `maxFrequentCount` when you shrink the window. It works because we only care about if a window can get even longer!"
+]

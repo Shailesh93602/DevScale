@@ -1,0 +1,72 @@
+<h1>Behavioral Design Patterns</h1>
+<p>Behavioral patterns define how objects communicate and interact. They abstract away the complex flow of control, allowing objects to loosely couple while still achieving complex goals.</p>
+
+<h2>1. The Observer Pattern</h2>
+<p>The Observer Pattern defines a one-to-many dependency. When the core state of one object changes, all its dependents (observers) are notified automatically. This is the foundation of React hooks and the Pub-Sub model.</p>
+<pre><code>interface Observer { update(temperature: number): void; }
+
+class WeatherStation {
+  private temp: number = 0;
+  private observers: Observer[] = [];
+
+  attach(o: Observer) { this.observers.push(o); }
+  
+  setTemp(t: number) {
+    this.temp = t;
+    this.notify();
+  }
+
+  private notify() {
+    for (const observer of this.observers) {
+      observer.update(this.temp);
+    }
+  }
+}
+
+class PhoneDisplay implements Observer {
+  update(t: number) { console.log(`Phone: Temp is ${t}`); }
+}
+class WebDisplay implements Observer {
+  update(t: number) { console.log(`Web: Temp is ${t}`); }
+}
+
+const station = new WeatherStation();
+station.attach(new PhoneDisplay());
+station.attach(new WebDisplay());
+
+// Both displays independently log the temperature instantly
+station.setTemp(72);
+</code></pre>
+
+<h2>2. The Strategy Pattern</h2>
+<p>The Strategy Pattern defines a family of algorithms, encapsulates each one into separate classes, and makes them interchangeable at runtime. It perfectly eliminates giant <code>if-else</code> or <code>switch</code> statements.</p>
+<pre><code>interface PaymentStrategy { pay(amount: number): void; }
+
+class PayByCreditCard implements PaymentStrategy {
+  pay(amount: number) { console.log(`Paid $${amount} via Credit Card`); }
+}
+class PayByPayPal implements PaymentStrategy {
+  pay(amount: number) { console.log(`Paid $${amount} via PayPal`); }
+}
+
+class ShoppingCart {
+  private strategy: PaymentStrategy;
+
+  setStrategy(strategy: PaymentStrategy) {
+    this.strategy = strategy;
+  }
+
+  checkout(amount: number) {
+    this.strategy.pay(amount);
+  }
+}
+
+const cart = new ShoppingCart();
+// We can swap the logic out cleanly at runtime
+cart.setStrategy(new PayByPayPal());
+cart.checkout(50);
+</code></pre>
+
+<h2>3. The Command Pattern</h2>
+<p>The Command Pattern transforms a request into a standalone object containing all information about the request. This allows you to parameterize methods, queue requests, or implement robust Undo/Redo functionality.</p>
+<p>Instead of clicking a button that directly executes `saveToDB()`, the button creates a `SaveCommand` object. This command is pushed onto an execution stack, which the Invoker processes later.</p>

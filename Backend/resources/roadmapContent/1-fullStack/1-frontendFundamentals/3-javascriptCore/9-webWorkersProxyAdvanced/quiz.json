@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "A Web Worker is running a CPU-intensive computation. It needs to update the progress UI. Why can't it directly call document.getElementById('progress').textContent = '50%', and what is the correct approach?",
+            "options": [
+                "Web Workers cannot use JavaScript string literals — they must use Uint8Array for all data.",
+                "Web Workers run on a completely separate thread with NO access to the DOM whatsoever. The DOM is not thread-safe — concurrent access from multiple threads would cause race conditions and crashes. The Worker can only communicate via postMessage(). Correct approach: inside the worker, postMessage({ type: 'progress', value: 50 }). In the main thread, worker.onmessage = (e) => { if (e.data.type === 'progress') progressEl.textContent = e.data.value + '%'; }. DOM updates happen on the main thread; the worker stays purely computational.",
+                "Web Workers can access the DOM but must use requestAnimationFrame() for updates.",
+                "Direct DOM access works in Workers but is slower — best avoided for performance."
+            ],
+            "answer": "Web Workers run on a completely separate thread with NO access to the DOM whatsoever. The DOM is not thread-safe — concurrent access from multiple threads would cause race conditions and crashes. The Worker can only communicate via postMessage(). Correct approach: inside the worker, postMessage({ type: 'progress', value: 50 }). In the main thread, worker.onmessage = (e) => { if (e.data.type === 'progress') progressEl.textContent = e.data.value + '%'; }. DOM updates happen on the main thread; the worker stays purely computational.",
+            "explanation": "What Workers CAN access: fetch() for HTTP, setTimeout/setInterval, IndexedDB, WebSockets, Canvas OffscreenCanvas, WebGL. This is enough for surprisingly sophisticated background work: parse gzipped response data, decrypt content, run face detection on canvas frames, compute physics simulations — all without freezing the UI."
+        },
+        {
+            "question": "What is the JavaScript Proxy trap 'set', and how does Vue 3's reactivity system use it to automatically update the DOM when state changes?",
+            "options": [
+                "The 'set' trap fires when a property is read from a proxy — Vue uses it to track dependencies.",
+                "The 'set' trap intercepts property assignment on the proxied object (obj.prop = value). When you write state.count++, this triggers the 'set' trap with target=state, prop='count', value=currentCount+1. Vue 3 wraps your reactive data in a Proxy with a 'set' trap that: (1) performs the actual assignment (Reflect.set), (2) looks up which effects (component render functions) depend on 'count', (3) schedules those effects to re-run, triggering DOM updates. This is why state.count++ magically updates the UI — Proxy intercepts the write.",
+                "Vue uses Proxy's 'get' trap exclusively — 'set' is only used for form validation in Vue.",
+                "Vue 3 no longer uses Proxy — it switched to Object.observe() which is faster."
+            ],
+            "answer": "The 'set' trap intercepts property assignment on the proxied object (obj.prop = value). When you write state.count++, this triggers the 'set' trap with target=state, prop='count', value=currentCount+1. Vue 3 wraps your reactive data in a Proxy with a 'set' trap that: (1) performs the actual assignment (Reflect.set), (2) looks up which effects (component render functions) depend on 'count', (3) schedules those effects to re-run, triggering DOM updates. This is why state.count++ magically updates the UI — Proxy intercepts the write.",
+            "explanation": "Vue 2 used Object.defineProperty() which couldn't detect: array index assignment (arr[0] = val), new property addition, property deletion. Vue 3's Proxy intercepts all of these, eliminating the need for Vue.set() and making the reactivity system more complete and transparent."
+        },
+        {
+            "question": "Why use WeakMap instead of Map for associating private data with class instances, and what memory problem does Map cause that WeakMap avoids?",
+            "options": [
+                "WeakMap is faster than Map for all operations — it's always the better choice.",
+                "Map holds strong references to its keys — as long as your Map exists, every key in it stays in memory (even if no other code holds a reference to the object). Using Map for class instance private data: when a User instance is no longer used and should be garbage collected, the Map keeps it alive because it holds a reference to it. WeakMap holds WEAK references — when a User instance has no other references, the GC can collect it AND automatically removes it from the WeakMap. This prevents memory leaks in long-running apps that create and discard many class instances.",
+                "WeakMap supports more data types as keys than Map does.",
+                "WeakMap is iterable while Map is not — iteration support is the key difference."
+            ],
+            "answer": "Map holds strong references to its keys — as long as your Map exists, every key in it stays in memory (even if no other code holds a reference to the object). Using Map for class instance private data: when a User instance is no longer used and should be garbage collected, the Map keeps it alive because it holds a reference to it. WeakMap holds WEAK references — when a User instance has no other references, the GC can collect it AND automatically removes it from the WeakMap. This prevents memory leaks in long-running apps that create and discard many class instances.",
+            "explanation": "Memory leak demonstration: Map version — create 10,000 User instances to process a CSV, all 10,000 stay in the privateData Map forever. WeakMap version — as each User goes out of scope after processing, the GC collects it and removes it from the WeakMap. Memory usage stays constant. WeakMap's intentional non-iterability enforces this — you can't loop over all 'live' keys."
+        }
+    ]
+}

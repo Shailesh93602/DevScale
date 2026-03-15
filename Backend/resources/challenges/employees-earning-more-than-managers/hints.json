@@ -1,0 +1,6 @@
+[
+  "You need to compare each employee's salary with their manager's salary. How can you access both in one query?",
+  "Join the Employee table with itself: one alias for the employee, one for the manager.",
+  "The join condition is employee.managerId = manager.id.",
+  "SELECT e.name AS Employee FROM Employee e JOIN Employee m ON e.managerId = m.id WHERE e.salary > m.salary;"
+]

@@ -1,0 +1,6 @@
+[
+  "Define dp[i] as the length of the longest increasing subsequence ending at index i. Each element alone is a subsequence of length 1.",
+  "For each i, look at all j < i. If nums[j] < nums[i], then dp[i] = max(dp[i], dp[j] + 1).",
+  "The O(n^2) DP works but can you do better? Think about maintaining the smallest possible tail for each subsequence length.",
+  "Use binary search on a 'tails' array: for each number, find where it should go. If it extends the array, append it. Otherwise, replace the first element >= it. The array length is the LIS length."
+]

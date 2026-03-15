@@ -1,0 +1,4 @@
+{
+    "name": "RAG & Vector Databases",
+    "description": "Retrieval-Augmented Generation, embeddings, chunking, and databases like Pinecone."
+}

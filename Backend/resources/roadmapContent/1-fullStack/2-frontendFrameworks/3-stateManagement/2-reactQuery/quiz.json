@@ -1,0 +1,74 @@
+{
+    "title": "React Query Quiz",
+    "description": "Test your server state management knowledge with TanStack Query.",
+    "passingScore": 80,
+    "timeLimit": 8,
+    "questions": [
+        {
+            "question": "What is the purpose of the queryKey in React Query?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It is the HTTP method for the request",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It uniquely identifies the query for caching and refetching; when it changes, the query refetches",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It is the API endpoint URL",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It is a security token for authentication",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does queryClient.invalidateQueries() do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Deletes data from the database",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Marks matching cached queries as stale so they refetch on next use",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Cancels pending network requests",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Clears the entire React Query cache",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the difference between 'staleTime' and 'gcTime' in React Query?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "They are the same setting",
+                    "isCorrect": false
+                },
+                {
+                    "text": "staleTime: how long data is considered fresh (no refetch); gcTime: how long unused data stays in cache before removal",
+                    "isCorrect": true
+                },
+                {
+                    "text": "staleTime controls error retry delays; gcTime controls success delays",
+                    "isCorrect": false
+                },
+                {
+                    "text": "staleTime is for mutations; gcTime is for queries",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,92 @@
+<h1>Introduction to React & JSX</h1>
+<p>React is a JavaScript <strong>library for building user interfaces</strong>, created by Meta (Facebook). It uses a component-based architecture and a virtual DOM for efficient rendering.</p>
+
+<h2>Why React?</h2>
+<ul>
+  <li><strong>Component-Based</strong> — Build encapsulated components, then compose them into complex UIs.</li>
+  <li><strong>Virtual DOM</strong> — React maintains a lightweight copy of the DOM; only changed parts re-render.</li>
+  <li><strong>Declarative</strong> — Describe what the UI should look like for a given state; React handles the DOM updates.</li>
+  <li><strong>Huge Ecosystem</strong> — React Native (mobile), Next.js (SSR), thousands of libraries.</li>
+</ul>
+
+<h2>Creating a React App</h2>
+<pre><code># Vite (recommended — fast, modern)
+npm create vite@latest my-app -- --template react-ts
+cd my-app && npm install && npm run dev
+
+# Or with Next.js (full-stack framework)
+npx create-next-app@latest my-app --typescript</code></pre>
+
+<h2>JSX — JavaScript + HTML</h2>
+<p>JSX lets you write HTML-like syntax directly inside JavaScript. Babel transforms JSX into <code>React.createElement()</code> calls.</p>
+<pre><code>// JSX
+const element = &lt;h1 className="title"&gt;Hello, {name}!&lt;/h1&gt;;
+
+// What Babel compiles it to:
+const element = React.createElement("h1", { className: "title" }, "Hello, ", name, "!");</code></pre>
+
+<h2>JSX Rules</h2>
+<pre><code>// 1. Must return a single root element (or Fragment)
+return (
+  &lt;&gt;
+    &lt;h1&gt;Title&lt;/h1&gt;
+    &lt;p&gt;Paragraph&lt;/p&gt;
+  &lt;/&gt;
+);
+
+// 2. Use className instead of class
+&lt;div className="container"&gt;
+
+// 3. Self-close empty elements
+&lt;img src="logo.png" alt="Logo" /&gt;
+&lt;br /&gt;
+
+// 4. JavaScript expressions in curly braces
+&lt;p&gt;{2 + 2}&lt;/p&gt;
+&lt;p&gt;{isLoggedIn ? "Welcome!" : "Please log in"}&lt;/p&gt;
+
+// 5. camelCase for event handlers and attributes
+&lt;button onClick={handleClick} tabIndex={0}&gt;Click me&lt;/button&gt;</code></pre>
+
+<h2>Your First Component</h2>
+<pre><code>// A functional component is just a function that returns JSX
+function WelcomeCard({ name, role }: { name: string; role: string }) {
+  return (
+    &lt;div className="card"&gt;
+      &lt;h2&gt;Welcome, {name}!&lt;/h2&gt;
+      &lt;p&gt;Role: &lt;strong&gt;{role}&lt;/strong&gt;&lt;/p&gt;
+    &lt;/div&gt;
+  );
+}
+
+// Using the component
+function App() {
+  return &lt;WelcomeCard name="Alice" role="Admin" /&gt;;
+}</code></pre>
+
+<h2>Rendering Lists</h2>
+<pre><code>const fruits = ["Apple", "Banana", "Cherry"];
+
+function FruitList() {
+  return (
+    &lt;ul&gt;
+      {fruits.map((fruit) =&gt; (
+        &lt;li key={fruit}&gt;{fruit}&lt;/li&gt; // Always add key prop!
+      ))}
+    &lt;/ul&gt;
+  );
+}</code></pre>
+
+<h2>Conditional Rendering</h2>
+<pre><code>function Greeting({ isLoggedIn }: { isLoggedIn: boolean }) {
+  return (
+    &lt;div&gt;
+      {isLoggedIn ? (
+        &lt;p&gt;Welcome back!&lt;/p&gt;
+      ) : (
+        &lt;p&gt;Please sign in.&lt;/p&gt;
+      )}
+      {isLoggedIn &amp;&amp; &lt;button&gt;Log out&lt;/button&gt;} {/* Short-circuit */}
+    &lt;/div&gt;
+  );
+}</code></pre>

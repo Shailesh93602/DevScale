@@ -1,0 +1,6 @@
+[
+  "The simplest approach is to clean the string (lowercase, remove non-alphanumeric), then compare it to its reverse.",
+  "However, reversing the string takes extra space. Can you do it in O(1) space?",
+  "Use two pointers: one starting from the beginning (left) and one from the end (right).",
+  "Move the pointers inward. If a pointer reaches a non-alphanumeric character, just skip it until you find a valid character. Then check if they match."
+]

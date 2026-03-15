@@ -1,0 +1,10 @@
+[
+  {"input":"{\"root\":[1,2,3]}","output":"25","explanation":"Paths: 12, 13","is_hidden":false},
+  {"input":"{\"root\":[4,9,0,5,1]}","output":"1026","explanation":"Paths: 495, 491, 40","is_hidden":false},
+  {"input":"{\"root\":[0]}","output":"0","explanation":"Single node","is_hidden":false},
+  {"input":"{\"root\":[1,0]}","output":"10","explanation":"Only left child","is_hidden":true},
+  {"input":"{\"root\":[9,8,7,6]}","output":"1083","explanation":"Paths: 986, 97","is_hidden":true},
+  {"input":"{\"root\":[1,2,3,4,5,6,7]}","output":"522","explanation":"Full binary tree depth 3","is_hidden":true},
+  {"input":"{\"root\":[9,0,0,0]}","output":"1800","explanation":"Tree with multiple 0s","is_hidden":true},
+  {"input":"{\"root\":[5,5,5,5,5,5,5,5,5]}","output":"27775","explanation":"Complex branching paths","is_hidden":true}
+]

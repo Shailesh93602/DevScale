@@ -1,0 +1,4 @@
+{
+    "name": "Async Patterns & Event Loop",
+    "description": "Deep dive into Node.js asynchronous architecture: the Event Loop phases, microtasks vs macrotasks, setImmediate, process.nextTick, and Promise orchestration."
+}

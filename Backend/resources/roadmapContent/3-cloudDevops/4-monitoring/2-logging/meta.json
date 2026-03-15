@@ -1,0 +1,4 @@
+{
+    "name": "Log Management",
+    "description": "Centralizing, parsing, and querying application logs across distributed servers."
+}

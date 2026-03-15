@@ -1,0 +1,10 @@
+{
+  "typescript": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *     val: number\n *     next: ListNode | null\n *     constructor(val?: number, next?: ListNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.next = (next===undefined ? null : next)\n *     }\n * }\n */\n\nfunction getIntersectionNode(headA: ListNode | null, headB: ListNode | null): ListNode | null {\n    \n};",
+  "javascript": "/**\n * @param {ListNode} headA\n * @param {ListNode} headB\n * @return {ListNode}\n */\nvar getIntersectionNode = function(headA, headB) {\n    \n};",
+  "python": "class Solution:\n    def getIntersectionNode(self, headA: ListNode, headB: ListNode) -> Optional[ListNode]:\n        ",
+  "java": "import java.util.*;\n\npublic class Solution {\n    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {\n        \n    }\n};",
+  "go": "func getIntersectionNode(headA, headB *ListNode) *ListNode {\n    \n}",
+  "rust": "impl Solution {\n    pub fn get_intersection_node(headA: Option<Box<ListNode>>, headB: Option<Box<ListNode>>) -> Option<Box<ListNode>> {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public ListNode GetIntersectionNode(ListNode headA, ListNode headB) {\n        \n    }\n}"
+}

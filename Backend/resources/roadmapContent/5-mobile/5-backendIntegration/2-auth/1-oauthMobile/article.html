@@ -1,0 +1,120 @@
+<h1>OAuth 2.0 &amp; Social Login in React Native</h1>
+<p>Most users dislike creating yet another username and password. OAuth 2.0 social login — "Sign in with Google/Apple/GitHub" — reduces signup friction dramatically and eliminates the need for your app to store and hash passwords at all. OAuth 2.0 is the industry standard authorization framework used by virtually every major platform. Understanding how it works prevents security mistakes that commonly appear in mobile implementations.</p>
+
+<h2>The OAuth 2.0 Authorization Code Flow</h2>
+<p>For mobile apps, the secure flow is the <strong>Authorization Code Flow with PKCE</strong> (Proof Key for Code Exchange). PKCE prevents a class of attacks where a malicious app intercepts the authorization code:</p>
+<ol>
+  <li>App generates a random <strong>code_verifier</strong> and computes <strong>code_challenge</strong> = SHA256(code_verifier).</li>
+  <li>App opens the browser with the provider's auth URL, including the code_challenge.</li>
+  <li>User authenticates in the browser (Google/Apple UI — your app never sees the password).</li>
+  <li>Browser redirects back to your app via a deep link with an authorization code.</li>
+  <li>Your app exchanges the code + code_verifier for access/refresh tokens (server-to-server).</li>
+</ol>
+
+<h2>Implementation with Expo Auth Session</h2>
+<pre><code>import * as WebBrowser from 'expo-web-browser';
+import * as Google from 'expo-auth-session/providers/google';
+import &#123; makeRedirectUri &#125; from 'expo-auth-session';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+// Required — enables Auth Session to handle the redirect URI
+WebBrowser.maybeCompleteAuthSession();
+
+export const useGoogleAuth = () =&gt; &#123;
+  const [request, response, promptAsync] = Google.useAuthRequest(&#123;
+    clientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID,
+    iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
+    androidClientId: process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID,
+    // Scopes determine what user data you will have access to
+    scopes: ['profile', 'email'],
+  &#125;);
+
+  React.useEffect(() =&gt; &#123;
+    handleGoogleResponse();
+  &#125;, [response]);
+
+  const handleGoogleResponse = async () =&gt; &#123;
+    if (response?.type !== 'success') return;
+
+    const &#123; authentication &#125; = response;
+
+    // Don't use the Google access token directly in your app!
+    // Send it to YOUR backend to verify and issue your own JWT
+    try &#123;
+      const backendResponse = await fetch('https://api.yourapp.com/auth/google', &#123;
+        method: 'POST',
+        headers: &#123; 'Content-Type': 'application/json' &#125;,
+        body: JSON.stringify(&#123; googleAccessToken: authentication?.accessToken &#125;)
+      &#125;);
+
+      const &#123; accessToken, user &#125; = await backendResponse.json();
+
+      // Store your backend's JWT securely
+      await AsyncStorage.setItem('auth_token', accessToken);
+    &#125; catch (error) &#123;
+      console.error('Auth failed:', error);
+    &#125;
+  &#125;;
+
+  return &#123; signInWithGoogle: () =&gt; promptAsync(), request &#125;;
+&#125;;</code></pre>
+
+<h2>Sign in with Apple (Required for iOS)</h2>
+<p><strong>Apple requires</strong> that any iOS app offering third-party social login must also offer Sign in with Apple. Failure to include it results in App Store rejection.</p>
+<pre><code>import * as AppleAuthentication from 'expo-apple-authentication';
+
+const SignInWithAppleButton = () =&gt; &#123;
+  const handleAppleSignIn = async () =&gt; &#123;
+    try &#123;
+      const credential = await AppleAuthentication.signInAsync(&#123;
+        requestedScopes: [
+          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+          AppleAuthentication.AppleAuthenticationScope.EMAIL,
+        ],
+      &#125;);
+
+      // credential.identityToken is a JWT signed by Apple
+      // Send this to your backend to verify and issue your own token
+      const response = await fetch('https://api.yourapp.com/auth/apple', &#123;
+        method: 'POST',
+        headers: &#123; 'Content-Type': 'application/json' &#125;,
+        body: JSON.stringify(&#123; identityToken: credential.identityToken &#125;)
+      &#125;);
+
+      const &#123; accessToken &#125; = await response.json();
+      await AsyncStorage.setItem('auth_token', accessToken);
+    &#125; catch (error: any) &#123;
+      if (error.code === 'ERR_CANCELED') return; // User dismissed
+      console.error('Apple sign in failed:', error);
+    &#125;
+  &#125;;
+
+  return (
+    &lt;AppleAuthentication.AppleAuthenticationButton
+      buttonType=&#123;AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN&#125;
+      buttonStyle=&#123;AppleAuthentication.AppleAuthenticationButtonStyle.BLACK&#125;
+      cornerRadius=&#123;5&#125;
+      style=&#123;&#123; width: '100%', height: 44 &#125;&#125;
+      onPress=&#123;handleAppleSignIn&#125;
+    /&gt;
+  );
+&#125;;</code></pre>
+
+<h2>Storing Tokens Securely</h2>
+<pre><code>import * as SecureStore from 'expo-secure-store';
+
+// ❌ WRONG: AsyncStorage stores in plaintext
+await AsyncStorage.setItem('auth_token', token);
+
+// ✅ CORRECT: SecureStore uses iOS Keychain / Android Keystore (hardware-backed encryption)
+await SecureStore.setItemAsync('auth_token', token);
+const token = await SecureStore.getItemAsync('auth_token');
+await SecureStore.deleteItemAsync('auth_token'); // On logout</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Never trust the OAuth token client-side for authorization decisions. Always send it to your backend to verify and issue your own short-lived JWT.</li>
+  <li>Store auth tokens in <code>expo-secure-store</code> (iOS Keychain / Android Keystore), not plain AsyncStorage.</li>
+  <li>If you offer Google login on iOS, you MUST also include Sign in with Apple — App Store will reject your app otherwise.</li>
+  <li>Implement token refresh — access tokens typically expire in 1 hour. Use a refresh token to silently obtain new access tokens without forcing re-login.</li>
+</ul>

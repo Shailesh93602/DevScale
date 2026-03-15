@@ -1,0 +1,4 @@
+{
+    "name": "Feature Stores & Data Version Control",
+    "description": "Building reusable, consistent feature pipelines for ML. Understanding what feature stores solve (training-serving skew, feature reuse), using Feast for offline/online feature serving, implementing DVC for dataset and model artifact versioning, managing reproducible ML experimentation workflows, and integrating with Git for ML pipeline version control."
+}

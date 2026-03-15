@@ -1,0 +1,29 @@
+{
+  "title": "3Sum",
+  "slug": "3sum",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["array", "two-pointers", "sorting"],
+  "company_tags": ["Amazon", "Facebook", "Microsoft", "Apple", "Bloomberg"],
+  "topic_tags": ["arrays", "two pointers"],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer array `nums`.",
+  "output_format": "All the unique triplets `[nums[i], nums[j], nums[k]]` such that `i != j`, `i != k`, and `j != k`, and `nums[i] + nums[j] + nums[k] == 0`.",
+  "example_input": "nums = [-1,0,1,2,-1,-4]",
+  "example_output": "[[-1,-1,2],[-1,0,1]]",
+  "constraints": "- `3 <= nums.length <= 3000`\n- `-10^5 <= nums[i] <= 10^5`",
+  "function_signature": "function threeSum(nums: number[]): number[][] {}",
+  "status": "ACTIVE"
+}

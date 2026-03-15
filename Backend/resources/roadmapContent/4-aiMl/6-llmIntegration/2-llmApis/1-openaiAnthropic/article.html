@@ -1,0 +1,164 @@
+<h1>OpenAI & Anthropic API Integration</h1>
+<p>Large Language Models (LLMs) accessible via API have fundamentally changed what's possible in software. Capabilities that would have required an entire research team — natural language understanding, code generation, document summarization, structured data extraction — are now available with a simple HTTP call. This article covers production-grade patterns for integrating OpenAI's GPT-4o and Anthropic's Claude APIs into your applications.</p>
+
+<h2>Setup</h2>
+<pre><code>pip install openai anthropic
+
+# Environment variables (never hardcode)
+# OPENAI_API_KEY=sk-...
+# ANTHROPIC_API_KEY=sk-ant-...</code></pre>
+
+<h2>OpenAI Chat Completions API</h2>
+<pre><code>from openai import OpenAI
+
+client = OpenAI()  # Reads OPENAI_API_KEY from environment
+
+# ─── Basic completion ──────────────────────────────────────────────────────
+response = client.chat.completions.create(
+    model="gpt-4o-mini",          # Fast, cheap — use for most tasks
+    # model="gpt-4o",             # Most capable — use for complex reasoning
+    messages=[
+        {
+            "role": "system",
+            "content": "You are a helpful assistant for an e-commerce platform. Be concise and accurate."
+        },
+        {
+            "role": "user",
+            "content": "What is your 30-day return policy?"
+        }
+    ],
+    temperature=0.7,    # 0.0 = deterministic, 1.0 = creative/random
+    max_tokens=500,     # Limit response length
+)
+
+answer = response.choices[0].message.content
+usage = response.usage  # Track tokens for cost monitoring
+print(f"Answer: {answer}")
+print(f"Cost: {usage.total_tokens} tokens")</code></pre>
+
+<h2>Streaming Responses for Real-Time UX</h2>
+<p>For long responses, streaming shows the answer token-by-token as it's generated — critical for chat interfaces where waiting 10 seconds for a full response feels broken:</p>
+<pre><code>from fastapi import FastAPI
+from fastapi.responses import StreamingResponse
+
+app = FastAPI()
+
+@app.get("/chat/stream")
+async def stream_chat(question: str):
+    async def generate():
+        stream = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": question}],
+            stream=True,  # Enable streaming
+        )
+        for chunk in stream:
+            delta = chunk.choices[0].delta.content
+            if delta:
+                yield f"data: {delta}\n\n"  # Server-Sent Events format
+        yield "data: [DONE]\n\n"
+
+    return StreamingResponse(generate(), media_type="text/event-stream")</code></pre>
+
+<h2>Structured Output — Extracting Data as JSON</h2>
+<p>One of the most powerful production patterns: use the LLM to extract structured data from unstructured text:</p>
+<pre><code>from pydantic import BaseModel
+from typing import Optional
+
+class OrderInfo(BaseModel):
+    order_id: Optional[str]
+    product_name: str
+    quantity: int
+    customer_email: str
+    issue_type: str  # "return", "refund", "damage", "inquiry"
+
+# Extract structured data from a customer email
+def extract_order_info(customer_email_text: str) -> OrderInfo:
+    response = client.beta.chat.completions.parse(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": "Extract order information from the customer email."},
+            {"role": "user", "content": customer_email_text}
+        ],
+        response_format=OrderInfo,  # Guaranteed to return valid Pydantic model
+    )
+    return response.choices[0].message.parsed
+
+# Usage
+email_text = """
+Hi, I ordered a blue wireless keyboard (order #AB-1234) but received a red one.
+My email is john@example.com. I'd like a replacement please.
+"""
+info = extract_order_info(email_text)
+# → OrderInfo(order_id='AB-1234', product_name='wireless keyboard', 
+#             quantity=1, customer_email='john@example.com', issue_type='return')</code></pre>
+
+<h2>Anthropic Claude API</h2>
+<pre><code>import anthropic
+
+client = anthropic.Anthropic()  # Reads ANTHROPIC_API_KEY
+
+# Claude 3.5 Sonnet is Claude's most capable model
+message = client.messages.create(
+    model="claude-3-5-sonnet-20241022",
+    max_tokens=1024,
+    system="You are an expert Python code reviewer.",
+    messages=[
+        {
+            "role": "user",
+            "content": """Review this function and identify any bugs or improvements:
+            
+def calculate_discount(price, discount_pct):
+    return price - (price * discount_pct)
+"""
+        }
+    ]
+)
+
+print(message.content[0].text)</code></pre>
+
+<h2>Managing Costs & Rate Limits in Production</h2>
+<pre><code">import asyncio
+from asyncio import Semaphore
+import hashlib
+import json
+
+# 1. Cache deterministic responses to avoid redundant API calls
+from functools import lru_cache
+import redis
+
+redis_client = redis.Redis(host='localhost', port=6379, db=0)
+
+def cached_completion(prompt: str, model: str = "gpt-4o-mini") -> str:
+    # Use prompt hash as cache key
+    cache_key = f"llm:{hashlib.md5(f'{model}:{prompt}'.encode()).hexdigest()}"
+    
+    cached = redis_client.get(cache_key)
+    if cached:
+        return cached.decode()
+    
+    response = client.chat.completions.create(
+        model=model,
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0,  # Deterministic for caching to be useful
+    )
+    result = response.choices[0].message.content
+    
+    # Cache for 1 hour
+    redis_client.setex(cache_key, 3600, result)
+    return result
+
+# 2. Rate limit concurrent requests
+semaphore = Semaphore(10)  # Max 10 concurrent API calls
+
+async def rate_limited_call(prompt: str) -> str:
+    async with semaphore:
+        # All calls are automatically queued if >10 running at once
+        return await asyncio.to_thread(cached_completion, prompt)</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always use <code>gpt-4o-mini</code> or Claude Haiku for tasks that don't require deep reasoning — they're 10-15x cheaper and often fast enough for classification, extraction, and summarization.</li>
+  <li>Implement response caching with Redis for deterministic prompts (e.g., FAQ answers, product summaries) — LLM API costs scale linearly with volume.</li>
+  <li>Log every API call with tokens used, latency, and model — set up billing alerts in OpenAI/Anthropic dashboards and monitor for runaway costs.</li>
+  <li>Never put API keys in client-side code (browser, mobile app) — always proxy LLM calls through your backend to protect your API key and add authentication/rate limiting.</li>
+</ul>

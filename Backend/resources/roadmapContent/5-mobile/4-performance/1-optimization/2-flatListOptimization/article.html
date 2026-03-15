@@ -1,0 +1,123 @@
+<h1>FlatList Optimization in React Native</h1>
+<p><code>FlatList</code> is React Native's primary component for rendering scrollable lists. It is far more performant than using a <code>ScrollView</code> with <code>.map()</code> because it uses <strong>windowed rendering</strong> — it only renders the items currently visible on screen (plus a small buffer), recycling component instances as the user scrolls. However, FlatList can still become slow if not configured correctly, especially on mobile devices with limited RAM.</p>
+
+<h2>The Core Problem: Unnecessary Re-renders</h2>
+<p>The most common FlatList performance issue is every item re-rendering when any state in the parent changes. Here's the solution chain:</p>
+<pre><code>import React, &#123; useCallback, memo &#125; from 'react';
+import &#123; FlatList, View, Text, StyleSheet &#125; from 'react-native';
+
+// ─── Step 1: Memoize the render item component ────────────────────────────
+const ProductItem = memo((&#123; item, onPress &#125;) =&gt; &#123;
+  return (
+    &lt;View style=&#123;styles.item&#125;&gt;
+      &lt;Text style=&#123;styles.name&#125;&gt;&#123;item.name&#125;&lt;/Text&gt;
+      &lt;Text style=&#123;styles.price&#125;&gt;$&#123;item.price&#125;&lt;/Text&gt;
+      &lt;Text style=&#123;styles.btn&#125; onPress=&#123;() =&gt; onPress(item.id)&#125;&gt;View&lt;/Text&gt;
+    &lt;/View&gt;
+  );
+&#125;);
+
+// ─── Step 2: Memoize renderItem to prevent new function refs ─────────────
+const ProductList = (&#123; products &#125;) =&gt; &#123;
+  const [selectedId, setSelectedId] = React.useState(null);
+
+  // useCallback keeps renderItem reference stable → prevents all items re-rendering
+  const renderItem = useCallback((&#123; item &#125;) =&gt; (
+    &lt;ProductItem item=&#123;item&#125; onPress=&#123;setSelectedId&#125; /&gt;
+  ), []); // No deps = never changes
+
+  // ─── Step 3: Provide a stable key extractor ──────────────────────────
+  const keyExtractor = useCallback((item) =&gt; item.id.toString(), []);
+
+  return (
+    &lt;FlatList
+      data=&#123;products&#125;
+      renderItem=&#123;renderItem&#125;
+      keyExtractor=&#123;keyExtractor&#125;
+
+      // ─── Step 4: Performance props ──────────────────────────────────
+      // Pre-render items 10 screens ahead beyond the visible window
+      windowSize=&#123;10&#125;
+
+      // Number of items to render in the initial batch
+      initialNumToRender=&#123;15&#125;
+
+      // Max items to update per JS frame (throttles updates)
+      maxToRenderPerBatch=&#123;10&#125;
+
+      // Remove off-screen items from memory (trade CPU for RAM)
+      removeClippedSubviews=&#123;true&#125;
+
+      // Avoids re-renders when data reference changes but items are equal
+      // Only use if your item objects are immutable
+      extraData=&#123;selectedId&#125;  // Re-render list when selectedId changes
+    /&gt;
+  );
+&#125;;</code></pre>
+
+<h2>getItemLayout — The Single Biggest Win for Fixed-Height Lists</h2>
+<p>By default, FlatList must measure each item's height dynamically before it can calculate scroll positions and jump to any index. If your items have a fixed height, <code>getItemLayout</code> pre-computes all positions, dramatically improving scroll performance:</p>
+<pre><code>const ITEM_HEIGHT = 80; // Fixed height per item in dp
+
+&lt;FlatList
+  data=&#123;products&#125;
+  renderItem=&#123;renderItem&#125;
+  keyExtractor=&#123;keyExtractor&#125;
+  getItemLayout=&#123;(data, index) =&gt; (&#123;
+    length: ITEM_HEIGHT,
+    offset: ITEM_HEIGHT * index,
+    index,
+  &#125;)&#125;
+  // Now scrollToIndex() and initialScrollIndex work instantly
+  initialScrollIndex=&#123;50&#125;  // Jump directly to item 50 without measuring 0-49
+/&gt;</code></pre>
+
+<h2>Handling Images in Lists</h2>
+<p>Images are the most common FlatList performance killer. Every image decode is a CPU-intensive operation:</p>
+<pre><code>// ❌ Slow: Plain Image re-loads on every render
+&lt;Image source=&#123;&#123; uri: item.imageUrl &#125;&#125; style=&#123;&#123; width: 80, height: 80 &#125;&#125; /&gt;
+
+// ✅ Fast: Use react-native-fast-image for caching and priority loading
+import FastImage from 'react-native-fast-image';
+
+&lt;FastImage
+  style=&#123;&#123; width: 80, height: 80 &#125;&#125;
+  source=&#123;&#123; uri: item.imageUrl, priority: FastImage.priority.normal &#125;&#125;
+  resizeMode=&#123;FastImage.resizeMode.cover&#125;
+  // FastImage caches to disk – subsequent renders load from disk, not network
+/&gt;</code></pre>
+
+<h2>Pagination — Loading Data Incrementally</h2>
+<pre><code>const ProductList = () =&gt; &#123;
+  const [products, setProducts] = React.useState([]);
+  const [page, setPage] = React.useState(1);
+  const [loading, setLoading] = React.useState(false);
+
+  const loadMore = useCallback(async () =&gt; &#123;
+    if (loading) return;
+    setLoading(true);
+    const newProducts = await fetchProducts(page);
+    setProducts(prev =&gt; [...prev, ...newProducts]);
+    setPage(prev =&gt; prev + 1);
+    setLoading(false);
+  &#125;, [loading, page]);
+
+  return (
+    &lt;FlatList
+      data=&#123;products&#125;
+      renderItem=&#123;renderItem&#125;
+      keyExtractor=&#123;keyExtractor&#125;
+      onEndReached=&#123;loadMore&#125;          // Triggers when user scrolls near bottom
+      onEndReachedThreshold=&#123;0.5&#125;      // At 50% of the last item
+      ListFooterComponent=&#123;loading ? &lt;ActivityIndicator /&gt; : null&#125;
+    /&gt;
+  );
+&#125;;</code></pre>
+
+<h2>Best Practices Summary</h2>
+<ul>
+  <li>Always wrap your <code>renderItem</code> component in <code>React.memo</code> and pass a <code>useCallback</code>-wrapped <code>renderItem</code> function.</li>
+  <li>Use <code>getItemLayout</code> whenever items have a fixed height — it's the single highest-impact optimization for long lists.</li>
+  <li>Never use <code>ScrollView + .map()</code> for lists longer than ~20 items — it renders all items at once and will cause memory issues.</li>
+  <li>Replace React Native's <code>Image</code> with <code>react-native-fast-image</code> for list images — it caches to disk and uses better memory strategies.</li>
+</ul>

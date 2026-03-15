@@ -1,0 +1,118 @@
+{
+    "title": "Weights & Biases Quiz",
+    "description": "Test your knowledge of experiment tracking, hyperparameter sweeps, and artifact management with W&B.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What does `wandb.init(config={...})` primarily accomplish when called at the start of a training run?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It trains the model using the hyperparameters in the config dict",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It creates a new W&B run, stores all hyperparameters, and begins streaming metrics to the cloud dashboard",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It downloads the latest dataset artifact from W&B storage",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It sets up a distributed training job across multiple GPUs",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the main advantage of W&B Sweeps over manual hyperparameter search?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Sweeps train models faster by using multiple GPUs",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Sweeps automatically manage the search over your hyperparameter space using Bayesian optimization, grid search, or random search",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Sweeps automatically deploy the best model to production",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Sweeps only work with scikit-learn models",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In a W&B Sweep with `method: 'bayes'`, how does it decide which hyperparameters to try next?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It tries all combinations exhaustively from the search space",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It picks random values from the specified distributions on each run",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It uses the results of previous runs to build a probabilistic model that predicts which hyperparameters are most likely to improve the target metric",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It clones the hyperparameters from the best existing run and adds random noise",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is a W&B Artifact, and why is it important for reproducibility?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A chart widget embedded in a W&B Report",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A versioned package of files (models, datasets) with tracked lineage — showing which dataset version trained which model version",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The set of hyperparameters used in a specific run",
+                    "isCorrect": false
+                },
+                {
+                    "text": "An alert notification sent when a metric exceeds a threshold",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Where should you store your W&B API key in a production/CI environment?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Hardcode it in the training script for convenience",
+                    "isCorrect": false
+                },
+                {
+                    "text": "In a public GitHub repository so all team members can access it",
+                    "isCorrect": false
+                },
+                {
+                    "text": "As the WANDB_API_KEY environment variable, injected via CI secrets or a secrets manager",
+                    "isCorrect": true
+                },
+                {
+                    "text": "In the model's config.yaml file that is committed to git",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

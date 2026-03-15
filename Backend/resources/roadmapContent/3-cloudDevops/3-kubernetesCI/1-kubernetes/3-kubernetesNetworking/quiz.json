@@ -1,0 +1,118 @@
+{
+    "title": "Kubernetes Services & Networking Quiz",
+    "description": "Test your knowledge on ClusterIP, LoadBalancers, Ingress, and internal DNS.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Why can't applications rely on direct Pod IP addresses for communication?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Because they are encrypted using Base64.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because Pod IP addresses are ephemeral (temporary). If a pod dies and is recreated, its IP changes.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Because Pod IPs are exposed to the public internet by default.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because Kubernetes does not assign IP addresses to Pods.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which Kubernetes Service type is the default, and restricts access strictly to applications inside the cluster?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "NodePort",
+                    "isCorrect": false
+                },
+                {
+                    "text": "LoadBalancer",
+                    "isCorrect": false
+                },
+                {
+                    "text": "ClusterIP",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Ingress",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How does a Service object dynamically know which Pods it should route traffic to?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "By hardcoding the Pod IDs in the Service YAML.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By matching the Service's strictly defined 'selector' against the Pods' 'labels'.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It automatically routes traffic to all pods in the same namespace.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By probing the pods using HTTP Health Checks.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "If you create a Service of type 'LoadBalancer' inside an AWS EKS cluster, what happens in the background?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Kubernetes makes an API call to AWS to provision a real, physical AWS Application Load Balancer and points it at your cluster.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Kubernetes installs Nginx inside a Master Node.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It opens a random high port (30000-32767) on all EC2 instances.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It creates a new VPC.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the primary architectural advantage of using an 'Ingress' over multiple 'LoadBalancer' services?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It increases the security encryption level of the traffic.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It eliminates the need for NodePorts entirely.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It allows you to map multiple microservices to different URL paths behind a single public Load Balancer IP, significantly reducing cloud costs.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It provides offline caching mechanisms for static assets.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

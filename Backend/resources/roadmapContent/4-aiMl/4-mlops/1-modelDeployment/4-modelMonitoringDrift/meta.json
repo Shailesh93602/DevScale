@@ -1,0 +1,4 @@
+{
+    "name": "ML Model Monitoring & Drift Detection",
+    "description": "Keeping deployed models healthy over time. Understanding data drift (input distribution changes), concept drift (target relationship changes), and model performance degradation. Implementing drift detection with Evidently AI, setting up monitoring dashboards, and building automated retraining triggers in an MLOps pipeline."
+}

@@ -1,0 +1,40 @@
+{
+  "title": "Reverse Words in a String",
+  "slug": "reverse-words-in-a-string",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": [
+    "string",
+    "two-pointers"
+  ],
+  "company_tags": [
+    "Amazon",
+    "Microsoft",
+    "Apple",
+    "Facebook"
+  ],
+  "topic_tags": [
+    "strings",
+    "two pointers"
+  ],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "A string `s`.",
+  "output_format": "A string of the words in reverse order concatenated by a single space.",
+  "example_input": "s = \"the sky is blue\"",
+  "example_output": "\"blue is sky the\"",
+  "constraints": "- `1 <= s.length <= 10^4`\n- `s` contains English letters (upper-case and lower-case), digits, and spaces `' '`.\n- There is at least one word in `s`.",
+  "function_signature": "function reverseWords(s: string): string {}",
+  "status": "ACTIVE"
+}

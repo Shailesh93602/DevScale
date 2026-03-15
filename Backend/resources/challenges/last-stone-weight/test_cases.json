@@ -1,0 +1,10 @@
+[
+  {"input":"{\"stones\":[2,7,4,1,8,1]}","output":"1","explanation":"Complex smashes resulting in 1","is_hidden":false},
+  {"input":"{\"stones\":[1]}","output":"1","explanation":"Single stone","is_hidden":false},
+  {"input":"{\"stones\":[2,2]}","output":"0","explanation":"Both stones destroyed","is_hidden":false},
+  {"input":"{\"stones\":[2,7,4,1,8,1,1]}","output":"0","explanation":"Even destruction","is_hidden":true},
+  {"input":"{\"stones\":[10,10,10]}","output":"10","explanation":"Three identical stones","is_hidden":true},
+  {"input":"{\"stones\":[1,2,3,4,5]}","output":"1","explanation":"Consecutive stones","is_hidden":true},
+  {"input":"{\"stones\":[100,200,300,400]}","output":"0","explanation":"Hundreds","is_hidden":true},
+  {"input":"{\"stones\":[134,251,7,84,2,6,8,55]}","output":"21","explanation":"Random scatter","is_hidden":true}
+]

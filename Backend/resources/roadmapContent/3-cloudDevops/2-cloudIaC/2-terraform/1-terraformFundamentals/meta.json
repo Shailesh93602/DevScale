@@ -1,0 +1,4 @@
+{
+    "name": "Terraform Infrastructure as Code",
+    "description": "HCL syntax, providers, resources, modules, state files and remote backends."
+}

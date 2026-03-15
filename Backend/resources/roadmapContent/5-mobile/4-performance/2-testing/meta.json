@@ -1,0 +1,10 @@
+{
+    "id": "2-testing",
+    "title": "Testing in React Native",
+    "description": "Unit and end-to-end testing strategies for mobile applications.",
+    "order": 2,
+    "topics": [
+        "1-jestRN",
+        "2-detox"
+    ]
+}

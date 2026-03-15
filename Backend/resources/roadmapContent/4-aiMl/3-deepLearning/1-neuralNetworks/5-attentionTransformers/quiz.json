@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "In scaled dot-product attention, why is the dot product divided by sqrt(d_k) before the softmax?",
+            "options": [
+                "The division by sqrt(d_k) normalizes the attention weights to sum to 1.",
+                "When d_k is large, dot products between query and key vectors grow large in magnitude, causing the softmax to produce near-one-hot outputs (extreme focus on one token). This creates extremely small gradients for most tokens — the vanishing gradient problem in attention. Dividing by sqrt(d_k) keeps the dot products in a regime where softmax gives more diffuse, useful attention distributions.",
+                "Dividing by sqrt(d_k) converts the attention scores to probability values in [0, 1].",
+                "The scaling prevents the attention matrix from becoming asymmetric."
+            ],
+            "answer": "When d_k is large, dot products between query and key vectors grow large in magnitude, causing the softmax to produce near-one-hot outputs (extreme focus on one token). This creates extremely small gradients for most tokens — the vanishing gradient problem in attention. Dividing by sqrt(d_k) keeps the dot products in a regime where softmax gives more diffuse, useful attention distributions.",
+            "explanation": "For d_k=512: without scaling, attention score = q·k ≈ 512 (assuming unit vectors) → softmax([512, 1, 3]) ≈ [1.0, 0.0, 0.0]. Only one token gets gradient. With scaling: 512/√512=22.6, softmax([22.6, 0.04, 0.13]) still somewhat peaked but trainable."
+        },
+        {
+            "question": "What specific disadvantage does BERT (encoder-only) have compared to GPT (decoder-only) that makes BERT inappropriate for text generation tasks?",
+            "options": [
+                "BERT is too large to run efficiently for text generation.",
+                "BERT uses bidirectional attention — every token sees all other tokens in both directions. For generation, each token must be predicted using ONLY preceding tokens (autoregressive). BERT has no mechanism for this constraint: it cannot generate text because it was trained to fill masks using full bidirectional context, not to predict the next token from partial context.",
+                "BERT does not use the Transformer architecture internally.",
+                "BERT requires the full sequence length to be known before processing begins."
+            ],
+            "answer": "BERT uses bidirectional attention — every token sees all other tokens in both directions. For generation, each token must be predicted using ONLY preceding tokens (autoregressive). BERT has no mechanism for this constraint: it cannot generate text because it was trained to fill masks using full bidirectional context, not to predict the next token from partial context.",
+            "explanation": "The bidirectionality that makes BERT excellent at understanding (it reads the full context) is exactly what prevents it from generating coherently. GPT's causal mask ensures token i can only attend to tokens 1..i, making autoregressive generation natural."
+        },
+        {
+            "question": "Multi-head attention uses 8 separate attention 'heads' that each operate on a d_model/8 dimensional subspace. What advantage does this provide over single-head attention with the full d_model dimension?",
+            "options": [
+                "Multi-head attention is 8x faster than single-head attention at the same d_model.",
+                "Different attention heads learn to capture different types of relationships simultaneously. One head may attend to syntactic dependencies (subject-verb agreement), another to semantic relationships (synonyms and related concepts), another to positional proximity. Single-head attention must compromise across all relationship types in one learned representation — multi-head allows specialization.",
+                "Multi-head attention prevents the model from attending to padding tokens.",
+                "Using 8 heads reduces memory usage by a factor of 8 compared to single-head attention."
+            ],
+            "answer": "Different attention heads learn to capture different types of relationships simultaneously. One head may attend to syntactic dependencies (subject-verb agreement), another to semantic relationships (synonyms and related concepts), another to positional proximity. Single-head attention must compromise across all relationship types in one learned representation — multi-head allows specialization.",
+            "explanation": "Visualizing BERT attention heads: Head 1 often attends to the previous token (local context). Head 2 attends to the end of the sentence (global structure). Head 5 tracks coreference (connecting 'it' to its antecedent noun). This specialization is impossible with a single attention head."
+        }
+    ]
+}

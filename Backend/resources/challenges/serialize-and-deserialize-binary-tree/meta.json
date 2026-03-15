@@ -1,0 +1,20 @@
+{
+  "title": "Serialize and Deserialize Binary Tree",
+  "slug": "serialize-and-deserialize-binary-tree",
+  "difficulty": "Hard",
+  "category": "algorithms",
+  "points": 150,
+  "tags": ["string","tree","depth-first-search","breadth-first-search","design","binary-tree"],
+  "company_tags": ["Facebook","Amazon","Microsoft","Google","Bloomberg"],
+  "topic_tags": ["trees","design","breadth-first search"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "A binary tree to serialize and then deserialize.",
+  "output_format": "The original binary tree reconstructed after serialization/deserialization.",
+  "example_input": "root = [1,2,3,null,null,4,5]",
+  "example_output": "[1,2,3,null,null,4,5]",
+  "constraints": "- The number of nodes in the tree is in the range `[0, 10^4]`.\n- `-1000 <= Node.val <= 1000`",
+  "function_signature": "function serialize(root: TreeNode | null): string {}\nfunction deserialize(data: string): TreeNode | null {}",
+  "status": "ACTIVE"
+}

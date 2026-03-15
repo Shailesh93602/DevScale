@@ -1,0 +1,97 @@
+<h1>TypeScript Fundamentals</h1>
+<p>TypeScript is a <strong>typed superset of JavaScript</strong> that compiles to plain JS. It catches errors at compile time, making code more maintainable, self-documenting, and refactorable.</p>
+
+<h2>Why TypeScript?</h2>
+<ul>
+  <li><strong>Catch bugs early</strong> — type errors surface at compile time, not in production.</li>
+  <li><strong>Autocompletion</strong> — IDEs fully understand your code's shape.</li>
+  <li><strong>Self-documenting</strong> — types describe what functions accept and return.</li>
+  <li><strong>Safer refactoring</strong> — rename a field and instantly see every usage that breaks.</li>
+</ul>
+
+<h2>Basic Types</h2>
+<pre><code>let name: string = "Alice";
+let age: number = 30;
+let active: boolean = true;
+let scores: number[] = [95, 87, 92];
+let pair: [string, number] = ["Alice", 30]; // Tuple
+
+// Union types — one of several types
+let id: string | number = "abc-123";
+id = 456; // ✅
+
+// Literal types — exact values
+let direction: "north" | "south" | "east" | "west" = "north";
+let status: 200 | 201 | 400 | 404 = 200;</code></pre>
+
+<h2>Interfaces</h2>
+<pre><code>interface User {
+  id: number;
+  name: string;
+  email: string;
+  role?: "admin" | "user"; // Optional with ?
+  readonly createdAt: Date; // Cannot be changed after creation
+}
+
+// Extending interfaces
+interface AdminUser extends User {
+  permissions: string[];
+  lastLogin: Date;
+}
+
+const admin: AdminUser = {
+  id: 1,
+  name: "Alice",
+  email: "alice@example.com",
+  role: "admin",
+  createdAt: new Date(),
+  permissions: ["read", "write", "delete"],
+  lastLogin: new Date(),
+};</code></pre>
+
+<h2>Type Aliases</h2>
+<pre><code>type Point = { x: number; y: number };
+type ID = string | number;
+type Status = "pending" | "active" | "inactive";
+
+// Intersection types — combine types
+type Employee = User & { department: string; salary: number };</code></pre>
+
+<h2>Functions with Types</h2>
+<pre><code>// Typed parameters and return type
+function add(a: number, b: number): number {
+  return a + b;
+}
+
+// Optional and default parameters
+function greet(name: string, greeting: string = "Hello"): string {
+  return `${greeting}, ${name}!`;
+}
+
+// Function type alias
+type Comparator&lt;T&gt; = (a: T, b: T) =&gt; number;
+const compareNumbers: Comparator&lt;number&gt; = (a, b) =&gt; a - b;
+
+// Void for functions with no return
+function logError(message: string): void {
+  console.error(message);
+}</code></pre>
+
+<h2>Type Assertions & Type Guards</h2>
+<pre><code>// Type assertion
+const input = document.getElementById("search") as HTMLInputElement;
+input.value; // ✅ TypeScript knows it's an input
+
+// Type guard — narrow the type
+function printId(id: string | number) {
+  if (typeof id === "string") {
+    console.log(id.toUpperCase()); // TypeScript knows it's a string here
+  } else {
+    console.log(id.toFixed(2));    // TypeScript knows it's a number here
+  }
+}
+
+// instanceof guard for classes
+if (error instanceof NetworkError) {
+  // TypeScript narrows to NetworkError
+}</code></pre>

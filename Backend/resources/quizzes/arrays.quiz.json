@@ -1,0 +1,20 @@
+{
+  "title": "Array Quiz",
+  "questions": [
+    {
+      "question": "What is the time complexity of accessing an element in an array?",
+      "options": ["O(1)", "O(n)", "O(log n)", "O(n^2)"],
+      "answer": "O(1)"
+    },
+    {
+      "question": "How do you declare an array in JavaScript?",
+      "options": [
+        "var arr = []",
+        "var arr = {}",
+        "var arr = ()",
+        "var arr = <>"
+      ],
+      "answer": "var arr = []"
+    }
+  ]
+}

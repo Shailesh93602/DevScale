@@ -1,0 +1,6 @@
+[
+  "Track the frequency of each element. Pop should return the element with the highest frequency.",
+  "Group elements by their frequency level. Use a stack for each frequency level.",
+  "When you push value v with new frequency f, also push it onto the stack for frequency f.",
+  "Pop from the stack of the maximum frequency. If that stack becomes empty, decrement maxFreq."
+]

@@ -1,0 +1,20 @@
+{
+  "title": "Design Twitter",
+  "slug": "design-twitter",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["hash-table","linked-list","design","heap"],
+  "company_tags": ["Amazon","Microsoft","Twitter"],
+  "topic_tags": ["heaps","system design","priority queue"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "A series of function calls to `postTweet`, `getNewsFeed`, `follow`, and `unfollow`.",
+  "output_format": "Results of the function calls, particularly an array of `tweetId`s for `getNewsFeed`.",
+  "example_input": "[\"Twitter\", \"postTweet\", \"getNewsFeed\", \"follow\", \"postTweet\", \"getNewsFeed\", \"unfollow\", \"getNewsFeed\"]\n[[], [1, 5], [1], [1, 2], [2, 6], [1], [1, 2], [1]]",
+  "example_output": "[null, null, [5], null, null, [6, 5], null, [5]]",
+  "constraints": "- `1 <= userId, followerId, followeeId <= 500`\n- `0 <= tweetId <= 10^4`\n- All tweets have unique IDs.\n- At most `3 * 10^4` calls will be made to methods.",
+  "function_signature": "class Twitter { constructor() {} postTweet(userId: number, tweetId: number): void {} getNewsFeed(userId: number): number[] {} follow(followerId: number, followeeId: number): void {} unfollow(followerId: number, followeeId: number): void {} }",
+  "status": "ACTIVE"
+}

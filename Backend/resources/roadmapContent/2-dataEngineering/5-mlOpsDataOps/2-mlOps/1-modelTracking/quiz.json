@@ -1,0 +1,118 @@
+{
+    "title": "Model Tracking & MLflow Quiz",
+    "description": "Test your knowledge on Model Tracking, MLflow components, and MLOps principles.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "In traditional software engineering, code is versioned. In Machine Learning, what must be tracked to guarantee reproducibility?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Code, Data, and Hyperparameters.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "CPU architecture, RAM speed, and power consumption.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Only the Python file containing the `fit()` method.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "API response times and bandwidth.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which MLflow component is responsible for saving training loss, accuracy metrics, and hyperparameters during an experiment run?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "MLflow Projects",
+                    "isCorrect": false
+                },
+                {
+                    "text": "MLflow Tracking",
+                    "isCorrect": true
+                },
+                {
+                    "text": "MLflow Registry",
+                    "isCorrect": false
+                },
+                {
+                    "text": "MLflow Deployments",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the function of the MLflow Model Registry?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It stores user credentials for accessing cloud databases.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It acts as a centralized store to manage the lifecycle, versioning, and stage transitions (e.g., Staging to Production) of ML models.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It downloads big data sets from Kaggle directly into the notebook.",
+                    "is file": false
+                },
+                {
+                    "text": "It automatically generates a React frontend for the model.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the primary benefit of MLflow's `autolog()` feature?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It automatically cleans missing data in Pandas DataFrames.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It automatically adjusts learning rates dynamically during training.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It logs parameters, metrics, and models automatically for supported frameworks without requiring manual `.log_param()` calls.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It automatically deploys the model to AWS seamlessly.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why would a Data Engineer need to interact with an MLflow Model Registry?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "To pull the specific model tagged as 'Production' to execute large-scale batch scoring jobs inside a data pipeline.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "To alter the internal weights of the neural network using SQL.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To stream user clicks directly into the Registry.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To visualize the pipeline's DAG structure using Airflow.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

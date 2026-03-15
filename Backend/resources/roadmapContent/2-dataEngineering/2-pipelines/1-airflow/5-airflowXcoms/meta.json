@@ -1,0 +1,4 @@
+{
+    "name": "XComs and Task Communication",
+    "description": "Exchanging metadata natively between isolated Airflow tasks. Understanding the strict limitations of XComs (Cross-Communication) and why massive Pandas DataFrames should never be passed through Airflow's internal Postgres database."
+}

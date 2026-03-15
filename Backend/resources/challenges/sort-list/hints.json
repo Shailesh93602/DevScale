@@ -1,0 +1,6 @@
+[
+  "Which sorting algorithm is most natural for linked lists? Think about one that involves splitting and merging.",
+  "Merge sort works well because you can split a linked list in half using the slow/fast pointer technique.",
+  "After splitting, recursively sort both halves, then merge them — just like merge two sorted lists.",
+  "For O(1) space, consider a bottom-up merge sort: iteratively merge sublists of increasing size (1, 2, 4, ...)."
+]

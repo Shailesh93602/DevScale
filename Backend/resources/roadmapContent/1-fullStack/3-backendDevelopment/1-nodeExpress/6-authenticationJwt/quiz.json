@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary difference between Authentication and Authorization?",
+            "options": [
+                "They are synonymous and can be used interchangeably in server design",
+                "Authentication verifies WHO the user is (Login); Authorization verifies WHAT they are allowed to do (Permissions)",
+                "Authentication checks permissions; Authorization validates the password hash",
+                "Authentication uses JWTs; Authorization uses session cookies"
+            ],
+            "answer": "Authentication verifies WHO the user is (Login); Authorization verifies WHAT they are allowed to do (Permissions)",
+            "explanation": "You authenticate a user by verifying their password. Once authenticated, you authorize them when they attempt to delete a post to ensure they have the 'Admin' role."
+        },
+        {
+            "question": "Why must you NEVER store user passwords in plain text in your database?",
+            "options": [
+                "Plain text takes up too much disk space",
+                "If a data breach occurs, hackers instantly have the passwords to access user accounts across the internet (due to password reuse)",
+                "SQL databases cannot process text efficiently in WHERE clauses",
+                "It causes performance issues during the login lookup"
+            ],
+            "answer": "If a data breach occurs, hackers instantly have the passwords to access user accounts across the internet (due to password reuse)",
+            "explanation": "Passwords must always be hashed (one-way encryption) using a slow algorithm like Bcrypt with a salt, so that even if the database is leaked, the original passwords remain secure."
+        },
+        {
+            "question": "Which statement about the data payload of a JSON Web Token (JWT) is true?",
+            "options": [
+                "It is heavily encrypted and unreadable to anyone without the server secret",
+                "It is only Base64 encoded, meaning anyone intercepting it can easily decode and read the data inside it",
+                "It automatically expires 24 hours after being issued regardless of configuration",
+                "It can safely store a user's unhashed password"
+            ],
+            "answer": "It is only Base64 encoded, meaning anyone intercepting it can easily decode and read the data inside it",
+            "explanation": "The JWT signature prevents the payload from being tampered with, but it does NOT encrypt the payload. You must never place sensitive information (banking info, SSNs) inside the JWT token."
+        },
+        {
+            "question": "How do stateless JWTs differ from traditional Server-Side Session architecture?",
+            "options": [
+                "They require the database to lookup the user's session ID on every request",
+                "Because the JWT contains everything needed to verify the user mathematically (via the signature), the server doesn't need to look up a session in memory or the database",
+                "They can only be used on HTTPS connections, whereas sessions run on HTTP",
+                "JWTs are much larger in size than session IDs and slow down the network immensely"
+            ],
+            "answer": "Because the JWT contains everything needed to verify the user mathematically (via the signature), the server doesn't need to look up a session in memory or the database",
+            "explanation": "Server sessions are 'stateful', meaning the server must store the session. JWTs are 'stateless'. The server verifies the crypto-signature is intact, and trusts the decoded payload immediately."
+        },
+        {
+            "question": "What security problem does the Refresh Token architecture solve?",
+            "options": [
+                "It prevents Cross-Site Request Forgery (CSRF)",
+                "It solves the inability to easily invalidate/logout truly stateless Access Tokens by making the Access Token expire in a few minutes",
+                "It encrypts the JSON payload automatically",
+                "It stops SQL injection on the login page"
+            ],
+            "answer": "It solves the inability to easily invalidate/logout truly stateless Access Tokens by making the Access Token expire in a few minutes",
+            "explanation": "If an attacker steals a 30-day JWT, they have access for 30 days. By making the Access JWT last 15 minutes, but giving the user a stateful 30-day Refresh Token, you can easily revoke theRefresh token if a 'logout' is requested."
+        }
+    ]
+}

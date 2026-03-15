@@ -1,0 +1,62 @@
+[
+  {
+    "input": { "promises": ["reject('err1')", "resolve(42)", "resolve(100)"] },
+    "output": { "status": "resolved", "value": 42 },
+    "explanation": "First to resolve (42) wins, even though first promise rejected",
+    "is_hidden": false
+  },
+  {
+    "input": { "promises": ["reject('a')", "reject('b')", "reject('c')"] },
+    "output": { "status": "rejected", "errors": ["a", "b", "c"] },
+    "explanation": "All reject — AggregateError with all reasons",
+    "is_hidden": false
+  },
+  {
+    "input": { "promises": ["resolve(1)"] },
+    "output": { "status": "resolved", "value": 1 },
+    "explanation": "Single resolved promise",
+    "is_hidden": false
+  },
+  {
+    "input": { "promises": [] },
+    "output": { "status": "rejected", "errors": [] },
+    "explanation": "Empty array rejects with empty AggregateError",
+    "is_hidden": true
+  },
+  {
+    "input": { "promises": [1, 2, 3] },
+    "output": { "status": "resolved", "value": 1 },
+    "explanation": "Plain values treated as resolved — first wins",
+    "is_hidden": true
+  },
+  {
+    "input": { "promises": ["reject('err')"] },
+    "output": { "status": "rejected", "errors": ["err"] },
+    "explanation": "Single rejection",
+    "is_hidden": true
+  },
+  {
+    "input": { "promises": ["slow_resolve(1, 200)", "fast_resolve(2, 10)"] },
+    "output": { "status": "resolved", "value": 2 },
+    "explanation": "Faster promise wins regardless of position",
+    "is_hidden": true
+  },
+  {
+    "input": { "promises": ["reject('e1')", "reject('e2')", "resolve('success')"] },
+    "output": { "status": "resolved", "value": "success" },
+    "explanation": "Only one success needed among many failures",
+    "is_hidden": true
+  },
+  {
+    "input": { "promises": ["resolve(null)"] },
+    "output": { "status": "resolved", "value": null },
+    "explanation": "null is a valid resolved value",
+    "is_hidden": true
+  },
+  {
+    "input": { "promises": ["resolve(0)", "resolve(1)"] },
+    "output": { "status": "resolved", "value": 0 },
+    "explanation": "Falsy value 0 is still a valid resolution",
+    "is_hidden": true
+  }
+]

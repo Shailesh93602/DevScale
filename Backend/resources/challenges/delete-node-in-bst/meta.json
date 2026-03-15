@@ -1,0 +1,19 @@
+{
+  "title": "Delete Node in a BST",
+  "slug": "delete-node-in-bst",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["tree", "binary-search-tree", "binary-tree"],
+  "company_tags": ["Amazon", "Microsoft", "Google", "Oracle", "Apple"],
+  "topic_tags": ["trees", "binary search trees"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "The root of a BST and an integer `key` to delete.",
+  "output_format": "The root of the BST after deleting the node with the given key.",
+  "example_input": "root = [5,3,6,2,4,null,7], key = 3",
+  "example_output": "[5,4,6,2,null,null,7]",
+  "constraints": "- The number of nodes in the tree is in the range `[0, 10^4]`.\n- `-10^5 <= Node.val <= 10^5`\n- Each node has a unique value.\n- `key` is a valid BST node value.\n- The root of the BST should not change after deletion, unless the root is deleted.",
+  "function_signature": "function deleteNode(root: TreeNode | null, key: number): TreeNode | null {}",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary organizational problem that a Data Governance Framework is designed to solve?",
+            "options": [
+                "It reduces the cost of cloud data warehouse queries.",
+                "It establishes clear accountability, standardized definitions, and enforceable data policies, preventing different teams from independently calculating the same metric differently and presenting conflicting, embarrassing numbers to leadership.",
+                "It automates the creation of dbt data models.",
+                "It optimizes Spark job execution plans automatically."
+            ],
+            "answer": "It establishes clear accountability, standardized definitions, and enforceable data policies, preventing different teams from independently calculating the same metric differently and presenting conflicting, embarrassing numbers to leadership.",
+            "explanation": "When Sales says Revenue is $10M and Finance says it's $8M, that's a governance failure. A Business Glossary with one authoritative definition and SQL model prevents this."
+        },
+        {
+            "question": "What is the specific distinction between a 'Data Owner' and a 'Data Steward' in a governance framework?",
+            "options": [
+                "Data Owners write SQL; Data Stewards manage Airflow.",
+                "A Data Owner is a senior business executive accountable for the quality and policies of a data domain. A Data Steward is a technical practitioner (e.g., a Data Engineer) responsible for executing those policies day-to-day.",
+                "Data Owners design the data warehouse; Data Stewards design dbt models.",
+                "There is no practical difference between the two roles."
+            ],
+            "answer": "A Data Owner is a senior business executive accountable for the quality and policies of a data domain. A Data Steward is a technical practitioner (e.g., a Data Engineer) responsible for executing those policies day-to-day.",
+            "explanation": "The Head of Finance (Data Owner) decides what data quality policies the financial data domain needs. The Data Steward implements those policies as Great Expectations tests."
+        },
+        {
+            "question": "What concrete business problem does a 'Data Catalog' solve that a simple database documentation wiki cannot?",
+            "options": [
+                "A Data Catalog compresses table data automatically.",
+                "A Data Catalog acts as a living, searchable, automatically-updated directory that links technical table schemas with business context (descriptions, ownership, lineage, sensitivity tags) — enabling any employee to quickly discover, understand, and trust the right data asset.",
+                "A Data Catalog runs data quality tests on a schedule.",
+                "A Data Catalog stores raw CSV files from external vendors."
+            ],
+            "answer": "A Data Catalog acts as a living, searchable, automatically-updated directory that links technical table schemas with business context (descriptions, ownership, lineage, sensitivity tags) — enabling any employee to quickly discover, understand, and trust the right data asset.",
+            "explanation": "A wiki goes stale immediately. A Data Catalog auto-updates from tools like dbt and Airflow, keeping metadata accurate without manual effort."
+        }
+    ]
+}

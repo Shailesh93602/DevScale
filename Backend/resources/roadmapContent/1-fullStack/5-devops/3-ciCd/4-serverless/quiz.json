@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the defining financial and architectural characteristic of Serverless compute platforms like AWS Lambda?",
+            "options": [
+                "You pay heavily for the amount of hard drive storage you reserve.",
+                "You do not provision or manage underlying EC2 servers; you deploy raw, event-driven functions, and you are billed explicitly only down to the millisecond that your code is actively executing.",
+                "Your code executes directly in the user's browser, bypassing the cloud.",
+                "You must actively manage Linux updates to maintain the security of your functions."
+            ],
+            "answer": "You do not provision or manage underlying EC2 servers; you deploy raw, event-driven functions, and you are billed explicitly only down to the millisecond that your code is actively executing.",
+            "explanation": "If your viral app gets 0 traffic at 3 AM, you pay exactly $0.00 dollars. The instant a million users hit it at 9 AM, it scales horizontally to infinite capacity automatically."
+        },
+        {
+            "question": "What is a major performance bottleneck inherent to Serverless architectures initially hitting dormant functions?",
+            "options": [
+                "Deadlocks on single-thread executions.",
+                "The 'Cold Start' delay: When a function hasn't been invoked recently, the cloud provider must physically spin up a brand new micro-container environment from scratch to execute the code, causing a multi-second latency spike for that first unlucky user.",
+                "Slow GitHub compilation times.",
+                "Docker daemon conflicts on the host machine."
+            ],
+            "answer": "The 'Cold Start' delay: When a function hasn't been invoked recently, the cloud provider must physically spin up a brand new micro-container environment from scratch to execute the code, causing a multi-second latency spike for that first unlucky user.",
+            "explanation": "Once the function is 'Warm', subsequent requests are executed in blazing-fast milliseconds. You can mitigate Cold Starts by paying for Provisioned Concurrency, keeping a pool of functions constantly awake."
+        },
+        {
+            "question": "What catastrophic failure occurs if you directly connect thousands of AWS Lambda functions sequentially to a standard PostgreSQL database?",
+            "options": [
+                "A Type conversion crash.",
+                "Database Connection Exhaustion: Each of the 10,000 scaled Lambda micro-containers attempts to open a completely unique, brand-new direct TCP connection, instantly overwhelming and crashing the severely limited connection limits of standard SQL databases.",
+                "A memory leak on the frontend client.",
+                "The AWS Lambda function timeout."
+            ],
+            "answer": "Database Connection Exhaustion: Each of the 10,000 scaled Lambda micro-containers attempts to open a completely unique, brand-new direct TCP connection, instantly overwhelming and crashing the severely limited connection limits of standard SQL databases.",
+            "explanation": "You must utilize a 'Connection Pooler' like PgBouncer as a middleman. The 10,000 serverless functions connect cleanly to the pooler, which effectively multiplexes them tightly into the 50 persistent connections the physical database can actually handle safely."
+        },
+        {
+            "question": "What is the primary function of the open-source 'Serverless Framework' tool?",
+            "options": [
+                "To compile Next.js websites natively.",
+                "To mathematically define and automatically orchestrate your massive AWS cloud infrastructure (like API Gateways, Lambda Functions, and specific permissions) purely utilizing a simple local `serverless.yml` configuration file securely.",
+                "To replace Git inside your terminal.",
+                "To execute SQL queries directly on the cloud."
+            ],
+            "answer": "To mathematically define and automatically orchestrate your massive AWS cloud infrastructure (like API Gateways, Lambda Functions, and specific permissions) purely utilizing a simple local `serverless.yml` configuration file securely.",
+            "explanation": "Instead of manually clicking 50 buttons in the complex AWS Console website to hook up an HTTP route to your function, you declare it simply in code, type `serverless deploy`, and it automates the rigorous provisioning."
+        },
+        {
+            "question": "What specific AWS routing component must be provisioned essentially to securely allow a public internet HTTP request to forcefully trigger your private backend AWS Lambda Javascript code?",
+            "options": [
+                "AWS S3 Bucket",
+                "AWS API Gateway: It serves as the physical 'front door' of the internet, actively parsing incoming `GET /users` HTTP web traffic natively and violently converting it into a structured event payload object injected seamlessly into the Lambda.",
+                "AWS Redshift",
+                "AWS Elastic Container Service"
+            ],
+            "answer": "AWS API Gateway: It serves as the physical 'front door' of the internet, actively parsing incoming `GET /users` HTTP web traffic natively and violently converting it into a structured event payload object injected seamlessly into the Lambda.",
+            "explanation": "Lambda itself is an execution environment, not an HTTP router. A separate tool (the Gateway) must listen on port 443 safely and strictly route the specific URL paths directly to the correctly mapped backend functions."
+        }
+    ]
+}

@@ -1,0 +1,20 @@
+{
+  "title": "Permutations",
+  "slug": "permutations",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["array","backtracking"],
+  "company_tags": ["Amazon","Microsoft","Google"],
+  "topic_tags": ["backtracking","recursion"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An array of distinct integers `nums`.",
+  "output_format": "All possible permutations.",
+  "example_input": "nums = [1,2,3]",
+  "example_output": "[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]",
+  "constraints": "- `1 <= nums.length <= 6`\n- `-10 <= nums[i] <= 10`\n- All the integers of `nums` are unique.",
+  "function_signature": "function permute(nums: number[]): number[][] {}",
+  "status": "ACTIVE"
+}

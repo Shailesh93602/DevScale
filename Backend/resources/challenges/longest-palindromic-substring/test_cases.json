@@ -1,0 +1,12 @@
+[
+  { "input": "{\"s\":\"babad\"}", "output": "\"bab\"", "explanation": "aba is also valid", "is_hidden": false },
+  { "input": "{\"s\":\"cbbd\"}", "output": "\"bb\"", "explanation": "Even length palindrome", "is_hidden": false },
+  { "input": "{\"s\":\"a\"}", "output": "\"a\"", "explanation": "Single character", "is_hidden": true },
+  { "input": "{\"s\":\"ac\"}", "output": "\"a\"", "explanation": "No multicharacter palindrome", "is_hidden": true },
+  { "input": "{\"s\":\"bb\"}", "output": "\"bb\"", "explanation": "Two identical characters", "is_hidden": true },
+  { "input": "{\"s\":\"ccc\"}", "output": "\"ccc\"", "explanation": "Three identical characters", "is_hidden": true },
+  { "input": "{\"s\":\"aaaa\"}", "output": "\"aaaa\"", "explanation": "Four identical characters", "is_hidden": true },
+  { "input": "{\"s\":\"abaaba\"}", "output": "\"abaaba\"", "explanation": "Even length complex palindrome", "is_hidden": true },
+  { "input": "{\"s\":\"racecar\"}", "output": "\"racecar\"", "explanation": "Odd length complex palindrome", "is_hidden": true },
+  { "input": "{\"s\":\"dabcba\"}", "output": "\"abcba\"", "explanation": "Palindrome at the end", "is_hidden": true }
+]

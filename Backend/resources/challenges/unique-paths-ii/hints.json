@@ -1,0 +1,6 @@
+[
+  "This is similar to Unique Paths, but you need to handle obstacles. What should dp[i][j] be if there's an obstacle at (i, j)?",
+  "If obstacleGrid[i][j] == 1, set dp[i][j] = 0. Otherwise, dp[i][j] = dp[i-1][j] + dp[i][j-1].",
+  "Be careful with the first row and first column: once you hit an obstacle, all subsequent cells in that row/column have 0 paths.",
+  "Check edge cases: obstacle at start (0,0) or end (m-1,n-1) means 0 paths."
+]

@@ -1,0 +1,118 @@
+{
+    "title": "RNNs & Time Series Quiz",
+    "description": "Test your knowledge on Sequence Data, Hidden States, LSTMs, and the Vanishing Gradient.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What primary limitation found in standard neural networks and CNNs necessitated the widespread mathematical invention of Recurrent Neural Networks (RNNs)?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Standard networks cannot process raw binary data.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Standard networks crash when encountering empty null datasets.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Standard networks execute entirely independent predictions and lack inherent 'memory' between inputs, rendering them mathematically incapable of natively understanding sequences, time, or sentence context over multiple steps.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Standard networks cannot run on GPUs.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How does a standard RNN practically pass historical context down a sequence (e.g., from word 1 to word 2)?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "By writing the previous inputs directly to an AWS S3 bucket.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By establishing a 'Hidden State' (analogous to short-term memory) at step 1, and feeding that exact state directly as supplementary input alongside the new raw data into step 2.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "By calculating the cross-entropy loss continuously.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By utilizing a Convolutional image filter.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which of the following datasets would a Recurrent Neural Network theoretically model better than a Convolutional Neural Network?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A static high-resolution JPEG image array of a cat.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A tabular CSV file featuring the square footage of distinct houses.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "An MP3 audio recording of a human speaking a continuous sentence spanning several seconds.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A massive static SQL database of user emails.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What famous mathematical phenomenon inherently destroyed the ability of traditional 'Vanilla' RNNs to remember crucial context from the beginning of a long paragraph?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The Traveling Salesman Problem",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The Curse of Dimensionality",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The Vanishing Gradient Problem (the calculus multipliers shrunk to zero iterating backwards through the enormous sequence length).",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The Out of Memory Exception.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How does an LSTM (Long Short-Term Memory) network specifically combat the flaws of older RNNs?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It abandons recurrent loops entirely.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It introduces a complex internal 'Cell' architecture featuring explicit, trainable mathematical 'Gates' (Forget, Input, Output) designed to strictly regulate exactly what information is structurally written to or deleted from long-term memory.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It acts purely as an Unsupervised clustering algorithm.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It switches execution directly to CPU processors.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

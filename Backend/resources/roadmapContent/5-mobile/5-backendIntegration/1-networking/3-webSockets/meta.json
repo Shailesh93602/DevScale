@@ -1,0 +1,6 @@
+{
+    "id": "3-webSockets",
+    "title": "Real-time Data with WebSockets",
+    "description": "Building chat and live updates using WebSockets and Socket.io.",
+    "order": 3
+}

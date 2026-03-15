@@ -1,0 +1,5 @@
+[
+  "Naively setting cells to 0 as you find them causes false positives — a 0 you set yourself will later cause its row/column to be zeroed out too!",
+  "First pass: collect all (row, col) positions that are 0. Second pass: zero out all those rows and columns. Uses O(m+n) extra space.",
+  "To use O(1) space, use the first row and first column of the matrix itself as your markers. But first, check if row 0 or col 0 originally contained a 0 and save that separately."
+]

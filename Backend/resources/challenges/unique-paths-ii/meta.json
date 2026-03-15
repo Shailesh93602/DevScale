@@ -1,0 +1,19 @@
+{
+  "title": "Unique Paths II",
+  "slug": "unique-paths-ii",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["dynamic-programming", "matrix"],
+  "company_tags": ["Amazon", "Google", "Microsoft", "Facebook", "Bloomberg"],
+  "topic_tags": ["dynamic programming", "grid"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "A 2D integer array `obstacleGrid` where `0` is empty and `1` is an obstacle.",
+  "output_format": "The number of unique paths from top-left to bottom-right, avoiding obstacles.",
+  "example_input": "obstacleGrid = [[0,0,0],[0,1,0],[0,0,0]]",
+  "example_output": "2",
+  "constraints": "- `m == obstacleGrid.length`\n- `n == obstacleGrid[i].length`\n- `1 <= m, n <= 100`\n- `obstacleGrid[i][j]` is `0` or `1`.",
+  "function_signature": "function uniquePathsWithObstacles(obstacleGrid: number[][]): number {}",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,118 @@
+{
+    "title": "SQL Window Functions Quiz",
+    "description": "Test your knowledge of ranking, LAG/LEAD, and frame-based window functions.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Which ranking function assigns the same rank to ties but skips subsequent ranks?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "ROW_NUMBER",
+                    "isCorrect": false
+                },
+                {
+                    "text": "DENSE_RANK",
+                    "isCorrect": false
+                },
+                {
+                    "text": "RANK",
+                    "isCorrect": true
+                },
+                {
+                    "text": "NTILE",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does LAG(revenue, 1) OVER (ORDER BY month) return?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The next month's revenue",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The previous month's revenue",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The average revenue",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The cumulative revenue",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which frame specification computes a running total from the start?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING",
+                    "isCorrect": false
+                },
+                {
+                    "text": "ROWS BETWEEN 1 PRECEDING AND CURRENT ROW",
+                    "isCorrect": false
+                },
+                {
+                    "text": "ROWS UNBOUNDED PRECEDING",
+                    "isCorrect": true
+                },
+                {
+                    "text": "ROWS BETWEEN 0 PRECEDING AND 0 FOLLOWING",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How is DENSE_RANK different from RANK?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "DENSE_RANK never assigns the same rank to two rows",
+                    "isCorrect": false
+                },
+                {
+                    "text": "DENSE_RANK does not skip rank numbers after ties",
+                    "isCorrect": true
+                },
+                {
+                    "text": "DENSE_RANK works without PARTITION BY",
+                    "isCorrect": false
+                },
+                {
+                    "text": "DENSE_RANK only ranks within a partition",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Window functions with PARTITION BY operate similarly to which SQL clause?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "WHERE",
+                    "isCorrect": false
+                },
+                {
+                    "text": "HAVING",
+                    "isCorrect": false
+                },
+                {
+                    "text": "GROUP BY",
+                    "isCorrect": true
+                },
+                {
+                    "text": "JOIN",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

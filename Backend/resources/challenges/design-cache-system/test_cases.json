@@ -1,0 +1,8 @@
+[
+  {
+    "input": "set('k1', 'v1'), get('k1')",
+    "output": "'v1'",
+    "explanation": "Basic set and get operation",
+    "is_hidden": false
+  }
+]

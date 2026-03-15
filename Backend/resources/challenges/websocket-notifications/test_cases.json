@@ -1,0 +1,62 @@
+[
+  {
+    "input": "User connects with valid JWT token",
+    "output": "{ \"event\": \"connected\", \"userId\": \"user1\", \"socketId\": \"abc123\" }",
+    "explanation": "Successful connection returns confirmation with user and socket IDs.",
+    "is_hidden": false
+  },
+  {
+    "input": "Connected user subscribes to 'order-updates' room",
+    "output": "{ \"event\": \"subscribed\", \"room\": \"order-updates\" }",
+    "explanation": "User joins the room and receives subscription confirmation.",
+    "is_hidden": false
+  },
+  {
+    "input": "send('user1', { type: 'order-shipped', title: 'Order Shipped', body: 'Your order has shipped' })",
+    "output": "User1 receives: { event: 'notification', data: { id: '...', type: 'order-shipped', ... } }",
+    "explanation": "Targeted notification is delivered to the specific user's active WebSocket connections.",
+    "is_hidden": false
+  },
+  {
+    "input": "broadcast('order-updates', { type: 'sale', title: 'Flash Sale' }) with 3 users subscribed",
+    "output": "All 3 subscribed users receive the notification",
+    "explanation": "Room broadcast delivers the notification to all room members.",
+    "is_hidden": false
+  },
+  {
+    "input": "send('offlineUser', { type: 'message', title: 'New Message' }); offlineUser connects later",
+    "output": "On connection, offlineUser receives the buffered notification",
+    "explanation": "Notifications for offline users are buffered and delivered when they reconnect.",
+    "is_hidden": false
+  },
+  {
+    "input": "User connects from two browser tabs simultaneously",
+    "output": "Both sockets receive notifications sent to that user",
+    "explanation": "Multiple connections per user are supported; notifications go to all active sockets.",
+    "is_hidden": true
+  },
+  {
+    "input": "User disconnects, other users are notified",
+    "output": "Online users receive: { event: 'presence', userId: 'user1', status: 'offline' }",
+    "explanation": "Presence tracking broadcasts online/offline status changes to other connected users.",
+    "is_hidden": true
+  },
+  {
+    "input": "Client sends ack for notificationId 'notif-1'",
+    "output": "Notification removed from pending acknowledgements",
+    "explanation": "Acknowledgement confirms delivery and removes the notification from retry queue.",
+    "is_hidden": true
+  },
+  {
+    "input": "Send same notification ID twice to same user",
+    "output": "Notification delivered only once (deduplicated)",
+    "explanation": "Deduplication prevents the same notification from being delivered multiple times.",
+    "is_hidden": true
+  },
+  {
+    "input": "Buffer 101 notifications for offline user (max 100)",
+    "output": "Oldest notification dropped, 100 most recent notifications kept",
+    "explanation": "Offline buffer enforces a per-user limit, dropping oldest notifications when exceeded.",
+    "is_hidden": true
+  }
+]

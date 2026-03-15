@@ -1,0 +1,6 @@
+[
+  "Think of this as a BFS problem: which indices can you reach with 1 jump, 2 jumps, etc.?",
+  "Track two boundaries: the end of the current 'level' (curEnd) and the farthest you can reach from this level.",
+  "When you reach curEnd, you must take another jump. Update curEnd to the farthest reachable position.",
+  "You only need O(1) space: track jumps, curEnd, and farthest. Iterate through the array once (excluding the last element)."
+]

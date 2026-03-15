@@ -1,0 +1,109 @@
+<h1>Scalability &amp; High Availability Design</h1>
+<p>Scalability is the ability of a system to handle growing load without requiring complete redesign. High availability (HA) ensures the system remains operational even when individual components fail. These two properties are the foundation of production-grade distributed systems — and achieving them requires deliberate architectural decisions at every layer.</p>
+
+<h2>Horizontal vs. Vertical Scaling</h2>
+<table>
+  <thead><tr><th></th><th>Vertical Scaling (Scale Up)</th><th>Horizontal Scaling (Scale Out)</th></tr></thead>
+  <tbody>
+    <tr><td>What it does</td><td>Add CPU/RAM to existing server</td><td>Add more servers</td></tr>
+    <tr><td>Downtime needed?</td><td>Often yes (reboot required)</td><td>No — rolling deployments</td></tr>
+    <tr><td>Cost curve</td><td>Exponential beyond ~32 cores</td><td>Linear with load</td></tr>
+    <tr><td>Limit</td><td>Physical hardware ceiling</td><td>Virtually unlimited</td></tr>
+    <tr><td>Best for</td><td>Databases, stateful services (short-term fix)</td><td>Stateless web servers, APIs</td></tr>
+  </tbody>
+</table>
+
+<h2>Load Balancing Algorithms</h2>
+<p>Load balancers distribute incoming traffic across a pool of servers. The choice of algorithm depends on your workload:</p>
+<ul>
+  <li><strong>Round Robin</strong>: Requests distributed sequentially 1→2→3→1→2→3. Simple, works when all servers have equal capacity and requests take similar time.</li>
+  <li><strong>Least Connections</strong>: Routes each new request to the server with fewest active connections. Best for workloads with highly variable request durations (e.g., video transcoding).</li>
+  <li><strong>IP Hash</strong>: Same client IP always routes to the same server. Enables server-side session affinity without shared session storage.</li>
+  <li><strong>Weighted Round Robin</strong>: Assign weights (e.g., 3× more traffic to servers with higher CPU). Used during gradual rollouts (canary deployments).</li>
+</ul>
+
+<h2>The CAP Theorem</h2>
+<p>A distributed system can guarantee at most <strong>two</strong> of these three properties simultaneously:</p>
+<ul>
+  <li><strong>C — Consistency</strong>: Every read receives the most recent write</li>
+  <li><strong>A — Availability</strong>: Every request receives a response (not necessarily latest data)</li>
+  <li><strong>P — Partition Tolerance</strong>: System works despite dropped network messages between nodes</li>
+</ul>
+<p>In practice, network partitions (P) are inevitable, so your choice is between CP and AP:</p>
+<ul>
+  <li><strong>CP systems</strong> (e.g., PostgreSQL, MongoDB with majority writes): Prefer consistency. Will reject writes during a partition to avoid divergence.</li>
+  <li><strong>AP systems</strong> (e.g., DynamoDB, Cassandra, DNS): Prefer availability. Will serve possibly stale reads during a partition and reconcile later.</li>
+</ul>
+
+<h2>Database Scaling Strategies</h2>
+<h3>Read Replicas</h3>
+<p>The database leader handles all writes; read replicas handle all reads. This offloads 70–90% of traffic in read-heavy workloads:</p>
+<pre><code>// Direct writes to primary (leader), reads to replica pool
+async function getUser(id: string) {
+  return readDb.query('SELECT * FROM users WHERE id = $1', [id]);
+  // readDb connection pool points to replica(s)
+}
+
+async function createUser(data: UserInput) {
+  return writeDb.query('INSERT INTO users ...', [...]);
+  // writeDb connection pool points to primary only
+}</code></pre>
+
+<h3>Database Sharding</h3>
+<p>When a single database server cannot hold all the data, you shard by splitting the data across multiple independent databases. A common strategy is <strong>hash-based sharding</strong>:</p>
+<pre><code>// Route each user to a shard based on their user_id
+function getShardId(userId: string, totalShards: number): number {
+  const hash = crc32(userId);  // Deterministic hash function
+  return hash % totalShards;
+}
+
+function getShardConnection(userId: string) {
+  const shardId = getShardId(userId, 4);  // 4 shard databases
+  return shardConnections[shardId];
+}</code></pre>
+
+<h2>Stateless Architecture</h2>
+<p>Horizontal scaling requires stateless application servers. If server #1 stores user session data in memory, routing the next request to server #2 will require a new login. Move <strong>all state</strong> out of the application process:</p>
+<ul>
+  <li><strong>Sessions</strong>: Store in Redis (shared across all servers) or use JWT tokens (self-contained, no server storage needed)</li>
+  <li><strong>File uploads</strong>: Store in object storage (S3, Cloudflare R2) — never on the local filesystem</li>
+  <li><strong>Scheduled jobs</strong>: Use an external queue (BullMQ, SQS) — not in-process <code>setInterval</code></li>
+</ul>
+
+<h2>High Availability Patterns</h2>
+<h3>Circuit Breaker</h3>
+<p>Prevents a slow downstream service from cascading failures through your entire system:</p>
+<pre><code>import CircuitBreaker from 'opossum';
+
+const breaker = new CircuitBreaker(callPaymentService, {
+  timeout: 3000,           // If call takes > 3s, count as failure
+  errorThresholdPercentage: 50,  // Open circuit if >50% of requests fail
+  resetTimeout: 30000,     // Try half-open after 30s
+});
+
+breaker.fallback(() => ({ status: 'queued', message: 'Payment will be retried' }));
+breaker.on('open', () => alertingService.notify('Payment circuit OPEN — downstream failures!'));
+
+const result = await breaker.fire({ amount: 999, userId: 'usr_123' });
+// If payment service is down: immediately returns fallback, no timeout waiting</code></pre>
+
+<h3>Health Checks &amp; Auto-Healing</h3>
+<pre><code>// Express health check endpoint (checked by load balancer every 30s)
+app.get('/health', async (req, res) => {
+  const checks = {
+    database: await checkDbConnection(),
+    redis: await checkRedisConnection(),
+    externalApi: await checkExternalApi(),
+  };
+  const healthy = Object.values(checks).every(Boolean);
+  res.status(healthy ? 200 : 503).json({ status: healthy ? 'ok' : 'degraded', checks });
+});
+// If this returns 503, the load balancer removes the server from rotation
+// Kubernetes/ECS will restart the container automatically</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Design for failure — assume any server will crash at any moment. Build redundancy into every layer: multiple API servers, multi-AZ databases, CDN with origin failover.</li>
+  <li>Implement graceful shutdown — drain in-flight requests before stopping (<code>SIGTERM</code> handler with 30s drain window). This eliminates request failures during deployments.</li>
+  <li>Use exponential backoff with jitter when retrying failed requests — flat retry intervals cause thundering herd problems that worsen outages.</li>
+</ul>

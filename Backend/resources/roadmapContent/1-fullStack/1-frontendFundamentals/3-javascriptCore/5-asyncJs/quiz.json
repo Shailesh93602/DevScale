@@ -1,0 +1,96 @@
+{
+    "title": "Async JavaScript Quiz",
+    "description": "Test your understanding of Promises, async/await, and the event loop.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What are the three states of a JavaScript Promise?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Start, Running, End",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Pending, Fulfilled, Rejected",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Loading, Success, Error",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Open, Closed, Settled",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which Promise combinator runs all promises in parallel and resolves only when ALL succeed?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Promise.race()",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Promise.any()",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Promise.all()",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Promise.resolve()",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In the event loop, which queue is processed BEFORE setTimeout callbacks?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Macrotask queue",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Microtask queue (Promises)",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Both are processed simultaneously",
+                    "isCorrect": false
+                },
+                {
+                    "text": "whichever was queued first",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does response.ok check when using fetch()?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Whether the network is connected",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Whether the HTTP status code is in the 200-299 range",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Whether the response body is not empty",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Whether cookies are set",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

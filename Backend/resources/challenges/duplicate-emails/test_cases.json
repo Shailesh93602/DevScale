@@ -1,0 +1,32 @@
+[
+  {
+    "input": "{\"Person\": [{\"id\": 1, \"email\": \"a@b.com\"}, {\"id\": 2, \"email\": \"c@d.com\"}, {\"id\": 3, \"email\": \"a@b.com\"}]}",
+    "output": "[{\"Email\": \"a@b.com\"}]",
+    "explanation": "a@b.com appears twice.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Person\": [{\"id\": 1, \"email\": \"joe@mail.com\"}, {\"id\": 2, \"email\": \"bob@mail.com\"}, {\"id\": 3, \"email\": \"joe@mail.com\"}, {\"id\": 4, \"email\": \"joe@mail.com\"}, {\"id\": 5, \"email\": \"bob@mail.com\"}]}",
+    "output": "[{\"Email\": \"joe@mail.com\"}, {\"Email\": \"bob@mail.com\"}]",
+    "explanation": "Both emails appear more than once.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Person\": [{\"id\": 1, \"email\": \"unique@test.com\"}, {\"id\": 2, \"email\": \"also@unique.com\"}]}",
+    "output": "[]",
+    "explanation": "No duplicates exist.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Person\": [{\"id\": 1, \"email\": \"x@x.com\"}, {\"id\": 2, \"email\": \"x@x.com\"}, {\"id\": 3, \"email\": \"x@x.com\"}, {\"id\": 4, \"email\": \"x@x.com\"}]}",
+    "output": "[{\"Email\": \"x@x.com\"}]",
+    "explanation": "Same email appears 4 times but only listed once.",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"Person\": [{\"id\": 1, \"email\": \"a@a.com\"}]}",
+    "output": "[]",
+    "explanation": "Single row cannot have duplicates.",
+    "is_hidden": true
+  }
+]

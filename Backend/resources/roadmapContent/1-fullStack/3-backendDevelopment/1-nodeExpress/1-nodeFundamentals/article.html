@@ -1,0 +1,80 @@
+<h1>Node.js Fundamentals</h1>
+<p>Node.js is a <strong>JavaScript runtime</strong> built on Chrome's V8 engine. It lets you run JavaScript on the server, enabling full-stack development with one language.</p>
+
+<h2>How Node.js Works</h2>
+<ul>
+  <li><strong>Single-threaded</strong> — one execution thread handles all requests.</li>
+  <li><strong>Non-blocking I/O</strong> — I/O operations (disk, network) are asynchronous; Node doesn't wait.</li>
+  <li><strong>Event Loop</strong> — constantly polls for completed async operations and executes their callbacks.</li>
+  <li>This makes Node excellent for I/O-heavy apps (APIs, chat, streaming) but not CPU-intensive tasks.</li>
+</ul>
+
+<h2>Core Modules</h2>
+<pre><code>const path = require("path");
+const fs   = require("fs/promises");
+const os   = require("os");
+const http = require("http");
+
+// Path operations
+path.join(__dirname, "data", "users.json"); // Safe cross-platform paths
+path.extname("image.png");  // ".png"
+path.basename("/data/users.json"); // "users.json"
+
+// File system (async)
+const data = await fs.readFile("data.json", "utf-8");
+const parsed = JSON.parse(data);
+await fs.writeFile("output.json", JSON.stringify(result, null, 2));
+
+// System info
+os.cpus().length;     // Number of CPU cores
+os.freemem();         // Free RAM in bytes
+os.platform();        // "darwin", "linux", "win32"</code></pre>
+
+<h2>ES Modules vs CommonJS</h2>
+<pre><code>// CommonJS (traditional Node.js style)
+const express = require("express");
+module.exports = { myFunc };
+
+// ES Modules (modern — in package.json: "type": "module")
+import express from "express";
+export { myFunc };
+export default router;</code></pre>
+
+<h2>Environment Variables</h2>
+<pre><code>// .env file (never commit to git!)
+DATABASE_URL=postgresql://user:pass@localhost:5432/mydb
+JWT_SECRET=super-secret-key-here
+PORT=3000
+
+// Load with dotenv
+import "dotenv/config"; // or require("dotenv").config();
+const port = process.env.PORT ?? 3000;
+const dbUrl = process.env.DATABASE_URL!</code></pre>
+
+<h2>npm — Package Management</h2>
+<pre><code># Install packages
+npm install express       # Production dependency
+npm install -D typescript # Dev-only dependency
+npm install -g nodemon    # Global utility
+
+# Useful scripts in package.json
+{
+  "scripts": {
+    "dev":   "nodemon --exec tsx src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  }
+}</code></pre>
+
+<h2>Node.js Streams</h2>
+<pre><code>import { createReadStream, createWriteStream } from "fs";
+
+// Stream a large file instead of loading it all into memory
+const readable = createReadStream("large-file.csv");
+const writable = createWriteStream("output.csv");
+readable.pipe(writable); // Pipe data through
+
+// HTTP response is a writable stream
+res.write("chunk1");
+res.write("chunk2");
+res.end();</code></pre>

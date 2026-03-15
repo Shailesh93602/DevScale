@@ -1,0 +1,6 @@
+[
+  "Use a Hash Map or Switch statement to store the integer value of each Roman numeral character.",
+  "Iterate through the string from left to right.",
+  "If the current character has a smaller value than the next character (e.g., 'I' before 'V'), it means this is a subtraction case. You should subtract the current character's value instead of adding it.",
+  "Otherwise, just add the current character's value to your running total."
+]

@@ -1,0 +1,56 @@
+<h1>Distributed Tracing in Depth</h1>
+<p>A user reports a checkout page that takes 4 seconds to load. Your CloudWatch alarm says API latency is elevated. But your system has 12 microservices involved in a checkout — which one is slow? This is the problem distributed tracing was designed to solve.</p>
+
+<h2>How Tracing Works</h2>
+<p>Every incoming request is assigned a unique <strong>Trace ID</strong>. As the request flows through each service, each operation creates a <strong>Span</strong> — a timed record of work with a start time, duration, and metadata. Spans form a tree that shows the entire request's journey:</p>
+<pre><code class="language-text">Trace ID: abc123 (User requested /checkout)
+
+├── [0ms]   API Gateway                          → 4100ms total
+│   ├── [12ms]  Auth Service (token validate)    → 45ms
+│   ├── [57ms]  Cart Service (get cart)          → 120ms
+│   │   └── [60ms]  Redis Cache (cache miss)     → 8ms
+│   ├── [177ms] Inventory Service (check stock)  → 3650ms ← ⚠️ BOTTLENECK
+│   │   └── [180ms] PostgreSQL (slow query)      → 3640ms ← ROOT CAUSE
+│   └── [3827ms] Payment Service                 → 230ms
+</code></pre>
+<p>The flame graph immediately reveals that the Inventory Service PostgreSQL query is taking 3.6 seconds. Without tracing, you'd spend hours adding debug logging and redeploy cycles.</p>
+
+<h2>OpenTelemetry Instrumentation</h2>
+<p>The standard way to emit traces today is <strong>OpenTelemetry (OTel)</strong> — a vendor-neutral SDK that works with Jaeger, Tempo, Datadog, Honeycomb, and any compatible backend:</p>
+<pre><code class="language-python">from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+
+# Initialize the tracer (done once at app startup)
+tracer = trace.get_tracer("inventory-service")
+
+def check_stock(product_id: str) -> int:
+    with tracer.start_as_current_span("check_stock") as span:
+        span.set_attribute("product.id", product_id)
+        
+        with tracer.start_as_current_span("db.query"):
+            result = db.execute(
+                "SELECT stock FROM products WHERE id = %s", [product_id]
+            )
+            span.set_attribute("db.rows_returned", len(result))
+        
+        return result[0]["stock"]
+</code></pre>
+
+<h2>W3C Trace Context: Propagation Across Services</h2>
+<p>Trace IDs must be propagated across service boundaries via HTTP headers, so downstream services know which trace they belong to:</p>
+<pre><code class="language-text">HTTP Request: API Gateway → Inventory Service
+Headers:
+  traceparent: 00-abc123def456-0102030405060708-01
+               ^^ ^^^^^^^^^^^^^^^^^ ^^^^^^^^^^^^^^^^
+               version  trace-id (128bit)  parent-span-id
+
+The Inventory Service reads traceparent and creates child spans
+under the same trace-id — building the complete request tree.
+</code></pre>
+
+<h2>Jaeger & Grafana Tempo</h2>
+<ul>
+  <li><strong>Jaeger:</strong> Open-source distributed tracing system developed by Uber. Provides a UI for searching traces by service, time, or latency percentile, and a dependency graph of service call relationships.</li>
+  <li><strong>Grafana Tempo:</strong> Cost-efficient tracing backend designed for massive scale. Uses object storage (S3) instead of expensive indexing, queries traces by Trace ID, and integrates directly with Grafana dashboards to correlate traces with metrics and logs — the "three pillars of observability" in one UI.</li>
+</ul>

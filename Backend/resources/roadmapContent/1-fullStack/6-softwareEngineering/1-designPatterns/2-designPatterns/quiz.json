@@ -1,0 +1,26 @@
+{
+    "questions": [
+        {
+            "question": "Which category does the Factory pattern belong to?",
+            "options": [
+                "Behavioral",
+                "Structural",
+                "Creational",
+                "Architectural"
+            ],
+            "correctAnswer": 2,
+            "explanation": "Creational patterns provide various object creation mechanisms."
+        },
+        {
+            "question": "The Observer pattern is primarily used for:",
+            "options": [
+                "Object creation",
+                "Real-time communication and event handling",
+                "Encapsulating algorithms",
+                "Simplifying complex interfaces"
+            ],
+            "correctAnswer": 1,
+            "explanation": "Observer is a behavioral pattern used for notification systems."
+        }
+    ]
+}

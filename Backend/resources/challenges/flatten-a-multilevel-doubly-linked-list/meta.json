@@ -1,0 +1,41 @@
+{
+  "title": "Flatten a Multilevel Doubly Linked List",
+  "slug": "flatten-a-multilevel-doubly-linked-list",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": [
+    "linked-list",
+    "depth-first-search",
+    "doubly-linked-list"
+  ],
+  "company_tags": [
+    "Bloomberg",
+    "Microsoft",
+    "Amazon",
+    "Apple"
+  ],
+  "topic_tags": [
+    "linked lists",
+    "depth-first search"
+  ],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "The `head` of the first level of the list.",
+  "output_format": "The head of the newly flattened doubly linked list.",
+  "example_input": "head = [1,2,3,4,5,6,null,null,null,7,8,9,10,null,null,11,12]",
+  "example_output": "[1,2,3,7,8,11,12,9,10,4,5,6]",
+  "constraints": "- The number of Nodes will not exceed `1000`.\n- `1 <= Node.val <= 10^5`",
+  "function_signature": "function flatten(head: _Node | null): _Node | null {}",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,6 @@
+[
+  "Keep a copy of the original array and a 'current' array. Use a history stack (array of arrays) for undo.",
+  "For moveItem: use splice(fromIndex, 1) to remove, then splice(toIndex, 0, item) to insert.",
+  "For swap: use destructuring assignment [arr[a], arr[b]] = [arr[b], arr[a]].",
+  "Before each operation, push a copy of the current state onto the history stack. Undo just pops from the stack."
+]

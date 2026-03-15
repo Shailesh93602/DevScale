@@ -1,0 +1,118 @@
+{
+    "title": "Kafka Streams Quiz",
+    "description": "Test your knowledge on KStreams, KTables, state stores, and stream processing concepts.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the primary difference between a KStream and a KTable?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A KStream handles inserts only, while a KTable behaves like a changelog where new records overwrite old ones with the same key.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A KStream is stored in memory, while a KTable is strictly stored on disk.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A KStream can be joined to other topics, but a KTable cannot.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A KTable is for batch processing and KStream is for real-time processing.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What local database does Kafka Streams embed by default to manage stateful aggregations?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "SQLite",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Redis",
+                    "isCorrect": false
+                },
+                {
+                    "text": "RocksDB",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Cassandra",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which infrastructure requirement differentiates Kafka Streams from Apache Spark or Flink?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Kafka Streams requires a Hadoop YARN cluster to run.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Kafka Streams does NOT require a separate processing cluster; it runs as a standard application library.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Kafka Streams requires Zookeeper to manage its streaming tasks.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Kafka Streams requires an Apache Airflow scheduler.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "If you need to join a very small, rarely changing dimension topic (like Zip Codes) cleanly to a massive stream, what abstraction is best?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "KStream",
+                    "isCorrect": false
+                },
+                {
+                    "text": "KTable",
+                    "isCorrect": false
+                },
+                {
+                    "text": "GlobalKTable",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Change Data Stream",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does it mean for two Kafka topics to be 'co-partitioned' before a standard join?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "They must have the exact same number of partitions and the same partitioning strategy.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "They must be hosted on the same Kafka broker.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "They must use the exact same AVRO schema.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "They must have the same offset retention policy.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,62 @@
+[
+  {
+    "input": "10 requests from client-1 with limit of 10/minute",
+    "output": "All 10 allowed. 11th request denied with retryAfter.",
+    "explanation": "Rate limiter allows requests up to the configured limit and denies excess requests.",
+    "is_hidden": false
+  },
+  {
+    "input": "Token bucket: burst of 5 requests, wait 1 second, 5 more requests (limit: 10/10s)",
+    "output": "All 10 requests allowed. Tokens refill over time.",
+    "explanation": "Token bucket allows short bursts up to bucket capacity. Tokens refill at a steady rate.",
+    "is_hidden": false
+  },
+  {
+    "input": "Fixed window: 50 requests at end of window, 50 at start of next window",
+    "output": "All 100 allowed (50 + 50), even with limit of 50/window",
+    "explanation": "Fixed window vulnerability: burst at window boundary allows 2x the limit in a short period.",
+    "is_hidden": false
+  },
+  {
+    "input": "Sliding window: same scenario as above",
+    "output": "Only 50 allowed total across the sliding window",
+    "explanation": "Sliding window counter prevents the boundary burst issue by weighting the previous window.",
+    "is_hidden": false
+  },
+  {
+    "input": "Rate limited response",
+    "output": "{ \"allowed\": false, \"remaining\": 0, \"retryAfter\": 30 } with 429 status",
+    "explanation": "Denied requests include remaining=0 and a retryAfter indicating when to retry.",
+    "is_hidden": false
+  },
+  {
+    "input": "Two different clients making requests",
+    "output": "Each client has independent rate limits",
+    "explanation": "Rate limits are tracked per client ID. One client being rate limited does not affect others.",
+    "is_hidden": true
+  },
+  {
+    "input": "Per-endpoint rules: /api/search (30/min) vs /api/upload (5/min)",
+    "output": "Each endpoint enforces its own limit independently",
+    "explanation": "Different endpoints can have different rate limits based on configured rules.",
+    "is_hidden": true
+  },
+  {
+    "input": "Express middleware returns proper headers",
+    "output": "X-RateLimit-Limit: 100, X-RateLimit-Remaining: 95, X-RateLimit-Reset: 1705312800",
+    "explanation": "Middleware adds standard rate limit headers to every response for client information.",
+    "is_hidden": true
+  },
+  {
+    "input": "Rate limit resets after window expires",
+    "output": "Client can make requests again after the window resets",
+    "explanation": "After the time window passes, the client's quota is fully restored.",
+    "is_hidden": true
+  },
+  {
+    "input": "Configure with zero maxRequests",
+    "output": "All requests denied (effectively blocks the client)",
+    "explanation": "Setting maxRequests to 0 blocks all traffic for the configured scope.",
+    "is_hidden": true
+  }
+]

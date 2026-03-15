@@ -1,0 +1,20 @@
+{
+  "title": "Merge K Sorted Arrays",
+  "slug": "merge-k-sorted-lists-heap",
+  "difficulty": "Hard",
+  "category": "algorithms",
+  "points": 150,
+  "tags": ["array","divide-and-conquer","heap","merge-sort"],
+  "company_tags": ["Amazon","Facebook","Microsoft","Google"],
+  "topic_tags": ["heaps","priority queue","divide and conquer"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An array of `k` arrays of integers, each sorted in ascending order.",
+  "output_format": "A single sorted array containing all the elements.",
+  "example_input": "arrays = [[1,4,5],[1,3,4],[2,6]]",
+  "example_output": "[1,1,2,3,4,4,5,6]",
+  "constraints": "- `k == arrays.length`\n- `0 <= k <= 10^4`\n- `0 <= arrays[i].length <= 500`\n- `-10^4 <= arrays[i][j] <= 10^4`\n- `arrays[i]` is sorted in ascending order.\n- The sum of `arrays[i].length` will not exceed `10^4`.",
+  "function_signature": "function mergeKArrays(arrays: number[][]): number[] {}",
+  "status": "ACTIVE"
+}

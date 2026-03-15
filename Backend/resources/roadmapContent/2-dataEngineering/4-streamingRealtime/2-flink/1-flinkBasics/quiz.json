@@ -1,0 +1,118 @@
+{
+    "title": "Flink Basics Quiz",
+    "description": "Test your knowledge on Flink architecture, Event Time vs Processing Time, and State.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Which architecture component serves as the 'worker' node in an Apache Flink cluster?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "JobManager",
+                    "isCorrect": false
+                },
+                {
+                    "text": "TaskManager",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Zookeeper",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Broker",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the difference between Event Time and Processing Time in stream processing?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Event Time is when the source produced the event; Processing Time is when the cluster executes the event.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Event Time measures latency; Processing Time measures throughput.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Event Time only supports batch jobs; Processing Time supports streams.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "They operate identically but run on different nodes.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How does Flink ensure Exactly-Once processing in the face of machine failures?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "By executing jobs synchronously.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By duplicating events to all consumers.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By periodically taking Checkpoints of the state and restoring from them upon failure.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "By caching data exclusively in CPU L3 cache.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which database does Flink frequently embed to manage state that is larger than the available RAM?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "MongoDB",
+                    "isCorrect": false
+                },
+                {
+                    "text": "PostgreSQL",
+                    "isCorrect": false
+                },
+                {
+                    "text": "RocksDB",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Neo4j",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "If you are a Data Analyst running continuous SQL queries against arriving streaming data, which Flink API are you using?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "DataStream API",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Table API / Flink SQL",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Batch execution mode",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The State Funnels API",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

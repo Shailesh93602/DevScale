@@ -1,0 +1,109 @@
+<h1>Offline Storage & Local Databases</h1>
+<p>Unlike web apps, mobile apps are expected to remain somewhat functional even in airplane mode, subway tunnels, or poor rural coverage areas. Achieving a true offline-first or rich offline experience requires caching data directly on the device using local storage solutions. React Native offers several tiers of storage ranging from simple key-value stores to high-performance relational databases.</p>
+
+<h2>Storage Hierarchy in React Native</h2>
+<table>
+  <thead><tr><th>Solution</th><th>Data Type</th><th>Performance</th><th>Best Used For</th></tr></thead>
+  <tbody>
+    <tr><td>AsyncStorage</td><td>Key/Value Strings</td><td>Slow (Disk I/O)</td><td>Preferences, UI metadata, flags</td></tr>
+    <tr><td>SecureStore</td><td>Encrypted Key/Value</td><td>Slow (Enclave)</td><td>JWT tokens, API keys, passwords</td></tr>
+    <tr><td>SQLite</td><td>Relational SQL DB</td><td>Fast</td><td>Complex querying, hundreds of rows</td></tr>
+    <tr><td>WatermelonDB</td><td>Local-first ORM</td><td>Ultra-fast</td><td>10k+ rows, offline-first syncing</td></tr>
+  </tbody>
+</table>
+
+<h2>AsyncStorage</h2>
+<p><code>@react-native-async-storage/async-storage</code> is the most basic storage mechanism. It writes to a plain text file on the device. Because it only accepts string values, you must constantly <code>JSON.stringify()</code> and <code>JSON.parse()</code> your objects — causing extreme performance degradation if you attempt to store large datasets (like an entire product catalog).</p>
+
+<pre><code>npx expo install @react-native-async-storage/async-storage</code></pre>
+<pre><code>import AsyncStorage from '@react-native-async-storage/async-storage';
+
+export const storeData = async (value: object) => {
+  try {
+    const jsonValue = JSON.stringify(value);
+    await AsyncStorage.setItem('user_profile', jsonValue);
+  } catch (e) {
+    console.error('Failed to save the data to the storage', e);
+  }
+};
+
+export const getData = async () => {
+  try {
+    const jsonValue = await AsyncStorage.getItem('user_profile');
+    return jsonValue != null ? JSON.parse(jsonValue) : null;
+  } catch (e) {
+    console.error('Failed to fetch the data from storage', e);
+  }
+};</code></pre>
+<p><strong>SECURITY WARNING:</strong> An attacker with physical access to an unlocked Android phone can easily extract AsyncStorage databases using a rooted OS or Android development tools. <strong>Never</strong> store PII, health data, or authentication tokens in AsyncStorage.</p>
+
+<h2>Expo SecureStore</h2>
+<p>For sensitive data, Expo provides a drop-in replacement that uses the <strong>iOS Secure Enclave / Android Keystore system</strong>. Data written to SecureStore is encrypted with a hardware-backed key that cannot be extracted from the device processor.</p>
+
+<pre><code>npx expo install expo-secure-store</code></pre>
+<pre><code>import * as SecureStore from 'expo-secure-store';
+
+async function saveAuthToken(value: string) {
+  // Saved inside the iPhone's dedicated security chip
+  await SecureStore.setItemAsync('auth_jwt_token', value);
+}
+
+async function getAuthToken() {
+  const result = await SecureStore.getItemAsync('auth_jwt_token');
+  if (result) {
+    // Automatically decrypted at retrieval time
+    console.log("Token retrieved securely");
+    return result;
+  }
+}</code></pre>
+
+<h2>Expo SQLite (Relational Local Database)</h2>
+<p>When you need to store thousands of items (like a list of 5,000 downloaded podcast episodes) and want to query, sort, and filter them instantly without locking the JS thread, you need a true database. Every mobile OS ships with an embedded SQLite engine.</p>
+
+<pre><code>npx expo install expo-sqlite</code></pre>
+<pre><code>import * as SQLite from 'expo-sqlite';
+
+// Opens or creates a database file on the phone
+const db = SQLite.openDatabaseSync('podcasts.db');
+
+export function initializeDatabase() {
+  // Sync wrapper avoids unhandled promises at initialization
+  db.execSync(`
+    CREATE TABLE IF NOT EXISTS episodes (
+      id INTEGER PRIMARY KEY NOT NULL,
+      title TEXT NOT NULL,
+      download_path TEXT,
+      duration_minutes INTEGER
+    );
+  `);
+}
+
+export function saveEpisode(id: number, title: string, path: string, duration: number) {
+  const statement = db.prepareSync(
+    'INSERT INTO episodes (id, title, download_path, duration_minutes) VALUES ($id, $title, $path, $dur)'
+  );
+  try {
+    const result = statement.executeSync({ 
+      $id: id, $title: title, $path: path, $dur: duration 
+    });
+    console.log(`Saved row ${result.lastInsertRowId}`);
+  } finally {
+    statement.finalizeSync(); // Prevent memory leaks
+  }
+}
+
+export function getDownloadedEpisodes() {
+  // Returns all matching rows instantly from native side
+  return db.getAllSync('SELECT * FROM episodes WHERE download_path IS NOT NULL');
+}</code></pre>
+
+<h2>WatermelonDB (Offline-First ORM)</h2>
+<p>Using raw SQL gets messy when your app state needs to be reactive (a component automatically re-rendering when a row in the database changes). <strong>WatermelonDB</strong> is a highly optimized database built on top of SQLite specifically for React Native.</p>
+<p>In Watermelon, data lives permanently on the disk and is only briefly loaded into RAM when requested. Components subscribe to queries using Observables, meaning your UI updates instantly as the local database changes. This is the foundation of "Local-First" architecture — where the user interacts exclusively with the local database, and a background sync engine pushes the changes up to your server API whenever the internet connection returns.</p>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always treat mobile storage as ephemeral cache — users change phones, uninstall apps, and wipe storage data. Never treat local data as the single source of truth for critical content unless it's an offline-syncing application.</li>
+  <li>Avoid putting huge arrays (e.g. 5,000 objects) into AsyncStorage or Zustand Persist. The JSON parsing blocks the React Native JavaScript thread, freezing your app's animations during retrieval. Move arrays >50 items into SQLite.</li>
+  <li>Use SecureStore for any token that grants API access, including OAuth refresh tokens and API keys.</li>
+</ul>

@@ -1,0 +1,118 @@
+{
+    "title": "Airflow Scheduling & Monitoring Quiz",
+    "description": "Test your knowledge of Airflow schedules, SLAs, backfilling, and monitoring.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What does setting `catchup=False` on a DAG do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Disables all retries",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Prevents Airflow from backfilling missed DAG runs",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Pauses the DAG",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Clears all previous run logs",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What cron expression runs a job daily at 6 AM?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "6 0 * * *",
+                    "isCorrect": false
+                },
+                {
+                    "text": "0 6 * * *",
+                    "isCorrect": true
+                },
+                {
+                    "text": "* 6 * * 0",
+                    "isCorrect": false
+                },
+                {
+                    "text": "0 * 6 * *",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does an Airflow SLA represent?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A scheduled log archive",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A maximum expected duration for a task or DAG run",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A security access level",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A task retry strategy",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which Airflow UI view shows a task-by-task duration timeline?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Graph View",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Grid View",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Gantt Chart",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Logs View",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does `max_active_runs=1` prevent?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Running more than one task at a time",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Multiple DAG runs running concurrently",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Backfilling historical runs",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Scheduling on weekends",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

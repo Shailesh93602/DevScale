@@ -1,0 +1,6 @@
+[
+  "The base cases are F(0) = 0 and F(1) = 1.",
+  "Each Fibonacci number is the sum of the two before it: F(n) = F(n-1) + F(n-2).",
+  "You can compute this iteratively from bottom up instead of using recursion.",
+  "Only two previous values are needed at any time - use two variables for O(1) space."
+]

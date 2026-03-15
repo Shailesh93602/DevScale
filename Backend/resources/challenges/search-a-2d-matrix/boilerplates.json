@@ -1,0 +1,10 @@
+{
+  "typescript": "function searchMatrix(matrix: number[][], target: number): boolean {\n    \n};",
+  "javascript": "/**\n * @param {number[][]} matrix\n * @param {number} target\n * @return {boolean}\n */\nvar searchMatrix = function(matrix, target) {\n    \n};",
+  "python": "class Solution:\n    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public boolean searchMatrix(int[][] matrix, int target) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool searchMatrix(vector<vector<int>>& matrix, int target) {\n        \n    }\n};",
+  "go": "func searchMatrix(matrix [][]int, target int) bool {\n    \n}",
+  "rust": "impl Solution {\n    pub fn search_matrix(matrix: Vec<Vec<i32>>, target: i32) -> bool {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public bool SearchMatrix(int[][] matrix, int target) {\n        \n    }\n}"
+}

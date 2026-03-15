@@ -1,0 +1,7 @@
+[
+  {"input":"{\"commands\":[\"Trie\",\"insert\",\"search\",\"search\",\"startsWith\",\"insert\",\"search\"], \"args\":[[],[\"apple\"],[\"apple\"],[\"app\"],[\"app\"],[\"app\"],[\"app\"]]}","output":"[null,null,true,false,true,null,true]","explanation":"Basic operations","is_hidden":false},
+  {"input":"{\"commands\":[\"Trie\",\"search\",\"startsWith\"], \"args\":[[],[\"a\"],[\"a\"]]}","output":"[null,false,false]","explanation":"Search in empty trie","is_hidden":false},
+  {"input":"{\"commands\":[\"Trie\",\"insert\",\"insert\",\"insert\",\"search\",\"startsWith\"], \"args\":[[],[\"a\"],[\"ab\"],[\"abc\"],[\"ab\"],[\"a\"]]}","output":"[null,null,null,null,true,true]","explanation":"Multiple prefixes inserted","is_hidden":true},
+  {"input":"{\"commands\":[\"Trie\",\"insert\",\"search\",\"startsWith\"], \"args\":[[],[\"hello\"],[\"hell\"],[\"hello\"]]}","output":"[null,null,false,true]","explanation":"Reverse prefix checks","is_hidden":true},
+  {"input":"{\"commands\":[\"Trie\",\"insert\",\"search\",\"startsWith\",\"search\",\"startsWith\"], \"args\":[[],[\"p\"],[\"p\"],[\"p\"],[\"\"],[\"\"]]}","output":"[null,null,true,true,false,true]","explanation":"Empty string checks","is_hidden":true}
+]

@@ -1,0 +1,24 @@
+[
+  {
+    "input": { "candidates": [10, 1, 2, 7, 6, 1, 5], "target": 8 },
+    "output": [[1, 1, 6], [1, 2, 5], [1, 7], [2, 6]],
+    "explanation": "Four unique combinations sum to 8.",
+    "is_hidden": false
+  },
+  {
+    "input": { "candidates": [2, 5, 2, 1, 2], "target": 5 },
+    "output": [[1, 2, 2], [5]],
+    "explanation": "Two unique combinations sum to 5.",
+    "is_hidden": false
+  },
+  {
+    "input": { "candidates": [1, 1], "target": 1 },
+    "output": [[1]],
+    "is_hidden": true
+  },
+  {
+    "input": { "candidates": [1, 1, 1], "target": 2 },
+    "output": [[1, 1]],
+    "is_hidden": true
+  }
+]

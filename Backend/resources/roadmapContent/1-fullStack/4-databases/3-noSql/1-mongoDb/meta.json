@@ -1,0 +1,4 @@
+{
+    "name": "MongoDB",
+    "description": "Document-based NoSQL database: collections, CRUD operations, aggregation pipelines and indexing."
+}

@@ -1,0 +1,19 @@
+{
+  "title": "Word Break",
+  "slug": "word-break",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["dynamic-programming", "string", "hash-table"],
+  "company_tags": ["Amazon", "Google", "Facebook", "Microsoft", "Apple", "Bloomberg"],
+  "topic_tags": ["dynamic programming", "string", "trie"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "A string `s` and a list of strings `wordDict`.",
+  "output_format": "Return `true` if `s` can be segmented into a space-separated sequence of dictionary words.",
+  "example_input": "s = \"leetcode\", wordDict = [\"leet\",\"code\"]",
+  "example_output": "true",
+  "constraints": "- `1 <= s.length <= 300`\n- `1 <= wordDict.length <= 1000`\n- `1 <= wordDict[i].length <= 20`\n- `s` and `wordDict[i]` consist of only lowercase English letters.\n- All strings in `wordDict` are unique.",
+  "function_signature": "function wordBreak(s: string, wordDict: string[]): boolean {}",
+  "status": "ACTIVE"
+}

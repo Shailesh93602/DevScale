@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is 'training-serving skew' and how does a feature store eliminate it?",
+            "options": [
+                "Training-serving skew occurs when the model is trained on old data but served on new data.",
+                "Training-serving skew occurs when features are computed differently at training time vs. serving time — for example, training uses a pandas groupby for '30-day rolling average' but production uses a different window or timezone, producing different feature values for the same customer. A feature store eliminates this by maintaining ONE canonical feature computation definition that is called identically by both the offline training pipeline and the online serving system.",
+                "Training-serving skew describes the performance difference between train and test accuracy.",
+                "Training-serving skew occurs when the model weights used in training differ from the deployed weights."
+            ],
+            "answer": "Training-serving skew occurs when features are computed differently at training time vs. serving time — for example, training uses a pandas groupby for '30-day rolling average' but production uses a different window or timezone, producing different feature values for the same customer. A feature store eliminates this by maintaining ONE canonical feature computation definition that is called identically by both the offline training pipeline and the online serving system.",
+            "explanation": "Uber's ML team documented training-serving skew as one of the top causes of unexplained model performance degradation. Their Michelangelo feature store (an early commercial feature store) was built specifically to eliminate it. The problem is particularly subtle because compute differences are invisible — the model receives different inputs than it was trained on."
+        },
+        {
+            "question": "Why must DVC pipelines (dvc repro) be defined in dvc.yaml rather than just running the training script directly each time?",
+            "options": [
+                "DVC pipelines run faster than running scripts directly due to GPU optimization.",
+                "DVC tracks the content hash of each stage's inputs (data files, code, parameters). When dvc repro is called, it only re-executes stages whose inputs have changed — skipping expensive preprocessing or training steps that don't need re-running. Additionally, the pipeline definition makes the entire ML workflow reproducible: anyone cloning the repo can run dvc repro and get exactly the same model with the same metrics.",
+                "DVC pipelines automatically parallelize all pipeline stages across multiple machines.",
+                "dvc.yaml required for DVC to track metrics — metadata cannot be tracked otherwise."
+            ],
+            "answer": "DVC tracks the content hash of each stage's inputs (data files, code, parameters). When dvc repro is called, it only re-executes stages whose inputs have changed — skipping expensive preprocessing or training steps that don't need re-running. Additionally, the pipeline definition makes the entire ML workflow reproducible: anyone cloning the repo can run dvc repro and get exactly the same model with the same metrics.",
+            "explanation": "A 3-stage pipeline: preprocess (30 min) → train (4 hours) → evaluate (5 min). You fix a bug in evaluate.py. dvc repro: detects preprocess.py and data unchanged → skip preprocess. Detects train.py and data unchanged → skip training. Only re-runs evaluate.py (5 min). Saved 4.5 hours."
+        },
+        {
+            "question": "A feature store has both 'offline' and 'online' stores. What is the key architectural difference and why are both needed?",
+            "options": [
+                "The offline store is for training on batch data; the online store is for real-time streaming data.",
+                "The offline store (data warehouse/data lake) provides low-latency historical features for model training — returning features for millions of training examples over a time range. The online store (low-latency database like Redis or DynamoDB) provides single-entity feature lookup at p99 < 20ms for real-time inference. Both are needed because training requires historical breadth (all customers over 6 months) while serving requires instant depth (this customer right now).",
+                "The offline store is for features computed in Python; the online store is for SQL-computed features.",
+                "Offline stores are used by data scientists; online stores are used by ML engineers."
+            ],
+            "answer": "The offline store (data warehouse/data lake) provides low-latency historical features for model training — returning features for millions of training examples over a time range. The online store (low-latency database like Redis or DynamoDB) provides single-entity feature lookup at p99 < 20ms for real-time inference. Both are needed because training requires historical breadth (all customers over 6 months) while serving requires instant depth (this customer right now).",
+            "explanation": "A BigQuery offline store can return all 5M customers' features from the last year in 2 minutes — perfect for training. It cannot do a single customer lookup in 10ms. Redis online store can do that single lookup in 1ms — but cannot serve 5M records for training. Feature stores bridge this with materialization jobs."
+        }
+    ]
+}

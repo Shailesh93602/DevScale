@@ -1,0 +1,1 @@
+["Iterate through the grid. When you find a '1', increment the island count and do a DFS/BFS to mark all connected land cells as visited (change '1' to '0' or use a visited set).", "Every DFS/BFS call from an unvisited '1' represents discovering a new island.", "Move in 4 directions: up, down, left, right. Make sure to check bounds before recursing."]

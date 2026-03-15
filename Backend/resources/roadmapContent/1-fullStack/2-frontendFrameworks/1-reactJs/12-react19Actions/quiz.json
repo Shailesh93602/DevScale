@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What makes the new 'use' hook in React 19 unique compared to all other hooks?",
+            "options": [
+                "It is the only hook that can return JSX",
+                "It is the only hook that can be called conditionally (e.g., inside an if statement or loop)",
+                "It replaces the need for useState entirely",
+                "It automatically caches data in localStorage"
+            ],
+            "answer": "It is the only hook that can be called conditionally (e.g., inside an if statement or loop)",
+            "explanation": "Unlike useState or useEffect, 'use' can be called inside loops, conditions, or early returns, making it highly flexible for reading Promises and Context values precisely when they are needed."
+        },
+        {
+            "question": "What happens when a component calls use(Promise)?",
+            "options": [
+                "The component renders 'undefined' until the promise resolves",
+                "The component suspends rendering, throwing the promise to the nearest <Suspense> boundary to show a fallback",
+                "The component crashes if the promise is not resolved",
+                "React converts the component into a Class component"
+            ],
+            "answer": "The component suspends rendering, throwing the promise to the nearest <Suspense> boundary to show a fallback",
+            "explanation": "The 'use' hook integrates directly with React Suspense. When you read a pending promise, React stops rendering that component and tells the nearest Suspense wrapper to display its fallback UI."
+        },
+        {
+            "question": "Why is useOptimistic useful in React 19 applications?",
+            "options": [
+                "It automatically retries failed network requests",
+                "It temporarily updates the UI instantly while a background mutation occurs, automatically reverting if the mutation fails",
+                "It compresses images before uploading them",
+                "It replaces the React Router for optimistic navigation"
+            ],
+            "answer": "It temporarily updates the UI instantly while a background mutation occurs, automatically reverting if the mutation fails",
+            "explanation": "Fast perceived performance is crucial. useOptimistic allows you to show the result of an action (like a 'liked' heart) instantly, while the actual network request resolving the final state happens in the background."
+        },
+        {
+            "question": "From where can you access the pending state of a form using the useFormStatus hook?",
+            "options": [
+                "From anywhere in the application using Context",
+                "From the component that rendered the <form> element",
+                "Only from a child component rendered INSIDE the <form> element",
+                "From the global window object"
+            ],
+            "answer": "Only from a child component rendered INSIDE the <form> element",
+            "explanation": "useFormStatus must be called from a component that is a descendant of the <form> element. It reads the form state implicitly from the React tree without needing props passed down."
+        },
+        {
+            "question": "What is the primary benefit of Server Actions?",
+            "options": [
+                "They run JavaScript directly in the browser console",
+                "They allow Client Components to call server-side code without manually creating REST API endpoints",
+                "They automatically style forms",
+                "They replace the need for an SQL database"
+            ],
+            "answer": "They allow Client Components to call server-side code without manually creating REST API endpoints",
+            "explanation": "By using the 'use server' directive, developers can write backend functions (like inserting into a database) and pass them directly to a form's action prop or an onClick handler, completely bypassing API routing boilerplate."
+        }
+    ]
+}

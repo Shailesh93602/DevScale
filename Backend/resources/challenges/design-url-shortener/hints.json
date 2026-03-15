@@ -1,0 +1,6 @@
+[
+  "For short code generation, consider Base62 encoding (a-z, A-Z, 0-9) of an auto-incrementing counter. A 6-character Base62 code can represent 62^6 = 56 billion unique URLs.",
+  "The system is read-heavy (100:1 ratio). Use a caching layer (like Redis) for frequently accessed short URLs. The 80/20 rule means caching 20% of URLs can serve 80% of traffic.",
+  "For analytics, do not block the redirect flow. Publish click events to a message queue asynchronously and process them in a background worker. This keeps redirect latency under 100ms.",
+  "Handle custom aliases by first checking if the alias is already taken. Store a flag to distinguish custom aliases from generated codes, since they follow different validation rules."
+]

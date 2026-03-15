@@ -1,0 +1,4 @@
+{
+    "name": "Git Internals: reflog, bisect & Cherry-pick",
+    "description": "Mastering Git's power user features that save you in production emergencies. git reflog as the ultimate safety net to recover 'lost' commits after hard resets, git bisect for binary-search debugging to find exactly which commit introduced a regression, git cherry-pick for applying specific commits across branches, interactive rebase for rewriting history (squash, fixup, reorder, drop), and git worktrees for working on multiple branches simultaneously."
+}

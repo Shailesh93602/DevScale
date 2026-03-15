@@ -1,0 +1,36 @@
+<h1>Code Splitting & Lazy Loading</h1>
+<p>Modern frontend frameworks allow you to build complex applications. However, this power comes at a cost: giant Javascript bundles. If your application compiles into a single massive 5 Megabyte file, users must physically download and parse all 5 Megabytes before the app is interactive. This destroys your Time to Interactive (TTI).</p>
+
+<h2>The Monolithic Bundle Problem</h2>
+<p>Imagine your React application has an Admin Panel that contains massive charting libraries. If you use standard static imports at the top of your `App.js` file, Webpack packages those massive libraries into the main bundle for every single user, even if they never visit the Admin page.</p>
+
+<h2>WebPack Code Splitting</h2>
+<p>To fix this, we must break the monolithic bundle apart. Instead of generating one giant file, the bundler generates numerous tiny chunks.</p>
+<pre><code>// Dynamic Import Syntax
+const AdminPanel = React.lazy(() =&gt; import('./AdminPanel'));
+</code></pre>
+<p>By utilizing the `import()` function dynamically, you instruct Webpack to cut this specific component out of the main bundle, isolating it into its own separate network chunk.</p>
+
+<h2>React Suspense</h2>
+<p>When you dynamically import a component, the browser requires network time to fetch the Javascript file. While the Javascript is downloading over the internet, React needs to know what to display.</p>
+<p>This is where the <code>&lt;Suspense&gt;</code> component is utilized. It catches the pending network promise and provides a clean loading fallback state.</p>
+<pre><code>import React, { Suspense, lazy } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
+const AdminPanel = lazy(() =&gt; import('./AdminPanel'));
+const Home = lazy(() =&gt; import('./Home'));
+
+function App() {
+  return (
+    &lt;BrowserRouter&gt;
+      &lt;Suspense fallback={&lt;Spinner label="Loading JS..." /&gt;}&gt;
+        &lt;Routes&gt;
+          &lt;Route path="/admin" element={&lt;AdminPanel /&gt;} /&gt;
+          &lt;Route path="/" element={&lt;Home /&gt;} /&gt;
+        &lt;/Routes&gt;
+      &lt;/Suspense&gt;
+    &lt;/BrowserRouter&gt;
+  );
+}
+</code></pre>
+<p>A 50 Megabyte enterprise application is dynamically shattered into tiny 100-kilobyte route-specific optimized payloads. Users safely download only the exact Javascript necessary for the specific page they are viewing.</p>

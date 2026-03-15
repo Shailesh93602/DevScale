@@ -1,0 +1,4 @@
+{
+    "name": "Kafka Security & ACLs",
+    "description": "Securing a production Kafka cluster. Exploring SSL/TLS encryption in transit, SASL authentication, and Access Control Lists (ACLs) to manage topic permissions safely."
+}

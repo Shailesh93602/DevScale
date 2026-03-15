@@ -1,0 +1,29 @@
+{
+  "title": "Product of Array Except Self",
+  "slug": "product-of-array-except-self",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["array", "prefix-sum"],
+  "company_tags": ["Amazon", "Microsoft", "Apple", "Facebook", "Asana"],
+  "topic_tags": ["arrays"],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer array `nums`.",
+  "output_format": "An array `answer` such that `answer[i]` is equal to the product of all the elements of `nums` except `nums[i]`.",
+  "example_input": "nums = [1,2,3,4]",
+  "example_output": "[24,12,8,6]",
+  "constraints": "- `2 <= nums.length <= 10^5`\n- `-30 <= nums[i] <= 30`\n- The product of any prefix or suffix of `nums` is guaranteed to fit in a 32-bit integer.",
+  "function_signature": "function productExceptSelf(nums: number[]): number[] {}",
+  "status": "ACTIVE"
+}

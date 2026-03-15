@@ -1,0 +1,4 @@
+{
+    "name": "State & Core Hooks",
+    "description": "Managing local state with useState, side effects with useEffect, and other essential hooks."
+}

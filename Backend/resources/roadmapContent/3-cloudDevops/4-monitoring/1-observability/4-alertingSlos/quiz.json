@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "An SLO is defined as '99.9% of requests succeed over a 30-day window.' How much downtime (error budget) does this allow per month, and what should happen when this budget is exhausted?",
+            "options": [
+                "0.1% failure allows exactly 1 hour of downtime; alerts are disabled when budget runs out.",
+                "99.9% SLO means 0.1% allowed failures ≈ 43.8 minutes of downtime per month. When the error budget is fully consumed, the SRE principle is to freeze new feature releases, focusing all engineering effort on reliability improvements until the budget is replenished in the next period.",
+                "Exceeding the error budget automatically triggers a rollback of the last deployment.",
+                "The error budget of 0.1% applies to database queries only, not HTTP requests."
+            ],
+            "answer": "99.9% SLO means 0.1% allowed failures ≈ 43.8 minutes of downtime per month. When the error budget is fully consumed, the SRE principle is to freeze new feature releases, focusing all engineering effort on reliability improvements until the budget is replenished in the next period.",
+            "explanation": "The error budget creates a shared language between product and engineering: 'We have 30 minutes of error budget remaining this month. Do you want to risk that budget on a high-risk feature deploy, or save it?'"
+        },
+        {
+            "question": "What is the advantage of 'multi-window multi-burn-rate' alerting over a simple alert like 'fire if error rate > 1% for 5 minutes'?",
+            "options": [
+                "Multi-window alerts use less CPU on the Prometheus server.",
+                "A simple threshold alert fires on transient spikes (causing false positives) and misses slow-burn degradations. Multi-window burn-rate alerts detect how fast the error budget is being consumed — a 14.4x burn rate fires immediately, a 3x burn rate fires after hours — correlating urgency directly with time-to-SLO-breach.",
+                "Simple threshold alerts cannot be sent to PagerDuty.",
+                "Multi-window alerts automatically remediate the issue without paging anyone."
+            ],
+            "answer": "A simple threshold alert fires on transient spikes (causing false positives) and misses slow-burn degradations. Multi-window burn-rate alerts detect how fast the error budget is being consumed — a 14.4x burn rate fires immediately, a 3x burn rate fires after hours — correlating urgency directly with time-to-SLO-breach.",
+            "explanation": "At 14.4x burn rate, your 30-day budget depletes in 2 hours — wake the on-call immediately. At 1x burn rate, you'll exactly hit the SLO boundary at month end — that's a Slack notification, not a 3am page."
+        },
+        {
+            "question": "Why should an error rate SLI distinguish between 'explicit' errors (HTTP 5xx) and 'implicit' errors (HTTP 200 with timeout/empty body)?",
+            "options": [
+                "Only explicit 5xx errors count against an SLO; implicit errors are client-side issues.",
+                "Implicit errors (a 200 response that returns an empty result due to a timeout) represent a failed user experience just as much as a 500 error does. If only 5xx are tracked, a service that silently returns empty responses to 20% of users looks artificially healthy in SLI metrics.",
+                "Implicit errors cause higher p99 latency and must be excluded from error rate SLIs.",
+                "HTTP clients automatically retry 200 responses with empty bodies, so they don't count."
+            ],
+            "answer": "Implicit errors (a 200 response that returns an empty result due to a timeout) represent a failed user experience just as much as a 500 error does. If only 5xx are tracked, a service that silently returns empty responses to 20% of users looks artificially healthy in SLI metrics.",
+            "explanation": "A search API that returns HTTP 200 with an empty results array due to a backend timeout is lying to the client. From the user's perspective, search is broken. From the SLO dashboard perspective (if only tracking 5xx), everything looks fine."
+        }
+    ]
+}

@@ -1,0 +1,6 @@
+[
+  "The problem defines a recursive sequence. You can generate the sequence iteratively starting from n = 1.",
+  "Base case: for n = 1, the result is '1'.",
+  "To calculate n = 2, you need the result of n = 1. To calculate n = 3, you need the result of n = 2. So, you can use a loop that runs n - 1 times.",
+  "In each iteration, read the string from the previous step. Group consecutive identical characters, count them, and append the count followed by the character to build the new string."
+]

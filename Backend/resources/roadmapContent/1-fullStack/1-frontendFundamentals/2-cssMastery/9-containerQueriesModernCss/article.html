@@ -1,0 +1,147 @@
+<h1>CSS Container Queries, Cascade Layers & Modern CSS</h1>
+<p>Container queries are the biggest advancement in CSS responsive design since Flexbox. They solve a fundamental problem: components that respond to their <em>container's</em> size, not the viewport — enabling truly portable, reusable UI components.</p>
+
+<h2>Container Queries (@container)</h2>
+<pre><code class="language-css">/* Step 1: Define a containment context */
+.card-wrapper {
+  container-type: inline-size;  /* Listen to width changes */
+  container-name: card;         /* Optional name for specificity */
+}
+
+/* Step 2: Write component-level responsive rules */
+.card {
+  /* Mobile-first: stacked layout */
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+/* When THIS COMPONENT's container is 500px or wider */
+@container card (min-width: 500px) {
+  .card {
+    flex-direction: row;     /* Side-by-side layout */
+    padding: 2rem;
+  }
+
+  .card__image {
+    width: 200px;
+    flex-shrink: 0;
+  }
+}
+
+/* The same .card can be used in a narrow sidebar AND a wide main area:
+   In the sidebar: stacked layout (container is 280px wide)
+   In the main area: horizontal layout (container is 600px wide)
+   Zero media query modifications needed! */
+</code></pre>
+
+<h2>Cascade Layers (@layer)</h2>
+<pre><code class="language-css">/* Cascade layers create explicit specificity ordering.
+   Layers declared later WIN over layers declared earlier — 
+   regardless of selector specificity. */
+
+/* Declare layer order upfront */
+@layer reset, base, components, utilities;
+
+/* Reset layer — lowest priority */
+@layer reset {
+  *, *::before, *::after { box-sizing: border-box; }
+  margin: 0; padding: 0;
+}
+
+/* Component layer */
+@layer components {
+  .button {
+    background: blue;
+    color: white;
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* Utilities layer — highest priority (declared last) */
+@layer utilities {
+  /* This .button override WON'T need !important even though .button
+     has the same specificity in components layer */
+  .button.bg-red {
+    background: red;   /* Wins because utilities layer > components layer */
+  }
+}
+
+/* Importing third-party CSS into a layer — gives you control */
+@import url('bootstrap.min.css') layer(bootstrap);
+/* All Bootstrap styles are now below your own layers! */
+</code></pre>
+
+<h2>The :has() Parent Selector</h2>
+<pre><code class="language-css">/* Style a parent based on its children — previously impossible in CSS! */
+
+/* Card that HAS an image: apply horizontal layout */
+.card:has(img) {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+}
+
+/* Form label that HAS a required input: show asterisk */
+label:has(input:required)::after {
+  content: ' *';
+  color: red;
+}
+
+/* Navigation item that contains the current page link */
+.nav-item:has(.nav-link[aria-current="page"]) {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+}
+
+/* Table row that HAS a checked checkbox: highlight row */
+tr:has(input[type="checkbox"]:checked) {
+  background: #eff6ff;
+}
+</code></pre>
+
+<h2>CSS Subgrid</h2>
+<pre><code class="language-css">/* Problem: nested elements don't align to the outer grid.
+   Subgrid: child participates in the PARENT's grid tracks */
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.card {
+  /* This card uses the PARENT'S column tracks */
+  grid-column: span 1;
+
+  /* Adopt parent's row tracks for internal elements */
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 3;  /* header, body, footer rows */
+}
+
+/* Now .card__header in every card aligns at the exact same height!
+   No JavaScript measuring required */
+.card__header { /* row 1 */ }
+.card__body    { /* row 2 */ }
+.card__footer  { /* row 3 */ }
+</code></pre>
+
+<h2>CSS Logical Properties for Internationalization</h2>
+<pre><code class="language-css">/* Physical properties: left/right are meaningless in RTL languages */
+.OLD {
+  margin-left: 1rem;   /* Wrong in Arabic, Hebrew (RTL) */
+  padding-right: 2rem;
+  border-left: 2px solid blue;
+}
+
+/* Logical properties: adapt to writing direction automatically */
+.NEW {
+  margin-inline-start: 1rem;    /* Left in LTR, Right in RTL */
+  padding-inline-end: 2rem;     /* Right in LTR, Left in RTL */
+  border-inline-start: 2px solid blue;
+
+  /* Also covers vertical writing modes */
+  margin-block-start: 1rem;     /* top in horizontal writing */
+  padding-block-end: 2rem;      /* bottom in horizontal writing */
+}
+</code></pre>

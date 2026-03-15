@@ -1,0 +1,9 @@
+{
+    "id": "1-vectorDatabases",
+    "title": "Vector Databases",
+    "description": "Semantic search and similarity retrieval using Pinecone and ChromaDB, the backbone of RAG pipelines.",
+    "order": 1,
+    "topics": [
+        "1-pineconeChroma"
+    ]
+}

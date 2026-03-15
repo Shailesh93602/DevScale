@@ -1,0 +1,12 @@
+[
+  { "input": "{\"nums\":[-1,0,1,2,-1,-4]}", "output": "[[-1,-1,2],[-1,0,1]]", "explanation": "Standard case with multiple solutions", "is_hidden": false },
+  { "input": "{\"nums\":[0,1,1]}", "output": "[]", "explanation": "No valid triplet", "is_hidden": false },
+  { "input": "{\"nums\":[0,0,0]}", "output": "[[0,0,0]]", "explanation": "All zeros", "is_hidden": false },
+  { "input": "{\"nums\":[0,0,0,0]}", "output": "[[0,0,0]]", "explanation": "Four zeros, only one unique triplet", "is_hidden": true },
+  { "input": "{\"nums\":[-2,0,1,1,2]}", "output": "[[-2,0,2],[-2,1,1]]", "explanation": "Multiple pairs summing to targeted value", "is_hidden": true },
+  { "input": "{\"nums\":[-2,0,0,2,2]}", "output": "[[-2,0,2]]", "explanation": "Duplicate solutions should be avoided", "is_hidden": true },
+  { "input": "{\"nums\":[1,2,-2,-1]}", "output": "[]", "explanation": "Negatives and positives but no zero sum", "is_hidden": true },
+  { "input": "{\"nums\":[-4,-2,-2,-2,0,1,2,2,2,3,3,4,4,6,6]}", "output": "[[-4,-2,6],[-4,0,4],[-4,1,3],[-4,2,2],[-2,-2,4],[-2,0,2]]", "explanation": "Large array with many duplicates and valid combinations", "is_hidden": true },
+  { "input": "{\"nums\":[3,0,-2,-1,1,2]}", "output": "[[-2,-1,3],[-2,0,2],[-1,0,1]]", "explanation": "Unsorted array", "is_hidden": true },
+  { "input": "{\"nums\":[-100000, 50000, 50000]}", "output": "[[-100000,50000,50000]]", "explanation": "Large magnitude numbers that could trigger integer overflow in weak languages", "is_hidden": true }
+]

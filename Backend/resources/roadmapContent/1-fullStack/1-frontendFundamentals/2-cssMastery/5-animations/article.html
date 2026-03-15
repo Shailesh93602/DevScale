@@ -1,0 +1,79 @@
+<h1>CSS Animations & Transitions</h1>
+<p>Motion design is essential to modern UX. Subtle, purposeful animation guides users, provides feedback, and makes interfaces feel alive and premium.</p>
+
+<h2>CSS Transitions</h2>
+<p>Transitions animate an element between two states (e.g., default → hover):</p>
+<pre><code>.button {
+  background: #6366f1;
+  transform: translateY(0);
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+.button:hover {
+  background: #4f46e5;
+  transform: translateY(-2px); /* Subtle lift effect */
+  box-shadow: 0 8px 25px rgba(99,102,241,0.4);
+}</code></pre>
+
+<h2>Transition Shorthand</h2>
+<pre><code>/* property | duration | timing-function | delay */
+transition: all 0.3s ease-in-out 0s;
+
+/* Multiple properties */
+transition:
+  background 0.3s ease,
+  transform 0.2s ease,
+  box-shadow 0.3s ease;</code></pre>
+
+<h2>Timing Functions</h2>
+<pre><code>ease          /* Slow start, fast middle, slow end (default) */
+linear        /* Constant speed */
+ease-in       /* Slow start */
+ease-out      /* Slow end */
+ease-in-out   /* Slow start and end */
+cubic-bezier(0.25, 0.46, 0.45, 0.94) /* Custom curve */
+steps(4)      /* Stepped animation (like sprite sheets) */</code></pre>
+
+<h2>CSS Keyframe Animations</h2>
+<pre><code>@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* Staggered animation with delay */
+.card:nth-child(1) { animation-delay: 0ms; }
+.card:nth-child(2) { animation-delay: 100ms; }
+.card:nth-child(3) { animation-delay: 200ms; }</code></pre>
+
+<h2>Infinite Animations</h2>
+<pre><code>@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.05); opacity: 0.8; }
+}
+.live-badge {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}</code></pre>
+
+<h2>Performance Rules</h2>
+<ul>
+  <li><strong>Animate only</strong> <code>transform</code> and <code>opacity</code> — these are GPU-accelerated and don't trigger repaints.</li>
+  <li>Avoid animating <code>width</code>, <code>height</code>, <code>margin</code> — these trigger full layout recalculations.</li>
+  <li>Use <code>will-change: transform</code> to promote elements to their own GPU layer ahead of time.</li>
+  <li>Always respect user preferences: <code>@media (prefers-reduced-motion: reduce) { animation: none; }</code></li>
+</ul>

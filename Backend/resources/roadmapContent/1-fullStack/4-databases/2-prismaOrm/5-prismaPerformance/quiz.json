@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary architectural purpose of utilizing a Prisma 'Interactive Transaction' via the `prisma.$transaction(async (tx) => {})` API?",
+            "options": [
+                "To compress SQL payloads over HTTP heavily",
+                "To group multiple disparate database read/write queries globally into an indivisible Atomic block; if any single JavaScript error is thrown within the callback, Prisma issues a native SQL `ROLLBACK` to flawlessly revert all queries simultaneously",
+                "To bypass Node.js event loops infinitely",
+                "To convert SQL schemas into GraphQL instantly"
+            ],
+            "answer": "To group multiple disparate database read/write queries globally into an indivisible Atomic block; if any single JavaScript error is thrown within the callback, Prisma issues a native SQL `ROLLBACK` to flawlessly revert all queries simultaneously",
+            "explanation": "If a bank transfer fails halfway through, data is corrupted. By executing all queries using the scoped `tx` parameter, Prisma holds the commit back. If `.update()` fails, or if you simply `throw new Error()`, Prisma safely cancels the entire block."
+        },
+        {
+            "question": "Inside an Interactive Transaction callback block, what critical rule must be definitively followed to ensure the queries actually participate in the transaction?",
+            "options": [
+                "You must forcefully use uppercase SQL strings globally",
+                "You must execute queries strictly using the injected `tx` parameter block (e.g., `tx.user.update()`) rather than the global `prisma` client. Queries made via `prisma.user` will physically execute outside the isolated transaction lock natively",
+                "You must write the transaction asynchronously without awaiting natively",
+                "You must disconnect Prisma manually at the end of the block"
+            ],
+            "answer": "You must execute queries strictly using the injected `tx` parameter block (e.g., `tx.user.update()`) rather than the global `prisma` client. Queries made via `prisma.user` will physically execute outside the isolated transaction lock natively",
+            "explanation": "The global `prisma` object executes standard independent queries. Only the mapped `tx` object carries the transactional context locked to that specific database connection string."
+        },
+        {
+            "question": "Why is the `$queryRaw` method using Tagged Template Literals (e.g. `` prisma.$queryRaw`SELECT * FROM User WHERE id=${id}` ``) universally preferred over using standard string concatenation when executing raw SQL in Prisma?",
+            "options": [
+                "It transpiles Postgres SQL into MongoDB strings automatically",
+                "It executes 50% faster mathematically",
+                "The Tagged Template syntax safely intercepts the variables natively, automatically parametrizing them at the PostgreSQL engine level to mathematically guarantee absolute protection against SQL Injection attacks",
+                "It forces the compiler to ignore syntax errors globally"
+            ],
+            "answer": "The Tagged Template syntax safely intercepts the variables natively, automatically parametrizing them at the PostgreSQL engine level to mathematically guarantee absolute protection against SQL Injection attacks",
+            "explanation": "If you concat the string via `SELECT WHERE id=\" + userId`, a hacker can send `userId=\"5; DROP TABLE Users\"` and destroy the application. Prisma's tagged template intercepts the variable and cleanly secures it."
+        },
+        {
+            "question": "If you are deploying a Prisma backend heavily reliant on PostgreSQL directly into a massive Serverless ecosystem (e.g., Vercel Functions or AWS Lambdas), what critical architectural performance flaw will you almost certainly encounter natively?",
+            "options": [
+                "GraphQL introspection errors",
+                "Connection Exhaustion: Because serverless environments boot thousands of isolated, stateless Node instances concurrently natively, they will rapidly overwhelm and crash the extremely limited direct TCP connection limits of a standard PostgreSQL database",
+                "B-Tree Index drift globally",
+                "Hard drive spatial scaling failures"
+            ],
+            "answer": "Connection Exhaustion: Because serverless environments boot thousands of isolated, stateless Node instances concurrently natively, they will rapidly overwhelm and crash the extremely limited direct TCP connection limits of a standard PostgreSQL database",
+            "explanation": "A Lambda function lives for milliseconds. 10,000 requests = 10,000 lambdas opening 10,000 DB connections. PostgreSQL is designed to typically handle ~100 persistent connections. It physically crashes under the TCP load."
+        },
+        {
+            "question": "What is the standard industry tool utilized natively to resolve the Serverless Connection Exhaustion flaw when executing PostgreSQL via Prisma?",
+            "options": [
+                "A Connection Pooler (like PgBouncer natively or Prisma Accelerate): It physically sits between the Lambdas and the Database, holding lightweight HTTP connections open from the clients and dynamically multiplexing them through a heavily restricted, small pool of direct DB connections natively",
+                "MongoDB Atlas Sharding algorithms",
+                "Redux Global State Management",
+                "GitHub CI/CD deployment hooks"
+            ],
+            "answer": "A Connection Pooler (like PgBouncer natively or Prisma Accelerate): It physically sits between the Lambdas and the Database, holding lightweight HTTP connections open from the clients and dynamically multiplexing them through a heavily restricted, small pool of direct DB connections natively",
+            "explanation": "PgBouncer acts like a massive waiting room. The 10,000 Lambdas connect to PgBouncer. PgBouncer then funnels the 10,000 queries efficiently through exactly 50 physical connections directly to Postgres, preventing a crash."
+        }
+    ]
+}

@@ -1,0 +1,66 @@
+<h1>Load Balancing & Proxies</h1>
+<p>A single web server can only handle a finite number of concurrent connections before its CPU or memory maxes out. To achieve High Availability (HA) and scale horizontally, Cloud architectures place multiple web servers behind a <strong>Load Balancer (LB)</strong>. The LB acts as a traffic cop, receiving incoming client requests and distributing them efficiently across the pool of backend servers.</p>
+
+<h2>Reverse Proxies vs. Load Balancers</h2>
+<ul>
+  <li><strong>Forward Proxy:</strong> Sits in front of <em>clients</em> to protect them (e.g., a corporate proxy blocking YouTube for employees).</li>
+  <li><strong>Reverse Proxy:</strong> Sits in front of <em>servers</em> to protect them (e.g., NGINX hiding the internal IP addresses of your backend Node.js servers). Provides TLS/SSL termination, caching, and compression.</li>
+  <li><strong>Load Balancer:</strong> A reverse proxy combined with algorithms to distribute traffic evenly across multiple backend instances. Both NGINX and HAProxy function as excellent software load balancers.</li>
+</ul>
+
+<h2>Layer 4 vs. Layer 7 Load Balancing</h2>
+<p>Load balancers operate at different layers of the OSI networking model, which determines how "smart" they can be regarding traffic routing.</p>
+
+<h3>Layer 4 (Transport Layer - TCP/UDP)</h3>
+<p>Layer 4 LBs (like AWS Network Load Balancer or HAProxy in TCP mode) only look at the first few packets: the source/destination IP addresses and ports. They do not decrypt the traffic or inspect the HTTP payload.</p>
+<ul>
+  <li><strong>Pros:</strong> Insanely fast. Because it doesn't decrypt SSL payloads, a Layer 4 LB can process millions of packets per second with sub-millisecond latency.</li>
+  <li><strong>Cons:</strong> "Dumb" routing. It cannot route traffic based on URL paths or HTTP headers. It just blindly forwards TCP streams.</li>
+</ul>
+
+<h3>Layer 7 (Application Layer - HTTP/HTTPS)</h3>
+<p>Layer 7 LBs (like AWS Application Load Balancer, NGINX, or Traefik) fully decrypt the SSL payload, inspect the HTTP headers, URL paths, and cookies, and <em>then</em> make routing decisions before re-encrypting the data and sending it to the backend.</p>
+<ul>
+  <li><strong>Pros:</strong> Extremely "Smart". You can write rules like: <em>"If URL starts with <code>/api</code> route to the Node.js pool. If URL starts with <code>/images</code> route to the Apache static pool. If HTTP Header contains <code>X-Mobile</code>, route to a specific cluster."</em></li>
+  <li><strong>Cons:</strong> High CPU overhead due to SSL termination (decrypt/encrypt cycles) and payload inspection.</li>
+</ul>
+
+<h2>Common Load Balancing Algorithms</h2>
+<ol>
+  <li><strong>Round Robin:</strong> The simplest method. Distributes requests sequentially: Server 1, Server 2, Server 3, Server 1... Assumes all servers have equal capacity.</li>
+  <li><strong>Least Connections:</strong> Routes the next request to the server with the fewest active, lingering connections. Vital for applications with long-lived requests (like WebSockets or heavy database queries) where Round Robin could overwhelm a single server.</li>
+  <li><strong>IP Hash / Sticky Sessions:</strong> Hashing the client's IP address ensures that a specific user is <em>always</em> routed to the same backend server. Required if your application stores user session data in local server memory instead of a shared Redis instance.</li>
+</ol>
+
+<h2>Health Checks</h2>
+<p>A Load Balancer is useless if it forwards traffic to a crashed server. LBs continuously send ping requests (Health Checks) to the backend pool. If Server 2 fails to respond to 3 consecutive pings (e.g., an HTTP 500 response on <code>/health</code>), the LB marks Server 2 as <strong>Unhealthy</strong> and immediately stops routing traffic to it, seamlessly removing it from the pool until it Recovers.</p>
+
+<pre><code># Sample NGINX Layer 7 Load Balancer Configuration
+upstream backend_app {
+    # Distribute traffic using the least_conn algorithm instead of round-robin
+    least_conn;
+    
+    # Define the backend pool
+    server 10.0.1.10:8080 max_fails=3 fail_timeout=30s;
+    server 10.0.1.11:8080 max_fails=3 fail_timeout=30s;
+    server 10.0.1.12:8080 backup; # Only used if the others go down
+}
+
+server {
+    listen 443 ssl;
+    server_name api.example.com;
+
+    # SSL Termination happens here
+    ssl_certificate /etc/nginx/ssl/cert.pem;
+    ssl_certificate_key /etc/nginx/ssl/key.pem;
+
+    location / {
+        # Forward decrypted traffic to the upstream pool
+        proxy_pass http://backend_app;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}</code></pre>
+
+<h2>Cloud Load Balancers</h2>
+<p>Modern DevOps rarely manage their own HAProxy/NGINX VMs for balancing (except in Kubernetes as Ingress Controllers). Cloud providers abstract this complexity entirely. In AWS, you provision an <strong>Application Load Balancer (ALB)</strong> or an <strong>API Gateway</strong>, which automatically scales itself up when traffic spikes to millions of requests, absorbing DDoS attacks without manual intervention.</p>

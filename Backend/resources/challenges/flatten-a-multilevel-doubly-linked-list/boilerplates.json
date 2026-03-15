@@ -1,0 +1,10 @@
+{
+  "typescript": "/**\n * Definition for _Node.\n * class _Node {\n *     val: number\n *     prev: _Node | null\n *     next: _Node | null\n *     child: _Node | null\n *     constructor(val?: number, prev? : _Node, next? : _Node, child? : _Node) {\n *         this.val = (val===undefined ? 0 : val);\n *         this.prev = (prev===undefined ? null : prev);\n *         this.next = (next===undefined ? null : next);\n *         this.child = (child===undefined ? null : child);\n *     }\n * }\n */\n\nfunction flatten(head: _Node | null): _Node | null {\n    \n};",
+  "javascript": "/**\n * @param {Node} head\n * @return {Node}\n */\nvar flatten = function(head) {\n    \n};",
+  "python": "class Solution:\n    def flatten(self, head: 'Optional[Node]') -> 'Optional[Node]':\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public Node flatten(Node head) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    Node* flatten(Node* head) {\n        \n    }\n};",
+  "go": "func flatten(head *Node) *Node {\n    \n}",
+  "rust": "impl Solution {\n    pub fn flatten(head: Option<Box<Node>>) -> Option<Box<Node>> {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public Node Flatten(Node head) {\n        \n    }\n}"
+}

@@ -1,0 +1,4 @@
+{
+    "name": "AWS Databases: RDS, DynamoDB & ElastiCache",
+    "description": "Selecting and operating managed databases on AWS. Understanding RDS Multi-AZ vs Read Replicas for PostgreSQL/MySQL, modeling for DynamoDB's single-table design, and using ElastiCache (Redis/Memcached) as a caching layer."
+}

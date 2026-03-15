@@ -1,0 +1,12 @@
+[
+  { "input": "{\"nums\":[3,4,5,1,2]}", "output": "1", "explanation": "Standard case", "is_hidden": false },
+  { "input": "{\"nums\":[4,5,6,7,0,1,2]}", "output": "0", "explanation": "Pivot in middle", "is_hidden": false },
+  { "input": "{\"nums\":[11,13,15,17]}", "output": "11", "explanation": "Not rotated (rotated n times)", "is_hidden": false },
+  { "input": "{\"nums\":[1]}", "output": "1", "explanation": "Single element", "is_hidden": true },
+  { "input": "{\"nums\":[2,1]}", "output": "1", "explanation": "Two elements rotated", "is_hidden": true },
+  { "input": "{\"nums\":[5,1,2,3,4]}", "output": "1", "explanation": "Pivot near beginning", "is_hidden": true },
+  { "input": "{\"nums\":[2,3,4,5,1]}", "output": "1", "explanation": "Pivot at the end", "is_hidden": true },
+  { "input": "{\"nums\":[-5000,-4000,-3000,5000]}", "output": "-5000", "explanation": "Negative and large positive values", "is_hidden": true },
+  { "input": "{\"nums\":[10,11,12,13,14,1,2,3,4,5,6,7,8,9]}", "output": "1", "explanation": "Long uneven splits", "is_hidden": true },
+  { "input": "{\"nums\":[500,600,700,800,900,100,200,300,400]}", "output": "100", "explanation": "Pivot exactly in center", "is_hidden": true }
+]

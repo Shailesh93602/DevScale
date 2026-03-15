@@ -1,0 +1,6 @@
+[
+  "Start with the .grid container: display: grid, grid-template-columns: repeat(columns, 1fr), and gap.",
+  "Generate base .col-{n} classes from 1 to columns, each with grid-column: span {n}.",
+  "Sort breakpoints by their pixel value (ascending) for mobile-first CSS.",
+  "For each breakpoint, wrap .col-{breakpoint}-{n} classes inside a @media (min-width: {value}px) block."
+]

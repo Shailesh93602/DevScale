@@ -1,0 +1,44 @@
+<h1>Choosing a Table Format: Iceberg vs Delta Lake vs Hudi</h1>
+<p>One of the most consequential architectural decisions a Data Engineer at a new company faces is: "Which open table format should we standardize on?" Apache Iceberg, Delta Lake, and Apache Hudi are all capable mature technologies. The best choice depends on your team's ecosystem, use case, and organizational constraints rather than any single definitive technical superiority.</p>
+
+<h2>Quick Comparison Summary</h2>
+<table>
+  <thead>
+    <tr><th>Feature</th><th>Apache Iceberg</th><th>Delta Lake</th><th>Apache Hudi</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Origin</td><td>Netflix/Apple</td><td>Databricks</td><td>Uber</td></tr>
+    <tr><td>Multi-engine support</td><td>Excellent</td><td>Good (best with Spark)</td><td>Good (best with Spark)</td></tr>
+    <tr><td>ACID Transactions</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+    <tr><td>Time Travel</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+    <tr><td>Schema Evolution</td><td>Excellent</td><td>Good</td><td>Good</td></tr>
+    <tr><td>Best for</td><td>Multi-engine Lakehouses</td><td>Databricks environments</td><td>Near-real-time CDC ingestion</td></tr>
+  </tbody>
+</table>
+
+<h2>When to Choose Apache Iceberg</h2>
+<p>Choose Iceberg if:</p>
+<ul>
+  <li>You need <strong>true multi-engine support</strong>: Your tables must be queryable by Spark, Flink, Trino, Presto, Snowflake, and BigQuery simultaneously without vendor lock-in.</li>
+  <li>You are partnering with major cloud providers: AWS Glue, AWS EMR, and Google BigQuery all have first-class Iceberg integration.</li>
+  <li>You want the strongest <strong>Schema Evolution</strong> guarantees, including column renaming and type promotion without rewriting data.</li>
+</ul>
+
+<h2>When to Choose Delta Lake</h2>
+<p>Choose Delta Lake if:</p>
+<ul>
+  <li>Your data platform is built on <strong>Databricks</strong> or Databricks-managed Spark clusters. Delta Lake's optimizations (Z-Ordering, Auto-Optimize, Auto-Compaction) are deeply integrated into the Databricks Runtime.</li>
+  <li>You need first-class <strong>Python and Spark DataFrame API</strong> integration with no friction.</li>
+  <li>Your team already uses Delta-native features like Change Data Feed and Liquid Clustering.</li>
+</ul>
+
+<h2>When to Choose Apache Hudi</h2>
+<p>Choose Hudi if:</p>
+<ul>
+  <li>Your primary use case is <strong>high-frequency, near-real-time CDC ingestion</strong> from relational databases at very high update rates.</li>
+  <li>You need Merge-on-Read tables to achieve sub-minute data freshness in your Data Lake.</li>
+  <li>Your team is already established on the AWS ecosystem (Amazon EMR has excellent Hudi support via Apache Hudi's AWS EMR integration profile).</li>
+</ul>
+
+<h2>Industry Trend (2024-2025)</h2>
+<p>As of 2025, <strong>Apache Iceberg</strong> is the most rapidly growing format and is increasingly becoming the de facto open standard, especially as major cloud vendors (AWS Glue, Google BigQuery, Snowflake, Azure Data Lake) all add first-class native Iceberg support. Unless you are a committed Databricks shop, new greenfield data lake projects are increasingly choosing Iceberg by default.</p>

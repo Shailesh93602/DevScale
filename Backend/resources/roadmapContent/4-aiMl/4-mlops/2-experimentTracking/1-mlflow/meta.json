@@ -1,0 +1,6 @@
+{
+    "id": "1-mlflow",
+    "title": "MLflow for Experiment Tracking",
+    "description": "Managing the machine learning lifecycle, including experimentation, reproducibility, and deployment.",
+    "order": 1
+}

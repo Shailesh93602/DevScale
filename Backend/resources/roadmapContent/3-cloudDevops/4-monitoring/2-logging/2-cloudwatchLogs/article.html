@@ -1,0 +1,62 @@
+<h1>AWS CloudWatch & Log Management</h1>
+<p>Amazon CloudWatch is the unified monitoring, logging, and performance management service native to AWS. Instead of spinning up third-party clusters (like ELK/Elasticsearch or Datadog), CloudWatch works out-of-the-box for practically every managed service in AWS without requiring custom agents or heavy configuration overhead. It is the central nervous system for cloud infrastructure.</p>
+
+<h2>CloudWatch Logs Architecture</h2>
+<p>Logs in CloudWatch are organized hierarchically:</p>
+<ul>
+  <li><strong>Log Group:</strong> The top-level container, representing a logical application or service (e.g., <code>/aws/lambda/UserAuthFunction</code> or <code>/var/log/nginx/access</code>). IAM permissions, data retention policies (e.g., delete logs older than 30 days), and encryption KMS keys are defined at the Log Group level.</li>
+  <li><strong>Log Stream:</strong> Inside a Log Group, a Stream represents a specific instance of the service over time. If your Lambda function spins up 5 concurrent containers to handle a traffic spike, CloudWatch creates 5 separate Log Streams inside the Lambda's Log Group to isolate their output.</li>
+  <li><strong>Log Event:</strong> The individual time-stamped message, such as an error stack trace or a JSON log line.</li>
+</ul>
+
+<h2>Ingesting Logs via the CloudWatch Agent</h2>
+<p>Managed services like Lambda, ECS (Fargate), and API Gateway send logs to CloudWatch automatically. However, standard EC2 instances running custom web servers (like Apache or Node.js) do not.</p>
+<p>To collect OS-level files (like <code>/var/log/syslog</code> or your application's custom file output), you must install and configure the <strong>CloudWatch Agent</strong> on the EC2 instance via SSH or User Data scripts.</p>
+
+<pre><code>// Example CloudWatch Agent JSON config (/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json)
+{
+  "logs": {
+    "logs_collected": {
+      "files": {
+        "collect_list": [
+          {
+            "file_path": "/var/log/nginx/access.log",
+            "log_group_name": "production-nginx-access",
+            "log_stream_name": "{instance_id}",
+            "timezone": "UTC"
+          }
+        ]
+      }
+    }
+  }
+}</code></pre>
+<p><em>Note: Ensure the EC2 instance has an IAM Role attached with the <code>CloudWatchAgentServerPolicy</code> permission so it can securely push logs to the AWS API.</em></p>
+
+<h2>Metric Filters & Alarms</h2>
+<p>CloudWatch allows you to continuously extract actionable metrics directly from unstructured text logs using <strong>Metric Filters</strong>. If an incoming log line matches a specific pattern, CloudWatch increments a custom metric counter.</p>
+<p>For example, you can create a filter matching the string <code>"ERROR"</code> or <code>"Timeout"</code> inside the <code>production-nginx-error</code> Log Group. Once the filter generates the custom metric, you attach a <strong>CloudWatch Alarm</strong>: <em>"If the ErrorCount metric exceeds 5 in a 1-minute period, trigger an SNS Topic to page the on-call engineer."</em></p>
+
+<h2>CloudWatch Logs Insights</h2>
+<p>Scrolling endlessly through thousands of Log Streams looking for a specific UUID is impossible. <strong>CloudWatch Logs Insights</strong> provides an interactive SQL-like query language designed specifically to analyze massive volumes of structured JSON logs across multiple Log Groups simultaneously.</p>
+
+<pre><code># Scenario: Find the Top 10 IP addresses causing HTTP 500 errors today across all Nginx servers
+fields @timestamp, @message, status_code, client_ip
+| filter status_code >= 500
+| stats count(*) as ErrorCount by client_ip
+| sort ErrorCount desc
+| limit 10
+
+# Scenario: Calculate the 95th Percentile API Response Latency (Requires JSON structured logging)
+fields @timestamp, request_duration_ms, endpoint
+| filter endpoint = '/api/checkout/process'
+| stats pct(request_duration_ms, 95) as p95_latency by bin(1h)</code></pre>
+
+<h2>Cost Optimization & Exporting to S3</h2>
+<p>While CloudWatch is convenient, it is <strong>extremely expensive</strong> to store Terabytes of data long-term compared to Amazon S3. For compliance purposes (like holding PCI data logs for 7 years), storing the data strictly in CloudWatch Logs is cost-prohibitive.</p>
+<p>The standard architectural pattern is <strong>Log Archival via Subscription Filters</strong>:</p>
+<ol>
+  <li>Configure the Log Group's retention policy strictly (e.g., delete automatically after 14 days) to save money on hot SSD storage.</li>
+  <li>Create a <strong>Subscription Filter</strong> that continuously streams the real-time logs directly to an Amazon Kinesis Data Firehose.</li>
+  <li>The Firehose automatically batches, severely compresses, and dumps the logs into cheaper Amazon S3 Standard-Infrequent Access storage for multi-year retention.</li>
+  <li>If an auditor requests 3-year-old logs, you simply query the cheap S3 bucket using <strong>Amazon Athena</strong> instead of paying CloudWatch storage rates.</li>
+</ol>

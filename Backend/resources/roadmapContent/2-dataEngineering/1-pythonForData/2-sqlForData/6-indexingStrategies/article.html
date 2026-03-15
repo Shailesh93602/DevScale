@@ -1,0 +1,32 @@
+<h1>Advanced Indexing Strategies</h1>
+<p>If your database contains 10 million rows, and you run a query like <code>SELECT * FROM users WHERE email='bob@example.com'</code>, the database must physically scan all 10 million rows from top to bottom on the hard drive. This is called a Full Table Scan (Sequential Scan), and it will cripple your application performance. The solution is creating an <strong>Index</strong>.</p>
+
+<h2>B-Tree Indexes (Balanced Tree)</h2>
+<p>A B-Tree Index is the default architectural structure for SQL databases mapping a column (like `email`) to the exact physical hard drive location of the full row.</p>
+<p>Think of it as the Index at the back of a 1,000-page textbook. Instead of reading every page to find the word "PostgreSQL", you flip to the Index, instantly find the word alphabetically, and it tells you exactly that the information is located on page 502.</p>
+<pre><code class="language-sql">-- Creating a standard B-Tree index dynamically
+CREATE INDEX idx_user_email ON users(email);
+
+-- This query is now exponentially faster natively
+SELECT * FROM users WHERE email = 'test@example.com';
+</code></pre>
+<p><strong>The Trade-off:</strong> Indexes mathematically destroy your WRITE performance (INSERTs, UPDATEs, DELETEs). Every time a user registers, the database must write the row to the massive data table AND update the deeply nested B-Tree structure. You should never blindly index every single column.</p>
+
+<h2>Hash Indexes</h2>
+<p>While B-Trees are phenomenal for range queries (e.g. <code>age &gt; 18 AND age &lt; 30</code>), they are slightly heavier. If you strictly solely need precise <strong>Exact Match</strong> equality lookups (e.g. <code>WHERE id = 5</code>), you can explicitly utilize a Hash Index.</p>
+<pre><code class="language-sql">-- Creating a strict Hash index efficiently
+CREATE INDEX idx_hash_token ON sessions USING HASH (token);
+</code></pre>
+
+<h2>Composite Indexes & Left-Prefix Rule</h2>
+<p>If you frequently query multiple columns simultaneously natively (e.g., <code>WHERE first_name='John' AND last_name='Doe'</code>), creating two separate standalone B-Tree indexes is very inefficient.</p>
+<p>Instead, you build a single <strong>Composite Index</strong> containing both columns smoothly organized logically.</p>
+<pre><code class="language-sql">-- The specific order of columns explicitly matters!
+CREATE INDEX idx_name_composite ON users(last_name, first_name);
+</code></pre>
+<p><strong>The Left-Prefix Rule:</strong> A Composite Index strictly operates from Left to Right natively mathematically. The database can gracefully utilize the `idx_name_composite` index if you query entirely by `last_name`, or if you query seamlessly by both `last_name AND first_name`.</p>
+<p>However, if you dangerously query <strong>strictly</strong> by `first_name` alone, the database physically cannot functionally use the index, and it will painfully resort to a massive Full Table Scan.</p>
+
+<h2>Covering Indexes (Index-Only Scans)</h2>
+<p>Normally, finding the row in the Index is highly efficient, but the database still must perform an expensive "Disk Seek" to fetch the rest of the actual full row data (e.g., pulling the `phone_number` and `address`).</p>
+<p>If you have a query <code>SELECT first_name FROM users WHERE last_name='Doe'</code>, the Composite Index above is incredibly powerful. The B-Tree structure already physically naturally contains both `last_name` and `first_name`. The database explicitly skips the expensive hard drive fetch entirely, pulling the `first_name` directly out of the B-Tree mathematically structure directly securely actively cleanly flawlessly. This is known as a blistering fast <strong>Index-Only Scan</strong>.</p>

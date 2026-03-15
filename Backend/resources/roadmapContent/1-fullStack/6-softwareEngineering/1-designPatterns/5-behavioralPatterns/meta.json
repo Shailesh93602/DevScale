@@ -1,0 +1,4 @@
+{
+    "name": "Behavioral Patterns",
+    "description": "Managing complex communication between loosely coupled objects. Implementing the Observer, Strategy, and Command patterns to dynamically alter system behavior at runtime."
+}

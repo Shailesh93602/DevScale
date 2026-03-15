@@ -1,0 +1,74 @@
+{
+    "title": "Terraform Quiz",
+    "description": "Test your Terraform infrastructure as code knowledge.",
+    "passingScore": 80,
+    "timeLimit": 8,
+    "questions": [
+        {
+            "question": "What does 'terraform plan' do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Applies changes to infrastructure",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Shows a preview of what changes Terraform would make without executing them",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Initialises the Terraform working directory",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Destroys all managed infrastructure",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why is Terraform state important?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It stores encrypted secrets",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It tracks what infrastructure Terraform manages, enabling it to determine what changes to make",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It logs all terraform commands run",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It caches provider plugins for faster init",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does 'sensitive = true' do on a Terraform variable?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Encrypts the variable value in state files",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Prevents the value from appearing in plan output, logs, or console",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Requires the variable to be at least 16 characters",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Disables the variable for production environments",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

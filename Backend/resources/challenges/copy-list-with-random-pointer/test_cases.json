@@ -1,0 +1,10 @@
+[
+  { "input": "{\"head\":[[7,null],[13,0],[11,4],[10,2],[1,0]]}", "output": "[[7,null],[13,0],[11,4],[10,2],[1,0]]", "explanation": "Standard deep copy", "is_hidden": false },
+  { "input": "{\"head\":[[1,1],[2,1]]}", "output": "[[1,1],[2,1]]", "explanation": "Both random to last node", "is_hidden": false },
+  { "input": "{\"head\":[[3,null],[3,0],[3,null]]}", "output": "[[3,null],[3,0],[3,null]]", "explanation": "Three nodes same values", "is_hidden": false },
+  { "input": "{\"head\":[]}", "output": "[]", "explanation": "Empty list", "is_hidden": true },
+  { "input": "{\"head\":[[1,null]]}", "output": "[[1,null]]", "explanation": "Single node no random", "is_hidden": true },
+  { "input": "{\"head\":[[1,0]]}", "output": "[[1,0]]", "explanation": "Single node self-loop random", "is_hidden": true },
+  { "input": "{\"head\":[[5,4],[4,3],[3,2],[2,1],[1,0]]}", "output": "[[5,4],[4,3],[3,2],[2,1],[1,0]]", "explanation": "Reverse random pointers", "is_hidden": true },
+  { "input": "{\"head\":[[1,null],[2,null],[3,null]]}", "output": "[[1,null],[2,null],[3,null]]", "explanation": "All null random", "is_hidden": true }
+]

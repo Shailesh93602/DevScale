@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What made the SolarWinds supply chain attack so devastating and difficult to detect?",
+            "options": [
+                "The attackers used zero-day exploits in SolarWinds' application servers.",
+                "The attackers compromised SolarWinds' software build pipeline and injected malicious code into a legitimate software update. The update was cryptographically signed with SolarWinds' real key, making it appear completely authentic — customers and security tools had no reason to question a signed update from a trusted vendor.",
+                "SolarWinds stored customer credentials in plaintext in an S3 bucket.",
+                "The attack used SQL injection to exfiltrate the SolarWinds customer database."
+            ],
+            "answer": "The attackers compromised SolarWinds' software build pipeline and injected malicious code into a legitimate software update. The update was cryptographically signed with SolarWinds' real key, making it appear completely authentic — customers and security tools had no reason to question a signed update from a trusted vendor.",
+            "explanation": "This attack illustrates why signing alone is insufficient — you also need to verify WHAT was signed and WHERE the build happened. Cosign with OIDC attestation proves the signature came from a specific GitHub Actions workflow, not just any process with access to the key."
+        },
+        {
+            "question": "What specific security assurance does Cosign image signing with OIDC provide that traditional GPG key signing cannot?",
+            "options": [
+                "Cosign uses stronger RSA-4096 keys while GPG typically uses RSA-2048.",
+                "Cosign with OIDC ties the signature to a specific, verifiable identity (e.g., 'this was signed by the GitHub Actions workflow in github.com/mycompany/api'). Traditional GPG requires managing and distributing private keys. If a GPG key is stolen, an attacker can sign malicious images. OIDC-based signing has no long-lived key to steal.",
+                "Cosign signatures are stored in the container registry; GPG signatures require a separate keyserver.",
+                "Cosign is faster than GPG for signing large container images."
+            ],
+            "answer": "Cosign with OIDC ties the signature to a specific, verifiable identity (e.g., 'this was signed by the GitHub Actions workflow in github.com/mycompany/api'). Traditional GPG requires managing and distributing private keys. If a GPG key is stolen, an attacker can sign malicious images. OIDC-based signing has no long-lived key to steal.",
+            "explanation": "The Kyverno admission policy example in the article only allows pods that were signed by a specific GitHub Actions workflow URL. An attacker who builds a malicious image manually cannot forge this — they'd need to compromise GitHub itself."
+        },
+        {
+            "question": "What is a 'dependency confusion' attack and how does an SBOM help mitigate it?",
+            "options": [
+                "A dependency confusion attack happens when two libraries have conflicting APIs.",
+                "An attacker publishes a malicious package to a public registry (npm, PyPI) with the same name as a private internal package but a higher version number. Package managers, configured to check public registries, automatically download the malicious public version instead of the private one. An SBOM tracks exact package sources, enabling detection of unexpected public packages where private ones were expected.",
+                "Dependency confusion exploits race conditions in package installation scripts.",
+                "It's when a developer accidentally imports the wrong module due to typos."
+            ],
+            "answer": "An attacker publishes a malicious package to a public registry (npm, PyPI) with the same name as a private internal package but a higher version number. Package managers, configured to check public registries, automatically download the malicious public version instead of the private one. An SBOM tracks exact package sources, enabling detection of unexpected public packages where private ones were expected.",
+            "explanation": "Microsoft, Apple, Shopify, and Tesla were all successfully demonstrated to be vulnerable to dependency confusion in 2021 (by a friendly security researcher). Several real-world malicious attacks using this technique have since been discovered."
+        }
+    ]
+}

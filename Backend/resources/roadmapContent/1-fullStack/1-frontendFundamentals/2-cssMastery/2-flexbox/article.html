@@ -1,0 +1,54 @@
+<h1>CSS Flexbox — The Complete Guide</h1>
+<p>Flexbox is a one-dimensional layout method designed for placing items in rows or columns. It solves common layout problems that were painful with floats and tables.</p>
+
+<h2>Enabling Flexbox</h2>
+<pre><code>.container {
+  display: flex;
+}</code></pre>
+<p>All direct children become <strong>flex items</strong>. The container is the <strong>flex container</strong>.</p>
+
+<h2>Main Axis vs Cross Axis</h2>
+<p>Flexbox has two axes. <code>justify-content</code> aligns along the <strong>main axis</strong>; <code>align-items</code> aligns along the <strong>cross axis</strong>.</p>
+<pre><code>.container {
+  flex-direction: row;    /* Main axis: horizontal (default) */
+  flex-direction: column; /* Main axis: vertical */
+}</code></pre>
+
+<h2>Container Properties</h2>
+<pre><code>.container {
+  display: flex;
+  flex-direction: row | column | row-reverse | column-reverse;
+  flex-wrap: nowrap | wrap | wrap-reverse;
+  justify-content: flex-start | flex-end | center | space-between | space-around | space-evenly;
+  align-items: stretch | flex-start | flex-end | center | baseline;
+  align-content: flex-start | center | space-between; /* Multi-line only */
+  gap: 16px;                  /* Space between items */
+  gap: 16px 8px;              /* Row gap, column gap */
+}</code></pre>
+
+<h2>Item Properties</h2>
+<pre><code>.item {
+  flex-grow: 1;       /* Grow to fill available space */
+  flex-shrink: 1;     /* Shrink if needed */
+  flex-basis: auto;   /* Initial size before flex adjustments */
+  flex: 1;            /* Shorthand: grow:1, shrink:1, basis:0 */
+  flex: 0 0 200px;    /* Fixed 200px, no grow/shrink */
+
+  align-self: center; /* Override align-items for this one item */
+  order: 2;           /* Reorder visually without changing HTML */
+}</code></pre>
+
+<h2>Common Patterns</h2>
+<pre><code>/* Perfect centering */
+.center { display: flex; justify-content: center; align-items: center; }
+
+/* Navbar: logo left, links right */
+.navbar { display: flex; justify-content: space-between; align-items: center; }
+
+/* Equal-width columns */
+.columns { display: flex; }
+.column  { flex: 1; }
+
+/* Responsive wrapping card grid */
+.grid { display: flex; flex-wrap: wrap; gap: 16px; }
+.card { flex: 1 1 280px; } /* Each card is min 280px, grows equally */</code></pre>

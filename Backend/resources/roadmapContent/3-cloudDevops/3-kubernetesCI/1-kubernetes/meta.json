@@ -1,0 +1,4 @@
+{
+    "name": "Kubernetes",
+    "description": "Container orchestration — pods, deployments, services, ingress, and Helm charts."
+}

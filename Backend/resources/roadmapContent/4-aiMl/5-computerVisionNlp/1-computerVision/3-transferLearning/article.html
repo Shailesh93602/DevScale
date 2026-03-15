@@ -1,0 +1,90 @@
+<h1>Transfer Learning & Image Classification</h1>
+<p>Training a convolutional neural network from scratch requires millions of labeled images and weeks of GPU time. Transfer learning lets you take a model pre-trained on ImageNet's 1.2 million images and adapt it to your specific task with as few as hundreds of your own images — achieving production-quality performance in minutes.</p>
+
+<h2>Why Transfer Learning Works</h2>
+<pre><code class="language-text">CNN Layers Learn Hierarchical Features:
+  Early layers:  Edges, textures, color gradients (universal — work for any images)
+  Middle layers: Shapes, patterns, parts of objects (partially transferable)
+  Late layers:   High-level semantic features specific to ImageNet classes
+
+Transfer learning: Keep early/middle layers (frozen), 
+                   Replace and retrain only late layers + classifier
+                   → Your task benefits from learned low-level features for free
+</code></pre>
+
+<h2>Fine-Tuning a Pretrained ResNet with PyTorch</h2>
+<pre><code class="language-python">import torch
+import torch.nn as nn
+from torchvision import models, transforms
+from torch.utils.data import DataLoader
+from torchvision.datasets import ImageFolder
+
+# Data augmentation — critical for small datasets
+train_transforms = transforms.Compose([
+    transforms.RandomResizedCrop(224),        # Random crop at resize → position invariance
+    transforms.RandomHorizontalFlip(),         # Horizontal flip → orientation invariance
+    transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2),  # Color augmentation
+    transforms.RandomRotation(15),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406],   # ImageNet normalization
+                        std=[0.229, 0.224, 0.225])      # (required for pretrained models)
+])
+
+val_transforms = transforms.Compose([
+    transforms.Resize(256),
+    transforms.CenterCrop(224),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+])
+
+# Load dataset
+train_dataset = ImageFolder('data/train', transform=train_transforms)
+val_dataset = ImageFolder('data/val', transform=val_transforms)
+num_classes = len(train_dataset.classes)
+
+# Load pretrained EfficientNet-B0 (excellent accuracy/efficiency trade-off)
+model = models.efficientnet_b0(weights=models.EfficientNet_B0_Weights.IMAGENET1K_V1)
+
+# Strategy 1: Feature extraction — freeze ALL layers, only train new classifier
+for param in model.parameters():
+    param.requires_grad = False
+
+# Replace the final classification layer (1000 ImageNet classes → your classes)
+model.classifier[1] = nn.Linear(model.classifier[1].in_features, num_classes)
+# Only this layer has requires_grad=True → only ~64K parameters to train!
+
+# Strategy 2: Fine-tuning — unfreeze later blocks for better accuracy
+# Unfreeze last 2 blocks (gradual unfreezing from output toward input)
+for name, param in model.named_parameters():
+    if 'features.7' in name or 'features.8' in name or 'classifier' in name:
+        param.requires_grad = True
+
+# Use differential learning rates: small LR for pretrained layers, larger for new layers
+optimizer = torch.optim.Adam([
+    {'params': model.features.parameters(), 'lr': 1e-5},  # Very small for pretrained
+    {'params': model.classifier.parameters(), 'lr': 1e-3}  # Larger for new layer
+])
+
+criterion = nn.CrossEntropyLoss()
+scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=20)
+</code></pre>
+
+<h2>Vision Transformer (ViT) for More Data</h2>
+<pre><code class="language-python"># ViT outperforms CNNs when you have large datasets (50K+ images)
+# For small datasets (&lt;10K images), CNN with transfer learning is usually better
+model_vit = models.vit_b_16(weights=models.ViT_B_16_Weights.IMAGENET1K_V1)
+model_vit.heads.head = nn.Linear(model_vit.heads.head.in_features, num_classes)
+
+# Quick evaluation: compute top-1 and top-5 accuracy
+def evaluate(model, loader):
+    model.eval()
+    correct_1, correct_5, total = 0, 0, 0
+    with torch.no_grad():
+        for images, labels in loader:
+            outputs = model(images)
+            _, pred = outputs.topk(5, 1, True, True)
+            correct_1 += pred[:, 0].eq(labels).sum().item()
+            correct_5 += pred.t().eq(labels.view(1, -1).expand_as(pred.t())).any(dim=0).sum().item()
+            total += labels.size(0)
+    print(f"Top-1: {100*correct_1/total:.1f}%, Top-5: {100*correct_5/total:.1f}%")
+</code></pre>

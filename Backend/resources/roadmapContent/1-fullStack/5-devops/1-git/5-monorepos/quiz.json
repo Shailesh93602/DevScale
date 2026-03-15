@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary architectural structure of an enterprise 'Monorepo' environment natively?",
+            "options": [
+                "A repository that utilizes strictly MongoDB unstructured document patterns natively",
+                "A highly centralized system where multiple physically distinct, logically independent applications (e.g., the NextJS website, the Express backend, the React Native mobile app) and their shared utility libraries are all systematically housed and orchestrated within a single, massive global Git repository natively",
+                "A repository restricted entirely to a total of one single developer natively for maximum speed",
+                "A system that exclusively builds applications using monolithic server execution algorithms"
+            ],
+            "answer": "A highly centralized system where multiple physically distinct, logically independent applications (e.g., the NextJS website, the Express backend, the React Native mobile app) and their shared utility libraries are all systematically housed and orchestrated within a single, massive global Git repository natively",
+            "explanation": "Rather than jumping between 4 completely different GitHub repos, everything is housed under one roof. The massive advantage is the ability to easily share code (like common typescript types or a central UI button framework) instantly across the entire company stack natively."
+        },
+        {
+            "question": "In a standard Polyrepo setup, modifying a shared UI component requires publishing it globally to NPM and updating versions in the consumer apps. How does an NPM/Yarn 'Workspace' automatically bypass this bottleneck natively within a Monorepo?",
+            "options": [
+                "It deploys the UI components to AWS S3 natively",
+                "It generates native HTTP webhook calls across modules",
+                "Workspaces mathematically leverage physical OS-level Symlinks locally inside `node_modules` during installation, redirecting the dependency request directly towards the adjacent local `/packages/ui` folder on your hard drive entirely bypassing the external NPM internet registry natively",
+                "It forces you to physically copy and paste code across directories globally"
+            ],
+            "answer": "Workspaces mathematically leverage physical OS-level Symlinks locally inside `node_modules` during installation, redirecting the dependency request directly towards the adjacent local `/packages/ui` folder on your hard drive entirely bypassing the external NPM internet registry natively",
+            "explanation": "This is what makes monorepos so incredibly fast. When the frontend imports the UI library, it is dynamically reading the exact live files resting in your local code folder natively. You edit the button, and the frontend instantly globally updates locally."
+        },
+        {
+            "question": "What specific orchestration problem arises automatically in a massive JavaScript monorepo holding 12 distinct applications natively?",
+            "options": [
+                "Typing mismatch collisions physically",
+                "Cryptographic failures across servers natively",
+                "If you type `npm run build` on the root, there is no mathematical certainty exactly which foundational libraries must be built strictly first before others, leading to race-condition compilation failures natively",
+                "NPM fundamentally crashes when viewing sub-directories locally"
+            ],
+            "answer": "If you type `npm run build` on the root, there is no mathematical certainty exactly which foundational libraries must be built strictly first before others, leading to race-condition compilation failures natively",
+            "explanation": "If the React App builds before the 'Shared Components' library finishes building natively, the React compilation permanently fails. You require an intelligent dependency graph orchestration tool to manage the sequence."
+        },
+        {
+            "question": "What specifically is the massive 'Remote Computation Caching' architectural superpower provided by specialized Monorepo tools natively like Turborepo?",
+            "options": [
+                "They permanently store the compiled code inside a MongoDB native instance",
+                "If a developer historically builds an massive application locally, tools precisely hash the outputs into a cloud cache native pipeline natively. When a secondary developer runs identical code, the algorithm natively skips the 10-minute compilation and instantly downloads the result across in 1 second natively",
+                "They cache CSS styles securely natively",
+                "They bypass V8 Engine compilation"
+            ],
+            "answer": "If a developer historically builds an massive application locally, tools precisely hash the outputs into a cloud cache native pipeline natively. When a secondary developer runs identical code, the algorithm natively skips the 10-minute compilation and instantly downloads the result across in 1 second natively",
+            "explanation": "This transforms massive enterprise environments. If a PR on GitHub hasn't altered certain micro-services locally, the CI/CD pipeline natively skips testing and building them, reducing deployment cycles violently from 45 minutes to 30 seconds."
+        },
+        {
+            "question": "Which specific architectural vulnerability (accidental coupling) often occurs natively inside massively centralized JavaScript monorepos globally?",
+            "options": [
+                "GraphQL types fail instantly natively",
+                "Memory leaks across Redis architectures natively",
+                "Because all code rests adjacent physically locally, junior developers might unknowingly globally import massive specialized Backend-only database utilities directly mathematically into a lightweight Frontend client component natively if strict module structural boundary linting is not enforced aggressively",
+                "CSS styles permanently override the backend"
+            ],
+            "answer": "Because all code rests adjacent physically locally, junior developers might unknowingly globally import massive specialized Backend-only database utilities directly mathematically into a lightweight Frontend client component natively if strict module structural boundary linting is not enforced aggressively",
+            "explanation": "When doing `import { hashPassword } from '../../packages/backend-utils'`, the React App will unknowingly pull incredibly heavy backend crypto-libraries natively into the frontend browser bundle natively, violating architectural separation natively."
+        }
+    ]
+}

@@ -1,0 +1,4 @@
+{
+    "name": "dbt Testing",
+    "description": "Writing tests in dbt for data quality, singular tests, generic tests, and freshness checks."
+}

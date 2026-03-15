@@ -1,0 +1,6 @@
+[
+  "The versions form a sorted boolean array: [false, false, ..., true, true, ...]. You need to find the first true.",
+  "Binary search is ideal: check the midpoint. If it's bad, search left (including mid). If good, search right.",
+  "Use left < right as the loop condition, and set right = mid (not mid - 1) when mid is bad.",
+  "Be careful with integer overflow when computing mid. Use left + (right - left) / 2."
+]

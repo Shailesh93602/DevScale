@@ -1,0 +1,4 @@
+{
+    "name": "Mongoose Modeling & Schema",
+    "description": "Structuring unstructured data. Utilizing the Mongoose ODM to enforce strict schemas, write validation logic, define pre/post save hooks, and execute 'Populates' for relational querying."
+}

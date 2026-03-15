@@ -1,0 +1,98 @@
+<h1>Middleware & Error Handling in Express</h1>
+<p>Middleware functions are the core architectural pattern of Express.js. They are functions that have access to the request object (<code>req</code>), the response object (<code>res</code>), and the <code>next</code> middleware function in the application's request-response cycle.</p>
+
+<h2>Understanding the Middleware Stack</h2>
+<p>When a request hits an Express server, it passes through a pipeline of middleware functions. Each middleware can execute code, make changes to the request/response objects, end the response cycle (by sending a response), or pass control to the <code>next()</code> middleware.</p>
+
+<pre><code>const express = require('express');
+const app = express();
+
+// 1. Application-level middleware (Runs on every request)
+app.use((req, res, next) =&gt; {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next(); // MUST call next() to pass control to the next function
+});
+
+// 2. Built-in middleware (Parses incoming JSON payloads)
+app.use(express.json());
+
+// 3. Route specific middleware
+const requireAuth = (req, res, next) =&gt; {
+  if (!req.headers.authorization) {
+    // Ending the cycle early (client receives error, next is never called)
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+  next();
+};
+
+app.get('/dashboard', requireAuth, (req, res) =&gt; {
+  res.json({ message: "Welcome to your dashboard" });
+});</code></pre>
+
+<h2>Modifying Request/Response Objects</h2>
+<p>Middleware is often used to validate data, decode tokens, or fetch user profiles, attaching the result directly to the <code>req</code> object so downstream controllers can use it without duplicating work.</p>
+<pre><code>const decodeUser = async (req, res, next) =&gt; {
+  try {
+    const token = req.headers.authorization.split(' ')[1];
+    const user = await jwt.verify(token, process.env.SECRET);
+    
+    // Attach user to request!
+    req.user = user; 
+    next();
+  } catch (err) {
+    res.status(403).json({ error: "Invalid token" });
+  }
+};
+
+app.get('/profile', decodeUser, (req, res) =&gt; {
+  // Controller safely uses req.user
+  res.json({ email: req.user.email }); 
+});</code></pre>
+
+<h2>Global Error Handling Middleware</h2>
+<p>In standard routes, if an error happens, you usually send a 500 response. However, if you forget a try/catch, your Node server might crash. Express provides a dedicated <strong>Error-Handling Middleware</strong>.</p>
+<p>It acts identically to normal middleware, except it has exactly <strong>Four arguments</strong> (<code>err, req, res, next</code>). Express recognizes this signature and reserves it for error handling.</p>
+
+<pre><code>// Normal route throws an error
+app.get('/crash', (req, res, next) =&gt; {
+  const err = new Error("Database connection failed");
+  err.status = 503;
+  // Passing an argument to next() tells Express: "An error occurred! Skip all normal middleware and go straight to the Error Handler."
+  next(err); 
+});
+
+// ... all other routes ...
+
+// Global Error Handler MUST be the last app.use() in the file!
+app.use((err, req, res, next) =&gt; {
+  console.error("GLOBAL ERROR CATCHER:", err.message);
+  
+  const status = err.status || 500;
+  res.status(status).json({
+    error: {
+      message: err.message || "Internal Server Error",
+      // Only show stack trace in development mode
+      stack: process.env.NODE_ENV === 'production' ? '🥞' : err.stack
+    }
+  });
+});</code></pre>
+
+<h2>Async Error Wrapping (Express 4 vs 5)</h2>
+<p>In Express 4, if a Promise rejects inside an <code>async</code> route handler, Express does not catch it automatically, leading to Unhandled Promise Rejections. You must wrap them or use a library like <code>express-async-errors</code>.</p>
+<pre><code>// Wrapper utility
+const asyncHandler = (fn) =&gt; (req, res, next) =&gt; {
+  return Promise.resolve(fn(req, res, next)).catch(next);
+};
+
+app.get('/users', asyncHandler(async (req, res) =&gt; {
+  const users = await db.getUsers(); // If this throws, asyncHandler catches it and calls next(err)
+  res.json(users);
+}));</code></pre>
+<p><em>Note: Express 5 (currently in beta/rc) natively supports returning Promises from handlers and catches them automatically.</em></p>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always remember to either call <code>res.send()</code>/<code>res.json()</code> to end the request, or call <code>next()</code>. If you do neither, the client request will hang indefinitely until it times out.</li>
+  <li>Place your Global Error Handler dead last, below all other <code>app.use()</code> and route definitions.</li>
+  <li>Use a library like <code>morgan</code> for logging middleware and <code>helmet</code> for security header middleware rather than writing them from scratch.</li>
+</ul>

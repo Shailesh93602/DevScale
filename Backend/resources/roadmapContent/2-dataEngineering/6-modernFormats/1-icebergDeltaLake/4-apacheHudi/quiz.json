@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What specific Data Engineering problem was Apache Hudi originally created at Uber to solve?",
+            "options": [
+                "Replacing Apache Kafka for real-time message streaming.",
+                "Enabling efficient record-level upserts and deletes directly into a massive S3-based Data Lake, eliminating the need to expensively rewrite entire Parquet partitions just to incorporate database change stream updates.",
+                "Providing a SQL interface for querying data stored in HDFS.",
+                "Accelerating Apache Spark job startup times on Hadoop clusters."
+            ],
+            "answer": "Enabling efficient record-level upserts and deletes directly into a massive S3-based Data Lake, eliminating the need to expensively rewrite entire Parquet partitions just to incorporate database change stream updates.",
+            "explanation": "Uber needed to process millions of ride and payment updates per hour into their Data Lake. Rewriting full partitions was taking hours. Hudi made it possible in minutes."
+        },
+        {
+            "question": "What is the key trade-off between Hudi's 'Copy-on-Write (CoW)' and 'Merge-on-Read (MoR)' table types?",
+            "options": [
+                "CoW supports deletes; MoR does not.",
+                "CoW provides excellent read performance by always keeping data in clean Parquet files (writes are more expensive since files are rewritten). MoR provides very fast writes by appending to small Avro delta logs (reads are more expensive since they must merge deltas at query time).",
+                "CoW stores data in columnar format; MoR stores data in row format.",
+                "CoW is designed for streaming; MoR is designed for batch processing."
+            ],
+            "answer": "CoW provides excellent read performance by always keeping data in clean Parquet files (writes are more expensive since files are rewritten). MoR provides very fast writes by appending to small Avro delta logs (reads are more expensive since they must merge deltas at query time).",
+            "explanation": "Choose CoW for read-heavy BI workloads with infrequent batch updates. Choose MoR for high-frequency streaming ingestion where you need sub-minute data freshness."
+        },
+        {
+            "question": "How does Hudi's 'Incremental Query Mode' provide a significant cost and performance advantage over traditional full table scan approaches?",
+            "options": [
+                "It caches the full table scan result in Redis for subsequent queries.",
+                "It enables downstream consumers to query only the specific records that were committed to the table since a given timestamp, completely skipping all unchanged historical data — reducing scan costs from petabytes to kilobytes for incremental pipelines.",
+                "It automatically converts full table scans to index-range scans.",
+                "It pre-partitions data by commit timestamp for faster filtering."
+            ],
+            "answer": "It enables downstream consumers to query only the specific records that were committed to the table since a given timestamp, completely skipping all unchanged historical data — reducing scan costs from petabytes to kilobytes for incremental pipelines.",
+            "explanation": "A downstream dbt model that only needs 'changes since last run' would normally scan 10TB. With Hudi incremental queries, it only scans the 500MB of changes from the last hour."
+        }
+    ]
+}

@@ -1,0 +1,4 @@
+{
+    "name": "Serverless Architecture",
+    "description": "Scaling to infinite capacity identically. Designing event-driven AWS Lambda functions, understanding Cold Starts and Connection Exhaustion, and utilizing the Serverless Framework safely."
+}

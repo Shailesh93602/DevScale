@@ -1,0 +1,6 @@
+[
+  "The top of the floor is beyond the last step. You need to reach index n (past the array).",
+  "To reach step i, you pay either cost[i-1] + dp[i-1] or cost[i-2] + dp[i-2]. Take the minimum.",
+  "Base cases: dp[0] = 0, dp[1] = 0 (you can start at either step for free).",
+  "Only two previous values are needed, so optimize to O(1) space."
+]

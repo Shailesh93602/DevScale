@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "In the Saga pattern for distributed transactions, what is the critical difference between compensation transactions and rollbacks, and why can't you use traditional database ROLLBACK in a microservices saga?",
+            "options": [
+                "Compensation and rollback are the same concept — different terminology for the same operation.",
+                "Database ROLLBACK undoes uncommitted changes atomically within a single database transaction. In a saga, each step is already COMMITTED to its own service's database before the next step begins. You cannot roll back a committed flight booking transaction at the airline's database. Compensation instead creates a new forward transaction that semantically reverses the effect (cancel the flight booking). Compensation may fail too, requiring additional compensating sagas — distributed systems have no perfect atomicity guarantee.",
+                "Sagas always use ROLLBACK internally; compensation is only for event sourcing.",
+                "Traditional ROLLBACK is unavailable in microservices because they use NoSQL databases."
+            ],
+            "answer": "Database ROLLBACK undoes uncommitted changes atomically within a single database transaction. In a saga, each step is already COMMITTED to its own service's database before the next step begins. You cannot roll back a committed flight booking transaction at the airline's database. Compensation instead creates a new forward transaction that semantically reverses the effect (cancel the flight booking). Compensation may fail too, requiring additional compensating sagas — distributed systems have no perfect atomicity guarantee.",
+            "explanation": "Real booking example: book flight (committed) → book hotel (fails). Compensation: cancel flight booking (a new business action, not an undo). But the cancellation might fail too if the airline's system is down. Sagas accept eventual consistency and require careful design of compensating actions for every possible step failure."
+        },
+        {
+            "question": "What problem does the Circuit Breaker pattern solve in microservice communication, and what are the three states a circuit breaker moves through?",
+            "options": [
+                "Circuit breaker prevents SQL injection between microservices.",
+                "When a downstream service (inventory, payment) is failing or slow, without a circuit breaker, every client request triggers a slow (30-second timeout) attempt to the failing service — degrading the entire system. Circuit breaker: CLOSED (normal, pass requests through), OPEN (service is failing, fail fast immediately for N seconds — no calls made), HALF-OPEN (after cooldown period, allow one probe request; if it succeeds → CLOSED, if it fails → OPEN again). This prevents cascading failures across the entire service mesh.",
+                "Circuit breaker: ACTIVE, INACTIVE, TESTING — cycles based on request count.",
+                "Circuit breakers only apply to external third-party APIs, not internal microservices."
+            ],
+            "answer": "When a downstream service (inventory, payment) is failing or slow, without a circuit breaker, every client request triggers a slow (30-second timeout) attempt to the failing service — degrading the entire system. Circuit breaker: CLOSED (normal, pass requests through), OPEN (service is failing, fail fast immediately for N seconds — no calls made), HALF-OPEN (after cooldown period, allow one probe request; if it succeeds → CLOSED, if it fails → OPEN again). This prevents cascading failures across the entire service mesh.",
+            "explanation": "Real consequence of missing circuit breaker: payment service goes down. Every checkout request waits 30s before timing out. Thread pool fills with waiting requests. API gateway starts timing out. User-facing requests for unrelated features (product search) start failing because all server threads are blocked waiting for the broken payment service. Circuit breaker would have failed-fast in milliseconds, isolating the damage."
+        },
+        {
+            "question": "Why is BullMQ with Redis preferred over direct HTTP calls for triggering background work (like sending emails after order creation)?",
+            "options": [
+                "HTTP is slower than TCP — Redis uses TCP making BullMQ faster.",
+                "Direct HTTP for background work means: if the email service is temporarily down when the order is created, the email is never sent (fire-and-forget) or the order creation fails (synchronous coupling). BullMQ persists the job in Redis — if the email worker is down, the job waits in the queue. When the worker restarts, it processes all pending jobs. Additionally: retry with exponential backoff for transient failures, configurable concurrency, job prioritization, delayed jobs, and job result tracking. The order creation completes instantly (non-blocking) regardless of email service health.",
+                "HTTP calls between services don't work without service discovery configured.",
+                "BullMQ only works for email — HTTP is required for all other inter-service communication."
+            ],
+            "answer": "Direct HTTP for background work means: if the email service is temporarily down when the order is created, the email is never sent (fire-and-forget) or the order creation fails (synchronous coupling). BullMQ persists the job in Redis — if the email worker is down, the job waits in the queue. When the worker restarts, it processes all pending jobs. Additionally: retry with exponential backoff for transient failures, configurable concurrency, job prioritization, delayed jobs, and job result tracking. The order creation completes instantly (non-blocking) regardless of email service health.",
+            "explanation": "Rule: if the downstream operation is (1) not needed for the response, (2) can be retried on failure, or (3) could be slow — use a queue. Examples: sending emails, generating thumbnails, syncing to CRM, sending analytics events. Keep the critical path (order creation) fast and always-available; defer non-critical work to queues."
+        }
+    ]
+}

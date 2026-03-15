@@ -1,0 +1,50 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# EduScale Development Rules
+
+## General
+1. Use TypeScript only
+2. Follow linting standards and type safety
+3. Use functional components only
+4. Use proper error handling
+
+## Frontend (Next.js 15)
+5. Use Next.js App Router for Frontend
+6. Use Tailwind CSS for styling - use semantic tokens (text-foreground, bg-background, etc.)
+7. Use Shadcn UI for components
+8. **ALWAYS use `<Button>` from `@/components/ui/button` or `<CustomLink>` from `@/components/ui/custom-link` for all clickable actions and links.**
+9. **NEVER use raw `<button>`, `<motion.button>`, or `<a>` tags.** Use the provided common components to ensure consistent styling and branding.
+10. **NEVER override the `default` variant of Button/CustomLink with hardcoded background colors** like `bg-foreground` or `bg-primary`. The component handles the primary branding (current primary color) automatically.
+11. **NEVER use hardcoded colors** like `text-black`, `bg-white`, `text-gray-*`, `text-primary-foreground` - use semantic tokens only.
+12. **NEVER use `dark:` prefix** - theme is handled by CSS variables.
+13. **Primary Color Consistency**: All "Get Started" and main CTA buttons must use the `variant="default"` (which uses the primary theme color) without any custom background/text color overrides.
+14. Use axios hooks (`useAxiosGet`, `useAxiosPut`, etc.) for API calls
+15. Use Yup for frontend validation
+16. Auth state: `useSelector(state => state.user.isAuthenticated)` from Redux
+17. Hide signup CTAs when user is authenticated
+
+## Backend (Express + Prisma)
+18. Use Node.js with Express for Backend
+19. Use Prisma for database ORM
+20. Use `sendResponse` function to send API responses
+21. Use `paginate` common function for pagination
+22. Use `catchAsync` for error handling in controllers
+23. Use Joi for backend validation
+24. Use middleware for: authentication, authorization, rate limiting, logging, compression, security, CORS, Helmet
+
+## Testing
+25. Backend: Jest (`npm test`)
+26. Frontend E2E: Playwright (`npx playwright test`)
+27. Every page must load without runtime errors
+28. Auth-dependent UI must be tested in both states
+
+## Key File Paths
+- Button: `Frontend/src/components/ui/button.tsx`
+- Navbar: `Frontend/src/components/Navbar/index.tsx`
+- API hooks: `Frontend/src/hooks/useAxios.ts`
+- Session tracker: `.claude/session-tracker.md`
+- Project tracker: `todo.md`

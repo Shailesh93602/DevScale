@@ -1,0 +1,10 @@
+{
+  "typescript": "function productExceptSelf(nums: number[]): number[] {\n    \n};",
+  "javascript": "/**\n * @param {number[]} nums\n * @return {number[]}\n */\nvar productExceptSelf = function(nums) {\n    \n};",
+  "python": "class Solution:\n    def productExceptSelf(self, nums: List[int]) -> List[int]:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public int[] productExceptSelf(int[] nums) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> productExceptSelf(vector<int>& nums) {\n        \n    }\n};",
+  "go": "func productExceptSelf(nums []int) []int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn product_except_self(nums: Vec<i32>) -> Vec<i32> {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int[] ProductExceptSelf(int[] nums) {\n        \n    }\n}"
+}

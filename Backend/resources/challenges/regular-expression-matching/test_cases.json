@@ -1,0 +1,12 @@
+[
+  { "input": "{\"s\": \"aa\", \"p\": \"a\"}", "output": "false", "explanation": "Pattern 'a' doesn't match 'aa'", "is_hidden": false },
+  { "input": "{\"s\": \"aa\", \"p\": \"a*\"}", "output": "true", "explanation": "'a*' matches zero or more 'a's", "is_hidden": false },
+  { "input": "{\"s\": \"ab\", \"p\": \".*\"}", "output": "true", "explanation": "'.*' matches any string", "is_hidden": false },
+  { "input": "{\"s\": \"aab\", \"p\": \"c*a*b\"}", "output": "true", "explanation": "c* = empty, a* = aa, b = b", "is_hidden": true },
+  { "input": "{\"s\": \"mississippi\", \"p\": \"mis*is*p*.\"}", "output": "false", "explanation": "Pattern doesn't cover the full string", "is_hidden": true },
+  { "input": "{\"s\": \"ab\", \"p\": \"a.\"}", "output": "true", "explanation": "'.' matches 'b'", "is_hidden": true },
+  { "input": "{\"s\": \"\", \"p\": \"a*\"}", "output": "true", "explanation": "a* matches empty string (zero a's)", "is_hidden": true },
+  { "input": "{\"s\": \"a\", \"p\": \"ab*\"}", "output": "true", "explanation": "b* matches zero b's", "is_hidden": true },
+  { "input": "{\"s\": \"aaa\", \"p\": \"a*a\"}", "output": "true", "explanation": "a* matches 'aa', then 'a' matches last 'a'", "is_hidden": true },
+  { "input": "{\"s\": \"abcd\", \"p\": \"d*.*\"}", "output": "true", "explanation": "d* = empty, .* matches 'abcd'", "is_hidden": true }
+]

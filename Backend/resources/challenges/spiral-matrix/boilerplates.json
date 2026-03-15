@@ -1,0 +1,10 @@
+{
+  "typescript": "function spiralOrder(matrix: number[][]): number[] {\n    \n};",
+  "javascript": "/**\n * @param {number[][]} matrix\n * @return {number[]}\n */\nvar spiralOrder = function(matrix) {\n    \n};",
+  "python": "class Solution:\n    def spiralOrder(self, matrix: List[List[int]]) -> List[int]:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public List<Integer> spiralOrder(int[][] matrix) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> spiralOrder(vector<vector<int>>& matrix) {\n        \n    }\n};",
+  "go": "func spiralOrder(matrix [][]int) []int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn spiral_order(matrix: Vec<Vec<i32>>) -> Vec<i32> {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public IList<int> SpiralOrder(int[][] matrix) {\n        \n    }\n}"
+}

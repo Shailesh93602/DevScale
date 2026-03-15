@@ -1,0 +1,4 @@
+{
+    "name": "Columnar Storage & Compression",
+    "description": "Understanding the physical storage level. Exploring why Data Warehouses explicitly abandon standard Row-Based storage in favor of Columnar formats like Parquet, unlocking massive read speeds and aggressive compression."
+}

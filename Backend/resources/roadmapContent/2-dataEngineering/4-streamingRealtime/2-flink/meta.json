@@ -1,0 +1,4 @@
+{
+    "name": "Apache Flink",
+    "description": "Stateful computations over streaming data. Core concepts, DataStream API, and windowing functions."
+}

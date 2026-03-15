@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "If you deploy a standard, default Node.js application to a highly expensive server with 16 CPU cores, how many cores will the application actually utilize to execute JavaScript?",
+            "options": [
+                "All 16 cores due to the Event Loop",
+                "It depends on the number of users connected",
+                "Exactly 1 core",
+                "4 cores, as Node has a default thread pool of 4"
+            ],
+            "answer": "Exactly 1 core",
+            "explanation": "Node.js JavaScript execution is strictly single-threaded. Regardless of having 16 cores, a standard Node app will max out one core at 100% while the other 15 sit idle, unless intentional clustering is used."
+        },
+        {
+            "question": "What is the primary function of the Node.js native 'cluster' module?",
+            "options": [
+                "To group similar database records together for faster querying",
+                "To fork multiple child processes (workers) that share the same server port, allowing Node to utilize all available CPU cores",
+                "To combine CSS and JavaScript files into a single bundle",
+                "To connect Node.js to a Redis caching cluster"
+            ],
+            "answer": "To fork multiple child processes (workers) that share the same server port, allowing Node to utilize all available CPU cores",
+            "explanation": "The cluster module creates a primary master process that spins up child workers (one per CPU core). The master automatically load balances incoming HTTP connections across these workers in a round-robin fashion."
+        },
+        {
+            "question": "Why is PM2 widely considered the community standard for deploying Node.js apps in production?",
+            "options": [
+                "It acts as a process manager that automatically handles clustering, logging, and restarting the application instantly if it crashes due to a fatal error",
+                "It replaces the Express.js routing engine with a faster Rust alternative",
+                "It prevents SQL injection natively",
+                "It serves React frontend static files"
+            ],
+            "answer": "It acts as a process manager that automatically handles clustering, logging, and restarting the application instantly if it crashes due to a fatal error",
+            "explanation": "PM2 daemonizes your application. If a critical bug crashes your server, PM2 restarts it in milliseconds. It also allows you to scale to all CPU cores silently with a simple '-i max' flag."
+        },
+        {
+            "question": "What architectural role does NGINX usually play when placed in front of a Node.js server?",
+            "options": [
+                "A relational database to replace MySQL",
+                "A Reverse Proxy that handles HTTPS decryption, rate limiting, and serves static files (like images), proxying dynamic API requests back to Node",
+                "A JavaScript execution engine that replaces V8",
+                "An automated deployment pipeline"
+            ],
+            "answer": "A Reverse Proxy that handles HTTPS decryption, rate limiting, and serves static files (like images), proxying dynamic API requests back to Node",
+            "explanation": "Node.js is poor at managing SSL certificates and serving static CSS/Image files efficiently. Nginx handles these heavy network-level tasks at blistering speeds, only bothering the Node server for actual API backend logic."
+        },
+        {
+            "question": "When scaling a Node application across multiple workers or physical servers, why must the application remain strictly 'stateless' (e.g., storing sessions in Redis instead of RAM)?",
+            "options": [
+                "Because stateful applications are forbidden by HTTP protocol rules",
+                "Because RAM is too expensive on cloud providers",
+                "Because if User A's session is stored in the RAM of Worker 1, and their next request is load-balanced to Worker 2, Worker 2 will not recognize them and force them to log in again",
+                "Because memory storage limits string sizes to 256 characters"
+            ],
+            "answer": "Because if User A's session is stored in the RAM of Worker 1, and their next request is load-balanced to Worker 2, Worker 2 will not recognize them and force them to log in again",
+            "explanation": "Every clustered worker is a completely separate V8 instance with its own isolated memory bucket. True scalability requires all shared state (sessions, caches, websockets) to be pushed out to a central external database like Redis."
+        }
+    ]
+}

@@ -1,0 +1,20 @@
+{
+  "title": "Minimum Number of Refueling Stops",
+  "slug": "minimum-number-of-refueling-stops",
+  "difficulty": "Hard",
+  "category": "algorithms",
+  "points": 150,
+  "tags": ["array","dynamic-programming","greedy","heap"],
+  "company_tags": ["Amazon","Google","Apple","Microsoft"],
+  "topic_tags": ["heaps","priority queue","dynamic programming","greedy"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer `target`, an integer `startFuel`, and a 2D array `stations` where `stations[i] = [position_i, fuel_i]`.",
+  "output_format": "The minimum number of refueling stops required to reach the target.",
+  "example_input": "target = 100, startFuel = 10, stations = [[10,60],[20,30],[30,30],[60,40]]",
+  "example_output": "2",
+  "constraints": "- `1 <= target, startFuel <= 10^9`\n- `0 <= stations.length <= 500`\n- `1 <= position_i < position_{i+1} < target`\n- `1 <= fuel_i < 10^9`",
+  "function_signature": "function minRefuelStops(target: number, startFuel: number, stations: number[][]): number {}",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,6 @@
+[
+  "Use `fn.length` to determine how many arguments the original function expects.",
+  "Compare the number of accumulated arguments to `fn.length`. If you have enough, call the original function.",
+  "If not enough arguments yet, return a new function that collects more arguments and combines them with the existing ones.",
+  "The key pattern is: (...args) => args.length >= fn.length ? fn(...args) : (...more) => curried(...args, ...more)"
+]

@@ -1,0 +1,4 @@
+{
+    "name": "Zustand & Jotai",
+    "description": "Lightweight state management with Zustand (single store, slices, devtools) and Jotai (atomic state, derived atoms, async atoms)."
+}

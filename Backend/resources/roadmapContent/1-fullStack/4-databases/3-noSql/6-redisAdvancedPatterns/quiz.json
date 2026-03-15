@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the cache stampede problem specific to Redis Sorted Set-based rate limiting, and how does the implementation prevent it?",
+            "options": [
+                "Cache stampede in rate limiting occurs when the Redis server restarts and all counters reset.",
+                "A simpler scenario in rate limiting: the EXPIRE on the rate limit key resets the window for the ENTIRE key, not per-entry. Without ZREMRANGEBYSCORE, expired entries accumulate — a user who made 99 requests 61 minutes ago still has those 99 entries in the set. The sliding window approach uses ZREMRANGEBYSCORE to remove entries outside the window before counting, ensuring the count reflects ONLY requests in the current window: remove anything older than (now - windowMs), then count what remains, then add the current request. This creates a true sliding window instead of a fixed-window reset.",
+                "Cache stampede in Redis rate limiting occurs when multiple users hit the limit simultaneously.",
+                "The EXPIRE command must be called before ZADD to prevent stampede conditions."
+            ],
+            "answer": "A simpler scenario in rate limiting: the EXPIRE on the rate limit key resets the window for the ENTIRE key, not per-entry. Without ZREMRANGEBYSCORE, expired entries accumulate — a user who made 99 requests 61 minutes ago still has those 99 entries in the set. The sliding window approach uses ZREMRANGEBYSCORE to remove entries outside the window before counting, ensuring the count reflects ONLY requests in the current window: remove anything older than (now - windowMs), then count what remains, then add the current request. This creates a true sliding window instead of a fixed-window reset.",
+            "explanation": "Fixed window flaw: if your limit is 100/minute, using a simple incrementing counter with 1-minute expiry: a user can make 100 requests at 11:59:50, counter resets at midnight, they make 100 more at 12:00:00 — 200 requests in 10 seconds. Sliding window (ZREMRANGEBYSCORE approach) sees: 100 requests in the last 60 seconds → limit enforced correctly."
+        },
+        {
+            "question": "What is Redis Streams xAck(), and what happens to unacknowledged messages in a consumer group?",
+            "options": [
+                "xAck() deletes a message from the stream permanently to free storage.",
+                "In Redis Streams consumer groups, when a consumer reads a message (xReadGroup), it moves to a 'Pending Entries List' (PEL) for that consumer. It stays PENDING until explicitly acknowledged with xAck(). If the consumer crashes before calling xAck, the message remains in the PEL as unacknowledged. Another consumer (or the same after restart) can reclaim pending messages using xAutoClaim() or xPending() + xClaim() — preventing message loss. This 'at-least-once' delivery guarantee ensures no message is lost even if workers crash mid-processing.",
+                "xAck() marks a message as 'delivered' but keeps it in the stream forever for audit purposes.",
+                "Unacknowledged messages are deleted after 60 seconds by the Redis garbage collector."
+            ],
+            "answer": "In Redis Streams consumer groups, when a consumer reads a message (xReadGroup), it moves to a 'Pending Entries List' (PEL) for that consumer. It stays PENDING until explicitly acknowledged with xAck(). If the consumer crashes before calling xAck, the message remains in the PEL as unacknowledged. Another consumer (or the same after restart) can reclaim pending messages using xAutoClaim() or xPending() + xClaim() — preventing message loss. This 'at-least-once' delivery guarantee ensures no message is lost even if workers crash mid-processing.",
+            "explanation": "Idempotency requirement: because Redis Streams provides at-least-once delivery (not exactly-once), messages CAN be processed twice (if worker crashes after processing but before xAck). Your message handler must be idempotent (safe to run multiple times with same input). For order processing: check if order status is already 'FULFILLED' before fulfilling again."
+        },
+        {
+            "question": "Redis HyperLogLog pfCount returns an approximate unique count with 0.81% standard error. When is this acceptable, and when do you need exact counts?",
+            "options": [
+                "HyperLogLog is only acceptable for analytics dashboards — never use it in any user-facing feature.",
+                "Acceptable for HyperLogLog: page view counting ('~1.2M unique visitors today'), trend analysis, A/B test cohort sizing, ad impression uniqueness estimation, feature usage analytics. The 0.81% error is imperceptible when displaying rounded analytics numbers ('1.2 million visitors' vs '1.1904 million actual'). Unacceptable: billing (how many API calls did this customer make?), voting systems (how many unique voters for each option?), compliance reporting (exact DAU for regulatory filings), deduplication (must know exact set membership — use a real Set or Bloom filter with exact counting).",
+                "HyperLogLog is always acceptable since no business decision needs exact visitor counts.",
+                "HyperLogLog error is cumulative — after 1000 measurements the error exceeds 50%."
+            ],
+            "answer": "Acceptable for HyperLogLog: page view counting ('~1.2M unique visitors today'), trend analysis, A/B test cohort sizing, ad impression uniqueness estimation, feature usage analytics. The 0.81% error is imperceptible when displaying rounded analytics numbers ('1.2 million visitors' vs '1.1904 million actual'). Unacceptable: billing (how many API calls did this customer make?), voting systems (how many unique voters for each option?), compliance reporting (exact DAU for regulatory filings), deduplication (must know exact set membership — use a real Set or Bloom filter with exact counting).",
+            "explanation": "HyperLogLog's superpower: tracks cardinality (unique element count) of any set with fixed 12KB memory regardless of set size. Tracking 100 unique visitors: 12KB. Tracking 100 million unique visitors: still 12KB. Compare to storing all user IDs in a Redis SET: 100M user UUIDs × 36 bytes = 3.6GB. HyperLogLog achieves statistical approximation of exact counting using mathematical hashing magic."
+        }
+    ]
+}

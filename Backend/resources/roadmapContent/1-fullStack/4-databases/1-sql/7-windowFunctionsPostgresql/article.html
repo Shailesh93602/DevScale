@@ -1,0 +1,115 @@
+<h1>Window Functions & Advanced PostgreSQL</h1>
+<p>Window functions are the most powerful analytical feature in SQL — they let you perform calculations across a set of rows that are related to the current row, without collapsing the result into a single aggregate. They're essential for analytics dashboards, leaderboards, ranking, and time-series analysis.</p>
+
+<h2>Window Function Syntax</h2>
+<pre><code class="language-sql">-- General syntax: function() OVER (PARTITION BY ... ORDER BY ...)
+-- PARTITION BY: divides rows into groups (like GROUP BY but keeps all rows)
+-- ORDER BY: defines ordering within each partition for ranking/aggregate functions
+
+SELECT
+  employee_name,
+  department,
+  salary,
+
+  -- Ranking within each department
+  ROW_NUMBER() OVER (PARTITION BY department ORDER BY salary DESC) AS row_num,
+  RANK()        OVER (PARTITION BY department ORDER BY salary DESC) AS rank,
+  DENSE_RANK()  OVER (PARTITION BY department ORDER BY salary DESC) AS dense_rank,
+
+  -- Running total of salary within department
+  SUM(salary) OVER (PARTITION BY department ORDER BY salary DESC) AS running_total,
+
+  -- Department average (all rows in partition — no ORDER BY)
+  AVG(salary) OVER (PARTITION BY department) AS dept_avg,
+
+  -- What is this employee's salary vs the top earner in their dept?
+  salary - FIRST_VALUE(salary) OVER (PARTITION BY department ORDER BY salary DESC) AS diff_from_top
+
+FROM employees;
+-- Output: all rows preserved (unlike GROUP BY), each row has partition context
+</code></pre>
+
+<h2>LAG & LEAD: Comparing Rows Over Time</h2>
+<pre><code class="language-sql">-- Month-over-month revenue change
+WITH monthly_revenue AS (
+  SELECT
+    DATE_TRUNC('month', created_at) AS month,
+    SUM(amount) AS revenue
+  FROM orders
+  GROUP BY 1
+)
+SELECT
+  month,
+  revenue,
+  LAG(revenue)  OVER (ORDER BY month) AS prev_month_revenue,
+  LEAD(revenue) OVER (ORDER BY month) AS next_month_revenue,
+
+  -- Percentage change from last month
+  ROUND(
+    (revenue - LAG(revenue) OVER (ORDER BY month)) /
+    LAG(revenue) OVER (ORDER BY month) * 100, 2
+  ) AS pct_change
+FROM monthly_revenue
+ORDER BY month;
+</code></pre>
+
+<h2>Recursive CTEs: Hierarchical Queries</h2>
+<pre><code class="language-sql">-- Recursive CTE: traverse organizational hierarchy (employee → manager → director → CEO)
+WITH RECURSIVE org_hierarchy AS (
+  -- Anchor: start with the top-level (no manager)
+  SELECT id, name, manager_id, 1 AS level, name::TEXT AS path
+  FROM employees
+  WHERE manager_id IS NULL
+
+  UNION ALL
+
+  -- Recursive: join each employee to their manager's record
+  SELECT
+    e.id, e.name, e.manager_id,
+    h.level + 1,
+    h.path || ' → ' || e.name
+  FROM employees e
+  JOIN org_hierarchy h ON e.manager_id = h.id
+)
+SELECT id, name, level, path
+FROM org_hierarchy
+ORDER BY level, path;
+
+-- Also useful for: threaded comments, category trees, shortest path in graphs
+</code></pre>
+
+<h2>PostgreSQL-Specific Features</h2>
+<pre><code class="language-sql">-- JSONB: store and query JSON efficiently
+CREATE TABLE products (
+  id SERIAL PRIMARY KEY,
+  name TEXT,
+  attributes JSONB   -- Indexed, efficiently stored binary JSON
+);
+
+-- Query inside JSONB
+SELECT * FROM products
+WHERE attributes ->> 'color' = 'blue'      -- Extract as text
+  AND (attributes -> 'specs' ->> 'weight')::NUMERIC &lt; 5;
+
+-- JSONB operators
+attributes ? 'color'        -- Does key exist?
+attributes ?| ARRAY['red', 'blue']  -- Any of these keys exist?
+attributes @> '{"brand": "Nike"}'   -- Does JSON contain this?
+
+-- Add index on JSONB attribute
+CREATE INDEX idx_products_color ON products ((attributes ->> 'color'));
+CREATE INDEX idx_products_gin ON products USING GIN(attributes);  -- Full JSONB search
+
+-- Full-text search
+ALTER TABLE articles ADD COLUMN search_vector tsvector
+  GENERATED ALWAYS AS (
+    to_tsvector('english', title || ' ' || coalesce(content, ''))
+  ) STORED;
+
+CREATE INDEX idx_articles_fts ON articles USING GIN(search_vector);
+
+SELECT title, ts_rank(search_vector, query) AS rank
+FROM articles, to_tsquery('english', 'postgres &amp; performance') query
+WHERE search_vector @@ query
+ORDER BY rank DESC;
+</code></pre>

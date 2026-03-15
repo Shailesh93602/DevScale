@@ -1,0 +1,6 @@
+{
+    "id": "1-textPreprocessing",
+    "title": "Text Preprocessing in NLP",
+    "description": "Fundamental techniques for cleaning and preparing text data for natural language understanding.",
+    "order": 1
+}

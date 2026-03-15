@@ -1,0 +1,74 @@
+{
+    "title": "Apache Spark Quiz",
+    "description": "Test your Spark distributed processing knowledge.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "In Spark, what is the difference between a Transformation and an Action?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "They are the same",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Transformations are lazy (define a plan); Actions trigger actual computation and return results",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Actions are lazy; Transformations execute immediately",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Transformations require a SparkSession; Actions do not",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is a Shuffle in Spark and why is it expensive?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It is the process of sorting data alphabetically",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It redistributes data across partitions — requiring disk I/O and network transfer across nodes",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It loads data from S3 to executors",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It runs a SQL query across all partitions",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "When should you use a broadcast join in Spark?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "When both tables are very large",
+                    "isCorrect": false
+                },
+                {
+                    "text": "When one table is small enough to be sent to every executor, eliminating the shuffle",
+                    "isCorrect": true
+                },
+                {
+                    "text": "When joining on non-indexed columns",
+                    "isCorrect": false
+                },
+                {
+                    "text": "When the join produces a very wide result",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

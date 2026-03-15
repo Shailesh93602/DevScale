@@ -1,0 +1,10 @@
+{
+    "id": "4-performance",
+    "title": "Mobile Performance & Testing",
+    "description": "Optimizing React Native applications and ensuring quality through automated testing.",
+    "order": 4,
+    "subjects": [
+        "1-optimization",
+        "2-testing"
+    ]
+}

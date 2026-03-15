@@ -1,0 +1,4 @@
+{
+    "name": "Spark Streaming",
+    "description": "Processing real-time data streams with Spark Structured Streaming and Kafka integration."
+}

@@ -1,0 +1,6 @@
+[
+  "The in-order successor is the node with the smallest value strictly greater than p's value.",
+  "In a BST, if the current node's value is greater than p.val, it might be the successor — but search left for a closer one.",
+  "If the current node's value is less than or equal to p.val, the successor must be in the right subtree.",
+  "You can solve this in O(H) time by using the BST property to narrow the search, without performing a full traversal."
+]

@@ -1,0 +1,72 @@
+<h1>Networking Fundamentals for Engineers</h1>
+<p>Understanding networking is essential for debugging production issues, configuring cloud infrastructure, and understanding security architecture.</p>
+
+<h2>OSI Model — The Stack</h2>
+<ul>
+  <li><strong>Layer 7 — Application</strong>: HTTP, HTTPS, DNS, SSH, FTP</li>
+  <li><strong>Layer 4 — Transport</strong>: TCP (reliable), UDP (fast, no guarantee)</li>
+  <li><strong>Layer 3 — Network</strong>: IP addresses, routing</li>
+  <li><strong>Layer 2 — Data Link</strong>: MAC addresses, switches</li>
+</ul>
+
+<h2>TCP vs UDP</h2>
+<pre><code>TCP (Transmission Control Protocol)
+✅ Reliable — guarantees delivery, ordering, error correction
+✅ Used for: HTTP/S, SSH, databases, file transfers
+❌ Higher overhead — connection setup (3-way handshake), ACKs
+
+UDP (User Datagram Protocol)
+✅ Fast — no connection setup, no acknowledgment
+✅ Used for: video streaming, DNS, gaming, VoIP
+❌ No delivery guarantee — packets may be lost or arrive out of order</code></pre>
+
+<h2>DNS — Domain Name System</h2>
+<pre><code># How DNS resolves api.myapp.com:
+1. Check /etc/hosts and local cache
+2. Query recursive resolver (ISP or 8.8.8.8)
+3. Recursive resolver queries root nameservers (.com → myapp.com NS)
+4. Query authoritative nameserver → returns IP 203.0.113.10
+5. Response cached for TTL duration
+
+# Common DNS record types:
+A         api.myapp.com → 203.0.113.10        (IPv4 address)
+CNAME     www.myapp.com → myapp.com           (alias)
+MX        myapp.com → mail.myapp.com          (mail server)
+TXT       myapp.com → "v=spf1 include:..."   (SPF, verification)
+
+# Useful commands
+nslookup api.myapp.com     # DNS lookup
+dig +short api.myapp.com   # DNS lookup with details
+curl -I https://myapp.com  # Check HTTP headers</code></pre>
+
+<h2>HTTP/HTTPS</h2>
+<pre><code>Request:
+GET /api/users HTTP/1.1
+Host: api.myapp.com
+Authorization: Bearer eyJhbGci...
+Content-Type: application/json
+
+Response:
+HTTP/1.1 200 OK
+Content-Type: application/json
+Cache-Control: max-age=3600
+X-RateLimit-Remaining: 99</code></pre>
+
+<h2>Load Balancers</h2>
+<pre><code># Round Robin — distribute requests evenly
+# Least Connections — route to server with fewest active connections
+# IP Hash — same client always hits same server (session stickiness)
+
+# Health checks
+upstream backend {
+  server app1:3000 weight=3;  # Gets 3x more traffic
+  server app2:3000;
+  server app3:3000 backup;    # Only used if others fail
+}</code></pre>
+
+<h2>VPC — Virtual Private Cloud</h2>
+<pre><code># AWS VPC structure:
+VPC: 10.0.0.0/16 (65,536 IPs)
+  Public Subnet:  10.0.1.0/24  → Has route to Internet Gateway → accessible from internet
+  Private Subnet: 10.0.2.0/24  → No internet route → databases, app servers
+  NAT Gateway in public subnet → allows private subnet to access internet outbound</code></pre>

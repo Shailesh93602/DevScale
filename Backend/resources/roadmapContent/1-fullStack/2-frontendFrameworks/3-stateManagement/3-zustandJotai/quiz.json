@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the main advantage of Zustand over Redux Toolkit?",
+            "options": [
+                "Zustand is faster at runtime",
+                "Zustand requires much less boilerplate — no reducers, actions, or providers needed",
+                "Zustand has better TypeScript support",
+                "Zustand supports time-travel debugging"
+            ],
+            "answer": "Zustand requires much less boilerplate — no reducers, actions, or providers needed",
+            "explanation": "Zustand creates state with a single create() call, no provider wrapping needed, no separate action files — just state and updaters in one place."
+        },
+        {
+            "question": "How do you prevent unnecessary re-renders when using Zustand?",
+            "options": [
+                "Use React.memo on all components",
+                "Subscribe to only the specific slice of state you need using a selector",
+                "Use shallow comparisons on the entire store",
+                "Split the store into multiple Zustand instances"
+            ],
+            "answer": "Subscribe to only the specific slice of state you need using a selector",
+            "explanation": "useStore(state => state.count) only re-renders when 'count' changes. If you select the entire store object, the component re-renders on any state change."
+        },
+        {
+            "question": "What is an 'atom' in Jotai?",
+            "options": [
+                "An immutable piece of state",
+                "A small, independent unit of state that components can subscribe to individually",
+                "A CSS animation unit",
+                "A JavaScript primitive type"
+            ],
+            "answer": "A small, independent unit of state that components can subscribe to individually",
+            "explanation": "Jotai atoms are modeled after the Recoil pattern where state is split into small, independent pieces. Components only re-render when their specific atoms change."
+        },
+        {
+            "question": "What Zustand middleware persists state to localStorage?",
+            "options": [
+                "persist()",
+                "storage()",
+                "cache()",
+                "hydrate()"
+            ],
+            "answer": "persist()",
+            "explanation": "The persist middleware from 'zustand/middleware' automatically saves state to localStorage (or any storage you configure) and rehydrates it on page reload."
+        },
+        {
+            "question": "What is the difference between useAtom, useAtomValue, and useSetAtom in Jotai?",
+            "options": [
+                "They are all identical",
+                "useAtom returns [value, setter], useAtomValue is read-only, useSetAtom is write-only — avoiding re-renders if you only need one",
+                "useAtomValue is for async atoms, useSetAtom for sync atoms",
+                "useAtom is deprecated in favor of useAtomValue"
+            ],
+            "answer": "useAtom returns [value, setter], useAtomValue is read-only, useSetAtom is write-only — avoiding re-renders if you only need one",
+            "explanation": "Components that only dispatch updates should use useSetAtom to avoid re-rendering when the atom value changes. Components that only read should use useAtomValue."
+        }
+    ]
+}

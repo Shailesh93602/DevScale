@@ -1,0 +1,43 @@
+{
+  "title": "Same Tree",
+  "slug": "same-tree",
+  "difficulty": "Easy",
+  "category": "algorithms",
+  "points": 50,
+  "tags": [
+    "tree",
+    "depth-first-search",
+    "breadth-first-search",
+    "binary-tree"
+  ],
+  "company_tags": [
+    "Amazon",
+    "Google",
+    "Apple",
+    "Microsoft"
+  ],
+  "topic_tags": [
+    "trees",
+    "depth-first search",
+    "breadth-first search"
+  ],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "The roots of two binary trees `p` and `q`.",
+  "output_format": "`true` if they are the same, `false` otherwise.",
+  "example_input": "p = [1,2,3], q = [1,2,3]",
+  "example_output": "true",
+  "constraints": "- The number of nodes in both trees is in the range `[0, 100]`.\n- `-10^4 <= Node.val <= 10^4`",
+  "function_signature": "function isSameTree(p: TreeNode | null, q: TreeNode | null): boolean {}",
+  "status": "ACTIVE"
+}

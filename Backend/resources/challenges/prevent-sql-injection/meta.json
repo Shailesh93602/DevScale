@@ -1,0 +1,19 @@
+{
+  "title": "Prevent SQL Injection",
+  "slug": "prevent-sql-injection",
+  "difficulty": "Easy",
+  "category": "security",
+  "points": 50,
+  "tags": ["sql-injection", "security", "database", "parameterized-queries", "input-validation"],
+  "company_tags": ["Google", "Amazon", "Microsoft", "Meta", "Stripe"],
+  "topic_tags": ["SQL Injection", "Input Validation", "Parameterized Queries", "ORM"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Raw SQL queries with user input concatenation that are vulnerable to SQL injection",
+  "output_format": "Secure versions using parameterized queries, input validation, and ORM patterns",
+  "example_input": "query = \"SELECT * FROM users WHERE username = '\" + userInput + \"'\"",
+  "example_output": "query = \"SELECT * FROM users WHERE username = ?\"; params = [userInput]",
+  "constraints": "- Must use parameterized queries (never string concatenation)\\n- Must validate and sanitize all user inputs\\n- Must handle various SQL injection patterns\\n- Must work with common SQL databases",
+  "function_signature": "function sanitizeQuery(rawQuery: string, userInputs: Record<string, string>): { query: string; params: string[] }",
+  "status": "ACTIVE"
+}

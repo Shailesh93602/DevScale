@@ -1,0 +1,108 @@
+<h1>Airflow Operators</h1>
+<p>In Apache Airflow, an <strong>operator</strong> defines a single unit of work within a DAG. Each operator creates a Task when instantiated. Airflow ships with hundreds of built-in operators and lets you build custom ones.</p>
+
+<h2>Common Built-in Operators</h2>
+<pre><code>from airflow.operators.python import PythonOperator
+from airflow.operators.bash import BashOperator
+from airflow.operators.empty import EmptyOperator
+from airflow.providers.postgres.operators.postgres import PostgresOperator
+
+# BashOperator
+run_script = BashOperator(
+    task_id='run_script',
+    bash_command='python /scripts/transform.py',
+    dag=dag,
+)
+
+# PythonOperator
+def process_data(**context):
+    print(context['ds'])  # execution date
+
+run_python = PythonOperator(
+    task_id='process_data',
+    python_callable=process_data,
+    dag=dag,
+)
+
+# PostgresOperator
+load_data = PostgresOperator(
+    task_id='load',
+    postgres_conn_id='my_postgres',
+    sql='INSERT INTO summary SELECT ...;',
+    dag=dag,
+)</code></pre>
+
+<h2>TaskFlow API (Modern Airflow 2.x+)</h2>
+<p>The TaskFlow API uses Python decorators — cleaner and more Pythonic:</p>
+<pre><code>from airflow.decorators import dag, task
+from datetime import datetime
+
+@dag(start_date=datetime(2024, 1, 1), schedule='@daily')
+def etl_pipeline():
+
+    @task
+    def extract() -> dict:
+        return {"rows": 1000, "source": "api"}
+
+    @task
+    def transform(data: dict) -> dict:
+        data["processed"] = True
+        return data
+
+    @task
+    def load(data: dict):
+        print(f"Loading {data['rows']} rows...")
+
+    raw = extract()
+    transformed = transform(raw)
+    load(transformed)
+
+etl_pipeline()</code></pre>
+
+<h2>Sensors — Wait for External Conditions</h2>
+<pre><code>from airflow.sensors.filesystem import FileSensor
+from airflow.sensors.external_task import ExternalTaskSensor
+
+# Wait for a file to appear
+wait_for_file = FileSensor(
+    task_id='wait_for_file',
+    filepath='/data/input.csv',
+    poke_interval=60,   # check every 60s
+    timeout=3600,       # fail after 1 hour
+    dag=dag,
+)
+
+# Wait for another DAG to complete
+wait_for_upstream = ExternalTaskSensor(
+    task_id='wait_upstream',
+    external_dag_id='upstream_pipeline',
+    external_task_id='final_task',
+    dag=dag,
+)</code></pre>
+
+<h2>XCom — Passing Data Between Tasks</h2>
+<pre><code>def push_data(**context):
+    context['ti'].xcom_push(key='row_count', value=500)
+
+def pull_data(**context):
+    count = context['ti'].xcom_pull(task_ids='push_task', key='row_count')
+    print(f"Processing {count} rows...")</code></pre>
+
+<h2>Custom Operator</h2>
+<pre><code>from airflow.models import BaseOperator
+
+class SlackAlertOperator(BaseOperator):
+    def __init__(self, message: str, **kwargs):
+        super().__init__(**kwargs)
+        self.message = message
+
+    def execute(self, context):
+        send_slack(self.message.format(**context))</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Use TaskFlow API for new DAGs — it handles XComs automatically.</li>
+  <li>Keep tasks small and single-purpose (idempotent).</li>
+  <li>Avoid heavy computation inside operators — call external services instead.</li>
+  <li>Use sensors sparingly — set reasonable <code>timeout</code> to avoid zombie tasks.</li>
+</ul>

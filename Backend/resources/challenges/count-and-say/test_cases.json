@@ -1,0 +1,12 @@
+[
+  { "input": "{\"n\":1}", "output": "\"1\"", "explanation": "Base case", "is_hidden": false },
+  { "input": "{\"n\":4}", "output": "\"1211\"", "explanation": "4th term", "is_hidden": false },
+  { "input": "{\"n\":2}", "output": "\"11\"", "explanation": "2nd term", "is_hidden": true },
+  { "input": "{\"n\":3}", "output": "\"21\"", "explanation": "3rd term", "is_hidden": true },
+  { "input": "{\"n\":5}", "output": "\"111221\"", "explanation": "5th term", "is_hidden": true },
+  { "input": "{\"n\":6}", "output": "\"312211\"", "explanation": "6th term", "is_hidden": true },
+  { "input": "{\"n\":7}", "output": "\"13112221\"", "explanation": "7th term", "is_hidden": true },
+  { "input": "{\"n\":8}", "output": "\"1113213211\"", "explanation": "8th term", "is_hidden": true },
+  { "input": "{\"n\":9}", "output": "\"31131211131221\"", "explanation": "9th term", "is_hidden": true },
+  { "input": "{\"n\":10}", "output": "\"13211311123113112211\"", "explanation": "10th term", "is_hidden": true }
+]

@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the 'N+1 Problem' in the context of GraphQL?",
+            "options": [
+                "A mathematics error when compiling GraphQL resolvers in Node.js",
+                "A situation where fetching a list of 100 items triggers 100 additional, separate database queries to resolve a nested relationship (like the 'author' of a 'post'), crushing database performance",
+                "A frontend error where React renders 1 extra time unnecessarily",
+                "A GraphQL schema design flaw preventing relationships"
+            ],
+            "answer": "A situation where fetching a list of 100 items triggers 100 additional, separate database queries to resolve a nested relationship (like the 'author' of a 'post'), crushing database performance",
+            "explanation": "Because GraphQL resolves data level-by-level, the parent level queries 1 list, and the nested level executes N times for each item in that list, resulting in 1+N total network calls to the database."
+        },
+        {
+            "question": "How does Facebook's `DataLoader` library efficiently solve the N+1 problem?",
+            "options": [
+                "It caches database queries on the client's browser",
+                "It intercepts requests, waits a single tick to collect (batch) all the requested ID keys from the nested resolvers, removes duplicates, and hits the database exactly once with a mass `WHERE IN (...)` query",
+                "It converts GraphQL into REST automatically",
+                "It permanently caches data globally inside the V8 engine"
+            ],
+            "answer": "It intercepts requests, waits a single tick to collect (batch) all the requested ID keys from the nested resolvers, removes duplicates, and hits the database exactly once with a mass `WHERE IN (...)` query",
+            "explanation": "Instead of executing 100 separate `findById` commands, the resolvers push their IDs to DataLoader. DataLoader groups them together and asks the database: 'Give me users with IDs 4, 7, 2, and 9 simultaneously'."
+        },
+        {
+            "question": "When defining the Batch Function logic required by DataLoader, what strict rule must be followed regarding the returned array?",
+            "options": [
+                "It must be returned as a JSON string",
+                "It must exclude any objects that were not found in the database",
+                "It must return an array of objects that is the EXACT same length and in the exact same index order as the array of ID keys provided to the function",
+                "It must sort the results alphabetically"
+            ],
+            "answer": "It must return an array of objects that is the EXACT same length and in the exact same index order as the array of ID keys provided to the function",
+            "explanation": "If DataLoader asks for keys `[1, 999]`, and 999 doesn't exist in the DB, the DB just returns `[{ id: 1 }]`. Your code MUST pad the array so it returns `[{ id: 1 }, null]`. Otherwise, DataLoader maps the wrong user data to the wrong resolver."
+        },
+        {
+            "question": "Why MUST `new DataLoader(...)` be instantiated inside the GraphQL `context` initialization function (which runs on every HTTP request) rather than globally in the module scope?",
+            "options": [
+                "Because DataLoader instances are incompatible with global Node.js modules",
+                "Because if defined globally, DataLoader's internal cache would persist across all users, potentially causing User A to leak cached private data to an unrelated query executed later by User B",
+                "Because the Garbage Collector cannot reach the `context` function",
+                "Because it is required to read headers"
+            ],
+            "answer": "Because if defined globally, DataLoader's internal cache would persist across all users, potentially causing User A to leak cached private data to an unrelated query executed later by User B",
+            "explanation": "DataLoader acts as a heavily memoized cache wrapper. Creating a fresh loader in the `context` ensures the cache is strictly scoped purely to that single HTTP request. It lives for 50 milliseconds, resolves the query, and dies."
+        },
+        {
+            "question": "How does a child resolver actually utilize the instantiated DataLoader?",
+            "options": [
+                "By replacing the database driver globally",
+                "By calling `await context.userLoader.load(parent.authorId)` instead of calling the database directly",
+                "By returning `dataLoader.flush()`",
+                "By writing a new Type definition"
+            ],
+            "answer": "By calling `await context.userLoader.load(parent.authorId)` instead of calling the database directly",
+            "explanation": "The `.load(id)` function registers the ID into the batch queue and returns a Promise. When the loader is finished batching the database query, it resolves all the promises simultaneously."
+        }
+    ]
+}

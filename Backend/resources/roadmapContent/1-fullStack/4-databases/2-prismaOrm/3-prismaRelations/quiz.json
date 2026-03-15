@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "In a Prisma `schema.prisma` file modeling a standard One-to-Many relationship (like a User having many Posts), where are the physical mathematical Foreign Key columns defined?",
+            "options": [
+                "In the Parent model (e.g., `User` has `postIds Int[]`) strictly",
+                "In global namespace arrays natively",
+                "In the Child model (e.g., the `Post` model explicitly contains a physical `authorId Int` field and maps it using the `@relation` attribute)",
+                "Foreign keys do not exist physically when using Prisma"
+            ],
+            "answer": "In the Child model (e.g., the `Post` model explicitly contains a physical `authorId Int` field and maps it using the `@relation` attribute)",
+            "explanation": "Because a single Post only has one author, it holds the exact integer ID pointing back to the author. The User model simply uses `posts Post[]` as a Prisma-only mapping hint; it doesn't create SQL arrays."
+        },
+        {
+            "question": "What specifically differentiates a 'One-to-One' relationship from a 'One-to-Many' relationship structurally within a Prisma Schema?",
+            "options": [
+                "One-to-One requires a MongoDB database exclusively",
+                "In a One-to-One arrangement, the parent holds a singular object type (not an array), and crucially, the scalar Foreign Key inside the child model MUST be tagged with the `@unique` constraint",
+                "One-to-One uses Strings, while One-to-Many uses Ints natively",
+                "There is absolutely no syntax difference natively"
+            ],
+            "answer": "In a One-to-One arrangement, the parent holds a singular object type (not an array), and crucially, the scalar Foreign Key inside the child model MUST be tagged with the `@unique` constraint",
+            "explanation": "If the `userId Int` column on a Profile table is not unique, the database allows you to insert 5 different profiles with `userId: 1`. Thus, it would mathematically be a 1-to-N relation. Adding `@unique` forces it to strictly be 1-to-1."
+        },
+        {
+            "question": "If you define an 'Implicit Many-to-Many' relation in Prisma by simply giving both models arrays (e.g., `Post` has `tags Tag[]` and `Tag` has `posts Post[]`), how does Prisma execute this in the SQL database?",
+            "options": [
+                "It uses a massive NoSQL JSON object array natively",
+                "It writes Javascript directly into the SQL engine magically",
+                "It automatically generates, manages, and executes queries against a hidden 'Join Table' (named something like `_PostToTag`) entirely behind the scenes without the developer needing to model it",
+                "It uses array string splitting algorithms"
+            ],
+            "answer": "It automatically generates, manages, and executes queries against a hidden 'Join Table' (named something like `_PostToTag`) entirely behind the scenes without the developer needing to model it",
+            "explanation": "SQL natively cannot do M-to-N relationships without a third table bridging the gap. Prisma realizes this and builds the SQL bridge table invisibly, keeping your schema extremely clean and readable."
+        },
+        {
+            "question": "Under what specific condition MUST a developer abandon the easy 'Implicit Many-to-Many' relationship in favor of manually modeling the bridge table as an 'Explicit Many-to-Many'?",
+            "options": [
+                "When switching to PostgreSQL 15 exclusively",
+                "When the application must store thousands of rows perfectly",
+                "When the application needs to store extra, specific metadata directly ON the relationship itself (e.g., storing the exact 'joinedAt' date or 'role' on a User-Group connection)",
+                "When caching using Redis natively"
+            ],
+            "answer": "When the application needs to store extra, specific metadata directly ON the relationship itself (e.g., storing the exact 'joinedAt' date or 'role' on a User-Group connection)",
+            "explanation": "Because Prisma hides the implicit join table, you cannot add columns to it. If a user joins a group and you need to know *when* they joined, you must explicitly model the `GroupMembership` table so you can append the `joinedAt` column."
+        },
+        {
+            "question": "In an Explicit Many-to-Many Join Table in Prisma, what is typically used as the primary key constraint to ensure a user cannot join the exact same group twice?",
+            "options": [
+                "A standard `@id @default(autoincrement())` field",
+                "A `userToken String`",
+                "A composite/compound primary key consisting of both foreign keys mapped at the bottom of the model (e.g., `@@id([userId, groupId])`)",
+                "A global encryption hash limit"
+            ],
+            "answer": "A composite/compound primary key consisting of both foreign keys mapped at the bottom of the model (e.g., `@@id([userId, groupId])`)",
+            "explanation": "While you can add an auto-incrementing ID to a join table, using a composite unique key (where the combination of UserId + GroupId must be exclusively unique) ensures strict data integrity natively."
+        }
+    ]
+}

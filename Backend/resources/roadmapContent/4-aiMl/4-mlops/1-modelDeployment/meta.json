@@ -1,0 +1,11 @@
+{
+    "id": "1-modelDeployment",
+    "title": "Model Deployment",
+    "description": "Strategies for serving machine learning models as production APIs.",
+    "order": 1,
+    "topics": [
+        "1-modelServing",
+        "2-fastApiMl",
+        "3-dockerMl"
+    ]
+}

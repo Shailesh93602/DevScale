@@ -1,0 +1,22 @@
+<h1>Load Balancing & Hashing</h1>
+<p>If you run a popular website that receives 100,000 requests per minute, a single Node.js server will instantly crash. You must add 50 identical servers to handle the traffic. But how does a user's browser know which of the 50 servers to connect to?</p>
+
+<h2>The Load Balancer</h2>
+<p>A Load Balancer is a specialized reverse proxy server (like Nginx, HAProxy, or AWS ALB) that sits between the public internet and your private cluster of servers. Every single user connects exactly to the Load Balancer's public IP address. The Load Balancer then mathematically decides which backend server should receive the request.</p>
+
+<h2>Routing Algorithms</h2>
+<p>Load Balancers use simple algorithms to distribute traffic.</p>
+<ul>
+  <li><strong>Round Robin:</strong> The simplest method. Request 1 goes to Server A, Request 2 goes to Server B, Request 3 goes to Server C, Request 4 goes back to Server A.</li>
+  <li><strong>Least Connections:</strong> The load balancer intelligently routes traffic to the server with the fewest active connections at that exact millisecond.</li>
+  <li><strong>IP Hashing:</strong> The load balancer mathematically hashes the user's IP Address (e.g. `hash("192.168.1.5") = Server B`). This guarantees that User 5 will strictly always be routed to Server B across multiple requests, which is critical for stateful applications like WebSockets or server-side memory sessions.</li>
+</ul>
+
+<h2>Layer 4 vs Layer 7 Load Balancing</h2>
+<p>The OSI Model outlines how internet networking functions. Professional load balancers operate at different layers.</p>
+<p><strong>Layer 4 (Transport Layer):</strong> A Layer 4 Load Balancer (like AWS Network Load Balancer) only looks at the raw TCP/UDP packet headers (Source IP, Destination Port). It blindly forwards the traffic to the backend server without actually inspecting the contents of the payload. It is incredibly fast and can handle millions of connections per minute.</p>
+<p><strong>Layer 7 (Application Layer):</strong> A Layer 7 Load Balancer (like Nginx or AWS Application Load Balancer) physically terminates the TCP connection and decrypts the SSL traffic. It fully understands the underlying HTTP protocol. Because it can read the actual HTTP URL and HTTP Headers natively, it can perform highly complex routing algorithms (e.g., routing `/api/users/*` requests to the User API Servers, and routing `/api/payments/*` requests to completely different Payment API Servers).</p>
+
+<h2>Consistent Hashing</h2>
+<p>When you use standard Hashing to route traffic across 4 separate cache servers, it works perfectly. But if 1 cache server suddenly crashes, the mathematical Modulo operation shifts drastically. (e.g. `User_ID % 3` instead of `User_ID % 4`). Instantly, 75% of all users are routed to entirely wrong cache servers, causing a massive Cache Miss effectively crashing the database.</p>
+<p><strong>Consistent Hashing</strong> fixes this mathematically by mapping servers and users onto a massive virtual ring (a circle of numbers from 0 to 360). When a server crashes, only the users explicitly assigned to that specific ring segment are reassigned. The remaining 75% of users strictly stay mapped to their exact same original cache servers.</p>

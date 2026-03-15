@@ -1,0 +1,5 @@
+[
+  "Use a conditional to check the request method first. You only care about POST, PUT, DELETE, and PATCH.",
+  "Access the header using `req.get('X-CSRF-TOKEN')` or `req.headers`. ",
+  "The 'session' object is usually attached to the request: `req.session`."
+]

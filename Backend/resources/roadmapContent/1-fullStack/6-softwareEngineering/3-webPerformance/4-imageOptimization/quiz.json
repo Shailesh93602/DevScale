@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary advantage of utilizing Next-Gen image formats like `WebP` and `AVIF` natively over standard `JPEGs` or `PNGs`?",
+            "options": [
+                "They explicitly support CSS variable manipulation.",
+                "They offer vastly superior compression algorithms, physically shrinking image file sizes drastically by 30% to 70% without any noticeable visual quality loss, enormously accelerating the page's LCP (Largest Contentful Paint) score.",
+                "They automatically embed JavaScript trackers natively.",
+                "They are explicitly natively required by all modern React versions."
+            ],
+            "answer": "They offer vastly superior compression algorithms, physically shrinking image file sizes drastically by 30% to 70% without any noticeable visual quality loss, enormously accelerating the page's LCP (Largest Contentful Paint) score.",
+            "explanation": "If a user requires 5 megabytes of bandwidth purely to download the hero banner JPEG, the site will feel incredibly slow compared to a highly compressed WebP taking 400 kilobytes."
+        },
+        {
+            "question": "What is the structural purpose of natively adding the `loading=\"lazy\"` attribute uniquely to an `<img>` tag?",
+            "options": [
+                "To explicitly instruct the browser to completely ignore and defer the intense downloading of that specific image file specifically until the user physically scrolls down closely near it, aggressively saving critical initial network bandwidth.",
+                "To manually blur the pixels natively.",
+                "To drastically increase the CSS z-index correctly.",
+                "To completely format the text lazily locally."
+            ],
+            "answer": "To explicitly instruct the browser to completely ignore and defer the intense downloading of that specific image file specifically until the user physically scrolls down closely near it, aggressively saving critical initial network bandwidth.",
+            "explanation": "There is zero reason to download a massive 2MB footer image instantly if the user hasn't even read the first paragraph of the article."
+        },
+        {
+            "question": "What major bandwidth issue do Image CDNs (e.g., Cloudinary or Imgix) solve practically via dynamic URL parameters?",
+            "options": [
+                "Resolving Database deadlocks safely.",
+                "They prevent mobile devices from explicitly downloading heavy, massive 4K desktop images, instead dynamically calculating and physically serving a perfectly miniature sized, highly compressed crop uniquely via the URL (e.g., `w_300`).",
+                "They perfectly calculate HTML tags smoothly.",
+                "They completely manage Git merges natively."
+            ],
+            "answer": "They prevent mobile devices from explicitly downloading heavy, massive 4K desktop images, instead dynamically calculating and physically serving a perfectly miniature sized, highly compressed crop uniquely via the URL (e.g., `w_300`).",
+            "explanation": "Using CSS `width: 100%` on a 5000px image does not optimize the file. The browser still downloads the entire 10MB payload first."
+        }
+    ]
+}

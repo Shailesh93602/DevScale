@@ -1,0 +1,4 @@
+{
+    "name": "Information Theory for ML",
+    "description": "Understanding the mathematical concepts from information theory that underpin machine learning. Covering Shannon entropy and its interpretation, KL divergence and cross-entropy as loss functions, mutual information for feature selection, the relationship between entropy and uncertainty, and why cross-entropy loss is used for classification models."
+}

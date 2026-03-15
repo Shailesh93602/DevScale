@@ -1,0 +1,41 @@
+<h1>CTEs & Subqueries</h1>
+<p>When you first learn SQL, queries are relatively simple: <code>SELECT * FROM users WHERE age &gt; 18</code>. However, in Data Engineering, you will quickly encounter analytical questions that require deeply complex, multi-step logic. If you try to write this logic as a single massive query, it becomes unreadable and impossible to maintain.</p>
+
+<h2>The Problem with Nested Subqueries</h2>
+<p>A Subquery is simply a query nested inside another query. While useful for simple tasks, deeply nesting subqueries creates what developers call "Spaghetti SQL."</p>
+<pre><code class="language-sql">-- A confusing nested subquery
+SELECT u.name, u.email
+FROM users u
+WHERE u.id IN (
+    SELECT o.user_id
+    FROM orders o
+    WHERE o.amount &gt; (
+        SELECT AVG(amount) FROM orders
+    )
+);
+</code></pre>
+<p>To understand this code, a developer must read it from the <strong>inside-out</strong>. First, find the average amount, then find the user IDs, and finally find the names. When queries become 5 or 6 levels deep, this inside-out reading becomes incredibly difficult.</p>
+
+<h2>Common Table Expressions (CTEs)</h2>
+<p>A <strong>CTE (Common Table Expression)</strong> utilizing the <code>WITH</code> clause is the modern solution to Spaghetti SQL. It allows you to define a temporary, named result set that exists only for the duration of the execution.</p>
+<p>Instead of reading inside-out, CTEs allow you to read SQL structurally from <strong>top-to-bottom</strong>, exactly like variables in Python or Javascript.</p>
+<pre><code class="language-sql">-- The exact same logic, rewritten with CTEs for readability
+WITH AverageOrder AS (
+    SELECT AVG(amount) as avg_amount 
+    FROM orders
+),
+HighSpenders AS (
+    SELECT o.user_id 
+    FROM orders o
+    JOIN AverageOrder a ON o.amount &gt; a.avg_amount
+)
+
+-- The final readable query
+SELECT u.name, u.email
+FROM users u
+JOIN HighSpenders h ON u.id = h.user_id;
+</code></pre>
+
+<h2>The DRY Principle in SQL</h2>
+<p>CTEs uniquely enforce the DRY (Don't Repeat Yourself) principle natively in SQL. If you need to use the `AverageOrder` calculation in three different places within your final `SELECT` statement, a standard Subquery forces you to literally copy and paste the logic three times.</p>
+<p>With a CTE, you declare `AverageOrder` exactly once at the top of the file, and simply reference its name three times below. This drastically reduces code duplication and prevents massive maintenance headaches.</p>

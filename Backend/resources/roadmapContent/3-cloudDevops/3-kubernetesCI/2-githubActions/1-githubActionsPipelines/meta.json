@@ -1,0 +1,4 @@
+{
+    "name": "GitHub Actions CI/CD Pipelines",
+    "description": "Workflows, jobs, steps, secrets, matrix builds, and deployment automation."
+}

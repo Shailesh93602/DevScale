@@ -1,0 +1,118 @@
+{
+    "title": "Prometheus Quiz",
+    "description": "Test your knowledge on the Pull Model, PromQL, and Metric types.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Which of the following describes the architecture used by Prometheus to collect metrics?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A Push Model: Agents on the servers constantly push data to the central database.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A Pull Model: The Prometheus server periodically makes HTTP GET requests to a /metrics endpoint on the target servers.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A Streaming Model: Data is streamed continuously via Kafka.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A Batch Model: Log files are uploaded via FTP nightly.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which Prometheus metric type is most appropriate for tracking the total, cumulative number of 404 HTTP errors since the server started?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Gauge",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Histogram",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Summary",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Counter",
+                    "isCorrect": true
+                }
+            ]
+        },
+        {
+            "question": "Which Prometheus metric type is most appropriate for tracking the current available RAM on a server, which heavily fluctuates up and down?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Counter",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Gauge",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Histogram",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Summary",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is PromQL?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A wrapper around standard SQL required to query PostgreSQL databases.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A proprietary language used exclusively for configuring Kubernetes YAML files.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Prometheus Query Language, heavily optimized for selecting and aggregating time-series data.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A JavaScript framework for building Dashboards.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the primary role of the Prometheus Alertmanager component?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "To restart crashed Docker containers automatically.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To scrape the /metrics endpoints faster during high CPU load.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To handle deduplication, grouping, and routing of fired alerts to actual receivers like Slack or PagerDuty.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "To index raw application logs for full-text search.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,19 @@
+{
+  "title": "Implement Curry Function",
+  "slug": "implement-curry",
+  "difficulty": "Medium",
+  "category": "frontend",
+  "points": 100,
+  "tags": ["javascript", "closures", "functional-programming", "higher-order-functions"],
+  "company_tags": ["Google", "Meta", "Uber", "Stripe"],
+  "topic_tags": ["Closures", "Partial Application", "Functional Programming"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "A function `fn` with any number of parameters",
+  "output_format": "A curried version of the function that can be called with arguments one at a time or in groups",
+  "example_input": "curry(fn)(1)(2)(3)",
+  "example_output": "fn(1, 2, 3)",
+  "constraints": "fn has a fixed arity (fn.length > 0)",
+  "function_signature": "function curry(fn: (...args: any[]) => any): (...args: any[]) => any",
+  "status": "ACTIVE"
+}

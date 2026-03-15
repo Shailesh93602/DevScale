@@ -1,0 +1,4 @@
+{
+    "name": "Deep Linking & Authentication Flow",
+    "description": "Implementing deep links and auth-protected navigation in React Native. Setting up universal links (iOS) and app links (Android), handling link routing with @react-navigation/native, building an auth flow with conditional stack rendering, persisting auth state with SecureStore, implementing biometric authentication gates, and testing deep links with Expo and Xcode."
+}

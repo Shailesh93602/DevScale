@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "Why does a React Native WebSocket connection typically close when the app moves to the background on iOS, and how should you handle this?",
+            "options": [
+                "iOS closes WebSocket connections to conserve battery after 5 minutes of inactivity.",
+                "iOS strictly limits background execution — apps have at most ~30 seconds of background time before they're suspended. Suspended apps have no network activity. When the app returns to foreground, the WebSocket might appear open (ws.readyState===OPEN) but actually be broken — messages sent to it are silently dropped. Handle this with AppState.addEventListener('change') to reconnect when state changes to 'active', and implement a heartbeat/ping mechanism to detect broken connections.",
+                "iOS always closes WebSocket connections immediately when the app is backgrounded.",
+                "WebSocket connections persist in the background via iOS Background Modes if 'Remote Notifications' is enabled."
+            ],
+            "answer": "iOS strictly limits background execution — apps have at most ~30 seconds of background time before they're suspended. Suspended apps have no network activity. When the app returns to foreground, the WebSocket might appear open (ws.readyState===OPEN) but actually be broken — messages sent to it are silently dropped. Handle this with AppState.addEventListener('change') to reconnect when state changes to 'active', and implement a heartbeat/ping mechanism to detect broken connections.",
+            "explanation": "Production pattern: send a ping every 25 seconds. If no pong received within 5 seconds: assume connection is broken, close and reconnect. This detects 'zombie connections' that appear open but are actually dead. Stack: AppState listener (reconnect on foreground) + heartbeat (detect silent breaks) + exponential backoff (prevent reconnect storms)."
+        },
+        {
+            "question": "For a real-time chat feature in React Native, when should you prefer Supabase Realtime over a custom WebSocket server?",
+            "options": [
+                "Supabase Realtime should always be used — custom WebSocket servers are too complex.",
+                "Supabase Realtime is ideal when: you're already using Supabase for your database, you want zero backend infrastructure to manage, your real-time needs align with database change events (INSERT/UPDATE/DELETE), and your traffic is moderate. Use a custom WebSocket server when: you need complex real-time logic beyond DB events (collaborative cursor tracking, game state, custom protocols), require very low latency (<100ms), have complex authorization rules that Supabase RLS doesn't support, or need server-to-client push independent of DB changes.",
+                "Supabase Realtime only works with Supabase authentication — you cannot use it with JWT-based auth.",
+                "Custom WebSocket servers are always faster — use Supabase Realtime only for prototypes."
+            ],
+            "answer": "Supabase Realtime is ideal when: you're already using Supabase for your database, you want zero backend infrastructure to manage, your real-time needs align with database change events (INSERT/UPDATE/DELETE), and your traffic is moderate. Use a custom WebSocket server when: you need complex real-time logic beyond DB events (collaborative cursor tracking, game state, custom protocols), require very low latency (<100ms), have complex authorization rules that Supabase RLS doesn't support, or need server-to-client push independent of DB changes.",
+            "explanation": "Chat apps: Supabase Realtime is perfect — messages are database rows, RLS ensures users only see their chat's messages, no custom server needed. Multiplayer game: custom WebSocket server needed — game state updates are 60x/second, require server-authoritative logic, and don't fit a database-change model."
+        },
+        {
+            "question": "Why must you guard state updates from WebSocket message handlers with isMounted checks or AbortController, and what bug occurs without them?",
+            "options": [
+                "isMounted checks improve WebSocket performance by filtering irrelevant message types.",
+                "When a component with a WebSocket subscription unmounts, the subscription's message handler callback may still fire (messages delivered between unmount trigger and subscription.remove() executing). Without a guard, calling setMessages() or any state setter on an unmounted component triggers a React warning ('Can't perform a state update on an unmounted component') and can cause memory leaks or stale closure bugs. The cleanup function in useEffect's return should always remove the subscription BEFORE the component fully unmounts.",
+                "isMounted checks are required on Android but optional on iOS.",
+                "Without isMounted, WebSocket messages are doubled — each message triggers two state updates."
+            ],
+            "answer": "When a component with a WebSocket subscription unmounts, the subscription's message handler callback may still fire (messages delivered between unmount trigger and subscription.remove() executing). Without a guard, calling setMessages() or any state setter on an unmounted component triggers a React warning ('Can't perform a state update on an unmounted component') and can cause memory leaks or stale closure bugs. The cleanup function in useEffect's return should always remove the subscription BEFORE the component fully unmounts.",
+            "explanation": "Modern React 18: the 'unmounted component' warning was removed from React, but the underlying problem (calling setState on nothing) remains. The real risk: stale closures where the handler fires with outdated closure values from before unmount. Always: return () => { ws.current?.close(); subscription?.remove(); } in useEffect cleanup."
+        }
+    ]
+}

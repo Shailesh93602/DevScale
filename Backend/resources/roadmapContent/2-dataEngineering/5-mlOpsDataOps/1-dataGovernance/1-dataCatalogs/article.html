@@ -1,0 +1,125 @@
+<h1>Data Catalogs & Metadata Management</h1>
+<p>As a data platform grows from 10 datasets to 10,000, a critical problem emerges: no one knows what data exists, where it lives, who owns it, or whether it can be trusted. Engineers waste hours finding the right table. Analysts accidentally use deprecated datasets in reports presented to executives. <strong>Data catalogs</strong> solve this by providing a searchable, centralized inventory of all data assets — tables, reports, dashboards, ML models, and streaming topics — enriched with metadata, lineage, and ownership.</p>
+
+<h2>What a Data Catalog Contains</h2>
+<ul>
+  <li><strong>Technical Metadata:</strong> Schema (column names, types), table size, row count, partitioning, location (S3 path, database name).</li>
+  <li><strong>Business Metadata:</strong> Human-readable descriptions, business glossary terms, PII classification, data domain tags.</li>
+  <li><strong>Operational Metadata:</strong> Last updated timestamp, freshness SLA, ingestion pipeline owner, quality score.</li>
+  <li><strong>Social Metadata:</strong> Who queries this table most often, star ratings, Q&amp;A threads, usage frequency.</li>
+  <li><strong>Lineage:</strong> Which upstream tables or pipelines produce this table, and which downstream reports/dashboards consume it.</li>
+</ul>
+
+<h2>Apache Atlas — Open Source Data Catalog</h2>
+<pre><code">import requests
+
+ATLAS_URL = "http://atlas-server:21000/api/atlas/v2"
+AUTH = ("admin", "admin")
+
+# Search for all tables related to "orders"
+def search_entities(search_term: str):
+    response = requests.get(
+        f"{ATLAS_URL}/search/quick",
+        params={"query": search_term, "typeName": "hive_table", "limit": 20},
+        auth=AUTH
+    )
+    entities = response.json().get("entities", [])
+    for entity in entities:
+        attrs = entity.get("attributes", {})
+        print(f"Table: {attrs.get('qualifiedName')}")
+        print(f"  Description: {attrs.get('description', 'No description')}")
+        print(f"  Owner: {attrs.get('owner', 'Unknown')}")
+        print(f"  Created: {attrs.get('createTime')}")
+        print()
+    return entities
+
+# Get data lineage for a specific table
+def get_lineage(guid: str):
+    response = requests.get(
+        f"{ATLAS_URL}/lineage/{guid}",
+        params={"depth": 3, "direction": "BOTH"},
+        auth=AUTH
+    )
+    lineage = response.json()
+    print(f"Relations: {len(lineage.get('relations', []))}")
+    return lineage</code></pre>
+
+<h2>DataHub — LinkedIn's Enterprise Data Catalog</h2>
+<p>DataHub is now the most widely adopted open-source data catalog, originally built by LinkedIn to manage their petabyte-scale data platform. It provides an intuitive UI, GraphQL API, and rich integrations with Snowflake, dbt, Airflow, Kafka, and more.</p>
+<pre><code"">from datahub.emitter.rest_emitter import DatahubRestEmitter
+from datahub.metadata.com.linkedin.pegasus2avro.dataset import DatasetProperties
+
+# Programmatically push dataset metadata to DataHub
+emitter = DatahubRestEmitter(gms_server="http://datahub-gms:8080")
+
+dataset_urn = "urn:li:dataset:(urn:li:dataPlatform:bigquery,myproject.orders.daily_orders,PROD)"
+
+emitter.emit_mce({
+    "entityType": "dataset",
+    "entityUrn": dataset_urn,
+    "aspect": {
+        "com.linkedin.dataset.DatasetProperties": {
+            "description": "Daily order aggregations — one row per calendar day. Source: orders.transactions table. Refreshes at 02:00 UTC.",
+            "tags": ["finance", "core-data", "pii-safe"],
+            "customProperties": {
+                "data_owner": "data-engineering@yourcompany.com",
+                "sla": "02:30 UTC",
+                "tier": "gold"
+            }
+        }
+    }
+})</code></pre>
+
+<h2>Automatic Metadata Extraction with DataHub Ingestion</h2>
+<pre><code"">## datahub-recipe.yaml — Ingest Snowflake metadata automatically
+source:
+  type: snowflake
+  config:
+    account_id: "abc12345.us-east-1"
+    username: "${SNOWFLAKE_USER}"
+    password: "${SNOWFLAKE_PASS}"
+    database_pattern:
+      allow:
+        - "^ANALYTICS$"
+        - "^FINANCE$"
+    include_table_lineage: true
+    include_view_lineage: true
+    profiling:
+      enabled: true
+      profile_table_row_counts: true
+
+sink:
+  type: datahub-rest
+  config:
+    server: "http://datahub-gms:8080"
+
+## Run with: datahub ingest -c datahub-recipe.yaml</code></pre>
+
+<h2>dbt + Data Catalog Integration</h2>
+<p>dbt automatically generates rich metadata from your model YAML documentation and pushes it to DataHub during CI/CD pipelines, keeping your catalog always up-to-date:</p>
+<pre><code"">## models/orders.yml — dbt model documentation
+version: 2
+models:
+  - name: daily_orders
+    description: "Daily order aggregations. Source of truth for revenue reporting."
+    meta:
+      owner: "analytics@company.com"
+      tier: gold
+    columns:
+      - name: order_date
+        description: "The calendar date of orders (UTC)"
+        tests:
+          - not_null
+          - unique
+      - name: total_revenue
+        description: "Sum of order values in USD. Excludes refunds."
+        tests:
+          - not_null</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Make catalog registration a required step in your data pipeline CI/CD — metadata should never be manually added after the fact.</li>
+  <li>Assign a data owner (team + individual) to every dataset. Without ownership, descriptions go stale and quality degrades.</li>
+  <li>Integrate with dbt for transformation lineage — this automatically maps which raw tables feed into which gold tables.</li>
+  <li>Track column-level lineage, not just table-level — this is essential for PII audits (show me every column that contains email addresses and every downstream report it flows into).</li>
+</ul>

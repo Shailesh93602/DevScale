@@ -1,0 +1,19 @@
+{
+  "title": "Implement K-Means Clustering",
+  "slug": "implement-k-means-clustering",
+  "difficulty": "Medium",
+  "category": "machine_learning",
+  "points": 100,
+  "tags": ["clustering", "unsupervised-learning", "k-means"],
+  "company_tags": ["Google", "Amazon", "Spotify"],
+  "topic_tags": ["Machine Learning", "Clustering", "Unsupervised Learning"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Data points as 2D array, number of clusters k, and max iterations",
+  "output_format": "Cluster assignments for each point and final centroids",
+  "example_input": "{\"data\": [[1,1],[1,2],[2,1],[8,8],[8,9],[9,8]], \"k\": 2, \"maxIterations\": 100}",
+  "example_output": "{\"assignments\": [0,0,0,1,1,1], \"centroids\": [[1.333,1.333],[8.333,8.333]]}",
+  "constraints": "1 <= k <= n_samples, 1 <= n_samples <= 10000, 1 <= n_features <= 50",
+  "function_signature": "function kMeans(data: number[][], k: number, maxIterations?: number): { assignments: number[]; centroids: number[][] }",
+  "status": "ACTIVE"
+}

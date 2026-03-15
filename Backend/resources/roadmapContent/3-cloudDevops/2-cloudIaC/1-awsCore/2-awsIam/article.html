@@ -1,0 +1,38 @@
+<h1>AWS IAM (Identity & Access Management)</h1>
+<p><strong>IAM</strong> is the absolute perimeter of your AWS cloud. A misconfigured IAM policy can instantly expose your entire infrastructure and customer data to the public internet.</p>
+
+<h2>The Principle of Least Privilege</h2>
+<p>The golden rule of IAM: <em>Give a user or system exactly the minimum permissions it needs to perform its job, and absolutely nothing more.</em> Avoid using the managed `AdministratorAccess` policy for anything other than your initial root setup.</p>
+
+<h2>Core Components</h2>
+<ul>
+  <li><strong>Users:</strong> A human (or a service account) that logs into the AWS console or uses an Access Key to make API calls.</li>
+  <li><strong>Groups:</strong> A collection of Users. (e.g., You attach a "Developer" policy to the "Developers" group. Any user added to the group inherits those permissions).</li>
+  <li><strong>Roles:</strong> Intended to be assumable by <em>things</em>, not humans. An EC2 server assumes a Role to get permission to read from an S3 bucket without you having to hardcode an Access Key onto the server.</li>
+  <li><strong>Policies:</strong> JSON documents attached to Users, Groups, or Roles. They define the exact permissions.</li>
+</ul>
+
+<h2>Anatomy of an IAM Policy</h2>
+<p>A policy consists of an Effect, an Action, and a Resource (and sometimes a Condition). By default, everything is <strong>Denied</strong>.</p>
+<pre><code>{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject"
+      ],
+      "Resource": "arn:aws:s3:::my-company-bucket/*"
+    }
+  ]
+}</code></pre>
+<p>If you attach this policy to a user, they can read and write objects to <code>my-company-bucket</code>, but they cannot delete the bucket itself (<code>s3:DeleteBucket</code>), nor can they access any other bucket.</p>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Enable MFA (Multi-Factor Authentication) on all user accounts, especially the root account.</li>
+  <li>Never generate Access Keys for the root account.</li>
+  <li>Do not hardcode Access Keys in your application code. Use IAM Roles attached to your compute resources (EC2, ECS, Lambda).</li>
+  <li>Use <strong>IAM Identity Center (formerly AWS SSO)</strong> instead of creating individual IAM Users if you have an organization with multiple AWS accounts.</li>
+</ul>

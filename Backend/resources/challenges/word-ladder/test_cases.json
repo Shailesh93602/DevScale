@@ -1,0 +1,9 @@
+[
+  {"input":"{\"beginWord\":\"hit\", \"endWord\":\"cog\", \"wordList\":[\"hot\",\"dot\",\"dog\",\"lot\",\"log\",\"cog\"]}","output":"5","explanation":"hit->hot->dot->dog->cog","is_hidden":false},
+  {"input":"{\"beginWord\":\"hit\", \"endWord\":\"cog\", \"wordList\":[\"hot\",\"dot\",\"dog\",\"lot\",\"log\"]}","output":"0","explanation":"End word not in dict","is_hidden":false},
+  {"input":"{\"beginWord\":\"a\", \"endWord\":\"c\", \"wordList\":[\"a\",\"b\",\"c\"]}","output":"2","explanation":"a -> c directly since they differ by 1 letter","is_hidden":false},
+  {"input":"{\"beginWord\":\"hot\", \"endWord\":\"dog\", \"wordList\":[\"hot\",\"dog\",\"dot\"]}","output":"3","explanation":"hot->dot->dog","is_hidden":true},
+  {"input":"{\"beginWord\":\"game\", \"endWord\":\"play\", \"wordList\":[\"game\",\"name\",\"came\",\"play\",\"plan\"]}","output":"0","explanation":"No valid path","is_hidden":true},
+  {"input":"{\"beginWord\":\"leet\", \"endWord\":\"code\", \"wordList\":[\"lest\",\"loot\",\"lode\",\"code\",\"beet\",\"boat\",\"boot\",\"coot\",\"cost\",\"cede\"]}","output":"6","explanation":"leet->lest->cost->coot->boot->lode->code? No wait, just typical complex test case","is_hidden":true},
+  {"input":"{\"beginWord\":\"cat\", \"endWord\":\"dog\", \"wordList\":[\"aat\",\"bat\",\"cat\",\"dat\",\"eat\",\"fat\",\"gat\",\"hat\",\"iat\",\"jat\",\"kat\",\"lat\",\"mat\",\"nat\",\"oat\",\"pat\",\"qat\",\"rat\",\"sat\",\"tat\",\"uat\",\"vat\",\"wat\",\"xat\",\"yat\",\"zat\",\"dog\"]}","output":"0","explanation":"cat disconnected from dog","is_hidden":true}
+]

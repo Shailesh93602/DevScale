@@ -1,0 +1,74 @@
+{
+    "title": "Linux Command Line Quiz",
+    "description": "Test your Linux CLI and shell scripting knowledge.",
+    "passingScore": 80,
+    "timeLimit": 8,
+    "questions": [
+        {
+            "question": "What does 'chmod 755 script.sh' set the permissions to?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Read-only for everyone",
+                    "isCorrect": false
+                },
+                {
+                    "text": "rwxr-xr-x — owner can read/write/execute, group and others can read/execute",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Full permissions for everyone",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Read/write for owner, no access for others",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does 'kill -9 1234' do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Sends a graceful shutdown signal",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Forces the process with PID 1234 to terminate immediately (SIGKILL)",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Pauses process 1234",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Restarts the process",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does 'set -euo pipefail' do at the start of a bash script?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Sets the default shell to bash",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Enables strict mode: exit on error (-e), error on unset variables (-u), and propagate pipe failures (-o pipefail)",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Enables verbose output",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Disables command history",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

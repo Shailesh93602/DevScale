@@ -1,0 +1,178 @@
+<h1>TypeScript Design Patterns</h1>
+<p>Design patterns are proven solutions to common software design problems. By utilizing TypeScript's strict interfaces, access modifiers (public/private), and abstract classes, you can implement classic Gang of Four patterns with high type safety.</p>
+
+<h2>1. The Factory Pattern (Creational)</h2>
+<p>The Factory pattern provides an interface for creating objects in a superclass, but allows subclasses to alter the type of objects that will be created. It replaces direct constructor calls (<code>new Thing()</code>) with a method call.</p>
+<pre><code>// 1. The Interface
+interface Button {
+  render(): void;
+  onClick(): void;
+}
+
+// 2. Concrete Implementations
+class MacButton implements Button {
+  render() { console.log("Render Mac style button"); }
+  onClick() { console.log("Mac button clicked"); }
+}
+
+class WindowsButton implements Button {
+  render() { console.log("Render Windows style button"); }
+  onClick() { console.log("Windows button clicked"); }
+}
+
+// 3. The Factory
+abstract class Dialog {
+  // The Factory Method
+  abstract createButton(): Button;
+
+  renderDialog() {
+    const okButton = this.createButton();
+    okButton.render();
+  }
+}
+
+// 4. Concrete Factories
+class MacDialog extends Dialog {
+  createButton(): Button { return new MacButton(); }
+}
+
+class WindowsDialog extends Dialog {
+  createButton(): Button { return new WindowsButton(); }
+}
+
+// Usage
+const os = 'Windows';
+const dialog: Dialog = os === 'Windows' ? new WindowsDialog() : new MacDialog();
+dialog.renderDialog(); // Safely renders a WindowsButton</code></pre>
+
+<h2>2. The Builder Pattern (Creational)</h2>
+<p>The Builder pattern separates the construction of a complex object from its representation, allowing the same construction process to create different representations. It solves the "Telescoping Constructor" problem where you have huge constructors with 10 optional parameters.</p>
+<pre><code>class QueryBuilder {
+  private query: { table?: string; select?: string[]; limit?: number; } = {};
+
+  reset() {
+    this.query = {};
+    return this;
+  }
+
+  table(name: string) {
+    this.query.table = name;
+    return this; // Return 'this' to allow method chaining!
+  }
+
+  select(fields: string[]) {
+    this.query.select = fields;
+    return this;
+  }
+
+  limit(count: number) {
+    this.query.limit = count;
+    return this;
+  }
+
+  getSQL(): string {
+    return `SELECT ${this.query.select?.join(', ') || '*'} FROM ${this.query.table} LIMIT ${this.query.limit || 100}`;
+  }
+}
+
+// Usage via Method Chaining
+const builder = new QueryBuilder();
+const sql = builder
+  .table("users")
+  .select(["id", "name", "email"])
+  .limit(10)
+  .getSQL();
+  
+console.log(sql); // SELECT id, name, email FROM users LIMIT 10</code></pre>
+
+<h2>3. The Strategy Pattern (Behavioral)</h2>
+<p>The Strategy pattern defines a family of algorithms, encapsulates each one, and makes them interchangeable. It lets the algorithm vary independently from clients that use it. It replaces massive <code>switch</code> statements.</p>
+<pre><code>// 1. The Strategy Interface
+interface PaymentStrategy {
+  pay(amount: number): boolean;
+}
+
+// 2. Concrete Strategies
+class StripePayment implements PaymentStrategy {
+  pay(amount: number) {
+    console.log(`Processing $${amount} through Stripe.`);
+    return true;
+  }
+}
+
+class PayPalPayment implements PaymentStrategy {
+  pay(amount: number) {
+    console.log(`Processing $${amount} through PayPal.`);
+    return true;
+  }
+}
+
+// 3. The Context
+class ShoppingCart {
+  constructor(private paymentStrategy: PaymentStrategy) {}
+
+  // Allows switching strategies at runtime!
+  setStrategy(strategy: PaymentStrategy) {
+    this.paymentStrategy = strategy;
+  }
+
+  checkout(amount: number) {
+    this.paymentStrategy.pay(amount);
+  }
+}
+
+// Usage
+const cart = new ShoppingCart(new StripePayment());
+cart.checkout(100); 
+
+// User switches payment method mid-checkout
+cart.setStrategy(new PayPalPayment());
+cart.checkout(100);</code></pre>
+
+<h2>4. The Observer Pattern (Behavioral)</h2>
+<p>The Observer pattern defines a one-to-many dependency so that when one object changes state, all its dependents are notified automatically. This is the foundation of Redux, RxJS, and Event Emitters.</p>
+<pre><code>interface Observer {
+  update(data: any): void;
+}
+
+class Subject {
+  private observers: Observer[] = [];
+
+  subscribe(observer: Observer) {
+    this.observers.push(observer);
+  }
+
+  unsubscribe(observer: Observer) {
+    this.observers = this.observers.filter(obs =&gt; obs !== observer);
+  }
+
+  notify(data: any) {
+    for (const observer of this.observers) {
+      observer.update(data);
+    }
+  }
+}
+
+// Concrete Implementations
+class Logger implements Observer {
+  update(data: any) { console.log(`[Logger]: Data updated - ${data}`); }
+}
+
+class EmailService implements Observer {
+  update(data: any) { console.log(`[Email]: Sending email for - ${data}`); }
+}
+
+// Usage
+const store = new Subject();
+store.subscribe(new Logger());
+store.subscribe(new EmailService());
+
+store.notify("User Registered!"); 
+// Outputs to both Logger and EmailService automatically</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Don't force design patterns where simple functions suffice. Classical patterns shine in heavy domain logic, but can over-complicate simple UI state.</li>
+  <li>Use Interfaces (<code>interface Strategy</code>) over Abstract Classes when you only need to define shape, not implementation.</li>
+  <li>Method Chaining (returning <code>this</code>) is the key to creating fluent APIs in the Builder pattern.</li>
+</ul>

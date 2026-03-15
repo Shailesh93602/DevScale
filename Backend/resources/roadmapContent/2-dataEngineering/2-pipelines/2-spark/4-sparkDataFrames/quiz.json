@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary architectural drawback of writing complex aggregations using legacy RDDs (Resilient Distributed Datasets) instead of the modern DataFrame API?",
+            "options": [
+                "RDDs are permanently stored on physical disk, making them incredibly slow to read.",
+                "RDDs are restricted to only processing standard integer types, failing on complex strings.",
+                "RDDs are completely unstructured and untyped. Because the Spark engine has no mathematical understanding of the data schema inside an RDD, it cannot intelligently optimize your analytical queries via the Catalyst Optimizer.",
+                "RDDs heavily depend on an active internet connection to execute transformations."
+            ],
+            "answer": "RDDs are completely unstructured and untyped. Because the Spark engine has no mathematical understanding of the data schema inside an RDD, it cannot intelligently optimize your analytical queries via the Catalyst Optimizer.",
+            "explanation": "Without known column names and strict data types, Spark cannot optimize operations. The DataFrame API provides this crucial schema awareness."
+        },
+        {
+            "question": "Why is strict Immutability a foundational, mandatory feature of Apache Spark DataFrames?",
+            "options": [
+                "It prevents unauthorized users from altering the original source database credentials.",
+                "It is the exact mathematical mechanism that ensures Flawless Fault Tolerance. Because the original data is never modified, if a cluster server crashes mid-calculation, Spark can seamlessly recreate the lost chunk of data by simply replaying the recorded lineage of transformations on a healthy server.",
+                "It aggressively compresses the data, saving 90% of RAM usage across the cluster.",
+                "It automatically prevents SQL Injection attacks natively."
+            ],
+            "answer": "It is the exact mathematical mechanism that ensures Flawless Fault Tolerance. Because the original data is never modified, if a cluster server crashes mid-calculation, Spark can seamlessly recreate the lost chunk of data by simply replaying the recorded lineage of transformations on a healthy server.",
+            "explanation": "If data were mutable, a mid-calculation server crash would leave the data in an unrecoverable, half-calculated corrupted state."
+        },
+        {
+            "question": "When you execute a Transformation like df.filter(df['age'] > 18) on a Spark DataFrame, what physically happens inside the Spark cluster at that exact moment?",
+            "options": [
+                "Absolutely nothing physical happens. Spark utilizes Lazy Evaluation, merely recording the mathematical intent (the lineage) into a Directed Acyclic Graph. The physical data is not moved or filtered until an Action is triggered.",
+                "Spark instantly streams the entire dataset to the Master Node for validation.",
+                "Spark immediately deletes all rows where age is under 18 from the physical hard drives.",
+                "Spark instantly transfers the filtered data to the local GPU VRAM."
+            ],
+            "answer": "Absolutely nothing physical happens. Spark utilizes Lazy Evaluation, merely recording the mathematical intent (the lineage) into a Directed Acyclic Graph. The physical data is not moved or filtered until an Action is triggered.",
+            "explanation": "This Lazy Evaluation allows the Catalyst Optimizer to review the entire sequence of intended operations and rewrite them entirely for maximum distributed efficiency before touching any physical data."
+        }
+    ]
+}

@@ -1,0 +1,6 @@
+[
+  "Use a sorted array or heap to implement the priority queue. Jobs with higher priority values should be dequeued first. When priorities are equal, use FIFO order (earlier createdAt first).",
+  "Implement a job state machine with defined transitions: waiting->active->completed/failed, failed->waiting (retry) or failed->dead (max retries). This prevents invalid state changes.",
+  "For exponential backoff on retries, calculate the delay as Math.pow(2, attemptNumber) * baseDelay. Cap the maximum delay to prevent extremely long waits (e.g., max 60 seconds).",
+  "Use a concurrency limiter in the worker pool. Track active worker count and only start processing a new job when activeWorkers < maxConcurrency. Use Promise.race with a timeout promise to enforce job timeouts."
+]

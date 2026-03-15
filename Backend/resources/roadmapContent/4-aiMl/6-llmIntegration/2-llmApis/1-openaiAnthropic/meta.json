@@ -1,0 +1,7 @@
+{
+    "id": "1-openaiAnthropic",
+    "title": "LLM APIs: OpenAI & Anthropic",
+    "description": "Integrate GPT-4o and Claude APIs to build production chat apps, function-calling agents, and structured output systems.",
+    "order": 1,
+    "duration": 40
+}

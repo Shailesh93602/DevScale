@@ -1,0 +1,67 @@
+<h1>OpenTelemetry & Distributed Tracing</h1>
+<p>Modern applications are incredibly distributed. If a user clicks "Checkout", that single HTTP request might traverse a Load Balancer, an API Gateway, an Authentication Service, an Inventory Microservice, and finally a PostgreSQL Database. If the checkout takes 10 seconds, traditional logs or CPU metrics won't tell you <em>which</em> of those 5 hops caused the 8-second delay. You need <strong>Distributed Tracing</strong>.</p>
+
+<h2>The Tracing Vendor Lock-In Problem</h2>
+<p>Historically, adopting tracing meant choosing a vendor (DataDog, New Relic, Honeycomb, or Jaeger) and hardcoding their proprietary agent directly into your application code.</p>
+<pre><code>// 🚫 Hardcoded vendor logic (Bad)
+import { datadogTracer } from 'dd-trace';
+datadogTracer.init();
+const span = datadogTracer.startSpan('checkout.process');</code></pre>
+<p>If your company decided to migrate away from DataDog to New Relic to save money, it required a massive engineering project to rewrite thousands of lines of trace instrumentation across dozens of microservices.</p>
+
+<h2>Enter OpenTelemetry (OTel)</h2>
+<p><strong>OpenTelemetry (OTel)</strong> is the second most active Cloud Native Computing Foundation (CNCF) project after Kubernetes. It provides a single, universally accepted, vendor-agnostic standard for generating, collecting, analyzing, and exporting telemetry data (Metrics, Logs, and Traces).</p>
+
+<p>You instrument your application code exactly <em>once</em> using the open OTel standards/SDKs. You then configure the <strong>OTel Collector</strong> to route that data anywhere you want. Want to switch vendors? You simply change one line in the Collector's YAML file — zero code changes required in your application.</p>
+
+<h2>Spans, Traces & Context Propagation</h2>
+<p>The entire concept of Tracing revolves around a tree structure of Spans:</p>
+<ul>
+  <li><strong>Span:</strong> A single logical unit of work within a system (e.g., executing a database query, or calling an external API). A Span records a start time, an end time, its parent Span ID, and metadata tags (like the HTTP status code or SQL query string).</li>
+  <li><strong>Trace:</strong> The complete journey of a request as it flows through the distributed system. A Trace is simply a collection of interconnected Spans.</li>
+</ul>
+
+<p>For Tracing to connect Microservice A to Microservice B, OTel relies on <strong>Context Propagation</strong> (W3C standard). When the "Checkout" request generates a unique <code>Trace ID</code> at the API Gateway, that ID is injected into standard HTTP Headers:</p>
+<pre><code># The API Gateway injects this into the request to the Inventory Service
+traceparent: 00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01</code></pre>
+<p>The Inventory Service parses that header, creates a child span linked to that <code>Trace ID</code>, and propagates it forward to the Payment Service. Finally, the tracing backend stitches the Spans back together into a visual flame graph.</p>
+
+<h2>Auto-Instrumentation vs. Manual Instrumentation</h2>
+<p>Writing <code>startSpan()</code> around every function call is tedious. OTel provides <strong>Auto-Instrumentation</strong> agents for most major languages (Java, Python, Node.js).</p>
+
+<pre><code># Node.js Auto-Instrumentation example:
+# You literally run your app with this wrapper, zero code changes needed!
+node --require @opentelemetry/auto-instrumentations-node/register app.js</code></pre>
+
+<p>By simply attaching the agent to your runtime, it automatically monkey-patches popular libraries (like Express.js, PostgreSQL, HTTP native module, Redis) and intercepts requests. It automatically starts Spans, records execution times, logs status codes, and injects/extracts the W3C headers all invisibly.</p>
+
+<h2>The OTel Collector Architecture</h2>
+<p>Instead of 50 microservices trying to push giant trace payloads across the internet to DataDog, applications send lightweight OTLP (OpenTelemetry Protocol) streams to a local <strong>OTel Collector</strong> running in the same cluster.</p>
+<p>The OTel Collector sits in the middle and performs a pipeline:</p>
+<ol>
+  <li><strong>Receivers:</strong> Accepts data via OTLP, Zipkin, Jaeger, or scraping Prometheus endpoints.</li>
+  <li><strong>Processors:</strong> Batches data, drops PII (e.g., scrubbing Social Security Numbers from SQL queries), and samples traces (e.g., "Only keep 10% of successful traces, but keep 100% of failed ones").</li>
+  <li><strong>Exporters:</strong> Translates the clean OTLP data into proprietary formats (Prometheus, Elasticsearch, Honeycomb, Jaeger, DataDog).</li>
+</ol>
+
+<pre><code># sample-otel-collector-config.yaml
+receivers:
+  otlp:
+    protocols: { grpc: , http: }
+
+processors:
+  batch:         # Send to exporters in chunks
+  memory_limiter: # Prevent OOM crashes
+
+exporters:
+  prometheus:    # Export Metrics
+    endpoint: "0.0.0.0:8889"
+  jaeger:        # Export Traces
+    endpoint: "jaeger-all-in-one:14250"
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [jaeger]</code></pre>

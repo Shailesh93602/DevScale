@@ -1,0 +1,6 @@
+[
+  "Think about what happens when you call clearTimeout on an existing timer and then immediately call setTimeout with a new one.",
+  "Use a closure to keep track of the timer ID between invocations of the debounced function.",
+  "Remember to forward all arguments to the original function using the spread operator, and preserve the `this` context using Function.prototype.apply.",
+  "The key pattern is: clear previous timer -> set new timer -> in the timer callback, call the original function with saved args."
+]

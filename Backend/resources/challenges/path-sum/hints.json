@@ -1,0 +1,1 @@
+["At each node, subtract the node's value from targetSum. If you reach a leaf and targetSum is exactly 0, you found the path!", "Base case: if root is null, return false. If root is a leaf (no children) and root.val === targetSum, return true.", "Recurse into left and right children with targetSum - root.val. Return true if EITHER side returns true."]

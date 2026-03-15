@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "Which HTML element should be used to provide a title/description for a table?",
+            "options": [
+                "<title>",
+                "<summary>",
+                "<caption>",
+                "<th>"
+            ],
+            "answer": "<caption>",
+            "explanation": "<caption> placed immediately after <table> provides an accessible title that screen readers announce before reading the table."
+        },
+        {
+            "question": "What does the scope='col' attribute on a <th> element indicate?",
+            "options": [
+                "The header applies to all cells in its row",
+                "The header applies to all cells in its column",
+                "The header spans multiple columns",
+                "The header is the first column"
+            ],
+            "answer": "The header applies to all cells in its column",
+            "explanation": "scope='col' tells assistive technologies that the header cell describes the column below it."
+        },
+        {
+            "question": "How do you make a table cell span 3 columns?",
+            "options": [
+                "span='3'",
+                "colspan='3'",
+                "columns='3'",
+                "width='3'"
+            ],
+            "answer": "colspan='3'",
+            "explanation": "The colspan attribute specifies how many columns a cell should span horizontally."
+        },
+        {
+            "question": "What is the correct way to make a table scroll horizontally on mobile?",
+            "options": [
+                "Add overflow-x: scroll to the table element",
+                "Wrap the table in a div with overflow-x: auto",
+                "Use table-layout: fixed",
+                "Set width: 100% on the table"
+            ],
+            "answer": "Wrap the table in a div with overflow-x: auto",
+            "explanation": "Wrapping the table in an overflow-x: auto container allows it to scroll horizontally on small screens without breaking layout."
+        },
+        {
+            "question": "Which element should NEVER be used for page layout?",
+            "options": [
+                "<div>",
+                "<section>",
+                "<table>",
+                "<article>"
+            ],
+            "answer": "<table>",
+            "explanation": "Tables are for tabular data only. Using them for layout breaks accessibility, SEO, and responsiveness. Use CSS Grid or Flexbox instead."
+        }
+    ]
+}

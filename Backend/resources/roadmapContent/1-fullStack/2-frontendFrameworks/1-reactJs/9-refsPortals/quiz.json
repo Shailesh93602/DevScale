@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What happens when you update a value stored in a useRef (e.g., ref.current = newValue)?",
+            "options": [
+                "The component immediately re-renders",
+                "The component re-renders on the next animation frame",
+                "The component does not re-render, but the value is preserved across renders",
+                "The component state is reset to initial values"
+            ],
+            "answer": "The component does not re-render, but the value is preserved across renders",
+            "explanation": "Unlike useState, mutating ref.current does not trigger a React render. It is used to store mutable data that shouldn't affect the visual output, like timer IDs or DOM node references."
+        },
+        {
+            "question": "Why would you need to use React.forwardRef?",
+            "options": [
+                "To pass state from a child to a parent",
+                "To allow a parent component to pass a 'ref' attribute specifically to a custom component",
+                "To forward URL parameters in React Router",
+                "To automatically bind 'this' to methods"
+            ],
+            "answer": "To allow a parent component to pass a 'ref' attribute specifically to a custom component",
+            "explanation": "By default, the 'ref' prop is stripped by React and not passed in the props object. forwardRef wraps a custom component so it can receive the ref parameter and attach it to an internal DOM node."
+        },
+        {
+            "question": "What problem does createPortal solve for UI components?",
+            "options": [
+                "It makes component fetching faster",
+                "It prevents memory leaks in unmounted components",
+                "It allows overlays like Modals to render outside the parent's CSS stacking context (e.g., escaping overflow: hidden)",
+                "It enables server-side rendering of specific components"
+            ],
+            "answer": "It allows overlays like Modals to render outside the parent's CSS stacking context (e.g., escaping overflow: hidden)",
+            "explanation": "Portals append the rendered DOM nodes to a different part of the document (like document.body), ensuring modals and tooltips aren't clipped by parent containers with overflow:hidden or strict z-index rules."
+        },
+        {
+            "question": "What hook allows you to expose a custom object with specific methods to a parent's ref, rather than exposing a raw DOM node?",
+            "options": [
+                "useLayoutEffect",
+                "useImperativeHandle",
+                "useCustomRef",
+                "useCallback"
+            ],
+            "answer": "useImperativeHandle",
+            "explanation": "useImperativeHandle is paired with forwardRef to customize the instance value that is exposed to parent components, restricting them to an API like { play(), pause() } instead of the raw <video> node."
+        },
+        {
+            "question": "Which of the following is a bad use case for a ref?",
+            "options": [
+                "Storing an interval ID to clear it later",
+                "Managing the focus of an input element",
+                "Storing the text content of an input instead of using controlled state",
+                "Integrating with a non-React 3rd party charting library"
+            ],
+            "answer": "Storing the text content of an input instead of using controlled state",
+            "explanation": "While uncontrolled inputs using refs are sometimes valid, replacing state entirely with refs for standard form values breaks React's declarative nature. You cannot easily render validation warnings or character counts if the value is hidden away in a ref without triggering re-renders."
+        }
+    ]
+}

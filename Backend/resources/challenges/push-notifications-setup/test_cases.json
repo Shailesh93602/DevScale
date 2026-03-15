@@ -1,0 +1,50 @@
+[
+  {
+    "input": {"notification": {"title": "Sale!", "body": "50% off", "channel": "promotions", "priority": "high"}, "preferences": {"enabled": true, "channels": ["promotions"], "quietHours": {"start": 22, "end": 7}}, "currentHour": 10},
+    "output": {"shouldDeliver": true},
+    "explanation": "Channel subscribed, not quiet hours, deliver",
+    "is_hidden": false
+  },
+  {
+    "input": {"notification": {"title": "Alert", "body": "Update", "channel": "alerts", "priority": "normal"}, "preferences": {"enabled": false, "channels": ["alerts"], "quietHours": {"start": 22, "end": 7}}, "currentHour": 10},
+    "output": {"shouldDeliver": false, "reason": "notifications_disabled"},
+    "explanation": "Notifications globally disabled",
+    "is_hidden": false
+  },
+  {
+    "input": {"notification": {"title": "News", "body": "Breaking", "channel": "news", "priority": "normal"}, "preferences": {"enabled": true, "channels": ["promotions"], "quietHours": {"start": 22, "end": 7}}, "currentHour": 10},
+    "output": {"shouldDeliver": false, "reason": "channel_not_subscribed"},
+    "explanation": "Channel not in user subscriptions",
+    "is_hidden": false
+  },
+  {
+    "input": {"notification": {"title": "Night", "body": "Late", "channel": "alerts", "priority": "high"}, "preferences": {"enabled": true, "channels": ["alerts"], "quietHours": {"start": 22, "end": 7}}, "currentHour": 23},
+    "output": {"shouldDeliver": false, "reason": "quiet_hours"},
+    "explanation": "During quiet hours with non-urgent priority",
+    "is_hidden": false
+  },
+  {
+    "input": {"notification": {"title": "Emergency", "body": "Critical", "channel": "alerts", "priority": "urgent"}, "preferences": {"enabled": true, "channels": ["alerts"], "quietHours": {"start": 22, "end": 7}}, "currentHour": 3},
+    "output": {"shouldDeliver": true},
+    "explanation": "Urgent bypasses quiet hours",
+    "is_hidden": true
+  },
+  {
+    "input": {"notification": {"title": "Morning", "body": "Hi", "channel": "social", "priority": "low"}, "preferences": {"enabled": true, "channels": ["social", "alerts"], "quietHours": {"start": 22, "end": 7}}, "currentHour": 7},
+    "output": {"shouldDeliver": true},
+    "explanation": "Exactly at quiet hours end, should deliver",
+    "is_hidden": true
+  },
+  {
+    "input": {"notification": {"title": "DM", "body": "Hi", "channel": "messages", "priority": "normal"}, "preferences": {"enabled": true, "channels": ["messages"], "quietHours": {"start": 8, "end": 17}}, "currentHour": 12},
+    "output": {"shouldDeliver": false, "reason": "quiet_hours"},
+    "explanation": "Daytime quiet hours (same-day range)",
+    "is_hidden": true
+  },
+  {
+    "input": {"notification": {"title": "Promo", "body": "Deal", "channel": "promotions", "priority": "normal"}, "preferences": {"enabled": true, "channels": ["promotions"], "quietHours": {"start": 0, "end": 0}}, "currentHour": 15},
+    "output": {"shouldDeliver": true},
+    "explanation": "No quiet hours (start equals end)",
+    "is_hidden": true
+  }
+]

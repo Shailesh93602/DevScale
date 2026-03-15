@@ -1,0 +1,12 @@
+[
+  { "input": "{\"s\":\"ADOBECODEBANC\", \"t\":\"ABC\"}", "output": "\"BANC\"", "explanation": "Classic use case", "is_hidden": false },
+  { "input": "{\"s\":\"a\", \"t\":\"a\"}", "output": "\"a\"", "explanation": "Identical strings", "is_hidden": false },
+  { "input": "{\"s\":\"a\", \"t\":\"aa\"}", "output": "\"\"", "explanation": "Not enough letters", "is_hidden": false },
+  { "input": "{\"s\":\"a\", \"t\":\"b\"}", "output": "\"\"", "explanation": "Letter not present", "is_hidden": true },
+  { "input": "{\"s\":\"ab\", \"t\":\"b\"}", "output": "\"b\"", "explanation": "Substring at end", "is_hidden": true },
+  { "input": "{\"s\":\"bba\", \"t\":\"ab\"}", "output": "\"ba\"", "explanation": "Ordering difference", "is_hidden": true },
+  { "input": "{\"s\":\"acbbaca\", \"t\":\"aba\"}", "output": "\"baca\"", "explanation": "Multiple valid windows", "is_hidden": true },
+  { "input": "{\"s\":\"cabwefgewcwaefgcf\", \"t\":\"cae\"}", "output": "\"cwae\"", "explanation": "Long string, scattered", "is_hidden": true },
+  { "input": "{\"s\":\"ADOBECODEBANC\", \"t\":\"ABCC\"}", "output": "\"CODEBANC\"", "explanation": "Duplicates in t needed", "is_hidden": true },
+  { "input": "{\"s\":\"\", \"t\":\"A\"}", "output": "\"\"", "explanation": "Empty base string", "is_hidden": true }
+]

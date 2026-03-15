@@ -1,0 +1,19 @@
+{
+  "title": "Best Time to Buy and Sell Stock II",
+  "slug": "best-time-buy-sell-stock-ii",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["dynamic-programming", "greedy", "array"],
+  "company_tags": ["Amazon", "Google", "Microsoft", "Facebook", "Bloomberg"],
+  "topic_tags": ["dynamic programming", "greedy"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer array `prices` where `prices[i]` is the stock price on day `i`.",
+  "output_format": "The maximum profit you can achieve with unlimited transactions.",
+  "example_input": "prices = [7,1,5,3,6,4]",
+  "example_output": "7",
+  "constraints": "- `1 <= prices.length <= 3 * 10^4`\n- `0 <= prices[i] <= 10^4`",
+  "function_signature": "function maxProfit(prices: number[]): number {}",
+  "status": "ACTIVE"
+}

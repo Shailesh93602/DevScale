@@ -1,0 +1,50 @@
+[
+  {
+    "input": {"n": 5, "rounds": 1},
+    "output": {"deadlockFree": true, "philosopherCount": 5, "actionsPerPhilosopher": 5},
+    "explanation": "5 philosophers, 1 round each: pick, pick, eat, put, put",
+    "is_hidden": false
+  },
+  {
+    "input": {"n": 2, "rounds": 1},
+    "output": {"deadlockFree": true, "philosopherCount": 2, "actionsPerPhilosopher": 5},
+    "explanation": "2 philosophers sharing 2 forks",
+    "is_hidden": false
+  },
+  {
+    "input": {"n": 3, "rounds": 2},
+    "output": {"deadlockFree": true, "philosopherCount": 3, "actionsPerPhilosopher": 10},
+    "explanation": "3 philosophers, 2 rounds each",
+    "is_hidden": false
+  },
+  {
+    "input": {"n": 1, "rounds": 1},
+    "output": {"deadlockFree": true, "philosopherCount": 1, "actionsPerPhilosopher": 5},
+    "explanation": "Single philosopher with fork 0",
+    "is_hidden": false
+  },
+  {
+    "input": {"n": 5, "rounds": 3},
+    "output": {"deadlockFree": true, "philosopherCount": 5, "actionsPerPhilosopher": 15},
+    "explanation": "5 philosophers, 3 rounds",
+    "is_hidden": true
+  },
+  {
+    "input": {"n": 10, "rounds": 1},
+    "output": {"deadlockFree": true, "philosopherCount": 10, "actionsPerPhilosopher": 5},
+    "explanation": "Max philosophers",
+    "is_hidden": true
+  },
+  {
+    "input": {"n": 4, "rounds": 5},
+    "output": {"deadlockFree": true, "philosopherCount": 4, "actionsPerPhilosopher": 25},
+    "explanation": "4 philosophers, 5 rounds",
+    "is_hidden": true
+  },
+  {
+    "input": {"n": 6, "rounds": 2},
+    "output": {"deadlockFree": true, "philosopherCount": 6, "actionsPerPhilosopher": 10},
+    "explanation": "6 philosophers, 2 rounds",
+    "is_hidden": true
+  }
+]

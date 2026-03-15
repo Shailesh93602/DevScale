@@ -1,0 +1,6 @@
+[
+  "Use a Map for O(1) lookups and store entries as objects containing the value, expiration timestamp, and last-accessed time for LRU tracking.",
+  "For TTL support, store the absolute expiration time (Date.now() + ttlMs) with each entry. Check expiration on every GET operation and lazily clean up expired entries.",
+  "Prevent cache stampede by maintaining a Map of in-flight promises. When multiple requests miss the same key simultaneously, have them all await the same fetch promise instead of each triggering their own database call.",
+  "Implement LRU eviction by tracking lastAccessed timestamps. When the cache exceeds maxSize, scan for the entry with the oldest lastAccessed time and remove it. Consider using a doubly-linked list for O(1) eviction in production."
+]

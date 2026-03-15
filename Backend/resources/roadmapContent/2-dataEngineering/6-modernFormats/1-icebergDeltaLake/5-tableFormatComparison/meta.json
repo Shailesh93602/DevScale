@@ -1,0 +1,4 @@
+{
+    "name": "Choosing a Table Format: Iceberg vs Delta vs Hudi",
+    "description": "Making the right architectural decision for your Data Lake. A comprehensive, practical comparison of Apache Iceberg, Delta Lake, and Apache Hudi — covering ecosystem integration, query engine support, community momentum, and migration paths."
+}

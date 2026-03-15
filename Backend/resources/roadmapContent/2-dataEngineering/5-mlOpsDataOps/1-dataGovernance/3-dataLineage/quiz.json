@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What specific question does 'Data Lineage' tooling primarily answer for a Data Engineering team?",
+            "options": [
+                "How much storage is consumed by each database table?",
+                "'If I modify this specific raw source table, which downstream SQL models, dashboards, and machine learning features will be impacted?' It maps the complete dependency graph of data flowing through the entire data platform.",
+                "How many rows were processed by each Airflow task yesterday?",
+                "Which Kafka topics have the highest throughput?"
+            ],
+            "answer": "'If I modify this specific raw source table, which downstream SQL models, dashboards, and machine learning features will be impacted?' It maps the complete dependency graph of data flowing through the entire data platform.",
+            "explanation": "Without lineage, a Data Engineer would have to manually grep through hundreds of SQL files to find all downstream dependencies before safely changing a table schema."
+        },
+        {
+            "question": "Why are 'silent' data quality failures considered more dangerous than pipeline crashes?",
+            "options": [
+                "Because silent failures crash servers without logs.",
+                "Because pipeline crashes are immediately obvious and trigger alerts. Silent failures write incorrect data that looks valid — producing wrong KPIs, corrupted ML model training sets, and flawed business decisions — often going undetected for weeks.",
+                "Because silent failures only occur in streaming pipelines.",
+                "Because silent failures only affect data in OLTP databases."
+            ],
+            "answer": "Because pipeline crashes are immediately obvious and trigger alerts. Silent failures write incorrect data that looks valid — producing wrong KPIs, corrupted ML model training sets, and flawed business decisions — often going undetected for weeks.",
+            "explanation": "A crash page in Airflow is caught immediately. An upstream system quietly changing 'user_id' to 'userId' will silently NULL out your dimension keys for weeks before anyone notices."
+        },
+        {
+            "question": "What category of Data Observability check helps detect when an Airflow pipeline has silently stopped running on schedule?",
+            "options": [
+                "Volume checks compare row counts against historical baselines.",
+                "Freshness checks verify that a specific table was last updated within an expected time window, triggering an alert if the table hasn't been refreshed according to its expected schedule.",
+                "Distribution checks analyze column value distributions.",
+                "Schema checks detect column type changes."
+            ],
+            "answer": "Freshness checks verify that a specific table was last updated within an expected time window, triggering an alert if the table hasn't been refreshed according to its expected schedule.",
+            "explanation": "If your Airflow DAG crashes silently at 2 AM and the marketing dashboard still loads (with 12-hour-old data), only a Freshness check would catch this before the business meeting."
+        }
+    ]
+}

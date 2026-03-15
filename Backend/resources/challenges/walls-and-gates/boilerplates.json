@@ -1,0 +1,10 @@
+{
+  "typescript": "/**\n Do not return anything, modify rooms in-place instead.\n */\nfunction wallsAndGates(rooms: number[][]): void {\n    \n};",
+  "javascript": "/**\n * @param {number[][]} rooms\n * @return {void} Do not return anything, modify rooms in-place instead.\n */\nvar wallsAndGates = function(rooms) {\n    \n};",
+  "python": "class Solution:\n    def wallsAndGates(self, rooms: List[List[int]]) -> None:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public void wallsAndGates(int[][] rooms) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    void wallsAndGates(vector<vector<int>>& rooms) {\n        \n    }\n};",
+  "go": "func wallsAndGates(rooms [][]int) {\n    \n}",
+  "rust": "impl Solution {\n    pub fn walls_and_gates(rooms: &mut Vec<Vec<i32>>) {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public void WallsAndGates(int[][] rooms) {\n        \n    }\n}"
+}

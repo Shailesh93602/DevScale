@@ -1,0 +1,48 @@
+<h1>GitHub Actions & Docker</h1>
+<p>Modern applications are packaged into <strong>Docker Containers</strong> before deployment. The process of building, tagging, testing, and pushing the Docker image to a registry should not be done manually; it should be 100% automated via CI/CD. <strong>GitHub Actions</strong> is a powerful tool for this.</p>
+
+<h2>The Goal of the CI Pipeline</h2>
+<p>When a developer opens a Pull Request to the <code>main</code> branch, GitHub Actions spins up a temporary runner server in the cloud, clones your code, and runs your tests. If tests fail, the PR is blocked.</p>
+<p>When the PR is merged into <code>main</code>, another Action builds your Docker image, tags it with a unique identifier (like the Git commit hash), and pushes it to a secure repository (like Docker Hub, Amazon ECR, or GitHub Container Registry).</p>
+
+<h2>Building and Pushing a Docker Image</h2>
+<p>Here is a basic GitHub action workflow file (saved in `.github/workflows/docker-publish.yml`):</p>
+<pre><code>name: Build and Push Docker Image
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    # Step 1: Login to DockerHub securely
+    - name: Login to DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    # Step 2: Build the image and push it to the registry
+    - name: Build and Push
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        push: true
+        tags: |
+          myworkspace/my-api:${{ github.sha }}
+          myworkspace/my-api:latest</code></pre>
+
+<h2>Image Tagging Best Practices</h2>
+<p>Notice the <code>tags:</code> array. Never rely solely on the <code>latest</code> tag in production deployments!</p>
+<ul>
+  <li>If your Kubernetes Deployment is instructed to pull <code>my-api:latest</code>, and a pod crashes and restarts, it will aggressively pull whatever image happens to currently hold the <code>latest</code> tag at that exact moment. If an intern pushed buggy code 5 minutes prior, your production cluster will instantly download the bug and crash.</li>
+  <li>By tagging the image with the specific Git Commit Hash (<code>${{ github.sha }}</code>), you guarantee that the image version is permanently immutable. Your deployment file should reference `my-api:abcdef123` specifically.</li>
+</ul>
+
+<h2>Image Caching in Actions</h2>
+<p>Downloading all dependencies (like running <code>npm install</code> inside the Dockerfile) is slow. If you don't configure caching, your 2-minute build could take 10 minutes every single time you push a typo fix. GitHub Actions provides caching actions (<code>actions/cache</code> or Docker layer caching) to reuse layers from previous builds, slashing CI pipeline times.</p>

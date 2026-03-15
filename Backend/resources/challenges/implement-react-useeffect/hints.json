@@ -1,0 +1,6 @@
+[
+  "Track effects in an array similar to state. Use an effectIndex that resets each render.",
+  "Compare current deps with previous deps using Object.is for each element. If any differ, the effect should re-run.",
+  "When re-running an effect, first call the cleanup function from the previous run (if one was returned).",
+  "Handle three cases: deps undefined (run every render), deps empty array (run only on first render), deps with values (run when values change)."
+]

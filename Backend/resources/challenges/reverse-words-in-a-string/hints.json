@@ -1,0 +1,6 @@
+[
+  "Many languages have built-in methods like `split()` and `trim()`. You can simply split the string by spaces, filter out empty strings formed by consecutive spaces, reverse the array, and join it with a space.",
+  "What if you want to optimize or implement it manually? Try scanning the string from the end to the beginning.",
+  "As you scan from right to left, look for non-space characters that define the end of a word. Then scan to find where the word begins.",
+  "Once you found the bounds of the word, append it to your result string and add a space."
+]

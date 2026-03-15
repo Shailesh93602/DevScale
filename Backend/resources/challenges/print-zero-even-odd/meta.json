@@ -1,0 +1,19 @@
+{
+  "title": "Print Zero Even Odd",
+  "slug": "print-zero-even-odd",
+  "difficulty": "Medium",
+  "category": "concurrency",
+  "points": 100,
+  "tags": ["concurrency", "synchronization", "coordination"],
+  "company_tags": ["Google", "Amazon", "Microsoft"],
+  "topic_tags": ["Concurrency", "Thread Coordination", "Synchronization"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "A positive integer n",
+  "output_format": "String in pattern 0102030405...",
+  "example_input": "{\"n\": 5}",
+  "example_output": "{\"result\": \"0102030405\"}",
+  "constraints": "1 <= n <= 1000",
+  "function_signature": "class ZeroEvenOdd { zero(printZero: () => void): Promise<void>; even(printEven: (n: number) => void): Promise<void>; odd(printOdd: (n: number) => void): Promise<void> }",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "input": "{\"Customers\": [{\"customer_id\": 1, \"year\": 2018, \"revenue\": 50}, {\"customer_id\": 1, \"year\": 2019, \"revenue\": -10}, {\"customer_id\": 2, \"year\": 2018, \"revenue\": -20}, {\"customer_id\": 2, \"year\": 2019, \"revenue\": -30}, {\"customer_id\": 3, \"year\": 2018, \"revenue\": 100}]}",
+    "output": "[{\"customer_id\": 1}, {\"customer_id\": 3}]",
+    "explanation": "Customer 1 total: 40. Customer 2 total: -50. Customer 3 total: 100.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Customers\": [{\"customer_id\": 1, \"year\": 2020, \"revenue\": 0}]}",
+    "output": "[]",
+    "explanation": "Zero revenue is not strictly positive.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Customers\": [{\"customer_id\": 1, \"year\": 2020, \"revenue\": 1}]}",
+    "output": "[{\"customer_id\": 1}]",
+    "explanation": "Revenue of 1 is positive.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Customers\": [{\"customer_id\": 1, \"year\": 2018, \"revenue\": 100}, {\"customer_id\": 1, \"year\": 2019, \"revenue\": -100}]}",
+    "output": "[]",
+    "explanation": "Total is exactly 0 — not positive.",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"Customers\": [{\"customer_id\": 1, \"year\": 2018, \"revenue\": -50}, {\"customer_id\": 1, \"year\": 2019, \"revenue\": 51}, {\"customer_id\": 2, \"year\": 2018, \"revenue\": -50}, {\"customer_id\": 2, \"year\": 2019, \"revenue\": 49}]}",
+    "output": "[{\"customer_id\": 1}]",
+    "explanation": "Customer 1: -50+51=1 (positive). Customer 2: -50+49=-1 (negative).",
+    "is_hidden": true
+  }
+]

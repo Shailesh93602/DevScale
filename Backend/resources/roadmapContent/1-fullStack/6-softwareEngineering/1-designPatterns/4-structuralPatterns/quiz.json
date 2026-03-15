@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary architectural purpose of the Adapter design pattern?",
+            "options": [
+                "To enforce global single instance creation.",
+                "To enable two classes with incompatible interfaces to collaborate by providing a bridging wrapper.",
+                "To securely isolate a separate database.",
+                "To compile nested HTML."
+            ],
+            "answer": "To enable two classes with incompatible interfaces to collaborate by providing a bridging wrapper.",
+            "explanation": "If your analytics provider requires parameters formatted as XML, but your internal system solely emits JSON objects, the Adapter transforms the payload in the middle."
+        },
+        {
+            "question": "What is the most powerful feature of utilizing the Decorator pattern over standard Class Inheritance?",
+            "options": [
+                "It forces global garbage collection.",
+                "It allows you to organically layer and attach unique new behaviors sequentially onto individual objects at runtime, rather than statically locking behaviors into massive inheritance class hierarchies.",
+                "It encrypts variables.",
+                "It runs perfectly asynchronously."
+            ],
+            "answer": "It allows you to organically layer and attach unique new behaviors sequentially onto individual objects at runtime, rather than statically locking behaviors into massive inheritance class hierarchies.",
+            "explanation": "With inheritance, if you need a Email+SMS+Slack notifier, you must build a completely rigid `EmailSmsSlackNotifier` class. With Decorators, you simply wrap objects into one another flexibly at runtime."
+        },
+        {
+            "question": "Which Structural Design Pattern completely shields client code from the complexities of a massive, heavily nested subsystem by providing a single, simplified, high-level interface?",
+            "options": [
+                "Proxy",
+                "Facade",
+                "Adapter",
+                "Bridge"
+            ],
+            "answer": "Facade",
+            "explanation": "The Facade Pattern acts as a simple front door to a complex inner system. You just call `Facade.execute()`, and it expertly coordinates the vast underlying complexity on your behalf."
+        }
+    ]
+}

@@ -1,0 +1,4 @@
+{
+    "name": "Code Splitting & Lazy Loading",
+    "description": "Shipping less Javascript to the client. Breaking monolithic bundles into tiny chunks utilizing Webpack Code Splitting, dynamic imports, and React Suspense boundaries to prioritize critical rendering."
+}

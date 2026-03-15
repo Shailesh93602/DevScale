@@ -1,0 +1,4 @@
+{
+    "name": "Mutations & Input Types",
+    "description": "Modifying data in GraphQL. Creating deeply nested Mutation resolvers, utilizing strict Input Types for validation, and structuring standardized return payloads."
+}

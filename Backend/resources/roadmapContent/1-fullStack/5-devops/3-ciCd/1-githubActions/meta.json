@@ -1,0 +1,4 @@
+{
+    "name": "GitHub Actions CI/CD",
+    "description": "Automating tests, linting, and Docker builds using GitHub Actions workflows."
+}

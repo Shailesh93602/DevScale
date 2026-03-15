@@ -1,0 +1,94 @@
+<h1>Image Processing with OpenCV</h1>
+<p>Before a neural network can classify an image or detect objects in it, the raw pixel data often needs to be cleaned, resized, normalized, or transformed. <strong>Image processing</strong> is the field of techniques that manipulate images programmatically — and it is the foundation all computer vision workflows build on. OpenCV is the industry-standard library for this, with thousands of functions for everything from basic resizing to advanced edge detection.</p>
+
+<h2>Loading and Inspecting Images</h2>
+<pre><code>import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Load an image — OpenCV loads in BGR order by default, not RGB
+img_bgr = cv2.imread("cat.jpg")
+print(f"Shape: {img_bgr.shape}")  # (height, width, channels) → (480, 640, 3)
+print(f"dtype: {img_bgr.dtype}")  # uint8 — values from 0 to 255
+
+# Convert to RGB for matplotlib display or for most ML models
+img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
+
+# Convert to grayscale — useful for reducing complexity
+img_gray = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2GRAY)
+print(f"Grayscale shape: {img_gray.shape}")  # (480, 640) — no channel dim</code></pre>
+
+<h2>Resizing and Cropping</h2>
+<p>Neural networks expect fixed-size inputs. The most common preprocessing step is resizing all images to a target resolution.</p>
+<pre><code">IMG_SIZE = (224, 224)  # Standard for ImageNet-pretrained models (ResNet, VGG)
+
+# Resize — INTER_AREA for shrinking, INTER_LINEAR or INTER_CUBIC for enlarging
+img_resized = cv2.resize(img_rgb, IMG_SIZE, interpolation=cv2.INTER_AREA)
+
+# Crop — numpy array slicing [y_start:y_end, x_start:x_end]
+h, w = img_rgb.shape[:2]
+# Crop a center patch
+center_crop = img_rgb[h//4 : 3*h//4, w//4 : 3*w//4]
+
+# Pad image to square without distortion
+def pad_to_square(img, target_size=224):
+    h, w = img.shape[:2]
+    scale = target_size / max(h, w)
+    new_h, new_w = int(h * scale), int(w * scale)
+    resized = cv2.resize(img, (new_w, new_h))
+    canvas = np.zeros((target_size, target_size, 3), dtype=np.uint8)
+    y_off = (target_size - new_h) // 2
+    x_off = (target_size - new_w) // 2
+    canvas[y_off:y_off+new_h, x_off:x_off+new_w] = resized
+    return canvas</code></pre>
+
+<h2>Normalization — Preparing Pixels for Neural Networks</h2>
+<p>Pixel values range from 0 to 255 (uint8). Neural networks train much better when inputs are in the range [0, 1] or standardized with the dataset's mean and std:</p>
+<pre><code"># Scale to [0.0, 1.0]
+img_normalized = img_resized.astype(np.float32) / 255.0
+
+# ImageNet standardization — required when using pretrained models
+IMAGENET_MEAN = np.array([0.485, 0.456, 0.406], dtype=np.float32)
+IMAGENET_STD  = np.array([0.229, 0.224, 0.225], dtype=np.float32)
+
+img_standardized = (img_normalized - IMAGENET_MEAN) / IMAGENET_STD</code></pre>
+
+<h2>Data Augmentation for Training</h2>
+<p>Augmentation artificially expands your training set by applying random transforms, making models more robust to variations in real-world data.</p>
+<pre><code"># Using Albumentations — the go-to library for augmentation pipelines
+import albumentations as A
+from albumentations.pytorch import ToTensorV2
+
+train_transform = A.Compose([
+    A.RandomResizedCrop(224, 224, scale=(0.7, 1.0)),
+    A.HorizontalFlip(p=0.5),
+    A.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1, p=0.5),
+    A.RandomRotate90(p=0.3),
+    A.GaussianBlur(blur_limit=(3, 7), p=0.2),
+    A.CoarseDropout(max_holes=8, max_height=32, max_width=32, p=0.3),
+    A.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD),
+    ToTensorV2()  # Convert to PyTorch tensor (C, H, W)
+])
+
+# Apply and view
+augmented = train_transform(image=img_rgb)["image"]</code></pre>
+
+<h2>Classical Image Processing</h2>
+<p>Before deep learning, computer vision relied on hand-crafted features. These techniques are still useful for preprocessing, filtering, and edge-case handling:</p>
+<pre><code"># Gaussian blur — removes noise before edge detection
+blurred = cv2.GaussianBlur(img_gray, ksize=(5, 5), sigmaX=0)
+
+# Canny edge detection — finds strong gradients in the image
+edges = cv2.Canny(blurred, threshold1=50, threshold2=150)
+
+# Thresholding — separate foreground from background
+_, binary_mask = cv2.threshold(img_gray, thresh=128, maxval=255,
+                                type=cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always check <code>img is None</code> after <code>cv2.imread()</code> — it returns <code>None</code> silently if the path is wrong, causing confusing downstream errors.</li>
+  <li>When loading images for PyTorch/TensorFlow, convert BGR→RGB immediately after loading from OpenCV.</li>
+  <li>Apply normalization and augmentation in a dataset class or data loader, not on raw disk files.</li>
+  <li>For large datasets, use Albumentations instead of torchvision.transforms — it's 10–50x faster due to its optimized C++ backend.</li>
+</ul>

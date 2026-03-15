@@ -1,0 +1,10 @@
+{
+  "typescript": "function longestWord(words: string[]): string {\n    \n};",
+  "javascript": "/**\n * @param {string[]} words\n * @return {string}\n */\nvar longestWord = function(words) {\n    \n};",
+  "python": "class Solution:\n    def longestWord(self, words: List[str]) -> str:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public String longestWord(String[] words) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    string longestWord(vector<string>& words) {\n        \n    }\n};",
+  "go": "func longestWord(words []string) string {\n    \n}",
+  "rust": "impl Solution {\n    pub fn longest_word(words: Vec<String>) -> String {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public string LongestWord(string[] words) {\n        \n    }\n}"
+}

@@ -1,0 +1,4 @@
+{
+    "name": "CI/CD Pipelines",
+    "description": "Automating testing, builds, and deployments with GitHub Actions and Vercel."
+}

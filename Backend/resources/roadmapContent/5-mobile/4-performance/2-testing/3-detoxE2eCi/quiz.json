@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the purpose of wrapping UI interactions in testID attributes, and why are text-based matchers like by.text() risky in Detox tests?",
+            "options": [
+                "testID attributes are required by Detox — elements without testID cannot be seen by the test.",
+                "testID provides a stable, developer-controlled identifier that survives text changes, localization, and UI redesigns. by.text('Submit Order') breaks when: the copywriter changes it to 'Place Order', the app adds localization (tests in French), or the text is rendered in an Image. testID='submit-order-button' survives all of these changes. Use by.text() only for verifying expected text content, not for selecting elements to interact with.",
+                "by.text() matchers are case-sensitive and only work for single-word strings.",
+                "testID attributes increase bundle size and should only be added to CI build profiles."
+            ],
+            "answer": "testID provides a stable, developer-controlled identifier that survives text changes, localization, and UI redesigns. by.text('Submit Order') breaks when: the copywriter changes it to 'Place Order', the app adds localization (tests in French), or the text is rendered in an Image. testID='submit-order-button' survives all of these changes. Use by.text() only for verifying expected text content, not for selecting elements to interact with.",
+            "explanation": "Best practice: every interactive element (Button, TextInput, navigation item) gets a unique testID following a naming convention: '[screen]-[element-type]' (e.g., 'login-email-input', 'checkout-confirm-button'). Static text labels can use by.text() for assertion verification: expect(element(by.text('Order Confirmed!'))).toBeVisible()."
+        },
+        {
+            "question": "Why does Detox require a dedicated debug BUILD before running tests, rather than using the Metro development server directly?",
+            "options": [
+                "Detox cannot communicate with Metro bundler — it requires a compiled binary.",
+                "Detox synchronizes with the app by monitoring native operations to know when the app is 'idle' and ready for the next test action. This synchronization mechanism is injected into the native build as a debugging framework. The Metro dev server (hot reload, fast refresh) introduces constant non-idle states that would confuse Detox's synchronization. A dedicated debug build has synchronization components compiled in without the live development noise.",
+                "Debug builds run faster than Metro dev server apps, reducing E2E test suite time.",
+                "Detox uses XCTest (iOS) and Espresso (Android) which require compiled binaries."
+            ],
+            "answer": "Detox synchronizes with the app by monitoring native operations to know when the app is 'idle' and ready for the next test action. This synchronization mechanism is injected into the native build as a debugging framework. The Metro dev server (hot reload, fast refresh) introduces constant non-idle states that would confuse Detox's synchronization. A dedicated debug build has synchronization components compiled in without the live development noise.",
+            "explanation": "Detox's synchronization is its killer feature: instead of element(by.id('home-screen')).waitFor().toBeVisible().withTimeout(30000) (arbitrary timeout), Detox knows when animations finish, network requests complete, and timers fire — element is queried only when the app is genuinely idle after your action."
+        },
+        {
+            "question": "Why must E2E tests run on macOS CI runners (not Linux) for iOS testing in GitHub Actions, and what is the cost implication?",
+            "options": [
+                "iOS simulators run on Linux but require a macOS license for the GitHub Actions environment.",
+                "iOS simulators are macOS-exclusive — they require the macOS operating system, Xcode, and the iOS Simulator runtime (which simulates Apple Silicon/x86 hardware). Linux runners cannot simulate iOS. The cost implication: macOS runners on GitHub Actions cost 10x more per minute than Linux runners (as of 2024). Android emulators run on Linux runners using KVM hardware virtualization (~1x cost). Strategies: run E2E tests only on main branch PRs, parallelize test suites, or use cloud device farms (BrowserStack, Sauce Labs).",
+                "macOS runners are required for both iOS and Android E2E tests in GitHub Actions.",
+                "macOS runners support Detox; Linux runners only support Jest unit tests."
+            ],
+            "answer": "iOS simulators are macOS-exclusive — they require the macOS operating system, Xcode, and the iOS Simulator runtime (which simulates Apple Silicon/x86 hardware). Linux runners cannot simulate iOS. The cost implication: macOS runners on GitHub Actions cost 10x more per minute than Linux runners (as of 2024). Android emulators run on Linux runners using KVM hardware virtualization (~1x cost). Strategies: run E2E tests only on main branch PRs, parallelize test suites, or use cloud device farms (BrowserStack, Sauce Labs).",
+            "explanation": "Cost optimization: a full iOS E2E suite on macOS-14 runner takes ~20 minutes = ~$5 per run at GitHub Actions rates. Run on: direct pushes to main, release PRs. Skip on: feature branch PRs (run unit tests only). Alternatively, Maestro (a simpler E2E framework) has a cloud runner that's cheaper for straightforward flows."
+        }
+    ]
+}

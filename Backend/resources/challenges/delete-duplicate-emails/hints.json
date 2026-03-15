@@ -1,0 +1,6 @@
+[
+  "You need a DELETE statement, not SELECT. Think about which rows to remove.",
+  "For each duplicate email, you want to keep the row with the smallest id and delete the rest.",
+  "Try joining the table with itself on the email column, with the condition that one id is greater than the other.",
+  "DELETE FROM Person WHERE id NOT IN (SELECT MIN(id) FROM Person GROUP BY email);"
+]

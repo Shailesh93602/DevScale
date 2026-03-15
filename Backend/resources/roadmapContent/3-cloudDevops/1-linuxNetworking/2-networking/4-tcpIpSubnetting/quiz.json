@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the fundamental reliability guarantee that TCP provides that UDP explicitly does NOT?",
+            "options": [
+                "TCP is faster than UDP because it uses a dedicated connection.",
+                "TCP guarantees ordered, reliable delivery — it uses a 3-way handshake to establish a connection, acknowledgements (ACKs) to confirm receipt, and automatic retransmission of lost packets. UDP provides none of these guarantees.",
+                "TCP encrypts all data in transit while UDP sends data in plain text.",
+                "TCP works on IPv6 while UDP only works on IPv4."
+            ],
+            "answer": "TCP guarantees ordered, reliable delivery — it uses a 3-way handshake to establish a connection, acknowledgements (ACKs) to confirm receipt, and automatic retransmission of lost packets. UDP provides none of these guarantees.",
+            "explanation": "This is why HTTP/HTTPS use TCP (every byte of your web page must arrive) but DNS and video streaming use UDP (a missed DNS packet just triggers a retry; a few dropped video frames are acceptable)."
+        },
+        {
+            "question": "How many usable host IP addresses does a /24 subnet (e.g., 10.0.1.0/24) provide?",
+            "options": [
+                "256 usable hosts.",
+                "254 usable hosts — the /24 provides 2^8 = 256 total addresses, but the first (10.0.1.0 — network address) and last (10.0.1.255 — broadcast address) are reserved and cannot be assigned to hosts.",
+                "128 usable hosts.",
+                "65,534 usable hosts."
+            ],
+            "answer": "254 usable hosts — the /24 provides 2^8 = 256 total addresses, but the first (10.0.1.0 — network address) and last (10.0.1.255 — broadcast address) are reserved and cannot be assigned to hosts.",
+            "explanation": "AWS also reserves 3 more IPs per subnet (.1 for the router, .2 for DNS, .3 for future use), so in AWS VPC subnets you actually get 251 assignable IPs from a /24."
+        },
+        {
+            "question": "In a cloud VPC design, why are databases and application servers typically placed in 'private subnets' rather than 'public subnets'?",
+            "options": [
+                "Private subnets have higher bandwidth limits than public subnets.",
+                "Private subnets have no Internet Gateway attached, meaning instances in them cannot receive inbound connections directly from the internet. This is a critical security boundary — your database should never be directly accessible from the public internet.",
+                "Private subnets are cheaper than public subnets in AWS.",
+                "Databases require UDP, which is only supported in private subnets."
+            ],
+            "answer": "Private subnets have no Internet Gateway attached, meaning instances in them cannot receive inbound connections directly from the public internet. This is a critical security boundary — your database should never be directly accessible from the public internet.",
+            "explanation": "A properly architected system puts load balancers in public subnets (internet-facing) and application servers + databases in private subnets. The only way in is through the load balancer or a VPN/bastion host."
+        }
+    ]
+}

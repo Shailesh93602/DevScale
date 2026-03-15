@@ -1,0 +1,4 @@
+{
+    "name": "Passwordless Auth & WebAuthn",
+    "description": "The modern era of authentication. Implementing magic email links, Mobile OTPs via SMS, and biometric device integration (Fingerprint/FaceID) using the WebAuthn API (Passkeys)."
+}

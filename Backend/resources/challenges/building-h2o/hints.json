@@ -1,0 +1,6 @@
+[
+  "Think of this as a barrier problem: you need 2 H and 1 O before any can proceed.",
+  "Use queues to hold waiting hydrogen and oxygen callbacks until a full molecule can form.",
+  "Keep counters for available H and O atoms. When counts reach 2H + 1O, release a batch.",
+  "Each atom function should return a Promise that resolves only when the atom is part of a complete molecule."
+]

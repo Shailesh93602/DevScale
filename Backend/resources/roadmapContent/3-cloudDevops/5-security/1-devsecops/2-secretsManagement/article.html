@@ -1,0 +1,94 @@
+<h1>Secrets Management</h1>
+<p>A "secret" is any digital credential used to authenticate to a system: database passwords, API keys, TLS certificates, SSH keys, and OAuth tokens. As applications grow to dozens of microservices and multiple environments, managing these credentials securely becomes a critical discipline. A single leaked database password can expose every customer record in your system.</p>
+
+<h2>The Anti-Patterns (What Not to Do)</h2>
+<ul>
+  <li><strong>Committing to Git:</strong> Even in private repositories, hardcoding credentials means every developer who ever worked on the project has a copy. Automated bots continuously scan GitHub for AWS keys and other credentials — exposure is often detected within minutes of a push.</li>
+  <li><strong>Plain-text .env files on servers:</strong> Any path traversal or file read vulnerability in your application can expose the entire <code>.env</code> file. Server backups, log files, and disk snapshots all suddenly contain your production passwords.</li>
+  <li><strong>Shared credentials:</strong> Using one database user for the entire microservices fleet means a breach in any service gives access to all. Audit logs become meaningless because all activity looks like the same user.</li>
+</ul>
+
+<h2>HashiCorp Vault — The Industry Standard</h2>
+<p>HashiCorp Vault is a secrets manager that stores credentials in an encrypted, audited database and serves them securely to authenticated applications:</p>
+<pre><code">import hvac  # HashiCorp Vault Python client
+
+client = hvac.Client(url='http://vault.internal:8200')
+
+# Authenticate using an IAM role (AWS), a Kubernetes service account, or an AppRole token
+# The application never has a "master password" — it authenticates with its identity
+client.auth.aws.iam_login(
+    access_key=os.environ['AWS_ACCESS_KEY_ID'],
+    secret_key=os.environ['AWS_SECRET_ACCESS_KEY'],
+    session_token=os.environ.get('AWS_SESSION_TOKEN'),
+    role='payment-service-role'  # The Vault role authorized for this service
+)
+
+# Read a secret — Vault checks permissions based on the authenticated role
+secret = client.secrets.kv.v2.read_secret_version(
+    path='payment-service/stripe',
+    mount_point='kv'
+)
+
+stripe_api_key = secret['data']['data']['api_key']  # Loaded directly into memory
+print(stripe_api_key)  # Never written to disk or logged</code></pre>
+
+<h2>Dynamic Secrets — Credentials That Self-Destruct</h2>
+<p>Static secrets (a permanent DB password) are dangerous because they can be stolen and used indefinitely. Vault's dynamic secrets solve this by generating short-lived credentials on demand:</p>
+<pre><code"">## Vault Policy — payment-service can create DB credentials, valid for 1 hour
+path "database/creds/payment-writer" {
+  capabilities = ["read"]
+}
+
+## When the payment service starts, it requests temporary DB credentials
+creds = client.secrets.database.generate_credentials(name='payment-writer')
+
+db_user     = creds['data']['username']  # e.g., "v-payment-xK3m2-AbCdEfGh"
+db_password = creds['data']['password']  # Random 32-char password
+lease_id    = creds['lease_id']          # Used to renew or revoke
+
+# These credentials are valid for 1 hour, then Vault automatically deletes the DB user
+# If an attacker steals them, they're useless within an hour</code></pre>
+
+<h2>AWS Secrets Manager</h2>
+<pre><code"">import boto3
+import json
+
+def get_secret(secret_name: str, region: str = "us-east-1") -> dict:
+    client = boto3.client("secretsmanager", region_name=region)
+    
+    response = client.get_secret_value(SecretId=secret_name)
+    secret = json.loads(response["SecretString"])
+    return secret
+
+# Usage — the Lambda/ECS task role must have IAM permission to read this secret
+db_credentials = get_secret("prod/order-service/postgres")
+db_host = db_credentials["host"]
+db_password = db_credentials["password"]
+
+# AWS Secrets Manager also supports automatic rotation — it rotates DB passwords
+# on a schedule and updates the secret value automatically</code></pre>
+
+<h2>Sealed Secrets for GitOps (Kubernetes)</h2>
+<p>In GitOps workflows, everything is managed via YAML files in Git. But you can't commit a Kubernetes <code>Secret</code> containing a password — it's only Base64-encoded, not encrypted. <strong>Bitnami Sealed Secrets</strong> solves this:</p>
+<pre><code"">## 1. Install the controller in your cluster
+helm install sealed-secrets sealed-secrets/sealed-secrets -n kube-system
+
+## 2. On developer's laptop: encrypt the secret using the cluster's public key
+kubectl create secret generic db-password \
+  --from-literal=password="SuperSecret123!" \
+  --dry-run=client -o yaml | \
+  kubeseal --format yaml > sealed-db-password.yaml
+
+## 3. The sealed YAML is safe to commit — it looks like unreadable gibberish
+## git add sealed-db-password.yaml && git commit -m "Add DB password (sealed)"
+
+## 4. Kubernetes controller decrypts it inside the cluster using the private key
+## → Creates a standard Kubernetes Secret automatically</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Install <code>git-secrets</code> or configure GitHub Advanced Security to scan pushes and block commits that contain patterns matching API keys and passwords.</li>
+  <li>Use dynamic secrets wherever possible — especially for database credentials. Static long-lived passwords are a liability.</li>
+  <li>Enable automatic rotation for any static credentials (AWS Secrets Manager supports this natively for RDS, Redshift, and DocumentDB).</li>
+  <li>Apply the principle of least privilege to Vault policies — the payment service should only be able to read <code>payment-service/*</code>, not all secrets.</li>
+</ul>

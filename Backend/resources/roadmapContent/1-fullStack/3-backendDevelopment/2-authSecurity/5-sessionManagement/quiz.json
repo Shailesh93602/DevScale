@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary security advantage of using Stateful Sessions over Stateless JWTs?",
+            "options": [
+                "Stateful sessions never expire, allowing eternal logins",
+                "Stateful sessions can be instantly revoked/destroyed from the server, immediately locking out a compromised user account even if the attacker possesses the session ID",
+                "Stateful sessions encrypt passwords natively in the browser",
+                "Stateful sessions do not require cookies"
+            ],
+            "answer": "Stateful sessions can be instantly revoked/destroyed from the server, immediately locking out a compromised user account even if the attacker possesses the session ID",
+            "explanation": "Once a stateless JWT is issued, it mathematically authorizes the user until it expires (usually hours or minutes later). You cannot log them out. With stateful sessions, the server checks the database every request; deleting the session from the DB instantly blocks the user."
+        },
+        {
+            "question": "Why is an In-Memory Database (like Redis) strongly recommended for storing sessions instead of a relational database like PostgreSQL?",
+            "options": [
+                "Redis supports relational joins better than Postgres",
+                "The server must validate the session ID on every single HTTP API request. Querying a physical disk database that frequently causes massive latency, whereas Redis (RAM) responds in microseconds",
+                "PostgreSQL cannot store random strings, only Integers",
+                "Redis automatically encrypts the HTML sent to the client"
+            ],
+            "answer": "The server must validate the session ID on every single HTTP API request. Querying a physical disk database that frequently causes massive latency, whereas Redis (RAM) responds in microseconds",
+            "explanation": "If a user loads a page that makes 10 API requests, the server must look up the session 10 times. Fast read-throughput is critical, making an in-memory Key-Value store like Redis the perfect architecture."
+        },
+        {
+            "question": "If you are storing session data persistently using Express-Session and Redis, what exactly is sent to the client's browser inside the Cookie?",
+            "options": [
+                "The user's ID, Email, and Role as a JSON object",
+                "A Base64-encoded encrypted password string",
+                "A meaningless, cryptographically random Session ID string (e.g. s:2kjf3...)",
+                "The entire Redux state tree from the server"
+            ],
+            "answer": "A meaningless, cryptographically random Session ID string (e.g. s:2kjf3...)",
+            "explanation": "A stateful session hands the client a meaningless token. The client hands it back. The server looks at the token, goes to Redis, and says 'Ah, this meaningless token belongs to User ID 5.' The client never sees the actual data (User ID, Role, etc.)."
+        },
+        {
+            "question": "What does the `httpOnly: true` setting do when configuring a session cookie in secure applications?",
+            "options": [
+                "It forces the browser to only use HTTPS connections",
+                "It prevents JavaScript running in the browser (e.g., document.cookie) from accessing or reading the cookie, heavily mitigating XSS (Cross-Site Scripting) token theft",
+                "It compresses the cookie size to save bandwidth",
+                "It allows the cookie to bypass CORS restrictions globally"
+            ],
+            "answer": "It prevents JavaScript running in the browser (e.g., document.cookie) from accessing or reading the cookie, heavily mitigating XSS (Cross-Site Scripting) token theft",
+            "explanation": "If a hacker executes a malicious script on your site (XSS), their script normally reads document.cookie and sends the session to their hacking server. `httpOnly` tells the browser: 'Never let JS touch this cookie, only attach it automatically to HTTP requests.'"
+        },
+        {
+            "question": "Why is it dangerous to store your Express sessions in memory (RAM) instead of Redis when deploying a Node app to production?",
+            "options": [
+                "Node.js RAM limits sessions to exactly 10 users",
+                "If your Node.js server scales horizontally to multiple processes (or restarts gracefully), sessions created on Server A will not exist on Server B, forcing logged-in users to randomly log out",
+                "Express-Session cannot run in memory natively without Vue.js",
+                "Memory storage leaks SSL certificates to the network"
+            ],
+            "answer": "If your Node.js server scales horizontally to multiple processes (or restarts gracefully), sessions created on Server A will not exist on Server B, forcing logged-in users to randomly log out",
+            "explanation": "Deploying 3 servers means requests are load-balanced randomly. If User logs into Server A, Server A's RAM knows them. But if their next click goes to Server B, Server B will reject them. A centralized Redis cache ensures all servers share the exact same session knowledge."
+        }
+    ]
+}

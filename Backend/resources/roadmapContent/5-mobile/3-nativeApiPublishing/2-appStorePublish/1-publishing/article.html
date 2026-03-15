@@ -1,0 +1,109 @@
+<h1>App Store Publishing with Expo EAS</h1>
+<p>Building a React Native app is only half the battle. To reach your users, you must publish it to the Apple App Store and Google Play Store. This involves compiling native binaries, managing cryptographic certificates, and navigating each store's submission process. Expo Application Services (EAS) makes this manageable from the command line.</p>
+
+<h2>Step 1: EAS Build — Compiling Native Binaries</h2>
+<p>The stores don't accept JavaScript. You need:</p>
+<ul>
+  <li><strong>.ipa</strong> (iOS App Package) for the Apple App Store</li>
+  <li><strong>.aab</strong> (Android App Bundle) for Google Play</li>
+</ul>
+<p>Building an <code>.ipa</code> normally requires a Mac with Xcode installed. EAS Build removes this constraint — it runs the compilation on Expo's cloud servers and e-mails you the finished binary.</p>
+
+<pre><code># Install the EAS CLI globally
+npm install -g eas-cli
+
+# Log in (create a free account at expo.dev first)
+eas login
+
+# Initialize EAS in your project
+eas build:configure
+
+# Build for both stores and run the native simulator
+# profile: "preview" generates a debug .apk for Android sideloading
+eas build --platform all --profile production
+
+# Build for a single platform
+eas build --platform ios --profile production
+eas build --platform android --profile production</code></pre>
+
+<p>The build profiles are defined in <code>eas.json</code>:</p>
+
+<pre><code>{
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal",
+      "android": { "buildType": "apk" }
+    },
+    "production": {
+      "autoIncrement": true
+    }
+  }
+}</code></pre>
+
+<h2>Step 2: iOS Code Signing — Certificates &amp; Provisioning Profiles</h2>
+<p>Apple requires cryptographic proof of your identity before allowing any app onto their platform. This involves two documents:</p>
+<ol>
+  <li><strong>Distribution Certificate</strong> — a key pair that proves you are a registered Apple Developer. Generated once per developer account, valid for 1 year.</li>
+  <li><strong>App Store Provisioning Profile</strong> — a document that ties your App ID (e.g., <code>com.yourcompany.appname</code>) to your Distribution Certificate, authorizing it to be distributed via the App Store.</li>
+</ol>
+<p>EAS handles this automatically via <code>eas credentials</code>. Run this once and it creates and stores the certificates in your Expo account, ready for every future build:</p>
+<pre><code>eas credentials</code></pre>
+
+<h2>Step 3: App Store Connect Setup (iOS)</h2>
+<p>Before submitting, create your app record in <a href="https://appstoreconnect.apple.com">App Store Connect</a>:</p>
+<ol>
+  <li>Click <strong>My Apps → +</strong> → New App</li>
+  <li>Set the Bundle ID (must match <code>ios.bundleIdentifier</code> in your <code>app.json</code>)</li>
+  <li>Fill in App Name, Primary Language, SKU (a unique internal identifier)</li>
+  <li>On the App Information page, upload at minimum: <strong>6.5" iPhone screenshots</strong>, App Icon (1024×1024 px), Privacy Policy URL, and an Age Rating questionnaire</li>
+</ol>
+
+<h2>Step 4: Google Play Store Setup (Android)</h2>
+<ol>
+  <li>Pay the one-time $25 developer registration fee at <a href="https://play.google.com/console">play.google.com/console</a></li>
+  <li>Create a new app → Declarations (accept policies, set app category)</li>
+  <li>Upload a <strong>Feature Graphic</strong> (1024×500 px) and at least 2 phone screenshots</li>
+  <li>Set the <strong>Content Rating</strong> questionnaire (required by all stores)</li>
+</ol>
+
+<h2>Step 5: EAS Submit — Automated Upload</h2>
+<p>Once your build is complete, EAS Submit uploads it to the stores automatically:</p>
+<pre><code># Submit the latest build to both stores
+eas submit --platform all
+
+# Submit a specific build ID
+eas submit --platform ios --id &lt;build-id&gt;
+
+# For iOS, you need an App Store Connect API key:
+# Apple Developer Portal → Users & Access → Keys → Generate API Key
+# Set in eas.json or provide as environment variable</code></pre>
+
+<p>For Android, you need a Google Play JSON service account key (created in Google Cloud Console, then linked in Google Play Console under "Release → Setup → API access").</p>
+
+<h2>Step 6: Over-the-Air (OTA) Updates</h2>
+<p>For JavaScript-only changes (bug fixes, text copy, business logic), you don't need a full store resubmission. EAS Update pushes the new JS bundle directly to installed apps on next launch:</p>
+<pre><code># Push an OTA update to the "production" branch
+eas update --branch production --message "Fix checkout bug"</code></pre>
+<p>OTA updates cannot change native code (new native packages, permissions, app icon). Those require a full EAS Build and store resubmission.</p>
+
+<h2>Versioning Strategy</h2>
+<table>
+  <thead><tr><th>Field</th><th>iOS</th><th>Android</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td>User-visible version</td><td>CFBundleShortVersionString (e.g., 1.2.0)</td><td>versionName (e.g., 1.2.0)</td><td>Shown in the store listing</td></tr>
+    <tr><td>Build number</td><td>CFBundleVersion (e.g., 47)</td><td>versionCode (e.g., 47)</td><td>Must increment with every submission</td></tr>
+  </tbody>
+</table>
+<p>Set <code>"autoIncrement": true</code> in <code>eas.json</code> production profile to have EAS increment the build number automatically on every build.</p>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always test on a real device before submitting — simulators don't surface crashes caused by native permissions or hardware differences.</li>
+  <li>Apple reviews take 1–3 days for the first submission; subsequent updates typically 24 hours. Submit well before your launch deadline.</li>
+  <li>Store all sensitive credentials (API keys, signing certificates) in EAS Secrets, never in your Git repository.</li>
+  <li>Use <code>expo-updates</code> channel branching: <code>production</code> for live users, <code>staging</code> for QA, to avoid accidental OTA updates to production users.</li>
+</ul>

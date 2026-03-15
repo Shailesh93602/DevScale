@@ -1,0 +1,74 @@
+{
+    "title": "dbt Quiz",
+    "description": "Test your dbt models, tests, and transformation knowledge.",
+    "passingScore": 80,
+    "timeLimit": 8,
+    "questions": [
+        {
+            "question": "What language do you use to write dbt models?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Python",
+                    "isCorrect": false
+                },
+                {
+                    "text": "SQL SELECT statements (with optional Jinja templating)",
+                    "isCorrect": true
+                },
+                {
+                    "text": "YAML",
+                    "isCorrect": false
+                },
+                {
+                    "text": "JavaScript",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does {{ ref('stg_orders') }} do in a dbt model?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Imports a Python function",
+                    "isCorrect": false
+                },
+                {
+                    "text": "References another dbt model by name and creates a dependency, so dbt builds in the right order",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Fetches data from a REST API",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Creates a temporary CTE",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does 'dbt test' do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Runs a sample query on each model",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Executes data quality tests defined in schema.yml (uniqueness, not_null, relationships, etc.)",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Checks Python syntax of macros",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Validates the dbt_project.yml configuration",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,6 @@
+[
+  "The minimum speed is 1 and the maximum useful speed is max(piles). Can you binary search within this range?",
+  "For a given speed k, the hours needed for one pile of size p is ceil(p / k).",
+  "If total hours at speed k is <= h, then k is a valid answer — but there might be a smaller valid k.",
+  "Binary search for the leftmost k where the total hours <= h. Use left < right with right = mid when feasible."
+]

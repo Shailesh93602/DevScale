@@ -1,0 +1,42 @@
+{
+  "title": "Palindromic Substrings",
+  "slug": "palindromic-substrings",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": [
+    "string",
+    "dynamic-programming",
+    "two-pointers"
+  ],
+  "company_tags": [
+    "Facebook",
+    "Microsoft",
+    "Amazon",
+    "Google",
+    "LinkedIn"
+  ],
+  "topic_tags": [
+    "strings",
+    "dynamic programming"
+  ],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "A string `s`.",
+  "output_format": "The number of palindromic substrings in `s`.",
+  "example_input": "s = \"abc\"",
+  "example_output": "3",
+  "constraints": "- `1 <= s.length <= 1000`\n- `s` consists of lowercase English letters.",
+  "function_signature": "function countSubstrings(s: string): number {}",
+  "status": "ACTIVE"
+}

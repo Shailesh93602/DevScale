@@ -1,0 +1,6 @@
+[
+  "Create a new empty array to hold the results.",
+  "Loop through the input array with a for loop (to get the index).",
+  "Call the callback with (arr[i], i, arr) and push the result to your output array.",
+  "Return the new array — it should have the same length as the input."
+]

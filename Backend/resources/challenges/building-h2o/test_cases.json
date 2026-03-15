@@ -1,0 +1,50 @@
+[
+  {
+    "input": {"atoms": "HOH"},
+    "output": {"moleculeCount": 1, "valid": true},
+    "explanation": "One molecule: 2H + 1O",
+    "is_hidden": false
+  },
+  {
+    "input": {"atoms": "OOHHHH"},
+    "output": {"moleculeCount": 2, "valid": true},
+    "explanation": "Two molecules from 4H and 2O",
+    "is_hidden": false
+  },
+  {
+    "input": {"atoms": "HHOHHO"},
+    "output": {"moleculeCount": 2, "valid": true},
+    "explanation": "Two molecules from interleaved atoms",
+    "is_hidden": false
+  },
+  {
+    "input": {"atoms": "HHOOHH"},
+    "output": {"moleculeCount": 2, "valid": true},
+    "explanation": "Two molecules with O's together",
+    "is_hidden": false
+  },
+  {
+    "input": {"atoms": "HHHOHHOHH"},
+    "output": {"moleculeCount": 3, "valid": true},
+    "explanation": "Three molecules from 6H and 3O",
+    "is_hidden": true
+  },
+  {
+    "input": {"atoms": "OHHHHOHHHHOO"},
+    "output": {"moleculeCount": 4, "valid": true},
+    "explanation": "Four molecules from 8H and 4O",
+    "is_hidden": true
+  },
+  {
+    "input": {"atoms": "OHH"},
+    "output": {"moleculeCount": 1, "valid": true},
+    "explanation": "Minimal input: one molecule starting with O",
+    "is_hidden": true
+  },
+  {
+    "input": {"atoms": "HHHHHHOOO"},
+    "output": {"moleculeCount": 3, "valid": true},
+    "explanation": "All H's then all O's",
+    "is_hidden": true
+  }
+]

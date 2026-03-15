@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the fundamental operational difference between a 'stateful' firewall (like AWS Security Groups) and a 'stateless' firewall (like AWS Network ACLs)?",
+            "options": [
+                "Stateful firewalls support both allow and deny rules; stateless firewalls only support allow rules.",
+                "Stateful firewalls track connection state and automatically allow return traffic for established connections. Stateless firewalls evaluate every packet in isolation and require explicit rules for both inbound requests AND outbound return traffic.",
+                "Stateless firewalls are more secure because they evaluate more rules.",
+                "Stateful firewalls apply at the subnet level; stateless firewalls apply at the instance level."
+            ],
+            "answer": "Stateful firewalls track connection state and automatically allow return traffic for established connections. Stateless firewalls evaluate every packet in isolation and require explicit rules for both inbound requests AND outbound return traffic.",
+            "explanation": "With Network ACLs (stateless), you must add both inbound rule 443 AND a corresponding outbound rule for ephemeral ports (1024-65535) for HTTPS to work. Security Groups handle this automatically."
+        },
+        {
+            "question": "An EC2 instance in a private subnet needs to receive HTTPS traffic from a public-facing Application Load Balancer. Which AWS network security mechanism should directly control this access?",
+            "options": [
+                "A Network ACL with a rule blocking all traffic except port 443.",
+                "A Security Group on the EC2 instance with an inbound rule allowing TCP port 443 from the ALB's Security Group ID — not from a broad IP range. This is the principle of least privilege at the network level.",
+                "An IAM policy allowing the EC2 instance to receive inbound traffic.",
+                "A Route Table entry directing HTTPS traffic to the private subnet."
+            ],
+            "answer": "A Security Group on the EC2 instance with an inbound rule allowing TCP port 443 from the ALB's Security Group ID — not from a broad IP range. This is the principle of least privilege at the network level.",
+            "explanation": "Referencing the ALB's Security Group instead of its IP range is a Security Group best practice: you get dynamic IP handling (ALB IPs scale automatically) and minimal blast radius."
+        },
+        {
+            "question": "What core principle of 'Zero Trust Networking' makes it superior to traditional perimeter-based security for modern cloud architectures?",
+            "options": [
+                "Zero Trust networking encrypts only outbound traffic for performance.",
+                "Zero Trust assumes no request is trustworthy by default, even from inside the internal network. Every request must be authenticated and authorized independently, all inter-service traffic is encrypted with mTLS, and access is continuously re-verified rather than trusted after a single login.",
+                "Zero Trust networking eliminates the need for VPNs by using public networks.",
+                "Zero Trust relies on IP whitelisting as the primary authentication mechanism."
+            ],
+            "answer": "Zero Trust assumes no request is trustworthy by default, even from inside the internal network. Every request must be authenticated and authorized independently, all inter-service traffic is encrypted with mTLS, and access is continuously re-verified rather than trusted after a single login.",
+            "explanation": "Traditional 'castle and moat' security assumes a compromised internal server can do anything. Zero Trust means a compromised server only gains access to exactly what it was authorized for — nothing more."
+        }
+    ]
+}

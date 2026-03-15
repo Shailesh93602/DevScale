@@ -1,0 +1,4 @@
+{
+    "name": "Transfer Learning & Image Classification",
+    "description": "Leveraging pretrained vision models instead of training from scratch. Understanding why transfer learning works, fine-tuning strategies (which layers to freeze and unfreeze), using torchvision pretrained models (ResNet, EfficientNet, ViT), data augmentation techniques for vision tasks, and building a production-ready image classifier pipeline."
+}

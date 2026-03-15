@@ -1,0 +1,97 @@
+<h1>Request Validation with Zod</h1>
+<p>One of the golden rules of backend engineering is <strong>Never Trust Client Input</strong>. If a user sends a string instead of an integer, or injects malicious code, your server will crash or save bad data. Zod evaluates, sanitizes, and strictly types incoming requests before they reach your controller.</p>
+
+<h2>Why Zod instead of Joi or Yup?</h2>
+<p>Zod is a TypeScript-first schema declaration and validation library. If you validate an object with Zod, it automatically infers exactly what the TypeScript type of that object should be, eliminating the need to write an interface and a schema separately.</p>
+
+<h2>Creating a Schema</h2>
+<pre><code>import { z } from 'zod';
+
+const userRegistrationSchema = z.object({
+  body: z.object({
+    username: z.string().min(3).max(20),
+    email: z.string().email('Invalid email address'),
+    password: z.string().min(8, 'Password must be at least 8 characters'),
+    age: z.number().int().positive().optional()
+  })
+});
+
+// Zod gives you the TypeScript type for free!
+type CreateUserInput = z.infer&lt;typeof userRegistrationSchema&gt;['body'];
+// Evaluates exactly to { username: string, email: string, password: string, age?: number }</code></pre>
+
+<h2>Creating a Validation Middleware for Express</h2>
+<p>Validating repeatedly in every controller violates DRY (Don't Repeat Yourself). The industry standard approach is writing a higher-order middleware function that accepts a Zod schema and returns an Express middleware.</p>
+
+<pre><code>import { AnyZodObject, ZodError } from 'zod';
+import { Request, Response, NextFunction } from 'express';
+
+export const validateRequest = (schema: AnyZodObject) =&gt; 
+  async (req: Request, res: Response, next: NextFunction) =&gt; {
+    try {
+      // parse() strictly checks the object. If it fails, it throws a ZodError.
+      // We parse req.body, req.query, and req.params simultaneously.
+      
+      const validatedData = await schema.parseAsync({
+        body: req.body,
+        query: req.query,
+        params: req.params,
+      });
+
+      // Optional: Replace req arrays with the strictly sanitized data
+      // (This strips away extra malicious fields sent by hackers, like `isAdmin: true`!)
+      req.body = validatedData.body;
+      req.query = validatedData.query;
+      req.params = validatedData.params;
+      
+      return next();
+
+    } catch (error) {
+      if (error instanceof ZodError) {
+        // Format the Zod validation errors to be easily readable by the frontend UI
+        const errorMessages = error.errors.map((issue: any) =&gt; ({
+            message: `${issue.path.join('.')} is ${issue.message}`,
+        }));
+        
+        return res.status(400).json({ error: 'Invalid data', details: errorMessages });
+      }
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  };</code></pre>
+
+<h2>Using the Middleware in Routes</h2>
+<p>Now, any incoming request to this endpoint will instantly be rejected with a <code>400 Bad Request</code> and detailed frontend validation errors, without a single line of your controller code ever executing.</p>
+
+<pre><code>import { Router } from 'express';
+import { validateRequest } from '../middleware/validate';
+import { userRegistrationSchema } from '../schemas/user.schema';
+import { registerUserController } from '../controllers/user.controller';
+
+const router = Router();
+
+// Placed before the controller!
+router.post(
+  '/register', 
+  validateRequest(userRegistrationSchema), 
+  registerUserController
+);
+
+export default router;</code></pre>
+
+<h2>Handling Query Parameters with Zod</h2>
+<p>Query parameters (<code>?page=2</code>) always come in as Strings from Express. You must tell Zod to coerce them to numbers if you expect pagination logic.</p>
+
+<pre><code>const paginationSchema = z.object({
+  query: z.object({
+    // Coerce converts "2" to 2 before validating
+    page: z.coerce.number().int().min(1).default(1),
+    limit: z.coerce.number().int().min(1).max(100).default(10)
+  })
+});</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Strive to make validation the very first action performed in your routing chain.</li>
+  <li>Ensure your Zod schema perfectly matches your database schema (Prisma/TypeORM) requirements (e.g., maximum string lengths).</li>
+  <li>By stripping out properties the schema does not declare (which <code>parse()</code> natively supports), you prevent Mass Assignment vulnerabilities where users inject <code>"role": "admin"</code> into their registration body.</li>
+</ul>

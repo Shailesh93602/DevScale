@@ -1,0 +1,4 @@
+{
+    "name": "Type Narrowing & Custom Guards",
+    "description": "Mastering control flow analysis: typeof, instanceof, 'in' operator, custom type predicates (is), assertion functions, and the power of 'unknown' and 'never'."
+}

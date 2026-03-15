@@ -1,0 +1,44 @@
+<h1>Monorepo Architecture</h1>
+<p>As startups scale, their codebase splits. You might have a React frontend in one GitHub repository, a Node.js API backend in a second repository, and a shared UI Library (buttons, colors) in a third repository. This <strong>Polyrepo</strong> architecture seems logical at first, but it quickly becomes an engineering nightmare.</p>
+
+<p>When you update a Button inside your UI library, you must publish it to NPM, switch to the React repo, pull the update, test it, and then switch to the Backend repo to make sure the API typings didn't break. This cross-repository coordination takes hours.</p>
+
+<h2>The Monorepo Solution</h2>
+<p>A <strong>Monorepo (Monolithic Repository)</strong> places multiple physically distinct projects, applications, and shared libraries directly inside a single, unified Git repository.</p>
+
+<pre><code>/my-company-monorepo
+  /apps
+    /web         # The Next.js frontend application
+    /api         # The Express backend API
+    /mobile      # The React Native app
+  /packages
+    /ui          # Shared React components library
+    /tsconfig    # Global TypeScript configurations
+    /eslint      # Global linting rules
+</code></pre>
+
+<p>If you update the core Button component in <code>packages/ui</code>, the <code>apps/web</code> frontend instantly uses the new code. No NPM publishing required. If the backend changes an API response type, the frontend instantly throws a TypeScript error locally instead of failing in production.</p>
+
+<h2>Monorepo Orchestrators (Turborepo)</h2>
+<p>While the benefits are massive, managing 10 different package.json files natively is difficult. Running <code>npm run build</code> in each folder manually takes forever. You need a dedicated build system.</p>
+<p><strong>Turborepo (by Vercel)</strong> is the industry standard tool for managing JavaScript and TypeScript monorepos natively.</p>
+
+<ul>
+  <li><strong>Task Orchestration:</strong> When you run <code>turbo run build</code> at the root folder, Turbo natively analyzes your dependency graph. If the Frontend depends on the UI package, it intelligently builds the UI package FIRST, guarantees it succeeds, and then mathematically builds the Frontend SECOND concurrently.</li>
+  <li><strong>Remote Caching:</strong> This is the superpower. If Developer A builds the entire massive application on their laptop, Turbo instantly hashes the outputs and saves them to a global cloud cache. If Developer B pulls the code and runs <code>turbo run build</code>, Turbo recognizes that the code hasn't radically changed and natively skips the 10-minute build, simply downloading the cached output in exactly 1 second.</li>
+</ul>
+
+<h2>NPM/Yarn Workspaces</h2>
+<p>Underneath tools like Turborepo, the actual linking of dependencies is handled natively by the package manager acting via <strong>Workspaces</strong>.</p>
+<p>If you define a workspace in the root <code>package.json</code>:</p>
+<pre><code>{
+  "name": "my-monorepo",
+  "workspaces": [ "apps/*", "packages/*" ]
+}</code></pre>
+<p>When you run <code>npm install</code> natively in the root, NPM automatically creates system-level symbolic links (symlinks) locally inside your <code>node_modules</code>. If the frontend specifies a dependency <code>"ui": "*"</code>, NPM physically links that request directly to your local <code>packages/ui</code> folder instead of looking on the internet!</p>
+
+<h2>Challenges of Monorepos</h2>
+<ul>
+  <li><strong>Scale Constraints:</strong> As a monorepo grows to incorporate millions of files (like Google or Facebook's monorepos), running standard Git commands natively like <code>git status</code> can abruptly take 20 seconds to execute because the timeline engine slows down. Specialized file virtualization tools are heavily required.</li>
+  <li><strong>Accidental Coupling:</strong> Because the code is physically located right next to everything, junior developers might accidentally import backend database functions directly mathematically into a frontend React component natively! Strong ESLint boundaries must be enforced.</li>
+</ul>

@@ -1,0 +1,5 @@
+[
+  "The core idea is similar to 3Sum: sort the array and use multiple loops with two pointers for the inner-most search.",
+  "To handle duplicates, skip the same value when iterating through each loop level.",
+  "The time complexity should be around O(n³). Can you optimize the two-pointer approach to achieve this?"
+]

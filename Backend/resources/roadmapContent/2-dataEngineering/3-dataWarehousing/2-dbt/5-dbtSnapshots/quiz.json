@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What explicitly is the catastrophic analytic problem with standard 'UPDATE' statements mutating data inside a traditional Data Warehouse?",
+            "options": [
+                "UPDATE statements inherently restrict CSS rendering pipelines.",
+                "They permanently explicitly delete the previous historical state of the specific row, entirely preventing analysts from reliably accurately calculating what the universe historically looked like on a specific date in the past.",
+                "UPDATE statements translate SQL reliably into Bash commands.",
+                "They completely bypass secure AWS networking authentication."
+            ],
+            "answer": "They permanently explicitly delete the previous historical state of the specific row, entirely preventing analysts from reliably accurately calculating what the universe historically looked like on a specific date in the past.",
+            "explanation": "If a user changes their subscription tier from Pro to Free, and you overwrite the database row, your historical financial modeling for last year is ruined."
+        },
+        {
+            "question": "How does a 'Type 2 Slowly Changing Dimension' (SCD Type 2) fundamentally logically resolve the complex historical overwrite problem natively?",
+            "options": [
+                "It aggressively deletes old logs from S3 buckets.",
+                "Instead of physically overwriting the original existing row, it gracefully intelligently retires the old row by explicitly filling in its 'valid_to' timestamp column smoothly, and physically inserts a brand new distinct row representing the updated reality.",
+                "It compiles nested CSS functions securely.",
+                "It translates Python natively to JSON strictly."
+            ],
+            "answer": "Instead of physically overwriting the original existing row, it gracefully intelligently retires the old row by explicitly filling in its 'valid_to' timestamp column smoothly, and physically inserts a brand new distinct row representing the updated reality.",
+            "explanation": "With SCD Type 2, the user has multiple rows in the database, each explicitly bound by a specific 'valid_from' and 'valid_to' date window."
+        },
+        {
+            "question": "In the context of data modeling, what is the primary operational advantage inherently gained by utilizing 'dbt Snapshots'?",
+            "options": [
+                "It acts as a dynamic CSS router exclusively natively.",
+                "It automatically physically seamlessly implements the incredibly complex SQL required to generate SCD Type 2 tables gracefully perfectly based strictly on a single unique key and a timestamp, completely removing human error from the massive architecture.",
+                "It explicitly deletes AWS infrastructure seamlessly.",
+                "It aggressively translates XML safely logically reliably into JSON securely elegantly intelligently safely."
+            ],
+            "answer": "It automatically physically seamlessly implements the incredibly complex SQL required to generate SCD Type 2 tables gracefully perfectly based strictly on a single unique key and a timestamp, completely removing human error from the massive architecture.",
+            "explanation": "Writing an SCD Type 2 ETL script manually is a nightmare. dbt completely automates the 'compare and insert' logic safely."
+        }
+    ]
+}

@@ -1,0 +1,6 @@
+[
+  "You need to find the MAX salary for each department first.",
+  "Join Employee with Department to get department names, then filter for max salaries.",
+  "Consider using a subquery: SELECT departmentId, MAX(salary) FROM Employee GROUP BY departmentId.",
+  "Use RANK() window function if you want to handle ties elegantly — RANK() OVER (PARTITION BY departmentId ORDER BY salary DESC)."
+]

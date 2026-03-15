@@ -1,0 +1,4 @@
+{
+    "name": "Window Functions & Advanced PostgreSQL",
+    "description": "SQL's most powerful analytical features. Window functions (ROW_NUMBER, RANK, DENSE_RANK, LAG, LEAD, FIRST_VALUE, LAST_VALUE) with OVER/PARTITION BY/ORDER BY, recursive CTEs for hierarchical queries (org charts, threaded comments, graph traversal), PostgreSQL-specific features (JSONB operators, full-text search with tsvector, pg_trgm for similarity search, lateral joins), and writing and optimizing complex analytical queries."
+}

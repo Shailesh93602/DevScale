@@ -1,0 +1,4 @@
+{
+    "name": "Query Optimisation",
+    "description": "Indexing strategies, EXPLAIN plans, query rewrites, and partitioning for fast SQL queries."
+}

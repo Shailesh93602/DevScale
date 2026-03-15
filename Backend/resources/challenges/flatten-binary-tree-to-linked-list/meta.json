@@ -1,0 +1,20 @@
+{
+  "title": "Flatten Binary Tree to Linked List",
+  "slug": "flatten-binary-tree-to-linked-list",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["linked-list","tree","depth-first-search","binary-tree"],
+  "company_tags": ["Microsoft","Amazon","Bloomberg","Apple"],
+  "topic_tags": ["trees","depth-first search","linked list"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "The root of a binary tree.",
+  "output_format": "The tree flattened in-place into a linked list using right pointers in the order of pre-order traversal. No value is returned.",
+  "example_input": "root = [1,2,5,3,4,null,6]",
+  "example_output": "[1,null,2,null,3,null,4,null,5,null,6]",
+  "constraints": "- The number of nodes in the tree is in the range `[0, 2000]`.\n- `-100 <= Node.val <= 100`",
+  "function_signature": "function flatten(root: TreeNode | null): void {}",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,4 @@
+{
+    "name": "Terraform State Management",
+    "description": "Remote state backends (S3 + DynamoDB), state locking, tracking drift, and workspaces."
+}

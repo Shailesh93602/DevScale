@@ -1,0 +1,56 @@
+[
+  {
+    "input": {"local": [{"id": 1, "data": "local_v", "timestamp": 100}], "remote": [{"id": 1, "data": "remote_v", "timestamp": 90}], "lastSync": 80},
+    "output": {"mergedCount": 1, "conflictCount": 1, "winner": "local"},
+    "explanation": "Both modified, local has higher timestamp, local wins",
+    "is_hidden": false
+  },
+  {
+    "input": {"local": [{"id": 1, "data": "v1", "timestamp": 50}], "remote": [{"id": 1, "data": "v2", "timestamp": 100}], "lastSync": 80},
+    "output": {"mergedCount": 1, "conflictCount": 0, "uploadCount": 0, "downloadCount": 1},
+    "explanation": "Only remote modified (local timestamp <= lastSync)",
+    "is_hidden": false
+  },
+  {
+    "input": {"local": [{"id": 1, "data": "v1", "timestamp": 100}], "remote": [], "lastSync": 80},
+    "output": {"mergedCount": 1, "conflictCount": 0, "uploadCount": 1, "downloadCount": 0},
+    "explanation": "New local item to upload",
+    "is_hidden": false
+  },
+  {
+    "input": {"local": [], "remote": [{"id": 2, "data": "new", "timestamp": 100}], "lastSync": 80},
+    "output": {"mergedCount": 1, "conflictCount": 0, "uploadCount": 0, "downloadCount": 1},
+    "explanation": "New remote item to download",
+    "is_hidden": false
+  },
+  {
+    "input": {"local": [{"id": 1, "data": "del", "timestamp": 100, "deleted": true}], "remote": [{"id": 1, "data": "v1", "timestamp": 90}], "lastSync": 80},
+    "output": {"mergedCount": 0, "conflictCount": 1, "winner": "local"},
+    "explanation": "Local deleted, remote modified - local wins, item is removed",
+    "is_hidden": true
+  },
+  {
+    "input": {"local": [{"id": 1, "data": "a", "timestamp": 100}, {"id": 2, "data": "b", "timestamp": 100}], "remote": [{"id": 1, "data": "c", "timestamp": 100}, {"id": 3, "data": "d", "timestamp": 100}], "lastSync": 80},
+    "output": {"mergedCount": 3, "conflictCount": 1},
+    "explanation": "Mixed: conflict on id 1, local-only id 2, remote-only id 3",
+    "is_hidden": true
+  },
+  {
+    "input": {"local": [{"id": 1, "data": "old", "timestamp": 50}], "remote": [{"id": 1, "data": "old", "timestamp": 50}], "lastSync": 80},
+    "output": {"mergedCount": 1, "conflictCount": 0, "uploadCount": 0, "downloadCount": 0},
+    "explanation": "Neither modified since last sync, keep as is",
+    "is_hidden": true
+  },
+  {
+    "input": {"local": [], "remote": [], "lastSync": 100},
+    "output": {"mergedCount": 0, "conflictCount": 0},
+    "explanation": "Empty state, nothing to sync",
+    "is_hidden": true
+  },
+  {
+    "input": {"local": [{"id": 1, "data": "a", "timestamp": 200}, {"id": 2, "data": "b", "timestamp": 200}, {"id": 3, "data": "c", "timestamp": 200}], "remote": [{"id": 1, "data": "x", "timestamp": 300}, {"id": 2, "data": "y", "timestamp": 100}, {"id": 3, "data": "z", "timestamp": 250}], "lastSync": 150},
+    "output": {"mergedCount": 3, "conflictCount": 2},
+    "explanation": "Multiple conflicts with different winners",
+    "is_hidden": true
+  }
+]

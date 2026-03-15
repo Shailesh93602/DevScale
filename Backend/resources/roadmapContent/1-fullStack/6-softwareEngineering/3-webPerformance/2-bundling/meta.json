@@ -1,0 +1,6 @@
+{
+    "id": "2-bundling",
+    "title": "Bundling and Code Splitting",
+    "description": "Optimizing asset delivery using modern build tools like Vite, Webpack, and Turbopack.",
+    "order": 2
+}

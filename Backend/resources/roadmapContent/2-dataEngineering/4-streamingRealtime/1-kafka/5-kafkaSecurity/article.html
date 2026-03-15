@@ -1,0 +1,35 @@
+<h1>Kafka Security & Access Control Lists (ACLs)</h1>
+<p>In a development environment, running Kafka without authentication is perfectly fine. But in a production environment, a Kafka cluster might be the central nervous system for an entire enterprise, receiving millions of payment transactions, healthcare records, and user behavioral events per second. Without proper security configurations, any internal server that can reach the Kafka Broker could read every single sensitive message.</p>
+
+<h2>Encryption In-Transit (SSL/TLS)</h2>
+<p>Without SSL, every message flying over the network between your Producer application and the Kafka Broker is transmitted as raw, unencrypted plain text. Any sophisticated network sniffer could intercept and read every single sensitive message.</p>
+<p>You configure <strong>SSL/TLS encryption</strong> by generating a Certificate Authority (CA), creating Keystores for each Broker, and configuring the Producer and Consumer clients to use TLS handshakes.</p>
+<pre><code class="language-properties"># On the Kafka Broker server-side configuration
+listeners=SSL://kafka-broker:9093
+ssl.keystore.location=/var/ssl/private/kafka.server.keystore.jks
+ssl.keystore.password=secure_keystore_password
+ssl.truststore.location=/var/ssl/private/kafka.server.truststore.jks
+</code></pre>
+
+<h2>Authentication (SASL)</h2>
+<p><strong>SASL (Simple Authentication and Security Layer)</strong> answers the question: "Who are you?" SSL encrypts the message payload, but it doesn't inherently prove the Producer's identity.</p>
+<p>The most popular SASL mechanisms used in enterprise Kafka clusters are:</p>
+<ul>
+  <li><strong>SASL/PLAIN:</strong> The simplest form. The Producer sends a username and password in the connection header. This is vulnerable unless wrapped tightly with SSL/TLS.</li>
+  <li><strong>SASL/SCRAM:</strong> Significantly more robust. Passwords are cryptographically hashed using a salt challenge. Even if an attacker intercepts the authentication exchange, they cannot recover the raw password.</li>
+  <li><strong>SASL/GSSAPI (Kerberos):</strong> The most common protocol in large enterprise environments. The identity is managed by a massive central Kerberos server, enabling single sign-on across thousands of services.</li>
+</ul>
+
+<h2>Authorization (Access Control Lists - ACLs)</h2>
+<p>Once you know <em>who</em> is connecting, ACLs control <em>what</em> they are allowed to do. With ACLs, you can explicitly grant or deny fine-grained permissions per user, per topic, per operation.</p>
+<pre><code class="language-bash"># Grant user 'payments-service' permission to WRITE to the 'transactions' topic only
+bin/kafka-acls.sh --authorizer-properties \
+  --add --allow-principal User:payments-service \
+  --operation Write --topic transactions
+
+# Grant 'analytics-team' permission only to READ from 'transactions'
+bin/kafka-acls.sh --authorizer-properties \
+  --add --allow-principal User:analytics-team \
+  --operation Read --topic transactions --group analytics-consumer-group
+</code></pre>
+<p>This ensures that the Payments microservice can write new transaction events but can never read from the topic. The Analytics team can read existing events but can never produce new ones. Any unauthorized access attempt is immediately rejected and logged.</p>

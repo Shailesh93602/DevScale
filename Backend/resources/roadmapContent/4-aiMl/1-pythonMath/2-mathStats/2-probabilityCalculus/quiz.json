@@ -1,0 +1,118 @@
+{
+    "title": "Probability & Calculus Quiz",
+    "description": "Test your knowledge on Gradients, Derivatives, and Probability distributions.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "In the context of training a Neural Network, what mathematical concept is used to determine the 'slope' of the error curve to figure out which direction to adjust the weights?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Integral Calculus",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Matrix Multiplication",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Derivatives (Calculus)",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Trigonometry",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the name of the core optimization algorithm that calculates gradients and takes small 'steps' downwards to minimize model error?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "K-Means Clustering",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Gradient Descent",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Random Forest",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Binary Search",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "The famous 'Bell Curve' shape represents which foundational concept in probability?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Uniform Distribution",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Normal (Gaussian) Distribution",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Poisson Distribution",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Binomial Distribution",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "If a feature in your dataset has a 'Variance' of exactly zero, what does that mean for your Machine Learning model?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It means every row in that column has the exact same value, making it completely useless for prediction. It should be dropped.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It means the feature perfectly predicts the target variable.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It means the data is perfectly normalized.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It means you must apply a Log transform.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which foundational theorem calculates 'Conditional Probability' (the likelihood of an event occurring given another event has already occurred)?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Pythagorean Theorem",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Central Limit Theorem",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Bayes' Theorem",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Fermat's Last Theorem",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

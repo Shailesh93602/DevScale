@@ -1,0 +1,10 @@
+[
+  {"input":"{\"n\":5, \"edges\":[[0,1],[1,2],[3,4]]}","output":"2","explanation":"Two components","is_hidden":false},
+  {"input":"{\"n\":5, \"edges\":[[0,1],[1,2],[2,3],[3,4]]}","output":"1","explanation":"One connected line","is_hidden":false},
+  {"input":"{\"n\":1, \"edges\":[]}","output":"1","explanation":"Single node","is_hidden":false},
+  {"input":"{\"n\":3, \"edges\":[]}","output":"3","explanation":"Three separate nodes","is_hidden":true},
+  {"input":"{\"n\":4, \"edges\":[[2,3],[1,2],[0,1]]}","output":"1","explanation":"Fully connected reversed edges","is_hidden":true},
+  {"input":"{\"n\":6, \"edges\":[[0,1],[1,2],[3,4],[4,5]]}","output":"2","explanation":"Two parallel lines","is_hidden":true},
+  {"input":"{\"n\":7, \"edges\":[[0,1],[1,2],[2,0],[3,4],[4,5],[5,6],[6,3]]}","output":"2","explanation":"Two cycles","is_hidden":true},
+  {"input":"{\"n\":4, \"edges\":[[0,3],[1,2]]}","output":"2","explanation":"Two edge pairs","is_hidden":true}
+]

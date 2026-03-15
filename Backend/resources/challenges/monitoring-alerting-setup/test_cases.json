@@ -1,0 +1,44 @@
+[
+  {
+    "input": "{\"serviceName\": \"api-gateway\", \"slo\": {\"availability\": 99.9, \"latencyP99Ms\": 500}, \"alertChannels\": [\"slack\", \"pagerduty\"]}",
+    "output": "Prometheus rules with recording rules and multi-burn-rate alerts, Grafana dashboard with 4 RED panels, Alertmanager with slack+pagerduty routing",
+    "explanation": "Standard API gateway with 99.9% SLO and 500ms P99 latency target",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"serviceName\": \"payment-service\", \"slo\": {\"availability\": 99.99, \"latencyP99Ms\": 200}, \"alertChannels\": [\"slack\", \"pagerduty\"]}",
+    "output": "Error budget 0.0001, fast burn threshold 0.00144, latency threshold 0.2s",
+    "explanation": "Four-nines SLO with tight latency requirement",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"serviceName\": \"batch-processor\", \"slo\": {\"availability\": 99.0, \"latencyP99Ms\": 5000}, \"alertChannels\": [\"slack\"]}",
+    "output": "Error budget 0.01, slack-only alerting, latency threshold 5.0s",
+    "explanation": "Relaxed SLOs with slack-only alerts",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"serviceName\": \"auth-service\", \"slo\": {\"availability\": 99.95, \"latencyP99Ms\": 100}, \"alertChannels\": [\"slack\", \"pagerduty\"]}",
+    "output": "Recording rules for auth-service job, alert names prefixed with auth-service, latency threshold 0.1s",
+    "explanation": "Auth service with strict latency requirements",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"serviceName\": \"api-gateway\", \"slo\": {\"availability\": 99.9, \"latencyP99Ms\": 500}, \"alertChannels\": [\"slack\"]}",
+    "output": "Dashboard with 4 panels: QPS, Error Rate, Latency Distribution (P50/P90/P99), Error Budget gauge",
+    "explanation": "Verify Grafana dashboard includes all RED method panels",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"serviceName\": \"search-service\", \"slo\": {\"availability\": 99.5, \"latencyP99Ms\": 1000}, \"alertChannels\": [\"slack\", \"pagerduty\"]}",
+    "output": "Error budget 0.005, fast burn alert at 0.072, slow burn at 0.005, latency alert at 1.0s",
+    "explanation": "Verify correct threshold calculations for moderate SLOs",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"serviceName\": \"api-gateway\", \"slo\": {\"availability\": 99.9, \"latencyP99Ms\": 500}, \"alertChannels\": [\"slack\", \"pagerduty\"]}",
+    "output": "All alert rules include 'for' duration, severity labels (critical/warning), service label",
+    "explanation": "Alert rules must have anti-flapping durations and proper labels",
+    "is_hidden": true
+  }
+]

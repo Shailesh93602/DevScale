@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "Why does React Native Gesture Handler produce smoother animations than TouchableOpacity when JavaScript is busy?",
+            "options": [
+                "Gesture Handler uses faster JavaScript algorithms for touch detection.",
+                "Gesture Handler runs natively on the UI thread — it never crosses the JS bridge for gesture recognition. When the JS thread is busy (data parsing, component re-renders), TouchableOpacity's touch handling queues behind other JS work, causing perceptible delays. Gesture Handler's native recognizer responds immediately regardless of JS thread load, because the UI thread is always available for input handling.",
+                "Gesture Handler uses the GPU for touch calculations while TouchableOpacity uses CPU.",
+                "Gesture Handler batches touch events and processes them more efficiently in batches."
+            ],
+            "answer": "Gesture Handler runs natively on the UI thread — it never crosses the JS bridge for gesture recognition. When the JS thread is busy (data parsing, component re-renders), TouchableOpacity's touch handling queues behind other JS work, causing perceptible delays. Gesture Handler's native recognizer responds immediately regardless of JS thread load, because the UI thread is always available for input handling.",
+            "explanation": "Real-world test: on a screen that fetches and renders 200 list items (JS thread spike), pressing a TouchableOpacity button has a noticeable ~150ms delay before the press feedback appears. The same button wrapped in Gesture Handler responds instantly because the feedback happens on the UI thread, completely independent of the JS spike."
+        },
+        {
+            "question": "In the swipe-to-delete implementation, why must .detach() be called when setting the worklet value inside onEnd?",
+            "options": [
+                ".detach() is not required — it's an optional performance optimization for worklets.",
+                "The onEnd callback in React Native Gesture Handler runs on the UI thread as a worklet. Functions called from worklets (including the callback passed to withSpring) also run on the UI thread. runOnJS() is needed when you want to call a regular JavaScript function (like a React state setter or navigation action) FROM a worklet — it schedules the JS call safely across the thread boundary.",
+                ".detach() prevents the gesture handler from receiving additional events after the gesture ends.",
+                "Without .detach(), gesture animations get stuck in the middle of a spring animation."
+            ],
+            "answer": "The onEnd callback in React Native Gesture Handler runs on the UI thread as a worklet. Functions called from worklets (including the callback passed to withSpring) also run on the UI thread. runOnJS() is needed when you want to call a regular JavaScript function (like a React state setter or navigation action) FROM a worklet — it schedules the JS call safely across the thread boundary.",
+            "explanation": "Threading rule: worklets run on UI thread, React state setters run on JS thread. Calling setState from a worklet without runOnJS() causes a crash with 'Tried to call JavaScript function from native code on the main thread'. runOnJS(onDelete)(item.id) wraps the call correctly so it runs on JS thread."
+        },
+        {
+            "question": "When composing simultaneous gestures (e.g., both pan and pinch active at the same time), what is the difference between Gesture.Simultaneous() and Gesture.Exclusive()?",
+            "options": [
+                "Simultaneous allows all gestures to activate at once; Exclusive allows only the fastest-detected gesture.",
+                "Gesture.Simultaneous(...gestures) allows all specified gestures to be active and recognized at the same time — enabling pinch + pan simultaneously for a maps-style zooming experience. Gesture.Exclusive(...gestures) allows only ONE of the specified gestures to be active — when one activates, others are cancelled. Use Exclusive for swipe-to-delete vs scroll (only one should win), Simultaneous for zoom+pan.",
+                "Exclusive gestures run on the UI thread; Simultaneous gestures run on the JS thread.",
+                "Simultaneous gestures only work on iOS; Exclusive gestures work cross-platform."
+            ],
+            "answer": "Gesture.Simultaneous(...gestures) allows all specified gestures to be active and recognized at the same time — enabling pinch + pan simultaneously for a maps-style zooming experience. Gesture.Exclusive(...gestures) allows only ONE of the specified gestures to be active — when one activates, others are cancelled. Use Exclusive for swipe-to-delete vs scroll (only one should win), Simultaneous for zoom+pan.",
+            "explanation": "Google Maps uses Simultaneous(pinch, pan, rotate) so users can zoom and scroll with two fingers simultaneously. A swipe-to-delete list uses Exclusive(swipe, scroll) so sideways swipe doesn't also scroll the list. Choosing the wrong composition type causes one gesture to unexpectedly cancel the other."
+        }
+    ]
+}

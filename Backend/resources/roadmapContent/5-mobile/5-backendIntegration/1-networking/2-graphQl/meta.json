@@ -1,0 +1,6 @@
+{
+    "id": "2-graphQl",
+    "title": "GraphQL with Apollo",
+    "description": "Fetching and managing data efficiently with Apollo Client and GraphQL.",
+    "order": 2
+}

@@ -1,0 +1,42 @@
+{
+  "title": "Minimum Window Substring",
+  "slug": "minimum-window-substring",
+  "difficulty": "Hard",
+  "category": "algorithms",
+  "points": 200,
+  "tags": [
+    "string",
+    "hash-table",
+    "sliding-window"
+  ],
+  "company_tags": [
+    "LinkedIn",
+    "Amazon",
+    "Facebook",
+    "Microsoft",
+    "Airbnb"
+  ],
+  "topic_tags": [
+    "strings",
+    "sliding window"
+  ],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "Two strings `s` and `t`.",
+  "output_format": "The minimum window substring of `s` such that every character in `t` (including duplicates) is included.",
+  "example_input": "s = \"ADOBECODEBANC\", t = \"ABC\"",
+  "example_output": "\"BANC\"",
+  "constraints": "- `m == s.length`\n- `n == t.length`\n- `1 <= m, n <= 10^5`\n- `s` and `t` consist of uppercase and lowercase English letters.",
+  "function_signature": "function minWindow(s: string, t: string): string {}",
+  "status": "ACTIVE"
+}

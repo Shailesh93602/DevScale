@@ -1,0 +1,20 @@
+{
+  "title": "Surrounded Regions",
+  "slug": "surrounded-regions",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["array","depth-first-search","breadth-first-search","union-find","matrix"],
+  "company_tags": ["Amazon","Google","Microsoft"],
+  "topic_tags": ["graphs","depth-first search","matrix"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An `m x n` matrix `board` containing `'X'` and `'O'`.",
+  "output_format": "The `board` modified in-place to capture all surrounded regions.",
+  "example_input": "board = [[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"O\",\"O\",\"X\"],[\"X\",\"X\",\"O\",\"X\"],[\"X\",\"O\",\"X\",\"X\"]]",
+  "example_output": "[[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"O\",\"X\",\"X\"]]",
+  "constraints": "- `m == board.length`\n- `n == board[i].length`\n- `1 <= m, n <= 200`\n- `board[i][j]` is `'X'` or `'O'`.",
+  "function_signature": "function solve(board: string[][]): void {}",
+  "status": "ACTIVE"
+}

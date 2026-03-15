@@ -1,0 +1,93 @@
+<h1>GraphQL Resolvers</h1>
+<p>A <strong>resolver</strong> is a function that returns data for a specific field in your GraphQL schema. Every field in a query is backed by a resolver — the bridge between your schema and your data sources.</p>
+
+<h2>Resolver Signature</h2>
+<p>Every resolver receives four arguments:</p>
+<pre><code>fieldName(parent, args, context, info) {
+  // parent  → result from the parent resolver
+  // args    → arguments passed to the field
+  // context → shared object (db, user session, etc.)
+  // info    → AST info about the query (rarely needed)
+}</code></pre>
+
+<h2>Basic Resolver Map</h2>
+<pre><code>const resolvers = {
+  Query: {
+    user: async (_parent, { id }, { db }) => {
+      return db.user.findUnique({ where: { id } });
+    },
+    allUsers: async (_parent, _args, { db }) => {
+      return db.user.findMany();
+    },
+  },
+  Mutation: {
+    createUser: async (_parent, { name, email }, { db }) => {
+      return db.user.create({ data: { name, email } });
+    },
+  },
+  User: {
+    posts: async (parent, _args, { db }) => {
+      return db.post.findMany({ where: { authorId: parent.id } });
+    },
+  },
+};</code></pre>
+
+<h2>Context — Passing Shared Resources</h2>
+<p>Context is created once per request and passed to every resolver. Use it for your database client, authenticated user, and services:</p>
+<pre><code>const server = new ApolloServer({ typeDefs, resolvers });
+
+const { url } = await startStandaloneServer(server, {
+  context: async ({ req }) => {
+    const token = req.headers.authorization || '';
+    const user = verifyToken(token); // decode JWT
+    const db = new PrismaClient();
+    return { db, user };
+  },
+});</code></pre>
+
+<h2>Authentication Guard in Resolvers</h2>
+<pre><code>Mutation: {
+  deletePost: async (_parent, { id }, { db, user }) => {
+    if (!user) throw new GraphQLError('Not authenticated', {
+      extensions: { code: 'UNAUTHENTICATED' },
+    });
+    return db.post.delete({ where: { id } });
+  },
+}</code></pre>
+
+<h2>The N+1 Problem</h2>
+<p>Without batching, fetching 100 users and their posts triggers 101 DB queries (1 for users + 100 individual post queries). Use <strong>DataLoader</strong> to batch them:</p>
+<pre><code>import DataLoader from 'dataloader';
+
+const postLoader = new DataLoader(async (userIds) => {
+  const posts = await db.post.findMany({
+    where: { authorId: { in: userIds } },
+  });
+  return userIds.map(id => posts.filter(p => p.authorId === id));
+});
+
+// In context:
+return { db, postLoader };
+
+// In User resolver:
+User: {
+  posts: (parent, _args, { postLoader }) => postLoader.load(parent.id),
+}</code></pre>
+
+<h2>Error Handling</h2>
+<pre><code>import { GraphQLError } from 'graphql';
+
+throw new GraphQLError('Resource not found', {
+  extensions: {
+    code: 'NOT_FOUND',
+    http: { status: 404 },
+  },
+});</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always use DataLoader for 1-to-many or many-to-many relationships.</li>
+  <li>Keep resolvers thin — move business logic to service classes.</li>
+  <li>Validate arguments before hitting the database.</li>
+  <li>Use context for auth checks rather than repeating them in each resolver.</li>
+</ul>

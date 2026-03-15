@@ -1,0 +1,20 @@
+{
+  "title": "Replace Words",
+  "slug": "replace-words",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["array","hash-table","string","trie"],
+  "company_tags": ["Google","Amazon","Uber"],
+  "topic_tags": ["tries","arrays","strings"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An array of strings `dictionary` and a string `sentence`.",
+  "output_format": "The modified sentence where words are replaced by their shortest root in the dictionary.",
+  "example_input": "dictionary = [\"cat\",\"bat\",\"rat\"], sentence = \"the cattle was rattled by the battery\"",
+  "example_output": "\"the cat was rat by the bat\"",
+  "constraints": "- `1 <= dictionary.length <= 1000`\n- `1 <= dictionary[i].length <= 100`\n- `1 <= sentence.length <= 10^5`\n- `dictionary[i]` and `sentence` consist of only lowercase letters and spaces.\n- The number of words in `sentence` is in the range `[1, 1000]`.",
+  "function_signature": "function replaceWords(dictionary: string[], sentence: string): string {}",
+  "status": "ACTIVE"
+}

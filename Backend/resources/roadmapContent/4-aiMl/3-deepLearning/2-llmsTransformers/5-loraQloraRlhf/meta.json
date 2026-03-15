@@ -1,0 +1,4 @@
+{
+    "name": "Advanced Fine-Tuning: LoRA, QLoRA & RLHF",
+    "description": "Efficiently adapting large language models to specific tasks without full parameter updates. Understanding LoRA (Low-Rank Adaptation) mathematics and why it works, QLoRA's 4-bit quantization for consumer GPU fine-tuning, RLHF (Reinforcement Learning from Human Feedback) for instruction following, and using Hugging Face PEFT and TRL libraries in practice."
+}

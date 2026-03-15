@@ -1,0 +1,20 @@
+{
+  "title": "Number of Islands",
+  "slug": "number-of-islands",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["array","depth-first-search","breadth-first-search","union-find","matrix"],
+  "company_tags": ["Amazon","Facebook","Microsoft","Google","Bloomberg","Apple"],
+  "topic_tags": ["graphs","depth-first search","breadth-first search"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An `m x n` 2D binary grid `grid` which represents a map of `'1'`s (land) and `'0'`s (water).",
+  "output_format": "The number of islands.",
+  "example_input": "grid = [[\"1\",\"1\",\"1\",\"1\",\"0\"],[\"1\",\"1\",\"0\",\"1\",\"0\"],[\"1\",\"1\",\"0\",\"0\",\"0\"],[\"0\",\"0\",\"0\",\"0\",\"0\"]]",
+  "example_output": "1",
+  "constraints": "- `m == grid.length`\n- `n == grid[i].length`\n- `1 <= m, n <= 300`\n- `grid[i][j]` is `'0'` or `'1'`.",
+  "function_signature": "function numIslands(grid: string[][]): number {}",
+  "status": "ACTIVE"
+}

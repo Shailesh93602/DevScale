@@ -1,0 +1,19 @@
+{
+  "title": "Fibonacci Number",
+  "slug": "fibonacci-number",
+  "difficulty": "Easy",
+  "category": "algorithms",
+  "points": 50,
+  "tags": ["dynamic-programming", "math", "recursion"],
+  "company_tags": ["Amazon", "Google", "Apple", "Facebook"],
+  "topic_tags": ["dynamic programming", "math"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer `n`.",
+  "output_format": "The nth Fibonacci number.",
+  "example_input": "n = 4",
+  "example_output": "3",
+  "constraints": "- `0 <= n <= 30`",
+  "function_signature": "function fib(n: number): number {}",
+  "status": "ACTIVE"
+}

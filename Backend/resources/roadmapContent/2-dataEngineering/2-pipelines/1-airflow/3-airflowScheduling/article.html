@@ -1,0 +1,95 @@
+<h1>Airflow Scheduling &amp; Monitoring</h1>
+<p>Airflow's scheduler is the heart of the platform — it determines when DAGs run. Understanding schedule intervals, SLAs, backfilling, and the Airflow UI is critical for production pipelines.</p>
+
+<h2>Schedule Intervals</h2>
+<pre><code># Cron expressions
+@dag(schedule='0 6 * * *')   # daily at 6 AM UTC
+@dag(schedule='0 */4 * * *') # every 4 hours
+@dag(schedule='@hourly')
+@dag(schedule='@daily')
+@dag(schedule='@weekly')
+@dag(schedule='@monthly')
+@dag(schedule=None)          # manual trigger only
+
+# Also accepts timedelta
+from datetime import timedelta
+@dag(schedule=timedelta(hours=6))</code></pre>
+
+<h2>Key DAG Parameters</h2>
+<pre><code>@dag(
+    dag_id='etl_pipeline',
+    start_date=datetime(2024, 1, 1),
+    schedule='@daily',
+    catchup=False,         # don't backfill historical runs
+    max_active_runs=1,     # prevent parallel runs
+    tags=['production', 'etl'],
+    default_args={
+        'retries': 3,
+        'retry_delay': timedelta(minutes=5),
+        'email_on_failure': True,
+        'email': ['alerts@company.com'],
+    }
+)</code></pre>
+
+<h2>Backfilling</h2>
+<p>Run a DAG for historical dates (e.g., after deploying a new pipeline):</p>
+<pre><code># Via CLI
+airflow dags backfill \
+  --start-date 2024-01-01 \
+  --end-date 2024-03-01 \
+  etl_pipeline</code></pre>
+<p>Set <code>catchup=False</code> to prevent automatic backfilling on startup.</p>
+
+<h2>SLAs (Service Level Agreements)</h2>
+<pre><code>from datetime import timedelta
+
+@task(sla=timedelta(hours=2))  # alert if task takes > 2h
+def long_running_task():
+    ...
+
+# DAG-level SLA callback
+def sla_miss_callback(dag, task_list, blocking_task_list, slas, blocking_tis):
+    send_slack_alert(f"SLA missed for tasks: {task_list}")
+
+@dag(sla_miss_callback=sla_miss_callback)</code></pre>
+
+<h2>Retries &amp; Alerting</h2>
+<pre><code>@task(
+    retries=3,
+    retry_delay=timedelta(minutes=10),
+    retry_exponential_backoff=True,
+    email_on_failure=True,
+    on_failure_callback=lambda ctx: alert_slack(ctx),
+)
+def fragile_task():
+    ...</code></pre>
+
+<h2>Airflow UI Key Features</h2>
+<ul>
+  <li><strong>Graph View</strong> — visualise DAG task dependencies</li>
+  <li><strong>Grid View</strong> — per-run task status history</li>
+  <li><strong>Gantt Chart</strong> — identify bottleneck tasks</li>
+  <li><strong>Task Logs</strong> — full stdout/stderr per task run</li>
+  <li><strong>Connections</strong> — manage DB/API credentials</li>
+  <li><strong>Variables</strong> — key-value config store</li>
+</ul>
+
+<h2>Monitoring with Prometheus + Grafana</h2>
+<pre><code># airflow.cfg
+[metrics]
+statsd_on = True
+statsd_host = localhost
+statsd_port = 8125
+
+# Key metrics to watch:
+# airflow.dag.*.duration         → DAG run duration
+# airflow.task_instance.failures → task failure count
+# airflow.scheduler.heartbeat    → scheduler health</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Set <code>catchup=False</code> unless backfilling is intentional.</li>
+  <li>Use <code>max_active_runs=1</code> for pipelines that must not overlap.</li>
+  <li>Add SLA callbacks for critical pipelines to alert on-call.</li>
+  <li>Keep DAG files lightweight — no heavy imports at module level.</li>
+</ul>

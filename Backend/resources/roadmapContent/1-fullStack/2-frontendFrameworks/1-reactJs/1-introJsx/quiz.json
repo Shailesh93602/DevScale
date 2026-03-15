@@ -1,0 +1,74 @@
+{
+    "title": "React & JSX Quiz",
+    "description": "Test your foundational React and JSX knowledge.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the Virtual DOM in React?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A separate CSS file for components",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A lightweight in-memory copy of the real DOM used to batch and optimize updates",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A browser extension for debugging React",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The HTML rendered on the server",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why must every list item in React have a unique 'key' prop?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It is required by HTML5 spec",
+                    "isCorrect": false
+                },
+                {
+                    "text": "React uses keys to efficiently identify which items have changed, been added, or removed",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Keys are used for CSS styling",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Keys encrypt the data for security",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What attribute replaces 'class' in JSX?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "class",
+                    "isCorrect": false
+                },
+                {
+                    "text": "htmlClass",
+                    "isCorrect": false
+                },
+                {
+                    "text": "className",
+                    "isCorrect": true
+                },
+                {
+                    "text": "cssClass",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

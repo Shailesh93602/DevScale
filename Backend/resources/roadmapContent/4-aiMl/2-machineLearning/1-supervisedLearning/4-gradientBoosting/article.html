@@ -1,0 +1,86 @@
+<h1>Gradient Boosting: XGBoost, LightGBM & CatBoost</h1>
+<p>Gradient boosting consistently wins structured data (tabular) ML competitions. The winners of most Kaggle competitions use XGBoost, LightGBM, or CatBoost. Understanding why these algorithms work and how to tune them is one of the highest-value skills in applied ML.</p>
+
+<h2>How Gradient Boosting Works</h2>
+<p>Gradient boosting builds an ensemble of shallow decision trees sequentially. Each new tree is trained to predict the <em>residual errors</em> of all previously built trees — essentially a team of specialists where each member focuses on correcting the previous members' mistakes:</p>
+<pre><code class="language-text">Initial prediction: mean(y) = 50 (house price in $K)
+
+Tree 1: Learns: "if bedrooms > 3, add +20K"
+  → Current prediction: 50 + 20 = 70K, residual = actual - 70
+
+Tree 2: Learns: "if location == 'downtown', add +15K to the residual"
+  → Current prediction: 70 + 15 = 85K, residual = actual - 85
+
+Tree 3: Learns: "if age < 5 years, add +10K to the residual"
+  → Final prediction: 85 + 10 = 95K
+
+Each tree corrects the errors of all previous trees.
+Learning rate (0.01-0.3) shrinks each tree's contribution,
+requiring more trees but reducing overfitting.
+</code></pre>
+
+<h2>XGBoost</h2>
+<pre><code class="language-python">import xgboost as xgb
+from sklearn.model_selection import cross_val_score
+
+model = xgb.XGBClassifier(
+    n_estimators=500,        # Number of trees (use early stopping to find optimal)
+    max_depth=6,             # Tree depth — deeper = more complex = more overfit risk
+    learning_rate=0.05,      # Shrinkage — lower = more trees needed but better generalization
+    subsample=0.8,           # Use 80% of rows per tree (reduces variance)
+    colsample_bytree=0.8,    # Use 80% of features per tree (reduces variance)
+    min_child_weight=5,      # Min samples in leaf — key regularization parameter
+    reg_alpha=0.1,           # L1 regularization (sparse weights)
+    reg_lambda=1.0,          # L2 regularization (smooth weights)
+    scale_pos_weight=100,    # For imbalanced: ratio of negative/positive samples
+    eval_metric='auc',
+    early_stopping_rounds=50,  # Stop if val AUC doesn't improve for 50 rounds
+    random_state=42
+)
+
+model.fit(X_train, y_train,
+          eval_set=[(X_val, y_val)],
+          verbose=100)
+
+print(f"Best iteration: {model.best_iteration}")
+print(f"CV AUC: {cross_val_score(model, X, y, cv=5, scoring='roc_auc').mean():.4f}")
+</code></pre>
+
+<h2>LightGBM: Faster with Leaf-Wise Growth</h2>
+<pre><code class="language-python">import lightgbm as lgb
+
+# LightGBM is often 10-100x faster than XGBoost for large datasets
+# Key difference: grows trees leaf-wise (deepest most beneficial leaf)
+# vs XGBoost's level-wise growth
+model = lgb.LGBMClassifier(
+    n_estimators=1000,
+    max_depth=-1,         # No limit — leaf-wise growth is self-regularizing
+    num_leaves=63,        # Main complexity parameter: 2^max_depth = 2^6 = 64
+    learning_rate=0.03,
+    min_child_samples=20, # Equivalent to min_child_weight in XGBoost
+    subsample=0.8,
+    colsample_bytree=0.8,
+    reg_alpha=0.1,
+    reg_lambda=0.1,
+    verbose=-1
+)
+</code></pre>
+
+<h2>CatBoost: For High-Cardinality Categoricals</h2>
+<pre><code class="language-python">from catboost import CatBoostClassifier
+
+# CatBoost handles categorical features natively — no encoding needed!
+# Uses ordered target encoding with statistical guarantees against leakage
+cat_features = ['city', 'product_category', 'user_segment']  # Column indices or names
+
+model = CatBoostClassifier(
+    iterations=1000,
+    learning_rate=0.05,
+    depth=6,
+    cat_features=cat_features,  # Pass categoricals directly — no preprocessing!
+    eval_metric='AUC',
+    early_stopping_rounds=50,
+    verbose=100
+)
+model.fit(X_train, y_train, eval_set=(X_val, y_val))
+</code></pre>

@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What fundamental problem does Helm solve that raw Kubernetes YAML files cannot address well?",
+            "options": [
+                "Helm adds encryption to Kubernetes Secrets automatically.",
+                "Helm packages all related Kubernetes resources (Deployment, Service, Ingress, HPA, etc.) into a versioned, reusable, parameterized unit (Chart). Without Helm, managing environment-specific differences (dev vs staging vs prod) requires maintaining completely separate copies of all YAML files.",
+                "Helm automatically optimizes container resource requests and limits.",
+                "Helm replaces the kubectl command for all Kubernetes operations."
+            ],
+            "answer": "Helm packages all related Kubernetes resources (Deployment, Service, Ingress, HPA, etc.) into a versioned, reusable, parameterized unit (Chart). Without Helm, managing environment-specific differences (dev vs staging vs prod) requires maintaining completely separate copies of all YAML files.",
+            "explanation": "Without Helm, changing the replica count from 2 in staging to 8 in production means maintaining two completely separate YAML files. With Helm, it's one template + a values override file per environment."
+        },
+        {
+            "question": "What happens when you run 'helm rollback myapp-prod 1'?",
+            "options": [
+                "It deletes the current release and reinstalls from the Chart repository.",
+                "It reverts all Kubernetes resources managed by the 'myapp-prod' release back to exactly the state they were in at revision 1 — effectively undoing the last N deployments. Helm stores every release's manifest history, making rollbacks a single command.",
+                "It rolls back only the Docker image tag to the version used in revision 1.",
+                "It creates a snapshot of revision 1 for backup purposes without changing the live release."
+            ],
+            "answer": "It reverts all Kubernetes resources managed by the 'myapp-prod' release back to exactly the state they were in at revision 1 — effectively undoing the last N deployments. Helm stores every release's manifest history, making rollbacks a single command.",
+            "explanation": "Compare to manually rolling back: you'd need to find the old image tag, the old config values, and manually apply a previous version of every YAML file. Helm's rollback does all of this atomically in seconds."
+        },
+        {
+            "question": "What is the purpose of the '--dry-run --debug' flags when running 'helm upgrade'?",
+            "options": [
+                "It deploys to a sandbox cluster instead of the target cluster for testing.",
+                "It renders all the templates with the provided values and sends them to the Kubernetes API server for validation, but does NOT apply any changes. The output shows exactly what YAML would be applied, allowing engineers to catch configuration errors before they affect the live cluster.",
+                "It enables verbose logging in the Kubernetes pods after deployment.",
+                "It runs Helm in read-only mode, preventing any future changes until unlocked."
+            ],
+            "answer": "It renders all the templates with the provided values and sends them to the Kubernetes API server for validation, but does NOT apply any changes. The output shows exactly what YAML would be applied, allowing engineers to catch configuration errors before they affect the live cluster.",
+            "explanation": "'helm upgrade --dry-run --debug' is the Helm equivalent of 'terraform plan' — you see exactly what would change before committing. Essential for reviewing changes before a production deployment."
+        }
+    ]
+}

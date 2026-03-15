@@ -1,0 +1,4 @@
+{
+    "name": "Kubernetes Deployments",
+    "description": "ReplicaSets, Deployments, rolling updates, rollbacks, and self-healing pods."
+}

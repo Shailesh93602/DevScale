@@ -1,0 +1,4 @@
+{
+    "name": "Attention Mechanisms & The Transformer Architecture",
+    "description": "Understanding the architectural breakthrough that powers all modern foundation models. Deriving scaled dot-product attention from first principles, multi-head attention, positional encodings, encoder-decoder structure, how transformers overcome RNN's sequential bottleneck, and implementing a mini-transformer in PyTorch."
+}

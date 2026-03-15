@@ -1,0 +1,182 @@
+<h1>Accessing Native Device APIs with Expo</h1>
+<p>Modern mobile apps are defined by their ability to interact with the physical hardware of the device — the camera, GPS, biometric sensors, file system, and Bluetooth. Expo provides a comprehensive library of native API wrappers that let you access these features from JavaScript without writing a single line of Swift or Kotlin.</p>
+
+<h2>The Permission System</h2>
+<p>Both iOS and Android enforce strict privacy controls. Before accessing any sensitive hardware, your app must explicitly request and receive user permission. Attempting to access a hardware API without permission results in an instant crash or silent failure.</p>
+<p>Every permission request has three possible outcomes: <code>granted</code>, <code>denied</code>, or <code>undetermined</code> (never asked). Design your UI to handle all three:</p>
+<pre><code>import { Camera } from 'expo-camera';
+import { useState, useEffect } from 'react';
+
+export default function CameraScreen() {
+  const [permission, requestPermission] = Camera.useCameraPermissions();
+
+  if (!permission) {
+    // Permission status is loading
+    return &lt;ActivityIndicator /&gt;;
+  }
+
+  if (!permission.granted) {
+    return (
+      &lt;View&gt;
+        &lt;Text&gt;Camera access is required to scan QR codes.&lt;/Text&gt;
+        &lt;Button title="Grant Permission" onPress={requestPermission} /&gt;
+      &lt;/View&gt;
+    );
+  }
+
+  return &lt;Camera style={StyleSheet.absoluteFill} /&gt;;
+}</code></pre>
+
+<h2>Camera — expo-camera</h2>
+<pre><code>npx expo install expo-camera</code></pre>
+<pre><code>import { CameraView, CameraType } from 'expo-camera';
+import { useRef, useState } from 'react';
+
+export default function PhotoCamera() {
+  const [facing, setFacing] = useState&lt;CameraType&gt;('back');
+  const cameraRef = useRef&lt;CameraView&gt;(null);
+
+  const takePicture = async () =&gt; {
+    const photo = await cameraRef.current?.takePictureAsync({
+      quality: 0.8,          // 0.0 to 1.0 quality compression
+      base64: false,         // Set to true to get base64 string
+      exif: false,           // Include EXIF metadata (GPS, camera settings)
+    });
+    console.log('Photo URI:', photo?.uri); // Local file path
+  };
+
+  return (
+    &lt;CameraView ref={cameraRef} facing={facing} style={StyleSheet.absoluteFill}&gt;
+      &lt;Button title="Flip" onPress={() =&gt; setFacing(f =&gt; f === 'back' ? 'front' : 'back')} /&gt;
+      &lt;Button title="Take Photo" onPress={takePicture} /&gt;
+    &lt;/CameraView&gt;
+  );
+}</code></pre>
+
+<h2>Image Picker — expo-image-picker</h2>
+<p>Lets users select existing photos from their photo library or take a new one:</p>
+<pre><code>npx expo install expo-image-picker</code></pre>
+<pre><code>import * as ImagePicker from 'expo-image-picker';
+
+const pickImage = async () =&gt; {
+  // Opens the system photo library (no custom camera UI needed)
+  const result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    allowsEditing: true,   // Lets user crop before selecting
+    aspect: [1, 1],        // Crop to square
+    quality: 0.7,
+  });
+
+  if (!result.canceled) {
+    const { uri, width, height, fileSize } = result.assets[0];
+    // uri is a local file:// path — ready to upload or display in &lt;Image&gt;
+    await uploadToSupabase(uri);
+  }
+};
+
+const takePhoto = async () =&gt; {
+  // Opens the camera directly (still uses ImagePicker)
+  const result = await ImagePicker.launchCameraAsync({ quality: 0.8 });
+  if (!result.canceled) console.log(result.assets[0].uri);
+};</code></pre>
+
+<h2>Location — expo-location</h2>
+<pre><code>npx expo install expo-location</code></pre>
+<pre><code>import * as Location from 'expo-location';
+
+const getLocation = async () =&gt; {
+  const { status } = await Location.requestForegroundPermissionsAsync();
+  if (status !== 'granted') return;
+
+  // Get a single GPS fix (fastest)
+  const location = await Location.getCurrentPositionAsync({
+    accuracy: Location.Accuracy.Balanced, // Trades battery for accuracy
+  });
+  const { latitude, longitude, altitude, accuracy } = location.coords;
+  console.log(`${latitude}, ${longitude}`);
+
+  // Reverse geocoding — convert coords to a human-readable address
+  const [address] = await Location.reverseGeocodeAsync({ latitude, longitude });
+  console.log(`${address.street}, ${address.city}, ${address.country}`);
+};
+
+// Watch location continuously (for turn-by-turn navigation)
+const watchLocation = async () =&gt; {
+  const sub = await Location.watchPositionAsync(
+    { accuracy: Location.Accuracy.High, timeInterval: 1000, distanceInterval: 5 },
+    (location) =&gt; updateMapMarker(location.coords)
+  );
+  return () =&gt; sub.remove(); // Always clean up in useEffect return
+};</code></pre>
+
+<h2>Secure Storage — expo-secure-store</h2>
+<p>For sensitive values like auth tokens, API keys, or user credentials. On iOS, data is stored in the Secure Enclave (hardware-level encryption). On Android, it uses the Android Keystore system:</p>
+<pre><code>npx expo install expo-secure-store</code></pre>
+<pre><code>import * as SecureStore from 'expo-secure-store';
+
+// Store (encrypts automatically)
+await SecureStore.setItemAsync('auth_token', 'eyJhbGciOiJIUzI1...');
+
+// Retrieve
+const token = await SecureStore.getItemAsync('auth_token');
+
+// Delete
+await SecureStore.deleteItemAsync('auth_token');
+
+// Never use AsyncStorage for sensitive data — it's unencrypted plain text on disk!</code></pre>
+
+<h2>Sensors — expo-sensors</h2>
+<pre><code>npx expo install expo-sensors</code></pre>
+<pre><code>import { Accelerometer, Gyroscope, Barometer } from 'expo-sensors';
+
+// Accelerometer — detect shake gestures, step counting
+Accelerometer.setUpdateInterval(100); // 100ms = 10 updates per second
+const subscription = Accelerometer.addListener(({ x, y, z }) =&gt; {
+  const magnitude = Math.sqrt(x * x + y * y + z * z);
+  if (magnitude &gt; 2.5) triggerShakeAnimation(); // Shake detection
+});
+
+// Clean up when component unmounts
+return () =&gt; subscription.remove();
+
+// Gyroscope — detect device rotation (360° photo viewers, AR games)
+Gyroscope.addListener(({ x, y, z }) =&gt; {
+  // x, y, z are rotation rates in radians/second
+});</code></pre>
+
+<h2>Haptic Feedback — expo-haptics</h2>
+<pre><code>npx expo install expo-haptics</code></pre>
+<pre><code>import * as Haptics from 'expo-haptics';
+
+// Light, Medium, or Heavy impact feedback (like tapping a button)
+await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+
+// Success, Warning, or Error notification feedback
+await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+
+// Double-tap like light selection feedback
+await Haptics.selectionAsync();</code></pre>
+
+<h2>Config Plugins — Injecting Native Permissions</h2>
+<p>Every native permission string must be declared in <code>app.json</code>. Expo Config Plugins inject these automatically into <code>Info.plist</code> (iOS) and <code>AndroidManifest.xml</code> (Android) during <code>eas build</code>:</p>
+<pre><code>"plugins": [
+  ["expo-camera", {
+    "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera to take photos.",
+    "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone for video recording."
+  }],
+  ["expo-location", {
+    "locationWhenInUsePermission": "Allow $(PRODUCT_NAME) to access your location to show nearby stores.",
+    "locationAlwaysPermission": "Allow location access in background for delivery tracking."
+  }],
+  ["expo-image-picker", {
+    "photosPermission": "Allow $(PRODUCT_NAME) to access your photos to set a profile picture."
+  }]
+]</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always explain <em>why</em> you need a permission before requesting it — show a custom in-app dialog before triggering the OS permission prompt.</li>
+  <li>Request permissions only when they are actually needed (lazy permission), not on app launch — users are more likely to grant a permission in context.</li>
+  <li>Test permissions on a physical device, not a simulator — simulators don't always accurately reflect the real permission prompt behavior.</li>
+  <li>Store auth tokens in <code>expo-secure-store</code>, never in <code>AsyncStorage</code> — AsyncStorage stores plain text files readable by other apps on non-encrypted Android devices.</li>
+</ul>

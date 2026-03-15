@@ -1,0 +1,4 @@
+{
+    "name": "Gesture Handling & Touch Interactions",
+    "description": "Building native-feeling touch interactions in React Native. Covering React Native Gesture Handler (RNGH) and why it replaces the JS responder system, implementing swipe-to-delete, pinch-to-zoom, pan gestures, combining multiple gestures with Simultaneous/Exclusive handlers, and building a Tinder-like swipe card using Gesture Handler + Reanimated."
+}

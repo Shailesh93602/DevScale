@@ -1,0 +1,4 @@
+{
+    "name": "Caching Strategies & CDNs",
+    "description": "Drastically reducing server load. Mastering Browser Caching (Cache-Control), understanding Edge Delivery via CDNs (Content Delivery Networks), and implementing robust Redis in-memory caching layers."
+}

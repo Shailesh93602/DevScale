@@ -1,0 +1,6 @@
+[
+  "Start with the token bucket algorithm: maintain a bucket of tokens per client. Each request consumes one token. Tokens refill at a fixed rate. If no tokens remain, deny the request.",
+  "For the sliding window counter, keep counts for both the current and previous time windows. Estimate the count using a weighted sum: previousCount * (1 - elapsedFraction) + currentCount. This approximation provides smooth rate limiting.",
+  "In a distributed system, use Redis INCR for atomic counting. To avoid race conditions between check and increment, use a Lua script that atomically checks the count and increments it only if under the limit.",
+  "Return useful headers: X-RateLimit-Remaining (how many requests left), X-RateLimit-Reset (when the window resets), and Retry-After (seconds to wait when rate limited). These help clients implement proper backoff."
+]

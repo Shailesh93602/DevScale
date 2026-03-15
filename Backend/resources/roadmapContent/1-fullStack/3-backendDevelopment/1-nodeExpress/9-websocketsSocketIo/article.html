@@ -1,0 +1,103 @@
+<h1>WebSockets & Socket.io</h1>
+<p>Traditional HTTP represents a unidirectional, request-response model: the client asks for data, the server replies, and the connection closes. If the server has new data (like a chat message), it cannot initiate contact with the client. <strong>WebSockets</strong> solve this by establishing a persistent, bi-directional, real-time connection.</p>
+
+<h2>WebSockets vs HTTP Polling</h2>
+<p>Before WebSockets, applications used "Long Polling" — writing a <code>setInterval</code> on the frontend to ping the server every 2 seconds asking "Any new messages?". This creates massive overhead (HTTP headers, TCP handshakes) and strains the server. WebSockets keep a single continuous TCP pipe open, transmitting tiny, lightweight data frames instantly.</p>
+
+<h2>Socket.io over Native WebSockets</h2>
+<p>While browsers have a native <code>WebSocket</code> API, the community standard is <strong>Socket.io</strong>. Socket.io sits on top of WebSockets and provides crucial features that bare WebSockets lack:</p>
+<ul>
+  <li><strong>Automatic Reconnection:</strong> If the user's WiFi drops, Socket.io automatically manages reconnecting and buffering messages.</li>
+  <li><strong>Fallbacks:</strong> If a corporate firewall completely blocks WebSocket traffic (port 80/443 upgrade), it gracefully falls back to HTTP Long Polling.</li>
+  <li><strong>Rooms & Namespaces:</strong> Easily target messages to specific groups of users (e.g., "Chat Room A" only).</li>
+</ul>
+
+<h2>Basic Socket.io Setup in Express</h2>
+<p>Because WebSockets rely on upgrading the core HTTP server, you cannot attach Socket.io directly to the Express <code>app</code> object. You must attach it to the underlying Node HTTP server.</p>
+
+<pre><code>const express = require('express');
+const { createServer } = require('http'); // Native Node.js module
+const { Server } = require('socket.io');
+
+const app = express();
+// 1. Wrap Express app inside native HTTP server
+const httpServer = createServer(app);
+// 2. Bind Socket.io to the HTTP server, configuring CORS for frontend
+const io = new Server(httpServer, {
+  cors: { origin: "http://localhost:3000" }
+});
+
+// 3. Listen for incoming connections
+io.on('connection', (socket) =&gt; {
+  console.log(`User connected: ${socket.id}`);
+  
+  // Listen for a custom event from this specific client
+  socket.on('send_message', (data) =&gt; {
+    console.log("Message received:", data);
+    
+    // Broadcast message to EVERYONE (including sender)
+    io.emit('receive_message', data);
+    
+    // Broadcast to everyone EXCEPT the sender
+    // socket.broadcast.emit('receive_message', data);
+  });
+
+  socket.on('disconnect', () =&gt; {
+    console.log(`User disconnected: ${socket.id}`);
+  });
+});
+
+// IMPORTANT: Listen on httpServer, NOT app!
+httpServer.listen(3001, () =&gt; {
+  console.log('Server running on port 3001');
+});</code></pre>
+
+<h2>Rooms: Grouping Connections</h2>
+<p>Rooms are arbitrary channels that sockets can join or leave. They are perfect for chat rooms, game lobbies, or specific document editing sessions.</p>
+
+<pre><code>io.on('connection', (socket) =&gt; {
+  
+  socket.on('join_room', (roomId) =&gt; {
+    socket.join(roomId);
+    console.log(`User ${socket.id} joined room: ${roomId}`);
+    
+    // Notify others in the room
+    socket.to(roomId).emit('notification', `A new user joined!`);
+  });
+
+  socket.on('send_room_message', ({ roomId, message }) =&gt; {
+    // Emits specifically to clients in that room ONLY
+    io.to(roomId).emit('receive_room_message', message);
+  });
+
+});</code></pre>
+
+<h2>Authenticating Socket Connections</h2>
+<p>It is dangerous to allow anyone to connect to your WebSockets. You should use a middleware in Socket.io to verify JWT tokens before allowing the connection to establish.</p>
+
+<pre><code>const jwt = require('jsonwebtoken');
+
+// Socket.io middleware runs before 'connection' is finalized
+io.use((socket, next) =&gt; {
+  // Clients pass the token inside the socket "auth" object during initialization
+  const token = socket.handshake.auth.token;
+  
+  if (!token) return next(new Error("Authentication error: No Token"));
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // Attach user payload to the socket object!
+    socket.user = decoded; 
+    next();
+  } catch(err) {
+    next(new Error("Authentication error: Invalid Token"));
+  }
+});
+
+io.on('connection', (socket) =&gt; {
+  console.log(`Authenticated user connected: ${socket.user.userId}`);
+});</code></pre>
+
+<h2>Scaling WebSockets (The Redis Adapter)</h2>
+<p>Stateful WebSockets clash with stateless horizontally-scaled servers. If you have 3 Node.js servers behind a Load Balancer, User A might connect to Server 1, and User B to Server 2. If User A emits a message to a room, Server 1 doesn't know User B exists on Server 2!</p>
+<p>To solve this, you must use the <strong>Socket.io Redis Adapter</strong>. It utilizes a Redis database as a Pub/Sub message broker. When Server 1 emits a message, it sends it to Redis, which silently forwards it to all other servers, ensuring User B gets the message seamlessly.</p>

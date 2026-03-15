@@ -1,0 +1,19 @@
+{
+  "title": "N-th Tribonacci Number",
+  "slug": "tribonacci",
+  "difficulty": "Easy",
+  "category": "algorithms",
+  "points": 50,
+  "tags": ["dynamic-programming", "math"],
+  "company_tags": ["Amazon", "Facebook", "Google"],
+  "topic_tags": ["dynamic programming", "math"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer `n`.",
+  "output_format": "The nth Tribonacci number.",
+  "example_input": "n = 4",
+  "example_output": "4",
+  "constraints": "- `0 <= n <= 37`\n- The answer is guaranteed to fit within a 32-bit integer.",
+  "function_signature": "function tribonacci(n: number): number {}",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,73 @@
+<h1>Advanced SQL — Window Functions & CTEs</h1>
+<p>These advanced SQL features are what separate junior analysts from senior data engineers. They enable complex analytics without subqueries or application-level loops.</p>
+
+<h2>Common Table Expressions (CTEs)</h2>
+<pre><code>-- CTEs improve readability by naming intermediate results
+WITH monthly_revenue AS (
+  SELECT
+    DATE_TRUNC('month', order_date) AS month,
+    SUM(amount) AS revenue
+  FROM orders
+  WHERE status = 'completed'
+  GROUP BY 1
+),
+revenue_growth AS (
+  SELECT
+    month,
+    revenue,
+    LAG(revenue) OVER (ORDER BY month) AS prev_revenue
+  FROM monthly_revenue
+)
+SELECT
+  month,
+  revenue,
+  ROUND((revenue - prev_revenue) / prev_revenue * 100, 2) AS growth_pct
+FROM revenue_growth
+ORDER BY month;</code></pre>
+
+<h2>Window Functions</h2>
+<pre><code>-- OVER() clause makes it a window function — calculates per row, not group
+SELECT
+  employee_name,
+  department,
+  salary,
+  -- Ranking within each department
+  RANK()       OVER (PARTITION BY department ORDER BY salary DESC) AS dept_rank,
+  ROW_NUMBER() OVER (PARTITION BY department ORDER BY salary DESC) AS row_num,
+  DENSE_RANK() OVER (PARTITION BY department ORDER BY salary DESC) AS dense_rank,
+
+  -- Running totals
+  SUM(salary)  OVER (PARTITION BY department ORDER BY hire_date) AS running_dept_total,
+
+  -- Lag/Lead — compare to previous/next row
+  LAG(salary,  1) OVER (ORDER BY hire_date) AS prev_hire_salary,
+  LEAD(salary, 1) OVER (ORDER BY hire_date) AS next_hire_salary,
+
+  -- Percentile
+  NTILE(4) OVER (ORDER BY salary DESC) AS salary_quartile
+FROM employees;</code></pre>
+
+<h2>Recursive CTEs</h2>
+<pre><code>-- Traverse hierarchies (org charts, file systems, categories)
+WITH RECURSIVE org_tree AS (
+  -- Anchor: start with CEO
+  SELECT id, name, manager_id, 0 AS level
+  FROM employees WHERE manager_id IS NULL
+
+  UNION ALL
+
+  -- Recursive: add each employee's reports
+  SELECT e.id, e.name, e.manager_id, ot.level + 1
+  FROM employees e
+  INNER JOIN org_tree ot ON e.manager_id = ot.id
+)
+SELECT * FROM org_tree ORDER BY level, name;</code></pre>
+
+<h2>EXPLAIN ANALYZE — Query Planning</h2>
+<pre><code>EXPLAIN ANALYZE
+SELECT u.name, COUNT(o.id)
+FROM users u LEFT JOIN orders o ON o.user_id = u.id
+GROUP BY u.id, u.name;
+
+-- Look for: Seq Scan (slow — no index), Index Scan (fast), Hash Join
+-- Keys: actual rows, loops, cost estimates vs actuals</code></pre>

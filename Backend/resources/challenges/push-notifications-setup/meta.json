@@ -1,0 +1,19 @@
+{
+  "title": "Implement Push Notifications",
+  "slug": "push-notifications-setup",
+  "difficulty": "Medium",
+  "category": "mobile",
+  "points": 100,
+  "tags": ["push-notifications", "messaging", "mobile"],
+  "company_tags": ["Google", "Apple", "Meta"],
+  "topic_tags": ["Mobile", "Push Notifications", "Messaging"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Notification payload and user preferences",
+  "output_format": "Processed notification with scheduling and filtering applied",
+  "example_input": "{\"notification\": {\"title\": \"Sale!\", \"body\": \"50% off\", \"channel\": \"promotions\", \"priority\": \"high\"}, \"preferences\": {\"enabled\": true, \"channels\": [\"promotions\"], \"quietHours\": {\"start\": 22, \"end\": 7}}, \"currentHour\": 10}",
+  "example_output": "{\"shouldDeliver\": true, \"notification\": {\"title\": \"Sale!\", \"body\": \"50% off\", \"channel\": \"promotions\", \"priority\": \"high\"}}",
+  "constraints": "Channels are strings, quietHours use 24h format, priority: low|normal|high|urgent",
+  "function_signature": "function processNotification(notification: Notification, preferences: UserPreferences, currentHour: number): NotificationResult",
+  "status": "ACTIVE"
+}

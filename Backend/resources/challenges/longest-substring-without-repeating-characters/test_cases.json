@@ -1,0 +1,12 @@
+[
+  { "input": "{\"s\":\"abcabcbb\"}", "output": "3", "explanation": "abc", "is_hidden": false },
+  { "input": "{\"s\":\"bbbbb\"}", "output": "1", "explanation": "b", "is_hidden": false },
+  { "input": "{\"s\":\"pwwkew\"}", "output": "3", "explanation": "wke", "is_hidden": false },
+  { "input": "{\"s\":\"\"}", "output": "0", "explanation": "Empty string", "is_hidden": true },
+  { "input": "{\"s\":\" \"}", "output": "1", "explanation": "Single space", "is_hidden": true },
+  { "input": "{\"s\":\"au\"}", "output": "2", "explanation": "Two different characters", "is_hidden": true },
+  { "input": "{\"s\":\"dvdf\"}", "output": "3", "explanation": "vdf — not dvd", "is_hidden": true },
+  { "input": "{\"s\":\"tmmzuxt\"}", "output": "5", "explanation": "mzuxt", "is_hidden": true },
+  { "input": "{\"s\":\"anviaj\"}", "output": "5", "explanation": "nviaj", "is_hidden": true },
+  { "input": "{\"s\":\"abcdefghijklmnopqrstuvwxyz\"}", "output": "26", "explanation": "All unique characters", "is_hidden": true }
+]

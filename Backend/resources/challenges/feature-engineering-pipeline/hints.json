@@ -1,0 +1,6 @@
+[
+  "Parse each operation string to extract the operation type and target column. Use string splitting on ':'.",
+  "For normalization, compute min and max of the column, then apply (x - min) / (max - min). Handle the edge case where max equals min.",
+  "For one-hot encoding, find all unique values, sort them alphabetically, then create a binary column for each unique value.",
+  "Build the final feature matrix by combining all transformed columns. Keep track of column names as you process operations."
+]

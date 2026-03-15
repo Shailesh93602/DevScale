@@ -1,0 +1,4 @@
+{
+    "name": "React Custom Hooks",
+    "description": "Building reusable stateful logic with custom hooks — useLocalStorage, useDebounce, useFetch, useMediaQuery, and composition patterns."
+}

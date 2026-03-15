@@ -1,0 +1,10 @@
+{
+  "typescript": "function minWindow(s: string, t: string): string {\n    \n};",
+  "javascript": "/**\n * @param {string} s\n * @param {string} t\n * @return {string}\n */\nvar minWindow = function(s, t) {\n    \n};",
+  "python": "class Solution:\n    def minWindow(self, s: str, t: str) -> str:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public String minWindow(String s, String t) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    string minWindow(string s, string t) {\n        \n    }\n};",
+  "go": "func minWindow(s string, t string) string {\n    \n}",
+  "rust": "impl Solution {\n    pub fn min_window(s: String, t: String) -> String {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public string MinWindow(string s, string t) {\n        \n    }\n}"
+}

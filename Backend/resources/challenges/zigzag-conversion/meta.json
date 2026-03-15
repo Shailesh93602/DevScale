@@ -1,0 +1,38 @@
+{
+  "title": "Zigzag Conversion",
+  "slug": "zigzag-conversion",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": [
+    "string"
+  ],
+  "company_tags": [
+    "Amazon",
+    "Apple",
+    "Microsoft",
+    "Yahoo"
+  ],
+  "topic_tags": [
+    "strings"
+  ],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "A string `s` and an integer `numRows`.",
+  "output_format": "The parsed string after converting to zigzag pattern.",
+  "example_input": "s = \"PAYPALISHIRING\", numRows = 3",
+  "example_output": "\"PAHNAPLSIIGYIR\"",
+  "constraints": "- `1 <= s.length <= 1000`\n- `s` consists of English letters (lower-case and upper-case), `','` and `'.'$.\n- `1 <= numRows <= 1000`",
+  "function_signature": "function convert(s: string, numRows: number): string {}",
+  "status": "ACTIVE"
+}

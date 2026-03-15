@@ -1,0 +1,69 @@
+<h1>CSS Grid — Two-Dimensional Layouts</h1>
+<p>CSS Grid is a two-dimensional layout system handling both rows <em>and</em> columns simultaneously — perfect for page-level layouts. Use Grid for the big picture; use Flexbox for aligning within components.</p>
+
+<h2>Defining a Grid</h2>
+<pre><code>.container {
+  display: grid;
+  grid-template-columns: 200px 1fr 200px; /* 3 columns */
+  grid-template-rows: auto 1fr auto;      /* 3 rows */
+  gap: 20px;
+}</code></pre>
+
+<h2>The fr Unit</h2>
+<p>The <code>fr</code> (fraction) unit distributes <strong>available</strong> space. <code>1fr 2fr</code> means one column gets 1/3 and the other gets 2/3 of available space.</p>
+
+<h2>repeat() & minmax()</h2>
+<pre><code>/* 12 equal columns */
+grid-template-columns: repeat(12, 1fr);
+
+/* Auto-responsive grid — no media queries needed! */
+grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));</code></pre>
+
+<h2>Placing Items Explicitly</h2>
+<pre><code>.header {
+  grid-column: 1 / -1;  /* Span full width (1 to last line) */
+}
+.sidebar {
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+}
+.main {
+  grid-column: 2 / 4;   /* Span columns 2 to 4 */
+  grid-row: 2 / 3;
+}
+/* Shorthand */
+.item { grid-area: 2 / 1 / 3 / 3; } /* row-start/col-start/row-end/col-end */</code></pre>
+
+<h2>Named Grid Areas</h2>
+<pre><code>.layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  grid-template-rows: 60px 1fr 60px;
+  grid-template-areas:
+    "header  header"
+    "sidebar main"
+    "footer  footer";
+}
+.header  { grid-area: header; }
+.sidebar { grid-area: sidebar; }
+.main    { grid-area: main; }
+.footer  { grid-area: footer; }</code></pre>
+
+<h2>Alignment in Grid</h2>
+<pre><code>.container {
+  justify-items: start | end | center | stretch;  /* Align items in column */
+  align-items:   start | end | center | stretch;  /* Align items in row */
+  justify-content: start | center | space-between; /* Align grid in container */
+  align-content:   start | center | space-between;
+}
+.item {
+  justify-self: center; /* Override for single item */
+  align-self: end;
+}</code></pre>
+
+<h2>Grid vs Flexbox — When to Use Each</h2>
+<ul>
+  <li>Use <strong>Grid</strong> for 2D page-level layouts (header, sidebar, main, footer).</li>
+  <li>Use <strong>Flexbox</strong> for 1D component-level alignment (nav links, card contents).</li>
+  <li>They are complementary — use both on the same page!</li>
+</ul>

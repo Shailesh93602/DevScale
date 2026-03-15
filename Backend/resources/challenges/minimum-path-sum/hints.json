@@ -1,0 +1,1 @@
+["Each cell can be reached from above or from the left. Which is cheaper?","dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1]).","Initialize first row and column as cumulative sums.","You can modify the grid in-place for O(1) extra space."]

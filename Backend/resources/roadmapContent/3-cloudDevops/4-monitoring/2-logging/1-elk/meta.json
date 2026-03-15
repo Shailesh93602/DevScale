@@ -1,0 +1,4 @@
+{
+    "name": "ELK Stack",
+    "description": "Elasticsearch, Logstash, and Kibana for centralized logging and full-text search."
+}

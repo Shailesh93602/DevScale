@@ -1,0 +1,14 @@
+[
+  { "input": "{\"nums\": [2,3,1,1,4]}", "output": "true", "explanation": "Jump 1 step to index 1, then 3 steps to the last index.", "is_hidden": false },
+  { "input": "{\"nums\": [3,2,1,0,4]}", "output": "false", "explanation": "Always stuck at index 3 with jump length 0.", "is_hidden": false },
+  { "input": "{\"nums\": [0]}", "output": "true", "explanation": "Already at the last index.", "is_hidden": false },
+  { "input": "{\"nums\": [1,1,1,1,1]}", "output": "true", "explanation": "Jump 1 step at a time to reach the end.", "is_hidden": true },
+  { "input": "{\"nums\": [5,0,0,0,0]}", "output": "true", "explanation": "Jump directly from index 0 to the last index.", "is_hidden": true },
+  { "input": "{\"nums\": [1,0,1]}", "output": "false", "explanation": "Stuck at index 1 with jump length 0.", "is_hidden": true },
+  { "input": "{\"nums\": [2,0,0]}", "output": "true", "explanation": "Jump 2 steps from index 0 to index 2.", "is_hidden": true },
+  { "input": "{\"nums\": [1,2,3]}", "output": "true", "explanation": "Multiple paths: 1->2->end or 1->end.", "is_hidden": true },
+  { "input": "{\"nums\": [0,1]}", "output": "false", "explanation": "Stuck at index 0 with jump length 0.", "is_hidden": true },
+  { "input": "{\"nums\": [3,0,8,2,0,0,1]}", "output": "true", "explanation": "Jump to index 2 which has value 8, can reach far beyond end.", "is_hidden": true },
+  { "input": "{\"nums\": [1,1,0,1]}", "output": "false", "explanation": "Reach index 2 but stuck with jump length 0.", "is_hidden": true },
+  { "input": "{\"nums\": [10,0,0,0,0,0,0,0,0,0,1]}", "output": "true", "explanation": "First element can jump past all zeros to the end.", "is_hidden": true }
+]

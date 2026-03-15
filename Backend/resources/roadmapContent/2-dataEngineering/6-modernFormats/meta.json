@@ -1,0 +1,4 @@
+{
+    "name": "Modern Data Lake Table Formats",
+    "description": "Apache Iceberg and Delta Lake — open table formats that add ACID transactions, time travel, and efficient updates to the data lakehouse."
+}

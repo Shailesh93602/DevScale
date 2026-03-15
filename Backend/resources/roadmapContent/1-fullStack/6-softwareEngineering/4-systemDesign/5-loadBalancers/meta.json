@@ -1,0 +1,4 @@
+{
+    "name": "Load Balancing & Hashing",
+    "description": "Distributing traffic intelligently. Understanding Layer 4 vs Layer 7 load balancers (Nginx/HAProxy), round-robin architectures, and the mathematics of Consistent Hashing."
+}

@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "Chain-of-thought prompting dramatically improves LLM performance on reasoning tasks. What is the mechanism behind this improvement?",
+            "options": [
+                "Chain-of-thought works by giving the model more tokens to process, increasing compute.",
+                "Chain-of-thought prompting instructs the model to generate intermediate reasoning steps before the final answer. This works because: (1) each reasoning step serves as context that guides the next step, (2) errors can be caught and corrected within the reasoning chain before producing the answer, and (3) complex multi-step problems get decomposed into simpler sub-problems that the model can solve accurately one at a time.",
+                "Chain-of-thought reduces hallucination by limiting the model to short answers.",
+                "Chain-of-thought enables the model to execute code internally to verify its arithmetic."
+            ],
+            "answer": "Chain-of-thought prompting instructs the model to generate intermediate reasoning steps before the final answer. This works because: (1) each reasoning step serves as context that guides the next step, (2) errors can be caught and corrected within the reasoning chain before producing the answer, and (3) complex multi-step problems get decomposed into simpler sub-problems that the model can solve accurately one at a time.",
+            "explanation": "Google Research showed CoT prompting improved PaLM's accuracy on the GSM8K math benchmark from 17% (standard prompting) to 58% — a 3.4x improvement. The model improved further to 74% with self-consistency CoT (generating multiple chains and majority-voting the answer)."
+        },
+        {
+            "question": "When using JSON mode in OpenAI's API, why must you still describe the desired JSON schema in the system prompt rather than relying on JSON mode alone?",
+            "options": [
+                "JSON mode requires a schema to validate the output against before returning it.",
+                "JSON mode guarantees syntactically valid JSON output but doesn't guarantee the structure matches your application's expectations. Without a schema in the prompt, the model decides what keys and values to include — you might get {'sentiment': 'positive'} when you expected {'sentiment': 'positive', 'confidence': 0.94, 'key_phrases': [...]}. The schema converts implicit expectations into explicit instructions.",
+                "JSON mode is only available for gpt-4 and needs a schema for gpt-3.5.",
+                "JSON mode automatically generates a Pydantic model that you must import from OpenAI."
+            ],
+            "answer": "JSON mode guarantees syntactically valid JSON output but doesn't guarantee the structure matches your application's expectations. Without a schema in the prompt, the model decides what keys and values to include — you might get {'sentiment': 'positive'} when you expected {'sentiment': 'positive', 'confidence': 0.94, 'key_phrases': [...]}. The schema converts implicit expectations into explicit instructions.",
+            "explanation": "In production: JSON mode without a schema prompt causes parsing errors when the application tries to access keys that weren't in the response. Always include the schema definition — pasting a Pydantic model's .schema() output into the system prompt works reliably."
+        },
+        {
+            "question": "What is 'LLM-as-Judge' evaluation and why is it more effective than BLEU/ROUGE for evaluating modern LLM outputs?",
+            "options": [
+                "LLM-as-Judge is faster than BLEU/ROUGE because it runs without reference answers.",
+                "LLM-as-Judge uses a powerful LLM (e.g., GPT-4) to score another LLM's output on dimensions like helpfulness, accuracy, and safety. BLEU/ROUGE measure n-gram overlap with reference answers — they penalize any valid paraphrase, fail to detect factual errors, and cannot evaluate open-ended creative or reasoning responses. LLM judges evaluate semantic quality rather than surface-level text similarity.",
+                "LLM-as-Judge eliminates the need for a held-out test set during evaluation.",
+                "LLM-as-Judge can be run locally without API costs using smaller open-source models."
+            ],
+            "answer": "LLM-as-Judge uses a powerful LLM (e.g., GPT-4) to score another LLM's output on dimensions like helpfulness, accuracy, and safety. BLEU/ROUGE measure n-gram overlap with reference answers — they penalize any valid paraphrase, fail to detect factual errors, and cannot evaluate open-ended creative or reasoning responses. LLM judges evaluate semantic quality rather than surface-level text similarity.",
+            "explanation": "BLEU scores two correct English translations differently if they use synonyms. LLM judges correctly identify both as accurate translations. For RAG evaluation: BLEU can't tell if an answer is faithful to the retrieved context — but an LLM judge can detect hallucinations explicitly."
+        }
+    ]
+}

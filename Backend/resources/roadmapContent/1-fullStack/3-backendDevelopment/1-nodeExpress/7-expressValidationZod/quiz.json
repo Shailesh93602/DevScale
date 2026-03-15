@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary advantage of using Zod over older libraries like Joi or strict Express Validator?",
+            "options": [
+                "Zod compiles faster in production Node environments",
+                "Zod natively connects to SQL databases for validation",
+                "Zod automatically infers TypeScript types from the validation schema using `z.infer`, removing the need to write interfaces manually",
+                "Zod acts as an entire replacement for Express routing"
+            ],
+            "answer": "Zod automatically infers TypeScript types from the validation schema using `z.infer`, removing the need to write interfaces manually",
+            "explanation": "Zod is TypeScript-first. When you define a schema `z.object({ name: z.string() })`, Zod can automatically generate the `type { name: string }` preventing duplication of schema logic and TypeScript interfaces."
+        },
+        {
+            "question": "When building an Express API, what is the best architectural way to implement Zod validation?",
+            "options": [
+                "Call Zod validation inside the DB layer right before saving",
+                "Write a higher-order middleware function that receives a schema, checks the request, and either calls next() or immediately rejects with a 400 Bad Request error.",
+                "Validate directly inside every React component before making the API call",
+                "Put an if/else checking `req.body` directly inside every controller function."
+            ],
+            "answer": "Write a higher-order middleware function that receives a schema, checks the request, and either calls next() or immediately rejects with a 400 Bad Request error.",
+            "explanation": "Using a generic validation middleware keeps your controllers completely clean (DRY). The controller is guaranteed that by the time it executes, the `req.body` exactly matches the required structure."
+        },
+        {
+            "question": "What happens if a user injects an undocumented field into the payload, like `{ username: 'test', password: 'asd', isAdmin: true }` when validated by a strict Zod schema?",
+            "options": [
+                "The server crashes due to a SQL unhandled identifier",
+                "Express automatically strips the `isAdmin` property by default",
+                "A standard Zod parse() strips out undeclared properties, automatically preventing Mass Assignment vulnerabilities when the sanitized data is passed forward.",
+                "Zod bypasses validation completely if the object has extra properties"
+            ],
+            "answer": "A standard Zod parse() strips out undeclared properties, automatically preventing Mass Assignment vulnerabilities when the sanitized data is passed forward.",
+            "explanation": "By replacing `req.body` with the output of `schema.parse(req.body)`, Zod removes properties ('isAdmin') that were not explicitly defined in the object schema, keeping hackers from forcibly injecting bad keys."
+        },
+        {
+            "question": "How do you handle Query string validation (like ?page=5) using Zod, given that query parameters are always received as Strings by Express?",
+            "options": [
+                "Use z.number().ensureString()",
+                "Parse the query manually using JSON.parse() before Zod execution",
+                "Use z.coerce.number() to force the query string into a mathematical integer before validating limits",
+                "Zod cannot validate query strings, only JSON bodies"
+            ],
+            "answer": "Use z.coerce.number() to force the query string into a mathematical integer before validating limits",
+            "explanation": "Because `req.query.page` is strictly the string \"5\", `z.number()` will fail. `z.coerce.number()` transforms the string '5' to the number 5, and then validates restrictions like min(1)."
+        },
+        {
+            "question": "If Zod validation fails inside a server endpoint, what HTTP Status Code should conceptually be returned to the client?",
+            "options": [
+                "200 OK (with an error message in the payload)",
+                "400 Bad Request",
+                "404 Not Found",
+                "500 Internal Server Error"
+            ],
+            "answer": "400 Bad Request",
+            "explanation": "Validation failures imply that the client sent malformed, incomplete, or invalid input data. The standard HTTP code for client-side formatting errors is 400 Bad Request."
+        }
+    ]
+}

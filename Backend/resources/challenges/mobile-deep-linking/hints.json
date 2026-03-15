@@ -1,0 +1,6 @@
+[
+  "First, parse the URL by splitting on '://' to get the scheme, then split the rest on '?' to separate path from query.",
+  "Split both the URL path and route pattern by '/' into segments. They must have the same number of segments to match.",
+  "Route segments starting with ':' are dynamic parameters - they match any value and capture it by the parameter name.",
+  "Parse query parameters by splitting on '&' then '=' to build a key-value map."
+]

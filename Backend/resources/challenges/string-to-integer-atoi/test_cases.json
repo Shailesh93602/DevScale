@@ -1,0 +1,12 @@
+[
+  { "input": "{\"s\":\"42\"}", "output": "42", "explanation": "Positive number", "is_hidden": false },
+  { "input": "{\"s\":\"   -42\"}", "output": "-42", "explanation": "Negative with spaces", "is_hidden": false },
+  { "input": "{\"s\":\"4193 with words\"}", "output": "4193", "explanation": "Words after number", "is_hidden": false },
+  { "input": "{\"s\":\"words and 987\"}", "output": "0", "explanation": "Words before number", "is_hidden": true },
+  { "input": "{\"s\":\"-91283472332\"}", "output": "-2147483648", "explanation": "Below 32-bit bound", "is_hidden": true },
+  { "input": "{\"s\":\"91283472332\"}", "output": "2147483647", "explanation": "Above 32-bit bound", "is_hidden": true },
+  { "input": "{\"s\":\"   +0 123\"}", "output": "0", "explanation": "Space stops parsing after +0", "is_hidden": true },
+  { "input": "{\"s\":\"+-12\"}", "output": "0", "explanation": "Double sign", "is_hidden": true },
+  { "input": "{\"s\":\".1\"}", "output": "0", "explanation": "Dot at start stops loop", "is_hidden": true },
+  { "input": "{\"s\":\"00000-42a1234\"}", "output": "0", "explanation": "Leading zeroes then negative signs stops digits", "is_hidden": true }
+]

@@ -1,0 +1,54 @@
+<h1>Supply Chain Security & SBOM</h1>
+<p>In December 2020, the SolarWinds attack compromised the software build pipeline of a major IT management company, injecting malicious code into a signed software update distributed to 18,000 customers — including the US Treasury, Pentagon, and Fortune 500 companies. No one questioned the update because it was signed by a legitimate key. This was a supply chain attack, and it fundamentally changed how the industry thinks about security.</p>
+
+<h2>What Is a Software Supply Chain Attack?</h2>
+<p>Your application's "supply chain" includes every dependency, build tool, CI/CD platform, container base image, and artifact registry in your software delivery pipeline. An attacker who compromises any link in this chain can inject malicious code that is then signed, packaged, and distributed as "legitimate" software to all downstream users.</p>
+
+<h2>SBOM: Software Bill of Materials</h2>
+<p>An <strong>SBOM</strong> is a complete, machine-readable inventory of every component in your software — every library, its version, its license, and its source. Just as a food product lists every ingredient, an SBOM lists every dependency:</p>
+<pre><code class="language-bash"># Generate an SBOM from a Docker image in CycloneDX format
+syft mycompany/api:v2.5.0 -o cyclonedx-json > sbom.json
+
+# Or from a directory/repository
+syft dir:./src -o spdx-json > sbom-spdx.json
+
+# Scan the SBOM against the National Vulnerability Database (NVD)
+grype sbom:./sbom.json
+# Output:
+# NAME              VERSION  VULNERABILITY  SEVERITY
+# openssl           3.0.1    CVE-2022-0778  HIGH
+# log4j-core        2.14.1   CVE-2021-44228 CRITICAL ← Log4Shell!
+</code></pre>
+<p>US Executive Order 14028 (2021) now mandates SBOMs for all software sold to the US Federal Government. Industry adoption is accelerating rapidly.</p>
+
+<h2>Container Image Signing with Cosign (Sigstore)</h2>
+<p><strong>Sigstore's Cosign</strong> enables cryptographic signing of container images, providing a verifiable chain of custody from CI build to Kubernetes admission:</p>
+<pre><code class="language-bash"># In your GitHub Actions CI pipeline — sign after building
+- name: Sign container image
+  run: |
+    cosign sign --yes \
+      --oidc-issuer https://token.actions.githubusercontent.com \
+      mycompany/api@${{ steps.build.outputs.digest }}
+    # Signature is stored in the OCI registry alongside the image
+    # The OIDC token proves this was signed by github.com/mycompany/api workflow
+
+# In Kubernetes admission — using Kyverno policy to verify signatures
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+spec:
+  rules:
+  - name: verify-image-signature
+    match:
+      resources: { kinds: [Pod] }
+    verifyImages:
+    - imageReferences: ["mycompany/*"]
+      attestors:
+      - entries:
+        - keyless:
+            subject: "https://github.com/mycompany/api/.github/workflows/*"
+            issuer: "https://token.actions.githubusercontent.com"
+    # Pods with unsigned images are REJECTED by the Kubernetes API
+</code></pre>
+
+<h2>SLSA Framework</h2>
+<p><strong>SLSA (Supply-chain Levels for Software Artifacts)</strong> defines four progressive levels of supply chain security maturity. Level 1 is basic (documentation), Level 4 is hermetically reproducible builds with two-party review. Most organizations target SLSA Level 2-3, which requires provenance attestation (a signed record of how the artifact was built) and protected CI/CD pipelines.</p>

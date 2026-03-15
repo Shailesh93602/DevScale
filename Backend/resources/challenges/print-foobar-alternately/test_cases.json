@@ -1,0 +1,50 @@
+[
+  {
+    "input": {"n": 1},
+    "output": {"result": "foobar"},
+    "explanation": "Print foo then bar once",
+    "is_hidden": false
+  },
+  {
+    "input": {"n": 2},
+    "output": {"result": "foobarfoobar"},
+    "explanation": "Print foobar twice",
+    "is_hidden": false
+  },
+  {
+    "input": {"n": 3},
+    "output": {"result": "foobarfoobarfoobar"},
+    "explanation": "Print foobar three times",
+    "is_hidden": false
+  },
+  {
+    "input": {"n": 5},
+    "output": {"result": "foobarfoobarfoobarfoobarfoobar"},
+    "explanation": "Print foobar five times",
+    "is_hidden": false
+  },
+  {
+    "input": {"n": 10},
+    "output": {"result": "foobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobar"},
+    "explanation": "Print foobar ten times",
+    "is_hidden": true
+  },
+  {
+    "input": {"n": 4},
+    "output": {"result": "foobarfoobarfoobarfoobar"},
+    "explanation": "Print foobar four times",
+    "is_hidden": true
+  },
+  {
+    "input": {"n": 7},
+    "output": {"result": "foobarfoobarfoobarfoobarfoobarfoobarfoobar"},
+    "explanation": "Print foobar seven times",
+    "is_hidden": true
+  },
+  {
+    "input": {"n": 15},
+    "output": {"result": "foobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobar"},
+    "explanation": "Print foobar fifteen times",
+    "is_hidden": true
+  }
+]

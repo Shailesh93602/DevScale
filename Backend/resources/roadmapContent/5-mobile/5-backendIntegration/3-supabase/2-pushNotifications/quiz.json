@@ -1,0 +1,118 @@
+{
+    "title": "Push Notifications in React Native Quiz",
+    "description": "Test your knowledge of Expo push tokens, permission flow, notification handlers, and server-side sending.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Why does `registerForPushNotifications` return null on an iOS Simulator or Android Emulator?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The Expo SDK has a known bug that prevents token generation on simulators",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Simulators and emulators do not have the hardware and OS-level push service integration required to receive push notifications — a physical device is required",
+                    "isCorrect": true
+                },
+                {
+                    "text": "FCM and APNs require a paid developer account to work on simulators",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Simulators cannot connect to the internet, preventing token generation",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is an Expo Push Token, and why must it be stored on your backend?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A temporary session token for authenticating Expo CLI commands",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A unique identifier for a specific app installation on a specific device — stored on the backend so you can target that device when sending notifications from your server",
+                    "isCorrect": true
+                },
+                {
+                    "text": "An API key from Expo that grants access to their push notification delivery quota",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A cryptographic signature proving the notification came from your verified server",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the correct handler to use when you want to navigate to a specific screen when a user TAPS a notification?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "addNotificationReceivedListener — it fires when the notification appears",
+                    "isCorrect": false
+                },
+                {
+                    "text": "addNotificationResponseReceivedListener — it fires specifically when the user interacts with (taps) a notification",
+                    "isCorrect": true
+                },
+                {
+                    "text": "setNotificationHandler — it controls where to navigate on all notifications",
+                    "isCorrect": false
+                },
+                {
+                    "text": "addBackgroundNotificationListener — it fires when the app is backgrounded",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Your backend receives a `DeviceNotRegistered` error after attempting to send a push notification. What action should you take?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Retry the notification send 3 more times with exponential backoff",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Remove the push token from your database — it means the user uninstalled the app and the token is no longer valid",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Contact Expo support to re-register the device token",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Switch from APNs to FCM for that device",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why should you re-register for push notifications on every app launch rather than only at signup?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Expo push tokens expire after 24 hours for security reasons",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The push token can change after an app reinstall, iOS update, OS reset, or device transfer — re-registering ensures your backend always has the current valid token",
+                    "isCorrect": true
+                },
+                {
+                    "text": "APNs requires re-registration every launch to prevent token staleness fees",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The Expo SDK clears the previous token on every cold start",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

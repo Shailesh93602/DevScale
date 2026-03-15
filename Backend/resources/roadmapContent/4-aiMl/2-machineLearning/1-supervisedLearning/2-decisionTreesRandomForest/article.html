@@ -1,0 +1,103 @@
+<h1>Decision Trees & Random Forests</h1>
+<p>Decision Trees are supervised learning algorithms used for both classification and regression tasks. They are highly interpretable, mimicking human decision-making by splitting data based on feature thresholds. However, single trees are prone to overfitting. We solve this by combining many trees into an ensemble called a <strong>Random Forest</strong> or <strong>Gradient Boosted Trees (XGBoost)</strong>.</p>
+
+<h2>Decision Trees: How They Split Data</h2>
+<p>A Decision Tree partitions the feature space into continuous rectangles. At each node, it asks a yes/no question (e.g., <code>Age > 30?</code> or <code>Income < $50,000?</code>) and splits the dataset based on the answer.</p>
+
+<p>How does the tree choose the "best" feature to split on? It uses impurity metrics:</p>
+<ul>
+  <li><strong>Gini Impurity (Classification)</strong>: Measures the probability of misclassifying a randomly chosen element if it were randomly labeled according to the class distribution in the node. A completely pure node (all samples belong to one class) has a Gini of 0.</li>
+  <li><strong>Information Gain / Entropy (Classification)</strong>: Measures the reduction in entropy (disorder) after the split.</li>
+  <li><strong>Mean Squared Error (Regression)</strong>: Minimizes variance within the child nodes.</li>
+</ul>
+
+<pre><code>import pandas as pd
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+# Example: Predicting loan default
+X = df[['age', 'credit_score', 'income', 'debt_to_income']]
+y = df['defaulted']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create a Decision Tree with a maximum depth to prevent overfitting
+tree_model = DecisionTreeClassifier(max_depth=5, criterion='gini')
+tree_model.fit(X_train, y_train)
+
+y_pred = tree_model.predict(X_test)
+print(f"Tree Accuracy: {accuracy_score(y_test, y_pred):.2f}")
+
+# Extract feature importances directly from the splits
+importances = pd.Series(tree_model.feature_importances_, index=X.columns)
+print(importances.sort_values(ascending=False))
+# credit_score      0.65
+# debt_to_income    0.20
+# income            0.10
+# age               0.05</code></pre>
+
+<h2>The Overfitting Problem</h2>
+<p>If you don't restrict a decision tree (e.g., setting <code>max_depth</code>), it will continue splitting until every leaf node contains only a single data point. It will perfectly memorize the training data (100% accuracy) but fail completely on unseen test data (high variance). This requires <strong>pruning</strong> the tree by limiting depth or minimum samples per leaf.</p>
+
+<h2>Random Forests: The Ensemble Solution</h2>
+<p>A Random Forest is an ensemble method that trains hundreds of decision trees simultaneously and averages their predictions (classification = majority vote, regression = mean). It mitigates the overfitting problem of single trees through a technique called <strong>Bagging (Bootstrap Aggregating)</strong>.</p>
+
+<p>To ensure the trees are diverse (not all learning the exact same splits), the Random Forest injects randomness in two ways:</p>
+<ol>
+  <li><strong>Data Bootstrapping</strong>: Each tree is trained on a random sample of the dataset with replacement (some rows appear multiple times, some not at all).</li>
+  <li><strong>Feature Subsampling</strong>: At each node split, the tree is only allowed to consider a random subset of all features (usually the square root of total features). If a dominant feature like <code>credit_score</code> exists, only some trees will be allowed to see it at the root node, forcing other trees to discover subtler patterns.</li>
+</ol>
+
+<pre><code>from sklearn.ensemble import RandomForestClassifier
+
+# Train 100 decision trees
+forest_model = RandomForestClassifier(
+    n_estimators=100,      # Number of trees
+    max_depth=10,          # Depth of individual trees
+    max_features='sqrt',   # Number of features to consider per split
+    n_jobs=-1,             # Use all CPU cores for parallel training
+    random_state=42
+)
+forest_model.fit(X_train, y_train)
+
+print(f"Random Forest Accuracy: {forest_model.score(X_test, y_test):.2f}")</code></pre>
+
+<h2>Gradient Boosting (XGBoost, LightGBM)</h2>
+<p>While Random Forests train trees independently in parallel (Bagging), Gradient Boosting builds trees <strong>sequentially (Boosting)</strong>. Each new tree focuses specifically on correcting the errors made by all previous trees.</p>
+<p>XGBoost (Extreme Gradient Boosting) is the dominant algorithm for tabular (spreadsheet) data, consistently winning Kaggle competitions over deep learning networks when the data is structured rows and columns.</p>
+
+<pre><code># pip install xgboost
+import xgboost as xgb
+
+# XGBoost requires careful tuning of learning rate and tree depth
+xgb_model = xgb.XGBClassifier(
+    n_estimators=200,
+    learning_rate=0.05,    # Step size shrinkage (lower = more robust, needs more trees)
+    max_depth=6,
+    subsample=0.8,         # Row subsampling
+    colsample_bytree=0.8,  # Column subsampling
+    objective='binary:logistic'
+)
+
+xgb_model.fit(X_train, y_train, 
+              eval_set=[(X_test, y_test)], 
+              verbose=False)</code></pre>
+
+<h2>When to use Trees vs. Neural Networks</h2>
+<table>
+  <thead><tr><th>Algorithm</th><th>Best For Data Type</th><th>Interpretability</th><th>Data Prep Needed</th></tr></thead>
+  <tbody>
+    <tr><td>Decision Tree</td><td>Simple structured rules</td><td>Extremely High</td><td>Minimal (No scaling needed)</td></tr>
+    <tr><td>Random Forest</td><td>Tabular data (CSV/DBs)</td><td>Moderate (Feature Importance)</td><td>Minimal (Handles missing values)</td></tr>
+    <tr><td>XGBoost</td><td>Tabular data (Highest accuracy)</td><td>Low-Moderate (SHAP values)</td><td>Moderate (Categorical encoding)</td></tr>
+    <tr><td>Neural Networks</td><td>Images, Text, Audio</td><td>Zero (Black Box)</td><td>Extensive (Scaling, Normalization)</td></tr>
+  </tbody>
+</table>
+
+<h2>Best Practices</h2>
+<ul>
+  <li><strong>No Feature Scaling Required</strong>: Unlike SVMs, KNN, or Neural Networks, tree-based models make binary splits on raw values. Normalizing or standardizing your data has <strong>zero effect</strong> on a Random Forest.</li>
+  <li><strong>Handles Non-Linearity</strong>: Random Forests naturally discover complex, non-linear interactions between variables without feature engineering (e.g., if <code>Age > 50</code> AND <code>Income < 20000</code>).</li>
+  <li><strong>Extrapolation Issue</strong>: Tree-based regression models cannot predict values outside the range they observed in training (they just predict the terminal leaf average). Time-series forecasting with continuous trend lines often fails with Random Forests.</li>
+</ul>

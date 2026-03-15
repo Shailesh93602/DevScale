@@ -1,0 +1,19 @@
+{
+  "title": "Edit Distance",
+  "slug": "edit-distance",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["dynamic-programming", "string"],
+  "company_tags": ["Amazon", "Google", "Microsoft", "Facebook", "Apple", "Bloomberg"],
+  "topic_tags": ["dynamic programming", "string"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Two strings `word1` and `word2`.",
+  "output_format": "The minimum number of operations required to convert `word1` to `word2`.",
+  "example_input": "word1 = \"horse\", word2 = \"ros\"",
+  "example_output": "3",
+  "constraints": "- `0 <= word1.length, word2.length <= 500`\n- `word1` and `word2` consist of lowercase English letters.",
+  "function_signature": "function minDistance(word1: string, word2: string): number {}",
+  "status": "ACTIVE"
+}

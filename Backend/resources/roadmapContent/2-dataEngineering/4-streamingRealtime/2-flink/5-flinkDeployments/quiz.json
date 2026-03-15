@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary operational advantage of using Flink's 'Application Mode' deployment instead of the shared 'Session Mode' for production jobs?",
+            "options": [
+                "Application Mode is significantly cheaper because it reuses existing resources.",
+                "Each job runs in its own completely dedicated, isolated Flink cluster. This provides full resource isolation, preventing a single memory-hungry job from starving or crashing other jobs sharing the same cluster.",
+                "Application Mode allows the job to run without a Resource Manager.",
+                "Application Mode is the only mode that supports stateful operations."
+            ],
+            "answer": "Each job runs in its own completely dedicated, isolated Flink cluster. This provides full resource isolation, preventing a single memory-hungry job from starving or crashing other jobs sharing the same cluster.",
+            "explanation": "In Session Mode, one job using all available memory will cause other jobs on the same cluster to fail. Application Mode completely eliminates this risk."
+        },
+        {
+            "question": "In a Flink streaming application, what are a 'Source Connector' and a 'Sink Connector' respectively?",
+            "options": [
+                "Source is for schema validation; Sink is for data compression.",
+                "A Source Connector is the input that feeds continuous data into the Flink pipeline (e.g., consuming from a Kafka Topic). A Sink Connector is the output that writes the processed results to an external system (e.g., inserting into a PostgreSQL database or writing Parquet files to S3).",
+                "Source is for reading from S3 only; Sink is for writing to Kafka only.",
+                "Source and Sink are interchangeable concepts in Flink."
+            ],
+            "answer": "A Source Connector is the input that feeds continuous data into the Flink pipeline (e.g., consuming from a Kafka Topic). A Sink Connector is the output that writes the processed results to an external system (e.g., inserting into a PostgreSQL database or writing Parquet files to S3).",
+            "explanation": "Every Flink job is essentially: Source (pull from Kafka) → Transform (filter, enrich, aggregate) → Sink (write to database or S3)."
+        },
+        {
+            "question": "Why is the 'Kafka → Flink → Apache Iceberg' pipeline pattern considered superior to a traditional Lambda Architecture?",
+            "options": [
+                "Because it avoids the need for any Kafka partitioning.",
+                "It unifies real-time stream processing and batch historical analytics on the same Iceberg table on S3, eliminating the need to build and maintain two completely separate code paths (one for streaming, one for batch) inherent in the Lambda Architecture.",
+                "Because Apache Iceberg is faster than Parquet for all workloads.",
+                "Because Flink cannot write directly to any batch storage systems."
+            ],
+            "answer": "It unifies real-time stream processing and batch historical analytics on the same Iceberg table on S3, eliminating the need to build and maintain two completely separate code paths (one for streaming, one for batch) inherent in the Lambda Architecture.",
+            "explanation": "The Lambda Architecture's biggest pain point is maintaining duplicate logic in a streaming layer (Flink/Spark Streaming) and a batch layer (Spark). Iceberg as a shared sink eliminates this."
+        }
+    ]
+}

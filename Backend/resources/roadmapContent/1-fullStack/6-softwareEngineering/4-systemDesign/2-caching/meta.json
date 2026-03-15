@@ -1,0 +1,6 @@
+{
+    "id": "2-caching",
+    "title": "Caching Strategies",
+    "description": "Accelerating data retrieval by using temporary storage at multiple levels of the system.",
+    "order": 2
+}

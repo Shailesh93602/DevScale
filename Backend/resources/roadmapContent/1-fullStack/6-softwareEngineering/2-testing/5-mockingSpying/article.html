@@ -1,0 +1,47 @@
+<h1>Mocking, Spying, & Stubs</h1>
+<p>When you write an isolated Unit Test, the function under test might rely on an external service. For instance, testing a `processOrder()` function that explicitly calls the Stripe API to charge a credit card.</p>
+<p>You absolutely must not hit the real Stripe network during a Unit Test. Real API calls are exceptionally slow, require internet access, and will actually charge the credit card, wasting real money. Instead, you must isolate your function using <strong>Mocks, Stubs, and Spies</strong>.</p>
+
+<h2>1. What is a Mock?</h2>
+<p>A Mock is a fake Javascript object or function that perfectly replaces the real external dependency. You instruct the mock exactly how to behave when it gets called.</p>
+<pre><code>// userController.test.ts
+import * as stripeAPI from "./stripeClient";
+import { processOrder } from "./userController";
+
+// 1. Tell Jest to intercept and completely fake the Stripe module
+jest.mock("./stripeClient");
+
+test("Should process order successfully without hitting remote API", async () =&gt; {
+  // 2. We program the Mock to instantly resolve successfully, bypassing the network
+  stripeAPI.chargeCreditCard.mockResolvedValue({ status: "success", amount: 50 });
+
+  // 3. We execute our controller logic safely in isolation
+  const result = await processOrder(50, "test-card-token");
+  expect(result).toBe("success");
+});
+</code></pre>
+<p>The `processOrder` function believes it is talking to Stripe, but it is actually communicating with your local Jest Mock.</p>
+
+<h2>2. What is a Spy?</h2>
+<p>Sometimes you don't want to fake the logic; you just want to silently record and verify exactly how a function was called. A **Spy** attaches a tracker to a real function.</p>
+<pre><code>// notification.test.ts
+import { sendEmail } from "./mailer";
+
+test("Should send an email correctly on user signup", () =&gt; {
+  // Attach a spy directly to the existing real function
+  const emailSpy = jest.spyOn(console, "log");
+
+  // Run the logic
+  sendSignupEmail("test@user.com");
+
+  // Assert exactly what the function tried to log
+  expect(emailSpy).toHaveBeenCalledWith("Email sent successfully to test@user.com");
+  
+  // Clean up the spy to avoid polluting other tests
+  emailSpy.mockRestore();
+});
+</code></pre>
+<p>The Spy intercepts the call, records the arguments and context, and can even block the original execution if configured to do so.</p>
+
+<h2>The Principle of Isolation</h2>
+<p>Mocking is the key to deep Isolation. If a bug is introduced into your Stripe client file, only the Stripe client unit tests should fail. The `processOrder` unit tests should still explicitly pass because they are safely mocking out the broken Stripe module. This allows you to pinpoint the exact file that caused the regression immediately.</p>

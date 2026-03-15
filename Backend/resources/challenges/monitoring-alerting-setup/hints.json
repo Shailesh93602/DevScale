@@ -1,0 +1,6 @@
+[
+  "Start with recording rules that pre-compute your SLIs: request rate using rate(), error ratio as errors/total, and latency percentiles using histogram_quantile().",
+  "For alerting, use multi-burn-rate approach: fast burn (14.4x error budget consumption) fires critical within minutes, slow burn (1x) fires warning over hours.",
+  "Your Grafana dashboard should follow the RED method: Rate (QPS), Errors (%), Duration (P50/P90/P99). Reference recording rules, not raw metrics.",
+  "In Alertmanager, route alerts by severity: critical goes to PagerDuty + Slack, warning to Slack only. Always set group_by to ['alertname', 'service']."
+]

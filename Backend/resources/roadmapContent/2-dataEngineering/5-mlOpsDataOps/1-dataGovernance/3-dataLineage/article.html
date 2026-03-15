@@ -1,0 +1,25 @@
+<h1>Data Lineage & Observability</h1>
+<p>Imagine a critical KPI on the CEO's dashboard showing "Total Revenue This Quarter" suddenly drops by 40% overnight. Is it a real business problem, or did a Data Engineer accidentally break a transformation pipeline? Without data observability tools, tracking down the root cause is a painstaking, hours-long process of manually inspecting dozens of interdependent SQL models and ETL scripts.</p>
+
+<h2>Data Lineage</h2>
+<p><strong>Data Lineage</strong> is the ability to trace the complete journey of a specific data point, from its original raw source all the way to its final representation in a dashboard or machine learning model.</p>
+<p>Tools like Apache Atlas, OpenLineage, and the built-in lineage graph in dbt provide a visual map answering: "If I change this raw `users` table in the source database, which 23 downstream models, dashboards, and ML features will be impacted?"</p>
+<p>When dbt runs, it automatically generates a rich <code>manifest.json</code> that encodes the exact dependency graph of every model in your project, which integrates directly with lineage visualization platforms.</p>
+
+<h2>The Silent Data Quality Crisis</h2>
+<p>The most dangerous data quality issues are not crashes — crashes are immediately obvious. The most dangerous failures are <strong>silent data quality issues</strong>:</p>
+<ul>
+  <li>The source system team changed a column name from <code>user_id</code> to <code>userId</code> without telling anyone. Your pipeline silently starts writing <code>NULL</code> for every row.</li>
+  <li>A new software release introduced a bug that sends <code>0</code> as the price for every checkout event. Your revenue model still runs successfully and writes clean-looking aggregations — but the numbers are wrong.</li>
+</ul>
+
+<h2>Data Observability Platforms</h2>
+<p>Modern Data Observability platforms (like <strong>Monte Carlo</strong>, <strong>Soda Core</strong>, and <strong>Great Expectations</strong>) work by continuously monitoring your Data Warehouse tables for anomalies using a combination of statistical tests and user-defined rules. They check metrics like:</p>
+<ul>
+  <li><strong>Volume:</strong> "The `fact_transactions` table usually grows by ~50,000 rows per hour. If it's Monday at 9 AM and it grew by only 3 rows, trigger an alert."</li>
+  <li><strong>Freshness:</strong> "The `stg_payments` model should be rebuilt by Airflow every hour. If it's been 3 hours since the last run, send a Slack alert to the Data Engineering team."</li>
+  <li><strong>Distribution:</strong> "The `country_code` column should contain ~200 distinct values. If it suddenly has 1 distinct value, something is catastrophically wrong upstream."</li>
+</ul>
+
+<h2>The OpenLineage Standard</h2>
+<p>OpenLineage is an open-source, vendor-neutral standard for capturing lineage metadata from tools like Apache Airflow, dbt, Apache Spark, and Flink. Instead of each tool inventing its own proprietary lineage format, they all emit events in the OpenLineage schema, enabling a unified lineage graph across your entire data stack.</p>

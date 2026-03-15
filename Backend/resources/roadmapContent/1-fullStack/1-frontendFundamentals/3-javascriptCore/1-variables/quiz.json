@@ -1,0 +1,96 @@
+{
+    "title": "JavaScript Variables & Types Quiz",
+    "description": "Test your understanding of JS variables, types, and operators.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the difference between == and === in JavaScript?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "They are identical",
+                    "isCorrect": false
+                },
+                {
+                    "text": "=== checks value and type; == only checks value with type coercion",
+                    "isCorrect": true
+                },
+                {
+                    "text": "== is for objects, === is for primitives",
+                    "isCorrect": false
+                },
+                {
+                    "text": "=== throws an error if types differ",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which keyword creates a block-scoped, re-assignable variable?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "var",
+                    "isCorrect": false
+                },
+                {
+                    "text": "const",
+                    "isCorrect": false
+                },
+                {
+                    "text": "let",
+                    "isCorrect": true
+                },
+                {
+                    "text": "static",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does typeof null return in JavaScript?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "\"null\"",
+                    "isCorrect": false
+                },
+                {
+                    "text": "\"undefined\"",
+                    "isCorrect": false
+                },
+                {
+                    "text": "\"object\"",
+                    "isCorrect": true
+                },
+                {
+                    "text": "\"boolean\"",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does the ?? operator do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Returns the right side if the left side is any falsy value",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Returns the right side only if the left side is null or undefined",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Checks if a value is defined",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Throws an error if the value is null",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

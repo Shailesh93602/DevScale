@@ -1,0 +1,4 @@
+{
+    "name": "CTEs & Subqueries",
+    "description": "Structuring complex SQL logic natively. Mastering Common Table Expressions (the WITH clause) to make massive analytical queries infinitely more readable and reusable."
+}

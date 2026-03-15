@@ -1,0 +1,118 @@
+{
+    "title": "Kafka Connect Quiz",
+    "description": "Test your knowledge on Source and Sink connectors, CDC, and SMTS.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Which of these components moves data FROM an external database INTO a Kafka topic?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Sink Connector",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Schema Registry",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Debezium Source Connector",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Kafka Streams App",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the primary advantage of log-based Change Data Capture (CDC) like Debezium over JDBC polling?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "CDC is completely stateless.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "CDC reads transaction logs capturing inserts, updates, and deletes immediately without querying the table.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "CDC enforces rigid Avro schemas directly to the source database.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "CDC translates binary SQL code into JVM bytecode.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What happens if a worker node crashes in a Kafka Connect cluster running in Distributed Mode?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The entire cluster must be rebooted.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The connectors pause until a human restarts the node.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Tasks on the dead node are automatically rebalanced and restarted on surviving nodes.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Data in transit is deleted permanently.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which feature of Kafka Connect allows you to mask PII or rename a field without writing code?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Single Message Transforms (SMTs)",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Converters",
+                    "isCorrect": false
+                },
+                {
+                    "text": "KStreams Topologies",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Log Compaction",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What role does the Schema Registry play in Kafka Connect?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It stores credentials for database authentication.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It stores and versions the structure (like Avro/Protobuf schemas) of messages to ensure compatibility between producers and consumers.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It visualizes the DAG for Airflow orchestrators.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It assigns partitions to consumers.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

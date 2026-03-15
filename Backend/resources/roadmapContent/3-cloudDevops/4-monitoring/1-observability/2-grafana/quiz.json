@@ -1,0 +1,118 @@
+{
+    "title": "Grafana Quiz",
+    "description": "Test your knowledge on Data Sources, Panels, and Dashboards as Code.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the primary relationship between Prometheus and Grafana?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Grafana replaces Prometheus entirely.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Grafana acts as the database that permanently stores metrics scraped by Prometheus.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Prometheus collects and stores the time-series data, while Grafana connects to Prometheus to query and visualize that data.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Prometheus builds dashboards, and Grafana sends Slack alerts.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which of the following describes Grafana's capability regarding Data Sources?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Grafana can only connect to Prometheus.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Grafana can connect to multiple disparate data sources (like Prometheus, PostgreSQL, and CloudWatch) on the same dashboard.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Grafana limits you to exactly one Data Source per server installation.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Grafana embeds its own SQLite database to avoid needing external Data Sources.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the benefit of using Variables (Templating) in a Grafana dashboard?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It encrypts the queries before sending them to the database.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It allows you to create a single dynamic dashboard with a dropdown menu to switch context (like between different servers or environments) instead of building a static dashboard for every single resource.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It automatically translates PromQL into SQL.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It limits user access based on their IAM role.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In a robust DevOps setup, how should Grafana Dashboards be managed to prevent data loss if the Grafana server is deleted?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "By manually clicking 'Export' every Friday and saving the file to your desktop.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By storing the Dashboard JSON definitions in a Git repository and using 'Provisioning' to automatically load them into Grafana.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "By running an SQL dump of the Prometheus database.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By taking a screenshot of the UI once a week.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which Grafana Panel type is best suited for plotting the statistical distribution of API response latencies to find outliers?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Gauge",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Stat",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Pie Chart",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Heatmap",
+                    "isCorrect": true
+                }
+            ]
+        }
+    ]
+}

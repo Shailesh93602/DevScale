@@ -1,0 +1,93 @@
+<h1>Exploratory Data Analysis (EDA)</h1>
+<p>Before writing a single line of model code, great data scientists spend the majority of their time understanding the data. EDA is the process of systematically examining a dataset to discover its structure, identify quality issues, find patterns, and develop intuitions that guide every subsequent modeling decision.</p>
+
+<h2>Data Quality Assessment</h2>
+<pre><code class="language-python">import pandas as pd
+import numpy as np
+
+df = pd.read_csv("churn_dataset.csv")
+
+# Step 1: Basic shape and types
+print(df.shape)          # (10000, 23) — 10K rows, 23 columns
+print(df.dtypes)         # Is 'customer_id' read as int? (should be str)
+print(df.head(10))       # Visual sanity check
+
+# Step 2: Missing values — what's missing and how much?
+missing = pd.DataFrame({
+    'Missing Count': df.isnull().sum(),
+    'Missing %': df.isnull().mean() * 100,
+    'Dtype': df.dtypes
+}).sort_values('Missing %', ascending=False)
+print(missing[missing['Missing Count'] > 0])
+
+# Step 3: Identify duplicates
+print(f"Duplicate rows: {df.duplicated().sum()}")
+print(f"Duplicate customer IDs: {df['customer_id'].duplicated().sum()}")
+
+# Step 4: Descriptive statistics — look for suspicious values
+print(df.describe())
+# Check: any negative ages? any prices = 0? any absurdly high values?
+</code></pre>
+
+<h2>Univariate Analysis: Understanding Each Feature</h2>
+<pre><code class="language-python">import matplotlib.pyplot as plt
+import seaborn as sns
+
+fig, axes = plt.subplots(2, 3, figsize=(15, 10))
+
+# Distribution of continuous features
+sns.histplot(df['monthly_revenue'], kde=True, ax=axes[0,0])
+axes[0,0].set_title("Monthly Revenue Distribution")
+
+# Log transform if highly skewed (right tail)
+sns.histplot(np.log1p(df['monthly_revenue']), kde=True, ax=axes[0,1])
+axes[0,1].set_title("Log(Monthly Revenue) — more normal")
+
+# Boxplot reveals outliers visually
+sns.boxplot(y=df['tenure_months'], ax=axes[0,2])
+
+# Count plot for categorical features
+sns.countplot(x='contract_type', data=df, ax=axes[1,0])
+
+# Target variable distribution (always check class imbalance!)
+churn_rate = df['churned'].value_counts(normalize=True)
+print(f"Churn rate: {churn_rate[1]:.1%}")  # Critical: 5% churn = imbalanced!
+sns.countplot(x='churned', data=df, ax=axes[1,1])
+</code></pre>
+
+<h2>Bivariate Analysis: Feature vs Target</h2>
+<pre><code class="language-python"># How does each feature relate to the target (churn)?
+
+# Numerical feature vs binary target: compare distributions
+fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+
+for i, feature in enumerate(['monthly_revenue', 'tenure_months', 'support_calls']):
+    sns.boxplot(x='churned', y=feature, data=df, ax=axes[i])
+    axes[i].set_title(f"{feature} by Churn")
+    # If box plots are similar → feature may not be predictive
+    # If clearly separated → strong predictive feature!
+
+# Correlation heatmap — identify multicollinearity
+corr_matrix = df.select_dtypes(include=[np.number]).corr()
+sns.heatmap(corr_matrix, annot=True, fmt='.2f', cmap='coolwarm', 
+            center=0, ax=axes[0])
+# High correlation between features (|r| > 0.8) = multicollinearity — consider removing one
+</code></pre>
+
+<h2>EDA-Driven Insights That Improve Models</h2>
+<pre><code class="language-python"># Example discoveries from EDA that directly improved the model:
+
+# Discovery 1: Revenue is right-skewed → apply log transform before modeling
+df['log_revenue'] = np.log1p(df['monthly_revenue'])
+
+# Discovery 2: Customers with 0 support calls AND 0 complaints never churn
+# → Create interaction feature
+df['zero_issues'] = ((df['support_calls'] == 0) & (df['complaints'] == 0)).astype(int)
+
+# Discovery 3: Churn spikes exactly at month 12 (contract renewal)
+# → Create binary feature for contract renewal period
+df['near_renewal'] = df['tenure_months'].apply(lambda x: 1 if x % 12 in [10, 11, 12] else 0)
+
+# Discovery 4: 3% of rows have 'age' = 0 (data error) → impute with median
+df.loc[df['age'] == 0, 'age'] = df['age'].median()
+</code></pre>

@@ -1,0 +1,155 @@
+<h1>Object-Oriented JavaScript & Prototypes</h1>
+<p>JavaScript's object-orientation is built on <strong>prototypal inheritance</strong> — fundamentally different from classical class-based inheritance. ES6 classes are syntactic sugar over the existing prototype system.</p>
+
+<h2>ES6 Classes</h2>
+<pre><code>class Animal {
+  // Private field (ES2022)
+  #name;
+  #sound;
+
+  constructor(name, sound) {
+    this.#name = name;
+    this.#sound = sound;
+  }
+
+  // Instance method
+  speak() {
+    return `${this.#name} says ${this.#sound}!`;
+  }
+
+  // Getter
+  get name() {
+    return this.#name;
+  }
+
+  // Static method (called on class, not instance)
+  static create(name, sound) {
+    return new Animal(name, sound);
+  }
+}
+
+const dog = new Animal('Buddy', 'Woof');
+console.log(dog.speak());   // "Buddy says Woof!"
+console.log(dog.name);      // "Buddy" (via getter)
+console.log(dog.#name);     // SyntaxError — private!</code></pre>
+
+<h2>Inheritance with extends</h2>
+<pre><code>class Dog extends Animal {
+  #breed;
+
+  constructor(name, breed) {
+    super(name, 'Woof');  // must call super() before using 'this'
+    this.#breed = breed;
+  }
+
+  fetch(item) {
+    return `${this.name} fetches the ${item}!`;
+  }
+
+  // Override parent method
+  speak() {
+    return `${super.speak()} (${this.#breed})`;
+  }
+}
+
+const rex = new Dog('Rex', 'German Shepherd');
+console.log(rex.speak());   // "Rex says Woof! (German Shepherd)"
+console.log(rex instanceof Dog);     // true
+console.log(rex instanceof Animal);  // true</code></pre>
+
+<h2>The Prototype Chain</h2>
+<p>Every JavaScript object has a hidden <code>[[Prototype]]</code> link. When you access a property, JavaScript searches up the chain:</p>
+<pre><code>const arr = [1, 2, 3];
+// arr → Array.prototype → Object.prototype → null
+
+// This is why arrays have .push(), .map(), .filter() etc.
+// They're defined on Array.prototype, shared by all arrays.
+
+// You can extend native prototypes (not recommended):
+Array.prototype.sum = function() {
+  return this.reduce((acc, n) => acc + n, 0);
+};
+
+// Better: use a static utility function instead
+function arraySum(arr) {
+  return arr.reduce((acc, n) => acc + n, 0);
+}</code></pre>
+
+<h2>Factory Functions (Alternative to Classes)</h2>
+<pre><code>function createUser(name, email) {
+  // Private state via closure
+  let loginCount = 0;
+
+  return {
+    name,
+    email,
+    login() {
+      loginCount++;
+      return `${name} logged in (${loginCount} times)`;
+    },
+    getLoginCount() {
+      return loginCount;
+    }
+  };
+}
+
+const user1 = createUser('Alice', 'alice@example.com');
+const user2 = createUser('Bob', 'bob@example.com');
+// No shared prototype — each object is independent</code></pre>
+
+<h2>Mixins — Composing Behaviors</h2>
+<pre><code>// Mixin: a bag of methods to mix into classes
+const Serializable = (Base) => class extends Base {
+  toJSON() {
+    return JSON.stringify(this);
+  }
+
+  static fromJSON(json) {
+    return Object.assign(new this(), JSON.parse(json));
+  }
+};
+
+const Printable = (Base) => class extends Base {
+  print() {
+    console.log(JSON.stringify(this, null, 2));
+  }
+};
+
+class Entity {
+  constructor(id) {
+    this.id = id;
+  }
+}
+
+// Compose multiple behaviors
+class User extends Serializable(Printable(Entity)) {
+  constructor(id, name) {
+    super(id);
+    this.name = name;
+  }
+}
+
+const user = new User(1, 'Alice');
+user.print();    // works
+user.toJSON();   // works</code></pre>
+
+<h2>Object Property Descriptors</h2>
+<pre><code>const config = {};
+
+Object.defineProperty(config, 'API_URL', {
+  value: 'https://api.example.com',
+  writable: false,    // cannot be changed
+  enumerable: true,   // shows in for...in and Object.keys
+  configurable: false // cannot be deleted or redefined
+});
+
+Object.freeze(config); // makes object fully immutable</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Use private class fields (<code>#field</code>) to properly encapsulate data.</li>
+  <li>Prefer composition (mixins/factory functions) over deep inheritance hierarchies.</li>
+  <li>Avoid extending native prototypes in library code.</li>
+  <li>Use <code>Object.freeze()</code> for configuration objects that should not be mutated.</li>
+  <li>Understand that <code>class</code> syntax is syntactic sugar — the prototype chain still exists underneath.</li>
+</ul>

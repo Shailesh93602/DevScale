@@ -1,0 +1,74 @@
+{
+    "title": "React Router Quiz",
+    "description": "Test your client-side routing knowledge with React Router v6.",
+    "passingScore": 80,
+    "timeLimit": 8,
+    "questions": [
+        {
+            "question": "Which component renders matched child route elements in React Router v6?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "<Switch>",
+                    "isCorrect": false
+                },
+                {
+                    "text": "<Outlet>",
+                    "isCorrect": true
+                },
+                {
+                    "text": "<Children>",
+                    "isCorrect": false
+                },
+                {
+                    "text": "<Render>",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How do you access URL parameters like /users/:id in React Router v6?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "this.props.match.params.id",
+                    "isCorrect": false
+                },
+                {
+                    "text": "const { id } = useParams()",
+                    "isCorrect": true
+                },
+                {
+                    "text": "const id = useRouter().query.id",
+                    "isCorrect": false
+                },
+                {
+                    "text": "window.location.params.id",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does <Navigate to='/login' replace /> do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Creates a link to /login",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Redirects to /login and replaces the current history entry (so back button skips it)",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Saves /login to localStorage",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Opens /login in a new tab",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

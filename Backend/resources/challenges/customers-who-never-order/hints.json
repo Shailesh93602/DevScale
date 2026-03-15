@@ -1,0 +1,6 @@
+[
+  "You need to find customers who do NOT appear in the Orders table.",
+  "Consider using a LEFT JOIN between Customers and Orders, then filter for NULLs.",
+  "Alternatively, use NOT IN with a subquery that selects all customerIds from Orders.",
+  "SELECT name AS Customers FROM Customers WHERE id NOT IN (SELECT customerId FROM Orders);"
+]

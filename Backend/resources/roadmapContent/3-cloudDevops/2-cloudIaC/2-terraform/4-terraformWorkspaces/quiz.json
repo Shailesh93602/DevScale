@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "Why is storing Terraform state in a local terraform.tfstate file dangerous in a team environment?",
+            "options": [
+                "Local state files use a proprietary format that can become corrupted.",
+                "Only the engineer who created it has access to it, two simultaneous 'terraform apply' runs can corrupt it, and it contains sensitive resource data (passwords, keys) that should not be committed to Git — making collaboration and safety impossible.",
+                "Local state files only work with AWS, not Azure or GCP.",
+                "Terraform deletes the local state file after each apply for security."
+            ],
+            "answer": "Only the engineer who created it has access to it, two simultaneous 'terraform apply' runs can corrupt it, and it contains sensitive resource data (passwords, keys) that should not be committed to Git — making collaboration and safety impossible.",
+            "explanation": "A corrupted state file can cause Terraform to lose track of all managed resources — potentially causing it to try to recreate your entire production infrastructure on the next apply."
+        },
+        {
+            "question": "What role does the DynamoDB table play in the S3 remote backend configuration for Terraform?",
+            "options": [
+                "It stores the actual Terraform state data more efficiently than S3.",
+                "It provides state locking — when one engineer runs 'terraform apply', Terraform writes a lock record to DynamoDB. Any concurrent 'terraform apply' attempting to run finds the lock and is immediately blocked, preventing simultaneous state corruption.",
+                "DynamoDB caches Terraform plan results for faster reruns.",
+                "It stores Terraform provider plugins to avoid re-downloading them."
+            ],
+            "answer": "It provides state locking — when one engineer runs 'terraform apply', Terraform writes a lock record to DynamoDB. Any concurrent 'terraform apply' attempting to run finds the lock and is immediately blocked, preventing simultaneous state corruption.",
+            "explanation": "Without the DynamoDB lock, two engineers running 'apply' simultaneously would both read the same state, make different changes, and the last writer wins — potentially destroying the other's changes."
+        },
+        {
+            "question": "What specific problem does 'terraform state rm' solve, and what is the critical detail about what it does NOT do?",
+            "options": [
+                "'terraform state rm' destroys the real cloud resource AND removes it from state.",
+                "'terraform state rm' removes a resource from Terraform's state file WITHOUT destroying the actual cloud resource. This is used when you want Terraform to stop managing a resource (e.g., hand it off to another team's state file) while keeping the resource running in AWS.",
+                "'terraform state rm' is equivalent to running 'terraform destroy' for one resource.",
+                "'terraform state rm' removes the entire state file and starts fresh."
+            ],
+            "answer": "'terraform state rm' removes a resource from Terraform's state file WITHOUT destroying the actual cloud resource. This is used when you want Terraform to stop managing a resource (e.g., hand it off to another team's state file) while keeping the resource running in AWS.",
+            "explanation": "This is a critical distinction. 'terraform destroy' deletes the real infrastructure. 'terraform state rm' only makes Terraform forget about it — the resource continues to exist in AWS unchanged."
+        }
+    ]
+}

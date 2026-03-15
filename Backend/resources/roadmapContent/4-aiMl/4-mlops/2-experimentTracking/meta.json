@@ -1,0 +1,10 @@
+{
+    "id": "2-experimentTracking",
+    "title": "Experiment Tracking",
+    "description": "Managing machine learning experiments, versioning, and reproducibility.",
+    "order": 2,
+    "topics": [
+        "1-mlflow",
+        "2-weightsAndBiases"
+    ]
+}

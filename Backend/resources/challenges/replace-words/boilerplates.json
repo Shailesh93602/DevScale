@@ -1,0 +1,10 @@
+{
+  "typescript": "function replaceWords(dictionary: string[], sentence: string): string {\n    \n};",
+  "javascript": "/**\n * @param {string[]} dictionary\n * @param {string} sentence\n * @return {string}\n */\nvar replaceWords = function(dictionary, sentence) {\n    \n};",
+  "python": "class Solution:\n    def replaceWords(self, dictionary: List[str], sentence: str) -> str:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public String replaceWords(List<String> dictionary, String sentence) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    string replaceWords(vector<string>& dictionary, string sentence) {\n        \n    }\n};",
+  "go": "func replaceWords(dictionary []string, sentence string) string {\n    \n}",
+  "rust": "impl Solution {\n    pub fn replace_words(dictionary: Vec<String>, sentence: String) -> String {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public string ReplaceWords(IList<string> dictionary, string sentence) {\n        \n    }\n}"
+}

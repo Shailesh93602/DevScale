@@ -1,0 +1,20 @@
+{
+  "title": "Rotting Oranges",
+  "slug": "rotting-oranges",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["array","breadth-first-search","matrix"],
+  "company_tags": ["Amazon","Facebook","Microsoft","Google"],
+  "topic_tags": ["graphs","breadth-first search","matrix"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An `m x n` grid where each cell can be: `0` (empty), `1` (fresh orange), or `2` (rotten orange).",
+  "output_format": "The minimum number of minutes that must elapse until no cell has a fresh orange. If it is impossible, return `-1`.",
+  "example_input": "grid = [[2,1,1],[1,1,0],[0,1,1]]",
+  "example_output": "4",
+  "constraints": "- `m == grid.length`\n- `n == grid[i].length`\n- `1 <= m, n <= 10`\n- `grid[i][j]` is `0`, `1`, or `2`.",
+  "function_signature": "function orangesRotting(grid: number[][]): number {}",
+  "status": "ACTIVE"
+}

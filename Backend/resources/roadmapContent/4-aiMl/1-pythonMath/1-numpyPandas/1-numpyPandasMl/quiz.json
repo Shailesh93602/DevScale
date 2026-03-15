@@ -1,0 +1,74 @@
+{
+    "title": "NumPy & Pandas for ML Quiz",
+    "description": "Test your data preprocessing and feature engineering knowledge.",
+    "passingScore": 80,
+    "timeLimit": 8,
+    "questions": [
+        {
+            "question": "Why should you call scaler.fit_transform() on training data but only scaler.transform() on test data?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The test set doesn't need scaling",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Fitting on test data would leak statistical information from the test set, giving artificially good results",
+                    "isCorrect": true
+                },
+                {
+                    "text": "transform() is faster than fit_transform()",
+                    "isCorrect": false
+                },
+                {
+                    "text": "This is just a style convention, not technically important",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does 'stratify=y' do in train_test_split?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Sorts the data before splitting",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Ensures the class proportion in y is preserved in both train and test splits",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Splits the data by the y column value",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Ensures no duplicate rows in the splits",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is one-hot encoding used for in machine learning?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Normalising numerical features",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Converting categorical variables into binary columns so algorithms can process them without implying ordinal relationships",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Encrypting sensitive feature data",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Reducing the number of features",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

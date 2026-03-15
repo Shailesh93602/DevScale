@@ -1,0 +1,29 @@
+{
+  "title": "Find Minimum in Rotated Sorted Array",
+  "slug": "find-minimum-in-rotated-sorted-array",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["array", "binary-search"],
+  "company_tags": ["Amazon", "Microsoft", "Facebook"],
+  "topic_tags": ["arrays", "binary search"],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer array `nums` of unique elements.",
+  "output_format": "The minimum element of this array.",
+  "example_input": "nums = [3,4,5,1,2]",
+  "example_output": "1",
+  "constraints": "- `n == nums.length`\n- `1 <= n <= 5000`\n- `-5000 <= nums[i] <= 5000`\n- All the integers of `nums` are unique.\n- `nums` is sorted and rotated between `1` and `n` times.",
+  "function_signature": "function findMin(nums: number[]): number {}",
+  "status": "ACTIVE"
+}

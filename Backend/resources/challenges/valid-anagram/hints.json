@@ -1,0 +1,6 @@
+[
+  "Two strings are anagrams if they have the same characters with the same frequencies.",
+  "A quick check: if `s.length !== t.length`, immediately return false.",
+  "One approach: sort both strings and compare. `O(n log n) time`.",
+  "Optimal approach: use a frequency map — count characters in `s`, then subtract for `t`. If any count goes non-zero, return false."
+]

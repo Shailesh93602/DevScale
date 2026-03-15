@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What naming convention must all custom hooks follow?",
+            "options": [
+                "Start with 'get'",
+                "Start with 'use'",
+                "Start with 'hook'",
+                "Start with 'handle'"
+            ],
+            "answer": "Start with 'use'",
+            "explanation": "React identifies hooks by the 'use' prefix. This naming convention also enables linting rules (eslint-plugin-react-hooks) to enforce the Rules of Hooks."
+        },
+        {
+            "question": "Why should a useFetch hook return a cleanup function from useEffect?",
+            "options": [
+                "To reset state when the URL changes",
+                "To abort the in-flight fetch request when the component unmounts or URL changes",
+                "To save the response to localStorage",
+                "To prevent the useEffect from running twice in development"
+            ],
+            "answer": "To abort the in-flight fetch request when the component unmounts or URL changes",
+            "explanation": "Without cleanup, an unmounted component might try to call setState after unmounting, causing memory leaks and React warnings. AbortController.abort() cancels the fetch."
+        },
+        {
+            "question": "What does a useDebounce hook prevent?",
+            "options": [
+                "Prevents state updates during renders",
+                "Prevents excessive API calls by delaying the update until the user stops typing",
+                "Prevents React from batching state updates",
+                "Prevents memory leaks in event handlers"
+            ],
+            "answer": "Prevents excessive API calls by delaying the update until the user stops typing",
+            "explanation": "useDebounce delays the propagation of a value until it stops changing for a specified delay, reducing the frequency of expensive operations like API calls during search input."
+        },
+        {
+            "question": "Do two components using the same custom hook share state?",
+            "options": [
+                "Yes, custom hooks act as singletons",
+                "No, each component call creates completely isolated state",
+                "Yes, if they're in the same parent component",
+                "Only if the hook uses useContext"
+            ],
+            "answer": "No, each component call creates completely isolated state",
+            "explanation": "Custom hooks are just functions. Each call to a hook creates a fresh, isolated instance of all the state and effects inside it — just like calling useState() in multiple components."
+        },
+        {
+            "question": "What should a useLocalStorage hook use to read the initial value lazily?",
+            "options": [
+                "useEffect with an empty dependency array",
+                "A useState initializer function (lazy initialization)",
+                "useLayoutEffect",
+                "useRef to avoid re-renders"
+            ],
+            "answer": "A useState initializer function (lazy initialization)",
+            "explanation": "useState(() => localStorage.getItem(key)) uses lazy initialization — the function only runs once on mount, avoiding repeated localStorage reads on every render."
+        }
+    ]
+}

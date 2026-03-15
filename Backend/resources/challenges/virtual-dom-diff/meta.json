@@ -1,0 +1,19 @@
+{
+  "title": "Virtual DOM Diffing Algorithm",
+  "slug": "virtual-dom-diff",
+  "difficulty": "Hard",
+  "category": "frontend",
+  "points": 150,
+  "tags": ["javascript", "virtual-dom", "react", "diffing", "algorithms"],
+  "company_tags": ["Meta", "Google", "Amazon", "Netflix"],
+  "topic_tags": ["Virtual DOM", "Tree Diffing", "React Internals"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Two virtual DOM trees (old and new)",
+  "output_format": "A list of patch operations to transform the old tree into the new tree",
+  "example_input": "diff(oldVNode, newVNode)",
+  "example_output": "[{ type: 'REPLACE', node: newVNode }, { type: 'PROPS', props: changedProps }]",
+  "constraints": "VNodes have type, props, and children. Children is an array of VNodes or strings.",
+  "function_signature": "function diff(oldTree: VNode, newTree: VNode): Patch[]",
+  "status": "ACTIVE"
+}

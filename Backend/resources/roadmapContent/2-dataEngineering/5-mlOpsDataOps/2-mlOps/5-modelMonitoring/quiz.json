@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the core reason why even a perfectly accurate production ML model will inevitably degrade in performance over time without any changes to the code?",
+            "options": [
+                "Cloud servers gradually introduce computation errors over time.",
+                "The real world changes — the statistical distribution of input data and the relationships between features and outcomes shifts over time, while the model's internal assumptions, trained on historical data, remain fixed and become progressively misaligned with reality.",
+                "Model weights decay due to floating-point precision loss.",
+                "Production traffic always exceeds the model's originally rated capacity."
+            ],
+            "answer": "The real world changes — the statistical distribution of input data and the relationships between features and outcomes shifts over time, while the model's internal assumptions, trained on historical data, remain fixed and become progressively misaligned with reality.",
+            "explanation": "A model trained on 2020 data operates in 2024. Consumer behavior, economic conditions, and device preferences all changed fundamentally. The model does not know this."
+        },
+        {
+            "question": "What specifically distinguishes 'Data Drift' (Covariate Shift) from 'Concept Drift' in the context of ML model degradation?",
+            "options": [
+                "Data Drift affects only structured data; Concept Drift affects unstructured data.",
+                "Data Drift occurs when the statistical distribution of input features changes (e.g., more mobile users than desktop). Concept Drift occurs when the fundamental relationship between features and the target variable changes (e.g., previously low-risk factors now correlate with high failure rates).",
+                "Data Drift is detectable by humans; Concept Drift requires automated tools.",
+                "Data Drift only affects classification models; Concept Drift affects regression models."
+            ],
+            "answer": "Data Drift occurs when the statistical distribution of input features changes (e.g., more mobile users than desktop). Concept Drift occurs when the fundamental relationship between features and the target variable changes (e.g., previously low-risk factors now correlate with high failure rates).",
+            "explanation": "Data Drift: 'The input data looks different.' Concept Drift: 'The same input data now means something different for the output.' Both degrade model accuracy but require different interventions."
+        },
+        {
+            "question": "What is the Population Stability Index (PSI) used to measure in a model monitoring pipeline?",
+            "options": [
+                "The number of unique users who trigger the model each day.",
+                "The degree to which the statistical distribution of a specific feature in current production data has shifted compared to the reference baseline distribution from the training dataset, helping teams quantify and threshold-gate significant feature drift.",
+                "The model's prediction latency in milliseconds at the 99th percentile.",
+                "The number of model parameters that changed during the last retraining run."
+            ],
+            "answer": "The degree to which the statistical distribution of a specific feature in current production data has shifted compared to the reference baseline distribution from the training dataset, helping teams quantify and threshold-gate significant feature drift.",
+            "explanation": "A PSI of 0 means perfect stability — the production distribution exactly matches training. A PSI above 0.2 signals significant drift that likely requires retraining."
+        }
+    ]
+}

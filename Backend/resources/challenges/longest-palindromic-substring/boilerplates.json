@@ -1,0 +1,10 @@
+{
+  "typescript": "function longestPalindrome(s: string): string {\n    \n};",
+  "javascript": "/**\n * @param {string} s\n * @return {string}\n */\nvar longestPalindrome = function(s) {\n    \n};",
+  "python": "class Solution:\n    def longestPalindrome(self, s: str) -> str:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public String longestPalindrome(String s) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    string longestPalindrome(string s) {\n        \n    }\n};",
+  "go": "func longestPalindrome(s string) string {\n    \n}",
+  "rust": "impl Solution {\n    pub fn longest_palindrome(s: String) -> String {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public string LongestPalindrome(string s) {\n        \n    }\n}"
+}

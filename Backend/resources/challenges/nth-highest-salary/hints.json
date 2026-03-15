@@ -1,0 +1,6 @@
+[
+  "First get distinct salaries and order them descending.",
+  "Use LIMIT 1 OFFSET (N-1) to skip to the Nth salary.",
+  "Wrap the query in a subquery to return NULL if the Nth salary doesn't exist.",
+  "Alternatively, use DENSE_RANK() to rank distinct salaries and filter for rank = N."
+]

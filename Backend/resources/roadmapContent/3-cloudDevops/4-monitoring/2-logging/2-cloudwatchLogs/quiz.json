@@ -1,0 +1,118 @@
+{
+    "title": "CloudWatch Logs Quiz",
+    "description": "Test your knowledge on Log Groups, Metric Filters, and AWS native logging.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "How are logs organized fundamentally within AWS CloudWatch?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "By Region mapping directly to raw text files.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By Folders containing zipped CSV files.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By IAM Roles and Policies.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By Log Groups (the application level) which contain multiple Log Streams (the instance/container level).",
+                    "isCorrect": true
+                }
+            ]
+        },
+        {
+            "question": "Which of the following AWS services automatically sends its `stdout` log output to CloudWatch Logs with zero configuration required?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "RDS PostgreSQL",
+                    "isCorrect": false
+                },
+                {
+                    "text": "EC2 Instances",
+                    "isCorrect": false
+                },
+                {
+                    "text": "S3 Buckets",
+                    "isCorrect": false
+                },
+                {
+                    "text": "AWS Lambda Serverless Functions",
+                    "isCorrect": true
+                }
+            ]
+        },
+        {
+            "question": "If you want to trigger an automated PagerDuty alert every time the word 'Timeout' appears more than 5 times in a log file, what CloudWatch feature do you use?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "You install an ELK stack instead.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "You write a Lambda function to parse the logs.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Create a Metric Filter to count the pattern, then create a CloudWatch Alarm tied to that metric.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "You use CloudTrail.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is CloudWatch Logs Insights?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A machine learning predictive algorithm.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A monthly PDF billing report.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "An automated security scanner.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "An interactive query language and tool within the AWS Console used to search and analyze terabytes of log data quickly.",
+                    "isCorrect": true
+                }
+            ]
+        },
+        {
+            "question": "Why do many DevOps teams export older CloudWatch Logs to Amazon S3 rather than keeping them in CloudWatch indefinitely?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "CloudWatch forcibly deletes unencrypted logs every 24 hours.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "CloudWatch Logs is significantly more expensive for massive, long-term multi-year storage compared to S3/Glacier.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "CloudWatch is not compliant with GDPR.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "S3 allows faster searching using Kibana.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

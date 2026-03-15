@@ -1,0 +1,41 @@
+{
+  "title": "Remove Nth Node From End of List",
+  "slug": "remove-nth-node-from-end-of-list",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": [
+    "linked-list",
+    "two-pointers"
+  ],
+  "company_tags": [
+    "Amazon",
+    "Microsoft",
+    "Facebook",
+    "Apple",
+    "Bloomberg"
+  ],
+  "topic_tags": [
+    "linked lists",
+    "two pointers"
+  ],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "The `head` of a linked list and an integer `n`.",
+  "output_format": "The head of the modified linked list.",
+  "example_input": "head = [1,2,3,4,5], n = 2",
+  "example_output": "[1,2,3,5]",
+  "constraints": "- The number of nodes in the list is `sz`.\n- `1 <= sz <= 30`\n- `0 <= Node.val <= 100`\n- `1 <= n <= sz`",
+  "function_signature": "function removeNthFromEnd(head: ListNode | null, n: number): ListNode | null {}",
+  "status": "ACTIVE"
+}

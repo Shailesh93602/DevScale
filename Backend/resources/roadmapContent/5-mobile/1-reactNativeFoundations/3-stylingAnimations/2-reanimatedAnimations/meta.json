@@ -1,0 +1,4 @@
+{
+    "name": "Reanimated 2 & Layout Animations",
+    "description": "Creating buttery-smooth 60fps animations that run on the UI thread. Understanding Reanimated 2's worklet system and why it outperforms the Animated API, shared values and derived values, useAnimatedStyle for declarative animations, entering/exiting layout animations, LayoutAnimation for simple transitions, and building a collapsing header with Reanimated and Gesture Handler."
+}

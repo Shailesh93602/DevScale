@@ -1,0 +1,114 @@
+<h1>Testing React Components</h1>
+<p>Testing gives you confidence that your components work correctly over time. Modern React testing relies mostly on two tools: <strong>Jest</strong> (the test runner) and <strong>React Testing Library</strong> (the rendering and assertion utilities).</p>
+
+<h2>Philosophy: React Testing Library (RTL)</h2>
+<p>Unlike older tools (like Enzyme) that inspected the internal state (<code>useState</code> values) or the component tree, RTL follows a simple rule: <strong>"The more your tests resemble the way your software is used, the more confidence they can give you."</strong></p>
+<p>You should query the DOM exactly how a user does: by finding text, ARIA roles, or labels, rather than searching for specific CSS classes or component names.</p>
+
+<h2>Basic Component Test</h2>
+<pre><code>import { render, screen, fireEvent } from '@testing-library/react';
+import Greeting from './Greeting';
+
+test('renders the greeting and interacts', () =&gt; {
+  // 1. Render the component in a virtual DOM
+  render(&lt;Greeting name="Alice" /&gt;);
+
+  // 2. Query the DOM (using user-centric queries)
+  const heading = screen.getByRole('heading', { name: /hello alice/i });
+  expect(heading).toBeInTheDocument();
+
+  // 3. Interact
+  const button = screen.getByRole('button', { name: /change name/i });
+  fireEvent.click(button);
+
+  // 4. Assert changes
+  expect(screen.getByText(/hello bob/i)).toBeInTheDocument();
+});</code></pre>
+
+<h2>Queries: Finding Elements</h2>
+<p>RTL provides several queries. They are ordered by accessibility preference:</p>
+<ol>
+  <li><code>getByRole</code>: Best option. Queries by ARIA role (button, heading, link, textbox).</li>
+  <li><code>getByLabelText</code>: For form inputs.</li>
+  <li><code>getByPlaceholderText</code>: For inputs without labels (less ideal).</li>
+  <li><code>getByText</code>: Good for finding non-interactive elements like paragraphs.</li>
+  <li><code>getByTestId</code>: The last resort. Use when the element is impossible to find otherwise.</li>
+</ol>
+
+<p>Queries also come in three variants based on expected results:</p>
+<ul>
+  <li><code>getBy...</code>: Returns the element. Throws an error if not found.</li>
+  <li><code>queryBy...</code>: Returns the element, or <code>null</code> if not found. Use to assert an element is NOT present.</li>
+  <li><code>findBy...</code>: Returns a Promise. Use for elements that will appear asynchronously.</li>
+</ul>
+
+<h2>Testing User Events</h2>
+<p>While <code>fireEvent</code> works for simple clicks, the <code>@testing-library/user-event</code> library simulates real user behavior much more accurately (focusing, typing character by character, firing keydown events).</p>
+
+<pre><code>import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import LoginForm from './LoginForm';
+
+test('submitting a form login', async () =&gt; {
+  // Setup userEvent
+  const user = userEvent.setup();
+  render(&lt;LoginForm /&gt;);
+
+  // Find inputs
+  const emailInput = screen.getByLabelText(/email/i);
+  const passwordInput = screen.getByLabelText(/password/i);
+  const submitButton = screen.getByRole('button', { name: /login/i });
+
+  // Simulate typing (asynchronous)
+  await user.type(emailInput, 'test@example.com');
+  await user.type(passwordInput, 'secret123');
+  
+  // Submit
+  await user.click(submitButton);
+
+  // Asserting async result (e.g. success message loads)
+  const successMsg = await screen.findByText(/welcome back/i);
+  expect(successMsg).toBeInTheDocument();
+});</code></pre>
+
+<h2>Mocking API Calls with MSW (Mock Service Worker)</h2>
+<p>Mocking <code>fetch</code> or <code>axios</code> directly is brittle. <strong>Mock Service Worker (MSW)</strong> intercepts network requests at the network level, letting your components fetch data as if they were talking to a real API.</p>
+
+<pre><code>import { render, screen } from '@testing-library/react';
+import { setupServer } from 'msw/node';
+import { http, HttpResponse } from 'msw';
+import UserList from './UserList';
+
+// Setup mock server
+const server = setupServer(
+  http.get('/api/users', () =&gt; {
+    return HttpResponse.json([
+      { id: 1, name: 'Alice' },
+      { id: 2, name: 'Bob' }
+    ]);
+  })
+);
+
+beforeAll(() =&gt; server.listen());
+afterEach(() =&gt; server.resetHandlers());
+afterAll(() =&gt; server.close());
+
+test('fetches and displays users', async () =&gt; {
+  render(&lt;UserList /&gt;);
+  
+  // Initially loading
+  expect(screen.getByText(/loading/i)).toBeInTheDocument();
+
+  // Wait for the async API call to resolve
+  const aliceItem = await screen.findByText('Alice');
+  expect(aliceItem).toBeInTheDocument();
+  expect(screen.getByText('Bob')).toBeInTheDocument();
+});</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Stop testing implementation details (e.g. <code>expect(component.state().count).toBe(1)</code>). Test what the user sees in the DOM.</li>
+  <li>Avoid wrapping your render calls in large custom setup functions unless strictly necessary for Providers (Router, Redux, Context).</li>
+  <li>Use <code>screen.debug()</code> generously when tests fail to visually see the virtual DOM state.</li>
+  <li>Always use <code>findBy...</code> for assertions related to asynchronous state updates.</li>
+</ul>

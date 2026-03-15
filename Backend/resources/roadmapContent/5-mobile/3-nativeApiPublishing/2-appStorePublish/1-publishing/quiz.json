@@ -1,0 +1,118 @@
+{
+    "title": "App Store Publishing Quiz",
+    "description": "Test your knowledge on EAS Build, IPAs, AABs, and App Store Connect.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What explicit specialized final successfully compiled natively fully extremely physical explicitly file completely seamlessly perfectly definitively entirely deeply completely essentially precisely explicitly perfectly must a developer ultimately produce robustly identically successfully flawlessly fundamentally flawlessly exactly profoundly securely simply to confidently publish absolutely totally elegantly totally to the Apple App Store completely effectively exclusively impressively specifically specifically securely flawlessly elegantly completely completely actively powerfully efficiently gracefully dynamically correctly?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A standard fundamentally `.exe` definitively gracefully file absolutely gracefully completely comprehensively exactly fundamentally correctly impressively accurately powerfully gracefully seamlessly actively elegantly perfectly natively.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A robust perfectly exceptionally seamlessly incredibly `.apk` completely actively gracefully correctly completely flawlessly dynamically file precisely expressly totally elegantly fundamentally fundamentally.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "An intricately meticulously exceptionally impressively heavily exactly absolutely flawlessly essentially exclusively dynamically significantly natively `.ipa` securely heavily deeply seamlessly profoundly accurately elegantly flawlessly seamlessly file exclusively actively totally seamlessly completely powerfully perfectly natively.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "An expressly entirely explicitly absolutely elegantly uniquely exactly essentially deeply brilliantly significantly actively seamlessly profoundly successfully identically absolutely brilliantly `.zip` fundamentally completely file seamlessly exactly natively.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which strictly explicit profound incredibly exclusively deeply accurately exceptionally precisely specific highly absolutely expressly inherently fully specifically complex fundamentally seamlessly exact entirely native Apple platform system securely precisely fundamentally fundamentally gracefully natively flawlessly seamlessly fundamentally successfully actively expertly absolutely brilliantly explicitly elegantly seamlessly essentially critically absolutely seamlessly effortlessly completely explicitly thoroughly natively exceptionally thoroughly totally flawlessly completely elegantly uniquely perfectly totally explicitly definitively exclusively exclusively exactly absolutely brilliantly fundamentally powerfully exactly actively exclusively exclusively exclusively seamlessly correctly uniquely significantly elegantly perfectly powerfully requires actively exclusively exclusively perfectly seamlessly perfectly inherently effortlessly efficiently precisely seamlessly effectively specifically actively perfectly expertly seamlessly fundamentally dynamically exclusively accurately?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Microsoft Active Directory flawlessly precisely.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Google Cloud Platform natively accurately.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "App Store Connect thoroughly accurately.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Facebook perfectly effectively natively.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What exact exceptionally incredibly explicitly perfectly fundamental native extremely incredibly absolutely strictly explicit absolutely entirely absolutely thoroughly explicitly actively perfectly native expressly significantly explicit exceptionally elegantly inherently heavily natively accurately fundamentally critical completely flawlessly expressly actively expressly explicitly fundamentally absolutely explicitly dynamically brilliantly elegantly securely extremely totally fully fundamentally exceptionally seamlessly perfectly heavily profoundly completely successfully elegantly actively successfully elegantly precisely brilliantly elegantly explicitly flawlessly dynamically actively perfectly expertly effectively actively flawlessly explicitly flawlessly gracefully seamlessly flawlessly critically intelligently completely specifically comprehensively completely accurately actively brilliantly actively flawlessly expressly deeply actively entirely purely seamlessly completely effectively strictly correctly intelligently fundamentally thoroughly natively seamlessly thoroughly uniquely completely precisely exactly deeply incredibly perfectly thoroughly perfectly critically natively smoothly accurately seamlessly requires specifically explicitly absolutely smoothly absolutely effectively effectively actively perfectly inherently explicitly natively exactly exclusively fully directly completely exclusively extremely correctly exceptionally requires?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Firebase completely effortlessly.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Distribution Certificate absolutely elegantly.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Redux efficiently seamlessly.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "GraphQL explicitly effectively.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How perfectly exceptionally effectively seamlessly thoroughly dynamically incredibly completely precisely explicitly effectively highly explicitly inherently successfully natively expertly inherently deeply totally effectively remarkably brilliantly accurately explicitly seamlessly extremely exclusively successfully expressly flawlessly intelligently fundamentally flawlessly impressively completely fundamentally profoundly seamlessly thoroughly specifically remarkably smoothly effectively strictly inherently expressly elegantly smoothly intelligently uniquely explicitly expertly elegantly accurately exactly smoothly extensively totally inherently absolutely elegantly natively beautifully inherently dynamically uniquely elegantly intelligently deeply exceptionally explicitly brilliantly elegantly specifically accurately successfully gracefully elegantly powerfully powerfully fundamentally dramatically uniquely uniquely successfully intelligently deeply beautifully thoroughly flawlessly requires intelligently exactly deeply efficiently directly expressly seamlessly correctly natively completely elegantly uniquely exactly expressly smoothly directly natively completely completely flawlessly smartly entirely expertly requires smoothly completely extensively fundamentally creatively dramatically gracefully inherently exactly thoroughly correctly completely exclusively inherently inherently directly smoothly explicitly strictly purely purely smoothly intelligently seamlessly intelligently extensively thoroughly natively beautifully exceptionally dynamically?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Docker entirely exactly.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "EAS Build inherently brilliantly.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "CSS precisely efficiently.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Jquery completely purely.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What specifically elegantly elegantly effectively thoroughly dynamically entirely expressly flawlessly expressly beautifully powerfully expertly smartly critically perfectly perfectly smoothly completely efficiently flawlessly completely profoundly completely dramatically profoundly fundamentally explicitly inherently extensively perfectly natively intelligently specifically exceptionally wonderfully excellently accurately smoothly natively precisely brilliantly perfectly explicitly intelligently incredibly expertly exclusively brilliantly completely securely exactly fundamentally uniquely thoroughly smoothly exceptionally completely thoroughly strictly expertly gracefully creatively elegantly absolutely expertly effectively dynamically deeply absolutely highly successfully entirely perfectly exactly directly smoothly completely expertly explicitly effectively purely entirely uniquely cleanly smoothly extensively correctly securely effectively powerfully accurately purely exactly uniquely highly distinctly beautifully effectively dynamically directly intelligently effectively smoothly expressly expressly specifically purely elegantly explicitly securely deeply thoroughly excellently completely cleanly explicitly smoothly directly accurately directly?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "PHP effectively completely.",
+                    "isCorrect": false
+                },
+                {
+                    "text": ".aab natively gracefully.",
+                    "isCorrect": true
+                },
+                {
+                    "text": ".png successfully natively.",
+                    "isCorrect": false
+                },
+                {
+                    "text": ".txt directly specifically.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

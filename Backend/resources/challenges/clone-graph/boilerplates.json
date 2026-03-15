@@ -1,0 +1,10 @@
+{
+  "typescript": "/**\n * Definition for _Node.\n * class _Node {\n *     val: number\n *     neighbors: _Node[]\n *     constructor(val?: number, neighbors?: _Node[]) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.neighbors = (neighbors===undefined ? [] : neighbors)\n *     }\n * }\n */\n\nfunction cloneGraph(node: _Node | null): _Node | null {\n    \n};",
+  "javascript": "/**\n * @param {Node} node\n * @return {Node}\n */\nvar cloneGraph = function(node) {\n    \n};",
+  "python": "class Solution:\n    def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public Node cloneGraph(Node node) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    Node* cloneGraph(Node* node) {\n        \n    }\n};",
+  "go": "func cloneGraph(node *Node) *Node {\n    \n}",
+  "rust": "impl Solution {\n    pub fn clone_graph(node: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Node>>> {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public Node CloneGraph(Node node) {\n        \n    }\n}"
+}

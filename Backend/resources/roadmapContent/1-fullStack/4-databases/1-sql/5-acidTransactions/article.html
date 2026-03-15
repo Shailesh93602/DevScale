@@ -1,0 +1,63 @@
+<h1>ACID Transactions in SQL</h1>
+<p>When you build an application that handles money (like Stripe or a Bank), things will go wrong. Servers crash, code throws errors, and database connections drop. If a user transfers $100 to their friend, the database must execute two separate commands:</p>
+<ol>
+  <li>Subtract $100 from the Sender's balance.</li>
+  <li>Add $100 to the Receiver's balance.</li>
+</ol>
+<p><strong>What happens if the server crashes exactly between step 1 and step 2?</strong> The $100 disappears entirely! To prevent this, Relational Databases guarantee <strong>ACID Properties</strong> by utilizing <strong>Transactions</strong>.</p>
+
+<h2>What is a Transaction?</h2>
+<p>A Transaction groups multiple SQL operations into a single, indivisible block of work. It is wrapped with <code>BEGIN</code> and finalized with either <code>COMMIT</code> (save everything permanently) or <code>ROLLBACK</code> (undo everything instantly).</p>
+
+<pre><code>BEGIN; -- Open the transaction block
+
+UPDATE accounts SET balance = balance - 100 WHERE id = 1; -- Execute Step 1
+UPDATE accounts SET balance = balance + 100 WHERE id = 2; -- Execute Step 2
+
+COMMIT; -- If both succeed, lock them in.
+-- If Step 2 fails, you run: ROLLBACK; to restore the balance.
+</code></pre>
+
+<h2>The ACID Properties Defined</h2>
+<p>A database must guarantee these four properties to be considered reliable:</p>
+
+<h3>1. Atomicity (All or Nothing)</h3>
+<p>A transaction must act as a single "Atomic" unit. If a transaction has 5 steps, and step 4 fails, steps 1, 2, and 3 are automatically aborted and rolled back. The database is never left in a partially updated state.</p>
+
+<h3>2. Consistency</h3>
+<p>The database must transition from one valid state to another valid state. If you defined an SQL constraint stating <code>balance &gt;= 0</code>, and a transaction tries to subtract $500 from a $200 account, the database rejects the entire transaction violently to maintain Consistency.</p>
+
+<h3>3. Isolation</h3>
+<p>If 100 users hit the database at the exact same millisecond, their transactions might try to read/write the same row simultaneously. <strong>Isolation</strong> ensures that transactions executing concurrently produce the exact same final result as if they had executed sequentially (one after the other). The database achieves this by using <strong>Row-Level Locks</strong>.</p>
+<p><em>Example:</em> If Transaction A reads a row, and Transaction B tries to modify that row before A finishes, the database physically forces Transaction B to pause and wait until A executes a <code>COMMIT</code>.</p>
+
+<h3>4. Durability</h3>
+<p>Once a transaction is successfully completed (<code>COMMIT</code>), the changes are guaranteed to be permanently saved to the hard drive, even if the database server loses power 10 milliseconds later. The database writes changes to an append-only WAL (Write-Ahead Log) physically on the disk before acknowledging the commit to your backend API.</p>
+
+<h2>Implementing Transactions in Node.js</h2>
+<p>If you are using PostgreSQL in Node.js (via the <code>pg</code> library or an ORM like Prisma), you MUST manage the transaction programmatically. If your Node code crashes, you must catch the error and execute the SQL <code>ROLLBACK</code> command.</p>
+
+<pre><code>// Using raw 'pg' library with async/await
+const client = await pool.connect();
+
+try {
+  // 1. Begin the Transaction!
+  await client.query('BEGIN');
+
+  // 2. Execute multiple queries
+  await client.query('UPDATE accounts SET balance = balance - 100 WHERE id = 1');
+  await client.query('UPDATE accounts SET balance = balance + 100 WHERE id = 2');
+
+  // 3. Commit successfully
+  await client.query('COMMIT');
+
+} catch (e) {
+  // 4. Critical: Catch the error and aggressively ROLLBACK!
+  await client.query('ROLLBACK');
+  throw e;
+} finally {
+  client.release(); // Return connection to pool
+}</code></pre>
+
+<h2>Isolation Levels</h2>
+<p>Relational Databases allow you to tune how aggressively they lock rows (Isolation). Locking rows strictly prevents bugs, but drastically slows down the database because transactions have to wait in line. <code>Read Committed</code> is the default in PostgreSQL. <code>Serializable</code> is the safest (but slowest) level, forcing transactions to behave as if they literally ran one by one in a single-file line.</p>

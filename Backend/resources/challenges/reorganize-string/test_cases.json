@@ -1,0 +1,9 @@
+[
+  {"input":"{\"s\":\"aab\"}","output":"\"aba\"","explanation":"Valid shuffle","is_hidden":false},
+  {"input":"{\"s\":\"aaab\"}","output":"\"\"","explanation":"Impossible shuffle","is_hidden":false},
+  {"input":"{\"s\":\"vvvlo\"}","output":"\"vlvov\"","explanation":"Valid shuffle","is_hidden":true},
+  {"input":"{\"s\":\"abbabbaa\"}","output":"\"abababab\"","explanation":"alternating pattern","is_hidden":true},
+  {"input":"{\"s\":\"z\"}","output":"\"z\"","explanation":"Single character","is_hidden":true},
+  {"input":"{\"s\":\"zhz\"}","output":"\"zhz\"","explanation":"Palindrome","is_hidden":true},
+  {"input":"{\"s\":\"aaabbc\"}","output":"\"ababac\"","explanation":"Multi char shuffle","is_hidden":true}
+]

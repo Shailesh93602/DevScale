@@ -1,0 +1,6 @@
+[
+  "This is the inverse of Promise.all — resolve on first success, collect errors on failure.",
+  "Wrap each value with Promise.resolve() and attach .then(resolve, ...) to resolve the outer promise on first success.",
+  "Keep an errors array and a rejectedCount. When all have rejected, reject with new AggregateError(errors).",
+  "Handle the empty array edge case — it should reject immediately since no promise can possibly fulfill."
+]

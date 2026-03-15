@@ -1,0 +1,74 @@
+{
+    "title": "SQL Fundamentals Quiz",
+    "description": "Test your SQL querying and database knowledge.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the difference between WHERE and HAVING in SQL?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "They are identical — WHERE and HAVING can be used interchangeably",
+                    "isCorrect": false
+                },
+                {
+                    "text": "WHERE filters rows before grouping; HAVING filters groups after GROUP BY",
+                    "isCorrect": true
+                },
+                {
+                    "text": "WHERE works on strings; HAVING works on numbers",
+                    "isCorrect": false
+                },
+                {
+                    "text": "HAVING is faster than WHERE",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What type of JOIN returns all rows from the left table and matched rows from the right (or NULL)?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "INNER JOIN",
+                    "isCorrect": false
+                },
+                {
+                    "text": "RIGHT JOIN",
+                    "isCorrect": false
+                },
+                {
+                    "text": "LEFT JOIN",
+                    "isCorrect": true
+                },
+                {
+                    "text": "CROSS JOIN",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does an index do in a relational database?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It enforces uniqueness constraints",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It creates a data structure to speed up lookups on specific columns, reducing full-table scans",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It automatically backs up the table",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It links tables together like a foreign key",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

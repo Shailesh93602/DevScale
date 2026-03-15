@@ -1,0 +1,10 @@
+{
+  "typescript": "function findMinHeightTrees(n: number, edges: number[][]): number[] {\n    \n};",
+  "javascript": "/**\n * @param {number} n\n * @param {number[][]} edges\n * @return {number[]}\n */\nvar findMinHeightTrees = function(n, edges) {\n    \n};",
+  "python": "class Solution:\n    def findMinHeightTrees(self, n: int, edges: List[List[int]]) -> List[int]:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public List<Integer> findMinHeightTrees(int n, int[][] edges) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> findMinHeightTrees(int n, vector<vector<int>>& edges) {\n        \n    }\n};",
+  "go": "func findMinHeightTrees(n int, edges [][]int) []int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn find_min_height_trees(n: i32, edges: Vec<Vec<i32>>) -> Vec<i32> {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public IList<int> FindMinHeightTrees(int n, int[][] edges) {\n        \n    }\n}"
+}

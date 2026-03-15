@@ -1,0 +1,6 @@
+[
+  "The easiest way would be to multiply all numbers together, then divide by the current element. But division is not allowed!",
+  "Think about what the final answer for index `i` is composed of. It's the product of everything to the LEFT of `i`, multiplied by the product of everything to the RIGHT of `i`.",
+  "You can pre-compute two arrays: one containing the prefix products and another containing the suffix products.",
+  "To optimize space to O(1) (excluding the output array), use the output array to store the prefix products first. Then, iterate backwards to compute and multiply the suffix products on the fly."
+]

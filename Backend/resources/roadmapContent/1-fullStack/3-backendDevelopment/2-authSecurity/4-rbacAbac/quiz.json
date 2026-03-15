@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary difference between a 401 Unauthorized error and a 403 Forbidden error in HTTP?",
+            "options": [
+                "401 means the database is down; 403 means the URL is wrong",
+                "401 means the user's JWT or login failed entirely (Authentication failed); 403 means the user is successfully logged in, but lacks the necessary permissions to access the resource (Authorization failed)",
+                "401 is used for API requests; 403 is used for loading HTML pages",
+                "They are completely interchangeable and identical in meaning"
+            ],
+            "answer": "401 means the user's JWT or login failed entirely (Authentication failed); 403 means the user is successfully logged in, but lacks the necessary permissions to access the resource (Authorization failed)",
+            "explanation": "If req.user is undefined, return 401. If req.user exists, but they are trying to access an Admin route when they only have the 'Viewer' role, return 403."
+        },
+        {
+            "question": "In Role-Based Access Control (RBAC), how are permissions structured?",
+            "options": [
+                "Permissions are determined dynamically based on the user's GPS coordinates",
+                "Users are assigned to distinct groups or labels (e.g., 'Admin', 'Editor'), and access to endpoints is granted purely if the user holds that specific label",
+                "Permissions are assigned via a one-time biometric scan",
+                "Users write their own permissions in JSON and submit them to the server"
+            ],
+            "answer": "Users are assigned to distinct groups or labels (e.g., 'Admin', 'Editor'), and access to endpoints is granted purely if the user holds that specific label",
+            "explanation": "RBAC abstracts permissions away from individuals. Instead of checking if user ID #1234 has permission, you check if they belong to the 'Admin' bucket, making it very easy to manage permissions globally."
+        },
+        {
+            "question": "What is a major limitation of standard Role-Based Access Control (RBAC) that ABAC aims to solve?",
+            "options": [
+                "RBAC cannot be used on Node.js servers",
+                "RBAC requires passwords to be stored in plaintext",
+                "RBAC cannot efficiently handle contextual ownership data (e.g., granting a 'User' permission to edit a post, BUT ONLY if they are the author of that specific post)",
+                "RBAC is not compliant with OAuth 2.0"
+            ],
+            "answer": "RBAC cannot efficiently handle contextual ownership data (e.g., granting a 'User' permission to edit a post, BUT ONLY if they are the author of that specific post)",
+            "explanation": "In RBAC, a 'User' role either has permission to edit posts, or they don't. It requires complex hardcoding to check if req.user.id === post.authorId. ABAC treats these as 'attributes' and evaluates them natively."
+        },
+        {
+            "question": "Attribute-Based Access Control (ABAC) evaluates policies based on which criteria?",
+            "options": [
+                "Only the user's role",
+                "Attributes of the User (clearance level), attributes of the Resource (owner ID), and Environment variables (time, IP network)",
+                "The size of the HTTP payload in kilobytes",
+                "The specific type of database being used (PostgreSQL vs MongoDB)"
+            ],
+            "answer": "Attributes of the User (clearance level), attributes of the Resource (owner ID), and Environment variables (time, IP network)",
+            "explanation": "ABAC is highly flexible. An ABAC policy might be: 'Allow transfer if User Clearance = High, AND Document Status = Approved, AND Current Time < 5:00 PM'."
+        },
+        {
+            "question": "What is the primary benefit of using an ABAC library like CASL in a Node.js project?",
+            "options": [
+                "It generates database tables automatically",
+                "It acts as a firewall against DDoS attacks",
+                "It allows you to define complex conditional authorization logic in one centralized place, keeping authorization logic from cluttering every specific controller",
+                "It intercepts WebSockets to prevent unauthorized data streams"
+            ],
+            "answer": "It allows you to define complex conditional authorization logic in one centralized place, keeping authorization logic from cluttering every specific controller",
+            "explanation": "Without CASL or ABAC tooling, your route controllers become massive webs of `if(user.id !== resource.ownerId && user.role !== 'admin') { return 403 }`. ABAC centrally defines these rules so controllers remain clean."
+        }
+    ]
+}

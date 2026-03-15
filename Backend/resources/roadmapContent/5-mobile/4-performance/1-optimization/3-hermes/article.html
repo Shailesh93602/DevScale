@@ -1,0 +1,86 @@
+<h1>Hermes JavaScript Engine in React Native</h1>
+<p>React Native apps historically ran JavaScript using JavaScriptCore (JSC) — the same engine that powers Safari. In 2019, Meta engineered and open-sourced <strong>Hermes</strong>, a JavaScript engine purpose-built for running React Native on mobile devices. Hermes is now the default engine for all new React Native and Expo projects because it delivers measurably better performance on real devices — especially on lower-end Android hardware that represents most of the global market.</p>
+
+<h2>How Hermes Improves Performance</h2>
+<p>Traditional JS engines (JSC, V8) compile JavaScript to bytecode at runtime using a Just-In-Time (JIT) compiler. Hermes takes a different approach: it uses <strong>Ahead-of-Time (AOT) compilation</strong>.</p>
+<ul>
+  <li><strong>Build time:</strong> Hermes compiles your JavaScript bundle into Hermes Bytecode (HBC) at build time — the CPU-intensive compilation work happens on the build server, not on the user's phone.</li>
+  <li><strong>App startup:</strong> When the user opens the app, Hermes loads pre-compiled bytecode directly, skipping compilation entirely. This drastically reduces Time to Interactive (TTI).</li>
+  <li><strong>Memory efficiency:</strong> Hermes is designed with a smaller memory footprint than JSC or V8, which is critical on 2-4GB RAM Android devices.</li>
+</ul>
+
+<h2>Verifying Hermes Is Active</h2>
+<pre><code>import React from 'react';
+import &#123; View, Text, StyleSheet &#125; from 'react-native';
+
+const HermesCheck = () =&gt; &#123;
+  // global.HermesInternal exists only when Hermes is the active engine
+  const isHermes = () =&gt; !!global.HermesInternal;
+
+  return (
+    &lt;View style=&#123;styles.container&#125;&gt;
+      &lt;Text style=&#123;styles.status&#125;&gt;
+        JS Engine: &#123;isHermes() ? '✅ Hermes' : '⚠️ JavaScriptCore'&#125;
+      &lt;/Text&gt;
+      &#123;isHermes() &amp;&amp; (
+        &lt;Text style=&#123;styles.info&#125;&gt;
+          Hermes Version: &#123;global.HermesInternal?.getRuntimeProperties?.()?.['OSS Release Version']&#125;
+        &lt;/Text&gt;
+      )&#125;
+    &lt;/View&gt;
+  );
+&#125;;
+
+// You can also check in Metro output during `npx react-native run-android`
+// Look for: "JS engine: hermes" in the build output</code></pre>
+
+<h2>Enabling Hermes in Expo</h2>
+<pre><code>// app.json / app.config.js — Hermes is enabled by default in Expo SDK 48+
+&#123;
+  "expo": &#123;
+    "jsEngine": "hermes"
+  &#125;
+&#125;
+
+// To verify in Expo Go / custom dev client
+import &#123; Platform &#125; from 'react-native';
+console.log('Hermes enabled:', Platform.constants?.reactNativeVersion);</code></pre>
+
+<h2>Enabling/Managing Hermes in Bare React Native</h2>
+<pre><code>// android/gradle.properties
+hermesEnabled=true    // This is the default in RN 0.70+
+
+// ios/Podfile — also enabled by default in recent RN versions
+:hermes_enabled =&gt; true</code></pre>
+
+<h2>Hermes and Proguard (Android)</h2>
+<p>For production Android builds, Hermes works with Proguard (code shrinking/obfuscation). In release builds, your JS is compiled to Hermes bytecode, then the native Hermes binary is stripped down by Proguard — further reducing APK size. You don't usually need to configure this manually, but knowing it exists helps when debugging "release works different from debug" issues.</p>
+
+<h2>Debugging with Hermes</h2>
+<p>Hermes ships with its own Chrome-compatible DevTools integration. When you open the in-app dev menu and tap "Open Debugger", it connects directly to Hermes via a Chrome DevTools Protocol (CDP) server — you get the full Chrome debugger experience (breakpoints, call stacks, memory snapshots) rather than the older Remote JS Debugging which sent all code across the network:</p>
+<pre><code>// Check Hermes runtime properties programmatically
+const properties = global.HermesInternal?.getRuntimeProperties();
+console.log(properties);
+// → &#123;
+//     "OSS Release Version": "for RN 0.73",
+//     "Build": "Release",
+//     "GC": "hades"        ← Concurrent GC (low-pause garbage collector)
+//   &#125;</code></pre>
+
+<h2>Hermes Feature Support</h2>
+<p>A common concern is JavaScript feature parity. Hermes fully supports:</p>
+<ul>
+  <li>ES2022 features (optional chaining, nullish coalescing, async/await, generators)</li>
+  <li>CommonJS and ESM module systems</li>
+  <li>Full React Hooks and Context API</li>
+  <li>TypeScript (after transpilation by Babel/Metro)</li>
+</ul>
+<p>Exceptions: Hermes does NOT support <code>eval()</code> or <code>new Function()</code> — both are security risks and performance anti-patterns. If a third-party library uses these, it will break with Hermes.</p>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Keep Hermes enabled at all times — there is no reason to disable it for a standard React Native app.</li>
+  <li>Profile startup time with and without Hermes using the Flipper Performance plugin to quantify the improvement in your specific app.</li>
+  <li>If a library breaks with Hermes (due to <code>eval()</code> usage), file a bug with the library maintainer — <code>eval()</code> is an anti-pattern in any environment.</li>
+  <li>For release builds, always test on a low-end Android device (2GB RAM) — Hermes's benefits are most visible there.</li>
+</ul>

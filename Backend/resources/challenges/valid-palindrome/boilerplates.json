@@ -1,0 +1,10 @@
+{
+  "typescript": "function isPalindrome(s: string): boolean {\n    \n};",
+  "javascript": "/**\n * @param {string} s\n * @return {boolean}\n */\nvar isPalindrome = function(s) {\n    \n};",
+  "python": "class Solution:\n    def isPalindrome(self, s: str) -> bool:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public boolean isPalindrome(String s) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool isPalindrome(string s) {\n        \n    }\n};",
+  "go": "func isPalindrome(s string) bool {\n    \n}",
+  "rust": "impl Solution {\n    pub fn is_palindrome(s: String) -> bool {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public bool IsPalindrome(string s) {\n        \n    }\n}"
+}

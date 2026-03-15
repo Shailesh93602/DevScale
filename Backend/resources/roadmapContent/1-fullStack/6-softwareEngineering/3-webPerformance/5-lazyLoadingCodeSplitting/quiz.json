@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary web performance danger associated with massive 'Monolithic' Javascript bundles?",
+            "options": [
+                "It forces the user to download and parse thousands of lines of heavy Javascript engine logic for complex pages they may never visit, destroying Time to Interactive.",
+                "It crashes local Webpack compilation loops safely.",
+                "It prevents DOM CSS variables aggressively.",
+                "It completely bypasses SQL indexes."
+            ],
+            "answer": "It forces the user to download and parse thousands of lines of heavy Javascript engine logic for complex pages they may never visit, destroying Time to Interactive.",
+            "explanation": "If the Admin module contains a massive 2 MB Charting library, a casual user viewing the home page strictly shouldn't be penalized downloading that massive payload."
+        },
+        {
+            "question": "What specific JavaScript syntax signals popular modern bundlers to dynamically sever a nested component away from the main bundle?",
+            "options": [
+                "The standard `import { Component } from './file'` syntax natively.",
+                "The asynchronous dynamic `import('./file')` Promise function syntax.",
+                "The `module.exports` syntax safely.",
+                "A regular Javascript `console.log()` command."
+            ],
+            "answer": "The asynchronous dynamic `import('./file')` Promise function syntax.",
+            "explanation": "Standard imports statically weld the files together immediately. The dynamic `import()` explicitly returns a generic Promise, allowing Webpack to safely cut the file out and inject a network request trigger."
+        },
+        {
+            "question": "In React applications specifically, what is the critical architectural function of the built-in `<Suspense>` component?",
+            "options": [
+                "To explicitly catch the pending network Promise while dynamic Javascript chunks are downloading over the internet, rendering a safe fallback UI like a Spinner instead of crashing the page.",
+                "To securely query PostgreSQL databases directly from the generic frontend.",
+                "To actively encrypt user passwords before sending them to Redux.",
+                "To manually restart the Node server environment."
+            ],
+            "answer": "To explicitly catch the pending network Promise while dynamic Javascript chunks are downloading over the internet, rendering a safe fallback UI like a Spinner instead of crashing the page.",
+            "explanation": "Because the code for that page doesn't exist on the client's laptop until they click the link, there is a physical 50ms to 2-second delay. `<Suspense>` handles that missing timeframe gracefully."
+        }
+    ]
+}

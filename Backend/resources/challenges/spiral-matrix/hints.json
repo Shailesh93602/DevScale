@@ -1,0 +1,6 @@
+[
+  "Think of the matrix as having layers of rings. You traverse each ring in order from outside in.",
+  "Try maintaining four boundaries: `top`, `bottom`, `left`, `right`. After traversing each side of the current layer, shrink the corresponding boundary.",
+  "Traverse: right across the top row → down the right column → left across the bottom row → up the left column. Then move all 4 boundaries inward and repeat.",
+  "Be careful about single row or column cases — when `top == bottom` or `left == right`, don't double-traverse."
+]

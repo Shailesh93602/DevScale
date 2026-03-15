@@ -1,0 +1,6 @@
+{
+    "id": "2-e2eTesting",
+    "title": "End-to-End (E2E) Testing",
+    "description": "Simulating real user scenarios and testing the entire application flow from start to finish.",
+    "order": 2
+}

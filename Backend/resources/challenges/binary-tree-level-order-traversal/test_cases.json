@@ -1,0 +1,12 @@
+[
+  { "input": "{\"root\":[3,9,20,null,null,15,7]}", "output": "[[3],[9,20],[15,7]]", "explanation": "Standard 3-level tree", "is_hidden": false },
+  { "input": "{\"root\":[1]}", "output": "[[1]]", "explanation": "Single node", "is_hidden": false },
+  { "input": "{\"root\":[]}", "output": "[]", "explanation": "Empty tree", "is_hidden": false },
+  { "input": "{\"root\":[1,2,3,4,5,6,7]}", "output": "[[1],[2,3],[4,5,6,7]]", "explanation": "Perfect binary tree", "is_hidden": true },
+  { "input": "{\"root\":[1,null,2,null,3]}", "output": "[[1],[2],[3]]", "explanation": "Right-skewed tree", "is_hidden": true },
+  { "input": "{\"root\":[1,2,null,3,null,4]}", "output": "[[1],[2],[3],[4]]", "explanation": "Left-skewed tree", "is_hidden": true },
+  { "input": "{\"root\":[0,-3,9,-10,null,5]}", "output": "[[0],[-3,9],[-10,5]]", "explanation": "Negative values", "is_hidden": true },
+  { "input": "{\"root\":[1,2,3,null,5,null,4]}", "output": "[[1],[2,3],[5,4]]", "explanation": "Asymmetric leaves", "is_hidden": true },
+  { "input": "{\"root\":[1,2,3,4,null,null,5,6,null,null,7]}", "output": "[[1],[2,3],[4,5],[6,7]]", "explanation": "4 levels", "is_hidden": true },
+  { "input": "{\"root\":[100,-100,100,-100,100,-100,100]}", "output": "[[100],[-100,100],[-100,100,-100,100]]", "explanation": "Alternating values", "is_hidden": true }
+]

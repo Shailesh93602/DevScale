@@ -1,0 +1,6 @@
+[
+  "A brute-force approach rotates one element at a time, repeating `k` times. That's O(n*k). Can you do better?",
+  "What if you used an extra array? Copy elements to their new positions with `newIndex = (i + k) % n`.",
+  "The clever in-place trick: first reverse the entire array, then reverse the first `k` elements, then reverse the rest. This achieves the rotation in O(n) with O(1) space.",
+  "Remember: `k` can be larger than the array length. Use `k = k % nums.length` to normalize it first."
+]

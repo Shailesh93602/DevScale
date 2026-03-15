@@ -1,0 +1,4 @@
+{
+    "name": "NoSQL Databases",
+    "description": "Document databases with MongoDB and in-memory caching with Redis."
+}

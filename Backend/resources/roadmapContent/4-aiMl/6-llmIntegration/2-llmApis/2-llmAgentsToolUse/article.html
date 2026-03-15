@@ -1,0 +1,100 @@
+<h1>LLM Agents & Tool Use</h1>
+<p>A standard LLM answers questions from its training knowledge. An <strong>LLM agent</strong> can take actions in the world: search the web, query databases, execute code, call APIs, and reason through multi-step problems. This transforms LLMs from passive information retrievers into active problem solvers.</p>
+
+<h2>The ReAct Framework</h2>
+<p><strong>ReAct (Reasoning + Acting)</strong> is the core agent paradigm: the LLM alternates between <em>Thought</em> (reasoning about what to do next) and <em>Action</em> (calling a tool), then observes the result and repeats until it reaches an answer:</p>
+<pre><code class="language-text">User: "What is the current stock price of Apple and how much would 100 shares cost?"
+
+Thought: I need the current AAPL stock price. I'll use the stock_price tool.
+Action: stock_price(symbol="AAPL")
+Observation: {"symbol": "AAPL", "price": 189.32, "currency": "USD"}
+
+Thought: The price is $189.32. Now I can calculate: 100 × $189.32 = $18,932.00
+Action: calculator(expression="100 * 189.32")
+Observation: 18932.0
+
+Thought: I have all the information needed.
+Final Answer: Apple (AAPL) is currently trading at $189.32. Purchasing 100 shares would cost $18,932.00.
+</code></pre>
+
+<h2>Building an Agent with LangChain</h2>
+<pre><code class="language-python">from langchain.agents import AgentExecutor, create_openai_tools_agent
+from langchain_openai import ChatOpenAI
+from langchain.tools import tool
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+import requests
+
+# Define custom tools — the agent decides when and how to use these
+@tool
+def get_stock_price(symbol: str) -> dict:
+    """Get the current stock price for a given ticker symbol. Args: symbol (str)"""
+    response = requests.get(f"https://api.example.com/stock/{symbol}")
+    return response.json()
+
+@tool
+def search_news(query: str) -> str:
+    """Search for recent news articles. Args: query (str)"""
+    # In production: use Tavily, Serper, or Bing Search API
+    return search_api.search(query, max_results=5)
+
+@tool
+def execute_python(code: str) -> str:
+    """Execute Python code and return the output. Args: code (str)"""
+    # WARNING: always sandbox code execution (Docker, E2B, etc.)
+    return sandbox.run(code)
+
+tools = [get_stock_price, search_news, execute_python]
+
+# Create agent with OpenAI function calling
+llm = ChatOpenAI(model="gpt-4-turbo", temperature=0)
+prompt = ChatPromptTemplate.from_messages([
+    ("system", "You are a financial research assistant. Use tools to get real-time data."),
+    ("user", "{input}"),
+    MessagesPlaceholder(variable_name="agent_scratchpad")  # Stores thought/action history
+])
+
+agent = create_openai_tools_agent(llm, tools, prompt)
+agent_executor = AgentExecutor(
+    agent=agent,
+    tools=tools,
+    verbose=True,           # Show reasoning steps
+    max_iterations=10,      # Prevent infinite loops
+    handle_parsing_errors=True
+)
+
+result = agent_executor.invoke({"input": "Compare Apple and Microsoft stock performance this week"})
+</code></pre>
+
+<h2>Memory Systems for Agents</h2>
+<pre><code class="language-python">from langchain.memory import ConversationBufferWindowMemory
+from langchain_community.vectorstores import FAISS
+
+# Short-term memory: keep last N messages in context
+short_term = ConversationBufferWindowMemory(k=10, return_messages=True)
+
+# Long-term memory: store important facts in a vector database
+# When user says "My name is Alex, I'm allergic to peanuts"
+# → Store this in vector DB, retrieve later when relevant
+
+class LongTermMemory:
+    def __init__(self, embeddings):
+        self.vectorstore = FAISS.from_texts(["Initial memory"], embeddings)
+    
+    def save(self, text: str):
+        """Store an important fact for future retrieval"""
+        self.vectorstore.add_texts([text])
+    
+    def recall(self, query: str, k: int = 3) -> list[str]:
+        """Retrieve relevant memories based on current context"""
+        results = self.vectorstore.similarity_search(query, k=k)
+        return [doc.page_content for doc in results]
+
+# Agent safety guards
+guardrails_prompt = """
+NEVER:
+- Execute code that accesses the filesystem or network without user confirmation
+- Share personal information from previous conversations with third-party tools
+- Make financial transactions without explicit user confirmation of the exact amount
+When uncertain about taking a significant action, ASK the user to confirm.
+"""
+</code></pre>

@@ -1,0 +1,48 @@
+{
+    "questions": [
+        {
+            "question": "What is the fundamental paradigm shift introduced strictly by Test-Driven Development (TDD)?",
+            "options": [
+                "You must deploy code to AWS before running tests.",
+                "You explicitly write the Unit Test BEFORE writing any actual application code, using the test to drive the architectural design.",
+                "You completely replace Javascript with Typescript.",
+                "You write E2E tests instead of Unit tests."
+            ],
+            "answer": "You explicitly write the Unit Test BEFORE writing any actual application code, using the test to drive the architectural design.",
+            "explanation": "Writing the test first forces you to think like the 'Consumer' of your own API. It ensures your functions are easy to use and completely decoupled."
+        },
+        {
+            "question": "What specifically happens during the 'Red' phase of the Red-Green-Refactor cycle?",
+            "options": [
+                "A critical production server crashes.",
+                "You write a test for a feature that doesn't exist yet, run the test runner, and verify that the test fails as expected.",
+                "You delete old deprecated code.",
+                "You refactor a React hook."
+            ],
+            "answer": "You write a test for a feature that doesn't exist yet, run the test runner, and verify that the test fails as expected.",
+            "explanation": "If a test passes before you even wrote the code, the test is fundamentally broken. Seeing it fail red is proof the test actually works."
+        },
+        {
+            "question": "What is the primary objective of the 'Green' phase in TDD?",
+            "options": [
+                "To write the absolute minimum amount of messy, basic code required purely to make the failing test pass.",
+                "To deploy the code securely.",
+                "To implement advanced Design Patterns like Singleton.",
+                "To format the code beautifully."
+            ],
+            "answer": "To write the absolute minimum amount of messy, basic code required purely to make the failing test pass.",
+            "explanation": "You do not prematurely optimize during the Green phase. The singular goal is to get out of the Red state as quickly as possible."
+        },
+        {
+            "question": "Why is it safe to aggressively alter code during the 'Refactor' phase?",
+            "options": [
+                "Because git saves your work.",
+                "Because you are protected by the Green test. If your refactoring accidentally breaks the logic, the test suite will instantly fail, alerting you.",
+                "Because Typescript ignores errors.",
+                "Because Node.js caches execution."
+            ],
+            "answer": "Because you are protected by the Green test. If your refactoring accidentally breaks the logic, the test suite will instantly fail, alerting you.",
+            "explanation": "This safety net completely eliminates the fear of changing legacy code. You can restructure the module confidently knowing the tests have your back."
+        }
+    ]
+}

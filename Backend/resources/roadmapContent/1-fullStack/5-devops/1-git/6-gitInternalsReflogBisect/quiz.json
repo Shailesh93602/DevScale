@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "You did git reset --hard HEAD~3 to undo 3 commits, but immediately realized you needed those commits. How do you recover them, and how long do you have before they're permanently gone?",
+            "options": [
+                "Commits removed by hard reset are permanently deleted — you must re-create them manually.",
+                "Use git reflog to see the history of HEAD movements. The reflog will show: 'abc123 HEAD@{1}: commit: Feature X' — your commits before the reset. Run git reset --hard HEAD@{1} to restore HEAD to before the reset, or git cherry-pick abc123 to apply specific commits. Reflog entries expire after 90 days by default (configurable via gc.reflogExpire). The commits aren't actually deleted from the object store until Git's garbage collector next runs — typically triggered automatically every 1000 commits or when you run git gc.",
+                "Use git pull --force to retrieve commits from the remote repository.",
+                "git stash list shows all lost commits from hard resets."
+            ],
+            "answer": "Use git reflog to see the history of HEAD movements. The reflog will show: 'abc123 HEAD@{1}: commit: Feature X' — your commits before the reset. Run git reset --hard HEAD@{1} to restore HEAD to before the reset, or git cherry-pick abc123 to apply specific commits. Reflog entries expire after 90 days by default (configurable via gc.reflogExpire). The commits aren't actually deleted from the object store until Git's garbage collector next runs — typically triggered automatically every 1000 commits or when you run git gc.",
+            "explanation": "Reflog is your ONLY safety net for local operations — it records every position HEAD has been at. It does NOT exist on the remote (git push doesn't push reflog). If a teammate squash-merged and force-pushed your branch before you could see reflog: you must fetch from remote or ask them to push the original branch. Remote history is protected by push protection — local history is only protected by reflog."
+        },
+        {
+            "question": "When using git bisect to find a regression, what must every test run output, and what is the advantage of providing a test script with 'git bisect run'?",
+            "options": [
+                "Each bisect step must output the commit hash of the bad commit — Git uses this to navigate.",
+                "git bisect tracks whether each checked-out commit is 'good' or 'bad' based on your manual input (git bisect good/bad) or the exit code of a script (git bisect run my-test.sh): exit 0 = GOOD commit, exit 1 = BAD commit. 'git bisect run' advantage: fully automated binary search. Instead of: check out commit → manually run tests → interpret results → mark good/bad → repeat 10 times, Git automatically checks out commits and runs your test script, marking results without human interaction. It finds the regression commit unattended in ~O(log n) steps.",
+                "Each bisect step must run git bisect log to record the result before proceeding.",
+                "git bisect run requires a Python script specifically — shell scripts are not supported."
+            ],
+            "answer": "git bisect tracks whether each checked-out commit is 'good' or 'bad' based on your manual input (git bisect good/bad) or the exit code of a script (git bisect run my-test.sh): exit 0 = GOOD commit, exit 1 = BAD commit. 'git bisect run' advantage: fully automated binary search. Instead of: check out commit → manually run tests → interpret results → mark good/bad → repeat 10 times, Git automatically checks out commits and runs your test script, marking results without human interaction. It finds the regression commit unattended in ~O(log n) steps.",
+            "explanation": "Power user tip: your test script can be a unit test, integration test, or even a shell command: git bisect run grep -q 'brokenFunction' src/utils.js. If the pattern exists (bad code added), grep exits 0... wait, that would mark it GOOD. Plan your test carefully: exit 0 = commit is GOOD (bug not present), exit 1 = commit is BAD (bug present). Some teams invert: git bisect start --term-old fixed --term-new broken for clarity."
+        },
+        {
+            "question": "What is the golden rule about git cherry-pick and git rebase, and why does violating it cause problems for your teammates?",
+            "options": [
+                "Cherry-pick and rebase should only be used on branches with more than 10 commits.",
+                "Never rebase or cherry-pick commits that have already been pushed to a shared remote branch that others may have cloned/pulled from. Both operations CREATE NEW COMMITS with different hashes (even if the content is identical). Your teammates' branches have the original commit hashes. When they try to push or pull after your rebase/force-push, Git sees divergent histories and creates merge conflicts or confusing duplicate commits. Safe: rebase/cherry-pick only on local-only branches or branches you own exclusively. If force-push is required: coordinate with the team first.",
+                "Cherry-pick is safe on any branch; only rebase must be avoided on shared branches.",
+                "The rule only applies to the main branch — other shared feature branches can be freely rebased."
+            ],
+            "answer": "Never rebase or cherry-pick commits that have already been pushed to a shared remote branch that others may have cloned/pulled from. Both operations CREATE NEW COMMITS with different hashes (even if the content is identical). Your teammates' branches have the original commit hashes. When they try to push or pull after your rebase/force-push, Git sees divergent histories and creates merge conflicts or confusing duplicate commits. Safe: rebase/cherry-pick only on local-only branches or branches you own exclusively. If force-push is required: coordinate with the team first.",
+            "explanation": "What 'same content, different hash' means: rebase takes commit A (hash: abc123, parent: xyz789) and creates commit A' (hash: def456, parent: new-base). If your teammate has abc123 and you force-push def456, their git pull creates a merge commit combining both — now the same change exists twice in history. This is why main branch is typically protected from force-pushes via GitHub branch protection rules."
+        }
+    ]
+}

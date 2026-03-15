@@ -1,0 +1,12 @@
+[
+  { "input": "{\"s\": \"leetcode\", \"wordDict\": [\"leet\",\"code\"]}", "output": "true", "explanation": "leet + code", "is_hidden": false },
+  { "input": "{\"s\": \"applepenapple\", \"wordDict\": [\"apple\",\"pen\"]}", "output": "true", "explanation": "apple + pen + apple", "is_hidden": false },
+  { "input": "{\"s\": \"catsandog\", \"wordDict\": [\"cats\",\"dog\",\"sand\",\"and\",\"cat\"]}", "output": "false", "explanation": "Cannot segment completely", "is_hidden": false },
+  { "input": "{\"s\": \"a\", \"wordDict\": [\"a\"]}", "output": "true", "explanation": "Single character match", "is_hidden": true },
+  { "input": "{\"s\": \"a\", \"wordDict\": [\"b\"]}", "output": "false", "explanation": "No match", "is_hidden": true },
+  { "input": "{\"s\": \"bb\", \"wordDict\": [\"a\",\"b\",\"bbb\",\"bbbb\"]}", "output": "true", "explanation": "b + b", "is_hidden": true },
+  { "input": "{\"s\": \"goalspecial\", \"wordDict\": [\"go\",\"goal\",\"goals\",\"special\"]}", "output": "true", "explanation": "goal + special", "is_hidden": true },
+  { "input": "{\"s\": \"aaaaaaa\", \"wordDict\": [\"aaaa\",\"aaa\"]}", "output": "true", "explanation": "aaa + aaaa or aaaa + aaa", "is_hidden": true },
+  { "input": "{\"s\": \"aaaaaaa\", \"wordDict\": [\"aaaa\",\"aa\"]}", "output": "false", "explanation": "Cannot make 7 from 4s and 2s", "is_hidden": true },
+  { "input": "{\"s\": \"cars\", \"wordDict\": [\"car\",\"ca\",\"rs\"]}", "output": "true", "explanation": "ca + rs", "is_hidden": true }
+]

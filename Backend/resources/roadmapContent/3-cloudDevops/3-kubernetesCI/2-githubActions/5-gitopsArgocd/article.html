@@ -1,0 +1,61 @@
+<h1>GitOps with ArgoCD</h1>
+<p>Traditional CD pipelines <em>push</em> changes to Kubernetes: a CI job runs, builds an image, and then runs <code>kubectl apply</code> to push changes to the cluster. <strong>GitOps</strong> inverts this model — a tool continuously <em>pulls</em> the desired state from a Git repository and reconciles the cluster with it. This makes Git the single source of truth for all infrastructure and application state.</p>
+
+<h2>The Four GitOps Principles</h2>
+<ol>
+  <li><strong>Declarative:</strong> The entire system (Kubernetes resources, Helm charts, Kustomizations) is described declaratively in Git</li>
+  <li><strong>Versioned:</strong> Every change is a Git commit with a complete audit trail of who changed what and when, and every previous state is reversible via <code>git revert</code></li>
+  <li><strong>Automatically Applied:</strong> The desired state in Git is applied to the cluster automatically, not manually</li>
+  <li><strong>Continuously Reconciled:</strong> Software agents continuously observe and correct drift between the desired state (Git) and the actual state (Kubernetes cluster)</li>
+</ol>
+
+<h2>ArgoCD Architecture</h2>
+<p><strong>ArgoCD</strong> runs inside your Kubernetes cluster and continuously monitors one or more Git repositories. When a Git commit changes a Kubernetes manifest, ArgoCD automatically detects the drift and syncs the cluster to match:</p>
+<pre><code class="language-yaml"># argocd-application.yaml — Defines what ArgoCD should manage
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-api-production
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/mycompany/k8s-manifests
+    targetRevision: HEAD
+    path: apps/my-api/production   # Monitor this directory in the repo
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: production
+  syncPolicy:
+    automated:
+      prune: true      # Delete resources removed from Git
+      selfHeal: true   # Re-apply if someone manually modifies the cluster
+    syncOptions:
+    - CreateNamespace=true
+</code></pre>
+
+<h2>The GitOps Deployment Workflow</h2>
+<pre><code class="language-text">Developer Workflow:
+1. CI pipeline builds new Docker image → pushes to ECR with tag v2.5.0
+2. CI pipeline opens a PR to the k8s-manifests repo:
+   - Changes: image.tag: v2.4.0 → v2.5.0 in apps/my-api/production/values.yaml
+3. Tech lead reviews the diff — sees exactly one line changed (the image tag)
+4. PR is merged to main
+
+ArgoCD Workflow (automatic):
+5. ArgoCD detects HEAD changed in the monitored directory
+6. ArgoCD computes the diff: current cluster has v2.4.0, Git says v2.5.0
+7. ArgoCD performs a rolling update, applying the new Deployment to the cluster
+8. ArgoCD reports Sync Status: "Synced" when cluster matches Git
+
+If someone manually kubectl-patches the cluster:
+9. ArgoCD detects drift (selfHeal: true)
+10. ArgoCD immediately reverts the manual change back to Git state
+</code></pre>
+
+<h2>ArgoCD vs Traditional Push-Based CI/CD</h2>
+<pre><code class="language-text">Traditional (Push):  CI runner needs kubectl credentials stored as secrets
+GitOps (Pull):       ArgoCD runs IN the cluster — CI runner only writes to Git
+→ No cluster credentials ever leave the cluster boundary
+→ Every deployment is a Git commit with audit trail + easy rollback via git revert
+</code></pre>

@@ -1,0 +1,52 @@
+<h1>DNS (Domain Name System)</h1>
+<p>The Domain Name System (DNS) is often called the "phonebook of the Internet." Humans interact online through easily readable domain names like <code>google.com</code> or <code>nytimes.com</code>. Web browsers, however, communicate via Internet Protocol (IP) addresses (e.g., <code>142.251.46.110</code> or <code>2607:f8b0:4005:800::200e</code>). DNS translates these human-readable domain names to machine-readable IP addresses.</p>
+
+<h2>The Recursive Resolution Process (How "example.com" loads)</h2>
+<p>When you type "example.com" into your browser, a complex hierarchy of servers works together to find the IP address. This happens in milliseconds:</p>
+<ol>
+  <li><strong>Browser / OS Cache:</strong> The browser first checks its own cache, then the Operating System cache, to see if it recently resolved <code>example.com</code>. If not, it asks a DNS Resolver.</li>
+  <li><strong>Recursive Resolver (ISP / Google 8.8.8.8):</strong> Usually provided by your Internet Service Provider, this server acts as the middleman. If it doesn't have the answer cached, it starts querying the hierarchy.</li>
+  <li><strong>Root Name Server:</strong> The Resolver asks the Root Server (there are 13 logical root servers globally). The Root doesn't know the IP, but it knows which server handles the <code>.com</code> Top-Level Domain (TLD).</li>
+  <li><strong>TLD Name Server:</strong> The Resolver asks the <code>.com</code> TLD Server. The TLD Server knows which specific Authoritative Name Server is responsible for <code>example.com</code>.</li>
+  <li><strong>Authoritative Name Server:</strong> This is the final server, owned by whoever manages the domain (e.g., AWS Route 53, Cloudflare, GoDaddy). It holds the actual DNS records. It returns the exact IP address mapped to the A Record back down the chain to the client.</li>
+</ol>
+
+<h2>Core DNS Record Types</h2>
+<p>An Authoritative Server holds <strong>Zone Files</strong> containing different types of DNS records:</p>
+<ul>
+  <li><strong>A Record (Address):</strong> The most basic record. Maps a domain to an IPv4 address (e.g., <code>example.com -> 104.18.2.1</code>).</li>
+  <li><strong>AAAA Record:</strong> Maps a domain to a modern IPv6 address.</li>
+  <li><strong>CNAME (Canonical Name):</strong> Maps an alias name to a true (canonical) domain name. You cannot point a CNAME to an IP address. Typically used to point subdomains (e.g., <code>www.example.com</code>) to the root domain (<code>example.com</code>), or to external services like a Heroku app format (<code>xyz.herokuapp.com</code>). <em>Note: A CNAME cannot be placed at the root/apex of a domain.</em></li>
+  <li><strong>MX Record (Mail Exchange):</strong> Dictates which mail servers accept email sent on behalf of your domain (e.g., pointing to Google Workspace servers). Includes priorities for failover.</li>
+  <li><strong>TXT Record:</strong> Arbitrary text. Originally for human notes, it is now exclusively used for security. Specifically for proving domain ownership (e.g., to generate an SSL cert or verify Google Search Console) or Email authentication (SPF, DKIM, and DMARC records to prevent spoofing).</li>
+  <li><strong>NS Record (Name Server):</strong> Indicates which servers are authoritative for the zone. When you buy a domain on Namecheap but want to manage it in AWS, you change the domain's NS records to point to AWS Route 53.</li>
+</ul>
+
+<h2>DNS TTL (Time To Live)</h2>
+<p>Every DNS record has a TTL value (in seconds). It dictates how long Resolving Name Servers and browsers are allowed to cache the record before they must ask the Authoritative Server for an update.</p>
+<p>For example, a standard A Record might have a TTL of 86400 (24 hours). If you change the IP address of your server, users around the world might continue hitting the old IP for up to 24 hours until their local ISP cache expires.</p>
+<p><strong>DevOps Best Practice:</strong> If you are planning an IP migration or blue-green deployment, temporarily lower your TTL to 60 seconds (1 minute) <em>a day beforehand</em>. When you make the switch, caching servers update almost instantly. You can raise the TTL back to 24 hours after a successful migration to reduce query costs.</p>
+
+<h2>Advanced DNS Routing (AWS Route 53 / Cloudflare)</h2>
+<p>Modern Authoritative Name Servers offer intelligent routing policies that go far beyond simple IP mappings:</p>
+<ul>
+  <li><strong>Weighted Routing:</strong> Route 80% of traffic to Server A, and 20% to Server B. Used for Canary Deployments or A/B testing.</li>
+  <li><strong>Latency-Based Routing:</strong> Route users to the AWS Region that provides the lowest network latency. A user in Tokyo gets the Tokyo IP; a user in Berlin gets the Frankfurt IP.</li>
+  <li><strong>Failover / Active-Passive Routing:</strong> Route traffic to the Primary datacenter. If the DNS server detects the Primary is down via an automated Health Check, it automatically updates the A Record to point to the Disaster Recovery (Secondary) datacenter.</li>
+</ul>
+
+<h2>Troubleshooting with dig</h2>
+<p>When a website won't load, the first thing a DevOps engineer checks is DNS resolution from the terminal using <code>dig</code> or <code>nslookup</code>.</p>
+<pre><code># Query the A record for google.com
+dig google.com +short
+# Output: 142.251.46.110
+
+# Check where the CNAME points
+dig www.facebook.com CNAME
+
+# Query a specific nameserver directly (bypassing local ISP caching)
+# This is vital for checking if an update has "propagated" fully
+dig @8.8.8.8 mynewdomain.com
+
+# Fetch all records (ANY) including MX and TXT
+dig example.com ANY</code></pre>

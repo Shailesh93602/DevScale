@@ -1,0 +1,62 @@
+[
+  {
+    "input": "3-step saga: all steps succeed",
+    "output": "{ \"status\": \"completed\", \"steps\": [{ \"status\": \"completed\" }, { \"status\": \"completed\" }, { \"status\": \"completed\" }] }",
+    "explanation": "When all steps succeed, saga status is 'completed' and all steps show 'completed'.",
+    "is_hidden": false
+  },
+  {
+    "input": "3-step saga: step 3 fails",
+    "output": "{ \"status\": \"compensated\", \"failedStep\": \"step-3\", \"steps\": [{ \"status\": \"compensated\" }, { \"status\": \"compensated\" }, { \"status\": \"failed\" }] }",
+    "explanation": "When step 3 fails, steps 1 and 2 are compensated in reverse order (2 first, then 1).",
+    "is_hidden": false
+  },
+  {
+    "input": "3-step saga: step 2 fails",
+    "output": "{ \"status\": \"compensated\", \"failedStep\": \"step-2\", \"steps\": [{ \"status\": \"compensated\" }, { \"status\": \"failed\" }, { \"status\": \"pending\" }] }",
+    "explanation": "When step 2 fails, only step 1 needs compensation. Step 3 was never executed.",
+    "is_hidden": false
+  },
+  {
+    "input": "3-step saga: step 1 fails",
+    "output": "{ \"status\": \"compensated\", \"failedStep\": \"step-1\", \"steps\": [{ \"status\": \"failed\" }, { \"status\": \"pending\" }, { \"status\": \"pending\" }] }",
+    "explanation": "When the first step fails, no compensation is needed since no steps completed.",
+    "is_hidden": false
+  },
+  {
+    "input": "Step results passed to subsequent steps via context",
+    "output": "Step 2 receives step 1's result in context.stepResults['step-1']",
+    "explanation": "Each step's result is stored in context.stepResults and accessible to later steps.",
+    "is_hidden": false
+  },
+  {
+    "input": "3-step saga: step 3 fails, compensation of step 1 also fails",
+    "output": "{ \"status\": \"compensation_failed\", \"compensationErrors\": [{ \"step\": \"step-1\", \"error\": \"...\" }] }",
+    "explanation": "When compensation fails, status is 'compensation_failed' with error details. Requires manual intervention.",
+    "is_hidden": true
+  },
+  {
+    "input": "Compensation continues even after one compensation step fails",
+    "output": "All compensation steps attempted, errors collected",
+    "explanation": "Unlike forward execution, compensation does not stop on failure - all steps are attempted.",
+    "is_hidden": true
+  },
+  {
+    "input": "Step execution exceeds 10-second timeout",
+    "output": "Step marked as failed with timeout error, compensation begins",
+    "explanation": "Per-step timeouts prevent hanging steps from blocking the entire saga.",
+    "is_hidden": true
+  },
+  {
+    "input": "getLogs(sagaId) after saga execution",
+    "output": "Ordered log entries: saga-started, step1-executing, step1-completed, step2-executing, ...",
+    "explanation": "Complete audit trail of all saga events with timestamps for debugging.",
+    "is_hidden": true
+  },
+  {
+    "input": "Concurrent execution of two sagas",
+    "output": "Both sagas run independently with separate contexts and IDs",
+    "explanation": "Multiple sagas can execute concurrently without interfering with each other.",
+    "is_hidden": true
+  }
+]

@@ -1,0 +1,68 @@
+# Editorial — Implement K-Nearest Neighbors
+
+## Approach: Brute Force Distance Computation
+
+### Intuition
+KNN is a lazy learning algorithm that stores training data and classifies new points by finding the K closest training examples using Euclidean distance, then performing majority voting.
+
+### Algorithm
+1. For each test point:
+   a. Compute Euclidean distance to every training point
+   b. Sort distances and select K smallest
+   c. Count class labels among K neighbors
+   d. Return the most frequent label (tie-break: smaller label)
+
+### TypeScript Solution
+
+```typescript
+function knn(
+  X_train: number[][],
+  y_train: number[],
+  X_test: number[][],
+  k: number
+): { predictions: number[] } {
+  function euclideanDistance(a: number[], b: number[]): number {
+    let sum = 0;
+    for (let i = 0; i < a.length; i++) {
+      sum += (a[i] - b[i]) ** 2;
+    }
+    return Math.sqrt(sum);
+  }
+
+  const predictions = X_test.map((testPoint) => {
+    const distances = X_train.map((trainPoint, idx) => ({
+      distance: euclideanDistance(testPoint, trainPoint),
+      label: y_train[idx],
+    }));
+
+    distances.sort((a, b) => a.distance - b.distance);
+    const kNearest = distances.slice(0, k);
+    const voteCounts = new Map<number, number>();
+
+    for (const neighbor of kNearest) {
+      voteCounts.set(neighbor.label, (voteCounts.get(neighbor.label) || 0) + 1);
+    }
+
+    let maxVotes = 0;
+    let prediction = Infinity;
+    for (const [label, count] of voteCounts) {
+      if (count > maxVotes || (count === maxVotes && label < prediction)) {
+        maxVotes = count;
+        prediction = label;
+      }
+    }
+
+    return prediction;
+  });
+
+  return { predictions };
+}
+```
+
+### Complexity
+- **Time**: O(m * n * d + m * n * log(n)) where m=test points, n=train points, d=features
+- **Space**: O(n) for storing distances
+
+### Optimizations
+- Use a max-heap of size K instead of sorting all distances: O(n * log(k))
+- Use KD-tree for faster neighbor lookup: O(n * log(n)) build, O(log(n)) average query

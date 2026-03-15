@@ -1,0 +1,4 @@
+{
+    "name": "Apollo Server Integration",
+    "description": "Deploying GraphQL to production. Setting up Apollo Server, integrating it as middleware within an existing Express application, and utilizing the Apollo Studio Explorer."
+}

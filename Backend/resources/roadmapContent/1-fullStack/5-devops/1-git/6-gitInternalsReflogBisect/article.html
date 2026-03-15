@@ -1,0 +1,114 @@
+<h1>Git Internals: reflog, bisect & Cherry-pick</h1>
+<p>Professional Git usage means knowing how to recover from mistakes, find bugs systematically, and edit history precisely. These commands are your safety net and surgical tools — used sparsely but invaluably in production emergencies.</p>
+
+<h2>git reflog: The Ultimate Safety Net</h2>
+<pre><code class="language-bash"># reflog records EVERY change to HEAD — even after hard reset, deleted branches, lost commits
+
+# Scenario: You did a hard reset and lost commits
+git reset --hard HEAD~5    # Panic — 5 commits gone!
+
+# Don't panic. reflog shows the history of HEAD movements
+git reflog
+# Output:
+# a3f2d11 HEAD@{0}: reset: moving to HEAD~5
+# 7b9c4e2 HEAD@{1}: commit: Add payment integration
+# 3d8a1f5 HEAD@{2}: commit: Fix checkout bug
+# ...
+
+# Recover: reset back to where you were BEFORE the hard reset
+git reset --hard HEAD@{1}
+# Or create a branch from the lost commit
+git branch recover-branch 7b9c4e2
+
+# Also useful for: recovering deleted branches
+git checkout -b restored-feature HEAD@{5}
+
+# Reflog expires after 90 days by default — don't wait!
+</code></pre>
+
+<h2>git bisect: Binary-Search Bug Finding</h2>
+<pre><code class="language-bash"># bisect finds the EXACT commit that introduced a bug in O(log n) time
+# If you have 1000 commits to check: bisect finds the bad one in ~10 steps!
+
+# Scenario: Production is broken, worked fine last month
+git bisect start
+
+# Mark current state as BAD (has the bug)
+git bisect bad
+
+# Mark a known good commit (last month's release)
+git bisect good v2.0.0    # Or a commit hash: git bisect good abc1234
+
+# Git checks out the midpoint commit — test whether the bug exists
+# If this commit is BAD (has the bug):
+git bisect bad
+
+# If this commit is GOOD (bug not present):
+git bisect good
+
+# Git narrows down and checks out the next midpoint — repeat testing
+# After ~10 iterations:
+# "abc1234 is the first bad commit"
+# Inspect that commit to find the bug
+
+# Automated bisect: provide a test script (exit 0 = good, exit 1 = bad)
+git bisect run npm test -- --grep "checkout total calculation"
+
+# End bisect session
+git bisect reset   # Returns to original HEAD
+</code></pre>
+
+<h2>git cherry-pick: Surgical Commit Application</h2>
+<pre><code class="language-bash"># Apply specific commits from one branch to another (without merging the whole branch)
+
+# Scenario: Critical bugfix on `main`, needs to be backported to `release/v2`
+git log main --oneline
+# abc1234 Fix critical payment calculation bug
+# def5678 Add new dashboard feature (DON'T want this on release branch)
+# ghi9012 Refactor product catalog (DON'T want this either)
+
+git checkout release/v2
+git cherry-pick abc1234    # Apply ONLY the bugfix commit
+
+# Cherry-pick a range of commits (abc to def, inclusive)
+git cherry-pick abc1234^..def5678
+
+# Cherry-pick without committing (stage only — inspect before committing)
+git cherry-pick -n abc1234
+
+# When cherry-pick has conflicts: resolve then continue
+git cherry-pick --continue    # After resolving conflicts
+git cherry-pick --abort       # Cancel the cherry-pick
+</code></pre>
+
+<h2>Interactive Rebase: Rewriting History</h2>
+<pre><code class="language-bash"># Clean up your commit history before opening a PR
+git rebase -i HEAD~6    # Interactively edit the last 6 commits
+
+# Opens editor showing:
+# pick abc123 WIP: fix button styles
+# pick def456 also fix button
+# pick ghi789 more button fixes
+# pick jkl012 actually add the feature
+# pick mno345 oops typo
+# pick pqr678 fix typo
+
+# Commands you can use:
+# pick   = keep commit as-is
+# squash = meld into previous commit (combine commits)
+# fixup  = like squash but discard this commit's message
+# reword = keep commit but edit the message
+# drop   = remove this commit entirely
+# reorder lines to change commit order
+
+# After editing:
+# pick jkl012 Add dark mode toggle button
+# fixup abc123 WIP: fix button styles
+# fixup def456 also fix button
+# fixup ghi789 more button fixes
+# fixup mno345 oops typo
+# fixup pqr678 fix typo
+
+# Result: one clean commit "Add dark mode toggle button"
+# RULE: Never rebase commits already pushed to shared branches!
+</code></pre>

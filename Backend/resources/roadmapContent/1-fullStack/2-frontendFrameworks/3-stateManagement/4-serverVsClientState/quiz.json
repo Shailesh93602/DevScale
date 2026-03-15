@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is 'server state' in the context of React state management?",
+            "options": [
+                "State stored on the Node.js server",
+                "Asynchronous data that originates from a remote server and requires caching, refetching, and staleness management",
+                "State variables prefixed with 'server'",
+                "State managed by SSR frameworks like Next.js"
+            ],
+            "answer": "Asynchronous data that originates from a remote server and requires caching, refetching, and staleness management",
+            "explanation": "Server state (user lists, product data, notifications) lives on the server and has unique challenges: it can be stale, needs synchronization, and requires loading/error states."
+        },
+        {
+            "question": "Why is it an anti-pattern to store server-fetched data in Zustand?",
+            "options": [
+                "Zustand can't store arrays",
+                "You end up manually implementing caching, refetching, staleness, and error handling that React Query provides for free",
+                "Zustand is too slow for async data",
+                "It creates circular dependencies"
+            ],
+            "answer": "You end up manually implementing caching, refetching, staleness, and error handling that React Query provides for free",
+            "explanation": "React Query provides automatic caching, background refetching, stale-while-revalidate, deduplication, and optimistic updates out of the box — reimplementing this in Zustand is unnecessary complex work."
+        },
+        {
+            "question": "In what order should you choose a state management solution for new state?",
+            "options": [
+                "Always start with Redux, downgrade as needed",
+                "Start with useState, then Context, then Zustand/Jotai if truly needed",
+                "Always use Zustand for best performance",
+                "Use a global store for all state from the start"
+            ],
+            "answer": "Start with useState, then Context, then Zustand/Jotai if truly needed",
+            "explanation": "State colocated near where it's used is simpler to maintain. Lift state up gradually: useState -> useReducer -> Context -> Zustand, depending on the scope and complexity."
+        },
+        {
+            "question": "What does 'optimistic update' mean in React Query?",
+            "options": [
+                "Caching data optimistically",
+                "Updating the UI immediately as if the server request succeeded, then rolling back if it fails",
+                "Using HTTP/2 for faster requests",
+                "Pre-fetching data before the user needs it"
+            ],
+            "answer": "Updating the UI immediately as if the server request succeeded, then rolling back if it fails",
+            "explanation": "Optimistic updates dramatically improve perceived performance by showing the result immediately. React Query's onMutate/onError pattern handles rollback if the server request fails."
+        },
+        {
+            "question": "What is the purpose of staleTime in React Query?",
+            "options": [
+                "Time before data expires and is deleted from cache",
+                "Duration data is considered fresh — no refetch will occur during this period",
+                "Time before a request times out",
+                "Delay before showing loading state"
+            ],
+            "answer": "Duration data is considered fresh — no refetch will occur during this period",
+            "explanation": "staleTime: 5 * 60 * 1000 means React Query won't refetch data that was fetched less than 5 minutes ago, reducing unnecessary network requests."
+        }
+    ]
+}

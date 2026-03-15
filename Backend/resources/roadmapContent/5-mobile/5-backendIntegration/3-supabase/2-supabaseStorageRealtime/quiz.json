@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "When using Supabase Realtime in React Native, why must you call supabase.removeChannel(channel) in the useEffect cleanup, and what happens without it?",
+            "options": [
+                "removeChannel is needed only for premium Supabase plans — free plans auto-cleanup channels.",
+                "Without removeChannel cleanup: (1) The Supabase channel (WebSocket subscription) continues running after the component unmounts, consuming connection resources and delivering events to a function with a stale closure over old state setters. (2) If the component remounts (e.g., navigating back to the chat screen), a NEW channel is created WITHOUT removing the old one — two subscriptions now deliver duplicate messages. Over time: memory leak, duplicate messages, and hitting Supabase's concurrent channel limits.",
+                "removeChannel cancels any in-flight database queries from the channel.",
+                "removeChannel is only needed in React Native — React web apps auto-cleanup Supabase channels."
+            ],
+            "answer": "Without removeChannel cleanup: (1) The Supabase channel (WebSocket subscription) continues running after the component unmounts, consuming connection resources and delivering events to a function with a stale closure over old state setters. (2) If the component remounts (e.g., navigating back to the chat screen), a NEW channel is created WITHOUT removing the old one — two subscriptions now deliver duplicate messages. Over time: memory leak, duplicate messages, and hitting Supabase's concurrent channel limits.",
+            "explanation": "Supabase free tier allows 200 concurrent realtime connections per project. An app that doesn't removeChannel() on unmount creates a new channel on each remount — 10 navigation cycles = 10 channels. At 200 users doing this: 2000 channels, hitting the limit and blocking new real-time subscriptions for other users."
+        },
+        {
+            "question": "Why is Supabase Edge Functions the right place to send push notifications (instead of the React Native app directly), even though the Expo Push API is callable from anywhere?",
+            "options": [
+                "Expo Push API only accepts requests from server-side environments, not mobile clients.",
+                "Calling Expo Push API from the mobile app means: the push sending logic is part of the app bundle (exposable, modifiable); the app must know all participants' push tokens (requires fetching them → privacy leak where user A can see user B's token); no reliable way to send notifications when the triggering user is offline. Server-side (Edge Functions): tokens are never exposed to clients, business logic runs securely, notifications fire reliably as a DB trigger regardless of who is online, and backend can add rate limiting and delivery tracking.",
+                "Edge Functions are faster than mobile apps at sending HTTP requests to external APIs.",
+                "The Expo Push API blocks requests from React Native apps due to CORS restrictions."
+            ],
+            "answer": "Calling Expo Push API from the mobile app means: the push sending logic is part of the app bundle (exposable, modifiable); the app must know all participants' push tokens (requires fetching them → privacy leak where user A can see user B's token); no reliable way to send notifications when the triggering user is offline. Server-side (Edge Functions): tokens are never exposed to clients, business logic runs securely, notifications fire reliably as a DB trigger regardless of who is online, and backend can add rate limiting and delivery tracking.",
+            "explanation": "Security principle: push tokens are like phone numbers — only your backend should know them. Client-side sending would require your app to fetch all recipient tokens from the DB, which violates privacy (why would user A's app need user B's push token?). Server-side: user A's app sends 'new message' event; the server looks up B's token and sends the notification."
+        },
+        {
+            "question": "What is Supabase Row Level Security (RLS), and why is it essential before calling supabase.storage.from().upload() from a React Native app?",
+            "options": [
+                "RLS limits the maximum file size that can be uploaded via the Supabase Storage SDK.",
+                "Without RLS, any authenticated user can read, modify, or delete any other user's files and database rows using your public Supabase credentials (Supabase URL + anon key are in your app bundle and visible to anyone who decompiles it). RLS policies are evaluated server-side and restrict what each authenticated user can access. For storage: RLS policy 'users can only upload to their own folder (userId/*)' prevents user A from overwriting user B's avatar. For chat messages: RLS ensures users can only read messages from chats they're members of.",
+                "RLS is only needed for multi-tenant enterprise apps — single-user apps don't require it.",
+                "RLS is configured client-side in the Supabase JS SDK via filter conditions."
+            ],
+            "answer": "Without RLS, any authenticated user can read, modify, or delete any other user's files and database rows using your public Supabase credentials (Supabase URL + anon key are in your app bundle and visible to anyone who decompiles it). RLS policies are evaluated server-side and restrict what each authenticated user can access. For storage: RLS policy 'users can only upload to their own folder (userId/*)' prevents user A from overwriting user B's avatar. For chat messages: RLS ensures users can only read messages from chats they're members of.",
+            "explanation": "Critical: Supabase's anon key is designed to be public — it has no permissions by default (or limited permissions you define with RLS). The service_role key is secret and bypasses RLS — NEVER include the service_role key in your React Native app. service_role belongs only in your backend (Edge Functions, Node.js server)."
+        }
+    ]
+}

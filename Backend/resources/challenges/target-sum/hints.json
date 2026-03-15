@@ -1,0 +1,6 @@
+[
+  "Each number gets either + or -. Let P be the sum of numbers with + and N be the sum with -. Then P - N = target and P + N = totalSum.",
+  "From the two equations, P = (totalSum + target) / 2. If this isn't an integer, the answer is 0.",
+  "Now the problem reduces to: how many subsets of nums sum to P? This is a 0/1 knapsack counting problem.",
+  "Use a 1D DP array: dp[j] = number of subsets summing to j. Iterate right to left for each number."
+]

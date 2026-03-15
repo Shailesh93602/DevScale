@@ -1,0 +1,6 @@
+[
+  "How can the robot reach cell (i, j)? Only from (i-1, j) or (i, j-1).",
+  "Define dp[i][j] = number of paths to reach (i, j). Then dp[i][j] = dp[i-1][j] + dp[i][j-1].",
+  "The first row and first column all have exactly 1 path (can only go right or only go down).",
+  "You can optimize to O(n) space since each row only depends on the current and previous values. Or use combinatorics: answer = C(m+n-2, m-1)."
+]

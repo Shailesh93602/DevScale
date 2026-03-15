@@ -1,0 +1,4 @@
+{
+    "name": "Database Scaling: Replication & Sharding",
+    "description": "Understanding how to scale stateful layers. Mastering Master-Slave database replication, partitioning massive datasets via Sharding, and exploring the CAP Theorem constraints."
+}

@@ -1,0 +1,10 @@
+{
+  "typescript": "function countSubstrings(s: string): number {\n    \n};",
+  "javascript": "/**\n * @param {string} s\n * @return {number}\n */\nvar countSubstrings = function(s) {\n    \n};",
+  "python": "class Solution:\n    def countSubstrings(self, s: str) -> int:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public int countSubstrings(String s) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int countSubstrings(string s) {\n        \n    }\n};",
+  "go": "func countSubstrings(s string) int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn count_substrings(s: String) -> i32 {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int CountSubstrings(string s) {\n        \n    }\n}"
+}

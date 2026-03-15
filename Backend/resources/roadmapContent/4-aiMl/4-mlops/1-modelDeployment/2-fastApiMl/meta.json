@@ -1,0 +1,6 @@
+{
+    "id": "2-fastApiMl",
+    "title": "Serving Models with FastAPI",
+    "description": "Building high-performance machine learning APIs with Python and FastAPI.",
+    "order": 2
+}

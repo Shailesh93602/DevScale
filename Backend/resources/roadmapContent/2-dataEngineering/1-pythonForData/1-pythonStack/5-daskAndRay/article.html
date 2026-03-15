@@ -1,0 +1,60 @@
+<h1>Scaling Python: Dask & Ray</h1>
+<p>Pandas is the undisputed king of single-machine data manipulation, but it has a fatal architectural flaw: it is strictly in-memory and single-threaded. If you try to load a 50GB CSV file on a machine with 16GB of RAM, Pandas will crash with an <code>OutOfMemoryError</code>. To process data that exceeds single-node capacity (Big Data), you must bridge Python to distributed computing.</p>
+
+<h2>Dask: Distributed DataFrames</h2>
+<p>Dask is designed to scale out Python's existing ecosystem (Pandas, NumPy, Scikit-Learn) to multi-core machines or distributed clusters. Crucially, <strong>Dask DataFrames mimic the Pandas API perfectly</strong>.</p>
+<p>Under the hood, a single Dask DataFrame is composed of many smaller Pandas DataFrames (called partitions) divided row-wise. Instead of forcing 1 CPU core to analyze a 50GB file, Dask instantly divides the file into fifty 1GB partitions, instructing 50 different CPU cores (across your cluster) to process them simultaneously.</p>
+
+<pre><code class="language-python">import dask.dataframe as dd
+
+# Reads massive datasets spanning thousands of files (CSV, Parquet, JSON)
+# This executes instantly because Dask builds a computation graph (Lazy Evaluation)
+# instead of reading data immediately.
+df = dd.read_parquet("s3://bucket-name/sales_data_2024/*.parquet")
+
+# Define complex operations exactly as you would in Pandas
+average_price = df.groupby('store_id').price.mean()
+
+# Nothing happens until .compute() is called!
+# Dask's scheduler analyzes the graph, distributes tasks to workers,
+# manages memory limits to avoid OOM crashes, and returns a single Pandas DataFrame.
+result = average_price.compute()
+</code></pre>
+
+<h2>Lazy Evaluation & Task Graphs</h2>
+<p>Dask relies on <strong>Lazy Evaluation</strong>. When you write <code>df.groupby(...)</code>, Dask does not perform computation; it builds a Directed Acyclic Graph (DAG) of the required operations. It waits for the <code>.compute()</code> trigger. This allows Dask to aggressively optimize execution: if you filter the data right before <code>compute()</code>, Dask's engine will push that filter down to the exact moment the data is read from disk (Predicate Pushdown), saving massive amounts of RAM and network I/O.</p>
+
+<h2>Ray: Distributed Applications & Machine Learning</h2>
+<p>While Dask focuses on mirroring data science libraries (DataFrames/Arrays), <strong>Ray</strong> is a universal, lower-level framework for scaling general-purpose Python and AI applications. Born at UC Berkeley, Ray is the underlying infrastructure powering massive AI workloads (including the training of ChatGPT).</p>
+
+<p>Ray excels at orchestrating complex, heterogeneous tasks — like allocating exactly 1 GPU to a specific deep learning training function while simultaneously allocating 4 CPU cores to an entirely different data-preprocessing function.</p>
+
+<pre><code class="language-python">import ray
+import time
+
+# Connects to the Ray cluster (or starts a local one utilizing all CPU cores)
+ray.init()
+
+# The @ray.remote decorator converts a standard Python function 
+# into an asynchronous distributed task
+@ray.remote
+def process_data_chunk(chunk):
+    time.sleep(2)  # Simulating heavy CPU processing
+    return sum(chunk)
+
+data = [[1, 2], [3, 4], [5, 6], [7, 8]]
+
+# Execute tasks simultaneously across the cluster in parallel
+# .remote() returns a non-blocking Future object immediately
+futures = [process_data_chunk.remote(chunk) for chunk in data]
+
+# ray.get() blocks until all distributed calculations finish, then gathers results
+results = ray.get(futures)  # Takes 2 seconds total, not 8!
+</code></pre>
+
+<h2>Dask vs Ray: Which to Choose?</h2>
+<ul>
+  <li><strong>Choose Dask when:</strong> You are hitting memory limits in Pandas or NumPy, operating on massive tabular datasets, or building standard ETL data pipelines.</li>
+  <li><strong>Choose Ray when:</strong> You are building distributed Machine Learning pipelines, Reinforcement Learning systems, Deep Learning model serving, or need fine-grained control over heterogeneous cluster resources (mixing CPU and GPU tasks).</li>
+</ul>
+<p>Modern data ecosystems often mix both: using Dask on Ray (Dask for the DataFrame API, Ray as the underlying execution engine) to get the best of both worlds.</p>

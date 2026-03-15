@@ -1,0 +1,69 @@
+<h1>SQL Window Functions</h1>
+<p><strong>Window functions</strong> perform calculations across a set of rows related to the current row — without collapsing rows like GROUP BY does. They are essential for advanced analytics: rankings, running totals, moving averages, and period-over-period comparisons.</p>
+
+<h2>Syntax</h2>
+<pre><code>function_name(expression)
+  OVER (
+    [PARTITION BY column]
+    [ORDER BY column]
+    [ROWS/RANGE frame]
+  )</code></pre>
+
+<h2>Ranking Functions</h2>
+<pre><code>SELECT
+  employee_id,
+  department,
+  salary,
+  ROW_NUMBER()  OVER (PARTITION BY department ORDER BY salary DESC) AS row_num,
+  RANK()        OVER (PARTITION BY department ORDER BY salary DESC) AS rank,
+  DENSE_RANK()  OVER (PARTITION BY department ORDER BY salary DESC) AS dense_rank,
+  NTILE(4)      OVER (ORDER BY salary DESC) AS quartile
+FROM employees;</code></pre>
+<ul>
+  <li><strong>ROW_NUMBER</strong> — unique sequential number, no ties</li>
+  <li><strong>RANK</strong> — ties get same rank, next rank skips (1,1,3)</li>
+  <li><strong>DENSE_RANK</strong> — ties get same rank, no skipping (1,1,2)</li>
+  <li><strong>NTILE(n)</strong> — divides rows into n equal buckets</li>
+</ul>
+
+<h2>Lead & Lag — Period Comparisons</h2>
+<pre><code>SELECT
+  month,
+  revenue,
+  LAG(revenue, 1)  OVER (ORDER BY month) AS prev_month_revenue,
+  LEAD(revenue, 1) OVER (ORDER BY month) AS next_month_revenue,
+  revenue - LAG(revenue, 1) OVER (ORDER BY month) AS mom_change
+FROM monthly_sales;</code></pre>
+
+<h2>Running Totals & Moving Averages</h2>
+<pre><code>SELECT
+  date,
+  amount,
+  SUM(amount)  OVER (ORDER BY date ROWS UNBOUNDED PRECEDING) AS running_total,
+  AVG(amount)  OVER (ORDER BY date ROWS BETWEEN 6 PRECEDING AND CURRENT ROW) AS ma_7day
+FROM daily_revenue;</code></pre>
+
+<h2>First & Last Value</h2>
+<pre><code>SELECT
+  product_id,
+  sale_date,
+  price,
+  FIRST_VALUE(price) OVER (PARTITION BY product_id ORDER BY sale_date) AS first_price,
+  LAST_VALUE(price)  OVER (PARTITION BY product_id ORDER BY sale_date
+                           ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS last_price
+FROM sales;</code></pre>
+
+<h2>Percentile Functions</h2>
+<pre><code>SELECT
+  PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY salary) AS median_salary,
+  PERCENTILE_CONT(0.9) WITHIN GROUP (ORDER BY salary) AS p90_salary
+FROM employees;</code></pre>
+
+<h2>Common Use Cases</h2>
+<ul>
+  <li>Find the top N rows per group (ROW_NUMBER + WHERE row_num = 1)</li>
+  <li>Month-over-month growth (LAG)</li>
+  <li>7-day moving average (AVG ROWS frame)</li>
+  <li>Cumulative sum of revenue (SUM UNBOUNDED PRECEDING)</li>
+  <li>Rank employees by salary within department (DENSE_RANK)</li>
+</ul>

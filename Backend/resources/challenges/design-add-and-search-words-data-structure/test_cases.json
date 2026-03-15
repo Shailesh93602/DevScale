@@ -1,0 +1,7 @@
+[
+  {"input":"{\"commands\":[\"WordDictionary\",\"addWord\",\"addWord\",\"addWord\",\"search\",\"search\",\"search\",\"search\"], \"args\":[[],[\"bad\"],[\"dad\"],[\"mad\"],[\"pad\"],[\"bad\"],[\".ad\"],[\"b..\"]]}","output":"[null,null,null,null,false,true,true,true]","explanation":"Basic test with dots","is_hidden":false},
+  {"input":"{\"commands\":[\"WordDictionary\",\"addWord\",\"search\",\"search\"], \"args\":[[],[\"a\"],[\"a\"],[\".\"]]}","output":"[null,null,true,true]","explanation":"Single character matches","is_hidden":false},
+  {"input":"{\"commands\":[\"WordDictionary\",\"addWord\",\"search\"], \"args\":[[],[\"word\"],[\"w..x\"]]}","output":"[null,null,false]","explanation":"Failing suffix","is_hidden":true},
+  {"input":"{\"commands\":[\"WordDictionary\",\"addWord\",\"search\",\"search\",\"search\",\"search\",\"search\"], \"args\":[[],[\"hello\"],[\"h.ll.\"],[\"h...o\"],[\".....\"],[\"h....\"],[\"h.....\"]]}","output":"[null,null,true,true,true,true,false]","explanation":"Multiple dots","is_hidden":true},
+  {"input":"{\"commands\":[\"WordDictionary\",\"addWord\",\"search\"], \"args\":[[],[\"x\"],[\"xx\"]]}","output":"[null,null,false]","explanation":"Length mismatch","is_hidden":true}
+]

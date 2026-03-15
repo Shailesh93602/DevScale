@@ -1,0 +1,20 @@
+{
+  "title": "Find Median from Data Stream",
+  "slug": "find-median-from-data-stream",
+  "difficulty": "Hard",
+  "category": "algorithms",
+  "points": 150,
+  "tags": ["two-pointers","design","sorting","data-stream","heap"],
+  "company_tags": ["Amazon","Microsoft","Apple","Google","Facebook"],
+  "topic_tags": ["heaps","design","data stream","priority queue"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "A stream of integers added continuously using an `addNum` method, followed by `findMedian` calls.",
+  "output_format": "The median of all elements added so far.",
+  "example_input": "[\"MedianFinder\", \"addNum\", \"addNum\", \"findMedian\", \"addNum\", \"findMedian\"]\n[[], [1], [2], [], [3], []]",
+  "example_output": "[null, null, null, 1.5, null, 2.0]",
+  "constraints": "- `-10^5 <= num <= 10^5`\n- There will be at least one element in the data structure before calling `findMedian`.\n- At most `5 * 10^4` calls will be made to `addNum` and `findMedian`.",
+  "function_signature": "class MedianFinder { constructor() {} addNum(num: number): void {} findMedian(): number {} }",
+  "status": "ACTIVE"
+}

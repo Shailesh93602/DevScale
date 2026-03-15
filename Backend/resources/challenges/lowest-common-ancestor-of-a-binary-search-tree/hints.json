@@ -1,0 +1,6 @@
+[
+  "A key property of a BST is that all values to the left are smaller and all values to the right are larger than the current node.",
+  "If both p and q are smaller than the current root's value, then the LCA must be in the left subtree.",
+  "If both p and q are larger than the current root's value, then the LCA must be in the right subtree.",
+  "If p and q lie on opposite sides (or one of them is equal to the current root), then the current root IS the LCA."
+]

@@ -1,0 +1,44 @@
+{
+  "title": "Group Anagrams",
+  "slug": "group-anagrams",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": [
+    "array",
+    "hash-table",
+    "string",
+    "sorting"
+  ],
+  "company_tags": [
+    "Amazon",
+    "Microsoft",
+    "Uber",
+    "Facebook",
+    "Apple"
+  ],
+  "topic_tags": [
+    "arrays",
+    "strings",
+    "hash tables"
+  ],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An array of strings `strs`.",
+  "output_format": "An array of arrays of strings, where each sub-array contains anagrams from the input.",
+  "example_input": "strs = [\"eat\",\"tea\",\"tan\",\"ate\",\"nat\",\"bat\"]",
+  "example_output": "[[\"bat\"],[\"nat\",\"tan\"],[\"ate\",\"eat\",\"tea\"]]",
+  "constraints": "- `1 <= strs.length <= 10^4`\n- `0 <= strs[i].length <= 100`\n- `strs[i]` consists of lowercase English letters.",
+  "function_signature": "function groupAnagrams(strs: string[]): string[][] {}",
+  "status": "ACTIVE"
+}

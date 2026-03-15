@@ -1,0 +1,98 @@
+<h1>React Components, Props & Composition</h1>
+<p>Components are the building blocks of every React UI. Props allow data to flow <strong>downward</strong> from parent to child components.</p>
+
+<h2>Functional Components</h2>
+<pre><code>// Simple functional component
+function Button({ label, onClick, variant = "primary" }: {
+  label: string;
+  onClick: () => void;
+  variant?: "primary" | "secondary";
+}) {
+  return (
+    &lt;button
+      className={`btn btn-${variant}`}
+      onClick={onClick}
+    &gt;
+      {label}
+    &lt;/button&gt;
+  );
+}
+
+// Usage
+&lt;Button label="Save" onClick={() =&gt; save()} /&gt;
+&lt;Button label="Cancel" onClick={() =&gt; cancel()} variant="secondary" /&gt;</code></pre>
+
+<h2>Props Rules</h2>
+<ul>
+  <li>Props are <strong>read-only</strong> — a component must never modify its own props.</li>
+  <li>Props flow <strong>one-way</strong> — parent to child (downward).</li>
+  <li>Any JavaScript value can be a prop: strings, numbers, arrays, objects, functions, JSX.</li>
+</ul>
+
+<h2>The children Prop</h2>
+<pre><code>function Card({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    &lt;div className="card"&gt;
+      &lt;h3 className="card-title"&gt;{title}&lt;/h3&gt;
+      &lt;div className="card-body"&gt;{children}&lt;/div&gt;
+    &lt;/div&gt;
+  );
+}
+
+// Usage — any JSX nested inside becomes `children`
+&lt;Card title="User Info"&gt;
+  &lt;p&gt;Name: Alice&lt;/p&gt;
+  &lt;p&gt;Role: Admin&lt;/p&gt;
+&lt;/Card&gt;</code></pre>
+
+<h2>Component Composition Patterns</h2>
+<pre><code>// Compound Components Pattern
+function Tabs({ children }: { children: React.ReactNode }) {
+  const [active, setActive] = React.useState(0);
+  return &lt;div className="tabs"&gt;{children}&lt;/div&gt;;
+}
+
+Tabs.Tab = function Tab({ label }: { label: string }) {
+  return &lt;button className="tab"&gt;{label}&lt;/button&gt;;
+};
+
+// Usage
+&lt;Tabs&gt;
+  &lt;Tabs.Tab label="Overview" /&gt;
+  &lt;Tabs.Tab label="Details" /&gt;
+&lt;/Tabs&gt;</code></pre>
+
+<h2>Passing Functions as Props (Lifting State Up)</h2>
+<pre><code>// Parent owns the state; passes handler down to child
+function SearchPage() {
+  const [query, setQuery] = React.useState("");
+
+  return (
+    &lt;div&gt;
+      &lt;SearchInput
+        value={query}
+        onChange={(val) =&gt; setQuery(val)} // Pass handler as prop
+      /&gt;
+      &lt;SearchResults query={query} /&gt;
+    &lt;/div&gt;
+  );
+}
+
+function SearchInput({ value, onChange }: { value: string; onChange: (v: string) =&gt; void }) {
+  return (
+    &lt;input
+      value={value}
+      onChange={(e) =&gt; onChange(e.target.value)}
+      placeholder="Search..."
+    /&gt;
+  );
+}</code></pre>
+
+<h2>Prop Drilling Problem & Solution</h2>
+<pre><code>// Problem: passing props through many layers
+&lt;App user={user}&gt;
+  &lt;Layout user={user}&gt;
+    &lt;Sidebar user={user}&gt;
+      &lt;Avatar user={user} /&gt; {/* Only this needs user! */}
+
+// Solution: Context API (covered in State Management)</code></pre>

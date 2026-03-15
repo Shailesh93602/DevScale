@@ -1,0 +1,10 @@
+{
+  "typescript": "function pacificAtlantic(heights: number[][]): number[][] {\n    \n};",
+  "javascript": "/**\n * @param {number[][]} heights\n * @return {number[][]}\n */\nvar pacificAtlantic = function(heights) {\n    \n};",
+  "python": "class Solution:\n    def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public List<List<Integer>> pacificAtlantic(int[][] heights) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<vector<int>> pacificAtlantic(vector<vector<int>>& heights) {\n        \n    }\n};",
+  "go": "func pacificAtlantic(heights [][]int) [][]int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn pacific_atlantic(heights: Vec<Vec<i32>>) -> Vec<Vec<i32>> {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public IList<IList<int>> PacificAtlantic(int[][] heights) {\n        \n    }\n}"
+}

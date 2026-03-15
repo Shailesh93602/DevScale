@@ -1,0 +1,36 @@
+<h1>Microservices Architecture</h1>
+<p>When you start a new project, you build a <strong>Monolithic Architecture</strong>. A Monolith is a single, massive codebase where the User Service, Payment Service, and Notification Service are all compiled and deployed together as one unified Node.js application.</p>
+
+<h2>The Monolith vs Microservices</h2>
+<p>Monoliths are easy to develop, test, and deploy. However, when the engineering team grows to 500 developers, the Monolith becomes a bottleneck.</p>
+<ul>
+  <li>If the Payment Team introduces a memory leak, the entire Monolith crashes, taking the core User Service offline with it.</li>
+  <li>If the Notification Service needs to scale to 100 servers during a spike, you are forced to scale the entire Monolith to 100 servers, wasting massive amounts of money.</li>
+</ul>
+
+<p><strong>Microservices Architecture</strong> solves this problem by breaking the Monolith apart into small, autonomous, independently deployable services.</p>
+
+<h2>The API Gateway</h2>
+<p>In a Microservices architecture, the UI (like a React app) should never communicate directly with 50 separate backend microservices.</p>
+<p>Instead, all client requests go through an <strong>API Gateway</strong>. The Gateway is a single entry point that handles authentication, rate limiting, and request routing.</p>
+<ol>
+  <li>The React App requests `/api/payments/123`.</li>
+  <li>The API Gateway intercepts the request and validates the JWT token.</li>
+  <li>The Gateway forwards the secure request to the internal Payment Microservice.</li>
+</ol>
+
+<h2>The Saga Pattern (Distributed Transactions)</h2>
+<p>The hardest problem in Microservices is data consistency.</p>
+<p>In a Monolith, if a user books a hotel and a flight, you can wrap both actions in a single SQL Transaction. If the flight booking fails, the database rolls back the hotel booking automatically.</p>
+<p>In Microservices, the <code>Hotel DB</code> and the <code>Flight DB</code> are physically separate. You cannot use standard SQL transactions across two different databases. You must use the <strong>Saga Pattern</strong>.</p>
+<p>A Saga is a sequence of local transactions. Each local transaction updates the database and publishes a message to trigger the next local transaction in the saga. If a local transaction fails (e.g., the Flight Service rejects the booking), the Saga automatically executes series of "Compensating Transactions" that undo the changes made by the preceding local transactions (e.g., it sends a message to the Hotel Service to cancel the room).</p>
+
+<h2>Event-Driven Architecture</h2>
+<p>Microservices should avoid communicating with each other synchronously via HTTP REST calls.</p>
+<p>If the User Service calls the Email Service via HTTP, and the Email Service is down, the User Service crashes. This defeats the purpose of isolation.</p>
+<p>Instead, Microservices use <strong>Event-Driven Communication</strong> via Apache Kafka or RabbitMQ.</p>
+<ul>
+  <li>The User Service creates a new user, saves it to its database, and publishes a <code>UserCreatedEvent</code> to Kafka.</li>
+  <li>The User Service immediately returns a 200 OK to the client.</li>
+  <li>Three seconds later, the independent Email Service consumes the event from Kafka and sends a welcome email.</li>
+</ul>

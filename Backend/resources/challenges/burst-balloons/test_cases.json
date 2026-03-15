@@ -1,0 +1,12 @@
+[
+  { "input": "{\"nums\": [3,1,5,8]}", "output": "167", "explanation": "Optimal order gives 3*1*5 + 3*5*8 + 1*3*8 + 1*8*1 = 167", "is_hidden": false },
+  { "input": "{\"nums\": [1,5]}", "output": "10", "explanation": "Burst 1 first: 1*1*5=5, then 5: 1*5*1=5. Total=10", "is_hidden": false },
+  { "input": "{\"nums\": [1]}", "output": "1", "explanation": "Single balloon: 1*1*1=1", "is_hidden": false },
+  { "input": "{\"nums\": [5]}", "output": "5", "explanation": "Single balloon: 1*5*1=5", "is_hidden": true },
+  { "input": "{\"nums\": [1,2,3]}", "output": "12", "explanation": "Optimal: burst 1 (1*1*2=2), burst 3 (2*3*1=6), burst 2 (1*2*1=2). Nope, burst 2 first (1*2*3=6), burst 1 (1*1*3=3), burst 3 (1*3*1=3)=12", "is_hidden": true },
+  { "input": "{\"nums\": [9,76,64,21]}", "output": "116718", "explanation": "Large values test", "is_hidden": true },
+  { "input": "{\"nums\": [0,0,0]}", "output": "0", "explanation": "All zeros yield 0 coins", "is_hidden": true },
+  { "input": "{\"nums\": [100]}", "output": "100", "explanation": "1*100*1=100", "is_hidden": true },
+  { "input": "{\"nums\": [2,3,7,1,4]}", "output": "166", "explanation": "Interval DP needed for optimal", "is_hidden": true },
+  { "input": "{\"nums\": [1,1,1,1,1]}", "output": "5", "explanation": "All ones", "is_hidden": true }
+]

@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the 'Delta Log' and what fundamental role does it play in a Delta Lake table?",
+            "options": [
+                "It is a monitoring dashboard for tracking Spark job performance.",
+                "It is an ordered series of JSON transaction journal files stored alongside the Parquet data files. Every DML operation (INSERT, UPDATE, DELETE) writes a new JSON entry recording which files were added and removed, providing the foundation for ACID guarantees and Time Travel.",
+                "It is a binary index file for accelerating column predicate pushdown.",
+                "It is the Databricks Cloud UI for browsing Delta tables visually."
+            ],
+            "answer": "It is an ordered series of JSON transaction journal files stored alongside the Parquet data files. Every DML operation (INSERT, UPDATE, DELETE) writes a new JSON entry recording which files were added and removed, providing the foundation for ACID guarantees and Time Travel.",
+            "explanation": "The Delta Log is analogous to a database's Write-Ahead Log (WAL). It's the authoritative record of everything that ever happened to the table, enabling recovery and time travel."
+        },
+        {
+            "question": "Why is the MERGE (Upsert) operation critical for building CDC (Change Data Capture) pipelines into a Delta Lake table?",
+            "options": [
+                "MERGE compresses all existing Parquet files when executed.",
+                "CDC pipelines receive a stream of changes (new rows, updated rows, deleted rows). MERGE handles all three cases in a single atomic operation — updating existing matching rows and inserting new ones — without requiring expensive DELETE + INSERT workarounds.",
+                "MERGE allows multiple Spark clusters to write to the same table simultaneously.",
+                "MERGE automatically generates surrogate keys for dimension tables."
+            ],
+            "answer": "CDC pipelines receive a stream of changes (new rows, updated rows, deleted rows). MERGE handles all three cases in a single atomic operation — updating existing matching rows and inserting new ones — without requiring expensive DELETE + INSERT workarounds.",
+            "explanation": "Without MERGE (upsert), you would need to read the entire target table, join with source changes, and rewrite everything — a massively expensive operation on a Petabyte-scale table."
+        },
+        {
+            "question": "What performance optimization does the 'Change Data Feed (CDF)' feature in Delta Lake provide for downstream consumers?",
+            "options": [
+                "It compresses the Delta Log JSON files into a binary format.",
+                "Instead of downstream jobs re-reading and re-processing the entire table on every run to detect changes, CDF exposes only the row-level changes (inserts, updates, deletes) that occurred since the last read, reducing compute costs for incremental processing dramatically.",
+                "It automatically triggers downstream Airflow DAGs when a table changes.",
+                "It replicates the Delta table to multiple AWS regions simultaneously."
+            ],
+            "answer": "Instead of downstream jobs re-reading and re-processing the entire table on every run to detect changes, CDF exposes only the row-level changes (inserts, updates, deletes) that occurred since the last read, reducing compute costs for incremental processing dramatically.",
+            "explanation": "Without CDF, a downstream Spark job must scan all 10TB to find the 1,000 changed rows. With CDF, it only reads the 1,000 changed rows directly from the change log."
+        }
+    ]
+}

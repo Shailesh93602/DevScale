@@ -1,0 +1,53 @@
+<h1>Data Modelling</h1>
+<p>A robust data model enables analysts to query massive volumes of data efficiently and avoids duplication of business logic. Data Modelling converts raw event data into structured tables prepared for analytical queries.</p>
+
+<h2>Dimensional Modelling: Star Schema</h2>
+<p>Invented by Ralph Kimball, the Star Schema remains the de facto standard for structuring Data Warehouses.</p>
+
+<h3>1. Fact Tables</h3>
+<p>Fact tables record measurements or events (e.g., a sale, a click). They contain mostly numbers and foreign keys.</p>
+<ul>
+  <li><strong>Transaction Fact:</strong> One row per event (e.g., <code>fact_orders</code>)</li>
+  <li><strong>Periodic Snapshot Fact:</strong> One row per summary period (e.g., <code>fact_monthly_account_balances</code>)</li>
+  <li><strong>Accumulating Snapshot Fact:</strong> One row representing an entity's lifecycle (e.g., <code>fact_order_fulfillment</code> updated as the order ships, delivers)</li>
+</ul>
+
+<h3>2. Dimension Tables</h3>
+<p>Dimension tables provide the "who, what, where, when, why, and how". They contain descriptive attributes.</p>
+<ul>
+  <li><code>dim_customer</code>: Customer name, email, segment</li>
+  <li><code>dim_product</code>: Product SKU, category, brand</li>
+  <li><code>dim_date</code>: Year, quarter, month, is_holiday</li>
+</ul>
+
+<p>Queries form a "Star" shape by joining the central Fact table out to the Dimensions.</p>
+
+<h2>Snowflake Schema</h2>
+<p>A variation of the Star Schema where dimension tables are normalized. For example, <code>dim_product</code> relates to a separate <code>dim_category</code> table.</p>
+<ul>
+  <li><strong>Pros:</strong> Saves storage space.</li>
+  <li><strong>Cons:</strong> Requires more complex JOINs, reducing performance in modern columnar databases. Cloud warehouses (BigQuery, Snowflake) vastly prefer the simpler Star Schema.</li>
+</ul>
+
+<h2>Slowly Changing Dimensions (SCDs)</h2>
+<p>How do we handle a customer moving to a new state?</p>
+<ul>
+  <li><strong>SCD Type 1 (Overwrite):</strong> Always overwrite the old state. We lose history. (Good for fixing spelling errors).</li>
+  <li><strong>SCD Type 2 (Add a row):</strong> Add a new row with the new state. We use <code>valid_from</code> and <code>valid_to</code> columns to track when they lived there. This creates perfect historical reporting.</li>
+  <li><strong>SCD Type 3 (Add a column):</strong> Add an <code>old_state</code> column. Keeps minimal history without adding rows.</li>
+</ul>
+
+<h2>Data Vault 2.0 (Advanced)</h2>
+<p>Designed for massive, highly agile Enterprise Data Warehouses (EDW) that ingest from many source systems. It separates structural information from descriptive data.</p>
+<ul>
+  <li><strong>Hubs:</strong> Core business keys (e.g., a Customer ID).</li>
+  <li><strong>Links:</strong> Relationships between Hubs (e.g., Customer bought Product).</li>
+  <li><strong>Satellites:</strong> Descriptive attributes and history for Hubs/Links over time.</li>
+</ul>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Use Surrogate Keys (auto-incrementing integers or UUID hashes) instead of Business Keys (like a changing email) for reliable JOINs.</li>
+  <li>Denormalize dimension tables in modern columnar data warehouses. Storage is cheap, JOINs are expensive.</li>
+  <li>Never update Fact tables if possible; they should be immutable event logs. Update Dimensions instead.</li>
+</ul>
