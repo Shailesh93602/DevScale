@@ -1,0 +1,4 @@
+{
+    "name": "TCP/IP & Subnetting",
+    "description": "Understanding TCP/IP stack from the ground up. Covering the OSI model, IPv4/IPv6 addressing, CIDR notation, subnetting, TCP vs UDP, the 3-way handshake, and how packets traverse the internet."
+}

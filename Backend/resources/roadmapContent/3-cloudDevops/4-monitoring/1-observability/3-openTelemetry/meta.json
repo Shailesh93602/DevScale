@@ -1,0 +1,4 @@
+{
+    "name": "OpenTelemetry",
+    "description": "Standardizing telemetry data generation, distributed tracing, and spans."
+}

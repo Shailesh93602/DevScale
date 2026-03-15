@@ -1,0 +1,19 @@
+{
+  "title": "Database Transactions & Optimistic Locking",
+  "slug": "database-transactions",
+  "difficulty": "Hard",
+  "category": "backend",
+  "points": 150,
+  "tags": ["database", "transactions", "concurrency", "locking"],
+  "company_tags": ["Stripe", "Amazon", "Goldman Sachs", "Square", "PayPal"],
+  "topic_tags": ["ACID", "Transactions", "Optimistic Locking", "Pessimistic Locking", "Isolation Levels"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Transaction operations (begin, read, write, commit, rollback) with concurrent execution scenarios",
+  "output_format": "Transaction results, conflict detection, and consistency guarantees",
+  "example_input": "T1: begin(); read(account_A); write(account_A, balance - 100); commit(); T2: begin(); read(account_A); write(account_A, balance - 50); commit();",
+  "example_output": "T1: committed. T2: conflict detected, retry with updated balance.",
+  "constraints": "Must implement ACID properties. Must support optimistic concurrency with version numbers. Must detect and handle write conflicts. Must support rollback on failure.",
+  "function_signature": "class TransactionManager { begin(): Transaction; commit(tx: Transaction): Promise<CommitResult>; rollback(tx: Transaction): void; withTransaction<T>(fn: (tx: Transaction) => Promise<T>): Promise<T>; }",
+  "status": "ACTIVE"
+}

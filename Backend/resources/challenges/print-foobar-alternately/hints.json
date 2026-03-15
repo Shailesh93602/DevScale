@@ -1,0 +1,6 @@
+[
+  "Use a boolean flag to track whose turn it is (foo or bar).",
+  "Each function should loop n times, but only proceed when it is their turn.",
+  "After printing, toggle the flag to signal the other function.",
+  "Use async/await with small delays or promise-based signaling to avoid busy-waiting."
+]

@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the fundamental difference between SAST and DAST, and what categories of vulnerabilities does each find that the other cannot?",
+            "options": [
+                "SAST tests the UI; DAST tests the backend API.",
+                "SAST analyzes source code statically (without running the application) — it finds code-level vulnerabilities like SQL injection patterns, hardcoded secrets, and insecure configurations. DAST tests the live running application externally like an attacker — it finds runtime vulnerabilities like authentication bypass, XSS, CSRF, and security header misconfigurations that only appear when the app is deployed.",
+                "SAST requires the full test suite to run; DAST can be performed without tests.",
+                "DAST is only for web applications; SAST works for any programming language."
+            ],
+            "answer": "SAST analyzes source code statically (without running the application) — it finds code-level vulnerabilities like SQL injection patterns, hardcoded secrets, and insecure configurations. DAST tests the live running application externally like an attacker — it finds runtime vulnerabilities like authentication bypass, XSS, CSRF, and security header misconfigurations that only appear when the app is deployed.",
+            "explanation": "SAST catches a SQL injection pattern in source code before it's even deployed. DAST catches that the /admin endpoint is accessible without authentication, which only manifests in the running application's routing configuration."
+        },
+        {
+            "question": "A security audit reveals an endpoint vulnerable to SQL injection. SAST caught the pattern in the PR but it was merged anyway. What process failure does this represent?",
+            "options": [
+                "The SAST tool was misconfigured and reported a false positive.",
+                "SAST findings should be configured as PR blocking checks — a critical SQL injection finding should prevent the PR from being merged until the vulnerability is remediated. Treating SAST alerts as 'advisory only' defeats the entire purpose of shift-left security.",
+                "The engineer reviewed the SAST finding but correctly evaluated it as low-risk.",
+                "SQL injection cannot be detected by SAST tools — only DAST can find it."
+            ],
+            "answer": "SAST findings should be configured as PR blocking checks — a critical SQL injection finding should prevent the PR from being merged until the vulnerability is remediated. Treating SAST alerts as 'advisory only' defeats the entire purpose of shift-left security.",
+            "explanation": "If SAST alerts don't block merges, engineers learn to ignore them. The value of continuous SAST is the enforcement — a CI gate that requires security approval for critical findings before code can reach production."
+        },
+        {
+            "question": "What specific attack technique do penetration testers use that automated SAST and DAST scans fundamentally cannot replicate?",
+            "options": [
+                "Pen testers use proprietary tools that scan more code patterns than Semgrep.",
+                "Pen testers chain multiple individually low-severity vulnerabilities into high-impact attack paths that automated tools don't understand. For example: an SSRF vulnerability (low severity) + the AWS metadata endpoint (known IP) + weak IMDSv1 configuration = complete AWS credential theft. An automated scanner reports the SSRF but doesn't reason about the downstream blast radius.",
+                "Pen testers test mobile apps while SAST/DAST only tests web applications.",
+                "Pen testers have access to the database schema, enabling more targeted attacks."
+            ],
+            "answer": "Pen testers chain multiple individually low-severity vulnerabilities into high-impact attack paths that automated tools don't understand. For example: an SSRF vulnerability (low severity) + the AWS metadata endpoint (known IP) + weak IMDSv1 configuration = complete AWS credential theft. An automated scanner reports the SSRF but doesn't reason about the downstream blast radius.",
+            "explanation": "This attack-path chaining is called 'privilege escalation through lateral movement.' SAST sees 'potentially dangerous URL fetch.' A pen tester sees 'I can hit the metadata service, get IAM credentials, and own the entire AWS account.'"
+        }
+    ]
+}

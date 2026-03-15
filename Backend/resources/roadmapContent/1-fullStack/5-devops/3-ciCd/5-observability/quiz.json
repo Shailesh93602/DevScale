@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary architectural purpose of integrating 'Sentry' into a production backend ecosystem?",
+            "options": [
+                "To compile Next.js code",
+                "To instantly aggregate and explicitly notify the engineering team of any unhandled exceptions occurring in the live production server, precisely capturing the exact stack trace, the user's browser details, and the OS.",
+                "To deploy code sequentially to AWS servers",
+                "To manage remote GitHub branches securely"
+            ],
+            "answer": "To instantly aggregate and explicitly notify the engineering team of any unhandled exceptions occurring in the live production server, precisely capturing the exact stack trace, the user's browser details, and the OS.",
+            "explanation": "You cannot stare at production logs 24/7. When a user experiences a 500 error, Sentry immediately alerts you with exactly what line of your code failed."
+        },
+        {
+            "question": "Why is utilizing basic `console.log()` heavily discouraged in scaling enterprise backend production environments?",
+            "options": [
+                "It mathematically corrupts SQL queries instantly",
+                "It outputs fundamentally unstructured, raw textual data that cannot be efficiently parsed, filtered, or queried across millions of cloud logs.",
+                "It disables TypeScript securely",
+                "It blocks HTTPS certificates"
+            ],
+            "answer": "It outputs fundamentally unstructured, raw textual data that cannot be efficiently parsed, filtered, or queried across millions of cloud logs.",
+            "explanation": "If you have 10,000 logs a minute, finding an error using `grep` is incredibly painful. You must utilize Structured JSON Logging to efficiently search your systems globally."
+        },
+        {
+            "question": "What specifically is the advantage of utilizing 'Winston' or 'Pino' explicitly for Node.js logging natively in an enterprise system?",
+            "options": [
+                "They encrypt the web traffic completely",
+                "They format explicit 'Structured JSON Logs', allowing centralized tools like Datadog to instantly parse and filter massive amounts of log data securely.",
+                "They deploy the docker containers dynamically",
+                "They manage Kubernetes orchestrations globally"
+            ],
+            "answer": "They format explicit 'Structured JSON Logs', allowing centralized tools like Datadog to instantly parse and filter massive amounts of log data securely.",
+            "explanation": "Structured JSON allows you to instantly search for `level: error` or filter logs by a specific `userId`, turning chaotic text into highly organized data."
+        },
+        {
+            "question": "In the context of 'APM' (Application Performance Monitoring) platforms like Datadog, what is their distinct purpose compared to basic Error Tracking?",
+            "options": [
+                "APM resets the AWS environment directly",
+                "Error Tracking tells you when the code crashes. APM safely monitors exact latency metrics, actively revealing which specific PostgreSQL queries or HTTP requests are running terribly slowly, even if they don't explicitly crash.",
+                "APM specifically handles user password hashing",
+                "APM directly manages the Domain Name System"
+            ],
+            "answer": "Error Tracking tells you when the code crashes. APM safely monitors exact latency metrics, actively revealing which specific PostgreSQL queries or HTTP requests are running terribly slowly, even if they don't explicitly crash.",
+            "explanation": "A user might not get an error screen, but waiting 8 seconds for a page to load is still a failure. APM hooks into your Node runtime and mathematically measures the exact millisecond duration of every single database query."
+        },
+        {
+            "question": "What fundamental data structure does structured logging (e.g., Winston) emit to enable enterprise log aggregation?",
+            "options": [
+                "Raw Binary Buffers",
+                "Stringified JSON Objects (e.g. `{\"level\": \"error\", \"message\": \"Failed\"}`)",
+                "Compiled WebAssembly Code",
+                "Base64 Encoded Images"
+            ],
+            "answer": "Stringified JSON Objects (e.g. `{\"level\": \"error\", \"message\": \"Failed\"}`)",
+            "explanation": "JSON is natively parsable by every major log aggregator (Datadog, AWS CloudWatch, ELK Stack). It transforms a messy line of text into key-value pairs that can be graphed and analyzed."
+        }
+    ]
+}

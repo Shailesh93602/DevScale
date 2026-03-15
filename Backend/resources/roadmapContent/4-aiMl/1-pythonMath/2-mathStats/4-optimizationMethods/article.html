@@ -1,0 +1,78 @@
+<h1>Optimization Methods: Gradient Descent & Beyond</h1>
+<p>Every neural network training session is a mathematical optimization problem: find the model parameters (weights and biases) that minimize the loss function. <strong>Gradient descent</strong> is the algorithm that solves this — and the choice of optimizer dramatically affects training speed, stability, and final model quality.</p>
+
+<h2>Gradient Descent Intuition</h2>
+<p>Imagine standing on a foggy mountain and trying to reach the lowest valley. You can only feel the slope beneath your feet. Gradient descent takes a step in the direction of steepest downhill slope — repeating this until you reach a (local) minimum:</p>
+<pre><code class="language-python">import numpy as np
+
+def gradient_descent(X, y, learning_rate=0.01, epochs=1000):
+    m, n = X.shape
+    weights = np.zeros(n)
+    
+    for epoch in range(epochs):
+        # Forward pass: compute predictions
+        predictions = X @ weights
+        errors = predictions - y
+        
+        # Compute gradient (direction of steepest ascent in loss landscape)
+        gradient = (2 / m) * X.T @ errors
+        
+        # Update weights by stepping OPPOSITE to gradient (downhill)
+        weights -= learning_rate * gradient
+        
+        if epoch % 100 == 0:
+            loss = np.mean(errors ** 2)
+            print(f"Epoch {epoch}: Loss = {loss:.4f}")
+    
+    return weights
+</code></pre>
+
+<h2>Batch, Stochastic & Mini-Batch SGD</h2>
+<pre><code class="language-text">Batch Gradient Descent:
+  - Uses ALL training examples each step
+  - Smooth, stable convergence but very slow for large datasets
+  - gradient = mean(gradients over all 1M examples)
+
+Stochastic Gradient Descent (SGD):
+  - Uses ONE random example each step
+  - Very noisy updates, but explores the loss landscape (can escape local minima)
+  - gradient = gradient of 1 random example
+
+Mini-Batch SGD (standard in deep learning):
+  - Uses a random batch of 32-256 examples each step
+  - Best of both worlds: efficient GPU parallelism + reasonable gradient estimate
+  - gradient = mean(gradients over 64 random examples)
+</code></pre>
+
+<h2>Adaptive Optimizers</h2>
+<pre><code class="language-python">import torch.optim as optim
+
+# Adam (Adaptive Moment Estimation) — default choice for most deep learning
+# Maintains per-parameter learning rates, adapts based on gradient history
+optimizer = optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-4)
+# lr=1e-3 is almost always a good starting learning rate for Adam
+
+# SGD with Momentum — preferred for CNNs in research papers
+# Momentum accumulates velocity in consistent gradient directions
+optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9, nesterov=True)
+
+# RMSProp — good for RNNs, adapts to sparse gradient landscapes
+optimizer = optim.RMSprop(model.parameters(), lr=1e-3)
+</code></pre>
+
+<h2>Learning Rate Schedules</h2>
+<pre><code class="language-python">from torch.optim.lr_scheduler import CosineAnnealingLR, OneCycleLR
+
+# Start high for broad exploration, decay for fine-grained convergence
+scheduler = CosineAnnealingLR(optimizer, T_max=100)
+
+# Training loop
+for epoch in range(100):
+    train_one_epoch(model, dataloader, optimizer)
+    scheduler.step()   # Adjusts learning rate each epoch
+
+# The One-Cycle Policy (fast.ai / Leslie Smith): 
+# ramp up LR → peak → cosine decay to near zero
+# Trains faster than fixed LR and often achieves better performance
+scheduler = OneCycleLR(optimizer, max_lr=0.01, steps_per_epoch=len(dataloader), epochs=10)
+</code></pre>

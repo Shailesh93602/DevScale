@@ -1,0 +1,4 @@
+{
+    "name": "Indexing & Performance",
+    "description": "Optimizing sluggish databases. Understanding how B-tree and Hash Indexes work under the hood, using the EXPLAIN ANALYZE command to read query plans, and avoiding full table scans."
+}

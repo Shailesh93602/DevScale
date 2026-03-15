@@ -1,0 +1,4 @@
+{
+    "name": "Privacy, GDPR & Data Masking",
+    "description": "Engineering compliance into data pipelines from day one. Understanding the Data Engineering implications of GDPR's Right to Erasure, implementing column-level data masking, and PII tokenization strategies."
+}

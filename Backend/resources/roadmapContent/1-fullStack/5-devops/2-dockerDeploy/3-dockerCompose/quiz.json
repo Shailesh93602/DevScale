@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary operational purpose of utilizing 'Docker Compose' natively within a modern Full Stack ecosystem?",
+            "options": [
+                "To compile TypeScript physically into JavaScript globally",
+                "To mathematically orchestrate the simultaneous native booting, structured networking, and persistent volume management of multiple distinctly isolated Docker containers (e.g., a React frontend, Node backend, and PostgreSQL database) entirely through a single descriptive YAML configuration file natively",
+                "To automatically generate Git commits globally",
+                "To format CSS securely"
+            ],
+            "answer": "To mathematically orchestrate the simultaneous native booting, structured networking, and persistent volume management of multiple distinctly isolated Docker containers (e.g., a React frontend, Node backend, and PostgreSQL database) entirely through a single descriptive YAML configuration file natively",
+            "explanation": "If you don't use Compose locally, you literally have to open 3 terminal windows and run `docker run postgres`, `docker run api`, and `docker run frontend` independently every single day. Compose simplifies this into one 10-second command."
+        },
+        {
+            "question": "In a `docker-compose.yml` file natively, how do you strictly ensure mathematically that your Node.js API container strictly waits for the PostgreSQL database container to completely boot up before actively launching the Node server itself?",
+            "options": [
+                "By writing a complex Python sleep script physically",
+                "By utilizing the strict `depends_on:` attribute strictly under the API service block, linking it mathematically directly to the exact name of the database service globally",
+                "By setting the server to boot precisely at midnight natively",
+                "Docker ensures this automatically without any strict configuration"
+            ],
+            "answer": "By utilizing the strict `depends_on:` attribute strictly under the API service block, linking it mathematically directly to the exact name of the database service globally",
+            "explanation": "If your Node API boots first natively, it violently crashes because `prisma.connect()` attempts to strictly hit a missing database natively. `depends_on: [database]` mathematically forces the boot sequence order natively."
+        },
+        {
+            "question": "If you map Ports natively within a Docker Compose service natively as `ports: ['8080:3000']`, what does the second number (`3000`) strictly mathematically uniquely represent?",
+            "options": [
+                "The Host's local browser port explicitly",
+                "The target IP address natively",
+                "The Container Port natively: The specific physical internal port that the Node server running isolated inside the container is explicitly strictly listening on natively",
+                "The security threshold natively"
+            ],
+            "answer": "The Container Port natively: The specific physical internal port that the Node server running isolated inside the container is explicitly strictly listening on natively",
+            "explanation": "The format natively is `[Host Machine Port]:[Internal Container Port]`. This mathematically instructs Docker natively to take all traffic hitting `localhost:8080` natively on your Mac deeply and cleanly funnel it directly perfectly into port `3000` securely inside the isolated mini-computer."
+        },
+        {
+            "question": "If your isolated Node.js backend container seamlessly needs to securely connect authentically directly to the isolated PostgreSQL database container natively orchestrated inside the same `docker-compose.yml` network natively, what URL structure must you theoretically use natively?",
+            "options": [
+                "`postgresql://user:pass@localhost:5432/db`",
+                "`postgresql://user:pass@127.0.0.1:5432/db`",
+                "`postgresql://user:pass@database:5432/db` (Where 'database' is fundamentally the mathematically identical exact Service Name explicitly defined structurally natively inside the YAML file)",
+                "`postgresql://user:pass@0.0.0.0:5432/db`"
+            ],
+            "answer": "`postgresql://user:pass@database:5432/db` (Where 'database' is fundamentally the mathematically identical exact Service Name explicitly defined structurally natively inside the YAML file)",
+            "explanation": "`localhost` specifically inside a container simply explicitly points straight back natively uniquely to itself. Compose intelligently builds a local dynamic DNS map mathematically enabling services natively to securely securely ping each other efficiently explicitly utilizing their raw YAML service names globally."
+        },
+        {
+            "question": "What specifically does appending the `-d` flag mechanically achieve when structurally executing the `docker compose up -d` command natively?",
+            "options": [
+                "It 'deletes' the containers after use permanently",
+                "It violently runs the containers explicitly profoundly in 'Detached Mode' natively, fundamentally mathematically returning control of your current terminal console instance globally instantly rather than strictly overriding your screen comprehensively securely monitoring the live booting logs locally",
+                "It 'deploys' explicitly natively to an AWS physical cluster globally",
+                "It 'downloads' precisely new packages seamlessly natively"
+            ],
+            "answer": "It violently runs the containers explicitly profoundly in 'Detached Mode' natively, fundamentally mathematically returning control of your current terminal console instance globally instantly rather than strictly overriding your screen comprehensively securely monitoring the live booting logs locally",
+            "explanation": "If you don't use `-d`, your terminal becomes deeply locked mathematically cleanly natively outputting the logs. If you press `Ctrl+C` natively locally, all deeply running containers completely automatically brutally shut down natively."
+        }
+    ]
+}

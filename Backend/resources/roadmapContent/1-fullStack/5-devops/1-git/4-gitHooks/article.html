@@ -1,0 +1,56 @@
+<h1>Git Hooks & Husky</h1>
+<p>In a team environment, maintaining code quality is critical. If a developer accidentally commits code with syntax errors, failing tests, or improperly formatted files (like missing semicolons or messy indentation), it completely breaks the CI/CD pipeline or annoys code reviewers.</p>
+<p>You cannot simply <em>ask</em> developers to remember to run <code>npm run lint</code> and <code>npm test</code> before every single commit. They will forget. The mathematical solution is automation through <strong>Git Hooks</strong>.</p>
+
+<h2>What are Git Hooks?</h2>
+<p>A Git Hook is a script that Git executes <em>automatically</em> before or after specific actions occur in the repository. They are stored natively in the hidden <code>.git/hooks/</code> directory.</p>
+
+<p>The two most common hooks in web development are:</p>
+<ul>
+  <li><strong><code>pre-commit</code>:</strong> Runs the exact millisecond you execute `git commit`. If this script fails (returns a non-zero exit code), Git violently rejects the commit.</li>
+  <li><strong><code>pre-push</code>:</strong> Runs right before you push to GitHub, ensuring no completely broken code is uploaded to the central server.</li>
+</ul>
+
+<h2>The Problem with Native Git Hooks</h2>
+<p>By default, files inside the <code>.git</code> folder are <strong>not shared</strong> when you push code to GitHub. If you write a brilliant `pre-commit` script on your laptop, your teammates will never get it when they pull the project. To enforce rules globally across the entire team, Node.js developers use a library called <strong>Husky</strong>.</p>
+
+<h2>Setting up Husky</h2>
+<p>Husky forces the configuration to live inside the project codebase (which IS tracked by Git) and automatically wires up the local Git hooks for anyone who runs `npm install`.</p>
+
+<pre><code># 1. Install Husky as a dev dependency
+npm install husky --save-dev
+
+# 2. Initialize Husky natively (Creates a .husky folder)
+npx husky install
+
+# 3. Add a script to package.json so teammates auto-install hooks!
+npm pkg set scripts.prepare="husky install"
+
+# 4. Create your first automated Hook! (Create a pre-commit file)
+npx husky add .husky/pre-commit "npm test"
+</code></pre>
+<p>Now, if any developer on the team tries to commit code while a test is currently failing, Husky intercepts the action and blocks the commit entirely. <em>"Fix your tests before you commit!"</em></p>
+
+<h2>Optimizing with Lint-Staged</h2>
+<p>If you have a massive enterprise app, running <code>npm test</code> and <code>npm run lint</code> against 5,000 files during every single commit could take 10 minutes. Developers will hate this workflow.</p>
+<p>To solve this, you use <strong>lint-staged</strong>. It ensures that the formatting scripts ONLY execute against the specific 2 or 3 files that were actually modified and <em>staged</em> in this exact commit.</p>
+
+<pre><code>// 1. Install lint-staged
+npm install lint-staged --save-dev
+
+// 2. Add configuration to package.json
+"lint-staged": {
+  "*.js": "eslint --cache --fix", // Automatically fix JS files
+  "*.{js,css,md}": "prettier --write" // Auto-format everything else!
+}
+</code></pre>
+
+<p>Finally, you modify your Husky <code>pre-commit</code> file to execute `npx lint-staged` instead of running everything globally.</p>
+<pre><code>#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Only process the exact files that are being committed!
+npx lint-staged
+</code></pre>
+
+<p><strong>The result:</strong> Every commit is now perfectly formatted to team standards instantly and flawlessly, without adding 5 minutes of wait time to the developer's workflow.</p>

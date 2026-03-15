@@ -1,0 +1,4 @@
+{
+    "name": "Separating Compute and Storage",
+    "description": "The architectural revolution of modern Cloud Warehouses natively. Understanding how Snowflake and BigQuery completely decouple physical hard drive space from CPU processing power carefully."
+}

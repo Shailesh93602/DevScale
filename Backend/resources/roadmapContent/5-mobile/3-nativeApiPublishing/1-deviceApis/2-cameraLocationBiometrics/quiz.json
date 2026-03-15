@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "When using expo-location's watchPositionAsync for a ride-sharing driver tracking feature, why must you always call subscription.remove() on component unmount?",
+            "options": [
+                "Forgetting to call remove() causes the GPS coordinates to be stored in AsyncStorage indefinitely.",
+                "watchPositionAsync registers a native GPS listener that continues running independently of React's component lifecycle. Without calling remove() on unmount: (1) the listener continues consuming battery tracking location even when the driver goes to a different screen, (2) the JS callback fires on an unmounted component warning, and (3) multiple subscriptions stack if the component remounts, causing duplicate handlers and excessive battery drain.",
+                "The subscription automatically removes itself when the user backgrounds the app.",
+                "remove() is optional — it only matters for accelerometer subscriptions, not location."
+            ],
+            "answer": "watchPositionAsync registers a native GPS listener that continues running independently of React's component lifecycle. Without calling remove() on unmount: (1) the listener continues consuming battery tracking location even when the driver goes to a different screen, (2) the JS callback fires on an unmounted component warning, and (3) multiple subscriptions stack if the component remounts, causing duplicate handlers and excessive battery drain.",
+            "explanation": "Battery impact: GPS is one of the highest battery consumers on mobile. A ride-sharing app that forgets subscription.remove() on the route screen will drain the driver's battery even when they're viewing their earnings screen. Always pair watchPositionAsync with useEffect cleanup: return () => subscription?.remove()."
+        },
+        {
+            "question": "Why must you handle the case where requestMediaLibraryPermissionsAsync returns 'denied' even if the user previously granted permission?",
+            "options": [
+                "Permissions expire after 30 days and must be re-requested.",
+                "Users can revoke permissions at any time in iOS/Android Settings without the app knowing. Between permission checks, a user may have visited Settings and turned off Photos access. Your app must check permission status each time before attempting to use a protected resource, gracefully handle the denied case (show an explanation with a Settings deeplink rather than silently failing), and never assume previously granted permissions remain granted.",
+                "requestMediaLibraryPermissionsAsync always returns 'denied' on the first call.",
+                "Android requires re-requesting all permissions after an app update."
+            ],
+            "answer": "Users can revoke permissions at any time in iOS/Android Settings without the app knowing. Between permission checks, a user may have visited Settings and turned off Photos access. Your app must check permission status each time before attempting to use a protected resource, gracefully handle the denied case (show an explanation with a Settings deeplink rather than silently failing), and never assume previously granted permissions remain granted.",
+            "explanation": "Best practice pattern: check permission → if denied AND canAskAgain → prompt for permission. If denied AND !canAskAgain (user selected 'Don't ask again') → Alert.alert with a 'Open Settings' button that calls Linking.openSettings(). Never silently fail — users are confused when a button does nothing without explanation."
+        },
+        {
+            "question": "Apple Sign-In only provides the user's name and email on the FIRST sign-in. Why is this critical to handle correctly in your backend?",
+            "options": [
+                "Apple Sign-In is optional for non-social apps — this restriction only applies to social features.",
+                "Apple's privacy design intentionally limits data sharing: full name and email are sent once on first authentication. If your backend doesn't save them immediately (or your save fails and you retry the Apple auth), subsequent sign-ins only provide an opaque user ID. You must implement: (1) save name/email on the backend on first receipt, (2) don't rely on subsequent Apple auth responses to have this data, (3) possibly offer users a way to add their info manually if the initial save fails.",
+                "Apple provides name and email on every sign-in — the 'first time only' applies only to the email.",
+                "The email is always available; only the name is restricted to first sign-in."
+            ],
+            "answer": "Apple's privacy design intentionally limits data sharing: full name and email are sent once on first authentication. If your backend doesn't save them immediately (or your save fails and you retry the Apple auth), subsequent sign-ins only provide an opaque user ID. You must implement: (1) save name/email on the backend on first receipt, (2) don't rely on subsequent Apple auth responses to have this data, (3) possibly offer users a way to add their info manually if the initial save fails.",
+            "explanation": "Real production bug: auth succeeds, backend crashes during user creation, name/email lost forever. The user re-authenticates with Apple but your backend only receives their Apple user ID — you create a nameless account. Prevention: wrap the user creation in a transaction, or show a name entry form as a fallback onboarding step."
+        }
+    ]
+}

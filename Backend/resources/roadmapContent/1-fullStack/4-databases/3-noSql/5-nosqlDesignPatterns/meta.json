@@ -1,0 +1,4 @@
+{
+    "name": "NoSQL Design Patterns",
+    "description": "Rethinking data architecture. Understanding when to use Embedding vs Referencing, managing unbounded arrays, and embracing intentional Data Duplication to optimize for Read-Heavy workloads."
+}

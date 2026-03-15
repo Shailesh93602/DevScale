@@ -1,0 +1,4 @@
+{
+    "name": "Linux Networking Tools",
+    "description": "Diagnosing network issues directly from the Linux terminal. Practical mastery of curl, wget, netstat, ss, nmap, tcpdump, iptables basics, and SSH tunneling for DevOps and SRE workflows."
+}

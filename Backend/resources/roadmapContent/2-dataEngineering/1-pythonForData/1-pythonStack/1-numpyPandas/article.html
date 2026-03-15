@@ -1,0 +1,81 @@
+<h1>NumPy & Pandas for Data Engineering</h1>
+<p>NumPy and Pandas are the two pillars of the Python data science stack. Together they provide fast array computing and expressive DataFrame manipulation.</p>
+
+<h2>NumPy — Fast Array Computing</h2>
+<pre><code>import numpy as np
+
+# Create arrays
+arr = np.array([1, 2, 3, 4, 5])
+matrix = np.array([[1, 2, 3], [4, 5, 6]])
+zeros = np.zeros((3, 4))
+ones  = np.ones((2, 3))
+arange = np.arange(0, 100, 5)  # 0, 5, 10, ... 95
+
+# Vectorised operations (much faster than Python loops)
+arr * 2          # [2, 4, 6, 8, 10]
+arr ** 2         # [1, 4, 9, 16, 25]
+np.sqrt(arr)     # element-wise sqrt
+arr[arr &gt; 3]     # [4, 5] — boolean indexing
+
+# Statistics
+arr.mean(), arr.std(), arr.min(), arr.max()
+np.percentile(arr, [25, 50, 75])</code></pre>
+
+<h2>Pandas — DataFrame Operations</h2>
+<pre><code>import pandas as pd
+
+# Creating DataFrames
+df = pd.read_csv("data.csv")
+df = pd.read_parquet("data.parquet") # Columnar, fast for big data
+df = pd.DataFrame({"name": ["Alice", "Bob"], "age": [30, 25]})
+
+# Exploring data
+df.head(10)       # First 10 rows
+df.info()         # Column types, null counts
+df.describe()     # Statistics summary
+df.shape          # (rows, columns)
+df.dtypes         # Column data types</code></pre>
+
+<h2>Selecting & Filtering</h2>
+<pre><code># Select columns
+df["name"]           # Series
+df[["name", "age"]]  # DataFrame
+
+# Filter rows
+df[df["age"] &gt; 25]
+df[(df["age"] &gt; 25) &amp; (df["city"] == "Mumbai")]
+df.query("age &gt; 25 and city == 'Mumbai'")  # More readable
+
+# loc — label-based
+df.loc[0:5, "name":"city"]
+
+# iloc — index-based positional
+df.iloc[0:5, 0:3]</code></pre>
+
+<h2>Transformations</h2>
+<pre><code># Add computed column
+df["full_name"] = df["first_name"] + " " + df["last_name"]
+df["decade"] = (df["year"] // 10) * 10
+
+# Apply custom function
+df["grade"] = df["score"].apply(lambda x: "A" if x &gt;= 90 else "B" if x &gt;= 80 else "C")
+
+# GroupBy — split → apply → combine
+summary = df.groupby("department").agg(
+    avg_salary=("salary", "mean"),
+    headcount=("id", "count"),
+    max_salary=("salary", "max"),
+).reset_index()
+
+# Pivot table
+pivot = df.pivot_table(values="revenue", index="region", columns="quarter", aggfunc="sum")</code></pre>
+
+<h2>Handling Missing Data</h2>
+<pre><code>df.isnull().sum()       # Count nulls per column
+df.dropna()             # Drop rows with any null
+df.fillna(0)            # Replace nulls with 0
+df["age"].fillna(df["age"].median(), inplace=True)  # Fill with median</code></pre>
+
+<h2>Merging DataFrames</h2>
+<pre><code>result = pd.merge(users, orders, on="user_id", how="left")
+result = pd.concat([df1, df2], ignore_index=True)  # Stack vertically</code></pre>

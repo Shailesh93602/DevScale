@@ -1,0 +1,6 @@
+[
+  "Consider how you check if two trees are completely identical (similar to the 'Same Tree' problem).",
+  "A tree is a subtree of another if either they are exactly identical, or the subtree matches the left child of the root, or the subtree matches the right child of the root.",
+  "You can solve this recursively by combining a traversal function with an `isSameTree` verification function.",
+  "Be careful with null cases. If the main tree is null, we can't find the subtree!"
+]

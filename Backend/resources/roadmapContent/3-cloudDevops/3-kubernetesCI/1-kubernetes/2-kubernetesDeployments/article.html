@@ -1,0 +1,40 @@
+<h1>Kubernetes Deployments</h1>
+<p>While Pods are the smallest deployable units in Kubernetes, you should rarely create a standalone Pod. If a server node crashes, any standalone Pods on it die permanently. To achieve High Availability and self-healing, you use a <strong>Deployment</strong>.</p>
+
+<h2>What is a Deployment?</h2>
+<p>A Deployment is a higher-level abstraction that manages <strong>ReplicaSets</strong>, which in turn manage Pods. You tell the Deployment, <em>"I always want exactly 3 copies (replicas) of my Node.js API running."</em></p>
+<p>If a Pod crashes, or the node it was running on experiences hardware failure, the ReplicaSet instantly detects that only 2 Pods are running and automatically spins up a completely new 3rd Pod to replace it. This is the <strong>Self-Healing</strong> nature of Kubernetes.</p>
+
+<h2>Writing a Deployment YAML</h2>
+<pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-api-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: node-api
+  template:
+    metadata:
+      labels:
+        app: node-api
+    spec:
+      containers:
+      - name: api-container
+        image: mycompany/node-api:v2
+        ports:
+        - containerPort: 3000</code></pre>
+
+<h2>Rolling Updates (Zero-Downtime Deployments)</h2>
+<p>Deployments make releasing new code incredibly safe through <strong>Rolling Updates</strong>. If you want to update from `v2` to `v3`:</p>
+<pre><code>kubectl set image deployment/node-api-deployment api-container=mycompany/node-api:v3</code></pre>
+<p>Kubernetes doesn't kill all 3 old pods at once. It spins up <em>one</em> new v3 Pod. Only when the new v3 Pod reports it is healthy does Kubernetes kill <em>one</em> old v2 Pod. It repeats this process sequentially. Users experience exactly zero downtime during the release!</p>
+
+<h2>Rollbacks</h2>
+<p>If the new `v3` image contains a fatal bug and the new pods crash immediately, the Rolling Update halts. You can instantly revert to the specific previous version without digging through Git.</p>
+<pre><code># Check the history of deployments
+kubectl rollout history deployment/node-api-deployment
+
+# Undo the last deployment immediately
+kubectl rollout undo deployment/node-api-deployment</code></pre>

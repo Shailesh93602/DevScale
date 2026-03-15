@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What does the Partial<User> utility type do?",
+            "options": [
+                "Makes some fields of User required",
+                "Makes all fields of User optional",
+                "Removes some fields from User",
+                "Creates a partial copy of a User object"
+            ],
+            "answer": "Makes all fields of User optional",
+            "explanation": "Partial<T> transforms all properties of T into optional ones, useful for update DTOs where you might want to update only some fields."
+        },
+        {
+            "question": "What does K extends keyof T constrain in a generic function?",
+            "options": [
+                "K must be a primitive type",
+                "K must be a valid property name (key) of type T",
+                "K must extend the T class",
+                "K must be a string or number"
+            ],
+            "answer": "K must be a valid property name (key) of type T",
+            "explanation": "K extends keyof T constrains K to be one of the property names of T, ensuring type-safe property access like getProperty(obj, key) where key must be a real key."
+        },
+        {
+            "question": "What is the difference between Pick<User, 'id' | 'name'> and Omit<User, 'password'>?",
+            "options": [
+                "They are identical",
+                "Pick creates a type with ONLY the listed fields; Omit creates a type with all fields EXCEPT the listed ones",
+                "Pick removes fields; Omit keeps them",
+                "Pick works on arrays; Omit works on objects"
+            ],
+            "answer": "Pick creates a type with ONLY the listed fields; Omit creates a type with all fields EXCEPT the listed ones",
+            "explanation": "Pick<User, 'id' | 'name'> creates { id, name }. Omit<User, 'password'> creates all User fields minus 'password'. Use Pick when you want few fields; Omit when you want most."
+        },
+        {
+            "question": "What does the 'infer' keyword do in conditional types?",
+            "options": [
+                "Makes TypeScript infer the type automatically",
+                "Allows you to extract and name a type from within a conditional type check",
+                "Infers the return type of a function",
+                "Creates a type inference rule"
+            ],
+            "answer": "Allows you to extract and name a type from within a conditional type check",
+            "explanation": "infer E within T extends (infer E)[] ? E : never creates a new type variable E and binds it to the array element type, enabling extraction of nested types."
+        },
+        {
+            "question": "What is a mapped type in TypeScript?",
+            "options": [
+                "A Map collection with typed keys and values",
+                "A type created by iterating over keys of another type and transforming them",
+                "A function that maps one type to another",
+                "An array type with fixed elements"
+            ],
+            "answer": "A type created by iterating over keys of another type and transforming them",
+            "explanation": "Mapped types use [K in keyof T] syntax to transform each property: type Nullable<T> = { [K in keyof T]: T[K] | null }; creates a new type with every property nullable."
+        }
+    ]
+}

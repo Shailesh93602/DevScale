@@ -1,0 +1,120 @@
+<h1>Container Security</h1>
+<p>Docker containers provide process isolation but they share the host machine's OS kernel. A compromised container process can potentially "break out" and attack the host server or other containers. <strong>Container Security</strong> is the practice of hardening containers at every layer — the image, the runtime configuration, and the production environment — to minimize the blast radius if your application is ever compromised.</p>
+
+<h2>1. Never Run as Root</h2>
+<p>By default, a process inside a Docker container runs as <code>root</code> (UID 0). If a hacker exploits a vulnerability in your application and achieves Remote Code Execution, they get root privileges inside the container — making host breakout significantly easier because kernel vulnerabilities affecting root processes have a much larger attack surface.</p>
+<pre><code"># ❌ Bad: Implicit root — the default
+FROM node:20-slim
+COPY . .
+CMD ["node", "server.js"]
+
+# ✅ Good: Create and switch to a non-root user
+FROM node:20-slim
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+
+# Create a system user with no login shell and no home directory
+RUN groupadd -r appgroup && useradd -r -g appgroup -s /bin/false appuser
+
+COPY --chown=appuser:appgroup . .
+
+# Switch BEFORE CMD — any subsequent commands run as appuser
+USER appuser
+EXPOSE 3000
+CMD ["node", "server.js"]</code></pre>
+
+<h2>2. Use Minimal Base Images</h2>
+<p>A standard <code>ubuntu:latest</code> image includes hundreds of tools (curl, wget, bash, apt, gcc). If an attacker gets in, they can use these to map your network, download malware, or escalate privileges. Minimal images have far smaller attack surfaces:</p>
+<pre><code"">## Option A: Alpine Linux (5MB)
+FROM node:20-alpine
+# Alpine uses musl libc and can have compatibility issues with some native modules
+
+## Option B: Google Distroless (best security)
+# Build stage
+FROM node:20 AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+
+# Runtime stage — NO shell, NO package manager, NO apt/apk
+FROM gcr.io/distroless/nodejs20-debian12
+WORKDIR /app
+COPY --from=builder /app/node_modules ./node_modules
+COPY . .
+# If attacker gets RCE, they can't run bash commands — there's no bash
+EXPOSE 3000
+CMD ["server.js"]</code></pre>
+
+<h2>3. Read-Only Root Filesystem</h2>
+<p>If a hacker breaches your web server, their first step is usually to download malware (crypto-miner, backdoor) and save it to disk. Prevent this entirely:</p>
+<pre><code"">## kubernetes/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+spec:
+  template:
+    spec:
+      containers:
+      - name: api
+        image: yourapp:v1.2.3
+        securityContext:
+          runAsNonRoot: true           # Kubernetes-level enforcement
+          runAsUser: 10001             # Specific non-root UID
+          readOnlyRootFilesystem: true # Cannot write to disk
+          allowPrivilegeEscalation: false  # Cannot use sudo or setuid
+          capabilities:
+            drop:
+              - ALL           # Drop all Linux capabilities (NET_ADMIN, SYS_ADMIN, etc.)
+            add:
+              - NET_BIND_SERVICE  # Only add back what's needed (bind ports < 1024)
+        volumeMounts:
+        # If app needs to write temp files, mount an in-memory tmpfs:
+        - name: tmp-vol
+          mountPath: /tmp
+      volumes:
+      - name: tmp-vol
+        emptyDir:
+          medium: Memory  # In-memory volume — nothing persists to host disk</code></pre>
+
+<h2>4. Runtime Security with Falco</h2>
+<p>Even with hardened images, you need to monitor what containers are actually doing at runtime. Falco hooks into the Linux kernel's syscall interface and triggers alerts on suspicious behavior — like a container opening a shell, reading password files, or making unexpected outbound connections:</p>
+<pre><code"">## falco_rules.yaml — custom Falco rules
+- rule: Shell Spawned in Container
+  desc: A shell was unexpectedly started inside a database container
+  condition: >
+    spawned_process and
+    container.name startswith "postgres-" and
+    proc.name in (bash, sh, zsh, ash)
+  output: >
+    Shell spawned in DB container (user=%user.name container=%container.name
+    parent=%proc.pname command=%proc.cmdline)
+  priority: CRITICAL
+
+- rule: Sensitive File Read
+  desc: A process read /etc/shadow (password hashes)
+  condition: >
+    open_read and
+    fd.name = /etc/shadow and
+    container.id != host
+  output: Sensitive file read (user=%user.name container=%container.name file=%fd.name)
+  priority: CRITICAL</code></pre>
+
+<h2>5. Image Vulnerability Scanning</h2>
+<p>Scan images for known CVEs before they're deployed. Integrate into your CI/CD pipeline so vulnerable images never reach production:</p>
+<pre><code"">## In GitHub Actions CI pipeline
+- name: Scan image with Trivy
+  uses: aquasecurity/trivy-action@master
+  with:
+    image-ref: 'yourapp:${{ github.sha }}'
+    format: 'sarif'
+    exit-code: '1'          # Fail CI if CRITICAL vulnerabilities found
+    severity: 'CRITICAL,HIGH'</code></pre>
+
+<h2>Best Practices Summary</h2>
+<ul>
+  <li><strong>Non-root user:</strong> Always define and switch to a non-root user in your Dockerfile.</li>
+  <li><strong>Minimal images:</strong> Prefer distroless or Alpine; avoid full OS images for production.</li>
+  <li><strong>Read-only filesystem:</strong> Use <code>readOnlyRootFilesystem: true</code> in Kubernetes Pod Security Contexts.</li>
+  <li><strong>Drop all capabilities:</strong> Use <code>capabilities.drop: [ALL]</code> and only add back what the app specifically needs.</li>
+  <li><strong>Scan continuously:</strong> Run Trivy or Snyk in CI and re-scan deployed images weekly as new CVEs are published daily.</li>
+</ul>

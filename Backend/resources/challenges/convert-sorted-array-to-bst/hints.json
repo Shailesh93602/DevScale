@@ -1,0 +1,6 @@
+[
+  "For a height-balanced BST, you want roughly equal elements on both sides of each node.",
+  "If you always pick the middle element of the current range as the root, the tree will be balanced.",
+  "Use divide and conquer: middle element becomes root, left half builds left subtree, right half builds right subtree.",
+  "The recursion base case is when left index exceeds right index — return null."
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "input": {"X_train": [[1,1],[2,2],[3,3],[6,6],[7,7],[8,8]], "y_train": [0,0,0,1,1,1], "X_test": [[4,4],[7,6]], "k": 3},
+    "output": {"predictions": [0, 1]},
+    "explanation": "[4,4] is closer to class 0 points; [7,6] is closer to class 1 points",
+    "is_hidden": false
+  },
+  {
+    "input": {"X_train": [[0,0],[1,0],[0,1],[10,10],[11,10],[10,11]], "y_train": [0,0,0,1,1,1], "X_test": [[0.5,0.5]], "k": 1},
+    "output": {"predictions": [0]},
+    "explanation": "With k=1, nearest neighbor to [0.5,0.5] is [0,0] with label 0",
+    "is_hidden": false
+  },
+  {
+    "input": {"X_train": [[1],[2],[3],[4],[5]], "y_train": [0,0,1,1,1], "X_test": [[3]], "k": 5},
+    "output": {"predictions": [1]},
+    "explanation": "All 5 neighbors: 3 are class 1, 2 are class 0 -> predict 1",
+    "is_hidden": false
+  },
+  {
+    "input": {"X_train": [[0],[1],[2],[3]], "y_train": [0,1,0,1], "X_test": [[0.5],[2.5]], "k": 2},
+    "output": {"predictions": [0, 0]},
+    "explanation": "Tie-breaking: equal votes -> choose smaller label 0",
+    "is_hidden": false
+  },
+  {
+    "input": {"X_train": [[1,2,3],[4,5,6],[7,8,9],[2,3,4]], "y_train": [0,1,1,0], "X_test": [[3,4,5]], "k": 3},
+    "output": {"predictions": [0]},
+    "explanation": "3D features: nearest 3 have labels [1,0,0] -> predict 0",
+    "is_hidden": true
+  },
+  {
+    "input": {"X_train": [[0,0],[5,5],[10,10],[0,5],[5,0],[10,5]], "y_train": [0,1,2,0,1,2], "X_test": [[1,1],[9,9]], "k": 2},
+    "output": {"predictions": [0, 2]},
+    "explanation": "Multi-class classification with 3 classes",
+    "is_hidden": true
+  },
+  {
+    "input": {"X_train": [[1],[1],[1],[2],[2],[2]], "y_train": [0,0,1,1,1,0], "X_test": [[1],[2]], "k": 3},
+    "output": {"predictions": [0, 1]},
+    "explanation": "Points at same location with different labels",
+    "is_hidden": true
+  },
+  {
+    "input": {"X_train": [[0],[100],[200],[300],[400]], "y_train": [0,1,2,3,4], "X_test": [[50],[250]], "k": 1},
+    "output": {"predictions": [0, 2]},
+    "explanation": "k=1 nearest neighbor with large value spread",
+    "is_hidden": true
+  },
+  {
+    "input": {"X_train": [[1,0],[0,1],[-1,0],[0,-1]], "y_train": [0,1,0,1], "X_test": [[0.5,0.5],[-0.5,-0.5]], "k": 2},
+    "output": {"predictions": [0, 0]},
+    "explanation": "Points around origin, tie-break to smaller label",
+    "is_hidden": true
+  },
+  {
+    "input": {"X_train": [[1,1],[2,2],[3,3],[4,4],[5,5],[6,6],[7,7],[8,8]], "y_train": [0,0,0,0,1,1,1,1], "X_test": [[4.5,4.5]], "k": 4},
+    "output": {"predictions": [0]},
+    "explanation": "Boundary case: 2 of each class in 4 nearest -> tie-break to 0",
+    "is_hidden": true
+  }
+]

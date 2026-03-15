@@ -1,0 +1,70 @@
+<h1>HTML Forms & User Input</h1>
+<p>Forms are how users interact with your web application — login pages, search bars, checkout flows, contact forms. Mastering HTML forms is fundamental for every web developer.</p>
+
+<h2>The Form Element</h2>
+<pre><code>&lt;form action="/submit" method="POST"&gt;
+  &lt;label for="email"&gt;Email:&lt;/label&gt;
+  &lt;input type="email" id="email" name="email" required&gt;
+
+  &lt;label for="password"&gt;Password:&lt;/label&gt;
+  &lt;input type="password" id="password" name="password" minlength="8" required&gt;
+
+  &lt;button type="submit"&gt;Sign In&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+
+<h2>Essential Input Types</h2>
+<ul>
+  <li><code>type="text"</code> — General single-line text</li>
+  <li><code>type="email"</code> — Browser validates email format automatically</li>
+  <li><code>type="password"</code> — Masks the input characters</li>
+  <li><code>type="number"</code> — Numeric input with min/max/step support</li>
+  <li><code>type="checkbox"</code> — Boolean toggle</li>
+  <li><code>type="radio"</code> — Single selection from a group</li>
+  <li><code>type="file"</code> — File upload</li>
+  <li><code>type="date"</code> — Browser date picker</li>
+  <li><code>type="range"</code> — Slider</li>
+  <li><code>type="color"</code> — Color picker</li>
+  <li><code>type="hidden"</code> — Data submitted but not visible to user</li>
+</ul>
+
+<h2>HTML5 Validation Attributes</h2>
+<pre><code>&lt;input type="text"
+  required               &lt;!-- field cannot be empty --&gt;
+  minlength="3"          &lt;!-- minimum character count --&gt;
+  maxlength="50"         &lt;!-- maximum character count --&gt;
+  pattern="[A-Za-z]+"   &lt;!-- regex pattern to match --&gt;
+  placeholder="Username"&gt;</code></pre>
+
+<h2>The Label Element</h2>
+<p>Always pair every input with a <code>&lt;label&gt;</code> using the <code>for</code> attribute. This is essential for accessibility and also increases the clickable area:</p>
+<pre><code>&lt;label for="username"&gt;Username:&lt;/label&gt;
+&lt;input type="text" id="username" name="username"&gt;</code></pre>
+
+<h2>Dropdown, Textarea & Fieldset</h2>
+<pre><code>&lt;!-- Dropdown --&gt;
+&lt;select name="country" id="country"&gt;
+  &lt;option value=""&gt;Select a country&lt;/option&gt;
+  &lt;option value="in"&gt;India&lt;/option&gt;
+  &lt;option value="us"&gt;United States&lt;/option&gt;
+&lt;/select&gt;
+
+&lt;!-- Multi-line text --&gt;
+&lt;textarea name="bio" rows="4" placeholder="Tell us about yourself..."&gt;&lt;/textarea&gt;
+
+&lt;!-- Group related fields --&gt;
+&lt;fieldset&gt;
+  &lt;legend&gt;Preferred Contact Method&lt;/legend&gt;
+  &lt;input type="radio" id="email-opt" name="contact" value="email"&gt;
+  &lt;label for="email-opt"&gt;Email&lt;/label&gt;
+  &lt;input type="radio" id="phone-opt" name="contact" value="phone"&gt;
+  &lt;label for="phone-opt"&gt;Phone&lt;/label&gt;
+&lt;/fieldset&gt;</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always use <code>method="POST"</code> for sensitive data — GET puts data in the URL.</li>
+  <li>Pair every input with a <code>&lt;label&gt;</code>.</li>
+  <li>Use HTML5 validation as a first layer — <strong>always validate on the server too</strong>.</li>
+  <li>Add <code>autocomplete</code> attributes to help password managers.</li>
+  <li>Use <code>novalidate</code> on the form if you handle all validation with JavaScript.</li>
+</ul>

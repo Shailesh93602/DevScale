@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "Why does importing lodash with import _ from 'lodash' bloat the bundle by 500KB when you only use one function, and how does importing import debounce from 'lodash/debounce' fix this?",
+            "options": [
+                "import _ from 'lodash' triggers a Lodash version check that downloads additional files.",
+                "import _ from 'lodash' imports the entire lodash module including all 300+ utility functions packed together. Metro bundler cannot tree-shake CommonJS modules (which lodash uses) — it must include everything. import debounce from 'lodash/debounce' directly imports only the debounce module file (~2KB) at the module level. The rest of lodash is never loaded. For lodash-style libraries: always check if an ESM alternative exists (lodash-es for web, but not supported by Metro), or import sub-modules directly.",
+                "Whole-library imports cache the entire lodash in memory; function imports compile to native code.",
+                "Metro bundler only loads the entire library when import _ syntax is used; import {debounce} triggers tree-shaking."
+            ],
+            "answer": "import _ from 'lodash' imports the entire lodash module including all 300+ utility functions packed together. Metro bundler cannot tree-shake CommonJS modules (which lodash uses) — it must include everything. import debounce from 'lodash/debounce' directly imports only the debounce module file (~2KB) at the module level. The rest of lodash is never loaded. For lodash-style libraries: always check if an ESM alternative exists (lodash-es for web, but not supported by Metro), or import sub-modules directly.",
+            "explanation": "Run react-native-bundle-visualizer and you'll commonly see: moment.js 300KB, lodash 500KB accounting for 30-40% of a small app's entire bundle. Replace moment → date-fns (modular, ~5KB per function). Replace lodash whole import → per-function imports. These two changes alone can reduce bundle size by 800KB+"
+        },
+        {
+            "question": "Why does expo-image perform significantly better than React Native's built-in Image component in a FlatList with fast scrolling?",
+            "options": [
+                "expo-image uses the device's GPU for image rendering while the built-in Image uses CPU.",
+                "expo-image implements a sophisticated multi-level cache (memory → disk → network) and recycles image decoders via its recyclingKey prop in FlatList. When scrolling fast, the built-in Image creates new image views for each cell, downloading and decoding images fresh. expo-image reuses the native image view slot, loading from memory cache (microseconds) or disk cache (milliseconds) instead of network (hundreds of milliseconds), eliminating the blank-flash between cells.",
+                "expo-image only renders visible pixels while built-in Image renders the entire image in memory.",
+                "expo-image decodes images on a background thread while built-in Image decodes on the main thread."
+            ],
+            "answer": "expo-image implements a sophisticated multi-level cache (memory → disk → network) and recycles image decoders via its recyclingKey prop in FlatList. When scrolling fast, the built-in Image creates new image views for each cell, downloading and decoding images fresh. expo-image reuses the native image view slot, loading from memory cache (microseconds) or disk cache (milliseconds) instead of network (hundreds of milliseconds), eliminating the blank-flash between cells.",
+            "explanation": "Critical prop: recyclingKey={item.id} tells expo-image this view is being reused for a different item in FlatList. Without it, the old image persists while the new one loads, showing the wrong image briefly. With it, the component immediately shows the blurhash placeholder while loading the correct item's image."
+        },
+        {
+            "question": "How does lazy loading screens via React.lazy and navigation help reduce Time-to-Interactive on app launch?",
+            "options": [
+                "React.lazy splits the JS bundle so each screen loads its code only when first navigated to.",
+                "The JavaScript bundle is parsed and executed on app launch — all eagerly imported screens parse their JS code at startup even if the user never visits them. By lazy importing screens (const ProfileScreen = lazy(() => import('./screens/ProfileScreen'))), Metro bundles their JS in a separate chunk (code splitting). Navigation to a lazy screen triggers the first download/parse of that chunk — offloading startup work to later when the user is already in the app and can tolerate a brief load.",
+                "React.lazy removes screens from the navigation stack until they are needed.",
+                "Lazy loading only helps when screens have more than 1000 lines of code."
+            ],
+            "answer": "The JavaScript bundle is parsed and executed on app launch — all eagerly imported screens parse their JS code at startup even if the user never visits them. By lazy importing screens (const ProfileScreen = lazy(() => import('./screens/ProfileScreen'))), Metro bundles their JS in a separate chunk (code splitting). Navigation to a lazy screen triggers the first download/parse of that chunk — offloading startup work to later when the user is already in the app and can tolerate a brief load.",
+            "explanation": "Prioritize eager loading for: Home, Login, Splash (critical 're-used' screens). Lazy load: Settings, OrderHistory, Help, detailed feature screens. Uber found that lazy loading 60% of their screens reduced TTI by 800ms on mid-range Android — a significant improvement for users in emerging markets."
+        }
+    ]
+}

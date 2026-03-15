@@ -1,0 +1,6 @@
+[
+  "Friendship is bidirectional. Each row in RequestAccepted creates a friend for BOTH the requester and accepter.",
+  "Use UNION ALL to combine requester_id and accepter_id into a single column of person IDs.",
+  "Group by person ID and count occurrences to get each person's friend count.",
+  "Order by count descending and LIMIT 1 to get the person with the most friends."
+]

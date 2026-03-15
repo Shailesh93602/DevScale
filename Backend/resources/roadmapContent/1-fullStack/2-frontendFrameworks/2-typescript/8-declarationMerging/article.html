@@ -1,0 +1,94 @@
+<h1>Declaration Merging & Global Augmentation</h1>
+<p>Declaration merging is a unique feature of TypeScript where the compiler merges two or more separate declarations declared with the same name into a single definition. This is incredibly useful for extending third-party libraries, augmenting global variables, or patching missing types.</p>
+
+<h2>Interface Merging</h2>
+<p>If you declare two <code>interface</code> definitions with the same name in the same scope, TypeScript merges their properties. Note: This does <strong>not</strong> work with <code>type</code> aliases — they will throw a "Duplicate identifier" error.</p>
+<pre><code>interface User {
+  id: number;
+  name: string;
+}
+
+// Later in the same file or a different file
+interface User {
+  email: string; // Adds to the existing User interface
+}
+
+const me: User = {
+  id: 1,
+  name: "Alice",
+  email: "alice@test.com" // Allowed! The interface merged.
+};</code></pre>
+
+<h2>Augmenting Global Objects (Window, NodeJS)</h2>
+<p>When you add properties to global objects like <code>window</code> in the browser or <code>process.env</code> in Node, TypeScript will complain because those properties aren't in the default type definitions. You can use <code>declare global</code> to merge your custom properties into the global scope.</p>
+
+<pre><code>// Appends 'analytics' to the global browser Window object
+declare global {
+  interface Window {
+    analytics: {
+      track(event: string): void;
+    };
+  }
+}
+
+// Now you can use it anywhere without errors
+window.analytics.track("page_view");</code></pre>
+
+<p>For Node.js environments (like expanding process.env):</p>
+<pre><code>declare global {
+  namespace NodeJS {
+    interface ProcessEnv {
+      DATABASE_URL: string;
+      API_KEY: string;
+      NODE_ENV: 'development' | 'production';
+    }
+  }
+}
+
+// Now process.env.DATABASE_URL is strongly typed as string instead of string | undefined
+console.log(process.env.DATABASE_URL.toUpperCase());</code></pre>
+
+<h2>Module Augmentation (Adding to Third-Party Libraries)</h2>
+<p>A very common problem is needing to add custom properties to an object defined by a library, such as adding a <code>user</code> property to an Express.js <code>Request</code> object.</p>
+
+<pre><code>import { Request } from 'express';
+
+// Augment the 'express' module
+declare module 'express-serve-static-core' {
+  // Merge into the Request interface of the module
+  interface Request {
+    user?: {
+      id: string;
+      role: 'admin' | 'user';
+    };
+  }
+}
+
+// Inside a middleware or controller
+app.get('/profile', (req, res) =&gt; {
+  // TypeScript now knows req.user exists and provides autocomplete!
+  console.log(req.user?.id); 
+});</code></pre>
+<p><em>Note: You must augment the exact module name where the interface is originally declared.</em></p>
+
+<h2>Namespace Merging</h2>
+<p>Namespaces can merge with themselves, but incredibly, they can also merge with Classes and Functions. This is a pattern heavily used in older JS libraries (like jQuery <code>$</code> being both a function and an object with properties).</p>
+
+<pre><code>// 1. Defining a class
+class Album {
+  label: Album.AlbumLabel; // Using a type from the merged namespace!
+}
+
+// 2. Merging a namespace with the same name
+namespace Album {
+  // This essentially creates a static property/type on the Album class
+  export class AlbumLabel { }
+}
+
+// Result: You can use Album as a class, and access Album.AlbumLabel</code></pre>
+
+<h2>When NOT to use Declaration Merging</h2>
+<ul>
+  <li>Do not use it to blindly fix "Property does not exist" errors on complex objects without understanding where the type comes from. Often, using a generic parameter is the "correct" way (e.g., <code>express.Request&lt;Params, ResBody, ReqBody, ReqQuery&gt;</code>).</li>
+  <li>Avoid interface merging in your own application's core business logic. It makes the code harder to read because the developer has to hunt for multiple interface declarations. Use <code>interface Person extends User {}</code> instead for intentional inheritance.</li>
+</ul>

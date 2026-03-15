@@ -1,0 +1,92 @@
+<h1>JWT Authentication</h1>
+<p>JSON Web Tokens (JWT) are the industry standard for <strong>stateless authentication</strong> — the server doesn't need to store sessions, making APIs scalable across multiple servers.</p>
+
+<h2>How JWT Works</h2>
+<ol>
+  <li>User submits credentials (email + password).</li>
+  <li>Server validates, then signs a JWT with a secret key.</li>
+  <li>Client stores the token (memory or httpOnly cookie).</li>
+  <li>Client sends token in Authorization header on every request.</li>
+  <li>Server validates the token on each request — no database lookup needed.</li>
+</ol>
+
+<h2>JWT Structure</h2>
+<pre><code>// A JWT has 3 parts separated by dots: header.payload.signature
+eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInJvbGUiOiJ1c2VyIn0.abc123
+
+// Decoded:
+Header:    { "alg": "HS256", "typ": "JWT" }
+Payload:   { "userId": 1, "role": "user", "iat": 1700000000, "exp": 1700086400 }
+Signature: HMACSHA256(base64(header) + "." + base64(payload), SECRET_KEY)</code></pre>
+
+<h2>Implementation</h2>
+<pre><code>import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+
+const JWT_SECRET = process.env.JWT_SECRET!;
+const JWT_EXPIRES = "15m"; // Short-lived access token
+const REFRESH_EXPIRES = "7d";
+
+// Register
+async function register(email: string, password: string) {
+  const hashedPassword = await bcrypt.hash(password, 12); // 12 rounds
+  const user = await db.user.create({ data: { email, password: hashedPassword } });
+  return generateTokens(user.id);
+}
+
+// Login
+async function login(email: string, password: string) {
+  const user = await db.user.findUnique({ where: { email } });
+  if (!user) throw new Error("Invalid credentials");
+
+  const valid = await bcrypt.compare(password, user.password);
+  if (!valid) throw new Error("Invalid credentials");
+
+  return generateTokens(user.id);
+}
+
+// Generate access + refresh token pair
+function generateTokens(userId: number) {
+  const accessToken  = jwt.sign({ userId }, JWT_SECRET, { expiresIn: JWT_EXPIRES });
+  const refreshToken = jwt.sign({ userId }, JWT_SECRET, { expiresIn: REFRESH_EXPIRES });
+  return { accessToken, refreshToken };
+}
+
+// Verify middleware
+function authMiddleware(req, res, next) {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ error: "No token provided" });
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+    req.userId = decoded.userId;
+    next();
+  } catch {
+    res.status(401).json({ error: "Token expired or invalid" });
+  }
+}</code></pre>
+
+<h2>Token Storage Best Practices</h2>
+<pre><code>// ✅ Best: httpOnly cookie (inaccessible to JavaScript — XSS-safe)
+res.cookie("refreshToken", refreshToken, {
+  httpOnly: true,
+  secure: true,         // HTTPS only
+  sameSite: "strict",   // CSRF protection
+  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+});
+
+// ⚠️ Acceptable: memory (Redux/useState) — lost on page refresh
+// ❌ Avoid: localStorage — vulnerable to XSS attacks</code></pre>
+
+<h2>Refresh Token Flow</h2>
+<pre><code>// When access token expires, use refresh token to get a new pair
+router.post("/refresh", (req, res) =&gt; {
+  const { refreshToken } = req.cookies;
+  if (!refreshToken) return res.status(401).json({ error: "No refresh token" });
+  try {
+    const { userId } = jwt.verify(refreshToken, JWT_SECRET) as { userId: number };
+    const tokens = generateTokens(userId);
+    res.json(tokens);
+  } catch {
+    res.status(401).json({ error: "Invalid refresh token" });
+  }
+});</code></pre>

@@ -1,0 +1,4 @@
+{
+    "name": "Supply Chain Security & SBOM",
+    "description": "Securing the entire software delivery pipeline from code commit to production deployment. Understanding Software Bill of Materials (SBOM) generation, dependency confusion attacks, Sigstore/Cosign for container image signing, SLSA framework levels, and protecting CI/CD pipelines from supply chain attacks."
+}

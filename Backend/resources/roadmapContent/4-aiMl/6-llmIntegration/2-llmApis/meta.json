@@ -1,0 +1,9 @@
+{
+    "id": "2-llmApis",
+    "title": "LLM APIs",
+    "description": "Integrating OpenAI and Anthropic APIs to build chat applications, function-calling agents, and structured output pipelines.",
+    "order": 2,
+    "topics": [
+        "1-openaiAnthropic"
+    ]
+}

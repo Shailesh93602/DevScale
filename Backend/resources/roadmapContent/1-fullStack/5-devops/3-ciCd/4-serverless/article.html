@@ -1,0 +1,48 @@
+<h1>Serverless Architecture</h1>
+<p>If you deploy your backend to a single AWS EC2 server, you face a major problem: traffic spikes. If your server can handle 100 concurrent users, what happens when a viral marketing campaign sends 10,000 users to your site instantly? The server completely crashes. You could spin up 10 more servers, but then you are paying thousands of dollars a month for idle machines when traffic dies down.</p>
+<p>The modern solution to this problem is <strong>Serverless Architecture</strong>.</p>
+
+<h2>AWS Lambda Functions</h2>
+<p>Serverless does not mean there are no servers. It means you don't manage them, and you don't pay for idle time. In AWS, the core of this architecture is <strong>Lambda</strong>.</p>
+<p>Instead of deploying a massive, monolithic Node.js Express server that runs perpetually 24/7, you deploy tiny, individual Javascript functions into the cloud.</p>
+<pre><code>// This code only runs when a user hits a specific API endpoint!
+exports.handler = async (event) =&gt; {
+  const userId = event.queryStringParameters.id;
+  const data = await database.getUser(userId);
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify(data),
+  };
+};
+</code></pre>
+
+<p>When user #1 hits your API, AWS instantly boots up a micro-container running your function. If 10,000 users hit the API at the exact same millisecond, AWS instantly boots up 10,000 independent micro-containers simultaneously.</p>
+<p>You have essentially achieved <strong>infinite horizontal scaling</strong> without configuring a single load balancer.</p>
+
+<h2>The Two Major Trade-offs</h2>
+
+<h3>1. The Cold Start Problem</h3>
+<p>If nobody has visited your API in the last hour, AWS powers down your function's containers to save money. When a new user clicks a link, AWS must physically boot up a brand new micro-container, install your code, and start Node. This process can take over 1.5 seconds.</p>
+<p>This delay is known as a <strong>Cold Start</strong>. After the function is warm, subsequent requests execute in less than 50 milliseconds. To mitigate this on Enterprise applications, you can pay for "Provisioned Concurrency" to ensure a pool of functions is kept constantly warm.</p>
+
+<h3>2. Connection Exhaustion</h3>
+<p>If you use a traditional relational database (like PostgreSQL) inside a Serverless architecture, you will instantly crash it.</p>
+<p>PostgreSQL is designed to handle roughly 100 persistent, long-lived TCP connections. But Serverless architecture creates a massive spike of thousands of tiny, instantaneous connections because each Lambda container must open its own dedicated line to the database.</p>
+<p>To safely use Serverless alongside SQL, you must route all traffic through a massively scalable <strong>Connection Pooler</strong> (like PgBouncer or Prisma Accelerate), which multiplexes 10,000 HTTP lambda requests down into 50 safe, secure, persistent TCP database connections.</p>
+
+<h2>The Serverless Framework</h2>
+<p>Manually uploading `.zip` files of Javascript code to the AWS console is tedious and error-prone. The industry standard tool for defining infrastructure is the <strong>Serverless Framework</strong>.</p>
+<p>You write a <code>serverless.yml</code> file locally on your laptop:</p>
+<pre><code>service: my-backend-api
+provider: aws
+
+functions:
+  getUserProfile:
+    handler: src/handlers/getUser.handler
+    events:
+      - httpApi:
+          path: /users/{id}
+          method: get
+</code></pre>
+<p>When you run <code>serverless deploy</code>, it automatically zips your code, provisions an AWS API Gateway router, and deploys every single Lambda function perfectly into the cloud in minutes.</p>

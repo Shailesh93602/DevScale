@@ -1,0 +1,6 @@
+[
+  "Thinking about which balloon to burst first makes subproblems dependent (neighbors change). What if you think about which to burst LAST instead?",
+  "Pad the array with 1s at both ends: [1, ...nums, 1]. Define dp[left][right] for the open interval (left, right).",
+  "If balloon k is the last to burst in (left, right), coins = arr[left]*arr[k]*arr[right] + dp[left][k] + dp[k][right].",
+  "Iterate by interval length from 1 to n. For each interval, try every k as the last balloon. Time: O(n^3)."
+]

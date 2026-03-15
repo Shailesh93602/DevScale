@@ -1,0 +1,147 @@
+<h1>Web Workers, Proxy & Advanced JavaScript Patterns</h1>
+<p>These features unlock JavaScript's most powerful capabilities — true parallelism with Web Workers, meta-programming with Proxy, and memory-efficient data structures with WeakMap. They're rarely taught in tutorials but appear constantly in framework internals and high-performance applications.</p>
+
+<h2>Web Workers: True Parallelism</h2>
+<pre><code class="language-javascript">// main.js — UI thread (never block this with heavy computation)
+const worker = new Worker('./heavy-worker.js', { type: 'module' });
+
+// Send data to worker (data is COPIED, not shared)
+worker.postMessage({ data: hugeDataset, operation: 'processCSV' });
+
+// Receive result without blocking the UI
+worker.onmessage = (event) => {
+  const { result } = event.data;
+  renderDataTable(result);     // Now update the UI with processed data
+};
+
+worker.onerror = (error) => console.error('Worker error:', error);
+
+// heavy-worker.js — runs on a separate thread (no DOM access)
+self.onmessage = (event) => {
+  const { data, operation } = event.data;
+
+  // This 5-second computation won't freeze the UI!
+  const result = processLargeCSV(data);   // Expensive operation
+
+  // Send result back to main thread
+  self.postMessage({ result });
+};
+
+// Use case: parsing CSV files, image processing, crypto operations,
+// physics simulations, running WASM modules
+</code></pre>
+
+<h2>SharedArrayBuffer: Zero-Copy Data Sharing</h2>
+<pre><code class="language-javascript">// For massive data: avoid copying by sharing memory between threads
+// Requires: Cross-Origin-Opener-Policy: same-origin header
+
+// main.js
+const shared = new SharedArrayBuffer(1024 * 1024);  // 1MB shared buffer
+const view = new Int32Array(shared);
+
+// Fill with data
+for (let i = 0; i &lt; view.length; i++) view[i] = i;
+
+// Send REFERENCE (not a copy!) to worker
+worker.postMessage({ buffer: shared });
+
+// heavy-worker.js
+self.onmessage = ({ data: { buffer } }) => {
+  const view = new Int32Array(buffer);
+
+  // Atomics prevent race conditions when multiple workers access same memory
+  Atomics.add(view, 0, 1);        // Thread-safe increment
+  const value = Atomics.load(view, 0);  // Thread-safe read
+
+  // Notify waiting threads (like a semaphore)
+  Atomics.notify(view, 0, 1);     // Wake up 1 waiting thread
+};
+</code></pre>
+
+<h2>Proxy: Meta-Programming & Reactive Systems</h2>
+<pre><code class="language-javascript">// Proxy intercepts fundamental object operations
+
+// 1. Validation proxy
+function createValidatedObject(schema) {
+  return new Proxy({}, {
+    set(target, prop, value) {
+      if (schema[prop] && !schema[prop](value)) {
+        throw new TypeError(`Invalid value for ${prop}: ${value}`);
+      }
+      target[prop] = value;
+      return true;
+    },
+    get(target, prop) {
+      if (!(prop in target)) {
+        throw new ReferenceError(`Property ${prop} does not exist`);
+      }
+      return target[prop];
+    }
+  });
+}
+
+const user = createValidatedObject({
+  age: (v) => typeof v === 'number' && v >= 0 && v &lt;= 150,
+  email: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
+});
+
+user.age = 25;          // ✅
+user.age = -5;          // ❌ TypeError: Invalid value for age: -5
+user.email = 'valid@test.com';  // ✅
+
+// 2. Deep reactive proxy (Vue 3's reactivity system works like this)
+function reactive(target, onChange) {
+  return new Proxy(target, {
+    set(obj, prop, value) {
+      obj[prop] = value;
+      onChange(prop, value);   // Trigger UI updates!
+      return true;
+    }
+  });
+}
+
+const state = reactive({ count: 0 }, (key, val) => {
+  document.getElementById(key).textContent = val;
+});
+
+state.count++;   // Automatically updates the DOM
+</code></pre>
+
+<h2>WeakMap & WeakRef: Memory-Safe Patterns</h2>
+<pre><code class="language-javascript">// WeakMap: associate private data with objects WITHOUT preventing GC
+const privateData = new WeakMap();
+
+class User {
+  constructor(name, password) {
+    // Private data is GC'd when the User instance is GC'd
+    // (Can't iterate WeakMap — prevents memory leaks)
+    privateData.set(this, { password, loginAttempts: 0 });
+  }
+
+  authenticate(attempt) {
+    const data = privateData.get(this);
+    if (attempt === data.password) {
+      data.loginAttempts = 0;
+      return true;
+    }
+    data.loginAttempts++;
+    if (data.loginAttempts >= 3) throw new Error('Account locked');
+    return false;
+  }
+}
+
+// WeakRef: hold a reference that doesn't prevent garbage collection
+const cache = new Map();
+
+function getExpensiveResource(id) {
+  const cached = cache.get(id);
+  if (cached) {
+    const resource = cached.deref();  // Returns null if GC'd
+    if (resource) return resource;    // Cache hit (object still alive)
+  }
+
+  const resource = computeExpensiveResource(id);
+  cache.set(id, new WeakRef(resource));  // Cache without preventing GC
+  return resource;
+}
+</code></pre>

@@ -1,0 +1,4 @@
+{
+    "name": "ACID Transactions",
+    "description": "Ensuring strict data integrity during complex operations. Understanding Atomicity, Consistency, Isolation, and Durability, managing COMMIT/ROLLBACK, and preventing race conditions."
+}

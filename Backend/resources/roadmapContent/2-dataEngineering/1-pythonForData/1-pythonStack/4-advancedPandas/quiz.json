@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "Why is utilizing standard Python `for` loops or `df.iterrows()` heavily discouraged when processing large Pandas DataFrames?",
+            "options": [
+                "Because `iterrows()` requires external internet connections.",
+                "Because Python iteration evaluates logic row-by-row at the interpreted level, which is incredibly slow for millions of rows compared to compiled C operations.",
+                "Because it compiles pandas into static HTML.",
+                "Because loops consume excessive hard drive space."
+            ],
+            "answer": "Because Python iteration evaluates logic row-by-row at the interpreted level, which is incredibly slow for millions of rows compared to compiled C operations.",
+            "explanation": "Native Python loops on datasets with 10 million rows will take minutes. Vectorized operations run in milliseconds."
+        },
+        {
+            "question": "What does the concept of 'Vectorization' mean in the context of Pandas and NumPy?",
+            "options": [
+                "Migrating SQL tables into AWS clusters.",
+                "Applying a mathematical operation to an entire column or array of data simultaneously, deferring the actual loop execution down to the highly optimized C-language layer.",
+                "Deleting missing rows automatically.",
+                "Converting JSON text into binary formats."
+            ],
+            "answer": "Applying a mathematical operation to an entire column or array of data simultaneously, deferring the actual loop execution down to the highly optimized C-language layer.",
+            "explanation": "Code like `df['C'] = df['A'] + df['B']` executes instantly because the CPU processes the entire numeric array array block at once."
+        },
+        {
+            "question": "What is the primary function of the Pandas `rolling()` method when working with time-series data?",
+            "options": [
+                "To randomly shuffle the rows in the dataset.",
+                "To calculate moving window metrics, such as a 7-day or 30-day moving average, smoothing out daily noise to identify long-term trends.",
+                "To filter out weekend dates from a calendar.",
+                "To compress the dataset into a Parquet file."
+            ],
+            "answer": "To calculate moving window metrics, such as a 7-day or 30-day moving average, smoothing out daily noise to identify long-term trends.",
+            "explanation": "If sales spike on Saturdays and drop on Sundays, analyzing a 7-day rolling mean provides a much clearer picture of overall business growth."
+        }
+    ]
+}

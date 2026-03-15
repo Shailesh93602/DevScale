@@ -1,0 +1,6 @@
+[
+  "Use a state variable with three states: waiting for zero, waiting for odd, waiting for even.",
+  "The zero function runs n times total. After printing 0, it sets the state to odd or even based on the next number.",
+  "The odd function handles numbers 1, 3, 5, ... and the even function handles 2, 4, 6, ...",
+  "After printing a number, odd and even functions set state back to 0 (zero's turn)."
+]

@@ -1,0 +1,141 @@
+<h1>TypeScript Configuration & Tooling</h1>
+<p>Proper TypeScript configuration is the foundation of a type-safe project. The <code>tsconfig.json</code> file controls what TypeScript checks, how it compiles, and how modules are resolved.</p>
+
+<h2>The tsconfig.json File</h2>
+<pre><code>{
+  "compilerOptions": {
+    // Language target
+    "target": "ES2022",         // Output JS version
+    "lib": ["ES2022", "DOM"],   // Type definitions to include
+
+    // Module system
+    "module": "ESNext",
+    "moduleResolution": "bundler",  // Use 'bundler' for Vite/Next.js
+
+    // Output
+    "outDir": "./dist",
+    "rootDir": "./src",
+
+    // Strict mode (STRONGLY recommended)
+    "strict": true,             // Enables all strict checks below:
+    "noImplicitAny": true,      // Error on implicit 'any'
+    "strictNullChecks": true,   // null/undefined are separate types
+    "strictFunctionTypes": true,
+    "noImplicitReturns": true,  // All code paths must return a value
+    "noUncheckedIndexedAccess": true, // arr[i] returns T | undefined
+
+    // Path aliases
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@components/*": ["./src/components/*"],
+      "@utils/*": ["./src/utils/*"]
+    },
+
+    // React
+    "jsx": "react-jsx",
+
+    // Other useful options
+    "skipLibCheck": true,       // Skip type checking .d.ts files
+    "resolveJsonModule": true,  // Import JSON files
+    "allowJs": false            // No .js files in TypeScript project
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}</code></pre>
+
+<h2>Strict Mode Explained</h2>
+<p>Always enable <code>"strict": true</code>. It catches real bugs:</p>
+<pre><code>// With strictNullChecks:
+function greet(name: string | null) {
+  console.log(name.toUpperCase()); // ❌ Error: name could be null
+  console.log(name?.toUpperCase()); // ✅ Safe with optional chaining
+}
+
+// With noImplicitAny:
+function process(data) { }  // ❌ Error: parameter 'data' implicitly has 'any' type
+function process(data: unknown) { }  // ✅</code></pre>
+
+<h2>Declaration Files (.d.ts)</h2>
+<p>Declaration files provide type information for JavaScript libraries without TypeScript source:</p>
+<pre><code>// custom.d.ts — declaring types for untyped modules
+declare module '*.svg' {
+  const content: string;
+  export default content;
+}
+
+declare module '*.png' {
+  const content: string;
+  export default content;
+}
+
+// Extending global types
+declare global {
+  interface Window {
+    analytics: Analytics;
+    __APP_VERSION__: string;
+  }
+}
+
+// Augmenting third-party module types
+declare module 'express' {
+  interface Request {
+    user?: AuthUser;
+  }
+}</code></pre>
+
+<h2>TypeScript with Vite</h2>
+<pre><code>// vite.config.ts
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import path from 'path';
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
+});
+
+// Then in any file:
+import { Button } from '@/components/Button';</code></pre>
+
+<h2>ESLint with TypeScript</h2>
+<pre><code>// eslint.config.js
+import tseslint from 'typescript-eslint';
+
+export default tseslint.config(
+  tseslint.configs.recommended,
+  tseslint.configs.strict,
+  {
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/prefer-nullish-coalescing': 'warn',
+    }
+  }
+);</code></pre>
+
+<h2>Useful tsc Commands</h2>
+<pre><code># Type-check without emitting files (fast!)
+npx tsc --noEmit
+
+# Watch mode
+npx tsc --watch
+
+# Generate declaration files only
+npx tsc --declaration --emitDeclarationOnly
+
+# Show which files are included
+npx tsc --listFiles</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always enable <code>"strict": true</code> from the start of a project.</li>
+  <li>Run <code>tsc --noEmit</code> in CI to catch type errors before merging.</li>
+  <li>Use path aliases (<code>@/</code>) to avoid relative import hell.</li>
+  <li>Add <code>declare global</code> augmentations instead of casting to <code>any</code>.</li>
+  <li>Use <code>skipLibCheck: true</code> to avoid slowdowns from third-party type errors.</li>
+</ul>

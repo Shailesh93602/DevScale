@@ -1,0 +1,6 @@
+[
+  "Track the timestamp of when the function was last executed. Use Date.now() to compare.",
+  "If enough time has passed since the last execution, call the function immediately and update the timestamp.",
+  "If called during the cooldown period, schedule a trailing call with setTimeout for the remaining time.",
+  "Remember to clear any pending trailing timeout if the cooldown expires and a new leading-edge call fires."
+]

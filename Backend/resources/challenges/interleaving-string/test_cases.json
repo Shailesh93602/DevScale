@@ -1,0 +1,12 @@
+[
+  { "input": "{\"s1\": \"aabcc\", \"s2\": \"dbbca\", \"s3\": \"aadbbcbcac\"}", "output": "true", "explanation": "Valid interleaving exists", "is_hidden": false },
+  { "input": "{\"s1\": \"aabcc\", \"s2\": \"dbbca\", \"s3\": \"aadbbbaccc\"}", "output": "false", "explanation": "No valid interleaving", "is_hidden": false },
+  { "input": "{\"s1\": \"\", \"s2\": \"\", \"s3\": \"\"}", "output": "true", "explanation": "All empty strings", "is_hidden": false },
+  { "input": "{\"s1\": \"a\", \"s2\": \"b\", \"s3\": \"ab\"}", "output": "true", "explanation": "Simple interleaving", "is_hidden": true },
+  { "input": "{\"s1\": \"a\", \"s2\": \"b\", \"s3\": \"ba\"}", "output": "true", "explanation": "Reversed order interleaving", "is_hidden": true },
+  { "input": "{\"s1\": \"a\", \"s2\": \"b\", \"s3\": \"c\"}", "output": "false", "explanation": "Characters don't match", "is_hidden": true },
+  { "input": "{\"s1\": \"\", \"s2\": \"abc\", \"s3\": \"abc\"}", "output": "true", "explanation": "s1 empty, s3 equals s2", "is_hidden": true },
+  { "input": "{\"s1\": \"abc\", \"s2\": \"def\", \"s3\": \"adbecf\"}", "output": "true", "explanation": "Perfect alternating interleave", "is_hidden": true },
+  { "input": "{\"s1\": \"aa\", \"s2\": \"aa\", \"s3\": \"aaaa\"}", "output": "true", "explanation": "All same characters", "is_hidden": true },
+  { "input": "{\"s1\": \"ab\", \"s2\": \"cd\", \"s3\": \"abcde\"}", "output": "false", "explanation": "Length mismatch: 2+2 != 5", "is_hidden": true }
+]

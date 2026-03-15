@@ -1,0 +1,118 @@
+{
+    "title": "Vector Databases Quiz",
+    "description": "Test your knowledge of embeddings, Pinecone, ChromaDB, and RAG pipeline design.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is an embedding in the context of vector databases?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A compressed binary representation of an image for faster storage",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A fixed-length list of floating-point numbers that encodes the semantic meaning of text, images, or audio — items with similar meaning have mathematically close embeddings",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A database index structure similar to a B-tree but optimized for text search",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A technique for reducing the size of large language models for deployment on mobile devices",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why can't a traditional SQL database efficiently perform semantic search (find the 10 most similar items to a query)?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "SQL databases cannot store floating-point numbers with enough precision",
+                    "isCorrect": false
+                },
+                {
+                    "text": "SQL indexes support exact matches and ranges, not high-dimensional geometric similarity — computing cosine similarity across millions of rows requires specialized ANN algorithms",
+                    "isCorrect": true
+                },
+                {
+                    "text": "SQL databases have a row limit of 10,000 that prevents large-scale similarity search",
+                    "isCorrect": false
+                },
+                {
+                    "text": "SQL databases store data in table format which is incompatible with vector operations",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In a Pinecone index, what does the `metadata` field stored alongside each vector allow you to do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Compress the vector to reduce storage costs",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Apply pre-query filters (e.g., category='footwear') so the ANN search only considers vectors matching additional criteria, combining semantic similarity with structured filtering",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Automatically re-embed the vector when its associated document is updated",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Define the distance metric (cosine, euclidean) used for similarity calculation",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In a RAG (Retrieval-Augmented Generation) pipeline, what is the correct order of operations?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Generate answer with LLM first, then retrieve context to verify accuracy",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Embed the user's query → search the vector database for relevant context → pass retrieved context + question to the LLM → return grounded answer",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Fine-tune the LLM on your documents → query the LLM directly without a database",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Store user questions in the vector database → retrieve previous similar answers → return the cached answer",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why should you set a minimum similarity threshold (e.g., score > 0.75) when passing retrieved results to an LLM?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Scores above 0.75 are required by the Pinecone API to avoid rate limiting",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Low-similarity results are irrelevant to the question — including them as context confuses the LLM and causes it to generate hallucinated or inaccurate answers",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The LLM's context window cannot handle the extra tokens from low-scoring results",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Low similarity scores indicate the embeddings have become stale and must be regenerated",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,6 @@
+[
+  "Use a Map<string, Function[]> to store listeners for each event name.",
+  "For `on`, push the callback to the event's listener array. For `off`, find and remove by reference (indexOf).",
+  "For `emit`, iterate over a COPY of the listener array (using spread [...cbs]) to safely handle listeners that unsubscribe during emission.",
+  "For `once`, create a wrapper function that calls the original callback and then calls `this.off()` to remove itself."
+]

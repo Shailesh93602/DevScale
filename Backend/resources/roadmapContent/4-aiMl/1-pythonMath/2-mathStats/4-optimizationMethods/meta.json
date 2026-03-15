@@ -1,0 +1,4 @@
+{
+    "name": "Optimization Methods: Gradient Descent & Beyond",
+    "description": "Understanding the mathematical engine behind training neural networks. Covering gradient descent intuition and the chain rule, mini-batch SGD, momentum and Nesterov momentum, adaptive learning rate optimizers (Adam, RMSProp, AdaGrad), learning rate schedules, and how to diagnose optimization failures during training."
+}

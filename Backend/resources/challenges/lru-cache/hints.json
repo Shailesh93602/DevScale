@@ -1,0 +1,7 @@
+[
+  "To achieve O(1) time complexity for getting and putting, you need two data structures working together.",
+  "You need a Hash Map to access nodes by key in O(1) time.",
+  "You also need a way to track the 'most recently used' and 'least recently used' elements and easily move an element to the 'most recently used' position in O(1) time.",
+  "A Doubly Linked List is perfect for this. When an item is accessed or added, remove it from its current position and attach it to the front (head) of the doubly linked list.",
+  "When the cache is full and you need to evict, simply remove the node at the tail of the doubly linked list and delete its key from the Hash Map."
+]

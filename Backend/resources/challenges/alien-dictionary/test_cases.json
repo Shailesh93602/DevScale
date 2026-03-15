@@ -1,0 +1,10 @@
+[
+  {"input":"{\"words\":[\"wrt\",\"wrf\",\"er\",\"ett\",\"rftt\"]}","output":"\"wertf\"","explanation":"Standard example","is_hidden":false},
+  {"input":"{\"words\":[\"z\",\"x\"]}","output":"\"zx\"","explanation":"Simple 2 letters","is_hidden":false},
+  {"input":"{\"words\":[\"z\",\"x\",\"z\"]}","output":"\"\"","explanation":"cyclic dependency","is_hidden":false},
+  {"input":"{\"words\":[\"abc\",\"ab\"]}","output":"\"\"","explanation":"prefix after longer word is invalid","is_hidden":true},
+  {"input":"{\"words\":[\"zy\",\"zx\"]}","output":"\"yxz\"","explanation":"y comes before x and z can be anywhere","is_hidden":true},
+  {"input":"{\"words\":[\"a\",\"b\",\"ca\",\"cb\"]}","output":"\"abc\"","explanation":"Normal order","is_hidden":true},
+  {"input":"{\"words\":[\"ze\",\"yf\",\"xd\",\"wc\",\"vb\",\"ua\"]}","output":"\"zyxwvuabcdef\"","explanation":"Every first letter ordered","is_hidden":true},
+  {"input":"{\"words\":[\"z\"]}","output":"\"z\"","explanation":"Single letter","is_hidden":true}
+]

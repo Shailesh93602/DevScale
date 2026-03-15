@@ -1,0 +1,4 @@
+{
+    "name": "OAuth, JWT & Secure Token Storage",
+    "description": "Implementing secure authentication in React Native. OAuth 2.0 flows with expo-auth-session for social login (Google, Apple Sign-in required on iOS), storing tokens securely with expo-secure-store (iOS Keychain / Android Keystore), JWT refresh token rotation, implementing silent token refresh with Axios interceptors, and handling biometric unlock for token access."
+}

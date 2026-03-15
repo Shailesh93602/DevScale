@@ -1,0 +1,10 @@
+[
+  { "input": "{\"operations\": [\"FreqStack\",\"push\",\"push\",\"push\",\"push\",\"push\",\"push\",\"pop\",\"pop\",\"pop\",\"pop\"], \"args\": [[],[5],[7],[5],[7],[4],[5],[],[],[],[]]}", "output": "[null,null,null,null,null,null,null,5,7,5,4]", "explanation": "Pop most frequent, then by recency.", "is_hidden": false },
+  { "input": "{\"operations\": [\"FreqStack\",\"push\",\"pop\"], \"args\": [[],[1],[]]}", "output": "[null,null,1]", "explanation": "Single push and pop.", "is_hidden": false },
+  { "input": "{\"operations\": [\"FreqStack\",\"push\",\"push\",\"push\",\"pop\"], \"args\": [[],[1],[2],[3],[]]}", "output": "[null,null,null,null,3]", "explanation": "All freq 1, pop most recent.", "is_hidden": false },
+  { "input": "{\"operations\": [\"FreqStack\",\"push\",\"push\",\"push\",\"push\",\"pop\",\"pop\"], \"args\": [[],[1],[1],[1],[1],[],[]]}", "output": "[null,null,null,null,null,1,1]", "explanation": "Same element, pop reduces frequency.", "is_hidden": true },
+  { "input": "{\"operations\": [\"FreqStack\",\"push\",\"push\",\"push\",\"push\",\"push\",\"pop\",\"pop\"], \"args\": [[],[4],[0],[9],[3],[4],[],[]]}", "output": "[null,null,null,null,null,null,4,3]", "explanation": "4 has freq 2, pop it first.", "is_hidden": true },
+  { "input": "{\"operations\": [\"FreqStack\",\"push\",\"push\",\"pop\",\"push\",\"push\",\"pop\"], \"args\": [[],[1],[2],[],[1],[2],[]]}", "output": "[null,null,null,2,null,null,2]", "explanation": "Interleaved push/pop.", "is_hidden": true },
+  { "input": "{\"operations\": [\"FreqStack\",\"push\",\"push\",\"push\",\"push\",\"push\",\"push\",\"pop\",\"push\",\"pop\",\"pop\"], \"args\": [[],[1],[2],[1],[2],[1],[2],[],[3],[],[]]}", "output": "[null,null,null,null,null,null,null,1,null,3,2]", "explanation": "Complex interleaving.", "is_hidden": true },
+  { "input": "{\"operations\": [\"FreqStack\",\"push\",\"push\",\"push\",\"pop\",\"pop\",\"pop\"], \"args\": [[],[5],[5],[5],[],[],[]]}", "output": "[null,null,null,null,5,5,5]", "explanation": "Pop same element 3 times.", "is_hidden": true }
+]

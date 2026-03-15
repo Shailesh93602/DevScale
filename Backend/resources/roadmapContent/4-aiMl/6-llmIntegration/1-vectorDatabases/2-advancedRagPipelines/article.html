@@ -1,0 +1,83 @@
+<h1>Advanced RAG Pipelines & Retrieval Optimization</h1>
+<p>Naive RAG (chunk text, embed, retrieve top-K, pass to LLM) works for simple demos but fails in production: it misses relevant context, retrieves noisy irrelevant chunks, and struggles with multi-step questions. Production RAG requires a layered retrieval architecture that combines multiple signals to find the truly relevant context.</p>
+
+<h2>The Naive RAG Failure Modes</h2>
+<pre><code class="language-text">Problem 1: Dense retrieval alone misses exact keyword matches
+  Query: "What is the CVE-2024-1234 vulnerability?"
+  Dense embedding similarity: terrible for exact identifiers/numbers
+  Fix: Hybrid search (dense + BM25 sparse retrieval)
+
+Problem 2: Long retrieved chunks contain noise that confuses the LLM
+  Retrieval: returns 3 full paragraphs when only 2 sentences are relevant
+  Fix: Reranking with cross-encoder (more precise relevance scoring)
+
+Problem 3: Multi-hop questions require connecting multiple documents
+  Query: "Who was the CEO when Company X acquired Company Y?"
+  Single retrieval can't find both the acquisition date AND the CEO history
+  Fix: Multi-hop retrieval with iterative querying
+</code></pre>
+
+<h2>Hybrid Search: Dense + Sparse</h2>
+<pre><code class="language-python">from langchain.retrievers import EnsembleRetriever
+from langchain_community.retrievers import BM25Retriever
+from langchain_community.vectorstores import Chroma
+from langchain_openai import OpenAIEmbeddings
+
+# BM25 sparse retriever — excellent for keyword/exact match
+bm25_retriever = BM25Retriever.from_documents(documents)
+bm25_retriever.k = 5
+
+# Dense vector retriever — excellent for semantic similarity
+embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
+vectorstore = Chroma.from_documents(documents, embeddings)
+dense_retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
+
+# Hybrid: combine both with Reciprocal Rank Fusion (RRF)
+# RRF score = sum(1 / (rank + 60)) across retrievers
+ensemble_retriever = EnsembleRetriever(
+    retrievers=[bm25_retriever, dense_retriever],
+    weights=[0.4, 0.6]   # BM25 40% weight, dense 60% weight
+)
+</code></pre>
+
+<h2>Reranking with Cross-Encoders</h2>
+<pre><code class="language-python">from sentence_transformers import CrossEncoder
+
+# Two-stage retrieval:
+# Stage 1: Bi-encoder (fast) — retrieve top-50 candidates
+# Stage 2: Cross-encoder (slow but accurate) — rerank top-50 to get top-5
+
+# Cross-encoder reads query AND document together → much more precise relevance
+cross_encoder = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-12-v2')
+
+def retrieve_with_reranking(query: str, retriever, k_final: int = 5) -> list:
+    # Stage 1: Fast retrieval (50 candidates)
+    candidates = retriever.get_relevant_documents(query, k=50)
+    
+    # Stage 2: Cross-encoder reranking
+    pairs = [(query, doc.page_content) for doc in candidates]
+    scores = cross_encoder.predict(pairs)
+    
+    # Sort by cross-encoder score and return top-k
+    ranked = sorted(zip(scores, candidates), key=lambda x: x[0], reverse=True)
+    return [doc for _, doc in ranked[:k_final]]
+</code></pre>
+
+<h2>Evaluating RAG with RAGAS</h2>
+<pre><code class="language-python">from ragas import evaluate
+from ragas.metrics import faithfulness, answer_relevancy, context_precision, context_recall
+
+# RAGAS metrics for holistic RAG evaluation:
+# Faithfulness: Is the answer grounded in the retrieved context? (no hallucination)
+# Answer Relevancy: Does the answer actually address the question?
+# Context Precision: Are the retrieved chunks actually relevant?
+# Context Recall: Did retrieval find all the relevant context?
+
+results = evaluate(
+    dataset=eval_dataset,
+    metrics=[faithfulness, answer_relevancy, context_precision, context_recall]
+)
+print(results)
+# {'faithfulness': 0.87, 'answer_relevancy': 0.91, 'context_precision': 0.78, 'context_recall': 0.83}
+# Faithfulness = 0.87: 13% of answers contain information not in retrieved context → hallucination risk
+</code></pre>

@@ -1,0 +1,6 @@
+[
+  "The challenge is that `random` pointers can point forward or backward, so you can't just copy nodes one by one in a single pass.",
+  "Use a HashMap to store a mapping from original node -> copy node.",
+  "In the first pass, create a copy of every node (just the value) and store in the map.",
+  "In the second pass, go through each original node and use the map to set `copy.next = map[original.next]` and `copy.random = map[original.random]`."
+]

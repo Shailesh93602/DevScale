@@ -1,0 +1,79 @@
+<h1>dbt Testing (Data Quality)</h1>
+<p>Data build tool (dbt) treats data like code. Just as application code requires unit testing, analytical data pipelines require robust data validations. dbt allows you to write assertions about your tables directly alongside your logic.</p>
+
+<h2>Generic Tests</h2>
+<p>Generic tests validate common scenarios across columns. You define them right inside your model's <code>schema.yml</code>.</p>
+<pre><code>version: 2
+models:
+  - name: dim_users
+    columns:
+      - name: user_id
+        tests:
+          - unique
+          - not_null
+      - name: email
+        tests:
+          - not_null
+      - name: status
+        tests:
+          - accepted_values:
+              values: ['active', 'inactive', 'pending']
+      - name: account_id
+        tests:
+          - relationships:
+              to: ref('dim_accounts')
+              field: id</code></pre>
+<p>dbt ships with those 4 built-in generic tests: <code>unique</code>, <code>not_null</code>, <code>accepted_values</code>, and <code>relationships</code>.</p>
+
+<h2>Running Tests</h2>
+<p>After defining tests in <code>schema.yml</code>, run them from the CLI:</p>
+<pre><code># Run all models, then run all tests
+dbt build
+
+# Run ONLY the tests (models must already be built)
+dbt test
+
+# Run tests on a specific model
+dbt test --select dim_users</code></pre>
+
+<h2>Singular Tests (Custom SQL)</h2>
+<p>For complex logic spanning multiple tables, you can write <strong>Singular Tests</strong>. A singular test is a SQL file saved in the <code>tests/</code> directory that <strong>returns failing rows</strong>.</p>
+<pre><code>-- tests/assert_total_amount_is_positive.sql
+-- If any row returns from this query, the test fails.
+
+SELECT
+    order_id,
+    SUM(amount) as total_amount
+FROM {{ ref('fct_order_items') }}
+GROUP BY 1
+HAVING SUM(amount) &lt; 0</code></pre>
+
+<h2>Freshness Checks</h2>
+<p>Ensuring your source data isn't stale is as important as its internal consistency.</p>
+<pre><code>version: 2
+sources:
+  - name: application_db
+    database: raw_zone
+    tables:
+      - name: users
+        loaded_at_field: updated_at
+        freshness:
+          warn_after: {count: 12, period: hour}
+          error_after: {count: 24, period: hour}</code></pre>
+<p>Run <code>dbt source freshness</code> to ensure the source data hasn't stopped loading before building downstream models.</p>
+
+<h2>dbt Expectations (External Package)</h2>
+<p>While dbt's built-in tests handle the basics, the <code>dbt-expectations</code> package provides dozens of powerful generic tests (like Great Expectations).</p>
+<pre><code>packages:
+  - package: calogica/dbt_expectations
+    version: 0.8.0</code></pre>
+<pre><code>tests:
+  - dbt_expectations.expect_column_values_to_match_regex:
+      regex: "^[0-9a-zA-Z_.-]+@[0-9a-zA-Z_.-]+\\.[a-zA-Z]+$"</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Test primary keys with both <code>unique</code> and <code>not_null</code> on every model.</li>
+  <li>Don't ignore the warning severity: <code>config(severity = 'warn')</code> on noisy tests to avoid breaking the pipeline.</li>
+  <li>Run tests automatically in your CI/CD pipeline on every Pull Request to catch bad data changes before they hit production.</li>
+</ul>

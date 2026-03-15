@@ -1,0 +1,25 @@
+<h1>Caching Strategies & CDNs</h1>
+<p>In web performance, the fastest network request is the one that never happens. Caching is the process of storing data closer to the user so it can be retrieved instantly without reaching the primary database or server.</p>
+
+<h2>Browser Caching (Cache-Control)</h2>
+<p>When a user visits your website for the first time, their browser downloads your HTML, CSS, JavaScript, and images. The server can send a special HTTP header called <code>Cache-Control</code> to instruct the browser to save these files locally.</p>
+<pre><code>// Example HTTP Response Header for a logo image
+Cache-Control: public, max-age=31536000
+</code></pre>
+<p>The <code>max-age</code> value is set in seconds (31,536,000 seconds = 1 year). When the user navigates to a new page on your site, the browser instantly loads the logo from its local hard drive, completely bypassing the network.</p>
+<p><strong>Warning:</strong> Never aggressively cache your primary <code>index.html</code> file, otherwise users will be permanently stuck on an old version of your website!</p>
+
+<h2>Content Delivery Networks (CDNs)</h2>
+<p>If your sole server is located in London, and a user in Sydney visits your site, the data must physically travel across the ocean. This causes terrible latency.</p>
+<p>A CDN (like Cloudflare or AWS CloudFront) is a massive global network of proxy servers. When you use a CDN, your static assets (images, CSS, JS) are copied to hundreds of data centers around the world.</p>
+<ol>
+  <li>The Australian user requests your website.</li>
+  <li>The request is intercepted by the CDN's Sydney data center.</li>
+  <li>The CDN instantly serves the cached files from Sydney, taking only 10 milliseconds instead of 300 milliseconds.</li>
+</ol>
+<p>This is called Edge Delivery. The server closest to the user is known as the "Edge" server.</p>
+
+<h2>In-Memory Caching (Redis)</h2>
+<p>CDNs are great for static files, but what about dynamic database queries? If a SQL query takes 5 seconds to calculate the "Top 10 High Scores", you do not want to run that calculation for all 10,000 concurrent users.</p>
+<p>Instead, the backend server runs the slow SQL query exactly once, and saves the JSON result into <strong>Redis</strong>.</p>
+<p>Redis is an In-Memory Database. It stores data directly in RAM instead of a physical hard drive. Fetching data from Redis takes less than 1 millisecond. When subsequent users request the high scores, the Node server instantly pulls the cached JSON from Redis, completely skipping the heavy PostgreSQL database.</p>

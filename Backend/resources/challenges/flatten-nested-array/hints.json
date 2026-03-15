@@ -1,0 +1,6 @@
+[
+  "Iterate through each element. Use Array.isArray() to check if an element is an array.",
+  "If the element is an array and depth > 0, recursively flatten it with depth - 1.",
+  "If the element is not an array (or depth is 0), add it directly to the result.",
+  "Default the depth parameter to Infinity for a complete flatten when no depth is specified."
+]

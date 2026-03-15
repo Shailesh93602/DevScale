@@ -1,0 +1,10 @@
+[
+  { "input": "{\"nums\":[1,1,1,2,2,3], \"k\":2}", "output": "[1,2]", "explanation": "1 appears 3x, 2 appears 2x", "is_hidden": false },
+  { "input": "{\"nums\":[1], \"k\":1}", "output": "[1]", "explanation": "Single element", "is_hidden": false },
+  { "input": "{\"nums\":[1,2], \"k\":2}", "output": "[1,2]", "explanation": "Both equally frequent", "is_hidden": true },
+  { "input": "{\"nums\":[4,1,2,2,3,3,3], \"k\":1}", "output": "[3]", "explanation": "k=1 returns most frequent", "is_hidden": true },
+  { "input": "{\"nums\":[5,5,5,5,5], \"k\":1}", "output": "[5]", "explanation": "All same element", "is_hidden": true },
+  { "input": "{\"nums\":[1,2,3,4,5,6,7,8,9,10], \"k\":3}", "output": "[1,2,3]", "explanation": "All equal frequency — any 3 are valid", "is_hidden": true },
+  { "input": "{\"nums\":[-1,-1,2,2,2,3], \"k\":2}", "output": "[2,-1]", "explanation": "Negatives in the result", "is_hidden": true },
+  { "input": "{\"nums\":[1,1,2,2,3,3,4], \"k\":3}", "output": "[1,2,3]", "explanation": "Tie-breaking — any 3 of 4 valid", "is_hidden": true }
+]

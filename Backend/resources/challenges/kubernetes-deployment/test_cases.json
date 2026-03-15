@@ -1,0 +1,38 @@
+[
+  {
+    "input": "{\"name\": \"api\", \"image\": \"myregistry/api:v1.0.0\", \"replicas\": 3, \"port\": 3000, \"resources\": {\"cpu\": \"500m\", \"memory\": \"512Mi\"}}",
+    "output": "Deployment with 3 replicas, RollingUpdate strategy, resource requests 250m/256Mi, limits 500m/512Mi, liveness and readiness probes, Service on port 80->3000, HPA 3-9 replicas",
+    "explanation": "Standard API deployment with 3 replicas and moderate resources",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"name\": \"worker\", \"image\": \"myregistry/worker:v2.0\", \"replicas\": 2, \"port\": 8080, \"resources\": {\"cpu\": \"1000m\", \"memory\": \"1024Mi\"}}",
+    "output": "Deployment with 2 replicas, resource requests 500m/512Mi, limits 1000m/1024Mi, containerPort 8080, HPA 2-6 replicas",
+    "explanation": "Worker service with higher resource allocation",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"name\": \"api\", \"image\": \"api:v1\", \"replicas\": 3, \"port\": 3000, \"resources\": {\"cpu\": \"500m\", \"memory\": \"512Mi\"}}",
+    "output": "Contains maxUnavailable: 0, maxSurge: 1, runAsNonRoot: true, podAntiAffinity",
+    "explanation": "Verify zero-downtime strategy, security context, and pod spreading",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"name\": \"api\", \"image\": \"api:v1\", \"replicas\": 3, \"port\": 3000, \"resources\": {\"cpu\": \"500m\", \"memory\": \"512Mi\"}}",
+    "output": "Liveness probe at /health with initialDelaySeconds 15, readiness probe at /ready with initialDelaySeconds 5",
+    "explanation": "Health probes must have different paths and appropriate delays",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"name\": \"api\", \"image\": \"api:v1\", \"replicas\": 5, \"port\": 3000, \"resources\": {\"cpu\": \"500m\", \"memory\": \"512Mi\"}}",
+    "output": "HPA with minReplicas 5, maxReplicas 15, averageUtilization 70, stabilizationWindowSeconds 300",
+    "explanation": "HPA scales from replicas to replicas*3 with stabilization",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"name\": \"frontend\", \"image\": \"frontend:latest\", \"replicas\": 2, \"port\": 80, \"resources\": {\"cpu\": \"200m\", \"memory\": \"256Mi\"}}",
+    "output": "All 4 manifests: Deployment, Service, HPA, Ingress. Labels app: frontend consistent across all.",
+    "explanation": "Label consistency across all Kubernetes resources",
+    "is_hidden": true
+  }
+]

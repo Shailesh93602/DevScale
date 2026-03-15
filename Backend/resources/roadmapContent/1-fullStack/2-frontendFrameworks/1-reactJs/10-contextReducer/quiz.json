@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary advantage of useReducer over useState?",
+            "options": [
+                "It makes API calls significantly faster",
+                "It allows managing complex state logic that involves multiple sub-values and centralizes update logic",
+                "It enables direct DOM manipulation",
+                "It prevents components from ever rendering unnecessarily"
+            ],
+            "answer": "It allows managing complex state logic that involves multiple sub-values and centralizes update logic",
+            "explanation": "useReducer handles state updates through a central reducer function, making it easier to reason about complex state transitions that depend on previous state or update multiple properties at once."
+        },
+        {
+            "question": "Why is it considered an anti-pattern to pass both 'state' and 'dispatch' in a single Context value object?",
+            "options": [
+                "Context cannot hold both objects and functions",
+                "Every consumer of that context will re-render whenever the state changes, even if they only need the dispatch function",
+                "It violates strict mode rules",
+                "The dispatch function will lose its binding to 'this'"
+            ],
+            "answer": "Every consumer of that context will re-render whenever the state changes, even if they only need the dispatch function",
+            "explanation": "Context re-renders all consumers when the 'value' changes. If state changes, the wrapper { state, dispatch } creates a new reference, re-rendering deep components that just wanted to trigger an action via dispatch."
+        },
+        {
+            "question": "How do you prevent a purely interactive component (like a Save Button) from re-rendering when React Context state changes?",
+            "options": [
+                "Use React.memo on the Context Provider",
+                "Create separate contexts for State vs. Dispatch, and only consume the Dispatch context in the button",
+                "Wrap the onClick handler in useCallback",
+                "Set the pureComponent flag to true"
+            ],
+            "answer": "Create separate contexts for State vs. Dispatch, and only consume the Dispatch context in the button",
+            "explanation": "React guarantees the dispatch function from useReducer is stable across renders. Putting it in its own DispatchContext means consumers of that context will almost never re-render."
+        },
+        {
+            "question": "What should custom Context hooks do when a component tries to use them outside a Provider?",
+            "options": [
+                "Return undefined silently",
+                "Return an empty object",
+                "Throw a clear and descriptive Error indicating the Provider is missing",
+                "Automatically generate a fallback Provider"
+            ],
+            "answer": "Throw a clear and descriptive Error indicating the Provider is missing",
+            "explanation": "Checking if the context is null/undefined and throwing an error eagerly prevents confusing null pointer crashes deep inside component logic."
+        },
+        {
+            "question": "What happens if a reducer mutates the state directly instead of returning a new object (e.g., state.count++)?",
+            "options": [
+                "It works normally but is slightly slower",
+                "React will not trigger a re-render because the object reference never changed",
+                "React throws a mutation error in production",
+                "The application crashes with a stack overflow"
+            ],
+            "answer": "React will not trigger a re-render because the object reference never changed",
+            "explanation": "Like useState, useReducer relies on reference equality checks (Object.is). If you mutate the object in place, React thinks the state hasn't changed and skips the render."
+        }
+    ]
+}

@@ -1,0 +1,6 @@
+[
+  "A straightforward solution is a two-pass algorithm using counting sort. Count the number of 0s, 1s, and 2s, then overwrite the array.",
+  "To do it in one pass, consider the Dutch National Flag problem algorithm proposed by Edsger W. Dijkstra.",
+  "You can use three pointers: `low`, `mid`, and `high`. `low` tracks where the next 0 should go, `high` tracks where the next 2 should go, and `mid` is the current element you're considering.",
+  "If `nums[mid]` is 0, swap it with `nums[low]` and increment both. If it's 1, just increment `mid`. If it's 2, swap it with `nums[high]` and decrement `high`."
+]

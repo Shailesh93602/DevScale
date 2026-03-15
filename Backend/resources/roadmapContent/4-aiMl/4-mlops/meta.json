@@ -1,0 +1,10 @@
+{
+    "id": "4-mlops",
+    "title": "MLOps",
+    "description": "Productionizing machine learning workflows, model deployment, and tracking.",
+    "order": 4,
+    "subjects": [
+        "1-modelDeployment",
+        "2-experimentTracking"
+    ]
+}

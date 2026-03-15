@@ -1,0 +1,6 @@
+[
+  "Two strings are anagrams if and only if their character counts (or their sorted strings) are equal.",
+  "Consider what makes a good hash map key. A sorted string works, but takes `O(K log K)` time to sort, where `K` is the string length.",
+  "Instead of sorting, you can build an array of 26 counts (one for each letter `a-z`) and use that as the key.",
+  "In JavaScript/TypeScript, you can easily turn an array of 26 counts into a string (e.g. `countArr.join('#')`) and use it as a map key!"
+]

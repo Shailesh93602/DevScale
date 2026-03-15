@@ -1,0 +1,10 @@
+{
+  "typescript": "function reverseWords(s: string): string {\n    \n};",
+  "javascript": "/**\n * @param {string} s\n * @return {string}\n */\nvar reverseWords = function(s) {\n    \n};",
+  "python": "class Solution:\n    def reverseWords(self, s: str) -> str:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public String reverseWords(String s) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    string reverseWords(string s) {\n        \n    }\n};",
+  "go": "func reverseWords(s string) string {\n    \n}",
+  "rust": "impl Solution {\n    pub fn reverse_words(s: String) -> String {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public string ReverseWords(string s) {\n        \n    }\n}"
+}

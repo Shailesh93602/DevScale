@@ -1,0 +1,136 @@
+<h1>Supabase: Storage, Realtime & Edge Functions</h1>
+<p>Supabase provides a complete backend as a service: PostgreSQL database, auth, real-time subscriptions, file storage, and Edge Functions (Deno-based serverless). Combined with its React Native client, you can build full-feature apps without managing any backend infrastructure.</p>
+
+<h2>File Uploads with Supabase Storage</h2>
+<pre><code class="language-jsx">import { supabase } from './supabase';
+import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
+
+async function uploadAvatar(userId) {
+  // Pick image
+  const result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    allowsEditing: true, aspect: [1, 1], quality: 0.8,
+  });
+
+  if (result.canceled) return;
+
+  const imageUri = result.assets[0].uri;
+  const fileName = `avatars/${userId}/${Date.now()}.jpg`;
+
+  // Read file as base64 for upload
+  const base64 = await FileSystem.readAsStringAsync(imageUri, {
+    encoding: FileSystem.EncodingType.Base64,
+  });
+
+  // Upload to Supabase Storage with progress tracking
+  const { data, error } = await supabase.storage
+    .from('user-content')          // Bucket name
+    .upload(fileName, decode(base64), {
+      contentType: 'image/jpeg',
+      upsert: true,                // Overwrite if exists
+    });
+
+  if (error) throw error;
+
+  // Get public URL for the uploaded file
+  const { data: { publicUrl } } = supabase.storage
+    .from('user-content')
+    .getPublicUrl(fileName);
+
+  // Save URL to user profile in database
+  await supabase
+    .from('profiles')
+    .update({ avatar_url: publicUrl })
+    .eq('id', userId);
+
+  return publicUrl;
+}
+</code></pre>
+
+<h2>Real-Time Subscriptions</h2>
+<pre><code class="language-jsx">import { useEffect, useState } from 'react';
+import { supabase } from './supabase';
+
+// Live chat — messages appear instantly for all participants
+function useChatMessages(chatId, currentUserId) {
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    // Load existing messages first
+    supabase
+      .from('messages')
+      .select('*, sender:profiles(id, name, avatar_url)')
+      .eq('chat_id', chatId)
+      .order('created_at', { ascending: true })
+      .then(({ data }) => setMessages(data ?? []));
+
+    // Subscribe to new messages in real-time
+    const channel = supabase
+      .channel(`chat-${chatId}`)
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'messages',
+        filter: `chat_id=eq.${chatId}`,
+      }, async (payload) => {
+        // Fetch the new message with full profile info
+        const { data } = await supabase
+          .from('messages')
+          .select('*, sender:profiles(id, name, avatar_url)')
+          .eq('id', payload.new.id)
+          .single();
+
+        setMessages((prev) => [...prev, data]);
+      })
+      .subscribe();
+
+    return () => supabase.removeChannel(channel);
+  }, [chatId]);
+
+  return messages;
+}
+</code></pre>
+
+<h2>Edge Functions for Server-Side Logic</h2>
+<pre><code class="language-typescript">// supabase/functions/send-notification/index.ts (Deno)
+// Called from mobile app when a new message is sent
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+serve(async (req) => {
+  const { chatId, message, senderId } = await req.json();
+
+  const supabase = createClient(
+    Deno.env.get('SUPABASE_URL')!,
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!  // Service role bypasses RLS
+  );
+
+  // Get all chat participants except the sender
+  const { data: participants } = await supabase
+    .from('chat_members')
+    .select('user_id, profiles!inner(push_token)')
+    .eq('chat_id', chatId)
+    .neq('user_id', senderId);
+
+  // Send push notifications via Expo Push API
+  const tokens = participants?.map(p => p.profiles.push_token).filter(Boolean);
+  if (tokens?.length) {
+    await fetch('https://exp.host/--/api/v2/push/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(tokens.map(token => ({
+        to: token, title: 'New message', body: message,
+        data: { type: 'message', chatId }
+      })))
+    });
+  }
+
+  return new Response(JSON.stringify({ sent: tokens?.length }));
+});
+</code></pre>
+<pre><code class="language-jsx">// Invoke Edge Function from React Native
+const { data, error } = await supabase.functions.invoke('send-notification', {
+  body: { chatId, message: content, senderId: user.id }
+});
+</code></pre>

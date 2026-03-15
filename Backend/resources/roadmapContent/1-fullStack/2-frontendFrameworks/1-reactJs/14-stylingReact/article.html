@@ -1,0 +1,114 @@
+<h1>Styling Ecosystem in React</h1>
+<p>Modern React applications have moved away from global CSS files toward scoped, component-based styling strategies. Each approach has unique trade-offs regarding performance, developer experience, and scalability.</p>
+
+<h2>CSS Modules</h2>
+<p>CSS Modules are simply CSS files where all class names are hashed at build time locally to the component. This perfectly solves the global namespace collision problem of CSS.</p>
+
+<pre><code>/* Button.module.css */
+.primaryButton {
+  background-color: blue;
+  color: white;
+  border-radius: 4px;
+}
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}</code></pre>
+
+<pre><code>// Button.jsx
+import styles from './Button.module.css';
+
+export function Button({ disabled, children }) {
+  return (
+    &lt;button 
+      className={`${styles.primaryButton} ${disabled ? styles.disabled : ''}`}
+      disabled={disabled}
+    &gt;
+      {children}
+    &lt;/button&gt;
+  );
+}</code></pre>
+<p><strong>Pros:</strong> Zero runtime overhead, pure CSS support (Sass/SCSS), natively supported in Vite and Next.js.<br>
+<strong>Cons:</strong> Managing multiple classes dynamically can get messy.</p>
+
+<h2>CSS-in-JS (Styled Components)</h2>
+<p>Styled Components allows you to write actual CSS syntax directly inside JavaScript using tagged template literals. The styles are injected into a <code>&lt;style&gt;</code> tag at runtime.</p>
+
+<pre><code>import styled from 'styled-components';
+
+// Creates a React component with hashed class names attached
+const Wrapper = styled.button`
+  background-color: ${props =&gt; props.primary ? 'blue' : 'gray'};
+  color: white;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: ${props =&gt; props.disabled ? 'not-allowed' : 'pointer'};
+  
+  &amp;:hover {
+    background-color: ${props =&gt; props.primary ? 'darkblue' : 'darkgray'};
+  }
+`;
+
+export function Content() {
+  return (
+    &lt;div&gt;
+      &lt;Wrapper primary&gt;Submit&lt;/Wrapper&gt;
+      &lt;Wrapper disabled&gt;Loading&lt;/Wrapper&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+<p><strong>Pros:</strong> Excellent dynamic styling based on React props, completely scoped, easy to read.<br>
+<strong>Cons:</strong> Performance penalty at runtime, massive issues with Next.js Server Components, large bundle size.</p>
+
+<h2>Utility-First CSS (Tailwind)</h2>
+<p>Tailwind CSS provides low-level utility classes that let you build completely custom designs without ever leaving your JSX. It has become the de facto standard in modern React, especially in Next.js.</p>
+
+<pre><code>export function Card({ title, description, active }) {
+  return (
+    &lt;div className={`p-6 max-w-sm rounded-xl shadow-lg border 
+        ${active ? 'bg-blue-50 border-blue-500' : 'bg-white border-gray-200'}
+      `}
+    &gt;
+      &lt;h2 className="text-xl font-bold text-slate-800"&gt;{title}&lt;/h2&gt;
+      &lt;p className="mt-2 text-slate-500"&gt;{description}&lt;/p&gt;
+      &lt;button className="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"&gt;
+        Action
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+<h2>Handling Complex Classes with <code>clsx</code> and <code>tailwind-merge</code></h2>
+<p>As components get complex, writing ternary operators in template literals becomes unreadable. The <code>clsx</code> utility conditionally joins classes, and <code>tailwind-merge</code> ensures that conflicting Tailwind utilities override correctly.</p>
+
+<pre><code>import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+// Common utility pattern (often named cn.ts)
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
+// Usage in Component
+export function Badge({ variant = 'default', className }) {
+  return (
+    &lt;span className={cn(
+      "px-2 py-1 rounded text-sm font-medium",
+      {
+        "bg-blue-100 text-blue-800": variant === 'default',
+        "bg-red-100 text-red-800": variant === 'destructive',
+        "bg-green-100 text-green-800": variant === 'success',
+      },
+      className // allow consumer to override
+    )}&gt;
+      Hey
+    &lt;/span&gt;
+  );
+}</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>For Next.js / React Server Components projects, avoid runtime CSS-in-JS (Styled Components, Emotion). Use Tailwind or CSS Modules instead.</li>
+  <li>Use <code>clsx</code> or <code>classnames</code> instead of complex template literals (<code>${foo ? 'a' : 'b'}</code>) for managing class logic.</li>
+  <li>In component libraries (like shadcn/ui), create reusable styled components natively with Tailwind + the <code>cva</code> (class-variance-authority) library.</li>
+</ul>

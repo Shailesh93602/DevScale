@@ -1,0 +1,19 @@
+{
+  "title": "Print FooBar Alternately",
+  "slug": "print-foobar-alternately",
+  "difficulty": "Medium",
+  "category": "concurrency",
+  "points": 100,
+  "tags": ["concurrency", "synchronization", "alternating"],
+  "company_tags": ["Google", "Microsoft", "Apple"],
+  "topic_tags": ["Concurrency", "Synchronization", "Promises"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Number n indicating how many times to print foobar",
+  "output_format": "String 'foobar' repeated n times",
+  "example_input": "{\"n\": 2}",
+  "example_output": "{\"result\": \"foobarfoobar\"}",
+  "constraints": "1 <= n <= 1000",
+  "function_signature": "class FooBar { foo(printFoo: () => void): Promise<void>; bar(printBar: () => void): Promise<void> }",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "input": "{\"Sales\": [{\"sale_id\": 1, \"product_id\": 100, \"year\": 2008, \"quantity\": 10, \"price\": 5000}, {\"sale_id\": 2, \"product_id\": 100, \"year\": 2009, \"quantity\": 12, \"price\": 5000}, {\"sale_id\": 7, \"product_id\": 200, \"year\": 2011, \"quantity\": 15, \"price\": 9000}], \"Product\": [{\"product_id\": 100, \"product_name\": \"Nokia\"}, {\"product_id\": 200, \"product_name\": \"Apple\"}, {\"product_id\": 300, \"product_name\": \"Samsung\"}]}",
+    "output": "[{\"product_name\": \"Nokia\", \"year\": 2008, \"price\": 5000}, {\"product_name\": \"Nokia\", \"year\": 2009, \"price\": 5000}, {\"product_name\": \"Apple\", \"year\": 2011, \"price\": 9000}]",
+    "explanation": "Each sale joined with its product name.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Sales\": [{\"sale_id\": 1, \"product_id\": 1, \"year\": 2020, \"quantity\": 1, \"price\": 100}], \"Product\": [{\"product_id\": 1, \"product_name\": \"Widget\"}]}",
+    "output": "[{\"product_name\": \"Widget\", \"year\": 2020, \"price\": 100}]",
+    "explanation": "Single sale.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Sales\": [{\"sale_id\": 1, \"product_id\": 1, \"year\": 2020, \"quantity\": 5, \"price\": 200}, {\"sale_id\": 2, \"product_id\": 1, \"year\": 2021, \"quantity\": 3, \"price\": 250}], \"Product\": [{\"product_id\": 1, \"product_name\": \"Gadget\"}]}",
+    "output": "[{\"product_name\": \"Gadget\", \"year\": 2020, \"price\": 200}, {\"product_name\": \"Gadget\", \"year\": 2021, \"price\": 250}]",
+    "explanation": "Same product sold in different years.",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"Sales\": [{\"sale_id\": 1, \"product_id\": 1, \"year\": 2020, \"quantity\": 1, \"price\": 100}, {\"sale_id\": 2, \"product_id\": 2, \"year\": 2020, \"quantity\": 2, \"price\": 200}, {\"sale_id\": 3, \"product_id\": 3, \"year\": 2020, \"quantity\": 3, \"price\": 300}], \"Product\": [{\"product_id\": 1, \"product_name\": \"A\"}, {\"product_id\": 2, \"product_name\": \"B\"}, {\"product_id\": 3, \"product_name\": \"C\"}]}",
+    "output": "[{\"product_name\": \"A\", \"year\": 2020, \"price\": 100}, {\"product_name\": \"B\", \"year\": 2020, \"price\": 200}, {\"product_name\": \"C\", \"year\": 2020, \"price\": 300}]",
+    "explanation": "Three different products, each with one sale.",
+    "is_hidden": true
+  }
+]

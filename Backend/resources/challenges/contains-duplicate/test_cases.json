@@ -1,0 +1,14 @@
+[
+  { "input": "{\"nums\":[1,2,3,1]}", "output": "true", "explanation": "1 repeats", "is_hidden": false },
+  { "input": "{\"nums\":[1,2,3,4]}", "output": "false", "explanation": "All distinct", "is_hidden": false },
+  { "input": "{\"nums\":[1,1,1,3,3,4,3,2,4,2]}", "output": "true", "explanation": "Multiple repeats", "is_hidden": false },
+  { "input": "{\"nums\":[5]}", "output": "false", "explanation": "Only one element", "is_hidden": true },
+  { "input": "{\"nums\":[-1,-2,-3,-1]}", "output": "true", "explanation": "Negative numbers", "is_hidden": true },
+  { "input": "{\"nums\":[-1,-2,-3,1,2,3]}", "output": "false", "explanation": "Positives and negatives matching absolutes", "is_hidden": true },
+  { "input": "{\"nums\":[0,0]}", "output": "true", "explanation": "Two zeros", "is_hidden": true },
+  { "input": "{\"nums\":[1000000000, 1000000000]}", "output": "true", "explanation": "Large constraints numbers", "is_hidden": true },
+  { "input": "{\"nums\":[-1000000000, -1000000000]}", "output": "true", "explanation": "Small constraints numbers", "is_hidden": true },
+  { "input": "{\"nums\":[7,1,5,3,6,4,0,8,13,5]}", "output": "true", "explanation": "Random values with repeat at the end", "is_hidden": true },
+  { "input": "{\"nums\":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]}", "output": "false", "explanation": "Strict sequential without duplicates", "is_hidden": true },
+  { "input": "{\"nums\":[2,14,18,22,22]}", "output": "true", "explanation": "Adjacent duplicates at end", "is_hidden": true }
+]

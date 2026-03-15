@@ -1,0 +1,4 @@
+{
+    "name": "The N+1 Problem & DataLoader",
+    "description": "Solving GraphQL's biggest performance flaw. Understanding how nested resolvers trigger the N+1 database query problem, and fixing it efficiently using Facebook's DataLoader library."
+}

@@ -1,0 +1,118 @@
+{
+    "title": "RAG & Vector Databases Quiz",
+    "description": "Test your knowledge on Embeddings, Chunking, Cosine Similarity, and Retrieval algorithms.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What primary problem does the RAG (Retrieval-Augmented Generation) architecture fundamentally solve for Enterprise LLM applications?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It compresses the LLM to fit on a mobile device.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It bypasses the need for internet connectivity entirely.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It allows a completely frozen, standard LLM (which is ignorant of private company data) to securely access and 'read' frequently changing, proprietary, live data immediately prior to generating a response.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It automatically forces the LLM to process code faster.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What specifically occurs during the crucial 'Augmentation' phase of a RAG pipeline?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The LLM's architecture is literally augmented via downloading extra parameters.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The system secretly executes a SQL INSERT query into the database.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The application dynamically modifies the user's prompt immediately before sending it to the API, injecting the raw text of the freshly retrieved proprietary documents into the LLM's 'context window' as background knowledge.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The model deletes its previous memory to save RAM.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In the context of Vector Databases, what exactly is an 'Embedding' mathematically?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A raw HTML string containing hyperlinks.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A dense mathematical array (vector) composed of hundreds or thousands of floating-point numbers that spatially captures the abstract 'semantic meaning' of a chunk of text, enabling fuzzy semantic searches.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A 2D PNG image.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A JSON object holding exclusively API metadata.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "If you are processing a massive 200-page proprietary manual for ingestion into a RAG pipeline, why must you run a 'Chunking' algorithm on the text first?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Embedding an entire massive book into a single vector muddies the mathematics, causing the distinct meaning to be 'lost in the middle'. Chunking splits the text into smaller, overlapping chunks (e.g., 500 chars), creating precise vectors for every paragraph.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Because Vector Databases charge money precisely per byte.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because JSON strings cannot hold more than 100 words natively.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To prevent unauthorized users from stealing the PDFs.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How does a Vector Database physically determine which 'Chunks' of text are the most relevant directly to a user's typed question?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "By executing standard Regex commands.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By calculating the mathematical spatial distance (typically via Cosine Similarity) between the multi-dimensional vector representing the user's question, and millions of pre-stored vectors representing the document chunks.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "By searching Google silently in the background.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By asking the LLM to read every chunk sequentially in real-time.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

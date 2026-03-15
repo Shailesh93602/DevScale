@@ -1,0 +1,10 @@
+{
+  "typescript": "function maxProfit(prices: number[]): number {\n    \n};",
+  "javascript": "/**\n * @param {number[]} prices\n * @return {number}\n */\nvar maxProfit = function(prices) {\n    \n};",
+  "python": "class Solution:\n    def maxProfit(self, prices: List[int]) -> int:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public int maxProfit(int[] prices) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int maxProfit(vector<int>& prices) {\n        \n    }\n};",
+  "go": "func maxProfit(prices []int) int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn max_profit(prices: Vec<i32>) -> i32 {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int MaxProfit(int[] prices) {\n        \n    }\n}"
+}

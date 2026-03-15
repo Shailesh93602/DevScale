@@ -1,0 +1,20 @@
+{
+  "title": "Map Sum Pairs",
+  "slug": "map-sum-pairs",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["hash-table","string","design","trie"],
+  "company_tags": ["Apple","Google","Amazon"],
+  "topic_tags": ["tries","design","hash table"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "A series of function calls to `insert` and `sum`.",
+  "output_format": "The sum of all values whose keys match the prefix.",
+  "example_input": "[\"MapSum\", \"insert\", \"sum\", \"insert\", \"sum\"]\n[[], [\"apple\", 3], [\"ap\"], [\"app\", 2], [\"ap\"]]",
+  "example_output": "[null, null, 3, null, 5]",
+  "constraints": "- `1 <= key.length, prefix.length <= 50`\n- `key` and `prefix` consist of only lowercase English letters.\n- `1 <= val <= 1000`\n- At most `50` calls will be made to `insert` and `sum`.",
+  "function_signature": "class MapSum { constructor() {} insert(key: string, val: number): void {} sum(prefix: string): number {} }",
+  "status": "ACTIVE"
+}

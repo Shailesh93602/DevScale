@@ -1,0 +1,6 @@
+[
+  "First check: if total gas < total cost, it's impossible. No starting point will work.",
+  "If you start at station A and can't reach station B, then no station between A and B can be a valid start either.",
+  "Use a greedy approach: track current surplus. When it goes negative, reset the start to the next station.",
+  "A single pass is enough: track totalSurplus (feasibility check) and currentSurplus (to find the start point)."
+]

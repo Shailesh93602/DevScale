@@ -1,0 +1,132 @@
+<h1>State Machines & XState</h1>
+<p>As user interfaces grow more complex, boolean flags (<code>isLoading</code>, <code>isError</code>, <code>isSuccess</code>) inevitably lead to "impossible states." Finite State Machines (FSM) solve this by formally defining every possible state your app can be in, and strictly controlling the transitions between them.</p>
+
+<h2>The Problem with Boolean Flags</h2>
+<pre><code>// Typical React component state
+const [isLoading, setIsLoading] = useState(false);
+const [isSuccess, setIsSuccess] = useState(false);
+const [isError, setIsError] = useState(false);
+const [data, setData] = useState(null);
+
+async function fetchData() {
+  setIsLoading(true);
+  setIsError(false); // Easy to forget this!
+  try {
+    const res = await api.get();
+    setData(res);
+    setIsSuccess(true);
+    // Forgot to set isLoading to false!
+  } catch (err) {
+    setIsError(true);
+    setIsLoading(false);
+  }
+}
+
+// Result: You end up with impossible states, like:
+// { isLoading: true, isError: true, isSuccess: true }</code></pre>
+
+<h2>Introduction to State Machines</h2>
+<p>A finite state machine is a mathematical model of computation. It has a finite number of <strong>States</strong> (Idle, Loading, Success, Error). It can only be in exactly ONE state at a time. It also explicitly defines <strong>Transitions</strong>: specific events that move the machine from one state to another.</p>
+<p>If you are in the <code>Error</code> state, the machine ignores a <code>SUCCESS</code> event because that transition doesn't exist.</p>
+
+<h2>XState: Statecharts for JS</h2>
+<pre><code>// 1. Install xstate and @xstate/react
+import { setup, createMachine } from 'xstate';
+import { useMachine } from '@xstate/react';
+
+// 2. Define the exact shape of your state machine
+const fetchMachine = createMachine({
+  id: 'fetch',
+  // The starting point
+  initial: 'idle',
+  
+  // Define all possible states
+  states: {
+    idle: {
+      on: { FETCH: 'loading' } // Transition: when FETCH event happens, go to loading
+    },
+    loading: {
+      on: {
+        RESOLVE: 'success',
+        REJECT: 'error'
+      }
+    },
+    success: {
+      type: 'final' // Machine stops here
+    },
+    error: {
+      on: { RETRY: 'loading' }
+    }
+  }
+});</code></pre>
+
+<h2>Using XState in React</h2>
+<pre><code>function DataFetcher() {
+  // useMachine connects XState to React's lifecycle
+  const [state, send] = useMachine(fetchMachine);
+
+  return (
+    &lt;div&gt;
+      {/* state.matches() safely checks the current state */}
+      
+      {state.matches('idle') &amp;&amp; (
+        &lt;button onClick={() =&gt; send({ type: 'FETCH' })}&gt;Start Fetch&lt;/button&gt;
+      )}
+
+      {state.matches('loading') &amp;&amp; &lt;p&gt;Loading data...&lt;/p&gt;}
+
+      {state.matches('success') &amp;&amp; &lt;p&gt;Data loaded successfully!&lt;/p&gt;}
+
+      {state.matches('error') &amp;&amp; (
+        &lt;div&gt;
+          &lt;p&gt;Oh no, an error occurred.&lt;/p&gt;
+          &lt;button onClick={() =&gt; send({ type: 'RETRY' })}&gt;Try Again&lt;/button&gt;
+        &lt;/div&gt;
+      )}
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+<h2>Context: State Machine Data</h2>
+<p>While standard States define <em>where</em> the app is, <strong>Context</strong> (in XState terms) defines the <em>quantitative data</em> (like user inputs, fetched arrays, or counts). You use Actions to update Context.</p>
+
+<pre><code>import { assign } from 'xstate';
+
+const userMachine = createMachine({
+  id: 'user',
+  initial: 'loggedOut',
+  context: {
+    user: null, // quantitative data
+    retries: 0
+  },
+  states: {
+    loggedOut: {
+      on: { LOGIN: 'authenticating' }
+    },
+    authenticating: {
+      on: {
+        SUCCESS: {
+          target: 'loggedIn',
+          // Action to update context
+          actions: assign({
+            user: (context, event) =&gt; event.user
+          })
+        },
+        FAILURE: {
+          target: 'error',
+          actions: assign({
+            retries: (context) =&gt; context.retries + 1
+          })
+        }
+      }
+    },
+    // ...
+  }
+});</code></pre>
+
+<h2>Why use XState?</h2>
+<ul>
+  <li><strong>Visual Editing:</strong> XState generates visual charts of your logic structure. You can literally show the UI logic to a product manager before writing React code.</li>
+  <li><strong>No Impossible States:</strong> Bugs where <code>isLoading</code> and <code>isError</code> are true simultaneously disappear forever.</li>
+  <li><strong>Decoupling:</strong> The business logic (the machine) is completely separated from the UI component framework.</li>
+</ul>

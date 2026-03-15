@@ -1,0 +1,19 @@
+{
+  "title": "Longest Common Subsequence",
+  "slug": "longest-common-subsequence",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["dynamic-programming", "string"],
+  "company_tags": ["Amazon", "Google", "Microsoft", "Bloomberg", "Uber"],
+  "topic_tags": ["dynamic programming", "string matching"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Two strings `text1` and `text2`.",
+  "output_format": "The length of their longest common subsequence. Return `0` if there is no common subsequence.",
+  "example_input": "text1 = \"abcde\", text2 = \"ace\"",
+  "example_output": "3",
+  "constraints": "- `1 <= text1.length, text2.length <= 1000`\n- `text1` and `text2` consist of only lowercase English characters.",
+  "function_signature": "function longestCommonSubsequence(text1: string, text2: string): number {}",
+  "status": "ACTIVE"
+}

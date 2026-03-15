@@ -1,0 +1,96 @@
+{
+    "title": "HTML5 Basics Quiz",
+    "description": "Test your knowledge of HTML5 document structure and semantic tags.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Which tag is considered semantic in HTML5?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "<div>",
+                    "isCorrect": false
+                },
+                {
+                    "text": "<article>",
+                    "isCorrect": true
+                },
+                {
+                    "text": "<b>",
+                    "isCorrect": false
+                },
+                {
+                    "text": "<span>",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does <!DOCTYPE html> instruct the browser to do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Link the CSS file",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Render the page in HTML5 mode",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Declare page language as English",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Close the HTML document",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which meta tag is critical for mobile-responsive design?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "meta charset",
+                    "isCorrect": false
+                },
+                {
+                    "text": "meta description",
+                    "isCorrect": false
+                },
+                {
+                    "text": "meta viewport",
+                    "isCorrect": true
+                },
+                {
+                    "text": "meta robots",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How many <h1> tags should a page typically have?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "As many as needed",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Exactly one",
+                    "isCorrect": true
+                },
+                {
+                    "text": "One per section",
+                    "isCorrect": false
+                },
+                {
+                    "text": "None — use CSS for titles",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

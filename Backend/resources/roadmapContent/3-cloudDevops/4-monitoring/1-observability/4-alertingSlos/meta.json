@@ -1,0 +1,4 @@
+{
+    "name": "Alerting & SLOs",
+    "description": "Building reliable alerting systems that reduce alert fatigue. Defining SLIs (Service Level Indicators) and SLOs (Service Level Objectives), writing multi-window multi-burn-rate alerts in Prometheus and Alertmanager, and routing alerts to PagerDuty and Slack with appropriate severity levels."
+}

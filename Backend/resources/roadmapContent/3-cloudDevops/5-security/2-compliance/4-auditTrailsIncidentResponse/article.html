@@ -1,0 +1,64 @@
+<h1>Audit Trails & Incident Response</h1>
+<p>A security incident without an audit trail is like a crime scene with no witnesses. When a breach occurs — and in cloud environments, assuming it will eventually occur is the realistic security posture — your ability to respond quickly and limit damage depends entirely on having comprehensive, tamper-resistant records of what happened, when, and who was responsible.</p>
+
+<h2>AWS CloudTrail: The Immutable Audit Log</h2>
+<p><strong>AWS CloudTrail</strong> records every API call made to AWS — by humans, applications, Lambda functions, and automated tools. Every <code>CreateBucket</code>, <code>DeleteUser</code>, <code>DescribeInstances</code>, and <code>AssumeRole</code> call is recorded with the caller's identity, IP address, timestamp, and parameters:</p>
+<pre><code class="language-json">{
+  "eventTime": "2024-03-10T08:23:11Z",
+  "eventName": "DeleteBucket",
+  "userIdentity": {
+    "type": "IAMUser",
+    "arn": "arn:aws:iam::123456789:user/john.doe",
+    "accessKeyId": "AKIAIOSFODNN7EXAMPLE"
+  },
+  "sourceIPAddress": "185.234.218.17",  // ← Unfamiliar IP!
+  "requestParameters": {
+    "bucketName": "production-backups"  // ← Production backup bucket deleted!
+  }
+}
+</code></pre>
+<pre><code class="language-bash"># Send CloudTrail logs to S3 with Object Lock (WORM — cannot be deleted for 7 years)
+aws cloudtrail create-trail \
+  --name production-audit \
+  --s3-bucket-name immutable-audit-logs \
+  --is-multi-region-trail \
+  --enable-log-file-validation  # Detects if log files were tampered with
+
+# Query CloudTrail with Athena — who deleted the production database?
+SELECT eventTime, userIdentity.arn, sourceIPAddress, requestParameters
+FROM cloudtrail_logs
+WHERE eventName IN ('DeleteDBInstance', 'ModifyDBInstance')
+  AND eventTime > '2024-03-10'
+ORDER BY eventTime DESC;
+</code></pre>
+
+<h2>Incident Response Runbooks</h2>
+<p>A security incident is the worst time to figure out your response process. Pre-built runbooks with specific, scripted steps for common scenarios reduce response time from hours to minutes:</p>
+<pre><code class="language-text">RUNBOOK: Compromised AWS Access Key
+─────────────────────────────────────
+Step 1: Immediately deactivate the specific access key (NOT delete — preserve for forensics)
+        aws iam update-access-key --access-key-id AKIAEXAMPLE --status Inactive
+
+Step 2: Revoke all active sessions for the IAM user
+        aws iam delete-login-profile --user-name john.doe  (if console access)
+
+Step 3: Query CloudTrail for all actions taken by this key in last 30 days
+        SELECT * FROM cloudtrail_logs WHERE userIdentity.accessKeyId = 'AKIAEXAMPLE'
+
+Step 4: Assess blast radius — what AWS resources were accessed/modified?
+
+Step 5: Notify security team and CISO. Begin GDPR 72-hour breach notification timer
+        if personal data was potentially accessed.
+
+Step 6: Create new key for the user only after root cause is understood.
+Step 7: Post-incident review — how did the key get exposed?
+</code></pre>
+
+<h2>Blameless Post-Incident Reviews</h2>
+<p>After every significant security incident, conduct a <strong>blameless post-incident review</strong>. The goal is systemic improvement, not finding someone to blame:</p>
+<ul>
+  <li><strong>Timeline:</strong> Reconstruct the exact sequence of events from CloudTrail, logs, and team messages</li>
+  <li><strong>Contributing factors:</strong> What technical and organizational conditions allowed this to happen?</li>
+  <li><strong>Action items:</strong> Specific, owned, time-bounded improvements — automated key rotation, better monitoring alerts, access review process</li>
+</ul>
+<p>Organizations that conduct blameless reviews improve faster — engineers report incidents honestly and propose improvements proactively rather than hiding mistakes out of fear of punishment.</p>

@@ -1,0 +1,75 @@
+<h1>The CSS Box Model</h1>
+<p>Every HTML element is a rectangular box. The <strong>box model</strong> defines how its total size is calculated — understanding it is fundamental to controlling layout and spacing.</p>
+
+<h2>The Four Layers</h2>
+<pre><code>┌──────────────────────────────┐
+│           Margin             │  ← Space outside the border
+│   ┌─────────────────────┐   │
+│   │       Border        │   │  ← The visible outline
+│   │  ┌───────────────┐  │   │
+│   │  │    Padding    │  │   │  ← Space inside the border
+│   │  │  ┌─────────┐  │  │   │
+│   │  │  │ Content │  │  │   │  ← Text, image, etc.
+│   │  │  └─────────┘  │  │   │
+│   │  └───────────────┘  │   │
+│   └─────────────────────┘   │
+└──────────────────────────────┘</code></pre>
+
+<h2>box-sizing: border-box</h2>
+<p>By default (<code>content-box</code>), width/height only measures the content area. Padding and border are added on <em>top</em> of that, making sizing confusing. Use <code>border-box</code> globally:</p>
+<pre><code>*,
+*::before,
+*::after {
+  box-sizing: border-box; /* Padding & border are INCLUDED in width/height */
+}</code></pre>
+
+<h2>CSS Selectors Cheatsheet</h2>
+<pre><code>/* Type selector */
+p { color: gray; }
+
+/* Class selector */
+.card { background: white; }
+
+/* ID selector (use sparingly) */
+#hero { font-size: 2rem; }
+
+/* Attribute selector */
+input[type="email"] { border-color: blue; }
+
+/* Pseudo-class */
+a:hover { text-decoration: underline; }
+li:nth-child(2n) { background: #f5f5f5; }
+input:focus { border-color: #6366f1; }
+
+/* Pseudo-element */
+p::first-line { font-weight: bold; }
+.btn::before { content: "→ "; }
+
+/* Child combinator */
+nav > a { margin: 0 8px; }
+
+/* Adjacent sibling */
+h2 + p { margin-top: 0; }
+
+/* General sibling */
+h2 ~ p { color: #555; }
+
+/* Descendant */
+.card p { font-size: 0.9rem; }</code></pre>
+
+<h2>CSS Specificity</h2>
+<p>When multiple rules target the same element, specificity determines which wins:</p>
+<ul>
+  <li><strong>Inline styles</strong> → 1,0,0,0</li>
+  <li><strong>ID selectors</strong> → 0,1,0,0</li>
+  <li><strong>Class/attribute/pseudo-class</strong> → 0,0,1,0</li>
+  <li><strong>Element/pseudo-element</strong> → 0,0,0,1</li>
+</ul>
+<pre><code>/* Specificity: 0,0,1,1 */
+.card p { color: blue; }
+
+/* Specificity: 0,1,0,0 — wins! */
+#hero { color: red; }</code></pre>
+
+<h2>The Cascade</h2>
+<p>When specificity is equal, the <strong>last rule wins</strong> (cascade). Use this intentionally by ordering your CSS from general to specific.</p>

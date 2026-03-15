@@ -1,0 +1,6 @@
+[
+  "As the array is sorted (but rotated), an O(log n) requirement highly suggests adapting Binary Search.",
+  "In any rotated sorted array, if you pick `mid`, at least one half (left to mid OR mid to right) will be strictly sorted.",
+  "First, find which half is properly sorted. You can check if the left half is sorted by comparing `nums[left]` with `nums[mid]`.",
+  "Once you know which half is sorted, check if your `target` lies within the boundaries of that strictly sorted half. If it does, discard the other half. If it doesn't, the target MUST be in the unsorted half."
+]

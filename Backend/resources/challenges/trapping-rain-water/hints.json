@@ -1,0 +1,6 @@
+[
+  "Consider how much water can be trapped at any single index `i`. It depends purely on the maximum height to its left, the maximum height to its right, and its own height.",
+  "Specifically, the water at index `i` is `Math.min(max_left, max_right) - height[i]` (if it's positive).",
+  "You could pre-calculate the maximum height to the left for every index and store it in an array, then do the same for the right. This gives an O(n) time, O(n) space solution.",
+  "To optimize space to O(1), try a Two Pointer approach. Start pointers at both ends (`left = 0`, `right = n - 1`). Maintain `maxLeft` and `maxRight` variables. Move the pointer corresponding to the smaller maximum inward, adding water as you go."
+]

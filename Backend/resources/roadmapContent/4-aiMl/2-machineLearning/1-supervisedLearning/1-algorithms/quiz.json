@@ -1,0 +1,74 @@
+{
+    "title": "Supervised Learning Quiz",
+    "description": "Test your ML algorithms and model training knowledge.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the main difference between a Random Forest and XGBoost?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Random Forest uses decision trees; XGBoost uses neural networks",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Random Forest trains trees independently (bagging); XGBoost trains trees sequentially to correct previous errors (boosting)",
+                    "isCorrect": true
+                },
+                {
+                    "text": "XGBoost can only handle classification; Random Forest handles both",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Random Forest is for regression; XGBoost is for classification",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does L2 regularisation (Ridge) do to a linear model?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It removes features with zero importance",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It penalises large weights, reducing model complexity and helping prevent overfitting",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It increases the learning rate",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It forces the model to use all features equally",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does cross-validation do in GridSearchCV?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It trains the model multiple times with different random seeds",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It evaluates model performance on multiple held-out data splits to get a reliable estimate",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It splits the dataset across multiple CPU cores",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It validates that hyperparameters are within acceptable ranges",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

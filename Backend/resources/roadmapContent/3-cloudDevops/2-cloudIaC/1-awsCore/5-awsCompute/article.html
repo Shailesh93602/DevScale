@@ -1,0 +1,66 @@
+<h1>AWS Compute: EC2, Lambda & ECS</h1>
+<p>AWS offers multiple compute services operating at different levels of abstraction — from raw virtual machines to fully serverless functions. Knowing when to use each is a core cloud architecture skill.</p>
+
+<h2>Amazon EC2: Virtual Machines</h2>
+<p><strong>Amazon EC2 (Elastic Compute Cloud)</strong> provides resizable virtual machines (instances) in the cloud. You choose the instance type (CPU, RAM, GPU, storage), the operating system, and take full control of the server environment.</p>
+
+<h3>Instance Types</h3>
+<pre><code class="language-text">t3.micro    — Burstable general purpose, dev/test, low traffic webhooks
+m6i.xlarge  — Balanced CPU/RAM, general application servers (m=memory+compute balanced)
+c6i.2xlarge — Compute optimized, CPU-intensive workloads like encoding (c=compute)
+r6i.4xlarge — Memory optimized, in-memory databases, large caches (r=RAM)
+p3.2xlarge  — GPU instance, ML training with NVIDIA V100 (p=parallel processing)
+</code></pre>
+
+<h3>Auto Scaling Groups (ASG)</h3>
+<p>Auto Scaling Groups automatically add or remove EC2 instances based on demand. You define: minimum instances, maximum instances, and scaling policies triggered by CloudWatch alarms (e.g., scale out when average CPU > 70% for 5 minutes):</p>
+<pre><code class="language-yaml"># ASG configuration (simplified)
+MinSize: 2          # Always keep at least 2 instances running
+MaxSize: 20         # Never exceed 20 instances
+DesiredCapacity: 4  # Start with 4, scale from there
+
+ScalingPolicy:
+  ScaleOut: Add 2 instances when CPU > 70% for 5 minutes
+  ScaleIn:  Remove 1 instance when CPU < 30% for 15 minutes
+</code></pre>
+
+<h2>AWS Lambda: Serverless Functions</h2>
+<p><strong>AWS Lambda</strong> runs your code without managing any servers. You write a function, define the trigger (an API Gateway request, an S3 event, a scheduled CloudWatch Events rule), and AWS handles all infrastructure, OS patches, and scaling automatically.</p>
+<pre><code class="language-python"># Lambda Function Handler (Python)
+import json
+
+def handler(event, context):
+    # 'event' contains the trigger data (e.g., API request body)
+    user_id = event['pathParameters']['userId']
+    
+    # Your business logic here
+    user = fetch_user(user_id)
+    
+    return {
+        'statusCode': 200,
+        'body': json.dumps(user)
+    }
+</code></pre>
+<p><strong>Cold Starts:</strong> The first invocation of a Lambda function (or after a period of inactivity) requires AWS to provision a new container, which adds 100ms-2s of latency. Mitigate with Provisioned Concurrency (pre-warm a specified number of execution environments) for latency-sensitive APIs.</p>
+
+<h2>Amazon ECS with Fargate: Managed Containers</h2>
+<p><strong>Amazon ECS (Elastic Container Service)</strong> runs Docker containers on AWS. With the <strong>Fargate</strong> launch type, AWS manages all the underlying EC2 instances — you just define the container specs and AWS runs them:</p>
+<pre><code class="language-json">{
+  "family": "api-task",
+  "containerDefinitions": [{
+    "name": "api",
+    "image": "123456789.dkr.ecr.us-east-1.amazonaws.com/my-api:latest",
+    "cpu": 256,
+    "memory": 512,
+    "portMappings": [{"containerPort": 3000}],
+    "environment": [{"name": "DB_HOST", "value": "rds.internal"}],
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {"awslogs-group": "/ecs/api"}
+    }
+  }],
+  "requiresCompatibilities": ["FARGATE"],
+  "networkMode": "awsvpc"
+}
+</code></pre>
+<p>ECS Fargate is the standard choice for containerized microservices when you want the DevOps simplicity of serverless but need persistent long-running container processes (unlike Lambda which has a 15-minute maximum execution time).</p>

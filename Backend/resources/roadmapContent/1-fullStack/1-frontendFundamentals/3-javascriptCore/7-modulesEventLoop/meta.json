@@ -1,0 +1,4 @@
+{
+    "name": "JavaScript Modules & the Browser Event Loop",
+    "description": "ES Modules (import/export), module bundlers, the call stack, event loop, microtask queue, and how JavaScript handles concurrency."
+}

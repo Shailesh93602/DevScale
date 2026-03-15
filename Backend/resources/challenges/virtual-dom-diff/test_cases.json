@@ -1,0 +1,86 @@
+[
+  {
+    "input": {
+      "old": { "type": "div", "props": {}, "children": ["Hello"] },
+      "new": { "type": "div", "props": {}, "children": ["World"] }
+    },
+    "output": { "type": "UPDATE", "child_patch": "REPLACE" },
+    "explanation": "Text child changed — UPDATE with child REPLACE",
+    "is_hidden": false
+  },
+  {
+    "input": {
+      "old": { "type": "div", "props": {}, "children": [] },
+      "new": { "type": "span", "props": {}, "children": [] }
+    },
+    "output": { "type": "REPLACE" },
+    "explanation": "Different element types — full replacement",
+    "is_hidden": false
+  },
+  {
+    "input": {
+      "old": { "type": "div", "props": { "class": "old" }, "children": [] },
+      "new": { "type": "div", "props": { "class": "new" }, "children": [] }
+    },
+    "output": { "type": "UPDATE", "props": [{ "key": "class", "value": "new" }] },
+    "explanation": "Same type, changed prop — UPDATE with prop patch",
+    "is_hidden": false
+  },
+  {
+    "input": {
+      "old": { "type": "div", "props": {}, "children": [] },
+      "new": { "type": "div", "props": {}, "children": [] }
+    },
+    "output": null,
+    "explanation": "Identical nodes — no patch needed",
+    "is_hidden": true
+  },
+  {
+    "input": { "old": null, "new": { "type": "div", "props": {}, "children": [] } },
+    "output": { "type": "CREATE" },
+    "explanation": "Old is null — CREATE patch",
+    "is_hidden": true
+  },
+  {
+    "input": { "old": { "type": "div", "props": {}, "children": [] }, "new": null },
+    "output": { "type": "REMOVE" },
+    "explanation": "New is null — REMOVE patch",
+    "is_hidden": true
+  },
+  {
+    "input": {
+      "old": { "type": "ul", "props": {}, "children": [{ "type": "li", "props": {}, "children": ["A"] }] },
+      "new": { "type": "ul", "props": {}, "children": [{ "type": "li", "props": {}, "children": ["A"] }, { "type": "li", "props": {}, "children": ["B"] }] }
+    },
+    "output": { "type": "UPDATE", "children_length": 2, "second_child": "CREATE" },
+    "explanation": "New child added — UPDATE with CREATE for second child",
+    "is_hidden": true
+  },
+  {
+    "input": {
+      "old": { "type": "div", "props": { "id": "x", "class": "a" }, "children": [] },
+      "new": { "type": "div", "props": { "id": "x" }, "children": [] }
+    },
+    "output": { "type": "UPDATE", "removed_prop": "class" },
+    "explanation": "Removed prop — UPDATE with prop set to undefined",
+    "is_hidden": true
+  },
+  {
+    "input": {
+      "old": "Hello",
+      "new": "Hello"
+    },
+    "output": null,
+    "explanation": "Identical text nodes — no patch",
+    "is_hidden": true
+  },
+  {
+    "input": {
+      "old": "Hello",
+      "new": { "type": "span", "props": {}, "children": ["Hello"] }
+    },
+    "output": { "type": "REPLACE" },
+    "explanation": "Text to element — REPLACE",
+    "is_hidden": true
+  }
+]

@@ -1,0 +1,99 @@
+<h1>Building REST APIs with Express.js</h1>
+<p>Express is the most popular Node.js framework. It's minimal and unopinionated — giving you the tools to build APIs without imposing a rigid structure.</p>
+
+<h2>REST API Conventions</h2>
+<pre><code>GET    /api/posts       → List all posts
+GET    /api/posts/:id   → Get one post
+POST   /api/posts       → Create a post
+PUT    /api/posts/:id   → Replace a post fully
+PATCH  /api/posts/:id   → Update post partially
+DELETE /api/posts/:id   → Delete a post</code></pre>
+
+<h2>HTTP Status Codes</h2>
+<pre><code>200 OK            — Successful GET, PATCH
+201 Created       — Successful POST
+204 No Content    — Successful DELETE
+400 Bad Request   — Invalid input
+401 Unauthorized  — Not authenticated
+403 Forbidden     — Authenticated but not allowed
+404 Not Found     — Resource doesn't exist
+409 Conflict      — Duplicate data
+422 Unprocessable — Validation errors
+500 Internal Server Error — Unexpected server crash</code></pre>
+
+<h2>Basic Express App</h2>
+<pre><code>import express, { Request, Response, NextFunction } from "express";
+import cors from "cors";
+
+const app = express();
+
+// Middleware
+app.use(express.json());        // Parse JSON bodies
+app.use(cors({ origin: process.env.FRONTEND_URL }));
+
+// Routes
+app.get("/api/health", (req: Request, res: Response) =&gt; {
+  res.json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
+app.listen(3000, () =&gt; console.log("🚀 Server on http://localhost:3000"));</code></pre>
+
+<h2>Route Structure with Express Router</h2>
+<pre><code>// routes/users.router.ts
+import { Router } from "express";
+const router = Router();
+
+router.get("/",     getUsers);
+router.get("/:id",  getUserById);
+router.post("/",    createUser);
+router.patch("/:id", updateUser);
+router.delete("/:id", deleteUser);
+
+export default router;
+
+// app.ts
+app.use("/api/users", usersRouter);</code></pre>
+
+<h2>Middleware Pattern</h2>
+<pre><code>// Middleware = (req, res, next) functions chained together
+// Auth middleware
+function authGuard(req: Request, res: Response, next: NextFunction) {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ error: "Unauthorized" });
+  try {
+    req.user = verifyToken(token); // Attach user to request
+    next(); // Pass to next middleware/route
+  } catch {
+    res.status(401).json({ error: "Invalid token" });
+  }
+}
+
+// Request logger
+function logger(req: Request, res: Response, next: NextFunction) {
+  console.log(`${req.method} ${req.path} — ${Date.now()}`);
+  next();
+}
+
+// Apply middleware
+router.get("/profile", authGuard, getProfile); // Route-level
+app.use(logger); // App-level</code></pre>
+
+<h2>Global Error Handler</h2>
+<pre><code>// Must have 4 params — Express recognises it as error handler
+app.use((err: Error, req: Request, res: Response, next: NextFunction) =&gt; {
+  console.error(err.stack);
+  res.status(500).json({
+    error: process.env.NODE_ENV === "production" ? "Internal server error" : err.message
+  });
+});
+
+// Use in routes
+router.get("/:id", async (req, res, next) =&gt; {
+  try {
+    const user = await UserService.findById(req.params.id);
+    if (!user) return res.status(404).json({ error: "User not found" });
+    res.json(user);
+  } catch (err) {
+    next(err); // Passes to error handler
+  }
+});</code></pre>

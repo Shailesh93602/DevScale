@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "Why is losing your Android release keystore file a catastrophic, unrecoverable event for your published app?",
+            "options": [
+                "A lost keystore can be recovered from Google Play Console within 30 days.",
+                "Google Play requires app updates to be signed with the same keystore as the original release. If you lose the keystore, you cannot sign new updates — your published app becomes permanently unmaintainable. Google Play App Signing can protect against this: you upload your app signing key to Google who re-signs your releases, keeping a secure backup. Without this protection, teams have been forced to publish a completely new app (different package name) and lose all their existing users and ratings.",
+                "A lost keystore only prevents new feature releases — security patches can still be deployed.",
+                "You can reset the keystore by contacting Google Play support with proof of identity."
+            ],
+            "answer": "Google Play requires app updates to be signed with the same keystore as the original release. If you lose the keystore, you cannot sign new updates — your published app becomes permanently unmaintainable. Google Play App Signing can protect against this: you upload your app signing key to Google who re-signs your releases, keeping a secure backup. Without this protection, teams have been forced to publish a completely new app (different package name) and lose all their existing users and ratings.",
+            "explanation": "EAS Build manages your Android keystore and backs it up to Expo's servers — use eas credentials to verify and download your keystore independently. Store it in a password manager and your company's secure secret vault. This is not a 'developer detail' — losing it is a business-continuity issue."
+        },
+        {
+            "question": "What is the difference between an APK and an Android App Bundle (AAB), and why does Google Play require AAB for new apps?",
+            "options": [
+                "APKs are for development testing only; AABs are required for release builds.",
+                "An APK (Android Package) contains compiled code and resources for ALL device architectures and screen densities in one file. An AAB (Android App Bundle) contains the same content but in an intermediate format that Google Play uses to generate optimized APKs per device. A user with a 64-bit device gets a smaller APK containing only 64-bit code and their screen's density resources. Result: 30-50% smaller download sizes, which directly improves install conversion rates.",
+                "AAB provides better security through code obfuscation compared to APK.",
+                "APK supports Android 5+; AAB requires Android 8 or higher."
+            ],
+            "answer": "An APK (Android Package) contains compiled code and resources for ALL device architectures and screen densities in one file. An AAB (Android App Bundle) contains the same content but in an intermediate format that Google Play uses to generate optimized APKs per device. A user with a 64-bit device gets a smaller APK containing only 64-bit code and their screen's density resources. Result: 30-50% smaller download sizes, which directly improves install conversion rates.",
+            "explanation": "Average app size reduction using AABs: ~35% smaller install size. For developing countries with limited cellular data plans and 16GB phones, this difference directly impacts whether users download and keep your app. EAS Build produces AABs for production (--profile production) and APKs for internal testing (--profile preview)."
+        },
+        {
+            "question": "Why should you implement in-app rating prompts ONLY after users complete a core positive action, rather than on app open or after a timer?",
+            "options": [
+                "Apple and Google require rating prompts to be shown only after user actions.",
+                "Users are most likely to leave positive reviews immediately after experiencing value — completing a purchase, finishing a workout, successfully sending money. Prompting on app open catches users in any mood (possibly rushed, annoyed by frequent launch prompts). Prompting after a negative experience (support ticket, error) catches frustrated users. One negative review can suppress install conversions for weeks. The prompt timing is the biggest controllable variable in your average star rating.",
+                "Rating prompts shown on app open are rejected by Apple App Store review.",
+                "In-app rating prompts only work if the user hasn't previously rated the app."
+            ],
+            "answer": "Users are most likely to leave positive reviews immediately after experiencing value — completing a purchase, finishing a workout, successfully sending money. Prompting on app open catches users in any mood (possibly rushed, annoyed by frequent launch prompts). Prompting after a negative experience (support ticket, error) catches frustrated users. One negative review can suppress install conversions for weeks. The prompt timing is the biggest controllable variable in your average star rating.",
+            "explanation": "A/B test result from Duolingo: rating prompt shown after completing a lesson → 4.7 average stars. Same prompt shown on app open (2nd session) → 4.1 average stars. The 0.6 star difference is the timing alone. Also: SKStoreReviewRequest limits the OS to showing the prompt at most 3 times per year — use it wisely."
+        }
+    ]
+}

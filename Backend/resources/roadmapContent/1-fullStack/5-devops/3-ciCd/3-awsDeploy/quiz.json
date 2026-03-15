@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary function of the PM2 Process Manager on an AWS EC2 instance?",
+            "options": [
+                "To compile TypeScript code into plain JavaScript.",
+                "To detach the Node.js application from the active SSH terminal session, running it perpetually in the background, and automatically restarting the process if it randomly crashes.",
+                "To protect the server from DDoS attacks.",
+                "To automatically provision the AWS server."
+            ],
+            "answer": "To detach the Node.js application from the active SSH terminal session, running it perpetually in the background, and automatically restarting the process if it randomly crashes.",
+            "explanation": "Without PM2, the moment you close your terminal or your internet connection drops, the standard `node server.js` command dies, taking your entire production backend offline."
+        },
+        {
+            "question": "Why is an 'Nginx Reverse Proxy' placed in front of a Node.js server on a production machine?",
+            "options": [
+                "Because Node.js cannot execute asynchronous code.",
+                "To intercept all inbound public web traffic hitting port 80 or 443, securely funneling it internally to the isolated Node.js application running on a secondary port (like 3000).",
+                "Because Nginx directly writes to PostgreSQL databases.",
+                "Because AWS requires Nginx by default to boot an EC2 machine."
+            ],
+            "answer": "To intercept all inbound public web traffic hitting port 80 or 443, securely funneling it internally to the isolated Node.js application running on a secondary port (like 3000).",
+            "explanation": "Node.js shouldn't be exposed directly to the wild internet on port 80. Nginx acts as a tough, ultra-fast shield, handling SSL encryption, rate limiting, and static file serving, only passing clean requests to Node."
+        },
+        {
+            "question": "What protocol and tool are typically used to securely connect directly to your raw AWS EC2 server terminal from your laptop?",
+            "options": [
+                "FTP (File Transfer Protocol)",
+                "SSH (Secure Shell) utilizing a cryptographic `.pem` or `.pub` private/public key pair.",
+                "HTTP over port 80.",
+                "WebSockets."
+            ],
+            "answer": "SSH (Secure Shell) utilizing a cryptographic `.pem` or `.pub` private/public key pair.",
+            "explanation": "You cannot simply type a password to log into an enterprise server. You must possess the mathematical private key file on your computer to initiate the SSH connection."
+        },
+        {
+            "question": "If you want to transition your bare IP address into a professional, human-readable Custom Domain (e.g. `myapp.com`), what must you configure?",
+            "options": [
+                "A SQL Foreign Key relationship.",
+                "A DNS 'A-Record' on your domain registrar pointing directly to your EC2 instance's static public IPv4 address.",
+                "A GitHub action.",
+                "An NPM package."
+            ],
+            "answer": "A DNS 'A-Record' on your domain registrar pointing directly to your EC2 instance's static public IPv4 address.",
+            "explanation": "DNS is the phonebook of the internet. The A-Record physically links the text `myapp.com` to the numbers `13.59.34.12`."
+        },
+        {
+            "question": "What is the industry-standard tool for completely automating the generation of free SSL/TLS certificates (HTTPS) for an Nginx server?",
+            "options": [
+                "Let's Encrypt / Certbot",
+                "PM2",
+                "React Router",
+                "Docker Compose"
+            ],
+            "answer": "Let's Encrypt / Certbot",
+            "explanation": "Certbot mathematically verifies that you own the domain, generates modern cryptographic certificates, and even directly rewrites your Nginx configuration files to force all traffic to securely utilize HTTPS on port 443."
+        }
+    ]
+}

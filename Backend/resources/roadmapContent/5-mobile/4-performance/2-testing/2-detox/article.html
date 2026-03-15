@@ -1,0 +1,136 @@
+<h1>End-to-End Testing with Detox</h1>
+<p>Unit tests verify individual components in isolation, but they can't catch integration failures — bugs that only appear when multiple components interact and real user flows run end-to-end. <strong>Detox</strong> is the leading end-to-end (E2E) testing framework for React Native, developed by Wix. It controls a real or simulated device — automatically tapping buttons, entering text, swiping, and verifying UI state — exactly as a real user would.</p>
+
+<h2>Jest vs Detox: Complementary, Not Competing</h2>
+<table>
+  <thead><tr><th>Aspect</th><th>Jest (Unit/Integration)</th><th>Detox (E2E)</th></tr></thead>
+  <tbody>
+    <tr><td>Runs on</td><td>Node.js (no device needed)</td><td>iOS Simulator / Android Emulator / Real device</td></tr>
+    <tr><td>Speed</td><td>Milliseconds per test</td><td>Seconds to minutes per test</td></tr>
+    <tr><td>Tests</td><td>Individual components, hooks, utilities</td><td>Full user flows across multiple screens</td></tr>
+    <tr><td>When to write</td><td>For every function and component</td><td>For critical business flows (login, checkout, onboarding)</td></tr>
+  </tbody>
+</table>
+
+<h2>Installing Detox</h2>
+<pre><code">npm install detox --save-dev
+npm install jest-circus --save-dev
+
+# Install Detox CLI globally
+npm install -g detox-cli
+
+# For iOS — also install:
+brew tap wix/brew && brew install applesimutils</code></pre>
+
+<h2>Configuration</h2>
+<pre><code"">// .detoxrc.js
+/** @type {Detox.DetoxConfig} */
+module.exports = {
+  testRunner: {
+    args: { '$0': 'jest', config: 'e2e/jest.config.js' },
+    jest: { setupTimeout: 120000 }
+  },
+  apps: {
+    'ios.debug': {
+      type: 'ios.app',
+      binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/YourApp.app',
+      build: 'xcodebuild -workspace ios/YourApp.xcworkspace -scheme YourApp -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build'
+    },
+    'android.debug': {
+      type: 'android.apk',
+      binaryPath: 'android/app/build/outputs/apk/debug/app-debug.apk',
+      build: 'cd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug',
+    }
+  },
+  devices: {
+    simulator: { type: 'ios.simulator', device: { type: 'iPhone 15' } },
+    emulator: { type: 'android.emulator', device: { avdName: 'Pixel_6_API_33' } }
+  },
+  configurations: {
+    'ios.sim.debug': { device: 'simulator', app: 'ios.debug' },
+    'android.emu.debug': { device: 'emulator', app: 'android.debug' }
+  }
+};</code></pre>
+
+<h2>Writing E2E Tests</h2>
+<pre><code"">// e2e/login.test.ts
+describe('Login Flow', () => {
+  beforeAll(async () => {
+    await device.launchApp({ newInstance: true });
+  });
+
+  beforeEach(async () => {
+    await device.reloadReactNative();
+  });
+
+  it('should complete login and reach home screen', async () => {
+    // Verify we're on the login screen
+    await expect(element(by.text('Welcome Back'))).toBeVisible();
+
+    // Enter credentials using testID (add testID to your TextInput components)
+    await element(by.id('email-input')).typeText('user@example.com');
+    await element(by.id('password-input')).typeText('Password123');
+    
+    // Dismiss keyboard before tapping the button
+    await element(by.id('password-input')).tapReturnKey();
+    
+    // Tap the login button
+    await element(by.text('Sign In')).tap();
+
+    // Assert we navigated to the home screen
+    await waitFor(element(by.text('Your Dashboard')))
+      .toBeVisible()
+      .withTimeout(5000); // Wait up to 5s for navigation to complete
+  });
+
+  it('should show error for invalid credentials', async () => {
+    await element(by.id('email-input')).typeText('wrong@email.com');
+    await element(by.id('password-input')).typeText('WrongPassword');
+    await element(by.text('Sign In')).tap();
+
+    await expect(element(by.text('Invalid email or password'))).toBeVisible();
+  });
+});</code></pre>
+
+<h2>Common Matchers and Actions</h2>
+<pre><code"">// Matchers — finding elements
+by.id('testID')          // by testID prop (most reliable)
+by.text('Submit')        // by visible text content
+by.type('RCTTextInput')  // by native component type
+by.label('Username')     // by accessibility label
+
+// Actions — interacting
+await element(...).tap()
+await element(...).longPress()
+await element(...).typeText('hello')
+await element(...).clearText()
+await element(...).scroll(200, 'down')
+await element(...).swipe('left', 'fast')
+
+// Expectations — assertions
+await expect(element(...)).toBeVisible()
+await expect(element(...)).toExist()
+await expect(element(...)).not.toBeVisible()
+await expect(element(...)).toHaveText('Submit')</code></pre>
+
+<h2>Running Detox Tests</h2>
+<pre><code"">
+# Build the app for testing (do this once, or when native code changes)
+detox build --configuration ios.sim.debug
+
+# Run E2E tests
+detox test --configuration ios.sim.debug
+
+# Run a specific test file
+detox test --configuration ios.sim.debug e2e/login.test.ts
+
+# Run on Android emulator
+detox test --configuration android.emu.debug</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Add <code>testID</code> props to all interactive elements in your components — this is the most reliable selector across platform differences.</li>
+  <li>Use <code>waitFor(...).toBeVisible().withTimeout(5000)</code> for any assertion involving navigation or async operations — never assume instant rendering.</li>
+  <li>Reset app state between tests with <code>device.reloadReactNative()</code> or <code>device.launchApp({ newInstance: true })</code> to ensure test isolation.</li>
+  <li>Run Detox tests in CI on iOS Simulator and Android Emulator — GitHub Actions supports both with the right runner configuration.</li>
+</ul>

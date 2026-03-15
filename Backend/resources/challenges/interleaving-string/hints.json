@@ -1,0 +1,6 @@
+[
+  "First check: if s1.length + s2.length != s3.length, return false immediately.",
+  "Define dp[i][j] = can we form s3[0..i+j-1] using the first i chars of s1 and first j chars of s2?",
+  "The current character s3[i+j-1] must come from either s1[i-1] or s2[j-1], and the previous state must be valid.",
+  "dp[i][j] = (dp[i-1][j] && s1[i-1] == s3[i+j-1]) || (dp[i][j-1] && s2[j-1] == s3[i+j-1])."
+]

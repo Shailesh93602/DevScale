@@ -1,0 +1,6 @@
+[
+  "If k >= n/2, you can make unlimited transactions (use the greedy approach from Stock II).",
+  "For limited k, maintain arrays buy[j] and sell[j] for j-th transaction.",
+  "buy[j] = max(buy[j], sell[j-1] - price): best state after j-th buy.",
+  "sell[j] = max(sell[j], buy[j] + price): best state after j-th sell. Answer is sell[k]."
+]

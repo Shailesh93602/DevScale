@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What fundamental problem with adversarial GAN training does the Wasserstein GAN (WGAN) solve, and how does it solve it?",
+            "options": [
+                "WGAN solves slow training by using a larger learning rate for the generator.",
+                "Standard GAN training uses Jensen-Shannon divergence, which saturates when real and fake distributions don't overlap — giving zero gradient to the generator (training stalls). WGAN uses the Wasserstein-1 (Earth Mover's) distance which provides meaningful gradients even when distributions are far apart. It replaces the sigmoid discriminator with a Lipschitz-constrained critic that outputs unbounded scores rather than probabilities.",
+                "WGAN eliminates mode collapse by using multiple generators that cover different modes.",
+                "WGAN solves vanishing gradients in the discriminator by switching to residual connections."
+            ],
+            "answer": "Standard GAN training uses Jensen-Shannon divergence, which saturates when real and fake distributions don't overlap — giving zero gradient to the generator (training stalls). WGAN uses the Wasserstein-1 (Earth Mover's) distance which provides meaningful gradients even when distributions are far apart. It replaces the sigmoid discriminator with a Lipschitz-constrained critic that outputs unbounded scores rather than probabilities.",
+            "explanation": "In practice: standard GANs often 'win' too early — the discriminator perfectly identifies fakes, generator gradient = 0, training stops. WGAN's critic continues giving useful gradient signal even when the generator is producing terrible outputs far from the real distribution."
+        },
+        {
+            "question": "Why do diffusion models generally produce higher quality and more diverse images than GANs, despite being slower at inference?",
+            "options": [
+                "Diffusion models use larger neural networks with more parameters.",
+                "GANs train a generator and discriminator in a fragile adversarial game prone to mode collapse — the generator learns to produce a limited set of outputs that fool the discriminator. Diffusion models optimize a stable denoising objective (predict the noise at each step) that directly models the full data distribution without adversarial instability, producing diverse outputs by sampling different noise trajectories.",
+                "Diffusion models use more GPU memory which allows higher resolution output.",
+                "Diffusion models were trained on larger datasets than comparable GANs."
+            ],
+            "answer": "GANs train a generator and discriminator in a fragile adversarial game prone to mode collapse — the generator learns to produce a limited set of outputs that fool the discriminator. Diffusion models optimize a stable denoising objective (predict the noise at each step) that directly models the full data distribution without adversarial instability, producing diverse outputs by sampling different noise trajectories.",
+            "explanation": "Stable Diffusion, DALL-E 3, and Midjourney all use diffusion — the superior quality and diversity convinced the research community to move away from GANs for image generation. GANs are still preferred where speed is critical (real-time applications)."
+        },
+        {
+            "question": "What does the guidance_scale parameter in Stable Diffusion control, and what is the tradeoff of setting it very high (e.g., guidance_scale=20)?",
+            "options": [
+                "guidance_scale controls image resolution — higher values produce larger images.",
+                "guidance_scale controls classifier-free guidance strength — how strictly the generation follows the text prompt. High values (≥15) produce images that closely match the prompt but with less diversity and more visual artifacts (oversaturation, unnatural details). Low values (≤3) produce diverse but prompt-unfaithful images. The range 7-12 balances prompt adherence with image quality.",
+                "guidance_scale controls the number of denoising steps — more steps = higher quality.",
+                "guidance_scale determines how many candidate images are generated before the best is selected."
+            ],
+            "answer": "guidance_scale controls classifier-free guidance strength — how strictly the generation follows the text prompt. High values (≥15) produce images that closely match the prompt but with less diversity and more visual artifacts (oversaturation, unnatural details). Low values (≤3) produce diverse but prompt-unfaithful images. The range 7-12 balances prompt adherence with image quality.",
+            "explanation": "guidance_scale=7.5 is the default that works well for most prompts. guidance_scale=20 would generate 'a photorealistic mountain lake' that literally looks like a mountain lake but with oversaturated, unnatural colors. guidance_scale=2 might generate a pleasant but unrelated landscape."
+        }
+    ]
+}

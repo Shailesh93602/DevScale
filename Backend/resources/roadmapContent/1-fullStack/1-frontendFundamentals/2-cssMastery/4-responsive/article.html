@@ -1,0 +1,53 @@
+<h1>Responsive Web Design</h1>
+<p>Responsive design ensures your website looks and works well on every device — from 320px mobile screens to 4K monitors. The strategy: write CSS that adapts to the viewport size.</p>
+
+<h2>1. The Viewport Meta Tag (Required)</h2>
+<pre><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</code></pre>
+<p>Without this, mobile browsers render at ~980px and scale it down, making everything tiny.</p>
+
+<h2>2. Media Queries</h2>
+<pre><code>/* Mobile-first: base styles target small screens */
+.container { padding: 16px; font-size: 1rem; }
+
+/* Tablet (768px+) */
+@media (min-width: 768px) {
+  .container { padding: 32px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; }
+}
+
+/* Desktop (1024px+) */
+@media (min-width: 1024px) {
+  .container { max-width: 1200px; margin: 0 auto; padding: 64px; }
+  .grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Large screens (1280px+) */
+@media (min-width: 1280px) {
+  .hero-title { font-size: 4rem; }
+}</code></pre>
+
+<h2>Common Breakpoints</h2>
+<pre><code>/* Mobile:  &lt; 768px (default, no query needed) */
+/* Tablet:  768px - 1023px */
+/* Desktop: 1024px - 1279px */
+/* Large:   1280px+ */</code></pre>
+
+<h2>Mobile-First vs Desktop-First</h2>
+<p><strong>Mobile-first (recommended):</strong> Write base styles for mobile, add complexity for larger screens with <code>min-width</code>. Results in smaller CSS for most users.</p>
+<p><strong>Desktop-first:</strong> Write base styles for desktop, simplify for smaller screens with <code>max-width</code>.</p>
+
+<h2>Fluid Images & Video</h2>
+<pre><code>img, video { max-width: 100%; height: auto; }</code></pre>
+
+<h2>Fluid Typography with clamp()</h2>
+<pre><code>/* Scales between 1rem (mobile) and 1.5rem (desktop) */
+h1 { font-size: clamp(1.5rem, 5vw, 3rem); }
+p  { font-size: clamp(1rem, 2.5vw, 1.125rem); }</code></pre>
+
+<h2>Container Queries (Modern CSS)</h2>
+<p>Container queries let you apply styles based on a <strong>parent container's size</strong> rather than the viewport — ideal for reusable components:</p>
+<pre><code>.card-container { container-type: inline-size; }
+
+@container (min-width: 400px) {
+  .card { flex-direction: row; }
+}</code></pre>

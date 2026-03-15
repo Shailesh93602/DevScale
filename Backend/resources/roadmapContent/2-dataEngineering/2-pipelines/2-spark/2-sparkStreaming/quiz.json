@@ -1,0 +1,118 @@
+{
+    "title": "Spark Streaming Quiz",
+    "description": "Test your knowledge of Spark Structured Streaming, Kafka integration, and output modes.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is a watermark used for in Spark Structured Streaming?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "To authenticate with Kafka brokers",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To define how long to wait for late-arriving data",
+                    "isCorrect": true
+                },
+                {
+                    "text": "To set the checkpoint interval",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To configure the output mode",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which output mode writes only rows that have changed since the last trigger?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "append",
+                    "isCorrect": false
+                },
+                {
+                    "text": "complete",
+                    "isCorrect": false
+                },
+                {
+                    "text": "update",
+                    "isCorrect": true
+                },
+                {
+                    "text": "overwrite",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why is setting a checkpoint location important in Spark Streaming?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It speeds up the Spark execution engine",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It allows Spark to recover offsets and state after a failure",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It compresses the output data",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It enables schema inference",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which function is used to parse JSON payloads from Kafka in Spark?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "parse_json()",
+                    "isCorrect": false
+                },
+                {
+                    "text": "json_decode()",
+                    "isCorrect": false
+                },
+                {
+                    "text": "from_json()",
+                    "isCorrect": true
+                },
+                {
+                    "text": "to_json()",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which Spark Streaming output mode is best for live running aggregations?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "complete",
+                    "isCorrect": false
+                },
+                {
+                    "text": "append",
+                    "isCorrect": false
+                },
+                {
+                    "text": "update",
+                    "isCorrect": true
+                },
+                {
+                    "text": "overwrite",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

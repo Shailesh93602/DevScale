@@ -1,0 +1,38 @@
+[
+  {
+    "input": "{\"Logs\": [{\"id\": 1, \"num\": \"1\"}, {\"id\": 2, \"num\": \"1\"}, {\"id\": 3, \"num\": \"1\"}, {\"id\": 4, \"num\": \"2\"}, {\"id\": 5, \"num\": \"1\"}, {\"id\": 6, \"num\": \"2\"}, {\"id\": 7, \"num\": \"2\"}]}",
+    "output": "[{\"ConsecutiveNums\": \"1\"}]",
+    "explanation": "1 appears three times consecutively (ids 1,2,3).",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Logs\": [{\"id\": 1, \"num\": \"1\"}, {\"id\": 2, \"num\": \"2\"}, {\"id\": 3, \"num\": \"1\"}, {\"id\": 4, \"num\": \"1\"}]}",
+    "output": "[]",
+    "explanation": "No number appears three times consecutively.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Logs\": [{\"id\": 1, \"num\": \"3\"}, {\"id\": 2, \"num\": \"3\"}, {\"id\": 3, \"num\": \"3\"}, {\"id\": 4, \"num\": \"3\"}, {\"id\": 5, \"num\": \"3\"}]}",
+    "output": "[{\"ConsecutiveNums\": \"3\"}]",
+    "explanation": "3 appears five times consecutively but returned once.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Logs\": [{\"id\": 1, \"num\": \"1\"}, {\"id\": 2, \"num\": \"1\"}, {\"id\": 3, \"num\": \"1\"}, {\"id\": 4, \"num\": \"2\"}, {\"id\": 5, \"num\": \"2\"}, {\"id\": 6, \"num\": \"2\"}]}",
+    "output": "[{\"ConsecutiveNums\": \"1\"}, {\"ConsecutiveNums\": \"2\"}]",
+    "explanation": "Both 1 and 2 appear three times consecutively.",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"Logs\": [{\"id\": 1, \"num\": \"1\"}]}",
+    "output": "[]",
+    "explanation": "Only one row, cannot have three consecutive.",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"Logs\": []}",
+    "output": "[]",
+    "explanation": "Empty table returns empty result.",
+    "is_hidden": true
+  }
+]

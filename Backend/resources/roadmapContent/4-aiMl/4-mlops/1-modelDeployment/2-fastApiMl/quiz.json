@@ -1,0 +1,118 @@
+{
+    "title": "FastAPI for ML Inference Quiz",
+    "description": "Test your knowledge of building production-grade ML APIs with FastAPI.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Where should you load an ML model (e.g., with joblib.load()) in a FastAPI application?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Inside the prediction route handler, so it gets the latest version on every request",
+                    "isCorrect": false
+                },
+                {
+                    "text": "In the application lifespan startup event, loaded once into memory and reused",
+                    "isCorrect": true
+                },
+                {
+                    "text": "In a background task triggered by the first request",
+                    "isCorrect": false
+                },
+                {
+                    "text": "In a separate thread that re-loads the model every 60 seconds",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "A Pydantic BaseModel in FastAPI's route definition primarily serves which purpose?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "To serialize the model weights to disk",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To automatically validate and type-coerce the incoming request body, returning a 422 on invalid input",
+                    "isCorrect": true
+                },
+                {
+                    "text": "To connect the API to the database via an ORM",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To define the Kubernetes deployment manifest",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Your model takes 8 seconds to produce a prediction. What is the best API design?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Increase the client timeout to 30 seconds so it can wait",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Use synchronous processing and hope the network doesn't drop",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Accept the request, return a job ID, process the prediction asynchronously, and expose a status endpoint",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Split the model into 8 smaller models that each take 1 second",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does the FastAPI middleware decorator `@app.middleware('http')` allow you to do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Lock an endpoint to only accept POST requests",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Intercept every request and response to add logging, timing, or CORS headers",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Define a background job that runs on a schedule",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Register a new database model with the ORM",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the recommended production command to run a FastAPI app with multiple workers?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "python main.py",
+                    "isCorrect": false
+                },
+                {
+                    "text": "uvicorn main:app --reload",
+                    "isCorrect": false
+                },
+                {
+                    "text": "gunicorn -w 4 -k uvicorn.workers.UvicornWorker app.main:app",
+                    "isCorrect": true
+                },
+                {
+                    "text": "flask run --host 0.0.0.0",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

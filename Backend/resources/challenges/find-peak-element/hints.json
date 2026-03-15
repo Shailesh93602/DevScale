@@ -1,0 +1,6 @@
+[
+  "Imagine the array boundaries are -infinity. A peak must exist because the array rises from -infinity and returns to -infinity.",
+  "If nums[mid] < nums[mid+1], there must be a peak to the right (the values go up and must eventually come down).",
+  "This allows binary search: always move toward the higher neighbor.",
+  "Use left < right as the loop condition. When left == right, you've found a peak."
+]

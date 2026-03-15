@@ -1,0 +1,74 @@
+{
+    "title": "Model Evaluation Quiz",
+    "description": "Test your model evaluation and ML best practices knowledge.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Why is accuracy a misleading metric for imbalanced datasets (e.g., 99% negative, 1% positive)?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Accuracy cannot be calculated for imbalanced data",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A model predicting always-negative gets 99% accuracy while detecting no positives — the metric hides poor performance",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Accuracy requires equal class sizes",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Accuracy is only for regression problems",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What condition indicates overfitting?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "High training error and high test error",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Low training error but significantly higher test error",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Low training error and low test error",
+                    "isCorrect": false
+                },
+                {
+                    "text": "High training error but low test error",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does K-Means clustering do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Classifies data into K predefined labelled categories",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Partitions unlabelled data into K clusters by minimising within-cluster variance",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Selects the K most important features",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Trains K separate regression models",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

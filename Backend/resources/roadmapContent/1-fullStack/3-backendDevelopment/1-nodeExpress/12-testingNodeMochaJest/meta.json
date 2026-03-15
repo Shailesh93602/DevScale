@@ -1,0 +1,4 @@
+{
+    "name": "Testing Node APIs",
+    "description": "Writing integration and unit tests for Express routes. Using Jest alongside Supertest to mock HTTP requests, simulate database interactions, and ensure high test coverage."
+}

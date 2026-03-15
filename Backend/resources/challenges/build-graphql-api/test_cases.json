@@ -1,0 +1,62 @@
+[
+  {
+    "input": "query { user(id: \"1\") { name email } }",
+    "output": "{ \"data\": { \"user\": { \"name\": \"Alice\", \"email\": \"alice@test.com\" } } }",
+    "explanation": "Simple query returns only the requested fields for the user.",
+    "is_hidden": false
+  },
+  {
+    "input": "query { user(id: \"999\") { name } }",
+    "output": "{ \"data\": { \"user\": null }, \"errors\": [{ \"message\": \"User not found\", \"path\": [\"user\"] }] }",
+    "explanation": "Querying a non-existent user returns null data with an error entry.",
+    "is_hidden": false
+  },
+  {
+    "input": "query { user(id: \"1\") { name posts { title } } }",
+    "output": "{ \"data\": { \"user\": { \"name\": \"Alice\", \"posts\": [{ \"title\": \"Hello World\" }] } } }",
+    "explanation": "Nested query resolves the user's posts through the relationship resolver.",
+    "is_hidden": false
+  },
+  {
+    "input": "mutation { createUser(input: { name: \"Bob\", email: \"bob@test.com\" }) { id name email } }",
+    "output": "{ \"data\": { \"createUser\": { \"id\": \"...\", \"name\": \"Bob\", \"email\": \"bob@test.com\" } } }",
+    "explanation": "CreateUser mutation creates a user and returns the requested fields.",
+    "is_hidden": false
+  },
+  {
+    "input": "mutation { createPost(input: { title: \"New Post\", content: \"Content\", authorId: \"1\" }) { id title author { name } } }",
+    "output": "{ \"data\": { \"createPost\": { \"id\": \"...\", \"title\": \"New Post\", \"author\": { \"name\": \"Alice\" } } } }",
+    "explanation": "CreatePost mutation creates a post and resolves the nested author field.",
+    "is_hidden": false
+  },
+  {
+    "input": "query { posts(authorId: \"1\", limit: 5) { title } }",
+    "output": "{ \"data\": { \"posts\": [{ \"title\": \"Post 1\" }, { \"title\": \"Post 2\" }] } }",
+    "explanation": "Filtered query returns only posts by the specified author, limited to 5.",
+    "is_hidden": true
+  },
+  {
+    "input": "Query fetching 10 posts with their authors (DataLoader test)",
+    "output": "10 posts resolved with only 1 batch query for all unique author IDs",
+    "explanation": "DataLoader batches individual author lookups into a single batch query, preventing N+1.",
+    "is_hidden": true
+  },
+  {
+    "input": "mutation { createUser(input: { name: \"\" }) { id } }",
+    "output": "{ \"errors\": [{ \"message\": \"Name and email are required\" }] }",
+    "explanation": "Invalid mutation input returns a validation error.",
+    "is_hidden": true
+  },
+  {
+    "input": "mutation { deletePost(id: \"1\") }",
+    "output": "{ \"data\": { \"deletePost\": true } }",
+    "explanation": "DeletePost mutation removes the post and returns true.",
+    "is_hidden": true
+  },
+  {
+    "input": "query { user(id: \"1\") { posts { comments { author { posts { title } } } } } }",
+    "output": "Deeply nested resolution works correctly up to 5 levels",
+    "explanation": "Nested resolution handles deep chains: user -> posts -> comments -> author -> posts.",
+    "is_hidden": true
+  }
+]

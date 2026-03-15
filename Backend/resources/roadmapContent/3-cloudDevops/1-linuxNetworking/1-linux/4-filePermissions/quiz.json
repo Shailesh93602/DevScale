@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "A file shows permissions '-rwxr-xr--'. What can a user who belongs to the file's group, but is not the owner, do with this file?",
+            "options": [
+                "Read, write, and execute the file.",
+                "Only read and execute the file — they have r-x (5) permissions. The write bit is not set for the group.",
+                "Only read the file but cannot execute it.",
+                "Nothing — group members have no permissions on this file."
+            ],
+            "answer": "Only read and execute the file — they have r-x (5) permissions. The write bit is not set for the group.",
+            "explanation": "The second triplet 'r-x' applies to group members: r=read allowed, -=write denied, x=execute allowed."
+        },
+        {
+            "question": "What does the command 'chmod 600 ~/.ssh/id_rsa' configure, and why is this the correct permission for a private SSH key?",
+            "options": [
+                "It grants everyone read access, necessary for SSH to function across all users.",
+                "It sets the file to Owner: rw-, Group: ---, Others: ---. SSH clients refuse to use a private key file if it is readable by anyone other than the owner as a security protection against key theft.",
+                "It sets execute permission so the SSH key can authenticate directly.",
+                "It encrypts the file using the kernel's built-in AES cipher."
+            ],
+            "answer": "It sets the file to Owner: rw-, Group: ---, Others: ---. SSH clients refuse to use a private key file if it is readable by anyone other than the owner as a security protection against key theft.",
+            "explanation": "The OpenSSH client performs a permissions check before loading a private key. If group or others can read it (e.g., 644), ssh will print 'UNPROTECTED PRIVATE KEY FILE' and refuse to connect."
+        },
+        {
+            "question": "What is the primary security purpose of the 'Sticky Bit' when applied to a shared directory like /tmp?",
+            "options": [
+                "It prevents the directory itself from being deleted by non-root users.",
+                "It ensures that only a file's owner (or root) can delete or rename that file within the directory, preventing users from deleting each other's temporary files even though they all have write access to the shared directory.",
+                "It causes new files created in the directory to inherit the directory's group ownership.",
+                "It prevents any new files from being created in the directory."
+            ],
+            "answer": "It ensures that only a file's owner (or root) can delete or rename that file within the directory, preventing users from deleting each other's temporary files even though they all have write access to the shared directory.",
+            "explanation": "Without the sticky bit on /tmp, any user with write access to /tmp could delete any other user's files there. The sticky bit (shown as 't') prevents this."
+        }
+    ]
+}

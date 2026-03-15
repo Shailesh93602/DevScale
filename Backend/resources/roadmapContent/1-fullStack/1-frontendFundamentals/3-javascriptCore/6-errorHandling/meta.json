@@ -1,0 +1,4 @@
+{
+    "name": "Error Handling & Debugging",
+    "description": "try/catch/finally, custom Error classes, error boundaries, debugging with dev tools, and defensive programming patterns."
+}

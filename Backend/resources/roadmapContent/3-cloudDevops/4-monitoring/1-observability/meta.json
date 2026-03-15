@@ -1,0 +1,4 @@
+{
+    "name": "Observability",
+    "description": "Understanding system health through metrics and traces using Prometheus, Grafana, and OTel."
+}

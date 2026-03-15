@@ -1,0 +1,4 @@
+{
+    "name": "Advanced GitHub Actions Workflows",
+    "description": "Going beyond basic CI/CD with GitHub Actions. Mastering reusable workflows (workflow_call), composite actions, matrix builds for multi-version testing, environment protection rules, manual approval gates, and self-hosted runners for private network access."
+}

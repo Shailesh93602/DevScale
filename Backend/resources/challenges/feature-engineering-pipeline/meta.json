@@ -1,0 +1,19 @@
+{
+  "title": "Build a Feature Engineering Pipeline",
+  "slug": "feature-engineering-pipeline",
+  "difficulty": "Hard",
+  "category": "machine_learning",
+  "points": 150,
+  "tags": ["feature-engineering", "data-preprocessing", "pipeline"],
+  "company_tags": ["Google", "Netflix", "Uber"],
+  "topic_tags": ["Machine Learning", "Feature Engineering", "Data Processing"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Raw data records and a list of transformation operations to apply",
+  "output_format": "Transformed feature matrix after applying the pipeline",
+  "example_input": "{\"data\": [[1,100,\"cat\"],[2,200,\"dog\"],[3,300,\"cat\"]], \"columns\": [\"age\",\"salary\",\"pet\"], \"operations\": [\"normalize:age\",\"normalize:salary\",\"one_hot:pet\"]}",
+  "example_output": "{\"features\": [[0,0,1,0],[0.5,0.5,0,1],[1,1,1,0]], \"column_names\": [\"age_norm\",\"salary_norm\",\"pet_cat\",\"pet_dog\"]}",
+  "constraints": "1 <= rows <= 10000, 1 <= columns <= 50, supported operations: normalize, standardize, one_hot, bin, log_transform",
+  "function_signature": "function featureEngineeringPipeline(data: any[][], columns: string[], operations: string[]): { features: number[][]; column_names: string[] }",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,4 @@
+{
+    "name": "Terraform Modules",
+    "description": "Organising Terraform code into reusable modules and publishing to registries."
+}

@@ -1,0 +1,19 @@
+{
+  "title": "Coin Change",
+  "slug": "coin-change",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["dynamic-programming", "array", "bfs"],
+  "company_tags": ["Amazon", "Google", "Microsoft", "Apple", "Goldman Sachs"],
+  "topic_tags": ["dynamic programming", "unbounded knapsack"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer array `coins` representing coin denominations and an integer `amount` representing the total amount.",
+  "output_format": "The fewest number of coins needed to make up `amount`. Return `-1` if it cannot be made up.",
+  "example_input": "coins = [1,5,11], amount = 11",
+  "example_output": "1",
+  "constraints": "- `1 <= coins.length <= 12`\n- `1 <= coins[i] <= 2^31 - 1`\n- `0 <= amount <= 10^4`",
+  "function_signature": "function coinChange(coins: number[], amount: number): number {}",
+  "status": "ACTIVE"
+}

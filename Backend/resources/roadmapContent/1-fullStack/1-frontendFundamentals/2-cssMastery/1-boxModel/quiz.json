@@ -1,0 +1,74 @@
+{
+    "title": "CSS Box Model & Selectors Quiz",
+    "description": "Test your understanding of the CSS box model and selector specificity.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What does box-sizing: border-box change about width and height calculations?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It only affects the margin",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Padding and border are included inside the declared width/height",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It removes all padding and borders",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It makes the element fill 100% of the viewport",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In CSS specificity, which has the highest priority?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Element selector (p)",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Class selector (.btn)",
+                    "isCorrect": false
+                },
+                {
+                    "text": "ID selector (#hero)",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Inline style attribute",
+                    "isCorrect": true
+                }
+            ]
+        },
+        {
+            "question": "Which selector targets an element ONLY if it is a direct child of another?",
+            "points": 10,
+            "options": [
+                {
+                    "text": ".parent .child",
+                    "isCorrect": false
+                },
+                {
+                    "text": ".parent + .child",
+                    "isCorrect": false
+                },
+                {
+                    "text": ".parent > .child",
+                    "isCorrect": true
+                },
+                {
+                    "text": ".parent ~ .child",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

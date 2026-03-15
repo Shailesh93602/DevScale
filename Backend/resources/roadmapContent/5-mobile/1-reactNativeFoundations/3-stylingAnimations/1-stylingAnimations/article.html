@@ -1,0 +1,38 @@
+<h1>Styling & Animations in React Native</h1>
+<p>If you are accustomed to web development, you are used to writing CSS files. You define a class (`.my-button`), apply properties like `background-color`, and use absolute measurements like `px` or `rem`. React Native fundamentally abandons traditional CSS.</p>
+
+<h2>The StyleSheet API</h2>
+<p>In React Native, all styling is written entirely in JavaScript using the <strong>StyleSheet API</strong>. You define a JavaScript object containing CamelCase properties (e.g., `backgroundColor` instead of `background-color`). You then inject that JavaScript object directly into the component's `style` prop.</p>
+<pre><code>import { StyleSheet, Text, View } from 'react-native';
+
+export default function App() {
+  return (
+    &lt;View style={styles.container}&gt;
+      &lt;Text style={styles.text}&gt;Hello World!&lt;/Text&gt;
+    &lt;/View&gt;
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#1E1E1E',
+  },
+  text: {
+    color: 'white',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+});</code></pre>
+
+<h2>Flexbox is Mandatory</h2>
+<p>In web development, you can use CSS Grid, Floats, or Block layout. <strong>In React Native, layout is strictly governed by Flexbox.</strong> If you don't know Flexbox, you cannot build mobile layouts.</p>
+<p>React Native's Flexbox engine (called Yoga) is almost identical to the web, with one major exception: The default `flexDirection` is <strong>column</strong> (top-to-bottom), not `row`! If you want two elements side-by-side, you must explicitly declare `flexDirection: 'row'` on their parent container.</p>
+
+<h2>Animations (Reanimated & Lottie)</h2>
+<p>Mobile users expect incredibly fluid, 60fps animations. A simple fading button or a sliding drawer must feel perfectly smooth.</p>
+<p>The standard React Native `Animated` API runs animations fundamentally on the "JS Thread" (the part of the CPU running your Javascript). If your Javascript is busy calculating data, your beautifully animated drawer will instantly jitter and freeze!</p>
+<p><strong>React Native Reanimated:</strong> This is the industry-standard animation library. It allows you to declare animations in JavaScript, but it physically offloads the execution entirely to the <strong>Native UI Thread</strong>. Even if your Javascript freezes completely, the animation runs flawlessly at 60fps natively on the phone's GPU.</p>
+<p><strong>Lottie:</strong> Created by Airbnb, Lottie allows designers to create incredibly complex animations in Adobe After Effects, export them as tiny JSON files, and play them natively in React Native with 4 lines of code.</p>

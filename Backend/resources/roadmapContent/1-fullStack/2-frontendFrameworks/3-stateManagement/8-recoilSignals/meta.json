@@ -1,0 +1,4 @@
+{
+    "name": "Signals & Fine-Grained Reactivity",
+    "description": "Exploring the paradigm shift toward Signals (Preact Signals, MobX). How fine-grained reactivity bypasses the traditional React render cycle for maximum performance."
+}

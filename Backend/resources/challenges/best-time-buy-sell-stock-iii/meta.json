@@ -1,0 +1,19 @@
+{
+  "title": "Best Time to Buy and Sell Stock III",
+  "slug": "best-time-buy-sell-stock-iii",
+  "difficulty": "Hard",
+  "category": "algorithms",
+  "points": 150,
+  "tags": ["dynamic-programming", "array"],
+  "company_tags": ["Amazon", "Google", "Microsoft", "Goldman Sachs", "Bloomberg"],
+  "topic_tags": ["dynamic programming", "state machine"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer array `prices`.",
+  "output_format": "The maximum profit with at most 2 transactions.",
+  "example_input": "prices = [3,3,5,0,0,3,1,4]",
+  "example_output": "6",
+  "constraints": "- `1 <= prices.length <= 10^5`\n- `0 <= prices[i] <= 10^5`",
+  "function_signature": "function maxProfit(prices: number[]): number {}",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,9 @@
+[
+  {"input":"{\"points\":[[1,3],[-2,2]], \"k\":1}","output":"[[-2,2]]","explanation":"Only 1 closest","is_hidden":false},
+  {"input":"{\"points\":[[3,3],[5,-1],[-2,4]], \"k\":2}","output":"[[3,3],[-2,4]]","explanation":"Two closest","is_hidden":false},
+  {"input":"{\"points\":[[0,1],[1,0]], \"k\":2}","output":"[[0,1],[1,0]]","explanation":"Equidistant","is_hidden":false},
+  {"input":"{\"points\":[[1,1],[2,2],[3,3]], \"k\":1}","output":"[[1,1]]","explanation":"Linear expansion","is_hidden":true},
+  {"input":"{\"points\":[[-1,-1],[-2,-2],[-3,-3]], \"k\":2}","output":"[[-1,-1],[-2,-2]]","explanation":"Negative coords","is_hidden":true},
+  {"input":"{\"points\":[[0,0],[0,0]], \"k\":1}","output":"[[0,0]]","explanation":"Origins","is_hidden":true},
+  {"input":"{\"points\":[[89,52],[-14,35],[45,-71],[0,1]], \"k\":3}","output":"[[0,1],[-14,35],[45,-71]]","explanation":"Random scatter","is_hidden":true}
+]

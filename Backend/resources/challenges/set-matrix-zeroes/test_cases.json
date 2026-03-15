@@ -1,0 +1,10 @@
+[
+  { "input": "{\"matrix\":[[1,1,1],[1,0,1],[1,1,1]]}", "output": "[[1,0,1],[0,0,0],[1,0,1]]", "explanation": "Single zero in center", "is_hidden": false },
+  { "input": "{\"matrix\":[[0,1,2,0],[3,4,5,2],[1,3,1,5]]}", "output": "[[0,0,0,0],[0,4,5,0],[0,3,1,0]]", "explanation": "Two zeros in top row", "is_hidden": false },
+  { "input": "{\"matrix\":[[1]]}", "output": "[[1]]", "explanation": "Single non-zero element", "is_hidden": true },
+  { "input": "{\"matrix\":[[0]]}", "output": "[[0]]", "explanation": "Single zero element", "is_hidden": true },
+  { "input": "{\"matrix\":[[0,0,0],[0,0,0]]}", "output": "[[0,0,0],[0,0,0]]", "explanation": "All zeros", "is_hidden": true },
+  { "input": "{\"matrix\":[[1,0,1],[1,1,1],[1,1,1]]}", "output": "[[0,0,0],[1,0,1],[1,0,1]]", "explanation": "Zero in first row", "is_hidden": true },
+  { "input": "{\"matrix\":[[1,1,1],[0,1,1],[1,1,1]]}", "output": "[[0,1,1],[0,0,0],[0,1,1]]", "explanation": "Zero in first column", "is_hidden": true },
+  { "input": "{\"matrix\":[[1,2,3,4],[5,0,7,8],[9,10,11,12],[13,14,15,0]]}", "output": "[[1,0,3,0],[0,0,0,0],[9,0,11,0],[0,0,0,0]]", "explanation": "Two zeros in different positions", "is_hidden": true }
+]

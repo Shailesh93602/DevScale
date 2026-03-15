@@ -1,0 +1,74 @@
+{
+    "title": "React Performance Quiz",
+    "description": "Test your React optimization knowledge.",
+    "passingScore": 80,
+    "timeLimit": 8,
+    "questions": [
+        {
+            "question": "What does React.memo do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Caches expensive calculations inside a component",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Prevents a component from re-rendering if its props haven't changed",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Memoizes state values between renders",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Stores component output in localStorage",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the difference between useMemo and useCallback?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "They are identical",
+                    "isCorrect": false
+                },
+                {
+                    "text": "useMemo caches a computed value; useCallback caches a function reference",
+                    "isCorrect": true
+                },
+                {
+                    "text": "useMemo is for state; useCallback is for side effects",
+                    "isCorrect": false
+                },
+                {
+                    "text": "useCallback is deprecated in React 18",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does React.lazy() enable?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Delayed state updates",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Code splitting — loading a component's JS bundle only when it's first needed",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Server-side rendering of components",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Automatic caching of API responses",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

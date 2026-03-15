@@ -1,0 +1,50 @@
+[
+  {
+    "input": {"n": 1},
+    "output": {"result": "01"},
+    "explanation": "n=1: print 0 then 1",
+    "is_hidden": false
+  },
+  {
+    "input": {"n": 2},
+    "output": {"result": "0102"},
+    "explanation": "n=2: 0,1,0,2",
+    "is_hidden": false
+  },
+  {
+    "input": {"n": 5},
+    "output": {"result": "0102030405"},
+    "explanation": "n=5: alternating zeros with 1-5",
+    "is_hidden": false
+  },
+  {
+    "input": {"n": 3},
+    "output": {"result": "010203"},
+    "explanation": "n=3: 0,1,0,2,0,3",
+    "is_hidden": false
+  },
+  {
+    "input": {"n": 4},
+    "output": {"result": "01020304"},
+    "explanation": "n=4: 0,1,0,2,0,3,0,4",
+    "is_hidden": true
+  },
+  {
+    "input": {"n": 6},
+    "output": {"result": "010203040506"},
+    "explanation": "n=6",
+    "is_hidden": true
+  },
+  {
+    "input": {"n": 10},
+    "output": {"result": "010203040506070809010"},
+    "explanation": "n=10: note 10 becomes '10' in the string",
+    "is_hidden": true
+  },
+  {
+    "input": {"n": 8},
+    "output": {"result": "0102030405060708"},
+    "explanation": "n=8",
+    "is_hidden": true
+  }
+]

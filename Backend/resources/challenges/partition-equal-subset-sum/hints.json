@@ -1,0 +1,6 @@
+[
+  "If the total sum is odd, the answer is immediately false. Why?",
+  "This problem reduces to: can we find a subset that sums to totalSum / 2?",
+  "This is the classic 0/1 knapsack problem. Use a boolean dp array where dp[j] means sum j is achievable.",
+  "Iterate through each number and update dp from right to left: dp[j] = dp[j] || dp[j - num]. This ensures each number is used at most once."
+]

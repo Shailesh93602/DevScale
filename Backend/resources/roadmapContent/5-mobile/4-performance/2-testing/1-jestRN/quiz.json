@@ -1,0 +1,118 @@
+{
+    "title": "Jest for React Native Quiz",
+    "description": "Test your knowledge of unit testing, RNTL queries, hook testing, and mocking in React Native.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Which RNTL query is preferred over getByTestId and why?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "getByRole — testID attributes are not stable across refactors; role-based and text-based queries describe what the user actually sees and interacts with",
+                    "isCorrect": true
+                },
+                {
+                    "text": "getByClassName — it is more stable than text-based queries",
+                    "isCorrect": false
+                },
+                {
+                    "text": "getById — native IDs are always stable and don't change",
+                    "isCorrect": false
+                },
+                {
+                    "text": "getAllByIndex — accessing components by position is the most reliable approach",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does `jest.useFakeTimers()` allow you to do in a test?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It makes tests run faster by skipping real I/O operations",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It replaces real timers with synchronous mock timers, allowing you to control setTimeout/setInterval behavior without waiting real time",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It prevents Jest from timing out when a test runs longer than 5 seconds",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It mocks the device's system clock to a fixed timestamp",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In the AAA testing pattern, what does each letter stand for?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Async, Await, Assert",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Arrange, Act, Assert — set up the test environment, perform the action, verify the result",
+                    "isCorrect": true
+                },
+                {
+                    "text": "API, Application, Assertion",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Authenticate, Authorize, Audit",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why should external dependencies like fetch API calls always be mocked in unit tests?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Real API calls will cause deprecation warnings in Jest",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Tests with real network calls are non-deterministic — they can fail due to network issues, server downtime, or rate limits, making the test suite unreliable",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Jest does not have access to the network on any platform",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Mocking is mandatory because React Native overrides the global fetch function",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the primary difference between `renderHook` and `render` in React Native Testing Library?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "renderHook can only be used for hooks that manage state; render is for hooks with side effects",
+                    "isCorrect": false
+                },
+                {
+                    "text": "renderHook is used to test custom hooks in isolation without rendering a full component; render is for testing full component trees",
+                    "isCorrect": true
+                },
+                {
+                    "text": "renderHook renders components without the React Native bridge; render uses the full bridge",
+                    "isCorrect": false
+                },
+                {
+                    "text": "They are identical; renderHook is just an alias for render that filters out JSX output",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

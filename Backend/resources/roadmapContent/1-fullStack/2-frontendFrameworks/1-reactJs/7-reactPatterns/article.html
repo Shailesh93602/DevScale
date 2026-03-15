@@ -1,0 +1,144 @@
+<h1>React Patterns & Architecture</h1>
+<p>As React applications grow, architectural patterns prevent code from becoming tangled and untestable. These patterns address common challenges: component communication, code reuse, performance, and feature organization.</p>
+
+<h2>Compound Components Pattern</h2>
+<p>Compound components share implicit state via React Context — creating an API where the parent manages state and children are self-contained:</p>
+<pre><code>// Select component with compound pattern
+const SelectContext = createContext(null);
+
+function Select({ children, value, onChange }) {
+  return (
+    &lt;SelectContext.Provider value={{ value, onChange }}&gt;
+      &lt;div className="select"&gt;{children}&lt;/div&gt;
+    &lt;/SelectContext.Provider&gt;
+  );
+}
+
+Select.Option = function Option({ value, children }) {
+  const { value: selected, onChange } = useContext(SelectContext);
+  return (
+    &lt;div
+      className={`option ${selected === value ? 'selected' : ''}`}
+      onClick={() => onChange(value)}
+    &gt;
+      {children}
+    &lt;/div&gt;
+  );
+};
+
+// Usage
+&lt;Select value={color} onChange={setColor}&gt;
+  &lt;Select.Option value="red"&gt;Red&lt;/Select.Option&gt;
+  &lt;Select.Option value="blue"&gt;Blue&lt;/Select.Option&gt;
+&lt;/Select&gt;</code></pre>
+
+<h2>Context API for Theming & Global State</h2>
+<pre><code>const ThemeContext = createContext(null);
+
+export function ThemeProvider({ children }) {
+  const [theme, setTheme] = useLocalStorage('theme', 'light');
+
+  const value = useMemo(() => ({
+    theme,
+    toggleTheme: () => setTheme(t => t === 'light' ? 'dark' : 'light'),
+    isDark: theme === 'dark',
+  }), [theme]);
+
+  return (
+    &lt;ThemeContext.Provider value={value}&gt;
+      &lt;div data-theme={theme}&gt;{children}&lt;/div&gt;
+    &lt;/ThemeContext.Provider&gt;
+  );
+}
+
+// Custom hook to consume the context
+export function useTheme() {
+  const context = useContext(ThemeContext);
+  if (!context) throw new Error('useTheme must be used within ThemeProvider');
+  return context;
+}</code></pre>
+
+<h2>Code Splitting with React.lazy & Suspense</h2>
+<pre><code>import { lazy, Suspense } from 'react';
+
+// This only loads when the component is rendered for the first time
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Settings  = lazy(() => import('./pages/Settings'));
+
+function App() {
+  return (
+    &lt;Suspense fallback={&lt;LoadingSpinner /&gt;}&gt;
+      &lt;Routes&gt;
+        &lt;Route path="/dashboard" element={&lt;Dashboard /&gt;} /&gt;
+        &lt;Route path="/settings"  element={&lt;Settings /&gt;} /&gt;
+      &lt;/Routes&gt;
+    &lt;/Suspense&gt;
+  );
+}</code></pre>
+
+<h2>Folder Structure for Large Applications</h2>
+<pre><code>src/
+  ├── app/              # App-level config: routing, providers, global styles
+  ├── features/         # Feature-based modules (the main meat)
+  │   ├── auth/
+  │   │   ├── components/   # Auth UI components
+  │   │   ├── hooks/        # useAuth, useSession
+  │   │   ├── api/          # Auth API calls
+  │   │   └── index.ts      # Public interface (barrel export)
+  │   └── dashboard/
+  ├── shared/            # Truly reusable across features
+  │   ├── components/   # Button, Input, Modal
+  │   ├── hooks/        # useLocalStorage, useDebounce
+  │   └── utils/        # formatDate, cn(), etc.
+  └── pages/            # Route-level components (thin wrappers)</code></pre>
+
+<h2>The Provider Pattern — Composing Providers</h2>
+<pre><code>// Avoid deeply nested providers in App.tsx
+const providers = [ThemeProvider, AuthProvider, QueryClientProvider, ...];
+
+function ComposeProviders({ providers, children }) {
+  return providers.reduceRight(
+    (acc, Provider) => &lt;Provider&gt;{acc}&lt;/Provider&gt;,
+    children
+  );
+}
+
+// Usage
+&lt;ComposeProviders providers={providers}&gt;
+  &lt;App /&gt;
+&lt;/ComposeProviders&gt;</code></pre>
+
+<h2>Error Boundary Components</h2>
+<pre><code>class ErrorBoundary extends React.Component {
+  state = { hasError: false, error: null };
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, info) {
+    console.error('Caught by ErrorBoundary:', error, info.componentStack);
+    // Log to monitoring (Sentry, etc.)
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback ?? &lt;p&gt;Something went wrong.&lt;/p&gt;;
+    }
+    return this.props.children;
+  }
+}
+
+// Usage
+&lt;ErrorBoundary fallback={&lt;ErrorPage /&gt;}&gt;
+  &lt;Dashboard /&gt;
+&lt;/ErrorBoundary&gt;</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Co-locate related files in feature folders — don't organize by file type.</li>
+  <li>Use barrel exports (<code>index.ts</code>) to define each feature's public API.</li>
+  <li>Wrap lazy-loaded routes in Suspense to show loading states.</li>
+  <li>Keep Context small and focused — don't put everything in one mega-context.</li>
+  <li>Always wrap major UI sections in ErrorBoundary components.</li>
+</ul>

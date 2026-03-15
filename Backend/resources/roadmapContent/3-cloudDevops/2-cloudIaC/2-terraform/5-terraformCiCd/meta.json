@@ -1,0 +1,4 @@
+{
+    "name": "Terraform in CI/CD Pipelines",
+    "description": "Automating infrastructure changes safely at scale. Implementing Terraform in GitHub Actions with plan/apply gates, atlantis-based GitOps workflows, drift detection, and the policy-as-code patterns using Sentinel or OPA."
+}

@@ -1,0 +1,30 @@
+<h1>Clean Architecture & DDD</h1>
+<p>When you build a small side-project, sticking all your database queries directly inside your Express route handlers works fine. But when building enterprise applications with 100,000+ lines of code, this tightly coupled monolithic design becomes a nightmare to maintain, test, and scale.</p>
+
+<h2>The Core Concept: Separation of Concerns</h2>
+<p>Clean Architecture mandates that your code is strictly divided into concentric boundary rings. The overarching rule is <strong>The Dependency Rule</strong>: Dependencies can only point inwards. Outer layers (like UI and Databases) can know about inner layers, but inner layers must know absolutely nothing about outer layers.</p>
+
+<h3>1. Domain Entities (The Core)</h3>
+<p>The deepest layer contains the core business rules. These are pure functions and standard classes representing your exact business models. They should contain absolutely zero dependencies on external frameworks (like React, Express, or Prisma).</p>
+<pre><code>// Pure Domain Entity. No imports. No database connection.
+class User {
+  constructor(public id: string, public email: string) {}
+
+  isValidEmail(): boolean {
+    return this.email.includes("@");
+  }
+}
+</code></pre>
+
+<h3>2. Use Cases (Application Logic)</h3>
+<p>The next layer outwards defines the specific Use Cases of the system (e.g. `RegisterUser`, `ProcessPayment`). These classes orchestrate the flow of data exclusively to and from the Domain Entities.</p>
+
+<h3>3. Interfaces & Controllers</h3>
+<p>This layer adapts the core use cases to whatever external delivery mechanism you are using. If you are building a REST API using Express, this layer grabs the HTTP request, parses the JSON body, and hands clean data deeply inwards into the Use Case layer.</p>
+
+<h3>4. Infrastructure (The Edge)</h3>
+<p>The outermost ring contains all external dependencies. The Database (PostgreSQL/Prisma), the Web Framework (Next.js/Express), and third-party APIs (Stripe/SendGrid). According to Domain-Driven Design, the Database is simply an implementation detail. You should theoretically be able to swap out MongoDB for PostgreSQL without touching your core Domain logic.</p>
+
+<h2>Domain-Driven Design (DDD)</h2>
+<p>Clean Architecture is usually paired with Domain-Driven Design (DDD). The core principle of DDD is establishing a <strong>Ubiquitous Language</strong>. Every single developer, product manager, and database architect must use the exact same terminology.</p>
+<p>If the marketing team calls an account a "Subscriber," the database table shouldn't be called `users`, and the frontend component shouldn't be called `&lt;ClientProfile&gt;`. Everything mathematically aligns globally around the exact Domain Language.</p>

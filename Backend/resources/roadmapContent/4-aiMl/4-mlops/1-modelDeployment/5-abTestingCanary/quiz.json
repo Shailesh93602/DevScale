@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "Your A/B test of a new recommendation model needs to detect a 1% increase in click-through rate (baseline: 5%). The sample size calculation returns 120,000 users per variant. Your platform gets 50,000 daily active users. What should you do?",
+            "options": [
+                "Run the test for 1 day with 50,000 users and declare significance if p < 0.05.",
+                "Run the test for at least 5 days (240,000 users ÷ 50,000 per day ÷ 50% in each variant = approximately 4-5 days) to reach the required sample size. Stopping early — even if results look significant after day 1 — inflates the false positive rate. 'Peeking' at results and stopping early is the most common A/B testing mistake.",
+                "Reduce the minimum detectable effect to 0.1% so fewer users are needed.",
+                "Skip the sample size calculation and use a meta-analysis of historical tests."
+            ],
+            "answer": "Run the test for at least 5 days (240,000 users ÷ 50,000 per day ÷ 50% in each variant = approximately 4-5 days) to reach the required sample size. Stopping early — even if results look significant after day 1 — inflates the false positive rate. 'Peeking' at results and stopping early is the most common A/B testing mistake.",
+            "explanation": "If you peek at p-values every day and stop when p < 0.05, your actual false positive rate is ~25-30% instead of the intended 5%. Sequential testing methods (e.g., always-valid p-values from Optimizely) allow peeking without inflating false positives."
+        },
+        {
+            "question": "What is 'shadow mode deployment' and when should you use it instead of a direct canary release?",
+            "options": [
+                "Shadow mode runs the new model on a shadow database that mirrors production.",
+                "Shadow mode runs the new model in parallel with the production model on all real traffic, but only the production model's response is shown to users. The new model's predictions are logged but not served. Use it for: high-stakes systems (medical, financial) where even 1% wrong canary traffic is unacceptable, validating new model predictions before any user sees them, and checking latency/infrastructure behavior at production scale.",
+                "Shadow mode is the same as blue-green deployment with instant traffic switching.",
+                "Shadow mode uses a shadow user group (internal employees) to validate the new model."
+            ],
+            "answer": "Shadow mode runs the new model in parallel with the production model on all real traffic, but only the production model's response is shown to users. The new model's predictions are logged but not served. Use it for: high-stakes systems (medical, financial) where even 1% wrong canary traffic is unacceptable, validating new model predictions before any user sees them, and checking latency/infrastructure behavior at production scale.",
+            "explanation": "A hospital's sepsis prediction model used shadow mode for 30 days before going live. Shadow mode revealed the new model was 15% more accurate BUT had 2x higher latency — discovered before any patient was impacted. The team optimized latency during shadow mode."
+        },
+        {
+            "question": "An A/B test shows Model B has statistically significant improvement in AUC (p=0.001) but no statistically significant improvement in revenue (p=0.18). Should you deploy Model B?",
+            "options": [
+                "Yes — AUC improvement is statistically significant, which guarantees revenue improvement.",
+                "No — or at minimum, investigate why the offline metric improvement didn't translate to business metrics. AUC improvement means the model ranks predictions better, but if the business decision threshold, feature distribution, or user interaction patterns differ between offline evaluation and production, AUC gains may not convert to revenue. Business KPIs are the true north star.",
+                "Yes — p=0.18 is close to significant, and with more traffic it will cross the threshold.",
+                "No — any A/B test with mixed results should be discarded and restarted."
+            ],
+            "answer": "No — or at minimum, investigate why the offline metric improvement didn't translate to business metrics. AUC improvement means the model ranks predictions better, but if the business decision threshold, feature distribution, or user interaction patterns differ between offline evaluation and production, AUC gains may not convert to revenue. Business KPIs are the true north star.",
+            "explanation": "This disconnect is common and important. Investigate: are you using the right business metric? Is the test underpowered for revenue (revenue has higher variance than clicks)? Does the model's improved accuracy change user behavior in a way that reduces revenue? These questions matter more than the AUC value."
+        }
+    ]
+}

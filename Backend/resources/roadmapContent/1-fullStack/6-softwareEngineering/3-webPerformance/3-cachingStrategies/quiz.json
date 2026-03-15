@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary function of the `Cache-Control` HTTP header in web performance?",
+            "options": [
+                "To encrypt CSS files.",
+                "To instruct the user's local web browser exactly how long it should safely store a specific file on its local hard drive, allowing subsequent page loads to bypass the network entirely.",
+                "To clear the Redux state in React.",
+                "To open a secure WebSocket connection."
+            ],
+            "answer": "To instruct the user's local web browser exactly how long it should safely store a specific file on its local hard drive, allowing subsequent page loads to bypass the network entirely.",
+            "explanation": "If an image has `max-age=31536000`, the browser stores it for an entire year. It will practically load instantly on the user's next visit."
+        },
+        {
+            "question": "How does a CDN (Content Delivery Network) drastically improve application performance for global users?",
+            "options": [
+                "It compiles pure Typescript into WebAssembly.",
+                "It physically caches your static files in numerous distributed data centers globally, allowing a user in Tokyo to instantly download assets from a local 'Edge' server instead of your primary server in New York.",
+                "It compresses video files manually.",
+                "It manages complex SQL database joins automatically."
+            ],
+            "answer": "It physically caches your static files in numerous distributed data centers globally, allowing a user in Tokyo to instantly download assets from a local 'Edge' server instead of your primary server in New York.",
+            "explanation": "CDNs conquer the physical limitations of the speed of light by bringing the code physically closer to the user."
+        },
+        {
+            "question": "What specifically is 'Redis' utilized for in modern backend architectural caching layers?",
+            "options": [
+                "Styling React components.",
+                "Serving as a lightning-fast 'In-Memory Database' resting purely in RAM, allowing the backend server to instantly retrieve heavily computed API payloads without continually punishing the primary SQL database.",
+                "Deploying Docker containers.",
+                "Routing static files."
+            ],
+            "answer": "Serving as a lightning-fast 'In-Memory Database' resting purely in RAM, allowing the backend server to instantly retrieve heavily computed API payloads without continually punishing the primary SQL database.",
+            "explanation": "Checking RAM is magnitudes faster than scanning a massive Relational Database on a hard disk. Redis acts as a high-speed buffer."
+        }
+    ]
+}

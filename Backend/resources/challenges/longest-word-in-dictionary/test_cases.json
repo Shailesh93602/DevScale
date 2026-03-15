@@ -1,0 +1,8 @@
+[
+  {"input":"{\"words\":[\"w\",\"wo\",\"wor\",\"worl\",\"world\"]}","output":"\"world\"","explanation":"Basic consecutive words","is_hidden":false},
+  {"input":"{\"words\":[\"a\",\"banana\",\"app\",\"appl\",\"ap\",\"apply\",\"apple\"]}","output":"\"apple\"","explanation":"Multiple candidates, lexicographical tiebreaker","is_hidden":false},
+  {"input":"{\"words\":[\"a\", \"b\", \"c\", \"d\", \"e\", \"f\"]}","output":"\"a\"","explanation":"Single character tiebreaker","is_hidden":true},
+  {"input":"{\"words\":[\"m\",\"ma\",\"mac\",\"mack\"]}","output":"\"mack\"","explanation":"Simple prefix chain","is_hidden":true},
+  {"input":"{\"words\":[\"yo\",\"ew\",\"fc\",\"zrc\",\"yodn\",\"fcm\",\"aq\",\"fce\",\"aqg\",\"qg\",\"y\",\"ewpz\"]}","output":"\"y\"","explanation":"Random disjoint dictionary","is_hidden":true},
+  {"input":"{\"words\":[\"b\",\"br\",\"bre\",\"brew\",\"brother\",\"brotherh\",\"brotherho\",\"brotherhoo\",\"brotherhood\"]}","output":"\"brew\"","explanation":"Missing link in brother","is_hidden":true}
+]

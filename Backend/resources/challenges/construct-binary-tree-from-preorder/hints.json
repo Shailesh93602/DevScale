@@ -1,0 +1,5 @@
+[
+  "The first element of preorder is always the root.",
+  "You can use recursion with a range (lower and upper bounds) to decide where each element belongs.",
+  "Alternatively, you can build it iteratively using a stack."
+]

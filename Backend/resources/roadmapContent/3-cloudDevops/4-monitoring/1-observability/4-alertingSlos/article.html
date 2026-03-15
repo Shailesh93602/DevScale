@@ -1,0 +1,78 @@
+<h1>Alerting & SLOs</h1>
+<p>The most common monitoring failure is not a lack of metrics — it's a flood of meaningless alerts that train engineers to ignore the pager. Alert fatigue kills on-call culture. The solution is tying alerts to customer-visible promises rather than arbitrary thresholds, using the SRE framework of <strong>SLIs</strong>, <strong>SLOs</strong>, and <strong>Error Budgets</strong>.</p>
+
+<h2>SLIs, SLOs, and Error Budgets</h2>
+<ul>
+  <li><strong>SLI (Service Level Indicator):</strong> A quantitative measure of service performance. The most important SLIs: request success rate, latency percentiles (p50, p95, p99), and availability.</li>
+  <li><strong>SLO (Service Level Objective):</strong> A target for an SLI. Example: "99.9% of HTTP requests must return a 2xx response over a rolling 30-day window." This is your service's internal reliability target.</li>
+  <li><strong>Error Budget:</strong> The allowed failure budget derived from the SLO. A 99.9% SLO means you have 0.1% failures allowed per month = approximately 43.8 minutes of downtime per month. When the budget is exhausted, new feature work stops and reliability takes priority.</li>
+</ul>
+
+<h2>Defining SLIs in Prometheus</h2>
+<pre><code class="language-yaml"># Calculate request success rate as an SLI using Prometheus recording rules
+- record: job:http_requests:rate5m
+  expr: rate(http_requests_total[5m])
+
+- record: job:http_request_errors:rate5m
+  expr: rate(http_requests_total{status=~"5.."}[5m])
+
+- record: job:http_availability:rate5m
+  expr: |
+    1 - (job:http_request_errors:rate5m / job:http_requests:rate5m)
+    # This gives you a ratio: 0.999 = 99.9% availability
+</code></pre>
+
+<h2>Multi-Window Multi-Burn-Rate Alerts</h2>
+<p>The Google SRE book's recommended alerting strategy fires at different urgency levels based on how fast the error budget is being consumed:</p>
+<pre><code class="language-yaml"># alertmanager-rules.yaml
+groups:
+- name: slo-alerts
+  rules:
+  # 🔥 CRITICAL: Burning 14.4x budget — page immediately, ~1 hour to SLO breach
+  - alert: ErrorBudgetBurnRateCritical
+    expr: |
+      (
+        job:http_availability:rate1h < (1 - 14.4 * 0.001)  # 1hr window
+        and
+        job:http_availability:rate6h < (1 - 14.4 * 0.001)  # 6hr window
+      )
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Error budget burning fast — page on-call immediately"
+
+  # ⚠️  WARNING: Burning 6x budget — investigate within hours
+  - alert: ErrorBudgetBurnRateWarning
+    expr: |
+      job:http_availability:rate6h < (1 - 6 * 0.001)
+    for: 15m
+    labels:
+      severity: warning
+</code></pre>
+
+<h2>Alertmanager: Routing & Silencing</h2>
+<pre><code class="language-yaml"># alertmanager.yml — Route alerts by severity
+route:
+  group_by: ['alertname', 'job']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 12h
+  receiver: 'slack-general'
+  routes:
+  - match:
+      severity: critical
+    receiver: 'pagerduty-oncall'   # Page the on-call engineer
+  - match:
+      severity: warning
+    receiver: 'slack-alerts'       # Post to Slack, no page
+
+receivers:
+- name: 'pagerduty-oncall'
+  pagerduty_configs:
+  - routing_key: 'YOUR_PAGERDUTY_KEY'
+- name: 'slack-alerts'
+  slack_configs:
+  - channel: '#alerts'
+    text: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+</code></pre>

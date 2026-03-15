@@ -1,0 +1,6 @@
+[
+  "To reach step n, you could have come from step n-1 or step n-2. How does this help you define a recurrence?",
+  "Let dp[i] be the number of ways to reach step i. Then dp[i] = dp[i-1] + dp[i-2].",
+  "The base cases are dp[1] = 1 (one way: take 1 step) and dp[2] = 2 (two ways: 1+1 or 2).",
+  "You only need the last two values at any point. Use two variables instead of an array for O(1) space."
+]

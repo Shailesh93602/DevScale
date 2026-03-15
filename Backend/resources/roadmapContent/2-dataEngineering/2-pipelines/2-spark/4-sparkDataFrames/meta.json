@@ -1,0 +1,4 @@
+{
+    "name": "DataFrame API & RDDs",
+    "description": "Understanding the core data structures of Apache Spark. Exploring the legacy Resilient Distributed Datasets (RDDs) and why the DataFrame API became the modern, highly optimized standard."
+}

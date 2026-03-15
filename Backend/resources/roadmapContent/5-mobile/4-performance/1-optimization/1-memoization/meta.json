@@ -1,0 +1,6 @@
+{
+    "id": "1-memoization",
+    "title": "Memoization and Rendering",
+    "description": "Using React.memo, useMemo, and useCallback to reduce unnecessary re-renders in mobile apps.",
+    "order": 1
+}

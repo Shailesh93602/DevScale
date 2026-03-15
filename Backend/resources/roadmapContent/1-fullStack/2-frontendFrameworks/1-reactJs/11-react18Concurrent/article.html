@@ -1,0 +1,107 @@
+<h1>React 18 Concurrent Features</h1>
+<p>React 18 introduced <strong>Concurrent Rendering</strong>, fundamentally changing how React operates behind the scenes. Instead of blocking the main thread while rendering deep component trees, React can now pause, yield, and resume rendering to keep the UI perfectly responsive.</p>
+
+<h2>Transitions (useTransition)</h2>
+<p>In standard React, all state updates are urgent. If you click a menu to open a heavy dashboard, the entire app freezes until the dashboard finishes rendering. <code>useTransition</code> lets you mark non-urgent updates, keeping the UI responsive while rendering happens in the background.</p>
+
+<pre><code>import { useState, useTransition } from 'react';
+
+function FilterableList({ items }) {
+  const [filter, setFilter] = useState('');
+  // 1. We have a fast input state, but a heavy filtered list
+  const [heavyFilter, setHeavyFilter] = useState('');
+  const [isPending, startTransition] = useTransition();
+
+  const onChange = (e) => {
+    // Urgent update: The input must reflect keystrokes immediately
+    setFilter(e.target.value);
+    
+    // Non-urgent update: The heavy list computation can lag behind
+    startTransition(() => {
+      setHeavyFilter(e.target.value);
+    });
+  };
+
+  return (
+    &lt;div&gt;
+      &lt;input value={filter} onChange={onChange} /&gt;
+      {isPending &amp;&amp; &lt;span&gt;Filtering...&lt;/span&gt;}
+      
+      {/* Heavy component that takes hundreds of ms to render */}
+      &lt;HeavyList items={items} query={heavyFilter} /&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+<h2>useDeferredValue</h2>
+<p><code>useDeferredValue</code> is similar to transitions, but instead of wrapping a state updating function, it wraps a <strong>value</strong> passed down from props or other state. It returns a deferred version of that value that "lags behind" during heavy renders.</p>
+
+<pre><code>import { useState, useDeferredValue, memo } from 'react';
+
+function SearchPage() {
+  const [query, setQuery] = useState('');
+  
+  // As the user types, 'query' updates instantly. 
+  // 'deferredQuery' will update in the background.
+  const deferredQuery = useDeferredValue(query);
+  
+  // Can check if stale to show visual feedback (opacity)
+  const isStale = query !== deferredQuery;
+
+  return (
+    &lt;div&gt;
+      &lt;input value={query} onChange={e =&gt; setQuery(e.target.value)} /&gt;
+      
+      &lt;div style={{ opacity: isStale ? 0.5 : 1 }}&gt;
+        &lt;SlowSearchResults query={deferredQuery} /&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+}
+
+// IMPORTANT: Slow component MUST be wrapped in React.memo
+// otherwise it will re-render anyway when the parent renders
+const SlowSearchResults = memo(function Results({ query }) {
+   // heavy rendering
+});</code></pre>
+
+<h2>Suspense for Data Fetching & Architecture</h2>
+<p>Suspense acts as a boundary that catches loading states from descendant components. When combined with Concurrent features or React Server Components, Suspense allows parts of the UI to stream in seamlessly.</p>
+
+<pre><code>import { Suspense, lazy } from 'react';
+
+// The Dashboard component is lazy loaded to split the bundle
+const DashboardPanel = lazy(() =&gt; import('./DashboardPanel'));
+
+function App() {
+  return (
+    &lt;div className="layout"&gt;
+      &lt;Sidebar /&gt;
+      &lt;main&gt;
+        {/* If DashboardPanel is loading, React will show the fallback but 
+            the sidebar and main app remain fully interactive */}
+        &lt;Suspense fallback={&lt;Spinner text="Loading Dashboard..." /&gt;}&gt;
+          &lt;DashboardPanel /&gt;
+        &lt;/Suspense&gt;
+      &lt;/main&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+<h2>Automatic Batching</h2>
+<p>Prior to React 18, React only batched state updates that occurred inside React event handlers (like onClick). Updates in Promises, setTimeout, or native event handlers would trigger multiple re-renders. React 18 fixes this by automatically batching all state updates regardless of origin.</p>
+
+<pre><code>// In React 18, this only triggers ONE re-render!
+fetch('/api/data').then(res =&gt; {
+  setData(res.data);
+  setLoading(false);
+  setError(null);
+  // React waits until the end of the microtask to flush these updates entirely
+});</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Use <code>useTransition</code> when you control the state update (e.g., inside an event handler).</li>
+  <li>Use <code>useDeferredValue</code> when receiving new values from above (as props) and you want a memoized child component to lag behind.</li>
+  <li>Always wrap heavy components consuming deferred values in <code>React.memo()</code> — without memo, the child re-renders aggressively anyway.</li>
+</ul>

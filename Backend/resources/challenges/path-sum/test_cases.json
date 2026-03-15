@@ -1,0 +1,12 @@
+[
+  {"input":"{\"root\":[5,4,8,11,null,13,4,7,2,null,null,null,1], \"targetSum\":22}","output":"true","explanation":"5->4->11->2 = 22","is_hidden":false},
+  {"input":"{\"root\":[1,2,3], \"targetSum\":5}","output":"false","explanation":"No path sums to 5","is_hidden":false},
+  {"input":"{\"root\":[], \"targetSum\":0}","output":"false","explanation":"Empty tree","is_hidden":false},
+  {"input":"{\"root\":[1,2], \"targetSum\":1}","output":"false","explanation":"Root is not leaf, path must reach leaf","is_hidden":true},
+  {"input":"{\"root\":[1,2], \"targetSum\":3}","output":"true","explanation":"1->2 = 3","is_hidden":true},
+  {"input":"{\"root\":[-2,null,-3], \"targetSum\":-5}","output":"true","explanation":"Negative values","is_hidden":true},
+  {"input":"{\"root\":[1,null,2,null,3,null,4,null,5], \"targetSum\":15}","output":"true","explanation":"Right-skewed path","is_hidden":true},
+  {"input":"{\"root\":[5,4,8,11,null,13,4,7,2,null,null,null,1], \"targetSum\":26}","output":"true","explanation":"5->8->13 = 26","is_hidden":true},
+  {"input":"{\"root\":[0,1,1], \"targetSum\":1}","output":"true","explanation":"0->1 branch","is_hidden":true},
+  {"input":"{\"root\":[1000,-1000], \"targetSum\":0}","output":"true","explanation":"1000 + (-1000) = 0","is_hidden":true}
+]

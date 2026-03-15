@@ -1,0 +1,140 @@
+<h1>React Native Core Components</h1>
+<p>Unlike React for the web, React Native does not use HTML tags like <code>&lt;div&gt;</code>, <code>&lt;span&gt;</code>, or <code>&lt;img&gt;</code>. Instead, it provides a set of <strong>Core Components</strong> that map directly to the native UI building blocks of iOS (UIKit/SwiftUI) and Android (View/Jetpack Compose).</p>
+
+<h2>View and Text: The Foundation</h2>
+<p>The <code>&lt;View&gt;</code> is the fundamental container in React Native, analogous to the web's <code>&lt;div&gt;</code>. It supports layout with Flexbox, styling, and basic touch handling. The <code>&lt;Text&gt;</code> component is the <strong>only</strong> way to display text — text strings cannot be bare inside a <code>&lt;View&gt;</code>.</p>
+<pre><code>import { View, Text, StyleSheet } from 'react-native';
+
+export default function BasicLayout() {
+  return (
+    &lt;View style={styles.container}&gt;
+      &lt;Text style={styles.title}&gt;Welcome to React Native&lt;/Text&gt;
+      &lt;Text style={styles.subtitle}&gt;Built with native performance.&lt;/Text&gt;
+    &lt;/View&gt;
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,                // Take up all available space
+    padding: 20,
+    backgroundColor: '#fff',
+    justifyContent: 'center', // Vertically center (default flex direction is column)
+    alignItems: 'center',     // Horizontally center
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    color: '#111827',
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#6b7280',
+  }
+});</code></pre>
+
+<h2>Image &amp; ImageBackground</h2>
+<p>The <code>&lt;Image&gt;</code> component handles both local assets and remote URLs. A critical quirk of React Native: <strong>remote images must have explicit width and height</strong>, or they will render at 0x0 size and remain invisible.</p>
+<pre><code>import { Image, ImageBackground, View, Text } from 'react-native';
+
+// Local asset (size is automatically inferred)
+const localLogo = require('./assets/logo.png');
+
+export default function ImageDemo() {
+  return (
+    &lt;View&gt;
+      &lt;Image source={localLogo} style={{ width: 100, height: 100 }} /&gt;
+      
+      {/* Remote image — MUST have dimensions */}
+      &lt;Image 
+        source={{ uri: 'https://example.com/profile.jpg' }} 
+        style={{ width: 150, height: 150, borderRadius: 75 }} 
+        resizeMode="cover" 
+      /&gt;
+
+      {/* Background image holding text */}
+      &lt;ImageBackground 
+        source={{ uri: 'https://example.com/pattern.jpg' }} 
+        style={{ width: '100%', height: 200, justifyContent: 'center' }}
+      &gt;
+        &lt;Text style={{ color: 'white', textAlign: 'center' }}&gt;Hero Text&lt;/Text&gt;
+      &lt;/ImageBackground&gt;
+    &lt;/View&gt;
+  );
+}</code></pre>
+
+<h2>TextInput &amp; Interactions</h2>
+<p><code>&lt;TextInput&gt;</code> is the foundational component for inputting text via the keyboard. Handling touches requires specialized components called Touchables or the newer <code>&lt;Pressable&gt;</code> API.</p>
+<pre><code>import { TextInput, TouchableOpacity, View, Text, Alert } from 'react-native';
+import { useState } from 'react';
+
+export default function InputDemo() {
+  const [text, setText] = useState('');
+
+  return (
+    &lt;View style={{ padding: 20 }}&gt;
+      &lt;TextInput
+        style={{ height: 40, borderColor: 'gray', borderWidth: 1, padding: 10, borderRadius: 8 }}
+        onChangeText={setText}
+        value={text}
+        placeholder="Enter your email"
+        keyboardType="email-address"
+        autoCapitalize="none"
+        secureTextEntry={false}  // True for passwords
+      /&gt;
+
+      {/* TouchableOpacity decreases opacity slightly when pressed (standard iOS feel) */}
+      &lt;TouchableOpacity 
+        style={{ marginTop: 20, backgroundColor: '#6366f1', padding: 15, borderRadius: 8 }}
+        onPress={() =&gt; Alert.alert('Submitted', `You typed: ${text}`)}
+      &gt;
+        &lt;Text style={{ color: 'white', textAlign: 'center', fontWeight: 'bold' }}&gt;Submit&lt;/Text&gt;
+      &lt;/TouchableOpacity&gt;
+    &lt;/View&gt;
+  );
+}</code></pre>
+
+<h2>Handling Lists: ScrollView vs. FlatList</h2>
+<p>The standard <code>&lt;ScrollView&gt;</code> renders all its children instantly. This is fine for a settings screen, but <strong>fatal for memory performance</strong> if you render a list of 1,000 items. For long lists, always use <code>&lt;FlatList&gt;</code>, which relies on "virtualization" (only rendering items currently visible on screen).</p>
+
+<pre><code>import { FlatList, View, Text, StyleSheet } from 'react-native';
+
+const DATA = Array.from({ length: 1000 }).map((_, i) =&gt; ({
+  id: `item-${i}`,
+  title: `List Item ${i}`
+}));
+
+export default function ListDemo() {
+  // Render function extracted for performance
+  const renderItem = ({ item }) =&gt; (
+    &lt;View style={styles.item}&gt;
+      &lt;Text style={styles.title}&gt;{item.title}&lt;/Text&gt;
+    &lt;/View&gt;
+  );
+
+  return (
+    &lt;FlatList
+      data={DATA}
+      renderItem={renderItem}
+      keyExtractor={item =&gt; item.id}
+      ItemSeparatorComponent={() =&gt; &lt;View style={{ height: 1, backgroundColor: '#e5e7eb' }} /&gt;}
+      // Optional: Pull-to-refresh
+      refreshing={false}
+      onRefresh={() =&gt; console.log('Refreshing...')}
+    /&gt;
+  );
+}
+
+const styles = StyleSheet.create({
+  item: { padding: 20 },
+  title: { fontSize: 16 }
+});</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li><strong>Never put text outside of a <code>&lt;Text&gt;</code> component.</strong> It will crash natively.</li>
+  <li><strong>Use <code>&lt;Pressable&gt;</code> or <code>&lt;TouchableOpacity&gt;</code> instead of <code>&lt;Button&gt;</code>.</strong> The core <code>&lt;Button&gt;</code> component looks totally different on iOS vs Android and is impossible to style identically. Custom components are always required for branded buttons.</li>
+  <li><strong>Use <code>&lt;KeyboardAvoidingView&gt;</code>.</strong> Unlike the web, the mobile virtual keyboard pops up over the UI, hiding your input fields. Wrap your screen forms in <code>KeyboardAvoidingView</code> to automatically push the UI up.</li>
+  <li><strong>Avoid deep nesting of Views.</strong> React Native translates every <code>&lt;View&gt;</code> to an actual platform view grouping. Deeply nested views bloat the mobile layout tree and degrade rendering speed.</li>
+</ul>

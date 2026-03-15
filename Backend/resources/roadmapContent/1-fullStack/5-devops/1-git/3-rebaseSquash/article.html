@@ -1,0 +1,53 @@
+<h1>Rebasing & History Rewrite</h1>
+<p>While <code>git merge</code> is the standard way to combine timelines, it often leaves the Git history intensely cluttered. If 5 developers merge 5 branches rapidly, the history graph looks like a tangled spiderweb of crossover lines and noisy "Merge branch main into feature" commits. Advanced teams demand a perfectly clean, linear history. The mathematical solution to this is <strong>Rebasing</strong>.</p>
+
+<h2>What is Git Rebase?</h2>
+<p>Imagine your commit history is a stack of blocks. You created a branch from the <code>main</code> branch 3 days ago. Since then, your teammates added 5 new blocks to <code>main</code>. Your timelines have diverged.</p>
+
+<p>If you run <code>git rebase main</code> while on your feature branch, Git performs a mathematical magic trick:</p>
+<ol>
+  <li>It temporarily "unplugs" your feature branch commits and puts them in memory.</li>
+  <li>It fast-forwards your feature branch to sync perfectly with the absolute tip of the new, updated <code>main</code> branch.</li>
+  <li>It physically recalculates and <strong>re-applies</strong> your commits one by one on top of the new timeline.</li>
+</ol>
+
+<pre><code># 1. Ensure you have the latest code
+git checkout main
+git pull
+
+# 2. Switch to your feature branch
+git checkout feature/new-button
+
+# 3. Mathematically rewrite history to build ON TOP of the latest main
+git rebase main
+</code></pre>
+<p>Because you re-based your work on top of the new updates, when you finally merge your feature branch back into `main`, it will be a perfectly clean <strong>Fast-Forward merge</strong>. No clunky Merge Commits exist in the history.</p>
+
+<h2>Interactive Rebase & Squashing (<code>git rebase -i</code>)</h2>
+<p>As you code locally, you might write horribly messy commits like: "fixed typo", "oops fixed again", "WIP", "finally works". Junior developers push these to GitHub, permanently polluting the project history.</p>
+<p>An <strong>Interactive Rebase</strong> allows you to pause history and mathematically compress 10 messy commits into exactly 1 pristine, beautifully documented commit before pushing.</p>
+
+<pre><code># Begin an interactive rebase for the last 4 commits
+git rebase -i HEAD~4
+</code></pre>
+<p>This opens a text file in your terminal:</p>
+<pre><code>pick 2fcfb83 add login form
+pick 8a931bb fix css typo
+pick 4c58cdq oops fix form state
+pick 9b8c7f1 ready to test
+
+# Change 'pick' to 'squash' (or 's') for the commits you want to merge UPWARD into the top commit:
+pick 2fcfb83 add login form
+s 8a931bb fix css typo
+s 4c58cdq oops fix form state
+s 9b8c7f1 ready to test
+</code></pre>
+<p>When you save, Git compresses all 4 blocks of code into a single, cohesive timeline block. You provide one clean message: <code>feat: implement login architecture</code>. The history is now flawless.</p>
+
+<h2>The Golden Rule of Rebasing (Force Pushing)</h2>
+<p>Because `rebase` mathematically destroys old commits and generates completely new ones (with new SHA hashes), <strong>you must NEVER rebase a branch that is publicly shared with other developers.</strong></p>
+
+<p>If you rebase your branch locally and attempt to push it to your existing branch on GitHub, GitHub will reject it entirely because the timelines no longer match. To bypass this, you must explicitly <strong>Force Push</strong>:</p>
+<pre><code>git push origin feature/new-button --force
+</code></pre>
+<p>The Force Push aggressively overwrites the GitHub server's timeline with your local rewritten timeline. If someone else was working on that branch, you just permanently deleted their local environment synchronization. <strong>Only force-push branches that belong exclusively to you.</strong></p>

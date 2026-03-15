@@ -1,0 +1,87 @@
+<h1>Git Workflows & Team Collaboration</h1>
+<p>Git is the industry-standard version control system. Mastering Git workflows is essential for collaborating in professional teams.</p>
+
+<h2>Core Git Commands</h2>
+<pre><code>git init                      # Initialise new repository
+git clone &lt;url&gt;               # Clone remote repository
+
+git status                    # See changed files
+git diff                      # See exact changes
+
+git add .                     # Stage all changes
+git add src/app.ts            # Stage specific file
+
+git commit -m "feat: add login endpoint"
+git commit --amend            # Edit last commit message
+
+git log --oneline --graph     # Visual branch history
+git show HEAD                 # Inspect latest commit</code></pre>
+
+<h2>Branching</h2>
+<pre><code>git branch                    # List branches
+git checkout -b feature/auth  # Create + switch to new branch
+git switch main               # Switch branch (modern syntax)
+
+git merge feature/auth        # Merge into current branch
+git rebase main               # Reapply commits on top of main (cleaner history)
+
+git branch -d feature/auth    # Delete branch after merge</code></pre>
+
+<h2>Professional Git Workflow (GitFlow)</h2>
+<pre><code># Branches:
+main      — Production-ready code only
+develop   — Integration branch for features
+feature/* — Individual feature branches
+hotfix/*  — Emergency production fixes
+release/* — Release preparation
+
+# Standard workflow:
+git checkout develop
+git checkout -b feature/user-auth
+
+# ... make commits ...
+
+git push origin feature/user-auth
+# → Open pull request on GitHub/GitLab
+# → Code review by team
+# → Merge into develop</code></pre>
+
+<h2>Resolving Merge Conflicts</h2>
+<pre><code># When git can't auto-merge:
+git merge feature/auth
+# CONFLICT: Merge conflict in src/routes/users.ts
+
+# Conflict markers in file:
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD (current branch)
+  const users = await getUsers();
+=======
+  const users = await fetchAllUsers();
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/auth
+
+# Fix: choose the right version, remove markers, then:
+git add src/routes/users.ts
+git commit -m "resolve merge conflict"</code></pre>
+
+<h2>Commit Message Convention</h2>
+<pre><code># Conventional Commits — parseable by tools
+feat:     new feature
+fix:      bug fix
+docs:     documentation changes
+style:    formatting, no logic change
+refactor: code restructuring, no behavior change
+test:     adding/updating tests
+chore:    build process, tooling changes
+
+# Examples:
+feat: add JWT refresh token endpoint
+fix: resolve null pointer in user repository
+feat(auth): add Google OAuth login
+fix(api)!: breaking change — rename userId to user_id</code></pre>
+
+<h2>.gitignore</h2>
+<pre><code>node_modules/
+dist/
+.env
+.env.local
+*.log
+.DS_Store</code></pre>

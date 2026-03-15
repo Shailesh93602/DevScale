@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "In the React Navigation auth flow pattern, why are protected screens completely absent from the navigator when the user is not authenticated, rather than hidden or conditionally rendering a redirect?",
+            "options": [
+                "Removing screens from the navigator is a React Navigation performance optimization.",
+                "Protected screens absent from the navigator tree cannot be navigated to via deep links, back button, or programmatic navigation.navigate() while unauthenticated. Hidden screens or redirect patterns still exist in the navigator and can potentially be reached through edge cases, back stack manipulation, or deep link handling bugs. Conditional rendering at the navigator level is the React Navigation recommended security pattern — protection is structural, not just visual.",
+                "React Navigation requires all screens to be defined at app startup for routing to work.",
+                "Removing screens prevents EAS Update from importing unnecessary screen bundles."
+            ],
+            "answer": "Protected screens absent from the navigator tree cannot be navigated to via deep links, back button, or programmatic navigation.navigate() while unauthenticated. Hidden screens or redirect patterns still exist in the navigator and can potentially be reached through edge cases, back stack manipulation, or deep link handling bugs. Conditional rendering at the navigator level is the React Navigation recommended security pattern — protection is structural, not just visual.",
+            "explanation": "When user?.id transitions from null to a value, React Navigation automatically transitions from the Auth stack to the App stack — no manual navigation.navigate() needed. Deep links to protected screens received while unauthenticated are queued by the linking system and resolved after login completes."
+        },
+        {
+            "question": "How does React Navigation handle a deep link to a protected screen (e.g., myapp://profile) when the user is not logged in?",
+            "options": [
+                "React Navigation shows a 404 error screen for links to screens not in the current navigator.",
+                "React Navigation's linking system stores the pending deep link. After the user logs in and the navigator re-renders with the authenticated screen set, React Navigation resolves the queued link and navigates to the requested screen. The user experiences: tap deep link → lands on login screen (auth stack active) → logs in → automatically navigates to Profile (the deep link target).",
+                "Deep links to protected screens require manual handling with Linking.getInitialURL().",
+                "The OS rejects the deep link before it reaches the app if the screen is not in the navigator."
+            ],
+            "answer": "React Navigation's linking system stores the pending deep link. After the user logs in and the navigator re-renders with the authenticated screen set, React Navigation resolves the queued link and navigates to the requested screen. The user experiences: tap deep link → lands on login screen (auth stack active) → logs in → automatically navigates to Profile (the deep link target).",
+            "explanation": "This built-in behavior is one of the most elegant aspects of React Navigation's auth pattern. You don't need to manually save the intended destination or navigate after login. The navigation state, screen set, and linking system cooperate to deliver the right experience automatically."
+        },
+        {
+            "question": "What is the difference between custom URL schemes (myapp://) and Universal Links (https://myapp.com) for deep linking, and which should be preferred for production apps?",
+            "options": [
+                "Custom URL schemes are iOS-only; Universal Links are Android-only.",
+                "Custom URL schemes (myapp://) can be claimed by any app — a malicious app can register the same scheme and intercept your deep links (a security vulnerability called URL scheme hijacking). Universal Links (iOS) and App Links (Android) are cryptographically verified via .well-known/apple-app-site-association and .well-known/assetlinks.json on your domain, guaranteeing only your app can handle your links. Prefer Universal Links for security-sensitive flows (magic links, OAuth redirects).",
+                "Universal Links only work when Safari/Chrome is the default browser.",
+                "Custom URL schemes must be unique globally — Apple/Google maintain a central registry."
+            ],
+            "answer": "Custom URL schemes (myapp://) can be claimed by any app — a malicious app can register the same scheme and intercept your deep links (a security vulnerability called URL scheme hijacking). Universal Links (iOS) and App Links (Android) are cryptographically verified via .well-known/apple-app-site-association and .well-known/assetlinks.json on your domain, guaranteeing only your app can handle your links. Prefer Universal Links for security-sensitive flows (magic links, OAuth redirects).",
+            "explanation": "Supabase magic link auth: the email contains https://myapp.com/auth/confirm?token=xxx (Universal Link). Your app opens, receives the token securely. If you used myapp://auth/confirm instead, a malicious app with scheme 'myapp' could intercept the link and steal the auth token — a real OAuth 2.0 attack vector."
+        }
+    ]
+}

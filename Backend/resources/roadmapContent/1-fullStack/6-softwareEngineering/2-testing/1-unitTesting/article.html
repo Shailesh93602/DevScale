@@ -1,0 +1,182 @@
+<h1>Unit Testing with Jest</h1>
+<p>Unit tests verify that individual functions or components work correctly in isolation. They form the first layer of the testing pyramid and give you the fastest feedback — a well-tested codebase allows you to refactor with confidence, catch bugs before production, and treat tests as living documentation of expected behavior.</p>
+
+<h2>Jest Setup for a TypeScript Node.js Project</h2>
+<pre><code>npm install --save-dev jest @types/jest ts-jest
+
+# jest.config.ts
+export default {
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+  testMatch: ['**/*.test.ts'],
+  collectCoverageFrom: ['src/**/*.ts', '!src/**/*.d.ts'],
+  coverageThreshold: { global: { lines: 80, branches: 80 } },
+};</code></pre>
+
+<h2>The AAA Pattern</h2>
+<p>Every unit test should be structured in three phases: <strong>Arrange</strong> (set up the test data and dependencies), <strong>Act</strong> (call the function under test), and <strong>Assert</strong> (verify the expected outcome):</p>
+<pre><code>// src/utils/pricing.ts
+export function calculateDiscount(price: number, discountPct: number): number {
+  if (price < 0) throw new Error('Price cannot be negative');
+  if (discountPct < 0 || discountPct > 100) throw new Error('Invalid discount percentage');
+  return Math.round(price * (1 - discountPct / 100) * 100) / 100;
+}
+
+// src/utils/pricing.test.ts
+import { calculateDiscount } from './pricing';
+
+describe('calculateDiscount', () => {
+  it('applies a 20% discount to a price', () => {
+    // Arrange
+    const price = 100;
+    const discountPct = 20;
+
+    // Act
+    const result = calculateDiscount(price, discountPct);
+
+    // Assert
+    expect(result).toBe(80);
+  });
+
+  it('rounds to 2 decimal places', () => {
+    expect(calculateDiscount(9.99, 10)).toBe(8.99);
+  });
+
+  it('throws when price is negative', () => {
+    expect(() => calculateDiscount(-10, 20)).toThrow('Price cannot be negative');
+  });
+
+  it('throws when discount exceeds 100%', () => {
+    expect(() => calculateDiscount(100, 150)).toThrow('Invalid discount percentage');
+  });
+
+  it('returns full price for 0% discount', () => {
+    expect(calculateDiscount(50, 0)).toBe(50);
+  });
+});</code></pre>
+
+<h2>Mocking Dependencies</h2>
+<p>Unit tests test one unit in isolation. When your function depends on external services (database, API, email), you <strong>mock</strong> them to avoid real network calls and control the response:</p>
+<pre><code>// src/services/userService.ts
+import { UserRepository } from '../repositories/userRepository';
+import { EmailService } from '../services/emailService';
+
+export class UserService {
+  constructor(
+    private userRepo: UserRepository,
+    private emailSvc: EmailService
+  ) {}
+
+  async createUser(email: string, name: string) {
+    const existing = await this.userRepo.findByEmail(email);
+    if (existing) throw new Error('Email already registered');
+
+    const user = await this.userRepo.create({ email, name });
+    await this.emailSvc.sendWelcome(email, name);
+    return user;
+  }
+}
+
+// src/services/userService.test.ts
+import { UserService } from './userService';
+import { UserRepository } from '../repositories/userRepository';
+import { EmailService } from '../services/emailService';
+
+// Auto-mock the entire module
+jest.mock('../repositories/userRepository');
+jest.mock('../services/emailService');
+
+describe('UserService.createUser', () => {
+  let svc: UserService;
+  let mockRepo: jest.Mocked<UserRepository>;
+  let mockEmail: jest.Mocked<EmailService>;
+
+  beforeEach(() => {
+    mockRepo = new UserRepository() as jest.Mocked<UserRepository>;
+    mockEmail = new EmailService() as jest.Mocked<EmailService>;
+    svc = new UserService(mockRepo, mockEmail);
+  });
+
+  it('creates a user and sends a welcome email', async () => {
+    // Arrange
+    mockRepo.findByEmail.mockResolvedValue(null);  // No existing user
+    mockRepo.create.mockResolvedValue({ id: '1', email: 'a@test.com', name: 'Alice' });
+    mockEmail.sendWelcome.mockResolvedValue(undefined);
+
+    // Act
+    const user = await svc.createUser('a@test.com', 'Alice');
+
+    // Assert
+    expect(user.id).toBe('1');
+    expect(mockRepo.create).toHaveBeenCalledWith({ email: 'a@test.com', name: 'Alice' });
+    expect(mockEmail.sendWelcome).toHaveBeenCalledWith('a@test.com', 'Alice');
+    expect(mockEmail.sendWelcome).toHaveBeenCalledTimes(1);
+  });
+
+  it('throws if email is already registered', async () => {
+    mockRepo.findByEmail.mockResolvedValue({ id: '2', email: 'a@test.com', name: 'Bob' });
+
+    await expect(svc.createUser('a@test.com', 'Alice'))
+      .rejects.toThrow('Email already registered');
+
+    // Verify no DB write or email was attempted
+    expect(mockRepo.create).not.toHaveBeenCalled();
+    expect(mockEmail.sendWelcome).not.toHaveBeenCalled();
+  });
+});</code></pre>
+
+<h2>Testing React Components with React Testing Library</h2>
+<pre><code>npm install --save-dev @testing-library/react @testing-library/user-event @testing-library/jest-dom</code></pre>
+<pre><code>// components/LoginForm.test.tsx
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { LoginForm } from './LoginForm';
+
+describe('LoginForm', () => {
+  it('shows validation error when email is empty and form is submitted', async () => {
+    const user = userEvent.setup();
+    const mockSubmit = jest.fn();
+    render(&lt;LoginForm onSubmit={mockSubmit} /&gt;);
+
+    // Act — click submit without filling in email
+    await user.click(screen.getByRole('button', { name: /sign in/i }));
+
+    // Assert — validation message appears
+    expect(screen.getByText(/email is required/i)).toBeInTheDocument();
+    expect(mockSubmit).not.toHaveBeenCalled();
+  });
+
+  it('calls onSubmit with credentials when form is valid', async () => {
+    const user = userEvent.setup();
+    const mockSubmit = jest.fn();
+    render(&lt;LoginForm onSubmit={mockSubmit} /&gt;);
+
+    await user.type(screen.getByLabelText(/email/i), 'user@example.com');
+    await user.type(screen.getByLabelText(/password/i), 'secret123');
+    await user.click(screen.getByRole('button', { name: /sign in/i }));
+
+    expect(mockSubmit).toHaveBeenCalledWith({ email: 'user@example.com', password: 'secret123' });
+  });
+});</code></pre>
+
+<h2>Coverage Reports</h2>
+<pre><code># Run tests with coverage report
+npx jest --coverage
+
+# Output:
+# ----------|----------|----------|----------|
+# File      | Stmts    | Branch   | Lines    |
+# ----------|----------|----------|----------|  
+# pricing.ts| 100%     | 100%     | 100%     |
+# ----------|----------|----------|----------|
+
+# Open the HTML report for line-by-line visualization:
+open coverage/lcov-report/index.html</code></pre>
+
+<h2>Test Organization Best Practices</h2>
+<ul>
+  <li><strong>File location</strong>: Co-locate tests with the file they test (<code>utils.ts</code> → <code>utils.test.ts</code> in the same directory), not in a separate <code>__tests__</code> folder. This makes it obvious when a file has no tests.</li>
+  <li><strong>One assertion per test</strong>: When a test fails, a precise single assertion tells you exactly what broke. Multiple assertions mean one failing assertion silently skips the rest.</li>
+  <li><strong>Test behavior, not implementation</strong>: Test that <code>sendWelcomeEmail</code> was called — not <em>how</em> the internal <code>mailer</code> object was constructed. Tests that depend on implementation details break when you refactor.</li>
+  <li><strong>No magic numbers</strong>: Use named constants (<code>const ADMIN_ROLE = 'admin'</code>) in both source and tests so the intent is clear when reading the test.</li>
+</ul>

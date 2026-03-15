@@ -1,0 +1,118 @@
+{
+    "title": "React Native Memoization Quiz",
+    "description": "Test your knowledge of React.memo, useMemo, useCallback, and performance optimization patterns.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "When does React.memo prevent a component from re-rendering?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "When the component's internal state changes",
+                    "isCorrect": false
+                },
+                {
+                    "text": "When the shallow comparison of props shows they are identical to the previous render",
+                    "isCorrect": true
+                },
+                {
+                    "text": "When the component is not visible on screen",
+                    "isCorrect": false
+                },
+                {
+                    "text": "When the component has no children",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why should you use useCallback when passing a function as a prop to a React.memo component?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "useCallback makes the function execute faster",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Functions defined inside a component get a new reference on every render; useCallback returns a stable reference so React.memo's comparison correctly identifies no change",
+                    "isCorrect": true
+                },
+                {
+                    "text": "useCallback is required by React.memo — it won't work without it",
+                    "isCorrect": false
+                },
+                {
+                    "text": "useCallback prevents the function from running more than once",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why does passing `style={{ margin: 10 }}` inline break React.memo optimization?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Inline styles are not supported in React Native",
+                    "isCorrect": false
+                },
+                {
+                    "text": "StyleSheet.create is required for performance and disables inline styles",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A new object literal is created on every render, so the reference always changes, causing React.memo to always see 'new' props",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The margin property is not recognized by React Native's shallow comparison",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does useMemo return?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A memoized callback function that doesn't change reference between renders",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The cached result of a computation, recomputed only when specified dependencies change",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A ref object that persists across renders without causing re-renders",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A higher-order component that wraps children with memoization",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "When is memoization NOT beneficial and should be avoided?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "When the component renders a large list of items",
+                    "isCorrect": false
+                },
+                {
+                    "text": "For simple, fast-rendering components where the memoization comparison overhead exceeds the render cost itself",
+                    "isCorrect": true
+                },
+                {
+                    "text": "When the component receives string props",
+                    "isCorrect": false
+                },
+                {
+                    "text": "When using TypeScript — memoization is only supported in plain JavaScript",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

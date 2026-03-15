@@ -1,0 +1,118 @@
+{
+    "title": "Data Modelling Quiz",
+    "description": "Test your knowledge on Fact vs Dimension tables and dimensional modelling concepts.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "In a Star Schema, what does a Fact table typically contain?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Descriptive text attributes like a user's address.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Measurements, quantitative data, and foreign keys.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A list of independent business concepts without relationships.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Raw JSON logs straight from the application database.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which Slowly Changing Dimension (SCD) type tracks historical changes by keeping multiple rows for the same entity with valid_from and valid_to dates?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Type 1",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Type 2",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Type 3",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Type 4",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why would an engineer prefer a Star schema over a Snowflake schema in a modern Data Warehouse like BigQuery?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A Star schema has fewer JOINs, leading to faster query performance in columnar databases.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A Snowflake schema cannot store numerical data.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A Star schema saves significant storage space through normalization.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A Snowflake schema does not support primary keys.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the name for a unique identifier system-generated specifically for the Data Warehouse to connect a Dimension to a Fact, replacing natural business keys?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Foreign Key",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Hash Partition Key",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Encrypted Key",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Surrogate Key",
+                    "isCorrect": true
+                }
+            ]
+        },
+        {
+            "question": "In the Data Vault 2.0 methodology, which table type stores the core business keys (e.g., CustomerID)?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Links",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Satellites",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Hubs",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Dimensions",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

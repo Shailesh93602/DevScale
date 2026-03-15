@@ -1,0 +1,42 @@
+<h1>Firewalls, VPNs & Network Security</h1>
+<p>In a cloud environment, every layer of your infrastructure can be exposed to the internet. A single misconfigured firewall rule can expose your entire database cluster to the world. Understanding the tools and models for controlling network access is one of the most critical skills in cloud architecture and DevOps.</p>
+
+<h2>Stateful vs Stateless Firewalls</h2>
+<ul>
+  <li><strong>Stateless Firewalls:</strong> Evaluate each packet in complete isolation against a rule list. If you allow inbound TCP on port 443, a stateless firewall also separately requires an explicit rule allowing the <em>return traffic</em> (the response) to get back to the client. Used for Network ACLs (NACLs) in AWS.</li>
+  <li><strong>Stateful Firewalls:</strong> Track active connection state. If an internal server initiates an outbound HTTPS request, the firewall automatically allows the inbound response packets back — no separate return-traffic rule needed. This is how AWS Security Groups work and is why Security Groups are usually preferred over NACLs for instance-level control.</li>
+</ul>
+
+<h2>AWS Security Groups vs Network ACLs</h2>
+<pre><code class="language-text">Security Groups (Instance-level):
+✅ Stateful — return traffic automatically allowed
+✅ Only ALLOW rules (default: deny all inbound, allow all outbound)
+✅ Applied to: EC2 instances, RDS, Lambda, etc.
+✅ Rules evaluated together (all rules checked)
+
+Network ACLs (Subnet-level):
+⚠️  Stateless — must explicitly allow both inbound AND return traffic
+⚠️  ALLOW and DENY rules both supported
+⚠️  Applied to: entire subnets
+⚠️  Rules evaluated in order (lowest number wins)
+</code></pre>
+<p>The recommended pattern: Use Security Groups as your primary access control (fine-grained, per-instance). Use NACLs as a secondary defense (subnet-level, e.g., block an entire IP range known for attacks).</p>
+
+<h2>VPN: Connecting Private Networks</h2>
+<p>A <strong>VPN (Virtual Private Network)</strong> creates an encrypted tunnel between two networks or between a user and a network, making private resources accessible as if they were on the local LAN:</p>
+<ul>
+  <li><strong>AWS Site-to-Site VPN:</strong> Connects your on-premise data center to your AWS VPC. All traffic between the two travels through an encrypted IPSec tunnel over the public internet, with no traffic visible to ISPs.</li>
+  <li><strong>AWS Client VPN:</strong> Allows individual remote developers to connect to private AWS resources using OpenVPN or WireGuard clients from their laptops.</li>
+  <li><strong>AWS Direct Connect:</strong> A dedicated physical network connection from your data center to AWS — not a VPN, but private. Used when VPN latency or bandwidth is insufficient for high-throughput workloads.</li>
+</ul>
+
+<h2>Zero Trust Networking</h2>
+<p>Traditional network security operated on a "castle and moat" model: trust everything inside the perimeter, block everything outside. Zero Trust replaces this with: <strong>"Never trust, always verify."</strong></p>
+<p>In a Zero Trust model:</p>
+<ul>
+  <li>Every request — even from inside the corporate network — must be authenticated and authorized</li>
+  <li>Access is granted with the least privilege necessary (specific resources, specific time windows)</li>
+  <li>All traffic is encrypted, even between internal microservices (using mutual TLS — mTLS)</li>
+  <li>Continuous verification: identity is re-evaluated on each request, not just at login</li>
+</ul>
+<p>Tools like <strong>HashiCorp Consul</strong> (service mesh), <strong>Cloudflare Access</strong>, and <strong>AWS Verified Access</strong> implement Zero Trust models at scale for modern cloud-native architectures.</p>

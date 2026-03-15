@@ -1,0 +1,104 @@
+<h1>Authentication & JWT</h1>
+<p>Authentication verifies <em>who</em> a user is, while authorization determines <em>what</em> they can do. In modern distributed web applications (like SPAs and Mobile Apps), JSON Web Tokens (JWT) have become the standard for stateless authentication.</p>
+
+<h2>Password Storage: Never Store Plaintext</h2>
+<p>If your database is compromised, plaintext passwords give hackers access to your users' accounts (and likely their accounts on other websites due to password reuse). Passwords must be hashed and salted before saving.</p>
+<pre><code>const bcrypt = require('bcrypt');
+
+// Hashing a password during Signup
+app.post('/register', async (req, res) =&gt; {
+  try {
+    const { email, password } = req.body;
+    
+    // Auto-generates a salt and hashes the password (10 rounds is standard)
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    const user = await db.users.create({ 
+      email, 
+      password: hashedPassword // Save the hash, NEVER the plaintext!
+    });
+    
+    res.status(201).json({ message: "User created" });
+  } catch(err) { res.status(500).send(err); }
+});
+
+// Verifying a password during Login
+app.post('/login', async (req, res) =&gt; {
+  const { email, plainPassword } = req.body;
+  const user = await db.users.findOne({ email });
+  
+  if (!user) return res.status(401).json({ error: "Invalid credentials" });
+  
+  // Bcrypt compares the raw string against the stored hash securely
+  const isMatch = await bcrypt.compare(plainPassword, user.password);
+  
+  if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
+  
+  // ... Issue Token ...
+});</code></pre>
+
+<h2>Stateless Authentication with JWT</h2>
+<p>Unlike Session Cookies which require the server to store a session ID in memory or a database (stateful), a JWT is completely self-contained (stateless). The server signs a payload of data cryptographically and gives it to the client.</p>
+
+<pre><code>const jwt = require('jsonwebtoken');
+
+// 1. Issuing the Token (After successful login)
+const token = jwt.sign(
+  { userId: user.id, role: user.role }, // Payload (never put passwords here!)
+  process.env.JWT_SECRET,               // A long, cryptographically secure string
+  { expiresIn: '1h' }                   // Expiration is crucial for security
+);
+
+res.json({ token });</code></pre>
+
+<h2>Protecting Routes with JWT Middleware</h2>
+<p>Clients send the JWT back to the server in the <code>Authorization: Bearer &lt;token&gt;</code> HTTP header. We write a custom Express middleware to verify it.</p>
+
+<pre><code>const requireAuth = (req, res, next) =&gt; {
+  const authHeader = req.headers.authorization;
+  
+  // 1. Check if header exists and starts with Bearer
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Missing or invalid token' });
+  }
+
+  // 2. Extract the token
+  const token = authHeader.split(' ')[1];
+
+  try {
+    // 3. Verify exactly matches our secret and hasn't expired.
+    // If it is tampered with or expired, this throws an error!
+    const decodedPayload = jwt.verify(token, process.env.JWT_SECRET);
+    
+    // 4. Attach the decoded user data to the request for the controller to use
+    req.user = decodedPayload;
+    next();
+  } catch (err) {
+    if (err.name === 'TokenExpiredError') {
+      return res.status(401).json({ error: 'Token expired' });
+    }
+    return res.status(403).json({ error: 'Tampered or invalid token' });
+  }
+};
+
+// Protect the dashboard route
+app.get('/api/dashboard', requireAuth, (req, res) =&gt; {
+  // We KNOW they are logged in if this code runs
+  res.json({ message: `Welcome user ${req.user.userId}` });
+});</code></pre>
+
+<h2>Refresh Tokens vs Access Tokens</h2>
+<p>A major flaw of true stateless JWTs is that if a token is stolen, the attacker can use it until it expires. You cannot "logout" or revoke a truly stateless token easily without adding database checks (defeating the purpose of being stateless).</p>
+<p><strong>The Solution: Short-lived Access Tokens + Long-lived Refresh Tokens</strong></p>
+<ol>
+  <li>Access Token: Lives for 15 minutes. Stateless. Used for every API request.</li>
+  <li>Refresh Token: Lives for 30 days. Stored in an HttpOnly cookie or secure storage. Used ONLY to request a new Access Token.</li>
+  <li>If the user clicks "Logout", the server deletes the Refresh Token from the database. The attacker's 15-minute Access token will quickly die, and they cannot get a new one.</li>
+</ol>
+
+<h2>Best Practices</h2>
+<ul>
+  <li><strong>Never put sensitive data (like passwords or SSNs) in a JWT payload.</strong> The payload is Base64 encoded, meaning anyone can read it, but only the server can verify it hasn't been tampered with.</li>
+  <li>If using JWTs in a browser application, store them in <strong>HttpOnly secure cookies</strong> rather than LocalStorage to prevent XSS (Cross-Site Scripting) theft.</li>
+  <li>Use an environment variable (<code>process.env.JWT_SECRET</code>) at least 64 characters long generated by a cryptographically secure random number generator.</li>
+</ul>

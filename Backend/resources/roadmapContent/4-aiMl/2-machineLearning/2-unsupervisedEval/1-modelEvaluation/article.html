@@ -1,0 +1,70 @@
+<h1>Model Evaluation & Feature Engineering</h1>
+<p>A model is only as good as how well you evaluate it and prepare its features. This topic covers the essential techniques for both.</p>
+
+<h2>Classification Metrics</h2>
+<pre><code>from sklearn.metrics import (
+    accuracy_score, precision_score, recall_score, f1_score,
+    roc_auc_score, confusion_matrix, ConfusionMatrixDisplay
+)
+
+# Accuracy — % correct (misleading for imbalanced datasets!)
+accuracy = accuracy_score(y_test, y_pred)
+
+# Precision — of predicted positives, how many are actually positive?
+precision = precision_score(y_test, y_pred)
+
+# Recall (Sensitivity) — of actual positives, how many did we find?
+recall = recall_score(y_test, y_pred)
+
+# F1-Score — harmonic mean of precision and recall
+f1 = f1_score(y_test, y_pred)
+
+# ROC-AUC — area under the ROC curve (threshold-independent, best overall metric)
+auc = roc_auc_score(y_test, y_prob)</code></pre>
+
+<h2>Bias-Variance Tradeoff</h2>
+<pre><code># Underfitting (High Bias):
+# - Model too simple (e.g., linear model for non-linear data)
+# - High training AND test error
+# Fix: more complex model, more features, more data
+
+# Overfitting (High Variance):
+# - Model memorises training data (e.g., deep decision tree, no regularisation)
+# - Low training error but HIGH test error
+# Fix: regularisation, more training data, dropout, cross-validation
+
+# Learning curve — diagnose the problem
+from sklearn.model_selection import learning_curve
+train_sizes, train_scores, val_scores = learning_curve(
+    model, X, y, cv=5, scoring="accuracy",
+    train_sizes=np.linspace(0.1, 1.0, 10)
+)</code></pre>
+
+<h2>Clustering (Unsupervised)</h2>
+<pre><code>from sklearn.cluster import KMeans, DBSCAN
+from sklearn.metrics import silhouette_score
+
+# K-Means — partition into K clusters
+kmeans = KMeans(n_clusters=5, random_state=42)
+labels = kmeans.fit_predict(X_scaled)
+print(f"Inertia: {kmeans.inertia_:.0f}")  # Lower = tighter clusters
+print(f"Silhouette Score: {silhouette_score(X_scaled, labels):.3f}")  # Higher = better
+
+# Elbow method — find optimal K
+inertias = []
+for k in range(1, 11):
+    inertias.append(KMeans(n_clusters=k).fit(X_scaled).inertia_)
+# Plot and look for the "elbow" (diminishing returns)</code></pre>
+
+<h2>Feature Selection</h2>
+<pre><code">from sklearn.feature_selection import SelectKBest, f_classif, RFECV
+
+# Univariate selection — pick top K features by statistical test
+selector = SelectKBest(score_func=f_classif, k=10)
+X_selected = selector.fit_transform(X, y)
+selected_features = [features[i] for i in selector.get_support(indices=True)]
+
+# Recursive Feature Elimination with CV
+rfe = RFECV(estimator=RandomForestClassifier(), cv=5, scoring="roc_auc")
+rfe.fit(X_train, y_train)
+print(f"Optimal features: {rfe.n_features_}")</code></pre>

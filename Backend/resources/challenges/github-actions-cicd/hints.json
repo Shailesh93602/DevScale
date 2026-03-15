@@ -1,0 +1,6 @@
+[
+  "Structure your pipeline into parallel CI jobs (lint, test) and sequential CD jobs (deploy). Use the 'needs' keyword to define dependencies between jobs.",
+  "Cache dependencies using the built-in cache option in setup-node/setup-python actions. Pass build artifacts between jobs using actions/upload-artifact and actions/download-artifact.",
+  "Use GitHub Environments for deployment protection. The 'environment' key in a job enables approval rules configured in repository settings.",
+  "Add concurrency control with 'concurrency: group: workflow-ref, cancel-in-progress: true' to prevent simultaneous deployments. Use OIDC (role-to-assume) instead of static access keys for cloud authentication."
+]

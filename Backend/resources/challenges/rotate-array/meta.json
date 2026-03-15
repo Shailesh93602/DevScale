@@ -1,0 +1,39 @@
+{
+  "title": "Rotate Array",
+  "slug": "rotate-array",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": [
+    "array",
+    "math",
+    "two-pointers"
+  ],
+  "company_tags": [
+    "Microsoft",
+    "Amazon",
+    "Apple"
+  ],
+  "topic_tags": [
+    "arrays"
+  ],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer array `nums` and a non-negative integer `k`.",
+  "output_format": "The array rotated to the right by `k` steps (in-place).",
+  "example_input": "nums = [1,2,3,4,5,6,7], k = 3",
+  "example_output": "[5,6,7,1,2,3,4]",
+  "constraints": "- `1 <= nums.length <= 10^5`\n- `-2^31 <= nums[i] <= 2^31 - 1`\n- `0 <= k <= 10^5`",
+  "function_signature": "function rotate(nums: number[], k: number): void {}",
+  "status": "ACTIVE"
+}

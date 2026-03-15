@@ -1,0 +1,9 @@
+[
+  {"input":"{\"target\":1, \"startFuel\":1, \"stations\":[]}","output":"0","explanation":"No stops needed","is_hidden":false},
+  {"input":"{\"target\":100, \"startFuel\":1, \"stations\":[[10,100]]}","output":"-1","explanation":"Can't reach first station","is_hidden":false},
+  {"input":"{\"target\":100, \"startFuel\":10, \"stations\":[[10,60],[20,30],[30,30],[60,40]]}","output":"2","explanation":"Need two stops","is_hidden":false},
+  {"input":"{\"target\":100, \"startFuel\":50, \"stations\":[[25,25],[50,50]]}","output":"1","explanation":"Skip first, stop at second","is_hidden":true},
+  {"input":"{\"target\":100, \"startFuel\":10, \"stations\":[[10,10],[20,10],[30,10],[40,10],[50,10],[60,10],[70,10],[80,10],[90,10]]}","output":"9","explanation":"Must stop at every station","is_hidden":true},
+  {"input":"{\"target\":100, \"startFuel\":100, \"stations\":[[10,10],[20,10],[30,10],[40,10],[50,10],[60,10],[70,10],[80,10],[90,10]]}","output":"0","explanation":"Start fuel enough for everything","is_hidden":true},
+  {"input":"{\"target\":1000, \"startFuel\":83, \"stations\":[[15,58],[27,87],[44,45],[68,58],[150,123],[288,59],[400,200],[550,250],[700,50],[800,200]]}","output":"6","explanation":"Greedy long distance run","is_hidden":true}
+]

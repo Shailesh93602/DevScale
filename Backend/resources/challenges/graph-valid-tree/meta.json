@@ -1,0 +1,20 @@
+{
+  "title": "Graph Valid Tree",
+  "slug": "graph-valid-tree",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["depth-first-search","breadth-first-search","union-find","graph"],
+  "company_tags": ["Google","Amazon","Microsoft","Facebook","LinkedIn"],
+  "topic_tags": ["graphs","union find","depth-first search"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer `n` and an array of `edges`.",
+  "output_format": "`true` if the edges make up a valid tree, `false` otherwise.",
+  "example_input": "n = 5, edges = [[0,1],[0,2],[0,3],[1,4]]",
+  "example_output": "true",
+  "constraints": "- `1 <= n <= 2000`\n- `0 <= edges.length <= 5000`\n- `edges[i].length == 2`\n- `0 <= ai, bi < n`\n- `ai != bi`\n- There are no self-loops or repeated edges.",
+  "function_signature": "function validTree(n: number, edges: number[][]): boolean {}",
+  "status": "ACTIVE"
+}

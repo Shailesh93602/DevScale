@@ -1,0 +1,4 @@
+{
+    "name": "Backpropagation & Regularization",
+    "description": "Understanding the mathematical engine of neural network training. Deriving backpropagation via the chain rule, understanding vanishing and exploding gradients, implementing dropout and batch normalization as regularization techniques, weight initialization strategies (Xavier, He), and building a complete PyTorch training loop with validation."
+}

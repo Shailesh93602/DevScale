@@ -1,0 +1,6 @@
+[
+  "How can you track the minimum as elements are pushed and popped?",
+  "Consider maintaining a second stack that records the minimum at each level of the main stack.",
+  "When pushing, the new minimum is min(val, current minimum). When popping, both stacks pop together.",
+  "Alternatively, store (value, currentMin) pairs in a single stack."
+]

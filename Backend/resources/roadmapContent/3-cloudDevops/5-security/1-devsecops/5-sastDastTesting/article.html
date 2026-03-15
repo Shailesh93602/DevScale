@@ -1,0 +1,52 @@
+<h1>SAST, DAST & Penetration Testing</h1>
+<p>Traditional security testing happened after development was complete — a penetration tester would attack the finished application before release. Modern DevSecOps "shifts security left," embedding automated security tests at every stage of the SDLC so vulnerabilities are caught at the exact moment they are introduced, when they are cheapest to fix.</p>
+
+<h2>SAST: Static Application Security Testing</h2>
+<p><strong>SAST</strong> analyzes source code (without executing it) to find security vulnerabilities using pattern matching and data flow analysis. It runs in the CI pipeline on every pull request:</p>
+<pre><code class="language-bash"># Semgrep: fast, rule-based SAST for many languages
+semgrep --config=p/owasp-top-ten ./src/
+
+# Common SAST findings:
+# - SQL Injection: raw string interpolation in DB queries
+#   BAD:  f"SELECT * FROM users WHERE id = {user_id}"
+#   GOOD: db.execute("SELECT * FROM users WHERE id = ?", [user_id])
+#
+# - Hardcoded secrets: API_KEY = "sk-abc123..." in source code
+# - Insecure deserialization: pickle.loads(user_input)
+# - Path traversal: open(f"/uploads/{filename}")  (filename could be "../../etc/passwd")
+# - Missing authentication on endpoint handlers
+</code></pre>
+<pre><code class="language-yaml"># In GitHub Actions CI — block PRs with high-severity SAST findings
+- name: Run Semgrep
+  uses: semgrep/semgrep-action@v1
+  with:
+    config: p/owasp-top-ten
+    publishToken: ${{ secrets.SEMGREP_APP_TOKEN }}
+</code></pre>
+
+<h2>DAST: Dynamic Application Security Testing</h2>
+<p><strong>DAST</strong> tests a live, running application from the outside — exactly like an attacker would. It fires crafted HTTP requests to discover vulnerabilities that only manifest at runtime:</p>
+<pre><code class="language-bash"># OWASP ZAP — industry standard open source DAST tool
+# Run a baseline scan against the staging environment
+docker run --rm owasp/zap2docker-stable zap-baseline.py \
+  -t https://staging.myapp.com \
+  -r zap-report.html
+
+# DAST tests for:
+# - XSS: injects <script>alert(1)</script> into every form field and URL parameter
+# - SQL Injection: appends ' OR 1=1-- to all inputs
+# - CSRF: checks for missing CSRF tokens on state-changing forms
+# - Broken authentication: tests for session fixation, cookie security flags
+# - Security headers: checks for missing HSTS, CSP, X-Frame-Options
+# - Exposed sensitive paths: /admin, /.env, /backup.sql, /phpinfo.php
+</code></pre>
+
+<h2>Penetration Testing</h2>
+<p>While SAST and DAST are automated, <strong>penetration testing</strong> (pen testing) involves skilled human security engineers actively trying to breach your systems using the same techniques real attackers use. A pen test goes far beyond automated scans:</p>
+<ul>
+  <li><strong>Reconnaissance:</strong> Discovering subdomains, open ports, technology fingerprinting, employee social engineering vectors</li>
+  <li><strong>Exploitation:</strong> Chaining multiple low-severity issues into high-impact attack paths (e.g., SSRF → IAM metadata service → AWS credential theft)</li>
+  <li><strong>Privilege Escalation:</strong> Starting from a low-privilege position and escalating to admin/root using misconfigurations</li>
+  <li><strong>Reporting:</strong> Detailed reproduction steps and prioritized remediation recommendations</li>
+</ul>
+<p>Best practice: Run automated SAST/DAST continuously in CI/CD, and commission a professional pen test annually (or before a major product launch or compliance certification).</p>

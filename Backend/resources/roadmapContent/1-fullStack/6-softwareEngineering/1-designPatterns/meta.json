@@ -1,0 +1,7 @@
+{
+  "id": "1-designPatterns",
+  "title": "Design Patterns",
+  "description": "Common software design patterns and SOLID principles.",
+  "order": 1,
+  "topics": ["1-solidPrinciples", "2-designPatterns"]
+}

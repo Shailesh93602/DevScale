@@ -1,0 +1,62 @@
+<h1>Advanced Joins & CTEs in SQL</h1>
+<p>Relational databases excel at combining data from multiple tables. Rather than executing multiple queries and combining the data manually in your Node.js or Python backend, <strong>JOINs</strong> and <strong>Subqueries</strong> allow the database engine to perform this heavy lifting natively and securely.</p>
+
+<h2>The 4 Primary JOINs</h2>
+<p>Understanding which JOIN to use determines exactly what data is returned or excluded.</p>
+<ul>
+  <li><strong>INNER JOIN:</strong> The most common. Returns records <strong>ONLY</strong> if there is a matching value in both tables. (If a User has no Posts, that User is excluded from the results).</li>
+  <li><strong>LEFT JOIN:</strong> Returns <strong>ALL</strong> records from the left table, and the matched records from the right table. (Returns all Users. If a User has no Posts, the Post columns will simply be <code>NULL</code>).</li>
+  <li><strong>RIGHT JOIN:</strong> The exact opposite of a LEFT JOIN. Returns all records from the right table.</li>
+  <li><strong>FULL OUTER JOIN:</strong> Returns all records when there is a match in either the left OR right table. It returns everything, filling in <code>NULL</code>s wherever data is missing.</li>
+</ul>
+
+<h3>Syntax Example</h3>
+<pre><code>-- Get all users, and any posts they have written (LEFT JOIN)
+SELECT u.name, u.email, p.title
+FROM users u
+LEFT JOIN posts p ON u.id = p.author_id;
+
+-- Get ONLY users who have written at least one post (INNER JOIN)
+SELECT u.name, u.email, p.title
+FROM users u
+INNER JOIN posts p ON u.id = p.author_id;</code></pre>
+
+<h2>Subqueries</h2>
+<p>A Subquery is a query nested entirely inside another query. They are often used in the <code>WHERE</code> clause to filter data based on dynamic values, or in the <code>SELECT</code> clause to calculate aggregated columns.</p>
+
+<pre><code>-- Find all users who have an age greater than the average age
+SELECT name, age 
+FROM users 
+WHERE age &gt; (SELECT AVG(age) FROM users);
+
+-- Find the titles of all posts written by users located in "New York"
+SELECT title 
+FROM posts 
+WHERE author_id IN (
+  SELECT id FROM users WHERE city = 'New York'
+);</code></pre>
+
+<h2>Common Table Expressions (CTEs)</h2>
+<p>While Subqueries are powerful, nesting them 3 or 4 levels deep makes a query completely unreadable. <strong>CTEs (Common Table Expressions)</strong> solve this by allowing you to define temporary tables at the very top of your query using the <code>WITH</code> clause.</p>
+<p>CTEs act like variables in programming. You define a query, give it a name, and then query <em>that name</em> later down in the file.</p>
+
+<pre><code>-- 1. Define the CTE at the top
+WITH NewYorkUsers AS (
+  SELECT id, name FROM users WHERE city = 'New York'
+),
+-- 2. You can define multiple CTEs, separated by commas
+PopularPosts AS (
+  SELECT id, title, author_id FROM posts WHERE views &gt; 1000
+)
+
+-- 3. The actual main query using the CTEs defined above!
+SELECT ny.name, p.title 
+FROM NewYorkUsers ny
+INNER JOIN PopularPosts p ON ny.id = p.author_id;</code></pre>
+
+<h2>Why use CTEs?</h2>
+<ol>
+  <li><strong>Readability:</strong> They read from top to bottom, making complex analytical queries much easier for other developers to understand.</li>
+  <li><strong>Reusability:</strong> You can reference the same CTE multiple times within the main query without writing the logic out twice.</li>
+  <li><strong>Recursion:</strong> CTEs can be marked as <code>WITH RECURSIVE</code> to query hierarchical tree structures (like an Employee &amp; Manager organizational chart, or deeply nested Reddit comments).</li>
+</ol>

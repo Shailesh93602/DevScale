@@ -1,0 +1,20 @@
+{
+  "title": "Find if Path Exists in Graph",
+  "slug": "find-if-path-exists-in-graph",
+  "difficulty": "Easy",
+  "category": "algorithms",
+  "points": 50,
+  "tags": ["depth-first-search","breadth-first-search","union-find","graph"],
+  "company_tags": ["Microsoft","Amazon","Google"],
+  "topic_tags": ["graphs","depth-first search","breadth-first search"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer `n`, an array of `edges` representing a bi-directional graph, a `start` node and an `end` node.",
+  "output_format": "`true` if there is a valid path from `start` to `end`, or `false` otherwise.",
+  "example_input": "n = 3, edges = [[0,1],[1,2],[2,0]], start = 0, end = 2",
+  "example_output": "true",
+  "constraints": "- `1 <= n <= 2 * 10^5`\n- `0 <= edges.length <= 2 * 10^5`\n- `edges[i].length == 2`\n- `0 <= ui, vi <= n - 1`\n- `ui != vi`\n- `0 <= start, end <= n - 1`\n- There are no duplicate edges.",
+  "function_signature": "function validPath(n: number, edges: number[][], start: number, end: number): boolean {}",
+  "status": "ACTIVE"
+}

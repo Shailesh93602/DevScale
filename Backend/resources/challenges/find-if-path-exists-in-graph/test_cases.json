@@ -1,0 +1,10 @@
+[
+  {"input":"{\"n\":3, \"edges\":[[0,1],[1,2],[2,0]], \"start\":0, \"end\":2}","output":"true","explanation":"Triangle graph path 0-1-2","is_hidden":false},
+  {"input":"{\"n\":6, \"edges\":[[0,1],[0,2],[3,5],[5,4],[4,3]], \"start\":0, \"end\":5}","output":"false","explanation":"Two disconnected components","is_hidden":false},
+  {"input":"{\"n\":1, \"edges\":[], \"start\":0, \"end\":0}","output":"true","explanation":"Single node","is_hidden":false},
+  {"input":"{\"n\":5, \"edges\":[[0,4]], \"start\":0, \"end\":4}","output":"true","explanation":"Direct edge","is_hidden":true},
+  {"input":"{\"n\":3, \"edges\":[[0,1],[1,2]], \"start\":0, \"end\":2}","output":"true","explanation":"Line graph","is_hidden":true},
+  {"input":"{\"n\":10, \"edges\":[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9]], \"start\":0, \"end\":9}","output":"true","explanation":"Long line","is_hidden":true},
+  {"input":"{\"n\":5, \"edges\":[[0,1],[1,2],[3,4]], \"start\":0, \"end\":4}","output":"false","explanation":"Disconnected in small graph","is_hidden":true},
+  {"input":"{\"n\":4, \"edges\":[[0,1],[2,3]], \"start\":0, \"end\":3}","output":"false","explanation":"Start and end in diff components","is_hidden":true}
+]

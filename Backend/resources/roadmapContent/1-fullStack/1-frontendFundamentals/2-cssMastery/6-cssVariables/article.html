@@ -1,0 +1,108 @@
+<h1>CSS Custom Properties (Variables)</h1>
+<p>CSS Custom Properties — commonly called <strong>CSS Variables</strong> — allow you to store values in reusable named tokens. They are the foundation of modern, themeable design systems.</p>
+
+<h2>Defining and Using Variables</h2>
+<pre><code>/* Define variables on :root to make them globally available */
+:root {
+  --color-primary: #6366f1;
+  --color-secondary: #8b5cf6;
+  --color-text: #1e293b;
+  --color-bg: #ffffff;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 2rem;
+  --radius-md: 0.5rem;
+  --font-body: 'Inter', sans-serif;
+}
+
+/* Use variables with var() */
+button {
+  background-color: var(--color-primary);
+  color: var(--color-bg);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+}</code></pre>
+
+<h2>Fallback Values</h2>
+<p>Provide a fallback in case a variable is undefined:</p>
+<pre><code>color: var(--color-accent, #f43f5e);  /* uses #f43f5e if --color-accent isn't set */</code></pre>
+
+<h2>Dark Mode with CSS Variables</h2>
+<p>This is where CSS variables truly shine — toggle an entire theme by changing a handful of values:</p>
+<pre><code>:root {
+  --color-bg: #ffffff;
+  --color-text: #1e293b;
+  --color-surface: #f1f5f9;
+}
+
+[data-theme="dark"],
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #0f172a;
+    --color-text: #f8fafc;
+    --color-surface: #1e293b;
+  }
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}</code></pre>
+<p>Toggle dark mode by setting <code>document.documentElement.setAttribute('data-theme', 'dark')</code> in JavaScript.</p>
+
+<h2>Scoped Variables</h2>
+<p>Variables follow the CSS cascade — you can scope them to specific components:</p>
+<pre><code>.card {
+  --card-bg: #f8fafc;
+  --card-border: 1px solid #e2e8f0;
+  background: var(--card-bg);
+  border: var(--card-border);
+}
+
+.card--highlighted {
+  --card-bg: #eff6ff;
+  --card-border: 2px solid #6366f1;
+  /* background and border automatically update! */
+}</code></pre>
+
+<h2>Animating CSS Variables with JavaScript</h2>
+<pre><code>// Update a variable dynamically
+document.documentElement.style.setProperty('--scroll-progress', `${scrollPercent}%`);
+
+// Progress bar that updates on scroll
+.progress-bar {
+  width: var(--scroll-progress, 0%);
+  background: var(--color-primary);
+  height: 4px;
+}</code></pre>
+
+<h2>CSS Variables vs. Preprocessor Variables (Sass)</h2>
+<ul>
+  <li><strong>Sass variables</strong> are compiled away at build time — they can't be changed dynamically.</li>
+  <li><strong>CSS variables</strong> are live in the browser — they can be changed with JavaScript, media queries, or pseudo-classes.</li>
+  <li>CSS variables participate in the cascade and can be inherited by child elements.</li>
+</ul>
+
+<h2>Building a Design Token System</h2>
+<pre><code>:root {
+  /* Primitive tokens */
+  --indigo-500: #6366f1;
+  --indigo-600: #4f46e5;
+  --slate-900: #0f172a;
+
+  /* Semantic tokens (reference primitives) */
+  --color-brand: var(--indigo-500);
+  --color-brand-hover: var(--indigo-600);
+  --color-text-primary: var(--slate-900);
+}</code></pre>
+<p>This two-layer system (primitives → semantics) is used by design systems like Material UI, Radix, and Chakra UI.</p>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Define all global variables on <code>:root</code>.</li>
+  <li>Use semantic naming (<code>--color-primary</code> not <code>--blue</code>).</li>
+  <li>Always include a fallback value when using <code>var()</code>.</li>
+  <li>Use CSS variables for theme tokens — colours, spacing, typography, shadows.</li>
+  <li>Prefer CSS variables over JavaScript style injection for performance.</li>
+</ul>

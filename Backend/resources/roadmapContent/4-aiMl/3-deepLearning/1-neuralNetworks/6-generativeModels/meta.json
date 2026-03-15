@@ -1,0 +1,4 @@
+{
+    "name": "Generative Models: GANs & Diffusion",
+    "description": "Building models that create new data — images, audio, and text. Understanding the adversarial training framework of GANs (generator vs discriminator), common GAN failure modes (mode collapse, training instability), the score-matching principle behind diffusion models, and practical use of Stable Diffusion and HuggingFace Diffusers."
+}

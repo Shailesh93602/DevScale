@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the fundamental architectural difference between traditional 'push-based' CD and 'pull-based' GitOps with ArgoCD?",
+            "options": [
+                "Push-based CD uses Helm; GitOps only works with raw Kubernetes YAML.",
+                "In push-based CD, the CI runner holds kubectl credentials and pushes changes directly to the cluster. In GitOps (pull-based), ArgoCD runs inside the cluster, pulls desired state from Git, and self-applies changes — meaning cluster credentials never leave the cluster boundary.",
+                "GitOps is slower than push-based CD because it polls Git every 5 minutes.",
+                "Push-based CD deploys to all environments simultaneously; GitOps deploys one at a time."
+            ],
+            "answer": "In push-based CD, the CI runner holds kubectl credentials and pushes changes directly to the cluster. In GitOps (pull-based), ArgoCD runs inside the cluster, pulls desired state from Git, and self-applies changes — meaning cluster credentials never leave the cluster boundary.",
+            "explanation": "Storing KUBECONFIG or cluster credentials in a CI pipeline is a significant security risk. If your CI runner is compromised, the attacker has full cluster access. With ArgoCD, your CI runner only needs to write to a Git repo."
+        },
+        {
+            "question": "What does ArgoCD's 'selfHeal: true' configuration accomplish, and why is it a core GitOps feature?",
+            "options": [
+                "It automatically scales up pods if any of them crash or fail health checks.",
+                "When 'selfHeal: true' is set, ArgoCD continuously compares the live cluster state to the Git state. If anyone manually modifies cluster resources outside of Git (e.g., kubectl edit or kubectl scale), ArgoCD immediately detects the drift and reverts the change back to what Git says — enforcing Git as the authoritative source of truth.",
+                "It automatically patches security vulnerabilities in running containers.",
+                "It prevents users from committing directly to the main branch of the manifests repo."
+            ],
+            "answer": "When 'selfHeal: true' is set, ArgoCD continuously compares the live cluster state to the Git state. If anyone manually modifies cluster resources outside of Git (e.g., kubectl edit or kubectl scale), ArgoCD immediately detects the drift and reverts the change back to what Git says — enforcing Git as the authoritative source of truth.",
+            "explanation": "This prevents 'configuration drift' from accumulated manual interventions. Without selfHeal, an operator might manually scale a deployment to handle an emergency, forget to update Git, and the next deployment reverts their fix."
+        },
+        {
+            "question": "How does GitOps with ArgoCD make production deployments auditable and reversible in a way that traditional kubectl apply commands cannot?",
+            "options": [
+                "ArgoCD stores all deployment logs in a separate PostgreSQL database.",
+                "Every deployment is a Git commit with a complete record of: who changed what (author), when, and why (commit message). Rolling back a broken deployment is a 'git revert' of the bad commit — ArgoCD automatically detects the revert and reconciles the cluster back to the previous stable state.",
+                "ArgoCD creates automatic snapshots of etcd before every sync operation.",
+                "Traditional kubectl apply is not supported on production clusters for security reasons."
+            ],
+            "answer": "Every deployment is a Git commit with a complete record of: who changed what (author), when, and why (commit message). Rolling back a broken deployment is a 'git revert' of the bad commit — ArgoCD automatically detects the revert and reconciles the cluster back to the previous stable state.",
+            "explanation": "In a compliance audit: 'Which engineer deployed v2.5.0 to production and when?' With GitOps: it's a Git blame on the manifests repo. With traditional kubectl: you'd need to dig through CI build logs and hope the information is still there."
+        }
+    ]
+}

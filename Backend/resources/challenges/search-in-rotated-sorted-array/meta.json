@@ -1,0 +1,29 @@
+{
+  "title": "Search in Rotated Sorted Array",
+  "slug": "search-in-rotated-sorted-array",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["array", "binary-search"],
+  "company_tags": ["Amazon", "LinkedIn", "Microsoft", "Facebook"],
+  "topic_tags": ["arrays", "binary search"],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer array `nums` and an integer `target`.",
+  "output_format": "The index of `target` if it is in `nums`, or `-1` if it is not in `nums`.",
+  "example_input": "nums = [4,5,6,7,0,1,2], target = 0",
+  "example_output": "4",
+  "constraints": "- `1 <= nums.length <= 5000`\n- `-10^4 <= nums[i] <= 10^4`\n- All values of `nums` are unique.\n- `nums` is an ascending array that is possibly rotated.\n- `-10^4 <= target <= 10^4`",
+  "function_signature": "function search(nums: number[], target: number): number {}",
+  "status": "ACTIVE"
+}

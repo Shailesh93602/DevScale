@@ -1,0 +1,62 @@
+[
+  {
+    "input": { "initial": 0, "operations": ["render", "increment", "render"] },
+    "output": { "renders": [0, 1] },
+    "explanation": "Initial state is 0, after increment and re-render it becomes 1",
+    "is_hidden": false
+  },
+  {
+    "input": { "initial": "hello", "operations": ["render", "set('world')", "render"] },
+    "output": { "renders": ["hello", "world"] },
+    "explanation": "String state updated via direct value",
+    "is_hidden": false
+  },
+  {
+    "input": { "initial": 0, "operations": ["render", "set(prev => prev + 5)", "render"] },
+    "output": { "renders": [0, 5] },
+    "explanation": "Functional update: prev => prev + 5",
+    "is_hidden": false
+  },
+  {
+    "input": { "initial": 0, "operations": ["render"] },
+    "output": { "renders": [0] },
+    "explanation": "First render returns initial value",
+    "is_hidden": true
+  },
+  {
+    "input": { "initial": 0, "operations": ["render", "increment", "increment", "increment", "render"] },
+    "output": { "renders": [0, 3] },
+    "explanation": "Multiple setState calls between renders accumulate",
+    "is_hidden": true
+  },
+  {
+    "input": { "type": "multi-state", "operations": ["render", "setName('Alice')", "setAge(25)", "render"] },
+    "output": { "renders": [{ "name": "", "age": 0 }, { "name": "Alice", "age": 25 }] },
+    "explanation": "Multiple useState hooks in one component track independently",
+    "is_hidden": true
+  },
+  {
+    "input": { "initial": 10, "operations": ["render", "set(prev => prev * 2)", "render", "set(prev => prev + 1)", "render"] },
+    "output": { "renders": [10, 20, 21] },
+    "explanation": "Chain of functional updates across renders",
+    "is_hidden": true
+  },
+  {
+    "input": { "initial": [], "operations": ["render", "set([1,2,3])", "render"] },
+    "output": { "renders": [[], [1, 2, 3]] },
+    "explanation": "Array state updates correctly",
+    "is_hidden": true
+  },
+  {
+    "input": { "initial": null, "operations": ["render", "set('value')", "render", "set(null)", "render"] },
+    "output": { "renders": [null, "value", null] },
+    "explanation": "State can transition between null and non-null",
+    "is_hidden": true
+  },
+  {
+    "input": { "initial": 0, "operations": ["render", "render", "render"] },
+    "output": { "renders": [0, 0, 0] },
+    "explanation": "Multiple renders without setState keep same state",
+    "is_hidden": true
+  }
+]

@@ -1,0 +1,4 @@
+{
+    "name": "Log Aggregation Pipelines",
+    "description": "Building reliable pipelines to collect, transform, and ship logs from distributed systems. Comparing Fluentd, Fluent Bit, Logstash, and Vector as log shippers; understanding pipeline stages (parsing, filtering, enrichment, routing); and designing log retention policies that balance cost with compliance."
+}

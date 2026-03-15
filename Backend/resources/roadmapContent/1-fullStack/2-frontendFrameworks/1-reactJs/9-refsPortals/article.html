@@ -1,0 +1,145 @@
+<h1>Refs, forwardRef & Portals</h1>
+<p>While React's declarative state model is powerful, sometimes you need to step outside of it to interact directly with DOM elements or store mutable data without triggering re-renders. That's where <code>useRef</code>, <code>forwardRef</code>, and <code>createPortal</code> come in.</p>
+
+<h2>useRef for DOM Access</h2>
+<p>The most common use case for <code>useRef</code> is accessing an underlying DOM node directly, often to manage focus, text selection, or media playback.</p>
+<pre><code>import { useRef } from 'react';
+
+function SearchInput() {
+  const inputRef = useRef(null);
+
+  const focusInput = () => {
+    // Current points to the mounted DOM element
+    inputRef.current.focus();
+  };
+
+  return (
+    &lt;div&gt;
+      &lt;input ref={inputRef} placeholder="Search..." /&gt;
+      &lt;button onClick={focusInput}&gt;Focus Input&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+<h2>useRef for Mutable Variables</h2>
+<p>Unlike <code>useState</code>, updating a ref does <strong>not</strong> trigger a re-render. Information that is mutated but doesn't affect the visual output should live in a ref, like timer IDs.</p>
+<pre><code>function Stopwatch() {
+  const [seconds, setSeconds] = useState(0);
+  const timerRef = useRef(null); // Stores the interval ID
+
+  const start = () => {
+    if (timerRef.current !== null) return;
+    timerRef.current = setInterval(() => {
+      setSeconds(s => s + 1);
+    }, 1000);
+  };
+
+  const stop = () => {
+    clearInterval(timerRef.current);
+    timerRef.current = null;
+  };
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;{seconds}s&lt;/p&gt;
+      &lt;button onClick={start}&gt;Start&lt;/button&gt;
+      &lt;button onClick={stop}&gt;Stop&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+<h2>forwardRef: Exposing DOM Nodes from Custom Components</h2>
+<p>By default, you can't pass a <code>ref</code> to a custom component. <code>forwardRef</code> lets your component take a ref and pass it down ("forward" it) to a standard DOM element inside it.</p>
+<pre><code>import { forwardRef, useRef } from 'react';
+
+// Custom, styled input component that can still be focused by a parent
+const FancyInput = forwardRef((props, ref) => {
+  return (
+    &lt;div className="fancy-wrapper"&gt;
+      &lt;span className="icon"&gt;🔍&lt;/span&gt;
+      &lt;input className="fancy-input" ref={ref} {...props} /&gt;
+    &lt;/div&gt;
+  );
+});
+
+function Parent() {
+  const inputRef = useRef(null);
+  
+  return (
+    &lt;div&gt;
+      &lt;FancyInput ref={inputRef} placeholder="Search..." /&gt;
+      &lt;button onClick={() => inputRef.current.focus()}&gt;Focus&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+<h2>useImperativeHandle: Customizing Exposed Refs</h2>
+<p>Usually, <code>forwardRef</code> exposes the raw DOM node. <code>useImperativeHandle</code> lets you expose a customized object with specific methods instead of the raw DOM node.</p>
+<pre><code>import { forwardRef, useRef, useImperativeHandle } from 'react';
+
+const VideoPlayer = forwardRef((props, ref) => {
+  const videoRef = useRef(null);
+
+  // Parent only gets access to these two methods, not the whole video node
+  useImperativeHandle(ref, () => {
+    return {
+      play() {
+        videoRef.current.play();
+      },
+      pause() {
+        videoRef.current.pause();
+      }
+    };
+  }, []); // dependencies
+
+  return &lt;video ref={videoRef} src="video.mp4" /&gt;;
+});
+
+function RemoteControl() {
+  const playerRef = useRef(null);
+  return (
+    &lt;div&gt;
+      &lt;VideoPlayer ref={playerRef} /&gt;
+      &lt;button onClick={() => playerRef.current.play()}&gt;Play&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+<h2>React Portals</h2>
+<p>Portals let you render a component's children into a different part of the DOM hierarchy than the parent component. This is essential for modals, tooltips, and dropdowns to escape <code>overflow: hidden</code> or <code>z-index</code> constraints.</p>
+<pre><code>import { createPortal } from 'react-dom';
+
+function Modal({ children, isOpen }) {
+  if (!isOpen) return null;
+
+  // Renders the JSX directly into document.body, not where Modal is placed
+  return createPortal(
+    &lt;div className="modal-backdrop"&gt;
+      &lt;div className="modal-content"&gt;
+        {children}
+      &lt;/div&gt;
+    &lt;/div&gt;,
+    document.body
+  );
+}
+
+// Usage in App
+// Even if App has overflow: hidden, the modal renders at the root level
+function App() {
+  const [open, setOpen] = useState(false);
+  return (
+    &lt;div className="app-main" style={{ overflow: 'hidden' }}&gt;
+      &lt;button onClick={() => setOpen(true)}&gt;Open Modal&lt;/button&gt;
+      &lt;Modal isOpen={open}&gt;
+        &lt;h1&gt;Hello from Portal!&lt;/h1&gt;
+      &lt;/Modal&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li><strong>Don't overuse refs for DOM manipulation.</strong> If you can do it declaratively with state (e.g., toggling a class), don't use a ref.</li>
+  <li><strong>Use refs for timers and intervals.</strong> They are perfect for storing mutable data that doesn't affect render output.</li>
+  <li><strong>Always use portals for overlays.</strong> Modals rendered inline will eventually break due to CSS stacking contexts.</li>
+</ul>

@@ -1,0 +1,4 @@
+{
+    "name": "Imbalanced Learning & SHAP Explainability",
+    "description": "Solving real-world classification challenges. Handling severely imbalanced datasets (fraud, churn, rare disease) with SMOTE, ADASYN, class weighting, and threshold tuning. Understanding model explainability with SHAP values — computing feature importance for individual predictions to build trust and satisfy regulatory requirements."
+}

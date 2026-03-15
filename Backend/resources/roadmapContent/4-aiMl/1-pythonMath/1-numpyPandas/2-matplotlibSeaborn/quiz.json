@@ -1,0 +1,118 @@
+{
+    "title": "Data Visualization Quiz",
+    "description": "Test your knowledge on Matplotlib, Seaborn, and finding correlations.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Which Python library is considered the foundational, low-level plotting library upon which many others are built?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Seaborn",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Pandas",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Matplotlib",
+                    "isCorrect": true
+                },
+                {
+                    "text": "TensorFlow",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the primary advantage of using Seaborn over raw Matplotlib?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It executes 10x faster because it is written in C++.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It provides a higher-level, more aesthetic API that is deeply integrated with Pandas DataFrames for statistical plotting.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It allows interactive 3D virtual reality visualizations.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It automatically cleans missing data in the DataFrame.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "If you want to quickly see the relationships between *every* numerical column in your dataset simultaneously, which Seaborn function is best?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "sns.lineplot()",
+                    "isCorrect": false
+                },
+                {
+                    "text": "sns.distplot()",
+                    "isCorrect": false
+                },
+                {
+                    "text": "sns.pairplot()",
+                    "isCorrect": true
+                },
+                {
+                    "text": "sns.boxplot()",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which type of plot is best utilized alongside `df.corr()` to easily spot highly correlated features?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Pie Chart",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Heatmap",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Histogram",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Violin Plot",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In a Boxplot, what do the individual dots located far outside the main 'whiskers' typically represent?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The median values.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Missing null values.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Statistical outliers.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Predicted values from a model.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

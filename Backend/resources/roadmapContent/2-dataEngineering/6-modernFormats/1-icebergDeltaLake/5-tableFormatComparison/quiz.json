@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "If your Data Engineering team needs your Data Lake tables to be simultaneously queryable by Apache Spark, Trino, Flink, Snowflake, and BigQuery — which table format should you prioritize?",
+            "options": [
+                "Apache Hudi, because it was designed specifically for multi-engine compatibility.",
+                "Apache Iceberg, because it was designed from the ground up with the pure open table specification, making it the most widely supported format across all major query engines and cloud data warehouses without vendor lock-in.",
+                "Delta Lake, because it is the most mature format available.",
+                "Apache Parquet directly, without any table format layer."
+            ],
+            "answer": "Apache Iceberg, because it was designed from the ground up with the pure open table specification, making it the most widely supported format across all major query engines and cloud data warehouses without vendor lock-in.",
+            "explanation": "Delta Lake works best within the Databricks and Spark ecosystem. Iceberg's open specification means AWS, Google Cloud, Snowflake, and Flink all support it natively."
+        },
+        {
+            "question": "For a team heavily invested in the Databricks platform, why is Delta Lake the most pragmatic table format choice?",
+            "options": [
+                "Because Databricks does not support Apache Iceberg at all.",
+                "Because Delta Lake's optimizations (Auto-Compaction, Z-Ordering, Auto-Optimize, Predictive Optimization, Liquid Clustering) are all deeply integrated into the Databricks Runtime, providing performance benefits that are not available when using Iceberg on Databricks.",
+                "Because Delta Lake is cheaper to store than Iceberg on AWS S3.",
+                "Because Delta Lake supports more column types than Iceberg."
+            ],
+            "answer": "Because Delta Lake's optimizations (Auto-Compaction, Z-Ordering, Auto-Optimize, Predictive Optimization, Liquid Clustering) are all deeply integrated into the Databricks Runtime, providing performance benefits that are not available when using Iceberg on Databricks.",
+            "explanation": "If you are already paying for Databricks, using Delta Lake maximizes the return on that investment through platform-native optimizations."
+        },
+        {
+            "question": "What specific architectural scenario makes Apache Hudi the strongest candidate over Iceberg or Delta Lake?",
+            "options": [
+                "When you need to query a static historical archive with no updates.",
+                "When your primary challenge is high-frequency, near-real-time record-level CDC ingestion from an OLTP database, where the Merge-on-Read table type allows you to ingest streaming updates with sub-minute latency while deferring expensive file compaction to background jobs.",
+                "When you need to run SQL joins across tables from multiple query engines.",
+                "When you need to apply schema migrations without rewriting data files."
+            ],
+            "answer": "When your primary challenge is high-frequency, near-real-time record-level CDC ingestion from an OLTP database, where the Merge-on-Read table type allows you to ingest streaming updates with sub-minute latency while deferring expensive file compaction to background jobs.",
+            "explanation": "Hudi was born from Uber's need to update millions of ride records per hour in S3. That CDC-at-scale use case remains its primary distinctive strength."
+        }
+    ]
+}

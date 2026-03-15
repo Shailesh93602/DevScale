@@ -1,0 +1,74 @@
+{
+    "title": "Prisma ORM Quiz",
+    "description": "Test your Prisma schema, migrations, and client API knowledge.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What does 'npx prisma migrate dev' do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Deploys your application to production",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Creates a new migration from schema changes and applies it to the dev database",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Generates the Prisma Client only",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Resets the database to its initial state",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does prisma.user.upsert() do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Updates multiple users at once",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Updates a user if it exists, or creates it if it doesn't",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Uploads user data to cloud storage",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Sorts users in ascending order",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the main advantage of Prisma over writing raw SQL?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Prisma is always faster than raw SQL",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Full TypeScript type safety — schema changes immediately reflect as compile errors in your code",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Prisma supports more databases than raw SQL",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Raw SQL cannot handle transactions",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "In a distributed trace flame graph, you see the checkout API taking 4 seconds total with one child span (Inventory Service PostgreSQL query) taking 3.6 seconds. What is the correct action?",
+            "options": [
+                "Scale up the API Gateway to reduce the 4-second response time.",
+                "Investigate the specific PostgreSQL query in the Inventory Service — it is the root cause consuming 90% of the total request time. Without distributed tracing, you'd only know 'the checkout API is slow' and would have to guess which of the 12 services to investigate.",
+                "Add a Redis cache in front of the API Gateway to reduce overall latency.",
+                "Increase the timeout threshold for the checkout API from 4 seconds to 8 seconds."
+            ],
+            "answer": "Investigate the specific PostgreSQL query in the Inventory Service — it is the root cause consuming 90% of the total request time. Without distributed tracing, you'd only know 'the checkout API is slow' and would have to guess which of the 12 services to investigate.",
+            "explanation": "This is exactly what distributed tracing provides: instant root cause identification from a flame graph rather than hours of log grepping across 12 different service log streams."
+        },
+        {
+            "question": "What is the purpose of the 'traceparent' HTTP header in the W3C Trace Context standard?",
+            "options": [
+                "It carries authentication tokens to allow downstream services to make API calls.",
+                "It propagates the Trace ID and parent Span ID to downstream services, so every service in the request's path creates child spans under the same trace — building a complete end-to-end call tree rather than disconnected per-service traces.",
+                "It sets the HTTP priority level to ensure traced requests are processed faster.",
+                "It enables HTTP/2 multiplexing for services that participate in a distributed trace."
+            ],
+            "answer": "It propagates the Trace ID and parent Span ID to downstream services, so every service in the request's path creates child spans under the same trace — building a complete end-to-end call tree rather than disconnected per-service traces.",
+            "explanation": "Without traceparent propagation, each service would generate its own independent trace. You'd see 12 separate Jaeger traces with no connection between them — useless for debugging cross-service latency."
+        },
+        {
+            "question": "Why is Grafana Tempo more cost-efficient at large scale than traditional trace backends like Elasticsearch-based solutions?",
+            "options": [
+                "Tempo compresses traces using a proprietary algorithm that Elasticsearch cannot replicate.",
+                "Tempo stores traces in cheap object storage (S3/GCS) rather than building expensive search indexes. Traces are retrieved by Trace ID (which costs nothing to index). This makes Tempo dramatically cheaper than full-text indexed solutions at scale, since terabytes of trace data in S3 cost pennies while Elasticsearch indexing is expensive.",
+                "Tempo runs as a serverless function, eliminating infrastructure costs entirely.",
+                "Tempo only stores the last 24 hours of traces, reducing storage requirements."
+            ],
+            "answer": "Tempo stores traces in cheap object storage (S3/GCS) rather than building expensive search indexes. Traces are retrieved by Trace ID (which costs nothing to index). This makes Tempo dramatically cheaper than full-text indexed solutions at scale, since terabytes of trace data in S3 cost pennies while Elasticsearch indexing is expensive.",
+            "explanation": "At 100M traces/day, Elasticsearch-based tracing can cost tens of thousands of dollars per month in storage and indexing. Tempo with S3 backend can handle the same volume for hundreds of dollars."
+        }
+    ]
+}

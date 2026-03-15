@@ -1,0 +1,27 @@
+// O(H) Time, O(H) Space — Recursive insertion
+/**
+ * Definition for a binary tree node.
+ * class TreeNode {
+ *     val: number
+ *     left: TreeNode | null
+ *     right: TreeNode | null
+ *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.left = (left===undefined ? null : left)
+ *         this.right = (right===undefined ? null : right)
+ *     }
+ * }
+ */
+
+function insertIntoBST(root: TreeNode | null, val: number): TreeNode | null {
+  // Base case: found the position to insert
+  if (root === null) return new TreeNode(val);
+
+  if (val < root.val) {
+    root.left = insertIntoBST(root.left, val);
+  } else {
+    root.right = insertIntoBST(root.right, val);
+  }
+
+  return root;
+}

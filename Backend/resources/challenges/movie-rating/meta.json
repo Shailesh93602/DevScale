@@ -1,0 +1,19 @@
+{
+  "title": "Movie Rating",
+  "slug": "movie-rating",
+  "difficulty": "Medium",
+  "category": "databases",
+  "points": 100,
+  "tags": ["sql", "union", "aggregation", "joins"],
+  "company_tags": ["Amazon", "Netflix", "Facebook", "Google"],
+  "topic_tags": ["SQL", "UNION ALL", "Aggregation"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Table: Movies (movie_id, title). Table: Users (user_id, name). Table: MovieRating (movie_id, user_id, rating, created_at).",
+  "output_format": "Result with column 'results' — first row: user who rated most movies (alphabetically first if tie), second row: movie with highest avg rating in Feb 2020 (alphabetically first if tie)",
+  "example_input": "Table: Movies\n| movie_id | title    |\n| 1        | Avengers |\n| 2        | Frozen   |\n| 3        | Joker    |",
+  "example_output": "| results  |\n| Daniel   |\n| Frozen   |",
+  "constraints": "- (movie_id, user_id) is the primary key of MovieRating\n- movie_id references Movies\n- user_id references Users",
+  "function_signature": "-- Write your SQL query below",
+  "status": "ACTIVE"
+}

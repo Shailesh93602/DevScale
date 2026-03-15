@@ -1,0 +1,6 @@
+[
+  "Think about maintaining two separate chains: one for odd-positioned nodes and one for even-positioned nodes.",
+  "You need to save the head of the even chain so you can attach it at the end of the odd chain.",
+  "Walk through the list with two pointers (odd and even). For each step, odd.next = even.next, then advance odd. Similarly for even.",
+  "After the loop, connect the end of the odd chain to the head of the even chain."
+]

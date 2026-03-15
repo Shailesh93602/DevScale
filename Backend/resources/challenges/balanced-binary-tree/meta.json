@@ -1,0 +1,19 @@
+{
+  "title": "Balanced Binary Tree",
+  "slug": "balanced-binary-tree",
+  "difficulty": "Easy",
+  "category": "algorithms",
+  "points": 50,
+  "tags": ["tree", "depth-first-search", "binary-tree", "recursion"],
+  "company_tags": ["Amazon", "Google", "Bloomberg", "Facebook", "Microsoft"],
+  "topic_tags": ["trees", "depth-first search"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "The root of a binary tree.",
+  "output_format": "A boolean indicating whether the tree is height-balanced.",
+  "example_input": "root = [3,9,20,null,null,15,7]",
+  "example_output": "true",
+  "constraints": "- The number of nodes in the tree is in the range `[0, 5000]`.\n- `-10^4 <= Node.val <= 10^4`",
+  "function_signature": "function isBalanced(root: TreeNode | null): boolean {}",
+  "status": "ACTIVE"
+}

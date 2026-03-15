@@ -1,0 +1,6 @@
+[
+  "Think about using Promises to create synchronization barriers between the functions.",
+  "Create a promise in the constructor that second() can await, and resolve it at the end of first().",
+  "Similarly, create a promise that third() awaits, resolved at the end of second().",
+  "The key insight is that promises in JavaScript act like one-shot events - once resolved, any await on them completes immediately."
+]

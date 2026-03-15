@@ -1,0 +1,62 @@
+[
+  {
+    "input": "queue.add('send-email', { to: 'user@test.com' }, { priority: 10 })",
+    "output": "{ \"id\": \"...\", \"type\": \"send-email\", \"status\": \"waiting\", \"priority\": 10 }",
+    "explanation": "Adding a job returns a job object with generated ID and 'waiting' status.",
+    "is_hidden": false
+  },
+  {
+    "input": "Add two jobs with priority 10 and 5; process both",
+    "output": "Priority 10 job processes first",
+    "explanation": "Higher priority jobs are dequeued and processed before lower priority ones.",
+    "is_hidden": false
+  },
+  {
+    "input": "Process a job that throws an error (maxRetries: 3)",
+    "output": "Job retried 3 times with exponential backoff (1s, 2s, 4s), then status becomes 'dead'",
+    "explanation": "Failed jobs are retried with increasing delays. After max retries, status changes to 'dead'.",
+    "is_hidden": false
+  },
+  {
+    "input": "queue.add('reminder', { msg: 'Hi' }, { delay: 5000 })",
+    "output": "Job created with status 'delayed', transitions to 'waiting' after 5 seconds",
+    "explanation": "Delayed jobs wait the specified duration before entering the queue for processing.",
+    "is_hidden": false
+  },
+  {
+    "input": "queue.getStats() after processing 10 jobs (7 completed, 3 dead)",
+    "output": "{ \"completed\": 7, \"dead\": 3, \"totalProcessed\": 10, \"avgProcessingTime\": 150 }",
+    "explanation": "Statistics accurately reflect the state of all jobs in the system.",
+    "is_hidden": false
+  },
+  {
+    "input": "Add 10 jobs simultaneously with maxConcurrency set to 3",
+    "output": "Only 3 jobs are active at any time; remaining wait in queue",
+    "explanation": "Concurrency limiter prevents more than maxConcurrency jobs from running simultaneously.",
+    "is_hidden": true
+  },
+  {
+    "input": "Process a job that exceeds the 30-second timeout",
+    "output": "Job fails with error 'Job timeout exceeded', retry is scheduled",
+    "explanation": "Jobs that exceed their timeout are automatically failed and retried.",
+    "is_hidden": true
+  },
+  {
+    "input": "queue.cancel(jobId) for a 'waiting' job",
+    "output": "true; job status changes to 'dead'",
+    "explanation": "Waiting and delayed jobs can be cancelled. Active jobs cannot be cancelled.",
+    "is_hidden": true
+  },
+  {
+    "input": "Add job with payload > 64KB",
+    "output": "Error: Job payload exceeds maximum size of 64KB",
+    "explanation": "Payload size is validated on job creation to prevent memory issues.",
+    "is_hidden": true
+  },
+  {
+    "input": "Job fails then succeeds on retry",
+    "output": "attempts: 2, status: 'completed', result: { success: true }",
+    "explanation": "Jobs that succeed on retry show the correct attempt count and completed status.",
+    "is_hidden": true
+  }
+]

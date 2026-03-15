@@ -1,0 +1,16 @@
+<h1>Columnar Storage & Compression</h1>
+<p>Traditional SQL databases (like PostgreSQL and MySQL) store data on the hard drive using a <strong>Row-Based</strong> format. When a new user registers, the database writes their `ID`, `Name`, `Email`, and `Age` together in one continuous block on the disk. This is perfect for transactional (OLTP) systems where you frequently fetch a single specific user profile.</p>
+
+<h2>The Problem with Row-Based Storage</h2>
+<p>In a Data Warehouse (OLAP), Data Analysts rarely fetch a single user profile. Instead, they run queries like: <code>SELECT SUM(payment_amount) FROM transactions WHERE year = 2023</code>.</p>
+<p>If the `transactions` table has 1 billion rows and is stored in a Row-Based format, the database must physically read the entire row (the strings, dates, IDs, and descriptions) off the hard drive just to extract the single `payment_amount` integer. This results in massive, unnecessary Disk I/O, crippling analytic performance.</p>
+
+<h2>Columnar Storage (Parquet & ORC)</h2>
+<p>Modern Cloud Data Warehouses (like Snowflake, BigQuery, and Amazon Redshift) strictly utilize <strong>Columnar Storage</strong> formats (like Apache Parquet or ORC).</p>
+<p>In Columnar Storage, the database physically groups the values of each column tightly together on the hard drive. All 1 billion `payment_amount` integers are stored sequentially in an isolated block, entirely separate from the `user_name` strings.</p>
+<p>When the Analyst runs <code>SELECT SUM(payment_amount) ...</code>, the Data Warehouse physically skips 90% of the hard drive. It ONLY reads the localized blocks containing the integers. A query that takes 30 minutes in PostgreSQL takes 3 seconds in Snowflake.</p>
+
+<h2>Aggressive Compression</h2>
+<p>Beyond read-speed, Columnar Storage unlocks massive algorithmic compression benefits. Because an entire hard drive block now contains identical data types (e.g., millions of integers clustered together), compression algorithms can drastically reduce file sizes.</p>
+<p>For example, using Run-Length Encoding (RLE), if a column stores the `country` string "USA" 50,000 times in a row, the database does not write "USA" 50,000 times. It simply writes <code>(USA x 50,000)</code>. This level of mathematical compression simply cannot be achieved in a Row-Based database where strings, dates, and integers are mixed haphazardly into a single row block.</p>
+<p>A 500-Gigabyte raw CSV file will often compress down to a blistering 20-Gigabyte Parquet file, saving immense cloud storage costs and exponentially increasing analytical querying speeds.</p>

@@ -1,0 +1,30 @@
+<h1>Image & Media Optimization</h1>
+<p>Images are the heaviest content on the modern internet, often consuming 80% of a webpage's total bandwidth. Loading massive unoptimized PNGs or JPEGs on high-definition Retina screens destroys your <strong>LCP (Largest Contentful Paint)</strong> score. If a user on a 3G mobile connection has to download a massive 5 megabyte image file before seeing anything, they will quickly abandon your website.</p>
+
+<h2>Next-Gen Image Formats (WebP & AVIF)</h2>
+<p>Most developers still use JPEG or PNG formats simply out of habit. However, Google specifically developed the <strong>WebP</strong> format for web performance, and the Alliance for Open Media released <strong>AVIF</strong>.</p>
+<p>A 1-Megabyte high-resolution JPEG image can often be drastically reduced in file size to just 150 Kilobytes using WebP, without any noticeable loss in visual quality. AVIF can push this compression even further.</p>
+<pre><code>// Modern HTML &lt;picture&gt; element offering fallbacks
+&lt;picture&gt;
+  &lt;source srcset="hero-image.avif" type="image/avif"&gt;
+  &lt;source srcset="hero-image.webp" type="image/webp"&gt;
+  &lt;img src="hero-image.jpg" alt="A high resolution hero banner"&gt;
+&lt;/picture&gt;
+</code></pre>
+<p>This syntax allows the browser to intelligently check if it supports AVIF. If it does, it downloads the tiny file. If not, it falls back to WebP, and finally to the heavy JPEG.</p>
+
+<h2>Native Lazy Loading</h2>
+<p>If your article contains 20 images, the browser naturally attempts to download all 20 immediately upon page load. This consumes huge amounts of memory and network bandwidth instantly, even if 18 of the images are completely hidden off-screen at the very bottom of the page.</p>
+<p>You must instruct the browser to intentionally <strong>defer</strong> downloading images that the user cannot currently see.</p>
+<pre><code>// Add the simple 'loading' attribute natively
+&lt;img src="product.jpg" loading="lazy" alt="Hidden off-screen product"&gt;
+</code></pre>
+<p>The <code>loading="lazy"</code> attribute tells Chrome to completely ignore this image file until the user actually physically scrolls close to it.</p>
+
+<h2>Image Optimization CDNs (Cloudinary / Imgix)</h2>
+<p>If a user is viewing your site on a small 300px wide iPhone, you absolutely should not force them to download a 4000px wide desktop 4K image file, only to shrink it down visually via CSS width. This wastes massive amounts of data.</p>
+<p>Instead of manually cropping and scaling hundreds of images in Photoshop, professional development teams utilize Image CDNs like Cloudinary.</p>
+<pre><code>// Dynamic resizing via a simple URL parameter
+&lt;img src="https://res.cloudinary.com/demo/image/upload/w_300/f_auto/hero.jpg"&gt;
+</code></pre>
+<p>In this example, the <code>w_300</code> parameter instructs Cloudinary's dynamic edge servers to instantly crop the massive source image down to exactly 300 pixels perfectly. The <code>f_auto</code> parameter tells it to intelligently serve WebP formatting automatically. The mobile device receives an incredibly tiny, perfectly optimized payload.</p>

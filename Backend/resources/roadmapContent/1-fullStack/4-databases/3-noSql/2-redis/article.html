@@ -1,0 +1,88 @@
+<h1>Redis Caching</h1>
+<p><strong>Redis</strong> (Remote Dictionary Server) is an open-source, in-memory data structure store used as a cache, message broker, and session store. Since data lives in RAM, reads/writes are extremely fast — typically under 1ms.</p>
+
+<h2>Core Data Structures</h2>
+<ul>
+  <li><strong>String</strong> — most basic type; stores text, numbers, serialized JSON</li>
+  <li><strong>Hash</strong> — like a dictionary/object; perfect for user sessions</li>
+  <li><strong>List</strong> — ordered list; great for queues (LPUSH/RPOP)</li>
+  <li><strong>Set</strong> — unordered unique values; good for tags/followers</li>
+  <li><strong>Sorted Set</strong> — set with a score; ideal for leaderboards</li>
+  <li><strong>Pub/Sub</strong> — publish-subscribe messaging channel</li>
+</ul>
+
+<h2>Common Redis Commands</h2>
+<pre><code># Strings
+SET user:1:name "Alice"
+GET user:1:name
+SET counter 0
+INCR counter          # atomic increment
+
+# Expiry (TTL)
+SET session:abc "token" EX 3600   # expires in 1 hour
+TTL session:abc                   # check remaining seconds
+
+# Hashes
+HSET user:1 name "Alice" age 25
+HGET user:1 name
+HGETALL user:1
+
+# Lists (queue)
+LPUSH jobs "task1"
+RPOP jobs
+
+# Sets
+SADD tags "nodejs" "redis"
+SMEMBERS tags
+
+# Sorted Sets (leaderboard)
+ZADD scores 150 "Alice" 200 "Bob"
+ZRANGE scores 0 -1 WITHSCORES REV</code></pre>
+
+<h2>Using Redis in Node.js (ioredis)</h2>
+<pre><code>import Redis from 'ioredis';
+const redis = new Redis(process.env.REDIS_URL);
+
+// Cache-aside pattern
+async function getUser(id: string) {
+  const cached = await redis.get(`user:${id}`);
+  if (cached) return JSON.parse(cached);
+
+  const user = await db.user.findUnique({ where: { id } });
+  await redis.set(`user:${id}`, JSON.stringify(user), 'EX', 300);
+  return user;
+}
+
+// Invalidate cache on update
+async function updateUser(id: string, data: any) {
+  const user = await db.user.update({ where: { id }, data });
+  await redis.del(`user:${id}`);
+  return user;
+}</code></pre>
+
+<h2>Rate Limiting with Redis</h2>
+<pre><code>async function rateLimit(ip: string): Promise<boolean> {
+  const key = `rate:${ip}`;
+  const count = await redis.incr(key);
+  if (count === 1) await redis.expire(key, 60); // 1-minute window
+  return count > 100; // blocked if > 100 requests/min
+}</code></pre>
+
+<h2>Session Storage</h2>
+<pre><code>// Store session
+await redis.hset(`session:${sessionId}`, {
+  userId: user.id,
+  createdAt: Date.now(),
+});
+await redis.expire(`session:${sessionId}`, 86400); // 24 hours
+
+// Retrieve session
+const session = await redis.hgetall(`session:${sessionId}`);</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always set TTL (expiry) on cached keys to prevent memory bloat.</li>
+  <li>Use consistent key naming: <code>entity:id:field</code> (e.g., <code>user:42:profile</code>).</li>
+  <li>Don't store large objects — serialize only what you need.</li>
+  <li>Use Redis Cluster or Redis Sentinel for high availability in production.</li>
+</ul>

@@ -1,0 +1,118 @@
+{
+    "title": "MLflow Experiment Tracking Quiz",
+    "description": "Test your knowledge of tracking ML experiments, comparing runs, and managing the model lifecycle with MLflow.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "In MLflow, what is the difference between a 'Parameter' and a 'Metric'?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Parameters are logged after training; Metrics are logged before",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Parameters are inputs you control before training (hyperparameters); Metrics are output measurements after training (accuracy, AUC)",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Parameters store model weights; Metrics store training data",
+                    "isCorrect": false
+                },
+                {
+                    "text": "There is no difference; they are synonyms in MLflow",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does `mlflow.autolog()` do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Automatically deploys the best-performing model to production",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Automatically captures parameters, metrics, and the model artifact without manual log_param/log_metric calls",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Automatically tunes hyperparameters using grid search",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Automatically creates a Docker container for the model",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why should you use a remote PostgreSQL + S3 backend for MLflow tracking in production instead of the default local ./mlruns folder?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The local folder does not support logging metrics",
+                    "isCorrect": false
+                },
+                {
+                    "text": "PostgreSQL makes model training faster",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The local folder doesn't survive server restarts and isn't shareable across a team",
+                    "isCorrect": true
+                },
+                {
+                    "text": "S3 is required by law for storing ML models",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How do you load the 'Production' stage version of a model named 'churn_predictor' from the MLflow Model Registry?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "mlflow.pyfunc.load_model('models:/churn_predictor/Production')",
+                    "isCorrect": true
+                },
+                {
+                    "text": "mlflow.load('churn_predictor', stage='production')",
+                    "isCorrect": false
+                },
+                {
+                    "text": "joblib.load('mlflow/models/churn_predictor/production.pkl')",
+                    "isCorrect": false
+                },
+                {
+                    "text": "mlflow.sklearn.restore_model('churn_predictor')",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What best practice should you follow when logging dataset information in MLflow?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Never log dataset information as it increases storage costs significantly",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Log dataset version, row count, and a feature hash as run tags to ensure any experiment can be reproduced exactly",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Upload the entire raw CSV dataset as an MLflow artifact on every run",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Only log the dataset name, not its contents or version",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,20 @@
+{
+  "title": "Kth Largest Element in a Stream",
+  "slug": "kth-largest-element-in-a-stream",
+  "difficulty": "Easy",
+  "category": "algorithms",
+  "points": 50,
+  "tags": ["tree","design","binary-search-tree","heap","data-stream"],
+  "company_tags": ["Amazon","Facebook","Google","Microsoft"],
+  "topic_tags": ["heaps","priority queue","design"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "A stream of numbers added continuously using an `add` method.",
+  "output_format": "The `k`th largest element in the stream.",
+  "example_input": "[\"KthLargest\", \"add\", \"add\", \"add\", \"add\", \"add\"]\n[[3, [4, 5, 8, 2]], [3], [5], [10], [9], [4]]",
+  "example_output": "[null, 4, 5, 5, 8, 8]",
+  "constraints": "- `1 <= k <= 10^4`\n- `0 <= nums.length <= 10^4`\n- `-10^4 <= nums[i] <= 10^4`\n- `-10^4 <= val <= 10^4`\n- At most `10^4` calls will be made to `add`.\n- It is guaranteed that there will be at least `k` elements in the array when you search for the `k`th element.",
+  "function_signature": "class KthLargest { constructor(k: number, nums: number[]) {} add(val: number): number {} }",
+  "status": "ACTIVE"
+}

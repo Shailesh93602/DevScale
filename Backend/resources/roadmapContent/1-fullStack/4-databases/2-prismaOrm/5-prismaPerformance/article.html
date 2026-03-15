@@ -1,0 +1,67 @@
+<h1>Advanced: Transactions & Raw SQL</h1>
+<p>While the standard Prisma CRUD methods handle 95% of application logic flawlessly, certain Enterprise workflows require you to push the ORM to its absolute limit. When dealing with complex financial mathematics, race conditions, or highly specialized database execution engines, you must utilize <strong>Interactive Transactions</strong> and <strong>Raw SQL</strong> executions.</p>
+
+<h2>Interactive Transactions</h2>
+<p>In standard execution, if you write <code>await prisma.user.update()</code> followed by <code>await prisma.post.create()</code>, they are executed completely independently. If the Node.js server crashes exactly after updating the user, the post is never created, leaving the database in an inconsistent state.</p>
+<p>To ensure <strong>Atomicity</strong> (ACID guarantees), Prisma provides the <code>$transaction</code> API. The most powerful version is the Interactive Transaction, which passes an artificially scoped <code>tx</code> client into a callback function.</p>
+
+<pre><code>// Moving $100 from Alice to Bob
+const performTransfer = async (aliceId, bobId, amount) =&gt; {
+  
+  // Start the powerful transaction block
+  await prisma.$transaction(async (tx) =&gt; {
+    
+    // 1. You MUST use 'tx', not 'prisma' inside this block!
+    const alice = await tx.account.findUnique({ where: { id: aliceId } });
+    
+    if (alice.balance &lt; amount) {
+      // 2. Throwing ANY error instantly triggers a Database ROLLBACK!
+      throw new Error(`Insufficient funds`); 
+    }
+
+    // 3. Subtract
+    await tx.account.update({
+      where: { id: aliceId },
+      data: { balance: { decrement: amount } },
+    });
+
+    // 4. Add
+    await tx.account.update({
+      where: { id: bobId },
+      data: { balance: { increment: amount } },
+    });
+    
+    // If the function reaches here safely, Prisma executes an automatic SQL COMMIT.
+  });
+};</code></pre>
+
+<h2>Executing Raw SQL Directly</h2>
+<p>Because Prisma acts as an abstraction layer across multiple database flavors (Postgres, MySQL, Mongo), it intentionally cannot support highly specialized, proprietary database features (e.g., PostgreSQL's specific PostGIS spatial mapping features, or recursive CTEs). </p>
+<p>When you reach a limitation, you can execute raw, untyped queries directly through the Prisma connection engine.</p>
+
+<pre><code>// Example: Executing a raw SQL command perfectly
+const activeAdmins = await prisma.$queryRaw`
+  SELECT * FROM "User" 
+  WHERE role = 'ADMIN' AND "lastLogin" &gt; NOW() - INTERVAL '30 days'
+`;
+
+// Crucial: Use tagged template literals. 
+// Prisma automatically parametrizes the variables to mathematically prevent SQL Injection!
+const userEmail = "hacker@evil.com' OR 1=1;--"; 
+
+// SAFE: Prisma treats this as a hard query parameter mathematically
+const user = await prisma.$queryRaw`SELECT * FROM "User" WHERE email = ${userEmail}`;
+</code></pre>
+
+<h2>Connection Pooling with PgBouncer</h2>
+<p>When deploying Prisma to a Serverless environment (like AWS Lambda or Vercel Edge Functions), a massive performance bottleneck emerges: <strong>Connection Exhaustion</strong>. Every time a Serverless function spins up, it creates a new TCP physical connection to the PostgreSQL database.</p>
+<p>If 1,000 users visit the site concurrently, 1,000 lambda functions spin up, creating 1,000 connection lines. Because PostgreSQL is fundamentally designed to only handle ~100 direct concurrent connections natively, the database crashes.</p>
+
+<h3>The Solution</h3>
+<p>You must route all serverless Prisma traffic through a <strong>Connection Pooler</strong> like PgBouncer or Prisma Accelerate.</p>
+<ol>
+  <li>The connection string changes from <code>postgresql://...:5432</code> to <code>postgresql://...:6543/?pgbouncer=true</code></li>
+  <li>The 1,000 lambda functions connect specifically to the PgBouncer middleman.</li>
+  <li>PgBouncer holds completely 1,000 lightweight HTTP connections open globally.</li>
+  <li>PgBouncer dynamically routes those massive requests through the 100 heavily restricted, physically direct TCP lines to PostgreSQL, preventing a global network crash natively.</li>
+</ol>

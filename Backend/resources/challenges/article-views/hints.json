@@ -1,0 +1,6 @@
+[
+  "When does an author view their own article? Think about which two columns need to match.",
+  "You need to compare author_id and viewer_id — filter rows where they are equal.",
+  "The table may have duplicate rows. How can you ensure each author appears only once in the result?",
+  "Use SELECT DISTINCT author_id AS id FROM Views WHERE author_id = viewer_id ORDER BY id."
+]

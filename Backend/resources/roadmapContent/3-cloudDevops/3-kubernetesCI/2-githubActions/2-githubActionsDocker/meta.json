@@ -1,0 +1,4 @@
+{
+    "name": "GitHub Actions & Docker",
+    "description": "Building Docker images in CI, tagging, and pushing to Docker Hub or ECR."
+}

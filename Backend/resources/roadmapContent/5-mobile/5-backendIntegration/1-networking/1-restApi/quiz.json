@@ -1,0 +1,118 @@
+{
+    "title": "REST API Integration in React Native Quiz",
+    "description": "Test your knowledge of fetch API, API client patterns, React Query, and file uploads in React Native.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What does `response.ok` check in the fetch API, and why is it important?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It checks if the network connection is available",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It returns true for HTTP status codes 200-299; important because fetch does NOT throw on 4xx/5xx errors — you must check it manually",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It validates that the response body is valid JSON",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It confirms the server received the request successfully",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In the centralized API client pattern, why should the 401 Unauthorized response be handled at the client level rather than in each individual API call?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The HTTP specification requires 401 to be handled at the transport layer",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Token expiry applies to every request — handling it once in the client avoids duplicating logout logic across dozens of API calls",
+                    "isCorrect": true
+                },
+                {
+                    "text": "React Native does not allow access to response status codes in component code",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Individual API call handlers cannot read authentication headers",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does `staleTime: 5 * 60 * 1000` in React Query's useQuery configuration do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Automatically refreshes data every 5 minutes in the background",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Marks data as stale (triggering a background refetch) after 5 minutes have passed since last fetch",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Cancels queries that take longer than 5 minutes to complete",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Caches data for 5 minutes then permanently removes it from memory",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "When uploading a file with fetch using FormData, why should you NOT set the 'Content-Type' header manually?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "React Native does not support multipart/form-data uploads",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Setting Content-Type manually overrides the automatically generated multipart boundary, breaking the server's ability to parse uploaded files",
+                    "isCorrect": true
+                },
+                {
+                    "text": "fetch ignores Content-Type headers when using FormData",
+                    "isCorrect": false
+                },
+                {
+                    "text": "You should always set Content-Type to 'application/octet-stream' for files",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does `queryClient.invalidateQueries({ queryKey: ['cart'] })` do in a React Query mutation's onSuccess callback?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Permanently deletes the cart data from the cache",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Marks cart queries as stale and triggers an automatic background refetch to sync with the latest server state",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Cancels any in-flight cart queries that are currently loading",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Resets the cart to its initial empty state",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

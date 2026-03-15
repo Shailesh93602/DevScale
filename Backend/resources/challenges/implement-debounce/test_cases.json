@@ -1,0 +1,130 @@
+[
+  {
+    "input": {
+      "calls": [{ "args": [], "delay_before": 0 }],
+      "debounce_delay": 100,
+      "wait_after": 150
+    },
+    "output": { "call_count": 1 },
+    "explanation": "Single call — function fires after 100ms delay",
+    "is_hidden": false
+  },
+  {
+    "input": {
+      "calls": [
+        { "args": [], "delay_before": 0 },
+        { "args": [], "delay_before": 50 },
+        { "args": [], "delay_before": 50 }
+      ],
+      "debounce_delay": 100,
+      "wait_after": 150
+    },
+    "output": { "call_count": 1 },
+    "explanation": "Three rapid calls within delay window — function fires only once",
+    "is_hidden": false
+  },
+  {
+    "input": {
+      "calls": [
+        { "args": ["hello"], "delay_before": 0 },
+        { "args": ["world"], "delay_before": 50 }
+      ],
+      "debounce_delay": 100,
+      "wait_after": 150
+    },
+    "output": { "call_count": 1, "last_args": ["world"] },
+    "explanation": "Last arguments are forwarded — 'world' is used, not 'hello'",
+    "is_hidden": false
+  },
+  {
+    "input": {
+      "calls": [
+        { "args": [], "delay_before": 0 },
+        { "args": [], "delay_before": 200 }
+      ],
+      "debounce_delay": 100,
+      "wait_after": 150
+    },
+    "output": { "call_count": 2 },
+    "explanation": "Calls separated by more than delay — function fires twice",
+    "is_hidden": true
+  },
+  {
+    "input": {
+      "calls": [],
+      "debounce_delay": 100,
+      "wait_after": 150
+    },
+    "output": { "call_count": 0 },
+    "explanation": "No calls made — function never fires",
+    "is_hidden": true
+  },
+  {
+    "input": {
+      "calls": [
+        { "args": [1], "delay_before": 0 },
+        { "args": [2], "delay_before": 10 },
+        { "args": [3], "delay_before": 10 },
+        { "args": [4], "delay_before": 10 },
+        { "args": [5], "delay_before": 10 }
+      ],
+      "debounce_delay": 50,
+      "wait_after": 100
+    },
+    "output": { "call_count": 1, "last_args": [5] },
+    "explanation": "Five rapid calls — only the last one (arg=5) fires",
+    "is_hidden": true
+  },
+  {
+    "input": {
+      "calls": [{ "args": [], "delay_before": 0 }],
+      "debounce_delay": 0,
+      "wait_after": 50
+    },
+    "output": { "call_count": 1 },
+    "explanation": "Zero delay — function fires immediately (on next tick)",
+    "is_hidden": true
+  },
+  {
+    "input": {
+      "calls": [
+        { "args": ["a"], "delay_before": 0 },
+        { "args": ["b"], "delay_before": 120 },
+        { "args": ["c"], "delay_before": 50 },
+        { "args": ["d"], "delay_before": 120 }
+      ],
+      "debounce_delay": 100,
+      "wait_after": 150
+    },
+    "output": { "call_count": 3, "last_args": ["d"] },
+    "explanation": "Mixed timing — three separate debounce windows complete",
+    "is_hidden": true
+  },
+  {
+    "input": {
+      "calls": [
+        { "args": [1, 2, 3], "delay_before": 0 }
+      ],
+      "debounce_delay": 50,
+      "wait_after": 100
+    },
+    "output": { "call_count": 1, "last_args": [1, 2, 3] },
+    "explanation": "Multiple arguments are forwarded correctly",
+    "is_hidden": true
+  },
+  {
+    "input": {
+      "calls": [
+        { "args": [], "delay_before": 0 },
+        { "args": [], "delay_before": 90 },
+        { "args": [], "delay_before": 90 },
+        { "args": [], "delay_before": 90 }
+      ],
+      "debounce_delay": 100,
+      "wait_after": 150
+    },
+    "output": { "call_count": 1 },
+    "explanation": "Each call resets the timer — only one invocation despite long total time",
+    "is_hidden": true
+  }
+]

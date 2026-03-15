@@ -1,0 +1,7 @@
+{
+  "id": "3-webPerformance",
+  "title": "Web Performance",
+  "description": "Optimizing web applications for speed and efficiency.",
+  "order": 3,
+  "topics": ["1-coreWebVitals", "2-bundling"]
+}

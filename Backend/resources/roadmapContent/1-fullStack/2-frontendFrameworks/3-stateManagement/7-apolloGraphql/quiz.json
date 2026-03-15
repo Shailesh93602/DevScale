@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is Apollo Client's 'Normalized Cache'?",
+            "options": [
+                "It caches responses strictly by the URL they were fetched from, like REST.",
+                "It flattens GraphQL responses into a table of entities based on their `__typename` and `id`, ensuring an object only exists once in cache.",
+                "It encrypts the GraphQL cache before storing it in localStorage.",
+                "It converts all JSON responses into XML for standardization."
+            ],
+            "answer": "It flattens GraphQL responses into a table of entities based on their `__typename` and `id`, ensuring an object only exists once in cache.",
+            "explanation": "This normalization is Apollo's superpower. Because entities are stored flat by ID, updating a specific user object in one place automatically causes every React component displaying that same user ID to re-render with the new data."
+        },
+        {
+            "question": "In Apollo, how can you ensure the cache updates automatically after a mutation modifies an existing object?",
+            "options": [
+                "Include the object's `id` and the modified fields in the mutation's return payload.",
+                "Manually call `window.reload()` after the mutation.",
+                "Disabling the cache globally using `cache: false`.",
+                "Passing the `reload` prop to useMutation."
+            ],
+            "answer": "Include the object's `id` and the modified fields in the mutation's return payload.",
+            "explanation": "If the mutation returns an object with a recognized `id` and `__typename`, Apollo's normalized cache automatically overwrites the old fields with the new ones and re-renders matching components without writing custom cache-update code."
+        },
+        {
+            "question": "When do you need to manually use the `update` function in a useMutation hook?",
+            "options": [
+                "When changing a text field on a user object.",
+                "When updating the server's cache duration.",
+                "When a mutation creates a brand new item or deletes an item from a list.",
+                "When switching to dark mode on the client."
+            ],
+            "answer": "When a mutation creates a brand new item or deletes an item from a list.",
+            "explanation": "Apollo auto-updates modified entities based on ID. However, if an object is newly created (it wasn't in the list before) or deleted, Apollo doesn't automatically know which cached arrays (e.g., getting a list of posts) it should add/remove the item from. You must manually inject it."
+        },
+        {
+            "question": "How does Apollo Client manage standalone, client-only UI state (like cart items or a global theme) without a GraphQL server?",
+            "options": [
+                "It requires a secondary instance of Redux.",
+                "It uses Reactive Variables (makeVar) and the useReactiveVar hook.",
+                "It forces you to write client-side SQL statements.",
+                "You must configure a mock GraphQL server entirely in the browser."
+            ],
+            "answer": "It uses Reactive Variables (makeVar) and the useReactiveVar hook.",
+            "explanation": "Reactive variables are independent buckets of state. Modifying a reactive variable triggers an update in all components utilizing the useReactiveVar hook, replacing simple Redux or Context needs."
+        },
+        {
+            "question": "What are Apollo 'Type Policies' primarily used for?",
+            "options": [
+                "Formatting UI CSS classes based on data types",
+                "Configuring caching behavior, such as implementing cursor-based pagination or defining custom ID fields (keyFields)",
+                "Adding TypeScript types to GraphQL schemas",
+                "Authorizing users based on access policies"
+            ],
+            "answer": "Configuring caching behavior, such as implementing cursor-based pagination or defining custom ID fields (keyFields)",
+            "explanation": "Type Policies defined in the InMemoryCache tell Apollo how to handle specific data shapes—for example, merging incoming paginated query arrays into existing cached arrays."
+        }
+    ]
+}

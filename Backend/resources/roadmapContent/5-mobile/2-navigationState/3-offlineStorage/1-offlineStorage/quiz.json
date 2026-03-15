@@ -1,0 +1,118 @@
+{
+    "title": "Offline Storage Quiz",
+    "description": "Test your knowledge on AsyncStorage, SecureStore, SQLite, and offline persistence.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the primary philosophical difference between traditional web development and a high-quality 'Offline-First' Mobile Application architecture?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Mobile inherently requires zero data to function.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Web applications gracefully handle airplane mode flawlessly inherently.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Mobile users exclusively expect applications to launch and load instantly and render previously fetched stored data flawlessly even deep within a subway tunnel actively lacking a cell connection entirely.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Mobile developers primarily utilize physical floppy disks natively.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What specifically is 'AsyncStorage' fundamentally analogous to technically regarding standard web development equivalents?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The massive Postgres Database hosted on AWS RDS.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The simple built-in browser `localStorage` API strictly used for persisting tiny synchronous key-value strings seamlessly.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A massive GraphQL backend exclusively.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A raw HTML canvas rendering image pixels.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why specifically is it universally considered an absolute, catastrophic anti-pattern to store sensitive unencrypted plain-text user passwords or credit cards deeply within standard `AsyncStorage`?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Because `AsyncStorage` deletes files randomly every 2 hours precisely.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because it consumes significant mobile battery completely.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because it actively writes data inherently securely encrypted.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because `AsyncStorage` is completely unencrypted; sophisticated malicious hackers specifically analyzing the phone's raw filesystem natively can easily securely extract all the raw data text flawlessly.",
+                    "isCorrect": true
+                }
+            ]
+        },
+        {
+            "question": "If your React Native application functionally must store and rapidly search through 100,000 deeply nested historical chat messages complexly on the phone entirely offline, which technology is the absolute best choice?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Redux variables specifically.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "SQLite (or WatermelonDB natively), which fundamentally embeds a blazingly fast legitimate relational SQL database natively directly onto the phone hardware perfectly.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A massive 50MB raw `AsyncStorage` JSON string directly.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A standard cloud-hosted AWS EC2 entirely.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What precise underlying performance issue does the incredibly robust 'WatermelonDB' library successfully resolve seamlessly for React Native applications utilizing massive local embedded SQLite databases?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It resolves absolutely nothing natively.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It forces rendering fully exclusively synchronously globally.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It flawlessly seamlessly utilizes strictly 'lazy loading', physically refusing absolutely to load massive SQL datasets from the phone's native hard drive deeply into limited Javascript RAM memory until the UI physically visually needs to explicitly render them beautifully.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It encrypts all data completely perfectly exclusively.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

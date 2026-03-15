@@ -1,0 +1,20 @@
+{
+  "title": "Task Scheduler",
+  "slug": "task-scheduler",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["array","hash-table","greedy","sorting","heap","counting"],
+  "company_tags": ["Facebook","Amazon","Microsoft"],
+  "topic_tags": ["heaps","greedy"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An array of characters `tasks` representing CPU tasks and an integer `n` representing the cooldown period.",
+  "output_format": "The minimum number of intervals required to complete all tasks.",
+  "example_input": "tasks = [\"A\",\"A\",\"A\",\"B\",\"B\",\"B\"], n = 2",
+  "example_output": "8",
+  "constraints": "- `1 <= task.length <= 10^4`\n- `tasks[i]` is upper-case English letter.\n- `0 <= n <= 100`",
+  "function_signature": "function leastInterval(tasks: string[], n: number): number {}",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,118 @@
+{
+    "title": "Dimensionality Reduction Quiz",
+    "description": "Test your knowledge on PCA, t-SNE, and tackling the Curse of Dimensionality.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "In the context of Machine Learning models, what does the phrase 'Curse of Dimensionality' refer to?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The problem where predicting multiple target columns at the exact same time crashes algorithms.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The mathematical phenomenon where adding too many columns (features) to your dataset causes the data points to drift further apart in high-dimensional space, severely decreasing model predictive power and exploding CPU times.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The issue where neural networks 'forget' historical data after training on multi-dimensional images.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A bug in early versions of Scikit-Learn related to 3D Matplotlib graphs.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the primary function of the Unsupervised 'PCA' (Principal Component Analysis) algorithm?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "To classify spam emails into distinct folders.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To artificially inject thousands of random new variables into a dataset to boost variance.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To mathematically compress continuous data by finding a smaller sequence of new 'Principal' vectors that still capture the vast majority of the variance (information) available in the original dimensions.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "To query specific columns in large NoSQL databases rapidly.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is a major, famously negative side effect of aggressively compressing hundreds of easily understandable columns via PCA into just 5 'Principal Components'?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The dataset becomes permanently encrypted.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The output size in Megabytes dramatically increases, filling the hard drive.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The new PCA features become fundamentally unrecognizable mathematical combinations, meaning you completely lose all interpretability regarding *why* the model is making its decisions.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The new features can only be interpreted by a GPU.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In the AI landscape, what do engineers typically use the sophisticated non-linear algorithms 't-SNE' or 'UMAP' for primarily?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Calculating the loss gradients in PyTorch.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Scraping unformatted text data aggressively from the internet.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Compressing ultra-high-dimensional text embeddings (e.g., 512 dimensions or more) down onto a simple 2D plot map solely to visually graph and confirm that distinct clusters physically formed.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "To automatically write SQL queries for analytics dashboards.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Is Principal Component Analysis (PCA) considered a Supervised or Unsupervised technique?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Supervised. It requires knowing the target Y labels to calculate accuracy.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Unsupervised. It ignores target labels entirely and simply analyzes mathematical variance present within the X features.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Semi-Supervised. It uses a small batch of labels to start.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Reinforcement. It trains an agent iteratively.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

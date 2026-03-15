@@ -1,0 +1,59 @@
+<h1>AWS Storage: S3, EBS & EFS</h1>
+<p>AWS offers three fundamentally different storage services, each optimized for a different access pattern. Choosing the wrong storage type is one of the most common and costly architectural mistakes in cloud engineering.</p>
+
+<h2>Amazon S3: Object Storage</h2>
+<p><strong>Amazon S3 (Simple Storage Service)</strong> stores data as objects (files) within buckets. It is the most durable storage service AWS offers (11 nines — 99.999999999% durability) and is the foundation of modern data lakes, static website hosting, and backup strategies.</p>
+
+<h3>S3 Storage Classes (Cost Optimization)</h3>
+<pre><code class="language-text">┌─────────────────────────────┬──────────────┬───────────────────────────┐
+│ Storage Class               │ Retrieval    │ Use Case                  │
+├─────────────────────────────┼──────────────┼───────────────────────────┤
+│ S3 Standard                 │ Immediate    │ Frequently accessed data   │
+│ S3 Standard-IA              │ Immediate    │ Infrequent access, cheaper │
+│ S3 Glacier Instant Retrieval│ Milliseconds │ Archive, quarterly access  │
+│ S3 Glacier Flexible         │ Minutes/hours│ Long-term archive          │
+│ S3 Glacier Deep Archive     │ 12 hours     │ Compliance retention, cheap│
+└─────────────────────────────┴──────────────┴───────────────────────────┘
+</code></pre>
+
+<h3>S3 Lifecycle Policies</h3>
+<p>Automatically transition objects between storage classes based on age, reducing costs without manual intervention:</p>
+<pre><code class="language-json">{
+  "Rules": [{
+    "ID": "auto-archive-logs",
+    "Status": "Enabled",
+    "Transitions": [
+      { "Days": 30, "StorageClass": "STANDARD_IA" },
+      { "Days": 90, "StorageClass": "GLACIER" },
+      { "Days": 365, "StorageClass": "DEEP_ARCHIVE" }
+    ],
+    "Expiration": { "Days": 2555 }
+  }]
+}
+</code></pre>
+
+<h3>S3 Versioning & Replication</h3>
+<p>Enable versioning so every PUT creates a new version rather than overwriting — a critical protection against accidental deletes and ransomware. Cross-Region Replication (CRR) automatically copies objects to a bucket in another region for disaster recovery.</p>
+
+<h2>Amazon EBS: Block Storage for EC2</h2>
+<p><strong>Amazon EBS (Elastic Block Store)</strong> provides raw block storage volumes attached to EC2 instances — equivalent to a physical hard drive for a server. Key characteristics:</p>
+<ul>
+  <li><strong>Attached to a single EC2 instance</strong> (at a time — not shared)</li>
+  <li><strong>Persists independently</strong> of the EC2 instance lifecycle (you can detach and reattach)</li>
+  <li><strong>Types:</strong> gp3 (general purpose SSD, baseline 3,000 IOPS), io2 (provisioned IOPS for databases, up to 64,000 IOPS), st1 (throughput-optimized HDD for sequential reads)</li>
+</ul>
+<pre><code class="language-bash"># Check attached volumes and their mount points on a running EC2 instance
+lsblk
+# Typical output for a gp3 root volume:
+# xvda    202:0    0  20G  0 disk
+# └─xvda1 202:1    0  20G  0 part /
+</code></pre>
+
+<h2>Amazon EFS: Shared File System</h2>
+<p><strong>Amazon EFS (Elastic File System)</strong> provides a managed NFS (Network File System) that can be mounted by multiple EC2 instances, ECS tasks, and Lambda functions simultaneously. EFS automatically scales to petabytes with no provisioning required. Use EFS when multiple compute resources need to read/write the same files concurrently — something EBS cannot do.</p>
+
+<h2>Choosing the Right Service</h2>
+<pre><code class="language-text">Use S3 when:   Any unstructured data, images, videos, logs, backups, Data Lake files
+Use EBS when:  Operating system volume, database data directory (MySQL, PostgreSQL)
+Use EFS when:  Shared config files, ML model artifacts, CMS media libraries
+</code></pre>

@@ -1,0 +1,6 @@
+[
+  "Odd-numbered IDs should swap with the next ID, even-numbered IDs with the previous ID.",
+  "Use CASE WHEN to handle odd and even IDs differently: odd gets id+1, even gets id-1.",
+  "Don't forget the edge case: if the total number of students is odd, the last student stays in place.",
+  "Check if an odd id equals MAX(id) — if so, don't swap it."
+]

@@ -1,0 +1,4 @@
+{
+    "name": "React Patterns & Architecture",
+    "description": "Compound components, render props, Context API for theming, code splitting with Suspense, and structuring large React applications."
+}

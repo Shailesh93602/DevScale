@@ -1,0 +1,19 @@
+{
+  "title": "Construct Binary Search Tree from Preorder Traversal",
+  "slug": "construct-binary-tree-from-preorder",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["tree", "binary-search-tree", "stack", "recursion"],
+  "company_tags": ["amazon", "facebook", "microsoft"],
+  "topic_tags": ["Tree", "Binary Search Tree", "Stack", "Recursion"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An array of integers `preorder`, which represents the preorder traversal of a BST.",
+  "output_format": "The root node of the constructed BST.",
+  "example_input": "preorder = [8,5,1,7,10,12]",
+  "example_output": "[8,5,10,1,7,null,12]",
+  "constraints": "1 <= preorder.length <= 100\n1 <= preorder[i] <= 10^8\nAll values of preorder are unique.",
+  "function_signature": "function bstFromPreorder(preorder: number[]): TreeNode | null",
+  "status": "ACTIVE"
+}

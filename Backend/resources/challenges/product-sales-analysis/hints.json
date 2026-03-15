@@ -1,0 +1,6 @@
+[
+  "You need to combine data from two tables: Sales and Product.",
+  "Use a JOIN on product_id to link sales to their product names.",
+  "Select product_name from Product, and year and price from Sales.",
+  "SELECT p.product_name, s.year, s.price FROM Sales s JOIN Product p ON s.product_id = p.product_id;"
+]

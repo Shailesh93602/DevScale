@@ -1,0 +1,38 @@
+[
+  {
+    "input": "{\"language\": \"node\", \"testCmd\": \"npm test\", \"buildCmd\": \"npm run build\", \"deployTarget\": \"aws-ecs\", \"branches\": {\"main\": \"production\", \"develop\": \"staging\"}}",
+    "output": "Workflow with lint, test, build, deploy-staging, deploy-production jobs. Uses actions/setup-node, npm ci caching, environment protection.",
+    "explanation": "Standard Node.js app deploying to AWS ECS with staging and production environments",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"language\": \"node\", \"testCmd\": \"npm test\", \"buildCmd\": \"npm run build\", \"deployTarget\": \"aws-ecs\", \"branches\": {\"main\": \"production\"}}",
+    "output": "Single deploy-production job, triggers only on push to main, requires environment approval",
+    "explanation": "Single-branch deployment with production-only strategy",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"language\": \"node\", \"testCmd\": \"npm test\", \"buildCmd\": \"npm run build\", \"deployTarget\": \"aws-ecs\", \"branches\": {\"main\": \"production\", \"develop\": \"staging\"}}",
+    "output": "Contains concurrency group, cancel-in-progress: true, needs keyword for job dependencies",
+    "explanation": "Verify safeguards: concurrency control and job dependency chain",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"language\": \"node\", \"testCmd\": \"npm test\", \"buildCmd\": \"npm run build\", \"deployTarget\": \"aws-ecs\", \"branches\": {\"main\": \"production\"}}",
+    "output": "Deploy job has 'if: github.event_name == push', uses OIDC role-to-assume, environment: production",
+    "explanation": "Security: deploy only on push (not PR), use OIDC auth, environment protection",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"language\": \"node\", \"testCmd\": \"npm test\", \"buildCmd\": \"npm run build\", \"deployTarget\": \"aws-ecs\", \"branches\": {\"main\": \"production\"}}",
+    "output": "Uses actions/upload-artifact and actions/download-artifact to pass build output between jobs",
+    "explanation": "Artifact management between CI and CD stages",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"language\": \"node\", \"testCmd\": \"npm test\", \"buildCmd\": \"npm run build\", \"deployTarget\": \"aws-ecs\", \"branches\": {\"main\": \"production\"}}",
+    "output": "Build job has needs: [lint, test]. Deploy job has needs: [build]. Lint and test run in parallel.",
+    "explanation": "Job dependency graph: lint||test -> build -> deploy",
+    "is_hidden": true
+  }
+]

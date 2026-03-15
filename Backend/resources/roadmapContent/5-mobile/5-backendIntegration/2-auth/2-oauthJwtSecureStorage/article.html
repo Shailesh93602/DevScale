@@ -1,0 +1,141 @@
+<h1>OAuth, JWT & Secure Token Storage</h1>
+<p>Authentication in mobile apps has unique challenges compared to web: there's no HttpOnly cookie protection, tokens must survive app restarts, and platform-specific secure storage (iOS Keychain, Android Keystore) must be used correctly to protect user credentials even if the device is compromised.</p>
+
+<h2>OAuth 2.0 Social Login</h2>
+<pre><code class="language-jsx">import * as Google from 'expo-auth-session/providers/google';
+import * as AppleAuthentication from 'expo-apple-authentication';
+import * as WebBrowser from 'expo-web-browser';
+
+WebBrowser.maybeCompleteAuthSession();  // Required for browser redirect to work
+
+// Google OAuth
+function useGoogleAuth() {
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    androidClientId: 'YOUR_ANDROID_CLIENT_ID.googleusercontent.com',
+    iosClientId: 'YOUR_IOS_CLIENT_ID.googleusercontent.com',
+  });
+
+  useEffect(() => {
+    if (response?.type === 'success') {
+      const { authentication } = response;
+      // Send Google access token to YOUR backend for verification
+      // Your backend verifies with Google and returns your own JWT
+      loginWithGoogleToken(authentication.accessToken);
+    }
+  }, [response]);
+
+  return { promptAsync, isLoading: !request };
+}
+
+// Apple Sign-In (REQUIRED on iOS if you offer other social logins)
+async function signInWithApple() {
+  try {
+    const credential = await AppleAuthentication.signInAsync({
+      requestedScopes: [
+        AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+        AppleAuthentication.AppleAuthenticationScope.EMAIL,
+      ],
+    });
+
+    // credential.identityToken: JWT from Apple — verify on your backend
+    // NOTE: Apple only sends name/email on FIRST sign-in!
+    // Store these immediately, they won't be available on subsequent logins
+    await loginWithAppleCredential(credential.identityToken);
+  } catch (e) {
+    if (e.code === 'ERR_REQUEST_CANCELED') return;  // User cancelled
+    throw e;
+  }
+}
+</code></pre>
+
+<h2>Secure Token Storage</h2>
+<pre><code class="language-jsx">import * as SecureStore from 'expo-secure-store';
+
+// NEVER store tokens in:
+// ❌ AsyncStorage (plain text, not encrypted)
+// ❌ MMKV default instance (not encrypted by default)
+// ❌ Redux persist (in memory then AsyncStorage)
+
+// ALWAYS use SecureStore (iOS Keychain / Android Keystore)
+const TOKEN_KEY = 'auth_token';
+const REFRESH_KEY = 'refresh_token';
+
+const tokenService = {
+  async save(accessToken, refreshToken) {
+    await Promise.all([
+      SecureStore.setItemAsync(TOKEN_KEY, accessToken),
+      SecureStore.setItemAsync(REFRESH_KEY, refreshToken),
+    ]);
+  },
+
+  async getAccessToken() {
+    return SecureStore.getItemAsync(TOKEN_KEY);
+  },
+
+  async getRefreshToken() {
+    return SecureStore.getItemAsync(REFRESH_KEY);
+  },
+
+  async clear() {
+    await Promise.all([
+      SecureStore.deleteItemAsync(TOKEN_KEY),
+      SecureStore.deleteItemAsync(REFRESH_KEY),
+    ]);
+  },
+};
+</code></pre>
+
+<h2>Axios Interceptor: Silent Token Refresh</h2>
+<pre><code class="language-jsx">import axios from 'axios';
+
+const api = axios.create({ baseURL: 'https://api.myapp.com' });
+
+// Attach token to every request
+api.interceptors.request.use(async (config) => {
+  const token = await tokenService.getAccessToken();
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+// Handle 401 (token expired) → silently refresh and retry
+let isRefreshing = false;
+let pendingRequests = [];
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        // Queue this request until refresh completes
+        return new Promise((resolve) => pendingRequests.push(resolve))
+          .then(() => api(originalRequest));
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      try {
+        const refreshToken = await tokenService.getRefreshToken();
+        const { data } = await axios.post('/auth/refresh', { refreshToken });
+        await tokenService.save(data.accessToken, data.refreshToken);
+
+        // Replay all queued requests with the new token
+        pendingRequests.forEach((resolve) => resolve());
+        pendingRequests = [];
+
+        return api(originalRequest);  // Retry original request
+      } catch {
+        // Refresh failed — logout user
+        await tokenService.clear();
+        authStore.logout();
+      } finally {
+        isRefreshing = false;
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
+</code></pre>

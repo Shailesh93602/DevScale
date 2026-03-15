@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the fundamental architectural concept of a 'Partition' physically within Apache Spark?",
+            "options": [
+                "A partition securely compresses relational schemas natively into CSS structures.",
+                "A logical, small, explicitly manageable chunk of numerical data (often around 128MB) functionally derived from a massive dataset. Spark optimally distributes thousands of these tiny discrete partitions dynamically across all available clustered worker nodes perfectly.",
+                "A partition completely disables network TCP sockets intelligently.",
+                "A partition exclusively routes load balancers rationally."
+            ],
+            "answer": "A logical, small, explicitly manageable chunk of numerical data (often around 128MB) functionally derived from a massive dataset. Spark optimally distributes thousands of these tiny discrete partitions dynamically across all available clustered worker nodes perfectly.",
+            "explanation": "If a file is 10TB, no single computer can hold it. Spark slices the 10TB file into 80,000 small partitions, allowing 1,000 workers to seamlessly process 80 partitions smoothly each."
+        },
+        {
+            "question": "What specifically separates a 'Wide' dataset transformation (like a generic JOIN) definitively from a 'Narrow' dataset transformation (like a specific FILTER)?",
+            "options": [
+                "A Wide transformation explicitly restricts network latency safely.",
+                "Narrow transformations only process data cleanly available on their specific local hard drive seamlessly. Wide transformations require massive destructive 'Shuffling', physically explicitly ripping data out of all cluster machines and aggressively transferring it painfully over the raw network wires.",
+                "Wide transformations gracefully translate Python algorithms to Typescript securely.",
+                "Narrow transformations securely compress UUIDs."
+            ],
+            "answer": "Narrow transformations only process data cleanly available on their specific local hard drive seamlessly. Wide transformations require massive destructive 'Shuffling', physically explicitly ripping data out of all cluster machines and aggressively transferring it painfully over the raw network wires.",
+            "explanation": "To GROUP BY the 'Country' column, all the 'USA' users scattered across 50 separate servers must physically journey across the network and merge onto exactly 1 resulting server. This takes hours."
+        },
+        {
+            "question": "When configuring a distributed Spark execution pipeline safely, what is the critical hardware condition known structurally as 'Data Skew' specifically?",
+            "options": [
+                "A memory leak natively inside Node.js safely.",
+                "An extremely uneven, mathematically dangerous distribution of data records across partitions. If 99% of your data shares the precise same key, 1 single poor Worker node cleanly receives all 99% of the traffic structurally, causing an immediate catastrophic Out Of Memory (OOM) crash securely.",
+                "An explicitly aggressive network payload logically securely.",
+                "A DNS routing mechanism to resolve domain names."
+            ],
+            "answer": "An extremely uneven, mathematically dangerous distribution of data records across partitions. If 99% of your data shares the precise same key, 1 single poor Worker node cleanly receives all 99% of the traffic structurally, causing an immediate catastrophic Out Of Memory (OOM) crash securely.",
+            "explanation": "If you group by gender, 50% goes to node A, 50% to node B, and 98 nodes sit completely idle, while Node A and Node B run out of RAM."
+        }
+    ]
+}

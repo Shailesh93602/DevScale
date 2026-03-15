@@ -1,0 +1,132 @@
+<h1>Push Notifications: APNs, FCM & Expo</h1>
+<p>Push notifications are one of the highest-impact features in mobile apps — they drive re-engagement, inform users of important events, and create a direct communication channel between your app and users. The infrastructure (APNs for iOS, FCM for Android) is complex, but Expo's notification service provides a unified abstraction.</p>
+
+<h2>The Push Notification Architecture</h2>
+<pre><code class="language-text">Your Backend → Expo Push API → APNs (iOS) / FCM (Android) → User's Device
+
+Alternatively:
+Your Backend → directly → APNs / FCM → User's Device
+
+Why use Expo Push API:
+  ✅ Single API endpoint for both iOS and Android
+  ✅ Handles APNs certificates and FCM server keys for you
+  ✅ Batch sending (sends up to 100 notifications per call)
+  ✅ Delivery receipts to detect failed deliveries
+</code></pre>
+
+<h2>Client-Side Setup</h2>
+<pre><code class="language-jsx">import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
+import { Platform } from 'react-native';
+
+// Configure how notifications appear when app is in FOREGROUND
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,    // Show notification banner even when app is open
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
+
+async function registerForPushNotifications() {
+  if (!Device.isDevice) return null;  // Won't work in simulator
+
+  // Check/request permission
+  const { status: existingStatus } = await Notifications.getPermissionsAsync();
+  let finalStatus = existingStatus;
+
+  if (existingStatus !== 'granted') {
+    const { status } = await Notifications.requestPermissionsAsync();
+    finalStatus = status;
+  }
+
+  if (finalStatus !== 'granted') {
+    Alert.alert('Enable notifications in Settings to receive updates.');
+    return null;
+  }
+
+  // Get Expo Push Token — unique per device, required to send to this device
+  const token = (await Notifications.getExpoPushTokenAsync({
+    projectId: Constants.expoConfig.extra.eas.projectId,
+  })).data;
+
+  // Send token to your backend to store against the user
+  await api.savePushToken(token);
+
+  // Android notification channel (required for Android 8+)
+  if (Platform.OS === 'android') {
+    await Notifications.setNotificationChannelAsync('default', {
+      name: 'Default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      sound: 'default',
+    });
+  }
+
+  return token;
+}
+
+// Handle notification tap → navigate to specific screen
+function NotificationNavigator() {
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    // Handle tap when app is in BACKGROUND or FOREGROUND
+    const responseSubscription = Notifications.addNotificationResponseReceivedListener(
+      (response) => {
+        const data = response.notification.request.content.data;
+        // Route based on notification type
+        if (data?.type === 'order') navigation.navigate('OrderDetail', { id: data.orderId });
+        if (data?.type === 'message') navigation.navigate('Chat', { chatId: data.chatId });
+      }
+    );
+
+    // Handle notification received while app is in FOREGROUND
+    const receivedSubscription = Notifications.addNotificationReceivedListener(
+      (notification) => console.log('Notification received:', notification)
+    );
+
+    return () => {
+      responseSubscription.remove();
+      receivedSubscription.remove();
+    };
+  }, []);
+}
+</code></pre>
+
+<h2>Sending Notifications from Your Backend</h2>
+<pre><code class="language-javascript">// Node.js backend using Expo Push API
+const { Expo } = require('expo-server-sdk');
+const expo = new Expo();
+
+async function sendPushNotification(pushToken, title, body, data = {}) {
+  if (!Expo.isExpoPushToken(pushToken)) {
+    console.error(`Invalid Expo push token: ${pushToken}`);
+    return;
+  }
+
+  const message = {
+    to: pushToken,
+    sound: 'default',
+    title,
+    body,
+    data,               // This data is passed to your notification tap handler
+    badge: 1,           // Show badge count on app icon
+    categoryIdentifier: 'order-update',  // For notification action buttons
+  };
+
+  const chunks = expo.chunkPushNotifications([message]);
+  for (const chunk of chunks) {
+    const tickets = await expo.sendPushNotificationsAsync(chunk);
+    // Check tickets for errors (invalid token, device offline, etc.)
+    for (const ticket of tickets) {
+      if (ticket.status === 'error') {
+        if (ticket.details?.error === 'DeviceNotRegistered') {
+          // Remove this token from your DB — user uninstalled the app
+          await removePushToken(pushToken);
+        }
+      }
+    }
+  }
+}
+</code></pre>

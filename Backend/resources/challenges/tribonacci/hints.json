@@ -1,0 +1,6 @@
+[
+  "This is like Fibonacci but with 3 previous terms instead of 2.",
+  "Base cases: T(0)=0, T(1)=1, T(2)=1.",
+  "T(n) = T(n-1) + T(n-2) + T(n-3). Iterate from 3 to n.",
+  "Use three variables to track the last three values for O(1) space."
+]

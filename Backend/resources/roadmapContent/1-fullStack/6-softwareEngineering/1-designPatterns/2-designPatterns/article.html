@@ -1,0 +1,216 @@
+<h1>Software Design Patterns</h1>
+<p>Design patterns are proven, reusable solutions to commonly occurring problems in software design. They were popularized by the "Gang of Four" book (1994) and remain as relevant as ever. Understanding patterns prevents you from reinventing the wheel and gives you a shared vocabulary to communicate complex design decisions with your team.</p>
+
+<h2>Creational Patterns — How Objects Are Created</h2>
+
+<h3>Singleton</h3>
+<p>Ensures a class has exactly one instance and provides a global access point to it. Common use cases: database connection pools, configuration managers, logger instances.</p>
+<pre><code>// Database connection manager — Singleton pattern
+class DatabasePool {
+  private static instance: DatabasePool;
+  private pool: any;
+
+  private constructor() {
+    // Expensive initialization — happens only once
+    this.pool = createPool({ host: process.env.DB_HOST, max: 20 });
+  }
+
+  static getInstance(): DatabasePool {
+    if (!DatabasePool.instance) {
+      DatabasePool.instance = new DatabasePool();
+    }
+    return DatabasePool.instance;
+  }
+
+  async query(sql: string, params: any[]) {
+    return this.pool.query(sql, params);
+  }
+}
+
+// Usage — always returns the same instance
+const db1 = DatabasePool.getInstance();
+const db2 = DatabasePool.getInstance();
+console.log(db1 === db2);  // true — same object</code></pre>
+
+<h3>Factory Pattern</h3>
+<p>Provides an interface for creating objects without specifying their exact class. Useful when you need to create different variants of an object based on runtime conditions:</p>
+<pre><code>// Payment processor factory
+interface PaymentProcessor {
+  charge(amount: number, currency: string): Promise<void>;
+}
+
+class StripeProcessor implements PaymentProcessor {
+  async charge(amount: number, currency: string) { /* ... */ }
+}
+
+class PayPalProcessor implements PaymentProcessor {
+  async charge(amount: number, currency: string) { /* ... */ }
+}
+
+// Factory function — caller doesn't need to know which class to instantiate
+function createPaymentProcessor(type: 'stripe' | 'paypal'): PaymentProcessor {
+  const processors = {
+    stripe: new StripeProcessor(),
+    paypal: new PayPalProcessor(),
+  };
+  const processor = processors[type];
+  if (!processor) throw new Error(`Unknown payment type: ${type}`);
+  return processor;
+}
+
+// Usage
+const processor = createPaymentProcessor(user.preferredPayment);
+await processor.charge(999, 'USD');</code></pre>
+
+<h3>Builder Pattern</h3>
+<p>Constructs complex objects step-by-step. Useful for objects with many optional parameters (avoids telescoping constructors):</p>
+<pre><code>class QueryBuilder {
+  private query = { table: '', conditions: [] as string[], columns: ['*'], limit: 100 };
+
+  from(table: string) { this.query.table = table; return this; }
+  select(...cols: string[]) { this.query.columns = cols; return this; }
+  where(condition: string) { this.query.conditions.push(condition); return this; }
+  take(limit: number) { this.query.limit = limit; return this; }
+
+  build(): string {
+    const cols = this.query.columns.join(', ');
+    const where = this.query.conditions.length
+      ? ` WHERE ${this.query.conditions.join(' AND ')}`
+      : '';
+    return `SELECT ${cols} FROM ${this.query.table}${where} LIMIT ${this.query.limit}`;
+  }
+}
+
+const sql = new QueryBuilder()
+  .from('users')
+  .select('id', 'email', 'created_at')
+  .where('active = true')
+  .where('role = "admin"')
+  .take(50)
+  .build();
+// → SELECT id, email, created_at FROM users WHERE active = true AND role = "admin" LIMIT 50</code></pre>
+
+<h2>Structural Patterns — How Objects Are Composed</h2>
+
+<h3>Adapter Pattern</h3>
+<p>Converts the interface of a class into another interface that clients expect. Useful when integrating third-party libraries with incompatible APIs:</p>
+<pre><code>// Old internal logger interface
+interface OldLogger {
+  log(msg: string): void;
+  warning(msg: string): void;
+  error(msg: string): void;
+}
+
+// New external library (Winston) has different API
+class WinstonAdapter implements OldLogger {
+  private winston: any;
+  constructor(winston: any) { this.winston = winston; }
+
+  log(msg: string) { this.winston.info(msg); }
+  warning(msg: string) { this.winston.warn(msg); }
+  error(msg: string) { this.winston.error(msg); }
+}
+
+// All existing code using OldLogger continues to work unchanged
+const logger: OldLogger = new WinstonAdapter(winstonInstance);</code></pre>
+
+<h3>Decorator Pattern</h3>
+<p>Adds functionality to objects dynamically without altering their class. Heavily used in TypeScript's decorator syntax and middleware patterns:</p>
+<pre><code>// Base function and wrapping decorators
+function withLogging<T extends (...args: any[]) => any>(fn: T, name: string): T {
+  return (async (...args: any[]) => {
+    console.log(`[${name}] Called with:`, args);
+    const start = Date.now();
+    try {
+      const result = await fn(...args);
+      console.log(`[${name}] Completed in ${Date.now() - start}ms`);
+      return result;
+    } catch (err) {
+      console.error(`[${name}] Failed:`, err);
+      throw err;
+    }
+  }) as T;
+}
+
+function withCache<T extends (...args: any[]) => Promise<any>>(fn: T, ttlMs = 60000): T {
+  const cache = new Map<string, { value: any; expires: number }>();
+  return (async (...args: any[]) => {
+    const key = JSON.stringify(args);
+    const cached = cache.get(key);
+    if (cached && Date.now() < cached.expires) return cached.value;
+    const value = await fn(...args);
+    cache.set(key, { value, expires: Date.now() + ttlMs });
+    return value;
+  }) as T;
+}
+
+// Compose decorators: caching + logging on getUserById
+const getUserById = async (id: string) => db.query('SELECT * FROM users WHERE id = $1', [id]);
+const optimizedGetUser = withLogging(withCache(getUserById, 300_000), 'getUserById');</code></pre>
+
+<h2>Behavioral Patterns — How Objects Communicate</h2>
+
+<h3>Observer Pattern</h3>
+<p>Defines a one-to-many dependency — when one object changes state, all dependents are notified automatically. Foundation of event-driven architectures and reactive programming:</p>
+<pre><code>class EventEmitter<T extends Record<string, any>> {
+  private listeners: Partial<Record<keyof T, Function[]>> = {};
+
+  on<K extends keyof T>(event: K, listener: (data: T[K]) => void): () => void {
+    (this.listeners[event] ??= []).push(listener);
+    return () => this.off(event, listener);  // Returns unsubscribe function
+  }
+
+  emit<K extends keyof T>(event: K, data: T[K]): void {
+    this.listeners[event]?.forEach(listener => listener(data));
+  }
+
+  off<K extends keyof T>(event: K, listener: Function): void {
+    this.listeners[event] = this.listeners[event]?.filter(l => l !== listener);
+  }
+}
+
+// Usage
+type OrderEvents = { placed: { id: string; total: number }; shipped: { id: string } };
+const orderBus = new EventEmitter<OrderEvents>();
+
+orderBus.on('placed', ({ id, total }) => sendConfirmationEmail(id, total));
+orderBus.on('placed', ({ id }) => notifyWarehouse(id));
+orderBus.on('shipped', ({ id }) => sendShippingUpdate(id));
+
+orderBus.emit('placed', { id: 'ORD-123', total: 4999 });
+// Both listeners fire automatically</code></pre>
+
+<h3>Strategy Pattern</h3>
+<p>Defines a family of algorithms, encapsulates each one, and makes them interchangeable. Eliminates large if/else chains and makes adding new algorithms trivial:</p>
+<pre><code>type SortStrategy = (items: number[]) => number[];
+
+const quickSort: SortStrategy = (arr) => { /* ... */ return arr; };
+const mergeSort: SortStrategy = (arr) => { /* ... */ return arr; };
+const bubbleSort: SortStrategy = (arr) => { /* ... */ return arr; };  // Testing only!
+
+class DataSorter {
+  constructor(private strategy: SortStrategy) {}
+  setStrategy(strategy: SortStrategy) { this.strategy = strategy; }
+  sort(data: number[]) { return this.strategy([...data]); }
+}
+
+const sorter = new DataSorter(quickSort);
+sorter.sort([3, 1, 4, 1, 5]);  // Uses quickSort
+
+sorter.setStrategy(mergeSort);  // Swap algorithm at runtime, no other code changes</code></pre>
+
+<h2>SOLID Principles</h2>
+<ul>
+  <li><strong>S — Single Responsibility</strong>: A class should have one and only one reason to change. A <code>User</code> class should not handle database queries AND email sending.</li>
+  <li><strong>O — Open/Closed</strong>: Open for extension, closed for modification. Add new payment processors by creating a new class, not editing the existing charge logic.</li>
+  <li><strong>L — Liskov Substitution</strong>: Objects of a subclass should be replaceable for the superclass without breaking the program.</li>
+  <li><strong>I — Interface Segregation</strong>: Many specific interfaces are better than one general-purpose interface.</li>
+  <li><strong>D — Dependency Inversion</strong>: Depend on abstractions (interfaces), not concrete implementations. Enables swapping implementations without changing business logic.</li>
+</ul>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Don't force patterns — use the simplest solution that solves the problem. Patterns are a vocabulary, not a mandate.</li>
+  <li>The Observer pattern is the backbone of most reactive frameworks (React state, RxJS, Zustand). Recognizing it helps you understand how these libraries work under the hood.</li>
+  <li>The Strategy pattern is a superior alternative to large <code>if/else</code> or <code>switch</code> chains — it makes your code open for extension without modification.</li>
+</ul>

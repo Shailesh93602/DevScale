@@ -1,0 +1,12 @@
+[
+  { "input": "{\"nums\": [2,3,2]}", "output": "3", "explanation": "Rob house 2 only (money=3). Can't rob 1 and 3 because they're adjacent in circle.", "is_hidden": false },
+  { "input": "{\"nums\": [1,2,3,1]}", "output": "4", "explanation": "Rob houses 1 and 3: 1+3=4", "is_hidden": false },
+  { "input": "{\"nums\": [1,2,3]}", "output": "3", "explanation": "Rob house 2 or 3", "is_hidden": false },
+  { "input": "{\"nums\": [1]}", "output": "1", "explanation": "Single house", "is_hidden": true },
+  { "input": "{\"nums\": [1,2]}", "output": "2", "explanation": "Two houses, pick the larger", "is_hidden": true },
+  { "input": "{\"nums\": [0,0,0]}", "output": "0", "explanation": "All zeros", "is_hidden": true },
+  { "input": "{\"nums\": [200,3,140,20,10]}", "output": "340", "explanation": "Rob houses 1 and 3: 200+140=340", "is_hidden": true },
+  { "input": "{\"nums\": [1,3,1,3,100]}", "output": "103", "explanation": "Rob houses 2 and 5: 3+100=103", "is_hidden": true },
+  { "input": "{\"nums\": [6,6,4,8,4,3,3,10]}", "output": "27", "explanation": "Rob houses 1,4,8 or similar optimal combination", "is_hidden": true },
+  { "input": "{\"nums\": [1000,1,1,1000]}", "output": "1001", "explanation": "Rob houses 1,3: 1000+1=1001 or houses 2,4: 1+1000=1001", "is_hidden": true }
+]

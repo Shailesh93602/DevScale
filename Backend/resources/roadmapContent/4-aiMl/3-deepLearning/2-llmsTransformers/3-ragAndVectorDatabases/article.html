@@ -1,0 +1,163 @@
+<h1>RAG Pipelines &amp; Advanced Vector Database Patterns</h1>
+<p>Retrieval-Augmented Generation (RAG) combines the knowledge retrieval power of vector databases with the language generation capabilities of LLMs. Instead of relying on knowledge baked into the model's weights (which may be outdated or wrong), RAG pulls fresh, relevant context from your own documents and feeds it to the LLM at query time. This is how systems like Perplexity AI, GitHub Copilot, and enterprise chatbots work.</p>
+
+<h2>The Core RAG Architecture</h2>
+<pre><code>┌─────────────────────────────────────────────────────────────────┐
+│  RAG PIPELINE                                                   │
+│                                                                 │
+│  INGESTION (one-time):                                          │
+│  Documents → Chunking → Embedding → Vector DB (Pinecone/Chroma)│
+│                                                                 │
+│  QUERY (per user request):                                      │
+│  User Query → Embed Query → ANN Search (top-K chunks)          │
+│             → Inject into LLM prompt → Generate Answer         │
+└─────────────────────────────────────────────────────────────────┘</code></pre>
+
+<h2>Production RAG with LangChain</h2>
+<pre><code>pip install langchain langchain-openai langchain-community chromadb</code></pre>
+<pre><code>from langchain_openai import OpenAIEmbeddings, ChatOpenAI
+from langchain_community.vectorstores import Chroma
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.document_loaders import DirectoryLoader, PyPDFLoader
+from langchain.chains import RetrievalQA
+from langchain.prompts import PromptTemplate
+import os
+
+# ─── Step 1: Load documents ──────────────────────────────────────────────────
+loader = DirectoryLoader('./docs', glob='**/*.pdf', loader_cls=PyPDFLoader)
+documents = loader.load()
+print(f"Loaded {len(documents)} documents")
+
+# ─── Step 2: Chunk documents ─────────────────────────────────────────────────
+# Critical: LLMs have context limits. Chunk size should match your embedding
+# model's optimal input size and the typical length of an answer.
+splitter = RecursiveCharacterTextSplitter(
+    chunk_size=500,        # Characters per chunk (tune based on content density)
+    chunk_overlap=100,     # Overlap preserves context across chunk boundaries
+    separators=["\n\n", "\n", ". ", " "],  # Split at natural boundaries
+    length_function=len,
+)
+chunks = splitter.split_documents(documents)
+print(f"Created {len(chunks)} chunks from {len(documents)} documents")
+
+# ─── Step 3: Embed and store ─────────────────────────────────────────────────
+embeddings = OpenAIEmbeddings(model="text-embedding-3-small")  # 1536-dim vectors
+
+# Persist to disk so you don't re-embed on every restart
+vectorstore = Chroma.from_documents(
+    documents=chunks,
+    embedding=embeddings,
+    persist_directory="./chroma_db"    # SQLite + binary blob file storage
+)
+print(f"Stored {vectorstore._collection.count()} chunks in ChromaDB")</code></pre>
+
+<pre><code># ─── Step 4: Build the RAG chain ────────────────────────────────────────────
+# Load existing vectorstore (in production — don't rebuild every request)
+vectorstore = Chroma(persist_directory="./chroma_db", embedding_function=embeddings)
+
+# Custom prompt that forces the LLM to stay grounded in retrieved context
+PROMPT_TEMPLATE = """You are a helpful assistant. Use ONLY the following context to answer the question.
+If the answer cannot be found in the context, say "I don't have enough information to answer that."
+Do not use any knowledge outside the provided context.
+
+Context:
+{context}
+
+Question: {question}
+
+Answer:"""
+
+prompt = PromptTemplate(
+    input_variables=["context", "question"],
+    template=PROMPT_TEMPLATE
+)
+
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)  # Low temp = factual, deterministic
+
+# MMR: Maximal Marginal Relevance — balances relevance AND diversity in retrieved chunks
+retriever = vectorstore.as_retriever(
+    search_type="mmr",           # Prevents returning near-duplicate chunks
+    search_kwargs={"k": 5, "fetch_k": 20, "lambda_mult": 0.7}
+)
+
+qa_chain = RetrievalQA.from_chain_type(
+    llm=llm,
+    chain_type="stuff",           # "stuff" = concatenate all chunks into one context
+    retriever=retriever,
+    chain_type_kwargs={"prompt": prompt},
+    return_source_documents=True  # Include sources in the response
+)
+
+# ─── Step 5: Query ────────────────────────────────────────────────────────────
+result = qa_chain.invoke({"query": "What is the refund policy for digital products?"})
+print(result["result"])
+print("\nSources:")
+for doc in result["source_documents"]:
+    print(f"  - {doc.metadata.get('source', 'Unknown')}, page {doc.metadata.get('page', '?')}")</code></pre>
+
+<h2>Advanced: Hybrid Search (Keyword + Semantic)</h2>
+<p>Pure semantic search misses exact keyword matches. Hybrid search combines dense vector similarity with sparse BM25 keyword search for better recall:</p>
+<pre><code>from langchain_community.retrievers import BM25Retriever
+from langchain.retrievers import EnsembleRetriever
+
+# Sparse retriever (keyword-based BM25)
+bm25_retriever = BM25Retriever.from_documents(chunks)
+bm25_retriever.k = 5
+
+# Dense retriever (semantic/embedding-based)
+dense_retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
+
+# Combine: 40% weight to keywords, 60% weight to semantic similarity
+hybrid_retriever = EnsembleRetriever(
+    retrievers=[bm25_retriever, dense_retriever],
+    weights=[0.4, 0.6]
+)
+
+# Hybrid tends to outperform either retriever alone by 5–10% on recall@5</code></pre>
+
+<h2>Evaluating RAG Quality</h2>
+<pre><code>pip install ragas</code></pre>
+<pre><code>from ragas import evaluate
+from ragas.metrics import (
+    answer_relevancy,         # Is the answer relevant to the question?
+    faithfulness,             # Does the answer stay grounded in the retrieved context?
+    context_recall,           # Were the right chunks retrieved?
+    context_precision         # Were irrelevant chunks retrieved?
+)
+from datasets import Dataset
+
+# Create evaluation dataset
+eval_data = {
+    "question": ["What is the return policy?", "How do I cancel my subscription?"],
+    "answer": [result["result"] for result in results],
+    "contexts": [[doc.page_content for doc in r["source_documents"]] for r in results],
+    "ground_truth": ["Returns accepted within 30 days...", "Cancel via Account Settings..."]
+}
+
+result = evaluate(Dataset.from_dict(eval_data), metrics=[
+    faithfulness, answer_relevancy, context_recall, context_precision
+])
+print(result.to_pandas())
+# faithfulness: 0.95 — 95% of claims in the answer are supported by context
+# answer_relevancy: 0.88 — answer addresses the question well
+# context_recall: 0.82 — retrieved chunks contain the necessary info</code></pre>
+
+<h2>Common RAG Failure Modes &amp; Fixes</h2>
+<table>
+  <thead><tr><th>Problem</th><th>Symptom</th><th>Fix</th></tr></thead>
+  <tbody>
+    <tr><td>Chunks too large</td><td>Context window overflow, LLM ignores distant info</td><td>Reduce chunk_size to 300–500 chars</td></tr>
+    <tr><td>Chunks too small</td><td>Retrieved chunks lack enough context</td><td>Increase chunk_size, add more overlap</td></tr>
+    <tr><td>Wrong chunks retrieved</td><td>Hallucinated or off-topic answers</td><td>Use hybrid search, add metadata filters</td></tr>
+    <tr><td>Duplicate chunks</td><td>Context window wasted with repetition</td><td>Use MMR retrieval instead of similarity</td></tr>
+    <tr><td>LLM ignores context</td><td>Model uses training knowledge not documents</td><td>Strengthen system prompt, lower temperature</td></tr>
+  </tbody>
+</table>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Add document metadata (title, date, section, page) to every chunk — use it for filtering (e.g., "only search documents from the last 6 months") and for showing sources to users.</li>
+  <li>Re-index embeddings when your embedding model changes — embedding spaces are not cross-compatible between models.</li>
+  <li>Use a dedicated evaluation pipeline (RAGAS) from day one — "the answers seem good" is not a reliable measure of RAG quality.</li>
+  <li>For production, cache embeddings in a persistent vector database (Pinecone, Weaviate, Qdrant) and run embedding updates as a batch job, not on every user request.</li>
+</ul>

@@ -1,0 +1,19 @@
+{
+  "title": "Two Sum",
+  "slug": "two-sum",
+  "difficulty": "Easy",
+  "category": "algorithms",
+  "points": 50,
+  "tags": ["array", "hash-map"],
+  "company_tags": ["Google", "Amazon", "Facebook", "Microsoft", "Apple", "Adobe", "Bloomberg"],
+  "topic_tags": ["arrays", "hash tables"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer array `nums` and an integer `target`.",
+  "output_format": "An array of two indices `[i, j]` such that `nums[i] + nums[j] == target`. You may return the answer in any order.",
+  "example_input": "nums = [2,7,11,15], target = 9",
+  "example_output": "[0,1]",
+  "constraints": "- `2 <= nums.length <= 10^4`\n- `-10^9 <= nums[i] <= 10^9`\n- `-10^9 <= target <= 10^9`\n- **Only one valid answer exists.**",
+  "function_signature": "function twoSum(nums: number[], target: number): number[] {}",
+  "status": "ACTIVE"
+}

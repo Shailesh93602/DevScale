@@ -1,0 +1,4 @@
+{
+    "name": "Git Hooks & Husky",
+    "description": "Automating quality control. Implementing pre-commit and pre-push hooks using Husky and lint-staged to strictly enforce code formatting and block broken code from entering the repository."
+}

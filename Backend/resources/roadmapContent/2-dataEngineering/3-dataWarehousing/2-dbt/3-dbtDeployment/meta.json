@@ -1,0 +1,4 @@
+{
+    "name": "dbt Deployment & CI/CD",
+    "description": "Running dbt in production, environment management, Slim CI, and scheduling with Airflow or dbt Cloud."
+}

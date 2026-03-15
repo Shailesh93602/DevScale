@@ -1,0 +1,6 @@
+[
+  "Group by month (YYYY-MM format) and country to get per-group statistics.",
+  "Use TO_CHAR(trans_date, 'YYYY-MM') in PostgreSQL to extract the month.",
+  "For approved-only counts and sums, use CASE WHEN state = 'approved' inside your aggregate functions.",
+  "SUM(CASE WHEN state = 'approved' THEN 1 ELSE 0 END) counts approved transactions."
+]

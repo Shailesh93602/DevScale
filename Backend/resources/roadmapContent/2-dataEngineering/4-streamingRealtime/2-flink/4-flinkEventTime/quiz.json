@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the core distinction between 'Event Time' and 'Processing Time' in Apache Flink stream processing?",
+            "options": [
+                "Event Time uses UTC; Processing Time uses local timezone.",
+                "Event Time is the timestamp embedded in the event by the original source when the event occurred. Processing Time is the wall-clock time when the Flink cluster receives and processes the event, which can be seconds or minutes later due to network latency.",
+                "Processing Time is always more accurate than Event Time.",
+                "Event Time is only available in Flink SQL, not the DataStream API."
+            ],
+            "answer": "Event Time is the timestamp embedded in the event by the original source when the event occurred. Processing Time is the wall-clock time when the Flink cluster receives and processes the event, which can be seconds or minutes later due to network latency.",
+            "explanation": "A mobile app generates a click event at 3:00 PM but the event arrives at Kafka only at 3:02 PM due to a slow network. Event Time = 3:00 PM, Processing Time = 3:02 PM."
+        },
+        {
+            "question": "Why is using 'Event Time' semantics almost always preferred over 'Processing Time' for production-grade streaming analytics?",
+            "options": [
+                "Because Event Time is easier to configure.",
+                "Because results computed using Event Time accurately reflect when events truly occurred at the source, making aggregations correct and reproducible even when data arrives out of order, while Processing Time results can be inaccurate and non-deterministic.",
+                "Because Processing Time cannot handle windowing operations.",
+                "Because Event Time does not require a Kafka connection."
+            ],
+            "answer": "Because results computed using Event Time accurately reflect when events truly occurred at the source, making aggregations correct and reproducible even when data arrives out of order, while Processing Time results can be inaccurate and non-deterministic.",
+            "explanation": "If you re-run a job on historical data with Event Time, you get the exact same results. With Processing Time, the results change depending on when you run the job."
+        },
+        {
+            "question": "What fundamental purpose does a Flink 'Watermark' serve in an Event Time-based streaming pipeline?",
+            "options": [
+                "Watermarks compress the Kafka message payloads.",
+                "A Watermark is a signal injected into the stream that tells Flink: 'No event with a timestamp earlier than T will arrive in the future.' This allows Flink to confidently close time windows and emit results without waiting indefinitely for potentially late data.",
+                "Watermarks encrypt all messages before they reach the TaskManagers.",
+                "Watermarks define the maximum number of partitions per topic."
+            ],
+            "answer": "A Watermark is a signal injected into the stream that tells Flink: 'No event with a timestamp earlier than T will arrive in the future.' This allows Flink to confidently close time windows and emit results without waiting indefinitely for potentially late data.",
+            "explanation": "Without Watermarks, Flink would not know when to close a window since theoretically a late event could arrive at any moment."
+        }
+    ]
+}

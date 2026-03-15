@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What primary software engineering problem does dbt solve by introducing the Jinja templating engine to SQL Data Warehousing?",
+            "options": [
+                "Jinja automatically provisions cloud infrastructure for the underlying database warehouse.",
+                "Jinja forces SQL into an Object-Oriented paradigm, making tables accessible only via strict Python classes.",
+                "Standard SQL is purely declarative and lacks control structures (loops, variables, functions), forcing massive copy-pasting of identical logic. Jinja introduces programmability, enabling DRY (Don't Repeat Yourself) principles through reusable macros, dynamic loops, and conditionals before compiling into valid raw SQL.",
+                "Jinja bypasses standard SQL execution, streaming the raw data directly to a local Apache Spark cluster instead."
+            ],
+            "answer": "Standard SQL is purely declarative and lacks control structures (loops, variables, functions), forcing massive copy-pasting of identical logic. Jinja introduces programmability, enabling DRY (Don't Repeat Yourself) principles through reusable macros, dynamic loops, and conditionals before compiling into valid raw SQL.",
+            "explanation": "By bringing software engineering best practices (like DRY functions) to SQL, dbt allows data engineering teams to scale massively without drowning in millions of lines of heavily duplicated boilerplate SQL code."
+        },
+        {
+            "question": "When utilizing a Jinja `{% for %}` loop in a dbt model to pivot rows into columns (like looping through an array of payment methods), when exactly is that Python-like loop executed?",
+            "options": [
+                "It is executed dynamically by the Snowflake/BigQuery database engine directly during the runtime query execution.",
+                "It is executed entirely by dbt during the Compilation phase (when you run dbt run or dbt compile), returning a final, raw, static SQL query that is then safely sent to the data warehouse for standard execution.",
+                "It runs natively inside the browser via WebAssembly.",
+                "It executes specifically right after the dbt tests complete successfully."
+            ],
+            "answer": "It is executed entirely by dbt during the Compilation phase (when you run dbt run or dbt compile), returning a final, raw, static SQL query that is then safely sent to the data warehouse for standard execution.",
+            "explanation": "Databases like BigQuery do not understand Jinja natively. dbt acts as a pre-processor: it executes all Python logic first to generate a massive, valid SQL string, which is then deployed to the warehouse normally."
+        },
+        {
+            "question": "What is the primary function of utilizing a dbt Package like `dbt_utils`?",
+            "options": [
+                "To export massive amounts of raw dbt data entirely out of the database and into external API endpoints via Python automatically.",
+                "To mathematically bypass Snowflake's internal optimizer algorithm.",
+                "To abstract away commonly utilized, complex SQL operations (like creating reliable Surrogate Keys, or generating date spines) via pre-built, community-tested, reliable open-source macros.",
+                "To securely encrypt PII data using strict AES-256 algorithms entirely."
+            ],
+            "answer": "To abstract away commonly utilized, complex SQL operations (like creating reliable Surrogate Keys, or generating date spines) via pre-built, community-tested, reliable open-source macros.",
+            "explanation": "Similar to utilizing npm packages in Node.js, dbt Packages save teams thousands of hours of rewriting common data-modeling boilerplate logic by importing trusted community macros directly into their pipelines."
+        }
+    ]
+}

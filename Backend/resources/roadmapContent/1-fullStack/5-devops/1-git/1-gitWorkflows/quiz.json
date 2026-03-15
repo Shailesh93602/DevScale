@@ -1,0 +1,74 @@
+{
+    "title": "Git Workflows Quiz",
+    "description": "Test your Git branching and collaboration knowledge.",
+    "passingScore": 80,
+    "timeLimit": 8,
+    "questions": [
+        {
+            "question": "What is the purpose of 'git rebase' vs 'git merge'?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "They are identical operations",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Rebase replays commits on top of another branch for a linear history; merge creates a merge commit preserving branch history",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Rebase is used to delete branches; merge creates new branches",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Rebase is only for hotfixes; merge is for features",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In Conventional Commits, what prefix indicates a new feature?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "add:",
+                    "isCorrect": false
+                },
+                {
+                    "text": "new:",
+                    "isCorrect": false
+                },
+                {
+                    "text": "feat:",
+                    "isCorrect": true
+                },
+                {
+                    "text": "feature:",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does 'git commit --amend' do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Creates a new branch from the last commit",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Modifies the most recent commit (message or staged changes)",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Reverts the last commit",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Adds an author signature to the commit",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

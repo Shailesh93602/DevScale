@@ -1,0 +1,125 @@
+<h1>Prisma with Next.js: Server Actions, Edge & Caching</h1>
+<p>Using Prisma in Next.js requires understanding several nuances: the global client singleton pattern to prevent connection exhaustion in development, the limitations of running Prisma on Edge Runtime, and the new Prisma Pulse/Accelerate products for caching and real-time subscriptions.</p>
+
+<h2>The Global Client Singleton (Critical for Next.js Dev)</h2>
+<pre><code class="language-typescript">// lib/prisma.ts — ALWAYS use this pattern in Next.js/Node.js
+import { PrismaClient } from '@prisma/client';
+
+// TypeScript global augmentation
+declare global {
+  var prisma: PrismaClient | undefined;
+}
+
+// The Problem: Next.js hot module replacement (HMR) re-runs every module
+// import on each save. Without this pattern: new PrismaClient() is called
+// on every save → hundreds of connection pools opened → PostgreSQL crashes.
+
+// The Solution: store the single instance on `globalThis` which survives HMR.
+export const prisma = globalThis.prisma ?? new PrismaClient({
+  log: process.env.NODE_ENV === 'development' ? ['query', 'warn', 'error'] : ['error'],
+});
+
+// Only cache the instance in development (avoid memory leaks in production)
+if (process.env.NODE_ENV !== 'production') globalThis.prisma = prisma;
+</code></pre>
+
+<h2>Prisma in Server Components & Server Actions</h2>
+<pre><code class="language-typescript">// app/products/page.tsx — Server Component (direct DB access, no API layer needed)
+import { prisma } from '@/lib/prisma';
+
+export default async function ProductsPage() {
+  // Runs on server: no client bundle cost, sensitive data never sent to browser
+  const products = await prisma.product.findMany({
+    where: { published: true },
+    include: { category: true },
+    orderBy: { createdAt: 'desc' },
+    take: 20,
+  });
+
+  return &lt;ProductList products={products} /&gt;;
+}
+
+// app/products/[id]/actions.ts — Server Action (form mutation)
+'use server';
+import { prisma } from '@/lib/prisma';
+import { revalidatePath } from 'next/cache';
+import { z } from 'zod';
+
+const CreateProductSchema = z.object({
+  name: z.string().min(1).max(200),
+  price: z.coerce.number().positive(),
+});
+
+export async function createProduct(formData: FormData) {
+  const result = CreateProductSchema.safeParse({
+    name: formData.get('name'),
+    price: formData.get('price'),
+  });
+
+  if (!result.success) {
+    return { error: result.error.format() };
+  }
+
+  const product = await prisma.product.create({ data: result.data });
+
+  revalidatePath('/products');  // Invalidate Next.js cache for this route
+  return { success: true, product };
+}
+</code></pre>
+
+<h2>Prisma Accelerate: Edge + Query Caching</h2>
+<pre><code class="language-typescript">// Prisma Accelerate: connection pooling + query-level caching for Edge Runtime
+// Edge Runtime (Cloudflare Workers, Vercel Edge) can't use the Prisma Client
+// because it requires Node.js TCP connections — Edge uses HTTP/fetch only.
+// Prisma Accelerate proxies queries over HTTP, enabling Edge + global caching.
+
+// 1. Change DATABASE_URL to Accelerate URL in .env:
+// DATABASE_URL="prisma://accelerate.prisma-data.net/?api_key=..."
+
+// 2. Install the extension
+import { PrismaClient } from '@prisma/client';
+import { withAccelerate } from '@prisma/extension-accelerate';
+
+const prisma = new PrismaClient().$extends(withAccelerate());
+
+// 3. Use cacheStrategy to cache specific queries at the CDN edge
+async function getProducts() {
+  return prisma.product.findMany({
+    where: { published: true },
+    cacheStrategy: {
+      ttl: 60,        // Cache for 60 seconds
+      swr: 30,        // Stale-While-Revalidate: serve stale for 30s while fetching fresh
+    },
+  });
+}
+
+// The query result is cached at Prisma's global CDN.
+// Subsequent requests from Vercel Edge Functions in Tokyo
+// get cached data from the nearest edge node — not from your database!
+</code></pre>
+
+<h2>Prisma Pulse: Real-Time Database Subscriptions</h2>
+<pre><code class="language-typescript">// Prisma Pulse: subscribe to database changes without polling
+import { PrismaClient } from '@prisma/client';
+import { withPulse } from '@prisma/extension-pulse';
+
+const prisma = new PrismaClient().$extends(withPulse({
+  apiKey: process.env.PULSE_API_KEY,
+}));
+
+// Stream all new orders in real-time
+async function monitorNewOrders() {
+  const stream = await prisma.order.stream({
+    create: {},       // Listen to INSERT events on orders table
+  });
+
+  for await (const event of stream) {
+    const newOrder = event.created;
+    console.log('New order:', newOrder);
+    await notifyFulfillmentTeam(newOrder);
+  }
+}
+
+// Use case: admin dashboards, order fulfillment systems,
+// notification triggers, audit logs — without polling or CDC setup
+</code></pre>

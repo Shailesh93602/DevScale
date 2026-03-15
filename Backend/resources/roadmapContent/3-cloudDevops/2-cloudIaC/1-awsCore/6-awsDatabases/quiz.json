@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "An application has an RDS Multi-AZ deployment. What specifically happens during a failover, and how long does it typically take?",
+            "options": [
+                "The standby begins serving read traffic immediately when primary CPU exceeds 80%.",
+                "When the primary instance fails, AWS automatically updates the database DNS endpoint to point to the synchronous standby instance in a different Availability Zone. The application reconnects to the same endpoint, now pointing to the new primary, typically within 60-120 seconds.",
+                "Multi-AZ failover requires a manual snapshot restore from S3, taking 20-30 minutes.",
+                "The standby takes over by cloning the primary instance on-demand, taking 5-10 minutes."
+            ],
+            "answer": "When the primary instance fails, AWS automatically updates the database DNS endpoint to point to the synchronous standby instance in a different Availability Zone. The application reconnects to the same endpoint, now pointing to the new primary, typically within 60-120 seconds.",
+            "explanation": "This is why applications must implement connection retry logic. The DNS CNAME that your app connects to stays the same — AWS transparently updates what it points to."
+        },
+        {
+            "question": "In DynamoDB's single-table design, what architectural benefit justifies storing multiple entity types (Users, Orders, Products) in the same table?",
+            "options": [
+                "Single-table design reduces DynamoDB storage costs by 50%.",
+                "DynamoDB cannot perform JOIN operations. Single-table design pre-joins related entities by collocating them under the same Partition Key, enabling a single query to retrieve an entity and all its related data in one round-trip with consistent single-digit millisecond latency.",
+                "Single-table design allows DynamoDB to support SQL queries.",
+                "It prevents DynamoDB from hitting its 400KB item size limit."
+            ],
+            "answer": "DynamoDB cannot perform JOIN operations. Single-table design pre-joins related entities by collocating them under the same Partition Key, enabling a single query to retrieve an entity and all its related data in one round-trip with consistent single-digit millisecond latency.",
+            "explanation": "In a relational DB: SELECT user + JOIN orders = 2 queries or a complex JOIN. In single-table DynamoDB: one KeyConditionExpression on PK=USER#123 returns both the user record and all their orders in one scan."
+        },
+        {
+            "question": "What specific database performance problem does Amazon ElastiCache Redis solve when placed in front of Amazon RDS?",
+            "options": [
+                "It encrypts RDS query results before they reach the application.",
+                "It absorbs repetitive read queries by storing frequently requested results in memory with sub-millisecond retrieval latency. Instead of every API request hitting RDS (5-20ms round trip), cache hits are served in microseconds, dramatically reducing RDS load and improving response times.",
+                "It prevents SQL injection attacks against the RDS database.",
+                "It automatically applies database indexes to RDS slow queries."
+            ],
+            "answer": "It absorbs repetitive read queries by storing frequently requested results in memory with sub-millisecond retrieval latency. Instead of every API request hitting RDS (5-20ms round trip), cache hits are served in microseconds, dramatically reducing RDS load and improving response times.",
+            "explanation": "A user profile page that was previously making 10 RDS queries on every page load can be cached in Redis for 5 minutes — reducing 10 database queries to 1 Redis GET for 99% of requests."
+        }
+    ]
+}

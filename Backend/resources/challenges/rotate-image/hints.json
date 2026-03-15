@@ -1,0 +1,6 @@
+[
+  "Think geometrically: after a 90° clockwise rotation, where does element at `(r, c)` move?",
+  "The formula is: element at `(r, c)` goes to `(c, n-1-r)`. But applying this directly needs extra space.",
+  "The elegant in-place trick: first **transpose** the matrix (swap `matrix[i][j]` with `matrix[j][i]`), then **reverse each row**.",
+  "Transpose + Row Reverse = 90° clockwise rotation. Transpose + Column Reverse = 90° counter-clockwise."
+]

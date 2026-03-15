@@ -1,0 +1,59 @@
+<h1>Apache Flink Fundamentals</h1>
+<p><strong>Apache Flink</strong> is an open-source framework for stateful computations over unbounded and bounded data streams. While Kafka is the "storage pipeline" that holds the streams of data, Flink is the "processing engine" that actually computes answers (e.g., aggregations, joins, machine learning inference) in real-time as the data flows through.</p>
+
+<h2>Batch vs. Stream Processing</h2>
+<p>Historically, Big Data was processed in batches (using Hadoop MapReduce or Apache Spark). It involved waiting for a day’s worth of data to accumulate in an S3 bucket, running a gigantic query, and updating a dashboard once a night.</p>
+<p>In contrast, Stream Processing analyzes data the millisecond it arrives. Think of a credit card fraud detection system: if you wait until midnight to run a batch job, the fraudster has already made off with the money. Flink enables <strong>sub-second latency</strong> responses to every single event on a Kafka topic.</p>
+<ul>
+  <li><strong>Unbounded Streams:</strong> Data has a start but no end. Continuous processing (Stream).</li>
+  <li><strong>Bounded Streams:</strong> Data has a start and an end. Processed completely and then stops (Batch).</li>
+</ul>
+<p>Flink uniquely treats batch processing as simply a special edge-case of stream processing, allowing you to use the exact same APIs for both paradigms.</p>
+
+<h2>Core Architecture</h2>
+<p>A Flink cluster consists of multiple components acting together:</p>
+<ul>
+  <li><strong>JobManager:</strong> The brain of the operation. It receives the code (JobGraph) from the client, requests resources (slots) from the cluster manager (like Kubernetes or YARN), coordinates checkpoints, and handles recovery if a worker dies.</li>
+  <li><strong>TaskManager:</strong> The muscle. These are the worker nodes that execute the actual user code (operators like <code>filter</code>, <code>map</code>, <code>join</code>, or <code>window</code>). Large clusters might run hundreds of TaskManagers.</li>
+  <li><strong>Task Slots:</strong> Each TaskManager is divided into a fixed number of slots (typically one per CPU core). An operation is assigned to a slot to guarantee isolated memory and execution time.</li>
+</ul>
+
+<h2>API Abstraction Levels</h2>
+<p>Flink offers developers different ways to express their computation logic, ranging from low-level control to high-level declarative syntax:</p>
+<ol>
+  <li><strong>ProcessFunction (Low-Level):</strong> Direct control over events, detailed state manipulation (e.g., storing a custom variable per user), and manual timer management. Use this when writing complex, custom event-driven applications.</li>
+  <li><strong>DataStream API (Core):</strong> The standard Java/Scala/Python API for building pipelines using functional transformations like <code>.map()</code>, <code>.filter()</code>, and <code>.keyBy()</code>.</li>
+  <li><strong>Table API &amp; SQL (High-Level):</strong> Write standard ANSI-SQL queries against a continuous stream. Flink translates the SQL into a distributed stream processing job automatically.</li>
+</ol>
+
+<pre><code>import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.datastream.DataStream;
+
+public class BasicFlinkApp {
+    public static void main(String[] args) throws Exception {
+        // 1. Set up the execution environment
+        final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+
+        // 2. Read from a source (Kafka, File, Socket)
+        DataStream&lt;String&gt; text = env.socketTextStream("localhost", 9999);
+
+        // 3. Define the transformations (Filter out short lines, convert to upper case)
+        DataStream&lt;String&gt; processed = text
+            .filter(line -> line.length() > 5)
+            .map(String::toUpperCase);
+
+        // 4. Output to a sink (Kafka, Database, Print)
+        processed.print();
+
+        // 5. Execute the streaming pipeline
+        env.execute("Basic Stream Filtering Job");
+    }
+}</code></pre>
+
+<h2>State and Why It Matters</h2>
+<p>A simple <code>filter()</code> operation is <strong>stateless</strong>: looking at one event is enough to decide if it passes the filter. However, aggregating a sum (e.g., "Total sales per hour") is <strong>stateful</strong>. Flink must remember the running total between the arrival of the first event and the thousandth event.</p>
+<p>Managing this state correctly is why Flink is difficult but powerful. State is typically partitioned by a key (e.g., <code>userId</code>), ensuring that all events for User A are routed to the same TaskManager, which holds the current state for User A in its local memory (often backed by RocksDB to prevent memory overflow).</p>
+
+<h2>Checkpointing & Exactly-Once Semantics</h2>
+<p>Because state lives in the RAM/local disk of a TaskManager, if that node crashes, the running total is lost. Flink solves this with Distributed <strong>Snapshots (Checkpoints)</strong>.</p>
+<p>Every few seconds, the JobManager commands all TaskManagers to pause processing and flush their current state incrementally to durable storage (like AWS S3). If a node dies, a new one spins up, reads the latest Checkpoint from S3, rewinds the Kafka consumer offset to the exact moment of that checkpoint, and resumes. This provides mathematically guaranteed <strong>Exactly-Once processing</strong> — even if servers catch fire, your output results are never over-counted or under-counted.</p>

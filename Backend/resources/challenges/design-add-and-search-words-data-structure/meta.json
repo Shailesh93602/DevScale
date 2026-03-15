@@ -1,0 +1,20 @@
+{
+  "title": "Design Add and Search Words Data Structure",
+  "slug": "design-add-and-search-words-data-structure",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["string","depth-first-search","design","trie"],
+  "company_tags": ["Meta","Amazon","Microsoft"],
+  "topic_tags": ["tries","dfs","design"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 1500,
+  "memory_limit_kb": 262144,
+  "input_format": "A series of calls to `addWord` and `search`.",
+  "output_format": "Boolean values for `search` indicating if the word is in the data structure.",
+  "example_input": "[\"WordDictionary\",\"addWord\",\"addWord\",\"addWord\",\"search\",\"search\",\"search\",\"search\"]\n[[],[\"bad\"],[\"dad\"],[\"mad\"],[\"pad\"],[\"bad\"],[\".ad\"],[\"b..\"]]",
+  "example_output": "[null,null,null,null,false,true,true,true]",
+  "constraints": "- `1 <= word.length <= 25`\n- `word` in `addWord` consists of lowercase English letters.\n- `word` in `search` consist of `.` or lowercase English letters.\n- There will be at most `2` dots in `word` for `search` queries.\n- At most `10^4` calls will be made to `addWord` and `search`.",
+  "function_signature": "class WordDictionary { constructor() {} addWord(word: string): void {} search(word: string): boolean {} }",
+  "status": "ACTIVE"
+}

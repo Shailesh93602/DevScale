@@ -1,0 +1,4 @@
+{
+    "name": "Redis Caching",
+    "description": "In-memory data store for caching, sessions, pub/sub messaging and rate limiting."
+}

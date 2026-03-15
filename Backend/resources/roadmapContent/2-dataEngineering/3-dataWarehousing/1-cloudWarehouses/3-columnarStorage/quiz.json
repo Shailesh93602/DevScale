@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary architectural penalty of attempting to run massive analytical queries across a traditional 'Row-Based' database (like PostgreSQL)?",
+            "options": [
+                "Row-based databases natively prevent SQL aggregation functions.",
+                "Row-based storage forces the database to read massive, unnecessary amounts of irrelevant data off the physical hard drive (like names and emails), even if the analytical query only explicitly requests a single integer column.",
+                "Row-based storage encrypts the data arrays sequentially.",
+                "Row-based storage strictly relies on standard CSS frameworks natively."
+            ],
+            "answer": "Row-based storage forces the database to read massive, unnecessary amounts of irrelevant data off the physical hard drive (like names and emails), even if the analytical query only explicitly requests a single integer column.",
+            "explanation": "To calculate the sum of total sales, a row-based database reads every single string and date physically interspersed around the numbers."
+        },
+        {
+            "question": "How does 'Columnar Storage' (e.g., Apache Parquet) explicitly resolve the grueling Read-Speed bottlenecks of massive Data Warehouses?",
+            "options": [
+                "It translates SQL queries into lightweight Javascript React APIs natively.",
+                "It physically reorganizes data on the hard drive, clustering all identical values for a specific column (like 'prices') sequentially together in a single block. This allows the engine to explicitly skip loading useless columns entirely during analytical queries.",
+                "It dynamically stores all data securely within high-speed GPU caches.",
+                "It deletes missing NULL values safely and dynamically."
+            ],
+            "answer": "It physically reorganizes data on the hard drive, clustering all identical values for a specific column (like 'prices') sequentially together in a single block. This allows the engine to explicitly skip loading useless columns entirely during analytical queries.",
+            "explanation": "If your table has 50 columns, but your query only selects 2, Columnar strictly only reads those 2 columns physically from disk."
+        },
+        {
+            "question": "Why do Columnar Storage formats mathematically achieve vastly superior file compression ratios compared to standard Row-Based formats?",
+            "options": [
+                "Because Columnar formats automatically delete whitespace from strings cleanly.",
+                "Because data types reside exclusively together (e.g., millions of consecutive identical integers), highly efficient aggressive compression algorithms like Run-Length Encoding can physically compress the data exponentially better.",
+                "Because Columnar formats compress files securely inside ZIP folders natively.",
+                "Because Columnar formats actively ignore all JSON dictionaries cleanly."
+            ],
+            "answer": "Because data types reside exclusively together (e.g., millions of consecutive identical integers), highly efficient aggressive compression algorithms like Run-Length Encoding can physically compress the data exponentially better.",
+            "explanation": "You cannot efficiently compress a row containing a string, an integer, and a date. You can effectively compress 1 million identical integers stored back-to-back."
+        }
+    ]
+}

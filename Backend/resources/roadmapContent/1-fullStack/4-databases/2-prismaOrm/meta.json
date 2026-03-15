@@ -1,0 +1,4 @@
+{
+    "name": "Prisma ORM",
+    "description": "Type-safe database access with schema-first ORM for Node.js."
+}

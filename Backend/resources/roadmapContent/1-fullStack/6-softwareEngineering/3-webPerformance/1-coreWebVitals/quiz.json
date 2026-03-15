@@ -1,0 +1,26 @@
+{
+    "questions": [
+        {
+            "question": "What does LCP measure in the context of Core Web Vitals?",
+            "options": [
+                "Visual Stability",
+                "Responsiveness",
+                "Loading Performance",
+                "Accessibility"
+            ],
+            "correctAnswer": 2,
+            "explanation": "LCP stands for Largest Contentful Paint and measures perceived load speed."
+        },
+        {
+            "question": "A good CLS score should be less than:",
+            "options": [
+                "0.1",
+                "0.25",
+                "2.5",
+                "5.0"
+            ],
+            "correctAnswer": 0,
+            "explanation": "Google recommends a CLS of 0.1 or less for a good user experience."
+        }
+    ]
+}

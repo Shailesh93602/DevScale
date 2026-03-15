@@ -1,0 +1,74 @@
+{
+    "title": "Neural Networks Quiz",
+    "description": "Test your neural network architecture and training knowledge.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What does Dropout regularisation do during training?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Removes input features with low importance",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Randomly sets a fraction of neurons to zero during each training step, preventing co-adaptation and reducing overfitting",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Reduces the learning rate after each epoch",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Drops entire training batches that have high loss",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why do we call model.eval() before validation?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "To reduce GPU memory usage",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To disable Dropout and BatchNorm training behaviour, which should not be active during inference",
+                    "isCorrect": true
+                },
+                {
+                    "text": "To freeze all model weights permanently",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To switch to a faster evaluation mode that skips weight updates",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the role of the activation function in a neural network?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "To initialise the network weights",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To introduce non-linearity, enabling the network to learn complex patterns beyond simple linear relationships",
+                    "isCorrect": true
+                },
+                {
+                    "text": "To normalise input data before training",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To calculate the loss between predictions and labels",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

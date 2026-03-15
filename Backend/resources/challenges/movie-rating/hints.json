@@ -1,0 +1,6 @@
+[
+  "This is two separate problems combined. Solve each independently, then combine with UNION ALL.",
+  "For part 1: GROUP BY user, COUNT ratings, ORDER BY count DESC then name ASC, LIMIT 1.",
+  "For part 2: Filter to February 2020, GROUP BY movie, ORDER BY AVG(rating) DESC then title ASC, LIMIT 1.",
+  "Use UNION ALL to combine the two result rows into a single result set."
+]

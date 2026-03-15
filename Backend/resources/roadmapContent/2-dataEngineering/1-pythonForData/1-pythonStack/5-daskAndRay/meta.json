@@ -1,0 +1,4 @@
+{
+    "name": "Scaling Python: Dask & Ray",
+    "description": "Breaking Python's memory limits. Utilizing Dask to parallelize massive Pandas DataFrames across multiple CPU cores, and leveraging Ray for distributed computing clusters."
+}

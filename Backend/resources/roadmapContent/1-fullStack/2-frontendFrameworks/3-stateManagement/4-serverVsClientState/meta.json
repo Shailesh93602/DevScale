@@ -1,0 +1,4 @@
+{
+    "name": "Server State vs Client State",
+    "description": "Understanding the distinction between server state and UI state, when to use each, and combining React Query with Zustand for a complete state strategy."
+}

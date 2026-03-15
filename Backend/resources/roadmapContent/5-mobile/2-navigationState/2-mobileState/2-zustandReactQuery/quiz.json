@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "When using React Query's useInfiniteQuery for a paginated feed, how does the library know when there are more pages to load, and when to stop?",
+            "options": [
+                "React Query automatically detects pagination by monitoring the HTTP Link header.",
+                "getNextPageParam is a function you provide that receives the last loaded page's data and determines the next page cursor/number. Return the next page identifier to enable loading more. Return undefined (or null) to signal there are no more pages — React Query sets hasNextPage=false and stops calling fetchNextPage. React Query never auto-fetches next pages; you explicitly call fetchNextPage() when the user reaches the bottom.",
+                "useInfiniteQuery loads all pages upfront and caches them for instant navigation.",
+                "React Query stops fetching when three consecutive pages return empty arrays."
+            ],
+            "answer": "getNextPageParam is a function you provide that receives the last loaded page's data and determines the next page cursor/number. Return the next page identifier to enable loading more. Return undefined (or null) to signal there are no more pages — React Query sets hasNextPage=false and stops calling fetchNextPage. React Query never auto-fetches next pages; you explicitly call fetchNextPage() when the user reaches the bottom.",
+            "explanation": "Typical pattern: API returns { data: [...items], nextPage: 3 } or { data: [...items], nextPage: null } when exhausted. getNextPageParam: (lastPage) => lastPage.nextPage ?? undefined. In FlatList: onEndReached={() => hasNextPage && fetchNextPage()}. This gives you full control over when subsequent pages load."
+        },
+        {
+            "question": "What is the staleTime option in React Query, and what happens when you set it to Infinity?",
+            "options": [
+                "staleTime determines when data is deleted from the cache.",
+                "staleTime defines how long data is considered 'fresh' and will NOT trigger a background refetch when the component mounts or the window regains focus. After staleTime expires, data becomes 'stale' — still shown from cache but a background refetch is triggered. staleTime=Infinity means data NEVER automatically refetches — you must manually invalidate with queryClient.invalidateQueries(). Use Infinity for static data (country list, app config) that rarely changes.",
+                "staleTime=Infinity prevents the query from being garbage collected from the cache.",
+                "Setting staleTime=Infinity makes the query run once on app start and never again."
+            ],
+            "answer": "staleTime defines how long data is considered 'fresh' and will NOT trigger a background refetch when the component mounts or the window regains focus. After staleTime expires, data becomes 'stale' — still shown from cache but a background refetch is triggered. staleTime=Infinity means data NEVER automatically refetches — you must manually invalidate with queryClient.invalidateQueries(). Use Infinity for static data (country list, app config) that rarely changes.",
+            "explanation": "staleTime=0 (default): every component mount triggers a background refetch, showing cached data instantly while fresh data loads silently. staleTime=5*60*1000: data is fresh for 5 minutes — no refetch when switching tabs 30 seconds after initial load. staleTime=Infinity: user profile that only changes on profile edit — manually invalidate after successful edit mutation."
+        },
+        {
+            "question": "What must you do in the onMutate function during an optimistic update, and why is the returned context important?",
+            "options": [
+                "onMutate should perform the actual API call — useMutation handles the cache update automatically.",
+                "In onMutate: (1) cancel any in-flight queries for the affected data (cancelQueries) to prevent race conditions, (2) snapshot the previous cache value (getQueryData), (3) apply the optimistic update (setQueryData). Return the snapshot as context. In onError, use context.previous to roll back via setQueryData. Without saving the snapshot, rollback on failure is impossible — the user sees a wrong state that never corrects itself.",
+                "onMutate simply logs the mutation intent; the actual optimistic update happens in onSuccess.",
+                "context from onMutate is used by React Query to debounce duplicate mutations."
+            ],
+            "answer": "In onMutate: (1) cancel any in-flight queries for the affected data (cancelQueries) to prevent race conditions, (2) snapshot the previous cache value (getQueryData), (3) apply the optimistic update (setQueryData). Return the snapshot as context. In onError, use context.previous to roll back via setQueryData. Without saving the snapshot, rollback on failure is impossible — the user sees a wrong state that never corrects itself.",
+            "explanation": "Real consequence: user taps 'Like' on a post. onMutate optimistically shows the post as liked immediately. Network request fails (offline). onError receives context.previous (post in un-liked state) and restores it via setQueryData — the heart icon reverts to un-liked. Without context: impossible to know what state to restore to."
+        }
+    ]
+}

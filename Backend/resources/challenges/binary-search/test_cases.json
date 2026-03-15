@@ -1,0 +1,12 @@
+[
+  { "input": "{\"nums\": [-1,0,3,5,9,12], \"target\": 9}", "output": "4", "explanation": "9 is at index 4.", "is_hidden": false },
+  { "input": "{\"nums\": [-1,0,3,5,9,12], \"target\": 2}", "output": "-1", "explanation": "2 not in array.", "is_hidden": false },
+  { "input": "{\"nums\": [5], \"target\": 5}", "output": "0", "explanation": "Single element match.", "is_hidden": false },
+  { "input": "{\"nums\": [1,2,3,4,5], \"target\": 1}", "output": "0", "explanation": "Target at beginning.", "is_hidden": true },
+  { "input": "{\"nums\": [1,2,3,4,5], \"target\": 5}", "output": "4", "explanation": "Target at end.", "is_hidden": true },
+  { "input": "{\"nums\": [1,2,3,4,5], \"target\": 6}", "output": "-1", "explanation": "Target larger than all.", "is_hidden": true },
+  { "input": "{\"nums\": [1,2,3,4,5], \"target\": 0}", "output": "-1", "explanation": "Target smaller than all.", "is_hidden": true },
+  { "input": "{\"nums\": [-5,-3,-1,0,2,4], \"target\": -3}", "output": "1", "explanation": "Negative target found.", "is_hidden": true },
+  { "input": "{\"nums\": [2,5], \"target\": 5}", "output": "1", "explanation": "Two elements, target is second.", "is_hidden": true },
+  { "input": "{\"nums\": [1], \"target\": 2}", "output": "-1", "explanation": "Single element, no match.", "is_hidden": true }
+]

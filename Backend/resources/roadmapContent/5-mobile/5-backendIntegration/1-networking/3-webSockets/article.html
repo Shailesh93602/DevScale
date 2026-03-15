@@ -1,0 +1,166 @@
+<h1>WebSockets in React Native</h1>
+<p>HTTP is a request-response protocol — the client asks, the server answers, connection closes. This is fine for loading a product list, but it fundamentally cannot support real-time features like live chat, collaborative editing, live sports scores, or real-time trading dashboards. For these cases, you need <strong>WebSockets</strong> — a persistent, bidirectional TCP connection where both client and server can send messages to each other at any time.</p>
+
+<h2>WebSocket vs HTTP</h2>
+<table>
+  <thead><tr><th>Property</th><th>HTTP</th><th>WebSocket</th></tr></thead>
+  <tbody>
+    <tr><td>Connection</td><td>New connection per request</td><td>Persistent connection</td></tr>
+    <tr><td>Direction</td><td>Client → Server (request only)</td><td>Bidirectional (both directions)</td></tr>
+    <tr><td>Latency</td><td>High (handshake per request)</td><td>Very low (connection already open)</td></tr>
+    <tr><td>Use case</td><td>Fetching data, CRUD operations</td><td>Live chat, notifications, real-time data</td></tr>
+    <tr><td>Overhead</td><td>Full HTTP headers per request</td><td>Small frame headers (2 bytes minimum)</td></tr>
+  </tbody>
+</table>
+
+<h2>Using the Native WebSocket API</h2>
+<p>React Native includes WebSocket support natively — no library needed for basic usage:</p>
+<pre><code>import React, &#123; useEffect, useRef, useState, useCallback &#125; from 'react';
+import &#123; View, Text, TextInput, FlatList, Pressable &#125; from 'react-native';
+
+interface Message &#123;
+  id: string;
+  text: string;
+  sender: string;
+  timestamp: number;
+&#125;
+
+const ChatRoom = (&#123; roomId, userId &#125;: &#123; roomId: string; userId: string &#125;) =&gt; &#123;
+  const [messages, setMessages] = useState&lt;Message[]&gt;([]);
+  const [inputText, setInputText] = useState('');
+  const [isConnected, setIsConnected] = useState(false);
+  const ws = useRef&lt;WebSocket | null&gt;(null);
+
+  const connect = useCallback(() =&gt; &#123;
+    const socket = new WebSocket(
+      `wss://api.yourapp.com/ws/chat/$&#123;roomId&#125;?userId=$&#123;userId&#125;`
+    );
+
+    socket.onopen = () =&gt; &#123;
+      console.log('WebSocket connected');
+      setIsConnected(true);
+      socket.send(JSON.stringify(&#123; type: 'join', roomId, userId &#125;));
+    &#125;;
+
+    socket.onmessage = (event) =&gt; &#123;
+      const data = JSON.parse(event.data);
+
+      switch (data.type) &#123;
+        case 'message':
+          setMessages(prev =&gt; [...prev, data.payload]);
+          break;
+        case 'user_joined':
+          console.log(`$&#123;data.username&#125; joined the room`);
+          break;
+      &#125;
+    &#125;;
+
+    socket.onerror = (error) =&gt; &#123;
+      console.error('WebSocket error:', error);
+    &#125;;
+
+    socket.onclose = (event) =&gt; &#123;
+      setIsConnected(false);
+      console.log(`Disconnected: $&#123;event.code&#125; $&#123;event.reason&#125;`);
+      // Auto-reconnect after 3 seconds (unless intentional close)
+      if (event.code !== 1000) &#123;
+        setTimeout(connect, 3000);
+      &#125;
+    &#125;;
+
+    ws.current = socket;
+  &#125;, [roomId, userId]);
+
+  useEffect(() =&gt; &#123;
+    connect();
+    return () =&gt; &#123;
+      ws.current?.close(1000, 'Component unmounted');
+    &#125;;
+  &#125;, [connect]);
+
+  const sendMessage = useCallback(() =&gt; &#123;
+    if (!inputText.trim() || !ws.current || ws.current.readyState !== WebSocket.OPEN) return;
+
+    ws.current.send(JSON.stringify(&#123;
+      type: 'message',
+      payload: &#123; text: inputText.trim(), sender: userId &#125;
+    &#125;));
+    setInputText('');
+  &#125;, [inputText, userId]);
+
+  return (
+    &lt;View style=&#123;&#123; flex: 1 &#125;&#125;&gt;
+      &lt;Text&gt;&#123;isConnected ? '🟢 Connected' : '🔴 Disconnected'&#125;&lt;/Text&gt;
+      &lt;FlatList
+        data=&#123;messages&#125;
+        keyExtractor=&#123;item =&gt; item.id&#125;
+        renderItem=&#123;(&#123; item &#125;) =&gt; (
+          &lt;View&gt;
+            &lt;Text style=&#123;&#123; fontWeight: 'bold' &#125;&#125;&gt;&#123;item.sender&#125;&lt;/Text&gt;
+            &lt;Text&gt;&#123;item.text&#125;&lt;/Text&gt;
+          &lt;/View&gt;
+        )&#125;
+      /&gt;
+      &lt;View style=&#123;&#123; flexDirection: 'row' &#125;&#125;&gt;
+        &lt;TextInput value=&#123;inputText&#125; onChangeText=&#123;setInputText&#125; style=&#123;&#123; flex: 1 &#125;&#125; /&gt;
+        &lt;Pressable onPress=&#123;sendMessage&#125;&gt;&lt;Text&gt;Send&lt;/Text&gt;&lt;/Pressable&gt;
+      &lt;/View&gt;
+    &lt;/View&gt;
+  );
+&#125;;</code></pre>
+
+<h2>Using Socket.io for Advanced Features</h2>
+<p>The native WebSocket API is low-level. Socket.io adds automatic reconnection, rooms, namespaces, acknowledgements (guaranteed delivery), and fallback to HTTP long-polling — making it much simpler for production use:</p>
+<pre><code>import &#123; io, Socket &#125; from 'socket.io-client';
+
+const socket: Socket = io('https://api.yourapp.com', &#123;
+  auth: &#123; token: authToken &#125;,
+  transports: ['websocket'],  // Skip HTTP polling, use WebSocket directly
+  reconnection: true,
+  reconnectionAttempts: 5,
+  reconnectionDelay: 2000,
+&#125;);
+
+// Listen for events
+socket.on('connect', () =&gt; console.log('Connected:', socket.id));
+socket.on('disconnect', (reason) =&gt; console.warn('Disconnected:', reason));
+socket.on('new_message', (message: Message) =&gt; &#123;
+  setMessages(prev =&gt; [...prev, message]);
+&#125;);
+
+// Emit with acknowledgement (guaranteed delivery confirmation)
+socket.emit('send_message', &#123; text: 'Hello!', room: 'general' &#125;, (ack) =&gt; &#123;
+  if (ack.success) console.log('Message delivered');
+&#125;);
+
+// Join a room (server-side filtering — only receive messages for this room)
+socket.emit('join_room', 'general');
+
+// Cleanup on unmount
+useEffect(() =&gt; &#123;
+  return () =&gt; &#123; socket.disconnect(); &#125;;
+&#125;, []);</code></pre>
+
+<h2>Handling Disconnections and App State</h2>
+<pre><code>import &#123; AppState, AppStateStatus &#125; from 'react-native';
+
+useEffect(() =&gt; &#123;
+  const subscription = AppState.addEventListener('change', (nextState: AppStateStatus) =&gt; &#123;
+    if (nextState === 'active') &#123;
+      // App came to foreground — reconnect if disconnected
+      if (!socket.connected) socket.connect();
+    &#125; else if (nextState === 'background') &#123;
+      // App went to background — disconnect to save battery
+      socket.disconnect();
+    &#125;
+  &#125;);
+  return () =&gt; subscription.remove();
+&#125;, []);</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always clean up WebSocket connections in the <code>useEffect</code> cleanup function — failing to do so creates memory leaks and ghost connections.</li>
+  <li>Use <code>ws.readyState === WebSocket.OPEN</code> before calling <code>ws.send()</code> — sending on a closing/closed socket causes an error.</li>
+  <li>Implement exponential backoff for reconnection delays instead of a fixed interval — prevents thundering herd if your server restarts.</li>
+  <li>Disconnect WebSockets when the app goes to the background and reconnect on foreground to preserve battery life.</li>
+</ul>

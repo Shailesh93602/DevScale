@@ -1,0 +1,107 @@
+<h1>MMKV, SQLite & Offline-First Architecture</h1>
+<p>Mobile apps that require internet connectivity to function feel fragile. Users expect apps to work on the subway, in flights, and in poor signal areas. Offline-first architecture means designing your data layer to work locally first, then syncing with the server when connectivity is available.</p>
+
+<h2>AsyncStorage vs MMKV — Choosing the Right Tool</h2>
+<pre><code class="language-text">AsyncStorage:              MMKV:
+- Built-in to Expo        - ~10x faster (C++ implementation)
+- Async API               - Synchronous API (safe on JS thread)
+- JSONified storage       - Binary encoding (more efficient)
+- Good for: token storage - Good for: frequently accessed settings, theme, user prefs
+- Max: ~6MB per key       - No meaningful size limit
+- Bridge overhead         - Direct JSI — no bridge crossing
+
+Use AsyncStorage: when you're already using it and speed isn't critical
+Use MMKV: for any frequently-read key-value storage in a performance-sensitive app
+</code></pre>
+<pre><code class="language-jsx">import { MMKV } from 'react-native-mmkv';
+
+const storage = new MMKV({ id: 'user-preferences' });
+
+// Synchronous reads — no await needed!
+const isDarkMode = storage.getBoolean('darkMode') ?? false;
+const lastOpenedTab = storage.getString('lastTab') ?? 'home';
+
+// Writes
+storage.set('darkMode', true);
+storage.set('lastTab', 'profile');
+
+// Perfect for persisting Zustand store:
+const mmkvStorage = {
+  setItem: (name, value) => storage.set(name, value),
+  getItem: (name) => storage.getString(name) ?? null,
+  removeItem: (name) => storage.delete(name),
+};
+</code></pre>
+
+<h2>Expo SQLite for Relational Data</h2>
+<pre><code class="language-jsx">import * as SQLite from 'expo-sqlite';
+
+const db = SQLite.openDatabaseSync('app.db');
+
+// Initialize schema
+db.execSync(`
+  CREATE TABLE IF NOT EXISTS messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    chat_id TEXT NOT NULL,
+    content TEXT NOT NULL,
+    sender_id TEXT NOT NULL,
+    created_at INTEGER NOT NULL,
+    synced INTEGER DEFAULT 0
+  );
+  CREATE INDEX IF NOT EXISTS idx_chat_messages ON messages(chat_id, created_at DESC);
+`);
+
+// Insert messages locally (before server sync)
+function saveMessageLocally(chatId, content, senderId) {
+  db.runSync(
+    'INSERT INTO messages (chat_id, content, sender_id, created_at) VALUES (?, ?, ?, ?)',
+    [chatId, content, senderId, Date.now()]
+  );
+}
+
+// Read messages instantly from local DB
+function getMessages(chatId) {
+  return db.getAllSync(
+    'SELECT * FROM messages WHERE chat_id = ? ORDER BY created_at DESC LIMIT 50',
+    [chatId]
+  );
+}
+</code></pre>
+
+<h2>Offline-First Sync Architecture</h2>
+<pre><code class="language-jsx">import NetInfo from '@react-native-community/netinfo';
+
+// 1. Always write to local DB first (instant UI feedback)
+async function sendMessage(chatId, content) {
+  const tempId = `temp_${Date.now()}`;
+  // Save locally with un-synced status
+  saveMessageLocally(chatId, content, currentUser.id, tempId);
+
+  // 2. Try to sync with server
+  const isOnline = (await NetInfo.fetch()).isConnected;
+  if (isOnline) {
+    await syncMessage(tempId);
+  }
+  // If offline: message sits in local DB with synced=0
+}
+
+// 3. Background sync when connectivity restores
+NetInfo.addEventListener((state) => {
+  if (state.isConnected) {
+    syncAllPendingMessages();  // Find synced=0 rows and push to server
+  }
+});
+
+async function syncAllPendingMessages() {
+  const pending = db.getAllSync('SELECT * FROM messages WHERE synced = 0');
+  for (const msg of pending) {
+    try {
+      const serverMsg = await api.sendMessage(msg);
+      db.runSync('UPDATE messages SET synced = 1, id = ? WHERE id = ?',
+        [serverMsg.id, msg.id]);
+    } catch (err) {
+      console.log('Sync failed for message:', msg.id);
+    }
+  }
+}
+</code></pre>

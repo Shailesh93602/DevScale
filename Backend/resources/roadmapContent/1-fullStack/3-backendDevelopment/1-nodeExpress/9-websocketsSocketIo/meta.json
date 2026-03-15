@@ -1,0 +1,4 @@
+{
+    "name": "WebSockets & Socket.io",
+    "description": "Building real-time, bidirectional, event-based communication channels using the ws library and Socket.io for chat applications, live dashboards, and multiplayer games."
+}

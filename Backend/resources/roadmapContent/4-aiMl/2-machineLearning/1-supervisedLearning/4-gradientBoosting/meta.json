@@ -1,0 +1,4 @@
+{
+    "name": "Gradient Boosting: XGBoost, LightGBM & CatBoost",
+    "description": "Mastering the most powerful family of ML algorithms for tabular data. Understanding gradient boosting's additive tree building process, the practical advantages of XGBoost histograms, LightGBM's leaf-wise growth strategy, CatBoost's superior categorical feature handling, and how to tune these models effectively."
+}

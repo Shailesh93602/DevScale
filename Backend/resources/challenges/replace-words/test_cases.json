@@ -1,0 +1,7 @@
+[
+  {"input":"{\"dictionary\":[\"cat\",\"bat\",\"rat\"], \"sentence\":\"the cattle was rattled by the battery\"}","output":"\"the cat was rat by the bat\"","explanation":"Basic test","is_hidden":false},
+  {"input":"{\"dictionary\":[\"a\",\"b\",\"c\"], \"sentence\":\"aadsfasf absbs bbab cadsfafs\"}","output":"\"a a b c\"","explanation":"Single character roots","is_hidden":false},
+  {"input":"{\"dictionary\":[\"a\", \"aa\", \"aaa\", \"aaaa\"], \"sentence\":\"a aa a aaaa aaa aaa aaa aaaaaa bbb baba ababa\"}","output":"\"a a a a a a a a bbb baba a\"","explanation":"Multiple matching roots","is_hidden":true},
+  {"input":"{\"dictionary\":[\"catt\",\"cat\",\"bat\",\"rat\"], \"sentence\":\"the cattle was rattled by the battery\"}","output":"\"the cat was rat by the bat\"","explanation":"Shortest root wins","is_hidden":true},
+  {"input":"{\"dictionary\":[\"ac\",\"ab\"], \"sentence\":\"it is abnormal that this solution is accepted\"}","output":"\"it is ab that this solution is ac\"","explanation":"Random sentence","is_hidden":true}
+]

@@ -1,0 +1,10 @@
+{
+  "typescript": "function findMin(nums: number[]): number {\n    \n};",
+  "javascript": "/**\n * @param {number[]} nums\n * @return {number}\n */\nvar findMin = function(nums) {\n    \n};",
+  "python": "class Solution:\n    def findMin(self, nums: List[int]) -> int:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public int findMin(int[] nums) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int findMin(vector<int>& nums) {\n        \n    }\n};",
+  "go": "func findMin(nums []int) int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn find_min(nums: Vec<i32>) -> i32 {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int FindMin(int[] nums) {\n        \n    }\n}"
+}

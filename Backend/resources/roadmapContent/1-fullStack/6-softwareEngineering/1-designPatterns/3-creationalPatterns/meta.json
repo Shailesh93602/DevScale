@@ -1,0 +1,4 @@
+{
+    "name": "Creational Patterns",
+    "description": "Mastering the robust creation of nested objects. Understanding the Singleton, Factory Method, and Builder patterns to decouple object creation from its actual usage."
+}

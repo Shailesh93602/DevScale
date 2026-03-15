@@ -1,0 +1,124 @@
+<h1>Data Quality & Validation with Great Expectations</h1>
+<p>Bad data is the silent killer of data platforms. A report confidently shows revenue is up 40%, but it's because a broken pipeline double-counted transactions. Without automated data quality checks, these issues propagate downstream into business decisions before anyone notices. <strong>Great Expectations (GX)</strong> is the leading open-source framework for defining, validating, and documenting data quality expectations as code — catching data issues at the pipeline boundary before they reach production.</p>
+
+<h2>Core Concepts</h2>
+<ul>
+  <li><strong>Expectation:</strong> A testable assertion about your data — "this column should never be null," "order totals should be between $0 and $100,000."</li>
+  <li><strong>Expectation Suite:</strong> A collection of expectations for a dataset, stored as JSON.</li>
+  <li><strong>Checkpoint:</strong> A configured pipeline step that validates a batch of data against an expectation suite and actions (alert, fail the pipeline) if validation fails.</li>
+  <li><strong>Data Docs:</strong> Auto-generated HTML documentation showing all your expectations and recent validation results.</li>
+</ul>
+
+<h2>Getting Started</h2>
+<pre><code">pip install great_expectations
+gx init  # Initialize a new GX project
+
+# Project structure created:
+# great_expectations/
+#   great_expectations.yml
+#   expectations/        ← Expectation suites stored here
+#   checkpoints/         ← Checkpoint configurations
+#   uncommitted/         ← Validation results (not committed to git)</code></pre>
+
+<h2>Defining Expectations</h2>
+<pre><code"">import great_expectations as gx
+
+context = gx.get_context()
+
+# Connect to a pandas DataFrame (also supports Spark, SQL databases, BigQuery)
+df = pd.read_csv("orders.csv")
+
+ds = context.sources.add_pandas("my_pandas_source")
+da = ds.add_dataframe_asset("orders_data")
+batch_request = da.build_batch_request(dataframe=df)
+
+# Create a suite of expectations
+suite = context.add_expectation_suite("orders_quality")
+validator = context.get_validator(batch_request=batch_request,
+                                   expectation_suite_name="orders_quality")
+
+# ─── Row-level expectations ───────────────────────────────
+# order_id must never be null and must be unique
+validator.expect_column_values_to_not_be_null("order_id")
+validator.expect_column_values_to_be_unique("order_id")
+
+# order_total must be between $0 and $100,000
+validator.expect_column_values_to_be_between("order_total", min_value=0, max_value=100_000)
+
+# status must only contain known values
+validator.expect_column_values_to_be_in_set(
+    "status",
+    value_set=["pending", "processing", "shipped", "delivered", "cancelled"]
+)
+
+# ─── Table-level expectations ─────────────────────────────
+# Table must have at least 1000 rows (detect empty dataset bug)
+validator.expect_table_row_count_to_be_between(min_value=1000)
+
+# Column set must be exactly as expected (no missing/extra columns)  
+validator.expect_table_columns_to_match_ordered_list([
+    "order_id", "user_id", "order_total", "status", "created_at"
+])
+
+validator.save_expectation_suite()</code></pre>
+
+<h2>Running Validations in a Pipeline</h2>
+<pre><code"">from great_expectations.checkpoint import SimpleCheckpoint
+
+# Define what to do on validation failure
+checkpoint = SimpleCheckpoint(
+    name="orders_checkpoint",
+    data_context=context,
+    expectation_suite_name="orders_quality",
+    action_list=[
+        {
+            "name": "store_validation_result",
+            "action": {"class_name": "StoreValidationResultAction"}
+        },
+        {
+            "name": "update_data_docs",
+            "action": {"class_name": "UpdateDataDocsAction"}
+        },
+        {
+            "name": "send_slack_notification",
+            "action": {
+                "class_name": "SlackNotificationAction",
+                "slack_webhook": "${SLACK_WEBHOOK_URL}",
+                "notify_on": "failure",  # Only alert on failures
+                "renderer": {"module_name": "great_expectations.render.renderer.checkpoint_new_email_renderer"}
+            }
+        }
+    ]
+)
+
+results = checkpoint.run(batch_request=batch_request)
+
+# Fail the Airflow/Prefect task if validation failed
+if not results.success:
+    raise ValueError(f"Data quality validation failed! Check Data Docs for details.")
+
+print("✅ All data quality checks passed")</code></pre>
+
+<h2>Integrating with Airflow</h2>
+<pre><code"">from airflow.operators.python import PythonOperator
+from great_expectations_provider.operators.great_expectations import GreatExpectationsOperator
+
+# Use the official GX Airflow provider
+validate_orders = GreatExpectationsOperator(
+    task_id="validate_orders_quality",
+    data_context_root_dir="/opt/airflow/great_expectations",
+    dataframe_to_validate=load_orders_dataframe(),
+    expectation_suite_name="orders_quality",
+    fail_task_on_validation_failure=True,  # DAG fails if data is bad
+)
+
+# DAG order: extract → validate → transform → load
+extract_task >> validate_orders >> transform_task >> load_task</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Store Expectation Suites in git alongside your pipeline code — data quality expectations are as important as unit tests.</li>
+  <li>Run validations <em>before</em> transformations, not after — catching bad data at ingestion prevents it from corrupting downstream tables.</li>
+  <li>Start with your most critical business metrics (revenue, user counts) and grow the suite gradually — comprehensive suites take time to build.</li>
+  <li>Use <code>expect_table_row_count_to_be_between</code> with a reasonable lower bound to catch empty dataset bugs — one of the most common pipeline failures.</li>
+</ul>

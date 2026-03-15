@@ -1,0 +1,4 @@
+{
+    "name": "Kubernetes Storage: PVs, PVCs & StorageClasses",
+    "description": "Providing persistent storage to stateful applications in Kubernetes. Understanding Persistent Volumes (PV) and Persistent Volume Claims (PVC) as the abstraction for storage, StorageClasses for dynamic provisioning, and StatefulSets for ordered, stable pod deployments."
+}

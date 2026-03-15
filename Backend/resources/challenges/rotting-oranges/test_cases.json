@@ -1,0 +1,12 @@
+[
+  {"input":"{\"grid\":[[2,1,1],[1,1,0],[0,1,1]]}","output":"4","explanation":"Takes 4 minutes","is_hidden":false},
+  {"input":"{\"grid\":[[2,1,1],[0,1,1],[1,0,1]]}","output":"-1","explanation":"Corner unreachable","is_hidden":false},
+  {"input":"{\"grid\":[[0,2]]}","output":"0","explanation":"No fresh oranges already","is_hidden":false},
+  {"input":"{\"grid\":[[1,2]]}","output":"1","explanation":"Adjacent","is_hidden":true},
+  {"input":"{\"grid\":[[2,2],[1,1],[0,0]]}","output":"1","explanation":"Top row all rotten","is_hidden":true},
+  {"input":"{\"grid\":[[1]]}","output":"-1","explanation":"Lone fresh orange","is_hidden":true},
+  {"input":"{\"grid\":[[2]]}","output":"0","explanation":"Only rotten, no fresh","is_hidden":true},
+  {"input":"{\"grid\":[[0]]}","output":"0","explanation":"Only empty cell","is_hidden":true},
+  {"input":"{\"grid\":[[2,1,1],[1,1,1],[1,1,2]]}","output":"2","explanation":"Two rotten corners","is_hidden":true},
+  {"input":"{\"grid\":[[1,1,1],[1,1,1],[1,1,2]]}","output":"4","explanation":"Single corner rotten","is_hidden":true}
+]

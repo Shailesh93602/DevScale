@@ -1,0 +1,164 @@
+<h1>Form State Management with React Hook Form</h1>
+<p>Forms are one of the most complex UI challenges. React Hook Form (RHF) provides a <strong>performant, flexible, and easy-to-use</strong> solution with minimal re-renders and seamless TypeScript + Zod validation integration.</p>
+
+<h2>Why React Hook Form?</h2>
+<ul>
+  <li><strong>Performance</strong> — Uses uncontrolled inputs (no re-render on every keystroke).</li>
+  <li><strong>Less boilerplate</strong> — No manual onChange/value wiring.</li>
+  <li><strong>TypeScript-native</strong> — Full type inference from your schema.</li>
+  <li><strong>Zod integration</strong> — Validates with the same schema as your backend.</li>
+</ul>
+
+<h2>Basic Form Setup with Zod</h2>
+<pre><code>import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+// 1. Define validation schema
+const loginSchema = z.object({
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
+  rememberMe: z.boolean().default(false),
+});
+
+type LoginFormData = z.infer&lt;typeof loginSchema&gt;;
+
+// 2. Use the form
+function LoginForm() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting, isDirty },
+    reset,
+  } = useForm&lt;LoginFormData&gt;({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: '', password: '', rememberMe: false },
+  });
+
+  const onSubmit = async (data: LoginFormData) =&gt; {
+    try {
+      await authService.login(data);
+      reset(); // clear form on success
+    } catch (error) {
+      // Handle server errors
+    }
+  };
+
+  return (
+    &lt;form onSubmit={handleSubmit(onSubmit)}&gt;
+      &lt;div&gt;
+        &lt;input {...register('email')} placeholder="Email" /&gt;
+        {errors.email &amp;&amp; &lt;p className="error"&gt;{errors.email.message}&lt;/p&gt;}
+      &lt;/div&gt;
+
+      &lt;div&gt;
+        &lt;input {...register('password')} type="password" placeholder="Password" /&gt;
+        {errors.password &amp;&amp; &lt;p className="error"&gt;{errors.password.message}&lt;/p&gt;}
+      &lt;/div&gt;
+
+      &lt;label&gt;
+        &lt;input {...register('rememberMe')} type="checkbox" /&gt;
+        Remember me
+      &lt;/label&gt;
+
+      &lt;button type="submit" disabled={isSubmitting}&gt;
+        {isSubmitting ? 'Logging in...' : 'Login'}
+      &lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+
+<h2>Dynamic Field Arrays</h2>
+<pre><code>import { useFieldArray } from 'react-hook-form';
+
+const schema = z.object({
+  name: z.string().min(1),
+  tags: z.array(z.object({ value: z.string().min(1) })).min(1, 'Add at least one tag'),
+});
+
+function TagsForm() {
+  const { control, register, formState: { errors } } = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: { tags: [{ value: '' }] }
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'tags'
+  });
+
+  return (
+    &lt;form&gt;
+      {fields.map((field, index) =&gt; (
+        &lt;div key={field.id}&gt;
+          &lt;input {...register(`tags.${index}.value`)} /&gt;
+          &lt;button type="button" onClick={() =&gt; remove(index)}&gt;Remove&lt;/button&gt;
+        &lt;/div&gt;
+      ))}
+      &lt;button type="button" onClick={() =&gt; append({ value: '' })}&gt;Add Tag&lt;/button&gt;
+      {errors.tags?.root &amp;&amp; &lt;p&gt;{errors.tags.root.message}&lt;/p&gt;}
+    &lt;/form&gt;
+  );
+}</code></pre>
+
+<h2>Watch — Conditional Fields</h2>
+<pre><code>function SignupForm() {
+  const { register, watch } = useForm();
+  const accountType = watch('accountType');
+
+  return (
+    &lt;form&gt;
+      &lt;select {...register('accountType')}&gt;
+        &lt;option value="personal"&gt;Personal&lt;/option&gt;
+        &lt;option value="business"&gt;Business&lt;/option&gt;
+      &lt;/select&gt;
+
+      {/* Only show company name for business accounts */}
+      {accountType === 'business' &amp;&amp; (
+        &lt;input {...register('companyName')} placeholder="Company name" /&gt;
+      )}
+    &lt;/form&gt;
+  );
+}</code></pre>
+
+<h2>setError — Server-Side Errors</h2>
+<pre><code>const { setError } = useForm();
+
+const onSubmit = async (data) =&gt; {
+  try {
+    await api.register(data);
+  } catch (error) {
+    if (error.code === 'EMAIL_TAKEN') {
+      setError('email', {
+        type: 'server',
+        message: 'This email is already registered'
+      });
+    }
+  }
+};</code></pre>
+
+<h2>Controlled Components with Controller</h2>
+<pre><code>import { Controller } from 'react-hook-form';
+
+// For custom/third-party inputs that don't expose a ref
+&lt;Controller
+  name="country"
+  control={control}
+  render={({ field }) =&gt; (
+    &lt;CustomSelect
+      options={countries}
+      value={field.value}
+      onChange={field.onChange}
+      onBlur={field.onBlur}
+    /&gt;
+  )}
+/&gt;</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always pair React Hook Form with Zod for end-to-end type safety from DB to UI.</li>
+  <li>Use <code>useFieldArray</code> for dynamic lists (tags, line items, team members).</li>
+  <li>Use <code>watch</code> sparingly — it causes re-renders on every change for watched fields.</li>
+  <li>Use <code>setError</code> to surface server-side validation errors back into the form.</li>
+  <li>Use <code>isDirty</code> to disable the submit button when nothing has changed.</li>
+</ul>

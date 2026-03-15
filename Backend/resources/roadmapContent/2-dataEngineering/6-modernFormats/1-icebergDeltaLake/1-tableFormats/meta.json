@@ -1,0 +1,7 @@
+{
+    "id": "1-tableFormats",
+    "title": "Apache Iceberg & Delta Lake: Modern Table Formats",
+    "description": "Add ACID guarantees, time travel, schema evolution, and efficient MERGE/UPDATE/DELETE operations to Parquet files on S3 using open table formats.",
+    "order": 1,
+    "duration": 45
+}

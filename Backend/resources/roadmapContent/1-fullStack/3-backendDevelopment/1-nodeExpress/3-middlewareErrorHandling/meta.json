@@ -1,0 +1,4 @@
+{
+    "name": "Middleware & Error Handling",
+    "description": "Mastering the Express middleware stack. Writing custom middleware, using built-in middleware, and creating centralized, global error-handling architecture."
+}

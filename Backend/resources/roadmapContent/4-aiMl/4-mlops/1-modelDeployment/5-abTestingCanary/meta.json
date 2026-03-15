@@ -1,0 +1,4 @@
+{
+    "name": "A/B Testing & Canary Deployments for ML",
+    "description": "Safely deploying and validating new model versions in production. Designing statistically rigorous A/B tests for ML models, computing sample sizes and statistical power, shadow mode deployment for risk-free validation, canary releases with gradual traffic shifting, and multi-armed bandit approaches for continuously optimizing model selection."
+}

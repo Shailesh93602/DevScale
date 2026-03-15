@@ -1,0 +1,6 @@
+[
+  "For each house, you have two choices: rob it or skip it. What happens in each case?",
+  "If you rob house i, you cannot rob house i-1. So the best with house i is nums[i] + best up to house i-2.",
+  "Define dp[i] = max money from first i houses. Then dp[i] = max(dp[i-1], dp[i-2] + nums[i]).",
+  "You only need the previous two dp values at any point. Optimize space to O(1) with two variables."
+]

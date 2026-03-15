@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "Why is managing a streaming application's state inside a standard local in-memory dictionary (like a Python dict) fundamentally broken in a distributed system?",
+            "options": [
+                "Python dictionaries cannot store integers.",
+                "Because if the server running that code crashes, the in-memory dictionary is permanently destroyed, instantly wiping all historical context (e.g., all fraud detection history, all running user session counts) and making recovery from failures impossible.",
+                "Python dictionaries are not compatible with Java's Kafka client.",
+                "In-memory dictionaries do not support UTF-8 encoding."
+            ],
+            "answer": "Because if the server running that code crashes, the in-memory dictionary is permanently destroyed, instantly wiping all historical context (e.g., all fraud detection history, all running user session counts) and making recovery from failures impossible.",
+            "explanation": "Flink's Managed State is persisted externally (e.g., in RocksDB or S3), so it survives server crashes and can be fully restored."
+        },
+        {
+            "question": "What is the primary advantage of using the 'EmbeddedRocksDBStateBackend' over the standard 'HashMapStateBackend' in a production Flink job?",
+            "options": [
+                "RocksDB state is permanently stored in the AWS cloud and never locally.",
+                "RocksDB stores state on the local TaskManager disk rather than in JVM heap memory, which allows it to handle state sizes that are orders of magnitude larger than what would fit in RAM, preventing Out-Of-Memory crashes.",
+                "RocksDB is 10x faster than the HashMapStateBackend for all workloads.",
+                "RocksDB automatically compresses Kafka message schemas."
+            ],
+            "answer": "RocksDB stores state on the local TaskManager disk rather than in JVM heap memory, which allows it to handle state sizes that are orders of magnitude larger than what would fit in RAM, preventing Out-Of-Memory crashes.",
+            "explanation": "If you're tracking state for 500 million unique users, you physically cannot store all that in a JVM heap. RocksDB handles it gracefully on disk."
+        },
+        {
+            "question": "How does Flink's Checkpointing mechanism achieve fault tolerance without replaying the entire stream from the very beginning after a crash?",
+            "options": [
+                "It deletes all processed Kafka events immediately after processing.",
+                "Flink periodically takes consistent snapshots of the entire distributed state and saves them to durable storage (like S3). After a crash, it loads the latest checkpoint and only re-processes the small amount of events that occurred since that checkpoint was taken.",
+                "Flink prevents crashes by locking all writes during processing.",
+                "Flink broadcasts all state to every TaskManager simultaneously."
+            ],
+            "answer": "Flink periodically takes consistent snapshots of the entire distributed state and saves them to durable storage (like S3). After a crash, it loads the latest checkpoint and only re-processes the small amount of events that occurred since that checkpoint was taken.",
+            "explanation": "If your stream started 6 months ago and you have a 5-minute checkpoint interval, a crash means you only re-process 5 minutes of data, not 6 months."
+        }
+    ]
+}

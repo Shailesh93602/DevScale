@@ -1,0 +1,132 @@
+<h1>React 19 & Modern Data Fetching</h1>
+<p>React 19 revolutionizes how developers handle asynchronous operations, forms, and data fetching on the client and server. By dropping boilerplate like <code>useEffect</code> for data loading in favor of new primitives, modern React is significantly simpler and faster.</p>
+
+<h2>The <code>use</code> Hook</h2>
+<p>The new <code>use</code> API is the only React hook that can be called <strong>conditionally</strong>. It allows you to read the value of a Promise or Context directly during render. When reading a Promise, React will suspend the component until the Promise resolves.</p>
+
+<pre><code>import { use, Suspense } from 'react';
+
+// Fetching without useEffect!
+function Comments({ commentsPromise }) {
+  // `use` suspends this component until the promise resolves
+  // The nearest &lt;Suspense&gt; boundary will show a fallback
+  const comments = use(commentsPromise);
+  
+  return (
+    &lt;ul&gt;
+      {comments.map(c =&gt; &lt;li key={c.id}&gt;{c.text}&lt;/li&gt;)}
+    &lt;/ul&gt;
+  );
+}
+
+function PostPage() {
+  const promise = fetch('/api/comments').then(r =&gt; r.json());
+  
+  return (
+    &lt;Suspense fallback={&lt;p&gt;Loading comments...&lt;/p&gt;}&gt;
+      &lt;Comments commentsPromise={promise} /&gt;
+    &lt;/Suspense&gt;
+  );
+}</code></pre>
+
+<h2>Server Actions</h2>
+<p>Server Actions allow you to define asynchronous functions that run on the server, but can be called directly from Client Components (like from a form <code>action</code> or button <code>onClick</code>). They eliminate the need to manually build API endpoints for every mutation.</p>
+
+<pre><code>// actions.js (Server)
+'use server';
+
+export async function createPost(formData) {
+  const title = formData.get('title');
+  await db.post.insert({ title });
+  // In Next.js, you might call revalidatePath('/posts') here
+}
+
+// PostForm.jsx (Client)
+import { createPost } from './actions';
+
+export function PostForm() {
+  return (
+    &lt;form action={createPost}&gt;
+      &lt;input name="title" /&gt;
+      &lt;button type="submit"&gt;Submit&lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+
+<h2>useActionState (formerly useFormState)</h2>
+<p>When you submit a form via an action, you usually need to display success messages or validation errors. <code>useActionState</code> connects the form to the Server Action, returning the current state of the response.</p>
+
+<pre><code>import { useActionState } from 'react';
+
+async function addToCartAction(previousState, formData) {
+  try {
+    const id = formData.get('productId');
+    await api.addToCart(id);
+    return { success: 'Product added successfully!' };
+  } catch (err) {
+    return { error: 'Failed to add product' };
+  }
+}
+
+function AddToCartForm() {
+  // Returns: [state, dispatchFunction, isPending]
+  const [state, formAction, isPending] = useActionState(addToCartAction, null);
+
+  return (
+    &lt;form action={formAction}&gt;
+      &lt;input type="hidden" name="productId" value="123" /&gt;
+      
+      {state?.error &amp;&amp; &lt;p className="error"&gt;{state.error}&lt;/p&gt;}
+      {state?.success &amp;&amp; &lt;p className="success"&gt;{state.success}&lt;/p&gt;}
+      
+      &lt;button disabled={isPending}&gt;
+        {isPending ? 'Adding...' : 'Add to Cart'}
+      &lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+
+<h2>useFormStatus</h2>
+<p><code>useFormStatus</code> is a hook designed for nested form components (like submit buttons deep in a form). It reads the status of the parent <code>&lt;form&gt;</code> without requiring props to be drilled down.</p>
+
+<pre><code>import { useFormStatus } from 'react-dom';
+
+// This component MUST be rendered inside a &lt;form action={...}&gt;
+function SubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    &lt;button type="submit" disabled={pending}&gt;
+      {pending ? 'Submitting...' : 'Submit'}
+    &lt;/button&gt;
+  );
+}</code></pre>
+
+<h2>useOptimistic</h2>
+<p>Optimistic updates make an app feel instantly responsive by updating the UI before the server confirms the mutation. <code>useOptimistic</code> temporarily overrides state during an async transition, rolling back automatically if it fails.</p>
+
+<pre><code>import { useOptimistic } from 'react';
+
+function LikeButton({ likeCount, onLike }) {
+  // During an action, optimisticCount takes over. Afterwards, it reverts to likeCount.
+  const [optimisticCount, addOptimisticLike] = useOptimistic(
+    likeCount,
+    (currentCount, increment) =&gt; currentCount + increment
+  );
+
+  return (
+    &lt;form action={async () =&gt; {
+      addOptimisticLike(1); // update UI instantly
+      await onLike();       // send to server
+    }}&gt;
+      &lt;button type="submit"&gt;❤️ {optimisticCount}&lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Replace simple <code>useEffect</code> data fetches with Server Components or the <code>use(Promise)</code> hook combined with Suspense.</li>
+  <li>Use Server Actions to eliminate boilerplate REST API routes for simple mutations.</li>
+  <li>Always use <code>useOptimistic</code> for interactions like upvoting, liking, or adding items to a cart to make the app feel instantly responsive.</li>
+</ul>

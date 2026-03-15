@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What specifically is the critical role of the Airflow 'Scheduler' daemon in a production cluster architecture?",
+            "options": [
+                "It compiles standard Python code directly into minified Typescript outputs.",
+                "It continuously monitors the DAG schedules, intelligently interprets task dependencies, and actively explicitly queues up 'Task Instances' into the Metadata Database when they are ready for execution.",
+                "It compresses large JSON web tokens securely.",
+                "It explicitly renders the graphical HTML dashboard."
+            ],
+            "answer": "It continuously monitors the DAG schedules, intelligently interprets task dependencies, and actively explicitly queues up 'Task Instances' into the Metadata Database when they are ready for execution.",
+            "explanation": "The Scheduler is the heart. The Webserver handles the UI, but the Scheduler is responsible for ensuring jobs actually run reliably on time."
+        },
+        {
+            "question": "If a Data Engineering team needs to execute 10,000 tasks concurrently across 50 separate physical virtual machines, which explicit core Airflow Executor must they utilize?",
+            "options": [
+                "The Sequential Executor, tightly configured optimally.",
+                "The Celery Executor, which explicitly pushes massive task workloads into a distributed Message Broker (like Redis) where numerous remote Worker nodes can pull and process them safely simultaneously.",
+                "The Local Executor safely deployed properly.",
+                "The Default SQLite engine securely configured."
+            ],
+            "answer": "The Celery Executor, which explicitly pushes massive task workloads into a distributed Message Broker (like Redis) where numerous remote Worker nodes can pull and process them safely simultaneously.",
+            "explanation": "The Sequential Executor handles 1 task at a time. The Celery Executor enables massive horizontal scaling utilizing a durable message queue."
+        },
+        {
+            "question": "What is the primary architectural cost-saving benefit of utilizing the modern 'Kubernetes Executor' over the traditional Celery Executor?",
+            "options": [
+                "It aggressively deletes old historical DAG scripts safely.",
+                "Instead of maintaining a permanent fleet of expensive, idle worker machines, the Kubernetes Executor dynamically spins up an isolated, temporary Docker pod strictly for the exact duration of a task, destroying it immediately afterward to save massive cloud costs.",
+                "It translates Python scripts to binary C code perfectly.",
+                "It automatically upgrades the PostgreSQL database."
+            ],
+            "answer": "Instead of maintaining a permanent fleet of expensive, idle worker machines, the Kubernetes Executor dynamically spins up an isolated, temporary Docker pod strictly for the exact duration of a task, destroying it immediately afterward to save massive cloud costs.",
+            "explanation": "You only explicitly pay AWS for the exact 5 minutes the specific task actively required computing resources."
+        }
+    ]
+}

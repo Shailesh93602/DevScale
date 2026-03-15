@@ -1,0 +1,89 @@
+<h1>Object Detection</h1>
+<p>Image classification answers "What is in this image?" — but object detection answers the harder question: "What objects are in this image, and exactly where are each of them?" Detection models output a list of <strong>bounding boxes</strong> (rectangular coordinates) paired with a class label and a confidence score for each detected object. This enables applications from autonomous driving to medical imaging to real-time security cameras.</p>
+
+<h2>The Core Output: Bounding Boxes</h2>
+<p>Every detection model outputs bounding boxes in one of two coordinate formats:</p>
+<ul>
+  <li><strong>XYXY format:</strong> <code>(x_min, y_min, x_max, y_max)</code> — top-left and bottom-right corners.</li>
+  <li><strong>XYWH format:</strong> <code>(x_center, y_center, width, height)</code> — used by YOLO models.</li>
+</ul>
+
+<h2>Non-Maximum Suppression (NMS)</h2>
+<p>Detection models generate many overlapping candidate boxes. NMS is the algorithm that collapses them into single clean detections by discarding boxes that heavily overlap a higher-confidence box of the same class.</p>
+<pre><code">import torch
+from torchvision.ops import nms
+
+# boxes: Tensor of shape (N, 4) in XYXY format
+# scores: Tensor of shape (N,) — confidence values
+boxes = torch.tensor([
+    [100.0, 50.0, 300.0, 250.0],
+    [110.0, 55.0, 305.0, 248.0],  # Overlaps heavily with box 0
+    [400.0, 200.0, 600.0, 400.0]  # Separate object
+])
+scores = torch.tensor([0.95, 0.80, 0.88])
+
+# IoU threshold: boxes overlapping > 0.5 with a higher-score box are suppressed
+keep_indices = nms(boxes, scores, iou_threshold=0.5)
+print(keep_indices)  # tensor([0, 2]) — box 1 suppressed (overlaps box 0)</code></pre>
+
+<h2>YOLO — You Only Look Once</h2>
+<p>YOLO is the dominant real-time object detection family. Unlike two-stage detectors (like Faster R-CNN) that first propose regions then classify them, YOLO treats detection as a single regression problem — it processes the full image in one forward pass and directly predicts all boxes and classes simultaneously.</p>
+<pre><code"># YOLOv8 with Ultralytics — the easiest way to use modern YOLO
+from ultralytics import YOLO
+
+# Load a pretrained YOLOv8 model (trained on COCO 80 classes)
+model = YOLO("yolov8n.pt")  # 'n'=nano (fastest), 's','m','l','x'=larger/more accurate
+
+# Run inference on an image
+results = model("street.jpg", conf=0.4)  # only show detections with >40% confidence
+
+for result in results:
+    boxes = result.boxes
+    for box in boxes:
+        x1, y1, x2, y2 = box.xyxy[0].tolist()
+        confidence = box.conf[0].item()
+        class_id = int(box.cls[0].item())
+        class_name = model.names[class_id]
+        print(f"{class_name}: {confidence:.2f} at [{x1:.0f},{y1:.0f},{x2:.0f},{y2:.0f}]")
+
+# Save results with bounding boxes drawn on the image
+results[0].save("output_detected.jpg")</code></pre>
+
+<h2>Fine-Tuning YOLO on Custom Data</h2>
+<pre><code"># dataset.yaml — define your custom dataset
+# nc: 3  (number of classes)
+# names: ['fire', 'smoke', 'person']
+# train: /data/fire_detection/train/images
+# val:   /data/fire_detection/val/images
+
+# Fine-tune from pretrained weights
+model = YOLO("yolov8s.pt")
+model.train(
+    data="dataset.yaml",
+    epochs=100,
+    imgsz=640,
+    batch=16,
+    lr0=0.01,
+    name="fire_detector_v1"
+)
+
+# Evaluate mAP on validation set
+metrics = model.val()
+print(f"mAP50: {metrics.box.map50:.3f}")
+print(f"mAP50-95: {metrics.box.map:.3f}")</code></pre>
+
+<h2>Key Evaluation Metrics</h2>
+<ul>
+  <li><strong>IoU (Intersection over Union):</strong> A predicted box and ground truth box's overlap divided by their union. An IoU of 0.5+ is typically considered a correct detection.</li>
+  <li><strong>Precision:</strong> Of all the boxes the model predicted, what fraction were actual objects (not false alarms)?</li>
+  <li><strong>Recall:</strong> Of all the real objects in the image, what fraction did the model successfully detect?</li>
+  <li><strong>mAP (mean Average Precision):</strong> The standard benchmark metric — the mean of Average Precision across all classes. <strong>mAP@50</strong> uses an IoU threshold of 0.5. <strong>mAP@50-95</strong> averages across IoU thresholds from 0.5 to 0.95.</li>
+</ul>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Start with a pretrained YOLO model and fine-tune it on your data — training from scratch requires massive datasets.</li>
+  <li>Use image augmentation (mosaic, mixup, flipping) during training — YOLO's training pipeline includes these by default.</li>
+  <li>Tune the confidence threshold for your use case: lower it for safety-critical applications (catch everything, even if some false positives), raise it for user-facing apps (only show confident detections).</li>
+  <li>Label your training data with Roboflow or Label Studio for consistent bounding box annotations.</li>
+</ul>

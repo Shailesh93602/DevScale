@@ -1,0 +1,86 @@
+<h1>Clustering Algorithms: K-Means, DBSCAN & Hierarchical</h1>
+<p>Clustering discovers hidden structure in unlabeled data — grouping similar items together without being told what the groups should be. It is used for customer segmentation, anomaly detection, document organization, image compression, and discovering patterns in genomics data.</p>
+
+<h2>K-Means Clustering</h2>
+<pre><code class="language-python">from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
+import numpy as np
+
+# K-Means requires feature scaling! (distance-based algorithm)
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# How to choose K — the Elbow Method using inertia
+inertias = []
+silhouettes = []
+K_range = range(2, 15)
+
+for k in K_range:
+    model = KMeans(n_clusters=k, n_init=10, random_state=42)
+    model.fit(X_scaled)
+    inertias.append(model.inertia_)  # Sum of squared distances to centroids
+
+# Plot inertia vs K — look for elbow where curve bends
+plt.plot(K_range, inertias, 'bo-')
+plt.xlabel('Number of clusters K')
+plt.ylabel('Inertia (SSE)')
+plt.title('Elbow Method for Optimal K')
+
+# Silhouette Score (better metric): how similar each point is to its own cluster
+# vs other clusters. Range [-1, 1], higher is better, > 0.5 is strong clustering
+from sklearn.metrics import silhouette_score
+
+for k in K_range:
+    model = KMeans(n_clusters=k, n_init=10)
+    labels = model.fit_predict(X_scaled)
+    score = silhouette_score(X_scaled, labels)
+    silhouettes.append(score)
+
+# Choose K with highest silhouette score
+optimal_k = K_range[np.argmax(silhouettes)]
+print(f"Optimal K = {optimal_k}, Silhouette = {max(silhouettes):.3f}")
+</code></pre>
+
+<h2>DBSCAN: Density-Based Clustering</h2>
+<pre><code class="language-python">from sklearn.cluster import DBSCAN
+
+# DBSCAN — no need to specify K! Discovers arbitrary-shaped clusters
+# and automatically labels outliers as noise (label = -1)
+dbscan = DBSCAN(
+    eps=0.5,           # Maximum distance between two points to be neighbors
+    min_samples=5,     # Minimum points to form a dense region (core point)
+    metric='euclidean',
+    n_jobs=-1
+)
+labels = dbscan.fit_predict(X_scaled)
+
+n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
+n_noise = list(labels).count(-1)
+print(f"Clusters: {n_clusters}, Outliers: {n_noise} ({n_noise/len(labels):.1%})")
+
+# DBSCAN is excellent for:
+# - Anomaly detection: noise points ARE the anomalies
+# - Geographic clustering: arbitrary city shapes
+# - Non-convex clusters that K-Means handles poorly
+</code></pre>
+
+<h2>Hierarchical Clustering</h2>
+<pre><code class="language-python">from sklearn.cluster import AgglomerativeClustering
+from scipy.cluster.hierarchy import dendrogram, linkage
+
+# Hierarchical clustering builds a tree of merges — no K needed upfront
+# Read the dendrogram to choose K by cutting at the right height
+Z = linkage(X_scaled, method='ward')  # Ward: minimizes within-cluster variance
+dendrogram(Z, truncate_mode='level', p=5)
+
+# Then assign labels with chosen K from the dendrogram
+hierarchical = AgglomerativeClustering(n_clusters=4, linkage='ward')
+labels = hierarchical.fit_predict(X_scaled)
+</code></pre>
+
+<h2>Choosing the Right Algorithm</h2>
+<pre><code class="language-text">K-Means:       Fast, scalable to millions of points, spherical clusters required
+DBSCAN:        Arbitrary shapes, handles outliers, no K needed, slow for high-D
+Hierarchical:  Produces dendrogram for visual K selection, not scalable to large data
+</code></pre>

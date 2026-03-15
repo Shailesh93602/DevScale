@@ -1,0 +1,7 @@
+{
+    "id": "1-pineconeChroma",
+    "title": "Vector Databases: Pinecone & ChromaDB",
+    "description": "Store and query high-dimensional embeddings using Pinecone (managed) and ChromaDB (open-source) for semantic search and RAG pipelines.",
+    "order": 1,
+    "duration": 35
+}

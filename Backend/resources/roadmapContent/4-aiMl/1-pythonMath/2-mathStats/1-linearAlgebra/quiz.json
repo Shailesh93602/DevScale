@@ -1,0 +1,74 @@
+{
+    "title": "Math for ML Quiz",
+    "description": "Test your linear algebra and probability for ML knowledge.",
+    "passingScore": 80,
+    "timeLimit": 8,
+    "questions": [
+        {
+            "question": "What does the dot product of two vectors measure?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The Euclidean distance between them",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Their element-wise multiplication summed — a measure of similarity/alignment",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The cross product of the vectors",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The angle between the two vectors in radians",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In gradient descent, what does the learning rate control?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The number of training epochs",
+                    "isCorrect": false
+                },
+                {
+                    "text": "How large a step we take in the direction of the negative gradient at each update",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The initial values of the model weights",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The batch size for mini-batch gradient descent",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is PCA (Principal Component Analysis) used for?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A classification algorithm for labelled data",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Dimensionality reduction — finding directions of maximum variance to represent data in fewer dimensions",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Generating new training samples",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Selecting which features to include by importance score",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

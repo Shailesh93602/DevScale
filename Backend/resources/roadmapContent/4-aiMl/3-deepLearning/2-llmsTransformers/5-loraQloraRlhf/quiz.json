@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "Why can LoRA fine-tune a 7B parameter model by training only 0.06% of the parameters, and why are the updates low-rank?",
+            "options": [
+                "LoRA trains only the final transformer block — the first 95% of layers are frozen.",
+                "LoRA decomposes the weight update matrix ΔW into two small matrices: ΔW = BA, where B is (d × r) and A is (r × d), with r << d (e.g., r=16 vs d=4096). This works because empirical research shows weight updates during fine-tuning have low intrinsic rank — the meaningful adaptation lies in a low-dimensional subspace. Training BA requires only 2×d×r parameters instead of d² for the full ΔW.",
+                "LoRA compresses model weights to 8-bit integers, reducing the parameter count.",
+                "LoRA trains a smaller 'student' model that distills knowledge from the frozen 'teacher' model."
+            ],
+            "answer": "LoRA decomposes the weight update matrix ΔW into two small matrices: ΔW = BA, where B is (d × r) and A is (r × d), with r << d (e.g., r=16 vs d=4096). This works because empirical research shows weight updates during fine-tuning have low intrinsic rank — the meaningful adaptation lies in a low-dimensional subspace. Training BA requires only 2×d×r parameters instead of d² for the full ΔW.",
+            "explanation": "For d=4096, r=16: Full ΔW = 4096² = 16.7M parameters. LoRA BA = 2×4096×16 = 131K parameters — 127x fewer. QLoRA adds 4-bit quantization of the frozen weights, reducing memory from ~112GB to ~12GB for a 7B model — fitting on a consumer RTX 3090."
+        },
+        {
+            "question": "The RLHF pipeline includes a KL divergence penalty between the RL-trained policy and the SFT baseline. What does removing this penalty cause?",
+            "options": [
+                "Removing the KL penalty speeds up PPO training by 3-5x.",
+                "Without the KL penalty, the model 'reward hacks' — it finds adversarial inputs that maximize the reward model score without actually being good responses. For example, the model might learn to generate repetitive, high-confidence-sounding text that triggers high reward model scores but is factually wrong or useless. The KL penalty forces the model to stay close to the SFT baseline's sensible behavior.",
+                "Removing the KL penalty prevents the model from generating toxic content.",
+                "Without the KL penalty, the reward model overfits to the training preference data."
+            ],
+            "answer": "Without the KL penalty, the model 'reward hacks' — it finds adversarial inputs that maximize the reward model score without actually being good responses. For example, the model might learn to generate repetitive, high-confidence-sounding text that triggers high reward model scores but is factually wrong or useless. The KL penalty forces the model to stay close to the SFT baseline's sensible behavior.",
+            "explanation": "Goodhart's Law: 'When a measure becomes a target, it ceases to be a good measure.' The reward model is an imperfect proxy for human preferences. The RL policy WILL exploit the reward model's blind spots unless constrained by the KL term. This is why RLHF is still an active research area."
+        },
+        {
+            "question": "When fine-tuning with LoRA, why is it best practice to target both query (q_proj) AND value (v_proj) weight matrices, rather than just one?",
+            "options": [
+                "Fine-tuning only q_proj causes numerical instability in the attention mechanism.",
+                "Both Q and V projections jointly determine what information is attended to (Q×K dot product) and what is retrieved (V). Adapting only Q changes WHERE attention focuses but not WHAT information is extracted. Adapting only V changes information extraction but not focus patterns. Together, they allow the model to both re-route its attention patterns AND re-encode the stored information — essential for effective task adaptation.",
+                "Targeting both halves the LoRA rank requirement, reducing parameters further.",
+                "The q_proj and v_proj matrices must always be updated together due to tied weights."
+            ],
+            "answer": "Both Q and V projections jointly determine what information is attended to (Q×K dot product) and what is retrieved (V). Adapting only Q changes WHERE attention focuses but not WHAT information is extracted. Adapting only V changes information extraction but not focus patterns. Together, they allow the model to both re-route its attention patterns AND re-encode the stored information — essential for effective task adaptation.",
+            "explanation": "The LoRA paper ablation: adapting only q_proj gives 63% of optimal fine-tune performance. Only v_proj gives 71%. Both q_proj + v_proj gives 96%. Adding k_proj adds marginal benefit. This guides the default LoRA configuration in most libraries."
+        }
+    ]
+}

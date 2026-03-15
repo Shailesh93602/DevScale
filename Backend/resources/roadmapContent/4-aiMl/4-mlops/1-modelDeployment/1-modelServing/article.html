@@ -1,0 +1,97 @@
+<h1>Model Serving Strategies</h1>
+<p>Training a machine learning model is only half the job. The other half is making it available so that real applications can use it to get predictions. <strong>Model serving</strong> is the infrastructure and process of exposing a trained model through an API or service endpoint, allowing upstream applications to send input data and receive predictions.</p>
+
+<h2>The Two Core Serving Modes</h2>
+<p>The fundamental design choice in model serving determines your latency profile, infrastructure cost, and user experience.</p>
+
+<h3>1. Real-Time (Online) Inference</h3>
+<p>A client sends a single request and waits for an immediate response. This is the standard REST/gRPC API model. Use it when a human or interactive process is waiting for the result.</p>
+<pre><code># FastAPI real-time inference endpoint
+from fastapi import FastAPI
+from pydantic import BaseModel
+import joblib
+import numpy as np
+
+app = FastAPI()
+model = joblib.load("model/fraud_detection.pkl")
+scaler = joblib.load("model/scaler.pkl")
+
+class Transaction(BaseModel):
+    amount: float
+    hour_of_day: int
+    merchant_category: int
+    distance_from_home_km: float
+
+@app.post("/predict/fraud")
+def predict(tx: Transaction):
+    features = np.array([[
+        tx.amount, tx.hour_of_day,
+        tx.merchant_category, tx.distance_from_home_km
+    ]])
+    scaled = scaler.transform(features)
+    probability = model.predict_proba(scaled)[0][1]
+    return {
+        "fraud_probability": round(float(probability), 4),
+        "is_fraud": probability > 0.5,
+        "model_version": "v2.1.0"
+    }</code></pre>
+
+<h3>2. Batch (Offline) Inference</h3>
+<p>You run predictions on a large dataset all at once and store the results. The key insight is that <em>no human is waiting</em> — the results will be read later. This is common for nightly recommendation refreshes, credit risk scoring on a loan portfolio, or personalized email content generation.</p>
+<pre><code># Batch inference with PySpark
+from pyspark.sql import SparkSession
+from pyspark.ml import PipelineModel
+
+spark = SparkSession.builder.appName("BatchScoring").getOrCreate()
+model = PipelineModel.load("s3://models/churn/v3")
+
+# Load all customers updated in the last 7 days
+customers = spark.read.parquet("s3://data/customers/daily/")
+
+# Run predictions on the entire dataset in parallel
+predictions = model.transform(customers)
+
+# Write results back to the data warehouse
+predictions.select("customer_id", "churn_probability", "risk_segment") \
+    .write.mode("overwrite") \
+    .parquet("s3://data/churn_scores/latest/")</code></pre>
+
+<h2>Dedicated Serving Frameworks</h2>
+<p>Raw FastAPI works, but production teams use specialized serving frameworks that add model versioning, A/B traffic splitting, hardware acceleration, and automatic batching.</p>
+<ul>
+  <li><strong>TensorFlow Serving (TFServing):</strong> Google's battle-tested gRPC server for TensorFlow SavedModel format. Handles multiple model versions simultaneously and can hot-swap a new version without downtime.</li>
+  <li><strong>TorchServe:</strong> The equivalent from PyTorch/AWS for serving PyTorch models with custom handlers.</li>
+  <li><strong>Triton Inference Server (NVIDIA):</strong> The most performant option. Can serve TensorFlow, PyTorch, ONNX, and TensorRT models on GPU, with automatic dynamic batching to maximize GPU utilization.</li>
+  <li><strong>BentoML:</strong> A Python-native framework that lets you define the entire serving logic (pre-processing, model call, post-processing) as code and packages it as a Docker container automatically.</li>
+</ul>
+
+<h2>Model Formats for Efficient Serving</h2>
+<p>The format you save your model in directly impacts inference speed and cross-platform compatibility:</p>
+<ul>
+  <li><strong>ONNX (Open Neural Network Exchange):</strong> An open standard format that converts models from any framework (PyTorch, TensorFlow, scikit-learn) into a unified graph. Runtimes like ONNX Runtime or TensorRT can then execute it 2–5x faster than the original framework.</li>
+  <li><strong>TorchScript:</strong> Serializes PyTorch models into a standalone format that can be loaded in C++ without any Python dependency — critical for edge deployment and mobile apps.</li>
+  <li><strong>TensorRT:</strong> NVIDIA's compiler and runtime that quantizes and fuses operations in a neural network specifically for a target GPU, often achieving 3–10x speedup over the original model.</li>
+</ul>
+
+<h2>Scaling Serving Infrastructure</h2>
+<p>When a single model server can't handle the load, you scale out:</p>
+<ul>
+  <li><strong>Horizontal Scaling:</strong> Run multiple identical instances of the model server behind a load balancer (e.g., NGINX or an AWS ALB). Kubernetes makes this trivial with a Deployment and HorizontalPodAutoscaler.</li>
+  <li><strong>GPU Batching:</strong> GPUs are most efficient when processing multiple inputs simultaneously. Servers like Triton will wait up to a configurable window (e.g., 5ms) to accumulate multiple incoming requests and batch them through the GPU in one shot, dramatically increasing throughput.</li>
+  <li><strong>Caching:</strong> If the same input arrives repeatedly (e.g., same product ID requested for recommendations), cache the result in Redis to avoid redundant inference.</li>
+</ul>
+
+<h2>Monitoring a Serving Endpoint</h2>
+<p>A production model server must track both infrastructure and ML-specific metrics:</p>
+<ul>
+  <li><strong>Infrastructure:</strong> Latency (p50, p95, p99), throughput (requests/sec), error rate, GPU/CPU utilization.</li>
+  <li><strong>ML-specific:</strong> Prediction distribution drift (are the model's outputs changing over time?), input feature drift (is the incoming data different from training data?), and business KPI impact (did this recommendation model actually increase clicks?).</li>
+</ul>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always version your models and endpoints (e.g., <code>/v1/predict</code>, <code>/v2/predict</code>) so clients can migrate gradually.</li>
+  <li>Use shadow mode (deploy new model alongside old one, mirror 5% of traffic) to validate a new model before cutting over.</li>
+  <li>Set a request timeout on all inference endpoints. A slow model prediction should fail fast, not cascade into a timeout for the entire user request chain.</li>
+  <li>Pre-load models into memory at startup, not on the first request — the first request should never pay the model loading penalty.</li>
+</ul>

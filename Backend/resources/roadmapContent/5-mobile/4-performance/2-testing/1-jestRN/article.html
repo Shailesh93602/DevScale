@@ -1,0 +1,153 @@
+<h1>Testing React Native with Jest</h1>
+<p>Testing is the practice of writing code that automatically verifies that your application code does what it's supposed to do. In React Native, <strong>Jest</strong> is the default testing framework — it ships by default with every Expo and bare React Native project. Unit tests run fast (usually in milliseconds) and give you confidence when refactoring, because any regression immediately fails your test suite.</p>
+
+<h2>What to Test (and What Not To)</h2>
+<ul>
+  <li><strong>Test:</strong> Business logic, utility functions, custom hooks, component rendering, user interactions, API call behavior.</li>
+  <li><strong>Don't test:</strong> Third-party library internals, implementation details (like which state variable holds a value), or every visual pixel — that's for snapshot/end-to-end tests.</li>
+</ul>
+
+<h2>Testing Utility Functions</h2>
+<pre><code">// src/utils/formatters.ts
+export const formatPrice = (priceInCents: number, currency = 'USD'): string => {
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency })
+    .format(priceInCents / 100);
+};
+
+export const truncateText = (text: string, maxLength: number): string => {
+  if (text.length <= maxLength) return text;
+  return text.substring(0, maxLength - 3) + '...';
+};</code></pre>
+
+<pre><code">// src/utils/__tests__/formatters.test.ts
+import { formatPrice, truncateText } from '../formatters';
+
+describe('formatPrice', () => {
+  it('formats cents to USD', () => {
+    expect(formatPrice(1999)).toBe('$19.99');
+  });
+  it('formats zero correctly', () => {
+    expect(formatPrice(0)).toBe('$0.00');
+  });
+  it('formats EUR currency', () => {
+    expect(formatPrice(5000, 'EUR')).toContain('50.00');
+  });
+});
+
+describe('truncateText', () => {
+  it('returns the original text if under maxLength', () => {
+    expect(truncateText('Hello', 10)).toBe('Hello');
+  });
+  it('truncates and adds ellipsis if over maxLength', () => {
+    expect(truncateText('Hello World!', 8)).toBe('Hello...');
+  });
+  it('exactly maxLength is not truncated', () => {
+    expect(truncateText('Exact', 5)).toBe('Exact');
+  });
+});</code></pre>
+
+<h2>Testing React Native Components with RNTL</h2>
+<p>React Native Testing Library (RNTL) is the recommended way to test components. It renders components using a test renderer and provides queries that encourage testing from a user's perspective:</p>
+<pre><code">// npm install --save-dev @testing-library/react-native
+
+// components/__tests__/LoginForm.test.tsx
+import React from 'react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react-native';
+import LoginForm from '../LoginForm';
+
+describe('LoginForm', () => {
+  it('shows error when email is invalid', async () => {
+    render(<LoginForm />);
+    
+    // Find by test ID (add testID prop to your component)
+    const emailInput = screen.getByTestId('email-input');
+    const submitButton = screen.getByText('Login');
+
+    fireEvent.changeText(emailInput, 'not-an-email');
+    fireEvent.press(submitButton);
+
+    await waitFor(() => {
+      expect(screen.getByText('Please enter a valid email')).toBeTruthy();
+    });
+  });
+
+  it('calls onSuccess with credentials on valid submission', async () => {
+    const mockOnSuccess = jest.fn();
+    render(<LoginForm onSuccess={mockOnSuccess} />);
+    
+    fireEvent.changeText(screen.getByTestId('email-input'), 'user@example.com');
+    fireEvent.changeText(screen.getByTestId('password-input'), 'SecurePass123');
+    fireEvent.press(screen.getByText('Login'));
+
+    await waitFor(() => {
+      expect(mockOnSuccess).toHaveBeenCalledWith({
+        email: 'user@example.com',
+        password: 'SecurePass123'
+      });
+    });
+  });
+});</code></pre>
+
+<h2>Testing Custom Hooks</h2>
+<pre><code"">// hooks/__tests__/useDebounce.test.ts
+import { renderHook, act } from '@testing-library/react-native';
+import { useDebounce } from '../useDebounce';
+
+jest.useFakeTimers(); // Control timer behavior in tests
+
+describe('useDebounce', () => {
+  it('should return initial value immediately', () => {
+    const { result } = renderHook(() => useDebounce('hello', 500));
+    expect(result.current).toBe('hello');
+  });
+
+  it('should not update before delay', () => {
+    const { result, rerender } = renderHook(
+      ({ value }) => useDebounce(value, 500),
+      { initialProps: { value: 'hello' } }
+    );
+    rerender({ value: 'world' });
+    expect(result.current).toBe('hello'); // Still old value
+  });
+
+  it('should update after delay', () => {
+    const { result, rerender } = renderHook(
+      ({ value }) => useDebounce(value, 500),
+      { initialProps: { value: 'hello' } }
+    );
+    rerender({ value: 'world' });
+    act(() => { jest.advanceTimersByTime(500); });
+    expect(result.current).toBe('world'); // Updated after delay
+  });
+});</code></pre>
+
+<h2>Mocking API Calls</h2>
+<pre><code"">// Mock the entire fetch module
+global.fetch = jest.fn();
+
+beforeEach(() => {
+  (fetch as jest.Mock).mockClear();
+});
+
+it('displays products after successful fetch', async () => {
+  (fetch as jest.Mock).mockResolvedValueOnce({
+    ok: true,
+    json: async () => [{ id: '1', name: 'Widget', price: 999 }]
+  });
+
+  render(<ProductList />);
+  
+  await waitFor(() => {
+    expect(screen.getByText('Widget')).toBeTruthy();
+    expect(screen.getByText('$9.99')).toBeTruthy();
+  });
+  expect(fetch).toHaveBeenCalledWith('/api/products');
+});</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Use <code>getByTestId</code> sparingly — prefer semantic queries like <code>getByText</code>, <code>getByRole</code>, <code>getByLabelText</code>. They test what the user actually sees.</li>
+  <li>Follow the AAA pattern: <strong>Arrange</strong> (set up), <strong>Act</strong> (interact), <strong>Assert</strong> (verify). One assertion per test keeps failures informative.</li>
+  <li>Always mock external dependencies (API calls, AsyncStorage, device sensors) so tests are deterministic and don't require a network.</li>
+  <li>Run tests in CI: add <code>npx jest --watchAll=false</code> to your GitHub Actions pipeline so every PR is automatically tested.</li>
+</ul>

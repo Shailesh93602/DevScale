@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "A Kubernetes Secret with a base64-encoded database password is stored in a public Git repository 'by mistake.' Why is base64 encoding NOT a security protection in this scenario?",
+            "options": [
+                "Base64 is a form of AES-128 encryption and requires a key to decode.",
+                "Base64 is purely a text encoding format, not encryption. Any person (or attacker) who finds the file can decode it in one second using 'base64 --decode' or any online tool — no key or password required. It provides zero confidentiality.",
+                "Base64 is secure as long as the repository is set to private mode.",
+                "Base64 encoding is secure but the mistake was using too short a password."
+            ],
+            "answer": "Base64 is purely a text encoding format, not encryption. Any person (or attacker) who finds the file can decode it in one second using 'base64 --decode' or any online tool — no key or password required. It provides zero confidentiality.",
+            "explanation": "Kubernetes base64-encodes Secrets only for safe YAML transmission, not for security. The actual encryption of Secrets at rest in etcd requires explicit configuration of 'Encryption Configuration' in the Kubernetes API server."
+        },
+        {
+            "question": "What specific security problem does the External Secrets Operator (ESO) solve that storing credentials directly in Kubernetes Secrets does not?",
+            "options": [
+                "ESO provides stronger encryption than Kubernetes native Secrets.",
+                "ESO keeps the actual secret values in a dedicated secrets manager (AWS Secrets Manager, Vault) with access auditing and automatic rotation, syncing them into K8s Secrets on demand. This means secrets are never stored in Git or etcd directly, access is audited, and rotated secrets automatically propagate to all consuming pods.",
+                "ESO allows secrets to be shared across multiple Kubernetes clusters.",
+                "ESO prevents pods from accessing secrets they are not authorized to use."
+            ],
+            "answer": "ESO keeps the actual secret values in a dedicated secrets manager (AWS Secrets Manager, Vault) with access auditing and automatic rotation, syncing them into K8s Secrets on demand. This means secrets are never stored in Git or etcd directly, access is audited, and rotated secrets automatically propagate to all consuming pods.",
+            "explanation": "With ESO: rotate the password in AWS Secrets Manager → ESO detects the change on its refresh interval → updates the Kubernetes Secret → pods reload the new credential. No manual intervention, no downtime, no stale credentials."
+        },
+        {
+            "question": "What makes HashiCorp Vault's 'dynamic secrets' approach fundamentally more secure than storing static long-lived database credentials?",
+            "options": [
+                "Dynamic secrets use AES-256 encryption while static credentials use AES-128.",
+                "Vault generates unique, short-lived credentials for each application request with an automatic TTL. If a dynamic credential is compromised, it expires within minutes/hours without any manual rotation. Static credentials, if leaked, remain valid indefinitely until someone discovers the breach and manually rotates them.",
+                "Dynamic secrets are stored in memory only and never written to disk.",
+                "Dynamic secrets have lower network latency than static credential lookups."
+            ],
+            "answer": "Vault generates unique, short-lived credentials for each application request with an automatic TTL. If a dynamic credential is compromised, it expires within minutes/hours without any manual rotation. Static credentials, if leaked, remain valid indefinitely until someone discovers the breach and manually rotates them.",
+            "explanation": "A static DB password committed accidentally to a public repo 2 years ago may still be valid today. A dynamic credential from that same event would have expired 1 hour later. Dynamic secrets dramatically shrink the blast radius of any credential leak."
+        }
+    ]
+}

@@ -1,0 +1,118 @@
+{
+    "title": "Accessing Device APIs Quiz",
+    "description": "Test your knowledge on Native Permissions, Camera access, and Config Plugins.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is universally required by both iOS and Android natively before your Javascript code can physically activate the user's physical camera hardware flawlessly?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It requires the user strictly logging in via Facebook Authentication.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It requires seamlessly downloading an explicit 50MB extension file actively.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The app inherently must explicitly pause Javascript execution seamlessly, aggressively request the native OS to display a specific security prompt, and securely await the user successfully manually tapping 'Allow' flawlessly.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It fundamentally perfectly requires Apple's explicit written consent explicitly.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What natively happens flawlessly if a developer writes aggressive code actively turning on the GPS location hardware immediately on boot without precisely requesting native OS permissions initially?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The OS seamlessly grants permission automatically due to convenience natively.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The JavaScript inherently functions perfectly entirely.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The native mobile operating system strictly identifies a massive security violation intricately and fundamentally crashes the application instantly violently to perfectly protect user privacy.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The app effortlessly gracefully transitions into 'Web Mode' exclusively.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which specific Expo API explicitly seamlessly handles opening the user's physical native 'Photos' gallery powerfully, allowing them to flawlessly select a previously saved photograph flawlessly?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "expo-image-picker",
+                    "isCorrect": true
+                },
+                {
+                    "text": "expo-photos-select",
+                    "isCorrect": false
+                },
+                {
+                    "text": "expo-secure-store",
+                    "isCorrect": false
+                },
+                {
+                    "text": "react-native-gallery",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why explicitly is `expo-secure-store` fundamentally superior perfectly to native `AsyncStorage` precisely for actively saving sensitive, extremely critical JWT authentication tokens natively?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Because it flawlessly encrypts the data string flawlessly securely, frequently precisely utilizing deeply embedded native physical hardware features seamlessly (like the Apple Secure Enclave) seamlessly rendering raw extraction mathematically impossible.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Because it strictly syncs perfectly automatically directly with AWS seamlessly.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because it acts strictly globally explicitly.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because it perfectly renders natively directly faster flawlessly.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How exactly does an Expo developer seamlessly effortlessly communicate explicit permission justifications (e.g., 'We expressly need the camera precisely to scan QR tickets explicitly') flawlessly to Apple's native `Info.plist` file entirely without ever manually touching Xcode?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "By executing a Python perfectly script exclusively.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By flawlessly utilizing powerful 'Config Plugins' directly within the unified `app.json` file exclusively, allowing EAS Build securely to seamlessly completely auto-generate the complex underlying native code files precisely intelligently.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "By creating a simple `.env` expressly file flawlessly.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By precisely explicitly emailing Apple natively directly.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

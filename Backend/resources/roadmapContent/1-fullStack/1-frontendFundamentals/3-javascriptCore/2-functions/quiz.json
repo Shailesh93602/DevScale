@@ -1,0 +1,74 @@
+{
+    "title": "Functions, Scope & Closures Quiz",
+    "description": "Test your knowledge of JS functions and closures.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is a closure in JavaScript?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A way to terminate a function early",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A function that retains access to its outer scope's variables after the outer function returns",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A function with no return value",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A built-in error handler",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the key difference between arrow functions and regular functions regarding 'this'?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Arrow functions are faster",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Arrow functions do not have their own 'this' — they inherit it from the surrounding scope",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Arrow functions can only have one parameter",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Arrow functions cannot access closures",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which type of function declaration is hoisted to the top of its scope?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Arrow function",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Function Expression",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Function Declaration",
+                    "isCorrect": true
+                },
+                {
+                    "text": "IIFE",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

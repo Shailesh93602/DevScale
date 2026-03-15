@@ -1,0 +1,7 @@
+[
+  "The obvious O(n log n) solution is to sort the array and look for adjacent duplicates, but the problem says you cannot modify the array.",
+  "The obvious O(n) solution is to use a Hash Set to track seen numbers, but the problem says you can only use O(1) space.",
+  "Because the array values are in the range [1, n] and there are n+1 elements, you can treat this array as a Linked List! The index is the node, and the value at that index is the 'next' pointer.",
+  "Since there is a duplicate number, multiple indices ('nodes') will point to the same value ('next node'). This means there is a cycle in our imaginary Linked List!",
+  "Use Floyd's Cycle-Finding Algorithm (Fast and Slow Pointers) to find the entrance to the cycle."
+]

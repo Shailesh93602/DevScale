@@ -1,0 +1,89 @@
+<h1>GitHub Actions: Secrets, Environments & OIDC Security</h1>
+<p>CI/CD pipelines require incredibly privileged access to your infrastructure. To deploy a Docker container, your pipeline needs the AWS Access Keys for ECR. To connect to the database for migrations, it needs the production database password. Managing these credentials securely is the most critical aspect of DevSecOps. Hardcoding a password in your repository or exposing an API key in the build logs is an immediate, catastrophic security breach.</p>
+
+<h2>GitHub Secrets Management</h2>
+<p>GitHub provides an encrypted key-value store called <strong>Secrets</strong>. When you create a secret (e.g., <code>DB_PASSWORD</code>) in the repository settings, GitHub encrypts it immediately. It can never be viewed again, even by repository administrators — it can only be updated or deleted, and it is only decrypted securely during the exact moment a GitHub Actions runner needs it.</p>
+
+<p>To use a secret in your workflow, you reference it using the <code>${{ secrets.SECRET_NAME }}</code> context:</p>
+<pre><code>name: Deploy to Production
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Run Database Migration
+        env:
+          # Inject secrets as environment variables for the script
+          DB_HOST: ${{ secrets.PROD_DB_HOST }}
+          DB_PASS: ${{ secrets.PROD_DB_PASSWORD }}
+        run: npm run db:migrate</code></pre>
+
+<p><strong>Log Redaction:</strong> If your script accidentally <code>echo $DB_PASS</code>, GitHub automatically detects the secret value in the output and masks it with asterisks (<code>***</code>) in the public build logs.</p>
+
+<h2>GitHub Environments & Approval Gates</h2>
+<p>If you have a <code>PROD_DB_PASSWORD</code> secret at the repository level, <em>any</em> developer who can trigger a workflow (even from a feature branch) can theoretically write a script to extract that string or execute malicious commands against production. This violates the principle of least privilege.</p>
+<p><strong>GitHub Environments</strong> solve this by scoping secrets to specific deployment environments (e.g., <code>staging</code> and <code>production</code>). Instead of adding secrets to the repository, you add them to the <code>production</code> environment.</p>
+
+<p>When a workflow attempts to use an Environment, you can configure <strong>Protection Rules</strong>:</p>
+<ul>
+  <li><strong>Required Reviewers:</strong> A senior engineer must manually click "Approve" before the deployment job executes.</li>
+  <li><strong>Wait Timers:</strong> Delay the job for 30 minutes to allow time to cancel if an issue is discovered.</li>
+  <li><strong>Branch Restrictions:</strong> Only allow the <code>main</code> branch or <code>release/*</code> tags to deploy to the production environment. An attacker pushing to a <code>feature/hack</code> branch physically cannot access the production secrets.</li>
+</ul>
+
+<pre><code>jobs:
+  deploy_prod:
+    runs-on: ubuntu-latest
+    environment: 
+      name: production           # This triggers the approval gate
+      url: https://myapp.com     # Adds a handy link to the GitHub UI
+    steps:
+      - run: deploy.sh
+        env:
+          # Safely pulls the password scoped only to the 'production' environment
+          DB_PASS: ${{ secrets.DB_PASSWORD }}</code></pre>
+
+<h2>The Modern Standard: OIDC (OpenID Connect)</h2>
+<p>While GitHub Secrets are secure, storing long-lived AWS Access Keys or GCP JSON Service Accounts in GitHub is fundamentally dangerous. If an employee with admin access leaves the company but takes the AWS Access Key stored in GitHub, they retain access to your cloud indefinitely until someone remembers to rotate the key.</p>
+
+<p><strong>OpenID Connect (OIDC)</strong> is a game-changing security feature that eliminates long-lived credentials entirely. Instead of giving GitHub an AWS Access Key, you establish a direct <em>trust relationship</em> between your AWS Account and your GitHub Repository.</p>
+
+<p>How OIDC works during a CI/CD run:</p>
+<ol>
+  <li>The GitHub Action runner generates a temporary JWT (JSON Web Token) containing claims like: <code>"repository": "my-org/my-app", "ref": "refs/heads/main"</code>.</li>
+  <li>The runner sends this token to AWS IAM's AssumeRoleWithWebIdentity endpoint.</li>
+  <li>AWS verifies the token's cryptographic signature via OIDC and inspects the claims. It checks: <em>"Is this token really from GitHub? Is it really from the 'my-org/my-app' repo? Is the branch 'main'?"</em></li>
+  <li>If the claims match the <strong>IAM Trust Policy</strong>, AWS grants the runner a temporary, short-lived session token (valid for exactly 1 hour, or just the duration of the build).</li>
+</ol>
+
+<pre><code># The most secure way to authenticate with AWS in CI/CD
+permissions:
+  id-token: write   # Required to request the OIDC JWT token
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure AWS Credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          # Zero secrets involved! Just providing the IAM Role ARN
+          role-to-assume: arn:aws:iam::1234567890:role/github-actions-deploy-role
+          aws-region: us-east-1</code></pre>
+
+<p>By using OIDC, there is no key to rotate, no string to leak, and no long-lived access. It is the absolute highest standard for DevSecOps pipelines.</p>

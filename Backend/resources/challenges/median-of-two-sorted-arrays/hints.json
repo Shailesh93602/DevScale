@@ -1,0 +1,6 @@
+[
+  "The median splits the merged array into two equal halves. You need to find the correct split point.",
+  "Binary search on the shorter array. If you take i elements from nums1, you must take (m+n+1)/2 - i from nums2.",
+  "The partition is valid when max(left side of A) <= min(right side of B) and vice versa.",
+  "Handle edge cases with -Infinity and Infinity when a partition puts 0 elements on one side of an array."
+]

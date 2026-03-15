@@ -1,0 +1,90 @@
+<h1>Signals & Fine-Grained Reactivity</h1>
+<p>For years, React's primary execution model has relied on the Virtual DOM. When state changes at the top of an app, React re-executes the entire component tree below it to figure out what changed. This top-down model works but leads to heavy memoization requirements (useMemo, useCallback, React.memo). </p>
+<p><strong>Signals</strong> represent a paradigm shift back to fine-grained reactivity, allowing specific parts of the DOM to update directly without triggering widespread component re-renders.</p>
+
+<h2>What is a Signal?</h2>
+<p>A Signal is an intelligent wrapper around a piece of data. While it holds a value, it also tracks <strong>who is listening to it</strong>. When the value changes, the Signal notifies its subscribers directly.</p>
+
+<pre><code>import { signal } from "@preact/signals-react";
+
+// The signal is defined OUTSIDE the component.
+// It acts as a global, reactive variable.
+const count = signal(0);
+const multiplier = signal(2);</code></pre>
+
+<h2>The Magic: Render Bypassing</h2>
+<p>When you use standard React <code>useState</code>, changing state causes the component function to run again. When you use a Signal deeply embedded in the DOM, standard implementations (like Preact Signals) bypass the Virtual DOM entirely. React's render function does not run again.</p>
+
+<pre><code>import { signal, computed } from "@preact/signals-react";
+
+const count = signal(0);
+// Computed signals automatically track dependencies
+const doubled = computed(() =&gt; count.value * 2);
+
+function Counter() {
+  console.log("Component Rendered!"); // This only runs ONCE!
+
+  return (
+    &lt;div&gt;
+      {/* 
+        When count.value changes, the signal reaches directly into the 
+        real DOM to update this text node. The component does NOT re-render!
+      */}
+      &lt;p&gt;Count: {count}&lt;/p&gt;
+      &lt;p&gt;Doubled: {doubled}&lt;/p&gt;
+      
+      {/* Mutating a signal is as easy as assigning to .value */}
+      &lt;button onClick={() =&gt; count.value++}&gt;Increment&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+<h2>Signals vs. React State</h2>
+<p>Compare the simplicity of Signals to the complexity of standard React state management.</p>
+
+<h3>Traditional React</h3>
+<pre><code>// ❌ Needs Context API to avoid prop drilling
+// ❌ Re-renders entire App tree when name changes
+function App() {
+  const [name, setName] = useState("Alice");
+  return (
+    &lt;UserContext.Provider value={{ name, setName }}&gt;
+      &lt;Header /&gt;
+      &lt;Profile /&gt;
+    &lt;/UserContext.Provider&gt;
+  );
+}</code></pre>
+
+<h3>With Signals</h3>
+<pre><code>// ✅ No Context Needed. No prop drilling.
+const name = signal("Alice");
+
+// ✅ Mutates state globally. Does not re-render wrapper components.
+function ProfileControls() {
+  return &lt;input value={name.value} onChange={e =&gt; name.value = e.target.value} /&gt;;
+}
+
+// ✅ Updates independently.
+function Header() {
+  return &lt;h1&gt;Welcome, {name}&lt;/h1&gt;;
+}</code></pre>
+
+<h2>Effect Tracking</h2>
+<p>Signals use specialized effects that automatically subscribe to the signals they read. You don't have to provide dependency arrays.</p>
+
+<pre><code>import { effect } from "@preact/signals-react";
+
+// Logs immediately, and then automatically runs again ONLY when count.value changes
+effect(() =&gt; {
+  console.log(`The count is now ${count.value}`);
+});</code></pre>
+
+<h2>Ecosystem Impact</h2>
+<p>Signals are the driving philosophy behind modern frameworks like SolidJS and Vue 3 (ref/reactive). Their addition to the React ecosystem (via libraries like <code>@preact/signals-react</code> or MobX) offers an alternative to React Context and Redux for global state, specifically emphasizing <strong>performance and developer ergonomics</strong>.</p>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Use Context/React State for data intrinsically tied to the UI tree (like specific modal states).</li>
+  <li>Use Signals for global business logic, heavy performance-sensitive pages, or rapidly changing state (like animation data or drag-and-drop coordinates).</li>
+  <li>Treat Signal variables like standard JS variables: assign with <code>=</code>, read with <code>.value</code>. Pass the signal itself into JSX (<code>&lt;p&gt;{count}&lt;/p&gt;</code>) to leverage direct DOM updates.</li>
+</ul>

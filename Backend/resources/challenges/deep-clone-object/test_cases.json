@@ -1,0 +1,62 @@
+[
+  {
+    "input": { "obj": { "a": 1, "b": { "c": 2 } } },
+    "output": { "a": 1, "b": { "c": 2 } },
+    "explanation": "Nested object is deep cloned — modifying clone does not affect original",
+    "is_hidden": false
+  },
+  {
+    "input": { "obj": [1, [2, [3]]] },
+    "output": [1, [2, [3]]],
+    "explanation": "Nested arrays are deep cloned",
+    "is_hidden": false
+  },
+  {
+    "input": { "obj": 42 },
+    "output": 42,
+    "explanation": "Primitives returned as-is",
+    "is_hidden": false
+  },
+  {
+    "input": { "obj": null },
+    "output": null,
+    "explanation": "null returned as-is",
+    "is_hidden": true
+  },
+  {
+    "input": { "obj": { "date": "Date(2024-01-01)" } },
+    "output": { "date": "Date(2024-01-01)" },
+    "explanation": "Date objects are cloned as new Date instances",
+    "is_hidden": true
+  },
+  {
+    "input": { "obj": { "a": 1, "b": [2, 3], "c": { "d": { "e": 4 } } } },
+    "output": { "a": 1, "b": [2, 3], "c": { "d": { "e": 4 } } },
+    "explanation": "Mixed nesting of objects and arrays",
+    "is_hidden": true
+  },
+  {
+    "input": { "obj": "" },
+    "output": "",
+    "explanation": "Empty string returned as-is",
+    "is_hidden": true
+  },
+  {
+    "input": { "obj": { "a": null, "b": null, "c": false, "d": 0 } },
+    "output": { "a": null, "b": null, "c": false, "d": 0 },
+    "explanation": "Falsy values preserved correctly",
+    "is_hidden": true
+  },
+  {
+    "input": { "obj": [] },
+    "output": [],
+    "explanation": "Empty array cloned",
+    "is_hidden": true
+  },
+  {
+    "input": { "obj": {} },
+    "output": {},
+    "explanation": "Empty object cloned",
+    "is_hidden": true
+  }
+]

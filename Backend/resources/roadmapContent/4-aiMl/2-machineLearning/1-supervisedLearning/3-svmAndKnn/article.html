@@ -1,0 +1,157 @@
+<h1>SVMs, KNN &amp; Naive Bayes Classifiers</h1>
+<p>While decision trees and random forests excel at tabular data, some classification problems call for fundamentally different algorithmic approaches. <strong>Support Vector Machines (SVMs)</strong> find optimal decision boundaries with maximum margin, <strong>K-Nearest Neighbors (KNN)</strong> classifies by proximity without any training phase, and <strong>Naive Bayes</strong> applies Bayes' theorem with a strong independence assumption for lightning-fast probabilistic classification.</p>
+
+<h2>Support Vector Machines (SVM)</h2>
+<p>SVMs find the hyperplane that separates classes with the <strong>maximum margin</strong> — the largest possible gap between the decision boundary and the nearest training examples (support vectors). Maximizing this margin improves generalization to unseen data.</p>
+
+<pre><code>import numpy as np
+from sklearn.svm import SVC, SVR
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.datasets import make_classification, make_moons, load_breast_cancer
+import matplotlib.pyplot as plt
+
+# SVM requires feature scaling — it's distance-based!
+X, y = load_breast_cancer(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+# Linear SVM — works well for linearly separable problems (text classification)
+svm_linear = SVC(kernel='linear', C=1.0)
+svm_linear.fit(X_train_scaled, y_train)
+print(f"Linear SVM accuracy: {svm_linear.score(X_test_scaled, y_test):.4f}")
+
+# RBF (Radial Basis Function) kernel — handles non-linear decision boundaries
+# Most powerful general-purpose SVM configuration
+svm_rbf = SVC(kernel='rbf', C=10, gamma='scale', probability=True)
+svm_rbf.fit(X_train_scaled, y_train)
+print(f"RBF SVM accuracy: {svm_rbf.score(X_test_scaled, y_test):.4f}")</code></pre>
+
+<h3>SVM Hyperparameter Tuning</h3>
+<pre><code># C (Regularization): 
+#   Small C  → allow some misclassifications, smoother boundary (prevent overfit)
+#   Large C  → punish misclassifications hard, tighter boundary (may overfit)
+#
+# Gamma (RBF kernel width):
+#   Small γ  → wide Gaussians, smooth boundary, may underfit
+#   Large γ  → narrow Gaussians, complex jagged boundary, may overfit
+
+param_grid = {
+    'C': [0.1, 1, 10, 100],
+    'gamma': ['scale', 'auto', 0.1, 0.01],
+    'kernel': ['rbf', 'poly']
+}
+grid_search = GridSearchCV(SVC(), param_grid, cv=5, scoring='accuracy', n_jobs=-1)
+grid_search.fit(X_train_scaled, y_train)
+print(f"Best params: {grid_search.best_params_}")
+print(f"Best CV accuracy: {grid_search.best_score_:.4f}")</code></pre>
+
+<h3>SVM for Regression (SVR)</h3>
+<pre><code># SVR: fit as many data points as possible within an ε-tube around the prediction
+from sklearn.svm import SVR
+from sklearn.datasets import load_diabetes
+
+X_reg, y_reg = load_diabetes(return_X_y=True)
+X_reg_scaled = StandardScaler().fit_transform(X_reg)
+
+svr = SVR(kernel='rbf', C=100, epsilon=0.1)
+svr.fit(X_reg_scaled, y_reg)
+print(f"SVR R² score: {svr.score(X_reg_scaled, y_reg):.4f}")</code></pre>
+
+<h2>K-Nearest Neighbors (KNN)</h2>
+<p>KNN is a <strong>lazy learning</strong> algorithm — it stores the entire training dataset and makes predictions at query time by finding the K most similar training examples and using their labels. There's no "training phase" — all computation happens at inference time:</p>
+<pre><code>from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import classification_report
+
+# KNN also requires feature scaling — Euclidean distance is scale-sensitive!
+knn = KNeighborsClassifier(
+    n_neighbors=5,         # Vote from the 5 closest training points
+    metric='euclidean',    # Distance metric: 'euclidean', 'manhattan', 'minkowski'
+    weights='distance'     # 'uniform'=equal vote, 'distance'=closer points vote more
+)
+knn.fit(X_train_scaled, y_train)
+y_pred = knn.predict(X_test_scaled)
+print(classification_report(y_test, y_pred))
+
+# Finding optimal K — plot accuracy vs K
+train_accs, test_accs = [], []
+for k in range(1, 31):
+    clf = KNeighborsClassifier(n_neighbors=k)
+    clf.fit(X_train_scaled, y_train)
+    train_accs.append(clf.score(X_train_scaled, y_train))
+    test_accs.append(clf.score(X_test_scaled, y_test))
+
+optimal_k = test_accs.index(max(test_accs)) + 1
+print(f"Optimal K: {optimal_k} (test accuracy: {max(test_accs):.4f})")
+# K=1: perfect training accuracy (overfit), poor test accuracy
+# Increasing K smooths the boundary but may underfit</code></pre>
+
+<h3>When to Use KNN</h3>
+<ul>
+  <li><strong>✅ Use when</strong>: Dataset is small (&lt;50K samples), feature space is low-dimensional, fast training is priority</li>
+  <li><strong>❌ Avoid when</strong>: Dataset has &gt;100K samples (prediction is O(n) per query), high-dimensional features (curse of dimensionality), or low-latency inference is required</li>
+</ul>
+
+<h2>Naive Bayes</h2>
+<p>Naive Bayes classifiers are based on Bayes' theorem with the "naive" assumption that all features are <strong>conditionally independent</strong> given the class label. Despite this simplistic assumption, they perform surprisingly well on text classification and NLP tasks:</p>
+<pre><code>from sklearn.naive_bayes import GaussianNB, MultinomialNB, BernoulliNB
+from sklearn.datasets import load_iris
+from sklearn.feature_extraction.text import CountVectorizer
+
+# ─── GaussianNB — for continuous features ───────────────────────────────────
+# Assumes each feature follows a Gaussian distribution within each class
+X_iris, y_iris = load_iris(return_X_y=True)
+gnb = GaussianNB()
+gnb.fit(X_iris, y_iris)
+print(f"Gaussian NB accuracy on Iris: {gnb.score(X_iris, y_iris):.4f}")
+
+# Inspect the learned class probabilities and feature distributions:
+print(f"Class priors: {gnb.class_prior_}")
+print(f"Feature means per class:\n{gnb.theta_}")  # μ for each feature in each class
+
+# ─── MultinomialNB — ideal for text classification ──────────────────────────
+# Works with word counts or TF-IDF features
+corpus = [
+    "buy cheap medications online now",     # spam
+    "limited offer free money transfer",     # spam
+    "meeting scheduled for tomorrow 3pm",   # ham
+    "quarterly sales report attached",      # ham
+    "click here to claim your prize now",   # spam
+    "please review the attached document",  # ham
+]
+labels = [1, 1, 0, 0, 1, 0]  # 1=spam, 0=ham
+
+vectorizer = CountVectorizer()
+X_text = vectorizer.fit_transform(corpus)
+
+mnb = MultinomialNB(alpha=1.0)  # alpha=1.0 is Laplace smoothing (prevents zero probs)
+mnb.fit(X_text, labels)
+
+# Classify new emails
+new_emails = ["free offer click here", "schedule a meeting next week"]
+print(mnb.predict(vectorizer.transform(new_emails)))        # → [1, 0]
+print(mnb.predict_proba(vectorizer.transform(new_emails)))  # Probability scores</code></pre>
+
+<h2>Algorithm Comparison</h2>
+<table>
+  <thead>
+    <tr><th>Algorithm</th><th>Training Time</th><th>Inference Time</th><th>Interpretable</th><th>Best Use Case</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>SVM (Linear)</td><td>O(n²) to O(n³)</td><td>O(n_sv)</td><td>Partial</td><td>Text classification, high-dim data</td></tr>
+    <tr><td>SVM (RBF)</td><td>O(n²) to O(n³)</td><td>O(n_sv)</td><td>No</td><td>Non-linear problems, small-medium datasets</td></tr>
+    <tr><td>KNN</td><td>O(1) (lazy)</td><td>O(n·d)</td><td>High</td><td>Small datasets, anomaly detection</td></tr>
+    <tr><td>Naive Bayes</td><td>O(n·d)</td><td>O(d)</td><td>High</td><td>Text, spam filtering, fast baselines</td></tr>
+  </tbody>
+</table>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always scale features before SVM or KNN — they are both distance-based and will behave badly if features have wildly different ranges.</li>
+  <li>Use SVMs for high-dimensional data with few samples (e.g., genomics, text with TF-IDF). Use Random Forests for larger tabular datasets.</li>
+  <li>Naive Bayes is an excellent baseline — train it in milliseconds, get a decent accuracy floor, then invest in more complex models only if the improvement justifies the cost.</li>
+  <li>For KNN in production, use <code>sklearn.neighbors.BallTree</code> (for low dimensions) or <code>FAISS</code> (Facebook's GPU-accelerated library) instead of brute-force search for large datasets.</li>
+</ul>

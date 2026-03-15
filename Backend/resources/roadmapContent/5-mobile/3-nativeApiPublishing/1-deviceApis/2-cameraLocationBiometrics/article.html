@@ -1,0 +1,124 @@
+<h1>Camera, Location & Biometrics</h1>
+<p>Device hardware APIs — camera, GPS, and biometrics — are gated behind Android and iOS permission systems. The key is requesting permissions at the natural moment of use (not on app launch), gracefully handling denied permissions, and understanding the difference between foreground and background access for battery-sensitive APIs like location.</p>
+
+<h2>Camera & Image Picker</h2>
+<pre><code class="language-jsx">import * as ImagePicker from 'expo-image-picker';
+import { CameraView, useCameraPermissions } from 'expo-camera';
+
+// Image picker — opens camera or photo library
+async function pickImage() {
+  // Request permission first
+  const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  if (status !== 'granted') {
+    Alert.alert('Permission required', 'Please allow access to your photo library.');
+    return;
+  }
+
+  const result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    allowsEditing: true,    // Crop UI after selection
+    aspect: [1, 1],         // Square crop
+    quality: 0.8,           // 80% JPEG quality (reduces upload size)
+  });
+
+  if (!result.canceled) {
+    const imageUri = result.assets[0].uri;
+    uploadImage(imageUri);
+  }
+}
+
+// Live camera view with capture button
+function CameraScreen() {
+  const [permission, requestPermission] = useCameraPermissions();
+  const cameraRef = useRef(null);
+
+  if (!permission?.granted) {
+    return (
+      &lt;View&gt;
+        &lt;Text&gt;Camera access needed&lt;/Text&gt;
+        &lt;Button title="Grant Permission" onPress={requestPermission} /&gt;
+      &lt;/View&gt;
+    );
+  }
+
+  async function takePicture() {
+    const photo = await cameraRef.current.takePictureAsync({ quality: 0.9 });
+    processPhoto(photo.uri);
+  }
+
+  return (
+    &lt;CameraView ref={cameraRef} style={{ flex: 1 }} facing="back"&gt;
+      &lt;TouchableOpacity style={styles.captureButton} onPress={takePicture} /&gt;
+    &lt;/CameraView&gt;
+  );
+}
+</code></pre>
+
+<h2>Location Services</h2>
+<pre><code class="language-jsx">import * as Location from 'expo-location';
+
+// Get current location (one-time)
+async function getCurrentLocation() {
+  const { status } = await Location.requestForegroundPermissionsAsync();
+  if (status !== 'granted') {
+    Alert.alert('Location required', 'Please enable location for this feature.');
+    return;
+  }
+
+  const location = await Location.getCurrentPositionAsync({
+    accuracy: Location.Accuracy.Balanced,  // Balance accuracy vs battery
+  });
+  return { lat: location.coords.latitude, lng: location.coords.longitude };
+}
+
+// Real-time location tracking (e.g., ride-sharing driver tracking)
+let locationSubscription;
+
+async function startTracking() {
+  const { status } = await Location.requestForegroundPermissionsAsync();
+  if (status !== 'granted') return;
+
+  locationSubscription = await Location.watchPositionAsync(
+    { accuracy: Location.Accuracy.High, distanceInterval: 10 },  // Update every 10 meters
+    (location) => {
+      updateDriverPosition(location.coords);
+    }
+  );
+}
+
+// IMPORTANT: Always clean up subscriptions
+function stopTracking() {
+  locationSubscription?.remove();
+}
+</code></pre>
+
+<h2>Biometric Authentication</h2>
+<pre><code class="language-jsx">import * as LocalAuthentication from 'expo-local-authentication';
+
+async function authenticateWithBiometrics() {
+  // Check if device supports biometrics
+  const compatible = await LocalAuthentication.hasHardwareAsync();
+  const enrolled = await LocalAuthentication.isEnrolledAsync();
+
+  if (!compatible || !enrolled) {
+    // Fallback to PIN/password
+    return authenticateWithPin();
+  }
+
+  const result = await LocalAuthentication.authenticateAsync({
+    promptMessage: 'Authenticate to access your account',
+    fallbackLabel: 'Use PIN',          // iOS fallback label
+    disableDeviceFallback: false,      // Allow passcode fallback
+    cancelLabel: 'Cancel',
+  });
+
+  if (result.success) {
+    // Biometric verification successful — retrieve stored token
+    const token = await SecureStore.getItemAsync('session_token');
+    return token;
+  } else {
+    console.log('Biometric auth failed:', result.error);
+    return null;
+  }
+}
+</code></pre>

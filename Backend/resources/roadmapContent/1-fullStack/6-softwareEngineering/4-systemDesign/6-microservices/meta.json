@@ -1,0 +1,4 @@
+{
+    "name": "Microservices Architecture",
+    "description": "Breaking the Monolith safely. Understanding the severe trade-offs of Microservices, implementing API Gateways, and managing distributed transactions utilizing the Saga Pattern."
+}

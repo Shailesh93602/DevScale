@@ -1,0 +1,159 @@
+<h1>Probability &amp; Calculus for Machine Learning</h1>
+<p>Machine learning is fundamentally about learning patterns from data through optimization. Two branches of mathematics are essential to understanding <em>why</em> ML algorithms work: <strong>probability theory</strong> (for measuring uncertainty and modeling data distributions) and <strong>calculus</strong> (for gradient descent — the engine that trains every neural network).</p>
+
+<h2>Probability Fundamentals</h2>
+<h3>Key Rules</h3>
+<pre><code>import numpy as np
+from scipy import stats
+
+# ─── Core probability rules ─────────────────────────────────────────────────
+
+# Rule of multiplication (independent events)
+# P(A and B) = P(A) * P(B)  — only when A and B are independent!
+p_heads = 0.5
+p_two_heads = p_heads * p_heads   # 0.25
+
+# Conditional probability: P(A | B) — probability of A GIVEN B occurred
+# P(A | B) = P(A and B) / P(B)
+# Example: P(spam | contains "free") = ?
+p_free_given_spam = 0.9
+p_spam = 0.3
+p_free = p_free_given_spam * p_spam + 0.05 * 0.7   # Law of total probability
+
+# ─── Bayes' Theorem ─────────────────────────────────────────────────────────
+# P(spam | free) = P(free | spam) * P(spam) / P(free)
+# This is the foundation of Naive Bayes classifiers!
+p_spam_given_free = (p_free_given_spam * p_spam) / p_free
+print(f"P(spam | 'free') = {p_spam_given_free:.3f}")  # → 0.794</code></pre>
+
+<h3>Probability Distributions Used in ML</h3>
+<pre><code>import matplotlib.pyplot as plt
+from scipy import stats
+import numpy as np
+
+# ─── Bernoulli — binary outcomes (0 or 1): coin flip, spam or not ───────────
+# P(X=1) = p,  P(X=0) = 1-p
+# Used in: logistic regression output, binary cross-entropy loss
+bern = stats.bernoulli(p=0.3)
+samples = bern.rvs(size=1000)
+print(f"Bernoulli mean: {samples.mean():.2f}, std: {samples.std():.2f}")
+
+# ─── Normal (Gaussian) — continuous bell curve ─────────────────────────────
+# Most natural phenomena cluster around a mean with symmetric tails
+# Used in: linear regression assumptions, weight initialization in neural nets
+normal = stats.norm(loc=170, scale=10)  # Mean=170cm height, std=10
+print(f"P(height > 185cm) = {1 - normal.cdf(185):.4f}")  # → ~0.0668
+
+# 68-95-99.7 Rule: 68% within 1σ, 95% within 2σ, 99.7% within 3σ
+print(f"68% interval: {normal.ppf(0.16):.1f} – {normal.ppf(0.84):.1f} cm")
+
+# ─── Uniform — all values equally likely ────────────────────────────────────
+# Used in: random weight initialization (Xavier/He initialization ranges)
+uniform = stats.uniform(loc=0, scale=1)
+
+# ─── Multinomial — categorical outcomes (dice rolls, classification softmax)
+# Example: class probabilities from a 3-class classifier
+class_probs = np.array([0.7, 0.2, 0.1])  # 70% cat, 20% dog, 10% bird
+# Softmax ensures these are valid probabilities and sum to 1.0
+print(f"Sum of probs: {class_probs.sum()}")  # → 1.0</code></pre>
+
+<h2>Maximum Likelihood Estimation (MLE)</h2>
+<p>Most ML training objectives are equivalent to maximizing the likelihood of the observed data under the model's assumptions. For a Gaussian model, MLE gives the mean and variance as the sample mean and variance:</p>
+<pre><code>data = np.array([172, 168, 180, 175, 169, 183, 174])
+
+# MLE estimate for a Gaussian distribution
+mu_mle = np.mean(data)          # → 174.4 (sample mean)
+sigma_mle = np.std(data)        # → 5.0 (sample std dev)
+print(f"MLE: μ={mu_mle:.1f}, σ={sigma_mle:.1f}")
+
+# This is why linear regression uses MSE — minimizing MSE is identical to
+# maximizing the log-likelihood of a Gaussian error distribution!</code></pre>
+
+<h2>Calculus: The Engine of Neural Network Training</h2>
+<h3>Derivatives — How Gradient Descent Works</h3>
+<pre><code># The derivative tells us the slope (rate of change) at a point
+# In ML: "if I increase this weight by a tiny amount, how does the loss change?"
+
+def loss(w):
+    """Simple parabolic loss function: L(w) = (w - 3)^2"""
+    return (w - 3) ** 2
+
+def d_loss_dw(w):
+    """Analytic derivative of the loss: dL/dw = 2(w - 3)"""
+    return 2 * (w - 3)
+
+# Numerical approximation (how PyTorch/TensorFlow compute gradients initially)
+def numerical_gradient(f, x, h=1e-5):
+    return (f(x + h) - f(x - h)) / (2 * h)
+
+w = 1.0
+print(f"Analytic gradient at w=1: {d_loss_dw(w)}")         # → -4.0
+print(f"Numerical gradient at w=1: {numerical_gradient(loss, w):.6f}")  # ≈ -4.0</code></pre>
+
+<h3>Gradient Descent — The Universal Optimization Algorithm</h3>
+<pre><code># Gradient Descent: repeatedly adjust weights in the direction that reduces loss
+# w_new = w_old - learning_rate * gradient
+
+def gradient_descent(initial_w, learning_rate=0.1, n_steps=50):
+    w = initial_w
+    history = [w]
+    for step in range(n_steps):
+        gradient = d_loss_dw(w)           # Compute gradient
+        w = w - learning_rate * gradient  # Step "downhill"
+        history.append(w)
+        if step % 10 == 0:
+            print(f"Step {step:3d}: w={w:.4f}, loss={loss(w):.6f}")
+    return w, history
+
+final_w, history = gradient_descent(initial_w=0.0)
+print(f"\nConverged to: w={final_w:.4f} (target: 3.0)")
+# Step   0: w=0.6000, loss=5.760000
+# Step  10: w=2.6844, loss=0.099609
+# Step  20: w=2.9316, loss=0.004736
+# Step  49: w=2.9999, loss=0.000000 ✓</code></pre>
+
+<h3>Partial Derivatives &amp; Chain Rule (Backpropagation)</h3>
+<p>Neural networks have millions of weights. Backpropagation uses the <strong>chain rule</strong> of calculus to compute the gradient of the loss with respect to every single weight in one efficient backward pass:</p>
+<pre><code># Chain rule: d(f∘g)/dx = f'(g(x)) * g'(x)
+# In neural nets: gradient of loss w.r.t. w1 = (dL/dz2) * (dz2/dz1) * (dz1/dw1)
+
+# Example: 2-layer network forward pass
+x = 2.0    # Input
+w1 = 0.5   # Weight layer 1
+w2 = -1.0  # Weight layer 2
+
+z1 = x * w1         # → 1.0  (linear layer 1)
+a1 = max(0, z1)     # → 1.0  (ReLU activation)
+z2 = a1 * w2        # → -1.0 (linear layer 2)
+loss = z2 ** 2      # → 1.0  (MSE loss vs target=0)
+
+# Backpropagation (chain rule applied):
+dL_dz2 = 2 * z2                       # → -2.0
+dz2_da1 = w2                          # → -1.0
+da1_dz1 = 1.0 if z1 > 0 else 0.0     # → 1.0 (ReLU derivative)
+dz1_dw1 = x                           # → 2.0
+
+# — — — — Chain rule: multiply them all together — — — —
+dL_dw1 = dL_dz2 * dz2_da1 * da1_dz1 * dz1_dw1  # → 4.0
+print(f"Gradient of loss w.r.t w1: {dL_dw1}")  # → 4.0
+# PyTorch's loss.backward() does this automatically for every weight!</code></pre>
+
+<h2>Key Probability Concepts in ML</h2>
+<table>
+  <thead><tr><th>Concept</th><th>Formula</th><th>ML Use</th></tr></thead>
+  <tbody>
+    <tr><td>Mean (μ)</td><td>Σx / n</td><td>Feature normalization center</td></tr>
+    <tr><td>Variance (σ²)</td><td>Σ(x-μ)² / n</td><td>Feature scaling target</td></tr>
+    <tr><td>Covariance</td><td>Σ(x-μx)(y-μy) / n</td><td>PCA, feature correlation</td></tr>
+    <tr><td>Entropy (H)</td><td>-Σ p(x) log p(x)</td><td>Decision tree splits (information gain)</td></tr>
+    <tr><td>Cross-Entropy</td><td>-Σ y log(ŷ)</td><td>Classification loss function</td></tr>
+    <tr><td>KL Divergence</td><td>Σ p log(p/q)</td><td>VAE loss, comparing distributions</td></tr>
+  </tbody>
+</table>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>When debugging gradient descent, check: Is the loss decreasing? If yes, but slowly → increase learning rate. If loss is diverging (NaN/Inf) → learning rate too high.</li>
+  <li>Feature normalization (z-score or min-max scaling) is a <em>calculus</em> concern — unnormalized features create loss surfaces with steep ravines, making gradient descent slow and unstable.</li>
+  <li>Use <code>torch.autograd.gradcheck()</code> in PyTorch to numerically verify your custom gradient implementations are correct.</li>
+</ul>

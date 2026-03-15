@@ -1,0 +1,107 @@
+<h1>CSS Architecture & Methodologies</h1>
+<p>As CSS codebases grow, they become difficult to maintain without a clear organizational strategy. CSS methodologies provide <strong>naming conventions and structural rules</strong> that keep stylesheets scalable and team-friendly.</p>
+
+<h2>BEM — Block, Element, Modifier</h2>
+<p>BEM is the most widely adopted CSS methodology. It uses a strict naming convention:</p>
+<pre><code>/* Block — standalone component */
+.card { }
+
+/* Element — part of a Block, uses double underscore */
+.card__title { }
+.card__image { }
+.card__body { }
+.card__footer { }
+
+/* Modifier — variant of Block or Element, uses double dash */
+.card--featured { }
+.card__title--large { }
+.card--dark { }</code></pre>
+
+<p>In HTML:</p>
+<pre><code>&lt;article class="card card--featured"&gt;
+  &lt;img class="card__image" src="..." alt="..."&gt;
+  &lt;div class="card__body"&gt;
+    &lt;h2 class="card__title card__title--large"&gt;Title&lt;/h2&gt;
+    &lt;p class="card__text"&gt;Content...&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;footer class="card__footer"&gt;...&lt;/footer&gt;
+&lt;/article&gt;</code></pre>
+
+<h2>SMACSS — Scalable and Modular Architecture for CSS</h2>
+<p>SMACSS categorizes CSS rules into 5 types:</p>
+<ul>
+  <li><strong>Base</strong> — Element defaults (resets, typography). No classes.</li>
+  <li><strong>Layout</strong> — Page structure (header, sidebar, grid). Prefix: <code>l-</code></li>
+  <li><strong>Module</strong> — Reusable UI components (cards, buttons, forms).</li>
+  <li><strong>State</strong> — JavaScript-driven states. Prefix: <code>is-</code> (e.g., <code>is-active</code>, <code>is-hidden</code>)</li>
+  <li><strong>Theme</strong> — Colour/font overrides for different themes.</li>
+</ul>
+
+<h2>CSS Modules</h2>
+<p>CSS Modules (used in React with Vite/Next.js) scope class names locally — eliminating global class name collisions:</p>
+<pre><code>/* Button.module.css */
+.button {
+  background: var(--color-primary);
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+}
+
+.button--danger {
+  background: #ef4444;
+}</code></pre>
+<pre><code>/* Button.jsx */
+import styles from './Button.module.css';
+
+export function Button({ variant, children }) {
+  return (
+    &lt;button className={`${styles.button} ${variant === 'danger' ? styles['button--danger'] : ''}`}&gt;
+      {children}
+    &lt;/button&gt;
+  );
+}</code></pre>
+<p>CSS Modules transform class names to something like <code>Button_button__3xkY8</code> at build time, guaranteeing uniqueness.</p>
+
+<h2>Utility-First CSS</h2>
+<p>The utility-first approach (popularized by Tailwind CSS) uses single-purpose, immutable classes directly in HTML:</p>
+<pre><code>&lt;!-- Traditional component-based --&gt;
+&lt;button class="btn btn--primary btn--lg"&gt;Submit&lt;/button&gt;
+
+&lt;!-- Utility-first (Tailwind-style) --&gt;
+&lt;button class="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-6 py-2 rounded-lg"&gt;Submit&lt;/button&gt;</code></pre>
+
+<h2>Organizing CSS Files</h2>
+<p>A recommended folder structure for a medium-to-large project:</p>
+<pre><code>styles/
+  ├── tokens/          # CSS variables (colour, spacing, typography)
+  │   └── variables.css
+  ├── base/            # Reset, typography defaults
+  │   ├── reset.css
+  │   └── typography.css
+  ├── components/      # Individual UI components
+  │   ├── button.css
+  │   ├── card.css
+  │   └── modal.css
+  ├── layouts/         # Page layouts and grid systems
+  │   └── grid.css
+  └── main.css         # Entry point — imports everything</code></pre>
+
+<h2>The 7-1 Pattern</h2>
+<p>Popular for Sass projects: 7 folders + 1 main file:</p>
+<pre><code>sass/
+  ├── abstracts/    # Variables, mixins, functions
+  ├── base/         # Reset, typography
+  ├── components/   # Buttons, inputs, cards
+  ├── layout/       # Header, footer, grid
+  ├── pages/        # Page-specific styles
+  ├── themes/        # Dark mode, brand themes
+  ├── vendors/       # Third-party CSS
+  └── main.scss     # @use all seven folders</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Choose one methodology and apply it consistently across your team.</li>
+  <li>BEM + CSS Variables is an excellent combination for most projects.</li>
+  <li>Use CSS Modules or CSS-in-JS in React apps to prevent naming collisions.</li>
+  <li>Group related rules and add comments for context.</li>
+  <li>Avoid deeply nested selectors — they are hard to override and debug.</li>
+</ul>

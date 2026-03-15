@@ -1,0 +1,19 @@
+{
+  "title": "Implement Array.map",
+  "slug": "implement-array-map",
+  "difficulty": "Easy",
+  "category": "frontend",
+  "points": 50,
+  "tags": ["javascript", "arrays", "higher-order-functions", "polyfill"],
+  "company_tags": ["Google", "Meta", "Amazon", "Apple"],
+  "topic_tags": ["Array Methods", "Higher-Order Functions", "Callbacks"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An array and a callback function",
+  "output_format": "A new array with the callback applied to each element",
+  "example_input": "myMap([1, 2, 3], x => x * 2)",
+  "example_output": "[2, 4, 6]",
+  "constraints": "Callback receives (element, index, array). Must not mutate the original array.",
+  "function_signature": "function myMap<T, U>(arr: T[], callback: (value: T, index: number, array: T[]) => U): U[]",
+  "status": "ACTIVE"
+}

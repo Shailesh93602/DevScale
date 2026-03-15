@@ -1,0 +1,20 @@
+[
+  { "input": "{\"s\": \"()\"}", "output": "true", "explanation": "Simple matching parentheses", "is_hidden": false },
+  { "input": "{\"s\": \"()[]{}\"}", "output": "true", "explanation": "Multiple bracket types, all valid", "is_hidden": false },
+  { "input": "{\"s\": \"(]\"}", "output": "false", "explanation": "Wrong closing bracket type", "is_hidden": false },
+  { "input": "{\"s\": \"([)]\"}", "output": "false", "explanation": "Interleaved brackets — invalid order", "is_hidden": false },
+  { "input": "{\"s\": \"{[]}\"}", "output": "true", "explanation": "Properly nested different bracket types", "is_hidden": false },
+  { "input": "{\"s\": \")\"}", "output": "false", "explanation": "Closing bracket with empty stack", "is_hidden": true },
+  { "input": "{\"s\": \"(\"}", "output": "false", "explanation": "Unclosed open bracket", "is_hidden": true },
+  { "input": "{\"s\": \"((\"}", "output": "false", "explanation": "Two unclosed brackets", "is_hidden": true },
+  { "input": "{\"s\": \"((()))\"}", "output": "true", "explanation": "Deeply nested same-type brackets", "is_hidden": true },
+  { "input": "{\"s\": \"({[]})\"}", "output": "true", "explanation": "Three nested bracket types", "is_hidden": true },
+  { "input": "{\"s\": \"({[})\"}", "output": "false", "explanation": "Mixed types that don't match at close", "is_hidden": true },
+  { "input": "{\"s\": \"[]{}()\"}", "output": "true", "explanation": "Sequential groups all valid", "is_hidden": true },
+  { "input": "{\"s\": \"{\"}", "output": "false", "explanation": "Single unclosed curly brace", "is_hidden": true },
+  { "input": "{\"s\": \"{{{{{{{{{{}}}}}}}}}}\"}", "output": "true", "explanation": "10 deeply nested curly braces", "is_hidden": true },
+  { "input": "{\"s\": \"(((([[[{{{}}}]]]))))\"}", "output": "true", "explanation": "Complex deeply nested valid string", "is_hidden": true },
+  { "input": "{\"s\": \"}{\"}", "output": "false", "explanation": "Reversed — both wrong", "is_hidden": true },
+  { "input": "{\"s\": \"([]{}()[]())\"}", "output": "true", "explanation": "Complex valid nested and sequential", "is_hidden": true },
+  { "input": "{\"s\": \"([]{}([])\"}", "output": "false", "explanation": "Valid-looking but missing one closing paren", "is_hidden": true }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "input": {"order": [1, 2, 3]},
+    "output": {"result": "firstsecondthird"},
+    "explanation": "Functions called in natural order",
+    "is_hidden": false
+  },
+  {
+    "input": {"order": [2, 1, 3]},
+    "output": {"result": "firstsecondthird"},
+    "explanation": "Second called first, but waits for first to complete",
+    "is_hidden": false
+  },
+  {
+    "input": {"order": [3, 2, 1]},
+    "output": {"result": "firstsecondthird"},
+    "explanation": "Reverse order - third and second must wait",
+    "is_hidden": false
+  },
+  {
+    "input": {"order": [1, 3, 2]},
+    "output": {"result": "firstsecondthird"},
+    "explanation": "Third called before second, must wait",
+    "is_hidden": false
+  },
+  {
+    "input": {"order": [2, 3, 1]},
+    "output": {"result": "firstsecondthird"},
+    "explanation": "Both second and third called before first",
+    "is_hidden": true
+  },
+  {
+    "input": {"order": [3, 1, 2]},
+    "output": {"result": "firstsecondthird"},
+    "explanation": "Third first, then first, then second",
+    "is_hidden": true
+  }
+]

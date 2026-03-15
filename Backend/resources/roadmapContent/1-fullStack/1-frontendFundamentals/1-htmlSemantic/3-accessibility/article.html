@@ -1,0 +1,66 @@
+<h1>Web Accessibility (a11y)</h1>
+<p>Accessibility ensures your website can be used by <strong>everyone</strong> — including people with visual, motor, auditory, or cognitive disabilities. It is also a legal requirement in many jurisdictions (ADA, WCAG, Section 508).</p>
+
+<h2>Why Accessibility Matters</h2>
+<ul>
+  <li>Over <strong>1 billion people</strong> worldwide have some form of disability.</li>
+  <li>Improves SEO — search engines and screen readers process HTML the same way.</li>
+  <li>Increases usability for everyone (e.g., keyboard navigation, high contrast).</li>
+  <li>Required by law in many countries for public-facing websites.</li>
+</ul>
+
+<h2>WCAG Core Principles (POUR)</h2>
+<ul>
+  <li><strong>Perceivable</strong> — All content can be seen or heard by all users.</li>
+  <li><strong>Operable</strong> — All functionality works via keyboard alone.</li>
+  <li><strong>Understandable</strong> — Content and UI are clear and predictable.</li>
+  <li><strong>Robust</strong> — Compatible with current and future assistive technologies.</li>
+</ul>
+
+<h2>Practical Techniques</h2>
+<pre><code>&lt;!-- 1. Always add alt text to images --&gt;
+&lt;img src="chart.png" alt="Bar chart showing Q4 revenue growth of 23%"&gt;
+&lt;img src="decorative.png" alt=""&gt; &lt;!-- empty alt for decorative images --&gt;
+
+&lt;!-- 2. aria-label for icon-only buttons --&gt;
+&lt;button aria-label="Close dialog"&gt;&times;&lt;/button&gt;
+
+&lt;!-- 3. Skip navigation link for keyboard users --&gt;
+&lt;a href="#main-content" class="skip-link"&gt;Skip to main content&lt;/a&gt;
+
+&lt;!-- 4. Announce dynamic content changes --&gt;
+&lt;div aria-live="polite" id="status"&gt;&lt;/div&gt;
+
+&lt;!-- 5. Describe input purpose --&gt;
+&lt;input type="text" aria-describedby="username-hint"&gt;
+&lt;p id="username-hint"&gt;Must be 8–20 characters, letters and numbers only.&lt;/p&gt;</code></pre>
+
+<h2>ARIA Landmark Roles</h2>
+<p>ARIA roles help screen readers understand the purpose of page regions:</p>
+<pre><code>role="banner"         — Site header
+role="navigation"     — Nav landmark
+role="main"           — Main content
+role="complementary"  — Sidebar/aside
+role="contentinfo"    — Footer
+role="search"         — Search form</code></pre>
+
+<h2>ARIA State Attributes</h2>
+<pre><code>&lt;button aria-expanded="false" aria-controls="dropdown-menu"&gt;Menu&lt;/button&gt;
+&lt;div id="dropdown-menu" aria-hidden="true"&gt;...&lt;/div&gt;
+
+&lt;input type="checkbox" aria-checked="true"&gt;
+&lt;div role="alert" aria-live="assertive"&gt;Error: Form invalid&lt;/div&gt;</code></pre>
+
+<h2>Keyboard Navigation</h2>
+<p>All interactive elements must be reachable via the <strong>Tab key</strong> in a logical order. Never remove the <code>:focus</code> outline without providing a visible alternative:</p>
+<pre><code>/* Never do this: */
+:focus { outline: none; }
+
+/* Instead, customize it: */
+:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}</code></pre>
+
+<h2>Colour Contrast</h2>
+<p>WCAG AA requires a contrast ratio of at least <strong>4.5:1</strong> for normal text and <strong>3:1</strong> for large text. Use tools like WebAIM Contrast Checker to verify your colour choices.</p>

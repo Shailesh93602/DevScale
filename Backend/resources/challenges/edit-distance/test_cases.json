@@ -1,0 +1,12 @@
+[
+  { "input": "{\"word1\": \"horse\", \"word2\": \"ros\"}", "output": "3", "explanation": "horse->rorse->rose->ros", "is_hidden": false },
+  { "input": "{\"word1\": \"intention\", \"word2\": \"execution\"}", "output": "5", "explanation": "5 operations needed", "is_hidden": false },
+  { "input": "{\"word1\": \"\", \"word2\": \"abc\"}", "output": "3", "explanation": "Insert 3 characters", "is_hidden": false },
+  { "input": "{\"word1\": \"abc\", \"word2\": \"\"}", "output": "3", "explanation": "Delete 3 characters", "is_hidden": true },
+  { "input": "{\"word1\": \"\", \"word2\": \"\"}", "output": "0", "explanation": "Both empty", "is_hidden": true },
+  { "input": "{\"word1\": \"abc\", \"word2\": \"abc\"}", "output": "0", "explanation": "Identical strings", "is_hidden": true },
+  { "input": "{\"word1\": \"a\", \"word2\": \"b\"}", "output": "1", "explanation": "One replace", "is_hidden": true },
+  { "input": "{\"word1\": \"saturday\", \"word2\": \"sunday\"}", "output": "3", "explanation": "Classic example", "is_hidden": true },
+  { "input": "{\"word1\": \"kitten\", \"word2\": \"sitting\"}", "output": "3", "explanation": "kitten->sitten->sittin->sitting", "is_hidden": true },
+  { "input": "{\"word1\": \"abcdefg\", \"word2\": \"gfedcba\"}", "output": "6", "explanation": "Reversed string", "is_hidden": true }
+]

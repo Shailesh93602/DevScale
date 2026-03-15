@@ -1,0 +1,6 @@
+[
+  "Since houses are in a circle, you cannot rob both the first and last house. How can you break this constraint?",
+  "Consider two separate scenarios: one where you exclude the first house, and one where you exclude the last house.",
+  "For each scenario, solve the standard House Robber problem on a linear array.",
+  "The answer is the maximum of these two scenarios. Use the O(1) space House Robber solution for each."
+]

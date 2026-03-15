@@ -1,0 +1,7 @@
+{
+  "id": "6-softwareEngineering",
+  "title": "Software Engineering Principles",
+  "description": "Core software engineering practices, system design, and performance optimizations.",
+  "order": 6,
+  "subjects": ["1-designPatterns", "2-testing", "3-webPerformance", "4-systemDesign"]
+}

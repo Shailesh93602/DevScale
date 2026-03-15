@@ -1,0 +1,1 @@
+["This is a classic simulation problem.", "You need to repeatedly find the two largest elements. What data structure gives you O(log N) access to the maximum element?", "Use a Max-Heap. Pop the two largest stones. If they have different weights, push the absolute difference back into the heap. Repeat until the heap has 1 or 0 elements."]

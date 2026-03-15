@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the functional difference between 'systemctl restart nginx' and 'systemctl reload nginx' in a production environment?",
+            "options": [
+                "They are identical — reload is just an alias for restart.",
+                "'restart' fully stops and then starts the process, causing a brief service interruption. 'reload' signals the process to re-read its configuration file without stopping, achieving zero-downtime configuration updates — critical for high-traffic web servers.",
+                "'reload' only works on services that have been explicitly enabled.",
+                "'restart' only applies config changes from unit files; 'reload' applies changes from the application config."
+            ],
+            "answer": "'restart' fully stops and then starts the process, causing a brief service interruption. 'reload' signals the process to re-read its configuration file without stopping, achieving zero-downtime configuration updates — critical for high-traffic web servers.",
+            "explanation": "When you update nginx.conf, 'systemctl reload nginx' sends SIGHUP. Nginx gracefully reloads config using new workers while old workers finish their current connections — zero dropped requests."
+        },
+        {
+            "question": "In a systemd service unit file, what is the difference between 'systemctl enable' and 'systemctl start'?",
+            "options": [
+                "They are the same — enable both starts the service and configures it for boot.",
+                "'start' launches the service immediately right now in the current session. 'enable' creates a symlink so the service is automatically started on every future system boot — but does NOT start it immediately.",
+                "'enable' starts the service with root privileges; 'start' uses the User directive.",
+                "'enable' is for system-wide services; 'start' is for user-level services."
+            ],
+            "answer": "'start' launches the service immediately right now in the current session. 'enable' creates a symlink so the service is automatically started on every future system boot — but does NOT start it immediately.",
+            "explanation": "A common mistake: 'systemctl enable myapp' and then wondering why the service isn't running. You need both 'enable' (persistent) AND 'start' (immediate). Many use 'systemctl enable --now myapp' to do both."
+        },
+        {
+            "question": "What specific advantage does a systemd Timer provide over a traditional cron job for scheduling recurring tasks?",
+            "options": [
+                "systemd Timers can run scripts in any programming language; cron is limited to bash.",
+                "systemd Timers integrate directly with journald for centralized logging, support the 'Persistent=true' directive to catch up on missed runs after downtime, and allow triggering based on system events (like boot time) rather than only fixed calendar schedules.",
+                "systemd Timers run with higher CPU priority than cron jobs.",
+                "systemd Timers are the only way to run tasks as a non-root user."
+            ],
+            "answer": "systemd Timers integrate directly with journald for centralized logging, support the 'Persistent=true' directive to catch up on missed runs after downtime, and allow triggering based on system events (like boot time) rather than only fixed calendar schedules.",
+            "explanation": "If a server is offline during a cron backup job's scheduled time, cron silently skips it. With 'Persistent=true', systemd runs the backup immediately upon the next boot."
+        }
+    ]
+}

@@ -1,0 +1,4 @@
+{
+    "name": "Firewalls, VPNs & Network Security",
+    "description": "Securing network perimeters in cloud environments. Understanding stateful vs stateless firewalls, Security Groups vs NACLs in AWS, VPN tunnels, Zero Trust networking, and common network attack vectors."
+}

@@ -1,0 +1,4 @@
+{
+    "name": "BERT, GPT & Foundation Model Architecture",
+    "description": "Understanding the two dominant paradigms in modern NLP: BERT's masked language modeling for bidirectional understanding, and GPT's autoregressive causal language modeling for generation. Comparing encoder-only (BERT), decoder-only (GPT), and encoder-decoder (T5/BART) architectures, and when to use each for different downstream tasks."
+}

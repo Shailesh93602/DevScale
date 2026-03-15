@@ -1,0 +1,74 @@
+{
+    "title": "API Security Quiz",
+    "description": "Test your knowledge of API security best practices.",
+    "passingScore": 80,
+    "timeLimit": 8,
+    "questions": [
+        {
+            "question": "What does helmet.js do for an Express application?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It provides authentication middleware",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It sets various HTTP security headers to protect against common web vulnerabilities",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It encrypts the database connection",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It validates request body schemas",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the purpose of rate limiting?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "To speed up API responses",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To limit how many requests a client can make in a time window, preventing brute force and DoS attacks",
+                    "isCorrect": true
+                },
+                {
+                    "text": "To restrict which countries can access the API",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To cache frequently requested data",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How do you prevent SQL injection attacks?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "By using HTTPS",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By using rate limiting on database endpoints",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By using parameterized queries or an ORM that handles parameterization automatically",
+                    "isCorrect": true
+                },
+                {
+                    "text": "By validating that input is not too long",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

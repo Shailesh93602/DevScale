@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary benefit of using the Supertest library to test Express APIs?",
+            "options": [
+                "It acts as a complete replacement for the Jest testing framework natively",
+                "It generates boilerplate unit tests for every API route automatically",
+                "It allows you to simulate HTTP requests against your Express app entirely in memory without ever opening a real, physical network port (avoiding EADDRINUSE errors)",
+                "It prevents all database mutations during tests globally"
+            ],
+            "answer": "It allows you to simulate HTTP requests against your Express app entirely in memory without ever opening a real, physical network port (avoiding EADDRINUSE errors)",
+            "explanation": "Supertest binds directly to the exported Express app object. You do not need to boot up a backend server on `localhost:3000` to run tests against the routing layer; everything happens blazing fast in memory."
+        },
+        {
+            "question": "When configuring an Express app for integration testing, why must the `app.listen()` method call be separated into a different file (like `server.js`) rather than being inside `app.js`?",
+            "options": [
+                "Because Jest natively parses `server.js` and ignores `app.js` automatically by default",
+                "If `app.js` contains `app.listen()`, importing it into a test file will trigger the server to start on a real port. Running multiple test files simultaneously will crash the test runner with 'Port already in use' errors",
+                "Because Supertest requires a `server.js` configuration object to mock headers",
+                "It is a strict requirement imposed by the Node.js V8 execution engine"
+            ],
+            "answer": "If `app.js` contains `app.listen()`, importing it into a test file will trigger the server to start on a real port. Running multiple test files simultaneously will crash the test runner with 'Port already in use' errors",
+            "explanation": "Jest runs test files deeply in parallel. If every test file imports `app.js` and it immediately issues `app.listen(3000)`, 5 tests will try to claim port 3000 simultaneously. Exporting purely the configured `app` object avoids this completely."
+        },
+        {
+            "question": "If you are writing an integration test with Supertest for a route that requires JWT authentication, how do you verify the user identity?",
+            "options": [
+                "Use `await request(app).post('/profile').set('Authorization', 'Bearer dummy-token')` to explicitly pass the mock header",
+                "You must spin up the frontend React app and automate a Playwright click on the login button",
+                "You configure Jest to bypass all middleware globally",
+                "Supertest logs the user in automatically via the database mock"
+            ],
+            "answer": "Use `await request(app).post('/profile').set('Authorization', 'Bearer dummy-token')` to explicitly pass the mock header",
+            "explanation": "Supertest provides a `.set('HeaderName', 'Value')` method exactly for this reason. You inject a valid (or invalid) JWT token directly into the HTTP headers to simulate authenticated requests flawlessly."
+        },
+        {
+            "question": "Why is 'Mocking' the database (e.g., `jest.mock('../models/User')`) frequently used when testing Node.js controllers?",
+            "options": [
+                "To test that the actual Postgres/MongoDB software installed on the server is functioning natively",
+                "To compile the database schema dramatically faster than Docker",
+                "To isolate the controller logic and assert its behavior without polluting a physical database with thousands of fake test records or facing slow network latency",
+                "To rewrite database queries into raw SQL"
+            ],
+            "answer": "To isolate the controller logic and assert its behavior without polluting a physical database with thousands of fake test records or facing slow network latency",
+            "explanation": "When you test a 'Create User' route, you want to prove the route handles inputs and errors correctly. You don't necessarily want to wait 200ms to physically save a row to a database, then manually delete that row during test teardown."
+        },
+        {
+            "question": "What is the common cause of the Jest error: 'Jest did not exit one second after the test run has completed. This usually means that there are asynchronous operations that weren't stopped in your tests'?",
+            "options": [
+                "A missing `expect()` assertion",
+                "A syntax error inside an async function that wasn't caught by a try/catch block",
+                "A database connection (like Mongoose or Prisma) was opened during the tests but was not forcefully closed in an `afterAll()` teardown hook",
+                "Using Supertest with Express natively causes this constantly"
+            ],
+            "answer": "A database connection (like Mongoose or Prisma) was opened during the tests but was not forcefully closed in an `afterAll()` teardown hook",
+            "explanation": "Jest runs tests instantly, but if a Prisma or Mongoose connection pool remains open in the background, Node.js refuses to exit its process. You must always use `afterAll(async () => { await db.disconnect() })`."
+        }
+    ]
+}

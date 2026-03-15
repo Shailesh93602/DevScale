@@ -1,0 +1,4 @@
+{
+    "name": "Helm: The Kubernetes Package Manager",
+    "description": "Managing complex Kubernetes application deployments with Helm. Understanding chart structure, templating with Go templates, managing releases and rollbacks, using Helm repositories, and customizing deployments with values files for different environments."
+}

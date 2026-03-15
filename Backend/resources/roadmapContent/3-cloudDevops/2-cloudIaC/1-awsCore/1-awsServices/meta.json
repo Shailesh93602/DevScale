@@ -1,0 +1,4 @@
+{
+    "name": "AWS Core Services",
+    "description": "EC2 instances, S3 storage, RDS databases, IAM roles, VPC networking, and Lambda functions."
+}

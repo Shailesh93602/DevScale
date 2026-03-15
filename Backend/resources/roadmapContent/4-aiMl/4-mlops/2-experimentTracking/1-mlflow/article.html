@@ -1,0 +1,98 @@
+<h1>MLflow: Experiment Tracking</h1>
+<p>Machine learning development is fundamentally iterative. You run dozens of experiments, tweaking hyperparameters, trying different features, and swapping algorithms. Without a tracking system, you quickly lose track of which combination produced your best model. <strong>MLflow</strong> is the open-source platform that solves this problem — it records every experiment run with its parameters, metrics, and artifacts, giving you a searchable history of all your work.</p>
+
+<h2>Core Concepts</h2>
+<ul>
+  <li><strong>Experiment:</strong> A named container for a group of related runs (e.g., "Churn Model — Q1 2025").</li>
+  <li><strong>Run:</strong> A single execution of your training code. Each run gets a unique ID and records parameters, metrics, tags, and artifacts.</li>
+  <li><strong>Parameters:</strong> The inputs you control before training (hyperparameters like <code>learning_rate=0.01</code>, <code>max_depth=6</code>).</li>
+  <li><strong>Metrics:</strong> The outputs you measure after training (e.g., <code>accuracy=0.94</code>, <code>auc=0.97</code>). Metrics can be logged at each step to visualize learning curves.</li>
+  <li><strong>Artifacts:</strong> Files saved by the run — the serialized model, a confusion matrix PNG, a feature importance CSV.</li>
+</ul>
+
+<h2>Instrumenting Your Training Code</h2>
+<pre><code>import mlflow
+import mlflow.sklearn
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.metrics import accuracy_score, roc_auc_score
+from sklearn.model_selection import train_test_split
+import pandas as pd
+
+# Set the tracking server URI (default: local ./mlruns folder)
+mlflow.set_tracking_uri("http://localhost:5000")
+mlflow.set_experiment("churn_prediction_v2")
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+# Define hyperparameters to tune
+params = {
+    "n_estimators": 200,
+    "learning_rate": 0.05,
+    "max_depth": 5,
+    "subsample": 0.8
+}
+
+with mlflow.start_run(run_name="gbm-subsample-0.8") as run:
+    # 1) Log all hyperparameters at once
+    mlflow.log_params(params)
+
+    # 2) Train the model
+    model = GradientBoostingClassifier(**params)
+    model.fit(X_train, y_train)
+
+    # 3) Evaluate and log metrics
+    predictions = model.predict(X_test)
+    probabilities = model.predict_proba(X_test)[:, 1]
+    
+    mlflow.log_metric("accuracy", accuracy_score(y_test, predictions))
+    mlflow.log_metric("roc_auc", roc_auc_score(y_test, probabilities))
+
+    # 4) Log the model itself as an artifact with automatic schema detection
+    mlflow.sklearn.log_model(
+        model,
+        artifact_path="model",
+        registered_model_name="churn_predictor"
+    )
+    
+    print(f"Run ID: {run.info.run_id}")</code></pre>
+
+<h2>Autologging — Zero Instrumentation</h2>
+<p>For supported frameworks, MLflow can automatically capture everything without you writing a single <code>log_param</code> or <code>log_metric</code> call:</p>
+<pre><code">import mlflow
+
+# One line enables automatic tracking for scikit-learn, XGBoost, PyTorch, etc.
+mlflow.autolog()
+
+# Now just train normally — everything is automatically captured
+model = GradientBoostingClassifier(n_estimators=200, learning_rate=0.05)
+model.fit(X_train, y_train)
+# MLflow automatically logs: parameters, metrics, model, feature importances</code></pre>
+
+<h2>Comparing Runs in the UI</h2>
+<p>Start the MLflow tracking server UI to visually compare all your runs:</p>
+<pre><code"># Start the UI server
+mlflow ui --host 0.0.0.0 --port 5000
+
+# Or point it at a remote tracking server
+mlflow ui --backend-store-uri postgresql://user:pass@db-host/mlflow \
+          --default-artifact-root s3://my-bucket/mlflow-artifacts</code></pre>
+<p>The UI lets you sort runs by any metric, create scatter plots comparing hyperparameters, and view learning curves logged step-by-step.</p>
+
+<h2>Loading a Registered Model for Inference</h2>
+<pre><code">import mlflow.pyfunc
+
+# Load the "Production" stage version of a registered model
+model = mlflow.pyfunc.load_model(
+    model_uri="models:/churn_predictor/Production"
+)
+
+# Use exactly like any Python object
+predictions = model.predict(new_data_df)</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Use a remote tracking server backed by PostgreSQL and S3 in production, not the local <code>./mlruns</code> folder — local tracking doesn't survive server restarts and isn't shareable.</li>
+  <li>Log every hyperparameter, even the "obvious" ones like <code>random_state</code> — future-you will thank present-you.</li>
+  <li>Use the Model Registry to promote models through stages: <code>Staging</code> → <code>Production</code> → <code>Archived</code>. This creates an auditable promotion history.</li>
+  <li>Log dataset information (version, row count, feature hash) as tags on each run so you can reproduce any experiment exactly.</li>
+</ul>

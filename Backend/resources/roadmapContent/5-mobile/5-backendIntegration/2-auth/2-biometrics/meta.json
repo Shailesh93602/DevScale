@@ -1,0 +1,6 @@
+{
+    "id": "2-biometrics",
+    "title": "Biometric Authentication",
+    "description": "Securing your app data with Face ID and Fingerprint sensors using Fingerprint and LocalAuthentication APIs.",
+    "order": 2
+}

@@ -1,0 +1,82 @@
+<h1>Seq2Seq Models & Machine Translation</h1>
+<p>Sequence-to-Sequence (Seq2Seq) models solve a fundamental problem: given one sequence (a sentence in English), produce a different sequence (its French translation, a summary, an answer). This paradigm underpins machine translation, abstractive summarization, code generation, and question answering.</p>
+
+<h2>The Encoder-Decoder Architecture</h2>
+<pre><code class="language-text">Encoder-Decoder for Translation:
+ 
+Input:  "The cat sat on the mat"
+         ↓ ↓  ↓   ↓   ↓   ↓  ↓
+        [Encoder — reads and compresses the entire input sequence]
+                        ↓
+                 [Context Vector / Encoder Hidden States]
+                        ↓
+        [Decoder — generates output one token at a time]
+         ↓    ↓     ↓     ↓     ↓    ↓
+Output: "Le  chat  était sur   le   tapis"
+
+Key insight: encoder and decoder can have different sequence lengths
+→ Input: 6 tokens,  Output: 6 tokens (translation often similar length)
+→ Input: 1000 tokens, Output: 50 tokens (document → summary, very different lengths)
+</code></pre>
+
+<h2>Neural Machine Translation in Practice</h2>
+<pre><code class="language-python">from transformers import MarianMTModel, MarianTokenizer, pipeline
+
+# Helsinki-NLP has pretrained translation models for 1000+ language pairs
+model_name = "Helsinki-NLP/opus-mt-en-fr"  # English → French
+tokenizer = MarianTokenizer.from_pretrained(model_name)
+model = MarianMTModel.from_pretrained(model_name)
+
+texts = [
+    "Machine learning is transforming the software industry.",
+    "The model was deployed successfully to production."
+]
+
+# Tokenize batch
+inputs = tokenizer(texts, return_tensors="pt", padding=True, truncation=True, max_length=512)
+
+# Generate translations with beam search
+translated = model.generate(
+    **inputs,
+    num_beams=4,          # Beam width: explore 4 candidates simultaneously, keep best
+    max_new_tokens=128,
+    early_stopping=True,   # Stop when all beams hit EOS token
+    no_repeat_ngram_size=3 # Prevent repeating 3-grams → reduces redundancy
+)
+
+translations = tokenizer.batch_decode(translated, skip_special_tokens=True)
+print(translations)
+# ['L'apprentissage automatique transforme l'industrie des logiciels.',
+#  'Le modèle a été déployé avec succès en production.']
+</code></pre>
+
+<h2>T5 for Multi-Task Seq2Seq</h2>
+<pre><code class="language-python">from transformers import pipeline
+
+# Summarization — a quintessential seq2seq task (long text → short summary)
+summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
+
+article = """
+Amazon Web Services launched three new AI services at re:Invent 2024.
+The first service, Bedrock Agents, allows developers to build autonomous
+AI agents that can access databases, APIs, and internal tools to complete
+complex multi-step tasks. The second service...
+[full article 2000 words]
+"""
+summary = summarizer(article, max_length=130, min_length=30, do_sample=False)
+print(summary[0]['summary_text'])
+# → "AWS launched three AI services at re:Invent 2024: Bedrock Agents for autonomous AI..."
+
+# BLEU and ROUGE for evaluation
+from rouge_score import rouge_scorer
+
+scorer = rouge_scorer.RougeScorer(['rouge1', 'rouge2', 'rougeL'])
+scores = scorer.score(reference, generated)
+print(f"ROUGE-L: {scores['rougeL'].fmeasure:.3f}")
+# ROUGE-L measures longest common subsequence — best overall summary quality metric
+
+# BLEU — common for machine translation (measures n-gram precision)
+from nltk.translate.bleu_score import corpus_bleu
+bleu = corpus_bleu(list_of_references, hypotheses)
+print(f"BLEU: {bleu:.3f}")
+</code></pre>

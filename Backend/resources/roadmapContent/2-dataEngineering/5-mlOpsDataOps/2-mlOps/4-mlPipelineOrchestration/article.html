@@ -1,0 +1,40 @@
+<h1>ML Pipeline Orchestration</h1>
+<p>Training a machine learning model in a Jupyter Notebook is a research activity. Deploying a robust, reproducible, automatically-retraining ML system in production is a software engineering discipline. The moment you need to retrain a model weekly with fresh data, run automated evaluation tests, gate deployment on performance thresholds, and track every experiment — you need an <strong>ML Pipeline</strong>.</p>
+
+<h2>What is an ML Pipeline?</h2>
+<p>An ML Pipeline is a directed, automated workflow that chains together all the discrete steps of an ML lifecycle into a reproducible, version-controlled process:</p>
+<ol>
+  <li><strong>Data Ingestion & Validation:</strong> Pull raw training data from the Data Warehouse. Validate schema and check for data quality issues.</li>
+  <li><strong>Feature Engineering:</strong> Transform raw features. Call the Feature Store to retrieve pre-computed features.</li>
+  <li><strong>Model Training:</strong> Train the model with specific hyperparameters. Log all metrics (accuracy, AUC, precision) to an experiment tracker like MLflow.</li>
+  <li><strong>Model Evaluation:</strong> Compare the newly trained model against the current production model. Only proceed if the new model performs better.</li>
+  <li><strong>Model Registration & Deployment:</strong> Register the approved model version in the Model Registry. Deploy it to the serving infrastructure.</li>
+</ol>
+
+<h2>Apache Airflow for ML Pipelines</h2>
+<p>Because Data Engineers already operate Airflow for ETL pipelines, it's natural to extend it to ML pipeline orchestration:</p>
+<pre><code class="language-python">with DAG("weekly_fraud_model_retrain", schedule_interval="@weekly") as dag:
+    
+    extract_training_data = PythonOperator(
+        task_id="extract_data",
+        python_callable=pull_training_data_from_snowflake
+    )
+    
+    train_model = PythonOperator(
+        task_id="train_model",
+        python_callable=train_xgboost_model  # Logs metrics to MLflow
+    )
+    
+    evaluate_model = BranchPythonOperator(
+        task_id="evaluate_model",
+        python_callable=compare_against_production  # Returns 'deploy' or 'reject'
+    )
+    
+    deploy_to_production = PythonOperator(task_id="deploy", ...)
+    
+    extract_training_data >> train_model >> evaluate_model >> deploy_to_production
+</code></pre>
+
+<h2>Kubeflow Pipelines</h2>
+<p><strong>Kubeflow</strong> is Kubernetes-native ML pipeline orchestration, designed specifically for ML workloads. Each pipeline step runs in its own dedicated Docker container, providing perfect environment isolation. The Data Preprocessing step can use a TensorFlow container with a custom GPU setup, while the Model Training step uses a PyTorch container, all running in parallel where possible.</p>
+<p>Kubeflow also integrates natively with the Kubernetes ecosystem (autoscaling, GPU node pools, distributed training operators), making it the preferred choice for organizations running large-scale ML workloads on Kubernetes clusters.</p>

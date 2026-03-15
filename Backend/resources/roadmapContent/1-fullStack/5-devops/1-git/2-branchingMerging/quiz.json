@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary architectural purpose of utilizing a Git Branch?",
+            "options": [
+                "To encrypt files so external developers cannot read them",
+                "To create an independent, fully isolated timeline of the project codebase, allowing a developer to experiment and break code without modifying the stable production code on the `main` timeline",
+                "To compress the size of the repository on the hard drive natively",
+                "To bypass automated GitHub permissions"
+            ],
+            "answer": "To create an independent, fully isolated timeline of the project codebase, allowing a developer to experiment and break code without modifying the stable production code on the `main` timeline",
+            "explanation": "Branching allows 5 developers to work on 5 different features simultaneously. Because they are on isolated branches, Developer A's broken code does not prevent Developer B from running the application."
+        },
+        {
+            "question": "What specifically triggers Git to halt an automated merge process and declare a 'Merge Conflict'?",
+            "options": [
+                "When two developers edit completely different files on two different branches",
+                "When a developer attempts to commit code without an active internet connection",
+                "When two developers modify the exact same line of code within the exact same file concurrently on divergent branches, rendering Git's algorithm mathematically incapable of determining which version is objectively correct",
+                "When the total repository file size exceeds 5 Gigabytes"
+            ],
+            "answer": "When two developers modify the exact same line of code within the exact same file concurrently on divergent branches, rendering Git's algorithm mathematically incapable of determining which version is objectively correct",
+            "explanation": "If Developer A changes Line 5 to say 'Red', and Developer B changes Line 5 to say 'Blue', Git pauses. It cannot guess whether you want Red, Blue, or 'RedBlue'. A human must manually intervene to resolve the ambiguity."
+        },
+        {
+            "question": "When resolving a Git merge conflict manually inside a code editor like VSCode, what do the `<<<<<<< HEAD` and `=======` markers physically represent?",
+            "options": [
+                "They are automated JavaScript decorators that compile safely",
+                "They are physical text collision boundaries injected by Git. Everything between `<<<<<<< HEAD` and `=======` is the code currently existing on your branch, and everything below is the incoming code from the other branch",
+                "They indicate a corrupted hard drive sector",
+                "They are HTTP headers exported by the GitHub server"
+            ],
+            "answer": "They are physical text collision boundaries injected by Git. Everything between `<<<<<<< HEAD` and `=======` is the code currently existing on your branch, and everything below is the incoming code from the other branch",
+            "explanation": "To resolve the conflict, you must legally delete these injected symbol markers leaving only valid, correct code. If you forget to delete the `=======` markers, the JavaScript engine will crash with a syntax error."
+        },
+        {
+            "question": "In a scenario where absolutely no other developer has committed to the `main` branch since you created your feature branch, what kind of sequence does Git execute when you merge?",
+            "options": [
+                "A Reverse Merge",
+                "A Fast-Forward Merge: Git does not create a new 'Merge Commit', but instead simply slides the `main` pointer straight forward down the linear timeline to naturally incorporate your new commits",
+                "A Recursive Conflict Merge",
+                "A Hard Reset"
+            ],
+            "answer": "A Fast-Forward Merge: Git does not create a new 'Merge Commit', but instead simply slides the `main` pointer straight forward down the linear timeline to naturally incorporate your new commits",
+            "explanation": "Because the history never actually split into two diverging parallel lines, there is nothing mathematically to 'stitch' back together. The `main` timeline just naturally 'fast-forwards'."
+        },
+        {
+            "question": "What is the most effective proactive workflow strategy to minimize the severity of complex Merge Conflicts on a team?",
+            "options": [
+                "Only committing code once a month natively",
+                "Working on massive, long-lived branches that take 6 weeks to complete",
+                "Keeping feature branches small, short-lived, and frequently pulling down updates from the `main` branch into your feature branch daily to resolve minor collisions early before they compound massively",
+                "Refusing to use branches and having all developers push to `main` directly"
+            ],
+            "answer": "Keeping feature branches small, short-lived, and frequently pulling down updates from the `main` branch into your feature branch daily to resolve minor collisions early before they compound massively",
+            "explanation": "Conflicts compound mathematically. If you branch off for 3 weeks, hundreds of files have changed on `main`. By pulling `main` into your branch every morning, you resolve tiny conflicts incrementally."
+        }
+    ]
+}

@@ -1,0 +1,65 @@
+<h1>Spark Optimisation</h1>
+<p>While Apache Spark is incredibly fast by default, it requires careful tuning and optimisation when processing petabytes of data to avoid Out Of Memory (OOM) errors and long execution times.</p>
+
+<h2>Data Partitioning</h2>
+<p>Spark splits data into chunks called partitions. How these are divided affects parallelism and network I/O.</p>
+<pre><code># Check current partitions
+df.rdd.getNumPartitions()
+
+# Repartition (Increases or decreases partitions evenly, causing a full shuffle)
+df = df.repartition(200)
+
+# Coalesce (Decreases partitions without a full shuffle, much faster)
+df = df.coalesce(50)</code></pre>
+
+<h2>Broadcast Joins</h2>
+<p>When joining a large table with a small table, Spark defaults to a Sort Merge Join (which requires heavy shuffling). Use a <strong>Broadcast Hash Join</strong> instead to send the small table to all worker nodes.</p>
+<pre><code>from pyspark.sql.functions import broadcast
+
+small_df = spark.table("dimensions.country")
+large_df = spark.table("facts.sales")
+
+# Force Broadcast Join
+result = large_df.join(broadcast(small_df), "country_id")</code></pre>
+<p><em>Spark implicitly broadcasts tables under 10MB (configurable via <code>spark.sql.autoBroadcastJoinThreshold</code>).</em></p>
+
+<h2>Caching and Persistence</h2>
+<p>If you use the same DataFrame multiple times, cache it so Spark doesn't recompute it.</p>
+<pre><code># df.cache() uses default storage level (Memory and Disk)
+df.cache()
+
+# Use persist() to specify storage levels
+from pyspark import StorageLevel
+df.persist(StorageLevel.MEMORY_AND_DISK_SER)
+
+# Release memory when done
+df.unpersist()</code></pre>
+
+<h2>Avoiding Data Skew</h2>
+<p>Data skew happens when one partition is significantly larger than others (e.g., when a "null" value dominates grouping keys). This leaves most executors idle while one grinds.</p>
+<ul>
+  <li><strong>Solution 1:</strong> Filter out nulls before joining or grouping.</li>
+  <li><strong>Solution 2:</strong> Salting — append a random number to the skewed key before the join, then aggregate again.</li>
+  <li><strong>Solution 3 (Spark 3.x+):</strong> Adaptive Query Execution (AQE) can handle skew automatically! Set <code>spark.sql.adaptive.skewJoin.enabled=true</code>.</li>
+</ul>
+
+<h2>Adaptive Query Execution (AQE)</h2>
+<p>Introduced in Spark 3, AQE dynamically optimises execution plans at runtime based on real statistics.</p>
+<pre><code>spark.conf.set("spark.sql.adaptive.enabled", "true")
+# Dynamically coalesces shuffle partitions
+spark.conf.set("spark.sql.adaptive.coalescePartitions.enabled", "true")</code></pre>
+
+<h2>Monitoring and Debugging</h2>
+<p>Use the <strong>Spark UI</strong> (usually on port 4040 locally) to check performance:</p>
+<ul>
+  <li><strong>Jobs / Stages Tab:</strong> Find slow stages. If a stage hangs at 99%, you have data skew.</li>
+  <li><strong>SQL Tab:</strong> View the visual execution plan. Look for heavy "Exchange" blocks (shuffles).</li>
+  <li><strong>Executors Tab:</strong> Monitor memory usage and garbage collection (GC) time. GC time > 10% indicates memory pressure.</li>
+</ul>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Filter data early (Predicate Pushdown). Read only columns you need.</li>
+  <li>Avoid UDFs (User Defined Functions) in Python unless necessary; they move data out of the JVM to a Python process, breaking Catalyst optimisations. Use built-in SQL functions.</li>
+  <li>Use Parquet or ORC formats over JSON or CSV.</li>
+</ul>

@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary architectural concept that allows Dask to process a 50GB CSV file on a laptop that only has 16GB of RAM without crashing?",
+            "options": [
+                "Dask automatically upgrades Python's internal memory allocator to 64-bit architecture.",
+                "Dask heavily compresses the data in memory using gzip before processing it.",
+                "Dask divides the massive dataset into many small Pandas DataFrames (partitions). Using Lazy Evaluation and Task Graphs, it orchestrates the execution to load, process, and discard one partition at a time — keeping total RAM usage under the 16GB limit throughout the computation.",
+                "Dask streams the data directly to the GPU for faster processing."
+            ],
+            "answer": "Dask divides the massive dataset into many small Pandas DataFrames (partitions). Using Lazy Evaluation and Task Graphs, it orchestrates the execution to load, process, and discard one partition at a time — keeping total RAM usage under the 16GB limit throughout the computation.",
+            "explanation": "Dask does not load the entire dataset into memory simultaneously. It pipelines the work so only a tiny fraction of the data is resident in memory at any given millisecond."
+        },
+        {
+            "question": "When you write data manipulation code using Dask (e.g., df.groupby('category').mean()), why does the execution take 0.01 seconds initially?",
+            "options": [
+                "Because Dask uses Lazy Evaluation. It does not execute the data operations immediately. Instead, it instantly constructs a Directed Acyclic Graph (DAG) detailing the steps required, waiting for you to explicitly call .compute() to begin the actual massive computation.",
+                "Because Dask heavily utilizes caching in Redis clusters.",
+                "Because Dask ignores complex mathematical operations until they are printed to the console.",
+                "Because Dask offloads the processing to a supercomputer in the cloud instantly."
+            ],
+            "answer": "Because Dask uses Lazy Evaluation. It does not execute the data operations immediately. Instead, it instantly constructs a Directed Acyclic Graph (DAG) detailing the steps required, waiting for you to explicitly call .compute() to begin the actual massive computation.",
+            "explanation": "Lazy Evaluation is the core concept of both Dask and Apache Spark. Building the mathematical instruction list (the Graph) takes milliseconds; actually moving terabytes of data across CPUs takes hours."
+        },
+        {
+            "question": "If you are designing the backend infrastructure for a distributed Deep Learning training system that requires complex orchestration between specific CPUs and specialized GPUs, which framework is the industry standard choice?",
+            "options": [
+                "Polars",
+                "Pandas Multi-threading Engine",
+                "Dask Array API",
+                "Ray"
+            ],
+            "answer": "Ray",
+            "explanation": "Ray is structurally designed for general-purpose distributed computing and fine-grained heterogeneous resource management (specifically CPUs vs GPUs), making it the dominant foundation for modern AI and ML distributed workloads."
+        }
+    ]
+}

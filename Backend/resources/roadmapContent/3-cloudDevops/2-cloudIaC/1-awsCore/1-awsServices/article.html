@@ -1,0 +1,79 @@
+<h1>AWS Core Services</h1>
+<p>Amazon Web Services (AWS) is the world's leading cloud platform. These are the essential services every cloud engineer must master.</p>
+
+<h2>EC2 — Elastic Compute Cloud (Virtual Servers)</h2>
+<pre><code># Instance types:
+t3.micro    — 2 vCPU, 1GB RAM (Free tier) — development
+t3.medium   — 2 vCPU, 4GB RAM — small production
+m6i.xlarge  — 4 vCPU, 16GB RAM — general purpose production
+
+# Key concepts:
+AMI      — Amazon Machine Image (OS snapshot to launch from)
+EBS      — Elastic Block Store (persistent disk attached to EC2)
+Security Group — stateful firewall (inbound/outbound rules)
+IAM Role — permissions attached to EC2 (avoid static credentials!)
+User Data — startup script executed on first boot
+
+# SSH into EC2
+ssh -i my-key.pem ec2-user@203.0.113.10</code></pre>
+
+<h2>S3 — Simple Storage Service (Object Storage)</h2>
+<pre><code># S3 is infinitely scalable, highly durable (11 9s) object storage
+aws s3 cp file.txt s3://my-bucket/data/file.txt
+aws s3 sync ./local/ s3://my-bucket/backup/
+aws s3 ls s3://my-bucket/ --recursive
+
+# Storage classes (cost vs retrieval speed)
+STANDARD          — Frequent access, millisecond retrieval
+STANDARD_IA       — Infrequent access, same speed, cheaper
+INTELLIGENT_TIERING — Auto-moves between tiers
+GLACIER           — Archive, minutes to hours retrieval, very cheap
+
+# Bucket policy — make objects public read
+{
+  "Effect": "Allow", "Principal": "*",
+  "Action": "s3:GetObject",
+  "Resource": "arn:aws:s3:::my-bucket/public/*"
+}</code></pre>
+
+<h2>RDS — Managed Relational Database</h2>
+<pre><code># AWS manages backups, patching, failover, replication
+# Supports PostgreSQL, MySQL, MariaDB, Oracle, SQL Server
+
+# Best practices:
+# - Deploy in private subnet (no public IP)
+# - Enable Multi-AZ for automatic failover
+# - Use Read Replicas for read scaling
+# - Use IAM authentication instead of passwords
+# - Enable automated backups (7-35 day retention)</code></pre>
+
+<h2>IAM — Identity & Access Management</h2>
+<pre><code># Principle of Least Privilege — grant ONLY what's needed
+
+# IAM Policy (JSON)
+{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Effect": "Allow",
+    "Action": ["s3:GetObject", "s3:PutObject"],
+    "Resource": "arn:aws:s3:::my-app-bucket/*"
+  }]
+}
+
+# Attach role to EC2 — no hardcoded credentials!
+aws iam create-role --role-name AppRole --assume-role-policy-document file://trust.json</code></pre>
+
+<h2>Lambda — Serverless Functions</h2>
+<pre><code>import json
+
+def handler(event, context):
+    user_id = event["pathParameters"]["id"]
+    # ... process request
+    return {
+        "statusCode": 200,
+        "headers": {"Content-Type": "application/json"},
+        "body": json.dumps({"userId": user_id, "status": "active"})
+    }
+
+# Triggers: API Gateway, S3 events, SQS, scheduled (EventBridge)
+# Limits: 15min max, 10GB memory, 512MB /tmp storage</code></pre>

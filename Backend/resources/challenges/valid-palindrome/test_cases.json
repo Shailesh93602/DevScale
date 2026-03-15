@@ -1,0 +1,12 @@
+[
+  { "input": "{\"s\":\"A man, a plan, a canal: Panama\"}", "output": "true", "explanation": "Classic palindrome after removing spaces and punctuation", "is_hidden": false },
+  { "input": "{\"s\":\"race a car\"}", "output": "false", "explanation": "Not a palindrome", "is_hidden": false },
+  { "input": "{\"s\":\" \"}", "output": "true", "explanation": "Empty string after removing space", "is_hidden": false },
+  { "input": "{\"s\":\".,\"}", "output": "true", "explanation": "Only punctuation", "is_hidden": true },
+  { "input": "{\"s\":\"0P\"}", "output": "false", "explanation": "Number and letter", "is_hidden": true },
+  { "input": "{\"s\":\"a.\"}", "output": "true", "explanation": "Single letter with punctuation", "is_hidden": true },
+  { "input": "{\"s\":\"ab_a\"}", "output": "true", "explanation": "With underscore", "is_hidden": true },
+  { "input": "{\"s\":\"1b1\"}", "output": "true", "explanation": "Numbers form palindrome", "is_hidden": true },
+  { "input": "{\"s\":\"Marge, let's \\\"went.\\\" I await news telegram.\"}", "output": "true", "explanation": "Long sentence with punctuation", "is_hidden": true },
+  { "input": "{\"s\":\"No, me\"}", "output": "false", "explanation": "Short non-palindrome", "is_hidden": true }
+]

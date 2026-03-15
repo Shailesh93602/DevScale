@@ -1,0 +1,19 @@
+{
+  "title": "Design Search Autocomplete System",
+  "slug": "design-search-autocomplete",
+  "difficulty": "Hard",
+  "category": "system_design",
+  "points": 200,
+  "tags": ["trie", "search", "autocomplete", "distributed-systems"],
+  "company_tags": ["Google", "Facebook", "Microsoft", "Amazon"],
+  "topic_tags": ["Trie", "Inverted Index", "Caching", "Distributed Systems", "Data Partitioning"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Partial user query string with prefix context",
+  "output_format": "Top K relevant autocomplete suggestions sorted by weight/popularity",
+  "example_input": "autocomplete.getSuggestions('how to ')",
+  "example_output": "['how to bake a cake', 'how to code in python', 'how to make coffee']",
+  "constraints": "Must return results in < 100ms. Handle 10M+ unique queries/day. Support real-time updates of trending queries. Scalable to multi-region deployment.",
+  "function_signature": "class AutocompleteSystem { getSuggestions(prefix: string): string[]; recordQuery(query: string): void; updateWeights(): void; }",
+  "status": "ACTIVE"
+}

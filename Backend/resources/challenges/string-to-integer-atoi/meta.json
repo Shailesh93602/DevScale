@@ -1,0 +1,40 @@
+{
+  "title": "String to Integer (atoi)",
+  "slug": "string-to-integer-atoi",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": [
+    "string",
+    "math"
+  ],
+  "company_tags": [
+    "Amazon",
+    "Microsoft",
+    "Bloomberg",
+    "Apple"
+  ],
+  "topic_tags": [
+    "strings",
+    "parsing"
+  ],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "A string `s`.",
+  "output_format": "The parsed integer.",
+  "example_input": "s = \"   -42\"",
+  "example_output": "-42",
+  "constraints": "- `0 <= s.length <= 200`\n- `s` consists of English letters (lower-case and upper-case), digits (`0-9`), `' '`, `'+'`, `'-'`, and `'.'`.",
+  "function_signature": "function myAtoi(s: string): number {}",
+  "status": "ACTIVE"
+}

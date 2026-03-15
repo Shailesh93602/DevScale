@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What types of changes can be deployed via EAS OTA updates, and critically what CANNOT be deployed via OTA?",
+            "options": [
+                "OTA updates can change anything in the app — including adding new npm packages and native permissions.",
+                "OTA updates can deploy changes to JavaScript code and bundled assets (images, fonts, JSON). OTA CANNOT deploy: new native modules (that require native compilation), changes to app.json (permissions, bundle ID, version), new config plugins, or changes that require App Store/Play Store review (new permissions, major feature additions). OTA is limited to the JavaScript layer — anything that compiles to native code requires a full store submission.",
+                "OTA can only update text content — code logic changes require store submission.",
+                "OTA updates are only available on iOS; Android always requires Play Store submission."
+            ],
+            "answer": "OTA updates can deploy changes to JavaScript code and bundled assets (images, fonts, JSON). OTA CANNOT deploy: new native modules (that require native compilation), changes to app.json (permissions, bundle ID, version), new config plugins, or changes that require App Store/Play Store review (new permissions, major feature additions). OTA is limited to the JavaScript layer — anything that compiles to native code requires a full store submission.",
+            "explanation": "OTA is ideal for: bug fixes in business logic, UI tweaks, copy changes, new screens that don't use new native APIs. Not suitable for: adding camera permissions (requires app.json change + store review), integrating a new native SDK, changing splash screen (native resource). When in doubt, ask: 'Does this change require rebuilding the native binary?' If yes → store submission."
+        },
+        {
+            "question": "What is the problem with using process.env.API_URL directly in React Native code, and how does EAS eas.json solve it?",
+            "options": [
+                "React Native doesn't support environment variables — all configuration must be hardcoded.",
+                "React Native's Metro bundler doesn't automatically load .env files or system environment variables the way Node.js does — process.env.API_URL would be undefined at runtime. EAS solves this by injecting env vars defined in eas.json at build time for native builds, and expo-constants/app.config.js for JS-accessible config. Different build profiles (development, staging, production) get different API_URL values compiled in automatically.",
+                "process.env.API_URL works in React Native but is a security risk since env vars are visible in the bundle.",
+                "EAS eas.json only works for iOS builds — Android requires a separate .env solution."
+            ],
+            "answer": "React Native's Metro bundler doesn't automatically load .env files or system environment variables the way Node.js does — process.env.API_URL would be undefined at runtime. EAS solves this by injecting env vars defined in eas.json at build time for native builds, and expo-constants/app.config.js for JS-accessible config. Different build profiles (development, staging, production) get different API_URL values compiled in automatically.",
+            "explanation": "Common approach: define API_URL in eas.json per profile, read in app.config.js with process.env.API_URL (works at build/export time), expose via Constants.expoConfig.extra.apiUrl. Result: dev build points to localhost, staging to staging.api.com, production to api.com — zero code changes needed."
+        },
+        {
+            "question": "A user installs your app in January with EAS build 45. You publish 3 OTA updates (JS-only changes). In March, you add a new camera permission requiring a new native build (build 46). What happens to users still on build 45?",
+            "options": [
+                "Users on build 45 automatically receive the new native code via OTA updates.",
+                "Users on build 45 continue running the latest JS update for build 45's compatibility, but they CANNOT receive the new camera feature until they update the app from the App Store to build 46. The new camera permission doesn't exist in their native binary. This is why OTA-only strategies have limits — when new native capabilities are needed, you must publish a full store update and encourage users to update.",
+                "Build 45 users are automatically force-updated to build 46 via EAS.",
+                "EAS prevents publishing OTA updates when there is a pending native build change."
+            ],
+            "answer": "Users on build 45 continue running the latest JS update for build 45's compatibility, but they CANNOT receive the new camera feature until they update the app from the App Store to build 46. The new camera permission doesn't exist in their native binary. This is why OTA-only strategies have limits — when new native capabilities are needed, you must publish a full store update and encourage users to update.",
+            "explanation": "EAS Update channels help manage this: build 45 subscribers get OTA updates on channel 'build-45', build 46 subscribers get updates on 'build-46'. After build 46 ships, you can show in-app prompts encouraging users to update. Use `Updates.manifest.runtimeVersion` to detect which native binary the user has."
+        }
+    ]
+}

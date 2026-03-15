@@ -1,0 +1,6 @@
+[
+  "A brute force O(n²) approach checks all subarrays. Note: because of negative numbers, a sliding window won't work here.",
+  "The key insight: `sum(i..j) = prefixSum[j] - prefixSum[i-1]`. So if `prefixSum[j] - k` was seen before, there's a valid subarray.",
+  "Use a HashMap to count occurrences of each prefix sum. Initialize with `{0: 1}` to handle subarrays starting from index 0.",
+  "For each element, compute running prefix sum. Check if `prefixSum - k` is in the map. Add the count, then record the current prefix sum in the map."
+]

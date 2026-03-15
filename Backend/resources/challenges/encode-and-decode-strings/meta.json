@@ -1,0 +1,40 @@
+{
+  "title": "Encode and Decode Strings",
+  "slug": "encode-and-decode-strings",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": [
+    "array",
+    "string",
+    "design"
+  ],
+  "company_tags": [
+    "Google",
+    "Facebook",
+    "Amazon"
+  ],
+  "topic_tags": [
+    "strings",
+    "design"
+  ],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An array of strings `strs`.",
+  "output_format": "The decoded array of strings. The test framework will encode the array and then decode it.",
+  "example_input": "strs = [\"lint\",\"code\",\"love\",\"you\"]",
+  "example_output": "[\"lint\",\"code\",\"love\",\"you\"]",
+  "constraints": "- `0 <= strs.length <= 200`\n- `0 <= strs[i].length <= 200`\n- `strs[i]` contains any possible characters out of `256` valid ascii characters.",
+  "function_signature": "function encode(strs: string[]): string; function decode(s: string): string[];",
+  "status": "ACTIVE"
+}

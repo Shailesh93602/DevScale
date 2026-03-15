@@ -1,0 +1,37 @@
+{
+  "title": "Count and Say",
+  "slug": "count-and-say",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": [
+    "string"
+  ],
+  "company_tags": [
+    "Amazon",
+    "Microsoft",
+    "Facebook"
+  ],
+  "topic_tags": [
+    "strings"
+  ],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer `n`.",
+  "output_format": "The $n^{th}$ term of the count-and-say sequence.",
+  "example_input": "n = 4",
+  "example_output": "\"1211\"",
+  "constraints": "- `1 <= n <= 30`",
+  "function_signature": "function countAndSay(n: number): string {}",
+  "status": "ACTIVE"
+}

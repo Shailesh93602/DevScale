@@ -1,0 +1,19 @@
+{
+  "title": "Infrastructure as Code with Terraform",
+  "slug": "terraform-infrastructure",
+  "difficulty": "Hard",
+  "category": "devops",
+  "points": 150,
+  "tags": ["terraform", "iac", "infrastructure", "aws", "cloud"],
+  "company_tags": ["HashiCorp", "Amazon", "Google", "Netflix", "Stripe"],
+  "topic_tags": ["Terraform", "Infrastructure as Code", "AWS", "Cloud Architecture"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Infrastructure requirements including VPC CIDR, subnet count, instance types, and database configuration",
+  "output_format": "Terraform HCL configuration for VPC, subnets, EC2 instances, RDS, and security groups",
+  "example_input": "{ region: 'us-east-1', vpcCidr: '10.0.0.0/16', azCount: 3, instanceType: 't3.medium', dbEngine: 'postgres' }",
+  "example_output": "Terraform configuration with VPC, public/private subnets, NAT gateway, EC2 ASG, RDS, and security groups",
+  "constraints": "- Must use variables for all configurable values\\n- Must include proper tagging\\n- Must separate public and private subnets\\n- Must use security groups with least-privilege rules\\n- Must include outputs for key resource IDs",
+  "function_signature": "function generateTerraformConfig(config: { region: string; vpcCidr: string; azCount: number; instanceType: string; dbEngine: string }): string",
+  "status": "ACTIVE"
+}

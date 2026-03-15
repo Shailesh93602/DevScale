@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary purpose of an SQL Transaction (wrapping commands in `BEGIN` and `COMMIT`)?",
+            "options": [
+                "To compress the SQL syntax so it uses less bandwidth",
+                "To group multiple SQL operations into a single, indivisible 'all-or-nothing' block of work that guarantees the database is never left in a partially updated state if an error occurs halfway through",
+                "To allow multiple databases to physically synchronize across different regions",
+                "To encrypt SQL commands before they hit the disk"
+            ],
+            "answer": "To group multiple SQL operations into a single, indivisible 'all-or-nothing' block of work that guarantees the database is never left in a partially updated state if an error occurs halfway through",
+            "explanation": "If a bank transfer crashes after subtracting from Account A but before adding to Account B, the money vanishes. Using transactions, if Step 2 fails, Step 1 is instantaneously undone via a 'ROLLBACK'."
+        },
+        {
+            "question": "What does the 'A' in ACID stand for, and what does it mathematically guarantee?",
+            "options": [
+                "Atomicity. It guarantees that a transaction is an indivisible unit. EITHER all steps succeed, OR none of them are applied",
+                "Asynchronous. It guarantees the database never blocks the event loop",
+                "Accessibility. It guarantees users can always log in without passwords",
+                "Append-Only. It guarantees rows can only be added, never deleted"
+            ],
+            "answer": "Atomicity. It guarantees that a transaction is an indivisible unit. EITHER all steps succeed, OR none of them are applied",
+            "explanation": "Because a transaction is 'Atomic', you can confidently execute 5 complex SQL operations knowing that if the 5th operation throws a constraint error, the preceding 4 are perfectly reverted."
+        },
+        {
+            "question": "What does the 'I' in ACID (Isolation) protect the database from?",
+            "options": [
+                "It isolates the database from hackers attempting DDOS attacks",
+                "It mathematically forces concurrently executing transactions (e.g., 20 users hitting the DB at the exact same millisecond) to yield the exact same result as if they had executed completely sequentially via applying complex Row-Level Locks.",
+                "It protects against physical data corruption on the hard drive",
+                "It prevents developers from dropping tables accidentally"
+            ],
+            "answer": "It mathematically forces concurrently executing transactions (e.g., 20 users hitting the DB at the exact same millisecond) to yield the exact same result as if they had executed completely sequentially via applying complex Row-Level Locks.",
+            "explanation": "If two Node.js requests try to buy the last 'Ticket #50' concurrently, they both SELECT it, see it's available, and UPDATE it. Isolation ensures the DB violently applies a lock, pausing Request 2 until Request 1 finishes, preventing a double booking."
+        },
+        {
+            "question": "If your Node.js application is managing a transaction and encounters an error during `client.query()` execution, what is the CRITICAL command you must send to the database before throwing the error?",
+            "options": [
+                "EXPLAIN ANALYZE",
+                "COMMIT",
+                "ROLLBACK",
+                "DROP DATABASE"
+            ],
+            "answer": "ROLLBACK",
+            "explanation": "If bad data causes an error in your try/catch block, you must explicitly instruct the database `await client.query('ROLLBACK')`. If you don't, the transaction remains open indefinitely, permanently freezing those rows until the database restarts."
+        },
+        {
+            "question": "What component of standard relational architectures satisfies the 'Durability' property of ACID (guaranteeing that committed data survives an immediate power outage)?",
+            "options": [
+                "The Write-Ahead Log (WAL). Before acknowledging a COMMIT to the server, the DB forcibly appends the raw change sequentially onto a physical file on the hard drive",
+                "The B-Tree Index caching mechanism",
+                "The Redis cache cluster",
+                "It relies purely on the OS Kernel's page cache"
+            ],
+            "answer": "The Write-Ahead Log (WAL). Before acknowledging a COMMIT to the server, the DB forcibly appends the raw change sequentially onto a physical file on the hard drive",
+            "explanation": "Even if Postgres loses power exactly 1 microsecond after telling Node.js 'Commit successful', the data physically exists in the WAL on disk. When power returns, Postgres reads the WAL and perfectly reconstructs the database state."
+        }
+    ]
+}

@@ -1,0 +1,118 @@
+{
+    "title": "SQL Query Optimisation Quiz",
+    "description": "Test your knowledge of indexes, EXPLAIN, and query rewriting strategies.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What does a 'Seq Scan' in EXPLAIN output indicate?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The query is using an index efficiently",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The entire table is being scanned row by row",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The query uses a hash join",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The query result is cached",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why should you avoid using a function on an indexed column in a WHERE clause?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Functions are not allowed in SQL WHERE clauses",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It prevents the database from using the index",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It causes a syntax error",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It forces a hash join instead of a merge join",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is a partial index best suited for?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Indexing only the most recently inserted rows",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Indexing only rows matching a specific condition",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Indexing multiple columns at once",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Speeding up aggregate functions",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which PostgreSQL command updates table statistics for the query planner?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "REFRESH",
+                    "isCorrect": false
+                },
+                {
+                    "text": "REINDEX",
+                    "isCorrect": false
+                },
+                {
+                    "text": "ANALYZE",
+                    "isCorrect": true
+                },
+                {
+                    "text": "UPDATE STATISTICS",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the main benefit of table partitioning?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It reduces the number of indexes needed",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It allows queries to scan only relevant partitions instead of the full table",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It compresses data automatically",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It speeds up INSERT operations",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

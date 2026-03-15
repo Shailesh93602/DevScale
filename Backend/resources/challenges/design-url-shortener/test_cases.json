@@ -1,0 +1,62 @@
+[
+  {
+    "input": "shorten('https://example.com/very/long/path')",
+    "output": "{ \"shortUrl\": \"https://short.ly/abc123\", \"shortCode\": \"abc123\", \"originalUrl\": \"https://example.com/very/long/path\" }",
+    "explanation": "Shortening a URL generates a unique 6-character short code and returns the full short URL.",
+    "is_hidden": false
+  },
+  {
+    "input": "resolve('abc123')",
+    "output": "\"https://example.com/very/long/path\"",
+    "explanation": "Resolving a short code returns the original URL for redirect.",
+    "is_hidden": false
+  },
+  {
+    "input": "shorten('https://example.com/promo', { customAlias: 'sale2024' })",
+    "output": "{ \"shortUrl\": \"https://short.ly/sale2024\", \"shortCode\": \"sale2024\" }",
+    "explanation": "Custom aliases allow users to specify memorable short codes.",
+    "is_hidden": false
+  },
+  {
+    "input": "shorten('https://example.com/promo', { customAlias: 'sale2024' }) when alias already exists",
+    "output": "Error: Custom alias already taken",
+    "explanation": "Duplicate custom aliases are rejected to maintain uniqueness.",
+    "is_hidden": false
+  },
+  {
+    "input": "resolve('nonexistent')",
+    "output": "Error: Short URL not found",
+    "explanation": "Attempting to resolve a non-existent short code returns a 404 error.",
+    "is_hidden": false
+  },
+  {
+    "input": "resolve('expired-code') after URL expiration",
+    "output": "Error: Short URL has expired",
+    "explanation": "Expired URLs are cleaned up and return an error on resolution attempt.",
+    "is_hidden": true
+  },
+  {
+    "input": "shorten same URL twice (without custom alias)",
+    "output": "Same short code returned both times",
+    "explanation": "Duplicate URL detection returns the existing short code instead of creating a new one.",
+    "is_hidden": true
+  },
+  {
+    "input": "getAnalytics('abc123') after 50 clicks",
+    "output": "{ \"totalClicks\": 50, \"clicksByDay\": [...], \"topReferrers\": [...] }",
+    "explanation": "Analytics endpoint returns click count, daily breakdown, and referrer information.",
+    "is_hidden": true
+  },
+  {
+    "input": "resolve('abc123') twice (cache test)",
+    "output": "First call: cache miss (reads from store). Second call: cache hit (faster).",
+    "explanation": "Resolved URLs are cached. Subsequent resolves are served from cache for better performance.",
+    "is_hidden": true
+  },
+  {
+    "input": "shorten('not-a-valid-url')",
+    "output": "Error: Invalid URL format",
+    "explanation": "Only valid HTTP/HTTPS URLs are accepted. Invalid formats are rejected.",
+    "is_hidden": true
+  }
+]

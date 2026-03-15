@@ -1,0 +1,4 @@
+{
+    "name": "Integration Testing",
+    "description": "Ensuring different components of your application work correctly together. Utilizing Supertest and test databases to fully validate complex backend API endpoints and middleware chains."
+}

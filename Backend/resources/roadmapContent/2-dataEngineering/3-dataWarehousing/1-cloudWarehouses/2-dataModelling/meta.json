@@ -1,0 +1,4 @@
+{
+    "name": "Data Modelling",
+    "description": "Star schemas, snowflake schemas, dimensional modelling techniques, slowly changing dimensions (SCDs), and Data Vault concepts."
+}

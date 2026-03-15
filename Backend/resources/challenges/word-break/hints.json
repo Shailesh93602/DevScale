@@ -1,0 +1,6 @@
+[
+  "Think about whether you can break the string at certain positions. What if s[0..j] is breakable and s[j+1..i] is a dictionary word?",
+  "Use a boolean dp array where dp[i] means s[0..i-1] can be segmented into dictionary words.",
+  "For each position i, check all possible j < i. If dp[j] is true and s[j..i-1] is in the dictionary, set dp[i] = true.",
+  "Store dictionary words in a Set for O(1) lookup. The answer is dp[s.length]."
+]

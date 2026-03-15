@@ -1,0 +1,56 @@
+[
+  {
+    "input": { "totalItems": 25, "pageSize": 10, "loads": 1 },
+    "output": { "itemCount": 10, "hasMore": true, "isLoading": false },
+    "explanation": "First load gets 10 items, more available",
+    "is_hidden": false
+  },
+  {
+    "input": { "totalItems": 25, "pageSize": 10, "loads": 3 },
+    "output": { "itemCount": 25, "hasMore": false },
+    "explanation": "Three loads: 10 + 10 + 5 = 25. Last page < pageSize means no more",
+    "is_hidden": false
+  },
+  {
+    "input": { "totalItems": 0, "pageSize": 10, "loads": 1 },
+    "output": { "itemCount": 0, "hasMore": false },
+    "explanation": "Empty data source — first load returns 0, hasMore false",
+    "is_hidden": false
+  },
+  {
+    "input": { "totalItems": 10, "pageSize": 10, "loads": 2 },
+    "output": { "itemCount": 10, "hasMore": false },
+    "explanation": "Exact page boundary — second load returns 0, stops loading",
+    "is_hidden": true
+  },
+  {
+    "input": { "totalItems": 50, "pageSize": 10, "loads": 1, "then_reset": true, "loads_after": 1 },
+    "output": { "itemCount": 10, "hasMore": true },
+    "explanation": "Reset clears data and resets to page 1",
+    "is_hidden": true
+  },
+  {
+    "input": { "totalItems": 100, "pageSize": 20, "loads": 5 },
+    "output": { "itemCount": 100, "hasMore": false },
+    "explanation": "100 items with pageSize 20 — exactly 5 full pages",
+    "is_hidden": true
+  },
+  {
+    "input": { "totalItems": 5, "pageSize": 10, "loads": 1 },
+    "output": { "itemCount": 5, "hasMore": false },
+    "explanation": "Fewer items than page size — done after one load",
+    "is_hidden": true
+  },
+  {
+    "input": { "totalItems": 30, "pageSize": 10, "concurrent_loads": 2 },
+    "output": { "itemCount": 10 },
+    "explanation": "Concurrent loadMore calls — only one executes",
+    "is_hidden": true
+  },
+  {
+    "input": { "totalItems": 1, "pageSize": 1, "loads": 2 },
+    "output": { "itemCount": 1, "hasMore": false },
+    "explanation": "PageSize 1 — second load returns empty",
+    "is_hidden": true
+  }
+]

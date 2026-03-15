@@ -1,0 +1,12 @@
+[
+  { "input": "{\"root\":[3,9,20,null,null,15,7]}", "output": "3", "explanation": "Standard tree", "is_hidden": false },
+  { "input": "{\"root\":[1,null,2]}", "output": "2", "explanation": "Skewed to the right", "is_hidden": false },
+  { "input": "{\"root\":[]}", "output": "0", "explanation": "Empty tree", "is_hidden": false },
+  { "input": "{\"root\":[0]}", "output": "1", "explanation": "Single node", "is_hidden": true },
+  { "input": "{\"root\":[1,2,3,4,5,null,6,7]}", "output": "4", "explanation": "Deeper left branch", "is_hidden": true },
+  { "input": "{\"root\":[1,2,null,3,null,4,null,5]}", "output": "5", "explanation": "Deep skewed left tree", "is_hidden": true },
+  { "input": "{\"root\":[1,null,2,null,3,null,4,null,5]}", "output": "5", "explanation": "Deep skewed right tree", "is_hidden": true },
+  { "input": "{\"root\":[5,5,5,5,5,5,5]}", "output": "3", "explanation": "Values don't matter", "is_hidden": true },
+  { "input": "{\"root\":[-100, -90, -80]}", "output": "2", "explanation": "Negative values", "is_hidden": true },
+  { "input": "{\"root\":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]}", "output": "4", "explanation": "Perfect binary tree", "is_hidden": true }
+]

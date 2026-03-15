@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "A company needs to build a model to classify support tickets into 50 categories. Should they use BERT (encoder-only) or GPT (decoder-only), and why?",
+            "options": [
+                "GPT — because it's a more recent and powerful architecture than BERT.",
+                "BERT — because text classification is a natural encoder task. The model needs to understand the full ticket content to assign a category, which BERT's bidirectional attention handles optimally. Each token can attend to all other tokens in both directions, building rich contextual representations. GPT's causal (unidirectional) attention is optimized for generation, not classification, and would be suboptimal here.",
+                "Both perform identically for classification — choose based on available memory.",
+                "GPT — because its autoregressive training on more data gives superior text understanding."
+            ],
+            "answer": "BERT — because text classification is a natural encoder task. The model needs to understand the full ticket content to assign a category, which BERT's bidirectional attention handles optimally. Each token can attend to all other tokens in both directions, building rich contextual representations. GPT's causal (unidirectional) attention is optimized for generation, not classification, and would be suboptimal here.",
+            "explanation": "The heuristic: classification/understanding → BERT family (RoBERTa, DistilBERT, DeBERTa). Generation → GPT family. Both I/O → T5/BART. Using GPT for classification is like using a left hand for a right-handed task — it works but suboptimally."
+        },
+        {
+            "question": "Why does T5's 'text-to-text' framing (every task as text in → text out) provide a significant practical advantage for multi-task learning?",
+            "options": [
+                "T5 processes text faster because it doesn't need softmax over a label vocabulary.",
+                "The unified text-to-text format allows a single model to be fine-tuned on translation, summarization, classification, and QA simultaneously using the same cross-entropy objective. This enables positive transfer (tasks reinforce each other) and allows one deployed model to serve multiple NLP tasks, rather than maintaining separate task-specific architectures.",
+                "T5's text-to-text approach generates longer outputs than other architectures.",
+                "The text-to-text approach allows T5 to skip the tokenization step entirely."
+            ],
+            "answer": "The unified text-to-text format allows a single model to be fine-tuned on translation, summarization, classification, and QA simultaneously using the same cross-entropy objective. This enables positive transfer (tasks reinforce each other) and allows one deployed model to serve multiple NLP tasks, rather than maintaining separate task-specific architectures.",
+            "explanation": "Google deployed T5 in production serving translation AND summarization AND QA from ONE model. Compare to: 1 BERT for classification + 1 BERT-NER for entity recognition + 1 seq2seq for summarization. T5's unified approach reduces infrastructure cost and improves each individual task through multi-task training."
+        },
+        {
+            "question": "What is 'Next Sentence Prediction' (NSP) in BERT's pre-training, and why was it later found to be helpful for some tasks but removed in RoBERTa?",
+            "options": [
+                "NSP trains BERT to complete sentences that were cut off mid-word.",
+                "NSP trains BERT to predict whether two sentences are consecutive in a document (50% yes, 50% randomly sampled no). This was intended to help tasks like question-answering that require understanding relationships between sentences. RoBERTa removed NSP after experiments showed that training on longer, full documents without NSP actually improved performance — NSP was forcing shorter sentence pairs that prevented BERT from learning long-range document context.",
+                "NSP was removed in RoBERTa because it caused BERT to ignore context beyond two sentences.",
+                "NSP is replaced in RoBERTa by Masked Language Modeling with a larger vocabulary."
+            ],
+            "answer": "NSP trains BERT to predict whether two sentences are consecutive in a document (50% yes, 50% randomly sampled no). This was intended to help tasks like question-answering that require understanding relationships between sentences. RoBERTa removed NSP after experiments showed that training on longer, full documents without NSP actually improved performance — NSP was forcing shorter sentence pairs that prevented BERT from learning long-range document context.",
+            "explanation": "This is a great example of careful ablation studies improving architectures. RoBERTa (Robustly Optimized BERT) benchmarked each BERT design choice, discovered NSP hurts more than it helps on most downstream tasks, and achieved state-of-the-art results by removing it."
+        }
+    ]
+}

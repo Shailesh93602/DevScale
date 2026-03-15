@@ -1,0 +1,4 @@
+{
+    "name": "AWS Compute: EC2, Lambda & ECS",
+    "description": "Running workloads on AWS at every level. Mastering EC2 instance types, Auto Scaling Groups, and placement groups; understanding Lambda serverless execution model and cold starts; and deploying containerized apps with ECS Fargate."
+}

@@ -1,0 +1,93 @@
+<h1>JavaScript Modules & the Browser Event Loop</h1>
+<p>Two essential concepts for writing scalable JavaScript: <strong>ES Modules</strong> for organizing code into independent files, and the <strong>Event Loop</strong> — the engine that makes JavaScript's asynchronous behaviour possible.</p>
+
+<h2>ES Modules</h2>
+<pre><code>// math.js — named exports
+export const PI = 3.14159;
+export function add(a, b) { return a + b; }
+export function multiply(a, b) { return a * b; }
+
+// utils.js — default export
+export default function formatCurrency(amount, currency = 'USD') {
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount);
+}
+
+// main.js — importing
+import formatCurrency from './utils.js';           // default import
+import { add, multiply, PI } from './math.js';      // named imports
+import * as Math from './math.js';                  // namespace import
+import { add as sum } from './math.js';             // renamed import
+
+// Dynamic import (lazy loading)
+const { heavyLibrary } = await import('./heavy.js');  // only loads when needed</code></pre>
+
+<h2>Module Features</h2>
+<ul>
+  <li>Modules are <strong>always in strict mode</strong> — no need for <code>'use strict'</code>.</li>
+  <li>Each module has its own <strong>scope</strong> — top-level variables are not global.</li>
+  <li>Modules are <strong>singletons</strong> — they execute only once and cache their exports.</li>
+  <li>Use <code>type="module"</code> when referencing modules in HTML: <code>&lt;script type="module" src="main.js"&gt;&lt;/script&gt;</code></li>
+</ul>
+
+<h2>The JavaScript Event Loop</h2>
+<p>JavaScript is <strong>single-threaded</strong> — it can only execute one piece of code at a time. The Event Loop is the mechanism that allows it to handle asynchronous operations without blocking.</p>
+
+<pre><code>// Execution order example
+console.log('1. Start');            // synchronous — runs immediately
+
+setTimeout(() => {
+  console.log('4. setTimeout');     // goes to Macrotask Queue
+}, 0);
+
+Promise.resolve().then(() => {
+  console.log('3. Promise');        // goes to Microtask Queue
+});
+
+console.log('2. End');              // synchronous — runs immediately
+
+// Output: 1, 2, 3, 4</code></pre>
+
+<h2>The Call Stack, Queues, and Web APIs</h2>
+<p>The Event Loop coordinates three areas:</p>
+<ul>
+  <li><strong>Call Stack</strong> — Where all synchronous code executes (LIFO structure).</li>
+  <li><strong>Web/Browser APIs</strong> — Where async operations run (setTimeout, fetch, DOM events). These are NOT in JavaScript — they're in the browser.</li>
+  <li><strong>Microtask Queue</strong> — High priority. Processes Promises (<code>.then</code>, <code>.catch</code>), <code>queueMicrotask()</code>, and MutationObserver callbacks. <strong>Fully drained before next macrotask.</strong></li>
+  <li><strong>Macrotask Queue (Task Queue)</strong> — Lower priority. Processes <code>setTimeout</code>, <code>setInterval</code>, I/O callbacks.</li>
+</ul>
+
+<h2>Event Loop Algorithm</h2>
+<ol>
+  <li>Execute all code in the Call Stack until it's empty.</li>
+  <li>Process ALL pending microtasks (Promise callbacks). If microtasks add more microtasks, keep processing.</li>
+  <li>Render the page if needed.</li>
+  <li>Pick ONE macrotask (setTimeout/setInterval callback) and execute it.</li>
+  <li>Go back to step 2.</li>
+</ol>
+
+<h2>Why This Matters</h2>
+<pre><code>// Never do this — blocks the event loop for 3 seconds!
+const start = Date.now();
+while (Date.now() - start &lt; 3000) {}  // CPU spins, UI freezes
+
+// Do this instead — non-blocking
+setTimeout(() => {
+  console.log('3 seconds passed');
+}, 3000);</code></pre>
+
+<h2>Module Bundlers</h2>
+<p>In production, modules are compiled/bundled by tools that optimize the output:</p>
+<ul>
+  <li><strong>Vite</strong> — Fast dev server using native ES modules. Uses Rollup for production builds.</li>
+  <li><strong>Webpack</strong> — Industry veteran. Highly configurable, handles all asset types.</li>
+  <li><strong>esbuild</strong> — Extremely fast, written in Go. Used internally by many tools.</li>
+  <li><strong>Rollup</strong> — Optimized for libraries and tree-shaking.</li>
+</ul>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Prefer named exports over default exports — better for refactoring and autocomplete.</li>
+  <li>Use dynamic imports for code splitting and lazy loading large libraries.</li>
+  <li>Avoid blocking the main thread with long synchronous operations — use Web Workers.</li>
+  <li>Understand that Promise callbacks always run after the current synchronous code completes.</li>
+</ul>

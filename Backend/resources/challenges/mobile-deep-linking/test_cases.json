@@ -1,0 +1,62 @@
+[
+  {
+    "input": {"url": "myapp://products/123?ref=home", "routes": [{"pattern": "products/:id", "screen": "ProductDetail"}]},
+    "output": {"screen": "ProductDetail", "params": {"id": "123"}, "query": {"ref": "home"}},
+    "explanation": "Match product route with id param and query param",
+    "is_hidden": false
+  },
+  {
+    "input": {"url": "myapp://home", "routes": [{"pattern": "home", "screen": "Home"}, {"pattern": "products/:id", "screen": "ProductDetail"}]},
+    "output": {"screen": "Home", "params": {}, "query": {}},
+    "explanation": "Static route match with no params",
+    "is_hidden": false
+  },
+  {
+    "input": {"url": "myapp://unknown/path", "routes": [{"pattern": "home", "screen": "Home"}]},
+    "output": null,
+    "explanation": "No matching route returns null",
+    "is_hidden": false
+  },
+  {
+    "input": {"url": "myapp://users/42/posts/99", "routes": [{"pattern": "users/:userId/posts/:postId", "screen": "UserPost"}]},
+    "output": {"screen": "UserPost", "params": {"userId": "42", "postId": "99"}, "query": {}},
+    "explanation": "Multiple path parameters",
+    "is_hidden": false
+  },
+  {
+    "input": {"url": "myapp://settings?theme=dark&lang=en", "routes": [{"pattern": "settings", "screen": "Settings"}]},
+    "output": {"screen": "Settings", "params": {}, "query": {"theme": "dark", "lang": "en"}},
+    "explanation": "Multiple query parameters",
+    "is_hidden": true
+  },
+  {
+    "input": {"url": "myapp://category/electronics/item/phone", "routes": [{"pattern": "category/:cat/item/:item", "screen": "CategoryItem"}]},
+    "output": {"screen": "CategoryItem", "params": {"cat": "electronics", "item": "phone"}, "query": {}},
+    "explanation": "Mixed static and dynamic segments",
+    "is_hidden": true
+  },
+  {
+    "input": {"url": "myapp://products/abc", "routes": [{"pattern": "products", "screen": "ProductList"}, {"pattern": "products/:id", "screen": "ProductDetail"}]},
+    "output": {"screen": "ProductDetail", "params": {"id": "abc"}, "query": {}},
+    "explanation": "Second route matches when first does not (different segment count)",
+    "is_hidden": true
+  },
+  {
+    "input": {"url": "myapp://a/b/c", "routes": [{"pattern": ":x/:y/:z", "screen": "ThreeParams"}]},
+    "output": {"screen": "ThreeParams", "params": {"x": "a", "y": "b", "z": "c"}, "query": {}},
+    "explanation": "All dynamic segments",
+    "is_hidden": true
+  },
+  {
+    "input": {"url": "myapp://", "routes": [{"pattern": "", "screen": "Root"}]},
+    "output": {"screen": "Root", "params": {}, "query": {}},
+    "explanation": "Empty path matches empty pattern",
+    "is_hidden": true
+  },
+  {
+    "input": {"url": "deeplink://profile/me?tab=posts&sort=newest", "routes": [{"pattern": "profile/:username", "screen": "Profile"}]},
+    "output": {"screen": "Profile", "params": {"username": "me"}, "query": {"tab": "posts", "sort": "newest"}},
+    "explanation": "Different scheme, params and query together",
+    "is_hidden": true
+  }
+]

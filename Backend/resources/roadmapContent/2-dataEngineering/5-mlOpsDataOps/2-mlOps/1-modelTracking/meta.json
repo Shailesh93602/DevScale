@@ -1,0 +1,4 @@
+{
+    "name": "Model Tracking",
+    "description": "Managing ML experiments, hyperparameter tuning, and model registries with MLflow."
+}

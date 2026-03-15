@@ -1,0 +1,4 @@
+{
+    "name": "Context & Authentication",
+    "description": "Securing GraphQL APIs. Extracting JWTs from HTTP headers, injecting the verified user into the global Context object, and protecting individual resolvers from unauthorized access."
+}

@@ -1,0 +1,118 @@
+{
+    "title": "CNNs & Computer Vision Quiz",
+    "description": "Test your knowledge on Convolution, Filters, Max Pooling, and Transfer Learning.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the primary reason standard, Fully-Connected Artificial Neural Networks are terrible for processing large, high-resolution images?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Every pixel connecting to every neuron creates millions of useless weights, destroying training times and ignoring fundamental spatial geometry (like pixels next to each other forming a shape).",
+                    "isCorrect": true
+                },
+                {
+                    "text": "They cannot process RGB color values, only black and white floating points.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "They only compile successfully on macOS environments.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Python's `numpy` library lacks the precision required to multiply pixel values.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In a CNN, what is a 'Filter' (or Kernel)?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A physical Instagram-style aesthetic filter applied before processing.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A tiny grid of weights (e.g., 3x3) that slides continuously across the image mathematically detecting specific local features like horizontal edges, corners, or textures.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "An automated system that removes null values from the image data.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A spam detection tool for text.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the core mathematical function of a 'Max Pooling' layer located deep within a CNN architecture?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It violently adds random noise back into the clean image to prevent overfitting.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It artificially increases the resolution of a pixelated image to 4K.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It drastically shrinks and downsamples the spatial dimensions of the feature map to reduce computation load while simultaneously retaining the most prominently activated core features.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It flattens the image into a 1-dimensional array immediately upon boot.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How does a CNN ultimately make a final classification (like predicting 'Dog' vs 'Cat') after sliding filters over an image?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It uses an SQL JOIN query.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It finally 'Flattens' the 2D feature maps from the deep layers into a simple 1D array and feeds that array directly into a perfectly standard Fully-Connected network classifier located at the very end.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It throws away the data and queries a database instead.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It outputs raw binary coordinates to the user.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What technique allows a junior developer with a single laptop to build a world-class tumor-detection AI model without training it mathematically from scratch on millions of normal images?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Unsupervised Dimensionality Reduction.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Downloading a massive pre-trained open-source CNN (like ResNet) that already understands elementary shapes and features, attaching a completely custom final classification layer to it, and retraining purely that final layer. (Transfer Learning).",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Writing the entire algorithm entirely in manual C++ code.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Utilizing k-Nearest Neighbors.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

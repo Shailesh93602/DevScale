@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the fundamental reason K-Means cannot discover clusters of arbitrary shape like crescents or interlocking rings?",
+            "options": [
+                "K-Means requires the number of clusters to be odd.",
+                "K-Means assigns each point to the nearest centroid using Euclidean distance, implicitly assuming clusters are convex and roughly spherical. Crescent or ring-shaped clusters have points near their centroid that don't belong to the cluster — K-Means cannot handle any cluster shape where the centroid falls outside the cluster's boundary.",
+                "K-Means requires clusters to have equal numbers of data points.",
+                "K-Means cannot handle more than 3 dimensions."
+            ],
+            "answer": "K-Means assigns each point to the nearest centroid using Euclidean distance, implicitly assuming clusters are convex and roughly spherical. Crescent or ring-shaped clusters have points near their centroid that don't belong to the cluster — K-Means cannot handle any cluster shape where the centroid falls outside the cluster's boundary.",
+            "explanation": "This is K-Means' key limitation. DBSCAN solves this by using density rather than distance to centroids, enabling arbitrary-shape discovery."
+        },
+        {
+            "question": "A customer segmentation analysis using DBSCAN labels 5% of customers as 'noise' (label=-1). What is the most appropriate interpretation of these noise points?",
+            "options": [
+                "These customers should be excluded from the analysis as data errors.",
+                "DBSCAN noise points are samples that don't fit into any dense cluster — they are sparse, unusual, or atypical customers. In fraud detection, these are exactly the anomalies you want to investigate. In customer segmentation, they represent unusual customer behaviors deserving special product offerings or further analysis.",
+                "DBSCAN noise indicates the epsilon parameter is too small and should be increased.",
+                "Noise points represent new customer segments that are too small to detect."
+            ],
+            "answer": "DBSCAN noise points are samples that don't fit into any dense cluster — they are sparse, unusual, or atypical customers. In fraud detection, these are exactly the anomalies you want to investigate. In customer segmentation, they represent unusual customer behaviors deserving special product offerings or further analysis.",
+            "explanation": "This 'outlier = noise in DBSCAN' property is why DBSCAN is a popular anomaly detection method. You don't need labeled fraud data — run DBSCAN and the fraud transactions often emerge as the noise points naturally."
+        },
+        {
+            "question": "Why is the silhouette score a better method for choosing K in K-Means than the elbow method?",
+            "options": [
+                "Silhouette score is faster to compute than inertia for large datasets.",
+                "The elbow method plots inertia vs K and requires subjective interpretation of where the 'elbow' is — which is often ambiguous or non-existent. The silhouette score provides a single objective number in [-1, 1] for each K value: higher is better, and you simply pick the K with the maximum score.",
+                "The silhouette score accounts for cluster shape; the elbow method assumes spherical clusters.",
+                "The elbow method only works for K < 10."
+            ],
+            "answer": "The elbow method plots inertia vs K and requires subjective interpretation of where the 'elbow' is — which is often ambiguous or non-existent. The silhouette score provides a single objective number in [-1, 1] for each K value: higher is better, and you simply pick the K with the maximum score.",
+            "explanation": "In practice, elbow plots often show a smooth curve with no clear bend — two engineers looking at the same plot often choose different K values. Silhouette score removes this ambiguity."
+        }
+    ]
+}

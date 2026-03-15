@@ -1,0 +1,118 @@
+{
+    "title": "GraphQL in React Native Quiz",
+    "description": "Test your knowledge of GraphQL queries, mutations, Apollo Client setup and caching.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the main mobile advantage of GraphQL over REST for data fetching?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "GraphQL is faster because it uses UDP instead of TCP for transport",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The client specifies exactly which fields it needs, eliminating over-fetching and allowing multiple resources to be fetched in one request",
+                    "isCorrect": true
+                },
+                {
+                    "text": "GraphQL works offline without a backend server",
+                    "isCorrect": false
+                },
+                {
+                    "text": "GraphQL automatically caches all responses on the device for 24 hours",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does the Apollo Client's `setContext` link do when configured with `authLink`?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It sets the React context so all components can access Apollo data",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It intercepts every outgoing request and attaches the auth token from AsyncStorage to the Authorization header",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It updates the React context with fresh data after every GraphQL response",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It validates GraphQL queries against the schema before sending them",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does `fetchPolicy: 'cache-and-network'` do in useQuery?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It only uses the cache and never makes a network request",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It always bypasses the cache and fetches fresh data from the network",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It returns cached data immediately to render the UI, then makes a background network request to update the cache with fresh data",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It uses the cached data if the device is offline and network data if online",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is an optimistic response in Apollo Client mutations?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A response that only resolves on success and never triggers error handlers",
+                    "isCorrect": false
+                },
+                {
+                    "text": "An immediate update to the local cache before the server responds, making the UI feel instant, with automatic rollback if the mutation fails",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A mutation that assumes the server will always return 200 OK",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A query that fetches multiple resources simultaneously to optimize performance",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Where should you define your GraphQL queries (gql`...`) in a React Native project?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "In a single centralized queries.ts file for easy maintenance",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Co-located with the component that uses them — this makes it clear what data each component needs and aids code maintainability",
+                    "isCorrect": true
+                },
+                {
+                    "text": "In the App.tsx file at application root so they are pre-parsed at startup",
+                    "isCorrect": false
+                },
+                {
+                    "text": "In a separate backend-side file that is shared with the server",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

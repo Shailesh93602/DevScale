@@ -1,0 +1,118 @@
+{
+    "title": "GraphQL Basics Quiz",
+    "description": "Test your understanding of GraphQL schema, queries, and mutations.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is a key advantage of GraphQL over REST?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It uses multiple endpoints for each resource",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The client can request exactly the data it needs",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It requires no schema definition",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It only supports JSON responses",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In GraphQL SDL, what does the `!` after a type signify?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The field is deprecated",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The field is optional",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The field is non-nullable (required)",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The field returns a list",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which GraphQL operation type is used to write or modify data?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Query",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Subscription",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Fragment",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Mutation",
+                    "isCorrect": true
+                }
+            ]
+        },
+        {
+            "question": "What problem does DataLoader solve in GraphQL?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Schema validation errors",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The N+1 database query problem",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Authentication failures",
+                    "isCorrect": false
+                },
+                {
+                    "text": "WebSocket disconnections",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which GraphQL operation is used for real-time data via WebSocket?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Mutation",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Query",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Subscription",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Fragment",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

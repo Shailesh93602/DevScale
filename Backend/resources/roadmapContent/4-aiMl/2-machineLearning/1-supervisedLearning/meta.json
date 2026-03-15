@@ -1,0 +1,4 @@
+{
+    "name": "Supervised Learning",
+    "description": "Regression, classification, decision trees, and ensemble methods with scikit-learn."
+}

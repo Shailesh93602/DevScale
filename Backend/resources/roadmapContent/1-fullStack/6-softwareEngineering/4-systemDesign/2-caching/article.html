@@ -1,0 +1,137 @@
+<h1>Caching Strategies with Redis</h1>
+<p>Caching is one of the highest-leverage optimizations in software engineering. A properly cached database query that returns in 0.2ms instead of 150ms is a 750× improvement. But caching introduces complexity: you now have two sources of truth that can diverge. This article covers the complete caching landscape — from browser caches to distributed Redis clusters.</p>
+
+<h2>The Caching Hierarchy</h2>
+<table>
+  <thead><tr><th>Cache Layer</th><th>Location</th><th>Latency</th><th>Managed By</th></tr></thead>
+  <tbody>
+    <tr><td>CPU Cache (L1/L2/L3)</td><td>CPU chip</td><td>1–10 nanoseconds</td><td>OS/Hardware</td></tr>
+    <tr><td>Application In-Memory</td><td>Server process heap</td><td>~0.1ms</td><td>Your code (Map, LRU)</td></tr>
+    <tr><td>Redis (distributed cache)</td><td>Dedicated cache server</td><td>0.5–2ms</td><td>Your code + Redis</td></tr>
+    <tr><td>CDN Cache</td><td>Edge nodes worldwide</td><td>1–20ms</td><td>CDN provider</td></tr>
+    <tr><td>Browser Cache</td><td>User's device</td><td>~0ms (disk read)</td><td>HTTP headers</td></tr>
+    <tr><td>Database Query Cache</td><td>DB server memory</td><td>0.5–5ms</td><td>DB engine</td></tr>
+  </tbody>
+</table>
+
+<h2>Redis — The Standard Application Cache</h2>
+<p>Redis is an in-memory data store with sub-millisecond latency, supporting strings, hashes, lists, sets, sorted sets, and more. It's the industry standard for application-level caching:</p>
+
+<pre><code>npm install ioredis
+</code></pre>
+
+<pre><code>// lib/redis.ts
+import Redis from 'ioredis';
+
+const redis = new Redis({
+  host: process.env.REDIS_HOST || 'localhost',
+  port: 6379,
+  password: process.env.REDIS_PASSWORD,
+  maxRetriesPerRequest: 3,
+  lazyConnect: true,
+});
+
+export default redis;</code></pre>
+
+<h3>Cache-Aside Pattern (Most Common)</h3>
+<p>The application manages the cache explicitly: look in cache → if miss, query DB → store result in cache → return to client:</p>
+<pre><code>import redis from './lib/redis';
+import { db } from './lib/db';
+
+async function getUserById(userId: string) {
+  const cacheKey = `user:${userId}`;
+  const TTL = 300;  // 5 minutes
+
+  // 1. Try cache first
+  const cached = await redis.get(cacheKey);
+  if (cached) return JSON.parse(cached);  // Cache HIT — return immediately
+
+  // 2. Cache MISS — fetch from database
+  const user = await db.query('SELECT * FROM users WHERE id = $1', [userId]);
+  if (!user) return null;
+
+  // 3. Store in cache with TTL
+  await redis.setex(cacheKey, TTL, JSON.stringify(user));
+
+  return user;
+}
+
+// Invalidate when user is updated
+async function updateUser(userId: string, data: Partial<User>) {
+  const user = await db.query('UPDATE users SET ... WHERE id = $1 RETURNING *', [userId, ...]);
+  await redis.del(`user:${userId}`);  // Bust the cache
+  return user;
+}</code></pre>
+
+<h3>Cache Invalidation Strategies</h3>
+<pre><code>// Strategy 1: TTL-only — let entries expire automatically
+await redis.setex('popular_products', 3600, JSON.stringify(products));  // Expires in 1 hour
+
+// Strategy 2: Write-through — update cache immediately on every write
+async function updateProductPrice(productId: string, newPrice: number) {
+  await db.query('UPDATE products SET price = $1 WHERE id = $2', [newPrice, productId]);
+  const updated = await db.query('SELECT * FROM products WHERE id = $1', [productId]);
+  await redis.setex(`product:${productId}`, 3600, JSON.stringify(updated));  // Update cache too
+}
+
+// Strategy 3: Cache tags — invalidate groups of related entries
+// When a user updates their profile, bust all pages that mention them
+async function invalidateUserRelatedCaches(userId: string) {
+  const keys = await redis.keys(`*user:${userId}*`);  // ⚠️ Don't use keys() in prod! Use SCAN
+  if (keys.length > 0) await redis.del(...keys);
+}
+
+// Production-safe key pattern scanning:
+async function invalidateByPattern(pattern: string) {
+  const pipeline = redis.pipeline();
+  let cursor = '0';
+  do {
+    const [newCursor, keys] = await redis.scan(cursor, 'MATCH', pattern, 'COUNT', 100);
+    cursor = newCursor;
+    keys.forEach(key => pipeline.del(key));
+  } while (cursor !== '0');
+  await pipeline.exec();
+}</code></pre>
+
+<h2>HTTP Caching — Browser &amp; CDN</h2>
+<pre><code>// Express.js response with caching headers
+app.get('/api/products', async (req, res) => {
+  const products = await getProducts();
+
+  res.set({
+    'Cache-Control': 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=600',
+    //     ↑ browser 1hr   ↑ CDN caches 24hrs        ↑ serve stale for 10min while refreshing
+    'ETag': generateEtag(products),    // Browser sends If-None-Match on next request
+    'Last-Modified': new Date().toUTCString(),
+  });
+
+  // 304 Not Modified — if nothing changed, send no body (saves bandwidth)
+  const clientEtag = req.headers['if-none-match'];
+  if (clientEtag === res.getHeader('ETag')) {
+    return res.status(304).send();
+  }
+
+  res.json(products);
+});
+
+// Private data (user-specific) — never cache on CDN!
+app.get('/api/me', (req, res) => {
+  res.set('Cache-Control', 'private, max-age=0, no-store');
+  res.json(req.user);
+});</code></pre>
+
+<h2>What NOT to Cache</h2>
+<ul>
+  <li>Rapidly changing data with strong consistency requirements (bank balances, inventory counts)</li>
+  <li>Personally identifiable information (PII) in shared caches — cache-key collisions can leak user data</li>
+  <li>Unique per-user data in public/CDN caches — use <code>'Cache-Control: private'</code></li>
+  <li>Very cheap queries — if a DB query takes 1ms, caching it in Redis (0.5ms overhead) provides minimal benefit and adds cache invalidation complexity</li>
+</ul>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Monitor your cache hit rate (target &gt;90% for frequently accessed data). A 60% hit rate means 40% of cache overhead for no benefit — revisit your TTL and key strategy.</li>
+  <li>Use <code>SCAN</code> instead of <code>KEYS</code> in production — <code>KEYS *</code> blocks Redis for the entire duration of the scan, causing latency spikes on large instances.</li>
+  <li>Never store full database rows in cache "just in case" — only cache what is actually read-heavy. Stale cached data is a serious bug.</li>
+  <li>Implement <strong>stampede protection</strong> (probabilistic early expiration or locking) for high-traffic cache keys where many concurrent requests hitting a cache miss simultaneously overload the database.</li>
+</ul>

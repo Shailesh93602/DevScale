@@ -1,0 +1,62 @@
+[
+  {
+    "input": { "fn": "add(a,b,c) => a+b+c", "calls": [[1], [2], [3]] },
+    "output": 6,
+    "explanation": "curry(add)(1)(2)(3) = 6",
+    "is_hidden": false
+  },
+  {
+    "input": { "fn": "add(a,b,c) => a+b+c", "calls": [[1, 2], [3]] },
+    "output": 6,
+    "explanation": "curry(add)(1, 2)(3) = 6 — group args",
+    "is_hidden": false
+  },
+  {
+    "input": { "fn": "add(a,b,c) => a+b+c", "calls": [[1, 2, 3]] },
+    "output": 6,
+    "explanation": "curry(add)(1, 2, 3) = 6 — all at once",
+    "is_hidden": false
+  },
+  {
+    "input": { "fn": "mul(a,b) => a*b", "calls": [[2], [5]] },
+    "output": 10,
+    "explanation": "curry(mul)(2)(5) = 10",
+    "is_hidden": true
+  },
+  {
+    "input": { "fn": "identity(x) => x", "calls": [[42]] },
+    "output": 42,
+    "explanation": "Single-argument function returns immediately",
+    "is_hidden": true
+  },
+  {
+    "input": { "fn": "add4(a,b,c,d) => a+b+c+d", "calls": [[1], [2], [3], [4]] },
+    "output": 10,
+    "explanation": "Four args one at a time",
+    "is_hidden": true
+  },
+  {
+    "input": { "fn": "add4(a,b,c,d) => a+b+c+d", "calls": [[1, 2], [3, 4]] },
+    "output": 10,
+    "explanation": "Four args in pairs",
+    "is_hidden": true
+  },
+  {
+    "input": { "fn": "sub(a,b) => a-b", "calls": [[10], [3]] },
+    "output": 7,
+    "explanation": "Argument order preserved: 10 - 3 = 7",
+    "is_hidden": true
+  },
+  {
+    "input": { "fn": "concat(a,b,c) => a+b+c", "calls": [["hello"], [" "], ["world"]] },
+    "output": "hello world",
+    "explanation": "Works with strings",
+    "is_hidden": true
+  },
+  {
+    "input": { "fn": "pow(a,b) => a**b", "calls": [[2], [10]] },
+    "output": 1024,
+    "explanation": "2^10 = 1024",
+    "is_hidden": true
+  }
+]

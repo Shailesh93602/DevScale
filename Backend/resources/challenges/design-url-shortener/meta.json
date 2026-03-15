@@ -1,0 +1,19 @@
+{
+  "title": "Design a URL Shortener",
+  "slug": "design-url-shortener",
+  "difficulty": "Medium",
+  "category": "system_design",
+  "points": 100,
+  "tags": ["url-shortener", "hashing", "distributed-systems", "scalability"],
+  "company_tags": ["Google", "Amazon", "Meta", "Microsoft", "Twitter"],
+  "topic_tags": ["URL Shortening", "Base62 Encoding", "Database Design", "Caching", "Analytics"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Long URLs to shorten and short URLs to resolve",
+  "output_format": "Shortened URLs and redirect targets with analytics",
+  "example_input": "shorten('https://example.com/very/long/path?query=value')",
+  "example_output": "{ \"shortUrl\": \"https://short.ly/abc123\", \"originalUrl\": \"https://example.com/very/long/path?query=value\" }",
+  "constraints": "Must handle 100M URLs. Short codes must be 6-8 characters. Must support custom aliases. Must handle 10K reads/second. Must track click analytics.",
+  "function_signature": "class URLShortener { shorten(url: string, customAlias?: string): Promise<ShortenResult>; resolve(shortCode: string): Promise<string>; getAnalytics(shortCode: string): Promise<Analytics>; }",
+  "status": "ACTIVE"
+}

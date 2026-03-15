@@ -1,0 +1,4 @@
+{
+    "name": "Sensors and Hooks",
+    "description": "Connecting Airflow to external systems securely. Utilizing Hooks to manage database credentials and APIs natively, and employing Sensors to actively wait for external files and events before executing downstream tasks."
+}

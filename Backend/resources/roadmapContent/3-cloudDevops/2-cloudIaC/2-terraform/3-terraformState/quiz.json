@@ -1,0 +1,118 @@
+{
+    "title": "Terraform State Management Quiz",
+    "description": "Test your knowledge on remote backends, S3, DynamoDB locking, and drift.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Why is it considered a massive security risk to commit the `terraform.tfstate` file to a Git repository?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The file size exceeds GitHub limits.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It stores all resource configurations, including database passwords and API keys, in plain text.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Git corrupts JSON text files automatically.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It forces other developers to run `terraform destroy` when pulling.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the primary industry standard method for storing Terraform state files for a DevOps team working on AWS?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A shared Dropbox folder.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A backend configuration pointing to an encrypted S3 bucket for storage and DynamoDB for state locking.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A PostgreSQL database hosted locally on a developer's laptop.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Inside the Docker container building the pipeline.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What critical function does an Amazon DynamoDB table provide when configured in a Terraform S3 backend?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It stores the physical JSON state file.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It manages State Locking, preventing multiple users/pipelines from running `terraform apply` concurrently and corrupting the state infrastructure.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It streams logs of the deployment process directly to AWS CloudWatch.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It handles IAM authentication for the Terraform execution role.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What happens if a developer circumvents Terraform and manually changes a server via the AWS web console?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The change is permanent, and Terraform deletes its state file.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "AWS shuts down the modified server.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Terraform detects 'Configuration Drift' during the next plan, and on the next apply, forces the server back to the state defined in code.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Terraform automatically updates the local .tf code to reflect the manual changes.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which of the following Terraform features allows you to maintain multiple, completely distinct state files (like one for Dev and one for Prod) from the exact same directory of untouched local code?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Modules",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Providers",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Workspaces",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Locals",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

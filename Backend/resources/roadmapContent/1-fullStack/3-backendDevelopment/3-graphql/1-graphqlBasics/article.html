@@ -1,0 +1,102 @@
+<h1>GraphQL Basics</h1>
+<p>GraphQL is a <strong>query language for APIs</strong> and a runtime for executing those queries with your existing data. Unlike REST, which exposes multiple endpoints, GraphQL exposes a single endpoint and lets the client specify exactly what data it needs.</p>
+
+<h2>Why GraphQL?</h2>
+<ul>
+  <li><strong>No over-fetching:</strong> Get exactly the fields you need, nothing more.</li>
+  <li><strong>No under-fetching:</strong> Fetch nested related data in one request.</li>
+  <li><strong>Strongly typed:</strong> Every API is described by a schema — a single source of truth.</li>
+  <li><strong>Self-documenting:</strong> The schema itself documents all available queries and types.</li>
+</ul>
+
+<h2>Schema Definition Language (SDL)</h2>
+<p>You define your API shape using SDL:</p>
+<pre><code>type User {
+  id: ID!
+  name: String!
+  email: String!
+  posts: [Post!]!
+}
+
+type Post {
+  id: ID!
+  title: String!
+  body: String!
+  author: User!
+}
+
+type Query {
+  user(id: ID!): User
+  allUsers: [User!]!
+}
+
+type Mutation {
+  createUser(name: String!, email: String!): User!
+}</code></pre>
+<p>The <code>!</code> means the field is non-nullable (required).</p>
+
+<h2>Queries vs Mutations vs Subscriptions</h2>
+<ul>
+  <li><strong>Query</strong> — Read data (like HTTP GET)</li>
+  <li><strong>Mutation</strong> — Write/modify data (like POST/PUT/DELETE)</li>
+  <li><strong>Subscription</strong> — Real-time data via WebSocket</li>
+</ul>
+
+<h2>Writing a Query</h2>
+<pre><code>query GetUser {
+  user(id: "1") {
+    name
+    email
+    posts {
+      title
+    }
+  }
+}</code></pre>
+<p>The client only gets <code>name</code>, <code>email</code>, and each post's <code>title</code> — nothing else.</p>
+
+<h2>Writing a Mutation</h2>
+<pre><code>mutation CreateUser {
+  createUser(name: "Alice", email: "alice@example.com") {
+    id
+    name
+  }
+}</code></pre>
+
+<h2>Variables</h2>
+<p>Avoid string interpolation by using variables:</p>
+<pre><code>query GetUser($id: ID!) {
+  user(id: $id) {
+    name
+  }
+}
+
+# Variables JSON:
+{ "id": "42" }</code></pre>
+
+<h2>Setting Up with Apollo Server</h2>
+<pre><code>import { ApolloServer } from '@apollo/server';
+import { startStandaloneServer } from '@apollo/server/standalone';
+
+const typeDefs = `
+  type Query {
+    hello: String
+  }
+`;
+
+const resolvers = {
+  Query: {
+    hello: () => 'Hello, GraphQL!',
+  },
+};
+
+const server = new ApolloServer({ typeDefs, resolvers });
+const { url } = await startStandaloneServer(server, { listen: { port: 4000 } });
+console.log(`Server ready at ${url}`);</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Use fragments to share common field selections across queries.</li>
+  <li>Always validate and sanitize inputs in mutations.</li>
+  <li>Use DataLoader to batch and cache database calls (avoid N+1 problem).</li>
+  <li>Paginate large list queries using <code>first</code>/<code>after</code> cursor-based pagination.</li>
+</ul>

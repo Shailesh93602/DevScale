@@ -1,0 +1,45 @@
+<h1>Terraform State Management</h1>
+<p>Terraform keeps track of the infrastructure it creates using a massive JSON file called the <strong>State File</strong> (<code>terraform.tfstate</code>). When you run <code>terraform apply</code>, it compares your local code against the State File to calculate the diff. Without the state, Terraform has no idea what it has built.</p>
+
+<h2>The Danger of Local State</h2>
+<p>By default, Terraform saves the state file locally on your laptop. This is extremely dangerous for teams.</p>
+<ol>
+  <li><strong>Collaboration:</strong> If you and a coworker run <code>terraform apply</code> from your local laptops, your local state files diverge.</li>
+  <li><strong>Secrets Exposure:</strong> The state file stores database passwords and AWS keys in plain text. Committing <code>terraform.tfstate</code> to Git is a massive security breach.</li>
+</ol>
+
+<h2>Remote State Backends</h2>
+<p>To fix this, teams configure a <strong>Backend</strong>. A backend tells Terraform where to store the state file remotely. The most common enterprise backend is <strong>AWS S3 + DynamoDB</strong>.</p>
+<pre><code># Adding this block instructs Terraform to never store state locally
+terraform {
+  backend "s3" {
+    bucket         = "my-company-terraform-states"
+    key            = "production/terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
+    dynamodb_table = "terraform-state-lock"
+  }
+}</code></pre>
+
+<h2>State Locking</h2>
+<p>What happens if your CI/CD pipeline runs `terraform apply`, and at the exact same second, your colleague runs `terraform apply`? Terraform could corrupt the state file, destroying your cloud.</p>
+<p>That's what the <strong>DynamoDB table</strong> is for. When Terraform starts executing, it writes a short-lived "lock" item to DynamoDB. If a second run attempts to start, it sees the lock, fails immediately, and waits until the first run finishes.</p>
+
+<h2>Configuration Drift</h2>
+<p>If someone logs into the AWS Web Console manually and changes an EC2 instance size from <code>t2.micro</code> to <code>t3.large</code>, the cloud no longer matches the Terraform Code. This is called <strong>Drift</strong>.</p>
+<p>On the next <code>terraform plan</code>, Terraform will detect this (by pinging the real AWS API and comparing it against the state). During <code>terraform apply</code>, it will forcibly revert the instance back to <code>t2.micro</code> to enforce the Infrastructure-as-Code state.</p>
+
+<h2>Workspaces</h2>
+<p>If you want to use the exact same code to deploy to Dev and Prod without copying folders, you use <strong>Workspaces</strong>. Workspaces allow a single codebase to maintain multiple separate remote state files.</p>
+<pre><code># Create a new workspace
+terraform workspace new production
+
+# Switch to development
+terraform workspace select dev
+
+# In your code, you can reference the workspace name!
+resource "aws_instance" "web" {
+  tags = {
+    Name = "Web-Server-${terraform.workspace}"
+  }
+}</code></pre>

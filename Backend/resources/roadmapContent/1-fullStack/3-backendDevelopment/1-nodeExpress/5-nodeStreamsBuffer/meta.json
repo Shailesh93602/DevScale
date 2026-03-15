@@ -1,0 +1,4 @@
+{
+    "name": "Node Streams & Buffers",
+    "description": "Handling massive data efficiently in Node.js. Understanding Buffers, Writable/Readable Streams, piping data, and streaming large files to clients without crashing memory."
+}

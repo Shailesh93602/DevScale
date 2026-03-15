@@ -1,0 +1,19 @@
+{
+  "title": "FizzBuzz Multithreaded",
+  "slug": "fizzbuzz-multithreaded",
+  "difficulty": "Medium",
+  "category": "concurrency",
+  "points": 100,
+  "tags": ["concurrency", "synchronization", "fizzbuzz"],
+  "company_tags": ["Google", "Amazon", "Microsoft"],
+  "topic_tags": ["Concurrency", "Thread Coordination", "Synchronization"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "A positive integer n",
+  "output_format": "FizzBuzz sequence from 1 to n",
+  "example_input": "{\"n\": 15}",
+  "example_output": "{\"result\": [\"1\",\"2\",\"fizz\",\"4\",\"buzz\",\"fizz\",\"7\",\"8\",\"fizz\",\"buzz\",\"11\",\"fizz\",\"13\",\"14\",\"fizzbuzz\"]}",
+  "constraints": "1 <= n <= 10000",
+  "function_signature": "class FizzBuzzMT { fizz(printFizz: () => void): Promise<void>; buzz(printBuzz: () => void): Promise<void>; fizzbuzz(printFizzBuzz: () => void): Promise<void>; number(printNumber: (n: number) => void): Promise<void> }",
+  "status": "ACTIVE"
+}

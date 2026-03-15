@@ -1,0 +1,74 @@
+<h1>OAuth 2.0 & Social Logins</h1>
+<p>OAuth 2.0 is the industry-standard protocol for authorization. Rather than forcing a user to create a new password for every website they use, OAuth allows a user to grant a third-party application (your Node app) limited access to their information stored on another service (like Google or GitHub), entirely without giving you their password.</p>
+
+<h2>OAuth vs. OpenID Connect (OIDC)</h2>
+<p>OAuth 2.0 is strictly an <strong>Authorization</strong> protocol (granting access to APIs, like reading a user's GitHub repos). However, developers started hacking it to use it for Authentication (verifying identity for "Log In with Google").</p>
+<p>To fix this, the industry created <strong>OpenID Connect (OIDC)</strong>, which sits on top of OAuth 2.0. OIDC standardizes the protocol to securely handle user identity by transmitting an <code>id_token</code> (a JWT containing the user's name, email, and profile picture).</p>
+
+<h2>The Authorization Code Flow</h2>
+<p>The most common and secure OAuth flow for web applications is the Authorization Code Flow.</p>
+<ol>
+  <li><strong>The Redirect:</strong> Your user clicks "Login with Google." Your app redirects them to Google's consent screen.</li>
+  <li><strong>The Consent:</strong> The user logs into Google (if not already) and clicks "Allow."</li>
+  <li><strong>The Code:</strong> Google redirects the user back to your app with a temporary <code>code</code> in the URL (e.g., <code>?code=abc123def</code>).</li>
+  <li><strong>The Exchange:</strong> Your Node backend takes this <code>code</code> and makes a secure, server-to-server HTTP POST request to Google, attaching your secret <code>client_secret</code>.</li>
+  <li><strong>The Tokens:</strong> Google verifies the code and secret, and responds with an <code>access_token</code> (for API access) and an <code>id_token</code> (for user identity).</li>
+</ol>
+
+<h2>Implementing with Passport.js</h2>
+<p>Writing the full OAuth flow manually takes hundreds of lines of code. <code>Passport.js</code> is the standard middleware for Node.js that abstracts this complexity away using "Strategies."</p>
+
+<pre><code>const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+
+// 1. Configure the Strategy
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "/auth/google/callback" // Where Google redirects back to
+  },
+  async (accessToken, refreshToken, profile, done) =&gt; {
+    // This callback runs AFTER the auth code is successfully exchanged!
+    try {
+      // Check if user already exists in our database based on their Google ID
+      let user = await User.findOne({ googleId: profile.id });
+
+      if (!user) {
+        // Create a new user if they don't exist
+        user = await User.create({
+          googleId: profile.id,
+          name: profile.displayName,
+          email: profile.emails[0].value,
+          avatar: profile.photos[0].value
+        });
+      }
+
+      // Tell Passport to proceed with this user
+      return done(null, user);
+    } catch (err) {
+      return done(err, null);
+    }
+  }
+));
+
+// 2. The Route the user clicks ("Login with Google")
+app.get('/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+// 3. The Callback Route (Step 3 & 4 of the flow)
+app.get('/auth/google/callback', 
+  // Passport automatically extracts the '?code=' from the URL,
+  // exchanges it for an access token, and triggers the callback we wrote above.
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  function(req, res) {
+    // Successful authentication, generate your OWN JWT here to send to your frontend!
+    const myApiToken = generateJWT(req.user);
+    res.redirect(`http://localhost:3000/dashboard?token=${myApiToken}`);
+  });
+</code></pre>
+
+<h2>Security Considerations</h2>
+<ul>
+  <li><strong>The State Parameter:</strong> To prevent CSRF attacks, pass a random <code>state</code> parameter during the initial redirect, and verify Google passes it back unchanged. (Passport handles this automatically).</li>
+  <li><strong>Client Secrets:</strong> Your <code>CLIENT_SECRET</code> must never touch the frontend React app. The code-to-token exchange (Step 4) must strictly happen on the Node.js backend.</li>
+</ul>

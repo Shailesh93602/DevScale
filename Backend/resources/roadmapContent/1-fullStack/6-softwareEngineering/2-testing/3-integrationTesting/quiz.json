@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary architectural goal of an Integration Test compared to a standard Unit Test?",
+            "options": [
+                "To test how fast the code compiles on GitHub Actions.",
+                "To verify that multiple distinct pieces of the system (like the Express Router, custom Middleware, and the Database layer) correctly and safely communicate with each other.",
+                "To verify that CSS animations trigger perfectly on the frontend.",
+                "To assert the logic of a single deeply isolated mathematical utility function."
+            ],
+            "answer": "To verify that multiple distinct pieces of the system (like the Express Router, custom Middleware, and the Database layer) correctly and safely communicate with each other.",
+            "explanation": "Unit tests ensure the engine parts work. Integration tests ensure the car actually drives when you put the parts together."
+        },
+        {
+            "question": "What specifically is the Node.js 'Supertest' library used for during backend testing?",
+            "options": [
+                "To mock Database connections dynamically.",
+                "To effortlessly spin up a virtual Express.js server and precisely fire simulated HTTP requests (like GET and POST) against your API endpoints to safely assert their responses.",
+                "To generate random Fake Data for users.",
+                "To test frontend React components natively."
+            ],
+            "answer": "To effortlessly spin up a virtual Express.js server and precisely fire simulated HTTP requests (like GET and POST) against your API endpoints to safely assert their responses.",
+            "explanation": "Supertest handles all the complexity of binding your app to a network, making the HTTP request, formatting headers, and strictly asserting the exact response status codes."
+        },
+        {
+            "question": "Why is it absolutely critical to utilize specific Jest hooks like `beforeEach()` when writing Integration Tests that interact with a real Database?",
+            "options": [
+                "To optimize the speed of the AWS cloud.",
+                "To aggressively wipe database tables completely clean before every single test securely, meticulously ensuring that lingering mutated data from Test A doesn't accidentally crash Test B.",
+                "Because Jest mathematically crashes without it.",
+                "To forcefully format code formatting safely."
+            ],
+            "answer": "To aggressively wipe database tables completely clean before every single test securely, meticulously ensuring that lingering mutated data from Test A doesn't accidentally crash Test B.",
+            "explanation": "Tests must be completely deterministic and logically isolated. If you don't clean the DB, running the test suite twice might cause 'Unique Key Restraint' failures."
+        }
+    ]
+}

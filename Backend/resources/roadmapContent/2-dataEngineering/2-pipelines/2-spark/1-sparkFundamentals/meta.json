@@ -1,0 +1,4 @@
+{
+    "name": "Apache Spark — Distributed Processing",
+    "description": "RDDs, DataFrames, Spark SQL, partitioning, and running on local/cluster."
+}

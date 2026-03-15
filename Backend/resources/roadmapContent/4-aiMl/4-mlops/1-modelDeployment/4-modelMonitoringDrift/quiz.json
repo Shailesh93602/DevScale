@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "A deployed churn prediction model's validation AUC was 0.91. Three months later, AUC measured on labeled production data is 0.78. You also run Evidently and find 42% of features have drifted significantly. What is the most likely root cause?",
+            "options": [
+                "The model has a bug that was introduced in the last deployment.",
+                "Data drift — the input feature distributions in production have shifted away from the training distribution. This is the classic scenario: the model was trained on data with one distribution (e.g., user behavior during economic boom), and three months later, user behavior patterns have changed (e.g., recession behavior) in ways the model wasn't trained to handle. Retraining on recent data should restore performance.",
+                "The evaluation code has a bug that is computing AUC incorrectly.",
+                "The model is overfitting to recent production data seen during inference."
+            ],
+            "answer": "Data drift — the input feature distributions in production have shifted away from the training distribution. This is the classic scenario: the model was trained on data with one distribution (e.g., user behavior during economic boom), and three months later, user behavior patterns have changed (e.g., recession behavior) in ways the model wasn't trained to handle. Retraining on recent data should restore performance.",
+            "explanation": "42% feature drift is a strong signal. The monitoring system worked as designed — catching the degradation before stakeholders noticed. The recommended action: trigger emergency retraining on the last 90 days of production data with confirmed labels."
+        },
+        {
+            "question": "What is 'concept drift' and how does it differ from 'data drift' in ML model monitoring?",
+            "options": [
+                "Concept drift affects only neural networks; data drift affects only tree-based models.",
+                "Data drift (covariate shift) means the input feature distribution P(X) has changed — but the relationship P(y|X) may still be the same. Concept drift means P(y|X) itself has changed — the same input features now map to different outputs. Example: pre-COVID, 'remote_work=1' predicted higher productivity. Post-COVID, this relationship reversed. Data drift might be detectable from inputs alone; concept drift requires monitoring prediction accuracy against true labels.",
+                "Concept drift occurs only in NLP models; data drift occurs in all model types.",
+                "Concept drift means the model's architecture becomes outdated; data drift means the training data label quality degrades."
+            ],
+            "answer": "Data drift (covariate shift) means the input feature distribution P(X) has changed — but the relationship P(y|X) may still be the same. Concept drift means P(y|X) itself has changed — the same input features now map to different outputs. Example: pre-COVID, 'remote_work=1' predicted higher productivity. Post-COVID, this relationship reversed. Data drift might be detectable from inputs alone; concept drift requires monitoring prediction accuracy against true labels.",
+            "explanation": "Concept drift is more dangerous because you cannot detect it from input distributions alone — you need ground truth labels which often arrive with a lag (e.g., fraud labels confirmed 30 days later). This is why real-time monitoring AND delayed accuracy monitoring are both necessary."
+        },
+        {
+            "question": "Why is it insufficient to monitor just Evidently drift metrics without also monitoring business KPIs (revenue, conversion rate, etc.) for an ML model in production?",
+            "options": [
+                "Evidently metrics are unreliable and business KPIs are more accurate.",
+                "Drift metrics indicate that the input distributions have changed, but don't tell you whether this change actually hurts business outcomes. A model can show significant statistical feature drift but still deliver good business results if the drift doesn't affect the prediction-relevant aspects. Conversely, small undetectable drift can cause large business impact if it affects the most predictive features. Business KPIs provide the ground truth on what actually matters.",
+                "Monitoring business KPIs is faster and cheaper than running Evidently drift analysis.",
+                "A/B tests are required alongside Evidently metrics for statistical validity."
+            ],
+            "answer": "Drift metrics indicate that the input distributions have changed, but don't tell you whether this change actually hurts business outcomes. A model can show significant statistical feature drift but still deliver good business results if the drift doesn't affect the prediction-relevant aspects. Conversely, small undetectable drift can cause large business impact if it affects the most predictive features. Business KPIs provide the ground truth on what actually matters.",
+            "explanation": "Complete monitoring stack: Evidently (technical alert: drift detected) → triggers investigation → measure actual AUC on labeled data → check business KPIs (revenue from predicted non-churners who did churn). Only when business KPIs degrade do you have a proven problem worth triaging."
+        }
+    ]
+}

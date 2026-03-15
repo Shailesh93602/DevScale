@@ -1,0 +1,58 @@
+<h1>The Four Golden Signals</h1>
+<p>Google's Site Reliability Engineering (SRE) book identifies four metrics that, when monitored together, give a complete picture of any service's health. These <strong>Four Golden Signals</strong> are the universal language of production system monitoring — whether you're running a REST API, a Kafka consumer, or a batch data pipeline.</p>
+
+<h2>1. Latency: How Long Does It Take?</h2>
+<p>Latency measures how long it takes to service a request. Critically, you must distinguish between <em>successful</em> request latency and <em>failed</em> request latency — a 500 error that returns in 1ms should not bring your p99 down.</p>
+<pre><code class="language-promql"># P99 latency — 99th percentile: the slowest 1% of requests
+histogram_quantile(0.99, 
+  rate(http_request_duration_seconds_bucket{job="api"}[5m])
+)
+
+# P50 (median) latency — typical user experience
+histogram_quantile(0.50,
+  rate(http_request_duration_seconds_bucket{status="200"}[5m])
+)
+</code></pre>
+
+<h2>2. Traffic: How Much Demand Exists?</h2>
+<p>Traffic quantifies the load on your system — requests per second, events per second, bytes per second. Traffic is the denominator that gives context to all other metrics ("error rate was 5% of 50,000 RPS" is very different from "5% of 10 RPS").</p>
+<pre><code class="language-promql"># Requests per second hitting the API service
+rate(http_requests_total{job="api"}[5m])
+
+# Messages processed per second by a Kafka consumer
+rate(kafka_consumer_records_consumed_total[5m])
+</code></pre>
+
+<h2>3. Errors: How Many Requests Are Failing?</h2>
+<p>Error rate is the fraction of requests producing errors. Both explicit errors (HTTP 5xx) and implicit errors (HTTP 200 but with a timeout that returned an empty body) must be tracked.</p>
+<pre><code class="language-promql"># Error rate as a percentage of total requests
+100 * (
+  rate(http_requests_total{status=~"5.."}[5m])
+  /
+  rate(http_requests_total[5m])
+)
+</code></pre>
+
+<h2>4. Saturation: How "Full" Is the Service?</h2>
+<p>Saturation measures how close a resource is to its capacity limit — the most constrained resource determines overall throughput. A service running at 95% CPU saturation is already degrading performance and any additional load will cause significant latency increases.</p>
+<pre><code class="language-promql"># CPU saturation
+100 - (avg by(instance)(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
+
+# Memory saturation
+100 * (1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)
+
+# Database connection pool saturation (key to catch before DB becomes bottleneck)
+db_pool_used_connections / db_pool_max_connections * 100
+</code></pre>
+
+<h2>Building the Golden Signals Dashboard</h2>
+<p>A well-designed Grafana dashboard gives on-call engineers an instant answer to "Is the service healthy?" without deep investigation. Structure the dashboard as exactly four panels, one per signal, always visible together. Annotate it with deployment markers (vertical lines at every deploy) — the most common cause of degradation in all four signals simultaneously is a bad deploy.</p>
+<pre><code class="language-text">┌───────────────┬───────────────┐
+│   LATENCY     │    TRAFFIC    │
+│  p50/p95/p99  │    req/sec    │
+├───────────────┼───────────────┤
+│    ERRORS     │  SATURATION   │
+│  error rate % │  CPU / Memory │
+└───────────────┴───────────────┘
+         ↑ Deploy annotations
+</code></pre>

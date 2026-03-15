@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What does enabling 'strict: true' in tsconfig.json do?",
+            "options": [
+                "Enables all strict type-checking options including noImplicitAny, strictNullChecks, and more",
+                "Makes TypeScript emit an error for any 'any' type",
+                "Prevents TypeScript from compiling until all errors are fixed",
+                "Enables ES6+ strict mode"
+            ],
+            "answer": "Enables all strict type-checking options including noImplicitAny, strictNullChecks, and more",
+            "explanation": "'strict: true' is a shorthand that enables noImplicitAny, strictNullChecks, strictFunctionTypes, strictBindCallApply, and other strict flags together."
+        },
+        {
+            "question": "What is the purpose of path aliases in tsconfig.json?",
+            "options": [
+                "To speed up TypeScript compilation",
+                "To replace long relative import paths with clean aliases like '@/components/Button'",
+                "To create type aliases",
+                "To resolve module version conflicts"
+            ],
+            "answer": "To replace long relative import paths with clean aliases like '@/components/Button'",
+            "explanation": "Path aliases configured in tsconfig 'paths' allow importing as '@/components/Button' instead of '../../../../components/Button', improving readability and maintainability."
+        },
+        {
+            "question": "What are .d.ts files used for?",
+            "options": [
+                "Declaring CSS styles in TypeScript",
+                "Providing TypeScript type definitions for JavaScript libraries or custom declarations",
+                "Declaring database schemas",
+                "Defining API contract types for documentation"
+            ],
+            "answer": "Providing TypeScript type definitions for JavaScript libraries or custom declarations",
+            "explanation": ".d.ts (declaration files) contain only type information (no implementation). They allow TypeScript to understand the shapes of JavaScript modules, global variables, and augmented types."
+        },
+        {
+            "question": "What command quickly type-checks a TypeScript project without compiling?",
+            "options": [
+                "npx tsc --check",
+                "npx tsc --noEmit",
+                "npx tsc --dryRun",
+                "npx tsc --validate"
+            ],
+            "answer": "npx tsc --noEmit",
+            "explanation": "tsc --noEmit runs the type checker but doesn't write any output files, making it fast for CI checks and pre-commit hooks."
+        },
+        {
+            "question": "What does 'moduleResolution: bundler' in tsconfig.json configure?",
+            "options": [
+                "Uses a bundler tool like webpack to resolve modules",
+                "Enables resolution algorithm matching modern bundlers like Vite that support package.json exports field",
+                "Bundles all TypeScript files into one",
+                "Prevents TypeScript from resolving external modules"
+            ],
+            "answer": "Enables resolution algorithm matching modern bundlers like Vite that support package.json exports field",
+            "explanation": "'bundler' is the recommended moduleResolution for Vite and Next.js projects. It supports package.json 'exports' field for subpath imports and is more permissive than 'node16'."
+        }
+    ]
+}

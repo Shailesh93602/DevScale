@@ -1,0 +1,6 @@
+[
+  "RPN is designed for stack-based evaluation. Push numbers, pop when you see an operator.",
+  "When you encounter an operator, pop two values. The first popped is the right operand, the second is the left.",
+  "Be careful with division — it truncates toward zero, not toward negative infinity. Use Math.trunc().",
+  "After processing all tokens, the stack should contain exactly one element: the answer."
+]

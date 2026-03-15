@@ -1,0 +1,10 @@
+{
+  "typescript": "/**\n Do not return anything, modify nums in-place instead.\n */\nfunction sortColors(nums: number[]): void {\n    \n};",
+  "javascript": "/**\n * @param {number[]} nums\n * @return {void} Do not return anything, modify nums in-place instead.\n */\nvar sortColors = function(nums) {\n    \n};",
+  "python": "class Solution:\n    def sortColors(self, nums: List[int]) -> None:\n        \"\"\"\n        Do not return anything, modify nums in-place instead.\n        \"\"\"\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public void sortColors(int[] nums) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    void sortColors(vector<int>& nums) {\n        \n    }\n};",
+  "go": "func sortColors(nums []int) {\n    \n}",
+  "rust": "impl Solution {\n    pub fn sort_colors(nums: &mut Vec<i32>) {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public void SortColors(int[] nums) {\n        \n    }\n}"
+}

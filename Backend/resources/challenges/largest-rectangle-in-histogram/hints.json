@@ -1,0 +1,6 @@
+[
+  "For each bar, the rectangle it can form extends left and right until a shorter bar is found.",
+  "A monotonic increasing stack helps find the left and right boundaries efficiently.",
+  "When popping from the stack, the width is: current index - stack top - 1 (or current index if stack is empty).",
+  "Add a sentinel height of 0 at the end to flush all remaining bars from the stack."
+]

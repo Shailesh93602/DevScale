@@ -1,0 +1,41 @@
+<h1>Indexing & Performance</h1>
+<p>When an SQL table grows to millions of rows, executing a simple query like <code>SELECT * FROM users WHERE email = 'test@example.com'</code> can suddenly take 5 or 10 seconds. This happens because the database must perform a <strong>Full Table Scan</strong>, reading every single row one by one until it finds a match. To solve this, you must create <strong>Indexes</strong>.</p>
+
+<h2>What is an Index?</h2>
+<p>An Index in an SQL database works exactly like the index at the back of a 1,000-page book. Instead of flipping through all 1,000 pages to find the word "Apple," you go to the index, look up "Apple," and it tells you exactly which page it is on (e.g., Page 42). The database index is a separate, highly optimized data structure pointing to the actual rows on disk.</p>
+
+<pre><code>-- CREATE INDEX command
+CREATE INDEX idx_users_email ON users(email);</code></pre>
+
+<h2>B-Tree Indexes (The Default)</h2>
+<p>If you don't specify an index type, PostgreSQL uses a <strong>B-Tree (Balanced Tree)</strong>. B-Trees sort data hierarchically. Because the data is perfectly sorted, the database can use a Binary Search algorithm to find a record in milliseconds, even if there are 100 million rows.</p>
+<p>B-Trees are excellent for:</p>
+<ul>
+  <li>Exact matches (<code>WHERE age = 25</code>)</li>
+  <li>Range queries (<code>WHERE age &gt; 18 AND age &lt; 30</code>)</li>
+  <li>Sorting (<code>ORDER BY age DESC</code>)</li>
+</ul>
+
+<h2>The Cost of Indexing</h2>
+<p>If indexes make reads so fast, why not put an index on every single column in the table? Because indexes heavily damage <strong>Write Performance</strong>.</p>
+<p>Every time you <code>INSERT</code>, <code>UPDATE</code>, or <code>DELETE</code> a row, the database must not only update the main table but also re-sort and update <em>every single index</em> attached to that table. Over-indexing causes writes to crawl to a halt and wastes massive amounts of hard drive space. Only index columns that are frequently used in <code>WHERE</code>, <code>JOIN</code>, or <code>ORDER BY</code> clauses.</p>
+
+<h2>Understanding Query Plans (EXPLAIN ANALYZE)</h2>
+<p>How do you know if your query is slow because of missing indexes? You prepend the command <code>EXPLAIN ANALYZE</code> to your query. This prevents the database from just returning the rows, and instead returns the <strong>Execution Plan</strong> detailing exactly how the engine fetched the data and how long each step took.</p>
+
+<pre><code>EXPLAIN ANALYZE SELECT * FROM users WHERE last_name = 'Smith';
+
+-- Output (Simplified):
+-- Seq Scan on users (cost=0.00..15462.00 rows=153 width=45) (actual time=0.012..450.000)
+-- Filter: ((last_name)::text = 'Smith'::text)
+-- Rows Removed by Filter: 999847
+-- Execution Time: 450.034 ms</code></pre>
+
+<p>In the above example, seeing <strong>Seq Scan (Sequential Scan)</strong> means the backend read nearly 1,000,000 rows just to find the 153 people named Smith, taking almost half a second. This is a massive red flag indicating a missing index.</p>
+
+<p>After adding <code>CREATE INDEX idx_last_name ON users(last_name);</code>, the result changes:</p>
+<pre><code>-- Output after Indexing:
+-- Index Scan using idx_last_name on users (cost=0.42..8.44 rows=153 width=45) (actual time=0.012..0.120)
+-- Index Cond: ((last_name)::text = 'Smith'::text)
+-- Execution Time: 0.150 ms</code></pre>
+<p>The time dropped from 450ms to 0.15ms. The presence of an <strong>Index Scan</strong> ensures the database directly navigated the B-Tree structure flawlessly.</p>

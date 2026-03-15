@@ -1,0 +1,11 @@
+[
+  { "input": "{\"matrix\":[[1,3,5,7],[10,11,16,20],[23,30,34,60]], \"target\":3}", "output": "true", "explanation": "Target in first row", "is_hidden": false },
+  { "input": "{\"matrix\":[[1,3,5,7],[10,11,16,20],[23,30,34,60]], \"target\":13}", "output": "false", "explanation": "Target not in matrix", "is_hidden": false },
+  { "input": "{\"matrix\":[[1]], \"target\":1}", "output": "true", "explanation": "1x1 matrix match", "is_hidden": true },
+  { "input": "{\"matrix\":[[1]], \"target\":2}", "output": "false", "explanation": "1x1 matrix no match", "is_hidden": true },
+  { "input": "{\"matrix\":[[1,3,5,7],[10,11,16,20],[23,30,34,60]], \"target\":1}", "output": "true", "explanation": "Target is first element", "is_hidden": true },
+  { "input": "{\"matrix\":[[1,3,5,7],[10,11,16,20],[23,30,34,60]], \"target\":60}", "output": "true", "explanation": "Target is last element", "is_hidden": true },
+  { "input": "{\"matrix\":[[1,3,5,7],[10,11,16,20],[23,30,34,60]], \"target\":0}", "output": "false", "explanation": "Target smaller than all", "is_hidden": true },
+  { "input": "{\"matrix\":[[1,3,5,7],[10,11,16,20],[23,30,34,60]], \"target\":100}", "output": "false", "explanation": "Target larger than all", "is_hidden": true },
+  { "input": "{\"matrix\":[[1,1],[1,1]], \"target\":1}", "output": "true", "explanation": "Duplicate values", "is_hidden": true }
+]

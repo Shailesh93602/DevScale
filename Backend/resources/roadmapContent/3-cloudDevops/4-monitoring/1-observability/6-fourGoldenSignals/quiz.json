@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "Of the four golden signals, which one provides critical early warning BEFORE a service starts returning errors or experiencing high latency?",
+            "options": [
+                "Traffic — a sudden increase in requests is always a warning sign.",
+                "Saturation — when a resource (CPU, memory, connection pool, disk) approaches its limit, performance degradation is imminent. A database at 95% connection pool saturation will soon reject new connections. An accurate saturation metric lets you scale proactively before errors appear.",
+                "Latency — rising p99 latency always precedes errors.",
+                "Error rate — errors are always the first golden signal to fire."
+            ],
+            "answer": "Saturation — when a resource (CPU, memory, connection pool, disk) approaches its limit, performance degradation is imminent. A database at 95% connection pool saturation will soon reject new connections. An accurate saturation metric lets you scale proactively before errors appear.",
+            "explanation": "This is why saturation is called the 'predictive' signal. Latency and errors are lagging indicators (the problem is already happening). Saturation is a leading indicator — you see it coming before customers feel it."
+        },
+        {
+            "question": "Why is it critical to use p99 latency rather than average (mean) latency when monitoring service performance?",
+            "options": [
+                "P99 is easier to compute in Prometheus than average latency.",
+                "Average latency is distorted by the majority of fast requests, hiding the fact that 1% of users experience terrible performance. P99 latency shows what the slowest 1% of users experience — which is often orders of magnitude higher than the average and represents real user-facing pain.",
+                "P99 latency avoids counting failed requests in the latency calculation.",
+                "Average latency is not a useful metric for microservices architectures."
+            ],
+            "answer": "Average latency is distorted by the majority of fast requests, hiding the fact that 1% of users experience terrible performance. P99 latency shows what the slowest 1% of users experience — which is often orders of magnitude higher than the average and represents real user-facing pain.",
+            "explanation": "If 99% of requests complete in 50ms but 1% take 10 seconds (e.g., hitting a database lock), the average might be 150ms — which looks fine. P99 = 10s immediately reveals the problem."
+        },
+        {
+            "question": "How does adding 'deploy annotations' (vertical lines marking each deployment) to a Four Golden Signals Grafana dashboard improve incident response?",
+            "options": [
+                "Deploy annotations automatically trigger rollbacks when metrics degrade.",
+                "Deploy annotations provide an instant visual correlation between a metric degradation and a specific code change. When latency spikes at exactly 14:32 and there's a deploy annotation at 14:31, the root cause is immediately obvious — eliminating hours of investigation to determine 'was this a code change or an infrastructure issue?'",
+                "Deploy annotations disable alerting during deployment windows to reduce noise.",
+                "Deploy annotations log which engineer approved each deployment for compliance."
+            ],
+            "answer": "Deploy annotations provide an instant visual correlation between a metric degradation and a specific code change. When latency spikes at exactly 14:32 and there's a deploy annotation at 14:31, the root cause is immediately obvious — eliminating hours of investigation to determine 'was this a code change or an infrastructure issue?'",
+            "explanation": "The most common pattern in production incidents is: metric degrades → on-call checks dashboard → deploy annotation is right before the degradation → immediate decision to rollback → incident resolved in 5 minutes instead of 2 hours."
+        }
+    ]
+}

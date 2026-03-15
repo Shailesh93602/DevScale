@@ -1,0 +1,118 @@
+{
+    "title": "OpenAI & Anthropic API Quiz",
+    "description": "Test your knowledge of LLM API integration, streaming, structured output, and cost management.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What does setting `temperature=0.0` in a chat completion request achieve?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It makes responses shorter by filtering out low-probability tokens",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It makes responses deterministic — the model always picks the highest probability next token, producing consistent output for caching and testing",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It disables the model's safety filters for more direct responses",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It limits the response to a maximum of 0 tokens (empty response)",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why should you stream LLM responses for chat interfaces instead of waiting for the full response?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Streaming is cheaper because OpenAI charges less for streamed responses",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Streaming shows tokens progressively as they're generated, making the interface feel responsive instead of frozen — users perceive 10 seconds of streaming as faster than 3 seconds of waiting",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Non-streaming responses hit a 512 token limit that prevents longer answers",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The OpenAI API has a 30-second timeout, so long responses must be streamed",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the primary advantage of using `response_format=PydanticModel` (structured output) over asking the LLM to 'return JSON'?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Structured output is 5x faster than unstructured completion",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It guarantees the response is valid JSON conforming to your schema — asking the model to 'return JSON' can still produce malformed or schema-non-compliant responses",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It automatically sends schema documentation to improve the model's accuracy",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It reduces token costs since JSON is more compact than natural language",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why should LLM API calls always be proxied through your backend rather than called directly from a mobile or web frontend?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The OpenAI API only accepts requests from server-side environments",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Exposing the API key in client-side code allows anyone to steal it and make API calls at your expense — the backend acts as an authenticated proxy and rate-limits per-user",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Frontend environments cannot handle streaming server-sent events",
+                    "isCorrect": false
+                },
+                {
+                    "text": "CORS policies prevent browsers from calling the OpenAI API directly",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "For which use case should you prefer `gpt-4o-mini` over `gpt-4o`?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Complex multi-step reasoning tasks like PhD-level math or advanced code architecture",
+                    "isCorrect": false
+                },
+                {
+                    "text": "High-volume classification, summarization, and extraction tasks where cost efficiency matters and deep reasoning isn't required",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Vision tasks that require analyzing images in detail",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Tasks requiring real-time streaming since gpt-4o doesn't support streaming",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

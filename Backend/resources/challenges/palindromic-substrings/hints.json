@@ -1,0 +1,6 @@
+[
+  "How can we reuse previously computed palindromes to compute larger ones?",
+  "If 'aba' is a palindrome, is 'xabax' a palindrome? Yes, if the outer characters match.",
+  "Consider expanding around every possible center. A center could be a single character (for odd-length palindromes) or between two characters (for even-length palindromes).",
+  "Since there are n characters, there are 2n - 1 possible centers. For each center, expand outward as long as it remains a palindrome."
+]

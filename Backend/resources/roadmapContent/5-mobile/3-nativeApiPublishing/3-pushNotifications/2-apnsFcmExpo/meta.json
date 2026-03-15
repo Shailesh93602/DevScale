@@ -1,0 +1,4 @@
+{
+    "name": "Push Notifications: APNs, FCM & Expo",
+    "description": "Implementing push notifications end-to-end across iOS and Android. Understanding the APNs and FCM infrastructure, setting up Expo Push Notification service as a unified abstraction, handling permission requests, sending notifications from your backend, processing foreground and background notifications, notification categories with action buttons, and routing users to specific screens via notification tap."
+}

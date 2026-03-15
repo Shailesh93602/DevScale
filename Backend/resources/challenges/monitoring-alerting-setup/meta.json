@@ -1,0 +1,19 @@
+{
+  "title": "Monitoring and Alerting Setup",
+  "slug": "monitoring-alerting-setup",
+  "difficulty": "Hard",
+  "category": "devops",
+  "points": 150,
+  "tags": ["monitoring", "alerting", "prometheus", "grafana", "observability"],
+  "company_tags": ["Google", "Netflix", "Datadog", "New Relic", "Amazon"],
+  "topic_tags": ["Monitoring", "Alerting", "Prometheus", "Grafana", "SRE"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Service configuration with name, SLO targets (availability %, latency P99), and alert channels",
+  "output_format": "Prometheus recording rules YAML, alert rules YAML, Grafana dashboard JSON, and Alertmanager config YAML",
+  "example_input": "{ serviceName: 'api-gateway', slo: { availability: 99.9, latencyP99Ms: 500 }, alertChannels: ['slack', 'pagerduty'] }",
+  "example_output": "Complete monitoring config with recording rules, multi-burn-rate alerts, RED dashboard, and alert routing",
+  "constraints": "- Must define recording rules for SLIs\\n- Alerts must use multi-burn-rate approach\\n- Dashboard must show RED metrics\\n- Alert routing must match severity to channels",
+  "function_signature": "function generateMonitoringConfig(config: { serviceName: string; slo: { availability: number; latencyP99Ms: number }; alertChannels: string[] }): { prometheusRules: string; grafanaDashboard: string; alertmanagerConfig: string }",
+  "status": "ACTIVE"
+}

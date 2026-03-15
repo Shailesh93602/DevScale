@@ -1,0 +1,6 @@
+{
+    "id": "1-restApi",
+    "title": "Consuming REST APIs",
+    "description": "Standard networking with Fetch and Axios for React Native applications.",
+    "order": 1
+}

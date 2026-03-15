@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary role of the Mongoose ODM in a Node.js project utilizing MongoDB?",
+            "options": [
+                "It translates MongoDB syntax strictly into PostgreSQL queries behind the scenes",
+                "It provides a Schema-based blueprint system to enforce strict data types, relationships, and validation rules upon MongoDB's inherently schema-less, unstructured database",
+                "It establishes a persistent WebSocket connection to the MongoDB cluster",
+                "It acts solely as an indexing engine for complex mathematical queries"
+            ],
+            "answer": "It provides a Schema-based blueprint system to enforce strict data types, relationships, and validation rules upon MongoDB's inherently schema-less, unstructured database",
+            "explanation": "If left raw, MongoDB allows any data format into any collection. Mongoose ensures that if `age` must be a Number, any attempt to insert a String is instantly rejected by Node.js before it hits the database."
+        },
+        {
+            "question": "If you define a field inside a Mongoose Schema with `unique: true`, what actually happens under the hood?",
+            "options": [
+                "Mongoose executes an extra `findById` query physically every single time before inserting to double-check manually",
+                "Mongoose sends a command to MongoDB to silently build a highly optimized Unique Index at the database level, forcing the database engine itself to instantly reject duplicates",
+                "Mongoose encrypts the string so it mathematically cannot be duplicated",
+                "It adds a completely random number to the string automatically"
+            ],
+            "answer": "Mongoose sends a command to MongoDB to silently build a highly optimized Unique Index at the database level, forcing the database engine itself to instantly reject duplicates",
+            "explanation": "Validation rules (like `minlength`) are checked by Mongoose in Node.js. However, `unique` relies purely on MongoDB's native B-Tree indexing infrastructure."
+        },
+        {
+            "question": "How does the `.populate()` method function when used to resolve cross-collection relationships (e.g., retrieving the 'Author' details nested inside a 'Post')?",
+            "options": [
+                "It executes a native SQL `INNER JOIN` entirely on the database server",
+                "It reads all ID references, intercepts the original JSON return, automatically runs completely separate subsequent queries against the referenced collections, and fuses the loaded documents together in the Node.js memory",
+                "It compresses all relationship data into a single string element",
+                "It uses a recursive MapReduce function on the server natively"
+            ],
+            "answer": "It reads all ID references, intercepts the original JSON return, automatically runs completely separate subsequent queries against the referenced collections, and fuses the loaded documents together in the Node.js memory",
+            "explanation": "Unlike relational databases which fuse tables pre-delivery, Mongoose `.populate()` effectively executes: 'Query 1: Get Post. Extract ID = 5. Query 2: Get User 5. Merge them and return to the controller.'"
+        },
+        {
+            "question": "What is a major advantage of utilizing Mongoose's `pre('save')` middleware hooks?",
+            "options": [
+                "It permanently locks the document to prevent accidental deletions",
+                "It caches the document in Redis automatically",
+                "It allows you to centralize automated document transformations (like securely hashing a plaintext password via bcrypt) in exactly one place inside the model definition, guaranteeing it always runs directly before insertion regardless of the API route being called",
+                "It triggers HTTP webhooks across external servers"
+            ],
+            "answer": "It allows you to centralize automated document transformations (like securely hashing a plaintext password via bcrypt) in exactly one place inside the model definition, guaranteeing it always runs directly before insertion regardless of the API route being called",
+            "explanation": "If you hash the password in the `registerController`, a different developer might forget to hash it in the `resetPasswordController`. Hooking it directly to the model's `save` event ensures data security natively."
+        },
+        {
+            "question": "What is the functional difference between Mongoose's `Statics` and `Methods`?",
+            "options": [
+                "Statics manipulate numerical data, while Methods handle strings",
+                "Instance Methods are attached to a specific individual document (e.g., `userDoc.comparePassword()`), while Static Methods are bound globally to the entire Model class (e.g., `User.findByEmail()`)",
+                "Statics can only be called from frontend clients using Fetch",
+                "Methods return Promises, while Statics rely entirely on Synchronous callbacks"
+            ],
+            "answer": "Instance Methods are attached to a specific individual document (e.g., `userDoc.comparePassword()`), while Static Methods are bound globally to the entire Model class (e.g., `User.findByEmail()`)",
+            "explanation": "Use Methods when operating on data you have already fetched (`user.validateEmail()`). Use Statics to create custom database queries where the row doesn't exist yet (`User.findActiveAdmins()`)."
+        }
+    ]
+}

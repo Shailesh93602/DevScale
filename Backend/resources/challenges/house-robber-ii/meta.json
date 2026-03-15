@@ -1,0 +1,19 @@
+{
+  "title": "House Robber II",
+  "slug": "house-robber-ii",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["dynamic-programming", "array"],
+  "company_tags": ["Amazon", "Google", "Microsoft", "eBay", "Adobe"],
+  "topic_tags": ["dynamic programming", "circular array"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer array `nums` representing the amount of money at each house arranged in a circle.",
+  "output_format": "The maximum amount of money you can rob without robbing two adjacent houses.",
+  "example_input": "nums = [2,3,2]",
+  "example_output": "3",
+  "constraints": "- `1 <= nums.length <= 100`\n- `0 <= nums[i] <= 1000`",
+  "function_signature": "function rob(nums: number[]): number {}",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,4 @@
+{
+    "name": "Supabase: Storage, Realtime & Edge Functions",
+    "description": "Leveraging Supabase's full platform in a React Native app. Using Supabase Storage for file uploads (avatars, documents) with progress tracking, subscribing to real-time database changes with Supabase Realtime channels, invoking Supabase Edge Functions from mobile for server-side logic, Row Level Security setup for user-scoped data access, and complete offline sync patterns with Supabase."
+}

@@ -1,0 +1,12 @@
+[
+  { "input": "{\"coins\": [1,5,11], \"amount\": 11}", "output": "1", "explanation": "Use one 11-coin", "is_hidden": false },
+  { "input": "{\"coins\": [2], \"amount\": 3}", "output": "-1", "explanation": "Cannot make 3 with coins of 2", "is_hidden": false },
+  { "input": "{\"coins\": [1], \"amount\": 0}", "output": "0", "explanation": "No coins needed for 0", "is_hidden": false },
+  { "input": "{\"coins\": [1,2,5], \"amount\": 11}", "output": "3", "explanation": "5+5+1=11", "is_hidden": true },
+  { "input": "{\"coins\": [1], \"amount\": 1}", "output": "1", "explanation": "One coin of 1", "is_hidden": true },
+  { "input": "{\"coins\": [1,5,11], \"amount\": 15}", "output": "3", "explanation": "5+5+5=15 (greedy would give 5 coins)", "is_hidden": true },
+  { "input": "{\"coins\": [2,5,10,1], \"amount\": 27}", "output": "4", "explanation": "10+10+5+2=27", "is_hidden": true },
+  { "input": "{\"coins\": [186,419,83,408], \"amount\": 6249}", "output": "20", "explanation": "Large input test case", "is_hidden": true },
+  { "input": "{\"coins\": [3,7], \"amount\": 2}", "output": "-1", "explanation": "Cannot make 2 with coins 3 and 7", "is_hidden": true },
+  { "input": "{\"coins\": [1,2,5], \"amount\": 100}", "output": "20", "explanation": "20 five-coins", "is_hidden": true }
+]

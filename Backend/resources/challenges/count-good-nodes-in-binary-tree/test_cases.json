@@ -1,0 +1,12 @@
+[
+  { "input": "{\"root\":[3,1,4,3,null,1,5]}", "output": "4", "explanation": "Standard good nodes", "is_hidden": false },
+  { "input": "{\"root\":[3,3,null,4,2]}", "output": "3", "explanation": "Node with value 2 not good", "is_hidden": false },
+  { "input": "{\"root\":[1]}", "output": "1", "explanation": "Single node is always good", "is_hidden": false },
+  { "input": "{\"root\":[2,2,null,2]}", "output": "3", "explanation": "All same values good", "is_hidden": true },
+  { "input": "{\"root\":[-1,-1,null,-1]}", "output": "3", "explanation": "Negative values", "is_hidden": true },
+  { "input": "{\"root\":[5,4,6,3,null,null,7]}", "output": "4", "explanation": "Mixed good and bad", "is_hidden": true },
+  { "input": "{\"root\":[10,5,15,3,7,12,20]}", "output": "5", "explanation": "BST shape", "is_hidden": true },
+  { "input": "{\"root\":[0,1,-1]}", "output": "2", "explanation": "Left child greater than root, right not", "is_hidden": true },
+  { "input": "{\"root\":[3,1,4,3,null,1,5,3]}", "output": "5", "explanation": "Deeper nesting", "is_hidden": true },
+  { "input": "{\"root\":[-10000,10000]}", "output": "2", "explanation": "Extreme values", "is_hidden": true }
+]

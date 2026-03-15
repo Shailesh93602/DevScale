@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the fundamental difference between Ridge (L2) and Lasso (L1) regularization in terms of what each does to model coefficients?",
+            "options": [
+                "Ridge removes features with low variance; Lasso removes features with high correlation.",
+                "Ridge shrinks all coefficients toward zero but never exactly to zero — it distributes the penalty proportionally. Lasso can shrink coefficients exactly to zero, effectively performing automatic feature selection by eliminating unimportant features from the model entirely.",
+                "Ridge uses the absolute value of coefficients; Lasso uses squared coefficients.",
+                "Ridge is for regression problems; Lasso is only for classification problems."
+            ],
+            "answer": "Ridge shrinks all coefficients toward zero but never exactly to zero — it distributes the penalty proportionally. Lasso can shrink coefficients exactly to zero, effectively performing automatic feature selection by eliminating unimportant features from the model entirely.",
+            "explanation": "Given 1000 features where 50 are truly predictive: Ridge uses all 1000 but with small coefficients. Lasso zeroes out the 950 irrelevant ones, producing a sparse, interpretable model with only 50 non-zero coefficients."
+        },
+        {
+            "question": "A Logistic Regression model has a coefficient of +2.3 for the feature 'support_calls'. What exactly does this coefficient represent?",
+            "options": [
+                "For each additional support call, the churn probability increases by 2.3%.",
+                "For each unit increase in support_calls, the log-odds of the positive class (churn) increases by 2.3 — meaning the odds of churning multiply by e^2.3 ≈ 10x. Logistic Regression coefficients represent changes in log-odds, not direct probability changes.",
+                "The model is 2.3 times more confident in its predictions for this feature.",
+                "A coefficient of 2.3 means support_calls is the 2nd or 3rd most important feature."
+            ],
+            "answer": "For each unit increase in support_calls, the log-odds of the positive class (churn) increases by 2.3 — meaning the odds of churning multiply by e^2.3 ≈ 10x. Logistic Regression coefficients represent changes in log-odds, not direct probability changes.",
+            "explanation": "This interpretability is why Logistic Regression is preferred in regulated industries. A bank must explain to regulators WHY a loan was denied. 'Support calls increase churn odds by 10x' is a clear, auditable explanation."
+        },
+        {
+            "question": "A model has very low training error but very high test error. According to the bias-variance tradeoff, what is the diagnosis and the appropriate fix?",
+            "options": [
+                "High bias (underfitting) — the model is too simple. Fix: add more features or complexity.",
+                "High variance (overfitting) — the model has memorized training data including noise. Low train error + high test error is the classic signature. Fixes: more training data, stronger regularization, simpler model (fewer parameters/depth), or dropout for neural networks.",
+                "The training and test data come from different distributions (dataset shift).",
+                "The evaluation metric is inappropriate for this type of problem."
+            ],
+            "answer": "High variance (overfitting) — the model has memorized training data including noise. Low train error + high test error is the classic signature. Fixes: more training data, stronger regularization, simpler model (fewer parameters/depth), or dropout for neural networks.",
+            "explanation": "The diagnosis is always: train error high → underfitting (high bias). Train error low, test error high → overfitting (high variance). Train error low, test error low → good generalization. Train error high in both → new pattern: possible dataset quality issue."
+        }
+    ]
+}

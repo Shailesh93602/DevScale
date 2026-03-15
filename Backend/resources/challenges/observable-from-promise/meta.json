@@ -1,0 +1,19 @@
+{
+  "title": "Implement Observable from Promise",
+  "slug": "observable-from-promise",
+  "difficulty": "Hard",
+  "category": "frontend",
+  "points": 150,
+  "tags": ["javascript", "rxjs", "observable", "reactive", "async"],
+  "company_tags": ["Google", "Netflix", "Microsoft", "Uber"],
+  "topic_tags": ["Reactive Programming", "Observables", "Async Patterns"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An Observable class and fromPromise factory function",
+  "output_format": "A minimal Observable implementation with subscribe, map, filter, and fromPromise",
+  "example_input": "fromPromise(fetch('/api/data'))",
+  "example_output": "Observable that emits the resolved value or errors",
+  "constraints": "Must support subscribe with next/error/complete callbacks. Must handle unsubscription.",
+  "function_signature": "class Observable<T> { subscribe(observer: Observer<T>): Subscription; }",
+  "status": "ACTIVE"
+}

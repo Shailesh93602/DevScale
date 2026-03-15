@@ -1,0 +1,12 @@
+[
+  { "input": "{\"lists\":[[1,4,5],[1,3,4],[2,6]]}", "output": "[1,1,2,3,4,4,5,6]", "explanation": "Standard k=3 merge", "is_hidden": false },
+  { "input": "{\"lists\":[]}", "output": "[]", "explanation": "No lists", "is_hidden": false },
+  { "input": "{\"lists\":[[]]}", "output": "[]", "explanation": "One empty list", "is_hidden": false },
+  { "input": "{\"lists\":[[1]]}", "output": "[1]", "explanation": "One single-node list", "is_hidden": true },
+  { "input": "{\"lists\":[[1],[2],[3]]}", "output": "[1,2,3]", "explanation": "Three single-node lists", "is_hidden": true },
+  { "input": "{\"lists\":[[1,2,3],[4,5,6],[7,8,9]]}", "output": "[1,2,3,4,5,6,7,8,9]", "explanation": "Non-overlapping sorted lists", "is_hidden": true },
+  { "input": "{\"lists\":[[1,4,7],[2,5,8],[3,6,9]]}", "output": "[1,2,3,4,5,6,7,8,9]", "explanation": "Interleaved sorted lists", "is_hidden": true },
+  { "input": "{\"lists\":[[-1,0,1],[-2,0,2]]}", "output": "[-2,-1,0,0,1,2]", "explanation": "Negative numbers", "is_hidden": true },
+  { "input": "{\"lists\":[[1,1,1],[1,1],[1]]}", "output": "[1,1,1,1,1,1]", "explanation": "All duplicates", "is_hidden": true },
+  { "input": "{\"lists\":[[2],[],[1,3]]}", "output": "[1,2,3]", "explanation": "One empty list among others", "is_hidden": true }
+]

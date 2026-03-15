@@ -1,0 +1,12 @@
+[
+  { "input": "{\"s\":\"III\"}", "output": "3", "explanation": "Simple addition", "is_hidden": false },
+  { "input": "{\"s\":\"LVIII\"}", "output": "58", "explanation": "Complex addition without subtraction", "is_hidden": false },
+  { "input": "{\"s\":\"MCMXCIV\"}", "output": "1994", "explanation": "Standard subtraction logic", "is_hidden": false },
+  { "input": "{\"s\":\"IV\"}", "output": "4", "explanation": "Basic subtraction IV", "is_hidden": true },
+  { "input": "{\"s\":\"IX\"}", "output": "9", "explanation": "Basic subtraction IX", "is_hidden": true },
+  { "input": "{\"s\":\"CD\"}", "output": "400", "explanation": "Basic subtraction CD", "is_hidden": true },
+  { "input": "{\"s\":\"M\"}", "output": "1000", "explanation": "Single max character", "is_hidden": true },
+  { "input": "{\"s\":\"MMMCMXCIX\"}", "output": "3999", "explanation": "Max possible roman numeral", "is_hidden": true },
+  { "input": "{\"s\":\"VIII\"}", "output": "8", "explanation": "Mixed addition V + III", "is_hidden": true },
+  { "input": "{\"s\":\"CMXCIX\"}", "output": "999", "explanation": "Multi-tier subtraction", "is_hidden": true }
+]

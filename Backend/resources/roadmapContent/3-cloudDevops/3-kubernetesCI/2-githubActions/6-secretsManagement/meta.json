@@ -1,0 +1,4 @@
+{
+    "name": "Secrets Management in CI/CD",
+    "description": "Securely managing sensitive credentials in CI/CD pipelines and Kubernetes. Covering GitHub Actions secrets with OIDC, HashiCorp Vault integration for dynamic secrets, Kubernetes Secrets, External Secrets Operator (syncing from AWS Secrets Manager), and avoiding secret sprawl."
+}

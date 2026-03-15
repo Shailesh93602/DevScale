@@ -1,0 +1,6 @@
+[
+  "As you traverse the array, what is the best price to buy at? It's the lowest price you've seen so far.",
+  "Track the minimum price seen so far as you iterate through the array left to right.",
+  "At each day, the maximum possible profit if you sell today is `current_price - minimum_price_seen_so_far`.",
+  "Keep updating a `max_profit` variable with the highest profit found, and update the `min_price` variable if you find a new lower price."
+]

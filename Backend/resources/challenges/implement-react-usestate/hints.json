@@ -1,0 +1,6 @@
+[
+  "Use an array to store all state values and an index (cursor) to track which useState call you're on.",
+  "Reset the index to 0 at the start of each render. Each useState call reads states[index] and increments the index.",
+  "On first render, initialize the state at the current index. On subsequent renders, use the existing stored value.",
+  "The setState function must capture the current index via closure, and support both direct values and updater functions: typeof newValue === 'function' ? newValue(prev) : newValue."
+]

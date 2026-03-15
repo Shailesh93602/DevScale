@@ -1,0 +1,12 @@
+[
+  { "input": "{\"head\":[1,2,2,1]}", "output": "true", "explanation": "Even-length palindrome", "is_hidden": false },
+  { "input": "{\"head\":[1,2]}", "output": "false", "explanation": "Not a palindrome", "is_hidden": false },
+  { "input": "{\"head\":[1]}", "output": "true", "explanation": "Single node is palindrome", "is_hidden": true },
+  { "input": "{\"head\":[1,2,1]}", "output": "true", "explanation": "Odd-length palindrome", "is_hidden": true },
+  { "input": "{\"head\":[1,2,3,2,1]}", "output": "true", "explanation": "Longer odd palindrome", "is_hidden": true },
+  { "input": "{\"head\":[1,2,3,4,5]}", "output": "false", "explanation": "Ascending not palindrome", "is_hidden": true },
+  { "input": "{\"head\":[0,0,0,0]}", "output": "true", "explanation": "All zeros", "is_hidden": true },
+  { "input": "{\"head\":[9,1,2,1,9]}", "output": "true", "explanation": "Mirror palindrome odd", "is_hidden": true },
+  { "input": "{\"head\":[1,0,0,1]}", "output": "true", "explanation": "Even palindrome with zeros", "is_hidden": true },
+  { "input": "{\"head\":[1,2,3,4,3,2,2]}", "output": "false", "explanation": "Almost palindrome but not", "is_hidden": true }
+]

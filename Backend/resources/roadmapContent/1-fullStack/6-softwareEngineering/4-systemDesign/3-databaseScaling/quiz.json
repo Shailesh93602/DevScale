@@ -1,0 +1,48 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary architectural concept behind Master-Slave Database Replication?",
+            "options": [
+                "To compress SQL commands.",
+                "To route all heavy WRITE operations (INSERT, UPDATE) strictly to a single Master node, while automatically duplicating that data to multiple Read-Replica nodes to handle the massive volume of SELECT queries.",
+                "To prevent SQL injection attacks.",
+                "To horizontally shard the data based on Geography."
+            ],
+            "answer": "To route all heavy WRITE operations (INSERT, UPDATE) strictly to a single Master node, while automatically duplicating that data to multiple Read-Replica nodes to handle the massive volume of SELECT queries.",
+            "explanation": "This dramatically relieves the stress on the primary Master database, completely solving read-heavy bottlenecks."
+        },
+        {
+            "question": "What is the main technical drawback known as 'Replication Lag' in an asynchronous replica ecosystem?",
+            "options": [
+                "The node server requires 5 minutes to boot.",
+                "The tiny physical delay it takes for the Master Database to copy a brand new WRITE operation over to the Replicas. If a user queries the Replica during this millisecond window, they will read stale data.",
+                "The delay caused by Webpack bundling.",
+                "The CSS rendering blocking time."
+            ],
+            "answer": "The tiny physical delay it takes for the Master Database to copy a brand new WRITE operation over to the Replicas. If a user queries the Replica during this millisecond window, they will read stale data.",
+            "explanation": "This is why Highly Consistent tasks (like checking an exact Bank Account balance) must always go to the Master, not the Replica."
+        },
+        {
+            "question": "When a database reaches hardware limits and must be 'Sharded', what exactly occurs?",
+            "options": [
+                "The database is upgraded to SSD hard drives.",
+                "The single massive dataset is horizontally chopped into separate logical chunks, and each chunk is physically distributed onto completely separate server hard drives based on a Shard Key.",
+                "The database is migrated to MongoDB.",
+                "The Node application is rewritten in Go."
+            ],
+            "answer": "The single massive dataset is horizontally chopped into separate logical chunks, and each chunk is physically distributed onto completely separate server hard drives based on a Shard Key.",
+            "explanation": "Sharding is extremely complex. A major drawback of Sharding is that standard SQL JOIN queries spanning data stored on two completely different physical servers are virtually impossible natively."
+        },
+        {
+            "question": "According to the CAP Theorem, if a distributed database system experiences a severe Network Partition (P), what two properties must engineers desperately choose between?",
+            "options": [
+                "Caching and Sharding.",
+                "Consistency (ensuring all nodes return the exact same accurate data, even if it means taking the database offline) vs Availability (keeping the database online, even if it returns stale, disjointed data).",
+                "Cost and Performance.",
+                "SQL and NoSQL."
+            ],
+            "answer": "Consistency (ensuring all nodes return the exact same accurate data, even if it means taking the database offline) vs Availability (keeping the database online, even if it returns stale, disjointed data).",
+            "explanation": "A financial bank will always choose Consistency (CP) and shut the ATM down. A social media feed will always choose Availability (AP) and just show older posts."
+        }
+    ]
+}

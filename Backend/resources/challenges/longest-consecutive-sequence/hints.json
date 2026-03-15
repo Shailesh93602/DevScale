@@ -1,0 +1,6 @@
+[
+  "Sorting works in O(n log n), but the problem requires O(n). Think about what data structure gives O(1) lookups.",
+  "Put all numbers into a HashSet. This lets you check if a number exists in O(1).",
+  "For each number, only start counting a sequence from the number if it's the START of a sequence — i.e., `num - 1` is NOT in the set.",
+  "From the sequence start, keep incrementing (`num+1`, `num+2`, ...) while the next number exists in the set, tracking the length."
+]

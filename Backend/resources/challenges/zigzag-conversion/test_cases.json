@@ -1,0 +1,12 @@
+[
+  { "input": "{\"s\":\"PAYPALISHIRING\", \"numRows\":3}", "output": "\"PAHNAPLSIIGYIR\"", "explanation": "3 rows standard zigzag", "is_hidden": false },
+  { "input": "{\"s\":\"PAYPALISHIRING\", \"numRows\":4}", "output": "\"PINALSIGYAHRPI\"", "explanation": "4 rows standard zigzag", "is_hidden": false },
+  { "input": "{\"s\":\"A\", \"numRows\":1}", "output": "\"A\"", "explanation": "Single character", "is_hidden": false },
+  { "input": "{\"s\":\"ABC\", \"numRows\":1}", "output": "\"ABC\"", "explanation": "numRows 1 doesn't zigzag", "is_hidden": true },
+  { "input": "{\"s\":\"AB\", \"numRows\":1}", "output": "\"AB\"", "explanation": "numRows 1 doesn't zigzag", "is_hidden": true },
+  { "input": "{\"s\":\"abcdefghijklmnop\", \"numRows\":5}", "output": "\"aiqbhjprcgkosdflnem\"", "explanation": "5 rows long string", "is_hidden": true },
+  { "input": "{\"s\":\"abcdef\", \"numRows\":2}", "output": "\"acebdf\"", "explanation": "2 rows alternating", "is_hidden": true },
+  { "input": "{\"s\":\"a\", \"numRows\":3}", "output": "\"a\"", "explanation": "s shorter than rows", "is_hidden": true },
+  { "input": "{\"s\":\"abcdef\", \"numRows\":6}", "output": "\"abcdef\"", "explanation": "Rows equals string length", "is_hidden": true },
+  { "input": "{\"s\":\"abcdef\", \"numRows\":10}", "output": "\"abcdef\"", "explanation": "Rows greater than string length", "is_hidden": true }
+]

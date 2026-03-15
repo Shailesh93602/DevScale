@@ -1,0 +1,79 @@
+<h1>Data Wrangling with Pandas</h1>
+<p><strong>Data wrangling</strong> (also called data munging) is the process of cleaning and transforming raw data into a usable format. In practice, ~80% of a data engineer's time is spent here. Pandas is the essential Python library for this work.</p>
+
+<h2>Loading Data</h2>
+<pre><code>import pandas as pd
+
+df = pd.read_csv('data.csv')
+df = pd.read_json('data.json')
+df = pd.read_parquet('data.parquet')
+df = pd.read_sql("SELECT * FROM orders", con=engine)</code></pre>
+
+<h2>Exploring a Dataset</h2>
+<pre><code>df.shape          # (rows, columns)
+df.dtypes         # column data types
+df.info()         # non-null counts + dtypes
+df.describe()     # mean, std, min, max
+df.head(5)        # first 5 rows
+df.isnull().sum() # missing values per column</code></pre>
+
+<h2>Handling Missing Values</h2>
+<pre><code># Drop rows with any NaN
+df.dropna(inplace=True)
+
+# Drop only if specific column is NaN
+df.dropna(subset=['email'], inplace=True)
+
+# Fill with a specific value
+df['age'].fillna(df['age'].median(), inplace=True)
+
+# Forward fill (time series)
+df['price'].ffill(inplace=True)</code></pre>
+
+<h2>Filtering and Selecting</h2>
+<pre><code># Boolean filter
+adults = df[df['age'] >= 18]
+
+# Multiple conditions
+active_users = df[(df['status'] == 'active') & (df['age'] > 21)]
+
+# Select columns
+subset = df[['name', 'email', 'age']]
+
+# iloc — by position; loc — by label
+df.iloc[0:5, 1:3]
+df.loc[df['country'] == 'India', 'city']</code></pre>
+
+<h2>Transforming Data</h2>
+<pre><code># Apply a function
+df['name'] = df['name'].str.strip().str.title()
+df['revenue'] = df['price'] * df['quantity']
+
+# Rename columns
+df.rename(columns={'prc': 'price', 'qty': 'quantity'}, inplace=True)
+
+# Change types
+df['date'] = pd.to_datetime(df['date'])
+df['price'] = df['price'].astype(float)</code></pre>
+
+<h2>Grouping and Aggregation</h2>
+<pre><code>summary = df.groupby('category').agg(
+    total_revenue=('revenue', 'sum'),
+    avg_price=('price', 'mean'),
+    order_count=('id', 'count')
+).reset_index()
+
+# Pivot table
+pivot = df.pivot_table(values='sales', index='region', columns='month', aggfunc='sum')</code></pre>
+
+<h2>Merging DataFrames</h2>
+<pre><code># Like SQL JOIN
+merged = pd.merge(orders, customers, on='customer_id', how='left')
+
+# Concatenate (stack rows)
+combined = pd.concat([df_jan, df_feb, df_mar], ignore_index=True)</code></pre>
+
+<h2>Exporting</h2>
+<pre><code>df.to_csv('clean_data.csv', index=False)
+df.to_parquet('clean_data.parquet')
+df.to_sql('orders', con=engine, if_exists='replace', index=False)</code></pre>

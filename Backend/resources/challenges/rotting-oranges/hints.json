@@ -1,0 +1,1 @@
+["Use multi-source BFS — start by adding ALL rotten oranges to the queue simultaneously.", "Each BFS level equals one minute. Spread rot to all adjacent fresh oranges.", "At the end, if there are any remaining fresh oranges (count > 0), return -1. Otherwise return the time elapsed."]

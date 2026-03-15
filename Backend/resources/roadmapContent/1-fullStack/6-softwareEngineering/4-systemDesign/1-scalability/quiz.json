@@ -1,0 +1,26 @@
+{
+    "questions": [
+        {
+            "question": "What is 'Scaling Out' also known as?",
+            "options": [
+                "Vertical Scaling",
+                "Horizontal Scaling",
+                "Circular Scaling",
+                "Optimistic Scaling"
+            ],
+            "correctAnswer": 1,
+            "explanation": "Scaling out is adding more hardware instances to a distributed system."
+        },
+        {
+            "question": "In the CAP Theorem, what does the 'A' stand for?",
+            "options": [
+                "Automation",
+                "Availability",
+                "Authentication",
+                "Accuracy"
+            ],
+            "correctAnswer": 1,
+            "explanation": "Availability (Every request receives a non-error response, without the guarantee that it contains the most recent write)."
+        }
+    ]
+}

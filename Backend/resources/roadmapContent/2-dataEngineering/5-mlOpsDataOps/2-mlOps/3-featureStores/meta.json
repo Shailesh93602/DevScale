@@ -1,0 +1,4 @@
+{
+    "name": "Feature Stores",
+    "description": "The critical infrastructure connecting Data Engineering and Machine Learning. Understanding how Feature Stores (like Feast or Tecton) solve the train/serve skew problem and enable feature reuse across ML teams."
+}

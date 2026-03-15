@@ -1,0 +1,10 @@
+{
+  "typescript": "function trap(height: number[]): number {\n    \n};",
+  "javascript": "/**\n * @param {number[]} height\n * @return {number}\n */\nvar trap = function(height) {\n    \n};",
+  "python": "class Solution:\n    def trap(self, height: List[int]) -> int:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public int trap(int[] height) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int trap(vector<int>& height) {\n        \n    }\n};",
+  "go": "func trap(height []int) int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn trap(height: Vec<i32>) -> i32 {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int Trap(int[] height) {\n        \n    }\n}"
+}

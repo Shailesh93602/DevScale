@@ -1,0 +1,7 @@
+{
+    "id": "1-supabaseMobile",
+    "title": "Supabase Integration in React Native",
+    "description": "Connect React Native to Supabase for auth, database queries, real-time subscriptions, and file storage using the supabase-js client.",
+    "order": 1,
+    "duration": 50
+}

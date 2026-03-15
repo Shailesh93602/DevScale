@@ -1,0 +1,19 @@
+{
+  "title": "Target Sum",
+  "slug": "target-sum",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["dynamic-programming", "backtracking"],
+  "company_tags": ["Facebook", "Amazon", "Google", "Microsoft", "Bloomberg"],
+  "topic_tags": ["dynamic programming", "0/1 knapsack"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer array `nums` and an integer `target`.",
+  "output_format": "The number of different expressions you can build by adding `+` or `-` before each number to reach `target`.",
+  "example_input": "nums = [1,1,1,1,1], target = 3",
+  "example_output": "5",
+  "constraints": "- `1 <= nums.length <= 20`\n- `0 <= nums[i] <= 1000`\n- `0 <= sum(nums[i]) <= 1000`\n- `-1000 <= target <= 1000`",
+  "function_signature": "function findTargetSumWays(nums: number[], target: number): number {}",
+  "status": "ACTIVE"
+}

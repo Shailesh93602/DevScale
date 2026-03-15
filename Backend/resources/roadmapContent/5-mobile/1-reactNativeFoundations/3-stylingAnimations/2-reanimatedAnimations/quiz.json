@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "Why does React Native Reanimated 2 produce smoother animations than the original Animated API, even when the JavaScript thread is busy?",
+            "options": [
+                "Reanimated 2 uses GPU shaders for all transformations, bypassing both JS and UI threads.",
+                "Reanimated 2 compiles animation logic into worklets that execute on the UI thread using JSI (JavaScript Interface), completely bypassing the React bridge. The original Animated API runs on the JS thread — when JS is busy (network responses, re-renders), animation frames are dropped. Reanimated worklets execute independent of JS thread load, guaranteeing 60fps even during JS-intensive operations.",
+                "Reanimated 2 uses hardware interpolation while Animated uses software easing.",
+                "Reanimated 2 batches animation updates and applies them in a single native call."
+            ],
+            "answer": "Reanimated 2 compiles animation logic into worklets that execute on the UI thread using JSI (JavaScript Interface), completely bypassing the React bridge. The original Animated API runs on the JS thread — when JS is busy (network responses, re-renders), animation frames are dropped. Reanimated worklets execute independent of JS thread load, guaranteeing 60fps even during JS-intensive operations.",
+            "explanation": "Test case: an accordion animation that plays while a FlatList renders 200 new items. Animated API: accordion animation drops to ~12fps during the list render. Reanimated 2: accordion continues at 60fps — the UI thread (where Reanimated runs) is unaffected by the JS thread work of rendering list items."
+        },
+        {
+            "question": "In useAnimatedStyle, the style computation function runs on the UI thread. What is a critical restriction this places on the code inside useAnimatedStyle?",
+            "options": [
+                "useAnimatedStyle cannot access React state — it can only read shared values.",
+                "The worklet (function) inside useAnimatedStyle runs on the UI thread, which has no access to the JS runtime or React state. You CANNOT call JS-thread functions, access React hooks (useState, useContext), or console.log from inside useAnimatedStyle. You can ONLY: read shared values (.value), perform math, use Reanimated utilities (interpolate, clamp). Accessing regular React state from useAnimatedStyle causes a crash or unexpected behavior.",
+                "useAnimatedStyle cannot handle conditional animations — only linear value mappings.",
+                "The worklet inside useAnimatedStyle must be a pure function with no external dependencies."
+            ],
+            "answer": "The worklet (function) inside useAnimatedStyle runs on the UI thread, which has no access to the JS runtime or React state. You CANNOT call JS-thread functions, access React hooks (useState, useContext), or console.log from inside useAnimatedStyle. You can ONLY: read shared values (.value), perform math, use Reanimated utilities (interpolate, clamp). Accessing regular React state from useAnimatedStyle causes a crash or unexpected behavior.",
+            "explanation": "If you need to use React state to control an animation: convert the state to a shared value with useEffect and useSharedValue. Then read the shared value in useAnimatedStyle. This bridges the JS and UI thread worlds correctly: state changes on JS thread → update shared value → useAnimatedStyle reacts on UI thread."
+        },
+        {
+            "question": "What does Extrapolation.CLAMP do in interpolate(), and what happens without it?",
+            "options": [
+                "CLAMP limits the animation to run once — without it, animations loop indefinitely.",
+                "CLAMP prevents the output value from going beyond the output range boundaries when the input exceeds the input range. Without CLAMP (default: EXTEND), if scrollY.value exceeds the inputRange max, the interpolated output continues extrapolating — a collapsible header height could become negative, and a title opacity could go below 0, potentially breaking the layout. CLAMP stops the value at the range boundary regardless of how far the input exceeds it.",
+                "CLAMP converts float animation values to integers for pixel-precise rendering.",
+                "Without CLAMP, the animation reverses direction when the input value exceeds the range."
+            ],
+            "answer": "CLAMP prevents the output value from going beyond the output range boundaries when the input exceeds the input range. Without CLAMP (default: EXTEND), if scrollY.value exceeds the inputRange max, the interpolated output continues extrapolating — a collapsible header height could become negative, and a title opacity could go below 0, potentially breaking the layout. CLAMP stops the value at the range boundary regardless of how far the input exceeds it.",
+            "explanation": "Example: interpolate(scrollY, [0, 100], [200, 60]) without CLAMP. When scrollY=200 (past the max), height extrapolates to 60 - 100*(200-60)/100 = -80px. Negative height crashes the layout. With CLAMP: height stays at 60 (the min) no matter how far scrollY exceeds 100."
+        }
+    ]
+}

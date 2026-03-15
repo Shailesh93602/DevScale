@@ -1,0 +1,53 @@
+<h1>Grafana & Dashboards as Code</h1>
+<p>While Prometheus is fantastic at scraping and querying time-series data, its default user interface is strictly for debugging. <strong>Grafana</strong> is the industry-standard open-source analytics and interactive visualization web application. Together, Prometheus and Grafana form the core of the modern "Monitoring Stack".</p>
+
+<h2>Data Sources & The "Single Pane of Glass"</h2>
+<p>Unlike Datadog or New Relic, Grafana does not store your metrics. It is simply a visualization layer that connects to external <strong>Data Sources</strong> via plugins. Out of the box, Grafana natively supports plotting data from:</p>
+<ul>
+  <li>Time-Series Databases (Prometheus, InfluxDB, Graphite)</li>
+  <li>Cloud Monitoring APIs (AWS CloudWatch, Google Cloud Monitoring, Azure Monitor)</li>
+  <li>Relational Databases (PostgreSQL, MySQL, Microsoft SQL Server)</li>
+  <li>Tracing Backends (Jaeger, Tempo, Zipkin)</li>
+</ul>
+<p>This massive ecosystem allows DevOps engineers to create a "Single Pane of Glass" dashboard. The top graph might show CPU usage from Prometheus, the middle graph shows Active Database Connections directly from PostgreSQL, and the bottom graph shows AWS Billing costs from CloudWatch — all on one screen.</p>
+
+<h2>Panels & Visualizations</h2>
+<p>A Grafana Dashboard is composed of independent <strong>Panels</strong>. Each Panel runs its own query (e.g., PromQL or SQL) against a selected Data Source and renders the result using a specific visualization type:</p>
+<ul>
+  <li><strong>Time Series:</strong> The default line/bar graph for continuous metrics (e.g., requests per second).</li>
+  <li><strong>Stat / Gauge:</strong> A large, single number summarizing a metric (e.g., "99.9% Uptime", "10 Active Nodes", or a speedometer showing memory utilization).</li>
+  <li><strong>Table:</strong> Excellent for displaying Top 10 lists (e.g., "Top 10 consumers of CPU", "Top 10 IP addresses hitting 404s").</li>
+  <li><strong>Heatmaps:</strong> Vital for visualizing Histograms. If you plot average API latency, a few 30-second timeouts will skew the average and hide the fact that 95% of users had a 100ms experience. Heatmaps show the <em>distribution</em> of latencies across time.</li>
+</ul>
+
+<h2>Dynamic Dashboards with Variables</h2>
+<p>If you have 50 microservices running across 3 different environments (Dev, Staging, Prod), you should <strong>not</strong> create 150 separate dashboards.</p>
+<p>Instead, Grafana uses <strong>Variables</strong> to create templated Master Dashboards. You define variables at the top of the dashboard that query Prometheus dynamically (e.g., <code>label_values(up, env)</code> populates an "Environment" dropdown). When a user selects <code>prod</code> and <code>auth-service</code> from the visual dropdowns, the variables (e.g., <code>$env</code> and <code>$service</code>) are automatically injected into every PromQL query on the page.</p>
+
+<pre><code>// Instead of hardcoding:
+rate(http_requests_total{job="auth-service", env="prod"}[5m])
+
+// Every panel query uses the variables:
+rate(http_requests_total{job="$service", env="$env"}[5m])</code></pre>
+
+<h2>Dashboards as Code (Provisioning)</h2>
+<p>In a mature DevOps environment, developers do not create or edit Dashboards by manually clicking in the Grafana UI. Clicking in the UI is "ClickOps" — if the Grafana pod crashes or needs to be rebuilt, all manual dashboards are permanently lost.</p>
+
+<p>Under the hood, a Grafana dashboard is simply a massive JSON file defining the panel layouts and queries. Using a process called <strong>Provisioning</strong>, DevOps teams store these JSON files in a Git repository. When the Grafana container boots up, it reads a specified directory, automatically loads all the JSON dashboards, and visually locks them in the UI so users cannot accidentally break them.</p>
+
+<pre><code># grafana-provisioning-dashboards.yaml
+apiVersion: 1
+providers:
+  - name: 'Application Dashboards'
+    orgId: 1
+    folder: 'Microservices'
+    type: file
+    disableDeletion: false
+    editable: false        # Locks the dashboard in the UI
+    updateIntervalSeconds: 10
+    options:
+      path: /etc/grafana/provisioning/dashboards</code></pre>
+
+<h2>Grafana Alerting</h2>
+<p>While Prometheus has its own Alertmanager, many teams prefer managing alerts directly within Grafana's unified UI. Grafana allows you to visually select a Panel (e.g., "CPU Usage"), click the "Alert" tab, and easily define a rule: <em>"If the Panel's query result is > 80% for 5 minutes, trigger an alert."</em></p>
+<p>Grafana can then route this alert to Slack webhooks, PagerDuty, email, or custom endpoints, attaching an image of the specific graph at the exact moment it breached the threshold.</p>

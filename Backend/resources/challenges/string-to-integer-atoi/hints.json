@@ -1,0 +1,7 @@
+[
+  "Carefully read the requirements. The exact order of operations matters: strip spaces, then handle the sign, then handle digits, then bound the return value.",
+  "You can use a while loop with an index pointer. Move the index forward as you consume white spaces. Move it forward if you consume a '+' or '-'. Then enter a loop to consume digits.",
+  "Check character codes (e.g., s.charCodeAt(i)) to make sure a char is between '0' and '9'.",
+  "To construct your number, you can do: result = result * 10 + (char - '0').",
+  "Don't forget to bound your answer at the very end to INT_MIN (-2147483648) and INT_MAX (2147483647)."
+]

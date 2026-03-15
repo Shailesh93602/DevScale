@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "Why is it critical to use TimeSeriesSplit instead of standard KFold cross-validation when evaluating a time series forecasting model?",
+            "options": [
+                "Standard KFold cannot handle datetime columns as features.",
+                "Standard KFold randomly shuffles data before splitting, which means a model trained on 'fold 3' might be trained on data from 2024 and validated on data from 2022 — using future data to predict the past (future leakage). TimeSeriesSplit ensures each training set uses only historical data, correctly simulating real-world deployment where you predict future values from current + past data.",
+                "TimeSeriesSplit uses more folds than standard KFold, providing a better estimate.",
+                "Standard KFold validation is slower for time series because of datetime parsing."
+            ],
+            "answer": "Standard KFold randomly shuffles data before splitting, which means a model trained on 'fold 3' might be trained on data from 2024 and validated on data from 2022 — using future data to predict the past (future leakage). TimeSeriesSplit ensures each training set uses only historical data, correctly simulating real-world deployment where you predict future values from current + past data.",
+            "explanation": "A stock price prediction model trained with standard KFold achieves what looks like 85% accuracy. In live trading, it loses money because it was 'trained on tomorrow's news to predict yesterday's price.' TimeSeriesSplit would have exposed this."
+        },
+        {
+            "question": "A learning curve shows: training AUC = 0.97 with 1,000 samples, training AUC = 0.97 with 10,000 samples; validation AUC = 0.78 with 1,000 samples, 0.82 with 10,000 samples. What does this indicate?",
+            "options": [
+                "The model is underfit — it needs more complex features to improve.",
+                "This is a high variance (overfitting) scenario. The persistent gap between train AUC (0.97) and validation AUC (0.82) that doesn't close suggests the model needs more data OR stronger regularization. The validation score is slowly improving with more data, indicating that collecting more training data is the primary path to improvement.",
+                "The model has reached its optimal performance and should be deployed as-is.",
+                "This indicates a data distribution mismatch between training and test sets."
+            ],
+            "answer": "This is a high variance (overfitting) scenario. The persistent gap between train AUC (0.97) and validation AUC (0.82) that doesn't close suggests the model needs more data OR stronger regularization. The validation score is slowly improving with more data, indicating that collecting more training data is the primary path to improvement.",
+            "explanation": "If the val AUC was flat at 0.78 regardless of data size, more data wouldn't help — you'd need a more complex model. Since val AUC is improving with more data (high variance), more training data and regularization are both appropriate fixes."
+        },
+        {
+            "question": "When applying SMOTE for oversampling a minority class, why must SMOTE be applied INSIDE the cross-validation loop rather than before cross-validation?",
+            "options": [
+                "SMOTE is too computationally expensive to run on the full dataset before CV.",
+                "Applying SMOTE before CV generates synthetic samples from the full training data, including samples that appear in validation folds. The validation set then contains real data that 'leaked' into SMOTE's synthetic minority samples, producing valididy metrics that are overly optimistic and don't reflect real-world performance.",
+                "SMOTE requires stratified splits that are only available inside cross-validation.",
+                "SMOTE must be applied before model fitting which happens inside the CV loop."
+            ],
+            "answer": "Applying SMOTE before CV generates synthetic samples from the full training data, including samples that appear in validation folds. The validation set then contains real data that 'leaked' into SMOTE's synthetic minority samples, producing valididy metrics that are overly optimistic and don't reflect real-world performance.",
+            "explanation": "The imblearn Pipeline handles this correctly — SMOTE is only applied during fit(), not transform(). This means each CV fold's SMOTE is fit only on that fold's training split, with no contamination of the validation split."
+        }
+    ]
+}

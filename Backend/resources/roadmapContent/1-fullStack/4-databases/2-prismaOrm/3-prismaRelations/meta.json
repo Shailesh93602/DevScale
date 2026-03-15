@@ -1,0 +1,4 @@
+{
+    "name": "Modeling Relations",
+    "description": "Connecting your tables perfectly. Defining One-to-One, One-to-Many, and complex Many-to-Many relationships, understanding implicit vs explicit join tables natively."
+}

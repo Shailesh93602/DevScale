@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary advantage of integrating Apollo Server as an `expressMiddleware` within an existing Express.js application, rather than running it strictly as a standalone server?",
+            "options": [
+                "It translates GraphQL queries into SQL syntax natively",
+                "It forces the use of HTTP/3 natively",
+                "It allows you to safely run traditional REST API endpoints (like Stripe Webhooks or static file serving) alongside your /graphql endpoint perfectly on the exact same HTTP server port",
+                "It removes the need for GraphQL resolvers entirely"
+            ],
+            "answer": "It allows you to safely run traditional REST API endpoints (like Stripe Webhooks or static file serving) alongside your /graphql endpoint perfectly on the exact same HTTP server port",
+            "explanation": "If Apollo runs standalone, it consumes the entire port (e.g., 4000). By using `app.use('/graphql', expressMiddleware(server))`, the rest of the Express routing (`app.get('/health')`) continues to function normally."
+        },
+        {
+            "question": "What critical setup step MUST be completed in Apollo Server v4 before you can attach the `expressMiddleware()` to your Express routes?",
+            "options": [
+                "You must call and await `server.start()` logically before mapping the middleware, otherwise Node.js throws an error",
+                "You must install MongoDB",
+                "You must encrypt the 'typeDefs' schema definitions",
+                "You must configure the frontend React cache"
+            ],
+            "answer": "You must call and await `server.start()` logically before mapping the middleware, otherwise Node.js throws an error",
+            "explanation": "In v4, the server initialization is explicitly asynchronous. `await server.start()` prepares the execution engine in the background before it is allowed to intercept network traffic via Express."
+        },
+        {
+            "question": "How does the Apollo Sandbox UI automatically know all of the available Queries, Mutations, and Object configurations without you manually writing UI documentation?",
+            "options": [
+                "It reads the .js files from your hard drive directly",
+                "Through 'Introspection'. GraphQL servers native ability to return information about their own schema schema dynamically when asked securely",
+                "It executes machine learning against the server's endpoint",
+                "It parses the frontend's React components"
+            ],
+            "answer": "Through 'Introspection'. GraphQL servers native ability to return information about their own schema schema dynamically when asked securely",
+            "explanation": "Introspection acts like an automated blueprint. The Sandbox issues a massive Introspection Query, allowing it to magically generate perfect graphical docs and IDE autocomplete features instantly."
+        },
+        {
+            "question": "Why is it considered a security best practice to disable 'Introspection' explicitly in a Production environment?",
+            "options": [
+                "Because introspection slows down the server by 50%",
+                "Because it exposes the entire blueprint, data models, capabilities, and potentially hidden admin mutations of your API to any hacker, making targeted exploits extremely easy",
+                "Because Apollo Sandbox charges a fee to use in production",
+                "Because Introspection overwrites the MongoDB database"
+            ],
+            "answer": "Because it exposes the entire blueprint, data models, capabilities, and potentially hidden admin mutations of your API to any hacker, making targeted exploits extremely easy",
+            "explanation": "While fantastic for local development, allowing everyone on the internet to see exactly how your backend relationships are wired and which hidden Admin mutations exist is an extreme security risk."
+        },
+        {
+            "question": "If your company scales the backend into massive Microservices (e.g. one server for Users, one for Products), what is the modern standard way to merge these individual GraphQL APIs into one unified Graph for the frontend?",
+            "options": [
+                "By using massive REST proxies manually",
+                "By utilizing 'Apollo Federation', an architecture where a central Gateway server automatically composites separate subgraph APIs into one schema and intelligently distributes incoming queries",
+                "By writing all microservices strictly in one giant file",
+                "By cloning all databases into one giant server"
+            ],
+            "answer": "By utilizing 'Apollo Federation', an architecture where a central Gateway server automatically composites separate subgraph APIs into one schema and intelligently distributes incoming queries",
+            "explanation": "Apollo Federation solves the GraphQL monolith. The Gateway analyzes an incoming query, splits it into separate pieces, grabs User data from the User service, Product data from the Product service, and fuses it back together before responding."
+        }
+    ]
+}

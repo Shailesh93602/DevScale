@@ -1,0 +1,5 @@
+[
+  "Because the list is sorted, all duplicates are adjacent to each other.",
+  "Traverse the list using a pointer `curr`. If `curr.val === curr.next.val`, skip the next node by setting `curr.next = curr.next.next`.",
+  "If the values are different, advance `curr` to `curr.next`."
+]

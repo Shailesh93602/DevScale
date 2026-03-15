@@ -1,0 +1,85 @@
+<h1>Attention Mechanisms & The Transformer Architecture</h1>
+<p>In 2017, the paper "Attention Is All You Need" introduced the Transformer — an architecture that abandoned recurrence and convolutions entirely, relying solely on attention mechanisms. This single idea became the foundation of BERT, GPT, T5, LLaMA, and every major foundation model in existence today.</p>
+
+<h2>The Core Problem: Why Attention?</h2>
+<p>RNNs process sequences token by token: to process token 100, they must pass information through 99 sequential steps. This creates two problems: (1) the gradient must flow through 99 steps — vanishing gradient problem, and (2) computation is sequential — cannot be parallelized on GPU. Attention solves both by allowing every token to directly attend to every other token in one parallel operation.</p>
+
+<h2>Scaled Dot-Product Attention</h2>
+<pre><code class="language-python">import torch
+import torch.nn as nn
+import math
+
+def scaled_dot_product_attention(Q, K, V, mask=None):
+    """
+    Q: queries  (batch, heads, seq_len, d_k)
+    K: keys     (batch, heads, seq_len, d_k)  
+    V: values   (batch, heads, seq_len, d_v)
+    
+    Intuition:
+    - Q: "What am I looking for?"
+    - K: "What do I contain?"
+    - V: "What information do I provide if selected?"
+    """
+    d_k = Q.size(-1)
+    
+    # Attention scores: how relevant is each position to every other position
+    scores = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(d_k)
+    # sqrt(d_k) scaling prevents extremely small gradients when d_k is large
+    
+    if mask is not None:
+        scores = scores.masked_fill(mask == 0, float('-inf'))
+    
+    # Softmax: convert scores to probabilities (attention weights sum to 1)
+    attention_weights = torch.softmax(scores, dim=-1)
+    
+    # Weighted sum of values: aggregate information from attended positions
+    return torch.matmul(attention_weights, V), attention_weights
+</code></pre>
+
+<h2>Multi-Head Attention</h2>
+<pre><code class="language-python">class MultiHeadAttention(nn.Module):
+    def __init__(self, d_model=512, num_heads=8):
+        super().__init__()
+        assert d_model % num_heads == 0
+        self.d_k = d_model // num_heads  # Each head works on a slice of d_model
+        self.num_heads = num_heads
+        
+        # Linear projections for Q, K, V and output
+        self.W_Q = nn.Linear(d_model, d_model)
+        self.W_K = nn.Linear(d_model, d_model)
+        self.W_V = nn.Linear(d_model, d_model)
+        self.W_O = nn.Linear(d_model, d_model)
+        
+    def forward(self, Q, K, V, mask=None):
+        batch_size = Q.size(0)
+        
+        # Project and reshape to (batch, heads, seq_len, d_k)
+        Q = self.W_Q(Q).view(batch_size, -1, self.num_heads, self.d_k).transpose(1, 2)
+        K = self.W_K(K).view(batch_size, -1, self.num_heads, self.d_k).transpose(1, 2)
+        V = self.W_V(V).view(batch_size, -1, self.num_heads, self.d_k).transpose(1, 2)
+        
+        # Apply attention independently per head (parallel!)
+        attn_output, _ = scaled_dot_product_attention(Q, K, V, mask)
+        
+        # Concatenate heads and project back to d_model
+        attn_output = attn_output.transpose(1, 2).contiguous().view(batch_size, -1, self.num_heads * self.d_k)
+        return self.W_O(attn_output)
+        # Each head learns different relationship types:
+        # Head 1: syntactic relationships (subject-verb agreement)
+        # Head 2: semantic relationships (word meaning context)
+        # Head 3: positional relationships (nearby word influence)
+</code></pre>
+
+<h2>Encoder vs Decoder vs Encoder-Decoder</h2>
+<pre><code class="language-text">Encoder-only (BERT): Bidirectional — every token sees all other tokens
+  Best for: classification, NER, semantic similarity, embeddings
+  Masking: NO causal mask — full bidirectional attention
+
+Decoder-only (GPT): Causal — each token only sees past tokens
+  Best for: text generation, code generation, chat
+  Masking: causal mask (upper triangle = -inf) prevents future leakage
+
+Encoder-Decoder (T5, BART): Encoder processes input, decoder generates output
+  Best for: translation, summarization, question answering
+  Masking: encoder is bidirectional; decoder is causal
+</code></pre>

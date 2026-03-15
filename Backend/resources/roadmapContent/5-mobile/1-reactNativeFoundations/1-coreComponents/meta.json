@@ -1,0 +1,7 @@
+{
+  "name": "Core Components",
+  "description": "React Native fundamentals — View, Text, StyleSheet, Flexbox, and platform differences.",
+  "topics": [
+    "1-coreComponents"
+  ]
+}

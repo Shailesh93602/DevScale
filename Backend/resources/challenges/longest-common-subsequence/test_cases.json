@@ -1,0 +1,12 @@
+[
+  { "input": "{\"text1\": \"abcde\", \"text2\": \"ace\"}", "output": "3", "explanation": "LCS is 'ace'", "is_hidden": false },
+  { "input": "{\"text1\": \"abc\", \"text2\": \"abc\"}", "output": "3", "explanation": "Identical strings, LCS is entire string", "is_hidden": false },
+  { "input": "{\"text1\": \"abc\", \"text2\": \"def\"}", "output": "0", "explanation": "No common characters", "is_hidden": false },
+  { "input": "{\"text1\": \"a\", \"text2\": \"a\"}", "output": "1", "explanation": "Single matching character", "is_hidden": true },
+  { "input": "{\"text1\": \"a\", \"text2\": \"b\"}", "output": "0", "explanation": "Single non-matching character", "is_hidden": true },
+  { "input": "{\"text1\": \"oxcpqrsvwf\", \"text2\": \"shmtulqrypy\"}", "output": "2", "explanation": "LCS is 'qr'", "is_hidden": true },
+  { "input": "{\"text1\": \"abcba\", \"text2\": \"abcbcba\"}", "output": "5", "explanation": "LCS is 'abcba'", "is_hidden": true },
+  { "input": "{\"text1\": \"bsbininm\", \"text2\": \"jmjkbkjkv\"}", "output": "1", "explanation": "LCS is 'b' or 'j' or 'k'", "is_hidden": true },
+  { "input": "{\"text1\": \"ezupkr\", \"text2\": \"ubmrapg\"}", "output": "2", "explanation": "LCS is 'up'", "is_hidden": true },
+  { "input": "{\"text1\": \"abcdefghij\", \"text2\": \"jihgfedcba\"}", "output": "1", "explanation": "Reversed string, only single char matches as subsequence", "is_hidden": true }
+]

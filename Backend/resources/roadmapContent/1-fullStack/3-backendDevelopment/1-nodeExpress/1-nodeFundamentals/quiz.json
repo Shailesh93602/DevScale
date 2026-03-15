@@ -1,0 +1,74 @@
+{
+    "title": "Node.js Fundamentals Quiz",
+    "description": "Test your Node.js runtime and core modules knowledge.",
+    "passingScore": 80,
+    "timeLimit": 8,
+    "questions": [
+        {
+            "question": "Node.js is single-threaded yet handles many concurrent requests. How?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "By spawning a new thread per request",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Through non-blocking I/O and the event loop — I/O operations happen asynchronously",
+                    "isCorrect": true
+                },
+                {
+                    "text": "By using multiple CPU cores for each request",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By queuing all requests and processing them synchronously",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which Node.js module should you use for working with file paths?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "os",
+                    "isCorrect": false
+                },
+                {
+                    "text": "url",
+                    "isCorrect": false
+                },
+                {
+                    "text": "path",
+                    "isCorrect": true
+                },
+                {
+                    "text": "fs",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why should you never commit a .env file to version control?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It slows down git operations",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It contains sensitive secrets like API keys and database passwords that would be exposed",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Node.js cannot read .env files from git",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Environment files are too large for git",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

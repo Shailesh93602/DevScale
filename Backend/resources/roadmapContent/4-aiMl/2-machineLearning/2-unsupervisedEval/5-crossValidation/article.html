@@ -1,0 +1,82 @@
+<h1>Cross-Validation & Hyperparameter Tuning</h1>
+<p>Using a single train-test split to evaluate or tune a model is statistically unreliable — your model might look excellent on one particular 20% holdout by chance. Cross-validation provides a rigorous, reproducible estimate of how well a model generalizes to unseen data.</p>
+
+<h2>K-Fold Cross-Validation</h2>
+<pre><code class="language-python">from sklearn.model_selection import cross_validate, StratifiedKFold, TimeSeriesSplit
+import numpy as np
+
+# Standard K-Fold: split data into K equal parts, train on K-1, evaluate on 1, rotate
+cv_results = cross_validate(
+    model, X, y,
+    cv=5,
+    scoring=['roc_auc', 'f1', 'precision', 'recall'],
+    return_train_score=True
+)
+
+print(f"Val AUC:  {cv_results['test_roc_auc'].mean():.4f} ± {cv_results['test_roc_auc'].std():.4f}")
+print(f"Train AUC: {cv_results['train_roc_auc'].mean():.4f}")
+# If Train AUC >> Val AUC → overfitting
+
+# Stratified K-Fold: preserves class distribution in each fold
+# ALWAYS use for classification with imbalanced classes
+skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+cv_strat = cross_validate(model, X, y, cv=skf, scoring='roc_auc')
+
+# Time Series Cross-Validation: NEVER shuffle time series data!
+# Each training set uses only past data — no future information leakage
+tscv = TimeSeriesSplit(n_splits=5)
+cv_ts = cross_validate(model, X_time, y_time, cv=tscv, scoring='neg_mean_squared_error')
+</code></pre>
+
+<h2>Learning Curves: Diagnosing the Source of Error</h2>
+<pre><code class="language-python">from sklearn.model_selection import learning_curve
+
+train_sizes, train_scores, val_scores = learning_curve(
+    model, X, y,
+    train_sizes=np.linspace(0.1, 1.0, 10),
+    cv=5, scoring='roc_auc', n_jobs=-1
+)
+
+# Interpret the learning curves:
+# 
+# High Bias (needs more complexity):
+#   Train AUC = 0.75, Val AUC = 0.74, both flat regardless of data size
+#   → Model is too simple. More data won't help.
+#
+# High Variance (needs more data or regularization):
+#   Train AUC = 0.97, Val AUC = 0.81, gap doesn't close with more data
+#   → Model is overfitting. Add regularization or more training data.
+#
+# Good Fit:
+#   Train AUC = 0.88, Val AUC = 0.86, converging with more data
+</code></pre>
+
+<h2>Hyperparameter Tuning</h2>
+<pre><code class="language-python">from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
+from scipy.stats import randint, uniform
+
+# Grid Search: exhaustive, guaranteed to find best within grid
+# Only feasible for ≤ 3 hyperparameters with ≤ 5 values each
+param_grid = {
+    'max_depth': [3, 5, 7, 10],
+    'min_samples_leaf': [5, 10, 20],
+    'n_estimators': [100, 200, 500]
+}  # 4×3×3 = 36 combinations × 5 folds = 180 model fits
+
+grid_search = GridSearchCV(model, param_grid, cv=5, scoring='roc_auc', n_jobs=-1)
+
+# Random Search: sample random combinations — often finds near-optimal in fewer trials
+param_dist = {
+    'max_depth': randint(2, 12),
+    'min_samples_leaf': randint(1, 30),
+    'learning_rate': uniform(0.01, 0.29),
+    'n_estimators': randint(100, 1000)
+}
+
+random_search = RandomizedSearchCV(
+    model, param_dist, n_iter=100, cv=5, scoring='roc_auc', n_jobs=-1, random_state=42
+)
+random_search.fit(X_train, y_train)
+print(f"Best params: {random_search.best_params_}")
+print(f"Best CV AUC: {random_search.best_score_:.4f}")
+</code></pre>

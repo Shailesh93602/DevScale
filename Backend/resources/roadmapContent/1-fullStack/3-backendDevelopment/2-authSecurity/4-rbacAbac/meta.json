@@ -1,0 +1,4 @@
+{
+    "name": "Authorization: RBAC & ABAC",
+    "description": "Implementing granular permissions. Comparing Role-Based Access Control (RBAC) with Attribute-Based Access Control (ABAC) to restrict user access to specific resources and endpoints."
+}

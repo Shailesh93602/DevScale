@@ -1,0 +1,19 @@
+{
+  "title": "Design a RESTful API for a Blog",
+  "slug": "design-restful-blog-api",
+  "difficulty": "Medium",
+  "category": "backend",
+  "points": 100,
+  "tags": ["rest-api", "express", "crud", "routing"],
+  "company_tags": ["Google", "Amazon", "Meta", "Stripe"],
+  "topic_tags": ["REST API Design", "HTTP Methods", "Resource Modeling", "Express.js"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "HTTP requests with method, path, headers, and optional JSON body",
+  "output_format": "JSON responses with appropriate status codes, headers, and body",
+  "example_input": "POST /api/posts { \"title\": \"Hello World\", \"content\": \"My first post\", \"author\": \"john\" }",
+  "example_output": "{ \"id\": 1, \"title\": \"Hello World\", \"content\": \"My first post\", \"author\": \"john\", \"createdAt\": \"2024-01-01T00:00:00Z\" }",
+  "constraints": "Must support CRUD operations for posts and comments. Must follow REST conventions. Must handle errors with proper HTTP status codes.",
+  "function_signature": "class BlogAPI { createPost(req, res): void; getPost(req, res): void; updatePost(req, res): void; deletePost(req, res): void; listPosts(req, res): void; addComment(req, res): void; }",
+  "status": "ACTIVE"
+}

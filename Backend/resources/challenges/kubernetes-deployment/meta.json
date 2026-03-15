@@ -1,0 +1,19 @@
+{
+  "title": "Kubernetes Deployment Configuration",
+  "slug": "kubernetes-deployment",
+  "difficulty": "Hard",
+  "category": "devops",
+  "points": 150,
+  "tags": ["kubernetes", "k8s", "deployment", "containers", "orchestration"],
+  "company_tags": ["Google", "Amazon", "Microsoft", "Uber", "Airbnb"],
+  "topic_tags": ["Kubernetes", "Container Orchestration", "Deployment", "Services"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Application configuration with image, replicas, resources, ports, health checks, and environment variables",
+  "output_format": "Complete Kubernetes manifests: Deployment, Service, HPA, and Ingress YAML",
+  "example_input": "{ name: 'api', image: 'api:v1.0', replicas: 3, port: 3000, resources: { cpu: '500m', memory: '512Mi' } }",
+  "example_output": "Kubernetes Deployment, Service (ClusterIP), HPA, and Ingress manifests as YAML",
+  "constraints": "- Deployment must include resource requests and limits\\n- Must have liveness and readiness probes\\n- Must use rolling update strategy\\n- Service must expose correct port\\n- HPA must scale based on CPU",
+  "function_signature": "function generateK8sManifests(config: { name: string; image: string; replicas: number; port: number; resources: { cpu: string; memory: string } }): string",
+  "status": "ACTIVE"
+}

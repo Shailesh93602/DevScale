@@ -1,0 +1,4 @@
+{
+    "name": "Migrations & Deployment",
+    "description": "Safely evolving your database schema. Utilizing 'prisma migrate dev' to track changes safely via SQL migration files, resolving database drift natively, and deploying to production."
+}

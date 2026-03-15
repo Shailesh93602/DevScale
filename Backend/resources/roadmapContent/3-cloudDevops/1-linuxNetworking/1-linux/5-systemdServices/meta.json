@@ -1,0 +1,4 @@
+{
+    "name": "systemd & Service Management",
+    "description": "Managing the Linux boot process and services in production. Understanding systemd units, service lifecycle (start/stop/enable), writing custom unit files, journalctl log management, and cron vs systemd timers."
+}

@@ -1,0 +1,72 @@
+<h1>Advanced Fine-Tuning: LoRA, QLoRA & RLHF</h1>
+<p>Full fine-tuning of a 7B parameter LLM requires ~112GB of GPU memory (7B × 16-bit = 14GB just for weights, plus optimizer states, gradients, and activations). Most organizations don't have this. LoRA and QLoRA make LLM fine-tuning accessible on consumer hardware while preserving most of the performance gains.</p>
+
+<h2>LoRA: Low-Rank Adaptation</h2>
+<p>Instead of updating all model weights, LoRA freezes the pre-trained weights and injects small, trainable low-rank matrices alongside them. The key insight: weight updates during fine-tuning have low intrinsic rank — you can represent them with far fewer parameters:</p>
+<pre><code class="language-python">from peft import get_peft_model, LoraConfig, TaskType
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+# Load the base model (frozen — weights don't change)
+base_model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-2-7b-hf")
+
+# LoRA configuration — the key parameters
+lora_config = LoraConfig(
+    task_type=TaskType.CAUSAL_LM,
+    r=16,               # Rank: lower = fewer params = faster / less expressive
+                        # Typical values: 4, 8, 16, 64
+    lora_alpha=32,      # Scaling factor: alpha/r is the effective learning rate scaling
+    lora_dropout=0.1,   # Dropout on LoRA layers
+    target_modules=[    # Which weight matrices to apply LoRA to
+        "q_proj",       # Query projection
+        "v_proj",       # Value projection (most impactful for attention)
+        "k_proj",       # Key projection
+        "o_proj",       # Output projection
+    ],
+    bias="none"         # Don't add bias parameters
+)
+
+# Apply LoRA — only adds ~0.1% extra trainable parameters!
+model = get_peft_model(base_model, lora_config)
+model.print_trainable_parameters()
+# Trainable params: 4,194,304 (0.06%) || All params: 6,742,609,920
+# Trains 0.06% of weights → 94% memory reduction for optimizer states
+</code></pre>
+
+<h2>QLoRA: 4-bit Quantization + LoRA</h2>
+<pre><code class="language-python">from transformers import BitsAndBytesConfig
+import torch
+
+# QLoRA: load the base model in 4-bit quantization, then apply LoRA on top
+bnb_config = BitsAndBytesConfig(
+    load_in_4bit=True,              # Quantize weights to 4-bit (vs 16-bit)
+    bnb_4bit_quant_type="nf4",     # NormalFloat4 — optimal for normally distributed weights
+    bnb_4bit_use_double_quant=True, # Quantize the quantization constants too
+    bnb_4bit_compute_dtype=torch.bfloat16  # Compute in BF16 for numerical stability
+)
+
+# With QLoRA: Llama-2-7B fits on a single 24GB GPU (RTX 3090/4090)
+# Without QLoRA: requires ~112GB GPU memory
+quantized_model = AutoModelForCausalLM.from_pretrained(
+    "meta-llama/Llama-2-7b-hf",
+    quantization_config=bnb_config,
+    device_map="auto"
+)
+</code></pre>
+
+<h2>RLHF: Making Models Helpful and Safe</h2>
+<pre><code class="language-python">from trl import PPOTrainer, RewardTrainer
+
+# RLHF three stages:
+# 1. Supervised Fine-Tuning (SFT): fine-tune on high-quality human demonstrations
+# 2. Reward Modeling: train a model to predict human preference scores
+# 3. PPO: optimize the LLM against the reward model using RL
+
+# Stage 2: Train reward model on human preference pairs
+# Humans rank: "Response A is better than Response B for this prompt"
+# The reward model learns to predict these preferences
+
+# Stage 3: PPO keeps the model from "hacking" the reward model:
+# - KL penalty: don't drift too far from the SFT baseline
+# - This prevents the model from generating nonsense that fools the reward model
+# InstructGPT / ChatGPT used this exact pipeline — RLHF is what creates "helpful" AI
+</code></pre>

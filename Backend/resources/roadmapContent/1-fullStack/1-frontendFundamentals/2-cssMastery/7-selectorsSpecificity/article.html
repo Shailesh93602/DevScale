@@ -1,0 +1,101 @@
+<h1>CSS Selectors & Specificity</h1>
+<p>Understanding how browsers decide which CSS rule wins in a conflict is fundamental. Two key mechanisms control this: <strong>specificity</strong> and <strong>the cascade</strong>.</p>
+
+<h2>Selector Types & Their Specificity Weight</h2>
+<p>Specificity is calculated as a 4-part score: <strong>(inline, ID, class/attribute/pseudo-class, element/pseudo-element)</strong></p>
+
+<table>
+<thead><tr><th>Selector</th><th>Score</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td>Inline style</td><td>1,0,0,0</td><td><code>style="color:red"</code></td></tr>
+<tr><td>ID selector</td><td>0,1,0,0</td><td><code>#header</code></td></tr>
+<tr><td>Class selector</td><td>0,0,1,0</td><td><code>.btn</code></td></tr>
+<tr><td>Attribute selector</td><td>0,0,1,0</td><td><code>[type="text"]</code></td></tr>
+<tr><td>Pseudo-class</td><td>0,0,1,0</td><td><code>:hover</code>, <code>:nth-child(2)</code></td></tr>
+<tr><td>Element selector</td><td>0,0,0,1</td><td><code>p</code>, <code>div</code></td></tr>
+<tr><td>Pseudo-element</td><td>0,0,0,1</td><td><code>::before</code>, <code>::after</code></td></tr>
+<tr><td>Universal selector</td><td>0,0,0,0</td><td><code>*</code></td></tr>
+</tbody>
+</table>
+
+<h2>Calculating Specificity</h2>
+<pre><code>/* Score: 0,0,1,1 — one class + one element */
+.nav a { color: blue; }
+
+/* Score: 0,1,0,0 — one ID */
+#main { color: green; }  /* wins over .nav a */
+
+/* Score: 0,0,2,1 — two classes + one element */
+.sidebar .link:hover { color: red; }</code></pre>
+
+<h2>Advanced Selectors</h2>
+<pre><code>/* Descendant (any level) */
+.card p { }
+
+/* Direct child */
+.nav > li { }
+
+/* Adjacent sibling (immediately after) */
+h2 + p { }
+
+/* General sibling (all after) */
+h2 ~ p { }
+
+/* Attribute selectors */
+[type="email"] { }           /* exact match */
+[href^="https"] { }          /* starts with */
+[href$=".pdf"] { }           /* ends with */
+[class*="btn"] { }           /* contains */
+
+/* Pseudo-classes */
+:nth-child(odd)    { }       /* every odd li */
+:nth-child(3n+1)   { }       /* every 3rd, starting from 1 */
+:not(.disabled)    { }       /* exclusion */
+:is(h1, h2, h3)    { }       /* group selector (lower specificity) */
+:where(h1, h2, h3) { }       /* like :is() but 0 specificity */
+:has(img)          { }       /* parent selector! */
+
+/* Pseudo-elements */
+p::first-line { }
+p::first-letter { font-size: 2em; }
+::selection { background: #6366f1; color: white; }</code></pre>
+
+<h2>The Cascade Algorithm</h2>
+<p>When specificity is equal, the cascade resolves conflicts by these rules (in order):</p>
+<ol>
+  <li><strong>Origin</strong> — Browser stylesheet &lt; User stylesheet &lt; Author (your CSS)</li>
+  <li><strong>Importance</strong> — <code>!important</code> overrides all (avoid using it)</li>
+  <li><strong>Specificity</strong> — Higher score wins</li>
+  <li><strong>Source order</strong> — Later rule wins when specificity is equal</li>
+</ol>
+
+<h2>The :is() and :where() Pseudo-classes</h2>
+<pre><code>/* Without :is() — repetitive */
+header h1, main h1, footer h1 { color: #1e293b; }
+
+/* With :is() — cleaner. Specificity = specificity of most specific arg */
+:is(header, main, footer) h1 { color: #1e293b; }
+
+/* :where() — same, but always 0 specificity (easy to override) */
+:where(header, main, footer) h1 { color: #1e293b; }</code></pre>
+
+<h2>The :has() Selector — The Parent Selector</h2>
+<pre><code>/* Style a card differently when it contains an image */
+.card:has(img) {
+  padding: 0;
+}
+
+/* Style a label when its input is checked */
+label:has(input:checked) {
+  font-weight: bold;
+  color: var(--color-primary);
+}</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Keep selectors as short as possible — avoid deeply nested selectors.</li>
+  <li>Avoid using <code>!important</code> — it breaks the natural cascade.</li>
+  <li>Prefer class selectors over element selectors for reusability.</li>
+  <li>Avoid ID selectors in CSS — they have too-high specificity and can't be reused.</li>
+  <li>Use <code>:where()</code> for low-specificity reset/base styles that are easy to override.</li>
+</ul>

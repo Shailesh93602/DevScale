@@ -1,0 +1,1 @@
+["Use a Min-Heap (Priority Queue) to store the K largest elements seen so far.", "The root of a Min-Heap containing K elements is the Kth largest element.", "When adding a new element, if the heap has fewer than K elements, add it. If the heap has K elements and the new element is larger than the root (the smallest of the K largest), pop the root and push the new element."]

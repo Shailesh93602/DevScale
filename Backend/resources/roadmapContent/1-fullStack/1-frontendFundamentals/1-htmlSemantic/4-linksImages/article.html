@@ -1,0 +1,93 @@
+<h1>Links, Images & Media in HTML</h1>
+<p>Beyond text, every modern web page relies on <strong>links, images, and multimedia</strong>. Mastering these elements correctly affects performance, accessibility, and user experience.</p>
+
+<h2>Anchor Tags — The Backbone of the Web</h2>
+<p>The <code>&lt;a&gt;</code> element creates hyperlinks. Its key attributes:</p>
+<pre><code>&lt;a href="https://example.com" target="_blank" rel="noopener noreferrer"&gt;Visit Example&lt;/a&gt;
+&lt;a href="#section-id"&gt;Jump to Section&lt;/a&gt;  &lt;!-- internal anchor --&gt;
+&lt;a href="mailto:hi@example.com"&gt;Email Us&lt;/a&gt;
+&lt;a href="tel:+911234567890"&gt;Call Us&lt;/a&gt;
+&lt;a href="/file.pdf" download&gt;Download PDF&lt;/a&gt;</code></pre>
+<p><strong>Critical:</strong> Always add <code>rel="noopener noreferrer"</code> when using <code>target="_blank"</code> to prevent tab-napping security vulnerabilities.</p>
+
+<h2>Images — The &lt;img&gt; Element</h2>
+<p>The <code>&lt;img&gt;</code> element is a void element (no closing tag) that embeds images:</p>
+<pre><code>&lt;img
+  src="hero.webp"
+  alt="A developer coding at a desk"
+  width="800"
+  height="450"
+  loading="lazy"
+/&gt;</code></pre>
+<ul>
+  <li><strong>alt</strong> — Required for accessibility and SEO. Describe the image content, not its appearance.</li>
+  <li><strong>width &amp; height</strong> — Prevents Cumulative Layout Shift (CLS), a Core Web Vital metric.</li>
+  <li><strong>loading="lazy"</strong> — Defers off-screen images, improving page load speed.</li>
+</ul>
+
+<h2>Responsive Images with &lt;picture&gt;</h2>
+<p>The <code>&lt;picture&gt;</code> element lets browsers choose the best image format and size:</p>
+<pre><code>&lt;picture&gt;
+  &lt;source media="(min-width: 1024px)" srcset="hero-lg.webp" type="image/webp"&gt;
+  &lt;source media="(min-width: 768px)"  srcset="hero-md.webp" type="image/webp"&gt;
+  &lt;img src="hero-sm.jpg" alt="Hero image" width="400" height="300" loading="lazy"&gt;
+&lt;/picture&gt;</code></pre>
+<p>Modern image formats in order of preference: <strong>AVIF &gt; WebP &gt; PNG/JPEG</strong>. Always provide a fallback <code>&lt;img&gt;</code>.</p>
+
+<h2>The &lt;figure&gt; and &lt;figcaption&gt; Elements</h2>
+<p>Use <code>&lt;figure&gt;</code> to associate an image with its caption semantically:</p>
+<pre><code>&lt;figure&gt;
+  &lt;img src="chart.png" alt="Bar chart showing revenue growth 2020-2024"&gt;
+  &lt;figcaption&gt;Figure 1: Revenue growth over four years.&lt;/figcaption&gt;
+&lt;/figure&gt;</code></pre>
+
+<h2>Audio &amp; Video</h2>
+<p>HTML5 provides native media elements without requiring Flash:</p>
+<pre><code>&lt;!-- Video --&gt;
+&lt;video controls width="720" poster="thumbnail.jpg" preload="metadata"&gt;
+  &lt;source src="video.webm" type="video/webm"&gt;
+  &lt;source src="video.mp4"  type="video/mp4"&gt;
+  &lt;p&gt;Your browser doesn't support HTML video. &lt;a href="video.mp4"&gt;Download it&lt;/a&gt;.&lt;/p&gt;
+&lt;/video&gt;
+
+&lt;!-- Audio --&gt;
+&lt;audio controls&gt;
+  &lt;source src="podcast.ogg" type="audio/ogg"&gt;
+  &lt;source src="podcast.mp3" type="audio/mpeg"&gt;
+&lt;/audio&gt;</code></pre>
+<ul>
+  <li><strong>controls</strong> — Shows native browser playback controls.</li>
+  <li><strong>poster</strong> — Thumbnail shown before the video plays.</li>
+  <li><strong>preload="metadata"</strong> — Only loads duration/dimensions, not the full video (better performance).</li>
+  <li>Always include multiple <code>&lt;source&gt;</code> formats for browser compatibility.</li>
+</ul>
+
+<h2>Iframes — Embedding External Content</h2>
+<pre><code>&lt;iframe
+  src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+  title="YouTube video player"
+  width="560"
+  height="315"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media"
+  allowfullscreen
+  loading="lazy"&gt;
+&lt;/iframe&gt;</code></pre>
+
+<h2>SVG Inline vs. External</h2>
+<p>SVGs can be embedded directly in HTML for maximum styling control:</p>
+<pre><code>&lt;!-- Inline SVG (can be styled with CSS) --&gt;
+&lt;svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"&gt;
+  &lt;path d="M12 2L2 7l10 5 10-5-10-5z"/&gt;
+&lt;/svg&gt;
+
+&lt;!-- External SVG (simpler but less styleable) --&gt;
+&lt;img src="icon.svg" alt="Stack icon" width="24" height="24"&gt;</code></pre>
+
+<h2>Best Practices Summary</h2>
+<ul>
+  <li>Always add meaningful <code>alt</code> text; use <code>alt=""</code> only for decorative images.</li>
+  <li>Prefer WebP/AVIF over JPEG/PNG for smaller file sizes.</li>
+  <li>Specify <code>width</code> and <code>height</code> on all <code>&lt;img&gt;</code> tags to prevent layout shift.</li>
+  <li>Use <code>loading="lazy"</code> on images below the fold.</li>
+  <li>Never open external links without <code>rel="noopener noreferrer"</code>.</li>
+</ul>

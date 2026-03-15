@@ -1,0 +1,8 @@
+[
+  {
+    "input": "send('u1', 'hello')",
+    "output": "{ status: 'sent' }",
+    "explanation": "Successful notification delivery",
+    "is_hidden": false
+  }
+]

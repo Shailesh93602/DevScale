@@ -1,0 +1,10 @@
+{
+  "typescript": "function reorganizeString(s: string): string {\n    \n};",
+  "javascript": "/**\n * @param {string} s\n * @return {string}\n */\nvar reorganizeString = function(s) {\n    \n};",
+  "python": "class Solution:\n    def reorganizeString(self, s: str) -> str:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public String reorganizeString(String s) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    string reorganizeString(string s) {\n        \n    }\n};",
+  "go": "func reorganizeString(s string) string {\n    \n}",
+  "rust": "impl Solution {\n    pub fn reorganize_string(s: String) -> String {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public string ReorganizeString(string s) {\n        \n    }\n}"
+}

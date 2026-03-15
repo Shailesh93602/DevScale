@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the Compound Components pattern primarily used for?",
+            "options": [
+                "Using multiple CSS classes on one element",
+                "Sharing implicit state between parent and child components via Context",
+                "Reducing the number of props passed to a component",
+                "Combining multiple custom hooks"
+            ],
+            "answer": "Sharing implicit state between parent and child components via Context",
+            "explanation": "Compound components (e.g., Select + Select.Option) use Context to share state without prop drilling, creating an expressive and flexible component API."
+        },
+        {
+            "question": "What is the primary use of React.lazy() and Suspense?",
+            "options": [
+                "Delaying component rendering for animations",
+                "Code splitting — loading components only when needed to reduce initial bundle size",
+                "Deferring state updates until after paint",
+                "Handling network errors in components"
+            ],
+            "answer": "Code splitting — loading components only when needed to reduce initial bundle size",
+            "explanation": "React.lazy() dynamically imports a component, and Suspense shows a fallback while it loads. This reduces initial JavaScript payload by only loading code when the route or component is needed."
+        },
+        {
+            "question": "What is a feature-based folder structure?",
+            "options": [
+                "Organizing files by type: all components together, all hooks together",
+                "Organizing files by domain feature, co-locating related components, hooks, and API code",
+                "Separating frontend and backend code into separate folders",
+                "Creating one folder per developer"
+            ],
+            "answer": "Organizing files by domain feature, co-locating related components, hooks, and API code",
+            "explanation": "Feature-based structure (e.g., features/auth/) groups all related files together, making it easier to delete, move, or test an entire feature as a unit."
+        },
+        {
+            "question": "Why should Error Boundary components be used in React applications?",
+            "options": [
+                "They speed up rendering",
+                "They catch JavaScript errors in the component tree and prevent the entire app from crashing",
+                "They handle network errors from fetch calls",
+                "They validate prop types at runtime"
+            ],
+            "answer": "They catch JavaScript errors in the component tree and prevent the entire app from crashing",
+            "explanation": "Error Boundaries wrap subtrees and show a fallback UI when any child component throws an error during rendering, preventing the error from taking down the whole application."
+        },
+        {
+            "question": "What problem does the Provider pattern solve when combining multiple React Providers?",
+            "options": [
+                "It prevents context value updates",
+                "It eliminates deeply nested provider trees in the app entry point",
+                "It merges multiple contexts into one",
+                "It prevents unnecessary re-renders"
+            ],
+            "answer": "It eliminates deeply nested provider trees in the app entry point",
+            "explanation": "When you have many providers (Theme, Auth, QueryClient, etc.), nesting them manually creates deeply indented code. The ComposeProviders utility flattens this into a clean array."
+        }
+    ]
+}

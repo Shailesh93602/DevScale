@@ -1,0 +1,19 @@
+{
+  "title": "Implement React useState Hook",
+  "slug": "implement-react-usestate",
+  "difficulty": "Hard",
+  "category": "frontend",
+  "points": 150,
+  "tags": ["javascript", "react", "hooks", "state-management"],
+  "company_tags": ["Meta", "Google", "Amazon", "Netflix", "Uber"],
+  "topic_tags": ["React Internals", "Closures", "State Management"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An initial state value",
+  "output_format": "A [state, setState] tuple that manages state across re-renders",
+  "example_input": "useState(0)",
+  "example_output": "[0, setState]",
+  "constraints": "State can be any value. setState accepts a value or an updater function.",
+  "function_signature": "function useState<T>(initialValue: T): [T, (newValue: T | ((prev: T) => T)) => void]",
+  "status": "ACTIVE"
+}

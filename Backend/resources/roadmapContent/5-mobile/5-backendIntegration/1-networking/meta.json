@@ -1,0 +1,11 @@
+{
+    "id": "1-networking",
+    "title": "Networking & Data",
+    "description": "Implementing REST, GraphQL, and WebSockets in React Native.",
+    "order": 1,
+    "topics": [
+        "1-restApi",
+        "2-graphQl",
+        "3-webSockets"
+    ]
+}

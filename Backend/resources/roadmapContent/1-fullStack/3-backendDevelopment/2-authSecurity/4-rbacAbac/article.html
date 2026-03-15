@@ -1,0 +1,93 @@
+<h1>Authorization: RBAC vs ABAC</h1>
+<p>Once a user is Authenticated (logged in), the server must determine what they are Authorized to do. "Can this user delete this post?" Solving this problem at scale efficiently usually involves either <strong>Role-Based Access Control (RBAC)</strong> or the more advanced <strong>Attribute-Based Access Control (ABAC)</strong>.</p>
+
+<h2>Role-Based Access Control (RBAC)</h2>
+<p>In RBAC, permissions are assigned to Roles (e.g., <code>Admin</code>, <code>Editor</code>, <code>Viewer</code>), and users are assigned to those roles. This is the simplest and most common form of authorization.</p>
+<p>Instead of checking "Can Alice delete posts?", you check "Is Alice an Admin? If yes, allow."</p>
+
+<h3>Implementing RBAC Middleware in Express</h3>
+<pre><code>// 1. Definition of Roles and Permissions
+const roles = {
+  ADMIN: 'admin',
+  EDITOR: 'editor',
+  VIEWER: 'viewer'
+};
+
+// 2. High-order middleware ensuring the user has the required role
+const requireRole = (...allowedRoles) =&gt; {
+  return (req, res, next) =&gt; {
+    // req.user is set by the earlier Authentication (JWT) middleware
+    if (!req.user || !allowedRoles.includes(req.user.role)) {
+      // 403 Forbidden: You are logged in, but lack permission
+      return res.status(403).json({ error: "Access Denied: Insufficient Role" });
+    }
+    next();
+  };
+};
+
+// 3. Applying the middleware to routes
+// Only admins can delete users
+app.delete('/api/users/:id', requireAuth, requireRole(roles.ADMIN), deleteUser);
+
+// Editors AND Admins can create posts
+app.post('/api/posts', requireAuth, requireRole(roles.ADMIN, roles.EDITOR), createPost);</code></pre>
+
+<h2>The Problem with RBAC</h2>
+<p>RBAC fails when permissions depend on <strong>context</strong>. </p>
+<p>For example, "A User can edit a post, BUT ONLY if they are the author of that post." In RBAC, being a "User" role means you can edit all posts or none. You can't easily express ownership.</p>
+
+<h2>Attribute-Based Access Control (ABAC)</h2>
+<p>ABAC solves the context problem by evaluating <strong>Attributes</strong> (properties of the User, the Resource, or the Environment) against boolean policies.</p>
+<ul>
+  <li><strong>User Attributes:</strong> Department, Age, Security Clearance.</li>
+  <li><strong>Resource Attributes:</strong> Document Owner, Document Status (Draft vs Published).</li>
+  <li><strong>Environment Attributes:</strong> Current Time, IP Address, Device Type.</li>
+</ul>
+
+<h3>Implementing ABAC</h3>
+<p>ABAC policies are usually written as code functions or JSON policies. For complex Node apps, libraries like <code>CASL</code> are the industry standard for ABAC.</p>
+
+<pre><code>import { defineAbility } from '@casl/ability';
+
+// 1. Define ABAC policy using CASL
+function defineRulesFor(user) {
+  return defineAbility((can, cannot) =&gt; {
+    // Admins can manage everything
+    if (user.role === 'admin') {
+      can('manage', 'all');
+    } else {
+      // Regular users can only read Published posts
+      can('read', 'Post', { status: 'published' });
+      
+      // Crucially: Users can ONLY update or delete posts where the authorId matches their own ID!
+      can(['update', 'delete'], 'Post', { authorId: user.id });
+    }
+  });
+}
+
+// 2. Checking authorization in the controller
+app.delete('/api/posts/:id', async (req, res) =&gt; {
+  // 1. Fetch the resource from DB
+  const post = await db.posts.findById(req.params.id);
+  
+  // 2. Generate the user's abilities
+  const ability = defineRulesFor(req.user);
+
+  // 3. Evaluate the ABAC rule!
+  // It automatically checks if post.authorId === user.id based on our definition
+  if (ability.cannot('delete', post)) {
+    return res.status(403).json({ error: "You do not own this post" });
+  }
+
+  await post.delete();
+  res.json({ message: "Post deleted" });
+});</code></pre>
+
+<h2>Hybrid Approach</h2>
+<p>Most modern applications use a Hybrid approach: RBAC to grant sweeping permissions across the organization (Administrators vs Guests), and ABAC to handle fine-grained row-level security (Ownership checks, temporal checks like "Cannot approve after 5:00 PM").</p>
+
+<h2>Status Codes: 401 vs 403</h2>
+<ul>
+  <li><strong>401 Unauthorized:</strong> "I don't know who you are. Please log in." (Failed Authentication)</li>
+  <li><strong>403 Forbidden:</strong> "I know exactly who you are, but you aren't allowed to do this." (Failed Authorization)</li>
+</ul>

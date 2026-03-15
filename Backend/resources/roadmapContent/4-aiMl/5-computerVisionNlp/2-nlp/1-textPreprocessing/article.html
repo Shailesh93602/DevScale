@@ -1,0 +1,99 @@
+<h1>Text Preprocessing for NLP</h1>
+<p>Raw text from the real world is messy — it contains HTML tags, emojis, inconsistent casing, contractions, repeated whitespace, and domain-specific jargon. Before any language model or machine learning algorithm can learn from text, it must be cleaned and converted into a numerical representation. This pipeline is called <strong>text preprocessing</strong>, and getting it right has an outsized impact on model quality.</p>
+
+<h2>Cleaning Raw Text</h2>
+<pre><code">import re
+import unicodedata
+
+def clean_text(text: str) -> str:
+    # 1. Normalize unicode (convert curly quotes, em-dashes to ASCII)
+    text = unicodedata.normalize("NFKC", text)
+    
+    # 2. Remove HTML tags
+    text = re.sub(r"<[^>]+>", " ", text)
+    
+    # 3. Expand contractions BEFORE lowercasing
+    contractions = {
+        "can't": "cannot", "won't": "will not", "n't": " not",
+        "'re": " are", "'ve": " have", "'ll": " will", "'d": " would"
+    }
+    for pattern, replacement in contractions.items():
+        text = text.replace(pattern, replacement)
+    
+    # 4. Remove URLs and email addresses
+    text = re.sub(r"http\S+|www\S+|\S+@\S+", " ", text)
+    
+    # 5. Lowercase
+    text = text.lower()
+    
+    # 6. Remove punctuation (keep spaces)
+    text = re.sub(r"[^\w\s]", " ", text)
+    
+    # 7. Remove extra whitespace
+    text = re.sub(r"\s+", " ", text).strip()
+    
+    return text
+
+sample = "I can't believe <b>this</b> is amazing!! Check it out: https://example.com"
+print(clean_text(sample))
+# → "i cannot believe this is amazing check it out"</code></pre>
+
+<h2>Tokenization</h2>
+<p>Tokenization splits text into the fundamental units the model operates on. What counts as a "token" depends on the strategy:</p>
+<pre><code"># 1. Word tokenization (spaCy — handles edge cases properly)
+import spacy
+nlp = spacy.load("en_core_web_sm")
+
+doc = nlp("Machine learning isn't magic, but it's close.")
+word_tokens = [token.text for token in doc]
+# → ['Machine', 'learning', 'is', "n't", 'magic', ',', 'but', 'it', "'s", 'close', '.']
+
+# 2. Stop word removal
+filtered = [token.text for token in doc if not token.is_stop and not token.is_punct]
+# → ['Machine', 'learning', 'magic', 'close']
+
+# 3. Lemmatization — reduce words to root form
+lemmas = [token.lemma_ for token in doc if not token.is_stop and not token.is_punct]
+# → ['machine', 'learn', 'magic', 'close']</code></pre>
+
+<h2>Subword Tokenization — The Transformer Standard</h2>
+<p>Modern transformers (BERT, GPT) don't use word tokenization. They use <strong>subword tokenization</strong> (BPE or WordPiece), which splits unknown words into known subword units. This solves the out-of-vocabulary problem — the tokenizer can handle any word by splitting it into characters and common substrings.</p>
+<pre><code"># Hugging Face tokenizers — the standard for all modern NLP
+from transformers import AutoTokenizer
+
+# BERT uses WordPiece tokenization
+tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
+
+text = "The unhelpfulness of bureaucratization is well-documented."
+tokens = tokenizer.tokenize(text)
+# → ['the', 'un', '##help', '##ful', '##ness', 'of', 'bureau', '##crat', '##ization', ...]
+# Note: '##' prefix means "continuation of previous token"
+
+# For model input, use encode — returns input_ids, attention_mask
+encoding = tokenizer(text, padding="max_length", truncation=True, max_length=128,
+                     return_tensors="pt")
+print(encoding["input_ids"].shape)    # torch.Size([1, 128])
+print(encoding["attention_mask"])  # 1 for real tokens, 0 for padding</code></pre>
+
+<h2>TF-IDF: Turning Text Into Vectors</h2>
+<p>For classical ML models (logistic regression, SVM), you need a numerical vector per document. TF-IDF (Term Frequency-Inverse Document Frequency) is the most common approach — rare words that appear in few documents get higher weight:</p>
+<pre><code"">from sklearn.feature_extraction.text import TfidfVectorizer
+
+corpus = [
+    "machine learning is fascinating",
+    "deep learning is a subset of machine learning",
+    "neural networks power deep learning"
+]
+
+vectorizer = TfidfVectorizer(max_features=100, ngram_range=(1, 2))
+X = vectorizer.fit_transform(corpus)
+print(X.shape)  # (3, 100) — 3 docs, up to 100 features
+print(vectorizer.get_feature_names_out()[:10])</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>For classical ML pipelines, use TF-IDF. For transformer-based models, use the model's own tokenizer — mixing them with other tokenizers breaks compatibility.</li>
+  <li>Apply stop word removal only for classical ML. Modern transformers benefit from stop words because they provide grammatical context.</li>
+  <li>Always examine your tokenized output to verify the tokenizer splits words as you expect — bugs here are subtle and silently hurt accuracy.</li>
+  <li>For multilingual tasks, use <code>bert-base-multilingual-cased</code> or <code>xlm-roberta</code> — they cover 100+ languages in a single model.</li>
+</ul>

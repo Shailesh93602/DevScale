@@ -1,0 +1,19 @@
+{
+  "title": "Find Peak Element",
+  "slug": "find-peak-element",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["binary-search", "array"],
+  "company_tags": ["Google", "Facebook", "Amazon", "Microsoft"],
+  "topic_tags": ["binary search", "arrays"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer array `nums`.",
+  "output_format": "Return the index of any peak element. A peak is an element strictly greater than its neighbors.",
+  "example_input": "nums = [1,2,3,1]",
+  "example_output": "2",
+  "constraints": "- `1 <= nums.length <= 1000`\n- `-2^31 <= nums[i] <= 2^31 - 1`\n- `nums[i] != nums[i + 1]` for all valid `i`.",
+  "function_signature": "function findPeakElement(nums: number[]): number {}",
+  "status": "ACTIVE"
+}

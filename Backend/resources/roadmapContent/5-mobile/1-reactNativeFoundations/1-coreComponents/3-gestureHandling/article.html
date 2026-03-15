@@ -1,0 +1,92 @@
+<h1>Gesture Handling & Touch Interactions</h1>
+<p>React Native's default JS-thread touch system creates janky interactions because touch events must cross the JS/native bridge before registering. React Native Gesture Handler (RNGH) solves this by running gesture recognition entirely on the UI thread — producing silky-smooth interactions that feel truly native.</p>
+
+<h2>Why Gesture Handler Over TouchableOpacity</h2>
+<pre><code class="language-text">TouchableOpacity (old approach):
+  Touch → Native bridge → JS thread → JS processes → Native bridge → UI update
+  Delay: 16-50ms per step — noticeable lag during heavy JS work
+
+React Native Gesture Handler:
+  Touch → Native gesture recognizer on UI thread → Immediate UI response
+  JS thread: only notified AFTER the gesture is already handled visually
+  
+Rule: For any interactive element that demands instant visual feedback
+       (buttons, sliders, drag handles) — always use RNGH over Touchable*.
+</code></pre>
+
+<h2>Swipe-to-Delete with PanGesture</h2>
+<pre><code class="language-jsx">import { GestureDetector, Gesture } from 'react-native-gesture-handler';
+import Animated, {
+  useSharedValue, useAnimatedStyle, withSpring, runOnJS
+} from 'react-native-reanimated';
+
+const SwipeableRow = ({ item, onDelete }) => {
+  const translateX = useSharedValue(0);
+  const SWIPE_THRESHOLD = -80;
+
+  const panGesture = Gesture.Pan()
+    .onUpdate((event) => {
+      // Only allow left swipe (negative X)
+      translateX.value = Math.min(0, event.translationX);
+    })
+    .onEnd((event) => {
+      if (event.translationX &lt; SWIPE_THRESHOLD) {
+        // Swiped far enough → snap to delete position
+        translateX.value = withSpring(-120);
+      } else {
+        // Not far enough → snap back
+        translateX.value = withSpring(0);
+      }
+    });
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: translateX.value }],
+  }));
+
+  return (
+    &lt;View style={styles.container}&gt;
+      {/* Delete button revealed underneath */}
+      &lt;View style={styles.deleteButton}&gt;
+        &lt;Text onPress={() => runOnJS(onDelete)(item.id)}&gt;Delete&lt;/Text&gt;
+      &lt;/View&gt;
+      {/* Swipeable row on top */}
+      &lt;GestureDetector gesture={panGesture}&gt;
+        &lt;Animated.View style={[styles.row, animatedStyle]}&gt;
+          &lt;Text&gt;{item.title}&lt;/Text&gt;
+        &lt;/Animated.View&gt;
+      &lt;/GestureDetector&gt;
+    &lt;/View&gt;
+  );
+};
+</code></pre>
+
+<h2>Pinch-to-Zoom</h2>
+<pre><code class="language-jsx">import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import Animated, { useSharedValue, useAnimatedStyle } from 'react-native-reanimated';
+
+const ZoomableImage = ({ source }) => {
+  const scale = useSharedValue(1);
+  const savedScale = useSharedValue(1);
+
+  const pinchGesture = Gesture.Pinch()
+    .onUpdate((event) => {
+      // Multiply current saved scale by ongoing pinch scale
+      scale.value = savedScale.value * event.scale;
+    })
+    .onEnd(() => {
+      // Clamp scale between 1x and 4x, then save
+      savedScale.value = Math.min(Math.max(scale.value, 1), 4);
+      scale.value = savedScale.value;
+    });
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  return (
+    &lt;GestureDetector gesture={pinchGesture}&gt;
+      &lt;Animated.Image source={source} style={[styles.image, animatedStyle]} /&gt;
+    &lt;/GestureDetector&gt;
+  );
+};
+</code></pre>

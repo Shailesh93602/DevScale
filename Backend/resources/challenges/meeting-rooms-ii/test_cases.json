@@ -1,0 +1,12 @@
+[
+  { "input": "{\"intervals\": [[0,30],[5,10],[15,20]]}", "output": "2", "explanation": "Two overlapping meetings at peak.", "is_hidden": false },
+  { "input": "{\"intervals\": [[7,10],[2,4]]}", "output": "1", "explanation": "No overlap, 1 room.", "is_hidden": false },
+  { "input": "{\"intervals\": [[0,5],[5,10],[10,15]]}", "output": "1", "explanation": "Sequential meetings, 1 room.", "is_hidden": false },
+  { "input": "{\"intervals\": [[1,5],[2,6],[3,7]]}", "output": "3", "explanation": "All three overlap, need 3 rooms.", "is_hidden": true },
+  { "input": "{\"intervals\": [[1,10]]}", "output": "1", "explanation": "Single meeting.", "is_hidden": true },
+  { "input": "{\"intervals\": [[0,1],[1,2],[2,3],[3,4]]}", "output": "1", "explanation": "Back-to-back meetings, 1 room.", "is_hidden": true },
+  { "input": "{\"intervals\": [[0,10],[0,10],[0,10],[0,10]]}", "output": "4", "explanation": "All identical, need 4 rooms.", "is_hidden": true },
+  { "input": "{\"intervals\": [[1,3],[2,4],[3,5],[4,6]]}", "output": "2", "explanation": "Max 2 overlapping at any time.", "is_hidden": true },
+  { "input": "{\"intervals\": [[6,15],[13,20],[6,17]]}", "output": "3", "explanation": "All three overlap in range [13,15].", "is_hidden": true },
+  { "input": "{\"intervals\": [[0,5],[1,3],[2,4],[5,8],[6,9]]}", "output": "3", "explanation": "Peak overlap of 3 in [2,3].", "is_hidden": true }
+]

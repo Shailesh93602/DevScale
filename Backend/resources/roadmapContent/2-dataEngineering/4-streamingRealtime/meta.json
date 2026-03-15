@@ -1,0 +1,4 @@
+{
+    "name": "Streaming & Real-Time",
+    "description": "Event-driven architectures and stream processing with Apache Kafka and Apache Flink."
+}

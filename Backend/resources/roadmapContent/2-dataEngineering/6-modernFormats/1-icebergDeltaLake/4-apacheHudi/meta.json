@@ -1,0 +1,4 @@
+{
+    "name": "Apache Hudi: Incremental Processing",
+    "description": "Solving the upsert problem for streaming Data Lakes. Understanding how Apache Hudi enables incremental data ingestion with record-level updates and deletes on S3, comparing Copy-on-Write vs Merge-on-Read strategies."
+}

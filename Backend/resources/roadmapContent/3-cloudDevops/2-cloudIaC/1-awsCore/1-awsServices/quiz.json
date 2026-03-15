@@ -1,0 +1,74 @@
+{
+    "title": "AWS Core Services Quiz",
+    "description": "Test your AWS fundamentals knowledge.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the recommended way to give an EC2 instance access to S3?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Hardcode AWS access keys in the application",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Attach an IAM Role to the EC2 instance with the required S3 permissions",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Store credentials in environment variables in the user data script",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Create a special S3 user with access keys",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is AWS Lambda?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A managed container orchestration service",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A serverless compute service that runs code in response to events without managing servers",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A virtual machine instance type",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A CDN (Content Delivery Network) for static assets",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the S3 INTELLIGENT_TIERING storage class used for?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Long-term archival with hours-level retrieval",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Automatically moving data between access tiers based on usage patterns to optimise cost",
+                    "isCorrect": true
+                },
+                {
+                    "text": "High-performance workloads requiring nanosecond access",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Frequently accessed data only",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

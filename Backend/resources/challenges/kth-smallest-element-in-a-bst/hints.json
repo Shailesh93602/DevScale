@@ -1,0 +1,1 @@
+["An in-order traversal of a BST produces values in ascending sorted order.", "Simply do an in-order traversal (left, root, right) and return the kth element you encounter.", "You can do this iteratively with a stack to avoid recursion overhead, which is more memory-efficient in practice."]

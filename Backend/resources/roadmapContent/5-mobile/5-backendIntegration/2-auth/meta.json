@@ -1,0 +1,10 @@
+{
+    "id": "2-auth",
+    "title": "Mobile Authentication",
+    "description": "Securing your mobile app with OAuth and biometric authentication.",
+    "order": 2,
+    "topics": [
+        "1-oauthMobile",
+        "2-biometrics"
+    ]
+}

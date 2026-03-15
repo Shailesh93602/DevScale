@@ -1,0 +1,182 @@
+<h1>React Navigation: Screens, Stacks, Tabs &amp; Drawers</h1>
+<p>Mobile apps don't have URLs — they have screens that animate in and out of view. <strong>React Navigation</strong> is the industry-standard navigation library for React Native, providing a fully customizable navigation architecture that maps closely to what iOS and Android users expect natively.</p>
+
+<h2>Installation</h2>
+<pre><code>npm install @react-navigation/native
+npx expo install react-native-screens react-native-safe-area-context
+
+# Stack Navigator
+npm install @react-navigation/native-stack
+
+# Bottom Tabs
+npm install @react-navigation/bottom-tabs
+
+# Drawer
+npm install @react-navigation/drawer
+npx expo install react-native-gesture-handler react-native-reanimated</code></pre>
+
+<h2>The NavigationContainer</h2>
+<p>Every React Navigation tree must be wrapped in a <code>NavigationContainer</code> at the root of your app. It manages the navigation state for the entire app:</p>
+<pre><code>// App.tsx
+import { NavigationContainer } from '@react-navigation/native';
+import { RootNavigator } from './navigation/RootNavigator';
+
+export default function App() {
+  return (
+    &lt;NavigationContainer&gt;
+      &lt;RootNavigator /&gt;
+    &lt;/NavigationContainer&gt;
+  );
+}</code></pre>
+
+<h2>Stack Navigation</h2>
+<p>The Stack Navigator mimics a physical stack of cards. Navigating to a new screen pushes a card on top; going back pops it off. This is the core pattern for hierarchical flows (list → detail → settings):</p>
+<pre><code>import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import HomeScreen from '../screens/HomeScreen';
+import DetailsScreen from '../screens/DetailsScreen';
+
+// Type-safe route params (TypeScript)
+type RootStackParamList = {
+  Home: undefined;
+  Details: { productId: string; productName: string };
+};
+
+const Stack = createNativeStackNavigator&lt;RootStackParamList&gt;();
+
+export function RootNavigator() {
+  return (
+    &lt;Stack.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        headerStyle: { backgroundColor: '#6366f1' },
+        headerTintColor: '#fff',
+        headerTitleStyle: { fontWeight: 'bold' },
+        animation: 'slide_from_right', // iOS natural feel
+      }}
+    &gt;
+      &lt;Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Product List' }} /&gt;
+      &lt;Stack.Screen
+        name="Details"
+        component={DetailsScreen}
+        options={({ route }) =&gt; ({ title: route.params.productName })} // Dynamic title
+      /&gt;
+    &lt;/Stack.Navigator&gt;
+  );
+}</code></pre>
+
+<pre><code>// HomeScreen.tsx — navigating with typed params
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../navigation/RootNavigator';
+
+type Props = NativeStackScreenProps&lt;RootStackParamList, 'Home'&gt;;
+
+export default function HomeScreen({ navigation }: Props) {
+  return (
+    &lt;Button
+      title="See Details"
+      onPress={() =&gt; navigation.navigate('Details', { productId: '42', productName: 'Hiking Boots' })}
+    /&gt;
+  );
+}
+
+// DetailsScreen.tsx — reading params
+type Props = NativeStackScreenProps&lt;RootStackParamList, 'Details'&gt;;
+export default function DetailsScreen({ route, navigation }: Props) {
+  const { productId, productName } = route.params;
+  return (
+    &lt;View&gt;
+      &lt;Text&gt;{productName} (ID: {productId})&lt;/Text&gt;
+      &lt;Button title="Go Back" onPress={() =&gt; navigation.goBack()} /&gt;
+    &lt;/View&gt;
+  );
+}</code></pre>
+
+<h2>Bottom Tab Navigation</h2>
+<p>Bottom Tabs are the primary navigation pattern of modern mobile apps (Instagram, Twitter). Each tab maintains its own independent navigation stack:</p>
+<pre><code>import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Ionicons from '@expo/vector-icons/Ionicons';
+
+const Tab = createBottomTabNavigator();
+
+export function TabNavigator() {
+  return (
+    &lt;Tab.Navigator
+      screenOptions={({ route }) =&gt; ({
+        tabBarIcon: ({ focused, color, size }) =&gt; {
+          // Return a vector icon based on route name and focus state
+          const iconMap = {
+            Home: focused ? 'home' : 'home-outline',
+            Search: focused ? 'search' : 'search-outline',
+            Profile: focused ? 'person' : 'person-outline',
+          };
+          return &lt;Ionicons name={iconMap[route.name]} size={size} color={color} /&gt;;
+        },
+        tabBarActiveTintColor: '#6366f1',
+        tabBarInactiveTintColor: 'gray',
+      })}
+    &gt;
+      &lt;Tab.Screen name="Home" component={HomeStack} /&gt;
+      &lt;Tab.Screen name="Search" component={SearchScreen} /&gt;
+      &lt;Tab.Screen name="Profile" component={ProfileScreen} /&gt;
+    &lt;/Tab.Navigator&gt;
+  );
+}</code></pre>
+
+<h2>Drawer Navigation</h2>
+<pre><code>import { createDrawerNavigator } from '@react-navigation/drawer';
+
+const Drawer = createDrawerNavigator();
+
+export function DrawerNavigator() {
+  return (
+    &lt;Drawer.Navigator
+      screenOptions={{
+        drawerStyle: { backgroundColor: '#1e1b4b', width: 240 },
+        drawerLabelStyle: { color: '#fff' },
+        drawerActiveTintColor: '#818cf8',
+      }}
+    &gt;
+      &lt;Drawer.Screen name="Home" component={HomeScreen} /&gt;
+      &lt;Drawer.Screen name="Settings" component={SettingsScreen} /&gt;
+      &lt;Drawer.Screen name="About" component={AboutScreen} /&gt;
+    &lt;/Drawer.Navigator&gt;
+  );
+}</code></pre>
+
+<h2>Deep Linking</h2>
+<p>Deep links let users open a specific screen from a URL (e.g., from a push notification or web link):</p>
+<pre><code>// In NavigationContainer, configure link mapping
+const linking = {
+  prefixes: ['myapp://', 'https://myapp.com'],
+  config: {
+    screens: {
+      Home: '',
+      Details: 'product/:productId',
+      Profile: 'user/:userId',
+    },
+  },
+};
+
+// &lt;NavigationContainer linking={linking}&gt;</code></pre>
+
+<h2>useNavigation &amp; useRoute Hooks</h2>
+<p>When passing <code>navigation</code> prop everywhere becomes tedious, use hooks inside deeply nested child components:</p>
+<pre><code>import { useNavigation, useRoute } from '@react-navigation/native';
+
+function NestedButton() {
+  const navigation = useNavigation();
+  return &lt;Button title="Go Home" onPress={() =&gt; navigation.navigate('Home')} /&gt;;
+}
+
+function NestedComponent() {
+  const route = useRoute();
+  return &lt;Text&gt;Current screen: {route.name}&lt;/Text&gt;;
+}</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always define a typed <code>ParamList</code> in TypeScript — it gives you autocomplete for params and catches route name typos at compile time.</li>
+  <li>Nest navigators deliberately: Tab inside Stack for post-auth flows, Stack inside each Tab for drill-down navigation.</li>
+  <li>Use <code>navigation.replace('Home')</code> instead of <code>navigate</code> when you don't want the user to be able to press Back (e.g., after successful login).</li>
+  <li>Don't put business logic in <code>_layout.tsx</code> — keep navigators as pure routing configuration, not data fetching containers.</li>
+</ul>

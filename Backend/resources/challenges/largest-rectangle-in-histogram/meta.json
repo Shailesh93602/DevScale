@@ -1,0 +1,19 @@
+{
+  "title": "Largest Rectangle in Histogram",
+  "slug": "largest-rectangle-in-histogram",
+  "difficulty": "Hard",
+  "category": "algorithms",
+  "points": 150,
+  "tags": ["stack", "monotonic-stack", "array"],
+  "company_tags": ["Amazon", "Google", "Microsoft", "Facebook", "Bloomberg"],
+  "topic_tags": ["stack", "monotonic stack", "arrays"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An array of integers `heights` representing the histogram's bar heights (width of each bar is 1).",
+  "output_format": "Return the area of the largest rectangle in the histogram.",
+  "example_input": "heights = [2,1,5,6,2,3]",
+  "example_output": "10",
+  "constraints": "- `1 <= heights.length <= 10^5`\n- `0 <= heights[i] <= 10^4`",
+  "function_signature": "function largestRectangleArea(heights: number[]): number {}",
+  "status": "ACTIVE"
+}

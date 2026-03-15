@@ -1,0 +1,40 @@
+<h1>Model Serving</h1>
+<p>Once a machine learning model is trained and validated, it needs to be made available for inference (generating predictions). This process is known as <strong>Model Serving</strong>. In the MLOps lifecycle, Data Engineers and ML Engineers work closely here to ensure standardisation, scalability, and monitoring.</p>
+
+<h2>Batch Prediction vs. Real-Time Inference</h2>
+<p>Models are deployed differently depending on the business need:</p>
+<ul>
+  <li><strong>Batch Prediction:</strong> The model is loaded onto a distributed computing cluster (like Apache Spark) in an Airflow DAG. It processes millions of records overnight, storing the pre-computed predictions in a database (like PostgreSQL or Cassandra). When a user opens the app, the backend simply runs a fast <code>SELECT</code> query. <em>(High throughput, high latency).</em></li>
+  <li><strong>Real-Time Inference:</strong> The model is exposed as a REST or gRPC API endpoint. When a user taking an action on the app triggers a request, the model generates a prediction on-the-fly and returns it dynamically within milliseconds. <em>(Low throughput, low latency).</em></li>
+</ul>
+
+<h2>The Complexity of Real-Time Serving</h2>
+<p>Serving an ML model in a generic Flask or FastAPI app is risky for production due to framework-specific dependencies and the hardware demands of Neural Networks (e.g., managing GPU memory). If your Python API is blocked by a massive tensor matrix multiplication, all subsequent incoming HTTP requests will timeout.</p>
+
+<h2>Model Serving Frameworks</h2>
+<p>To handle these complexities safely, the industry uses dedicated Model Serving platforms:</p>
+
+<h3>BentoML</h3>
+<p>BentoML simplifies generating a production-ready API wrapper around models natively tracked from MLflow or created in Scikit/PyTorch. It automatically containerises the model into a standard Docker image (a "Bento").</p>
+<pre><code>import bentoml
+from bentoml.io import JSON
+
+# Define the runner (handles hardware logic inside BentoML)
+runner = bentoml.xgboost.get("my_rf_model:latest").to_runner()
+svc = bentoml.Service("fraud_detector", runners=[runner])
+
+@svc.api(input=JSON(), output=JSON())
+async def predict(input_data):
+    # Asynchronously serves requests without blocking
+    result = await runner.predict.async_run(input_data)
+    return {"fraud_probability": result}</code></pre>
+
+<h3>KServe & Seldon Core</h3>
+<p>These are Kubernetes-native platforms tailored for massive enterprise MLOps. Once you have a Dockerised model, these tools orchestrate it on Kubernetes, providing:</p>
+<ul>
+  <li><strong>Serverless Autoscaling:</strong> Scale from zero replicas to hundreds simultaneously based strictly on API request volume.</li>
+  <li><strong>A/B Testing:</strong> Route exactly 10% of production traffic to "Model V2" and 90% to "Model V1" to confidently assess if the new model performs better in the real world.</li>
+</ul>
+
+<h2>Monitoring Model Drift</h2>
+<p>Unlike standard APIs, ML APIs can silently fail due to <strong>Data Drift</strong>. If user behavior changes over time, the model's accuracy deteriorates, even if the API responds with a successful <code>HTTP 200 OK</code>. A robust serving infrastructure continuously logs the incoming live data and compares its distribution against the data the model was originally trained on, triggering an alert for a pipeline retrain if the drift becomes significant.</p>

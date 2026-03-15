@@ -1,0 +1,118 @@
+{
+    "title": "Shell Scripting Quiz",
+    "description": "Test your knowledge on bash scripts, variables, loops, and conditions.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Which of the following lines correctly defines a variable in a Bash script?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "VAR = value",
+                    "isCorrect": false
+                },
+                {
+                    "text": "$VAR = value",
+                    "isCorrect": false
+                },
+                {
+                    "text": "VAR=value",
+                    "isCorrect": true
+                },
+                {
+                    "text": "let VAR = 'value'",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does `$1` represent inside a bash script?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The first command-line argument passed to the script.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The exit code of the previous command.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The process ID (PID) of the script.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The name of the script itself.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "If you want your Bash script to immediately stop executing if any single command within it fails, what should you include at the top?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "set -e",
+                    "isCorrect": true
+                },
+                {
+                    "text": "exit 1",
+                    "isCorrect": false
+                },
+                {
+                    "text": "trap error SIGINT",
+                    "isCorrect": false
+                },
+                {
+                    "text": "#!/bin/bash --safe",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which variable holds the exit status (0 for success, >0 for failure) of the most recently executed command?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "$$",
+                    "isCorrect": false
+                },
+                {
+                    "text": "$@",
+                    "isCorrect": false
+                },
+                {
+                    "text": "$?",
+                    "isCorrect": true
+                },
+                {
+                    "text": "$0",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What do the `[ ]` brackets indicate in Bash?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A JSON array.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A command substitution, replacing the text with the output of a command.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A conditional test expression used with 'if' statements.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A dictionary mapping keys to values.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

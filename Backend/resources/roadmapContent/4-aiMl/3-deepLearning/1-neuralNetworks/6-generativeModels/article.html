@@ -1,0 +1,92 @@
+<h1>Generative Models: GANs & Diffusion</h1>
+<p>Generative models learn the distribution of training data and can sample new, realistic examples from it. GANs and diffusion models are the two dominant approaches for generating high-quality images, audio, and video.</p>
+
+<h2>Generative Adversarial Networks (GANs)</h2>
+<p>A GAN consists of two networks locked in adversarial competition: a <strong>Generator</strong> that creates fake samples, and a <strong>Discriminator</strong> that tries to distinguish real from fake. Training is a minimax game — the generator gets better at fooling the discriminator, which in turn gets better at detecting fakes:</p>
+<pre><code class="language-python">import torch
+import torch.nn as nn
+
+class Generator(nn.Module):
+    """Takes random noise → produces realistic images"""
+    def __init__(self, latent_dim=100, img_channels=3, features=64):
+        super().__init__()
+        self.net = nn.Sequential(
+            # Upsample: (latent_dim, 1, 1) → (features*8, 4, 4)
+            nn.ConvTranspose2d(latent_dim, features*8, 4, 1, 0, bias=False),
+            nn.BatchNorm2d(features*8),
+            nn.ReLU(True),
+            nn.ConvTranspose2d(features*8, features*4, 4, 2, 1, bias=False),
+            nn.BatchNorm2d(features*4),
+            nn.ReLU(True),
+            nn.ConvTranspose2d(features*4, features*2, 4, 2, 1, bias=False),
+            nn.BatchNorm2d(features*2),
+            nn.ReLU(True),
+            nn.ConvTranspose2d(features*2, img_channels, 4, 2, 1, bias=False),
+            nn.Tanh()  # Output in [-1, 1] range (normalized images)
+        )
+
+    def forward(self, z):
+        return self.net(z)
+
+# GAN loss functions
+criterion = nn.BCEWithLogitsLoss()
+
+def train_discriminator(D, G, real_images, z, optimizer_D):
+    optimizer_D.zero_grad()
+    # Real images → Discriminator should output 1 (real)
+    real_labels = torch.ones(real_images.size(0), 1)
+    real_loss = criterion(D(real_images), real_labels)
+    
+    # Fake images → Discriminator should output 0 (fake)
+    fake_images = G(z).detach()  # detach: don't backprop into G
+    fake_labels = torch.zeros(z.size(0), 1)
+    fake_loss = criterion(D(fake_images), fake_labels)
+    
+    (real_loss + fake_loss).backward()
+    optimizer_D.step()
+
+def train_generator(G, D, z, optimizer_G):
+    optimizer_G.zero_grad()
+    # Generator WANTS Discriminator to output 1 for its fake images
+    fake_images = G(z)
+    real_labels = torch.ones(z.size(0), 1)  # Fool the discriminator
+    loss = criterion(D(fake_images), real_labels)
+    loss.backward()
+    optimizer_G.step()
+</code></pre>
+
+<h2>GAN Failure Modes</h2>
+<pre><code class="language-text">Mode Collapse: Generator produces only a few types of images (ignores most of the distribution)
+  Fix: Wasserstein GAN (WGAN) with gradient penalty instead of BCE loss
+
+Training Instability: Loss oscillates, generator/discriminator stops learning
+  Fix: balance training (2-3 D steps per G step), spectral normalization, careful LR tuning
+
+Evaluation with FID (Fréchet Inception Distance):
+  Lower FID = better — measures similarity between real and generated distributions
+</code></pre>
+
+<h2>Diffusion Models</h2>
+<p>Diffusion models learn to reverse a noise-adding process. During training, Gaussian noise is progressively added to real images over T steps until the image is pure noise. The model learns to predict and remove this noise step-by-step, generating new images by starting from pure noise and iteratively denoising:</p>
+<pre><code class="language-python">from diffusers import StableDiffusionPipeline
+import torch
+
+# Using a pretrained Stable Diffusion model (Hugging Face Diffusers)
+pipe = StableDiffusionPipeline.from_pretrained(
+    "runwayml/stable-diffusion-v1-5",
+    torch_dtype=torch.float16
+).to("cuda")
+
+# Text-conditioned image generation
+image = pipe(
+    prompt="A photorealistic mountain lake at sunset, 8K",
+    negative_prompt="blurry, low quality, cartoon",
+    num_inference_steps=50,    # More steps = higher quality, slower
+    guidance_scale=7.5,        # How strongly to follow the text prompt
+    width=512, height=512
+).images[0]
+
+# Why diffusion models produce better quality than GANs:
+# GANs: generator learns one path through the data space → mode collapse
+# Diffusion: explicitly models the full data distribution via denoising score matching
+</code></pre>

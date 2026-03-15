@@ -1,0 +1,74 @@
+{
+    "title": "Responsive Design Quiz",
+    "description": "Test your knowledge of responsive design patterns and media queries.",
+    "passingScore": 80,
+    "timeLimit": 8,
+    "questions": [
+        {
+            "question": "Which CSS at-rule is used to apply styles based on screen size?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "@viewport",
+                    "isCorrect": false
+                },
+                {
+                    "text": "@media",
+                    "isCorrect": true
+                },
+                {
+                    "text": "@screen",
+                    "isCorrect": false
+                },
+                {
+                    "text": "@responsive",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does mobile-first mean in responsive design?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The site only supports mobile devices",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Base styles target mobile; larger screens are enhanced with min-width queries",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Mobile styles override desktop styles",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The site must be tested on a phone first",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does clamp(1rem, 5vw, 3rem) do when used for font-size?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Sets font-size to exactly 5vw always",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Sets font-size that scales with viewport, clamped between 1rem and 3rem",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Creates three different font sizes for three breakpoints",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Sets font-size to 1rem on mobile only",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

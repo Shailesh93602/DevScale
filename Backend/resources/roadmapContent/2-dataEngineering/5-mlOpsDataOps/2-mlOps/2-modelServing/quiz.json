@@ -1,0 +1,118 @@
+{
+    "title": "Model Serving Quiz",
+    "description": "Test your knowledge on real-time inference, batch scoring, and managing model drift.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Which scenario best describes 'Batch Prediction'?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A model exposed as a REST API that generates recommendations dynamically in milliseconds when a user searches for an item.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A Spark job running overnight to generate predictions for millions of users and storing the results in a database for fast querying the next day.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Streaming new live transactions through Kafka into a fraud detection application.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Training a model repeatedly on multiple GPUs.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is a primary danger of serving a heavy ML model (like a Deep Neural Network) inside a standard, synchronous Flask app without a dedicated serving framework?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Flask cannot import TensorFlow or PyTorch modules.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Flask cannot return JSON data types.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Heavy matrix computations block the main thread, causing subsequent incoming HTTP requests to queue up and timeout.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Flask apps are inherently insecure and easily hacked.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which of the following describes 'Model Drift' (or Concept/Data Drift)?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "When the REST API container crashes due to Out-Of-Memory errors.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "When the real-world incoming data changes over time, causing the previously highly-accurate model's performance to degrade silently.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "When the model takes significantly longer to load from storage.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "When Hyperparameters are tuned incorrectly.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the term for a deployment strategy where you route exactly 10% of live user traffic to a newly deployed Model V2 while keeping 90% of traffic on Model V1?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A/B Testing (or Canary Release)",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Batch Prediction",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Serverless Scaling",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Single Message Transformation",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does a dedicated framework like BentoML generate to package your model for production deployment?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "An Apache Airflow DAG.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A raw pickled Python file.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A standardized, production-ready Docker container holding the API server, dependencies, and model weights.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A dbt YAML schema file.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

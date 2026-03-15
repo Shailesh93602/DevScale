@@ -1,0 +1,85 @@
+<h1>ML Model Monitoring & Drift Detection</h1>
+<p>A deployed model is not a finished product — it's a living system in a changing world. Data distributions shift, user behavior evolves, and the real-world patterns a model learned may no longer hold. Without continuous monitoring, a model silently degrades from 92% accuracy to 65% accuracy while the business assumes nothing has changed.</p>
+
+<h2>Types of Drift</h2>
+<pre><code class="language-text">Data Drift (Covariate Shift):
+  Input feature distributions change — but the P(y|x) relationship stays the same
+  Example: A customer churn model trained in Q1 on young customers
+           Now most users are older (different age distribution)
+  Signal: Feature statistics drift, but target labels don't shift yet
+
+Concept Drift (P(y|x) changes):
+  The fundamental relationship between inputs and outputs changes
+  Example: What predicts churn during a recession vs. economic boom
+  Signal: Model performance degrades even though input distributions are stable
+
+Label/Target Drift:
+  The distribution of the target variable itself changes
+  Example: Fraud rate jumps from 0.2% to 2.5% (major fraud campaign)
+  Detection: Monitor target distribution daily
+</code></pre>
+
+<h2>Implementing Drift Detection with Evidently AI</h2>
+<pre><code class="language-python">import pandas as pd
+from evidently.report import Report
+from evidently.metric_preset import DataDriftPreset, ModelPerformancePreset
+
+# Reference data: used to train the model (represents "normal" distribution)
+reference_df = pd.read_csv("training_data_march.csv")
+
+# Current data: recent production predictions
+current_df = pd.read_csv("production_data_april.csv")
+
+# Data Drift Report — detects if input feature distributions have shifted
+drift_report = Report(metrics=[DataDriftPreset()])
+drift_report.run(reference_data=reference_df, current_data=current_df)
+drift_report.save_html("drift_report.html")
+
+# Inspect results
+drift_results = drift_report.as_dict()
+drifted_features = [
+    feat for feat, stats in drift_results['metrics'][0]['result']['drift_by_columns'].items()
+    if stats['drift_detected']
+]
+print(f"Drifted features: {drifted_features}")
+
+# Performance Monitoring (when ground truth labels are available)
+# e.g., for a fraud detection model, labels arrive 30 days later when fraud is confirmed
+performance_report = Report(metrics=[ModelPerformancePreset()])
+performance_report.run(
+    reference_data=reference_df[['features', 'predictions', 'actuals']],
+    current_data=current_df[['features', 'predictions', 'actuals']]
+)
+</code></pre>
+
+<h2>Automated Retraining Triggers</h2>
+<pre><code class="language-python">import mlflow
+from datetime import datetime
+
+def check_and_retrain(drift_results, performance_results, threshold_drift=0.3, threshold_f1=0.85):
+    """Automated retraining pipeline triggered by monitoring alerts"""
+    
+    drift_share = drift_results['overall_drift_share']
+    current_f1 = performance_results['current']['f1_score']
+    
+    should_retrain = False
+    reason = []
+    
+    if drift_share > threshold_drift:
+        should_retrain = True
+        reason.append(f"Data drift: {drift_share:.1%} features drifted (threshold: {threshold_drift:.1%})")
+    
+    if current_f1 < threshold_f1:
+        should_retrain = True
+        reason.append(f"F1 degradation: {current_f1:.3f} < {threshold_f1:.3f}")
+    
+    if should_retrain:
+        print(f"Triggering retraining: {', '.join(reason)}")
+        # In practice: trigger a CI/CD pipeline (GitHub Actions, Airflow DAG, SageMaker Pipeline)
+        trigger_retraining_pipeline(
+            new_data_path=f"s3://data/production/{datetime.now().strftime('%Y-%m')}/*.parquet",
+            mlflow_experiment="churn-model-v2"
+        )
+    else:
+        print(f"Model healthy: drift={drift_share:.1%}, F1={current_f1:.3f}")
+</code></pre>

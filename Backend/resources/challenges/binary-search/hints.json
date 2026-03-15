@@ -1,0 +1,6 @@
+[
+  "The array is sorted — you can eliminate half the elements each comparison.",
+  "Compare the middle element with the target. If it matches, return the index.",
+  "If the middle element is less than target, search the right half. If greater, search the left half.",
+  "Use left + Math.floor((right - left) / 2) for mid to avoid potential overflow."
+]

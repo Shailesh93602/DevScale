@@ -1,0 +1,26 @@
+<h1>AWS EC2 & Nginx</h1>
+<p>While platforms like Vercel and Heroku are incredibly easy to use, they are expensive at scale and hide how the internet actually works. To truly master backend infrastructure, you must know how to deploy an application to a raw, empty virtual machine running Ubuntu Linux. The most famous provider is AWS Elastic Compute Cloud (EC2).</p>
+
+<h2>1. Provisioning an EC2 Instance</h2>
+<p>When you spin up an EC2 instance, you are renting a small slice of a physical server resting in an AWS data center. You securely connect to it over the internet using SSH.</p>
+<pre><code># Securely log into the remote server using your cryptographic key
+ssh -i "my-server-key.pem" ubuntu@13.59.X.X
+</code></pre>
+<p>Once inside, you physical clone your GitHub repository onto the machine, install Node.js manually, and execute <code>npm run build</code>.</p>
+
+<h2>2. Keeping the Server Alive with PM2</h2>
+<p>If you run <code>node server.js</code> manually, the second you close your laptop or terminate the SSH connection, the server instantly shuts down.</p>
+<p>You must use a <strong>Process Manager</strong> like PM2. It detaches the Node server from your active terminal session and runs it perpetually in the background. If your Express app crashes due to a Javascript error, PM2 automatically restarts the node process in milliseconds.</p>
+<pre><code># Install PM2 globally
+npm install -g pm2
+
+# Run the app explicitly in the background
+pm2 start server.js --name "api-backend"
+</code></pre>
+
+<h2>3. Nginx Reverse Proxy</h2>
+<p>Your Node app listens on port 3000. However, standard HTTP traffic flows strictly across port 80. You cannot easily bind Node directly to port 80 safely. Instead, you place an ultra-fast C-based web server called <strong>Nginx</strong> directly in front of your Node app.</p>
+<p>Nginx acts as a <strong>Reverse Proxy</strong>. It binds to port 80, intercepts all internet traffic hitting your IP address, and seamlessly funnels it internally to your Node app on port 3000. It also excels at serving static files (like images) incredibly fast, reducing the load on your Node process.</p>
+
+<h2>4. Custom Domains & SSL (HTTPS)</h2>
+<p>Finally, you purchase a domain name (like <code>myapp.com</code>) and point its DNS A-Record to your elastic EC2 IP address. To secure the traffic, you use a free service called <strong>Let's Encrypt / Certbot</strong>. It automatically verifies your domain ownership and configures Nginx to use SSL certificates, transforming your insecure <code>http://</code> traffic into secure <code>https://</code> traffic over port 443 seamlessly.</p>

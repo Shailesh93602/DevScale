@@ -1,0 +1,62 @@
+<h1>Shell Scripting</h1>
+<p>As a DevOps engineer, you will repeatedly perform tasks like server backups, log rotation, or environment setup. <strong>Shell Scripting</strong> automates these manual commands into a single executable file.</p>
+
+<h2>The Shebang</h2>
+<p>Every bash script should start with a "shebang" (<code>#!</code>) indicating which interpreter should run the file.</p>
+<pre><code>#!/bin/bash
+echo "Hello, Server!"</code></pre>
+
+<h2>Variables and Input</h2>
+<pre><code>#!/bin/bash
+
+# Assigning variables (no spaces around '=')
+BACKUP_DIR="/var/backups"
+DB_NAME="production_db"
+
+# Reading user input
+read -p "Enter backup name: " USER_INPUT
+
+# Using Positional Parameters ($1, $2)
+# Run script as: ./backup.sh my_database
+TARGET=$1
+echo "Backing up ${TARGET} to ${BACKUP_DIR}"</code></pre>
+
+<h2>Conditionals (If Statements)</h2>
+<p>Bash uses <code>[ ]</code> or <code>[[ ]]</code> for test conditions, and requires spaces inside the brackets.</p>
+<pre><code>#!/bin/bash
+FILE="/etc/nginx/nginx.conf"
+
+if [[ -f "$FILE" ]]; then
+    echo "$FILE exists. Proceeding with reload..."
+    systemctl reload nginx
+else
+    echo "Error: $FILE not found!"
+    exit 1
+fi</code></pre>
+<p><em>Common flags: <code>-f</code> (is file), <code>-d</code> (is directory), <code>-z</code> (string is empty).</em></p>
+
+<h2>Loops</h2>
+<p>Loops are essential for running the same command against multiple files or servers.</p>
+<pre><code>#!/bin/bash
+
+# For Loop iterating over a list
+for SERVER in web1 web2 db1; do
+    echo "Pinging $SERVER..."
+    ping -c 1 $SERVER
+done
+
+# While Loop reading a file line-by-line
+while read -r LINE; do
+    echo "Processing user: $LINE"
+done &lt; users.txt</code></pre>
+
+<h2>Exit Codes and Error Handling</h2>
+<p>Every Linux command returns an exit code (0 for success, 1-255 for errors). You can access the last exit code using <code>$?</code>.</p>
+<pre><code>#!/bin/bash
+mkdir /root/secured_folder
+
+if [[ $? -ne 0 ]]; then
+    echo "Failed to create directory. Are you root?"
+    exit 1
+fi</code></pre>
+<p><strong>Pro-Tip:</strong> Put <code>set -e</code> at the top of your scripts. It tells bash to exit immediately if <em>any</em> command fails, preventing destructive cascading errors.</p>

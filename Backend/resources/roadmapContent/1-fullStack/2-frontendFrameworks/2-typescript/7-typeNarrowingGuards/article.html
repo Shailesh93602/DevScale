@@ -1,0 +1,105 @@
+<h1>Type Narrowing & Custom Guards</h1>
+<p>In TypeScript, a variable can have a broad type (like <code>string | number</code> veya <code>unknown</code>). <strong>Narrowing</strong> is the process of safely refining that type to a more specific one using JavaScript control flow structures so TypeScript can guarantee safety.</p>
+
+<h2>Basic Control Flow Narrowing</h2>
+<p>TypeScript understands standard JavaScript checks like <code>typeof</code> and <code>instanceof</code>. When used in an <code>if</code> block, the type is narrowed inside that block.</p>
+<pre><code>function processInput(input: string | number | Date) {
+  // Narrowing with typeof
+  if (typeof input === "string") {
+    // TypeScript knows input is exactly string here
+    console.log(input.toUpperCase());
+  } else if (typeof input === "number") {
+    // TypeScript knows input is exactly number
+    console.log(input.toFixed(2));
+  } else if (input instanceof Date) {
+    // Narrowing with instanceof for classes/objects
+    console.log(input.toISOString());
+  }
+}</code></pre>
+
+<h2>The 'in' Operator Narrowing</h2>
+<p>When dealing with union types of objects, the <code>in</code> operator checks if a property exists on an object, allowing TypeScript to narrow down which object type you have.</p>
+<pre><code>type Fish = { swim: () =&gt; void };
+type Bird = { fly: () =&gt; void };
+
+function move(animal: Fish | Bird) {
+  if ("swim" in animal) {
+    animal.swim(); // TypeScript knows this is Fish
+  } else {
+    animal.fly();  // TypeScript knows this is Bird
+  }
+}</code></pre>
+
+<h2>Custom Type Predicate Guards (<code>is</code>)</h2>
+<p>Sometimes standard JavaScript checks aren't enough, particularly when dealing with complex data fetching where you just get <code>unknown</code> or <code>any</code>. You can write custom functions that explicitly tell TypeScript "if this function returns true, the variable is of type X".</p>
+<pre><code>// The return type "pet is Fish" is a Type Predicate
+function isFish(pet: Fish | Bird | unknown): pet is Fish {
+  // Standard JS check returning a boolean
+  return (pet as Fish).swim !== undefined;
+}
+
+function feed(pet: unknown) {
+  if (isFish(pet)) {
+    pet.swim(); // pet is narrowed from unknown to Fish
+  }
+}
+
+// Excellent for array filtering
+const pets = [getFish(), getBird(), getFish()];
+// TypeScript doesn't narrow arrays effectively without standard type predicates
+const fishes: Fish[] = pets.filter(isFish); </code></pre>
+
+<h2>Assertion Functions</h2>
+<p>Assertion functions throw an error if a condition is not met. After calling an assertion function, TypeScript assumes the rest of the code is safe and the type is narrowed.</p>
+<pre><code>// Assertion signature
+function assertIsString(val: any): asserts val is string {
+  if (typeof val !== 'string') {
+    throw new Error('Not a string!');
+  }
+}
+
+function process(value: unknown) {
+  assertIsString(value);
+  // execution stops here if it throws
+  // therefore, value MUST be string below this line
+  console.log(value.toUpperCase());
+}</code></pre>
+
+<h2>The power of <code>unknown</code> vs <code>any</code></h2>
+<p><code>any</code> turns off type checking completely. <code>unknown</code> means "I don't know what this is yet". You cannot do <em>anything</em> with an <code>unknown</code> variable (call methods, access properties) until you <strong>narrow</strong> it using a type guard. Always use <code>unknown</code> over <code>any</code> for API responses.</p>
+<pre><code>function handleResponse(res: any) {
+  res.doSomething(); // No error, but crashes at runtime if method doesn't exist
+}
+
+function handleSafeResponse(res: unknown) {
+  res.doSomething(); // ❌ Error: Object is of type 'unknown'
+  
+  if (typeof res === 'object' &amp;&amp; res !== null &amp;&amp; 'doSomething' in res) {
+    (res as { doSomething: () =&gt; void }).doSomething(); // ✅ Safe
+  }
+}</code></pre>
+
+<h2>Exhaustiveness Checking with <code>never</code></h2>
+<p>The <code>never</code> type represents a state that should not exist. You can use it in <code>switch</code> statements to ensure you have handled every possible case of a union. If you add a new case to the union later but forget to update the switch statement, TypeScript will throw an error!</p>
+<pre><code>type Shape = "circle" | "square";
+
+function getArea(shape: Shape) {
+  switch (shape) {
+    case "circle":
+      return Math.PI * 2;
+    case "square":
+      return 4;
+    default:
+      // If we add "triangle" to Shape, `shape` will fall through to default.
+      // TypeScript will yell because "triangle" cannot be assigned to "never".
+      const _exhaustiveCheck: never = shape;
+      return _exhaustiveCheck;
+  }
+}</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Avoid using type assertions (<code>as string</code>) — they bypass type checks. Use Type Guards instead.</li>
+  <li>Use <code>unknown</code> instead of <code>any</code> when processing data from APIs or user inputs, forcing you to write guards.</li>
+  <li>Use exhaustiveness checking (<code>never</code>) on Redux reducers or state machine transitions to guarantee all states are handled.</li>
+</ul>

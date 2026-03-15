@@ -1,0 +1,6 @@
+[
+  "Euclidean distance between two points a and b is sqrt(sum((a[i] - b[i])^2)). Compute this for each test-train pair.",
+  "After computing distances, sort them and take the K smallest. These are your K nearest neighbors.",
+  "Use a frequency map to count labels among K neighbors. The label with the highest count is your prediction.",
+  "For tie-breaking, choose the smaller label value when two labels have equal vote counts."
+]

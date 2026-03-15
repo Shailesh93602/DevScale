@@ -1,0 +1,4 @@
+{
+    "name": "Loki & Structured Logging",
+    "description": "Building a cost-effective log aggregation stack with Grafana Loki. Understanding Loki's label-based architecture vs. full-text indexing, writing effective LogQL queries, implementing structured JSON logging in applications, and correlating logs with traces and metrics in Grafana."
+}

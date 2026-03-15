@@ -1,0 +1,33 @@
+<h1>Model Monitoring & Drift Detection</h1>
+<p>Deploying a machine learning model to production is not the end of the ML lifecycle — it is the beginning of a new operational challenge. Unlike traditional software where a function will reliably return the same output for the same input indefinitely, ML models <em>degrade over time</em>. The world changes, and a model trained on historical data becomes progressively less accurate at predicting the present.</p>
+<p>This phenomenon is called <strong>Model Drift</strong>, and detecting it is a critical Data Engineering responsibility.</p>
+
+<h2>Types of Drift</h2>
+<ul>
+  <li><strong>Data Drift (Covariate Shift):</strong> The statistical distribution of the input features changes over time. For example, a fraud detection model was trained primarily on desktop web transactions in 2020. By 2024, 80% of transactions are from mobile. The model has never seen that distribution of device types before, and its accuracy degrades accordingly.</li>
+  <li><strong>Concept Drift:</strong> The fundamental relationship between the input features and the target variable changes. For example, a credit risk model learned that "high debt-to-income ratio" correlates with default risk. After a global financial crisis, this relationship changes as previously low-risk profiles start defaulting. The model's internal "mental model" of the world is no longer valid.</li>
+  <li><strong>Prediction Drift:</strong> The model's output distribution shifts, even if inputs seem similar. If a model that previously predicted "Fraud" 2% of the time now predicts it 15% of the time, something is likely wrong.</li>
+</ul>
+
+<h2>Statistical Drift Detection Tests</h2>
+<p>Data Engineers implement automated statistical tests that compare the distribution of live production data against a baseline reference dataset (typically the training dataset).</p>
+<ul>
+  <li><strong>Population Stability Index (PSI):</strong> Quantifies how much the distribution of a specific feature has shifted. A PSI above 0.2 is typically considered significant drift that warrants investigation.</li>
+  <li><strong>Kolmogorov-Smirnov Test:</strong> A non-parametric statistical test that compares two distributions and returns a p-value. A low p-value indicates the two distributions are statistically different.</li>
+  <li><strong>Jensen-Shannon Divergence:</strong> Measures the similarity between two probability distributions. Used for categorical features like `country_code` or `device_type`.</li>
+</ul>
+
+<h2>Building a Monitoring Pipeline</h2>
+<pre><code class="language-python">from evidently import Report
+from evidently.metrics import DataDriftPreset
+
+# Compare production data from this week against the training baseline
+report = Report(metrics=[DataDriftPreset()])
+report.run(reference_data=training_df, current_data=production_this_week_df)
+
+# If drift is detected, trigger an automated retraining Airflow DAG
+drift_results = report.as_dict()
+if drift_results['metrics'][0]['result']['dataset_drift']:
+    airflow_api.trigger_dag("weekly_model_retrain")
+</code></pre>
+<p>Production-grade monitoring pipelines run these statistical tests nightly or weekly using tools like <strong>Evidently AI</strong>, <strong>WhyLabs</strong>, or <strong>Arize</strong>, alerting the ML team when drift exceeds configured thresholds and automatically triggering retraining pipelines when needed.</p>

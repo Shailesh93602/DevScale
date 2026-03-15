@@ -1,0 +1,92 @@
+<h1>Prompt Engineering & LLM Evaluation</h1>
+<p>Prompt engineering is the art of communicating with large language models effectively. A well-crafted prompt can transform a mediocre response into an expert-quality answer — often without any fine-tuning required. In production, systematic prompt engineering is cheaper, faster, and more maintainable than fine-tuning for many use cases.</p>
+
+<h2>Core Prompting Techniques</h2>
+<pre><code class="language-python">from openai import OpenAI
+client = OpenAI()
+
+# Zero-Shot: no examples, just task description
+zero_shot = """Classify the following customer review as POSITIVE, NEGATIVE, or NEUTRAL.
+Reply with only the classification label.
+
+Review: "Delivery was fast but the product quality was disappointing."
+Classification:"""
+
+# Few-Shot: provide labeled examples before the actual input
+few_shot = """Classify customer reviews. Reply with POSITIVE, NEGATIVE, or NEUTRAL only.
+
+Review: "Absolutely love this product, exceeded expectations!"
+Classification: POSITIVE
+
+Review: "Arrived damaged and customer service was unhelpful."
+Classification: NEGATIVE
+
+Review: "It works as described, nothing special."
+Classification: NEUTRAL
+
+Review: "Delivery was fast but the product quality was disappointing."
+Classification:"""
+
+# Chain-of-Thought: ask the model to reason step-by-step before answering
+# Dramatically improves accuracy on complex reasoning tasks
+chain_of_thought = """Solve this problem step by step, then give the final answer.
+
+Problem: A store sells shirts for $25 each. Buy 3 get 1 free. What do 5 shirts cost?
+
+Steps:"""
+
+response = client.chat.completions.create(
+    model="gpt-4-turbo",
+    messages=[{"role": "user", "content": chain_of_thought}]
+)
+</code></pre>
+
+<h2>Structured Output with JSON Mode</h2>
+<pre><code class="language-python">from pydantic import BaseModel
+from openai import OpenAI
+import json
+
+# JSON mode: forces the model to output valid JSON
+# Use for: extracting structured data from unstructured text
+
+class SentimentAnalysis(BaseModel):
+    sentiment: str          # "positive" | "negative" | "neutral"
+    confidence: float       # 0.0 to 1.0
+    key_phrases: list[str]  # Phrases that drove the sentiment
+
+response = client.chat.completions.create(
+    model="gpt-4-turbo",
+    response_format={"type": "json_object"},
+    messages=[{
+        "role": "system",
+        "content": f"You analyze customer reviews. Respond with JSON matching this schema: {SentimentAnalysis.schema()}"
+    }, {
+        "role": "user",
+        "content": "Review: 'The battery dies too quickly but camera quality is stunning.'"
+    }]
+)
+
+result = SentimentAnalysis(**json.loads(response.choices[0].message.content))
+</code></pre>
+
+<h2>LLM Evaluation Frameworks</h2>
+<pre><code class="language-python">from rouge_score import rouge_scorer
+from nltk.translate.bleu_score import sentence_bleu
+
+# ROUGE: measures recall-oriented overlap for summarization
+scorer = rouge_scorer.RougeScorer(['rouge1', 'rouge2', 'rougeL'], use_stemmer=True)
+scores = scorer.score(reference_summary, generated_summary)
+print(f"ROUGE-L F1: {scores['rougeL'].fmeasure:.3f}")
+
+# LLM-as-Judge: use a powerful LLM to evaluate another LLM's output
+# More reliable than BLEU/ROUGE for open-ended generation
+eval_prompt = """Rate the following AI response for helpfulness (1-5), accuracy (1-5), 
+and conciseness (1-5). Respond as JSON with keys: helpfulness, accuracy, conciseness, 
+reasoning.
+
+User question: {question}
+AI response: {response}"""
+
+# Run evaluations across a test set to track model quality over time
+# and compare prompt variants for quality regressions before deploying
+</code></pre>

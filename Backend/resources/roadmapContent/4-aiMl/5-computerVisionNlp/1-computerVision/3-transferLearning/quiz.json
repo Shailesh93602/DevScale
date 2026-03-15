@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "When fine-tuning EfficientNet for a medical imaging task with only 800 training images, which layers should be frozen and which should be trained?",
+            "options": [
+                "All layers should be unfrozen and trained from scratch for medical domain accuracy.",
+                "Freeze all layers except the final classification head initially. The early-to-middle layers of ImageNet-pretrained models learn universal visual features (edges, textures, shapes) that transfer well even to medical images (X-rays, histology). With only 800 images, training too many parameters causes severe overfitting. After convergence of just the classifier, optionally unfreeze the last 1-2 blocks for incremental improvement.",
+                "Freeze only the first layer; all other layers should be trainable.",
+                "Unfreeze the entire network but use a very small learning rate of 1e-8 to prevent catastrophic forgetting."
+            ],
+            "answer": "Freeze all layers except the final classification head initially. The early-to-middle layers of ImageNet-pretrained models learn universal visual features (edges, textures, shapes) that transfer well even to medical images (X-rays, histology). With only 800 images, training too many parameters causes severe overfitting. After convergence of just the classifier, optionally unfreeze the last 1-2 blocks for incremental improvement.",
+            "explanation": "Rule of thumb: fewer training images → freeze more layers. 800 images: freeze all but classifier (64K params). 8,000 images: unfreeze last block (500K params). 80,000 images: fine-tune all layers with small learning rate. The 'catastrophic forgetting' risk increases with more unfrozen layers."
+        },
+        {
+            "question": "Why is data augmentation (random flips, crops, color jitter) particularly critical for small vision datasets, and why should you NOT apply augmentation to validation data?",
+            "options": [
+                "Augmentation is critical because it doubles the dataset size, which improves accuracy linearly.",
+                "Data augmentation artificially increases dataset diversity by showing the model the same image in many realistic variations — teaching invariance to position, orientation, and color. This reduces overfitting when the training set is small. Validation data must NOT be augmented (only normalized) because validation measures generalization to real-world images as they actually appear — augmenting would make the task artificially harder and produce misleading metrics.",
+                "Data augmentation reduces training time by allowing smaller batch sizes.",
+                "Augmentation ensures all images have the same pixel intensity distribution."
+            ],
+            "answer": "Data augmentation artificially increases dataset diversity by showing the model the same image in many realistic variations — teaching invariance to position, orientation, and color. This reduces overfitting when the training set is small. Validation data must NOT be augmented (only normalized) because validation measures generalization to real-world images as they actually appear — augmenting would make the task artificially harder and produce misleading metrics.",
+            "explanation": "A model trained on 1000 cat images + 6 augmentation operations per image effectively sees 7000 diverse examples. Crucially, augmentation during training doesn't increase validation accuracy artificially — it reduces overfitting, so train/val accuracy gap narrows."
+        },
+        {
+            "question": "What is the primary reason Vision Transformers (ViT) outperform CNNs on large datasets but underperform on small ones?",
+            "options": [
+                "ViT requires more GPU memory, which causes out-of-memory issues on small datasets.",
+                "CNNs have inductive biases baked into their architecture (translation equivariance, local receptive fields) that are useful priors for vision tasks — allowing them to learn efficiently from limited data. ViT treats image patches as sequences with no inductive bias toward spatial locality; it must learn these spatial relationships purely from data. With enough data (millions of images), ViT learns better representations. With little data, CNNs' spatial inductive biases provide a crucial head start.",
+                "ViT uses more augmentation by default, which hurts performance on small datasets.",
+                "ViT's patch tokenization loses pixel-level detail that CNNs preserve with convolutional filters."
+            ],
+            "answer": "CNNs have inductive biases baked into their architecture (translation equivariance, local receptive fields) that are useful priors for vision tasks — allowing them to learn efficiently from limited data. ViT treats image patches as sequences with no inductive bias toward spatial locality; it must learn these spatial relationships purely from data. With enough data (millions of images), ViT learns better representations. With little data, CNNs' spatial inductive biases provide a crucial head start.",
+            "explanation": "The original ViT paper found ViT underperformed ResNet on ImageNet (1.2M images) but dramatically outperformed it when pre-trained on JFT-300M (300M images). The crossover point is roughly 10-100M images — below this, CNN inductive biases win."
+        }
+    ]
+}

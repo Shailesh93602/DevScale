@@ -1,0 +1,19 @@
+{
+  "title": "Building H2O",
+  "slug": "building-h2o",
+  "difficulty": "Medium",
+  "category": "concurrency",
+  "points": 100,
+  "tags": ["concurrency", "barrier", "synchronization"],
+  "company_tags": ["Google", "Amazon", "Apple"],
+  "topic_tags": ["Concurrency", "Barrier Synchronization", "Resource Coordination"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "A string of H and O characters representing arriving atoms",
+  "output_format": "Grouped output where every 3 chars form a valid H2O molecule (2 Hs and 1 O)",
+  "example_input": "{\"atoms\": \"OOHHHH\"}",
+  "example_output": "{\"molecules\": [\"HHO\", \"HHO\"]}",
+  "constraints": "Input length is always divisible by 3, with exactly 2x Hs as Os",
+  "function_signature": "class H2O { hydrogen(releaseHydrogen: () => void): Promise<void>; oxygen(releaseOxygen: () => void): Promise<void> }",
+  "status": "ACTIVE"
+}

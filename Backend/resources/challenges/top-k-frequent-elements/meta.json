@@ -1,0 +1,44 @@
+{
+  "title": "Top K Frequent Elements",
+  "slug": "top-k-frequent-elements",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": [
+    "array",
+    "hash-table",
+    "sorting",
+    "heap",
+    "bucket-sort"
+  ],
+  "company_tags": [
+    "Amazon",
+    "Facebook",
+    "Google",
+    "Microsoft",
+    "Uber"
+  ],
+  "topic_tags": [
+    "arrays",
+    "hash tables"
+  ],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer array `nums` and an integer `k`.",
+  "output_format": "The `k` most frequent elements (in any order).",
+  "example_input": "nums = [1,1,1,2,2,3], k = 2",
+  "example_output": "[1,2]",
+  "constraints": "- `1 <= nums.length <= 10^5`\n- `-10^4 <= nums[i] <= 10^4`\n- `k` is in the range `[1, the number of unique elements in the array]`.\n- It is guaranteed that the answer is unique.",
+  "function_signature": "function topKFrequent(nums: number[], k: number): number[] {}",
+  "status": "ACTIVE"
+}

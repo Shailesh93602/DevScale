@@ -1,0 +1,10 @@
+{
+  "typescript": "function subarraySum(nums: number[], k: number): number {\n    \n};",
+  "javascript": "/**\n * @param {number[]} nums\n * @param {number} k\n * @return {number}\n */\nvar subarraySum = function(nums, k) {\n    \n};",
+  "python": "class Solution:\n    def subarraySum(self, nums: List[int], k: int) -> int:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public int subarraySum(int[] nums, int k) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int subarraySum(vector<int>& nums, int k) {\n        \n    }\n};",
+  "go": "func subarraySum(nums []int, k int) int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn subarray_sum(nums: Vec<i32>, k: i32) -> i32 {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int SubarraySum(int[] nums, int k) {\n        \n    }\n}"
+}

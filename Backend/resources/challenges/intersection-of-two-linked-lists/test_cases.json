@@ -1,0 +1,12 @@
+[
+  { "input": "{\"intersectVal\":8, \"listA\":[4,1,8,4,5], \"listB\":[5,6,1,8,4,5], \"skipA\":2, \"skipB\":3}", "output": "8", "explanation": "Standard intersection", "is_hidden": false },
+  { "input": "{\"intersectVal\":2, \"listA\":[1,9,1,2,4], \"listB\":[3,2,4], \"skipA\":3, \"skipB\":1}", "output": "2", "explanation": "Intersection at 2", "is_hidden": false },
+  { "input": "{\"intersectVal\":0, \"listA\":[2,6,4], \"listB\":[1,5], \"skipA\":3, \"skipB\":2}", "output": "0", "explanation": "No intersection", "is_hidden": false },
+  { "input": "{\"intersectVal\":1, \"listA\":[1], \"listB\":[1], \"skipA\":0, \"skipB\":0}", "output": "1", "explanation": "Intersection at head of both", "is_hidden": true },
+  { "input": "{\"intersectVal\":5, \"listA\":[1,2,3,4,5], \"listB\":[5], \"skipA\":4, \"skipB\":0}", "output": "5", "explanation": "Intersection at tail of one and head of other", "is_hidden": true },
+  { "input": "{\"intersectVal\":0, \"listA\":[], \"listB\":[], \"skipA\":0, \"skipB\":0}", "output": "0", "explanation": "Both empty", "is_hidden": true },
+  { "input": "{\"intersectVal\":0, \"listA\":[1,2,3], \"listB\":[], \"skipA\":3, \"skipB\":0}", "output": "0", "explanation": "One empty", "is_hidden": true },
+  { "input": "{\"intersectVal\":4, \"listA\":[2,2,4,5,4], \"listB\":[2,2,4,4,5,4], \"skipA\":2, \"skipB\":3}", "output": "4", "explanation": "Multiple duplicate values", "is_hidden": true },
+  { "input": "{\"intersectVal\":99, \"listA\":[99], \"listB\":[1,99], \"skipA\":0, \"skipB\":1}", "output": "99", "explanation": "Intersect at single node", "is_hidden": true },
+  { "input": "{\"intersectVal\":0, \"listA\":[1,1,1,1], \"listB\":[2,2,2], \"skipA\":4, \"skipB\":3}", "output": "0", "explanation": "All identical values but no intersection", "is_hidden": true }
+]

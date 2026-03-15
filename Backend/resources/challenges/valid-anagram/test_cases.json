@@ -1,0 +1,12 @@
+[
+  { "input": "{\"s\":\"anagram\",\"t\":\"nagaram\"}", "output": "true", "explanation": "Same letters rearranged", "is_hidden": false },
+  { "input": "{\"s\":\"rat\",\"t\":\"car\"}", "output": "false", "explanation": "Different letters", "is_hidden": false },
+  { "input": "{\"s\":\"a\",\"t\":\"a\"}", "output": "true", "explanation": "Single identical characters", "is_hidden": true },
+  { "input": "{\"s\":\"a\",\"t\":\"b\"}", "output": "false", "explanation": "Single different characters", "is_hidden": true },
+  { "input": "{\"s\":\"ab\",\"t\":\"ba\"}", "output": "true", "explanation": "Two-char swap", "is_hidden": true },
+  { "input": "{\"s\":\"aab\",\"t\":\"baa\"}", "output": "true", "explanation": "Repeated chars", "is_hidden": true },
+  { "input": "{\"s\":\"aab\",\"t\":\"bab\"}", "output": "false", "explanation": "Different frequencies", "is_hidden": true },
+  { "input": "{\"s\":\"listen\",\"t\":\"silent\"}", "output": "true", "explanation": "Classic anagram pair", "is_hidden": true },
+  { "input": "{\"s\":\"abc\",\"t\":\"abcd\"}", "output": "false", "explanation": "Different lengths", "is_hidden": true },
+  { "input": "{\"s\":\"aaaaaaaaaa\",\"t\":\"aaaaaaaaab\"}", "output": "false", "explanation": "Almost identical but last char differs", "is_hidden": true }
+]

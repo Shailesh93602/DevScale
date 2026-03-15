@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the core difference between a window function and GROUP BY aggregation, and when do you use each?",
+            "options": [
+                "Window functions work on text data; GROUP BY works on numbers — they handle different data types.",
+                "GROUP BY collapses multiple rows into one row per group (you lose individual row data). Window functions perform the same calculation but KEEP all original rows — each row also shows the computation over its partition. Use GROUP BY when you want: totals per department, employee count per location. Use window functions when you want: each employee's salary AND their department average AND their rank in the department — all in one result set without joining aggregated subqueries.",
+                "Window functions require an ORDER BY clause; GROUP BY never uses ORDER BY.",
+                "GROUP BY is standard SQL; window functions are PostgreSQL-specific extensions."
+            ],
+            "answer": "GROUP BY collapses multiple rows into one row per group (you lose individual row data). Window functions perform the same calculation but KEEP all original rows — each row also shows the computation over its partition. Use GROUP BY when you want: totals per department, employee count per location. Use window functions when you want: each employee's salary AND their department average AND their rank in the department — all in one result set without joining aggregated subqueries.",
+            "explanation": "Before window functions, getting 'each employee plus their department average' required: SELECT e.*, da.avg_salary FROM employees e JOIN (SELECT department, AVG(salary) as avg_salary FROM employees GROUP BY department) da ON e.department = da.department. Window functions make this: SELECT *, AVG(salary) OVER (PARTITION BY department) FROM employees. Same result, no subquery, one scan."
+        },
+        {
+            "question": "In a recursive CTE for organizational hierarchy, what prevents an infinite loop if there's a cycle in the data (employee A manages B, B manages A)?",
+            "options": [
+                "PostgreSQL automatically detects cycles and stops recursive CTEs.",
+                "By default, PostgreSQL will infinite-loop and crash / run until max_recursion depth. Prevention options: (1) Add a depth limit: WHERE h.level < 10, (2) Track visited IDs in an array: array_append(h.visited, e.id) and check NOT (e.id = ANY(h.visited)), (3) Use PostgreSQL's CYCLE clause (added in PostgreSQL 14): WITH RECURSIVE ... CYCLE id SET is_cycle USING path — automatically detects cycles and marks them. Always design hierarchical data to prevent cycles at the constraint level.",
+                "Recursive CTEs in PostgreSQL are limited to 3 levels of recursion by default.",
+                "The UNION ALL keyword prevents cycles — use UNION DISTINCT to allow cycles."
+            ],
+            "answer": "By default, PostgreSQL will infinite-loop and crash / run until max_recursion depth. Prevention options: (1) Add a depth limit: WHERE h.level < 10, (2) Track visited IDs in an array: array_append(h.visited, e.id) and check NOT (e.id = ANY(h.visited)), (3) Use PostgreSQL's CYCLE clause (added in PostgreSQL 14): WITH RECURSIVE ... CYCLE id SET is_cycle USING path — automatically detects cycles and marks them. Always design hierarchical data to prevent cycles at the constraint level.",
+            "explanation": "PostgreSQL 14+ CYCLE syntax: WITH RECURSIVE org(id, name, manager_id, path) AS ( ... UNION ALL ... ) CYCLE id SET is_cycle USING path SELECT * FROM org WHERE NOT is_cycle. The database automatically tracks the path and stops when it detects a repeated ID. For pre-14 PostgreSQL: the visited array approach is the safest."
+        },
+        {
+            "question": "Why does PostgreSQL's JSONB outperform JSON column type, and when should you use JSONB vs a normalized relational schema?",
+            "options": [
+                "JSONB supports more JSON data types than JSON — JSON can't store numbers.",
+                "JSON stores data as raw text (fast writes, slow reads — must re-parse every query). JSONB stores binary-encoded, pre-parsed JSON (slower writes, fast reads — no parsing overhead, supports GIN indexes for deep attribute queries). JSONB also deduplicates keys and removes insignificant whitespace. Use JSONB when: attributes vary widely per entity (EAV pattern alternative), schema is not yet known, data from external APIs. Use normalized relational tables when: frequently querying/joining on specific attributes, data integrity constraints needed (foreign keys, NOT NULL), or complex reporting queries are required.",
+                "JSONB is standard SQL; JSON is a PostgreSQL-specific extension.",
+                "JSONB stores data in a separate table for performance; JSON stores inline."
+            ],
+            "answer": "JSON stores data as raw text (fast writes, slow reads — must re-parse every query). JSONB stores binary-encoded, pre-parsed JSON (slower writes, fast reads — no parsing overhead, supports GIN indexes for deep attribute queries). JSONB also deduplicates keys and removes insignificant whitespace. Use JSONB when: attributes vary widely per entity (EAV pattern alternative), schema is not yet known, data from external APIs. Use normalized relational tables when: frequently querying/joining on specific attributes, data integrity constraints needed (foreign keys, NOT NULL), or complex reporting queries are required.",
+            "explanation": "Common use: e-commerce products where different product types have different attributes. A shoe has {size, color, material}, a laptop has {RAM, storage, screen_size}. Storing these in a normalized EAV (Entity-Attribute-Value) table requires complex multi-join queries. JSONB lets each product row store its own schema while still being queryable: WHERE attributes @> '{\"color\": \"red\"}' with a GIN index is nearly as fast as a dedicated indexed column."
+        }
+    ]
+}

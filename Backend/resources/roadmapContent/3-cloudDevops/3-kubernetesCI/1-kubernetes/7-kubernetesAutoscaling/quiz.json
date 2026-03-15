@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "When should you use an HPA (scale replicas horizontally) vs a VPA (increase pod resources vertically) for a Kubernetes workload?",
+            "options": [
+                "HPA is for stateless apps; VPA is for stateful apps that cannot be replicated.",
+                "HPA is ideal for stateless, scalable workloads (web APIs, workers) where more replicas = more capacity. VPA is better for single-instance workloads (databases, singleton services) where adding more pods doesn't help but giving the existing pod more CPU/memory does.",
+                "HPA scales based on HTTP requests; VPA scales based on CPU only.",
+                "HPA requires the Metrics Server; VPA requires Prometheus."
+            ],
+            "answer": "HPA is ideal for stateless, scalable workloads (web APIs, workers) where more replicas = more capacity. VPA is better for single-instance workloads (databases, singleton services) where adding more pods doesn't help but giving the existing pod more CPU/memory does.",
+            "explanation": "You can run 50 identical API pods simultaneously. But you cannot easily run 50 independent PostgreSQL primary pods — you need one big pod. HPA adds copies; VPA makes existing copies bigger."
+        },
+        {
+            "question": "What specific advantage does KEDA provide over standard HPA for a Kafka consumer deployment?",
+            "options": [
+                "KEDA can scale down to zero pods when there is no work — standard HPA cannot.",
+                "Both KEDA and HPA can scale Kafka consumers based on CPU utilization.",
+                "KEDA only works with Kafka; standard HPA works with all workload types.",
+                "KEDA scales based on pod restart counts; HPA scales based on CPU."
+            ],
+            "answer": "KEDA can scale down to zero pods when there is no work — standard HPA cannot.",
+            "explanation": "HPA has a minimum of 1 replica (you always pay for at least one running pod). KEDA can scale to 0 replicas when the Kafka consumer lag is 0, then instantly scale back up when messages arrive, eliminating idle compute costs entirely."
+        },
+        {
+            "question": "What is the HPA's primary scaling formula, and what does it tell you about how the autoscaler behaves when CPU spikes suddenly?",
+            "options": [
+                "HPA adds one replica per extra percentage point of CPU above the threshold.",
+                "HPA calculates desired replicas as: ceil(currentReplicas × (currentCPU / targetCPU)). If you have 4 pods at 120% of target CPU, it computes ceil(4 × 1.2) = 5 new pods needed. This proportional scaling means a 2x spike in load triggers approximately 2x the replicas.",
+                "HPA always doubles the replica count when any metric exceeds its threshold.",
+                "HPA adds replicas one at a time with a 5-minute cooldown between each addition."
+            ],
+            "answer": "HPA calculates desired replicas as: ceil(currentReplicas × (currentCPU / targetCPU)). If you have 4 pods at 120% of target CPU, it computes ceil(4 × 1.2) = 5 new pods needed. This proportional scaling means a 2x spike in load triggers approximately 2x the replicas.",
+            "explanation": "This proportional formula means HPA responds gracefully to gradual load increases and aggressively to sudden spikes — no manual tuning needed. It's fundamentally a control loop that continuously adjusts to maintain the target metric."
+        }
+    ]
+}

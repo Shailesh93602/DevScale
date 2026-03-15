@@ -1,0 +1,10 @@
+{
+  "typescript": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *     val: number\n *     left: TreeNode | null\n *     right: TreeNode | null\n *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.left = (left===undefined ? null : left)\n *         this.right = (right===undefined ? null : right)\n *     }\n * }\n */\n\nfunction rightSideView(root: TreeNode | null): number[] {\n    \n};",
+  "javascript": "/**\n * @param {TreeNode} root\n * @return {number[]}\n */\nvar rightSideView = function(root) {\n    \n};",
+  "python": "class Solution:\n    def rightSideView(self, root: Optional[TreeNode]) -> List[int]:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public List<Integer> rightSideView(TreeNode root) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> rightSideView(TreeNode* root) {\n        \n    }\n};",
+  "go": "func rightSideView(root *TreeNode) []int {\n    \n}",
+  "rust": "use std::rc::Rc;\nuse std::cell::RefCell;\nimpl Solution {\n    pub fn right_side_view(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public IList<int> RightSideView(TreeNode root) {\n        \n    }\n}"
+}

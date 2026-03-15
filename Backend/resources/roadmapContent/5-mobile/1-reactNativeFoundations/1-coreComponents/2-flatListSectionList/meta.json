@@ -1,0 +1,4 @@
+{
+    "name": "FlatList, SectionList & ScrollView Deep Dive",
+    "description": "Mastering the list components that power every production React Native app. Understanding FlatList's windowed rendering, keyExtractor, getItemLayout for fixed-height optimization, SectionList for grouped data with sticky headers, RefreshControl for pull-to-refresh, infinite scroll with onEndReached, and when to choose FlatList vs FlashList."
+}

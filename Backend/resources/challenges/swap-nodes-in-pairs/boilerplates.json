@@ -1,0 +1,10 @@
+{
+  "typescript": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *     val: number\n *     next: ListNode | null\n *     constructor(val?: number, next?: ListNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.next = (next===undefined ? null : next)\n *     }\n * }\n */\n\nfunction swapPairs(head: ListNode | null): ListNode | null {\n    \n};",
+  "javascript": "/**\n * @param {ListNode} head\n * @return {ListNode}\n */\nvar swapPairs = function(head) {\n    \n};",
+  "python": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution:\n    def swapPairs(self, head: Optional[ListNode]) -> Optional[ListNode]:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public ListNode swapPairs(ListNode head) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    ListNode* swapPairs(ListNode* head) {\n        \n    }\n};",
+  "go": "func swapPairs(head *ListNode) *ListNode {\n    \n}",
+  "rust": "impl Solution {\n    pub fn swap_pairs(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public ListNode SwapPairs(ListNode head) {\n        \n    }\n}"
+}

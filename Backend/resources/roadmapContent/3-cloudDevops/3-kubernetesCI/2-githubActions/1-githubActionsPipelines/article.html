@@ -1,0 +1,88 @@
+<h1>GitHub Actions — CI/CD Pipelines</h1>
+<p>GitHub Actions automates software workflows — tests, builds, and deployments — directly in your GitHub repository using YAML files.</p>
+
+<h2>Workflow Structure</h2>
+<pre><code># .github/workflows/ci.yml
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 2 * * 1'   # Every Monday at 2am (dependency audits)</code></pre>
+
+<h2>Complete Node.js CI Pipeline</h2>
+<pre><code>jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20, 22]   # Test on multiple versions
+    services:
+      postgres:
+        image: postgres:16
+        env: { POSTGRES_PASSWORD: testpass, POSTGRES_DB: testdb }
+        options: --health-cmd="pg_isready" --health-interval=10s
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run test:coverage
+        env:
+          DATABASE_URL: postgresql://postgres:testpass@localhost:5432/testdb
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/</code></pre>
+
+<h2>Deployment to Production</h2>
+<pre><code>  deploy:
+    needs: test           # Wait for test job
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'   # Only on main branch
+    environment: production               # Use GitHub Environments
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build & Push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            myorg/api:${{ github.sha }}
+            myorg/api:latest
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl set image deployment/api api=myorg/api:${{ github.sha }}
+          kubectl rollout status deployment/api
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}</code></pre>
+
+<h2>Secrets & Environments</h2>
+<pre><code># Access secrets (stored encrypted in GitHub repo settings)
+${{ secrets.DATABASE_URL }}
+${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+# GitHub Environments — require manual approval for production
+environment:
+  name: production
+  url: https://myapp.com</code></pre>

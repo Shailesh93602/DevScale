@@ -1,0 +1,4 @@
+{
+    "name": "Prisma Schema & Migrations",
+    "description": "Defining models, running migrations, and seeding databases with Prisma."
+}

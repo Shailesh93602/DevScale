@@ -1,0 +1,172 @@
+<h1>CNNs &amp; Computer Vision with PyTorch</h1>
+<p>Convolutional Neural Networks (CNNs) revolutionized computer vision by learning spatial feature hierarchies directly from raw pixels — early layers detect edges and textures, middle layers detect shapes and parts, deep layers detect complex objects. Before CNNs, computer vision required hand-engineered features (SIFT, HOG); now a single end-to-end network outperforms them all.</p>
+
+<h2>Why CNNs Work for Images</h2>
+<p>A fully connected layer treats each pixel independently — a 224×224 color image has 150,528 inputs, requiring enormous weight matrices and ignoring spatial relationships. CNNs exploit two key properties of images:</p>
+<ul>
+  <li><strong>Local connectivity</strong>: A 3×3 filter connects only to a 3×3 patch of the input, reducing parameters from millions to thousands per layer</li>
+  <li><strong>Translation invariance</strong>: The same filter (edge detector, texture detector) is applied at every spatial location — if an edge appears at position (10,20) or (100,150), the same filter catches it</li>
+</ul>
+
+<h2>Convolutional Layer in PyTorch</h2>
+<pre><code>import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from torchvision import datasets, transforms, models
+from torch.utils.data import DataLoader
+
+# ─── 2D Convolution: slides a learnable filter across the input ──────────────
+conv_layer = nn.Conv2d(
+    in_channels=3,     # RGB image has 3 channels
+    out_channels=64,   # Learn 64 different filters
+    kernel_size=3,     # Each filter is 3×3 pixels
+    stride=1,          # Move filter 1 pixel at a time
+    padding=1          # 'same' padding — output size = input size
+)
+
+# With BatchNorm + ReLU (the standard block):
+class ConvBnRelu(nn.Module):
+    def __init__(self, in_c, out_c, kernel=3, stride=1, padding=1):
+        super().__init__()
+        self.block = nn.Sequential(
+            nn.Conv2d(in_c, out_c, kernel, stride, padding, bias=False),
+            nn.BatchNorm2d(out_c),   # Normalize activations → faster, stable training
+            nn.ReLU(inplace=True)
+        )
+    def forward(self, x):
+        return self.block(x)</code></pre>
+
+<h2>A Complete CNN Architecture</h2>
+<pre><code>class ConvNet(nn.Module):
+    """CNN for 32x32 input images (CIFAR-10 style)"""
+    def __init__(self, num_classes=10):
+        super().__init__()
+        # Feature extraction: image → feature maps
+        self.features = nn.Sequential(
+            ConvBnRelu(3, 32),           # 32×32×3  → 32×32×32
+            ConvBnRelu(32, 32),
+            nn.MaxPool2d(2, 2),          # 32×32×32 → 16×16×32 (halves spatial dims)
+            nn.Dropout2d(0.1),
+
+            ConvBnRelu(32, 64),          # 16×16×32  → 16×16×64
+            ConvBnRelu(64, 64),
+            nn.MaxPool2d(2, 2),          # 16×16×64 → 8×8×64
+            nn.Dropout2d(0.2),
+
+            ConvBnRelu(64, 128),         # 8×8×64   → 8×8×128
+            ConvBnRelu(128, 128),
+            nn.MaxPool2d(2, 2),          # 8×8×128  → 4×4×128
+        )
+        # Classification head: feature maps → class probabilities
+        self.classifier = nn.Sequential(
+            nn.Flatten(),                # 4×4×128 = 2048 features
+            nn.Linear(2048, 512),
+            nn.ReLU(),
+            nn.Dropout(0.5),
+            nn.Linear(512, num_classes)  # 10 logits (apply Softmax or use CrossEntropyLoss)
+        )
+
+    def forward(self, x):
+        x = self.features(x)
+        return self.classifier(x)
+
+model = ConvNet(num_classes=10)
+print(f"Parameters: {sum(p.numel() for p in model.parameters()):,}")  # ≈ 1.6M</code></pre>
+
+<h2>Training Pipeline</h2>
+<pre><code>import torch.optim as optim
+from tqdm import tqdm
+
+# ─── Data loading with augmentation ─────────────────────────────────────────
+train_transform = transforms.Compose([
+    transforms.RandomCrop(32, padding=4),     # Data augmentation
+    transforms.RandomHorizontalFlip(),
+    transforms.ColorJitter(brightness=0.2, contrast=0.2),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+])
+test_transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+])
+
+train_ds = datasets.CIFAR10(root='./data', train=True, download=True, transform=train_transform)
+test_ds  = datasets.CIFAR10(root='./data', train=False, transform=test_transform)
+train_loader = DataLoader(train_ds, batch_size=128, shuffle=True, num_workers=4, pin_memory=True)
+test_loader  = DataLoader(test_ds,  batch_size=256, shuffle=False, num_workers=4)
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+model = ConvNet().to(device)
+optimizer = optim.AdamW(model.parameters(), lr=3e-4, weight_decay=1e-4)
+scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=50)
+criterion = nn.CrossEntropyLoss(label_smoothing=0.1)
+
+def train_epoch(model, loader):
+    model.train()
+    total_loss, correct = 0, 0
+    for images, labels in loader:
+        images, labels = images.to(device), labels.to(device)
+        optimizer.zero_grad()
+        outputs = model(images)
+        loss = criterion(outputs, labels)
+        loss.backward()
+        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+        optimizer.step()
+        total_loss += loss.item()
+        correct += (outputs.argmax(1) == labels).sum().item()
+    return total_loss / len(loader), correct / len(loader.dataset)
+
+for epoch in range(50):
+    train_loss, train_acc = train_epoch(model, train_loader)
+    scheduler.step()
+    if epoch % 10 == 0:
+        print(f"Epoch {epoch}: loss={train_loss:.4f}, acc={train_acc:.4f}")</code></pre>
+
+<h2>Transfer Learning — The Practical Approach</h2>
+<p>Training a CNN from scratch requires large datasets (100K+ images) and days of GPU time. <strong>Transfer learning</strong> uses a CNN pre-trained on ImageNet (1.2M images, 1000 classes) as a starting point. The learned feature detectors are general-purpose and work well even for your specific domain:</p>
+<pre><code># Strategy 1: Use as fixed feature extractor (small dataset, &lt;5K images)
+resnet = models.resnet50(weights=models.ResNet50_Weights.DEFAULT)
+
+# Freeze all layers — they won't update during training
+for param in resnet.parameters():
+    param.requires_grad = False
+
+# Replace the final classifier for your problem (e.g., 5 classes)
+resnet.fc = nn.Sequential(
+    nn.Dropout(0.3),
+    nn.Linear(resnet.fc.in_features, 5)
+)
+# Only the new FC layer has requires_grad=True, so only it trains!
+
+# Strategy 2: Fine-tuning (medium dataset, 5K–50K images)
+# Freeze backbone layers, unfreeze from layer4 onwards
+for name, param in resnet.named_parameters():
+    if 'layer4' in name or 'fc' in name:
+        param.requires_grad = True   # Fine-tune last block + classifier
+    else:
+        param.requires_grad = False  # Keep frozen
+
+# Use a much smaller learning rate for fine-tuned layers!
+optimizer = optim.AdamW([
+    {'params': resnet.layer4.parameters(), 'lr': 1e-5},   # Small LR for pretrained
+    {'params': resnet.fc.parameters(), 'lr': 1e-3}         # Larger LR for new layers
+])</code></pre>
+
+<h2>Popular CNN Architectures</h2>
+<table>
+  <thead><tr><th>Model</th><th>Top-1 ImageNet</th><th>Params</th><th>Best Use</th></tr></thead>
+  <tbody>
+    <tr><td>ResNet-50</td><td>76.1%</td><td>25M</td><td>General transfer learning baseline</td></tr>
+    <tr><td>EfficientNet-B0</td><td>77.1%</td><td>5.3M</td><td>Mobile, resource-constrained</td></tr>
+    <tr><td>VisionTransformer (ViT-B)</td><td>81.1%</td><td>86M</td><td>Large dataset, state-of-art accuracy</td></tr>
+    <tr><td>ConvNeXt-Small</td><td>83.1%</td><td>50M</td><td>Modern, strong accuracy + efficiency</td></tr>
+  </tbody>
+</table>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always use data augmentation (random crops, flips, color jitter) — CNNs overfit without it on smaller datasets.</li>
+  <li>Use <code>BatchNorm2d</code> after every convolution — it dramatically stabilizes training and allows higher learning rates.</li>
+  <li>Transfer learning almost always beats training from scratch unless your domain is very different from ImageNet (e.g., medical X-rays, satellite imagery).</li>
+  <li>Use <code>torch.compile(model)</code> (PyTorch 2.0+) for a free 20–40% training speedup on modern GPUs.</li>
+</ul>

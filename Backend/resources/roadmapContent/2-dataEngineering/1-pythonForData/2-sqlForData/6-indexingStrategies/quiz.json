@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary architectural penalty (trade-off) of dynamically adding a B-Tree Index to a database table?",
+            "options": [
+                "It limits the maximum storage strictly to 10 Gigabytes.",
+                "It mathematically degrades WRITE performance (INSERT / UPDATE / DELETE), because the database must cautiously update the complex B-Tree algorithmic structure on the hard drive for every single new record.",
+                "It explicitly disables standard JSON objects natively.",
+                "It completely bypasses network TCP checks securely."
+            ],
+            "answer": "It mathematically degrades WRITE performance (INSERT / UPDATE / DELETE), because the database must cautiously update the complex B-Tree algorithmic structure on the hard drive for every single new record.",
+            "explanation": "Indexes supercharge READ speed, but severely impact WRITE speed. Therefore, you must only index columns that are frequently utilized in SQL WHERE clauses."
+        },
+        {
+            "question": "Regarding Composite Indexes, what explicit constraint does the critical 'Left-Prefix Rule' cleanly mandate mathematically?",
+            "options": [
+                "The index uniquely converts all strings explicitly to lowercase format.",
+                "The SQL database can effectively utilize the index only if the `WHERE` clause fundamentally filters by the leftmost precisely ordered columns first.",
+                "The composite CSS variables natively.",
+                "It generates UUIDs automatically safely."
+            ],
+            "answer": "The SQL database can effectively utilize the index only if the `WHERE` clause fundamentally filters by the leftmost precisely ordered columns first.",
+            "explanation": "If your index is (last_name, first_name), querying by 'last_name' works. Querying by 'first_name' alone skips the index completely."
+        },
+        {
+            "question": "What is the extreme performance benefit of an 'Index-Only Scan'?",
+            "options": [
+                "It prevents all SQL injection natively.",
+                "If the `SELECT` query only asks for columns that explicitly already exist physically inside the B-Tree Index structure, the database can completely skip the slow 'Disk Seek' required to fetch the full row data.",
+                "It aggressively deletes old logs from S3 buckets.",
+                "It bypasses the Webpack compression natively."
+            ],
+            "answer": "If the `SELECT` query only asks for columns that explicitly already exist physically inside the B-Tree Index structure, the database can completely skip the slow 'Disk Seek' required to fetch the full row data.",
+            "explanation": "If the index already contains the data you asked for, there is no need to look any further on the hard drive. It returns the data instantly from the tree."
+        }
+    ]
+}

@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "A medical diagnostic model predicts disease with 95% confidence for a patient who tests positive. Using Bayes' theorem, what additional information is needed to determine the actual probability the patient has the disease?",
+            "options": [
+                "We only need the model's 95% confidence — that is already the posterior probability.",
+                "We need the prior probability (disease prevalence in the population). A 95% sensitive test for a disease affecting 0.1% of the population produces a posterior of only ~2% despite the high sensitivity — most positives are false positives. Without the prior, the 95% figure is meaningless.",
+                "We need the model's false negative rate to compute the true positive rate.",
+                "We need the total number of patients the model was trained on."
+            ],
+            "answer": "We need the prior probability (disease prevalence in the population). A 95% sensitive test for a disease affecting 0.1% of the population produces a posterior of only ~2% despite the high sensitivity — most positives are false positives. Without the prior, the 95% figure is meaningless.",
+            "explanation": "This is the 'base rate neglect' fallacy. Doctors routinely overestimate positive predictive value because they ignore disease prevalence. Bayes' theorem formalizes the correct calculation."
+        },
+        {
+            "question": "Why does Bayesian hyperparameter optimization find better hyperparameters using fewer trials than random search?",
+            "options": [
+                "Bayesian optimization tests hyperparameters in alphabetical order, which happens to be more efficient.",
+                "Bayesian optimization builds a probabilistic surrogate model (Gaussian Process) of the relationship between hyperparameters and validation performance. After each trial, it updates this model and uses an acquisition function to intelligently select the next hyperparameters most likely to improve on the current best — exploiting patterns from past trials rather than searching randomly.",
+                "Bayesian optimization uses a larger validation set than random search, producing more reliable estimates.",
+                "Bayesian optimization precomputes all possible hyperparameter combinations, making each trial faster."
+            ],
+            "answer": "Bayesian optimization builds a probabilistic surrogate model (Gaussian Process) of the relationship between hyperparameters and validation performance. After each trial, it updates this model and uses an acquisition function to intelligently select the next hyperparameters most likely to improve on the current best — exploiting patterns from past trials rather than searching randomly.",
+            "explanation": "After 10 trials, Bayesian optimization knows that learning_rate > 0.1 always underperformed. It won't waste trials exploring that region. Random search doesn't learn — trial 50 is just as random as trial 1."
+        },
+        {
+            "question": "What specific advantage does a 'calibrated' probability output provide over a standard classifier's confidence score in a medical or financial application?",
+            "options": [
+                "Calibrated probabilities are always higher than uncalibrated ones, reflecting a more optimistic model.",
+                "A calibrated model's probability outputs match observed frequencies — if it predicts 70% for 1,000 patients, approximately 700 actually have the condition. Uncalibrated models are often overconfident (predict 90% when true frequency is 60%), leading to excessive treatment intensity or incorrect financial risk allocation.",
+                "Calibrated models use less memory and compute faster at inference time.",
+                "Calibration removes the need for a threshold to convert probabilities to class labels."
+            ],
+            "answer": "A calibrated model's probability outputs match observed frequencies — if it predicts 70% for 1,000 patients, approximately 700 actually have the condition. Uncalibrated models are often overconfident (predict 90% when true frequency is 60%), leading to excessive treatment intensity or incorrect financial risk allocation.",
+            "explanation": "A bank's credit risk model predicts 95% default probability. If uncalibrated, the true rate might be 60% — the model is systematically overconfident. A calibrated model lets risk managers correctly size loan loss reserves."
+        }
+    ]
+}

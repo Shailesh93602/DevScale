@@ -1,0 +1,87 @@
+<h1>Context & Authentication in GraphQL</h1>
+<p>Unlike REST APIs which have many separate endpoints (<code>/users</code>, <code>/posts</code>) where authentication middleware can be attached selectively, a GraphQL API has exactly ONE endpoint (<code>/graphql</code>). You cannot easily block the entire endpoint because some queries (like <code>getPublicPosts</code>) must be accessible to anonymous users.</p>
+<p>Solving authentication in GraphQL relies on the <strong>Context Context Object</strong>.</p>
+
+<h2>The Global Context Object</h2>
+<p>In GraphQL resolvers, the third argument is the <code>context</code>: <code>(parent, args, context, info)</code>. The Context is a plain JavaScript object that is created once, globally, for <em>every single incoming HTTP request</em>. It is shared across all resolvers.</p>
+<p>This makes it the perfect place to execute authentication logic: extract the JWT from the HTTP headers, verify it, and put the user's data into the context for any resolver to access if needed.</p>
+
+<h2>Setting up Authentication with Apollo Server</h2>
+<p>When you initialize Apollo Server, you define a <code>context</code> function. This function receives the Express <code>req</code> object.</p>
+
+<pre><code>const { ApolloServer } = require('@apollo/server');
+const jwt = require('jsonwebtoken');
+
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+});
+
+// Using the Express middleware integration
+app.use('/graphql', expressMiddleware(server, {
+  // This function runs on EVERY incoming GraphQL request!
+  context: async ({ req }) =&gt; {
+    // 1. Extract the Authorization header
+    const token = req.headers.authorization?.split(' ')[1] || '';
+    
+    // 2. Default state: not logged in
+    let user = null;
+
+    if (token) {
+      try {
+        // 3. Verify the token mathematically
+        const decodedPayload = jwt.verify(token, process.env.JWT_SECRET);
+        // 4. Optionally fetch the full user from the DB if needed
+        user = await db.users.findById(decodedPayload.id); 
+      } catch (err) {
+        // Token is invalid/expired. We don't throw an error here, 
+        // because maybe they are requesting a public resource!
+        console.warn("Invalid token provided");
+      }
+    }
+
+    // 5. Return the Context object. 
+    // This object is injected as the 3rd argument into EVERY resolver!
+    return { user, db, req };
+  },
+}));</code></pre>
+
+<h2>Authorizing Resolvers</h2>
+<p>Now that the <code>context.user</code> is populated globally, you can protect specific queries and mutations simply by checking if the user exists inside the resolver.</p>
+
+<pre><code>const resolvers = {
+  Query: {
+    // 🟢 Public Endpoint: We don't care if context.user is null
+    getPublicPosts: async (_, args, context) =&gt; {
+      return await context.db.posts.find({ isPublic: true });
+    },
+
+    // 🔴 Protected Endpoint: Must be logged in!
+    getMyProfile: async (_, args, context) =&gt; {
+      if (!context.user) {
+        // Throwing a GraphQL Error will safely reach the frontend UI
+        throw new Error("You must be logged in to view your profile");
+      }
+      return context.user;
+    }
+  },
+  
+  Mutation: {
+    // 🔴 Protected Endpoint: Must be logged in AND an Admin!
+    deleteUser: async (_, { id }, context) =&gt; {
+      if (!context.user) throw new Error("Not logged in");
+      if (context.user.role !== 'ADMIN') throw new Error("Forbidden: Admins only");
+      
+      return await context.db.users.findByIdAndDelete(id);
+    }
+  }
+};</code></pre>
+
+<h2>Dependency Injection via Context</h2>
+<p>Notice that we also attached the <code>db</code> connection in the context setup function above. Passing the database, API keys, and caching mechanisms into the Context object is a common architectural pattern known as <strong>Dependency Injection</strong>. It prevents you from having to use <code>require('../../db')</code> in multiple resolver files, and makes writing unit tests much easier since you can simply inject a fake database during testing.</p>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Do not throw strict HTTP 401 Unauthorized errors in the main <code>context</code> initialization function. Doing so will completely crash the request and prevent users from viewing public queries without a token. Let the specific resolver decide if it requires authentication.</li>
+  <li>Use custom GraphQL Error extensions (like <code>GraphQLError('Not Authorised', { extensions: { code: 'UNAUTHENTICATED' } })</code>) rather than generic JS Errors so your frontend Apollo Client can automatically intercept and redirect to the login page cleanly.</li>
+</ul>

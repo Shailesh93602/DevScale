@@ -1,0 +1,19 @@
+{
+  "title": "Implement Infinite Scroll",
+  "slug": "infinite-scroll",
+  "difficulty": "Medium",
+  "category": "frontend",
+  "points": 100,
+  "tags": ["javascript", "dom", "performance", "pagination", "intersection-observer"],
+  "company_tags": ["Meta", "Google", "Twitter", "Pinterest", "TikTok"],
+  "topic_tags": ["Intersection Observer", "Pagination", "Performance", "DOM"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "A data fetcher function and configuration options",
+  "output_format": "An infinite scroll controller that loads more data as the user scrolls",
+  "example_input": "createInfiniteScroll({ fetchPage, pageSize: 20, threshold: 0.8 })",
+  "example_output": "Controller with loadMore, getItems, hasMore, isLoading methods",
+  "constraints": "Page size >= 1. Threshold between 0 and 1. Data source may be finite.",
+  "function_signature": "function createInfiniteScroll(config: InfiniteScrollConfig): InfiniteScrollController",
+  "status": "ACTIVE"
+}

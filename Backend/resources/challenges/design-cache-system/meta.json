@@ -1,0 +1,19 @@
+{
+  "title": "Design a Distributed Cache",
+  "slug": "design-cache-system",
+  "difficulty": "Hard",
+  "category": "system_design",
+  "points": 200,
+  "tags": ["caching", "distributed-systems", "redis", "memcached"],
+  "company_tags": ["Google", "Facebook", "Twitter", "Amazon"],
+  "topic_tags": ["Consitent Hashing", "Eviction Policies", "Cache Consistency", "Data Replication", "Availability"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Key-value pairs to store (set) or keys to retrieve (get)",
+  "output_format": "Stored values or 'null' if not found/expired",
+  "example_input": "cache.set('user:123', { name: 'Alice' }, ttl=3600)",
+  "example_output": "cache.get('user:123') => { name: 'Alice' }",
+  "constraints": "Support LRU/LFU eviction. Scale to TBs of data across hundreds of nodes. Handle node failures with minimal data loss. Consistent hashing to minimize remapping.",
+  "function_signature": "class DistributedCache { get(key: string): any; set(key: string, value: any, ttl?: number): void; remove(key: string): void; }",
+  "status": "ACTIVE"
+}

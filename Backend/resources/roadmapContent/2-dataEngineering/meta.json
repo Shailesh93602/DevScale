@@ -1,0 +1,14 @@
+{
+    "title": "Data Engineering",
+    "description": "Master the complete data stack: Python, SQL, Spark, Airflow, data warehouses, and real-time streaming pipelines.",
+    "tags": "Python,DataEngineering,DataAnalysis,Streaming",
+    "difficulty": "MEDIUM",
+    "main_concepts": [
+        "1-pythonForData",
+        "2-pipelines",
+        "3-dataWarehousing",
+        "4-streamingRealtime",
+        "5-mlOpsDataOps",
+        "6-modernFormats"
+    ]
+}

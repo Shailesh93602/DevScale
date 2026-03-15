@@ -1,0 +1,4 @@
+{
+    "name": "Zustand & React Query on Mobile",
+    "description": "Building scalable client state management and server state synchronization. Using Zustand for global client state with persistence via AsyncStorage, React Query (TanStack Query) for caching server data, managing background refetch, optimistic updates for instant UI feedback, infinite queries for paginated lists, and combining Zustand + React Query for a complete mobile data architecture."
+}

@@ -1,0 +1,42 @@
+{
+  "title": "Add Two Numbers",
+  "slug": "add-two-numbers",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": [
+    "linked-list",
+    "math",
+    "recursion"
+  ],
+  "company_tags": [
+    "Amazon",
+    "Microsoft",
+    "Bloomberg",
+    "Facebook",
+    "Apple"
+  ],
+  "topic_tags": [
+    "linked lists",
+    "math"
+  ],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "The heads of two non-empty linked lists `l1` and `l2`, representing two non-negative integers stored in reverse order.",
+  "output_format": "The head of the linked list representing the sum.",
+  "example_input": "l1 = [2,4,3], l2 = [5,6,4]",
+  "example_output": "[7,0,8]",
+  "constraints": "- The number of nodes in each linked list is in the range `[1, 100]`.\n- `0 <= Node.val <= 9`\n- It is guaranteed that the list represents a number that does not have leading zeros.",
+  "function_signature": "function addTwoNumbers(l1: ListNode | null, l2: ListNode | null): ListNode | null {}",
+  "status": "ACTIVE"
+}

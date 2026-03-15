@@ -1,0 +1,6 @@
+[
+  "Consider splitting the list into two halves. You can find the middle of the list using the slow/fast pointer technique.",
+  "Once you have the two halves, you want to interleave them. The first half goes forward, but the second half goes backward.",
+  "Reverse the second half of the list.",
+  "Finally, merge the first half and the reversed second half alternately."
+]

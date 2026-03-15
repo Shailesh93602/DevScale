@@ -1,0 +1,118 @@
+<h1>Core Web Vitals &amp; Web Performance</h1>
+<p>Core Web Vitals are Google's standardized metrics for measuring real-user experience on the web. They directly impact SEO rankings and, more importantly, user satisfaction. A page that loads in 1 second converts 3× better than one that loads in 5 seconds. This article covers how to measure, understand, and optimize all three Core Web Vitals.</p>
+
+<h2>The Three Core Web Vitals</h2>
+<table>
+  <thead><tr><th>Metric</th><th>Measures</th><th>Good</th><th>Needs Improvement</th><th>Poor</th></tr></thead>
+  <tbody>
+    <tr><td>LCP (Largest Contentful Paint)</td><td>Loading speed</td><td>&lt; 2.5s</td><td>2.5s – 4.0s</td><td>&gt; 4.0s</td></tr>
+    <tr><td>INP (Interaction to Next Paint)</td><td>Responsiveness</td><td>&lt; 200ms</td><td>200ms – 500ms</td><td>&gt; 500ms</td></tr>
+    <tr><td>CLS (Cumulative Layout Shift)</td><td>Visual stability</td><td>&lt; 0.1</td><td>0.1 – 0.25</td><td>&gt; 0.25</td></tr>
+  </tbody>
+</table>
+
+<h2>LCP — Largest Contentful Paint</h2>
+<p>LCP measures when the largest visible element (hero image, H1, video thumbnail) finishes rendering. It's the best proxy for "when does the page feel loaded?"</p>
+<p><strong>Common LCP issues and fixes:</strong></p>
+<ul>
+  <li><strong>Slow server response (TTFB)</strong>: Use a CDN (Cloudflare, Vercel Edge), add server-side caching, or upgrade your hosting tier.</li>
+  <li><strong>Render-blocking resources</strong>: Move non-critical CSS/JS to load after the initial paint. Defer non-critical scripts with <code>defer</code> or <code>async</code>.</li>
+  <li><strong>Unoptimized images</strong>: Use next-gen formats (WebP, AVIF), correct <code>srcset</code> for responsive images, and always set explicit <code>width</code> and <code>height</code> attributes.</li>
+</ul>
+<pre><code>&lt;!-- Bad: LCP image blocks render --&gt;
+&lt;img src="hero.jpg"&gt;
+
+&lt;!-- Good: Preloaded + WebP + explicit dimensions --&gt;
+&lt;link rel="preload" as="image" href="hero.webp" fetchpriority="high"&gt;
+&lt;img
+  src="hero.webp"
+  width="1200"
+  height="600"
+  alt="Hero image"
+  fetchpriority="high"
+  decoding="async"
+  srcset="hero-400w.webp 400w, hero-800w.webp 800w, hero-1200w.webp 1200w"
+  sizes="(max-width: 768px) 100vw, 1200px"
+&gt;</code></pre>
+
+<h2>INP — Interaction to Next Paint</h2>
+<p>INP measures the delay from a user interaction (click, tap, keypress) to the next frame being painted. High INP means the UI feels "janky" or unresponsive — usually caused by <strong>long JavaScript tasks blocking the main thread</strong>.</p>
+<pre><code>// Bad: Long synchronous task blocks the main thread for 300ms
+function processLargeArray(arr) {
+  return arr.map(item => expensiveTransform(item)); // 300ms = very bad INP
+}
+
+// Good: Break work into chunks with scheduler.yield()
+async function processLargeArray(arr) {
+  const results = [];
+  for (let i = 0; i < arr.length; i++) {
+    results.push(expensiveTransform(arr[i]));
+    // Yield to the browser every 50 items to allow rendering/input handling
+    if (i % 50 === 0) await scheduler.yield();
+  }
+  return results;
+}
+
+// Alternative: Use a Web Worker for CPU-intensive work off the main thread
+const worker = new Worker('./processor.worker.js');
+worker.postMessage({ items: largeArray });
+worker.onmessage = (e) => displayResults(e.data);</code></pre>
+
+<h2>CLS — Cumulative Layout Shift</h2>
+<p>CLS measures unexpected layout shifts — when elements jump around the page after load, causing mis-clicks. The most common causes:</p>
+<ul>
+  <li>Images and videos without explicit dimensions</li>
+  <li>Ads, embeds, or iframes with dynamically injected size</li>
+  <li>Web fonts causing text to reflow (FOIT/FOUT)</li>
+</ul>
+<pre><code>&lt;!-- Bad: Image with no dimensions shifts layout when loaded --&gt;
+&lt;img src="product.jpg" alt="Product"&gt;
+
+&lt;!-- Good: Reserve space with aspect-ratio CSS --&gt;
+&lt;style&gt;
+  .product-img {
+    width: 100%;
+    aspect-ratio: 16 / 9;  /* Browser reserves exact space before image loads */
+    object-fit: cover;
+  }
+&lt;/style&gt;
+&lt;img class="product-img" src="product.jpg" width="800" height="450" alt="Product"&gt;
+
+&lt;!-- Good: Prevent font swap with font-display: optional --&gt;
+&lt;style&gt;
+  @font-face {
+    font-family: 'Inter';
+    src: url('/fonts/inter.woff2') format('woff2');
+    font-display: swap;  /* Use system font until Inter loads — minimal CLS */
+  }
+&lt;/style&gt;</code></pre>
+
+<h2>Measuring CWV</h2>
+<pre><code>// Measure CWV in real users' browsers with the web-vitals library
+import { onLCP, onINP, onCLS } from 'web-vitals';
+
+function sendToAnalytics({ name, value, rating }) {
+  // Send to your analytics endpoint
+  fetch('/api/vitals', {
+    method: 'POST',
+    body: JSON.stringify({ metric: name, value, rating, url: location.href }),
+  });
+}
+
+onLCP(sendToAnalytics);
+onINP(sendToAnalytics);
+onCLS(sendToAnalytics);</code></pre>
+
+<p>For lab testing (during development): use <a href="https://pagespeed.web.dev">PageSpeed Insights</a>, Lighthouse in Chrome DevTools, or <code>npx lighthouse https://yoursite.com --output html</code>.</p>
+
+<h2>Practical Performance Checklist</h2>
+<ul>
+  <li>✅ All images have explicit <code>width</code> and <code>height</code> attributes</li>
+  <li>✅ Hero/LCP image is preloaded with <code>&lt;link rel="preload" fetchpriority="high"&gt;</code></li>
+  <li>✅ Images are WebP/AVIF with correct <code>srcset</code> for responsive sizes</li>
+  <li>✅ Web fonts use <code>font-display: swap</code></li>
+  <li>✅ JavaScript is code-split and loaded with <code>defer</code></li>
+  <li>✅ Critical CSS is inlined; non-critical CSS is loaded asynchronously</li>
+  <li>✅ Static assets are served from a CDN with long-lived cache headers</li>
+  <li>✅ Server response time (TTFB) is under 800ms</li>
+</ul>

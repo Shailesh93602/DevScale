@@ -1,0 +1,6 @@
+[
+  "With unlimited transactions, you can capture every upward price movement.",
+  "If prices[i] > prices[i-1], you can profit from that day's increase.",
+  "Sum up all positive consecutive differences: profit += max(0, prices[i] - prices[i-1]).",
+  "This greedy approach is equivalent to buying at every valley and selling at every peak."
+]

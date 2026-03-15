@@ -1,0 +1,19 @@
+{
+  "title": "Duplicate Emails",
+  "slug": "duplicate-emails",
+  "difficulty": "Easy",
+  "category": "databases",
+  "points": 50,
+  "tags": ["sql", "group-by", "having", "aggregation"],
+  "company_tags": ["Amazon", "Facebook", "Google"],
+  "topic_tags": ["SQL", "GROUP BY", "HAVING"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Table: Person with columns id (int, primary key), email (varchar)",
+  "output_format": "Result table with column Email containing all duplicate emails",
+  "example_input": "Table: Person\n| id | email   |\n| 1  | a@b.com |\n| 2  | c@d.com |\n| 3  | a@b.com |",
+  "example_output": "| Email   |\n| a@b.com |",
+  "constraints": "- 1 <= Person.id <= 10^4\n- email is a valid email string",
+  "function_signature": "-- Write your SQL query below",
+  "status": "ACTIVE"
+}

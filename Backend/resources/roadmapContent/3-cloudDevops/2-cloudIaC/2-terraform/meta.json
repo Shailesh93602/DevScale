@@ -1,0 +1,4 @@
+{
+    "name": "Terraform & Infrastructure as Code",
+    "description": "Provisioning cloud infrastructure with Terraform HCL, modules, and state management."
+}

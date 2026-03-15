@@ -1,0 +1,4 @@
+{
+    "name": "API Security Best Practices",
+    "description": "Rate limiting, CORS, input sanitization, helmet.js, and OWASP top 10."
+}

@@ -1,0 +1,10 @@
+[
+  { "input": "{\"n\": 4}", "output": "4", "explanation": "T(4) = 1+1+2 = 4", "is_hidden": false },
+  { "input": "{\"n\": 25}", "output": "1389537", "explanation": "Large tribonacci number", "is_hidden": false },
+  { "input": "{\"n\": 0}", "output": "0", "explanation": "T(0) = 0", "is_hidden": false },
+  { "input": "{\"n\": 1}", "output": "1", "explanation": "T(1) = 1", "is_hidden": true },
+  { "input": "{\"n\": 2}", "output": "1", "explanation": "T(2) = 1", "is_hidden": true },
+  { "input": "{\"n\": 3}", "output": "2", "explanation": "T(3) = 0+1+1 = 2", "is_hidden": true },
+  { "input": "{\"n\": 10}", "output": "149", "explanation": "T(10) = 149", "is_hidden": true },
+  { "input": "{\"n\": 37}", "output": "2082876103", "explanation": "Maximum constraint", "is_hidden": true }
+]

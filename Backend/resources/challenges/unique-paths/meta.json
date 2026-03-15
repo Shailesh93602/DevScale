@@ -1,0 +1,19 @@
+{
+  "title": "Unique Paths",
+  "slug": "unique-paths",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["dynamic-programming", "math", "combinatorics"],
+  "company_tags": ["Amazon", "Google", "Microsoft", "Facebook", "Bloomberg"],
+  "topic_tags": ["dynamic programming", "grid", "combinatorics"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Two integers `m` and `n` representing the grid dimensions (rows and columns).",
+  "output_format": "The number of unique paths from top-left to bottom-right.",
+  "example_input": "m = 3, n = 7",
+  "example_output": "28",
+  "constraints": "- `1 <= m, n <= 100`",
+  "function_signature": "function uniquePaths(m: number, n: number): number {}",
+  "status": "ACTIVE"
+}

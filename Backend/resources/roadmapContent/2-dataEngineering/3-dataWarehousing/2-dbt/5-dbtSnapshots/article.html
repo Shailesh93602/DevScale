@@ -1,0 +1,35 @@
+<h1>Slowly Changing Dimensions (Snapshots)</h1>
+<p>In standard data pipelines, databases often overwrite historical data. If a user named "Bob" currently lives in "New York", and he moves to "California", the application database simply executes an <code>UPDATE</code> statement. The row now says "California", and the historical fact that Bob ever lived in New York is permanently deleted.</p>
+
+<h2>The Problem with Overwriting History</h2>
+<p>From an operational standpoint, overwriting is fine. But for Data Analysts, deleted history is catastrophic. If the Marketing team wants to know "How many users lived in New York during the 2022 Christmas Sale?", the calculation will be inherently broken because Bob's record in the data warehouse was mutated in 2024 to "California."</p>
+<p>To fundamentally solve this, Data Engineers implement exactly what is known as <strong>Type 2 Slowly Changing Dimensions (SCD Type 2)</strong>.</p>
+
+<h2>Enter dbt Snapshots</h2>
+<p>Building a custom SCD Type 2 pipeline manually in SQL is incredibly complex and prone to massive architectural errors. <strong>dbt Snapshots</strong> automate this entire process flawlessly.</p>
+<pre><code class="language-sql">{% snapshot users_snapshot %}
+
+{{
+    config(
+      target_schema='snapshots',
+      unique_key='id',
+      strategy='timestamp',
+      updated_at='last_updated_date',
+    )
+}}
+
+SELECT * FROM {{ source('raw_database', 'users') }}
+
+{% endsnapshot %}
+</code></pre>
+
+<h2>How Snapshots Work Physically</h2>
+<p>When you execute <code>dbt snapshot</code>, dbt inspects the raw source database and compares it to its internal Snapshot table.</p>
+<ol>
+  <li>The first time you run it, dbt inserts Bob's "New York" record with <code>dbt_valid_from = 2022-01-01</code> and <code>dbt_valid_to = NULL</code> (meaning this is his current, active location).</li>
+  <li>When Bob updates his profile to "California" in 2024, the raw database simply overwrites the old row.</li>
+  <li>The next time you run <code>dbt snapshot</code>, dbt notices that the <code>last_updated_date</code> on Bob's row has structurally changed!</li>
+</ol>
+
+<p>Instead of overwriting the Data Warehouse, dbt magically executes an elegant transformation. It updates Bob's "New York" row, explicitly marking <code>dbt_valid_to = 2024-05-01</code> (closing the historical chapter). It then <strong>inserts a brand new row</strong> for "California" with <code>dbt_valid_from = 2024-05-01</code> and <code>dbt_valid_to = NULL</code>.</p>
+<p>Now, when Analysts query the Data Warehouse, they can explicitly filter by the <code>dbt_valid_from</code> timestamps to perfectly recreate the exact state of the universe on any given historical date safely.</p>

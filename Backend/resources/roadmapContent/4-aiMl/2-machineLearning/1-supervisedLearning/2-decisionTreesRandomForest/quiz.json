@@ -1,0 +1,118 @@
+{
+    "title": "Decision Trees & Ensembles Quiz",
+    "description": "Test your knowledge on Trees, Random Forests, Bagging, and Boosting algorithms.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the primary vulnerability of a single, deeply grown Decision Tree?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It requires perfect linear normalization of the input data.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It takes weeks to compile.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It is inherently biased against floating-point numbers.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It is extremely prone to severe overfitting, capturing noise and memorizing the training data perfectly while failing on new data.",
+                    "isCorrect": true
+                }
+            ]
+        },
+        {
+            "question": "What broad concept describes combining the independent predictions of multiple weaker ML models to produce a single, stronger, more robust prediction?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Unsupervised Clustering",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Deep Learning Processing",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Ensemble Learning",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Data Normalization",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How does a 'Random Forest' algorithm fundamentally combat the overfitting found in single decision trees?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "By employing 'Bagging'—training hundreds of parallel trees on random subsets of rows and features, and forcing them to democratically vote on the final prediction.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "By executing a sequential process analyzing the errors of previous iterations.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By using raw Calculus to calculate the partial derivatives.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By rejecting null hypothesis tests during node splits.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How does 'Boosting' (as seen in XGBoost) fundamentally differ from 'Bagging' (as seen in Random Forests)?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Boosting trains trees completely in parallel simultaneously, while Bagging trains sequentially.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Boosting only builds a single giant tree.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Boosting trains trees *sequentially*, where each subsequent weak model specifically attempts to correct the mathematical errors (residuals) made by the previous model in the chain.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Boosting is an Unsupervised mechanism, Bagging is Supervised.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which of these algorithms would likely perform best out-of-the-box on a complex Tabular dataset (like CSV spreadsheets) rather than unstructured data like images?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Convolutional Neural Network",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Transformer Architecture (LLM)",
+                    "isCorrect": false
+                },
+                {
+                    "text": "XGBoost (Extreme Gradient Boosting)",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Recurrent Neural Network (LSTM)",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

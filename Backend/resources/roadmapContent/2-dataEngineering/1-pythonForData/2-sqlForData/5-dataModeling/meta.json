@@ -1,0 +1,4 @@
+{
+    "name": "Data Modeling Patterns",
+    "description": "Architecting analytical databases optimally. Understanding the fundamental differences between the Star Schema and Snowflake Schema, and designing robust Fact and Dimension tables."
+}

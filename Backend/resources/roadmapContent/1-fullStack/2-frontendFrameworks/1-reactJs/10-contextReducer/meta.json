@@ -1,0 +1,4 @@
+{
+    "name": "Advanced Context & useReducer",
+    "description": "Scaling React state without Redux. Using the Context API efficiently, pairing it with useReducer, and the pattern of separating state and dispatch providers to prevent re-renders."
+}

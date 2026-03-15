@@ -1,0 +1,74 @@
+{
+    "title": "React Hooks & State Quiz",
+    "description": "Test your mastery of React hooks and state management patterns.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What does the dependency array in useEffect control?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The order in which effects run",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Which values, when changed, cause the effect to re-run",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The cleanup function execution",
+                    "isCorrect": false
+                },
+                {
+                    "text": "How many times the component can render",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is wrong with: state.count++; setState(state)?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "setState does not accept objects",
+                    "isCorrect": false
+                },
+                {
+                    "text": "You are mutating state directly — React will not detect the change and re-render",
+                    "isCorrect": true
+                },
+                {
+                    "text": "++ operator is not supported in React",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Nothing, this is correct",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the main use case for useRef?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "To manage global state",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To persist values across renders without triggering re-renders, and to access DOM elements",
+                    "isCorrect": true
+                },
+                {
+                    "text": "To replace useState for all state management",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To create context providers",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

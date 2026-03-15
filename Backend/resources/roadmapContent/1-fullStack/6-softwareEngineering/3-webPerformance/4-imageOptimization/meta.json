@@ -1,0 +1,4 @@
+{
+    "name": "Image & Media Optimization",
+    "description": "Shrinking the heaviest assets on the web. Serving modern WebP and AVIF formats, implementing intelligent Lazy Loading to defer off-screen images, and utilizing specialized Image CDNs."
+}

@@ -1,0 +1,4 @@
+{
+    "name": "CSS Custom Properties (Variables)",
+    "description": "Using CSS variables (--var) to build consistent, themeable, maintainable design systems with cascade and inheritance."
+}

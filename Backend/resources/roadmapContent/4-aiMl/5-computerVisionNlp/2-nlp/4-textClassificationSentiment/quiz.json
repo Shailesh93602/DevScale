@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "For a high-volume customer support ticket classification system (10M+ tickets per day), why might TF-IDF + Logistic Regression be preferable over fine-tuned BERT despite lower accuracy?",
+            "options": [
+                "TF-IDF + Logistic Regression always achieves better accuracy than BERT for customer support text.",
+                "TF-IDF + Logistic Regression inference is 100-1000x faster (microseconds vs milliseconds) and requires no GPU. At 10M tickets/day, BERT's latency and GPU cost may be prohibitive. If TF-IDF achieves 87% F1 and BERT achieves 92% F1, the 5% accuracy gain may not justify 100x infrastructure cost increase. The right choice depends on error cost, latency budget, and infrastructure constraints.",
+                "BERT cannot handle high-volume production workloads without special hardware.",
+                "TF-IDF maintains high accuracy even when categories are updated, unlike BERT."
+            ],
+            "answer": "TF-IDF + Logistic Regression inference is 100-1000x faster (microseconds vs milliseconds) and requires no GPU. At 10M tickets/day, BERT's latency and GPU cost may be prohibitive. If TF-IDF achieves 87% F1 and BERT achieves 92% F1, the 5% accuracy gain may not justify 100x infrastructure cost increase. The right choice depends on error cost, latency budget, and infrastructure constraints.",
+            "explanation": "Production ML maxim: 'Good enough model with low latency beats perfect model with unaffordable latency.' Many companies use TF-IDF fast-path for 90% of traffic and escalate only ambiguous cases (low confidence score) to BERT — the hybrid approach gets 95% of the accuracy at 10% of the cost."
+        },
+        {
+            "question": "What does zero-shot classification with facebook/bart-large-mnli enable that makes it uniquely valuable for rapidly prototyping new classification systems?",
+            "options": [
+                "Zero-shot classification automatically labels training data for supervised fine-tuning.",
+                "Zero-shot classification allows classification into completely new categories at inference time without any labeled training examples — you simply provide candidate labels as text strings. This is invaluable for: prototyping new taxonomy before investing in data labeling, handling rare/new categories that have no training examples, and validating that a classification task is feasible before committing to fine-tuning.",
+                "Zero-shot classification runs without any GPU, making it cheaper than BERT fine-tuning.",
+                "Zero-shot classification eliminates the need for a validation set during model evaluation."
+            ],
+            "answer": "Zero-shot classification allows classification into completely new categories at inference time without any labeled training examples — you simply provide candidate labels as text strings. This is invaluable for: prototyping new taxonomy before investing in data labeling, handling rare/new categories that have no training examples, and validating that a classification task is feasible before distinguishing categories before committing to fine-tuning.",
+            "explanation": "A startup needs to classify customer feedback into 20 new support categories. Week 1: deploy zero-shot classifier, get 72% accuracy immediately with zero labeled data. Week 4: collect 200 labeled examples per category via the zero-shot system. Fine-tune DistilBERT → 91% accuracy. Zero-shot enabled fast iteration."
+        },
+        {
+            "question": "Adding bigrams (ngram_range=(1,2)) to TF-IDF vectorization captures phrases like 'not good', 'very satisfied', and 'highly recommend'. Why are these bigrams essential for sentiment analysis?",
+            "options": [
+                "Bigrams double the feature count, which always improves accuracy by giving more signal.",
+                "Sentiment often depends on word combinations that reverse or amplify individual word meaning. 'not good' has opposite sentiment to 'good'. 'highly recommend' is a stronger signal than 'recommend' alone. Unigram TF-IDF treats these as separate independent tokens — 'not' and 'good' — missing the negation relationship. Bigrams capture local syntactic context that is essential for accurate sentiment understanding.",
+                "Bigrams prevent TF-IDF from treating each word as having the same importance.",
+                "Bigrams are required for TF-IDF to process sentences longer than 10 words."
+            ],
+            "answer": "Sentiment often depends on word combinations that reverse or amplify individual word meaning. 'not good' has opposite sentiment to 'good'. 'highly recommend' is a stronger signal than 'recommend' alone. Unigram TF-IDF treats these as separate independent tokens — 'not' and 'good' — missing the negation relationship. Bigrams capture local syntactic context that is essential for accurate sentiment understanding.",
+            "explanation": "Benchmark result: TF-IDF unigrams on Amazon reviews → 88% accuracy. TF-IDF bigrams → 91% accuracy. The 3% improvement comes almost entirely from negation patterns ('not satisfied', 'no problems', 'doesn't work'). Adding trigrams provides diminishing returns and increases model size significantly."
+        }
+    ]
+}

@@ -1,0 +1,4 @@
+{
+    "name": "GraphQL Resolvers",
+    "description": "Implementing resolver functions, context, authentication guards, and the DataLoader pattern."
+}

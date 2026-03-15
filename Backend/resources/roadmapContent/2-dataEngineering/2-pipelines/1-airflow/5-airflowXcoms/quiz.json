@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary architectural purpose of utilizing an Airflow 'XCom' (Cross-Communication)?",
+            "options": [
+                "It aggressively translates Python Pandas scripts directly to SQL code.",
+                "It provides a secure, built-in mechanism for completely isolated Airflow tasks (which might run on different servers) to exchange small pieces of critical metadata by saving values to the central Airflow database.",
+                "It strictly generates HTML dashboards for the frontend.",
+                "It encrypts passwords dynamically securely."
+            ],
+            "answer": "It provides a secure, built-in mechanism for completely isolated Airflow tasks (which might run on different servers) to exchange small pieces of critical metadata by saving values to the central Airflow database.",
+            "explanation": "Because Task A and Task B might run hours apart on different virtual machines, they cannot share local RAM variables. XComs solve this."
+        },
+        {
+            "question": "What happens physically when an Airflow task explicitly executes `xcom_push` with a Python dictionary?",
+            "options": [
+                "The dictionary is compiled into a C executable binary.",
+                "Airflow serializes the value (usually into JSON) and permanently saves it inside the core Airflow Metadata Database (e.g., PostgreSQL) so downstream tasks can query it later.",
+                "The dictionary is instantly emailed securely to administrators.",
+                "The dictionary is sent via WebSockets natively."
+            ],
+            "answer": "Airflow serializes the value (usually into JSON) and permanently saves it inside the core Airflow Metadata Database (e.g., PostgreSQL) so downstream tasks can query it later.",
+            "explanation": "This allows any downstream task in the DAG to reliably fetch the value using `xcom_pull` without relying on local machine state."
+        },
+        {
+            "question": "Why is it considered a severe architectural anti-pattern to push a massive 5-Gigabyte Pandas DataFrame explicitly into an XCom?",
+            "options": [
+                "Because XComs only accept boolean values.",
+                "Because XCom values are saved directly into the core Airflow Metadata Database. Dumping 5 Gigabytes of raw data into it will instantly overwhelm the database and crash the entire Airflow ecosystem.",
+                "Because Pandas completely ignores metadata formats.",
+                "Because XComs automatically delete all string objects."
+            ],
+            "answer": "Because XCom values are saved directly into the core Airflow Metadata Database. Dumping 5 Gigabytes of raw data into it will instantly overwhelm the database and crash the entire Airflow ecosystem.",
+            "explanation": "Airflow is solely an orchestrator. If you must pass data between tasks, you should save the data to S3, and explicitly pass the tiny S3 URL path string via the XCom."
+        }
+    ]
+}

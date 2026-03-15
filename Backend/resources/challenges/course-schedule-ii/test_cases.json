@@ -1,0 +1,10 @@
+[
+  {"input":"{\"numCourses\":2, \"prerequisites\":[[1,0]]}","output":"[0,1]","explanation":"Linear","is_hidden":false},
+  {"input":"{\"numCourses\":4, \"prerequisites\":[[1,0],[2,0],[3,1],[3,2]]}","output":"[0,1,2,3]","explanation":"Diamond DAG","is_hidden":false},
+  {"input":"{\"numCourses\":1, \"prerequisites\":[]}","output":"[0]","explanation":"Single course","is_hidden":false},
+  {"input":"{\"numCourses\":2, \"prerequisites\":[[1,0],[0,1]]}","output":"[]","explanation":"Cycle returns empty","is_hidden":true},
+  {"input":"{\"numCourses\":3, \"prerequisites\":[[1,0],[2,1]]}","output":"[0,1,2]","explanation":"Linear chain","is_hidden":true},
+  {"input":"{\"numCourses\":3, \"prerequisites\":[]}","output":"[0,1,2]","explanation":"No prereqs any order valid","is_hidden":true},
+  {"input":"{\"numCourses\":4, \"prerequisites\":[[1,0],[2,0],[3,1],[3,2],[2,1]]}","output":"[0,1,2,3]","explanation":"Complex DAG","is_hidden":true},
+  {"input":"{\"numCourses\":3, \"prerequisites\":[[0,1],[1,2],[2,0]]}","output":"[]","explanation":"3-cycle","is_hidden":true}
+]

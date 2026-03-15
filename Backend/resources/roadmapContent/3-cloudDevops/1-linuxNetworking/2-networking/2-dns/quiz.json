@@ -1,0 +1,118 @@
+{
+    "title": "DNS Fundamentals Quiz",
+    "description": "Test your knowledge on DNS records, resolving queries, and caching TTL.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Which DNS record maps a human-readable domain name directly to an IPv4 address?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "AAAA Record",
+                    "isCorrect": false
+                },
+                {
+                    "text": "CNAME",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A Record",
+                    "isCorrect": true
+                },
+                {
+                    "text": "TXT Record",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the Time-To-Live (TTL) value in a DNS record responsible for?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It determines how many hops an IP packet can take before dropping.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It dictates how long caching nameservers and browsers should remember the record without querying the authoritative server again.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It defines the expiration date of an SSL/TLS certificate.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It indicates the exact moment a domain registration expires.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which of these is the most common use case for a TXT record?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Mapping a subdomain to an external vendor server.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Routing incoming email to a specific provider.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Storing encryption keys and ownership validation tokens (like for SPF, DKIM, DMARC, or let's encrypt validation).",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Resolving the Top Level Domain (TLD).",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In the DNS hierarchy, what is the Server that holds the final, definitive records customized by the domain owner called?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Root Name Server",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Authoritative Name Server",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Resolving Name Server",
+                    "isCorrect": false
+                },
+                {
+                    "text": "TLD Name Server",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which command-line utility is widely used by engineers to query DNS name servers directly and troubleshoot propagation issues?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "traceroute",
+                    "isCorrect": false
+                },
+                {
+                    "text": "ps aux",
+                    "isCorrect": false
+                },
+                {
+                    "text": "curl",
+                    "isCorrect": false
+                },
+                {
+                    "text": "dig",
+                    "isCorrect": true
+                }
+            ]
+        }
+    ]
+}

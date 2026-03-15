@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary mechanical difference between executing `git merge main` and `git rebase main` on a divergent feature branch?",
+            "options": [
+                "Merge deletes your branch, Rebase keeps it globally",
+                "Merge creates a brand new 'Merge Commit' to permanently tie two divergent timelines together. Rebase mathematically unplugs your commits, fast-forwards the base, and replays your commits linearly on top of the newest code, completely eliminating the need for a Merge Commit",
+                "Rebase only works natively on Linux environments",
+                "Merge resolves conflicts automatically, Rebase mathematically prevents conflicts"
+            ],
+            "answer": "Merge creates a brand new 'Merge Commit' to permanently tie two divergent timelines together. Rebase mathematically unplugs your commits, fast-forwards the base, and replays your commits linearly on top of the newest code, completely eliminating the need for a Merge Commit",
+            "explanation": "If 10 developers merge daily, the history log looks incredibly messy and entangled. By rebasing, everyone's work appears to have been mathematically coded in a perfectly straight, linear chronological line."
+        },
+        {
+            "question": "What highly requested capability does executing an 'Interactive Rebase' (`git rebase -i HEAD~5`) provide a developer before they push to a central repository?",
+            "options": [
+                "It provides a GUI visualization of the repository tree globally",
+                "It temporarily halts the timeline and opens an interactive script allowing the developer to alter history natively; enabling them to reorder commits, delete accidental commits, or compress ('Squash') multiple rapid, messy commits into one cohesive block natively",
+                "It automatically deploys the code via SSH to production",
+                "It allows connecting multiple external remote origins natively"
+            ],
+            "answer": "It temporarily halts the timeline and opens an interactive script allowing the developer to alter history natively; enabling them to reorder commits, delete accidental commits, or compress ('Squash') multiple rapid, messy commits into one cohesive block natively",
+            "explanation": "If you made 7 commits titled 'wip', 'fix typo', 'fix syntax', the project history is permanently noisy. Interactive rebasing 'Squashes' those 7 micro-commits into 1 pristine, professional commit block."
+        },
+        {
+            "question": "What is considered the absolute 'Golden Rule' of Git Rebasing that, if broken, will categorically destroy a team's workflow?",
+            "options": [
+                "Never rebase during a weekend natively",
+                "Never interactively squash more than 3 commits simultaneously",
+                "Never rebase commits that exist on a public, shared branch (like `main`) that other developers have already pulled to their laptops locally",
+                "Never rebase when your laptop battery is physically low"
+            ],
+            "answer": "Never rebase commits that exist on a public, shared branch (like `main`) that other developers have already pulled to their laptops locally",
+            "explanation": "Because rebasing mathematically destroys old commits and replaces them with new cryptographic hashes, if you rebase a shared branch, Developer B's laptop will aggressively conflict because their local history no longer aligns with the server timeline."
+        },
+        {
+            "question": "If you successfully rewrite your timeline using a local interactive rebase, but GitHub rejects your subsequent `git push` because the timelines diverged natively, how must you bypass the block?",
+            "options": [
+                "By deleting your GitHub account temporarily",
+                "By utilizing the highly aggressive `git push --force` command, instructing the GitHub server to mathematically overwrite and replace its remote timeline perfectly with your newly modified local timeline",
+                "By running `npm rebuild` natively",
+                "By manually merging the branch directly on the GitHub UI"
+            ],
+            "answer": "By utilizing the highly aggressive `git push --force` command, instructing the GitHub server to mathematically overwrite and replace its remote timeline perfectly with your newly modified local timeline",
+            "explanation": "GitHub protects history natively. If the cryptographic hashes don't align, it blocks the push. A force push bypasses this safety lock, which is perfectly safe for a private feature branch, but catastrophic if run against `main`."
+        },
+        {
+            "question": "During a rebase, if a merge conflict mathematically occurs on the 2nd commit of your replayed history, what must you do after manually editing the text file to resolve it?",
+            "options": [
+                "Execute `git commit -m \"Resolved\"` native",
+                "Delete the repository entirely and clone again locally",
+                "Stage the resolved file using `git add`, and then execute `git rebase --continue` to instruct the algorithm to finish mathematically replaying the remaining 3 commits natively",
+                "Run `git pull` from the main branch natively"
+            ],
+            "answer": "Stage the resolved file using `git add`, and then execute `git rebase --continue` to instruct the algorithm to finish mathematically replaying the remaining 3 commits natively",
+            "explanation": "Unlike standard merging which creates a single commit, rebase pauses the timeline replay exactly where the conflict occurred. Once you fix it, `--continue` re-starts the chronological mathematical replay operation."
+        }
+    ]
+}

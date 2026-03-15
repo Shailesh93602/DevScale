@@ -1,0 +1,7 @@
+[
+  {"input":"{\"commands\":[\"Twitter\",\"postTweet\",\"getNewsFeed\",\"follow\",\"postTweet\",\"getNewsFeed\",\"unfollow\",\"getNewsFeed\"], \"args\":[[],[1,5],[1],[1,2],[2,6],[1],[1,2],[1]]}","output":"[null,null,[5],null,null,[6,5],null,[5]]","explanation":"Standard flow","is_hidden":false},
+  {"input":"{\"commands\":[\"Twitter\",\"postTweet\",\"postTweet\",\"postTweet\",\"postTweet\",\"postTweet\",\"postTweet\",\"postTweet\",\"postTweet\",\"postTweet\",\"postTweet\",\"postTweet\",\"getNewsFeed\"], \"args\":[[],[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[1,7],[1,8],[1,9],[1,10],[1,11],[1]]}","output":"[null,null,null,null,null,null,null,null,null,null,null,null,[11,10,9,8,7,6,5,4,3,2]]","explanation":"More than 10 tweets limit","is_hidden":false},
+  {"input":"{\"commands\":[\"Twitter\",\"follow\",\"getNewsFeed\"], \"args\":[[],[1,2],[1]]}","output":"[null,null,[]]","explanation":"Empty feed","is_hidden":true},
+  {"input":"{\"commands\":[\"Twitter\",\"postTweet\",\"follow\",\"getNewsFeed\",\"unfollow\",\"getNewsFeed\"], \"args\":[[],[2,100],[1,2],[1],[1,2],[1]]}","output":"[null,null,null,[100],null,[]]","explanation":"Follow unfollow logic","is_hidden":true},
+  {"input":"{\"commands\":[\"Twitter\",\"postTweet\",\"postTweet\",\"getNewsFeed\"], \"args\":[[],[1,5],[1,3],[1]]}","output":"[null,null,null,[3,5]]","explanation":"Reverse tweet ids out of order","is_hidden":true}
+]

@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the 'Golden Rule' of database architecture when designing schemas heavily oriented around a NoSQL Document Database like MongoDB?",
+            "options": [
+                "Store data in third-normal form (3NF) strictly",
+                "Design your database schema structure to perfectly match your frontend application's query requirements, storing data that is read together physically together",
+                "Encode all data in Base64 mathematically",
+                "Separate every single property into its own collection automatically"
+            ],
+            "answer": "Design your database schema structure to perfectly match your frontend application's query requirements, storing data that is read together physically together",
+            "explanation": "In SQL, you shape tables based strictly on relationships and let JOINs do the math later. In NoSQL, because JOINs are expensive, you design the document so a single `.find()` operation returns exactly the JSON payload the frontend component needs instantly."
+        },
+        {
+            "question": "When is it architecturally correct to 'Embed' related child data (storing it as an array directly inside the parent document) rather than 'Referencing' it?",
+            "options": [
+                "When the array of child data is expected to grow infinitely larger than millions of rows",
+                "When you need to bypass CORS policies natively",
+                "When the related data is strongly bounded logically (small, finite size like 5 shipping addresses) and specifically belongs strictly to that single parent document rather than being shared across tables",
+                "When you expect millions of concurrent users simultaneously to authenticate"
+            ],
+            "answer": "When the related data is strongly bounded logically (small, finite size like 5 shipping addresses) and specifically belongs strictly to that single parent document rather than being shared across tables",
+            "explanation": "If data is 'Contained In' the parent exclusively (like a User's historical addresses), embedding them is essentially a free read performance boost. One query to get the User natively returns all their addresses simultaneously without any lookup."
+        },
+        {
+            "question": "Why is 'Embedding' thousands of elements inside a single document (like embedding every 'Comment' heavily inside a 'Post' document) considered a massive anti-pattern in MongoDB?",
+            "options": [
+                "Because MongoDB limits arrays to strictly 10 items natively",
+                "Because it will eventually crash the engine by exceeding MongoDB's strict absolute 16MB document size limit, alongside drastically slowing down network payload transmission speeds",
+                "Because MongoDB strictly ignores nested objects",
+                "Because it triggers automated SQL table drops natively"
+            ],
+            "answer": "Because it will eventually crash the engine by exceeding MongoDB's strict absolute 16MB document size limit, alongside drastically slowing down network payload transmission speeds",
+            "explanation": "MongoDB restricts a single BSON document natively to 16MB. When dealing with unbounded relationships (like a Viral Post getting 500,000 comments), embedding causes the document to geometrically balloon and crash the server natively. Use 'Referencing' instead."
+        },
+        {
+            "question": "In NoSQL architectures, why is intentionally 'Duplicating Data' (like storing the user's name physically identically in 5,000 of their Order documents) considered an optimal Best Practice instead of a mistake?",
+            "options": [
+                "Because duplicated data is cryptographically more secure natively",
+                "Because modern APIs calculate data backwards automatically",
+                "Because modern web applications are heavily read-biased. By duplicating the name mathematically into the Orders, you eliminate the need to execute millions of expensive secondary lookup queries, sacrificing rare write speed for incredibly fast native read speeds",
+                "Because MongoDB deletes isolated records automatically"
+            ],
+            "answer": "Because modern web applications are heavily read-biased. By duplicating the name mathematically into the Orders, you eliminate the need to execute millions of expensive secondary lookup queries, sacrificing rare write speed for incredibly fast native read speeds",
+            "explanation": "People change their name once every 10 years (Write). People view order histories thousands of times a day (Read). Duplicating data optimizes for the 10,000 Reads perfectly, and accepts the minor penalty of running a mass-update script if the name ever actually changes."
+        },
+        {
+            "question": "Which specific NoSQL design pattern involves artificially storing a subset of commonly accessed data directly mathematically inside a referenced document to avoid lookups?",
+            "options": [
+                "The Relational Transpiler Pattern",
+                "The Computed Proxy Pattern",
+                "The Extended Reference Pattern",
+                "The Singleton Instance Pattern"
+            ],
+            "answer": "The Extended Reference Pattern",
+            "explanation": "Instead of storing just `{ customerId: '123' }` mathematically, the Extended Reference Pattern stores `{ customerId: '123', name: 'Alice' }`. You maintain the structural reference link, but carry enough 'extended' data to satisfy the UI completely natively."
+        }
+    ]
+}

@@ -1,0 +1,124 @@
+<h1>Named Entity Recognition (NER)</h1>
+<p>Named Entity Recognition (NER) is one of the most practically useful NLP tasks. Given raw text, NER systems automatically identify and classify <strong>named entities</strong> — specific real-world objects like people, organizations, locations, dates, products, and monetary values. This transforms unstructured text into structured, queryable information and is the backbone of information extraction pipelines across finance, healthcare, and legal industries.</p>
+
+<h2>The BIO Tagging Scheme</h2>
+<p>NER is framed as a token classification problem. Every token gets a tag using the BIO (Beginning-Inside-Outside) scheme:</p>
+<ul>
+  <li><strong>B-TYPE:</strong> The <em>beginning</em> token of an entity (e.g., B-ORG, B-PER)</li>
+  <li><strong>I-TYPE:</strong> An <em>inside</em> token — continuation of a multi-token entity</li>
+  <li><strong>O:</strong> <em>Outside</em> — not part of any named entity</li>
+</ul>
+<pre><code>Text:    "Tim    Cook   is   Apple's   CEO   in   California  ."
+BIO:      B-PER  I-PER  O    B-ORG     O     O    B-GPE       O
+
+# Common entity types:
+# PER  = Person
+# ORG  = Organization
+# GPE  = Geopolitical Entity (countries, cities, states)
+# LOC  = Location (geographical features)
+# DATE = Date expression
+# MONEY = Monetary value</code></pre>
+
+<h2>Using spaCy's Pretrained NER (Quick Start)</h2>
+<pre><code>import spacy
+
+# Load large English model for best accuracy
+nlp = spacy.load("en_core_web_lg")
+
+text = """Elon Musk, CEO of Tesla, announced on Monday that the company 
+          will invest $5 billion in new Gigafactories across Germany and Texas."""
+
+doc = nlp(text)
+
+for ent in doc.ents:
+    print(f"{ent.text:<30} | {ent.label_:<10} | {spacy.explain(ent.label_)}")
+
+# Output:
+# Elon Musk                      | PERSON     | People, including fictional
+# Tesla                          | ORG        | Companies, agencies, institutions
+# Monday                         | DATE       | Absolute or relative dates
+# 5 billion                      | MONEY      | Monetary values
+# Germany                        | GPE        | Countries, cities, states
+# Texas                          | GPE        | Countries, cities, states</code></pre>
+
+<h2>Fine-Tuning BERT for Custom NER</h2>
+<p>Pretrained models know common entities but won't know your domain-specific ones (drug names, custom product SKUs, legal clause types). You need to fine-tune on labeled data:</p>
+<pre><code"">from transformers import AutoTokenizer, AutoModelForTokenClassification, Trainer, TrainingArguments
+import torch
+
+MODEL_NAME = "dslim/bert-base-NER"  # Already fine-tuned on CoNLL-2003 NER benchmark
+
+tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+model = AutoModelForTokenClassification.from_pretrained(MODEL_NAME)
+
+# The label mapping for this model
+id2label = model.config.id2label
+# {0: 'O', 1: 'B-MISC', 2: 'I-MISC', 3: 'B-PER', 4: 'I-PER', ...}
+
+def predict_entities(text: str):
+    inputs = tokenizer(text, return_tensors="pt", truncation=True)
+    
+    with torch.no_grad():
+        outputs = model(**inputs)
+    
+    predictions = outputs.logits.argmax(dim=-1)[0]  # (seq_len,)
+    tokens = tokenizer.convert_ids_to_tokens(inputs["input_ids"][0])
+    
+    results = []
+    for token, pred in zip(tokens, predictions):
+        if token not in ["[CLS]", "[SEP]", "[PAD]"]:
+            label = id2label[pred.item()]
+            results.append((token, label))
+    return results
+
+entities = predict_entities("Barack Obama was born in Hawaii.")
+for token, label in entities:
+    print(f"{token:<15} {label}")</code></pre>
+
+<h2>Building a Complete NER Pipeline with spaCy</h2>
+<pre><code"">import spacy
+from spacy.training import Example
+
+# Create a blank English model and add NER component
+nlp = spacy.blank("en")
+ner = nlp.add_pipe("ner")
+
+# Add your custom entity labels
+ner.add_label("DRUG_NAME")
+ner.add_label("DOSAGE")
+ner.add_label("SIDE_EFFECT")
+
+# Training data — annotations in (text, {"entities": [(start, end, label)]}) format  
+TRAIN_DATA = [
+    ("Patient was prescribed Metformin 500mg.", 
+     {"entities": [(23, 32, "DRUG_NAME"), (33, 38, "DOSAGE")]}),
+    ("Aspirin caused headaches in 15% of patients.",
+     {"entities": [(0, 7, "DRUG_NAME"), (15, 24, "SIDE_EFFECT")]}),
+]
+
+# Initialize and train
+optimizer = nlp.initialize()
+for epoch in range(30):
+    for text, annotations in TRAIN_DATA:
+        doc = nlp.make_doc(text)
+        example = Example.from_dict(doc, annotations)
+        nlp.update([example], sgd=optimizer)
+
+# Save model
+nlp.to_disk("custom_ner_model")</code></pre>
+
+<h2>Real-World Applications</h2>
+<ul>
+  <li><strong>PII Redaction:</strong> Automatically find and mask names, phone numbers, and addresses in documents before sharing.</li>
+  <li><strong>Financial Intelligence:</strong> Extract company names, monetary values, and dates from earnings call transcripts.</li>
+  <li><strong>Medical Record Analysis:</strong> Identify drug names, dosages, diagnoses, and procedures from clinical notes.</li>
+  <li><strong>Knowledge Graph Construction:</strong> Extract entity relationships from millions of news articles to build a structured database.</li>
+</ul>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Start with spaCy's <code>en_core_web_lg</code> for general use — it's significantly more accurate than <code>en_core_web_sm</code> for NER tasks.</li>
+  <li>For fine-tuning, annotate at least 500–1000 examples per entity type. Less than this leads to unreliable generalization.</li>
+  <li>Use annotation tools like Prodigy (from the spaCy team) or Label Studio for efficient, consistent labeling.</li>
+  <li>Always evaluate on a held-out test set using F1-score per entity type — overall accuracy hides poor performance on rare entity types.</li>
+</ul>

@@ -1,0 +1,74 @@
+<h1>systemd & Service Management</h1>
+<p>In modern Linux distributions (Ubuntu 16.04+, CentOS 7+, Debian 8+), <strong>systemd</strong> is the init system — it is the very first process started by the kernel (PID 1) and is responsible for bringing the entire system up and managing every service running on the machine. As a DevOps engineer, you will interact with systemd daily.</p>
+
+<h2>systemctl: The Primary Interface</h2>
+<p><code>systemctl</code> is the command for controlling the systemd system and service manager. These are the most essential commands:</p>
+<pre><code class="language-bash"># Service lifecycle management
+sudo systemctl start nginx        # Start a service right now
+sudo systemctl stop nginx         # Stop a service gracefully
+sudo systemctl restart nginx      # Stop then start (applies config changes)
+sudo systemctl reload nginx       # Reload config WITHOUT stopping (zero downtime)
+sudo systemctl status nginx       # Check status, last 10 log lines, PID, uptime
+
+# Boot-time persistence
+sudo systemctl enable nginx       # Auto-start nginx on every system boot
+sudo systemctl disable nginx      # Stop auto-starting on boot
+sudo systemctl is-enabled nginx   # Check if enabled (returns 'enabled' or 'disabled')
+
+# System-wide operations
+sudo systemctl list-units --type=service --state=running  # List all running services
+sudo systemctl daemon-reload      # Reload systemd config after creating new unit files
+</code></pre>
+
+<h2>Understanding Unit Files</h2>
+<p>Every service (called a "Unit" in systemd) is defined by a <code>.service</code> file stored in <code>/etc/systemd/system/</code> (custom) or <code>/lib/systemd/system/</code> (package-managed). Here is a real-world example for running a Node.js application as a managed system service:</p>
+<pre><code class="language-ini"># /etc/systemd/system/myapp.service
+[Unit]
+Description=My Node.js Production Application
+Documentation=https://github.com/company/myapp
+After=network.target  # Only start after networking is available
+
+[Service]
+Type=simple
+User=appuser           # Run as this non-root user for security
+WorkingDirectory=/opt/myapp
+ExecStart=/usr/bin/node /opt/myapp/server.js
+Restart=always         # Automatically restart if the process crashes
+RestartSec=10          # Wait 10 seconds before restarting
+Environment="NODE_ENV=production"
+Environment="PORT=3000"
+StandardOutput=journal  # Send stdout to systemd journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target  # Start in the standard multi-user runlevel
+</code></pre>
+<pre><code class="language-bash"># After creating the file, enable and start it
+sudo systemctl daemon-reload
+sudo systemctl enable myapp
+sudo systemctl start myapp
+</code></pre>
+
+<h2>journalctl: Viewing Logs</h2>
+<p>systemd captures all service output (stdout/stderr) into a structured binary log called the <strong>journal</strong>. <code>journalctl</code> is your primary log viewing tool:</p>
+<pre><code class="language-bash">journalctl -u nginx              # All logs for the nginx service
+journalctl -u nginx -f           # Follow logs in real-time (like tail -f)
+journalctl -u nginx --since "1 hour ago"     # Logs from last hour
+journalctl -u nginx --since "2024-03-01" --until "2024-03-02"
+journalctl -p err -u nginx       # Only error-level messages
+journalctl -u nginx -n 50        # Last 50 lines
+</code></pre>
+
+<h2>systemd Timers vs Cron</h2>
+<p>systemd Timers are the modern replacement for cron jobs. They offer better logging (integrated with journald), dependency handling, and can be triggered by events (e.g., "30 minutes after boot") rather than just calendar schedules:</p>
+<pre><code class="language-ini"># /etc/systemd/system/backup.timer
+[Unit]
+Description=Run database backup every night at 2 AM
+
+[Timer]
+OnCalendar=*-*-* 02:00:00   # Every day at 2:00 AM
+Persistent=true              # Run immediately if the last trigger was missed
+
+[Install]
+WantedBy=timers.target
+</code></pre>

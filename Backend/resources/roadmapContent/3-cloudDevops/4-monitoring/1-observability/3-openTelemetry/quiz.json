@@ -1,0 +1,118 @@
+{
+    "title": "OpenTelemetry Quiz",
+    "description": "Test your knowledge on Spans, Traces, and vendor-agnostic observability.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What primary problem in a microservices architecture does Distributed Tracing solve that standard metrics cannot?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It tracks the history of developer commits in Git.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It pinpoints exactly which microservice in a long chain of requests caused a bottleneck or error.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It automatically encrypts network traffic.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It acts as a high-availability Load Balancer.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the primary benefit of standardizing your application code using the OpenTelemetry API?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It makes your application code immune to security vulnerabilities.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It guarantees 100% uptime for all microservices.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It writes the telemetry data directly into the kernel memory.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It provides a vendor-agnostic way to collect data; allowing you to switch analysis platforms (like migrating from Jaeger to DataDog) without modifying application code.",
+                    "isCorrect": true
+                }
+            ]
+        },
+        {
+            "question": "In OpenTelemetry, what term describes a single, timed unit of work, such as a single database query or a function call?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A Route",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A Trace",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A Span",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A Log Entry",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How do multiple decoupled microservices link their work together to form a single continuous Trace?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "They all log to the exact same local text file on the server.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By communicating via gRPC exclusively.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "They execute on the exact same Docker host.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By injecting and propagating a unique 'Trace Context' (Trace ID) through HTTP headers or message metadata as the request travels between services.",
+                    "isCorrect": true
+                }
+            ]
+        },
+        {
+            "question": "What does the 'Auto-Instrumentation' feature of OpenTelemetry agents (like in Java or Node.js) allow you to do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It automatically rewrites inefficient backend SQL queries.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It automatically intercepts standard library calls, generating spans for HTTP requests and database queries without requiring manual coding.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It automatically triggers the CI/CD pipeline upon errors.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It writes unit tests for your code.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

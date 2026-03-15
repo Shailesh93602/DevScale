@@ -1,0 +1,79 @@
+<h1>MongoDB — Document Database</h1>
+<p>MongoDB is a <strong>NoSQL document database</strong> that stores data as flexible JSON-like documents (BSON). Unlike relational DBs, there's no fixed schema — documents in the same collection can have different fields.</p>
+
+<h2>Core Concepts</h2>
+<ul>
+  <li><strong>Database</strong> → contains collections</li>
+  <li><strong>Collection</strong> → like a SQL table, holds documents</li>
+  <li><strong>Document</strong> → a JSON object with key-value pairs</li>
+  <li><strong>_id</strong> → auto-generated unique identifier for each document</li>
+</ul>
+
+<h2>CRUD Operations (MongoDB Shell)</h2>
+<pre><code>// Insert
+db.users.insertOne({ name: "Alice", age: 25, role: "admin" });
+db.users.insertMany([{ name: "Bob" }, { name: "Carol" }]);
+
+// Read
+db.users.findOne({ name: "Alice" });
+db.users.find({ age: { $gte: 18 } }).sort({ name: 1 }).limit(10);
+
+// Update
+db.users.updateOne({ name: "Alice" }, { $set: { age: 26 } });
+db.users.updateMany({ role: "guest" }, { $set: { active: false } });
+
+// Delete
+db.users.deleteOne({ name: "Bob" });
+db.users.deleteMany({ active: false });</code></pre>
+
+<h2>Query Operators</h2>
+<pre><code>$eq, $ne         // equal, not equal
+$gt, $gte        // greater than (or equal)
+$lt, $lte        // less than (or equal)
+$in, $nin        // in array / not in array
+$and, $or, $not  // logical operators
+$exists          // field exists check</code></pre>
+
+<h2>Aggregation Pipeline</h2>
+<p>Use pipeline stages to transform documents:</p>
+<pre><code>db.orders.aggregate([
+  { $match: { status: "completed" } },
+  { $group: { _id: "$userId", total: { $sum: "$amount" } } },
+  { $sort: { total: -1 } },
+  { $limit: 5 }
+]);</code></pre>
+
+<h2>Using Mongoose (Node.js ODM)</h2>
+<pre><code>import mongoose from 'mongoose';
+
+const userSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, unique: true },
+  createdAt: { type: Date, default: Date.now },
+});
+
+const User = mongoose.model('User', userSchema);
+
+// Create
+const user = await User.create({ name: 'Alice', email: 'alice@dev.io' });
+
+// Find
+const users = await User.find({ name: /Alice/ });
+
+// Update
+await User.findByIdAndUpdate(id, { name: 'Alicia' }, { new: true });
+
+// Delete
+await User.findByIdAndDelete(id);</code></pre>
+
+<h2>Indexing for Performance</h2>
+<pre><code>db.users.createIndex({ email: 1 }, { unique: true });
+db.users.createIndex({ name: "text" }); // full-text search</code></pre>
+
+<h2>When to Use MongoDB</h2>
+<ul>
+  <li>✅ Schema flexibility needed (user-generated content, CMS)</li>
+  <li>✅ Nested/hierarchical data that doesn't fit rows/columns</li>
+  <li>✅ Horizontal scaling across many servers</li>
+  <li>❌ Complex multi-table transactions (use PostgreSQL instead)</li>
+</ul>

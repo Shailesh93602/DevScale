@@ -1,0 +1,118 @@
+{
+    "title": "MongoDB Quiz",
+    "description": "Test your knowledge of MongoDB documents, CRUD, and aggregation.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the MongoDB equivalent of a SQL table?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Document",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Collection",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Schema",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Database",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which MongoDB operator finds documents where a field is greater than or equal to a value?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "$eq",
+                    "isCorrect": false
+                },
+                {
+                    "text": "$lt",
+                    "isCorrect": false
+                },
+                {
+                    "text": "$gte",
+                    "isCorrect": true
+                },
+                {
+                    "text": "$in",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What aggregation stage filters documents before grouping?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "$group",
+                    "isCorrect": false
+                },
+                {
+                    "text": "$sort",
+                    "isCorrect": false
+                },
+                {
+                    "text": "$match",
+                    "isCorrect": true
+                },
+                {
+                    "text": "$limit",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does the `$set` operator do in an updateOne call?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Deletes the specified field",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Updates or adds the specified field values",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Indexes the field",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Renames the collection",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which field is auto-generated as a unique identifier in every MongoDB document?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "uuid",
+                    "isCorrect": false
+                },
+                {
+                    "text": "id",
+                    "isCorrect": false
+                },
+                {
+                    "text": "_id",
+                    "isCorrect": true
+                },
+                {
+                    "text": "docId",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

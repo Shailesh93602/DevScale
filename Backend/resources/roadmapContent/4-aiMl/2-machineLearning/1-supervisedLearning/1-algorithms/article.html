@@ -1,0 +1,70 @@
+<h1>Supervised Learning Algorithms</h1>
+<p>Supervised learning trains models on labelled data (inputs + correct outputs) to make predictions on unseen data.</p>
+
+<h2>Linear Regression</h2>
+<pre><code>from sklearn.linear_model import LinearRegression, Ridge
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Simple linear model — predicts continuous values
+model = LinearRegression()
+model.fit(X_train, y_train)
+predictions = model.predict(X_test)
+
+mse = mean_squared_error(y_test, predictions)
+r2  = r2_score(y_test, predictions)
+print(f"RMSE: {mse**0.5:.2f}, R²: {r2:.3f}")
+
+# Ridge regression — L2 regularisation (reduces overfitting)
+ridge = Ridge(alpha=1.0)  # alpha controls regularisation strength
+ridge.fit(X_train, y_train)</code></pre>
+
+<h2>Logistic Regression (Classification)</h2>
+<pre><code>from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report, confusion_matrix
+
+clf = LogisticRegression(max_iter=1000, C=1.0)  # C = 1/regularisation
+clf.fit(X_train, y_train)
+y_pred = clf.predict(X_test)
+y_prob = clf.predict_proba(X_test)[:, 1]  # Probability of positive class
+
+print(classification_report(y_test, y_pred))
+# precision, recall, F1-score, support per class</code></pre>
+
+<h2>Decision Trees & Ensembles</h2>
+<pre><code>from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+import xgboost as xgb
+
+# Random Forest — bagging ensemble (many trees trained on random subsets)
+rf = RandomForestClassifier(n_estimators=100, max_depth=5, random_state=42)
+rf.fit(X_train, y_train)
+importance = pd.Series(rf.feature_importances_, index=feature_names).sort_values(ascending=False)
+
+# XGBoost — boosting ensemble (trees trained sequentially to fix previous errors)
+model = xgb.XGBClassifier(n_estimators=200, learning_rate=0.05, max_depth=4,
+                            use_label_encoder=False, eval_metric="logloss")
+model.fit(X_train, y_train,
+          eval_set=[(X_test, y_test)],
+          early_stopping_rounds=10,
+          verbose=False)</code></pre>
+
+<h2>Hyperparameter Tuning</h2>
+<pre><code>from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
+
+param_grid = {
+    "n_estimators": [100, 200, 500],
+    "max_depth": [3, 5, 7, None],
+    "min_samples_split": [2, 5, 10],
+}
+
+grid_search = GridSearchCV(
+    RandomForestClassifier(random_state=42),
+    param_grid,
+    cv=5,           # 5-fold cross-validation
+    scoring="roc_auc",
+    n_jobs=-1,      # Use all CPU cores
+    verbose=2
+)
+grid_search.fit(X_train, y_train)
+print(f"Best params: {grid_search.best_params_}")
+print(f"Best AUC: {grid_search.best_score_:.3f}")</code></pre>

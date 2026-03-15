@@ -1,0 +1,74 @@
+{
+    "title": "REST API with Express Quiz",
+    "description": "Test your Express.js and REST API design knowledge.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What HTTP status code should a successful POST (resource creation) return?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "200 OK",
+                    "isCorrect": false
+                },
+                {
+                    "text": "201 Created",
+                    "isCorrect": true
+                },
+                {
+                    "text": "204 No Content",
+                    "isCorrect": false
+                },
+                {
+                    "text": "202 Accepted",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does calling next(err) inside a route handler do in Express?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Ignores the error and continues to the next route",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Logs the error to the console",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Passes the error to Express's error-handling middleware (next 4-param function)",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Restarts the server",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is Express middleware?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A library that manages the database",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A function with (req, res, next) signature that runs between the request and response",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The main application entry point",
+                    "isCorrect": false
+                },
+                {
+                    "text": "An ORM for SQL databases",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

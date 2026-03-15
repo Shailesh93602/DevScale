@@ -1,0 +1,118 @@
+{
+    "title": "Terraform Modules Quiz",
+    "description": "Test your knowledge on grouping resources, child modules, and the registry.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the primary benefit of using Terraform Modules?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It eliminates the need to pay for AWS services.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It packages complex infrastructure setups into reusable, parameterised blocks, reducing code duplication.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It is exactly replacing Docker containers.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It speeds up the Terraform binary execution time.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What exactly is a Terraform 'Module' at a basic level?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A specialized ZIP file downloaded from HashiCorp.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A virtual machine pre-configured with Terraform.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Any directory containing Terraform configuration (.tf) files.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A Docker image containing the state file.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "When defining a module block linking to a public registry component, what is a crucial best practice?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Always run 'terraform init' with the --force flag.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Explicitly define a specific 'version' argument to prevent unexpected breaking changes from auto-updating.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Never pass input variables; rely on the registry's defaults.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Always keep the source argument blank.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which command downloads the code for the modules specified in your configuration?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "terraform module download",
+                    "isCorrect": false
+                },
+                {
+                    "text": "terraform apply",
+                    "isCorrect": false
+                },
+                {
+                    "text": "terraform init",
+                    "isCorrect": true
+                },
+                {
+                    "text": "terraform refresh",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Inside a typical module folder, which file is standardly used to define the input parameters expected by the module?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "inputs.tf",
+                    "isCorrect": false
+                },
+                {
+                    "text": "variables.tf",
+                    "isCorrect": true
+                },
+                {
+                    "text": "main.tf",
+                    "isCorrect": false
+                },
+                {
+                    "text": "parameters.JSON",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,77 @@
+<h1>Ensemble Methods & Model Stacking</h1>
+<p>No single ML model is optimal for every part of the data distribution. Ensemble methods combine multiple models to get better predictions than any individual model — the "wisdom of crowds" principle applied to machine learning.</p>
+
+<h2>Bagging: Variance Reduction</h2>
+<p><strong>Bagging (Bootstrap Aggregating)</strong> trains multiple models independently on different random subsets of the training data, then averages their predictions. This reduces variance (overfitting) without increasing bias:</p>
+<pre><code class="language-python">from sklearn.ensemble import BaggingClassifier, RandomForestClassifier
+
+# Random Forest IS bagging with decision trees + feature randomness
+# Both reduce variance by averaging many independently trained trees
+rf = RandomForestClassifier(
+    n_estimators=200,   # Number of trees — more is better up to diminishing returns
+    max_features='sqrt',  # Use sqrt(n_features) per split — introduces diversity
+    max_depth=None,     # Grow full trees — variance is controlled by averaging
+    min_samples_leaf=5,
+    bootstrap=True,     # Sample with replacement (the 'bagging' in Random Forest)
+    oob_score=True,     # Use Out-Of-Bag samples as free validation set
+    n_jobs=-1
+)
+rf.fit(X_train, y_train)
+print(f"OOB Score (free validation): {rf.oob_score_:.4f}")
+</code></pre>
+
+<h2>Voting Ensemble</h2>
+<pre><code class="language-python">from sklearn.ensemble import VotingClassifier
+from sklearn.linear_model import LogisticRegression
+import xgboost as xgb
+import lightgbm as lgb
+
+# Combine fundamentally different models — each contributes unique perspectives
+estimators = [
+    ('lr', LogisticRegression(C=1.0)),    # Linear model — captures linear patterns
+    ('xgb', xgb.XGBClassifier()),          # Tree booster — captures non-linearities
+    ('lgb', lgb.LGBMClassifier()),         # Fast booster
+]
+
+# Hard voting: majority class vote
+# Soft voting: average predicted probabilities (better for calibrated models)
+voting = VotingClassifier(estimators=estimators, voting='soft', weights=[1, 2, 2])
+voting.fit(X_train, y_train)
+</code></pre>
+
+<h2>Stacking: Meta-Learning</h2>
+<pre><code class="language-python">from sklearn.ensemble import StackingClassifier
+
+# Level 0: Base model predictions become features for the meta-learner
+# Level 1: Meta-learner learns how to best combine base model predictions
+base_models = [
+    ('rf', RandomForestClassifier(n_estimators=100)),
+    ('xgb', xgb.XGBClassifier(n_estimators=200)),
+    ('lgb', lgb.LGBMClassifier(n_estimators=200)),
+]
+
+# Meta-learner sees: [rf_prob, xgb_prob, lgb_prob] → final prediction
+# Logistic Regression is often the best meta-learner (simple, calibrated)
+meta_learner = LogisticRegression(C=1.0)
+
+stack = StackingClassifier(
+    estimators=base_models,
+    final_estimator=meta_learner,
+    cv=5,              # Cross-validation prevents target leakage in Level 0 predictions
+    stack_method='predict_proba',
+    passthrough=False  # True = also include original features in meta-learner
+)
+stack.fit(X_train, y_train)
+</code></pre>
+
+<h2>When to Use Ensembles</h2>
+<pre><code class="language-text">Use Ensembles When:
+✅ Kaggle/competition settings — squeeze every 0.01% AUC improvement
+✅ High-stakes production where the best possible accuracy matters
+✅ Combining models trained on different data modalities (text + tabular + image)
+
+Skip Ensembles When:
+❌ Model interpretability is required (regulators need to understand decisions)
+❌ Inference latency is critical (5 models = 5x slower prediction)
+❌ Diminishing returns — adding a 6th model to 5 similar models rarely helps
+</code></pre>

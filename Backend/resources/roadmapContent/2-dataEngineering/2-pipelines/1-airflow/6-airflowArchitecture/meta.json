@@ -1,0 +1,4 @@
+{
+    "name": "Airflow Architecture & Scaling",
+    "description": "Understanding the internal mechanics of a production Airflow deployment. Exploring the interplay between the Webserver, Scheduler, Metadata Database, and the distributed Celery Executor for massive parallel scaling."
+}

@@ -1,0 +1,12 @@
+[
+  { "input": "{\"head\":[1,2,3,4,5], \"n\":2}", "output": "[1,2,3,5]", "explanation": "Remove 2nd from end", "is_hidden": false },
+  { "input": "{\"head\":[1], \"n\":1}", "output": "[]", "explanation": "Remove only element", "is_hidden": false },
+  { "input": "{\"head\":[1,2], \"n\":1}", "output": "[1]", "explanation": "Remove tail element", "is_hidden": false },
+  { "input": "{\"head\":[1,2], \"n\":2}", "output": "[2]", "explanation": "Remove head element (n == length)", "is_hidden": true },
+  { "input": "{\"head\":[5,4,3,2,1], \"n\":5}", "output": "[4,3,2,1]", "explanation": "Remove head element of 5-element list", "is_hidden": true },
+  { "input": "{\"head\":[5,4,3,2,1], \"n\":1}", "output": "[5,4,3,2]", "explanation": "Remove tail element of 5-element list", "is_hidden": true },
+  { "input": "{\"head\":[5,4,3,2,1], \"n\":3}", "output": "[5,4,2,1]", "explanation": "Remove middle element of 5-element list", "is_hidden": true },
+  { "input": "{\"head\":[7,8,9,10,11,12], \"n\":4}", "output": "[7,8,10,11,12]", "explanation": "Remove deep element", "is_hidden": true },
+  { "input": "{\"head\":[10,20], \"n\":2}", "output": "[20]", "explanation": "Remove head of 2 item list", "is_hidden": true },
+  { "input": "{\"head\":[0,1,0,1,0,1], \"n\":4}", "output": "[0,1,1,0,1]", "explanation": "Remove redundant value element", "is_hidden": true }
+]

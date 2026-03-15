@@ -1,0 +1,132 @@
+<h1>Apache Iceberg & Delta Lake: Modern Table Formats</h1>
+<p>As data lakes grew to petabyte scale stored on object storage (S3, GCS, Azure Blob), teams discovered a painful limitation: you couldn't reliably update, delete, or run concurrent reads/writes on raw Parquet files. If a Spark job writing data crashes half-way through, you have a corrupt dataset. If someone runs a report while a pipeline is loading data, they see partial results. <strong>Apache Iceberg</strong> and <strong>Delta Lake</strong> are open table formats that add a transactional layer on top of Parquet files — bringing ACID guarantees, time travel, schema evolution, and efficient updates to the data lake.</p>
+
+<h2>The Problem with Raw Parquet on S3</h2>
+<ul>
+  <li><strong>No atomic writes:</strong> Writing 100 partition files takes time — readers can see half-written partitions mid-write.</li>
+  <li><strong>No updates/deletes:</strong> Parquet is immutable. To update one row in a 10GB file, you must rewrite the entire file.</li>
+  <li><strong>No time travel:</strong> If a pipeline loads bad data, you can't return to the state before the bad write.</li>
+  <li><strong>Partition discovery is slow:</strong> Reading <code>s3://bucket/year=*/month=*/day=*/</code> requires listing thousands of S3 prefixes for every query.</li>
+</ul>
+
+<h2>Apache Iceberg</h2>
+<p>Iceberg maintains a <strong>metadata layer</strong> — a set of JSON/Avro manifest files that catalog exactly which Parquet files belong to each table snapshot. Queries read the manifest first, then directly access only the relevant files — no directory scanning needed:</p>
+<pre><code">## PySpark with Iceberg on S3
+from pyspark.sql import SparkSession
+
+spark = SparkSession.builder \
+    .appName("iceberg-demo") \
+    .config("spark.sql.catalog.glue_catalog", "org.apache.iceberg.spark.SparkCatalog") \
+    .config("spark.sql.catalog.glue_catalog.catalog-impl", "org.apache.iceberg.aws.glue.GlueCatalog") \
+    .config("spark.sql.catalog.glue_catalog.warehouse", "s3://my-data-lake/iceberg/") \
+    .getOrCreate()
+
+# Create an Iceberg table (stores metadata in Glue Data Catalog)
+spark.sql("""
+    CREATE TABLE IF NOT EXISTS glue_catalog.analytics.orders (
+        order_id    BIGINT,
+        customer_id BIGINT,
+        total       DECIMAL(10, 2),
+        status      STRING,
+        created_at  TIMESTAMP
+    ) USING iceberg
+    PARTITIONED BY (days(created_at))   -- Hidden partitioning by day
+    TBLPROPERTIES (
+        'write.format.default' = 'parquet',
+        'write.parquet.compression-codec' = 'zstd'
+    )
+""")
+
+# UPSERT (MERGE INTO) — update existing rows, insert new ones
+spark.sql("""
+    MERGE INTO glue_catalog.analytics.orders AS target
+    USING new_orders AS source
+    ON target.order_id = source.order_id
+    WHEN MATCHED THEN UPDATE SET target.status = source.status
+    WHEN NOT MATCHED THEN INSERT *
+""")
+
+# DELETES — GDPR right-to-erasure compliance
+spark.sql("""
+    DELETE FROM glue_catalog.analytics.orders
+    WHERE customer_id = 12345
+""")</code></pre>
+
+<h2>Time Travel with Iceberg</h2>
+<pre><code">## Query the table as it existed yesterday (before a bad pipeline run)
+yesterday_df = spark.read \
+    .option("as-of-timestamp", "2025-03-08T00:00:00+00:00") \
+    .table("glue_catalog.analytics.orders")
+
+## Or query a specific snapshot ID
+spark.read \
+    .option("snapshot-id", "4765473927140846373") \
+    .table("glue_catalog.analytics.orders")
+
+## View all snapshots (audit history)
+spark.sql("SELECT * FROM glue_catalog.analytics.orders.snapshots").show()
+## → snapshot_id, committed_at, operation (append/overwrite/delete), summary
+
+## Roll back to a previous snapshot after a bad write
+spark.sql("""
+    CALL glue_catalog.system.rollback_to_snapshot(
+        'analytics.orders',
+        4765473927140846373
+    )
+""")</code></pre>
+
+<h2>Delta Lake (Databricks)</h2>
+<p>Delta Lake is the competing table format maintained by Databricks and supported natively in Azure Synapse. It uses a <code>_delta_log/</code> directory containing JSON transaction logs. Delta Lake is deeply integrated with Databricks' platform and MLflow:</p>
+<pre><code">## Delta Lake with PySpark (or Databricks notebook)
+from delta import configure_spark_with_delta_pip
+
+spark = configure_spark_with_delta_pip(SparkSession.builder) \
+    .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension") \
+    .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog") \
+    .getOrCreate()
+
+# Create a Delta table
+df = spark.read.parquet("s3://raw-data/orders/")
+df.write.format("delta") \
+    .mode("overwrite") \
+    .partitionBy("order_date") \
+    .save("s3://my-data-lake/delta/orders/")
+
+# MERGE — upsert pattern
+from delta.tables import DeltaTable
+
+delta_table = DeltaTable.forPath(spark, "s3://my-data-lake/delta/orders/")
+delta_table.alias("target") \
+    .merge(
+        new_orders_df.alias("source"),
+        "target.order_id = source.order_id"
+    ) \
+    .whenMatchedUpdate(set={"status": "source.status", "updated_at": "source.updated_at"}) \
+    .whenNotMatchedInsertAll() \
+    .execute()
+
+# Time travel
+delta_table.history().show()  # View full audit log
+old_df = spark.read.format("delta") \
+    .option("versionAsOf", 5) \
+    .load("s3://my-data-lake/delta/orders/")</code></pre>
+
+<h2>Iceberg vs Delta Lake: Choosing One</h2>
+<table>
+  <thead><tr><th>Feature</th><th>Apache Iceberg</th><th>Delta Lake</th></tr></thead>
+  <tbody>
+    <tr><td>Best ecosystem</td><td>Multi-engine (Spark, Trino, Flink, Athena)</td><td>Databricks / Azure Synapse</td></tr>
+    <tr><td>Managed catalog</td><td>AWS Glue, Nessie, REST catalog</td><td>Unity Catalog (Databricks)</td></tr>
+    <tr><td>Governance</td><td>Nessie (git-like branches for data)</td><td>Unity Catalog access controls</td></tr>
+    <tr><td>GDPR deletes</td><td>✅ Row-level deletes</td><td>✅ Row-level deletes</td></tr>
+    <tr><td>Best for</td><td>Multi-engine open data stack</td><td>Databricks-centric organizations</td></tr>
+  </tbody>
+</table>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Run <strong>compaction</strong> (small file merging) regularly — frequent streaming writes create thousands of tiny Parquet files that kill query performance. Iceberg has <code>rewrite_data_files</code>, Delta has <code>OPTIMIZE</code>.</li>
+  <li>Run <strong>expire snapshots / vacuum</strong> to clean old data files — without this, your S3 storage grows unboundedly as deleted rows still occupy physical files.</li>
+  <li>Use <strong>hidden partitioning</strong> in Iceberg (e.g., <code>PARTITIONED BY (days(created_at))</code>) — it prevents the classic "wrong partition filter" bug where <code>WHERE date = '2025-03-09'</code> doesn't use partitioning because the partition key is a timestamp.</li>
+  <li>Prefer Iceberg on AWS (native Athena support) and Delta on Azure (native Synapse support).</li>
+</ul>

@@ -1,0 +1,4 @@
+{
+    "name": "Feature Engineering & Data Preprocessing",
+    "description": "Transforming raw data into features that machine learning models can learn from. Covering handling missing values (imputation strategies), encoding categorical variables (one-hot, ordinal, target encoding), feature scaling (standardization vs normalization), outlier detection and treatment, and building robust sklearn Pipelines."
+}

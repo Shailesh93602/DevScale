@@ -1,0 +1,19 @@
+{
+  "title": "Maximum Frequency Stack",
+  "slug": "maximum-frequency-stack",
+  "difficulty": "Hard",
+  "category": "algorithms",
+  "points": 150,
+  "tags": ["stack", "hash-map", "design"],
+  "company_tags": ["Amazon", "Google", "Microsoft"],
+  "topic_tags": ["stack", "hash tables", "design"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "A sequence of push and pop operations.",
+  "output_format": "For pop operations, return the most frequent element (ties broken by most recent).",
+  "example_input": "[\"FreqStack\",\"push\",\"push\",\"push\",\"push\",\"push\",\"push\",\"pop\",\"pop\",\"pop\",\"pop\"]\n[[],[5],[7],[5],[7],[4],[5],[],[],[],[]]",
+  "example_output": "[null,null,null,null,null,null,null,5,7,5,4]",
+  "constraints": "- `0 <= val <= 10^9`\n- At most `2 * 10^4` calls to push and pop.\n- It is guaranteed there will be at least one element in the stack before calling pop.",
+  "function_signature": "class FreqStack { push(val: number): void; pop(): number; }",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "input": "{\"query\": \"SELECT * FROM users WHERE username = '\" + input + \"'\", \"input\": \"admin\"}",
+    "output": "{ query: 'SELECT * FROM users WHERE username = $1', params: ['admin'] }",
+    "explanation": "Basic parameterization of a string-concatenated query",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"action\": \"detect\", \"input\": \"' OR '1'='1\"}",
+    "output": "{ isMalicious: true, patterns: ['String-based injection'] }",
+    "explanation": "Classic OR-based SQL injection detection",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"action\": \"detect\", \"input\": \"1; DROP TABLE users--\"}",
+    "output": "{ isMalicious: true, patterns: ['Stacked query injection'] }",
+    "explanation": "Stacked query injection with DROP TABLE",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"action\": \"validate\", \"input\": \"john_doe\", \"type\": \"username\"}",
+    "output": "{ valid: true, sanitized: 'john_doe' }",
+    "explanation": "Valid alphanumeric username passes validation",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"action\": \"validate\", \"input\": \"'; DROP TABLE--\", \"type\": \"username\"}",
+    "output": "{ valid: false, sanitized: '' }",
+    "explanation": "Malicious input fails username validation",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"action\": \"detect\", \"input\": \"1 UNION SELECT username, password FROM users\"}",
+    "output": "{ isMalicious: true, patterns: ['UNION-based injection'] }",
+    "explanation": "UNION-based data exfiltration attempt",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"action\": \"detect\", \"input\": \"hello world\"}",
+    "output": "{ isMalicious: false, patterns: [] }",
+    "explanation": "Normal input should not trigger false positive",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"action\": \"secureSelect\", \"table\": \"users\", \"conditions\": {\"email\": \"test@example.com\"}}",
+    "output": "{ query: 'SELECT * FROM users WHERE email = $1', params: ['test@example.com'] }",
+    "explanation": "Secure query builder with parameterized conditions",
+    "is_hidden": true
+  }
+]

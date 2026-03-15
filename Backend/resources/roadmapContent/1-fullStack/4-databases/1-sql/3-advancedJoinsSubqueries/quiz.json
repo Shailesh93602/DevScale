@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary characteristic of a `LEFT JOIN`?",
+            "options": [
+                "It returns only the rows where there is a perfect match strictly in both the left and right tables",
+                "It returns all rows from the left table, and includes matched data from the right table. If there is no match in the right table, the resulting columns from the right will be populated with NULL values",
+                "It concatenates all strings in the left table into a single massive column",
+                "It permanently deletes unmatched records from the right table"
+            ],
+            "answer": "It returns all rows from the left table, and includes matched data from the right table. If there is no match in the right table, the resulting columns from the right will be populated with NULL values",
+            "explanation": "If you do `Users LEFT JOIN Posts`, you will always get a list of every User in the database, even if they have 0 posts. If they have 0 posts, their `post.title` column in the output is simply NULL."
+        },
+        {
+            "question": "If you want to return a list of ONLY those Users who have successfully created at least one Post, which JOIN should you use?",
+            "options": [
+                "FULL OUTER JOIN",
+                "LEFT JOIN",
+                "RIGHT JOIN",
+                "INNER JOIN"
+            ],
+            "answer": "INNER JOIN",
+            "explanation": "INNER JOIN specifically evaluates the `ON` condition. If the condition is not met (because the User has no rows inside the Posts table), that User is entirely excluded from the final returned dataset."
+        },
+        {
+            "question": "Which scenario commonly requires the use of a Subquery nested inside a `WHERE` clause?",
+            "options": [
+                "When changing the text color of the output in the terminal",
+                "When you need to filter the main table based on an aggregate calculation or dynamic list retrieved from another table (e.g., `WHERE salary > (SELECT AVG(salary)...)`)",
+                "When creating a new database user account",
+                "When attempting to drop a table safely"
+            ],
+            "answer": "When you need to filter the main table based on an aggregate calculation or dynamic list retrieved from another table (e.g., `WHERE salary > (SELECT AVG(salary)...)`)",
+            "explanation": "You cannot perform aggregate functions simultaneously in a WHERE clause natively (SQL throws an error). Instead, the subquery calculates the dynamic average first, and the outer query filters using that calculated value."
+        },
+        {
+            "question": "What is the primary advantage of using a CTE (Common Table Expression / `WITH` clause) instead of burying a Subquery deep inside the `FROM` clause?",
+            "options": [
+                "CTEs increase database disk storage magically",
+                "CTEs allow you to write database triggers automatically",
+                "CTEs significantly improve readability by allowing you to define named, temporary dataset blocks at the top of the file, which can then be cleanly referenced multiple times in the main query",
+                "CTEs bypass all database security roles for faster execution"
+            ],
+            "answer": "CTEs significantly improve readability by allowing you to define named, temporary dataset blocks at the top of the file, which can then be cleanly referenced multiple times in the main query",
+            "explanation": "If a query has 4 layers of nested `SELECT (SELECT (SELECT...)))`, it is literally unreadable. A CTE breaks it up logically from top-to-bottom. Define CTE_1, define CTE_2, then SELECT from CTE_1 JOIN CTE_2."
+        },
+        {
+            "question": "Which specific specialized database feature is made possible by using the `WITH RECURSIVE` CTE syntax?",
+            "options": [
+                "Generating pseudo-random strings infinitely",
+                "Querying and flattening deeply nested hierarchical tree structures (like organizational charts or indefinitely nested comment threads)",
+                "Executing foreign API requests directly from PostgreSQL",
+                "Preventing SQL Injection natively"
+            ],
+            "answer": "Querying and flattening deeply nested hierarchical tree structures (like organizational charts or indefinitely nested comment threads)",
+            "explanation": "Standard SQL struggles heavily with 'trees'. If comment A is a child of comment B, which is a child of comment C... discovering the whole tree required dozens of separate queries. A recursive CTE loops internally to build the entire tree structure in one query."
+        }
+    ]
+}

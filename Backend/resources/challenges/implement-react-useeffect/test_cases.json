@@ -1,0 +1,62 @@
+[
+  {
+    "input": { "type": "deps-change", "initial": 0, "operations": ["render", "increment", "render"] },
+    "output": { "effect_runs": 2, "cleanup_runs": 1 },
+    "explanation": "Effect runs on first render and re-runs when dependency (count) changes. Cleanup runs before second effect.",
+    "is_hidden": false
+  },
+  {
+    "input": { "type": "empty-deps", "operations": ["render", "render", "render"] },
+    "output": { "effect_runs": 1, "cleanup_runs": 0 },
+    "explanation": "Empty deps [] — effect runs only on first render",
+    "is_hidden": false
+  },
+  {
+    "input": { "type": "no-deps", "operations": ["render", "render", "render"] },
+    "output": { "effect_runs": 3, "cleanup_runs": 2 },
+    "explanation": "No deps — effect runs every render, cleanup before each re-run",
+    "is_hidden": false
+  },
+  {
+    "input": { "type": "deps-same", "operations": ["render", "render"] },
+    "output": { "effect_runs": 1, "cleanup_runs": 0 },
+    "explanation": "Deps unchanged between renders — effect does not re-run",
+    "is_hidden": true
+  },
+  {
+    "input": { "type": "cleanup-returned", "operations": ["render", "increment", "render"] },
+    "output": { "effect_runs": 2, "cleanup_calls": ["cleanup(0)"] },
+    "explanation": "Cleanup from previous effect runs before new effect",
+    "is_hidden": true
+  },
+  {
+    "input": { "type": "multiple-effects", "operations": ["render"] },
+    "output": { "effect1_runs": 1, "effect2_runs": 1 },
+    "explanation": "Multiple useEffect calls in one component tracked independently",
+    "is_hidden": true
+  },
+  {
+    "input": { "type": "deps-change", "initial": 0, "operations": ["render", "increment", "render", "increment", "render"] },
+    "output": { "effect_runs": 3, "cleanup_runs": 2 },
+    "explanation": "Three renders with changing deps — 3 effects, 2 cleanups",
+    "is_hidden": true
+  },
+  {
+    "input": { "type": "no-cleanup", "operations": ["render", "render"] },
+    "output": { "effect_runs": 2, "cleanup_runs": 0 },
+    "explanation": "Effect returns undefined — no cleanup to run",
+    "is_hidden": true
+  },
+  {
+    "input": { "type": "empty-deps", "initial": 0, "operations": ["render", "increment", "render", "increment", "render"] },
+    "output": { "effect_runs": 1, "cleanup_runs": 0 },
+    "explanation": "Empty deps — only runs once despite state changes",
+    "is_hidden": true
+  },
+  {
+    "input": { "type": "multi-deps", "operations": ["render", "setA(1)", "render", "setB(1)", "render"] },
+    "output": { "effect_runs": 3, "cleanup_runs": 2 },
+    "explanation": "Effect depends on [a, b] — runs when either changes",
+    "is_hidden": true
+  }
+]

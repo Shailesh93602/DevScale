@@ -1,0 +1,19 @@
+{
+  "title": "Mobile Deep Linking Setup",
+  "slug": "mobile-deep-linking",
+  "difficulty": "Medium",
+  "category": "mobile",
+  "points": 100,
+  "tags": ["deep-linking", "navigation", "url-handling"],
+  "company_tags": ["Uber", "Airbnb", "Instagram"],
+  "topic_tags": ["Mobile", "Deep Linking", "Navigation"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "A deep link URL and route configuration",
+  "output_format": "Parsed route with screen name and parameters",
+  "example_input": "{\"url\": \"myapp://products/123?ref=home\", \"routes\": [{\"pattern\": \"products/:id\", \"screen\": \"ProductDetail\"}]}",
+  "example_output": "{\"screen\": \"ProductDetail\", \"params\": {\"id\": \"123\"}, \"query\": {\"ref\": \"home\"}}",
+  "constraints": "URL follows standard deep link format, routes use :param for path parameters",
+  "function_signature": "function parseDeepLink(url: string, routes: Route[]): { screen: string; params: Record<string, string>; query: Record<string, string> } | null",
+  "status": "ACTIVE"
+}

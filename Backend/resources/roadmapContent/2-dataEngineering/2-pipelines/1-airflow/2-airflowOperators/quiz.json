@@ -1,0 +1,118 @@
+{
+    "title": "Airflow Operators Quiz",
+    "description": "Test your knowledge of Airflow operators, TaskFlow API, and sensors.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Which Airflow operator runs an arbitrary Python function?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "BashOperator",
+                    "isCorrect": false
+                },
+                {
+                    "text": "PythonOperator",
+                    "isCorrect": true
+                },
+                {
+                    "text": "PostgresOperator",
+                    "isCorrect": false
+                },
+                {
+                    "text": "EmptyOperator",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the main advantage of the TaskFlow API over classic operators?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It runs tasks faster",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It handles XCom automatically using decorators and return values",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It supports more operator types",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It removes the need for a scheduler",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does a Sensor operator do in Airflow?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Measures task execution time",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Waits (pokes) until an external condition is met before proceeding",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Sends monitoring alerts",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Transforms data between tasks",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is XCom used for in Airflow?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Scheduling DAG runs",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Passing small amounts of data between tasks",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Connecting to external databases",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Managing Airflow connections",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which class must a custom Airflow operator extend?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "AirflowTask",
+                    "isCorrect": false
+                },
+                {
+                    "text": "BaseOperator",
+                    "isCorrect": true
+                },
+                {
+                    "text": "PythonOperator",
+                    "isCorrect": false
+                },
+                {
+                    "text": "DAGOperator",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

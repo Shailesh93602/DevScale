@@ -1,0 +1,6 @@
+[
+  "The area of a container is determined by the minimum of the two heights, multiplied by the distance (width) between them.",
+  "Consider setting a pointer at the very beginning and a pointer at the very end of the array. This gives you the maximum possible width.",
+  "To potentially increase the area, you would need to increase the height. Since the area is bottlenecked by the shorter line, which pointer should you move inwards?",
+  "Always move the pointer pointing to the shorter line inward. Continue this until the two pointers meet, keeping track of the maximum area seen so far."
+]

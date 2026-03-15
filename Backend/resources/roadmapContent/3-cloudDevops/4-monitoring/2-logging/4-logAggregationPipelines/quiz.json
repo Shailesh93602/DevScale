@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "In a log aggregation pipeline, what is the key operational reason for deploying Fluent Bit on each node rather than only running Logstash centrally?",
+            "options": [
+                "Fluent Bit and Logstash serve the same purpose and one or the other should be used, not both.",
+                "Fluent Bit is ultra-lightweight (< 1MB RAM) and collects logs close to the source, providing buffering if the central Logstash cluster is temporarily unavailable. Logstash handles heavier transformations centrally. This two-tier architecture prevents log loss during central cluster maintenance and distributes the parsing CPU load.",
+                "Logstash cannot connect to Kubernetes pods directly; only Fluent Bit can.",
+                "Central Logstash creates network bottlenecks because all log traffic must traverse a single point."
+            ],
+            "answer": "Fluent Bit is ultra-lightweight (< 1MB RAM) and collects logs close to the source, providing buffering if the central Logstash cluster is temporarily unavailable. Logstash handles heavier transformations centrally. This two-tier architecture prevents log loss during central cluster maintenance and distributes the parsing CPU load.",
+            "explanation": "If Logstash is briefly unavailable during a maintenance window, Fluent Bit buffers logs locally and replays them when Logstash recovers. Without a local buffer, all logs generated during that window are permanently lost."
+        },
+        {
+            "question": "Why should security audit logs be retained for 7 years while application debug logs only need 30 days?",
+            "options": [
+                "Security logs are smaller than debug logs and cheaper to store long-term.",
+                "Compliance frameworks (SOC2, PCI-DSS, ISO 27001) legally require security audit logs (who accessed what data, when, and what changes were made) to be retained for years to support forensic investigations and compliance audits. Debug logs are only useful for active debugging and become irrelevant after a few weeks.",
+                "Debug logs contain PII and must be deleted within 30 days under GDPR.",
+                "Security audit logs are automatically compressed by the storage system, making long retention feasible."
+            ],
+            "answer": "Compliance frameworks (SOC2, PCI-DSS, ISO 27001) legally require security audit logs (who accessed what data, when, and what changes were made) to be retained for years to support forensic investigations and compliance audits. Debug logs are only useful for active debugging and become irrelevant after a few weeks.",
+            "explanation": "A data breach discovered 18 months after it occurred requires audit logs from that period to determine the blast radius. If only 30-day retention was applied to audit logs, the forensic investigation is impossible."
+        },
+        {
+            "question": "What is the purpose of the 'PII anonymization' step in a Logstash pipeline, and why must it happen at the pipeline level rather than in the application?",
+            "options": [
+                "Anonymization at the pipeline level is faster because Logstash runs on dedicated hardware.",
+                "PII (like client IP addresses or user emails) often leaks into logs inadvertently — in access logs, error messages, or stack traces. Pipeline-level anonymization provides a safety net that enforces GDPR compliance even when individual developers don't think to scrub PII before logging, creating a centralized, consistently applied control.",
+                "Applications cannot access their own log output to anonymize it.",
+                "Pipeline anonymization is a legal requirement not applicable to in-application anonymization."
+            ],
+            "answer": "PII (like client IP addresses or user emails) often leaks into logs inadvertently — in access logs, error messages, or stack traces. Pipeline-level anonymization provides a safety net that enforces GDPR compliance even when individual developers don't think to scrub PII before logging, creating a centralized, consistently applied control.",
+            "explanation": "In a company with 50 microservices and 100 developers, relying on each developer to never log PII is not a viable compliance strategy. A single Logstash anonymization filter catches PII from all services, including the service whose developer forgot."
+        }
+    ]
+}

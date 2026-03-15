@@ -1,0 +1,118 @@
+{
+    "title": "Apache Iceberg & Delta Lake Quiz",
+    "description": "Test your knowledge of modern table formats, ACID guarantees, time travel, and the data lakehouse pattern.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What fundamental limitation of raw Parquet files on S3 do table formats like Iceberg and Delta Lake solve?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Parquet files cannot store nested data types like arrays and structs",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Raw Parquet provides no ACID guarantees — concurrent reads/writes cause partial data reads, and there's no way to atomically update or delete individual rows",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Parquet's columnar compression is too slow for real-time analytics",
+                    "isCorrect": false
+                },
+                {
+                    "text": "S3 has a 5GB file size limit that Parquet files frequently exceed",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the purpose of 'time travel' in Apache Iceberg?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It optimizes queries by predictively caching data expected to be queried in the future",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It allows querying the table as it existed at any past snapshot or timestamp — enabling audit, debugging bad pipeline writes, and regulatory data reconstruction",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It replicates data to multiple geographical regions automatically for disaster recovery",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It delays write operations to batch them for better performance",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why do data engineers run regular 'compaction' jobs against Iceberg or Delta Lake tables?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Compaction re-encrypts table data each night to maintain security compliance",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Streaming pipeline micro-batches create thousands of small Parquet files over time — compaction merges them into larger optimally-sized files, significantly improving query scan performance",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Compaction validates the Parquet schema for consistency across all partitions",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Compaction is required to make time travel features available on older data versions",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In which scenario would you choose Apache Iceberg over Delta Lake?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "When your organization is entirely on Databricks and uses Unity Catalog for governance",
+                    "isCorrect": false
+                },
+                {
+                    "text": "When you need a multi-engine open stack where Trino, Apache Flink, AWS Athena, and Spark all read the same tables without vendor lock-in",
+                    "isCorrect": true
+                },
+                {
+                    "text": "When you need ACID transactions — Delta Lake does not support them",
+                    "isCorrect": false
+                },
+                {
+                    "text": "When deploying on Azure, since Iceberg has native Azure Synapse integration",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What happens to deleted rows' underlying Parquet files after a DELETE operation in Iceberg if you never run `expire_snapshots`?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "They are immediately removed from S3 because the metadata no longer references them",
+                    "isCorrect": false
+                },
+                {
+                    "text": "They remain on S3 indefinitely — Iceberg only removes logically from the snapshot metadata. Expire snapshots + vacuum must be run explicitly to reclaim physical storage",
+                    "isCorrect": true
+                },
+                {
+                    "text": "They are moved to S3 Glacier for cold storage automatically",
+                    "isCorrect": false
+                },
+                {
+                    "text": "They are retained for exactly 30 days and then auto-deleted by the catalog",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

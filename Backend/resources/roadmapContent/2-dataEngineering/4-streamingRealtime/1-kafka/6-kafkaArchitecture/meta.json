@@ -1,0 +1,4 @@
+{
+    "name": "Kafka Architecture & Zookeeper",
+    "description": "Navigating the internal architecture of a Kafka cluster. Understanding Brokers, replication factors cleanly, log segments, and the transition from Zookeeper to KRaft consensus."
+}

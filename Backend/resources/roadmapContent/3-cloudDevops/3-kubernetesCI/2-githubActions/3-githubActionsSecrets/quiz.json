@@ -1,0 +1,118 @@
+{
+    "title": "Managing Secrets in CI/CD Quiz",
+    "description": "Test your knowledge on securely managing AWS keys, variables, and OIDC in GitHub.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "In GitHub Actions, what prevents a developer from reading a production database password embedded in the repository settings?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The values are permanently encrypted and hidden from the UI immediately after they are saved; they can only be deleted or overwritten.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The values are hashed using MD5.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "They must enter a 2FA code every time they load the settings page.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "AWS blocks access to GitHub API queries automatically.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the correct syntax for referencing a stored repository secret inside a GitHub Actions `.yml` workflow file?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "${SECRET_NAME}",
+                    "isCorrect": false
+                },
+                {
+                    "text": "%%secrets.NAME%%",
+                    "isCorrect": false
+                },
+                {
+                    "text": "${{ secrets.NAME }}",
+                    "isCorrect": true
+                },
+                {
+                    "text": "@[NAME]",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does the GitHub Actions runner automatically do if a script attempts to `echo` or print an active Secret to the console output?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It bans the repository from executing workflows.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It intercepts the output and redacts the value, replacing the secret string with '***' in the visible logs.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It deletes the secret entirely from settings.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It emails the repository admin immediately.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which of the following describes the most secure, modern industry standard for authenticating GitHub Actions directly to an AWS Cloud Environment without storing static access keys?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Hardcoding the keys into a private Git branch.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "OpenID Connect (OIDC) Federation, utilizing temporary, short-lived session tokens.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Storing the keys in AWS Secrets Manager and making the bucket public temporarily.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Using the AWS Root Account credentials.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why are static, long-lived AWS IAM Access Keys stored as Secrets considered an 'anti-pattern' compared to OIDC?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Because they cost extra money.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "They expire every 15 minutes, causing builds to fail randomly.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because they reduce execution speed significantly.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because if stolen, they do not automatically expire, remaining valid indefinitely until a human manually rotates or deletes them.",
+                    "isCorrect": true
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,198 @@
+<h1>End-to-End Testing with Playwright</h1>
+<p>End-to-End (E2E) tests verify that an entire application flow works correctly from the user's perspective — clicking through a real browser, submitting forms, and asserting what appears on screen. They sit at the top of the testing pyramid and are the most valuable tests for catching integration bugs that unit tests miss.</p>
+
+<h2>Why Playwright Over Cypress?</h2>
+<table>
+  <thead><tr><th></th><th>Playwright</th><th>Cypress</th></tr></thead>
+  <tbody>
+    <tr><td>Browser support</td><td>Chromium, Firefox, WebKit (Safari)</td><td>Chromium-based only (+ Firefox beta)</td></tr>
+    <tr><td>Parallelism</td><td>Native parallel workers</td><td>Paid cloud plan</td></tr>
+    <tr><td>Developer tooling</td><td>Codegen, Trace Viewer, UI Mode</td><td>Time-travel debugging</td></tr>
+    <tr><td>Multi-tab / iframes</td><td>Full support</td><td>Limited</td></tr>
+    <tr><td>Speed</td><td>Fast (no iframe isolation overhead)</td><td>Slower due to iframe architecture</td></tr>
+  </tbody>
+</table>
+
+<h2>Setup</h2>
+<pre><code>npm init playwright@latest
+# Installs Playwright + browsers (Chromium, Firefox, WebKit)
+# Creates: playwright.config.ts, tests/ directory, example tests</code></pre>
+
+<pre><code>// playwright.config.ts
+import { defineConfig, devices } from '@playwright/test';
+
+export default defineConfig({
+  testDir: './tests/e2e',
+  fullyParallel: true,         // Run tests in parallel across workers
+  retries: process.env.CI ? 2 : 0,  // Retry failed tests in CI
+  reporter: 'html',
+  use: {
+    baseURL: 'http://localhost:3000',
+    trace: 'on-first-retry',  // Captures a detailed trace on retry (invaluable for debugging)
+    screenshot: 'only-on-failure',
+  },
+  projects: [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'firefox',  use: { ...devices['Desktop Firefox'] } },
+    { name: 'Mobile Safari', use: { ...devices['iPhone 14'] } },
+  ],
+  webServer: {
+    command: 'npm run start',   // Start your dev server before running tests
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI,
+  },
+});</code></pre>
+
+<h2>Writing Your First E2E Tests</h2>
+<pre><code>// tests/e2e/auth.spec.ts
+import { test, expect } from '@playwright/test';
+
+test.describe('Authentication', () => {
+  test('user can sign in with valid credentials', async ({ page }) => {
+    await page.goto('/login');
+
+    // Fill the login form
+    await page.getByLabel('Email').fill('user@example.com');
+    await page.getByLabel('Password').fill('password123');
+    await page.getByRole('button', { name: /sign in/i }).click();
+
+    // Assert redirect to dashboard
+    await expect(page).toHaveURL('/dashboard');
+    await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
+    await expect(page.getByText('user@example.com')).toBeVisible();
+  });
+
+  test('shows error message for wrong credentials', async ({ page }) => {
+    await page.goto('/login');
+
+    await page.getByLabel('Email').fill('wrong@example.com');
+    await page.getByLabel('Password').fill('wrongpassword');
+    await page.getByRole('button', { name: /sign in/i }).click();
+
+    await expect(page.getByText(/invalid email or password/i)).toBeVisible();
+    await expect(page).toHaveURL('/login');  // Stays on login page
+  });
+});</code></pre>
+
+<h2>Testing Complex User Flows</h2>
+<pre><code>// tests/e2e/checkout.spec.ts
+import { test, expect } from '@playwright/test';
+
+test.describe('E-Commerce Checkout', () => {
+  // Shared setup: log in before each test in this describe block
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/login');
+    await page.getByLabel('Email').fill('testuser@example.com');
+    await page.getByLabel('Password').fill('password');
+    await page.getByRole('button', { name: /sign in/i }).click();
+    await page.waitForURL('/dashboard');
+  });
+
+  test('user can add product to cart and checkout', async ({ page }) => {
+    // Navigate to product
+    await page.goto('/products/hiking-boots');
+    await expect(page.getByRole('heading', { name: 'Hiking Boots' })).toBeVisible();
+
+    // Add to cart
+    await page.getByRole('button', { name: 'Add to Cart' }).click();
+    await expect(page.getByTestId('cart-count')).toHaveText('1');
+
+    // Navigate to cart
+    await page.getByTestId('cart-icon').click();
+    await expect(page).toHaveURL('/cart');
+    await expect(page.getByText('Hiking Boots')).toBeVisible();
+
+    // Checkout
+    await page.getByRole('button', { name: 'Proceed to Checkout' }).click();
+    await page.getByLabel('Card Number').fill('4242 4242 4242 4242');
+    await page.getByLabel('Card Number').fill('4242 4242 4242 4242');
+    await page.getByLabel('Expiry').fill('12/28');
+    await page.getByLabel('CVC').fill('123');
+    await page.getByRole('button', { name: 'Complete Purchase' }).click();
+
+    // Verify order confirmation
+    await expect(page).toHaveURL(/\/order\/[\w-]+/);  // Regex URL match
+    await expect(page.getByText(/order confirmed/i)).toBeVisible();
+  });
+});</code></pre>
+
+<h2>Page Object Model (POM)</h2>
+<p>When selectors change, you don't want to update 50 test files. The Page Object Model encapsulates page-specific selectors and actions into a class:</p>
+<pre><code>// tests/e2e/pages/LoginPage.ts
+import { Page, Locator, expect } from '@playwright/test';
+
+export class LoginPage {
+  readonly emailInput: Locator;
+  readonly passwordInput: Locator;
+  readonly submitButton: Locator;
+  readonly errorMessage: Locator;
+
+  constructor(private page: Page) {
+    this.emailInput    = page.getByLabel('Email');
+    this.passwordInput = page.getByLabel('Password');
+    this.submitButton  = page.getByRole('button', { name: /sign in/i });
+    this.errorMessage  = page.getByRole('alert');
+  }
+
+  async goto() { await this.page.goto('/login'); }
+
+  async login(email: string, password: string) {
+    await this.emailInput.fill(email);
+    await this.passwordInput.fill(password);
+    await this.submitButton.click();
+  }
+}
+
+// In your test:
+// const loginPage = new LoginPage(page);
+// await loginPage.goto();
+// await loginPage.login('user@test.com', 'pass');</code></pre>
+
+<h2>API Mocking</h2>
+<p>Mock backend endpoints so E2E tests don't depend on a live API:</p>
+<pre><code>test('shows error when API is down', async ({ page }) => {
+  // Intercept all calls to /api/users and return a 503
+  await page.route('**/api/users', route =>
+    route.fulfill({ status: 503, body: 'Service Unavailable' })
+  );
+
+  await page.goto('/users');
+  await expect(page.getByText('Service temporarily unavailable')).toBeVisible();
+});
+
+test('displays products from mocked API', async ({ page }) => {
+  await page.route('**/api/products', route =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify([{ id: '1', name: 'Mocked Boots', price: 99 }]),
+    })
+  );
+
+  await page.goto('/products');
+  await expect(page.getByText('Mocked Boots')).toBeVisible();
+});</code></pre>
+
+<h2>Running Tests</h2>
+<pre><code># Run all tests
+npx playwright test
+
+# Run in UI Mode (interactive, visual debugging)
+npx playwright test --ui
+
+# Run a specific file
+npx playwright test tests/e2e/auth.spec.ts
+
+# Generate test code by recording browser actions
+npx playwright codegen http://localhost:3000
+
+# View the HTML report after a run
+npx playwright show-report</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Test critical user journeys, not every edge case — leave edge cases for unit tests. A healthy test suite has ~70% unit tests, ~20% integration, ~10% E2E.</li>
+  <li>Use <code>getByRole</code> and <code>getByLabel</code> over CSS selectors — they query by accessible attributes, making tests resilient to UI redesigns.</li>
+  <li>Never use <code>page.waitForTimeout(2000)</code> — this makes tests slow and flaky. Use <code>await expect(locator).toBeVisible()</code> which automatically retries until the element appears (or times out).</li>
+  <li>Run E2E tests in CI on every pull request but in parallel — a 5-minute E2E suite running in parallel across 4 workers finishes in 75 seconds, making it viable in any CI pipeline.</li>
+</ul>

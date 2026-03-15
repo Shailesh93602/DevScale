@@ -1,0 +1,19 @@
+{
+  "title": "Implement Caching Layer with Redis",
+  "slug": "implement-redis-cache",
+  "difficulty": "Medium",
+  "category": "backend",
+  "points": 100,
+  "tags": ["caching", "redis", "performance", "middleware"],
+  "company_tags": ["Amazon", "Netflix", "Twitter", "Uber", "Stripe"],
+  "topic_tags": ["Redis", "Caching Strategies", "TTL", "Cache Invalidation", "Performance"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Cache operations: GET, SET, DELETE with keys and values, plus TTL configuration",
+  "output_format": "Cached values, cache hit/miss indicators, and response times",
+  "example_input": "SET user:123 {\"name\":\"Alice\"} TTL=300; GET user:123",
+  "example_output": "{ \"data\": {\"name\":\"Alice\"}, \"cache\": \"HIT\", \"ttl\": 295 }",
+  "constraints": "Must support TTL-based expiration. Must handle cache stampede. Must support cache-aside pattern. Memory limit of 100MB for cache.",
+  "function_signature": "class CacheService { get(key: string): Promise<any>; set(key: string, value: any, ttl?: number): Promise<void>; delete(key: string): Promise<void>; getOrSet(key: string, fetcher: () => Promise<any>, ttl?: number): Promise<any>; }",
+  "status": "ACTIVE"
+}

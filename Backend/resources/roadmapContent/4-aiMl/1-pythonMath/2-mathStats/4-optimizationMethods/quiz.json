@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "Why does Adam optimizer outperform basic SGD for most deep learning tasks, and what specific problem does it solve?",
+            "options": [
+                "Adam uses a larger batch size than SGD, processing more data per step.",
+                "Adam maintains per-parameter adaptive learning rates based on first and second gradient moments. Features with sparse gradients (e.g., rare words in NLP) get larger effective learning rates; parameters with large consistent gradients get smaller rates. This eliminates the laborious manual learning rate tuning required for SGD to achieve good performance.",
+                "Adam applies L2 regularization automatically, preventing overfitting.",
+                "Adam uses the full dataset for each step while SGD uses mini-batches."
+            ],
+            "answer": "Adam maintains per-parameter adaptive learning rates based on first and second gradient moments. Features with sparse gradients (e.g., rare words in NLP) get larger effective learning rates; parameters with large consistent gradients get smaller rates. This eliminates the laborious manual learning rate tuning required for SGD to achieve good performance.",
+            "explanation": "Adam is robust to learning rate choice — lr=1e-3 works well across vastly different model architectures. SGD requires careful tuning: too high causes divergence, too low means the model never converges within a practical training budget."
+        },
+        {
+            "question": "What is the 'vanishing gradient' problem, and which optimizer type helps mitigate it in deep networks?",
+            "options": [
+                "Vanishing gradients occur when the learning rate is set too high.",
+                "In deep networks, gradients are multiplied together at each layer during backpropagation. If individual layer gradients are < 1, the product shrinks exponentially toward zero in early layers — those layers stop learning. Adaptive optimizers like Adam and RMSProp mitigate this because they normalize by the magnitude of recent gradients, preventing any gradient from becoming effectively zero.",
+                "Vanishing gradients only occur in RNNs, not in feedforward networks.",
+                "Increasing batch size eliminates the vanishing gradient problem."
+            ],
+            "answer": "In deep networks, gradients are multiplied together at each layer during backpropagation. If individual layer gradients are < 1, the product shrinks exponentially toward zero in early layers — those layers stop learning. Adaptive optimizers like Adam and RMSProp mitigate this because they normalize by the magnitude of recent gradients, preventing any gradient from becoming effectively zero.",
+            "explanation": "A 100-layer network with average layer gradient of 0.9: the gradient at layer 1 is 0.9^100 ≈ 0.000027 — essentially zero. This is also why skip connections (ResNet) were invented — they provide gradients a direct path to early layers."
+        },
+        {
+            "question": "What is the 'One-Cycle Learning Rate Policy' and why does it train faster than a fixed learning rate?",
+            "options": [
+                "One-Cycle trains the model for exactly one epoch at a very high learning rate.",
+                "One-Cycle ramps the learning rate up from a low value to a peak (exploring broadly and escaping poor local minima), then cosine-decays to near zero (fine-grained convergence). This allows using a much higher peak learning rate than is safe with a fixed rate, typically achieving the same or better accuracy in 5-10x fewer training epochs.",
+                "One-Cycle applies a different learning rate to each layer based on depth.",
+                "One-Cycle eliminates the need for weight decay regularization."
+            ],
+            "answer": "One-Cycle ramps the learning rate up from a low value to a peak (exploring broadly and escaping poor local minima), then cosine-decays to near zero (fine-grained convergence). This allows using a much higher peak learning rate than is safe with a fixed rate, typically achieving the same or better accuracy in 5-10x fewer training epochs.",
+            "explanation": "Leslie Smith's 1cycle policy was popularized by fast.ai. Training an ImageNet ResNet50 took 90 epochs with standard schedules. With 1cycle, equivalent accuracy is achieved in just 30 epochs — a 3x speedup with no accuracy loss."
+        }
+    ]
+}

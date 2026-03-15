@@ -1,0 +1,57 @@
+<h1>dbt Macros, Jinja, & Packages</h1>
+<p>Standard SQL is declarative, but it lacks the programming control structures (if statements, for loops, variables) needed for scalable software engineering. If you need to apply the exact same timezone conversion or currency formatting to 50 different columns across 10 tables, standard SQL forces you to copy-paste the logic 50 times. This violates the <strong>DRY (Don't Repeat Yourself)</strong> principle and makes maintaining a data warehouse a nightmare.</p>
+
+<h2>Jinja Templating in dbt</h2>
+<p><strong>dbt (data build tool)</strong> solves this by compiling your code using <strong>Jinja</strong>, a Python templating engine. Jinja allows Data Engineers to write dynamic, programmable SQL.</p>
+<p>When you run <code>dbt run</code>, dbt first processes all the Jinja logic (the code inside <code>{{ ... }}</code> or <code>{% ... %}</code>), generating raw, valid, database-specific SQL. Only then does it execute that compiled SQL against your data warehouse (Snowflake, BigQuery, Postgres).</p>
+
+<h2>Macros: Functions for SQL</h2>
+<p>A <strong>Macro</strong> in dbt is the equivalent of a function in Python. You define a macro once, and reuse it anywhere in your dbt project.</p>
+
+<pre><code class="language-sql">-- Defining a macro in /macros/cents_to_dollars.sql
+{% macro cents_to_dollars(column_name, scale=2) %}
+    ROUND(CAST({{ column_name }} AS NUMERIC) / 100, {{ scale }})
+{% endmacro %}
+</code></pre>
+
+<p>Once defined globally, any analyst can use this macro securely and consistently in their models:</p>
+
+<pre><code class="language-sql">-- Utilizing the Macro in a dbt model
+SELECT
+    user_id,
+    {{ cents_to_dollars('payment_amount_cents') }} AS payment_dollars
+FROM {{ ref('stg_stripe_payments') }}
+</code></pre>
+
+<h2>Advanced Jinja Control Logic</h2>
+<p>Jinja allows you to write control structures like <code>for</code> loops and <code>if</code> statements inside your SQL. This is incredibly powerful for pivoting data or generating repetitive case statements programmatically.</p>
+
+<pre><code class="language-sql">-- Dynamically pivoting payment methods into separate columns
+{% set payment_methods = ["credit_card", "bank_transfer", "gift_card"] %}
+
+SELECT
+    order_id,
+    -- Loop through the array to dynamically generate columns!
+    {% for method in payment_methods %}
+    SUM(CASE WHEN payment_method = '{{ method }}' THEN amount ELSE 0 END) AS {{ method }}_amount,
+    {% endfor %}
+    SUM(amount) AS total_amount
+FROM {{ ref('stg_payments') }}
+GROUP BY 1
+</code></pre>
+<p>If the business adds a "bitcoin" payment method tomorrow, you simply add "bitcoin" to the Jinja array. dbt will dynamically generate the new column logic automatically on the next run. This dramatically reduces boilerplate SQL.</p>
+
+<h2>dbt Packages (The dbt Ecosystem)</h2>
+<p>Because macros are just text files, the global dbt community has built robust open-source <strong>dbt Packages</strong>. Similar to Python's <code>pip</code> or Node's <code>npm</code>, you can install packages natively into your <code>packages.yml</code> file.</p>
+
+<p>The most essential package is <strong>dbt_utils</strong>. Instead of writing your own macros for common data engineering tasks, you simply call the pre-built, battle-tested macros provided by the community.</p>
+
+<pre><code class="language-sql">-- Using dbt_utils to generate a secure Surrogate Key automatically
+SELECT
+    {{ dbt_utils.generate_surrogate_key(['user_id', 'order_date']) }} as unique_order_id,
+    user_id,
+    order_date
+FROM {{ ref('stg_orders') }}
+</code></pre>
+
+<p>Other popular packages include <strong>dbt_expectations</strong> (adding Great Expectations-style data quality tests to dbt) and <strong>ts_utils</strong> for time-series gap filling.</p>

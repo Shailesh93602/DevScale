@@ -1,0 +1,4 @@
+{
+    "name": "Message Queues & Async Processing",
+    "description": "Handling massive throughput securely. Utilizing RabbitMQ and Apache Kafka to decouple services, buffer heavy traffic spikes, and process background tasks asynchronously."
+}

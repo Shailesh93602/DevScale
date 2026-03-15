@@ -1,0 +1,4 @@
+{
+    "name": "React 19 & Modern Data Fetching",
+    "description": "Understanding React 19's new primitives: the 'use' hook for promises/context, Server Actions, useActionState, useFormStatus, and useOptimistic for seamless data mutations."
+}

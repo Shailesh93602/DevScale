@@ -1,0 +1,89 @@
+<h1>Redux Toolkit — Modern Global State</h1>
+<p>Redux Toolkit (RTK) is the official, opinionated way to use Redux. It eliminates the boilerplate of classic Redux while keeping the predictability of a single global store.</p>
+
+<h2>Core Concepts</h2>
+<ul>
+  <li><strong>Store</strong> — Single source of truth for all global state.</li>
+  <li><strong>Slice</strong> — A bundle of reducer logic + actions for one feature.</li>
+  <li><strong>Action</strong> — A plain object describing what happened.</li>
+  <li><strong>Reducer</strong> — A pure function that returns the next state.</li>
+  <li><strong>Selector</strong> — A function that extracts data from the store.</li>
+</ul>
+
+<h2>Setup</h2>
+<pre><code>npm install @reduxjs/toolkit react-redux</code></pre>
+
+<h2>Creating a Slice</h2>
+<pre><code>// features/cart/cartSlice.ts
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+interface CartItem { id: number; name: string; qty: number; price: number; }
+interface CartState { items: CartItem[]; }
+
+const cartSlice = createSlice({
+  name: "cart",
+  initialState: { items: [] } as CartState,
+  reducers: {
+    addItem(state, action: PayloadAction&lt;CartItem&gt;) {
+      const existing = state.items.find(i =&gt; i.id === action.payload.id);
+      if (existing) existing.qty += 1;      // RTK uses Immer — direct mutation is OK!
+      else state.items.push(action.payload);
+    },
+    removeItem(state, action: PayloadAction&lt;number&gt;) {
+      state.items = state.items.filter(i =&gt; i.id !== action.payload);
+    },
+    clearCart(state) {
+      state.items = [];
+    },
+  },
+});
+
+export const { addItem, removeItem, clearCart } = cartSlice.actions;
+export const selectCartItems = (state: RootState) =&gt; state.cart.items;
+export const selectCartTotal = (state: RootState) =&gt;
+  state.cart.items.reduce((sum, i) =&gt; sum + i.price * i.qty, 0);
+export default cartSlice.reducer;</code></pre>
+
+<h2>Configuring the Store</h2>
+<pre><code>// store.ts
+import { configureStore } from "@reduxjs/toolkit";
+import cartReducer from "./features/cart/cartSlice";
+
+export const store = configureStore({
+  reducer: { cart: cartReducer },
+});
+
+export type RootState = ReturnType&lt;typeof store.getState&gt;;
+export type AppDispatch = typeof store.dispatch;</code></pre>
+
+<h2>Using in Components</h2>
+<pre><code>import { useSelector, useDispatch } from "react-redux";
+
+function CartButton({ item }: { item: Product }) {
+  const dispatch = useDispatch();
+  const cartItems = useSelector(selectCartItems);
+  const total = useSelector(selectCartTotal);
+  const isInCart = cartItems.some(i =&gt; i.id === item.id);
+
+  return (
+    &lt;button onClick={() =&gt; dispatch(addItem({ ...item, qty: 1 }))}&gt;
+      {isInCart ? "In Cart ✓" : "Add to Cart"} | Total: ${total}
+    &lt;/button&gt;
+  );
+}</code></pre>
+
+<h2>Async with createAsyncThunk</h2>
+<pre><code>import { createAsyncThunk } from "@reduxjs/toolkit";
+
+export const fetchUser = createAsyncThunk("users/fetchById", async (id: number) =&gt; {
+  const res = await fetch(`/api/users/${id}`);
+  return res.json();
+});
+
+// In slice:
+extraReducers: (builder) =&gt; {
+  builder
+    .addCase(fetchUser.pending,   (state) =&gt; { state.loading = true; })
+    .addCase(fetchUser.fulfilled, (state, action) =&gt; { state.user = action.payload; state.loading = false; })
+    .addCase(fetchUser.rejected,  (state, action) =&gt; { state.error = action.error.message; state.loading = false; });
+}</code></pre>

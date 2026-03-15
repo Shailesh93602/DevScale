@@ -1,0 +1,58 @@
+<h1>Kafka Connect & Schema Registry</h1>
+<p>While Kafka provides the core messaging backbone, getting data in and out of Kafka manually requires writing hundreds of custom Producer or Consumer applications. If you simply want to stream PostgreSQL updates into Kafka, or dump a Kafka topic into Amazon S3, writing a custom Python script is inefficient and error-prone. <strong>Kafka Connect</strong> solves this problem by providing a standard, scalable framework for streaming data between Kafka and other systems without writing a single line of code.</p>
+
+<h2>What is Kafka Connect?</h2>
+<p>Kafka Connect is a separate JVM process (or cluster of processes) that runs alongside your Kafka cluster. It uses standard configuration files (JSON payload sent via REST API) to instantiate pre-built plugins called <strong>Connectors</strong>.</p>
+<ul>
+  <li><strong>Source Connectors:</strong> Continuously poll an external system (like a database or an API) and automatically produce the data as messages into a Kafka topic.</li>
+  <li><strong>Sink Connectors:</strong> Continuously consume messages from a Kafka topic and write them out to an external system (like Elasticsearch, Snowflake, or an S3 bucket).</li>
+</ul>
+
+<h2>Source Connectors & Change Data Capture (CDC)</h2>
+<p>One of the most powerful use cases for Kafka Connect is Change Data Capture (CDC). Suppose you have a legacy monolithic PostgreSQL database. Every time a row is inserted, updated, or deleted in the <code>users</code> table, you want microservices to react instantly.</p>
+<p>A Source Connector like <strong>Debezium</strong> attaches directly to the database's write-ahead log (WAL). As transactions occur, Debezium streams them directly into Kafka in real-time, completely bypassing application logic.</p>
+
+<pre><code># Example: Submitting a Debezium PostgreSQL Source Connector configuration via curl
+curl -X POST http://localhost:8083/connectors -H "Content-Type: application/json" -d '{
+  "name": "inventory-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "tasks.max": "1",
+    "database.hostname": "postgres",
+    "database.port": "5432",
+    "database.user": "postgres",
+    "database.password": "postgres",
+    "database.dbname" : "inventory",
+    "database.server.name": "dbserver1",
+    "table.include.list": "public.inventory"
+  }
+}'</code></pre>
+
+<h2>Sink Connectors & Data Lakes</h2>
+<p>If your backend is processing millions of click events, you don't want to store them in a transactional database. You want to dump them into a Data Lake (like S3) or a Data Warehouse (like Snowflake) for offline batch analysis.</p>
+<p>The <strong>S3 Sink Connector</strong> subscribes to the <code>clicks</code> topic, batches the events, compresses them, and writes them out as organized Parquet files in S3 (e.g., <code>s3://my-lake/clicks/year=2023/month=10/day=15/</code>).</p>
+
+<h2>The Schema Evolution Problem</h2>
+<p>Kafka treats message values as raw byte arrays. If an engineer accidentally changes a producer to output <code>{"usr_idx": 5}</code> instead of <code>{"user_id": 5}</code>, Kafka accepts it happily. However, downstream consumers will instantly crash when they try to parse <code>user_id</code> and find it missing. This is a catastrophic failure mode in distributed streaming architectures.</p>
+
+<h2>Confluent Schema Registry</h2>
+<p>The <strong>Schema Registry</strong> is a standalone application that stores a versioned history of schemas (usually in Avro, Protobuf, or JSON Schema formats). It forces producers and consumers to agree on a strict contract before any data is sent.</p>
+
+<p>How it enforces the contract:</p>
+<ol>
+  <li>The Producer constructs a message according to the local schema.</li>
+  <li>The Producer checks the Schema Registry: <em>"Does this schema match the current allowed version (or is it a compatible evolution)?"</em></li>
+  <li>If valid, the Registry returns a Schema ID. The Producer attaches this ID to the message payload, serializes the data (e.g., as binary Avro), and sends it to Kafka.</li>
+  <li>The Consumer reads the message, sees the Schema ID, fetches the exact schema definition from the Registry (and caches it), and deserializes the binary payload back into an object safely.</li>
+</ol>
+
+<h2>Schema Compatibility Modes</h2>
+<p>Because applications evolve, schemas must change (e.g., adding a new field). The Registry enforces compatibility rules to prevent breaking changes:</p>
+<ul>
+  <li><strong>BACKWARD (Default):</strong> Consumers using the NEW schema can read data produced with the OLD schema. Example rule: Any newly added fields must have a default value.</li>
+  <li><strong>FORWARD:</strong> Consumers using the OLD schema can read data produced with the NEW schema. Example rule: Consumers must ignore fields they don't recognize.</li>
+  <li><strong>FULL:</strong> Both backward and forward compatible. Ensure all changes are purely additive with default values.</li>
+</ul>
+
+<h2>Why using Connect + Schema Registry is the Industry Standard</h2>
+<p>Combining Kafka Connect with the Schema Registry eliminates repetitive boilerplate code, guarantees data integrity across hundreds of microservices, and ensures your Data Warehouse sinks receive cleanly structured, documented data rather than a tangled mess of arbitrary JSON strings. It is the defining line between a messy logging system and an enterprise data nervous system.</p>

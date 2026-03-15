@@ -1,0 +1,28 @@
+{
+  "title": "Best Time to Buy and Sell Stock",
+  "slug": "best-time-to-buy-and-sell-stock",
+  "difficulty": "Easy",
+  "category": "algorithms",
+  "points": 50,
+  "tags": ["array", "dynamic-programming"],
+  "company_tags": ["Amazon", "Microsoft", "Facebook", "Bloomberg"],
+  "topic_tags": ["arrays", "greedy"],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust"
+  ],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer array `prices` where `prices[i]` is the price of a given stock on the `ith` day.",
+  "output_format": "The maximum profit you can achieve from this transaction. If you cannot achieve any profit, return `0`.",
+  "example_input": "prices = [7,1,5,3,6,4]",
+  "example_output": "5",
+  "constraints": "- `1 <= prices.length <= 10^5`\n- `0 <= prices[i] <= 10^4`",
+  "function_signature": "function maxProfit(prices: number[]): number {}",
+  "status": "ACTIVE"
+}

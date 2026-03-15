@@ -1,0 +1,32 @@
+[
+  {
+    "input": "{\"Person\": [{\"id\": 1, \"email\": \"john@example.com\"}, {\"id\": 2, \"email\": \"bob@example.com\"}, {\"id\": 3, \"email\": \"john@example.com\"}]}",
+    "output": "[{\"id\": 1, \"email\": \"john@example.com\"}, {\"id\": 2, \"email\": \"bob@example.com\"}]",
+    "explanation": "Duplicate john@example.com removed, kept id=1.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Person\": [{\"id\": 1, \"email\": \"a@b.com\"}, {\"id\": 2, \"email\": \"c@d.com\"}, {\"id\": 3, \"email\": \"a@b.com\"}, {\"id\": 4, \"email\": \"c@d.com\"}, {\"id\": 5, \"email\": \"a@b.com\"}]}",
+    "output": "[{\"id\": 1, \"email\": \"a@b.com\"}, {\"id\": 2, \"email\": \"c@d.com\"}]",
+    "explanation": "Multiple duplicates removed for both emails.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Person\": [{\"id\": 1, \"email\": \"unique@test.com\"}]}",
+    "output": "[{\"id\": 1, \"email\": \"unique@test.com\"}]",
+    "explanation": "No duplicates to remove.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Person\": [{\"id\": 1, \"email\": \"same@test.com\"}, {\"id\": 2, \"email\": \"same@test.com\"}, {\"id\": 3, \"email\": \"same@test.com\"}]}",
+    "output": "[{\"id\": 1, \"email\": \"same@test.com\"}]",
+    "explanation": "All three have the same email; keep only id=1.",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"Person\": [{\"id\": 1, \"email\": \"a@a.com\"}, {\"id\": 2, \"email\": \"b@b.com\"}, {\"id\": 3, \"email\": \"c@c.com\"}]}",
+    "output": "[{\"id\": 1, \"email\": \"a@a.com\"}, {\"id\": 2, \"email\": \"b@b.com\"}, {\"id\": 3, \"email\": \"c@c.com\"}]",
+    "explanation": "All emails are unique; nothing to delete.",
+    "is_hidden": true
+  }
+]

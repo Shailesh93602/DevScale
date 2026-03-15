@@ -1,0 +1,6 @@
+[
+  "The primary defense against SQL injection is parameterized queries (prepared statements). Replace string concatenation with ? or $1 placeholders and pass user inputs as a separate parameter array.",
+  "Never trust user input. Validate that usernames are alphanumeric, IDs are integers, and emails match a pattern BEFORE using them in queries.",
+  "Look for common injection patterns: single quotes, OR 1=1, semicolons followed by SQL keywords (DROP, DELETE, UPDATE), UNION SELECT, and comment markers (--, /*).",
+  "Defense in depth: use parameterized queries as primary defense, input validation as secondary, and consider using an ORM like Prisma which parameterizes automatically."
+]

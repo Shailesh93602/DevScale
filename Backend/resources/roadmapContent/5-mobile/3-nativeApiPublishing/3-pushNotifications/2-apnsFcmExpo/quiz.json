@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "You call Expo.sendPushNotificationsAsync() and receive a ticket with status='error' and details.error='DeviceNotRegistered'. What does this mean and what action should your backend take?",
+            "options": [
+                "The device has a poor signal — retry sending the same notification after 30 seconds.",
+                "DeviceNotRegistered means the Expo push token is no longer valid — the user uninstalled the app, or the OS revoked the push registration (e.g., device reset, app reinstall). Your backend should immediately remove this token from the database and stop sending to it. Continuing to send to dead tokens wastes API calls and can trigger rate limiting. The user will get a new token when they reinstall and re-register.",
+                "The device's notifications are currently muted — the notification will be delivered when unmuted.",
+                "DeviceNotRegistered means the Expo project is not associated with APNs — reconfigure credentials."
+            ],
+            "answer": "DeviceNotRegistered means the Expo push token is no longer valid — the user uninstalled the app, or the OS revoked the push registration (e.g., device reset, app reinstall). Your backend should immediately remove this token from the database and stop sending to it. Continuing to send to dead tokens wastes API calls and can trigger rate limiting. The user will get a new token when they reinstall and re-register.",
+            "explanation": "Production notification pipelines must check delivery receipts (second API call, 15+ minutes after send). Receipts reveal delivery failures at the APNs/FCM level. Building a token cleanup job that runs nightly to remove DeviceNotRegistered and InvalidCredentials tokens keeps your notification database healthy and reduces costs."
+        },
+        {
+            "question": "What is the technical difference between how iOS and Android handle push notifications when the app is in the KILLED state (not running at all)?",
+            "options": [
+                "Both iOS and Android deliver notifications identically regardless of app state.",
+                "Both platforms deliver the notification banner via APNs/FCM while the app is killed. Difference: when the user TAPS the notification, on iOS the app cold launches and your notification handler code runs via getLastNotificationResponseAsync(). On Android, the data payload in the notification intent is accessible. The critical difference: your notification tap handler registered with addNotificationResponseReceivedListener only fires for BACKGROUND (not killed) state. For killed state, you must check getLastNotificationResponseAsync() on app launch.",
+                "Killed apps on iOS receive push notifications via Background App Refresh; Android uses Doze mode.",
+                "Android delivers to killed apps silently while iOS requires user interaction to deliver."
+            ],
+            "answer": "Both platforms deliver the notification banner via APNs/FCM while the app is killed. Difference: when the user TAPS the notification, on iOS the app cold launches and your notification handler code runs via getLastNotificationResponseAsync(). On Android, the data payload in the notification intent is accessible. The critical difference: your notification tap handler registered with addNotificationResponseReceivedListener only fires for BACKGROUND (not killed) state. For killed state, you must check getLastNotificationResponseAsync() on app launch.",
+            "explanation": "Common bug: 'Our deep link from notifications works in development but not after force-quitting the app.' Cause: the developer only registered addNotificationResponseReceivedListener but didn't check getLastNotificationResponseAsync in the App component's useEffect on mount. Fix: always handle both code paths."
+        },
+        {
+            "question": "Why should push notification tokens be stored per user-device combination rather than per user in your backend database?",
+            "options": [
+                "Push notification tokens are globally unique — two users cannot have the same token.",
+                "A user may have multiple devices (iPhone + iPad, work phone + personal phone) or reinstall the app (generating a new token). Storing only one token per user means only their last logged-in device receives notifications. The correct schema: user (1) → many push_tokens (user_id, token, device_type, created_at). On notification send: query all tokens for the user and send to all. Cleanup: remove expired tokens from the list on DeviceNotRegistered receipt.",
+                "Storing multiple tokens per user improves delivery reliability through redundancy.",
+                "Backend databases have foreign key constraints that require separate token tables."
+            ],
+            "answer": "A user may have multiple devices (iPhone + iPad, work phone + personal phone) or reinstall the app (generating a new token). Storing only one token per user means only their last logged-in device receives notifications. The correct schema: user (1) → many push_tokens (user_id, token, device_type, created_at). On notification send: query all tokens for the user and send to all. Cleanup: remove expired tokens from the list on DeviceNotRegistered receipt.",
+            "explanation": "Enterprise email app failure: only the iPhone received notification of a critical security alert. The iPad was missed because the backend stored one token per user. The user happened to be using the iPad when the alert fired. Multiple tokens is not optional — it's necessary for correct multi-device notification delivery."
+        }
+    ]
+}

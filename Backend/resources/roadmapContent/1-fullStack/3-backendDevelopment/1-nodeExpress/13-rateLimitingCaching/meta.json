@@ -1,0 +1,4 @@
+{
+    "name": "Rate Limiting, Caching & API Security Hardening",
+    "description": "Production-grade API protection techniques. Implementing rate limiting with express-rate-limit and Redis sliding window algorithm, response caching with node-cache and Redis, helmet.js for security headers (CSP, HSTS, X-Frame-Options), CORS configuration hardening, request size limiting, and building a complete API security middleware stack that protects against common attacks."
+}

@@ -1,0 +1,29 @@
+<h1>Database Scaling: Replication & Sharding</h1>
+<p>Scaling a stateless Node.js server is easy: you simply spin up 10 identical servers behind a load balancer. However, scaling a stateful database like PostgreSQL is the hardest problem in System Design. You cannot simply spin up 10 independent databases, or else user data will instantly become fragmented.</p>
+
+<h2>Vertical Scaling vs Horizontal Scaling</h2>
+<p><strong>Vertical Scaling</strong> (Scaling Up) means buying a strictly bigger, more expensive server with more CPU cores and RAM. This is easiest, but eventually, you hit a physical hardware limit where no larger server exists.</p>
+<p><strong>Horizontal Scaling</strong> (Scaling Out) means adding more commodity servers to a distributed network. This is theoretically infinite but requires massive architectural complexity.</p>
+
+<h2>Database Replication (Master-Slave)</h2>
+<p>Most applications have a 10-to-1 read-to-write ratio. You read a user profile 10 times for every 1 time you update it. Master-Slave Replication exploits this metric.</p>
+<p>You define one primary <strong>Master Database</strong>. All `INSERT`, `UPDATE`, and `DELETE` queries must go to the Master. You then provision multiple <strong>Read-Replica (Slave) Databases</strong>. The Master continuously copies its new data to the Replicas asynchronously. All `SELECT` read queries are routed exclusively to the Replicas.</p>
+<p><strong>The Trade-off:</strong> Replication Lag. Because the data copy takes a few milliseconds, a user might update their profile on the Master, instantly refresh the page, and hit a Replica that hasn't received the update yet, showing old data.</p>
+
+<h2>Database Sharding</h2>
+<p>When your dataset becomes so massive (e.g., 50 Terabytes of User Data) that it cannot physically fit on a single Master hard drive, you must use <strong>Sharding</strong>.</p>
+<p>Sharding partitions your database horizontally across multiple separate machines. You choose a specific "Shard Key". For example, if you shard by <code>User ID</code>:</p>
+<ul>
+  <li>Users with IDs 1 to 1,000,000 are stored completely on Database Server A.</li>
+  <li>Users with IDs 1,000,001 to 2,000,000 are stored completely on Database Server B.</li>
+</ul>
+<p><strong>The Trade-off:</strong> SQL `JOIN` operations across different shards become virtually impossible. You have to write highly complex application-level logic to stitch the data back together.</p>
+
+<h2>The CAP Theorem</h2>
+<p>When designing distributed systems, you must understand the CAP Theorem. It states that a distributed data store can only simultaneously provide two out of the following three guarantees:</p>
+<ol>
+  <li><strong>Consistency:</strong> Every read receives the most recent write or an error.</li>
+  <li><strong>Availability:</strong> Every request receives a non-error response.</li>
+  <li><strong>Partition Tolerance:</strong> The system continues to operate despite network failures dropping messages between nodes.</li>
+</ol>
+<p>Since network failures (Partitions) are practically inevitable on the internet, you are forced to choose between designing an <code>AP</code> system (Highly Available, but might return stale data) or a <code>CP</code> system (Highly Consistent, but will shut down and refuse connections during a network error).</p>

@@ -1,0 +1,4 @@
+{
+    "name": "dbt CI/CD & Deployments",
+    "description": "Running dbt securely in production. Exploring dbt Cloud native deployments vs GitHub Actions, running tests automatically on Pull Requests natively, and implementing Slim CI securely."
+}

@@ -1,0 +1,20 @@
+{
+  "title": "Word Search II",
+  "slug": "word-search-ii",
+  "difficulty": "Hard",
+  "category": "algorithms",
+  "points": 150,
+  "tags": ["array","string","backtracking","trie","matrix"],
+  "company_tags": ["Amazon","Microsoft","Apple","Google"],
+  "topic_tags": ["tries","backtracking","graphs"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An `m x n` `board` of characters and a list of strings `words`.",
+  "output_format": "All words on the board.",
+  "example_input": "board = [[\"o\",\"a\",\"a\",\"n\"],[\"e\",\"t\",\"a\",\"e\"],[\"i\",\"h\",\"k\",\"r\"],[\"i\",\"f\",\"l\",\"v\"]], words = [\"oath\",\"pea\",\"eat\",\"rain\"]",
+  "example_output": "[\"eat\",\"oath\"]",
+  "constraints": "- `m == board.length`\n- `n == board[i].length`\n- `1 <= m, n <= 12`\n- `board[i][j]` is a lowercase English letter.\n- `1 <= words.length <= 3 * 10^4`\n- `1 <= words[i].length <= 10`\n- `words[i]` consists of lowercase English letters.\n- All the strings of `words` are unique.",
+  "function_signature": "function findWords(board: string[][], words: string[]): string[] {}",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,6 @@
+[
+  "Level order traversal is just BFS (Breadth-First Search).",
+  "Use a queue. Start by enqueuing the root.",
+  "The trick to grouping by level: before processing nodes from the queue, snapshot the current queue size. That tells you exactly how many nodes belong to the current level.",
+  "Process exactly that many nodes, collecting their values into a level array, and enqueue all their children. Then move to the next level."
+]

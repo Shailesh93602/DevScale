@@ -1,0 +1,19 @@
+{
+  "title": "Koko Eating Bananas",
+  "slug": "koko-eating-bananas",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["binary-search", "array"],
+  "company_tags": ["Google", "Facebook", "Amazon"],
+  "topic_tags": ["binary search", "arrays"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer array `piles` and an integer `h` (hours).",
+  "output_format": "Return the minimum integer eating speed `k` such that Koko can eat all bananas within `h` hours.",
+  "example_input": "piles = [3,6,7,11], h = 8",
+  "example_output": "4",
+  "constraints": "- `1 <= piles.length <= 10^4`\n- `piles.length <= h <= 10^9`\n- `1 <= piles[i] <= 10^9`",
+  "function_signature": "function minEatingSpeed(piles: number[], h: number): number {}",
+  "status": "ACTIVE"
+}

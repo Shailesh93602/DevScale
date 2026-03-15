@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the core conceptual difference between OAuth 2.0 and OpenID Connect (OIDC)?",
+            "options": [
+                "OAuth requires passwords; OIDC requires fingerprints",
+                "OAuth is designed strictly for Authorization (granting API access); OIDC is an identity layer sitting on top of OAuth designed specifically for Authentication (Logins)",
+                "OAuth is built by Google; OIDC is built by Microsoft",
+                "OAuth uses XML, while OIDC uses strictly JSON"
+            ],
+            "answer": "OAuth is designed strictly for Authorization (granting API access); OIDC is an identity layer sitting on top of OAuth designed specifically for Authentication (Logins)",
+            "explanation": "Because developers were incorrectly using OAuth to do 'Log in with Facebook', the industry created OpenID Connect. OIDC standardizes returning an `id_token` containing user profile data, solving the authentication gap in plain OAuth."
+        },
+        {
+            "question": "In the standard OAuth 2.0 'Authorization Code Flow', what does the Authorization Server (like Google) return to the client browser immediately after the user clicks 'Allow' on the consent screen?",
+            "options": [
+                "A long-lived Access Token",
+                "The user's plaintext password",
+                "A temporary, short-lived 'code' appended to the callback URL (e.g. ?code=123)",
+                "A session cookie"
+            ],
+            "answer": "A temporary, short-lived 'code' appended to the callback URL (e.g. ?code=123)",
+            "explanation": "Google redirects back to your app with a temporary 'code'. Your frontend cannot use this code. It must send the code to your Node.js backend, which then securely exchanges it with Google for the real tokens."
+        },
+        {
+            "question": "Why must the Step 4 exchange (trading the temporary 'code' for an 'access_token') happen on your Node.js backend rather than directly inside your React frontend?",
+            "options": [
+                "React cannot make POST requests",
+                "The exchange requires passing your application's highly confidential 'client_secret', which would be exposed to hackers if placed in frontend JavaScript",
+                "Google strictly blocks requests originating from React frameworks",
+                "Browsers cannot parse JSON Web Tokens"
+            ],
+            "answer": "The exchange requires passing your application's highly confidential 'client_secret', which would be exposed to hackers if placed in frontend JavaScript",
+            "explanation": "The client_secret is the password for your entire application. If you put it in a React app, anyone can steal it and impersonate your app. Therefore, the server-to-server exchange is mandatory."
+        },
+        {
+            "question": "What is the primary purpose of Passport.js correctly integrated with a Strategy like `passport-google-oauth20`?",
+            "options": [
+                "To abstract away the heavy boilerplate of URL redirection and token exchange logic natively",
+                "To encrypt databases locally before sending to Google",
+                "To replace Express routing entirely",
+                "To generate CSS styling for the 'Login with Google' buttons"
+            ],
+            "answer": "To abstract away the heavy boilerplate of URL redirection and token exchange logic natively",
+            "explanation": "Passport intercepts the Google redirect, extracts the ?code, attaches the secret, executes the POST request, and hands you the final user profile in a clean callback function, saving you hundreds of lines of code."
+        },
+        {
+            "question": "During an OAuth flow, what is the purpose of the 'state' parameter?",
+            "options": [
+                "To define the geographic region of the user",
+                "To mitigate CSRF (Cross-Site Request Forgery) attacks by ensuring the response from Google matches the exact request originally initiated by your app",
+                "To store the user's password securely in transit",
+                "To set the Redux state in the frontend"
+            ],
+            "answer": "To mitigate CSRF (Cross-Site Request Forgery) attacks by ensuring the response from Google matches the exact request originally initiated by your app",
+            "explanation": "When your app redirects to Google, it generates a random 'state' string. Google sends it back. If the returned state doesn't match the one you generated, it means an attacker is trying to forcefully log a user into the attacker's account."
+        }
+    ]
+}

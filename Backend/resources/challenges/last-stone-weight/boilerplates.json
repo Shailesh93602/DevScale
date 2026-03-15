@@ -1,0 +1,10 @@
+{
+  "typescript": "function lastStoneWeight(stones: number[]): number {\n    \n};",
+  "javascript": "/**\n * @param {number[]} stones\n * @return {number}\n */\nvar lastStoneWeight = function(stones) {\n    \n};",
+  "python": "class Solution:\n    def lastStoneWeight(self, stones: List[int]) -> int:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public int lastStoneWeight(int[] stones) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int lastStoneWeight(vector<int>& stones) {\n        \n    }\n};",
+  "go": "func lastStoneWeight(stones []int) int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn last_stone_weight(stones: Vec<i32>) -> i32 {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int LastStoneWeight(int[] stones) {\n        \n    }\n}"
+}

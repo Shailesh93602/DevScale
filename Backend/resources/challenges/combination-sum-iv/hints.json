@@ -1,0 +1,6 @@
+[
+  "This is similar to climbing stairs but with variable step sizes. Think about how many ways you can reach each sum.",
+  "Let dp[i] = number of ordered sequences that sum to i. How can you build dp[i] from smaller subproblems?",
+  "For each sum i, try each number in nums. If num <= i, then dp[i] += dp[i - num].",
+  "The base case is dp[0] = 1 (one way to make sum 0: use no numbers). The answer is dp[target]."
+]

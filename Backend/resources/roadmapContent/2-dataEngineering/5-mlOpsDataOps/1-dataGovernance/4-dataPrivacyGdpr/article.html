@@ -1,0 +1,30 @@
+<h1>Privacy, GDPR & Data Masking</h1>
+<p>In 2018, the European Union enacted the <strong>General Data Protection Regulation (GDPR)</strong>, the world's most comprehensive data privacy law. For Data Engineers, GDPR is not just a legal concern but a set of concrete technical requirements that must be baked directly into the architecture of every data pipeline handling European citizens' data.</p>
+
+<h2>The Key GDPR Engineering Challenges</h2>
+<ul>
+  <li><strong>Right to Erasure (Article 17):</strong> A user can legally request that their data be permanently deleted from all systems. This is trivially handled in a standard OLTP database with a SQL <code>DELETE</code> statement. But how do you delete a user from a 10-Terabyte Parquet file in S3? From a changelog deep in a Kafka topic? From a past Snowflake table? This requires careful architectural planning from day one.</li>
+  <li><strong>Data Minimization (Article 5):</strong> You should only collect and store data that is strictly necessary for a defined, specific purpose.</li>
+  <li><strong>Lawful Basis for Processing:</strong> You must have explicit legal justification (consent, contract, legitimate interest) before collecting or processing personal data.</li>
+</ul>
+
+<h2>Cryptographic Erasure & Tokenization</h2>
+<p>One elegant technical solution for streams and immutable storage (like Kafka and S3) is <strong>Cryptographic Erasure</strong>. Instead of storing a user's raw email address directly in Kafka, you encrypt it with a unique, user-specific encryption key stored in a secure key management system (like AWS KMS).</p>
+<p>When a user requests erasure, you simply delete their encryption key. All the encrypted blobs in Kafka still exist, but they are now permanently and mathematically unreadable. The data is "erased" without physically modifying the immutable Kafka log.</p>
+
+<h2>Data Masking</h2>
+<p>Data Masking protects PII (Personally Identifiable Information) by transforming sensitive column values before they reach unauthorized viewers in the Data Warehouse.</p>
+<pre><code class="language-sql">-- Snowflake Column-Level Security with Dynamic Data Masking
+-- Analysts see 'XXXX-XXXX-XXXX-1234' while Data Engineers see the real number
+CREATE MASKING POLICY credit_card_mask AS (val STRING) RETURNS STRING ->
+    CASE
+        WHEN CURRENT_ROLE() IN ('DATA_ENGINEER') THEN val
+        ELSE 'XXXX-XXXX-XXXX-' || RIGHT(val, 4)
+    END;
+
+ALTER TABLE transactions MODIFY COLUMN credit_card_number
+    SET MASKING POLICY credit_card_mask;
+</code></pre>
+
+<h2>PII Data Catalog</h2>
+<p>As a first step, organizations must build a <strong>PII Data Catalog</strong>: an inventory of every column in every table in every database that contains personal information. Tools like AWS Macie and Apache Atlas can automatically scan databases and flag potential PII columns using pattern recognition (e.g., columns that contain phone-number-shaped strings or email-address-shaped strings), helping Data Engineering teams identify and secure sensitive data at scale.</p>

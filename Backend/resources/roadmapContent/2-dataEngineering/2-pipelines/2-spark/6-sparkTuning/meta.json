@@ -1,0 +1,4 @@
+{
+    "name": "Tuning Spark & Shuffle Operations",
+    "description": "Preventing Out-of-Memory crashes. Mastering Data Partitioning, minimizing catastrophic Data Shuffles across the network, and understanding the distinct differences between Narrow and Wide Transformations."
+}

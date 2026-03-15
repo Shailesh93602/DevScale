@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is declaration merging in TypeScript?",
+            "options": [
+                "A tool to combine multiple JavaScript files into one bundle",
+                "The compiler's ability to combine two or more separate declarations with the same name into a single definition",
+                "A way to merge two different git branches",
+                "A utility function to perform deep object merging"
+            ],
+            "answer": "The compiler's ability to combine two or more separate declarations with the same name into a single definition",
+            "explanation": "If TypeScript sees two interfaces named 'User' in the same scope, it merges their properties into a single 'User' interface, rather than throwing an error."
+        },
+        {
+            "question": "Which of the following TypeScript constructs supports declaration merging?",
+            "options": [
+                "type aliases",
+                "interfaces",
+                "const variables",
+                "let variables"
+            ],
+            "answer": "interfaces",
+            "explanation": "Interfaces support declaration merging, which makes them highly extensible. Type aliases do not support merging; defining two types with the same name results in a 'Duplicate identifier' error."
+        },
+        {
+            "question": "How do you add a custom property, like 'analytics', to the global browser 'window' object in TypeScript?",
+            "options": [
+                "window.analytics = new Analytics();",
+                "interface Window { analytics: any; }",
+                "declare global { interface Window { analytics: Analytics; } }",
+                "module window { export analytics; }"
+            ],
+            "answer": "declare global { interface Window { analytics: Analytics; } }",
+            "explanation": "To safely modify a global interface from a module file (a file with imports/exports), you must wrap the interface declaration inside 'declare global {}'."
+        },
+        {
+            "question": "Why is module augmentation commonly used with frameworks like Express.js?",
+            "options": [
+                "To compile Express faster",
+                "To add custom properties (like req.user from authentication middleware) to the built-in Request object types",
+                "To bypass security CORS checks",
+                "To convert Express to a frontend framework"
+            ],
+            "answer": "To add custom properties (like req.user from authentication middleware) to the built-in Request object types",
+            "explanation": "Because third-party libraries define their own types, you cannot edit their source code. Module augmentation (declare module 'express') allows you to inject your custom properties into their types safely."
+        },
+        {
+            "question": "Is it considered a best practice to use interface merging extensively in your own internal business models?",
+            "options": [
+                "Yes, it makes files much shorter",
+                "Yes, it is the only way to achieve polymorphism",
+                "No, because finding the complete shape of an interface becomes difficult since it might be declared across many different files",
+                "No, because it disables strict type checking"
+            ],
+            "answer": "No, because finding the complete shape of an interface becomes difficult since it might be declared across many different files",
+            "explanation": "While great for extending third-party libraries, scattering parts of an interface definition across your own codebase creates 'spooky action at a distance' making it very difficult for developers to understand the full shape of the object. Extending interfaces (interface A extends B) is much clearer."
+        }
+    ]
+}

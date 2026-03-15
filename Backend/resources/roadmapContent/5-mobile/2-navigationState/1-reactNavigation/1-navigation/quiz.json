@@ -1,0 +1,118 @@
+{
+    "title": "React Navigation Quiz",
+    "description": "Test your knowledge on Stack routing, physical screens, Bottom Tabs, and Drawers.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "In standard web development using `react-router-dom`, navigating to a new URL structurally unmounts the old page entirely. How does mobile 'Stack Routing' heavily differ conceptually from this approach?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It forces the application into an HTML WebView.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It uses raw string IDs to navigate.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "When moving forward, it literally physically 'stacks' the brand-new Screen directly on top of the old one in a massive pile. The old Screen is NOT destroyed; it quietly persists faithfully executing underneath.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It deletes the app entirely and restarts it natively.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What happens precisely to the underlying `HomeScreen` in a Stack Navigator when a user triggers `navigation.navigate('SettingsScreen')`?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The `HomeScreen` is instantly garbage collected strictly to completely save system RAM.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The `SettingsScreen` physically slides securely into view entirely on top of the `HomeScreen`, preserving the original `HomeScreen`'s precise state seamlessly in the background.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The mobile app pauses completely.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The `HomeScreen` explicitly converts into `SettingsScreen` code.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "When a user executes `navigation.goBack()` explicitly on iOS, how does the Stack Navigator physically react?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It gracefully tosses the top-most active Screen permanently into the garbage (popping the stack), smoothly revealing the impeccably preserved underlying Screen immediately.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It crashes the application silently.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It reloads the data entirely from the remote server API.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It generates a completely new instance from scratch.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which specific Navigator precisely renders a permanent menu interface securely hugging the absolute bottom edge of the phone display containing discrete interactive icons?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Drawer Navigator",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Stack Navigator",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Switch Navigator",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Bottom Tab Navigator",
+                    "isCorrect": true
+                }
+            ]
+        },
+        {
+            "question": "What is structurally possible regarding nesting complex navigators deep inside one another utilizing the React Navigation framework?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "You fundamentally cannot nest Navigators; doing so will explicitly crash the UI.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "You can seamlessly nest an entire massive, infinite Stack Navigator exclusively deep inside a single specific tab of a Bottom Tab Navigator effortlessly.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "You can only nest a single Navigator deeply on standard Tuesdays.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It requires writing custom complex Java code.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,118 @@
+{
+    "title": "Image Processing Quiz",
+    "description": "Test your knowledge of image loading, preprocessing, normalization, and augmentation for computer vision.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "OpenCV's cv2.imread() loads images in which channel order?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "RGB — Red, Green, Blue",
+                    "isCorrect": false
+                },
+                {
+                    "text": "BGR — Blue, Green, Red",
+                    "isCorrect": true
+                },
+                {
+                    "text": "HSV — Hue, Saturation, Value",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Grayscale — single channel",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why is image normalization (scaling pixels from [0,255] to [0,1] or using mean/std) important before training a neural network?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It compresses the image file to save disk space",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It improves gradient flow during backpropagation by keeping input values in a stable range, leading to faster and more stable training",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It makes the images smaller so they fit in GPU memory",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It converts the image to grayscale automatically",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why is data augmentation applied during training but typically NOT during inference?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Augmentation increases image file size, which slows down serving",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Augmentation randomly transforms images to increase training data diversity and robustness; during inference you want deterministic, consistent predictions",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Augmentation can only run on CPUs, which are not available during inference",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Augmentation requires the ground truth label to apply the correct transform",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the ImageNet-standard input size that most pretrained models (ResNet, VGG, EfficientNet) expect?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "512 × 512 pixels",
+                    "isCorrect": false
+                },
+                {
+                    "text": "128 × 128 pixels",
+                    "isCorrect": false
+                },
+                {
+                    "text": "224 × 224 pixels",
+                    "isCorrect": true
+                },
+                {
+                    "text": "1024 × 1024 pixels",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which interpolation method should you use when SHRINKING an image with cv2.resize()?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "cv2.INTER_CUBIC — best for all cases",
+                    "isCorrect": false
+                },
+                {
+                    "text": "cv2.INTER_NEAREST — fastest but lowest quality",
+                    "isCorrect": false
+                },
+                {
+                    "text": "cv2.INTER_AREA — recommended for downscaling as it reduces aliasing artifacts",
+                    "isCorrect": true
+                },
+                {
+                    "text": "cv2.INTER_LINEAR — only works for grayscale images",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

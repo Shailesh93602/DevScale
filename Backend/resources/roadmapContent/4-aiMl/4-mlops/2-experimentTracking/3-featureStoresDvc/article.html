@@ -1,0 +1,99 @@
+<h1>Feature Stores & Data Version Control</h1>
+<p>Two of the most persistent problems in production ML are <strong>training-serving skew</strong> (features computed differently between training and inference) and <strong>irreproducibility</strong> (nobody can reproduce last month's experiment). Feature stores and DVC solve these systematically.</p>
+
+<h2>Feature Stores: Solving Training-Serving Skew</h2>
+<p>Training-serving skew occurs when the feature computation logic used at training time differs from what's used in production inference — producing subtle, hard-to-debug differences that degrade model performance. A feature store centralizes feature computation with a single definition used everywhere:</p>
+<pre><code class="language-python">from feast import FeatureStore, Entity, Feature, FeatureView
+from feast.types import Float64, Int64
+from datetime import timedelta
+
+# Define entities (what you're making predictions about)
+customer = Entity(name="customer_id", value_type=ValueType.INT64)
+
+# Define features — computed ONCE, served from both offline (training) and online (inference) stores
+customer_features = FeatureView(
+    name="customer_behavior_features",
+    entities=["customer_id"],
+    ttl=timedelta(days=1),    # Feature freshness — stale after 1 day
+    features=[
+        Feature(name="total_spend_30d", dtype=Float64),
+        Feature(name="login_count_7d", dtype=Int64),
+        Feature(name="support_calls_90d", dtype=Int64),
+        Feature(name="avg_session_duration_seconds", dtype=Float64),
+    ],
+    source=your_data_source  # BigQuery, Redis, Snowflake, etc.
+)
+
+store = FeatureStore(repo_path=".")
+
+# OFFLINE serving — for model training (historical features for each timestamp)
+training_df = store.get_historical_features(
+    entity_df=training_entity_df,    # customer_id + event_timestamp per row
+    features=["customer_behavior_features:total_spend_30d",
+              "customer_behavior_features:login_count_7d"]
+).to_df()
+
+# ONLINE serving — for real-time inference (latest feature values)
+features = store.get_online_features(
+    features=["customer_behavior_features:total_spend_30d"],
+    entity_rows=[{"customer_id": 12345}]
+).to_dict()
+# EXACTLY the same feature logic — guaranteed consistency between training and serving
+</code></pre>
+
+<h2>DVC: Data Version Control</h2>
+<pre><code class="language-bash"># DVC tracks large datasets and model artifacts in Git-compatible way
+# Stores actual files in remote storage (S3, GCS, Azure), metadata in Git
+
+# Initialize DVC in a project
+git init && dvc init
+
+# Track a large dataset (stores in remote, pointer goes to Git)
+dvc add data/training_dataset.parquet
+git add data/training_dataset.parquet.dvc .gitignore
+git commit -m "Add training dataset v1"
+
+# Push to remote storage (S3 bucket)
+dvc remote add -d myremote s3://ml-artifacts-bucket/dvc
+dvc push
+
+# Define a reproducible ML pipeline in dvc.yaml
+# Each stage has: command, inputs (deps), outputs
+</code></pre>
+<pre><code class="language-yaml"># dvc.yaml — reproducible ML pipeline
+stages:
+  preprocess:
+    cmd: python src/preprocess.py --input data/raw.csv --output data/processed.parquet
+    deps:
+      - src/preprocess.py
+      - data/raw.csv
+    outs:
+      - data/processed.parquet
+
+  train:
+    cmd: python src/train.py --data data/processed.parquet --model models/churn_model.pkl
+    deps:
+      - src/train.py
+      - data/processed.parquet
+    params:
+      - params.yaml:        # Hyperparameters tracked with the pipeline
+          - model.n_estimators
+          - model.max_depth
+    outs:
+      - models/churn_model.pkl
+    metrics:
+      - metrics/eval.json   # AUC, F1 automatically tracked
+
+  evaluate:
+    cmd: python src/evaluate.py --model models/churn_model.pkl --output metrics/eval.json
+    deps:
+      - src/evaluate.py
+      - models/churn_model.pkl
+</code></pre>
+<pre><code class="language-bash"># Run the full pipeline (skips stages where deps haven't changed)
+dvc repro
+
+# Compare experiments across commits
+dvc exp run --set-param model.n_estimators=500
+dvc metrics diff HEAD~1  # Show how metrics changed from last commit
+</code></pre>

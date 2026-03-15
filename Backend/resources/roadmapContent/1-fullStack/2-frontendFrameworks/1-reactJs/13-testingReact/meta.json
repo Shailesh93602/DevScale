@@ -1,0 +1,4 @@
+{
+    "name": "Testing React Components",
+    "description": "Writing robust tests with Jest and React Testing Library. Testing component rendering, user interactions, asynchronous state updates, and mocking API calls."
+}

@@ -1,0 +1,30 @@
+import BaseRepository from './baseRepository';
+import { PrismaClient } from '@prisma/client';
+
+import prisma from '../lib/prisma';
+
+export default class UserPointsRepository extends BaseRepository<
+  PrismaClient['userPoints']
+> {
+  constructor() {
+    // Pass the Prisma delegate for the user model (prisma.user)
+    super(prisma.userPoints);
+  }
+
+  async getUserPoints(user_id: string) {
+    const points = await this.findMany({
+      where: { user_id },
+    });
+
+    return points;
+  }
+
+  // Update user points
+  async updateUserPoints(user_id: string, points: number): Promise<void> {
+    await this.upsert({
+      where: { user_id },
+      update: { points: { increment: points } },
+      create: { user_id, points },
+    });
+  }
+}

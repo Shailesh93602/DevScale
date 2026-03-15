@@ -1,0 +1,24 @@
+[
+  {
+    "input": { "n": 2 },
+    "output": [0, 1, 1],
+    "explanation": "0 (0), 1 (1), 2 (10).",
+    "is_hidden": false
+  },
+  {
+    "input": { "n": 5 },
+    "output": [0, 1, 1, 2, 1, 2],
+    "explanation": "Counting 1s for numbers 0 to 5.",
+    "is_hidden": false
+  },
+  {
+    "input": { "n": 0 },
+    "output": [0],
+    "is_hidden": true
+  },
+  {
+    "input": { "n": 10 },
+    "output": [0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2],
+    "is_hidden": true
+  }
+]

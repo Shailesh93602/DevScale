@@ -1,0 +1,6 @@
+[
+  "A common mistake: just checking that left child < root AND right child > root is NOT sufficient. An entire subtree must satisfy the BST property.",
+  "For example: [5,4,6,null,null,3,7] — the node 3 is in the right subtree of 5, but 3 < 5, which makes it INVALID.",
+  "The correct approach: pass down a valid range [min, max] for each node. The node's value must be within this range.",
+  "For the root, the range is (-Infinity, +Infinity). When you go left, your max becomes the parent's value. When you go right, your min becomes the parent's value."
+]
