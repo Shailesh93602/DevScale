@@ -1,0 +1,118 @@
+{
+    "title": "AWS Networking Quiz",
+    "description": "Test your knowledge on VPCs, Subnets, NAT Gateways, and Security Groups.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What specifically defines a subnet as 'Public' in an AWS VPC?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It has 'Public' in the subnet name tag.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It is assigned a CIDR block starting with 10.0.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Its associated Route Table contains a default route (0.0.0.0/0) pointing to an Internet Gateway.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It does not use a Security Group.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "If an EC2 instance in a Private Subnet needs to download security patches from the internet, what networking component must be configured?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "An auto-scaling group.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A NAT Gateway living in a public subnet.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "An Elastic Load Balancer.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A Direct Connect link.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which AWS firewall mechanism operates at the instance level and is stateful (return traffic is automatically allowed)?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Route Tables",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Internet Gateway",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Network ACLs",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Security Groups",
+                    "isCorrect": true
+                }
+            ]
+        },
+        {
+            "question": "When defining a CIDR block for a subnet, how many IP addresses does AWS permanently reserve and make unavailable for your use?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "0",
+                    "isCorrect": false
+                },
+                {
+                    "text": "1",
+                    "isCorrect": false
+                },
+                {
+                    "text": "5",
+                    "isCorrect": true
+                },
+                {
+                    "text": "10",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How are Network ACLs fundamentally different from Security Groups?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "NACLs are stateful, preventing you from writing outbound rules.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "NACLs operate at the Subnet level and are stateless, requiring explicit inbound and outbound rules.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "NACLs are used only for IPv6 traffic.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "NACLs are the only way to allow SSH access.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

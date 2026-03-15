@@ -1,0 +1,4 @@
+{
+    "name": "Web Workers, Proxy & Advanced JS Patterns",
+    "description": "JavaScript's most powerful but underused features. Web Workers for offloading CPU-intensive tasks to a background thread (keeping the main thread smooth), SharedArrayBuffer and Atomics for shared memory between workers, Proxy and Reflect for building reactive systems and validation layers, WeakMap and WeakRef for memory-safe data association, and the Iterator/Generator protocol for building custom lazy sequences."
+}

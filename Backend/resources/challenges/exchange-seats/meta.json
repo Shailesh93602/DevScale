@@ -1,0 +1,19 @@
+{
+  "title": "Exchange Seats",
+  "slug": "exchange-seats",
+  "difficulty": "Medium",
+  "category": "databases",
+  "points": 100,
+  "tags": ["sql", "case-when", "window-functions"],
+  "company_tags": ["Amazon", "Facebook", "Google", "Bloomberg"],
+  "topic_tags": ["SQL", "CASE", "Window Functions"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Table: Seat with columns id (int, primary key, auto-increment), student (varchar)",
+  "output_format": "Result table with swapped seat IDs — every two consecutive students swap seats. If odd number of students, the last one stays.",
+  "example_input": "Table: Seat\n| id | student |\n| 1  | Abbot   |\n| 2  | Doris   |\n| 3  | Emerson |\n| 4  | Green   |\n| 5  | Jeames  |",
+  "example_output": "| id | student |\n| 1  | Doris   |\n| 2  | Abbot   |\n| 3  | Green   |\n| 4  | Emerson |\n| 5  | Jeames  |",
+  "constraints": "- 1 <= id <= 10^4\n- id is continuous starting from 1\n- student is a non-empty string",
+  "function_signature": "-- Write your SQL query below",
+  "status": "ACTIVE"
+}

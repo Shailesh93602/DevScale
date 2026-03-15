@@ -1,0 +1,79 @@
+<h1>Modern JavaScript — ES6+ Features</h1>
+<p>ES6 (2015) and later versions transformed JavaScript into a powerful, expressive language. These features are now industry standard — you'll see them in every modern codebase.</p>
+
+<h2>Destructuring</h2>
+<pre><code>// Array destructuring
+const [first, second, ...rest] = [1, 2, 3, 4, 5];
+const [,, third] = [1, 2, 3]; // Skip elements with commas
+
+// Object destructuring
+const { name, age, role = "user" } = user; // With default
+const { name: userName, address: { city } } = user; // Rename + nested
+
+// In function parameters
+function displayUser({ name, role = "user" }) {
+  return `${name} (${role})`;
+}</code></pre>
+
+<h2>Template Literals</h2>
+<pre><code>const msg = `Hello, ${user.name}! You have ${inbox.length} messages.`;
+
+// Multi-line strings (no more \n needed)
+const html = `
+  &lt;div class="card"&gt;
+    &lt;h2&gt;${title}&lt;/h2&gt;
+    &lt;p&gt;${description}&lt;/p&gt;
+  &lt;/div&gt;
+`;</code></pre>
+
+<h2>Modules (import / export)</h2>
+<pre><code>// math.js — Named exports
+export const add = (a, b) => a + b;
+export const multiply = (a, b) => a * b;
+export const PI = 3.14159;
+
+// Default export (one per file)
+export default function greet(name) { return `Hi, ${name}`; }
+
+// app.js — Importing
+import greet from "./math.js";            // default import
+import { add, PI } from "./math.js";      // named imports
+import greet, { add } from "./math.js";   // both
+import * as math from "./math.js";        // namespace import</code></pre>
+
+<h2>Optional Chaining & Nullish Coalescing</h2>
+<pre><code>// Safe nested access — returns undefined instead of throwing
+const city = user?.address?.city;
+const firstTag = post?.tags?.[0];
+const result = obj?.method?.();
+
+// Default for null/undefined only (not 0, "", false)
+const display = user.name ?? "Anonymous";</code></pre>
+
+<h2>Functional Array Methods</h2>
+<pre><code>const products = [
+  { name: "Laptop", price: 999, inStock: true },
+  { name: "Phone",  price: 599, inStock: false },
+  { name: "Tablet", price: 349, inStock: true },
+];
+
+// map — transform each element
+const names = products.map(p => p.name); // ["Laptop", "Phone", "Tablet"]
+
+// filter — keep matching elements
+const available = products.filter(p => p.inStock);
+
+// reduce — accumulate into single value
+const totalValue = products.reduce((sum, p) => sum + p.price, 0);
+
+// find — first match
+const laptop = products.find(p => p.name === "Laptop");
+
+// some / every — boolean checks
+const hasOutOfStock = products.some(p => !p.inStock);   // true
+const allInStock = products.every(p => p.inStock);      // false
+
+// Chaining
+const totalAvailableValue = products
+  .filter(p => p.inStock)
+  .reduce((sum, p) => sum + p.price, 0); // 1348</code></pre>

@@ -1,0 +1,7 @@
+{
+  "name": "App Store Deployment",
+  "description": "Publishing to the Apple App Store and Google Play Store — metadata, certificates, and release processes.",
+  "topics": [
+    "1-publishing"
+  ]
+}

@@ -1,0 +1,4 @@
+{
+    "name": "Process Management",
+    "description": "Managing daemons, background jobs, systemd, and troubleshooting high CPU/memory usage."
+}

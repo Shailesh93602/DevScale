@@ -1,0 +1,7 @@
+{
+  "name": "Device APIs & Push Notifications",
+  "description": "Camera, GPS, biometrics, local notifications, and Expo push notifications.",
+  "topics": [
+    "1-deviceAPIs"
+  ]
+}

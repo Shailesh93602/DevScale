@@ -1,0 +1,4 @@
+{
+    "name": "Stored Procedures & Triggers",
+    "description": "Pushing heavy logic down to the database level. Writing PostgreSQL functions (PL/pgSQL), creating triggers for automatic audit logging, and managing materialized views."
+}

@@ -1,0 +1,6 @@
+{
+    "id": "1-modelServing",
+    "title": "Model Serving Strategies",
+    "description": "Techniques for making machine learning models available through real-time and batch predictions.",
+    "order": 1
+}

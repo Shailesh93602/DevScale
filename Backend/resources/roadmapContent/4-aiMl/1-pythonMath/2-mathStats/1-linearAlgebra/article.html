@@ -1,0 +1,76 @@
+<h1>Linear Algebra & Probability for ML</h1>
+<p>ML algorithms are fundamentally mathematical. Understanding these concepts helps you choose the right model, interpret results, and debug when things go wrong.</p>
+
+<h2>Vectors & Matrices</h2>
+<pre><code>import numpy as np
+
+# Vectors — features of one data point
+x = np.array([1, 2, 3])    # 3D feature vector (shape: (3,))
+
+# Matrices — dataset with n samples, m features
+X = np.array([[1, 2, 3],
+              [4, 5, 6],
+              [7, 8, 9]])   # shape: (3, 3)
+
+# Matrix operations
+X.T              # Transpose (rows ↔ cols)
+X @ X.T          # Matrix multiplication (dot product)
+np.linalg.inv(X) # Matrix inverse
+np.linalg.det(X) # Determinant
+
+# Dot product — similarity measure
+a = np.array([1, 2, 3])
+b = np.array([4, 5, 6])
+np.dot(a, b)       # 1*4 + 2*5 + 3*6 = 32
+
+# Euclidean distance — measure between points
+dist = np.sqrt(np.sum((a - b) ** 2))  # or: np.linalg.norm(a - b)</code></pre>
+
+<h2>Gradient Descent — The Core of ML Optimisation</h2>
+<pre><code># Learning = finding weights (θ) that minimise loss function L(θ)
+# Gradient tells you the direction of steepest increase
+# Move opposite to gradient by learning rate (α)
+
+# Update rule:
+# θ = θ - α * ∇L(θ)
+
+# Intuition in 1D (house price prediction)
+def gradient_descent(X, y, learning_rate=0.01, epochs=1000):
+    m, n = X.shape
+    theta = np.zeros(n)  # Start with zero weights
+
+    for epoch in range(epochs):
+        predictions = X @ theta
+        errors = predictions - y
+        gradient = (1/m) * X.T @ errors  # dL/dθ
+        theta -= learning_rate * gradient  # Update step
+
+    return theta</code></pre>
+
+<h2>Probability & Statistics for ML</h2>
+<pre><code>from scipy import stats
+
+# Normal distribution — foundation of many assumptions
+mu, sigma = 170, 10          # Mean height, std dev
+x = stats.norm(mu, sigma)
+x.pdf(175)                   # Probability density at 175cm
+x.cdf(180)                   # P(height &lt;= 180)
+
+# Bayes' Theorem: P(A|B) = P(B|A) * P(A) / P(B)
+# Example: P(cancer | positive test) = P(positive | cancer) * P(cancer) / P(positive)
+# This is the foundation of Naive Bayes classifier
+
+# Key distributions:
+# Bernoulli: binary outcome (coin flip → classification)
+# Gaussian: continuous values (heights, errors)
+# Poisson: count events per interval (errors per day)</code></pre>
+
+<h2>Eigendecomposition — PCA Foundation</h2>
+<pre><code># PCA finds directions of maximum variance in data
+from sklearn.decomposition import PCA
+
+pca = PCA(n_components=2)   # Reduce to 2D for visualisation
+X_reduced = pca.fit_transform(X_scaled)
+
+print(pca.explained_variance_ratio_)  # How much variance each component captures
+# e.g. [0.92, 0.05] → first 2 PCs capture 97% of variance</code></pre>

@@ -1,0 +1,19 @@
+{
+  "title": "Write a Multi-Stage Dockerfile",
+  "slug": "write-multi-stage-dockerfile",
+  "difficulty": "Medium",
+  "category": "devops",
+  "points": 100,
+  "tags": ["docker", "containerization", "multi-stage-build", "optimization"],
+  "company_tags": ["Google", "Amazon", "Docker", "Netflix", "Spotify"],
+  "topic_tags": ["Docker", "Containers", "Build Optimization", "Image Size"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "A Node.js/TypeScript application with package.json, tsconfig.json, and src/ directory",
+  "output_format": "A multi-stage Dockerfile that builds and serves the application with minimal image size",
+  "example_input": "Node.js TypeScript app with express server",
+  "example_output": "Dockerfile with build stage and production stage, final image < 200MB",
+  "constraints": "- Must use at least 2 stages\n- Final image must not contain dev dependencies\n- Must use specific base image tags (not latest)\n- Build artifacts must be copied correctly between stages",
+  "function_signature": "function generateDockerfile(config: { baseImage: string; buildCmd: string; startCmd: string; port: number }): string",
+  "status": "ACTIVE"
+}

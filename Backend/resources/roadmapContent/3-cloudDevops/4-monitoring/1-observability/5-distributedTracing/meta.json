@@ -1,0 +1,4 @@
+{
+    "name": "Distributed Tracing in Depth",
+    "description": "Understanding end-to-end request tracing across microservices. Implementing trace context propagation with W3C Trace Context, configuring Jaeger and Tempo as tracing backends, building span-level performance dashboards, and diagnosing latency regressions using flame graphs and trace comparisons."
+}

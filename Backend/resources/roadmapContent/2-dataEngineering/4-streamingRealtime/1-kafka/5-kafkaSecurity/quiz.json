@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What specific security threat does enabling SSL/TLS encryption on a Kafka cluster primarily defend against?",
+            "options": [
+                "It prevents SQL injection inside Kafka topics.",
+                "It encrypts all data travelling over the network between Producers, Brokers, and Consumers, preventing network eavesdroppers from reading the raw message payload in plain text.",
+                "It automatically rotates all database API keys daily.",
+                "It compresses Kafka JSON payloads before sending."
+            ],
+            "answer": "It encrypts all data travelling over the network between Producers, Brokers, and Consumers, preventing network eavesdroppers from reading the raw message payload in plain text.",
+            "explanation": "Without TLS, all your Kafka messages are plain text on the wire. Any server on the same network could intercept and read millions of payment events."
+        },
+        {
+            "question": "What specific security concern does Kafka's SASL authentication mechanism address, which plain SSL/TLS encryption alone does NOT solve?",
+            "options": [
+                "SASL prevents Kafka topics from being partitioned.",
+                "SASL answers the 'Who are you?' question by authenticating the identity of the Producer or Consumer client connecting to the Broker, ensuring only known and authorized services can connect.",
+                "SASL automatically compresses all Kafka schemas.",
+                "SASL translates Avro messages to plain JSON."
+            ],
+            "answer": "SASL answers the 'Who are you?' question by authenticating the identity of the Producer or Consumer client connecting to the Broker, ensuring only known and authorized services can connect.",
+            "explanation": "SSL encrypts the message contents. SASL verifies the identity of the sender. You need both to secure a production cluster."
+        },
+        {
+            "question": "Using Kafka ACLs (Access Control Lists), what is the fundamental security principle you can enforce for different services?",
+            "options": [
+                "You can grant every service full WRITE and READ access to all topics.",
+                "You can enforce the Principle of Least Privilege, granting each specific service or team only the exact operations (Read/Write) they require on specific topics, and explicitly denying all other permissions.",
+                "You can disable all SSL authentication globally.",
+                "You can force all consumers to use the same consumer group ID."
+            ],
+            "answer": "You can enforce the Principle of Least Privilege, granting each specific service or team only the exact operations (Read/Write) they require on specific topics, and explicitly denying all other permissions.",
+            "explanation": "The payments-service should only WRITE to the 'transactions' topic. The analytics team should only READ from it. ACLs enforce this boundary programmatically."
+        }
+    ]
+}

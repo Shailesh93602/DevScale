@@ -1,0 +1,19 @@
+{
+  "title": "Implement Throttle",
+  "slug": "implement-throttle",
+  "difficulty": "Medium",
+  "category": "frontend",
+  "points": 100,
+  "tags": ["javascript", "closures", "timing", "performance"],
+  "company_tags": ["Google", "Meta", "Amazon", "Microsoft"],
+  "topic_tags": ["Closures", "Timers", "Higher-Order Functions", "Rate Limiting"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "A function `fn` and an interval in milliseconds `interval`",
+  "output_format": "A throttled version of the function that invokes `fn` at most once per `interval` ms",
+  "example_input": "throttle(fn, 300)",
+  "example_output": "A function that calls fn at most once every 300ms",
+  "constraints": "0 <= interval <= 10000, fn is a valid function",
+  "function_signature": "function throttle(fn: (...args: any[]) => void, interval: number): (...args: any[]) => void",
+  "status": "ACTIVE"
+}

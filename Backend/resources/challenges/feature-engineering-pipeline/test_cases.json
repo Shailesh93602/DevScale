@@ -1,0 +1,62 @@
+[
+  {
+    "input": {"data": [[1,100,"cat"],[2,200,"dog"],[3,300,"cat"]], "columns": ["age","salary","pet"], "operations": ["normalize:age","normalize:salary","one_hot:pet"]},
+    "output": {"features": [[0,0,1,0],[0.5,0.5,0,1],[1,1,1,0]], "column_names": ["age_norm","salary_norm","pet_cat","pet_dog"]},
+    "explanation": "Normalize numeric columns and one-hot encode categorical",
+    "is_hidden": false
+  },
+  {
+    "input": {"data": [[10],[20],[30]], "columns": ["val"], "operations": ["standardize:val"]},
+    "output": {"features": [[-1.225],[0],[1.225]], "column_names": ["val_std"]},
+    "explanation": "Z-score standardization: mean=20, std=8.165",
+    "is_hidden": false
+  },
+  {
+    "input": {"data": [[0],[9],[99],[999]], "columns": ["x"], "operations": ["log_transform:x"]},
+    "output": {"features": [[0],[2.303],[4.605],[6.908]], "column_names": ["x_log"]},
+    "explanation": "Log(1+x) transformation",
+    "is_hidden": false
+  },
+  {
+    "input": {"data": [[1],[5],[10],[15],[20]], "columns": ["v"], "operations": ["bin:v:4"]},
+    "output": {"features": [[0],[0],[1],[2],[3]], "column_names": ["v_bin"]},
+    "explanation": "Equal-width binning into 4 bins",
+    "is_hidden": false
+  },
+  {
+    "input": {"data": [[5,5],[5,5],[5,5]], "columns": ["a","b"], "operations": ["normalize:a","standardize:b"]},
+    "output": {"features": [[0,0],[0,0],[0,0]], "column_names": ["a_norm","b_std"]},
+    "explanation": "Edge case: all same values, output 0",
+    "is_hidden": true
+  },
+  {
+    "input": {"data": [["a","x"],["b","y"],["c","x"],["a","z"]], "columns": ["c1","c2"], "operations": ["one_hot:c1","one_hot:c2"]},
+    "output": {"features": [[1,0,0,1,0,0],[0,1,0,0,1,0],[0,0,1,1,0,0],[1,0,0,0,0,1]], "column_names": ["c1_a","c1_b","c1_c","c2_x","c2_y","c2_z"]},
+    "explanation": "One-hot encoding two categorical columns",
+    "is_hidden": true
+  },
+  {
+    "input": {"data": [[100],[200],[300],[400],[500]], "columns": ["salary"], "operations": ["normalize:salary","log_transform:salary"]},
+    "output": {"features": [[0,4.615],[0.25,5.303],[0.5,5.707],[0.75,6.001],[1,6.216]], "column_names": ["salary_norm","salary_log"]},
+    "explanation": "Multiple operations on same column",
+    "is_hidden": true
+  },
+  {
+    "input": {"data": [[-10],[0],[10]], "columns": ["x"], "operations": ["normalize:x"]},
+    "output": {"features": [[0],[0.5],[1]], "column_names": ["x_norm"]},
+    "explanation": "Normalization with negative values",
+    "is_hidden": true
+  },
+  {
+    "input": {"data": [[1,"red"],[2,"blue"],[3,"red"],[4,"green"],[5,"blue"]], "columns": ["num","color"], "operations": ["standardize:num","one_hot:color"]},
+    "output": {"features": [[-1.414,0,0,1],[-0.707,1,0,0],[0,0,0,1],[0.707,0,1,0],[1.414,1,0,0]], "column_names": ["num_std","color_blue","color_green","color_red"]},
+    "explanation": "Mix of standardization and one-hot encoding",
+    "is_hidden": true
+  },
+  {
+    "input": {"data": [[1],[2],[3],[4],[5],[6],[7],[8],[9],[10]], "columns": ["x"], "operations": ["bin:x:5"]},
+    "output": {"features": [[0],[0],[1],[1],[2],[2],[3],[3],[4],[4]], "column_names": ["x_bin"]},
+    "explanation": "Binning 10 values into 5 bins",
+    "is_hidden": true
+  }
+]

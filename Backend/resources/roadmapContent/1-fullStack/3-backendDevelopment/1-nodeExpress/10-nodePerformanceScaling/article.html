@@ -1,0 +1,92 @@
+<h1>Performance, Scaling & PM2</h1>
+<p>Node.js runs your entire server logic on a single thread. While the Event Loop handles I/O efficiently, actual JavaScript execution is restricted to one CPU core. If you deploy a standard Node.js app to an expensive 8-core AWS server, 7 of those cores will sit at 0% utilization while the 1 core maxes out at 100%. Node must be scaled intentionally.</p>
+
+<h2>The Native Cluster Module</h2>
+<p>The <code>cluster</code> module allows you to easily create child processes (Workers) that share the same server port. The master process acts as a load balancer, distributing incoming connections across the CPU cores in a round-robin fashion.</p>
+
+<pre><code>const cluster = require('cluster');
+const os = require('os');
+const express = require('express');
+
+// Count the physical CPU cores available
+const numCPUs = os.cpus().length;
+
+if (cluster.isPrimary) {
+  console.log(`Primary Master ${process.pid} is running`);
+
+  // Fork a worker for every CPU core
+  for (let i = 0; i &lt; numCPUs; i++) {
+    cluster.fork();
+  }
+
+  // Self-Healing: If a worker crashes, instantly spin up a replacement
+  cluster.on('exit', (worker, code, signal) =&gt; {
+    console.log(`Worker ${worker.process.pid} died. Restarting...`);
+    cluster.fork();
+  });
+} else {
+  // This code runs inside the child workers. 
+  // All 8 workers will share port 3000!
+  const app = express();
+  app.get('/', (req, res) =&gt; {
+    res.send(`Hello from Worker ${process.pid}`);
+  });
+  app.listen(3000, () =&gt; console.log(`Worker ${process.pid} started`));
+}</code></pre>
+
+<h2>Production Daemonization with PM2</h2>
+<p>Writing clustering code manually is tedious. In established production environments, the community standard is <strong>PM2</strong>. PM2 is an advanced Process Manager that handles clustering, automatic restarts on crashes, logging, and zero-downtime reloads automatically.</p>
+
+<pre><code># Install PM2 globally
+npm install pm2 -g
+
+# Start the app and automatically scale to the maximum number of CPU cores (-i max)
+pm2 start server.js -i max --name "my-api"
+
+# View real-time performance, memory, and CPU metrics
+pm2 monit
+
+# Save the configuration so the server restarts on machine reboot
+pm2 save
+pm2 startup</code></pre>
+<p>If you use PM2, you do <strong>not</strong> need to use the native <code>cluster</code> module in your code. PM2 wraps your standard Express app and clusters it behind the scenes.</p>
+
+<h2>Reverse Proxy with NGINX</h2>
+<p>Node.js is Excellent at application logic, but it is mediocre at serving static files (images, CSS) and managing SSL certificates (HTTPS). Standard architecture places an <strong>NGINX</strong> reverse proxy <em>in front</em> of Node.js.</p>
+<ol>
+  <li>The user's browser connects to Nginx on Port 80/443.</li>
+  <li>Nginx decrypts the HTTPS traffic securely.</li>
+  <li>If the user requests an image, Nginx serves it directly (blazing fast, bypassing Node entirely).</li>
+  <li>If the user requests an API route, Nginx forwards (proxies) the request to the hidden Node.js server instances running on Port 3000.</li>
+</ol>
+
+<h2>Caching with Redis</h2>
+<p>The fastest way to scale a database is to stop querying it. High-traffic reads should be cached in memory. Because clustered Node instances cannot share RAM, an external in-memory database like <strong>Redis</strong> is required.</p>
+
+<pre><code>const redis = require('redis');
+const client = redis.createClient({ url: 'redis://localhost:6379' });
+await client.connect();
+
+app.get('/api/heavy-data', async (req, res) =&gt; {
+  // 1. Check Redis Cache
+  const cachedData = await client.get('dashboard_stats');
+  if (cachedData) {
+    return res.json({ source: 'cache', data: JSON.parse(cachedData) });
+  }
+
+  // 2. Cache Miss: Calculate heavy data from PostgeSQL (takes 3 seconds)
+  const heavyData = await db.calculateMassiveStatistics();
+  
+  // 3. Save to Redis with an Expiration (Time to Live) of 60 seconds
+  await client.setEx('dashboard_stats', 60, JSON.stringify(heavyData));
+
+  // 4. Return to user
+  res.json({ source: 'database', data: heavyData });
+});</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Your Express app must remain completely <strong>Stateless</strong>. Do not store sessions or files in application memory (variables), because in a clustered environment, Worker 1 cannot access Worker 2's memory.</li>
+  <li>Always use PM2 for production process management to ensure your app stays alive after unexpected fatal crashes or unhandled promise rejections.</li>
+  <li>Offload HTTPS decryption and static file serving to a Reverse Proxy (Nginx, AWS ALB, Cloudflare).</li>
+</ul>

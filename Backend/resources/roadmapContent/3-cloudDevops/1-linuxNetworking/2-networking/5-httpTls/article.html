@@ -1,0 +1,53 @@
+<h1>HTTP, TLS & Web Protocols</h1>
+<p>The protocols governing how browsers, APIs, and microservices communicate are constantly evolving. Understanding the mechanics of HTTP, TLS, and modern protocol upgrades is essential for diagnosing performance problems, implementing security correctly, and knowing why "just use HTTPS" is not as simple as it sounds.</p>
+
+<h2>HTTP Versions: The Evolution</h2>
+<ul>
+  <li><strong>HTTP/1.1:</strong> The workhorse of the web for 20 years. Each request requires a separate TCP connection (or uses persistent connections via Keep-Alive, but still runs requests sequentially). <strong>Head-of-line blocking</strong> is a critical limitation: if request 1 stalls, requests 2, 3, and 4 all wait behind it on the same connection.</li>
+  <li><strong>HTTP/2:</strong> Multiplexes multiple requests over a single TCP connection simultaneously using binary frames and streams. Removes head-of-line blocking at the application layer, adds header compression (HPACK), and supports server push. Adopted by almost all modern web servers and CDNs.</li>
+  <li><strong>HTTP/3:</strong> Replaces TCP with QUIC (built on UDP). Eliminates even TCP-level head-of-line blocking. Enables 0-RTT connection resumption (no handshake overhead for returning users) and dramatically improves performance on lossy mobile networks. Used by Google, Cloudflare, and Meta.</li>
+</ul>
+
+<h2>The TLS Handshake</h2>
+<p>When you type <code>https://</code>, a <strong>TLS handshake</strong> occurs before any HTTP data is sent. TLS (Transport Layer Security) provides encryption, authentication, and integrity verification:</p>
+<pre><code class="language-text">1. Client Hello: Browser sends supported TLS versions and cipher suites
+2. Server Hello: Server selects TLS version + cipher, sends its certificate
+3. Certificate Verification: Browser checks the certificate chain:
+   - Is it signed by a trusted Certificate Authority (CA)?
+   - Is the domain name correct (CN/SAN match)?
+   - Is it expired?
+4. Key Exchange: Both sides derive a shared session key using 
+   asymmetric cryptography (RSA or ECDHE) — the private key never travels the wire
+5. Finished: Both sides confirm the handshake succeeded
+6. Application Data: HTTP data now flows, encrypted with the symmetric session key
+</code></pre>
+<p>TLS 1.3 (the current standard) reduced this handshake from 2 round-trips to 1, and adds support for 0-RTT resumption for returning connections.</p>
+
+<h2>WebSockets</h2>
+<p>Standard HTTP is a request-response protocol — the client asks, the server answers, and the connection closes. <strong>WebSockets</strong> provide a persistent, full-duplex communication channel over a single TCP connection:</p>
+<pre><code class="language-javascript">// Client opens a WebSocket connection (starts as HTTP upgrade request)
+const ws = new WebSocket('wss://api.example.com/live-data');
+
+ws.onmessage = (event) => {
+    console.log('Server pushed:', event.data);  // Server can push anytime!
+};
+
+ws.send(JSON.stringify({ type: 'subscribe', channel: 'btc_price' }));
+</code></pre>
+<p>The connection starts as an HTTP/1.1 upgrade request, then the protocol "upgrades" to WebSocket. Unlike HTTP polling (where the client repeatedly asks "anything new?"), the server can push data to the client at any time with zero overhead.</p>
+
+<h2>gRPC</h2>
+<p><strong>gRPC</strong> is a high-performance RPC framework developed by Google, used extensively for microservice-to-microservice communication. It uses HTTP/2 for transport and Protocol Buffers (binary serialization) instead of JSON:</p>
+<pre><code class="language-protobuf">// user.proto — Service definition
+service UserService {
+    rpc GetUser (GetUserRequest) returns (User) {}
+    rpc ListUsers (ListUsersRequest) returns (stream User) {}  // Server streaming!
+}
+
+message User {
+    string id = 1;
+    string email = 2;
+    int32 age = 3;
+}
+</code></pre>
+<p>gRPC messages are typically 5-10x smaller than equivalent JSON and parse 5-10x faster. The strongly typed protobuf contracts also serve as self-documenting API specifications, eliminating entire categories of integration bugs.</p>

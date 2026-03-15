@@ -1,0 +1,114 @@
+<h1>Memoization in React Native</h1>
+<p>React Native apps re-render components automatically whenever state or props change. While this is the right default, it becomes a performance bottleneck when complex components or expensive calculations are triggered far more often than needed. <strong>Memoization</strong> is the technique of caching the output of a function so that if the same inputs are provided again, the cached result is returned immediately instead of recomputing.</p>
+
+<h2>Understanding Why Components Re-render</h2>
+<p>In React Native, a component re-renders when:</p>
+<ol>
+  <li>Its own state changes (via <code>useState</code> or <code>useReducer</code>).</li>
+  <li>Its parent re-renders (props may or may not have changed).</li>
+  <li>A context value it subscribes to changes.</li>
+</ol>
+<p>The key insight: when a parent re-renders, <em>all child components re-render by default</em> — even if the child's props are identical. Memoization breaks this chain for expensive children.</p>
+
+<h2>React.memo — Memoizing Components</h2>
+<p><code>React.memo</code> is a Higher Order Component that wraps a component and does a shallow comparison of its props before re-rendering. If props haven't changed, the previous render output is reused.</p>
+<pre><code>import React from 'react';
+import &#123; View, Text, StyleSheet &#125; from 'react-native';
+
+interface ProductCardProps &#123;
+  name: string;
+  price: number;
+  onAddToCart: () =&gt; void;
+&#125;
+
+// Without React.memo: re-renders every time the parent renders
+// With React.memo: only re-renders when name, price, or onAddToCart changes
+const ProductCard = React.memo(&#123; name, price, onAddToCart &#125;: ProductCardProps) =&gt; &#123;
+  console.log(`Rendering ProductCard: $&#123;name&#125;`);  // Use this to verify memoization works
+
+  return (
+    &lt;View style=&#123;styles.card&#125;&gt;
+      &lt;Text style=&#123;styles.name&#125;&gt;&#123;name&#125;&lt;/Text&gt;
+      &lt;Text style=&#123;styles.price&#125;&gt;$&#123;price.toFixed(2)&#125;&lt;/Text&gt;
+      &lt;Text onPress=&#123;onAddToCart&#125; style=&#123;styles.button&#125;&gt;Add to Cart&lt;/Text&gt;
+    &lt;/View&gt;
+  );
+&#125;);
+
+// Optional: custom comparison function for deep comparison
+const MemoizedCard = React.memo(ProductCard, (prevProps, nextProps) =&gt; &#123;
+  return prevProps.name === nextProps.name &amp;&amp; prevProps.price === nextProps.price;
+  // Return true = props are equal = skip re-render
+&#125;);</code></pre>
+
+<h2>useMemo — Memoizing Expensive Calculations</h2>
+<p><code>useMemo</code> caches the result of a computation between renders. It only recomputes when one of its declared dependencies changes.</p>
+<pre><code>import &#123; useMemo &#125; from 'react';
+
+const ProductListScreen = (&#123; products, searchQuery &#125;: Props) =&gt; &#123;
+  // ❌ Without useMemo: filters and sorts on EVERY render
+  // const filtered = products.filter(...).sort(...);
+
+  // ✅ With useMemo: only recomputes when products or searchQuery changes
+  const filteredAndSorted = useMemo(() =&gt; &#123;
+    console.log('Filtering products...');  // Should only log when deps change
+    return products
+      .filter(p =&gt; p.name.toLowerCase().includes(searchQuery.toLowerCase()))
+      .sort((a, b) =&gt; a.price - b.price);
+  &#125;, [products, searchQuery]);
+
+  return &lt;FlatList data=&#123;filteredAndSorted&#125; renderItem=&#123;...&#125; /&gt;;
+&#125;;</code></pre>
+
+<h2>useCallback — Memoizing Functions</h2>
+<p>Functions defined inside a component get a new reference on every render. When you pass a function as a prop to a <code>React.memo</code> child, a new function reference causes the child to re-render even if the logic is identical. <code>useCallback</code> solves this:</p>
+<pre><code>import &#123; useCallback, useState &#125; from 'react';
+
+const ShoppingCart = (&#123; products &#125;: Props) =&gt; &#123;
+  const [cart, setCart] = useState([]);
+
+  // ❌ New function reference on every render → breaks React.memo on ProductCard
+  // const handleAddToCart = (product) =&gt; setCart(prev =&gt; [...prev, product]);
+
+  // ✅ Stable function reference — only changes when setCart changes (never)
+  const handleAddToCart = useCallback((product: Product) =&gt; &#123;
+    setCart(prev =&gt; [...prev, product]);
+  &#125;, []); // Empty deps = never changes
+
+  return (
+    &lt;&gt;
+      &#123;products.map(product =&gt; (
+        &lt;ProductCard   // This is the React.memo'd component from above
+          key=&#123;product.id&#125;
+          name=&#123;product.name&#125;
+          price=&#123;product.price&#125;
+          onAddToCart=&#123;() =&gt; handleAddToCart(product)&#125;
+        /&gt;
+      ))&#125;
+    &lt;/&gt;
+  );
+&#125;;</code></pre>
+
+<h2>The Inline Object Problem</h2>
+<p>A common mistake that silently breaks <code>React.memo</code>:</p>
+<pre><code>// ❌ WRONG: New style object created on every render → ProductCard always re-renders
+&lt;ProductCard style=&#123;&#123; margin: 10, padding: 5 &#125;&#125; ... /&gt;
+
+// ✅ CORRECT: Define styles outside component or use useMemo
+const styles = StyleSheet.create(&#123; card: &#123; margin: 10, padding: 5 &#125; &#125;);
+&lt;ProductCard style=&#123;styles.card&#125; ... /&gt;</code></pre>
+
+<h2>When NOT to Memoize</h2>
+<p>Memoization has a cost — it adds memory overhead and the comparison computation itself. Don't use it for:</p>
+<ul>
+  <li>Simple components that render fast (just a <code>Text</code> or <code>View</code>) — the comparison cost exceeds the render cost.</li>
+  <li>Components whose props change on nearly every render — memoization never kicks in, just adds overhead.</li>
+  <li>Components with complex props (large arrays) where shallow comparison is insufficient.</li>
+</ul>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Use <code>React.DevTools Profiler</code> or <code>console.log</code> in render to verify memoization is actually working before adding it everywhere.</li>
+  <li>Apply memoization from the bottom up — memoize leaf components first, then work upward only if profiling shows a bottleneck.</li>
+  <li>Always move static objects and arrays outside the component body; <code>useMemo</code> for dynamic ones.</li>
+</ul>

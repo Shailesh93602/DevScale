@@ -1,0 +1,10 @@
+{
+    "id": "1-computerVision",
+    "title": "Computer Vision",
+    "description": "Deep learning techniques for analyzing and understanding images.",
+    "order": 1,
+    "topics": [
+        "1-imageProcessing",
+        "2-objectDetection"
+    ]
+}

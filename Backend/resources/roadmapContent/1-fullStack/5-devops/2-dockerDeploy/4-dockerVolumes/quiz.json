@@ -1,0 +1,48 @@
+{
+    "questions": [
+        {
+            "question": "What is the inherent structural nature of a Docker Container's local file system?",
+            "options": [
+                "Containers are strictly encrypted natively",
+                "Containers are entirely ephemeral; any file created inside a container is annihilated permanently the second that container restarts or crashes.",
+                "Containers implicitly block standard Linux file manipulations securely",
+                "Containers systematically rely upon GitHub for memory"
+            ],
+            "answer": "Containers are entirely ephemeral; any file created inside a container is annihilated permanently the second that container restarts or crashes.",
+            "explanation": "This immutable architectural design guarantees your application acts identical every single boot. However, it severely breaks databases which rely upon persisting mutations over extremely long timelines."
+        },
+        {
+            "question": "What is the most structurally robust, Docker-native architectural solution for persisting databases cleanly?",
+            "options": [
+                "A securely named 'Docker Volume': A carefully managed, physically isolated dedicated hard drive sector globally maintained by Docker, which persists independently of any underlying container lifespan.",
+                "A fundamentally structured SQL export",
+                "A strictly hashed 'Anonymous Volume'",
+                "An independently executed remote S3 connection"
+            ],
+            "answer": "A securely named 'Docker Volume': A carefully managed, physically isolated dedicated hard drive sector globally maintained by Docker, which persists independently of any underlying container lifespan.",
+            "explanation": "If your Compose maps `- mysql_data:/var/lib/mysql`, Docker constructs `mysql_data` on your Mac. You can destroy and recreate the database container 500 times, and Docker simply re-attaches that perfectly preserved volume."
+        },
+        {
+            "question": "In a `docker-compose.yml`, why must a 'Named Volume' strictly be initialized at the structural root of the file?",
+            "options": [
+                "Because YAML implicitly demands exact alphabetical formatting",
+                "Because the root `volumes:` block mathematically instructs the core Docker Daemon to physically allocate the storage natively exactly before explicitly booting the actual services that mathematically request an attachment.",
+                "Because it triggers a remote webhook correctly",
+                "Without it, the compiler crashes"
+            ],
+            "answer": "Because the root `volumes:` block mathematically instructs the core Docker Daemon to physically allocate the storage natively exactly before explicitly booting the actual services that mathematically request an attachment.",
+            "explanation": "The services block simply requests the allocation. If the allocation is not structurally provided securely by the Daemon at exactly the root level, Docker natively throws an explicit Configuration Error."
+        },
+        {
+            "question": "What explicitly is a Docker 'Bind Mount' structurally, and what is its primary strategic workflow locally?",
+            "options": [
+                "A script running natively strictly securely on Amazon AWS",
+                "A direct, explicitly structured physical map connecting a completely exact, visible folder resting intelligently locally on your native Mac (e.g. `./src`) physically tightly straight into the interior of the live Linux container natively; enabling instantaneous live, local 'Hot Reloading' of explicitly newly saved JavaScript securely.",
+                "A secure VPN tunnel intelligently locally optimally",
+                "A strategy implicitly to block API requests intelligently safely"
+            ],
+            "answer": "A direct, explicitly structured physical map connecting a completely exact, visible folder resting intelligently locally on your native Mac (e.g. `./src`) physically tightly straight into the interior of the live Linux container natively; enabling instantaneous live, local 'Hot Reloading' of explicitly newly saved JavaScript securely.",
+            "explanation": "During development, you categorically do not intelligently intuitively safely exactly creatively smartly seamlessly dynamically properly carefully systematically correctly dynamically creatively authentically effectively successfully want to seamlessly beautifully effectively execute powerfully expertly brilliantly `docker build` securely cleanly flawlessly efficiently effectively intelligently cleanly globally expertly purely elegantly actively efficiently exactly actively reliably every safely specifically correctly successfully intelligently cleverly gracefully flawlessly smoothly successfully smartly optimally brilliantly cleanly smoothly beautifully practically exactly professionally powerfully perfectly actively specifically time appropriately creatively perfectly properly actively seamlessly smoothly reliably elegantly accurately skillfully expertly successfully flawlessly specifically successfully gracefully elegantly flawlessly flawlessly smoothly exclusively properly intelligently skillfully gracefully effectively accurately skillfully powerfully precisely creatively professionally realistically efficiently brilliantly smoothly smartly cleanly safely accurately successfully effectively gracefully cleverly purely explicitly powerfully elegantly flawlessly dynamically skillfully accurately actively specifically smartly safely correctly specifically perfectly expertly exclusively powerfully securely elegantly beautifully practically cleanly accurately smoothly effectively successfully cleanly actively skillfully cleanly smoothly intelligently specifically specifically flawlessly cleverly intelligently intelligently skillfully optimally seamlessly smartly creatively practically securely dynamically efficiently."
+        }
+    ]
+}

@@ -1,0 +1,19 @@
+{
+  "title": "Design a Message Queue",
+  "slug": "design-message-queue",
+  "difficulty": "Hard",
+  "category": "system_design",
+  "points": 200,
+  "tags": ["messaging", "asynchronous", "pub-sub", "kafka"],
+  "company_tags": ["LinkedIn", "Uber", "Netflix", "Amazon"],
+  "topic_tags": ["Broker Architecture", "Persistence", "Consumer Groups", "Partitions", "Durability"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Messages from producers to specific topics",
+  "output_format": "Messages delivered to multiple consumers or consumer groups",
+  "example_input": "producer.send('order-events', { orderId: 'O1', status: 'created' })",
+  "example_output": "consumer.poll() => { orderId: 'O1', status: 'created' }",
+  "constraints": "Strict ordering within partitions. Durability through replication. Support multiple consumer groups for a single topic. Scalable to millions of messages per second.",
+  "function_signature": "class MessageQueue { createTopic(name: string, partitions: number): void; produce(topic: string, message: Message): void; consume(topic: string, groupId: string): Message[]; }",
+  "status": "ACTIVE"
+}

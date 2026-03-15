@@ -1,0 +1,4 @@
+{
+    "name": "JWT Authentication",
+    "description": "Stateless authentication with JSON Web Tokens, refresh tokens, and protected routes."
+}

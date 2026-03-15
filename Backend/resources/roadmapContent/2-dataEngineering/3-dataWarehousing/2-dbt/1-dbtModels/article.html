@@ -1,0 +1,76 @@
+<h1>dbt — Data Build Tool</h1>
+<p>dbt lets data analysts and engineers write transformation logic in SQL while applying software engineering best practices: version control, testing, documentation, and CI/CD.</p>
+
+<h2>What dbt Does</h2>
+<p>dbt handles only the <strong>Transform</strong> part of ELT (Extract, Load, Transform). You write SQL SELECT statements; dbt handles compilation, dependency resolution, and execution.</p>
+
+<h2>Project Structure</h2>
+<pre><code>my_dbt_project/
+├── dbt_project.yml        # Project config
+├── profiles.yml           # DB connections
+├── models/
+│   ├── staging/           # Clean raw data 1:1
+│   │   ├── stg_orders.sql
+│   │   └── stg_customers.sql
+│   ├── intermediate/      # Business logic joins
+│   │   └── int_orders_with_items.sql
+│   └── marts/             # Final analytics-ready tables
+│       ├── fct_sales.sql
+│       └── dim_customers.sql
+├── tests/
+│   └── assert_positive_revenue.sql
+└── macros/
+    └── cents_to_dollars.sql</code></pre>
+
+<h2>Writing Models (SQL SELECT statements)</h2>
+<pre><code>-- models/staging/stg_orders.sql
+SELECT
+    id                              AS order_id,
+    user_id                         AS customer_id,
+    created_at                      AS order_date,
+    status,
+    total_amount_cents / 100.0      AS total_amount_dollars
+FROM {{ source('raw', 'orders') }}
+WHERE status != 'test'
+
+-- models/marts/fct_sales.sql — references another model
+WITH orders AS (
+    SELECT * FROM {{ ref('stg_orders') }}  -- dependency!
+),
+customers AS (
+    SELECT * FROM {{ ref('stg_customers') }}
+)
+SELECT
+    o.order_id,
+    c.customer_name,
+    c.segment,
+    o.order_date,
+    o.total_amount_dollars
+FROM orders o
+LEFT JOIN customers c ON o.customer_id = c.customer_id</code></pre>
+
+<h2>dbt Tests</h2>
+<pre><code># schema.yml — out-of-the-box tests
+models:
+  - name: stg_orders
+    columns:
+      - name: order_id
+        tests:
+          - unique        # No duplicates
+          - not_null      # No nulls
+      - name: status
+        tests:
+          - accepted_values:
+              values: ['pending', 'completed', 'cancelled']
+      - name: customer_id
+        tests:
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id</code></pre>
+
+<h2>Key Commands</h2>
+<pre><code>dbt run              # Build all models
+dbt run --select fct_sales  # Build one model + its descendants
+dbt test             # Run all tests
+dbt docs generate    # Generate documentation site
+dbt docs serve       # View docs + lineage graph at localhost:8080</code></pre>

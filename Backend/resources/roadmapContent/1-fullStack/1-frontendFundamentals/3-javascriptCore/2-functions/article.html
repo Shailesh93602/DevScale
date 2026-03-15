@@ -1,0 +1,85 @@
+<h1>JavaScript Functions, Scope & Closures</h1>
+<p>Functions are the fundamental unit of code organisation in JavaScript. Understanding scope and closures is what separates junior from senior developers.</p>
+
+<h2>Ways to Define Functions</h2>
+<pre><code>// 1. Function Declaration (hoisted — can call before definition)
+function greet(name) {
+  return `Hello, ${name}!`;
+}
+
+// 2. Function Expression (not hoisted)
+const greet = function(name) {
+  return `Hello, ${name}!`;
+};
+
+// 3. Arrow Function (no own 'this', concise syntax)
+const greet = (name) => `Hello, ${name}!`;
+
+// Arrow with multiple statements
+const greet = (name) => {
+  const msg = `Hello, ${name}!`;
+  return msg.toUpperCase();
+};</code></pre>
+
+<h2>Parameters & Defaults</h2>
+<pre><code>function createUser(name, role = "user", active = true) {
+  return { name, role, active };
+}
+createUser("Alice");           // { name:"Alice", role:"user", active:true }
+createUser("Bob", "admin");    // { name:"Bob", role:"admin", active:true }
+
+// Rest parameters — collect remaining args into array
+function sum(first, ...rest) {
+  return rest.reduce((acc, n) => acc + n, first);
+}
+sum(1, 2, 3, 4); // 10</code></pre>
+
+<h2>Scope</h2>
+<pre><code>const globalVar = "global"; // Accessible everywhere
+
+function outer() {
+  const outerVar = "outer"; // Accessible inside outer & inner
+
+  function inner() {
+    const innerVar = "inner"; // Only accessible inside inner
+    console.log(outerVar);   // ✅ parent scope accessible
+    console.log(globalVar);  // ✅ global accessible
+  }
+
+  inner();
+  // console.log(innerVar); // ❌ ReferenceError
+}</code></pre>
+
+<h2>Closures</h2>
+<p>A closure is formed when a function <strong>remembers</strong> variables from its outer scope even after the outer function has returned. This is one of JavaScript's most powerful features.</p>
+<pre><code>function makeCounter(start = 0) {
+  let count = start; // private state
+
+  return {
+    increment: () => ++count,
+    decrement: () => --count,
+    reset:     () => { count = start; },
+    value:     () => count,
+  };
+}
+
+const counter = makeCounter(10);
+counter.increment(); // 11
+counter.increment(); // 12
+counter.decrement(); // 11
+counter.value();     // 11</code></pre>
+
+<h2>IIFE (Immediately Invoked Function Expression)</h2>
+<pre><code>// Creates a private scope without polluting the global scope
+const result = (function() {
+  const privateData = "hidden";
+  return { getData: () => privateData };
+})();
+result.getData(); // "hidden"</code></pre>
+
+<h2>Spread Operator</h2>
+<pre><code>const arr1 = [1, 2, 3];
+const arr2 = [...arr1, 4, 5];    // [1, 2, 3, 4, 5]
+
+const obj1 = { a: 1, b: 2 };
+const obj2 = { ...obj1, c: 3 };  // { a:1, b:2, c:3 }</code></pre>

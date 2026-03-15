@@ -1,0 +1,19 @@
+{
+  "title": "Build a GraphQL API",
+  "slug": "build-graphql-api",
+  "difficulty": "Hard",
+  "category": "backend",
+  "points": 150,
+  "tags": ["graphql", "api", "schema", "resolvers"],
+  "company_tags": ["Meta", "GitHub", "Shopify", "Airbnb", "Twitter"],
+  "topic_tags": ["GraphQL", "Schema Design", "Resolvers", "N+1 Problem", "DataLoader"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "GraphQL queries and mutations as strings with optional variables",
+  "output_format": "JSON response with data field and optional errors array",
+  "example_input": "query { user(id: \"1\") { name email posts { title } } }",
+  "example_output": "{ \"data\": { \"user\": { \"name\": \"Alice\", \"email\": \"alice@test.com\", \"posts\": [{ \"title\": \"Hello\" }] } } }",
+  "constraints": "Must handle nested queries up to 5 levels deep. Must prevent N+1 queries with DataLoader. Must support queries, mutations, and input validation.",
+  "function_signature": "class GraphQLServer { schema: GraphQLSchema; resolvers: Resolvers; execute(query: string, variables?: Record<string, any>): Promise<ExecutionResult>; }",
+  "status": "ACTIVE"
+}

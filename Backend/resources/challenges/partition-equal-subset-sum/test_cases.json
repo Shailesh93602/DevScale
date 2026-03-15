@@ -1,0 +1,12 @@
+[
+  { "input": "{\"nums\": [1,5,11,5]}", "output": "true", "explanation": "[1,5,5] and [11], both sum to 11", "is_hidden": false },
+  { "input": "{\"nums\": [1,2,3,5]}", "output": "false", "explanation": "Total=11 which is odd, impossible", "is_hidden": false },
+  { "input": "{\"nums\": [1,1]}", "output": "true", "explanation": "[1] and [1]", "is_hidden": false },
+  { "input": "{\"nums\": [1]}", "output": "false", "explanation": "Cannot split single element into two equal subsets", "is_hidden": true },
+  { "input": "{\"nums\": [1,2,3,4,5,6,7]}", "output": "true", "explanation": "Total=28, target=14. [1,6,7] and [2,3,4,5]", "is_hidden": true },
+  { "input": "{\"nums\": [100,100,100,100,100,100,100,100]}", "output": "true", "explanation": "Four 100s on each side", "is_hidden": true },
+  { "input": "{\"nums\": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]}", "output": "false", "explanation": "15 ones, total=15 is odd", "is_hidden": true },
+  { "input": "{\"nums\": [2,2,2,2,2,2,2,2,2,2]}", "output": "true", "explanation": "Five 2s on each side", "is_hidden": true },
+  { "input": "{\"nums\": [3,3,3,4,5]}", "output": "true", "explanation": "[3,3,3] sum=9 and [4,5] sum=9", "is_hidden": true },
+  { "input": "{\"nums\": [14,9,8,4,3,2]}", "output": "true", "explanation": "[14,4,2] sum=20 and [9,8,3] sum=20", "is_hidden": true }
+]

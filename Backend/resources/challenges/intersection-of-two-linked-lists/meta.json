@@ -1,0 +1,41 @@
+{
+  "title": "Intersection of Two Linked Lists",
+  "slug": "intersection-of-two-linked-lists",
+  "difficulty": "Easy",
+  "category": "algorithms",
+  "points": 50,
+  "tags": [
+    "hash-table",
+    "linked-list",
+    "two-pointers"
+  ],
+  "company_tags": [
+    "Amazon",
+    "Microsoft",
+    "Bloomberg",
+    "Adobe"
+  ],
+  "topic_tags": [
+    "linked lists",
+    "two pointers"
+  ],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "The heads of two singly linked lists `headA` and `headB`.",
+  "output_format": "The node at which the two lists intersect, or `null` if they do not.",
+  "example_input": "intersectVal = 8, listA = [4,1,8,4,5], listB = [5,6,1,8,4,5], skipA = 2, skipB = 3",
+  "example_output": "Intersected at '8'",
+  "constraints": "- The number of nodes of `listA` is in the `m`.\n- The number of nodes of `listB` is in the `n`.\n- `1 <= m, n <= 3 * 10^4`\n- `1 <= Node.val <= 10^5`\n- `0 <= skipA <= m`\n- `0 <= skipB <= n`",
+  "function_signature": "function getIntersectionNode(headA: ListNode | null, headB: ListNode | null): ListNode | null {}",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "input": "{\"Insurance\": [{\"pid\": 1, \"tiv_2015\": 10, \"tiv_2016\": 5, \"lat\": 10, \"lon\": 10}, {\"pid\": 2, \"tiv_2015\": 20, \"tiv_2016\": 20, \"lat\": 20, \"lon\": 20}, {\"pid\": 3, \"tiv_2015\": 10, \"tiv_2016\": 30, \"lat\": 20, \"lon\": 20}, {\"pid\": 4, \"tiv_2015\": 10, \"tiv_2016\": 40, \"lat\": 40, \"lon\": 40}]}",
+    "output": "[{\"tiv_2016\": 45.00}]",
+    "explanation": "Policyholders 1 and 4 qualify: shared tiv_2015=10 and unique locations. 5+40=45.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Insurance\": [{\"pid\": 1, \"tiv_2015\": 10, \"tiv_2016\": 100, \"lat\": 10, \"lon\": 10}]}",
+    "output": "[]",
+    "explanation": "Single policyholder cannot share tiv_2015 with anyone.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Insurance\": [{\"pid\": 1, \"tiv_2015\": 10, \"tiv_2016\": 50, \"lat\": 10, \"lon\": 10}, {\"pid\": 2, \"tiv_2015\": 10, \"tiv_2016\": 60, \"lat\": 20, \"lon\": 20}]}",
+    "output": "[{\"tiv_2016\": 110.00}]",
+    "explanation": "Both share tiv_2015=10 and have unique locations. 50+60=110.",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"Insurance\": [{\"pid\": 1, \"tiv_2015\": 10, \"tiv_2016\": 50, \"lat\": 10, \"lon\": 10}, {\"pid\": 2, \"tiv_2015\": 10, \"tiv_2016\": 60, \"lat\": 10, \"lon\": 10}]}",
+    "output": "[]",
+    "explanation": "Both share tiv_2015 but also share location, so neither qualifies.",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"Insurance\": [{\"pid\": 1, \"tiv_2015\": 10, \"tiv_2016\": 5, \"lat\": 10, \"lon\": 10}, {\"pid\": 2, \"tiv_2015\": 20, \"tiv_2016\": 20, \"lat\": 20, \"lon\": 20}, {\"pid\": 3, \"tiv_2015\": 10, \"tiv_2016\": 30, \"lat\": 30, \"lon\": 30}, {\"pid\": 4, \"tiv_2015\": 20, \"tiv_2016\": 40, \"lat\": 40, \"lon\": 40}]}",
+    "output": "[{\"tiv_2016\": 95.00}]",
+    "explanation": "All policyholders share tiv_2015 with someone and have unique locations. 5+20+30+40=95.",
+    "is_hidden": true
+  }
+]

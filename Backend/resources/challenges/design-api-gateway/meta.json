@@ -1,0 +1,19 @@
+{
+  "title": "Design an API Gateway",
+  "slug": "design-api-gateway",
+  "difficulty": "Hard",
+  "category": "system_design",
+  "points": 200,
+  "tags": ["api-gateway", "microservices", "routing", "security"],
+  "company_tags": ["Amazon", "Netflix", "Uber", "Lyft"],
+  "topic_tags": ["Reverse Proxy", "Load Balancing", "Authentication", "Rate Limiting", "Request Transformation"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Incoming HTTP requests with various paths, headers, and payloads",
+  "output_format": "Routed requests to downstream services or error responses (4xx, 5xx)",
+  "example_input": "GET /api/v1/orders HTTP/1.1\nHost: api.shop.com\nAuthorization: Bearer <token>",
+  "example_output": "Forward to OrderService:8080/orders",
+  "constraints": "Must handle 1M+ requests per second. Latency overhead < 5ms. Support dynamic routing and circuit breaking. Handle SSL termination and logging.",
+  "function_signature": "class ApiGateway { route(request: HttpRequest): Promise<HttpResponse>; addService(config: ServiceConfig): void; applyMiddleware(middleware: Middleware): void; }",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,19 @@
+{
+  "title": "Deep Clone an Object",
+  "slug": "deep-clone-object",
+  "difficulty": "Medium",
+  "category": "frontend",
+  "points": 100,
+  "tags": ["javascript", "objects", "recursion", "deep-copy"],
+  "company_tags": ["Google", "Meta", "Amazon", "Microsoft", "Uber"],
+  "topic_tags": ["Recursion", "Objects", "Data Structures"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Any JavaScript value (object, array, primitive, Date, RegExp, etc.)",
+  "output_format": "A deep copy where no references are shared with the original",
+  "example_input": "deepClone({ a: 1, b: { c: 2 } })",
+  "example_output": "{ a: 1, b: { c: 2 } } (new references)",
+  "constraints": "Input can be any JSON-serializable value plus Date, RegExp, Map, Set. Handle circular references.",
+  "function_signature": "function deepClone<T>(obj: T): T",
+  "status": "ACTIVE"
+}

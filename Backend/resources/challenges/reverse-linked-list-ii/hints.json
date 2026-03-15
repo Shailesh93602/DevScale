@@ -1,0 +1,6 @@
+[
+  "Use a dummy node before the head to handle the case where left = 1 without special logic.",
+  "Navigate to the node just before position 'left'. This node stays fixed while you reverse the sublist after it.",
+  "To reverse in-place, think about repeatedly taking the node after 'start' and inserting it right after 'prev'.",
+  "You need (right - left) such operations to fully reverse the sublist."
+]

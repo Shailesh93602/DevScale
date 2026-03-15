@@ -1,0 +1,10 @@
+{
+  "typescript": "/**\n * Definition for a binary tree node.\n * class TreeNode {\n *     val: number\n *     left: TreeNode | null\n *     right: TreeNode | null\n *     constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.left = (left===undefined ? null : left)\n *         this.right = (right===undefined ? null : right)\n *     }\n * }\n */\n\nfunction hasPathSum(root: TreeNode | null, targetSum: number): boolean {\n    \n};",
+  "javascript": "/**\n * @param {TreeNode} root\n * @param {number} targetSum\n * @return {boolean}\n */\nvar hasPathSum = function(root, targetSum) {\n    \n};",
+  "python": "class Solution:\n    def hasPathSum(self, root: Optional[TreeNode], targetSum: int) -> bool:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public boolean hasPathSum(TreeNode root, int targetSum) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool hasPathSum(TreeNode* root, int targetSum) {\n        \n    }\n};",
+  "go": "func hasPathSum(root *TreeNode, targetSum int) bool {\n    \n}",
+  "rust": "use std::rc::Rc;\nuse std::cell::RefCell;\nimpl Solution {\n    pub fn has_path_sum(root: Option<Rc<RefCell<TreeNode>>>, target_sum: i32) -> bool {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public bool HasPathSum(TreeNode root, int targetSum) {\n        \n    }\n}"
+}

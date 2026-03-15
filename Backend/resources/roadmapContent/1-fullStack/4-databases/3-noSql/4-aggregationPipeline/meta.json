@@ -1,0 +1,4 @@
+{
+    "name": "MongoDB Aggregation Pipeline",
+    "description": "Mastering advanced analytical queries. Processing massive datasets sequentially using the $match, $group, $sort, and $lookup stages to compute custom metrics inside the database."
+}

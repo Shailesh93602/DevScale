@@ -1,0 +1,92 @@
+<h1>Terraform in CI/CD Pipelines</h1>
+<p>Running <code>terraform apply</code> manually from a developer's laptop is error-prone and hard to audit. In a mature DevOps culture, infrastructure changes go through the same review process as application code: a pull request, an automated plan preview, peer review, and only then an automated apply. This is GitOps for infrastructure.</p>
+
+<h2>The Core Pattern: Plan on PR, Apply on Merge</h2>
+<pre><code class="language-yaml"># .github/workflows/terraform.yml
+name: Terraform CI/CD
+
+on:
+  pull_request:
+    branches: [main]
+    paths: ['infrastructure/**']
+  push:
+    branches: [main]
+    paths: ['infrastructure/**']
+
+jobs:
+  terraform-plan:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::123456789:role/github-actions-terraform
+          aws-region: us-east-1
+      
+      - name: Terraform Init
+        run: terraform init
+        working-directory: infrastructure/
+      
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan -no-color 2>&1 | tee plan_output.txt
+        working-directory: infrastructure/
+      
+      - name: Post Plan to PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const plan = require('fs').readFileSync('plan_output.txt', 'utf8');
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              body: `### Terraform Plan\n\`\`\`\n${plan}\n\`\`\``
+            });
+
+  terraform-apply:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment: production   # Requires manual approval in GitHub Environments
+    steps:
+      - uses: actions/checkout@v4
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+</code></pre>
+
+<h2>OIDC: Keyless AWS Authentication</h2>
+<p>Rather than storing long-lived AWS Access Keys as GitHub Secrets (a significant security risk if ever exposed), use <strong>OIDC (OpenID Connect)</strong> to allow GitHub Actions to assume an IAM Role directly via a short-lived token:</p>
+<pre><code class="language-hcl"># Terraform: create the OIDC trust relationship
+resource "aws_iam_openid_connect_provider" "github" {
+  url             = "https://token.actions.githubusercontent.com"
+  client_id_list  = ["sts.amazonaws.com"]
+}
+
+resource "aws_iam_role" "github_actions" {
+  name = "github-actions-terraform"
+  assume_role_policy = jsonencode({
+    Statement = [{
+      Effect    = "Allow"
+      Principal = { Federated = aws_iam_openid_connect_provider.github.arn }
+      Action    = "sts:AssumeRoleWithWebIdentity"
+      Condition = {
+        StringLike = {
+          "token.actions.githubusercontent.com:sub" = "repo:myorg/myrepo:*"
+        }
+      }
+    }]
+  })
+}
+</code></pre>
+
+<h2>Drift Detection</h2>
+<p>Infrastructure drift occurs when someone makes a manual change to AWS (e.g., changes a Security Group rule in the console) that is not reflected in the Terraform code. Schedule a nightly drift detection job:</p>
+<pre><code class="language-bash"># terraform plan returns exit code 2 if there are changes (drift detected)
+terraform plan -detailed-exitcode
+# Exit code 0 = no changes, 1 = error, 2 = changes exist (drift!)
+
+if [ $? -eq 2 ]; then
+    # Send Slack alert: "Infrastructure drift detected in production!"
+    curl -X POST $SLACK_WEBHOOK -d '{"text": "⚠️ Terraform drift detected!"}'
+fi
+</code></pre>

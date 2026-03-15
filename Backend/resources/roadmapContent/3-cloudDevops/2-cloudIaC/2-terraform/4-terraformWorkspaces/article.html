@@ -1,0 +1,73 @@
+<h1>Terraform Workspaces & Remote Backends</h1>
+<p>One of the most dangerous scenarios in infrastructure-as-code is two engineers running <code>terraform apply</code> simultaneously against the same environment, potentially corrupting the state file. Or an engineer running <code>terraform apply</code> from their laptop using a local <code>terraform.tfstate</code> file that is not shared with the team. Remote backends and state locking solve both of these critical problems.</p>
+
+<h2>The Problem with Local State</h2>
+<p>By default, Terraform stores state in a local <code>terraform.tfstate</code> file. This is fine for solo projects but breaks completely in teams:</p>
+<ul>
+  <li>No other team member has access to your local state file</li>
+  <li>Two simultaneous <code>terraform apply</code> runs can corrupt state</li>
+  <li>The state file contains sensitive data (passwords from resources) — it should not be committed to Git</li>
+</ul>
+
+<h2>Remote Backend: S3 + DynamoDB</h2>
+<p>The standard pattern for team-based Terraform is storing state in S3 (durable, versioned, encrypted) with DynamoDB providing state locking (preventing concurrent modifications):</p>
+<pre><code class="language-hcl"># backend.tf — Configure remote state storage
+terraform {
+  backend "s3" {
+    bucket         = "mycompany-terraform-state"
+    key            = "production/vpc/terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true  # Encrypt state at rest (contains passwords!)
+    
+    # DynamoDB table for state locking
+    dynamodb_table = "terraform-state-locks"
+  }
+}
+</code></pre>
+<p>When you run <code>terraform apply</code>, Terraform:</p>
+<ol>
+  <li>Writes a lock entry to DynamoDB with the current user's identity</li>
+  <li>If another apply is running, it finds the DynamoDB lock and refuses to proceed</li>
+  <li>On completion, releases the DynamoDB lock</li>
+</ol>
+
+<h2>Terraform Workspaces</h2>
+<p>Workspaces allow a single Terraform configuration to manage multiple isolated environments (dev, staging, prod) without duplicating code:</p>
+<pre><code class="language-bash"># Create and switch between workspaces
+terraform workspace new dev
+terraform workspace new staging
+terraform workspace new production
+terraform workspace select production
+
+# The current workspace is accessible in HCL as ${terraform.workspace}
+terraform workspace show  # prints current workspace name
+</code></pre>
+<pre><code class="language-hcl"># variables.tf — Use workspace to drive environment-specific values
+locals {
+  env_config = {
+    dev        = { instance_type = "t3.micro",   min_size = 1, max_size = 2  }
+    staging    = { instance_type = "t3.medium",  min_size = 2, max_size = 5  }
+    production = { instance_type = "m6i.xlarge", min_size = 4, max_size = 20 }
+  }
+  current = local.env_config[terraform.workspace]
+}
+
+resource "aws_instance" "app" {
+  instance_type = local.current.instance_type
+}
+</code></pre>
+<p>Each workspace stores its own separate state file in S3: <code>env:/dev/terraform.tfstate</code>, <code>env:/production/terraform.tfstate</code>, ensuring complete isolation between environments.</p>
+
+<h2>State Manipulation Commands</h2>
+<pre><code class="language-bash"># Show the current state (what Terraform knows about your infrastructure)
+terraform state list
+
+# Import an existing resource into Terraform state (brought under TF management)
+terraform import aws_s3_bucket.logs mycompany-existing-logs-bucket
+
+# Remove a resource from state WITHOUT destroying it (stops managing it)
+terraform state rm aws_s3_bucket.old_bucket
+
+# Move a resource in state (after renaming it in HCL)
+terraform state mv aws_instance.old_name aws_instance.new_name
+</code></pre>

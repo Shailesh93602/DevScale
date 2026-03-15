@@ -1,0 +1,19 @@
+{
+  "title": "WebSocket Real-Time Notifications",
+  "slug": "websocket-notifications",
+  "difficulty": "Hard",
+  "category": "backend",
+  "points": 150,
+  "tags": ["websocket", "real-time", "notifications", "socket.io"],
+  "company_tags": ["Slack", "Discord", "Meta", "Twitch", "Google"],
+  "topic_tags": ["WebSocket", "Real-Time Communication", "Event-Driven", "Pub/Sub", "Connection Management"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "WebSocket connection events, notification payloads, room subscriptions",
+  "output_format": "Real-time notification delivery to connected clients with acknowledgements",
+  "example_input": "connect(userId: 'user1'); subscribe('order-updates'); emit('new-order', {orderId: 123})",
+  "example_output": "Client user1 receives: { type: 'new-order', data: {orderId: 123}, timestamp: '...' }",
+  "constraints": "Must handle 10K concurrent connections. Must support rooms/channels. Must handle reconnection. Must deliver notifications in order. Must support acknowledgements.",
+  "function_signature": "class NotificationServer { onConnection(socket): void; send(userId: string, notification: Notification): void; broadcast(room: string, notification: Notification): void; getOnlineUsers(): string[]; }",
+  "status": "ACTIVE"
+}

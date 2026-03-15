@@ -1,0 +1,105 @@
+<h1>Model Evaluation Metrics</h1>
+<p>Training a machine learning model is only half the battle; the other half is rigorously proving it works. Relying purely on "Accuracy" is the most common and dangerous trap for beginners, especially when dealing with imbalanced datasets (e.g., fraud detection, where 99.9% of transactions are legitimate). To evaluate a model correctly, you need metrics specifically tailored to your business problem.</p>
+
+<h2>The Confusion Matrix</h2>
+<p>For binary classification (Positive vs. Negative), every prediction falls into one of four buckets:</p>
+<ul>
+  <li><strong>True Positive (TP)</strong>: Predicts fraud, and it <em>is</em> fraud.</li>
+  <li><strong>True Negative (TN)</strong>: Predicts normal, and it <em>is</em> normal.</li>
+  <li><strong>False Positive (FP) (Type I Error)</strong>: Predicts fraud, but it is <em>normal</em> (Customer's card is blocked).</li>
+  <li><strong>False Negative (FN) (Type II Error)</strong>: Predicts normal, but it is <em>fraud</em> (Company loses money).</li>
+</ul>
+
+<pre><code>import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.metrics import confusion_matrix
+import numpy as np
+
+# y_test are actual labels, y_pred are model predictions
+y_test = [0, 1, 0, 0, 1, 0, 1, 1, 0, 0] # 0: Normal, 1: Fraud
+y_pred = [0, 1, 0, 1, 0, 0, 1, 1, 0, 0] 
+
+# Calculate the confusion matrix
+cm = confusion_matrix(y_test, y_pred)
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+            xticklabels=['Pred Normal', 'Pred Fraud'], 
+            yticklabels=['Actual Normal', 'Actual Fraud'])
+plt.ylabel('True label')
+plt.xlabel('Predicted label')
+plt.title('Confusion Matrix')
+plt.show()</code></pre>
+
+<h2>Precision, Recall, and the F1-Score</h2>
+<p>Since a 99% accuracy on a 99% imbalanced dataset means the model just guessed "Normal" every time, we use conditional metrics:</p>
+
+<h3>Precision: "When you cry wolf, is there actually a wolf?"</h3>
+<p><code>Precision = TP / (TP + FP)</code><br>Out of all the transactions the <em>model flagged</em> as fraud, what percentage were <em>actually</em> fraud? High precision minimizes False Positives (fewer false alarms blocking legitimate cards).</p>
+
+<h3>Recall (Sensitivity): "Did you catch all the wolves?"</h3>
+<p><code>Recall = TP / (TP + FN)</code><br>Out of all the <em>actual</em> fraud transactions naturally occurring, what percentage did the model <em>correctly identify</em>? High recall minimizes False Negatives (letting less fraud slip through).</p>
+
+<h3>The F1-Score: The Harmonic Mean</h3>
+<p>Precision and Recall are always a trade-off. If you flag everything as fraud, your Recall is 100%, but your Precision is 1%. The <strong>F1-Score</strong> is the harmonic mean of both, providing a single metric for imbalanced classes.</p>
+
+<pre><code>from sklearn.metrics import classification_report
+
+# Prints Precision, Recall, and F1-Score for each class separately
+print(classification_report(y_test, y_pred, target_names=['Normal', 'Fraud']))
+
+# Output looks like:
+#               precision    recall  f1-score   support
+#       Normal       0.83      0.83      0.83         6
+#        Fraud       0.75      0.75      0.75         4
+#     accuracy                           0.80        10
+#    macro avg       0.79      0.79      0.79        10</code></pre>
+
+<h2>The ROC Curve and AUC (Area Under Curve)</h2>
+<p>Most classifiers don't just output 0 or 1; they output a probability (e.g., <code>0.82 probability of Fraud</code>). By default, we use a threshold of <code>0.5</code>. If we lower the threshold to <code>0.2</code>, we increase Recall but destroy Precision.</p>
+<p>The <strong>ROC Curve (Receiver Operating Characteristic)</strong> plots the True Positive Rate against the False Positive Rate at <em>every possible threshold</em> from 0.00 to 1.00.</p>
+<p>The <strong>AUC (Area Under the Curve)</strong> is a single number summarizing the ROC curve. An AUC of 1.0 is perfect; an AUC of 0.5 is random guessing. AUC is scale-invariant (it only cares about the ranking order of probabilities, not their absolute values).</p>
+
+<pre><code>from sklearn.metrics import roc_curve, roc_auc_score
+
+# Get the probability of the positive class (column 1)
+y_prob = model.predict_proba(X_test)[:, 1]
+
+# Calculate the AUC Score
+auc = roc_auc_score(y_test, y_prob)
+print(f"Model AUC is: {auc:.3f}")
+
+# Plotting the ROC curve
+fpr, tpr, thresholds = roc_curve(y_test, y_prob)
+plt.plot(fpr, tpr, label=f'ROC Curve (AUC = {auc:.2f})')
+plt.plot([0, 1], [0, 1], 'k--') # Diagonal representing random guessing
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.legend()
+plt.show()</code></pre>
+
+<h2>Regression Metrics</h2>
+<p>You cannot use classification metrics for predicting continuous numbers (e.g., predicting House Prices).</p>
+
+<h3>Mean Absolute Error (MAE)</h3>
+<p>The average magnitude of the errors without considering their direction. If MAE is $5,000, your house price predictions are off by $5,000 on average.</p>
+
+<h3>Mean Squared Error (MSE) & Root Mean Squared Error (RMSE)</h3>
+<p>Squares the errors before averaging them. This heavily penalizes large outlier errors. RMSE takes the square root, returning the metric to the original units (dollars).</p>
+
+<h3>R-Squared (Coefficient of Determination)</h3>
+<p>Returns the percentage of variance in the dependent variable explained by the independent variables. R² = 1 is perfect prediction; R² = 0 means the model is no better than just guessing the dataset's mean value.</p>
+
+<pre><code>from sklearn.metrics import mean_absolute_error, root_mean_squared_error, r2_score
+
+y_true = [300000, 450000, 500000]
+y_pred = [310000, 430000, 505000]
+
+print(f"MAE:  ${mean_absolute_error(y_true, y_pred):,.0f}")  # $11,667
+print(f"RMSE: ${root_mean_squared_error(y_true, y_pred):,.0f}") # $13,229
+print(f"R²:   {r2_score(y_true, y_pred):.3f}")               # 0.978</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li><strong>Never use Accuracy for imbalanced data.</strong> If predicting a disease that occurs in 1% of patients, a model that simply outputs "Healthy" for everyone achieves 99% accuracy but is completely useless. Use AUC or F1-Score instead.</li>
+  <li><strong>Optimize for your business constraint.</strong> In cancer screening, you want extremely high Recall (catch all tumors) even if Precision drops (false alarms cause anxiety, but missing a tumor is fatal).</li>
+  <li><strong>Cross-Validation.</strong> A high score on a single Train/Test split might be luck. Use K-Fold Cross-Validation to ensure your metrics are stable across all segments of your data.</li>
+</ul>

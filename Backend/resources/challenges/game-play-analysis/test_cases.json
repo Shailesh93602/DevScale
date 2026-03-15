@@ -1,0 +1,32 @@
+[
+  {
+    "input": "{\"Activity\": [{\"player_id\": 1, \"device_id\": 2, \"event_date\": \"2016-03-01\", \"games_played\": 5}, {\"player_id\": 1, \"device_id\": 2, \"event_date\": \"2016-05-02\", \"games_played\": 6}, {\"player_id\": 2, \"device_id\": 3, \"event_date\": \"2017-06-25\", \"games_played\": 1}, {\"player_id\": 3, \"device_id\": 1, \"event_date\": \"2016-03-02\", \"games_played\": 0}, {\"player_id\": 3, \"device_id\": 4, \"event_date\": \"2018-07-03\", \"games_played\": 5}]}",
+    "output": "[{\"player_id\": 1, \"first_login\": \"2016-03-01\"}, {\"player_id\": 2, \"first_login\": \"2017-06-25\"}, {\"player_id\": 3, \"first_login\": \"2016-03-02\"}]",
+    "explanation": "Each player's earliest event_date.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Activity\": [{\"player_id\": 1, \"device_id\": 1, \"event_date\": \"2020-01-01\", \"games_played\": 3}]}",
+    "output": "[{\"player_id\": 1, \"first_login\": \"2020-01-01\"}]",
+    "explanation": "Single activity row.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Activity\": [{\"player_id\": 1, \"device_id\": 1, \"event_date\": \"2020-12-31\", \"games_played\": 1}, {\"player_id\": 1, \"device_id\": 2, \"event_date\": \"2020-01-01\", \"games_played\": 2}]}",
+    "output": "[{\"player_id\": 1, \"first_login\": \"2020-01-01\"}]",
+    "explanation": "Earlier date 2020-01-01 is the first login.",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"Activity\": [{\"player_id\": 1, \"device_id\": 1, \"event_date\": \"2020-01-01\", \"games_played\": 0}, {\"player_id\": 2, \"device_id\": 2, \"event_date\": \"2020-01-01\", \"games_played\": 0}]}",
+    "output": "[{\"player_id\": 1, \"first_login\": \"2020-01-01\"}, {\"player_id\": 2, \"first_login\": \"2020-01-01\"}]",
+    "explanation": "Both players first logged in on the same day.",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"Activity\": [{\"player_id\": 5, \"device_id\": 1, \"event_date\": \"2019-05-10\", \"games_played\": 3}, {\"player_id\": 5, \"device_id\": 1, \"event_date\": \"2019-05-11\", \"games_played\": 4}, {\"player_id\": 5, \"device_id\": 2, \"event_date\": \"2019-05-09\", \"games_played\": 1}]}",
+    "output": "[{\"player_id\": 5, \"first_login\": \"2019-05-09\"}]",
+    "explanation": "Earliest date is 2019-05-09.",
+    "is_hidden": true
+  }
+]

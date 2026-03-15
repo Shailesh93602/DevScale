@@ -1,0 +1,65 @@
+# Agent 1 - Dynamic Programming Challenge Tracker
+
+## EXISTING DRAFTS TO COMPLETE (18)
+- [~] climbing-stairs
+- [ ] house-robber
+- [ ] house-robber-ii
+- [ ] coin-change
+- [ ] longest-increasing-subsequence
+- [ ] longest-common-subsequence
+- [ ] word-break
+- [ ] combination-sum-iv
+- [ ] unique-paths
+- [ ] unique-paths-ii
+- [ ] decode-ways
+- [ ] partition-equal-subset-sum
+- [ ] target-sum
+- [ ] edit-distance
+- [ ] interleaving-string
+- [ ] burst-balloons
+- [ ] regular-expression-matching
+- [ ] longest-palindromic-substring
+
+## NEW CHALLENGES TO CREATE (42)
+- [ ] min-cost-climbing-stairs
+- [ ] fibonacci-number
+- [ ] tribonacci
+- [ ] best-time-buy-sell-stock-ii
+- [ ] best-time-buy-sell-stock-iii
+- [ ] best-time-buy-sell-stock-iv
+- [ ] best-time-buy-sell-cooldown
+- [ ] best-time-buy-sell-fee
+- [ ] minimum-path-sum
+- [ ] triangle
+- [ ] maximal-square
+- [ ] maximal-rectangle
+- [ ] longest-palindromic-subsequence
+- [ ] palindrome-partitioning-ii
+- [ ] distinct-subsequences
+- [ ] scramble-string
+- [ ] dungeon-game
+- [ ] cherry-pickup
+- [ ] cherry-pickup-ii
+- [ ] count-palindromic-subsequences
+- [ ] coin-change-ii
+- [ ] perfect-squares
+- [ ] knight-dialer
+- [ ] ones-and-zeroes
+- [ ] profitable-schemes
+- [ ] longest-string-chain
+- [ ] number-of-lis
+- [ ] russian-doll-envelopes
+- [ ] matrix-chain-multiplication
+- [ ] stone-game
+- [ ] stone-game-ii
+- [ ] delete-operation-two-strings
+- [ ] min-ascii-delete-sum
+- [ ] uncrossed-lines
+- [ ] max-length-repeated-subarray
+- [ ] paint-house
+- [ ] paint-house-ii
+- [ ] arithmetic-slices
+- [ ] arithmetic-slices-ii
+- [ ] frog-jump
+- [ ] wildcard-matching-dp
+- [ ] word-break-ii

@@ -1,0 +1,77 @@
+<h1>API Security Best Practices</h1>
+<p>Security is not optional. A single vulnerability can compromise all your users' data. These are the must-implement protections for every production API.</p>
+
+<h2>1. Helmet.js — Security Headers</h2>
+<pre><code>import helmet from "helmet";
+app.use(helmet()); // Sets 11+ security HTTP headers automatically
+
+// What helmet sets:
+// X-Content-Type-Options: nosniff
+// X-Frame-Options: DENY
+// Content-Security-Policy: ...
+// Strict-Transport-Security: max-age=15552000
+// And more...</code></pre>
+
+<h2>2. CORS — Control Who Can Call Your API</h2>
+<pre><code>import cors from "cors";
+
+app.use(cors({
+  origin: ["https://myapp.com", "https://www.myapp.com"],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true, // Allow cookies
+}));</code></pre>
+
+<h2>3. Rate Limiting — Prevent Brute Force & DoS</h2>
+<pre><code>import rateLimit from "express-rate-limit";
+
+// General API limit
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100,                  // 100 requests per window
+  standardHeaders: true,
+  message: { error: "Too many requests, try again later" },
+});
+
+// Stricter for auth endpoints
+const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 5 });
+
+app.use("/api", apiLimiter);
+app.use("/api/auth/login", authLimiter);</code></pre>
+
+<h2>4. Input Validation & Sanitization</h2>
+<pre><code>import { z } from "zod"; // Zod schema validation
+
+const createUserSchema = z.object({
+  email: z.string().email().max(255),
+  password: z.string().min(8).max(64),
+  name: z.string().min(2).max(100).regex(/^[a-zA-Z\s]+$/),
+});
+
+router.post("/users", async (req, res) =&gt; {
+  const result = createUserSchema.safeParse(req.body);
+  if (!result.success) {
+    return res.status(422).json({ errors: result.error.flatten() });
+  }
+  // result.data is now typed and validated
+  await UserService.create(result.data);
+});</code></pre>
+
+<h2>5. SQL Injection Prevention</h2>
+<pre><code>// ❌ NEVER do this — raw string interpolation
+const user = await db.query(`SELECT * FROM users WHERE email = '${email}'`);
+
+// ✅ Use parameterized queries (your ORM does this automatically)
+const user = await prisma.user.findUnique({ where: { email } });
+const user = await db.query("SELECT * FROM users WHERE email = $1", [email]);</code></pre>
+
+<h2>6. OWASP Top 10 Quick Reference</h2>
+<ul>
+  <li><strong>Injection</strong> — Use parameterized queries and ORMs.</li>
+  <li><strong>Broken Auth</strong> — Use bcrypt, short-lived JWTs, MFA.</li>
+  <li><strong>Sensitive Data</strong> — HTTPS everywhere, never log passwords.</li>
+  <li><strong>XSS</strong> — Sanitize output, use Content-Security-Policy.</li>
+  <li><strong>CSRF</strong> — Use SameSite cookies, CSRF tokens.</li>
+  <li><strong>Security Misconfiguration</strong> — Use Helmet, disable X-Powered-By.</li>
+  <li><strong>Vulnerable Dependencies</strong> — Run <code>npm audit</code> regularly.</li>
+</ul>

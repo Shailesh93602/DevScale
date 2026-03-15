@@ -1,0 +1,19 @@
+{
+  "title": "Min Cost Climbing Stairs",
+  "slug": "min-cost-climbing-stairs",
+  "difficulty": "Easy",
+  "category": "algorithms",
+  "points": 50,
+  "tags": ["dynamic-programming", "array"],
+  "company_tags": ["Amazon", "Google", "Microsoft", "Apple"],
+  "topic_tags": ["dynamic programming"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer array `cost` where `cost[i]` is the cost of the `ith` step.",
+  "output_format": "The minimum cost to reach the top of the floor.",
+  "example_input": "cost = [10,15,20]",
+  "example_output": "15",
+  "constraints": "- `2 <= cost.length <= 1000`\n- `0 <= cost[i] <= 999`",
+  "function_signature": "function minCostClimbingStairs(cost: number[]): number {}",
+  "status": "ACTIVE"
+}

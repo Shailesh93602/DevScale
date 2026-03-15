@@ -1,0 +1,4 @@
+{
+    "name": "Docker: Multi-Stage Builds, Compose & Production",
+    "description": "Advanced Docker techniques used in production. Multi-stage builds to create minimal production images (build stage with all dev tools → runtime stage with only the binary), Docker Compose for local development environments with service dependencies, health checks, and service ordering, building efficient layer caches by ordering Dockerfile instructions correctly, Docker security best practices (non-root user, read-only filesystem, no secrets in layers), and pushing images to container registries."
+}

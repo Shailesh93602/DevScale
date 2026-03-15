@@ -1,0 +1,6 @@
+[
+  "Store the subscribe function in the constructor. Only call it when subscribe() is invoked (lazy execution).",
+  "Wrap the user's observer in a safe observer that tracks isComplete and isUnsubscribed flags to prevent emissions after termination.",
+  "For map/filter: return a new Observable whose subscribe function subscribes to `this` and transforms/filters values before passing to the outer observer.",
+  "For fromPromise: create an Observable that calls promise.then(value => { observer.next(value); observer.complete(); }, err => observer.error(err))."
+]

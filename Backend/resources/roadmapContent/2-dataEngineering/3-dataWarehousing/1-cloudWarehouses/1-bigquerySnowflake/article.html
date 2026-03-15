@@ -1,0 +1,57 @@
+<h1>Cloud Data Warehouses — BigQuery & Snowflake</h1>
+<p>Cloud data warehouses are purpose-built for analytical (OLAP) workloads — scanning and aggregating billions of rows quickly using columnar storage and massively parallel processing.</p>
+
+<h2>OLTP vs OLAP</h2>
+<ul>
+  <li><strong>OLTP</strong> (PostgreSQL, MySQL) — Row-oriented, fast single-row reads/writes, operational.</li>
+  <li><strong>OLAP</strong> (BigQuery, Snowflake) — Column-oriented, fast full-column scans, analytical.</li>
+</ul>
+
+<h2>BigQuery (Google Cloud)</h2>
+<pre><code>-- Serverless — no infrastructure to manage
+-- Pay per query ($ per TB scanned) or flat rate
+
+-- Partitioned table — drastically reduces scan costs
+CREATE TABLE sales.orders
+PARTITION BY DATE(order_date)
+CLUSTER BY region, product_id
+AS SELECT * FROM raw.orders;
+
+-- Query only the partition you need
+SELECT region, SUM(revenue)
+FROM sales.orders
+WHERE DATE(order_date) BETWEEN '2024-01-01' AND '2024-03-31'
+GROUP BY region;
+
+-- BigQuery ML — train models directly in SQL!
+CREATE OR REPLACE MODEL sales.forecast_model
+OPTIONS(model_type='linear_reg', input_label_cols=['revenue'])
+AS SELECT * FROM sales.training_data;</code></pre>
+
+<h2>Snowflake</h2>
+<pre><code>-- Virtual Warehouses — compute you can scale and pause
+ALTER WAREHOUSE my_wh SET WAREHOUSE_SIZE = 'X-LARGE';
+ALTER WAREHOUSE my_wh SUSPEND;
+
+-- Zero-copy cloning — instant snapshot for testing
+CREATE DATABASE test_db CLONE prod_db;
+
+-- Time Travel — query historical data
+SELECT * FROM orders AT (TIMESTAMP =&gt; '2024-01-01 00:00:00');
+SELECT * FROM orders BEFORE (STATEMENT =&gt; '&lt;query_id&gt;'); -- Undo a bad DML
+
+-- Streams + Tasks — CDC and automation
+CREATE STREAM orders_stream ON TABLE orders;
+CREATE TASK process_stream
+  WAREHOUSE = compute_wh
+  SCHEDULE = 'USING CRON 0 * * * * UTC'
+AS INSERT INTO processed_orders SELECT * FROM orders_stream WHERE METADATA$ACTION = 'INSERT';</code></pre>
+
+<h2>Star Schema — Dimensional Modelling</h2>
+<pre><code>-- Fact table: measurements/events
+fact_sales (sale_id, date_id, product_id, region_id, quantity, revenue)
+
+-- Dimension tables: descriptive attributes
+dim_date    (date_id, date, year, quarter, month, week, day_of_week)
+dim_product (product_id, name, category, brand, cost)
+dim_region  (region_id, city, state, country, timezone)</code></pre>

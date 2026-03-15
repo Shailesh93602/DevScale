@@ -1,0 +1,5 @@
+[
+  "Consider the bitwise properties. As numbers increase, the lower bits flip frequently.",
+  "What is the common prefix of the binary representations of 'left' and 'right'?",
+  "The bitwise AND of a range will keep only the common high-order bits that stay the same across the entire range."
+]

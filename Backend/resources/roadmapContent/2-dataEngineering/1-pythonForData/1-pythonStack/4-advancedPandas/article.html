@@ -1,0 +1,37 @@
+<h1>Advanced Pandas & Vectorization</h1>
+<p>As a Data Engineer, you will process datasets with millions of rows. Standard Python `for` loops are too slow for this scale. To process massive datasets efficiently in Pandas, you must use Vectorization.</p>
+
+<h2>The Problem with Iteration</h2>
+<p>If you have a DataFrame with 5 million rows containing `price` and `tax_rate`, you might try to iterate through the data row by row using `df.iterrows()`. This approach forces Python, an interpreted language, to evaluate the loop 5 million times. This can take several minutes to run.</p>
+
+<h2>The Power of Vectorization</h2>
+<p>Pandas is built on top of NumPy, which is written in highly optimized C. Vectorization means applying an operation to an entire array or column at once, pushing the loop down to the compiled C level.</p>
+<pre><code class="language-python"># SLOW Iteration (Never do this)
+total_costs = []
+for index, row in df.iterrows():
+    total_costs.append(row['price'] * row['tax_rate'])
+df['total_cost'] = total_costs
+
+# FAST Vectorization (Always do this)
+df['total_cost'] = df['price'] * df['tax_rate']
+</code></pre>
+<p>The vectorized approach is often 100x to 1000x faster than the Pandas `iterrows()` method. When manipulating strings or dates, always use the built-in vectorized accessors like `df['date'].dt.month` or `df['name'].str.upper()`.</p>
+
+<h2>GroupBy and Aggregation</h2>
+<p>The `groupby` operation is essential for data aggregation. It separates the data into distinct groups, applies a mathematical function, and combines the results. This is known as the Split-Apply-Combine strategy.</p>
+<pre><code class="language-python"># Calculate the average revenue per store
+store_performance = df.groupby('store_id')['revenue'].mean()
+
+# Apply multiple different aggregations simultaneously
+complex_agg = df.groupby('store_id').agg({
+    'revenue': ['sum', 'mean'],
+    'customer_count': 'max'
+})
+</code></pre>
+
+<h2>Window Functions (Rolling Means)</h2>
+<p>Data Engineers frequently analyze time-series data. Calculating a 7-day moving average requires a Window Function. Pandas provides the `rolling()` method to evaluate metrics over a specific preceding window of rows.</p>
+<pre><code class="language-python"># Calculate a 7-day rolling average for daily sales
+df['7_day_avg'] = df['daily_sales'].rolling(window=7).mean()
+</code></pre>
+<p>Window functions are crucial for smoothing out noisy data and identifying underlying trends without writing complex, nested iteration logic.</p>

@@ -1,0 +1,62 @@
+<h1>Secrets Management in CI/CD</h1>
+<p>Secrets — database passwords, API keys, TLS certificates, SSH private keys — are the most sensitive assets in any software system. Yet they are routinely mishandled: committed to Git, stored in environment variables visible in CI logs, hardcoded in Dockerfiles, or emailed between engineers. A single leaked secret can result in data breaches costing millions. Proper secrets management is non-negotiable in production engineering.</p>
+
+<h2>The Secret Anti-Patterns to Avoid</h2>
+<ul>
+  <li>❌ Committing <code>.env</code> files with real credentials to Git — even "private" repos get breached</li>
+  <li>❌ Storing secrets as plain text GitHub Actions environment variables</li>
+  <li>❌ Printing secrets in CI logs (<code>echo $DB_PASSWORD</code> is logged forever)</li>
+  <li>❌ Baking secrets into Docker images with <code>ENV DB_PASSWORD=...</code></li>
+  <li>❌ Long-lived static credentials that never rotate</li>
+</ul>
+
+<h2>GitHub Actions: Encrypted Secrets</h2>
+<pre><code class="language-yaml">jobs:
+  deploy:
+    steps:
+    # Secrets are injected as environment variables — never appear in logs
+    - name: Deploy to Production
+      env:
+        DB_PASSWORD: ${{ secrets.PRODUCTION_DB_PASSWORD }}
+        API_KEY: ${{ secrets.STRIPE_API_KEY }}
+      run: |
+        ./scripts/deploy.sh
+        # GitHub automatically masks secrets values in log output
+</code></pre>
+
+<h2>Kubernetes Secrets & External Secrets Operator</h2>
+<p>Kubernetes has a built-in <code>Secret</code> resource, but base64 encoding is not encryption — it's trivially reversible. The recommended pattern is to store actual secret values in <strong>AWS Secrets Manager</strong> or <strong>HashiCorp Vault</strong> and sync them into Kubernetes Secrets automatically using the <strong>External Secrets Operator (ESO)</strong>:</p>
+<pre><code class="language-yaml"># ExternalSecret — syncs AWS Secrets Manager → Kubernetes Secret
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: production-db-credentials
+  namespace: production
+spec:
+  refreshInterval: 1h      # Re-sync every hour (picks up rotated secrets)
+  secretStoreRef:
+    name: aws-secrets-store
+    kind: SecretStore
+  target:
+    name: db-credentials   # Creates this Kubernetes Secret
+  data:
+  - secretKey: password    # Key in the resulting K8s Secret
+    remoteRef:
+      key: production/database    # Path in AWS Secrets Manager
+      property: password          # Field within the JSON secret
+</code></pre>
+
+<h2>HashiCorp Vault: Dynamic Secrets</h2>
+<p>The most advanced secrets management pattern is <strong>dynamic secrets</strong> — credentials that Vault generates on-demand, with a short TTL, for a specific application identity:</p>
+<pre><code class="language-python">import hvac
+
+# Vault generates a unique, short-lived PostgreSQL credential for this app
+client = hvac.Client(url='https://vault.internal')
+client.auth.kubernetes.login(role='my-api', jwt=service_account_token)
+
+# Dynamic credential — valid for 1 hour, unique to this pod instance
+creds = client.secrets.database.generate_credentials(name='production-postgres')
+db_password = creds['data']['password']
+# → 'a3f2k9x1p8...' (unique, expires in 1 hour, auto-rotated)
+</code></pre>
+<p>When the pod dies, the credential automatically expires. If the credential is leaked, it becomes useless within an hour — no manual rotation needed, no stale credentials persisting indefinitely.</p>

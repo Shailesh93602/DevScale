@@ -1,0 +1,30 @@
+<h1>Apache Hudi: Incremental Processing</h1>
+<p><strong>Apache Hudi (Hadoop Upserts Deletes and Incrementals)</strong> was originally developed by Uber's Data Engineering team to solve a very specific, urgent problem: how do you efficiently ingest millions of real-time ride and payment record updates directly into their massive S3-based Data Lake?</p>
+<p>Before Hudi, Uber's pipeline had to periodically rewrite entire massive Parquet partitions to incorporate updates from their OLTP database. Hudi introduced native, record-level upsert and delete semantics directly on top of cloud object storage, enabling true incremental data lake ingestion.</p>
+
+<h2>Copy-on-Write (CoW) Tables</h2>
+<p>In <strong>Copy-on-Write</strong> mode, when you upsert a batch of records, Hudi identifies exactly which Parquet files contain the affected records and rewrites only those files — incorporating all new updates and deletions in a fresh version of those files.</p>
+<p><strong>Trade-offs:</strong></p>
+<ul>
+  <li>✅ <strong>Excellent Read Performance:</strong> All data is always in clean, optimized Parquet files. No merge overhead at read time.</li>
+  <li>❌ <strong>Higher Write Latency:</strong> Rewriting Parquet files for each batch is expensive. Not suitable for very high-frequency micro-batch ingestion.</li>
+</ul>
+<p>Best use case: Nightly batch ETL jobs that ingest millions of daily updates. Read-heavy workloads served to many BI Analysts.</p>
+
+<h2>Merge-on-Read (MoR) Tables</h2>
+<p>In <strong>Merge-on-Read</strong> mode, new updates are written directly into small delta log files (in Avro format) alongside the existing base Parquet files. The actual merge of delta logs into the base Parquet column store happens lazily during background compaction jobs (typically triggered hourly or daily).</p>
+<p><strong>Trade-offs:</strong></p>
+<ul>
+  <li>✅ <strong>Near-Real-Time Ingestion:</strong> Writing to small Avro delta files is extremely fast. Can ingest high-frequency streaming updates with very low latency.</li>
+  <li>❌ <strong>Higher Read Overhead:</strong> Every read-time query must merge the base Parquet files with the delta log files, adding computational overhead to analytical queries.</li>
+</ul>
+
+<h2>Hudi's Incremental Query Mode</h2>
+<p>Hudi's most distinctive feature is its <strong>Incremental Query API</strong>, which allows downstream consumers to efficiently query only the records that changed since a specific commit timestamp:</p>
+<pre><code class="language-python"># Only read records committed after a specific timestamp -- extremely efficient!
+spark.read.format("hudi") \
+    .option("hoodie.datasource.query.type", "incremental") \
+    .option("hoodie.datasource.read.begin.instanttime", "20240115120000") \
+    .load("s3://lake/transactions/")
+</code></pre>
+<p>This is architecturally superior to full table scans for downstream pipelines that only need to process new changes, making Hudi especially powerful for building reliable, cost-efficient Change Data Capture pipelines on top of Data Lakes.</p>

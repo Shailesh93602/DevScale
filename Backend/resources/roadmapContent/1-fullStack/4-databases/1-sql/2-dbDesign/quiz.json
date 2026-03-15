@@ -1,0 +1,74 @@
+{
+    "title": "Database Design Quiz",
+    "description": "Test your schema design and normalization knowledge.",
+    "passingScore": 80,
+    "timeLimit": 8,
+    "questions": [
+        {
+            "question": "What is a junction table used for?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Storing audit logs",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Implementing many-to-many relationships between two tables",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Linking a table's primary key to itself",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Caching frequently queried data",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does ON DELETE CASCADE mean on a foreign key?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Set the foreign key to NULL when the parent is deleted",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Prevent deletion if child rows exist",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Automatically delete child rows when the parent row is deleted",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Copy the deleted parent to an archive table",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does Third Normal Form (3NF) eliminate?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Atomic column values",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Transitive dependencies — non-key columns depending on other non-key columns",
+                    "isCorrect": true
+                },
+                {
+                    "text": "All relationships between tables",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The need for primary keys",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

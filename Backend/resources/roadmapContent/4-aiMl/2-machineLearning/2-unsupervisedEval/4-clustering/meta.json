@@ -1,0 +1,4 @@
+{
+    "name": "Clustering Algorithms: K-Means, DBSCAN & Hierarchical",
+    "description": "Discovering structure in unlabeled data. Understanding K-Means algorithm, initialization strategies (K-Means++), elbow method and silhouette score for choosing K, density-based clustering with DBSCAN (handles arbitrary shapes and outliers), agglomerative hierarchical clustering with dendrograms, and real-world clustering applications."
+}

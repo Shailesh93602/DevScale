@@ -1,0 +1,1 @@
+["Use Union-Find (Disjoint Set) algorithm.", "Iterate through each edge in the graph. For each edge (u, v), find the parent (or root) of u and v.", "If they have the same parent, they are already connected. This edge creates a cycle, so it is the redundant connection."]

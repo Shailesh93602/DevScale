@@ -1,0 +1,6 @@
+[
+  "The brute force approach takes O(n^2) or O(n^3) time. To do better, what if we keep a running sum?",
+  "Let's look at Kadane's algorithm. If the current running sum becomes negative, it means that this prefix cannot contribute positively to any future subarrays. At that point, it's better to just drop it and start a new subarray.",
+  "At each step, we have two choices: either add the current element to our existing running sum, or start a fresh sum beginning at the current element.",
+  "The current subarray sum ending at index `i` is the maximum between `nums[i]` and `current_sum + nums[i]`."
+]

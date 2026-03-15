@@ -1,0 +1,28 @@
+<h1>Data Modeling Patterns</h1>
+<p>When you build a standard web application, your database is highly Normalized. <strong>Normalization</strong> strictly eliminates data redundancy (e.g., storing a user's address in only one place). This makes `INSERT` and `UPDATE` operations incredibly fast. This is known as an <strong>OLTP (Online Transaction Processing)</strong> database.</p>
+<p>However, when a Data Analyst wants to calculate "Total Sales by City for 2023," running an analytical query on a highly Normalized database requires massive 7-table `JOIN` statements. This will crush the database and take 15 minutes to run.</p>
+<p>Data Engineers explicitly build <strong>OLAP (Online Analytical Processing)</strong> databases (Data Warehouses) using completely different structural schemas optimized purely for lightning-fast reads.</p>
+
+<h2>Dimensional Modeling</h2>
+<p>In a Data Warehouse, data is organized into two distinct types of tables:</p>
+<ul>
+  <li><strong>Fact Tables:</strong> Massive, extremely long tables containing the actual numerical measurements or transactions (e.g., `sales_amount`, `discount`, `time_stamp`). A Fact table might have 10 billion rows.</li>
+  <li><strong>Dimension Tables:</strong> Smaller, descriptive tables that provide context to the facts (e.g., `customers`, `products`, `store_locations`). Dimension tables contain attributes you want to group or filter by (e.g., "Filter by Region = 'North'").</li>
+</ul>
+
+<h2>The Star Schema</h2>
+<p>The Star Schema is the industry standard for Data Warehouses. It is named because the architecture physically looks like a star. You place the massive Fact Table directly in the center, and connect the descriptive Dimension Tables directly to it via Foreign Keys in a single, un-nested ring.</p>
+<pre><code class="language-sql">-- Typical Analytical Query on a Star Schema
+-- Requires only simple, single-level JOINs
+SELECT d_date.year, d_store.region, SUM(f_sales.amount)
+FROM fact_sales f_sales
+JOIN dim_date d_date ON f_sales.date_id = d_date.id
+JOIN dim_store d_store ON f_sales.store_id = d_store.id
+GROUP BY d_date.year, d_store.region;
+</code></pre>
+<p><strong>Trade-offs:</strong> The Star Schema intentionally <em>Denormalizes</em> data. The `dim_store` table might repeat the string "California" 500 times. We waste hard drive space to gain explosive Read speed. Hard drive space is cheap; CPU analytical time is incredibly expensive.</p>
+
+<h2>The Snowflake Schema</h2>
+<p>The Snowflake Schema is a variation of the Star Schema. Instead of keeping Dimension tables completely flat, you normalize the Dimension tables themselves.</p>
+<p>For example, instead of storing `Country`, `State`, and `City` natively inside `dim_store`, you break `dim_store` apart so it points to a `dim_city` table, which points to a `dim_state` table.</p>
+<p><strong>Trade-offs:</strong> The Snowflake Schema saves a tiny bit of hard drive storage space by removing redundancy. However, it explicitly forces the Data Analyst to write painfully complex, deeply nested 3-level `JOIN` queries again. Most modern Data Warehouses heavily prefer the flat Star Schema because storage costs are virtually zero.</p>

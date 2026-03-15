@@ -1,0 +1,118 @@
+{
+    "title": "Mobile State Management Quiz",
+    "description": "Test your knowledge on Context, Redux, and Zustand.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Why is robust Global State Management far more critical in a mobile Stack Navigation environment than a traditional web browser?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Because underlying screens deep in the Stack are never successfully destroyed; if deeply nested Screen 3 profoundly updates user data, Screen 1 must be instantly and flawlessly synced globally so the UI is perfectly correct when the user ultimately hits the 'Back' button.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Because mobile data costs money.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because Swift requires Global State fundamentally.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It isn't; it is exactly identical logically in every way.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the primary, devastating performance flaw inherent in utilizing the built-in React Context API specifically for highly dynamic, rapidly changing global variables?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Context inherently forces the entire physical operating system to reboot.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Context aggressively forces every single underlying component explicitly subscribed to it to violently re-render on the UI thread whenever *any* unrelated data inside the Context updates, completely destroying the smooth mobile framerate.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Context inherently utilizes gigabytes of RAM continuously.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Context cannot store string values.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which specific framework is globally recognized as the complex, boilerplate-heavy 'gold standard' for enforcing strict, enterprise-level state management featuring rigid Actions and Reducers?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Redux Toolkit",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Axios Framework",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Firebase Auth",
+                    "isCorrect": false
+                },
+                {
+                    "text": "HTML Canvas",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why has the 'Zustand' library exploded in extreme popularity explicitly compared to legacy Redux?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It fundamentally abandons grueling Redux boilerplate, offering an astonishingly simple, hook-based modular 'store' approach while simultaneously explicitly preventing unnecessary re-renders flawlessly.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Because it runs perfectly on Nokia phones natively.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because it natively writes code perfectly using sophisticated AI.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because it legally mandates typing entirely in Typescript.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In React Native Redux precisely, what is fundamentally prohibited mathematically?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Using arrays in JavaScript strictly.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Importing CSS efficiently.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Mutating the active global store state values directly; you are strictly forced to dispatch explicit 'Actions' seamlessly allowing a clean 'Reducer' to methodically output a brand-new perfect copy of the state sequentially.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Testing the code rigorously.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,4 @@
+{
+    "name": "iOS & Android App Store Submission",
+    "description": "Navigating the full app store release process for both platforms. Creating iOS certificates, provisioning profiles, and App Store Connect listings. Setting up Google Play Console, generating signed Android APKs and AABs, configuring app.json for production builds, using EAS Submit for automated store submissions, writing compelling store listings, and managing staged rollouts and version management."
+}

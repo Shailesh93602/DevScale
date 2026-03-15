@@ -1,0 +1,10 @@
+[
+  {"input":"{\"rooms\":[[2147483647,-1,0,2147483647],[2147483647,2147483647,2147483647,-1],[2147483647,-1,2147483647,-1],[0,-1,2147483647,2147483647]]}","output":"[[3,-1,0,1],[2,2,1,-1],[1,-1,2,-1],[0,-1,3,4]]","explanation":"Standard example","is_hidden":false},
+  {"input":"{\"rooms\":[[-1]]}","output":"[[-1]]","explanation":"Single wall","is_hidden":false},
+  {"input":"{\"rooms\":[[0]]}","output":"[[0]]","explanation":"Single gate","is_hidden":false},
+  {"input":"{\"rooms\":[[2147483647]]}","output":"[[2147483647]]","explanation":"Unreachable single cell","is_hidden":true},
+  {"input":"{\"rooms\":[[0,-1],[2147483647,2147483647]]}","output":"[[0,-1],[1,2]]","explanation":"Simple 2x2","is_hidden":true},
+  {"input":"{\"rooms\":[[-1,-1],[-1,-1]]}","output":"[[-1,-1],[-1,-1]]","explanation":"All walls","is_hidden":true},
+  {"input":"{\"rooms\":[[0,0],[0,0]]}","output":"[[0,0],[0,0]]","explanation":"All gates","is_hidden":true},
+  {"input":"{\"rooms\":[[2147483647,-1,0]]}","output":"[[2147483647,-1,0]]","explanation":"Unreachable over wall","is_hidden":true}
+]

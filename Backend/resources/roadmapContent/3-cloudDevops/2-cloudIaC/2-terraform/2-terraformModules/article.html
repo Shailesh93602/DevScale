@@ -1,0 +1,42 @@
+<h1>Terraform Modules</h1>
+<p>As your infrastructure grows, writing thousands of lines of code in a single <code>main.tf</code> file becomes unmanageable. If you need to spin up 5 identical web servers across 3 environments (Dev, Staging, Prod), copying and pasting the Terraform resource blocks will lead to catastrophic typos.</p>
+<p><strong>Terraform Modules</strong> solve this by allowing you to package and reuse infrastructure configurations.</p>
+
+<h2>What is a Module?</h2>
+<p>A module is simply a directory containing Terraform configuration files (<code>.tf</code>). In fact, the directory where you run <code>terraform apply</code> is technically the "Root Module". You can call other modules (Child Modules) from the Root Module.</p>
+
+<h2>Creating a Custom Module</h2>
+<p>Imagine you have a directory <code>modules/vpc</code> with a standard company-compliant VPC setup.</p>
+<pre><code># Inside main.tf (Calling the module)
+module "my_custom_vpc" {
+  # The path to your module directory
+  source = "./modules/vpc"
+
+  # Passing input variables expected by the module
+  vpc_name    = "production-vpc"
+  cidr_block  = "10.0.0.0/16"
+}</code></pre>
+
+<h2>The Terraform Public Registry</h2>
+<p>You don't always have to write your own modules from scratch. The <strong>Terraform Registry</strong> (registry.terraform.io) contains thousands of verified, production-ready modules written by AWS, Google, and the HashiCorp community.</p>
+<pre><code># Calling a public registry module
+module "vpc" {
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "5.0.0"  # ALWAYS pin the version!
+
+  name = "my-vpc"
+  cidr = "10.0.0.0/16"
+
+  azs             = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+
+  enable_nat_gateway = true
+}</code></pre>
+
+<h2>Module Best Practices</h2>
+<ul>
+  <li><strong>Pin Versions:</strong> Always use the <code>version</code> argument when pulling external modules. If an author releases a major update with breaking changes, an unpinned module will automatically pull the newest state and destroy your servers on the next apply.</li>
+  <li><strong>Use Standard Structure:</strong> Ensure your inner module always contains <code>main.tf</code>, <code>variables.tf</code>, and <code>outputs.tf</code>.</li>
+  <li><strong>Parameterise Everything:</strong> Hardcode as little as possible inside the module so it remains fully reusable across totally different environments.</li>
+</ul>

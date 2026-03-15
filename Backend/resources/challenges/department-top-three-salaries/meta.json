@@ -1,0 +1,19 @@
+{
+  "title": "Department Top Three Salaries",
+  "slug": "department-top-three-salaries",
+  "difficulty": "Hard",
+  "category": "databases",
+  "points": 150,
+  "tags": ["sql", "window-functions", "dense-rank", "joins"],
+  "company_tags": ["Amazon", "Facebook", "Google", "Microsoft", "Bloomberg"],
+  "topic_tags": ["SQL", "Window Functions", "DENSE_RANK"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Table: Employee with columns id (int), name (varchar), salary (int), departmentId (int). Table: Department with columns id (int), name (varchar).",
+  "output_format": "Result table with columns Department, Employee, Salary showing employees who earn one of the top three unique salaries in their department",
+  "example_input": "Table: Employee\n| id | name  | salary | departmentId |\n| 1  | Joe   | 85000  | 1            |\n| 2  | Henry | 80000  | 2            |\n| 3  | Sam   | 60000  | 2            |\n| 4  | Max   | 90000  | 1            |\n| 5  | Janet | 69000  | 1            |\n| 6  | Randy | 85000  | 1            |\n| 7  | Will  | 70000  | 1            |",
+  "example_output": "| Department | Employee | Salary |\n| IT         | Max      | 90000  |\n| IT         | Joe      | 85000  |\n| IT         | Randy    | 85000  |\n| IT         | Will     | 70000  |\n| Sales      | Henry    | 80000  |\n| Sales      | Sam      | 60000  |",
+  "constraints": "- 1 <= Employee.id <= 10^4\n- 1 <= Department.id <= 10^4\n- departmentId references Department.id",
+  "function_signature": "-- Write your SQL query below",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,7 @@
+[
+  "Iterative approach: Maintain 3 pointers (`prev`, `current`, `next`).",
+  "As you traverse the list, grab `current.next` (to save it), point `current.next` to `prev`, and shift `prev` and `current` forward.",
+  "At the end of the loop, `current` will be null, and `prev` will be the new head of the reversed list.",
+  "Recursive approach: Ask the question 'If the rest of the list is already reversed, how do I reverse the very first node?'.",
+  "The base case for recursion is when `head` is null or `head.next` is null."
+]

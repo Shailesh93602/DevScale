@@ -1,0 +1,19 @@
+{
+  "title": "Combination Sum IV",
+  "slug": "combination-sum-iv",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["dynamic-programming", "array"],
+  "company_tags": ["Google", "Facebook", "Amazon", "Apple", "Snapchat"],
+  "topic_tags": ["dynamic programming", "combinatorics"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An array of distinct integers `nums` and an integer `target`.",
+  "output_format": "The number of possible combinations that add up to `target`.",
+  "example_input": "nums = [1,2,3], target = 4",
+  "example_output": "7",
+  "constraints": "- `1 <= nums.length <= 200`\n- `1 <= nums[i] <= 1000`\n- All elements of `nums` are unique.\n- `1 <= target <= 1000`",
+  "function_signature": "function combinationSum4(nums: number[], target: number): number {}",
+  "status": "ACTIVE"
+}

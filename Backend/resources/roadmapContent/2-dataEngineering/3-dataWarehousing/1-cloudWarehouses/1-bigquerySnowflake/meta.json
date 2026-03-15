@@ -1,0 +1,4 @@
+{
+    "name": "Cloud Data Warehouses — BigQuery & Snowflake",
+    "description": "Architecture, loading data, OLAP queries, partitioning, and cost optimisation."
+}

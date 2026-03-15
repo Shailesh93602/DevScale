@@ -1,0 +1,39 @@
+<h1>ISO 27001, PCI-DSS & GDPR</h1>
+<p>As cloud systems handle increasingly sensitive data — financial records, health information, personal data — regulatory compliance is not optional. The major frameworks that govern cloud infrastructure are ISO 27001, PCI-DSS, and GDPR. Understanding their technical requirements is essential for any engineer working in regulated industries.</p>
+
+<h2>ISO 27001: Information Security Management System (ISMS)</h2>
+<p><strong>ISO 27001</strong> is the international standard for information security management. It provides a framework for establishing, implementing, and maintaining an ISMS — a systematic approach to managing sensitive information. It is broadly applicable across all industries:</p>
+<ul>
+  <li><strong>Risk Assessment:</strong> Identify assets, threats, vulnerabilities, and implement appropriate controls</li>
+  <li><strong>Annex A Controls:</strong> 93 security controls covering access control, cryptography, physical security, supplier relationships, and incident management</li>
+  <li><strong>Certification:</strong> An accredited auditor validates compliance through a formal audit process</li>
+</ul>
+<h3>Technical Controls Required</h3>
+<pre><code class="language-text">Access Control: MFA for all privileged access, principle of least privilege, quarterly access reviews
+Cryptography:   Encryption at rest (AES-256), encryption in transit (TLS 1.2+), key management
+Operations:     Change management documented, vulnerability scanning, patch management process
+Incident Mgmt:  Documented incident response plan, 72-hour breach notification capability
+Monitoring:     Centralized logging of all access and changes, log retention ≥ 1 year
+</code></pre>
+
+<h2>PCI-DSS: Payment Card Industry Data Security Standard</h2>
+<p><strong>PCI-DSS</strong> applies to any organization that stores, processes, or transmits credit card data. The key technical requirements:</p>
+<pre><code class="language-text">Requirement 1: Network segmentation — isolate cardholder data environment (CDE) in dedicated VPC
+Requirement 2: No default passwords anywhere in the CDE
+Requirement 3: Encrypt stored cardholder data — never store CVV after authorization
+Requirement 4: Encrypt card data in transit — TLS 1.2+ only, disable TLS 1.0/1.1/SSL
+Requirement 6: Vulnerability management — regular scanning, patch within 30 days for critical CVEs
+Requirement 8: MFA for all CDE access, password complexity, no shared accounts
+Requirement 10: Audit logs for all CDE access, retained 12 months, 3 months immediately available
+</code></pre>
+<p><strong>PCI-DSS Scope Reduction:</strong> The most powerful security architecture decision is minimizing what systems are in scope. Tokenization (replacing card numbers with random tokens) means your application never touches real card data — only your payment processor (Stripe, Adyen) does. This can reduce your PCI scope from hundreds of systems to a handful.</p>
+
+<h2>GDPR: General Data Protection Regulation</h2>
+<p><strong>GDPR</strong> governs how EU citizens' personal data is collected, processed, and stored. Key technical requirements for cloud architects:</p>
+<ul>
+  <li><strong>Data Minimization:</strong> Only collect and store personal data that is strictly necessary for the stated purpose</li>
+  <li><strong>Encryption at Rest & Transit:</strong> All personal data must be encrypted — S3 SSE, RDS encryption, TLS everywhere</li>
+  <li><strong>Right to Erasure ("Right to be Forgotten"):</strong> Systems must be able to delete all personal data for a specific user across all systems — including backups (implemented via cryptographic erasure)</li>
+  <li><strong>Data Breach Notification:</strong> Must notify the supervisory authority within <strong>72 hours</strong> of discovering a breach — requires pre-built incident response runbooks</li>
+  <li><strong>Data Processing Records:</strong> Document what data you collect, why, and how long you keep it (Article 30 records)</li>
+</ul>

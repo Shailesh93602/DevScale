@@ -1,0 +1,118 @@
+{
+    "title": "Spark Optimisation Quiz",
+    "description": "Test your knowledge of broadcast joins, partitions, and avoiding OOM errors in Spark.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Which Spark join handles a very small dimension table combined with a massive fact table without data skew?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Sort Merge Join",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Hash Partition Join",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Broadcast Hash Join",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Nested Loop Join",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "If you notice one Spark task running much longer than the others during a Sort Merge Join, you likely have:",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Too many broadcast tables",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Data skew caused by a dominant key",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A misconfigured driver memory",
+                    "isCorrect": false
+                },
+                {
+                    "text": "AQE disabled",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the primary difference between df.repartition() and df.coalesce()?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Repartition is much faster because it avoids shuffling data over the network",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Coalesce decreases the partition count without causing a full shuffle, so it's faster",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Coalesce increases the partition count dynamically",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Repartition cannot increase partition count past the initial number",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why should you avoid using Python UDFs when using the PySpark DataFrame API?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Because Python doesn't support the required math operations",
+                    "isCorrect": false
+                },
+                {
+                    "text": "They cause data to serialize/deserialize between the JVM and Python, breaking Catalyst optimisations",
+                    "isCorrect": true
+                },
+                {
+                    "text": "They prevent broadcasting the dataframe",
+                    "isCorrect": false
+                },
+                {
+                    "text": "They force Spark to evaluate transformations eagerly",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What feature introduced in Spark 3 dynamically adjusts query execution plans based on runtime statistics?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Structured Streaming",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Dataframe Cache Engine",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Adaptive Query Execution (AQE)",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Predicate Pushdown Optimizer",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

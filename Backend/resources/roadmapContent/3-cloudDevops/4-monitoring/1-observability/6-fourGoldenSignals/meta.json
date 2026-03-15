@@ -1,0 +1,4 @@
+{
+    "name": "The Four Golden Signals",
+    "description": "Applying Google Site Reliability Engineering's four golden signals (Latency, Traffic, Errors, Saturation) as the universal framework for monitoring any service. Learning to instrument applications to emit the right metrics, and building dashboards that give a health overview at a glance."
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "input": "{\"Seat\": [{\"id\": 1, \"student\": \"Abbot\"}, {\"id\": 2, \"student\": \"Doris\"}, {\"id\": 3, \"student\": \"Emerson\"}, {\"id\": 4, \"student\": \"Green\"}, {\"id\": 5, \"student\": \"Jeames\"}]}",
+    "output": "[{\"id\": 1, \"student\": \"Doris\"}, {\"id\": 2, \"student\": \"Abbot\"}, {\"id\": 3, \"student\": \"Green\"}, {\"id\": 4, \"student\": \"Emerson\"}, {\"id\": 5, \"student\": \"Jeames\"}]",
+    "explanation": "Pairs swap: (1,2) and (3,4). Seat 5 stays as it's odd and last.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Seat\": [{\"id\": 1, \"student\": \"Alice\"}, {\"id\": 2, \"student\": \"Bob\"}]}",
+    "output": "[{\"id\": 1, \"student\": \"Bob\"}, {\"id\": 2, \"student\": \"Alice\"}]",
+    "explanation": "Two students simply swap.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Seat\": [{\"id\": 1, \"student\": \"Solo\"}]}",
+    "output": "[{\"id\": 1, \"student\": \"Solo\"}]",
+    "explanation": "Single student stays in place.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Seat\": [{\"id\": 1, \"student\": \"A\"}, {\"id\": 2, \"student\": \"B\"}, {\"id\": 3, \"student\": \"C\"}, {\"id\": 4, \"student\": \"D\"}]}",
+    "output": "[{\"id\": 1, \"student\": \"B\"}, {\"id\": 2, \"student\": \"A\"}, {\"id\": 3, \"student\": \"D\"}, {\"id\": 4, \"student\": \"C\"}]",
+    "explanation": "Even number of students, all pairs swap perfectly.",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"Seat\": [{\"id\": 1, \"student\": \"A\"}, {\"id\": 2, \"student\": \"B\"}, {\"id\": 3, \"student\": \"C\"}, {\"id\": 4, \"student\": \"D\"}, {\"id\": 5, \"student\": \"E\"}, {\"id\": 6, \"student\": \"F\"}, {\"id\": 7, \"student\": \"G\"}]}",
+    "output": "[{\"id\": 1, \"student\": \"B\"}, {\"id\": 2, \"student\": \"A\"}, {\"id\": 3, \"student\": \"D\"}, {\"id\": 4, \"student\": \"C\"}, {\"id\": 5, \"student\": \"F\"}, {\"id\": 6, \"student\": \"E\"}, {\"id\": 7, \"student\": \"G\"}]",
+    "explanation": "Three pairs swap, last student G stays.",
+    "is_hidden": true
+  }
+]

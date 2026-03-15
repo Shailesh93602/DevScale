@@ -1,0 +1,74 @@
+{
+    "title": "ES6+ Features Quiz",
+    "description": "Test your knowledge of modern JavaScript syntax and features.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What does the ?. operator do in JavaScript?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Ternary operator shorthand for if/else",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Optional chaining — safely accesses nested properties, returns undefined instead of throwing",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Nullish coalescing — provides a default value",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Checks if a value is null only",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does Array.prototype.reduce() do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Filters the array to matching elements",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Returns the first matching element",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Accumulates all array values into a single output value",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Sorts the array in ascending order",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How do you export a function as both the DEFAULT and as a NAMED export?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "You cannot — a function can only have one export type",
+                    "isCorrect": false
+                },
+                {
+                    "text": "export default fn; and separately export { fn } — both are valid simultaneously",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Use export all: fn",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Use module.exports in ES modules",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,74 @@
+{
+    "title": "Networking Fundamentals Quiz",
+    "description": "Test your networking and TCP/IP knowledge.",
+    "passingScore": 80,
+    "timeLimit": 8,
+    "questions": [
+        {
+            "question": "What is the main difference between TCP and UDP?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "TCP uses IP addresses; UDP uses MAC addresses",
+                    "isCorrect": false
+                },
+                {
+                    "text": "TCP guarantees reliable, ordered delivery; UDP is faster but has no delivery guarantee",
+                    "isCorrect": true
+                },
+                {
+                    "text": "TCP is for HTTP; UDP is for HTTPS",
+                    "isCorrect": false
+                },
+                {
+                    "text": "UDP can handle more connections simultaneously",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the purpose of a NAT Gateway in a VPC?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "To expose private subnet resources to incoming internet traffic",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To allow resources in private subnets to initiate outbound internet connections without being publicly accessible",
+                    "isCorrect": true
+                },
+                {
+                    "text": "To translate domain names to IP addresses",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To balance traffic between availability zones",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What DNS record type maps a domain name to an IPv4 address?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "CNAME",
+                    "isCorrect": false
+                },
+                {
+                    "text": "MX",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A record",
+                    "isCorrect": true
+                },
+                {
+                    "text": "TXT",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

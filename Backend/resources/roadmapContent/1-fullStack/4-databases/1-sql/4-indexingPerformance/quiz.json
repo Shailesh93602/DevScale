@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What happens when you run a `WHERE` query on a 1-million-row SQL table on a column that does NOT have an index?",
+            "options": [
+                "The database refuses to run the query and throws an indexing error",
+                "The database performs a 'Full Table Scan' (Sequential Scan), reading every single row sequentially from disk one-by-one until it finds matches, causing severe performance latency",
+                "The database automatically writes an index in memory before executing the query",
+                "The query is offloaded to the frontend client to process"
+            ],
+            "answer": "The database performs a 'Full Table Scan' (Sequential Scan), reading every single row sequentially from disk one-by-one until it finds matches, causing severe performance latency",
+            "explanation": "Without a sorted index mapping out where things are, the database is essentially blind. It must look at row 1, row 2, row 3... all the way to row 1,000,000 to determine if it matches your condition."
+        },
+        {
+            "question": "What is the primary characteristic of a B-Tree (Balanced Tree) index, which is the default index type in almost all relational databases?",
+            "options": [
+                "It stores data completely randomly for security masking",
+                "It compresses all data into a single long string",
+                "It organizes the pointers in a continually sorted hierarchical tree structure, allowing the database to execute binary searches in milliseconds instead of linear searches",
+                "It is fundamentally incapable of running 'greater than' ( > ) or 'less than' ( < ) queries"
+            ],
+            "answer": "It organizes the pointers in a continually sorted hierarchical tree structure, allowing the database to execute binary searches in milliseconds instead of linear searches",
+            "explanation": "Because a B-Tree is perfectly sorted, the engine can ask: 'Is 50 > 25? Yes, discard the left half of the tree.' This binary search halves the search space recursively, finding the answer almost instantly regardless of table size."
+        },
+        {
+            "question": "If indexes massively increase Read performance, why shouldn't a developer just put an index on every single column in the database?",
+            "options": [
+                "Because it is illegal under GDPR data protection laws",
+                "Because indexes heavily damage Write Performance. Every time you INSERT, UPDATE, or DELETE a row, the database must pause to recalculate and rewrite every index attached to that table",
+                "Because SQL limits the total amount of indexes globally to exactly 5",
+                "Because columns that are indexed can no longer be updated via API calls"
+            ],
+            "answer": "Because indexes heavily damage Write Performance. Every time you INSERT, UPDATE, or DELETE a row, the database must pause to recalculate and rewrite every index attached to that table",
+            "explanation": "Indexes are literal files on the hard drive. Writing 1 row to an over-indexed table might cause the hard drive to perform 20 separate complex file rewrites to keep the B-Trees structured, crashing your INSERT speed."
+        },
+        {
+            "question": "How do you definitively check exactly why an SQL query is running slowly in PostgreSQL?",
+            "options": [
+                "By printing `console.log()` statements on the Node.js server",
+                "By checking the raw table file size in gigabytes",
+                "By placing the words `EXPLAIN ANALYZE` directly in front of the SQL query before execution. This returns the database engine's step-by-step Execution Plan showing exactly how it navigated to the data",
+                "By running an npm performance package"
+            ],
+            "answer": "By placing the words `EXPLAIN ANALYZE` directly in front of the SQL query before execution. This returns the database engine's step-by-step Execution Plan showing exactly how it navigated to the data",
+            "explanation": "Using `EXPLAIN ANALYZE SELECT * FROM users` will print out a tree showing exactly which indexes the database chose to use, where it resorted to a slow Seq Scan, and how many milliseconds each step took."
+        },
+        {
+            "question": "What indicator in an `EXPLAIN ANALYZE` output indicates that an index is successfully being utilized for the query?",
+            "options": [
+                "Seq Scan",
+                "Index Scan",
+                "Full Scan",
+                "Buffer Scan"
+            ],
+            "answer": "Index Scan",
+            "explanation": "Seeing 'Index Scan using idx_email' means the database engine successfully found the B-tree you created, recognized it was the fastest path, and used it to instantly jump to the requested rows."
+        }
+    ]
+}

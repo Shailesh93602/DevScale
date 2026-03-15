@@ -1,0 +1,50 @@
+[
+  {
+    "input": "{\"baseImage\": \"node:20-alpine\", \"buildCmd\": \"npm run build\", \"startCmd\": \"node dist/index.js\", \"port\": 3000}",
+    "output": "Dockerfile with 2 stages, builder stage with npm ci and npm run build, production stage with node:20-alpine, EXPOSE 3000, CMD node dist/index.js",
+    "explanation": "Standard Node.js TypeScript app with dist output directory on port 3000",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"baseImage\": \"node:18-slim\", \"buildCmd\": \"npm run compile\", \"startCmd\": \"node build/server.js\", \"port\": 8080}",
+    "output": "Dockerfile with 2 stages using node:18-slim, compile command, build/ directory, EXPOSE 8080",
+    "explanation": "Custom base image, different build command and output directory",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"baseImage\": \"node:20-alpine\", \"buildCmd\": \"npx tsc\", \"startCmd\": \"node out/app.js\", \"port\": 4000}",
+    "output": "Dockerfile using direct tsc compilation, out/ directory, port 4000",
+    "explanation": "Direct TypeScript compilation without npm script",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"baseImage\": \"node:20-alpine\", \"buildCmd\": \"npm run build\", \"startCmd\": \"node dist/index.js\", \"port\": 3000}",
+    "output": "Contains FROM ... AS builder, WORKDIR /app, COPY package*.json, RUN npm ci, ENV NODE_ENV=production, USER node",
+    "explanation": "Verify all required directives are present: multi-stage, workdir, layer caching, env, non-root user",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"baseImage\": \"node:20-alpine\", \"buildCmd\": \"npm run build\", \"startCmd\": \"node dist/index.js\", \"port\": 5000}",
+    "output": "EXPOSE 5000 and HEALTHCHECK with port 5000",
+    "explanation": "Port configuration must be dynamic based on input",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"baseImage\": \"node:16-alpine\", \"buildCmd\": \"npm run build\", \"startCmd\": \"node dist/main.js\", \"port\": 9000}",
+    "output": "FROM node:16-alpine in both stages, CMD [\"node\", \"dist/main.js\"]",
+    "explanation": "Older Node version with different entry point",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"baseImage\": \"node:20-alpine\", \"buildCmd\": \"npm run build\", \"startCmd\": \"node dist/index.js\", \"port\": 3000}",
+    "output": "Does NOT contain npm install (uses npm ci), does NOT contain COPY node_modules, does NOT run as root",
+    "explanation": "Negative test: verify bad practices are absent",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"baseImage\": \"node:20-bullseye-slim\", \"buildCmd\": \"npm run build:prod\", \"startCmd\": \"node dist/server.js\", \"port\": 443}",
+    "output": "Dockerfile with Debian slim base, build:prod script, EXPOSE 443",
+    "explanation": "Debian-based image with HTTPS port",
+    "is_hidden": true
+  }
+]

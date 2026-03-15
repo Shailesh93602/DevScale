@@ -1,0 +1,6 @@
+{
+    "id": "1-scalability",
+    "title": "Scalability and Availability",
+    "description": "Strategies for designing software systems that can handle growth and maintain uptime.",
+    "order": 1
+}

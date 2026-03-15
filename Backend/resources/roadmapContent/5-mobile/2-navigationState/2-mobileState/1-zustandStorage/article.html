@@ -1,0 +1,161 @@
+<h1>Global State Management with Zustand</h1>
+<p>In mobile applications, data frequently needs to be shared across completely independent navigation screens — a user profile photo on a Drawer menu needs to update immediately when a user changes it in their Settings screen. React's built-in Context API causes unnecessary re-renders when managing complex global state. For modern React Native apps, <strong>Zustand</strong> provides an incredibly fast, minimalist global store without the dense boilerplate of Redux.</p>
+
+<h2>Why Zustand over Redux or Context?</h2>
+<table>
+  <thead><tr><th>Feature</th><th>React Context</th><th>Redux Toolkit</th><th>Zustand</th></tr></thead>
+  <tbody>
+    <tr><td>Boilerplate</td><td>High (Providers, Custom Hooks)</td><td>Medium (Slices, Store Setup)</td><td>None (Just define state + actions)</td></tr>
+    <tr><td>Re-rendering</td><td>High (Entire tree beneath Provider)</td><td>Optimized (Hooks/Selectors)</td><td>Optimized (Hooks/Selectors)</td></tr>
+    <tr><td>Provider wrapping</td><td>Requires wrapping root <code>&lt;App&gt;</code></td><td>Requires <code>&lt;Provider&gt;</code></td><td><strong>No Provider Needed</strong></td></tr>
+    <tr><td>Async actions</td><td>Manual via <code>useEffect</code></td><td>Thunks / RTK Query</td><td>Native async functions</td></tr>
+  </tbody>
+</table>
+
+<h2>Creating a Zustand Store</h2>
+<p>Zustand stores are just custom React Hooks. You define a state object and the functions (actions) that mutate it in a single file:</p>
+
+<pre><code>npx expo install zustand</code></pre>
+
+<pre><code>// store/useAuthStore.ts
+import { create } from 'zustand';
+
+// 1. Define the store's typescript shape
+interface AuthState {
+  user: { id: string; name: string; email: string } | null;
+  isAuthenticated: boolean;
+  token: string | null;
+  
+  // Actions
+  login: (userData: AuthState['user'], token: string) => void;
+  logout: () => void;
+  updateProfileName: (newName: string) => void;
+}
+
+// 2. Create the store implementation
+export const useAuthStore = create&lt;AuthState&gt;()((set) => ({
+  user: null,
+  isAuthenticated: false,
+  token: null,
+
+  // Action: Replace state completely
+  login: (user, token) => set({ user, token, isAuthenticated: true }),
+
+  // Action: Clear state
+  logout: () => set({ user: null, token: null, isAuthenticated: false }),
+
+  // Action: Merge nested state — zustand handles partial updates
+  updateProfileName: (newName) => 
+    set((state) => ({
+      user: state.user ? { ...state.user, name: newName } : null
+    }))
+}));</code></pre>
+
+<h2>Using the Store in Components</h2>
+<p>Unlike Context, there is no Provider to wrap your app in. Any component can extract just the state fragment it needs. Zustand ensures the component only re-renders if that specific extracted piece of data changes:</p>
+
+<pre><code>// screens/ProfileScreen.tsx
+import { View, Text, Button } from 'react-native';
+import { useAuthStore } from '../store/useAuthStore';
+
+export default function ProfileScreen() {
+  // Extract just the user object — component ignores token changes
+  const user = useAuthStore((state) => state.user);
+  
+  // Extract actions separately (or together)
+  const logout = useAuthStore((state) => state.logout);
+
+  if (!user) return <Text>You are completely logged out.</Text>;
+
+  return (
+    &lt;View style={{ padding: 20 }}&gt;
+      &lt;Text style={{ fontSize: 24, fontWeight: 'bold' }}&gt;Hello, {user.name}&lt;/Text&gt;
+      &lt;Text style={{ color: 'gray' }}&gt;{user.email}&lt;/Text&gt;
+
+      &lt;Button title="Log Out" color="red" onPress={logout} /&gt;
+    &lt;/View&gt;
+  );
+}</code></pre>
+
+<h2>Handling Async Actions</h2>
+<p>Zustand has no concept of "middleware" or "thunks" for asynchronous logic — you just use standard ES6 <code>async/await</code> functions inside your store configuration:</p>
+
+<pre><code>// store/useRepoStore.ts
+interface RepoState {
+  repos: string[];
+  isLoading: boolean;
+  error: string | null;
+  fetchRepos: (username: string) => Promise&lt;void&gt;;
+}
+
+export const useRepoStore = create&lt;RepoState&gt;()((set) => ({
+  repos: [],
+  isLoading: false,
+  error: null,
+
+  fetchRepos: async (username: string) => {
+    // 1. Set loading state before network request
+    set({ isLoading: true, error: null });
+
+    try {
+      const resp = await fetch(`https://api.github.com/users/${username}/repos`);
+      if (!resp.ok) throw new Error('Failed to fetch repositories');
+      
+      const data = await resp.json();
+      const names = data.map((r: any) => r.name);
+
+      // 2. Set successful data
+      set({ repos: names, isLoading: false });
+    } catch (err: any) {
+      // 3. Set error state
+      set({ error: err.message, isLoading: false });
+    }
+  }
+}));</code></pre>
+
+<h2>Persisting State with AsyncStorage</h2>
+<p>Normally, when a user closes their app, all memory state is lost. You want preferences like Dark Mode or Authentication state to persist to disk. Zustand offers a native Persist middleware that integrates instantly with React Native's <code>AsyncStorage</code>:</p>
+
+<pre><code>npx expo install @react-native-async-storage/async-storage</code></pre>
+
+<pre><code>// store/useSettingsStore.ts
+import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+interface SettingsState {
+  theme: 'light' | 'dark' | 'system';
+  notificationsEnabled: boolean;
+  setTheme: (t: 'light' | 'dark' | 'system') => void;
+  toggleNotifications: () => void;
+}
+
+export const useSettingsStore = create&lt;SettingsState&gt;()(
+  // Wrap your setup function in the "persist" middleware
+  persist(
+    (set, get) => ({
+      theme: 'system',
+      notificationsEnabled: true,
+      
+      setTheme: (theme) => set({ theme }),
+      toggleNotifications: () => 
+        set({ notificationsEnabled: !get().notificationsEnabled })
+    }),
+    {
+      name: 'app-settings-storage', // The unique key used in AsyncStorage
+      storage: createJSONStorage(() => AsyncStorage), // Define mobile disk engine
+      
+      // Optional: Filter out things you don't want saved to disk
+      // e.g. "Don't save theme to disk, only save notifications"
+      // partialize: (state) => ({ notificationsEnabled: state.notificationsEnabled }),
+    }
+  )
+);</code></pre>
+<p>The next time the app opens, Zustand automatically reads <code>app-settings-storage</code> off the device disk and hydrates its memory state. Your components will immediately render with the correct persisted values.</p>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Do not put standard navigation parameters in global state (e.g. <code>currentProductID</code>). These belong in React Navigation route params.</li>
+  <li>Zustand actions can be called completely outside of React components. Need to log someone out when an Axios interceptor detects a 401 error? Just call <code>useAuthStore.getState().logout()</code> from your API service.</li>
+  <li>Avoid huge monolithic stores. Zustand allows you to split concerns easily: have a <code>useAuthStore</code>, a <code>useCartStore</code>, and a <code>useSettingsStore</code>. </li>
+</ul>

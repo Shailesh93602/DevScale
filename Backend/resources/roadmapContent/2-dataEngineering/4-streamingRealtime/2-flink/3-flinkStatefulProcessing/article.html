@@ -1,0 +1,30 @@
+<h1>Flink Stateful Stream Processing</h1>
+<p>Stateless operations, like filtering out invalid events or reformatting a JSON field, are straightforward: each event is processed independently in isolation. But most real-world streaming problems are inherently <strong>stateful</strong>. To detect fraud, you need to remember the last 10 transactions for a specific user. To count unique daily visitors, you need to maintain a running set of all seen user IDs. This persistent memory is what Flink calls <strong>State</strong>.</p>
+
+<h2>What is Managed State?</h2>
+<p>In a distributed streaming system, you cannot store state in a local Python dictionary. If the server crashes, your dictionary vanishes and your fraud detection model forgets everything it ever learned. Apache Flink provides <strong>Managed State</strong>, which automatically handles state persistence, fault tolerance, and redistribution after a failure.</p>
+
+<h2>Keyed State</h2>
+<p>The most powerful form of state in Flink is <strong>Keyed State</strong>. When a stream is grouped <code>keyBy('user_id')</code>, Flink internally partitions all events by the key. Each unique key (each user) gets its own completely isolated, private state partition.</p>
+<pre><code class="language-java">// Each user_id has its own private ValueState counter
+ValueState&lt;Integer&gt; transactionCountState = getRuntimeContext()
+    .getState(new ValueStateDescriptor&lt;&gt;("transaction_count", Integer.class));
+
+// When a new event arrives for user_id='123', Flink automatically fetches
+// the specific state for user '123' from the distributed State Backend
+Integer currentCount = transactionCountState.value();
+if (currentCount == null) currentCount = 0;
+transactionCountState.update(currentCount + 1);
+</code></pre>
+<p>This architecture allows Flink to process millions of independent user sessions simultaneously, with each user's state perfectly isolated from every other user's state.</p>
+
+<h2>State Backends</h2>
+<p>Flink needs somewhere to physically store the state data. It supports multiple <strong>State Backends</strong>:</p>
+<ul>
+  <li><strong>HashMapStateBackend:</strong> Stores all state in the JVM's heap memory. Extremely fast, but if your state grows very large (billions of keys), you will immediately crash the JVM with an Out Of Memory error.</li>
+  <li><strong>EmbeddedRocksDBStateBackend:</strong> The standard for production use. State is stored in a local RocksDB key-value database on each TaskManager's local hard disk. Because it uses disk instead of RAM, it can handle virtually unlimited state sizes. This is the standard for any serious production Flink deployment.</li>
+</ul>
+
+<h2>Checkpointing: The Key to Fault Tolerance</h2>
+<p>Flink uses periodic <strong>Checkpoints</strong> to make state fault-tolerant. Every N seconds (e.g., every 5 minutes), Flink automatically takes a snapshot of the entire distributed state of all TaskManagers and uploads it to a durable storage system like AWS S3 or HDFS.</p>
+<p>If the Flink cluster crashes at 3:17 PM, Flink does not re-process data from the very beginning of the stream. Instead, it loads the last successful Checkpoint from S3 (e.g., from 3:15 PM) and replays only the 2 minutes of missed Kafka messages, restoring the entire cluster to a consistent state within seconds.</p>

@@ -1,0 +1,4 @@
+{
+    "name": "Prisma with Next.js: Server Actions, Edge & Caching",
+    "description": "Using Prisma in modern Next.js applications. Avoiding the Prisma Client instantiation problem in development (the global singleton pattern), using Prisma in Server Components and Server Actions, the challenge of running Prisma on Vercel Edge Runtime (and why you need Prisma Accelerate), implementing query-level caching with Prisma Accelerate, and the Prisma Pulse solution for real-time database subscriptions."
+}

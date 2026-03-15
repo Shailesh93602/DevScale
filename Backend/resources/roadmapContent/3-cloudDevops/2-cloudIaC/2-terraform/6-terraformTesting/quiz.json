@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What dangerous infrastructure misconfigurations would 'terraform validate' pass without errors, but which Checkov would correctly flag as security issues?",
+            "options": [
+                "Invalid HCL syntax and undefined variable references.",
+                "Security misconfigurations like S3 buckets with public access enabled, Security Groups allowing SSH from 0.0.0.0/0, RDS instances without encryption, or EBS volumes without encryption — all valid HCL that terraform validate happily accepts but which create serious security vulnerabilities.",
+                "Missing required Terraform provider version constraints.",
+                "Circular dependencies between Terraform resources."
+            ],
+            "answer": "Security misconfigurations like S3 buckets with public access enabled, Security Groups allowing SSH from 0.0.0.0/0, RDS instances without encryption, or EBS volumes without encryption — all valid HCL that terraform validate happily accepts but which create serious security vulnerabilities.",
+            "explanation": "terraform validate only checks if the HCL is syntactically correct and references are valid. It has no security awareness. Checkov knows 1000+ real-world AWS security best practices."
+        },
+        {
+            "question": "What is the fundamental difference between Checkov (static analysis) and Terratest (integration testing) for Terraform validation?",
+            "options": [
+                "Checkov tests against real AWS; Terratest only analyzes HCL files locally.",
+                "Checkov analyzes HCL code statically without deploying any real infrastructure — it's fast (seconds) but can't verify actual runtime behavior. Terratest deploys real resources to AWS, runs assertions against the actual deployed infrastructure, then destroys it — slower and costs money but tests reality.",
+                "Checkov is for Terraform modules; Terratest is for root configurations.",
+                "Checkov requires a paid Bridgecrew subscription; Terratest is free."
+            ],
+            "answer": "Checkov analyzes HCL code statically without deploying any real infrastructure — it's fast (seconds) but can't verify actual runtime behavior. Terratest deploys real resources to AWS, runs assertions against the actual deployed infrastructure, then destroys it — slower and costs money but tests reality.",
+            "explanation": "Checkov can confirm 'this S3 bucket configuration has encryption enabled in code.' Terratest confirms 'this S3 bucket actually has encryption enabled when deployed, AND the VPC CIDR is actually correct, AND the security group rules are actually applied.'"
+        },
+        {
+            "question": "Why is embedding Checkov as a CI pipeline step (blocking PRs with security failures) more effective than running it as a separate periodic audit?",
+            "options": [
+                "CI pipeline steps run Checkov faster than manual execution.",
+                "A PR-blocking gate catches misconfigurations at the exact moment they are introduced by an engineer, when context is fresh and the fix is trivial to make. A periodic audit finds misconfigurations in deployed production infrastructure, where fixing them requires careful coordination to avoid outages.",
+                "Periodic audits cannot detect security issues in existing infrastructure.",
+                "Checkov's accuracy improves when integrated into CI pipelines."
+            ],
+            "answer": "A PR-blocking gate catches misconfigurations at the exact moment they are introduced by an engineer, when context is fresh and the fix is trivial to make. A periodic audit finds misconfigurations in deployed production infrastructure, where fixing them requires careful coordination to avoid outages.",
+            "explanation": "Shift-left security principle: the earlier in the development cycle you catch a bug, the cheaper it is to fix. A misconfiguration caught in PR review takes 2 minutes to fix. The same misconfiguration deployed to production for 2 months requires an incident response."
+        }
+    ]
+}

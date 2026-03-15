@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary role of the Event Loop in Node.js?",
+            "options": [
+                "To compile JavaScript code into machine code asynchronously.",
+                "To handle thousands of database connections simultaneously using multiple threads.",
+                "To orchestrate non-blocking I/O operations by offloading tasks to the system kernel and executing callbacks when tasks complete.",
+                "To prevent SQL injection attacks by sanitizing inputs on every request cycle."
+            ],
+            "answer": "To orchestrate non-blocking I/O operations by offloading tasks to the system kernel and executing callbacks when tasks complete.",
+            "explanation": "Node itself is single threaded. Libuv and the Event Loop allow Node to perform I/O operations concurrently by pushing network/file reading tasks to the OS, and running defining callbacks when the OS reports back."
+        },
+        {
+            "question": "Which of the following belongs to the Microtask Queue and executes with the highest priority BEFORE any macrotasks?",
+            "options": [
+                "setTimeout()",
+                "setImmediate()",
+                "process.nextTick()",
+                "fs.readFile() callback"
+            ],
+            "answer": "process.nextTick()",
+            "explanation": "process.nextTick() forces a callback to execute immediately after the current operation completes, entirely bypassing the normal phases of the event loop. Promises (.then) also go to a Microtask queue, but nextTick fires before promises."
+        },
+        {
+            "question": "If you call setTimeout(fn, 0) and setImmediate(fn) directly inside an I/O callback (like fs.readFile), which will execute first?",
+            "options": [
+                "setTimeout",
+                "It is random depending on the CPU load",
+                "setImmediate",
+                "Whichever was written first in the code"
+            ],
+            "answer": "setImmediate",
+            "explanation": "I/O callbacks execute during the 'Poll' phase of the event loop. The phase that comes immediately after 'Poll' is the 'Check' phase, which is where setImmediate executes. The loop must cycle all the way back to the beginning to reach the 'Timers' phase for setTimeout."
+        },
+        {
+            "question": "Why is it dangerous to run a while-loop that counts to 10 billion directly inside an Express route handler?",
+            "options": [
+                "It will corrupt the MySQL database connection pool",
+                "Because Node is single-threaded, it blocks the entire Event Loop; no other users can connect or receive responses until the loop finishes.",
+                "It will throw an 'EventLoopOverflow' error automatically.",
+                "It writes too many logs to the console."
+            ],
+            "answer": "Because Node is single-threaded, it blocks the entire Event Loop; no other users can connect or receive responses until the loop finishes.",
+            "explanation": "Since there is only one JavaScript thread serving all clients, CPU-bound operations freeze the server. Other clients trying to access even simple routes will hang. This is \"blocking the event loop.\""
+        },
+        {
+            "question": "How should you correctly handle heavy, CPU-bound tasks (like image processing) in a Node.js web server?",
+            "options": [
+                "Wrap the task in a Promise to push it to the Microtask queue",
+                "Offload the logic to the Frontend so the browser calculates it",
+                "Use Node's Worker Threads module to execute the task in a separate JavaScript environment (Isolate)",
+                "Use setImmediate() to push it to the Check phase"
+            ],
+            "answer": "Use Node's Worker Threads module to execute the task in a separate JavaScript environment (Isolate)",
+            "explanation": "Worker Threads (require('worker_threads')) allow Node to span distinct threads with their own V8 execution contexts. Long tasks run in parallel in the background without affecting the main event loop's responsiveness."
+        }
+    ]
+}

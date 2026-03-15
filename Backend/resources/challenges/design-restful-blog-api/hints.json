@@ -1,0 +1,6 @@
+[
+  "Start by defining your resource models (Post and Comment) and their relationships. Think about what fields are required vs optional.",
+  "Use proper HTTP status codes: 201 for successful creation, 204 for successful deletion, 400 for validation errors, and 404 when a resource is not found.",
+  "Implement pagination using page and limit query parameters. Return metadata (total count, total pages) alongside the data array.",
+  "Create a centralized error handling middleware that catches all errors and returns a consistent error response format with statusCode and error message."
+]

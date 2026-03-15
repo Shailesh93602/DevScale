@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary function of the `npx prisma migrate dev` command?",
+            "options": [
+                "It resets the SQL database globally",
+                "It connects to your local database, detects any un-tracked changes made inside your `schema.prisma` file, generates raw `.sql` migration files to apply those changes, and ultimately regenerates the TypeScript `@prisma/client` natively",
+                "It deploys the Prisma Studio dashboard to an AWS server instance",
+                "It converts raw MongoDB syntax into PostgreSQL natively"
+            ],
+            "answer": "It connects to your local database, detects any un-tracked changes made inside your `schema.prisma` file, generates raw `.sql` migration files to apply those changes, and ultimately regenerates the TypeScript `@prisma/client` natively",
+            "explanation": "This command creates an automated workflow. You type `model Post { id Int }`, run the command, and it writes the `CREATE TABLE` script, executes it locally, and updates your VSCode autocomplete instantly."
+        },
+        {
+            "question": "What is 'Database Drift' in the context of Prisma?",
+            "options": [
+                "When developers transition from PostgreSQL to MongoDB natively",
+                "When the application's read speeds gradually slow down due to missing B-Tree indexes",
+                "When the actual physical structure of the SQL database (e.g. columns, tables) no longer natively matches the schema expected by the Prisma migration history files, usually caused by manual GUI modifications",
+                "When Prisma fails to install via NPM locally"
+            ],
+            "answer": "When the actual physical structure of the SQL database (e.g. columns, tables) no longer natively matches the schema expected by the Prisma migration history files, usually caused by manual GUI modifications",
+            "explanation": "If the database expects a `name` column, but a developer manually logs into pgAdmin and deletes the column without using a Prisma migration, Prisma will detect a drift mismatch the next time it runs."
+        },
+        {
+            "question": "Why is it strictly forbidden to execute `npx prisma migrate dev` on a live Production server environment?",
+            "options": [
+                "Because `dev` mathematically requires an active MongoDB replica set natively",
+                "Because `dev` is a highly destructive, interactive command designed to aggressively enforce schema parity; if it detects drift, it may automatically drop columns or reset (delete) the entire live customer database to force synchronization natively",
+                "Because `dev` blocks the main Node.js event loop causing infinite DDOS latency",
+                "Because `dev` deletes all migration files"
+            ],
+            "answer": "Because `dev` is a highly destructive, interactive command designed to aggressively enforce schema parity; if it detects drift, it may automatically drop columns or reset (delete) the entire live customer database to force synchronization natively",
+            "explanation": "Production databases must be treated with infinite caution. `migrate deploy` is designed to strictly read raw SQL scripts and execute them blindly. `migrate dev` is a local tool designed to violently fix development bugs."
+        },
+        {
+            "question": "What is the strict primary purpose of the `npx prisma migrate deploy` command executed within a CI/CD pipeline (like Vercel or GitHub Actions)?",
+            "options": [
+                "To compile TypeScript files into JavaScript globally",
+                "To safely check the database's `_prisma_migrations` history table, apply any absolutely new `.sql` migrations that have not yet been executed in production, and then cleanly exit without modifying existing data or generating new schema files natively",
+                "To forcibly overwrite the production database with local laptop data",
+                "To generate seed records"
+            ],
+            "answer": "To safely check the database's `_prisma_migrations` history table, apply any absolutely new `.sql` migrations that have not yet been executed in production, and then cleanly exit without modifying existing data or generating new schema files natively",
+            "explanation": "When deploying, your codebase has updated. `Deploy` runs the raw SQL scripts attached to that code block against the database before starting the Node server, ensuring the tables exist securely before traffic hits the API."
+        },
+        {
+            "question": "What specifically does the `npx prisma migrate reset` command do in a local development environment?",
+            "options": [
+                "It reverts the last 5 commits strictly",
+                "It drops the entire local database completely destroying all data, perfectly recreates the schema purely from the chronological migration files, and then executes the `seed.ts` script to generate fresh, pristine dummy development data natively",
+                "It resets the user passwords",
+                "It rolls back the Prisma npm package to v3 natively"
+            ],
+            "answer": "It drops the entire local database completely destroying all data, perfectly recreates the schema purely from the chronological migration files, and then executes the `seed.ts` script to generate fresh, pristine dummy development data natively",
+            "explanation": "When your local database is completely broken and drifting, you execute `reset` to wipe the slate clean and start fresh in seconds. This is exceptionally fast locally, which is why seeding logic is natively integrated."
+        }
+    ]
+}

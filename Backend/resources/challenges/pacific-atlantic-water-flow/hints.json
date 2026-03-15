@@ -1,0 +1,1 @@
+["Instead of asking 'which cells can reach both oceans?', think in reverse: which cells can be reached FROM the oceans?", "Do a BFS/DFS starting from all Pacific border cells (top row + left column), marking cells reachable going uphill (height >=). Do the same for Atlantic border (bottom row + right column).", "The answer is the intersection: cells reachable from both oceans."]

@@ -1,0 +1,36 @@
+<h1>Networking & Security</h1>
+<p>By default, Docker containers are securely isolated from the outside world. If you run a Node.js server inside a container on port 8080, and try to visit <code>http://localhost:8080</code> on your Mac, your browser will say "Site cannot be reached."</p>
+
+<h2>Port Mapping (Host vs Container)</h2>
+<p>To access the Node server from the outside physical world, you must specify a Port Mapping when executing the container:</p>
+<pre><code>docker run -p 3000:8080 my-node-app
+</code></pre>
+<p>This syntax is defined as <code>[HOST_PORT]:[CONTAINER_PORT]</code>. Docker listens to Port 3000 on your Host Machine (your Mac). It takes any incoming HTTP request and funnels it through the firewall into the container's isolated internal Port 8080.</p>
+
+<p><strong>Security Golden Rule:</strong> Never publicly expose your internal Database Port! If you map <code>-p 5432:5432</code> for PostgreSQL on a production AWS server, hackers will attempt to brute-force your root password immediately. You should only expose your API server to the public internet.</p>
+
+<h2>Bridge Networks</h2>
+<p>If you don't expose your Database to the outside world, how does your Node API server securely connect to it?</p>
+<p>When you execute <code>docker compose up</code> locally, Docker constructs a private Virtual Internet called a <strong>Bridge Network</strong>.</p>
+<ul>
+  <li>Your Database container is placed directly on this private local network.</li>
+  <li>Your API container is also placed directly on this exact same private network.</li>
+</ul>
+<p>Because both containers share this isolated Bridge Network, they can magically ping each other using their exact Service Names (e.g., <code>postgresql://admin:pass@database:5432/db</code>). They do not need to use the public internet. This creates a highly secure, closed ecosystem where the database is completely invisible to the outside world, but fully accessible to your API.</p>
+
+<h2>Injecting Environment Variables</h2>
+<p>You must never hardcode database passwords or API keys directly inside your <code>Dockerfile</code> or your source code. If you do, that password becomes permanently baked into the final Image, which means anyone who downloads your image can extract your passwords.</p>
+
+<p>Instead, your application must rely on <strong>Environment Variables</strong> dynamically injected at runtime.</p>
+<p>You define an <code>.env</code> file on your host machine:</p>
+<pre><code>STRIPE_SECRET_KEY=sk_live_12345
+DATABASE_URL=postgresql://admin:hiddenpass@database:5432/main
+</code></pre>
+<p>And you instruct Docker Compose to pass this file explicitly into the running container:</p>
+<pre><code>services:
+  api-server:
+    image: my-node-app
+    env_file:
+      - .env
+</code></pre>
+<p>Now, your Node application can freely access <code>process.env.STRIPE_SECRET_KEY</code>, but the actual secret key is never saved inside the immutable Docker Image file.</p>

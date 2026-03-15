@@ -1,0 +1,8 @@
+[
+  {
+    "input": "prefix='how to'",
+    "output": "['how to bake', 'how to code', 'how to draw', 'how to make coffee', 'how to swim']",
+    "explanation": "Top 5 suggestions for 'how to'",
+    "is_hidden": false
+  }
+]

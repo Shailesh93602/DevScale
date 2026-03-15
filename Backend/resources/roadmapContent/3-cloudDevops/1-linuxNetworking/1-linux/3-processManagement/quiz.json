@@ -1,0 +1,118 @@
+{
+    "title": "Process Management Quiz",
+    "description": "Test your knowledge on top, kill signals, background jobs, and systemd.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Which of the following commands sends a forceful termination signal (SIGKILL) that cannot be ignored by the process?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "kill -1 1234",
+                    "isCorrect": false
+                },
+                {
+                    "text": "kill -15 1234",
+                    "isCorrect": false
+                },
+                {
+                    "text": "kill -9 1234",
+                    "isCorrect": true
+                },
+                {
+                    "text": "systemctl kill 1234",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which character allows you to run a command in the background, freeing up your terminal?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "|",
+                    "isCorrect": false
+                },
+                {
+                    "text": "&",
+                    "isCorrect": true
+                },
+                {
+                    "text": "%",
+                    "isCorrect": false
+                },
+                {
+                    "text": ">>",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the standard command used to view real-time, interactive performance metrics and running CPU processes?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "ps aux",
+                    "isCorrect": false
+                },
+                {
+                    "text": "systemctl",
+                    "isCorrect": false
+                },
+                {
+                    "text": "top",
+                    "isCorrect": true
+                },
+                {
+                    "text": "free",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which command manages services that should start automatically on boot in modern Linux distributions?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "init.d",
+                    "isCorrect": false
+                },
+                {
+                    "text": "nohup",
+                    "isCorrect": false
+                },
+                {
+                    "text": "systemctl",
+                    "isCorrect": true
+                },
+                {
+                    "text": "cron",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does the command `lsof -i :8080` do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It opens a firewall rule for port 8080.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It lists which process is currently listening on port 8080.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It sends a ping request to port 8080.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It instantly kills whatever is running on port 8080.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

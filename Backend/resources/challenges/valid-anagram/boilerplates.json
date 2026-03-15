@@ -1,0 +1,10 @@
+{
+  "typescript": "function isAnagram(s: string, t: string): boolean {\n    \n};",
+  "javascript": "/**\n * @param {string} s\n * @param {string} t\n * @return {boolean}\n */\nvar isAnagram = function(s, t) {\n    \n};",
+  "python": "class Solution:\n    def isAnagram(self, s: str, t: str) -> bool:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public boolean isAnagram(String s, String t) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool isAnagram(string s, string t) {\n        \n    }\n};",
+  "go": "func isAnagram(s string, t string) bool {\n    \n}",
+  "rust": "impl Solution {\n    pub fn is_anagram(s: String, t: String) -> bool {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public bool IsAnagram(string s, string t) {\n        \n    }\n}"
+}

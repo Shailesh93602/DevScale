@@ -1,0 +1,4 @@
+{
+    "name": "Refs, forwardRef & Portals",
+    "description": "Mastering mutable references, DOM access with useRef, forwarding refs to custom components, useImperativeHandle, and rendering outside the DOM hierarchy with createPortal."
+}

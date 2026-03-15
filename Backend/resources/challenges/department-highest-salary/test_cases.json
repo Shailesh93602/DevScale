@@ -1,0 +1,32 @@
+[
+  {
+    "input": "{\"Employee\": [{\"id\": 1, \"name\": \"Joe\", \"salary\": 70000, \"departmentId\": 1}, {\"id\": 2, \"name\": \"Jim\", \"salary\": 90000, \"departmentId\": 1}, {\"id\": 3, \"name\": \"Henry\", \"salary\": 80000, \"departmentId\": 2}, {\"id\": 4, \"name\": \"Sam\", \"salary\": 60000, \"departmentId\": 2}, {\"id\": 5, \"name\": \"Max\", \"salary\": 90000, \"departmentId\": 1}], \"Department\": [{\"id\": 1, \"name\": \"IT\"}, {\"id\": 2, \"name\": \"Sales\"}]}",
+    "output": "[{\"Department\": \"IT\", \"Employee\": \"Jim\", \"Salary\": 90000}, {\"Department\": \"IT\", \"Employee\": \"Max\", \"Salary\": 90000}, {\"Department\": \"Sales\", \"Employee\": \"Henry\", \"Salary\": 80000}]",
+    "explanation": "Jim and Max tie for highest in IT; Henry is highest in Sales.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Employee\": [{\"id\": 1, \"name\": \"Alice\", \"salary\": 50000, \"departmentId\": 1}], \"Department\": [{\"id\": 1, \"name\": \"Engineering\"}]}",
+    "output": "[{\"Department\": \"Engineering\", \"Employee\": \"Alice\", \"Salary\": 50000}]",
+    "explanation": "Only one employee in the department.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Employee\": [{\"id\": 1, \"name\": \"A\", \"salary\": 100000, \"departmentId\": 1}, {\"id\": 2, \"name\": \"B\", \"salary\": 100000, \"departmentId\": 1}, {\"id\": 3, \"name\": \"C\", \"salary\": 100000, \"departmentId\": 1}], \"Department\": [{\"id\": 1, \"name\": \"HR\"}]}",
+    "output": "[{\"Department\": \"HR\", \"Employee\": \"A\", \"Salary\": 100000}, {\"Department\": \"HR\", \"Employee\": \"B\", \"Salary\": 100000}, {\"Department\": \"HR\", \"Employee\": \"C\", \"Salary\": 100000}]",
+    "explanation": "All three employees tie for the highest salary.",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"Employee\": [{\"id\": 1, \"name\": \"X\", \"salary\": 90000, \"departmentId\": 1}, {\"id\": 2, \"name\": \"Y\", \"salary\": 80000, \"departmentId\": 2}, {\"id\": 3, \"name\": \"Z\", \"salary\": 70000, \"departmentId\": 3}], \"Department\": [{\"id\": 1, \"name\": \"A\"}, {\"id\": 2, \"name\": \"B\"}, {\"id\": 3, \"name\": \"C\"}]}",
+    "output": "[{\"Department\": \"A\", \"Employee\": \"X\", \"Salary\": 90000}, {\"Department\": \"B\", \"Employee\": \"Y\", \"Salary\": 80000}, {\"Department\": \"C\", \"Employee\": \"Z\", \"Salary\": 70000}]",
+    "explanation": "Each department has only one employee.",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"Employee\": [{\"id\": 1, \"name\": \"Joe\", \"salary\": 85000, \"departmentId\": 1}, {\"id\": 2, \"name\": \"Henry\", \"salary\": 80000, \"departmentId\": 2}, {\"id\": 3, \"name\": \"Sam\", \"salary\": 60000, \"departmentId\": 2}, {\"id\": 4, \"name\": \"Max\", \"salary\": 90000, \"departmentId\": 1}, {\"id\": 5, \"name\": \"Janet\", \"salary\": 69000, \"departmentId\": 1}, {\"id\": 6, \"name\": \"Randy\", \"salary\": 85000, \"departmentId\": 1}], \"Department\": [{\"id\": 1, \"name\": \"IT\"}, {\"id\": 2, \"name\": \"Sales\"}]}",
+    "output": "[{\"Department\": \"IT\", \"Employee\": \"Max\", \"Salary\": 90000}, {\"Department\": \"Sales\", \"Employee\": \"Henry\", \"Salary\": 80000}]",
+    "explanation": "Max has the highest in IT (90000), Henry has the highest in Sales (80000).",
+    "is_hidden": true
+  }
+]

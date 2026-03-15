@@ -1,0 +1,99 @@
+<h1>Zustand & React Query on Mobile</h1>
+<p>Mobile apps deal with two distinct categories of state: <strong>client state</strong> (UI state, user preferences, local toggles) and <strong>server state</strong> (data fetched from APIs that can become stale). Zustand handles client state efficiently; React Query specializes in server state with caching, background refresh, and optimistic updates.</p>
+
+<h2>Zustand: Simple Global State</h2>
+<pre><code class="language-jsx">import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+// Auth store: persisted to AsyncStorage, survives app restarts
+const useAuthStore = create(
+  persist(
+    (set, get) => ({
+      user: null,
+      token: null,
+      isLoading: true,
+
+      setUser: (user, token) => set({ user, token, isLoading: false }),
+      logout: () => set({ user: null, token: null }),
+      setLoading: (isLoading) => set({ isLoading }),
+
+      // Computed value using get()
+      isAuthenticated: () => get().user !== null,
+    }),
+    {
+      name: 'auth-storage',   // Key in AsyncStorage
+      storage: createJSONStorage(() => AsyncStorage),
+      // Only persist specific fields (not isLoading)
+      partialize: (state) => ({ user: state.user, token: state.token }),
+    }
+  )
+);
+
+// Non-persisted UI state
+const useCartStore = create((set) => ({
+  items: [],
+  addItem: (product) => set((state) => ({
+    items: [...state.items, product]
+  })),
+  removeItem: (id) => set((state) => ({
+    items: state.items.filter(item => item.id !== id)
+  })),
+  totalCount: 0,  // Computed in selectors
+}));
+
+// Usage — subscribe to only what you need (prevents unnecessary re-renders)
+const user = useAuthStore((state) => state.user);       // Only re-renders when user changes
+const token = useAuthStore((state) => state.token);     // Only re-renders when token changes
+</code></pre>
+
+<h2>React Query: Server State Management</h2>
+<pre><code class="language-jsx">import { QueryClient, QueryClientProvider, useQuery, useMutation, useInfiniteQuery } from '@tanstack/react-query';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,  // Data is fresh for 5 minutes
+      gcTime: 10 * 60 * 1000,    // Keep in cache for 10 minutes after last use
+      retry: 2,                   // Retry failed requests twice
+    },
+  },
+});
+
+// Cached query — only fetches if data is stale or not in cache
+function useProduct(id) {
+  return useQuery({
+    queryKey: ['product', id],  // Cache key — include all dependencies
+    queryFn: () => api.getProduct(id),
+    enabled: !!id,              // Only fetch when id is available
+  });
+}
+
+// Infinite scroll with useInfiniteQuery
+function useProductFeed() {
+  return useInfiniteQuery({
+    queryKey: ['products'],
+    queryFn: ({ pageParam = 1 }) => api.getProducts({ page: pageParam }),
+    getNextPageParam: (lastPage) => lastPage.nextPage ?? undefined,
+  });
+}
+
+// Optimistic mutation — UI updates instantly, rolls back on error
+function useAddToCart() {
+  return useMutation({
+    mutationFn: (productId) => api.addToCart(productId),
+    onMutate: async (productId) => {
+      await queryClient.cancelQueries({ queryKey: ['cart'] });
+      const previous = queryClient.getQueryData(['cart']);
+      // Optimistically update cart
+      queryClient.setQueryData(['cart'], (old) => [...old, { id: productId }]);
+      return { previous };
+    },
+    onError: (err, productId, context) => {
+      // Roll back on error
+      queryClient.setQueryData(['cart'], context.previous);
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ['cart'] }),
+  });
+}
+</code></pre>

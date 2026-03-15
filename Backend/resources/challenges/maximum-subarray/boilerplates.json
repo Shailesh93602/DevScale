@@ -1,0 +1,10 @@
+{
+  "typescript": "function maxSubArray(nums: number[]): number {\n    \n};",
+  "javascript": "/**\n * @param {number[]} nums\n * @return {number}\n */\nvar maxSubArray = function(nums) {\n    \n};",
+  "python": "class Solution:\n    def maxSubArray(self, nums: List[int]) -> int:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public int maxSubArray(int[] nums) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int maxSubArray(vector<int>& nums) {\n        \n    }\n};",
+  "go": "func maxSubArray(nums []int) int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn max_sub_array(nums: Vec<i32>) -> i32 {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int MaxSubArray(int[] nums) {\n        \n    }\n}"
+}

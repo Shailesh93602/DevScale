@@ -1,0 +1,89 @@
+<h1>React Router — Client-Side Navigation</h1>
+<p>React Router (v6+) enables navigation in single-page applications without full page reloads. The URL changes, but only the relevant component re-renders.</p>
+
+<h2>Setup</h2>
+<pre><code>npm install react-router-dom
+
+// main.tsx
+import { BrowserRouter } from "react-router-dom";
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  &lt;BrowserRouter&gt;
+    &lt;App /&gt;
+  &lt;/BrowserRouter&gt;
+);</code></pre>
+
+<h2>Defining Routes</h2>
+<pre><code>import { Routes, Route } from "react-router-dom";
+
+function App() {
+  return (
+    &lt;Routes&gt;
+      &lt;Route path="/" element={&lt;HomePage /&gt;} /&gt;
+      &lt;Route path="/about" element={&lt;AboutPage /&gt;} /&gt;
+      &lt;Route path="/users/:id" element={&lt;UserProfile /&gt;} /&gt;
+      &lt;Route path="/dashboard/*" element={&lt;Dashboard /&gt;} /&gt;
+      &lt;Route path="*" element={&lt;NotFound /&gt;} /&gt; {/* 404 */}
+    &lt;/Routes&gt;
+  );
+}</code></pre>
+
+<h2>Navigation</h2>
+<pre><code>import { Link, NavLink, useNavigate } from "react-router-dom";
+
+// Declarative navigation
+&lt;Link to="/about"&gt;About&lt;/Link&gt;
+&lt;NavLink to="/dashboard" className={({ isActive }) =&gt; isActive ? "active" : ""}&gt;
+  Dashboard
+&lt;/NavLink&gt;
+
+// Programmatic navigation
+function LoginPage() {
+  const navigate = useNavigate();
+
+  const handleLogin = async () =&gt; {
+    await login();
+    navigate("/dashboard");           // Redirect after login
+    navigate(-1);                     // Go back
+    navigate("/home", { replace: true }); // Replace history entry
+  };
+}</code></pre>
+
+<h2>Route Parameters & Query Strings</h2>
+<pre><code>import { useParams, useSearchParams } from "react-router-dom";
+
+// Route: /users/:userId/posts/:postId
+function PostDetail() {
+  const { userId, postId } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tab = searchParams.get("tab") ?? "overview"; // /posts/1?tab=comments
+
+  return &lt;div&gt;Post {postId} by User {userId}, tab: {tab}&lt;/div&gt;;
+}</code></pre>
+
+<h2>Nested Routes</h2>
+<pre><code>function Dashboard() {
+  return (
+    &lt;div&gt;
+      &lt;DashboardNav /&gt;
+      &lt;Outlet /&gt; {/* Child routes render here */}
+    &lt;/div&gt;
+  );
+}
+
+&lt;Route path="/dashboard" element={&lt;Dashboard /&gt;}&gt;
+  &lt;Route index element={&lt;DashboardHome /&gt;} /&gt;
+  &lt;Route path="analytics" element={&lt;Analytics /&gt;} /&gt;
+  &lt;Route path="settings" element={&lt;Settings /&gt;} /&gt;
+&lt;/Route&gt;</code></pre>
+
+<h2>Protected Routes</h2>
+<pre><code>function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { isLoggedIn } = useAuth();
+  if (!isLoggedIn) return &lt;Navigate to="/login" replace /&gt;;
+  return &lt;&gt;{children}&lt;/&gt;;
+}
+
+// Usage
+&lt;Route path="/dashboard" element={
+  &lt;ProtectedRoute&gt;&lt;Dashboard /&gt;&lt;/ProtectedRoute&gt;
+} /&gt;</code></pre>

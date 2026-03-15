@@ -1,0 +1,7 @@
+{
+    "id": "2-pushNotifications",
+    "title": "Push Notifications with Expo & FCM",
+    "description": "Implement cross-platform push notifications using Expo Notifications, Firebase Cloud Messaging (FCM), and Apple Push Notification service (APNs).",
+    "order": 2,
+    "duration": 40
+}

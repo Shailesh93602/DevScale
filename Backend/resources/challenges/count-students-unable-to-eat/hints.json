@@ -1,0 +1,6 @@
+[
+  "The order of students in the queue doesn't actually matter for the final count. Think about why.",
+  "What matters is the total count of sandwiches of each type vs the number of students who prefer each type.",
+  "Count how many students prefer type 0 and type 1, then count how many sandwiches of each type exist.",
+  "Students who can't eat = MAX(0, students_wanting_type_X - sandwiches_of_type_X) for each type X."
+]

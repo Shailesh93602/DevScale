@@ -1,0 +1,118 @@
+{
+    "title": "React Native Core Components Quiz",
+    "description": "Test your knowledge on View, Text, ScrollView, and FlatList.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "In React Native, what happens physically 'under the hood' when you utilize a primitive `<View>` component in your JavaScript code?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It compiles down into a generic HTML `<div>` inside an embedded WebView browser.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "React Native uses a Bridge to translate the generic `<View>` down into a true, native OS element (a `UIView` on iOS and `ViewGroup` on Android) at runtime.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It runs the Javascript physically on the device's CPU.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It creates a canvas element and draws pixels manually.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What happens if you attempt to render a raw string like `Hello World` directly inside a `<View>` without wrapping it in a `<Text>` component?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It renders perfectly just like in a web browser using React.js.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It renders, but the font size is extremely tiny.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The mobile application will immediately crash, throwing a strict invariant violation error.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It defaults to black text with a white background.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which of the following describes a crucial and unique requirement for rendering remote images (from a URL) using the `<Image>` component that differs from traditional web development?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The image must end strictly in `.png` format.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "You must physically define static `width` and `height` style properties on the component, or the image fundamentally will not render.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "You must base64 encode the URL string.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "You must use an `<img>` tag instead.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "If your application requires rendering a massive database list containing 5,000 distinct items (like a Twitter feed), which component MUST you use to prevent Severe memory leaks and crashes?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A standard `<View>`.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A `<ScrollView>`, because it handles unlimited data gracefully.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A `<FlatList>`, because it implements 'windowing', only physically rendering the tiny subset of items actively visible on the phone screen at one time.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "An HTML `<map>` function.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "You place three `<Text>` components inside a `<View>`. The text exceeds the physical height of the phone screen, but the user cannot swipe down to view the hidden text. Why?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Because they have not authenticated via FaceID.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because standard `<View>` components are fundamentally static containers and do NOT possess scrolling capabilities natively. The content must be explicitly wrapped in a `<ScrollView>`.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Because the text is absolute positioned.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because the app is running in Development mode.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

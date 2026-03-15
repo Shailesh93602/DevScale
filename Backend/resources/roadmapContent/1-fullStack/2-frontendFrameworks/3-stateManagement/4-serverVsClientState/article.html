@@ -1,0 +1,130 @@
+<h1>Server State vs. Client State</h1>
+<p>One of the most important architectural decisions in React is understanding that not all state is the same. <strong>State has two fundamentally different natures</strong>, and using the wrong tool for each is the root cause of most state management complexity.</p>
+
+<h2>The Two Types of State</h2>
+
+<h3>Client State (UI State)</h3>
+<p>Local, ephemeral information that belongs to the UI:</p>
+<ul>
+  <li>Is the modal open or closed?</li>
+  <li>What text is in the search input?</li>
+  <li>Which tab is active?</li>
+  <li>Is dark mode enabled?</li>
+  <li>Form field values before submission</li>
+</ul>
+<p><strong>Tools:</strong> useState, useReducer, Zustand, Jotai, Context API</p>
+
+<h3>Server State (Remote/Async State)</h3>
+<p>Data that exists on the server and is fetched asynchronously:</p>
+<ul>
+  <li>The list of users from <code>/api/users</code></li>
+  <li>The current user's profile</li>
+  <li>Product inventory data</li>
+  <li>Notification count</li>
+</ul>
+<p><strong>Characteristics:</strong> asynchronous, can become stale, shared across sessions, requires caching, re-fetching, optimistic updates, etc.</p>
+<p><strong>Tools:</strong> React Query (TanStack Query), SWR, RTK Query</p>
+
+<h2>Why You Shouldn't Store Server State in Redux/Zustand</h2>
+<pre><code>// ❌ Anti-pattern: manual server state in Redux/Zustand
+// You end up managing: loading, error, caching, refetching, staleness manually
+const useStore = create((set) =&gt; ({
+  users: [],
+  usersLoading: false,
+  usersError: null,
+  fetchUsers: async () =&gt; {
+    set({ usersLoading: true });
+    try {
+      const users = await getUsers();
+      set({ users, usersLoading: false });
+    } catch (error) {
+      set({ usersError: error, usersLoading: false });
+    }
+  }
+}));
+
+// ✅ Correct: server state belongs in React Query
+function useUsers() {
+  return useQuery({
+    queryKey: ['users'],
+    queryFn: getUsers,
+    staleTime: 5 * 60 * 1000, // consider fresh for 5 minutes
+  });
+}</code></pre>
+
+<h2>Combining React Query + Zustand</h2>
+<pre><code>// Zustand handles client-only UI state
+const useUIStore = create((set) =&gt; ({
+  selectedUserId: null,
+  isCreateModalOpen: false,
+  filterRole: 'all',
+  setSelectedUser: (id) =&gt; set({ selectedUserId: id }),
+  openCreateModal: () =&gt; set({ isCreateModalOpen: true }),
+  closeCreateModal: () =&gt; set({ isCreateModalOpen: false }),
+  setFilterRole: (role) =&gt; set({ filterRole: role }),
+}));
+
+// React Query handles server state
+function useFilteredUsers() {
+  const filterRole = useUIStore(s =&gt; s.filterRole);
+
+  return useQuery({
+    queryKey: ['users', filterRole],  // re-fetches when filter changes
+    queryFn: () =&gt; fetchUsers({ role: filterRole }),
+  });
+}
+
+// Component uses both together cleanly
+function UsersPage() {
+  const { data: users, isLoading } = useFilteredUsers();
+  const { filterRole, setFilterRole, openCreateModal } = useUIStore();
+
+  return (
+    &lt;div&gt;
+      &lt;select value={filterRole} onChange={e =&gt; setFilterRole(e.target.value)}&gt;
+        &lt;option value="all"&gt;All&lt;/option&gt;
+        &lt;option value="admin"&gt;Admins&lt;/option&gt;
+      &lt;/select&gt;
+      &lt;button onClick={openCreateModal}&gt;Create User&lt;/button&gt;
+      {isLoading ? &lt;Spinner /&gt; : users?.map(u =&gt; &lt;UserRow key={u.id} user={u} /&gt;)}
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+<h2>Optimistic Updates with React Query</h2>
+<pre><code>const queryClient = useQueryClient();
+
+const deleteUser = useMutation({
+  mutationFn: (userId: string) =&gt; api.deleteUser(userId),
+  onMutate: async (userId) =&gt; {
+    // Optimistically remove from UI immediately
+    await queryClient.cancelQueries({ queryKey: ['users'] });
+    const previousUsers = queryClient.getQueryData(['users']);
+    queryClient.setQueryData(['users'], (old: User[]) =&gt;
+      old.filter(u =&gt; u.id !== userId)
+    );
+    return { previousUsers }; // for rollback
+  },
+  onError: (err, userId, context) =&gt; {
+    // Rollback on error
+    queryClient.setQueryData(['users'], context?.previousUsers);
+  },
+  onSettled: () =&gt; {
+    queryClient.invalidateQueries({ queryKey: ['users'] });
+  }
+});</code></pre>
+
+<h2>State Decision Flowchart</h2>
+<pre><code>Is the state from a server/API?
+├── YES → Use React Query / SWR
+└── NO → Is it needed by many components?
+          ├── YES → Use Zustand / Context
+          └── NO → Use useState / useReducer</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Never store server-fetched data in Zustand/Redux — React Query manages caching and updates.</li>
+  <li>Keep client state as close to the component that uses it as possible (start with useState).</li>
+  <li>Use React Query's <code>staleTime</code> to prevent overfetching.</li>
+  <li>Optimistic updates significantly improve perceived performance.</li>
+</ul>

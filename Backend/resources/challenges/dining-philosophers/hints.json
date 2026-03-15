@@ -1,0 +1,6 @@
+[
+  "Deadlock requires circular wait. If philosopher i holds fork i and waits for fork i+1, and all do this, deadlock occurs.",
+  "Resource ordering breaks the cycle: always pick up the lower-numbered fork first.",
+  "For philosopher i with forks i and (i+1)%n, pick up min(i, (i+1)%n) before max(i, (i+1)%n).",
+  "The last philosopher (n-1) will pick fork 0 before fork n-1, breaking the circular dependency."
+]

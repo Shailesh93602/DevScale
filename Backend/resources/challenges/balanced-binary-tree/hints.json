@@ -1,0 +1,6 @@
+[
+  "A tree is balanced if for every node, the height difference between its left and right subtrees is at most 1.",
+  "You can compute the height of a subtree recursively. The height of a null node is 0.",
+  "A naive approach checks balance at each node by computing heights top-down, but this leads to redundant computation.",
+  "For an optimal O(N) solution, combine height computation and balance checking into a single recursive function. Return -1 as a sentinel to indicate an unbalanced subtree."
+]

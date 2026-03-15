@@ -1,0 +1,118 @@
+{
+    "title": "Load Balancing Quiz",
+    "description": "Test your knowledge on algorithms, OSI layers, and health checks.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Which Load Balancing algorithm sequentially distributes traffic across a pool of servers (Server A, Server B, Server C, Server A...)?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Least Connections",
+                    "isCorrect": false
+                },
+                {
+                    "text": "IP Hashing",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Round Robin",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Subnet Masking",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which of the following routing rules specifies Layer 7 (Application) Load Balancing instead of Layer 4?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Routing all traffic originating from a specific country IP block to Server A.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Routing all traffic destined for HTTP port 80 to an API server.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Routing requests specifically matching the URL path '/api/v1' to the backend API servers, while routing '/assets' to a CDN.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Load balancing purely over TCP/UDP packet headers.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "If your backend servers hold login sessions in local RAM (in-memory user state), which algorithm ensures a logged-in user is always routed to the correct server?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Least Time",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Round Robin",
+                    "isCorrect": false
+                },
+                {
+                    "text": "IP Hash",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Maximum Throughput",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How does a Load Balancer ensure that it doesn't send client traffic to a backend server that has crashed?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It waits constantly for a heartbeat REST API call initiated by the server itself.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It performs periodic Health Checks (like pinging a /healthz endpoint) to determine if nodes are healthy.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It catches exceptions thrown by the user's browser.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It relies entirely on AWS Zookeeper.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which open-source software is widely used as an L7 reverse proxy and load balancer in containerized environments?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "PostgreSQL",
+                    "isCorrect": false
+                },
+                {
+                    "text": "RabbitMQ",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Docker Swarm",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Nginx",
+                    "isCorrect": true
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,94 @@
+<h1>A/B Testing & Canary Deployments for ML</h1>
+<p>Deploying a new model version without proper experimentation is like performing surgery without a diagnosis. A/B testing provides statistical evidence that the new model actually improves business metrics — not just offline evaluation metrics — before committing to a full rollout.</p>
+
+<h2>Why Offline Metrics Don't Tell the Whole Story</h2>
+<pre><code class="language-text">Offline evaluation: Model A AUC=0.91, Model B AUC=0.93
+                    → Model B looks better!
+                    
+Online A/B test result: Model B has 3% lower click-through rate
+                    → Model B was optimizing the wrong metric!
+
+This disconnect happens because:
+- Offline metrics measure prediction quality, not business impact
+- Our training data doesn't capture the full causal structure
+- User behavior changes when the model changes (reflexive systems)
+</code></pre>
+
+<h2>Designing a Statistically Valid A/B Test</h2>
+<pre><code class="language-python">from scipy import stats
+import numpy as np
+
+def compute_sample_size(baseline_rate, minimum_detectable_effect, alpha=0.05, power=0.80):
+    """
+    Calculate how many users needed per variant for statistical significance.
+    
+    baseline_rate:           Current conversion rate (e.g., 0.05 = 5%)
+    minimum_detectable_effect: Smallest improvement worth detecting (e.g., 0.01 = 1pp lift)
+    alpha:                   Significance level (type I error rate, default 5%)
+    power:                   Statistical power (1 - type II error, default 80%)
+    """
+    p1 = baseline_rate
+    p2 = baseline_rate + minimum_detectable_effect
+    
+    z_alpha = stats.norm.ppf(1 - alpha / 2)  # Two-tailed
+    z_beta = stats.norm.ppf(power)
+    
+    n = (z_alpha * np.sqrt(2 * p1 * (1-p1)) + z_beta * np.sqrt(p1*(1-p1) + p2*(1-p2)))**2 / (p2-p1)**2
+    return int(np.ceil(n))
+
+# Example: 5% baseline conversion, want to detect 0.5% lift, 95% confidence
+n_per_variant = compute_sample_size(baseline_rate=0.05, minimum_detectable_effect=0.005)
+print(f"Need {n_per_variant:,} users per variant ({n_per_variant*2:,} total)")
+# → 75,000 users per variant — don't stop the test early before reaching this!
+
+def evaluate_ab_test(control_conversions, control_n, treatment_conversions, treatment_n):
+    """Evaluate A/B test results"""
+    p_control = control_conversions / control_n
+    p_treatment = treatment_conversions / treatment_n
+    
+    # Two-proportion z-test
+    _, p_value = stats.proportions_ztest(
+        [treatment_conversions, control_conversions],
+        [treatment_n, control_n]
+    )
+    
+    lift = (p_treatment - p_control) / p_control * 100
+    print(f"Control:   {p_control:.3%}, Treatment: {p_treatment:.3%}")
+    print(f"Lift: {lift:+.2f}%, p-value: {p_value:.4f}")
+    print(f"Statistically significant: {p_value < 0.05}")
+</code></pre>
+
+<h2>Shadow Mode & Canary Deployment</h2>
+<pre><code class="language-python"># Shadow Mode: new model runs in parallel but results are NOT shown to users
+# Use to: validate new model predictions in real traffic without any user impact
+# Risk: zero (users see control model only)
+
+# Canary Release: gradually shift traffic to new model version
+# NGINX / Istio / API Gateway weighted routing:
+
+# Stage 1: 5% traffic → observe for 24 hours
+# Stage 2: 20% traffic → observe for 24 hours  
+# Stage 3: 50% traffic → statistical significance reached?
+# Stage 4: 100% traffic → full rollout
+
+# AWS SageMaker blue/green deployment example:
+import boto3
+
+sagemaker_client = boto3.client('sagemaker')
+
+# Update endpoint to split traffic: 90% Model A, 10% Model B (canary)
+sagemaker_client.update_endpoint(
+    EndpointName='churn-prediction-endpoint',
+    EndpointConfigName='churn-prediction-config-v2',
+    # Deployment config: shift 10% traffic to new variant
+    DeploymentConfig={
+        'BlueGreenUpdatePolicy': {
+            'TrafficRoutingConfiguration': {
+                'Type': 'CANARY',
+                'CanarySize': {'Type': 'CAPACITY_PERCENT', 'Value': 10}
+            },
+            'WaitIntervalInSeconds': 86400  # Wait 24 hours before full rollout
+        }
+    }
+)
+</code></pre>

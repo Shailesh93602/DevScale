@@ -1,0 +1,38 @@
+<h1>Prometheus</h1>
+<p>In a cloud environment, you need to know if your servers are running out of CPU, or if your API is suddenly taking 5 seconds to respond instead of 50 milliseconds. <strong>Prometheus</strong> is the industry standard tool for collecting these metrics.</p>
+
+<h2>Time-Series Database</h2>
+<p>Prometheus is fundamentally a Time-Series Database (TSDB). It stores metrics as streams of numeric values over time. Every data point consists of three things:</p>
+<ol>
+  <li><strong>Metric Name:</strong> (e.g., <code>http_requests_total</code>)</li>
+  <li><strong>Labels:</strong> Key-value pairs for filtering (e.g., <code>{method="GET", status="500"}</code>)</li>
+  <li><strong>Value &amp; Timestamp:</strong> (e.g., <code>42 @ 1629837192</code>)</li>
+</ol>
+
+<h2>The Pull Model</h2>
+<p>Unlike traditional monitoring tools where servers <em>push</em> their metrics to a central database, <strong>Prometheus uses a Pull Model</strong>.</p>
+<p>Your application exposes an HTTP endpoint (usually <code>/metrics</code>). Every 15 seconds, the Prometheus server makes an HTTP GET request to that endpoint on every single server in your cluster, <em>scraping</em> the data and saving it to its database.</p>
+<pre><code># Example payload exposed at /metrics
+# HELP http_requests_total The total number of HTTP requests.
+# TYPE http_requests_total counter
+http_requests_total{method="post",code="200"} 1027
+http_requests_total{method="post",code="400"} 3
+http_requests_total{method="get",code="200"} 4539</code></pre>
+
+<h2>Metric Types</h2>
+<ul>
+  <li><strong>Counter:</strong> A number that only ever goes UP (e.g., total number of requests, total errors). Useful for calculating <i>rates</i> (e.g., requests per second).</li>
+  <li><strong>Gauge:</strong> A number that can go up and down (e.g., current RAM usage, current active database connections).</li>
+  <li><strong>Histogram:</strong> Samples observations into configurable buckets. (e.g., tracking API response times: 10 requests took &lt;100ms, 5 requests took &lt;500ms). Crucial for calculating Apdex scores and percentiles.</li>
+</ul>
+
+<h2>PromQL (Prometheus Query Language)</h2>
+<p>To alert on metrics, you query Prometheus using PromQL. It is specifically designed for time-series arithmetic.</p>
+<pre><code># Get the per-second rate of 500 errors over the last 5 minutes
+rate(http_requests_total{status="500"}[5m])
+
+# Alert if the 5-minute error rate exceeds 5 errors per second
+rate(http_requests_total{status="500"}[5m]) > 5</code></pre>
+
+<h2>Alertmanager</h2>
+<p>Prometheus itself just collects data and evaluates PromQL rules. When a rule is violated, it fires an alert to the <strong>Alertmanager</strong>. The Alertmanager handles actual notification routing (sending a message to a Slack channel, triggering a PagerDuty incident, or sending an email) and handles deduplication (if 50 servers crash, it sends 1 consolidated Slack message, not 50).</p>

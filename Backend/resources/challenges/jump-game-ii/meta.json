@@ -1,0 +1,19 @@
+{
+  "title": "Jump Game II",
+  "slug": "jump-game-ii",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["greedy", "dynamic-programming", "array"],
+  "company_tags": ["Amazon", "Google", "Facebook", "Microsoft", "Apple"],
+  "topic_tags": ["greedy", "arrays", "dynamic programming"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer array `nums` where `nums[i]` represents the maximum jump length from position `i`.",
+  "output_format": "Return the minimum number of jumps to reach the last index.",
+  "example_input": "nums = [2,3,1,1,4]",
+  "example_output": "2",
+  "constraints": "- `1 <= nums.length <= 10^4`\n- `0 <= nums[i] <= 1000`\n- It is guaranteed that you can reach `nums[n - 1]`.",
+  "function_signature": "function jump(nums: number[]): number {}",
+  "status": "ACTIVE"
+}

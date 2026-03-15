@@ -1,0 +1,4 @@
+{
+    "name": "dbt Macros, Jinja, & Packages",
+    "description": "Writing DRY SQL securely. Utilizing the Jinja templating engine to write dynamic, programmable SQL macros (functions), and importing pre-built dbt packages to accelerate development rationally."
+}

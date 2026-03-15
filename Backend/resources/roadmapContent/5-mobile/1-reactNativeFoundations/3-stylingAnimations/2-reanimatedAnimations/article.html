@@ -1,0 +1,106 @@
+<h1>Reanimated 2 & Layout Animations</h1>
+<p>The original React Native Animated API runs on the JS thread — meaning animations can drop frames whenever JS is busy (network data arriving, component re-renders, etc.). React Native Reanimated 2 moves animation logic into worklets that execute on the UI thread, completely decoupled from JavaScript, producing consistent 60fps animations even under heavy load.</p>
+
+<h2>Core Concepts: Shared Values & Animated Styles</h2>
+<pre><code class="language-jsx">import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withSpring,
+  withRepeat,
+  Easing,
+  interpolate,
+  Extrapolation
+} from 'react-native-reanimated';
+
+// useSharedValue: lives on UI thread — changes don't cause React re-renders
+const opacity = useSharedValue(0);
+const scale = useSharedValue(1);
+
+// useAnimatedStyle: computes style on UI thread based on shared values
+// This function runs as a worklet on the UI thread!
+const animatedStyle = useAnimatedStyle(() => ({
+  opacity: opacity.value,
+  transform: [{ scale: scale.value }],
+}));
+
+// Trigger animations — these run entirely on UI thread
+const fadeIn = () => {
+  opacity.value = withTiming(1, { duration: 300, easing: Easing.ease });
+};
+const bounce = () => {
+  scale.value = withSpring(1.2, { damping: 4, stiffness: 300 }, () => {
+    scale.value = withSpring(1);  // Chain: spring back after bouncing
+  });
+};
+
+// Pulsing animation using withRepeat
+const pulse = () => {
+  scale.value = withRepeat(
+    withTiming(1.1, { duration: 800 }),
+    -1,    // -1 = repeat forever
+    true   // reverse: ping-pong between 1.0 and 1.1
+  );
+};
+
+return &lt;Animated.View style={[styles.box, animatedStyle]} /&gt;;
+</code></pre>
+
+<h2>Collapsible Header Pattern</h2>
+<pre><code class="language-jsx">import { useAnimatedScrollHandler, interpolate } from 'react-native-reanimated';
+
+const HEADER_MAX_HEIGHT = 200;
+const HEADER_MIN_HEIGHT = 60;
+
+const CollapsibleScreen = () => {
+  const scrollY = useSharedValue(0);
+
+  // Capture scroll events on UI thread — no JS bridge crossing!
+  const scrollHandler = useAnimatedScrollHandler((event) => {
+    scrollY.value = event.contentOffset.y;
+  });
+
+  const headerStyle = useAnimatedStyle(() => ({
+    height: interpolate(
+      scrollY.value,
+      [0, HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT],  // Input range
+      [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],        // Output range
+      Extrapolation.CLAMP                           // Don't go beyond bounds
+    ),
+  }));
+
+  const titleStyle = useAnimatedStyle(() => ({
+    fontSize: interpolate(scrollY.value, [0, 100], [28, 18], Extrapolation.CLAMP),
+    opacity: interpolate(scrollY.value, [0, 80], [1, 0], Extrapolation.CLAMP),
+  }));
+
+  return (
+    &lt;View style={{ flex: 1 }}&gt;
+      &lt;Animated.View style={[styles.header, headerStyle]}&gt;
+        &lt;Animated.Text style={[styles.title, titleStyle]}&gt;My App&lt;/Animated.Text&gt;
+      &lt;/Animated.View&gt;
+      &lt;Animated.ScrollView onScroll={scrollHandler} scrollEventThrottle={16}&gt;
+        &lt;!-- Content --&gt;
+      &lt;/Animated.ScrollView&gt;
+    &lt;/View&gt;
+  );
+};
+</code></pre>
+
+<h2>Layout Animations: Enter / Exit Effects</h2>
+<pre><code class="language-jsx">import Animated, { FadeIn, FadeOut, SlideInRight, ZoomOut } from 'react-native-reanimated';
+
+// Items automatically animate when mounted/unmounted from the component tree
+const NotificationBadge = ({ count }) => (
+  &lt;Animated.View entering={ZoomIn} exiting={ZoomOut}&gt;
+    &lt;Text&gt;{count}&lt;/Text&gt;
+  &lt;/Animated.View&gt;
+);
+
+const ListItem = ({ item }) => (
+  // Slide in from right when added, fade out when removed
+  &lt;Animated.View entering={SlideInRight} exiting={FadeOut}&gt;
+    &lt;Text&gt;{item.title}&lt;/Text&gt;
+  &lt;/Animated.View&gt;
+);
+</code></pre>

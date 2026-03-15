@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary technical problem that CSS Modules solve in React?",
+            "options": [
+                "Compiling Sass variables to CSS",
+                "Eliminating global CSS namespace collisions by hashing class names at build time",
+                "Extracting all styles into a single minified file",
+                "Enabling dark mode across the application"
+            ],
+            "answer": "Eliminating global CSS namespace collisions by hashing class names at build time",
+            "explanation": "CSS Modules automatically scopes CSS classes locally to the component. The class '.button' is transformed at build time into something unique like '.Button_module_button__HASH', so it cannot conflict with other '.button' classes in the app."
+        },
+        {
+            "question": "What is a major downside of using runtime CSS-in-JS libraries (like Styled Components or Emotion) in modern React (Server Components)?",
+            "options": [
+                "They do not support CSS animations",
+                "They incur a runtime performance penalty and do not easily support React Server Components",
+                "They require developers to learn a new syntax that isn't CSS",
+                "They cannot accept React props"
+            ],
+            "answer": "They incur a runtime performance penalty and do not easily support React Server Components",
+            "explanation": "Because libraries like Styled Components parse styles and inject <style> tags at runtime in the browser, they block React Server Components from streaming directly and cause a performance hit."
+        },
+        {
+            "question": "What is Tailwind CSS primarily considered to be?",
+            "options": [
+                "A component library like Bootstrap (pre-built buttons, cards)",
+                "A CSS-in-JS library",
+                "A Utility-First CSS framework providing low-level classes to build designs in JSX",
+                "A React hook for managing CSS variables"
+            ],
+            "answer": "A Utility-First CSS framework providing low-level classes to build designs in JSX",
+            "explanation": "Tailwind provides granular classes like 'bg-red-500' and 'flex' rather than highly opinionated components like 'card' or 'btn'. This allows rapid, custom component development without leaving JSX or writing raw CSS."
+        },
+        {
+            "question": "Why is the clsx (or classnames) utility library commonly used in React projects?",
+            "options": [
+                "To compile CSS into Webpack",
+                "To conditionally construct HTML classname strings safely based on JS objects and arrays",
+                "To replace the styled-components library",
+                "To polyfill CSS Grid in older browsers"
+            ],
+            "answer": "To conditionally construct HTML classname strings safely based on JS objects and arrays",
+            "explanation": "Constructing dynamic classes using template literals (className={`${base} ${active ? 'active' : ''}`}) gets messy quickly with hanging spaces. clsx({ active: isActive }) handles the logic cleanly."
+        },
+        {
+            "question": "What does the tailwind-merge library specifically solve when creating reusable components?",
+            "options": [
+                "It minifies the final CSS bundle automatically",
+                "It prevents class collisions by smartly overriding conflicting Tailwind utility classes",
+                "It merges Tailwind configs from multiple repositories",
+                "It converts Tailwind classes into inline styles"
+            ],
+            "answer": "It prevents class collisions by smartly overriding conflicting Tailwind utility classes",
+            "explanation": "If a component defaults to 'px-2 py-1 bg-red-500', and a user passes 'bg-blue-500', they might render 'bg-red-500 bg-blue-500'. CSS cascade (not class order) determines the winner, causing bugs. tailwind-merge removes 'bg-red-500' if 'bg-blue-500' is appended."
+        }
+    ]
+}

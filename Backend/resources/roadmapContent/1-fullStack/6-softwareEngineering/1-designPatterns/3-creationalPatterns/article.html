@@ -1,0 +1,73 @@
+<h1>Creational Design Patterns</h1>
+<p>Creational Patterns deal with the mechanism of object creation. Instead of constantly instantiating objects directly with the <code>new</code> keyword everywhere in your codebase, these patterns provide robust ways to create objects while hiding the creation logic.</p>
+
+<h2>1. The Singleton Pattern</h2>
+<p>The Singleton ensures that a class has only <strong>one</strong> instance globally across the entire application, and provides a global point of access to it.</p>
+<p>This is commonly used for Database Connections or Global Configuration objects.</p>
+<pre><code>class DatabaseConnection {
+  private static instance: DatabaseConnection;
+
+  // Private constructor prevents external instantiation completely
+  private constructor() {
+    this.connect();
+  }
+
+  public static getInstance(): DatabaseConnection {
+    if (!DatabaseConnection.instance) {
+      DatabaseConnection.instance = new DatabaseConnection();
+    }
+    return DatabaseConnection.instance;
+  }
+}
+
+// Both variables physically point to the exact same RAM memory address
+const db1 = DatabaseConnection.getInstance();
+const db2 = DatabaseConnection.getInstance();
+</code></pre>
+
+<h2>2. The Factory Method Pattern</h2>
+<p>The Factory Method defines an interface for creating an object, but allows subclasses to alter the type of objects that will be created. It encapsulates the complex instantiating logic behind a simple function.</p>
+<pre><code>interface Transport { deliver(): void; }
+class Truck implements Transport { deliver() { console.log('Road delivery'); } }
+class Ship implements Transport { deliver() { console.log('Sea delivery'); } }
+
+class LogisticsFactory {
+  public createTransport(type: 'road' | 'sea'): Transport {
+    if (type === 'road') return new Truck();
+    if (type === 'sea') return new Ship();
+    throw new Error('Unknown transport');
+  }
+}
+
+const factory = new LogisticsFactory();
+const vehicle = factory.createTransport('sea');
+vehicle.deliver();
+</code></pre>
+<p>By using the Factory, the client code does not need to know the specific class names (Truck or Ship); it just asks the factory for a transport vehicle.</p>
+
+<h2>3. The Builder Pattern</h2>
+<p>The Builder Pattern separates the construction of a highly complex object from its final representation. Instead of having a confusing constructor with 15 arguments, you construct the object step-by-step.</p>
+<pre><code>class QueryBuilder {
+  private query = { select: '', where: '', limit: 10 };
+
+  select(fields: string) {
+    this.query.select = fields;
+    return this; // Return 'this' to allow method chaining
+  }
+
+  where(condition: string) {
+    this.query.where = condition;
+    return this;
+  }
+
+  build() {
+    return `SELECT ${this.query.select} FROM table WHERE ${this.query.where}`;
+  }
+}
+
+// Clean, readable, and flexible object construction
+const sql = new QueryBuilder()
+  .select('id, name')
+  .where('age &gt; 18')
+  .build();
+</code></pre>

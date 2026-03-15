@@ -1,0 +1,118 @@
+{
+    "title": "dbt Deployment & CI/CD Quiz",
+    "description": "Test your knowledge of scheduling, testing, and continuous deployment in dbt.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Which specific file must dbt compare its current state against to enable 'Slim CI' (running only changed models)?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "run_results.json",
+                    "isCorrect": false
+                },
+                {
+                    "text": "dbt_project.yml",
+                    "isCorrect": false
+                },
+                {
+                    "text": "profiles.yml",
+                    "isCorrect": false
+                },
+                {
+                    "text": "manifest.json",
+                    "isCorrect": true
+                }
+            ]
+        },
+        {
+            "question": "What does the `--defer` flag do in a dbt run?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Defers execution until the database has no other active queries.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Resolves `ref()` statements for unchanged upstream models to point to their production counterparts.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Skips materialization of tables and only checks for SQL syntax errors.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Runs tests before building the models.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which of the following describes the difference between dbt Core and dbt Cloud?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "dbt Core is a command-line tool, while dbt Cloud adds an IDE, job scheduler, and hosted documentation.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "dbt Core only supports Snowflake, while dbt Cloud supports BigQuery and Redshift.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "dbt Cloud provides a data warehouse engine to run queries without external databases.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "dbt Core requires Python, while dbt Cloud is built entirely in Node.js.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "To generate the static documentation website for a dbt project, which command is used?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "dbt compile",
+                    "isCorrect": false
+                },
+                {
+                    "text": "dbt build docs",
+                    "isCorrect": false
+                },
+                {
+                    "text": "dbt docs generate",
+                    "isCorrect": true
+                },
+                {
+                    "text": "dbt clean",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "When configuring profiles.yml for dbt, what purpose does the `target` configuration serve?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It specifies the data warehouse connection settings (like dev or prod) to use.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It selects which dbt models will be executed during a run.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It defines the S3 bucket where dbt logs are uploaded.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It scopes the specific users who have permission to trigger the pipeline.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

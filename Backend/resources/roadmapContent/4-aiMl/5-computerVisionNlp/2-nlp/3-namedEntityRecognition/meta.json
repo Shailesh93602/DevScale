@@ -1,0 +1,6 @@
+{
+    "id": "3-namedEntityRecognition",
+    "title": "Named Entity Recognition (NER)",
+    "description": "Identifying and classifying entities like names, organizations, and dates in raw text.",
+    "order": 3
+}

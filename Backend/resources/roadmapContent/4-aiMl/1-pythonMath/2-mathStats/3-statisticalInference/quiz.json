@@ -1,0 +1,118 @@
+{
+    "title": "Statistical Inference Quiz",
+    "description": "Test your knowledge on Hypothesis Testing, P-Values, and A/B Testing.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the primary purpose of 'Statistical Inference'?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "To compress image datasets efficiently without losing quality.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To draw valid mathematical conclusions about a massive 'Population' by analyzing a small 'Sample' of data.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "To query databases using raw SQL.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To ensure neural networks never crash.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In the context of A/B Testing an ML model, what is the 'Null Hypothesis'?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The baseline assumption that your brilliant new ML model had absolutely no effect, and any observed improvement was just random chance.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The assumption that the model is perfectly accurate.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A hypothesis that predicts values equal to zero.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The assumption that the Python code contains a bug.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "If you calculate a 'P-Value' of 0.01 (1%) after running a model optimization test, what conclusion do you draw?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The model's accuracy is only 1%.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The results are statistically significant, meaning there is less than a 5% chance the observed improvement was due to random luck. You confidently deploy.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The results are 'Not Statistically Significant'. The improvement was random noise.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The test needs to run for 10 more years before concluding.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which term describes a range of values (e.g., $400k to $450k) that mathematically quantifies uncertainty, rather than predicting a single exact number?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Standard Deviation",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A Point Estimate",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A Confidence Interval",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A Correlation Coefficient",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why do tech giants like Netflix use A/B Testing to evaluate new machine learning algorithms?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Because Python code cannot be tested locally.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A/B Testing acts as a controlled scientific experiment in production, isolating the exact impact of the new ML model vs the old model on actual user behavior.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It splits cloud computing costs in half.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because they are legally required to do so by the government.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

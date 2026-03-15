@@ -1,0 +1,6 @@
+[
+  "The flattening operation is essentially a Depth-First Search (DFS) over the linked list structure.",
+  "Consider using a stack to implement the DFS iteratively, or the call stack for recursion.",
+  "When you encounter a node with a child, you need to first process the child list, and eventually reconnect its tail to the current node's original `next` node.",
+  "Make sure you update the `prev` pointers properly, as this is a doubly linked list. Also, remember to set all `child` pointers to `null` in the flattened list."
+]

@@ -1,0 +1,4 @@
+{
+    "name": "Airflow Scheduling & Monitoring",
+    "description": "Cron-based scheduling, SLAs, backfilling, retries, and Airflow UI monitoring."
+}

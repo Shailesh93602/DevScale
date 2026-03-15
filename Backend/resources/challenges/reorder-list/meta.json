@@ -1,0 +1,41 @@
+{
+  "title": "Reorder List",
+  "slug": "reorder-list",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": [
+    "linked-list",
+    "two-pointers",
+    "stack",
+    "recursion"
+  ],
+  "company_tags": [
+    "Amazon",
+    "Facebook",
+    "Microsoft"
+  ],
+  "topic_tags": [
+    "linked lists",
+    "two pointers"
+  ],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "The `head` of a singly linked list.",
+  "output_format": "The head of the reordered list (or the list is modified in-place and returned).",
+  "example_input": "head = [1,2,3,4]",
+  "example_output": "[1,4,2,3]",
+  "constraints": "- The number of nodes in the list is in the range `[1, 5 * 10^4]`.\n- `1 <= Node.val <= 1000`",
+  "function_signature": "function reorderList(head: ListNode | null): void {}",
+  "status": "ACTIVE"
+}

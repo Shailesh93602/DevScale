@@ -1,0 +1,118 @@
+{
+    "title": "Biometric Authentication Quiz",
+    "description": "Test your knowledge of biometric auth, Secure Enclave, SecureStore, and edge case handling in React Native.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "When a user authenticates with Face ID in your React Native app, does your app code receive the raw facial scan data?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Yes — the raw biometric data is sent to your callback function so you can verify it against your server",
+                    "isCorrect": false
+                },
+                {
+                    "text": "No — the biometric template is stored and processed exclusively in the device's Secure Enclave hardware; your app only receives a boolean success/failure result",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Yes — but it is encrypted with the user's PIN before being passed to the app",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Only on Android — iOS sends biometric data to apps via the Keychain",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does `SecureStore.setItemAsync(key, value, { requireAuthentication: true })` do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Immediately prompts the user for biometric authentication before saving the value",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Saves the value protected by the hardware keystore — the biometric prompt will be required when reading the value with getItemAsync",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Encrypts the value with the user's PIN and stores it in AsyncStorage",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Registers the value as requiring a fresh login from the server every time it is accessed",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What should your app do when LocalAuthentication returns `error: 'lockout'`?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Delete the user account as the device may be compromised",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Retry biometric authentication automatically after a 2-second delay",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Inform the user that too many attempts failed and direct them to unlock the device with their PIN/pattern first",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Enable biometric bypass mode and allow access without authentication",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why should biometric authentication be offered as opt-in rather than mandatory?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Mandatory biometrics are prohibited by GDPR in Europe",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Not all devices support biometrics, not all users enroll them, and biometrics can fail — mandatory biometric login would lock out users from their accounts",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Opt-in biometrics are faster than mandatory ones due to how the Secure Enclave scans",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Mandatory biometrics prevent the app from being submitted to the App Store",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the correct moment to offer the user the option to enable biometric login?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "During app onboarding before the user has created an account",
+                    "isCorrect": false
+                },
+                {
+                    "text": "After the user's first successful password login — they now have a valid session and can opt-in to biometric convenience for future logins",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Every time the app opens, to ensure the user hasn't changed their mind",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Only in device Settings, not within the app",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

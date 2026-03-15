@@ -1,0 +1,19 @@
+{
+  "title": "Investments in 2016",
+  "slug": "investments-in-2016",
+  "difficulty": "Medium",
+  "category": "databases",
+  "points": 100,
+  "tags": ["sql", "subquery", "having", "aggregation"],
+  "company_tags": ["Amazon", "Facebook", "Bloomberg"],
+  "topic_tags": ["SQL", "Subquery", "GROUP BY"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Table: Insurance with columns pid (int), tiv_2015 (float), tiv_2016 (float), lat (float), lon (float)",
+  "output_format": "Result table with column tiv_2016 showing the sum of tiv_2016 for qualifying policyholders, rounded to 2 decimal places",
+  "example_input": "Table: Insurance\n| pid | tiv_2015 | tiv_2016 | lat | lon |\n| 1   | 10       | 5        | 10  | 10  |\n| 2   | 20       | 20       | 20  | 20  |\n| 3   | 10       | 30       | 20  | 20  |\n| 4   | 10       | 40       | 40  | 40  |",
+  "example_output": "| tiv_2016 |\n| 45.00    |",
+  "constraints": "- pid is the primary key\n- Each row contains policyholder info\n- lat and lon represent city location",
+  "function_signature": "-- Write your SQL query below",
+  "status": "ACTIVE"
+}

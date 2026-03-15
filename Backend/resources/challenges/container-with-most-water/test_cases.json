@@ -1,0 +1,12 @@
+[
+  { "input": "{\"height\":[1,8,6,2,5,4,8,3,7]}", "output": "49", "explanation": "Basic case", "is_hidden": false },
+  { "input": "{\"height\":[1,1]}", "output": "1", "explanation": "Two small elements", "is_hidden": false },
+  { "input": "{\"height\":[4,3,2,1,4]}", "output": "16", "explanation": "Ends are the highest", "is_hidden": true },
+  { "input": "{\"height\":[1,2,1]}", "output": "2", "explanation": "Middle is highest, but ends are wider", "is_hidden": true },
+  { "input": "{\"height\":[100,2,2,2,2,2,100]}", "output": "600", "explanation": "Huge ends", "is_hidden": true },
+  { "input": "{\"height\":[1,0,0,0,0,0,0,0,0,1]}", "output": "9", "explanation": "Zeroes in the middle don't affect width capacity", "is_hidden": true },
+  { "input": "{\"height\":[2,3,4,5,18,17,6]}", "output": "17", "explanation": "Adjacent huge spikes in the middle beat wide small ends", "is_hidden": true },
+  { "input": "{\"height\":[1,8,6,2,5,4,8,25,7]}", "output": "49", "explanation": "One enormous spike doesn't matter because it's bottlenecked by the other side", "is_hidden": true },
+  { "input": "{\"height\":[0,0,0,0]}", "output": "0", "explanation": "All zeroes", "is_hidden": true },
+  { "input": "{\"height\":[10000,10000]}", "output": "10000", "explanation": "Very high columns", "is_hidden": true }
+]

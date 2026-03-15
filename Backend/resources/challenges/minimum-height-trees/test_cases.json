@@ -1,0 +1,10 @@
+[
+  {"input":"{\"n\":4, \"edges\":[[1,0],[1,2],[1,3]]}","output":"[1]","explanation":"Star graph","is_hidden":false},
+  {"input":"{\"n\":6, \"edges\":[[3,0],[3,1],[3,2],[3,4],[5,4]]}","output":"[3,4]","explanation":"Two minimum roots","is_hidden":false},
+  {"input":"{\"n\":1, \"edges\":[]}","output":"[0]","explanation":"Single node","is_hidden":false},
+  {"input":"{\"n\":2, \"edges\":[[0,1]]}","output":"[0,1]","explanation":"Two connected nodes","is_hidden":true},
+  {"input":"{\"n\":3, \"edges\":[[0,1],[1,2]]}","output":"[1]","explanation":"Line graph","is_hidden":true},
+  {"input":"{\"n\":5, \"edges\":[[0,1],[1,2],[2,3],[3,4]]}","output":"[2]","explanation":"Long line odd exactly one root","is_hidden":true},
+  {"input":"{\"n\":6, \"edges\":[[0,1],[1,2],[2,3],[3,4],[4,5]]}","output":"[2,3]","explanation":"Long line even exactly two roots","is_hidden":true},
+  {"input":"{\"n\":7, \"edges\":[[0,1],[1,2],[1,3],[2,4],[3,5],[4,6]]}","output":"[1,2]","explanation":"Complex tree","is_hidden":true}
+]

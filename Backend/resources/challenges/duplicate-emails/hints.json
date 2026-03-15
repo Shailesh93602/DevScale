@@ -1,0 +1,6 @@
+[
+  "You need to find emails that appear more than once. Think GROUP BY.",
+  "After grouping by email, use the HAVING clause to filter groups with COUNT(*) > 1.",
+  "Alternatively, join the table with itself on matching emails but different IDs.",
+  "SELECT email AS Email FROM Person GROUP BY email HAVING COUNT(*) > 1;"
+]

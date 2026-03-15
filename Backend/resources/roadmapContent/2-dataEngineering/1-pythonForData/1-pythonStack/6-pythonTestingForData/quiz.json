@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary technical difference between standard software unit testing and specialized 'Data Quality Testing'?",
+            "options": [
+                "Data quality testing encrypts SSL connections.",
+                "Unit testing verifies the core logic of the application code itself, whereas Data Quality Testing verifies constraints, schemas, and values of the actual incoming data payloads to assert correctness before processing it into the Data Warehouse.",
+                "Unit tests utilize Redux State Management.",
+                "Data tests rely on static CSS variables."
+            ],
+            "answer": "Unit testing verifies the core logic of the application code itself, whereas Data Quality Testing verifies constraints, schemas, and values of the actual incoming data payloads to assert correctness before processing it into the Data Warehouse.",
+            "explanation": "If a third-party completely changes the schema of their API output, your flawless Python code will still crash. Data quality tests intercept this bad schema early."
+        },
+        {
+            "question": "Which specific declarative framework is considered the industry standard in the Python Data Engineering ecosystem for asserting strict Data Quality Contracts?",
+            "options": [
+                "Jest Native.",
+                "Great Expectations (GX), which natively allows Data Engineers to rigorously write human-readable rules (e.g., `expect_column_values_to_not_be_null`) asserting conditions on massive DataFrames instantly.",
+                "React Query.",
+                "SQLAlchemy ORM."
+            ],
+            "answer": "Great Expectations (GX), which natively allows Data Engineers to rigorously write human-readable rules (e.g., `expect_column_values_to_not_be_null`) asserting conditions on massive DataFrames instantly.",
+            "explanation": "GX essentially functions as 'Pytest specifically for giant datasets'. It validates rules automatically and generates HTML reports."
+        },
+        {
+            "question": "What specifically is a standard 'Data Contract' utilized for within an architectural pipeline?",
+            "options": [
+                "A rigid legal document sent exclusively to consumers.",
+                "A strict, highly automated schema constraint deeply embedded inside the ETL pipeline orchestration layer, designed to explicitly halt all processing and alert developers if invalid data attempts to enter the pristine Data Lake.",
+                "A protocol specifically designed natively for Docker routing.",
+                "A JSON Web Token cleanly identifying users securely."
+            ],
+            "answer": "A strict, highly automated schema constraint deeply embedded inside the ETL pipeline orchestration layer, designed to explicitly halt all processing and alert developers if invalid data attempts to enter the pristine Data Lake.",
+            "explanation": "If an upstream team accidentally introduces a bug resulting in millions of NULL Customer_IDs, the contract strictly prevents that poison from entering your production dashboards."
+        }
+    ]
+}

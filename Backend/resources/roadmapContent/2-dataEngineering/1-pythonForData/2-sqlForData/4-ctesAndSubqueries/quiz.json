@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary structural disadvantage of utilizing deeply nested Subqueries in complex analytical SQL?",
+            "options": [
+                "Subqueries consume permanent hard drive space instantly.",
+                "They force developers to read and comprehend the logic in a confusing 'inside-out' manner, making massive 5-level deep queries practically impossible to maintain or debug.",
+                "They encrypt the output format randomly.",
+                "They fundamentally prevent all WHERE clauses natively."
+            ],
+            "answer": "They force developers to read and comprehend the logic in a confusing 'inside-out' manner, making massive 5-level deep queries practically impossible to maintain or debug.",
+            "explanation": "Subqueries nest logic internally. The human brain struggles to maintain the context of the outer query while deciphering the nested inner math."
+        },
+        {
+            "question": "How does a CTE (Common Table Expression) explicitly resolve the readability issues caused by legacy Subqueries?",
+            "options": [
+                "It translates SQL directly into Javascript arrays.",
+                "It utilizes the `WITH` clause to declare temporary named mathematical variables sequentially, allowing developers to read and comprehend the complex logic clearly from top-to-bottom.",
+                "It completely bypasses standard database indexing safely.",
+                "It compresses string data physically."
+            ],
+            "answer": "It utilizes the `WITH` clause to declare temporary named mathematical variables sequentially, allowing developers to read and comprehend the complex logic clearly from top-to-bottom.",
+            "explanation": "CTEs act exactly like declaring `let x = 10` at the top of a Javascript file, cleanly naming a piece of logic before you actually use it later."
+        },
+        {
+            "question": "How do CTEs natively enforce the DRY (Don't Repeat Yourself) principle within a massive SQL script?",
+            "options": [
+                "By enforcing strict Type Checking on integers.",
+                "If a specific complex calculation is needed 5 times in the final query, a CTE allows you to declare that specific math block exactly once at the top securely, and simply comfortably reference its name globally below.",
+                "By deleting repetitive row data safely.",
+                "By dynamically rotating log arrays."
+            ],
+            "answer": "If a specific complex calculation is needed 5 times in the final query, a CTE allows you to declare that specific math block exactly once at the top securely, and simply comfortably reference its name globally below.",
+            "explanation": "Standard subqueries literally force you to copy-paste the exact same identical mathematical block 5 separate times into your SELECT clause."
+        }
+    ]
+}

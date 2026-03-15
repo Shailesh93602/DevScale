@@ -1,0 +1,85 @@
+<h1>Apache Airflow — Orchestrating Data Pipelines</h1>
+<p>Apache Airflow is the de-facto standard for workflow orchestration in data engineering. You define pipelines as code using Python DAGs (Directed Acyclic Graphs).</p>
+
+<h2>Core Concepts</h2>
+<ul>
+  <li><strong>DAG</strong> — Directed Acyclic Graph: defines tasks and their dependencies.</li>
+  <li><strong>Task</strong> — A unit of work (Python function, Bash command, SQL query).</li>
+  <li><strong>Operator</strong> — Template for a task type (PythonOperator, BashOperator, etc.).</li>
+  <li><strong>Scheduler</strong> — Monitors DAGs and triggers runs at the right time.</li>
+  <li><strong>Executor</strong> — Runs tasks (LocalExecutor, CeleryExecutor, KubernetesExecutor).</li>
+</ul>
+
+<h2>Writing Your First DAG</h2>
+<pre><code>from airflow import DAG
+from airflow.operators.python import PythonOperator
+from airflow.operators.bash import BashOperator
+from datetime import datetime, timedelta
+
+default_args = {
+    "owner": "data-team",
+    "retries": 2,
+    "retry_delay": timedelta(minutes=5),
+    "email_on_failure": True,
+    "email": ["alerts@company.com"],
+}
+
+with DAG(
+    dag_id="daily_sales_pipeline",
+    default_args=default_args,
+    schedule="0 6 * * *",   # Every day at 6am (cron)
+    start_date=datetime(2024, 1, 1),
+    catchup=False,          # Don't backfill missed runs
+    tags=["sales", "daily"],
+) as dag:
+
+    def extract_sales():
+        import pandas as pd
+        df = pd.read_sql("SELECT * FROM sales WHERE date = CURRENT_DATE", conn)
+        df.to_parquet("/tmp/sales_raw.parquet")
+
+    def transform_sales():
+        import pandas as pd
+        df = pd.read_parquet("/tmp/sales_raw.parquet")
+        df["revenue"] = df["quantity"] * df["unit_price"]
+        df.to_parquet("/tmp/sales_transformed.parquet")
+
+    extract = PythonOperator(task_id="extract", python_callable=extract_sales)
+    transform = PythonOperator(task_id="transform", python_callable=transform_sales)
+    load = BashOperator(task_id="load", bash_command="python /opt/airflow/scripts/load_to_bq.py")
+
+    # Set dependency chain
+    extract &gt;&gt; transform &gt;&gt; load</code></pre>
+
+<h2>XCom — Passing Data Between Tasks</h2>
+<pre><code>def extract(**context):
+    data = fetch_api_data()
+    context["ti"].xcom_push(key="row_count", value=len(data))
+    return data  # Also auto-pushed to XCom
+
+def validate(**context):
+    count = context["ti"].xcom_pull(task_ids="extract", key="row_count")
+    if count == 0:
+        raise ValueError("No data extracted!")
+
+extract_task = PythonOperator(task_id="extract", python_callable=extract, provide_context=True)
+validate_task = PythonOperator(task_id="validate", python_callable=validate, provide_context=True)</code></pre>
+
+<h2>Sensors — Wait for External Events</h2>
+<pre><code>from airflow.sensors.filesystem import FileSensor
+from airflow.providers.aws.sensors.s3 import S3KeySensor
+
+# Wait for a file to appear
+wait_for_file = FileSensor(
+    task_id="wait_for_upload",
+    filepath="/data/incoming/today.csv",
+    poke_interval=60,   # Check every 60 seconds
+    timeout=7200,       # Fail if not found in 2 hours
+)
+
+# Wait for S3 object
+wait_for_s3 = S3KeySensor(
+    task_id="wait_for_s3",
+    bucket_key="s3://my-bucket/data/{{ ds }}/sales.csv",
+    wildcard_match=False,
+)</code></pre>

@@ -1,0 +1,10 @@
+{
+    "id": "3-supabase",
+    "title": "Supabase & Firebase Mobile Integration",
+    "description": "Backend-as-a-Service solutions for mobile apps — auth, real-time database, file storage, and push notifications without a custom backend.",
+    "order": 3,
+    "topics": [
+        "1-supabaseMobile",
+        "2-pushNotifications"
+    ]
+}

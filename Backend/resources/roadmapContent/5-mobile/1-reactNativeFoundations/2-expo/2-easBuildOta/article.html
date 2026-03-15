@@ -1,0 +1,107 @@
+<h1>EAS Build, OTA Updates & App Configuration</h1>
+<p>Expo Application Services (EAS) transforms what used to take days of iOS/Android build configuration into minutes. EAS Build manages certificates, provisioning, and CI/CD in the cloud — eliminating the need for macOS machines to build iOS apps and infrastructure to build Android binaries.</p>
+
+<h2>EAS Build Setup</h2>
+<pre><code class="language-bash"># Install EAS CLI
+npm install -g eas-cli
+
+# Login and initialize
+eas login
+eas build:configure   # Creates eas.json with build profiles
+
+# Build for iOS (managed certificates — EAS handles everything)
+eas build --platform ios --profile preview
+
+# Build for Android (APK for testing, AAB for Play Store)
+eas build --platform android --profile production
+
+# Build both simultaneously
+eas build --platform all --profile production
+</code></pre>
+<pre><code class="language-json">// eas.json — build profile configuration
+{
+  "cli": { "version": ">= 5.0.0" },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": { "APP_ENV": "development", "API_URL": "http://localhost:3000" }
+    },
+    "preview": {
+      "distribution": "internal",
+      "ios": { "simulator": false },
+      "env": { "APP_ENV": "staging", "API_URL": "https://staging.api.com" }
+    },
+    "production": {
+      "autoIncrement": true,    // Auto-bump build number on each production build
+      "env": { "APP_ENV": "production", "API_URL": "https://api.myapp.com" }
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": { "appleId": "dev@myapp.com", "ascAppId": "1234567890" },
+      "android": { "serviceAccountKeyPath": "./google-service-account.json" }
+    }
+  }
+}
+</code></pre>
+
+<h2>Over-The-Air (OTA) Updates</h2>
+<p>OTA updates let you push JavaScript and asset changes directly to users without going through the App Store — a massive advantage for fixing bugs quickly:</p>
+<pre><code class="language-bash"># Publish an OTA update (JS-layer changes only — no native code changes)
+eas update --branch production --message "Fix checkout bug"
+
+# Users automatically receive the update on next app launch
+# Critical: OTA cannot change native code, add new permissions, or modify app.json
+</code></pre>
+<pre><code class="language-jsx">// Programmatic update checking in your app
+import * as Updates from 'expo-updates';
+
+async function checkForUpdate() {
+  try {
+    const update = await Updates.checkForUpdateAsync();
+    if (update.isAvailable) {
+      await Updates.fetchUpdateAsync();
+      // Prompt user or auto-reload depending on update urgency
+      await Updates.reloadAsync();  // Reload app with new JS bundle
+    }
+  } catch (error) {
+    console.log('Error checking for updates:', error);
+  }
+}
+
+// Check on app foreground
+useEffect(() => {
+  if (!__DEV__) {   // Never check for OTA during development
+    checkForUpdate();
+  }
+}, []);
+</code></pre>
+
+<h2>Config Plugins for Native Configuration</h2>
+<pre><code class="language-json">// app.json — managed workflow native configuration
+{
+  "expo": {
+    "name": "MyApp",
+    "slug": "myapp",
+    "version": "1.0.0",
+    "plugins": [
+      ["expo-camera", { "cameraPermission": "Allow MyApp to use your camera." }],
+      ["expo-location", { "locationAlwaysPermission": "Allow MyApp to use your location." }],
+      ["expo-notifications", {
+        "icon": "./assets/notification-icon.png",
+        "color": "#ffffff"
+      }],
+      ["@config-plugins/react-native-firebase"]  // Third-party config plugin
+    ],
+    "ios": {
+      "bundleIdentifier": "com.mycompany.myapp",
+      "infoPlist": { "NSFaceIDUsageDescription": "For biometric login." }
+    },
+    "android": {
+      "package": "com.mycompany.myapp",
+      "permissions": ["CAMERA", "ACCESS_FINE_LOCATION"]
+    }
+  }
+}
+</code></pre>

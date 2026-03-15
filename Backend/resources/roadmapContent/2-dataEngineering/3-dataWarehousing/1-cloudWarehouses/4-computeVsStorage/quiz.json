@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary architectural failure of legacy 'Tightly-Coupled' on-premise Data Warehouses when scaling enterprise workloads?",
+            "options": [
+                "They explicitly require all SQL queries to be fully written in Python natively.",
+                "Because hardware Storage (Hard Drives) and Compute (CPUs) are permanently bonded inside a single physical machine, you cannot financially scale one without unnecessarily paying millions to scale the other simultaneously.",
+                "They completely securely block incoming API traffic smoothly.",
+                "They generate CSV files randomly explicitly."
+            ],
+            "answer": "Because hardware Storage (Hard Drives) and Compute (CPUs) are permanently bonded inside a single physical machine, you cannot financially scale one without unnecessarily paying millions to scale the other simultaneously.",
+            "explanation": "If you only need more hard drive space to store logs, you are forced to buy expensive CPUs that you will never use."
+        },
+        {
+            "question": "How do modern Cloud Data Warehouses logically (like Snowflake) drastically drastically differently explicitly resolve this scaling bottleneck?",
+            "options": [
+                "By structurally decoupling the physical Storage layer completely from the elastic Compute layer, ensuring companies only pay for the exact cheap AWS S3 storage they consume, while dynamically scaling CPU power strictly for the seconds a query is actively running.",
+                "By intelligently compressing the network routing effectively gracefully.",
+                "By translating raw CSS code explicitly successfully natively.",
+                "By writing all internal storage into temporary local RAM safely securely."
+            ],
+            "answer": "By structurally decoupling the physical Storage layer completely from the elastic Compute layer, ensuring companies only pay for the exact cheap AWS S3 storage they consume, while dynamically scaling CPU power strictly for the seconds a query is actively running.",
+            "explanation": "Compute Clusters sit separately. When they need to crunch numbers, they fetch the data from S3, do the math, and disappear."
+        },
+        {
+            "question": "What explicitly allows Snowflake to mathematically perform a 'Zero-Copy Clone' of a 5-Petabyte production database in less than 3 seconds natively?",
+            "options": [
+                "Its built-in PostgreSQL native integration safely.",
+                "Because Storage is decoupled from Compute, Snowflake doesn't actually copy the 5 Petabytes of physical hard drive space; it simply structurally generates a completely transparent logic metadata pointer, cleanly referencing the identical original underlying AWS S3 blocks.",
+                "It aggressively drops all indexes securely effectively.",
+                "It physically encrypts the dataset magically."
+            ],
+            "answer": "Because Storage is decoupled from Compute, Snowflake doesn't actually copy the 5 Petabytes of physical hard drive space; it simply structurally generates a completely transparent logic metadata pointer, cleanly referencing the identical original underlying AWS S3 blocks.",
+            "explanation": "Creating a fast clone for testing natively costs virtually $0 in extra storage, fundamentally revolutionizing the Data Engineering development lifecycle drastically."
+        }
+    ]
+}

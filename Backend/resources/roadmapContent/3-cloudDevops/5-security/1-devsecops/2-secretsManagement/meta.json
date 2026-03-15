@@ -1,0 +1,4 @@
+{
+    "name": "Secrets Management",
+    "description": "Using HashiCorp Vault, AWS Secrets Manager, and avoiding hardcoded secrets."
+}

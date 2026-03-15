@@ -1,0 +1,6 @@
+[
+  "The O(log n) time-complexity constraint means we must use Binary Search.",
+  "In a rotated sorted array, if you pick any mid point, at least one half of the array will ALWAYS be strictly sorted.",
+  "If the `mid` element is strictly greater than the right-most element of our bounds, it means the 'pivot' (and thus the minimum element) must lie to the right.",
+  "Conversely, if the `mid` element is less than the right-most element, the right half is sorted, and the minimum element is either at `mid` or somewhere to its left."
+]

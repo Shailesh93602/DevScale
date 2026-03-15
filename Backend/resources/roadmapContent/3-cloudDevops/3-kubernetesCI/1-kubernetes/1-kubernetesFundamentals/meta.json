@@ -1,0 +1,4 @@
+{
+    "name": "Kubernetes Fundamentals",
+    "description": "Pods, deployments, services, ConfigMaps, secrets, ingress, and kubectl."
+}

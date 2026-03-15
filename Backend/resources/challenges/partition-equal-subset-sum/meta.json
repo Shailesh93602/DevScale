@@ -1,0 +1,19 @@
+{
+  "title": "Partition Equal Subset Sum",
+  "slug": "partition-equal-subset-sum",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["dynamic-programming", "array"],
+  "company_tags": ["Amazon", "Facebook", "Google", "Apple", "Bloomberg"],
+  "topic_tags": ["dynamic programming", "0/1 knapsack"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer array `nums`.",
+  "output_format": "Return `true` if you can partition the array into two subsets with equal sum.",
+  "example_input": "nums = [1,5,11,5]",
+  "example_output": "true",
+  "constraints": "- `1 <= nums.length <= 200`\n- `1 <= nums[i] <= 100`",
+  "function_signature": "function canPartition(nums: number[]): boolean {}",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,6 @@
+[
+  "Check the global enabled flag first - if false, block all notifications.",
+  "Check if the notification channel is in the user's subscribed channels list.",
+  "For quiet hours, handle the overnight case (start > end) separately: quiet if hour >= start OR hour < end.",
+  "Urgent priority notifications should bypass quiet hours but still respect the enabled flag and channel subscription."
+]

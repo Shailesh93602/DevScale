@@ -1,0 +1,112 @@
+<h1>Deep Linking & Authentication Flow</h1>
+<p>Deep links route external URLs directly into specific screens of your app — enabling marketing campaigns, email magic links, and shared content URLs. A robust authentication flow correctly handles unauthenticated users, loading states, and persistent sessions without exposing protected screens.</p>
+
+<h2>Deep Link Setup</h2>
+<pre><code class="language-json">// app.json — configure URL scheme and universal links
+{
+  "expo": {
+    "scheme": "myapp",           // myapp://  — custom URL scheme
+    "ios": {
+      "associatedDomains": ["applinks:myapp.com"]  // Universal Links (https://)
+    },
+    "android": {
+      "intentFilters": [{
+        "action": "VIEW",
+        "autoVerify": true,
+        "data": [{ "scheme": "https", "host": "myapp.com" }],
+        "category": ["BROWSABLE", "DEFAULT"]
+      }]
+    }
+  }
+}
+</code></pre>
+<pre><code class="language-jsx">// React Navigation deep link configuration
+import { NavigationContainer } from '@react-navigation/native';
+
+const linking = {
+  prefixes: ['myapp://', 'https://myapp.com'],
+  config: {
+    screens: {
+      // Stack navigator
+      Home: 'home',
+      // myapp://product/123 → ProductDetail screen with id=123
+      ProductDetail: 'product/:id',
+      // myapp://profile?tab=orders → Profile with tab param
+      Profile: {
+        path: 'profile',
+        parse: { tab: (tab) => tab },
+      },
+      // Nested navigators
+      Tabs: {
+        screens: {
+          Orders: 'orders',
+          Settings: 'settings',
+        },
+      },
+    },
+  },
+};
+
+export default function App() {
+  return (
+    &lt;NavigationContainer linking={linking}&gt;
+      &lt;RootNavigator /&gt;
+    &lt;/NavigationContainer&gt;
+  );
+}
+</code></pre>
+
+<h2>The Authentication Navigation Pattern</h2>
+<pre><code class="language-jsx">import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useAuthStore } from './store/authStore';
+
+const Stack = createNativeStackNavigator();
+
+function RootNavigator() {
+  const { user, isLoading } = useAuthStore();
+
+  // Show splash/loading screen while checking stored session
+  if (isLoading) return &lt;SplashScreen /&gt;;
+
+  return (
+    &lt;Stack.Navigator screenOptions={{ headerShown: false }}&gt;
+      {user ? (
+        // User is signed in — show app screens
+        // React Navigation automatically transitions from Auth → App group
+        &lt;&gt;
+          &lt;Stack.Screen name="Home" component={HomeScreen} /&gt;
+          &lt;Stack.Screen name="Profile" component={ProfileScreen} /&gt;
+          &lt;Stack.Screen name="Settings" component={SettingsScreen} /&gt;
+        &lt;/&gt;
+      ) : (
+        // No user — show auth screens
+        // Protected screens are COMPLETELY absent from navigator tree
+        // Deep links to protected screens are queued and resolved after login
+        &lt;&gt;
+          &lt;Stack.Screen name="Welcome" component={WelcomeScreen} /&gt;
+          &lt;Stack.Screen name="Login" component={LoginScreen} /&gt;
+          &lt;Stack.Screen name="Signup" component={SignupScreen} /&gt;
+        &lt;/&gt;
+      )}
+    &lt;/Stack.Navigator&gt;
+  );
+}
+</code></pre>
+
+<h2>Session Persistence with SecureStore</h2>
+<pre><code class="language-jsx">import * as SecureStore from 'expo-secure-store';
+
+// On login: save session token securely (iOS Keychain / Android Keystore)
+await SecureStore.setItemAsync('session_token', token);
+
+// On app launch: restore session  
+const token = await SecureStore.getItemAsync('session_token');
+if (token) {
+  // Validate token with server, then set user in state
+  const user = await validateToken(token);
+  authStore.setUser(user);
+}
+
+// On logout: clear all secure storage
+await SecureStore.deleteItemAsync('session_token');
+</code></pre>

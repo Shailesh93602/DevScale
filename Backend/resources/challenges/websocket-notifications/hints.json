@@ -1,0 +1,6 @@
+[
+  "Use a Map to track userId -> Set<WebSocket> connections, since a single user may have multiple active connections (e.g., browser tabs, mobile app).",
+  "Implement rooms as a Map<string, Set<string>> mapping room names to sets of userIds. When broadcasting to a room, iterate through the room's user set and send to each user's active connections.",
+  "For offline users, maintain a bounded buffer (max 100 entries per user). When a user reconnects, flush their buffer by sending all queued notifications in order, then clear it.",
+  "Add delivery acknowledgements: after sending a notification, start a timeout timer. If the client does not send an 'ack' event within the timeout, retry delivery or move the notification to a dead-letter queue."
+]

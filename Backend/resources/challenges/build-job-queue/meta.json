@@ -1,0 +1,19 @@
+{
+  "title": "Build a Job Queue System",
+  "slug": "build-job-queue",
+  "difficulty": "Hard",
+  "category": "backend",
+  "points": 150,
+  "tags": ["job-queue", "async", "workers", "scheduling"],
+  "company_tags": ["Stripe", "GitHub", "Shopify", "Uber", "Netflix"],
+  "topic_tags": ["Job Queue", "Background Processing", "Worker Pattern", "Retry Logic", "Priority Queue"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Job definitions with type, payload, priority, and scheduling options",
+  "output_format": "Job status updates, completion results, and queue statistics",
+  "example_input": "queue.add('send-email', { to: 'user@test.com', subject: 'Welcome' }, { priority: 'high', retries: 3 })",
+  "example_output": "{ \"jobId\": \"job-1\", \"status\": \"completed\", \"result\": { \"sent\": true }, \"duration\": 150 }",
+  "constraints": "Must support job priorities. Must handle retries with exponential backoff. Must support delayed/scheduled jobs. Must handle concurrent workers safely.",
+  "function_signature": "class JobQueue { add(type: string, payload: any, options?: JobOptions): Promise<Job>; process(type: string, handler: JobHandler): void; getJob(id: string): Promise<Job>; getStats(): QueueStats; }",
+  "status": "ACTIVE"
+}

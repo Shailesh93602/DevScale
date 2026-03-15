@@ -1,0 +1,7 @@
+[
+  {"input":"{\"candidates\":[2,3,6,7], \"target\":7}","output":"[[2,2,3],[7]]","explanation":"Standard input","is_hidden":false},
+  {"input":"{\"candidates\":[2,3,5], \"target\":8}","output":"[[2,2,2,2],[2,3,3],[3,5]]","explanation":"Multiple combinations","is_hidden":false},
+  {"input":"{\"candidates\":[2], \"target\":1}","output":"[]","explanation":"Target is lower than any candidate","is_hidden":false},
+  {"input":"{\"candidates\":[1], \"target\":2}","output":"[[1,1]]","explanation":"Repeat single number","is_hidden":true},
+  {"input":"{\"candidates\":[4,2,8], \"target\":8}","output":"[[4,4],[4,2,2],[2,2,2,2],[2,2,4],[8]]","explanation":"Different orders internally, need to sort combinations.","is_hidden":true}
+]

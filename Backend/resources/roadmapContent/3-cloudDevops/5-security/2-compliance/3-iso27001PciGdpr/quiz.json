@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "A company wants to minimize its PCI-DSS compliance scope for handling credit card payments. What is the most effective architectural approach?",
+            "options": [
+                "Store all credit card data encrypted with AES-256 — encryption brings you out of scope.",
+                "Implement tokenization — use a payment processor (Stripe, Adyen) that handles all actual card data and returns a token. Your application only ever sees the token, never the real card number, CVV, or expiry date. This reduces your PCI-DSS scope from your entire payment stack to almost nothing.",
+                "Use HTTPS instead of HTTP for all payment pages to achieve PCI compliance.",
+                "Store CVV codes in a separate database from card numbers to reduce risk."
+            ],
+            "answer": "Implement tokenization — use a payment processor (Stripe, Adyen) that handles all actual card data and returns a token. Your application only ever sees the token, never the real card number, CVV, or expiry date. This reduces your PCI-DSS scope from your entire payment stack to almost nothing.",
+            "explanation": "Note: PCI-DSS explicitly prohibits storing CVV after authorization regardless of encryption. Tokenization means you don't store card data at all. A PCI audit of a tokenized system typically takes days instead of months."
+        },
+        {
+            "question": "Under GDPR, a company discovers a breach of personal data at 3 PM on Monday. By what time must they notify the supervisory authority, and what should be documented in the notification?",
+            "options": [
+                "Within 30 days — GDPR gives companies time to fully investigate before reporting.",
+                "Within 72 hours of discovery (by 3 PM Thursday at the latest). The notification must include: the nature of the breach, categories and approximate number of individuals affected, likely consequences of the breach, and measures taken or proposed to address it — even if the full investigation is not yet complete.",
+                "Within 24 hours for breaches affecting more than 1,000 users.",
+                "Only if financial data was breached — GDPR does not require breach notification for non-financial personal data."
+            ],
+            "answer": "Within 72 hours of discovery (by 3 PM Thursday at the latest). The notification must include: the nature of the breach, categories and approximate number of individuals affected, likely consequences of the breach, and measures taken or proposed to address it — even if the full investigation is not yet complete.",
+            "explanation": "This 72-hour clock is why pre-built incident response runbooks are critical. An organization that discovers a breach on a Saturday morning and has no runbook will almost certainly miss the 72-hour notification deadline."
+        },
+        {
+            "question": "What does ISO 27001 certification actually prove about an organization, and why is it valuable for B2B enterprise sales?",
+            "options": [
+                "ISO 27001 proves the organization has never had a security breach.",
+                "ISO 27001 certification proves that an accredited, independent auditor has verified the organization has implemented a documented Information Security Management System (ISMS) with systematic risk assessment, appropriate controls, and continuous improvement processes — not that it's perfectly secure, but that it manages security systematically.",
+                "ISO 27001 means all software passes SAST and DAST scanning.",
+                "ISO 27001 certification eliminates the need for PCI-DSS compliance for payment processing."
+            ],
+            "answer": "ISO 27001 certification proves that an accredited, independent auditor has verified the organization has implemented a documented Information Security Management System (ISMS) with systematic risk assessment, appropriate controls, and continuous improvement processes — not that it's perfectly secure, but that it manages security systematically.",
+            "explanation": "Enterprise buyers (banks, hospitals, government agencies) require ISO 27001 certification from their SaaS vendors before signing contracts. It's a trust signal that removes your company from the 'too risky to buy from' category."
+        }
+    ]
+}

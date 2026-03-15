@@ -1,0 +1,4 @@
+{
+    "name": "Airflow Operators",
+    "description": "Built-in and custom Airflow operators: BashOperator, PythonOperator, sensors, and TaskFlow API."
+}

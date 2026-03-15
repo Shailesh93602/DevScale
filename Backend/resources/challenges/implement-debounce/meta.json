@@ -1,0 +1,19 @@
+{
+  "title": "Implement Debounce",
+  "slug": "implement-debounce",
+  "difficulty": "Medium",
+  "category": "frontend",
+  "points": 100,
+  "tags": ["javascript", "closures", "timing", "performance"],
+  "company_tags": ["Google", "Meta", "Amazon", "Uber"],
+  "topic_tags": ["Closures", "Timers", "Higher-Order Functions"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "A function `fn` and a delay in milliseconds `delay`",
+  "output_format": "A debounced version of the function that delays invoking `fn` until after `delay` ms have elapsed since the last invocation",
+  "example_input": "debounce(fn, 300)",
+  "example_output": "A function that only calls fn after 300ms of inactivity",
+  "constraints": "0 <= delay <= 10000, fn is a valid function",
+  "function_signature": "function debounce(fn: (...args: any[]) => void, delay: number): (...args: any[]) => void",
+  "status": "ACTIVE"
+}

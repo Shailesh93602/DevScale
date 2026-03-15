@@ -1,0 +1,19 @@
+{
+  "title": "Climbing Stairs",
+  "slug": "climbing-stairs",
+  "difficulty": "Easy",
+  "category": "algorithms",
+  "points": 50,
+  "tags": ["dynamic-programming", "math", "memoization"],
+  "company_tags": ["Amazon", "Google", "Microsoft", "Apple", "Adobe"],
+  "topic_tags": ["dynamic programming", "fibonacci"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer `n` representing the number of steps to reach the top.",
+  "output_format": "The number of distinct ways to climb to the top.",
+  "example_input": "n = 3",
+  "example_output": "3",
+  "constraints": "- `1 <= n <= 45`",
+  "function_signature": "function climbStairs(n: number): number {}",
+  "status": "ACTIVE"
+}

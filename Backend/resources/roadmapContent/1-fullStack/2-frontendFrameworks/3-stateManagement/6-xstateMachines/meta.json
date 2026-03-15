@@ -1,0 +1,4 @@
+{
+    "name": "State Machines & XState",
+    "description": "Managing highly complex, multi-step UI logic using finite state machines and statecharts with the XState library to eliminate impossible states."
+}

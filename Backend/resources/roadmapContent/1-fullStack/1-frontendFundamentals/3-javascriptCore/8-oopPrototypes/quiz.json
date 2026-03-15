@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What are private class fields in JavaScript (ES2022)?",
+            "options": [
+                "Fields declared with the private keyword",
+                "Fields prefixed with # that are only accessible within the class body",
+                "Fields declared inside the constructor only",
+                "Fields that cannot be read, only written"
+            ],
+            "answer": "Fields prefixed with # that are only accessible within the class body",
+            "explanation": "Private class fields use the # prefix (e.g., #name) and are truly private — accessing them outside the class throws a SyntaxError."
+        },
+        {
+            "question": "What must be the first statement in a subclass constructor?",
+            "options": [
+                "this.init()",
+                "super()",
+                "Object.create()",
+                "parent.call(this)"
+            ],
+            "answer": "super()",
+            "explanation": "In a class that extends another, super() must be called before any reference to 'this' in the constructor. It initializes the parent class and sets up the prototype chain."
+        },
+        {
+            "question": "What is prototypal inheritance in JavaScript?",
+            "options": [
+                "Objects inherit from class blueprints like in Java",
+                "Objects directly inherit from other objects through a prototype chain",
+                "Inheritance is achieved by copying methods between objects",
+                "JavaScript does not support inheritance"
+            ],
+            "answer": "Objects directly inherit from other objects through a prototype chain",
+            "explanation": "Every JavaScript object has a [[Prototype]] link to another object. Property lookup traverses this chain until the property is found or null is reached."
+        },
+        {
+            "question": "What is the main advantage of factory functions over classes?",
+            "options": [
+                "Factory functions are faster",
+                "Factory functions support true private state via closures without special syntax",
+                "Factory functions support inheritance",
+                "Factory functions are part of the ES6 standard"
+            ],
+            "answer": "Factory functions support true private state via closures without special syntax",
+            "explanation": "Variables declared inside a factory function are captured by the closure and are truly private, with no way to access them from outside. This is simpler and more flexible before ES2022 private fields."
+        },
+        {
+            "question": "What is a JavaScript mixin?",
+            "options": [
+                "A class that inherits from multiple parent classes",
+                "A function that adds reusable methods to a class without classical inheritance",
+                "A way to merge two objects into one",
+                "An ES6 feature that replaces prototype chains"
+            ],
+            "answer": "A function that adds reusable methods to a class without classical inheritance",
+            "explanation": "Mixins are functions that take a Base class and return a new class with added methods: const Serializable = (Base) => class extends Base { toJSON() {...} }. This enables composition of behaviors."
+        }
+    ]
+}

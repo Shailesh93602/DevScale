@@ -1,0 +1,74 @@
+{
+    "title": "Advanced TypeScript Quiz",
+    "description": "Test your generics and utility types knowledge.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What does Partial<User> produce?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Removes all properties from User",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Creates a new type where all User properties are optional",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Creates a union of all User property types",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Makes User read-only",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What are TypeScript generics used for?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Defining generic HTML elements",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Writing reusable, type-safe code that works with multiple types",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Speeding up TypeScript compilation",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Replacing interfaces with simpler syntax",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does Pick<User, 'name' | 'email'> return?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "All User properties except name and email",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A type with only the name and email properties from User",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A union type of name and email strings",
+                    "isCorrect": false
+                },
+                {
+                    "text": "An error — Pick only accepts one property",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

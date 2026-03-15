@@ -1,0 +1,62 @@
+[
+  {
+    "input": { "promises": ["resolve(1)", "resolve(2)", "resolve(3)"] },
+    "output": { "status": "resolved", "value": [1, 2, 3] },
+    "explanation": "All resolve — returns array in order",
+    "is_hidden": false
+  },
+  {
+    "input": { "promises": ["resolve(1)", "reject('error')", "resolve(3)"] },
+    "output": { "status": "rejected", "reason": "error" },
+    "explanation": "One rejects — entire promise rejects with that reason",
+    "is_hidden": false
+  },
+  {
+    "input": { "promises": [] },
+    "output": { "status": "resolved", "value": [] },
+    "explanation": "Empty array resolves to empty array",
+    "is_hidden": false
+  },
+  {
+    "input": { "promises": [1, 2, 3] },
+    "output": { "status": "resolved", "value": [1, 2, 3] },
+    "explanation": "Plain values treated as resolved promises",
+    "is_hidden": true
+  },
+  {
+    "input": { "promises": ["resolve(1)"] },
+    "output": { "status": "resolved", "value": [1] },
+    "explanation": "Single promise resolves normally",
+    "is_hidden": true
+  },
+  {
+    "input": { "promises": ["reject('fail')"] },
+    "output": { "status": "rejected", "reason": "fail" },
+    "explanation": "Single rejection",
+    "is_hidden": true
+  },
+  {
+    "input": { "promises": ["slow_resolve(1, 100)", "fast_resolve(2, 10)", "medium_resolve(3, 50)"] },
+    "output": { "status": "resolved", "value": [1, 2, 3] },
+    "explanation": "Results maintain input order regardless of resolution order",
+    "is_hidden": true
+  },
+  {
+    "input": { "promises": ["resolve('a')", "resolve('b')", "resolve('c')", "resolve('d')", "resolve('e')"] },
+    "output": { "status": "resolved", "value": ["a", "b", "c", "d", "e"] },
+    "explanation": "Five string promises all resolve",
+    "is_hidden": true
+  },
+  {
+    "input": { "promises": ["resolve(null)", "resolve(undefined)", "resolve(0)", "resolve(false)"] },
+    "output": { "status": "resolved", "value": [null, null, 0, false] },
+    "explanation": "Falsy resolved values are preserved",
+    "is_hidden": true
+  },
+  {
+    "input": { "promises": ["reject('err1')", "reject('err2')"] },
+    "output": { "status": "rejected", "reason": "err1" },
+    "explanation": "Multiple rejections — first one wins",
+    "is_hidden": true
+  }
+]

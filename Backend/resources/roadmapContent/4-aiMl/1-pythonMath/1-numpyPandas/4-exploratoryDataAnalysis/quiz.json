@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "During EDA, you discover the target variable (fraud) has a 0.5% positive rate (1 fraudulent transaction in 200). What critical modeling implications does this reveal?",
+            "options": [
+                "The dataset is too small to build a reliable fraud detection model.",
+                "The extreme class imbalance means a naive model that predicts 'not fraud' for every transaction achieves 99.5% accuracy while catching zero frauds. You must use imbalance-handling techniques (SMOTE, class weights, stratified sampling), and evaluate with precision-recall AUC or F1 score — never raw accuracy.",
+                "The training data needs to be collected again with a better sampling strategy.",
+                "KNN or SVM should be used since they handle binary classification best."
+            ],
+            "answer": "The extreme class imbalance means a naive model that predicts 'not fraud' for every transaction achieves 99.5% accuracy while catching zero frauds. You must use imbalance-handling techniques (SMOTE, class weights, stratified sampling), and evaluate with precision-recall AUC or F1 score — never raw accuracy.",
+            "explanation": "This EDA finding — discovered before modeling — completely determines your evaluation strategy. Teams that skip EDA and jump to modeling will optimize toward 99.5% accuracy and ship a model that catches 0% of fraud."
+        },
+        {
+            "question": "During bivariate EDA, the boxplot of 'tenure_months' vs. 'churn' shows nearly identical distributions for churned vs. non-churned customers. What should you conclude?",
+            "options": [
+                "Tenure is the most important feature because it is measured in months.",
+                "Tenure is unlikely to be a strong predictor of churn on its own — its distribution doesn't differ between classes. However, it might still be useful in combinations (interaction features), or there may be a non-linear relationship (e.g., churn spikes at specific renewal-month values) that a boxplot wouldn't reveal.",
+                "The dataset has a label error and churn labels should be inverted.",
+                "You should remove tenure from the feature set immediately."
+            ],
+            "answer": "Tenure is unlikely to be a strong predictor of churn on its own — its distribution doesn't differ between classes. However, it might still be useful in combinations (interaction features), or there may be a non-linear relationship (e.g., churn spikes at specific renewal-month values) that a boxplot wouldn't reveal.",
+            "explanation": "EDA finding: 'boxplots look similar → weak individual predictor.' But an engineer who then explores 'churn rate by tenure_months % 12' might discover a massive spike at month 12 — a non-linearity that no boxplot reveals."
+        },
+        {
+            "question": "Why should you apply a log transformation to a right-skewed feature (like income or revenue) before feeding it to a linear regression model?",
+            "options": [
+                "Log transformation is required for all numerical features in sklearn.",
+                "Linear regression assumes a linear relationship between features and target. A right-skewed distribution compresses most values near zero and spreads a long tail at high values — outliers disproportionately influence the model. Log transformation compresses the scale, making the relationship more linear and reducing the outsized influence of extreme values.",
+                "Log transformation ensures all values are in the range [0, 1] required for regression.",
+                "Sklearn's LinearRegression cannot process values greater than 1000."
+            ],
+            "answer": "Linear regression assumes a linear relationship between features and target. A right-skewed distribution compresses most values near zero and spreads a long tail at high values — outliers disproportionately influence the model. Log transformation compresses the scale, making the relationship more linear and reducing the outsized influence of extreme values.",
+            "explanation": "Income ranges from $20K to $10M. Without log transform, the model's coefficient for income is dominated by a handful of billionaires. With log transform, the relationship between log(income) and house price is approximately linear across the full spectrum."
+        }
+    ]
+}

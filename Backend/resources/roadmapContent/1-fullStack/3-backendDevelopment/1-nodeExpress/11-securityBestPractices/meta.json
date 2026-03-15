@@ -1,0 +1,4 @@
+{
+    "name": "Express Security Best Practices",
+    "description": "Securing REST APIs against common vulnerabilities (OWASP Top 10). Implementing Helmet, CORS, Rate Limiting, preventing NoSQL injection, and avoiding CSRF."
+}

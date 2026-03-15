@@ -1,0 +1,4 @@
+{
+    "name": "dbt Models, Tests & Documentation",
+    "description": "Writing SQL models, running dbt tests, generating docs, and lineage graphs."
+}

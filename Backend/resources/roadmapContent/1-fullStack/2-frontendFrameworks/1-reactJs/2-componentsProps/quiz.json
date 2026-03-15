@@ -1,0 +1,74 @@
+{
+    "title": "Components & Props Quiz",
+    "description": "Test your understanding of React components and prop patterns.",
+    "passingScore": 80,
+    "timeLimit": 8,
+    "questions": [
+        {
+            "question": "Can a React component modify its own props?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Yes, using setState()",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Yes, by directly reassigning the prop",
+                    "isCorrect": false
+                },
+                {
+                    "text": "No — props are read-only and flow one-way from parent to child",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Yes, but only for object and array props",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the 'children' prop in React?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A lifecycle method for child components",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Any JSX content nested between a component's opening and closing tags",
+                    "isCorrect": true
+                },
+                {
+                    "text": "An array of all child component names",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A prop that only accepts text strings",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What pattern solves prop drilling in React?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Passing props through every intermediate component",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Context API or state management libraries like Redux",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Using global JavaScript variables",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Using localStorage to share state",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

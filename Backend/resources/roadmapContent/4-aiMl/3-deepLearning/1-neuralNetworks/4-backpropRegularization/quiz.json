@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "Why does calling model.eval() before inference in PyTorch change the behavior of Dropout and Batch Normalization?",
+            "options": [
+                "model.eval() switches to a faster inference mode that skips gradient computation.",
+                "model.eval() disables Dropout (all neurons are active, scaled by dropout rate) and switches BatchNorm from using mini-batch statistics to using running statistics accumulated during training. This is critical because Dropout during inference would make predictions stochastic, and using mini-batch statistics for single-sample inference would be noisy and incorrect.",
+                "model.eval() converts the model to float16 precision for faster inference.",
+                "model.eval() enables torch.no_grad() implicitly, preventing gradient computation."
+            ],
+            "answer": "model.eval() disables Dropout (all neurons are active, scaled by dropout rate) and switches BatchNorm from using mini-batch statistics to using running statistics accumulated during training. This is critical because Dropout during inference would make predictions stochastic, and using mini-batch statistics for single-sample inference would be noisy and incorrect.",
+            "explanation": "Forgetting model.eval() is a very common production bug. A model that 'worked in development' produces noisy, inconsistent predictions in production because Dropout is randomly zeroing neurons on every call. Always use model.eval() + torch.no_grad() when serving predictions."
+        },
+        {
+            "question": "What does gradient clipping (torch.nn.utils.clip_grad_norm_) prevent, and what symptom indicates you need it?",
+            "options": [
+                "Gradient clipping prevents underfitting by ensuring gradients are large enough to train.",
+                "Gradient clipping prevents exploding gradients by scaling down gradient vectors that exceed a maximum norm. The symptom is training loss that suddenly spikes to infinity (NaN loss) or oscillates wildly — indicating gradients became so large they pushed weights to extreme values that destabilize the network.",
+                "Gradient clipping prevents vanishing gradients in deep networks.",
+                "Gradient clipping prevents overfitting by limiting how much weights can change per step."
+            ],
+            "answer": "Gradient clipping prevents exploding gradients by scaling down gradient vectors that exceed a maximum norm. The symptom is training loss that suddenly spikes to infinity (NaN loss) or oscillates wildly — indicating gradients became so large they pushed weights to extreme values that destabilize the network.",
+            "explanation": "RNNs and Transformers with deep sequences are especially prone to exploding gradients. max_norm=1.0 is the most common value. If you see 'Loss = nan' in your training log, check for exploding gradients first."
+        },
+        {
+            "question": "Why use He (Kaiming) initialization for ReLU networks and Xavier (Glorot) initialization for sigmoid/tanh networks rather than initializing all weights to the same small random value?",
+            "options": [
+                "Named initializers are required by PyTorch and cannot be replaced with custom schemes.",
+                "Different activation functions have different variance-preserving requirements. ReLU sets ~50% of activations to zero, effectively halving the variance at each layer — He init compensates with var = 2/fan_in. Sigmoid/tanh saturate at extremes; Xavier init (var = 2/(fan_in+fan_out)) prevents activations from entering saturation regions. Naive uniform initialization causes systematic vanishing or exploding gradients from the very first forward pass.",
+                "He and Xavier initialization are only relevant for the final classification layer.",
+                "These initializations prevent weight symmetry for the first epoch only."
+            ],
+            "answer": "Different activation functions have different variance-preserving requirements. ReLU sets ~50% of activations to zero, effectively halving the variance at each layer — He init compensates with var = 2/fan_in. Sigmoid/tanh saturate at extremes; Xavier init (var = 2/(fan_in+fan_out)) prevents activations from entering saturation regions. Naive uniform initialization causes systematic vanishing or exploding gradients from the very first forward pass.",
+            "explanation": "A 50-layer network with ReLU + constant small weights: by layer 50, activations shrink to practically zero — the model learns nothing. He init ensures each layer's output has roughly the same variance as its input, keeping signal alive throughout all layers."
+        }
+    ]
+}

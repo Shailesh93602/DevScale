@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "Why does LightGBM's leaf-wise tree growth strategy make it significantly faster than XGBoost's level-wise strategy for large datasets?",
+            "options": [
+                "LightGBM uses GPU acceleration while XGBoost only uses CPU.",
+                "Level-wise growth splits ALL leaf nodes at each depth level, even ones that provide minimal improvement. Leaf-wise growth selects the SINGLE leaf with the maximum potential gain to split next — this achieves lower training loss in fewer splits, requiring fewer trees to converge and reducing overall computation.",
+                "LightGBM uses smaller trees (depth 3) while XGBoost uses larger trees (depth 6).",
+                "LightGBM caches the training dataset in GPU memory; XGBoost reads from disk."
+            ],
+            "answer": "Level-wise growth splits ALL leaf nodes at each depth level, even ones that provide minimal improvement. Leaf-wise growth selects the SINGLE leaf with the maximum potential gain to split next — this achieves lower training loss in fewer splits, requiring fewer trees to converge and reducing overall computation.",
+            "explanation": "At depth 6, level-wise growth creates 64 splits per tree level regardless of their value. Leaf-wise growth creates only the highest-value split — making each tree more efficient and allowing LightGBM to train 10-100x faster than XGBoost on large datasets."
+        },
+        {
+            "question": "What is CatBoost's key advantage over XGBoost and LightGBM when your dataset contains many high-cardinality categorical features like zip codes or product IDs?",
+            "options": [
+                "CatBoost automatically reduces high-cardinality features to 10 unique values.",
+                "CatBoost natively handles categorical features using an ordered target encoding algorithm with mathematical guarantees against target leakage — no manual one-hot encoding or target encoding preprocessing is required. XGBoost and LightGBM require you to encode categoricals yourself, which is error-prone and can introduce data leakage without careful implementation.",
+                "CatBoost achieves lower training loss because it uses more trees by default.",
+                "CatBoost converts high-cardinality categories to embeddings like neural networks."
+            ],
+            "answer": "CatBoost natively handles categorical features using an ordered target encoding algorithm with mathematical guarantees against target leakage — no manual one-hot encoding or target encoding preprocessing is required. XGBoost and LightGBM require you to encode categoricals yourself, which is error-prone and can introduce data leakage without careful implementation.",
+            "explanation": "With 50,000 unique zip codes: One-hot encoding creates 50,000 sparse columns (slow, memory-hungry). Standard target encoding leaks if not done carefully in cross-validation. CatBoost handles both problems safely and automatically."
+        },
+        {
+            "question": "What does 'early stopping' in XGBoost prevent, and how does it work?",
+            "options": [
+                "Early stopping prevents the model from exceeding its memory limit.",
+                "Early stopping prevents overfitting from using too many trees. After each new tree is added, XGBoost evaluates performance on a held-out validation set. If the validation metric doesn't improve for N consecutive rounds (e.g., early_stopping_rounds=50), training stops — automatically choosing the optimal number of trees without overfitting.",
+                "Early stopping reduces training time by limiting each tree to 100 splits.",
+                "Early stopping prevents the learning rate from decreasing below a minimum value."
+            ],
+            "answer": "Early stopping prevents overfitting from using too many trees. After each new tree is added, XGBoost evaluates performance on a held-out validation set. If the validation metric doesn't improve for N consecutive rounds (e.g., early_stopping_rounds=50), training stops — automatically choosing the optimal number of trees without overfitting.",
+            "explanation": "Without early stopping, you set n_estimators=500 and risk overfitting after tree 200. With early stopping, training automatically stops at the optimal point (e.g., 247 trees) — training is faster AND the model generalizes better."
+        }
+    ]
+}

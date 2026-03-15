@@ -1,0 +1,4 @@
+{
+    "name": "Advanced Joins & CTEs",
+    "description": "Mastering complex data retrieval. Understanding INNER, LEFT, RIGHT, and FULL OUTER JOINs, writing subqueries, and using Common Table Expressions (CTEs) for readable queries."
+}

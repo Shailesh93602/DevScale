@@ -1,0 +1,6 @@
+[
+  "Define each saga step as an object with three things: a name, an execute function (forward action), and a compensate function (undo action). Store steps in an ordered array.",
+  "Execute steps sequentially. After each successful step, store its result in the saga context so subsequent steps can access it. If a step fails, record which step index failed.",
+  "For compensation, iterate backwards from (failedStepIndex - 1) to 0. The failed step itself does not need compensation since it did not complete. Crucially, do NOT stop if a compensation step fails - continue compensating the remaining steps.",
+  "Track the saga lifecycle with a state machine: STARTED -> EXECUTING -> COMPLETED/COMPENSATING -> COMPENSATED/COMPENSATION_FAILED. Log every transition for auditability and debugging in distributed systems."
+]

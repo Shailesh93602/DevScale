@@ -1,0 +1,29 @@
+{
+  "title": "Container With Most Water",
+  "slug": "container-with-most-water",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["array", "two-pointers", "greedy"],
+  "company_tags": ["Amazon", "Google", "Facebook", "Microsoft"],
+  "topic_tags": ["arrays", "two pointers"],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer array `height` of length `n`.",
+  "output_format": "The maximum amount of water a container can store.",
+  "example_input": "height = [1,8,6,2,5,4,8,3,7]",
+  "example_output": "49",
+  "constraints": "- `n == height.length`\n- `2 <= n <= 10^5`\n- `0 <= height[i] <= 10^4`",
+  "function_signature": "function maxArea(height: number[]): number {}",
+  "status": "ACTIVE"
+}

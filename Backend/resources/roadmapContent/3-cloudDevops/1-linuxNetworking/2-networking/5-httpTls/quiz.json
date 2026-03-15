@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is 'Head-of-line blocking' in HTTP/1.1 and how does HTTP/2 fundamentally resolve it?",
+            "options": [
+                "HTTP/1.1 can't process POST requests; HTTP/2 adds POST support.",
+                "In HTTP/1.1, if a request stalls (e.g., slow DB query), all subsequent requests on the same connection must wait behind it in a queue. HTTP/2 uses multiplexing over a single TCP connection, sending multiple independent request/response streams simultaneously so one slow request doesn't block others.",
+                "HTTP/1.1 requires DNS resolution before each request; HTTP/2 caches DNS.",
+                "HTTP/1.1 doesn't support compression; HTTP/2 adds gzip support."
+            ],
+            "answer": "In HTTP/1.1, if a request stalls (e.g., slow DB query), all subsequent requests on the same connection must wait behind it in a queue. HTTP/2 uses multiplexing over a single TCP connection, sending multiple independent request/response streams simultaneously so one slow request doesn't block others.",
+            "explanation": "Browsers worked around HTTP/1.1 head-of-line blocking by opening 6 parallel TCP connections per domain. HTTP/2 makes this unnecessary with true multiplexing on a single connection."
+        },
+        {
+            "question": "During a TLS handshake, what specific security goal does the 'Certificate Verification' step accomplish?",
+            "options": [
+                "It encrypts the HTTP request body before transmission.",
+                "It authenticates the server's identity — the client verifies that the server's certificate was signed by a trusted Certificate Authority (CA), the domain name matches, and the certificate has not expired. This prevents man-in-the-middle attacks.",
+                "It negotiates the TCP connection window size.",
+                "It compresses the TLS session key using RSA padding."
+            ],
+            "answer": "It authenticates the server's identity — the client verifies that the server's certificate was signed by a trusted Certificate Authority (CA), the domain name matches, and the certificate has not expired. This prevents man-in-the-middle attacks.",
+            "explanation": "Without certificate verification, an attacker could intercept your connection and present their own certificate, pretending to be your bank. The CA trust chain is what makes HTTPS trustworthy."
+        },
+        {
+            "question": "What is the core architectural difference between WebSockets and standard HTTP request-response that makes WebSockets ideal for real-time applications?",
+            "options": [
+                "WebSockets use UDP instead of TCP for lower latency.",
+                "WebSockets establish a persistent, full-duplex channel where the server can push data to the client at any time without the client requesting it first. Standard HTTP is strictly request-response — the server can only send data if the client asks first.",
+                "WebSockets use JSON while HTTP uses binary formats.",
+                "WebSockets bypass TLS encryption for performance."
+            ],
+            "answer": "WebSockets establish a persistent, full-duplex channel where the server can push data to the client at any time without the client requesting it first. Standard HTTP is strictly request-response — the server can only send data if the client asks first.",
+            "explanation": "Chat apps, live stock tickers, collaborative editors, and online games all require the server to push updates the moment they happen. HTTP polling (asking 'anything new?' every second) is wasteful; WebSockets eliminate this overhead."
+        }
+    ]
+}

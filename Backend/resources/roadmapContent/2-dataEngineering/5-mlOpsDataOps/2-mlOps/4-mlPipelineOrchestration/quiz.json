@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What specific capability makes a 'BranchPythonOperator' in Airflow particularly valuable in an automated ML training pipeline?",
+            "options": [
+                "It runs Python scripts in parallel across 10 Airflow workers simultaneously.",
+                "It enables conditional logic, allowing the pipeline to automatically evaluate whether the newly trained model outperforms the current production model and then dynamically branch — either proceeding to deployment or routing to a 'reject and alert' path.",
+                "It integrates Airflow with Kubernetes GPU nodes automatically.",
+                "It compresses trained model weights before uploading to S3."
+            ],
+            "answer": "It enables conditional logic, allowing the pipeline to automatically evaluate whether the newly trained model outperforms the current production model and then dynamically branch — either proceeding to deployment or routing to a 'reject and alert' path.",
+            "explanation": "An automated ML pipeline should never blindly deploy a newly trained model. The BranchPythonOperator gates deployment on objective performance criteria."
+        },
+        {
+            "question": "What is the key architectural advantage of Kubeflow Pipelines over standard Apache Airflow for ML-specific workloads?",
+            "options": [
+                "Kubeflow Pipelines does not require Kubernetes to run.",
+                "Each Kubeflow pipeline step runs in its own isolated Docker container with a completely independent environment, natively enabling GPU attachment, framework-specific libraries, and Kubernetes-native autoscaling — capabilities that Airflow's standard Python workers don't easily provide.",
+                "Kubeflow is significantly cheaper to operate than Airflow.",
+                "Kubeflow Pipelines has a built-in Feature Store."
+            ],
+            "answer": "Each Kubeflow pipeline step runs in its own isolated Docker container with a completely independent environment, natively enabling GPU attachment, framework-specific libraries, and Kubernetes-native autoscaling — capabilities that Airflow's standard Python workers don't easily provide.",
+            "explanation": "You can't easily attach an NVIDIA A100 GPU to a standard Airflow PythonOperator. With Kubeflow, you declaratively assign a GPU node to the training step container."
+        },
+        {
+            "question": "What critical role does an 'Experiment Tracker' (like MLflow) play in a production ML Pipeline?",
+            "options": [
+                "It tracks the cost of Airflow DAG runs.",
+                "It automatically records every training run's parameters (hyperparameters, dataset version, code commit SHA) and metrics (accuracy, AUC, F1), creating a complete, auditable history that enables comparing experiments and reproducing any past model exactly.",
+                "It monitors the Kafka cluster's consumer lag in real-time.",
+                "It stores the raw training dataset in a columnar format."
+            ],
+            "answer": "It automatically records every training run's parameters (hyperparameters, dataset version, code commit SHA) and metrics (accuracy, AUC, F1), creating a complete, auditable history that enables comparing experiments and reproducing any past model exactly.",
+            "explanation": "Without an experiment tracker, 'which hyperparameters gave us that 94% accuracy last Tuesday?' is an unanswerable question. MLflow records everything automatically."
+        }
+    ]
+}

@@ -1,0 +1,142 @@
+<h1>Redis: Advanced Data Structures & Patterns</h1>
+<p>Redis's true power lies beyond simple string key-value storage. Its specialized data structures — Sorted Sets, Streams, HyperLogLog — enable architectures that would otherwise require dedicated third-party services. Learn these to build leaderboards, event queues, pub/sub systems, and analytics pipelines entirely within Redis.</p>
+
+<h2>Sorted Sets: Leaderboards & Rate Limiting</h2>
+<pre><code class="language-javascript">import { createClient } from 'redis';
+const redis = createClient();
+
+// Leaderboard: Sorted Set where score = points
+async function updateScore(userId, points) {
+  await redis.zIncrBy('leaderboard:global', points, userId);
+}
+
+async function getTopPlayers(count = 10) {
+  // ZREVRANGE: highest score first, with scores
+  const players = await redis.zRangeWithScores('leaderboard:global', 0, count - 1, {
+    REV: true,
+  });
+  return players;
+  // Returns: [{ value: 'user:123', score: 9450 }, { value: 'user:456', score: 8200 }, ...]
+}
+
+async function getPlayerRank(userId) {
+  // 0-indexed rank from the top (ZREVRANK)
+  const rank = await redis.zRevRank('leaderboard:global', userId);
+  return rank + 1;  // Convert to 1-indexed
+}
+
+// Sliding window rate limiting using Sorted Sets
+async function isAllowed(userId, limit = 100, windowSeconds = 60) {
+  const key = `ratelimit:${userId}`;
+  const now = Date.now();
+  const windowStart = now - windowSeconds * 1000;
+
+  // Remove expired entries from the window
+  await redis.zRemRangeByScore(key, '-inf', windowStart);
+
+  // Count requests in current window
+  const count = await redis.zCard(key);
+  if (count >= limit) return false;
+
+  // Add current request with timestamp as score
+  await redis.zAdd(key, { score: now, value: `${now}-${Math.random()}` });
+  await redis.expire(key, windowSeconds);
+  return true;
+}
+</code></pre>
+
+<h2>Redis Streams: Lightweight Message Queue</h2>
+<pre><code class="language-javascript">// Redis Streams: persistent, ordered log of events
+// Like Kafka but without the infrastructure complexity
+
+// Producer: add events to stream
+async function publishOrderEvent(order) {
+  const eventId = await redis.xAdd(
+    'orders:stream',         // Stream key
+    '*',                     // Auto-generate ID (timestamp-based)
+    {
+      event_type: 'ORDER_CREATED',
+      order_id: order.id,
+      user_id: order.userId,
+      total: order.total.toString(),
+    }
+  );
+  console.log('Event published:', eventId);
+}
+
+// Consumer: read and process events with consumer groups
+// Consumer groups: multiple consumers process without duplicating work
+
+// Create consumer group (run once)
+await redis.xGroupCreate('orders:stream', 'fulfillment-service', '0', {
+  MKSTREAM: true,    // Create stream if it doesn't exist
+});
+
+// Read new messages (never-before-seen by this group)
+async function processOrders() {
+  while (true) {
+    const messages = await redis.xReadGroup(
+      'fulfillment-service',  // Consumer group name
+      'worker-1',             // This specific consumer identifier
+      { key: 'orders:stream', id: '>' },  // '>' means new messages only
+      { COUNT: 10, BLOCK: 5000 }          // Process 10, wait 5s if empty
+    );
+
+    for (const { id, message } of messages[0]?.messages ?? []) {
+      await fulfillOrder(message);
+      // Acknowledge: removes from "pending" — won't be re-delivered
+      await redis.xAck('orders:stream', 'fulfillment-service', id);
+    }
+  }
+}
+</code></pre>
+
+<h2>Pub/Sub & Distributed Locks</h2>
+<pre><code class="language-javascript">// Pub/Sub: broadcast messages to all subscribers
+const subscriber = redis.duplicate();
+await subscriber.connect();
+await subscriber.subscribe('notifications:user:123', (message) => {
+  const notification = JSON.parse(message);
+  sendWebSocketMessage(notification);
+});
+
+// Publisher
+await redis.publish('notifications:user:123', JSON.stringify({
+  type: 'ORDER_READY',
+  message: 'Your order is ready for pickup!'
+}));
+
+// Distributed Lock (Redlock algorithm for safe locking across replicas)
+import Redlock from 'redlock';
+const redlock = new Redlock([redis]);
+
+async function processPaymentExclusively(orderId) {
+  // Acquire lock for 5 seconds — only ONE server can process this order
+  await using lock = await redlock.acquire([`lock:payment:${orderId}`], 5000);
+
+  // Only one server reaches this code, even with 10 replicas!
+  const order = await getOrder(orderId);
+  if (order.status !== 'PENDING') return;  // Already processed
+  await chargePayment(order);
+  await updateOrderStatus(orderId, 'PAID');
+  // Lock auto-releases when `using` block exits (even on error)
+}
+</code></pre>
+
+<h2>HyperLogLog: Probabilistic Counting</h2>
+<pre><code class="language-javascript">// Count unique visitors without storing all user IDs (99.8% accurate, fixed 12KB memory)
+async function trackPageView(page, userId) {
+  const key = `unique_visitors:${page}:${new Date().toISOString().slice(0, 10)}`;
+  await redis.pfAdd(key, userId);
+}
+
+async function getUniqueVisitors(page, date) {
+  const key = `unique_visitors:${page}:${date}`;
+  return redis.pfCount(key);
+  // Returns approximate unique count — same memory whether 100 or 10,000,000 visitors
+}
+
+// Merge multiple HyperLogLogs for combined stats
+await redis.pfMerge('unique:all_pages:today', ['unique:home:today', 'unique:products:today']);
+const totalUniqueVisitors = await redis.pfCount('unique:all_pages:today');
+</code></pre>

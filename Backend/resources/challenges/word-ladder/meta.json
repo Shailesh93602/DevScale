@@ -1,0 +1,20 @@
+{
+  "title": "Word Ladder",
+  "slug": "word-ladder",
+  "difficulty": "Hard",
+  "category": "algorithms",
+  "points": 150,
+  "tags": ["hash-table","string","breadth-first-search"],
+  "company_tags": ["Amazon","Google","Microsoft","Facebook","LinkedIn"],
+  "topic_tags": ["graphs","breadth-first search","hash table"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "Two strings `beginWord` and `endWord`, and a list of strings `wordList`.",
+  "output_format": "The number of words in the shortest transformation sequence from `beginWord` to `endWord`.",
+  "example_input": "beginWord = \"hit\", endWord = \"cog\", wordList = [\"hot\",\"dot\",\"dog\",\"lot\",\"log\",\"cog\"]",
+  "example_output": "5",
+  "constraints": "- `1 <= beginWord.length <= 10`\n- `endWord.length == beginWord.length`\n- `1 <= wordList.length <= 5000`\n- `wordList[i].length == beginWord.length`\n- `beginWord`, `endWord`, and `wordList[i]` consist of lowercase English letters.\n- `beginWord != endWord`\n- All the words in `wordList` are **unique**.",
+  "function_signature": "function ladderLength(beginWord: string, endWord: string, wordList: string[]): number {}",
+  "status": "ACTIVE"
+}

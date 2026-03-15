@@ -1,0 +1,6 @@
+[
+  "A node is 'good' if its value is >= all values on the path from root to it. This means its value must be >= the maximum value seen so far on the path.",
+  "Use DFS and pass the current maximum (max so far from root to current node) down recursively.",
+  "At each node, check if the currentNode.val >= maxSoFar. If yes, count it as good.",
+  "Update maxSoFar when recursing into children: maxSoFar = max(maxSoFar, currentNode.val)."
+]

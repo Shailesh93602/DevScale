@@ -1,0 +1,4 @@
+{
+    "name": "TypeScript Generics & Utility Types",
+    "description": "Mastering generics, constraints, conditional types, mapped types, and built-in utility types like Partial, Required, Pick, Omit, Record."
+}

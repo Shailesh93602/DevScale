@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary structural difference between an OLTP (Transaction) Database and an OLAP (Analytical) Data Warehouse?",
+            "options": [
+                "OLTP uses Python, while OLAP relies exclusively on Javascript DOM manipulation.",
+                "OLTP databases are highly 'Normalized' to make INSERTS fast. OLAP Data Warehouses intentionally 'Denormalize' data to make massive analytical READs and aggregations incredibly fast.",
+                "OLTP databases strictly prevent standard SQL.",
+                "OLAP natively requires GraphQL."
+            ],
+            "answer": "OLTP databases are highly 'Normalized' to make INSERTS fast. OLAP Data Warehouses intentionally 'Denormalize' data to make massive analytical READs and aggregations incredibly fast.",
+            "explanation": "Normalizing data requires slow JOINs. Data Warehouses flatten the data so analysts can query millions of rows smoothly without exploding the CPU."
+        },
+        {
+            "question": "In standard Dimensional Modeling, what differentiates a 'Fact' Table from a 'Dimension' Table?",
+            "options": [
+                "Fact Tables contain passwords.",
+                "Fact tables contain the massive, rapidly accumulating numerical measurements and transaction data. Dimension tables are smaller descriptive contexts utilized to filter or GROUP BY those facts logically.",
+                "Fact tables strictly utilize NoSQL JSON blobs.",
+                "Dimension tables explicitly host physical images natively."
+            ],
+            "answer": "Fact tables contain the massive, rapidly accumulating numerical measurements and transaction data. Dimension tables are smaller descriptive contexts utilized to filter or GROUP BY those facts logically.",
+            "explanation": "Facts are the verbs (A purchase occurred). Dimensions are the nouns (Who bought it, what they bought, uniquely where they bought it)."
+        },
+        {
+            "question": "Why is the explicit 'Star Schema' heavily preferred over the 'Snowflake Schema'?",
+            "options": [
+                "It aggressively compresses network logic.",
+                "The Star Schema keeps Dimension tables completely un-nested securely, natively explicitly strictly ensuring that massive analytical aggregations require ONLY simple 1-level JOINs cleanly.",
+                "The Star schema prevents CSS styling.",
+                "It forces native garbage collection intelligently."
+            ],
+            "answer": "The Star Schema keeps Dimension tables completely un-nested securely, natively explicitly strictly ensuring that massive analytical aggregations require ONLY simple 1-level JOINs cleanly.",
+            "explanation": "Snowflaking normalizes the dimensions, effectively creating a massive web of 5-level deep JOIN requirements that slows down the Data Warehouse."
+        }
+    ]
+}

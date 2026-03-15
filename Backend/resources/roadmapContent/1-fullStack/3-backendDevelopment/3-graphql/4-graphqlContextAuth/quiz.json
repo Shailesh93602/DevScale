@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "Why is implementing authentication radically different in GraphQL compared to evaluating it in a traditional REST API?",
+            "options": [
+                "GraphQL automatically encrypts all HTTP headers",
+                "GraphQL does not support HTTP cookies",
+                "REST uses many individual endpoints (/users, /posts) where middleware can be targeted efficiently, whereas GraphQL uses exactly ONE endpoint (/graphql) that handles both public and private data simultaneously",
+                "GraphQL requires authentication to be handled purely on the React frontend"
+            ],
+            "answer": "REST uses many individual endpoints (/users, /posts) where middleware can be targeted efficiently, whereas GraphQL uses exactly ONE endpoint (/graphql) that handles both public and private data simultaneously",
+            "explanation": "Because a single GraphQL request to /graphql might ask for both a list of public products (unauthenticated) AND the user's private shopping cart (authenticated) at the same time, you cannot simply add 'requireAuth' middleware globally to the route."
+        },
+        {
+            "question": "Where is the correct place to decode a JWT and fetch the authenticated User object in a modern GraphQL architecture?",
+            "options": [
+                "Inside the global `context` function, which runs once per HTTP request and injects the resulting data into every resolver natively",
+                "Inside every single resolver manually by evaluating `req.headers` individually",
+                "In the frontend Apollo Client cache",
+                "Inside the GraphQL Schema Type Definitions"
+            ],
+            "answer": "Inside the global `context` function, which runs once per HTTP request and injects the resulting data into every resolver natively",
+            "explanation": "The global `context` initialization function intercepts the incoming Express request, extracts the token, verifies it, and attaches `{ user: User }`. Then, every child resolver receives that exact `context` object as its third argument."
+        },
+        {
+            "question": "If an invalid or expired JWT is provided in the HTTP headers, why shouldn't the main `context` initialization function instantly throw an error and abort the request?",
+            "options": [
+                "Because GraphQL will permanently ban the IP address",
+                "Because Node.js cannot catch errors executed inside context functions",
+                "If you abort perfectly, public queries (which don't require an active login) will also crash and fail. You should simply leave `context.user = null` and let the specific resolvers decide if they need the user to exist.",
+                "It is acceptable to throw errors there; it's considered best practice."
+            ],
+            "answer": "If you abort perfectly, public queries (which don't require an active login) will also crash and fail. You should simply leave `context.user = null` and let the specific resolvers decide if they need the user to exist.",
+            "explanation": "A user with a dead token might just be trying to browse public blog posts. Let the query proceed. If they attempt to hit a protected mutation (like deleteUser), THAT specific resolver checks `if (!context.user) throw Error`."
+        },
+        {
+            "question": "How do you protect a specific Mutation so that only 'Admin' users can execute it?",
+            "options": [
+                "By writing a custom TypeDef: type Mutation { deleteData @admin }",
+                "By filtering the database results inside the Apollo cache",
+                "By adding an `if` statement logic inside the specific Mutation resolver: `if (context.user.role !== 'admin') throw new Error()`",
+                "By changing the GraphQL endpoint URL to /graphql/admin"
+            ],
+            "answer": "By adding an `if` statement logic inside the specific Mutation resolver: `if (context.user.role !== 'admin') throw new Error()`",
+            "explanation": "Because the `context.user` object is readily available, authorization is handled directly using standard JavaScript logic within the resolver before executing database commands."
+        },
+        {
+            "question": "Aside from the `user` object, what else is commonly passed into the GraphQL `context` using the Dependency Injection pattern?",
+            "options": [
+                "The React DOM Tree",
+                "CSS stylesheets for the Apollo sandbox",
+                "References to the Database connections, DataLoaders, and external API services",
+                "The compiled TypeScript schema"
+            ],
+            "answer": "References to the Database connections, DataLoaders, and external API services",
+            "explanation": "Passing `db` via the context (e.g., `context.db.users.find()`) prevents you from having to manually require database files into every resolver file, making testing (supplying fake mock databases) exceptionally easy."
+        }
+    ]
+}

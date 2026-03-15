@@ -1,0 +1,19 @@
+{
+  "title": "Immediate Food Delivery II",
+  "slug": "immediate-food-delivery",
+  "difficulty": "Medium",
+  "category": "databases",
+  "points": 100,
+  "tags": ["sql", "aggregation", "window-functions", "subquery"],
+  "company_tags": ["DoorDash", "Amazon", "Uber", "Facebook"],
+  "topic_tags": ["SQL", "Aggregation", "CASE WHEN"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Table: Delivery with columns delivery_id (int), customer_id (int), order_date (date), customer_pref_delivery_date (date)",
+  "output_format": "Result table with column immediate_percentage showing the percentage of first orders that are immediate (rounded to 2 decimal places)",
+  "example_input": "Table: Delivery\n| delivery_id | customer_id | order_date | customer_pref_delivery_date |\n| 1           | 1           | 2019-08-01 | 2019-08-02                  |\n| 2           | 2           | 2019-08-02 | 2019-08-02                  |\n| 3           | 1           | 2019-08-11 | 2019-08-12                  |\n| 4           | 3           | 2019-08-24 | 2019-08-24                  |",
+  "example_output": "| immediate_percentage |\n| 50.00                |",
+  "constraints": "- delivery_id is the primary key\n- An order is immediate if order_date = customer_pref_delivery_date\n- The first order is the order with the earliest order_date per customer",
+  "function_signature": "-- Write your SQL query below",
+  "status": "ACTIVE"
+}

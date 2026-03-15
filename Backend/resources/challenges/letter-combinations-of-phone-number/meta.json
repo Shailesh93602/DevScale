@@ -1,0 +1,19 @@
+{
+  "title": "Letter Combinations of a Phone Number",
+  "slug": "letter-combinations-of-phone-number",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": [],
+  "company_tags": [],
+  "topic_tags": [],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "TODO",
+  "output_format": "TODO",
+  "example_input": "TODO",
+  "example_output": "TODO",
+  "constraints": "TODO",
+  "function_signature": "// TODO",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,74 @@
+<h1>Kubernetes Autoscaling: HPA, VPA & KEDA</h1>
+<p>One of the core value propositions of Kubernetes is its ability to automatically adjust the number of running pods based on real-time demand, eliminating both the waste of over-provisioning and the performance degradation of under-provisioning.</p>
+
+<h2>Horizontal Pod Autoscaler (HPA)</h2>
+<p>The <strong>HPA</strong> automatically scales the number of pod replicas in a Deployment or StatefulSet based on observed CPU or memory utilization (or any custom metric):</p>
+<pre><code class="language-yaml">apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: api-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: api-deployment
+  minReplicas: 2          # Never go below 2 replicas (maintain HA)
+  maxReplicas: 20         # Never exceed 20 replicas
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 60   # Scale out when average CPU > 60%
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+</code></pre>
+<p>The HPA controller checks metrics every 15 seconds. If average CPU across all pods exceeds 60%, it calculates the needed replicas as: <code>ceil(currentReplicas * (currentMetricValue / desiredMetricValue))</code></p>
+
+<h2>Vertical Pod Autoscaler (VPA)</h2>
+<p>While HPA scales out (more pods), the <strong>VPA</strong> scales up (bigger pods). VPA analyzes historical CPU/memory usage and automatically adjusts the <code>resources.requests</code> and <code>resources.limits</code> in the pod spec:</p>
+<pre><code class="language-yaml">apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: api-vpa
+spec:
+  targetRef:
+    apiVersion: "apps/v1"
+    kind: Deployment
+    name: api-deployment
+  updatePolicy:
+    updateMode: "Auto"   # Automatically evict and restart pods with new resource requests
+  resourcePolicy:
+    containerPolicies:
+    - containerName: api
+      maxAllowed:
+        cpu: 4
+        memory: 8Gi
+</code></pre>
+<p>VPA is particularly valuable for discovering correct resource requests — many teams over-provision (paying for 4 CPUs when the app reliably uses 0.5 CPU).</p>
+
+<h2>KEDA: Event-Driven Autoscaling</h2>
+<p><strong>KEDA (Kubernetes Event-Driven Autoscaling)</strong> extends HPA beyond CPU/memory to scale based on external event sources — like the depth of a Kafka topic, an SQS queue length, or a Redis list length:</p>
+<pre><code class="language-yaml">apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: kafka-consumer-scaler
+spec:
+  scaleTargetRef:
+    name: payment-processor-deployment
+  minReplicaCount: 1
+  maxReplicaCount: 50
+  triggers:
+  - type: kafka
+    metadata:
+      bootstrapServers: kafka.production.svc:9092
+      topic: payment-events
+      consumerGroup: payment-processors
+      lagThreshold: "100"   # Scale out when consumer lag exceeds 100 messages/replica
+</code></pre>
+<p>This means: when no messages are in the queue, KEDA scales the payment processor down to 0 replicas. As messages flood in, KEDA instantly scales up to process them — paying for compute only when there's actual work to do.</p>

@@ -1,0 +1,36 @@
+<h1>Feature Stores</h1>
+<p>Imagine a team of Data Scientists is building a fraud detection model. They spend 3 weeks writing complex Python pipelines to compute 40 sophisticated features from raw transaction data: "average spend in the last 7 days," "number of transactions from a new device," "velocity of merchant category changes." The model performs excellent in testing.</p>
+<p>Then a completely separate team building a credit risk model needs the exact same "average spend in the last 7 days" feature. Instead of reusing the fraud team's work, they spend another 3 weeks independently re-implementing the exact same computation with slightly different logic. The results are subtly different, leading to mysterious model inconsistencies.</p>
+<p>This problem — feature duplication, inconsistent implementations, and the dangerous gap between training and serving — is what <strong>Feature Stores</strong> are specifically designed to solve.</p>
+
+<h2>What is a Feature Store?</h2>
+<p>A Feature Store is a centralized data platform that manages the complete lifecycle of ML features: their computation, storage, versioning, and optimized serving to both ML training pipelines and real-time production models.</p>
+<p>The two most prominent open-source Feature Stores are <strong>Feast</strong> and <strong>Tecton</strong>.</p>
+
+<h2>The Train/Serve Skew Problem</h2>
+<p>The most insidious problem Feature Stores solve is <strong>Train/Serve Skew</strong>. Consider this scenario:</p>
+<ul>
+  <li><strong>Training time:</strong> Your Data Scientist trains a model using a batch Spark job that computes "user's average purchase price over the last 30 days" by running a SQL query joining the full history table.</li>
+  <li><strong>Serving time:</strong> A production Python microservice needs to compute the same feature for a live user request. The backend engineer writes a different, simpler SQL query that computes the same metric but uses slightly different date windowing logic.</li>
+</ul>
+<p>The model was trained on one feature definition but is being served a subtly different version. This skew silently degrades model accuracy.</p>
+
+<h2>How a Feature Store Solves This</h2>
+<pre><code class="language-python">import feast
+
+feature_store = feast.FeatureStore(repo_path=".")
+
+# Both the training pipeline AND the real-time API call the EXACT same
+# feature store function — guaranteeing identical feature computation
+training_features = feature_store.get_historical_features(
+    entity_df=training_df,
+    features=["user_features:avg_purchase_30d", "user_features:device_count"]
+)
+
+# In the production API:
+online_features = feature_store.get_online_features(
+    features=["user_features:avg_purchase_30d"],
+    entity_rows=[{"user_id": "12345"}]
+)
+</code></pre>
+<p>The Feature Store maintains an <strong>Offline Store</strong> (a Data Warehouse like Snowflake for batch training) and an <strong>Online Store</strong> (a low-latency key-value database like Redis for real-time serving). Both are populated from the same feature computation pipeline, guaranteeing complete consistency.</p>

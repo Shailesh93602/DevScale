@@ -1,0 +1,90 @@
+<h1>Terraform — Infrastructure as Code</h1>
+<p>Terraform lets you define cloud infrastructure using code (HCL), enabling version control, code review, reproducibility, and automated provisioning.</p>
+
+<h2>Why IaC?</h2>
+<ul>
+  <li><strong>Reproducible</strong> — Spin up identical environments (dev/staging/prod).</li>
+  <li><strong>Version controlled</strong> — Infrastructure changes go through code review.</li>
+  <li><strong>Self-documenting</strong> — Code is the documentation.</li>
+  <li><strong>Idempotent</strong> — Apply the same config many times; same result.</li>
+</ul>
+
+<h2>Core Concepts</h2>
+<pre><code># Providers — plugins for cloud platforms
+terraform {
+  required_providers {
+    aws = { source = "hashicorp/aws", version = "~&gt; 5.0" }
+  }
+  backend "s3" {
+    bucket = "my-terraform-state"
+    key    = "prod/terraform.tfstate"
+    region = "us-east-1"
+  }
+}
+
+provider "aws" { region = "us-east-1" }</code></pre>
+
+<h2>Resources</h2>
+<pre><code># resource "type" "name"
+resource "aws_vpc" "main" {
+  cidr_block           = "10.0.0.0/16"
+  enable_dns_hostnames = true
+  tags = { Name = "production-vpc" }
+}
+
+resource "aws_instance" "web" {
+  ami             = "ami-0c55b159cbfafe1f0"
+  instance_type   = "t3.small"
+  subnet_id       = aws_subnet.public.id           # Reference other resource
+  iam_instance_profile = aws_iam_instance_profile.app.name
+  user_data = file("scripts/setup.sh")
+
+  tags = { Name = "web-server", Environment = var.environment }
+}</code></pre>
+
+<h2>Variables & Outputs</h2>
+<pre><code"># variables.tf
+variable "environment" {
+  type    = string
+  default = "dev"
+  validation {
+    condition     = contains(["dev", "staging", "prod"], var.environment)
+    error_message = "Must be dev, staging, or prod."
+  }
+}
+
+variable "db_password" {
+  type      = string
+  sensitive = true  # Never logged or shown in plan output
+}
+
+# outputs.tf
+output "web_server_ip" {
+  value = aws_eip.web.public_ip
+}
+
+output "rds_endpoint" {
+  value     = aws_db_instance.main.endpoint
+  sensitive = true
+}</code></pre>
+
+<h2>Terraform Workflow</h2>
+<pre><code>terraform init          # Download providers
+terraform plan          # Preview changes (dry run)
+terraform apply         # Apply changes (asks for confirmation)
+terraform apply -auto-approve  # No confirmation prompt (CI/CD)
+terraform destroy       # Tear down all resources
+
+# State management
+terraform state list    # List resources in state
+terraform state show aws_instance.web  # Inspect resource state
+terraform import aws_s3_bucket.mybucket my-existing-bucket  # Import existing</code></pre>
+
+<h2>Modules — Reusable Infrastructure</h2>
+<pre><code"># Call a module
+module "vpc" {
+  source      = "./modules/vpc"   # Local module
+  # source   = "terraform-aws-modules/vpc/aws"  # Registry module
+  environment = var.environment
+  cidr_block  = "10.0.0.0/16"
+}</code></pre>

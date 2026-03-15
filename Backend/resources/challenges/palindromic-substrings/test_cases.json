@@ -1,0 +1,12 @@
+[
+  { "input": "{\"s\":\"abc\"}", "output": "3", "explanation": "Three items: a, b, c", "is_hidden": false },
+  { "input": "{\"s\":\"aaa\"}", "output": "6", "explanation": "a x3, aa x2, aaa x1", "is_hidden": false },
+  { "input": "{\"s\":\"a\"}", "output": "1", "explanation": "Single character", "is_hidden": true },
+  { "input": "{\"s\":\"aba\"}", "output": "4", "explanation": "a, b, a, aba", "is_hidden": true },
+  { "input": "{\"s\":\"abba\"}", "output": "6", "explanation": "a, b, b, a, bb, abba", "is_hidden": true },
+  { "input": "{\"s\":\"xaba\"}", "output": "5", "explanation": "x, a, b, a, aba", "is_hidden": true },
+  { "input": "{\"s\":\"racecar\"}", "output": "10", "explanation": "Multiple nested palindromes", "is_hidden": true },
+  { "input": "{\"s\":\"aaaa\"}", "output": "10", "explanation": "Many overlapping palindromes", "is_hidden": true },
+  { "input": "{\"s\":\"abacaba\"}", "output": "12", "explanation": "Complex symmetrical structure", "is_hidden": true },
+  { "input": "{\"s\":\"abcdefg\"}", "output": "7", "explanation": "All unique characters", "is_hidden": true }
+]

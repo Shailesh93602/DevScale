@@ -1,0 +1,41 @@
+{
+  "title": "Rotate Image",
+  "slug": "rotate-image",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": [
+    "array",
+    "math",
+    "matrix"
+  ],
+  "company_tags": [
+    "Amazon",
+    "Microsoft",
+    "Apple",
+    "Google"
+  ],
+  "topic_tags": [
+    "arrays",
+    "matrix"
+  ],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An `n x n` 2D matrix representing an image.",
+  "output_format": "The matrix rotated 90 degrees clockwise (in-place).",
+  "example_input": "matrix = [[1,2,3],[4,5,6],[7,8,9]]",
+  "example_output": "[[7,4,1],[8,5,2],[9,6,3]]",
+  "constraints": "- `n == matrix.length == matrix[i].length`\n- `1 <= n <= 20`\n- `-1000 <= matrix[i][j] <= 1000`",
+  "function_signature": "function rotate(matrix: number[][]): void {}",
+  "status": "ACTIVE"
+}

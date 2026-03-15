@@ -1,0 +1,10 @@
+{
+  "typescript": "function minRefuelStops(target: number, startFuel: number, stations: number[][]): number {\n    \n};",
+  "javascript": "/**\n * @param {number} target\n * @param {number} startFuel\n * @param {number[][]} stations\n * @return {number}\n */\nvar minRefuelStops = function(target, startFuel, stations) {\n    \n};",
+  "python": "class Solution:\n    def minRefuelStops(self, target: int, startFuel: int, stations: List[List[int]]) -> int:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public int minRefuelStops(int target, int startFuel, int[][] stations) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int minRefuelStops(int target, int startFuel, vector<vector<int>>& stations) {\n        \n    }\n};",
+  "go": "func minRefuelStops(target int, startFuel int, stations [][]int) int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn min_refuel_stops(target: i32, start_fuel: i32, stations: Vec<Vec<i32>>) -> i32 {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int MinRefuelStops(int target, int startFuel, int[][] stations) {\n        \n    }\n}"
+}

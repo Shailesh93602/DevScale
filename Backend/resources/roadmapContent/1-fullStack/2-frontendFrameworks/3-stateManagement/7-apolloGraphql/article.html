@@ -1,0 +1,132 @@
+<h1>Apollo Client & GraphQL State</h1>
+<p>Apollo Client is the industry-standard state management library for GraphQL applications. It excels because it automatically handles both remote server state (fetching, caching, error handling) and local UI state through a unified cache.</p>
+
+<h2>The Normalized Cache</h2>
+<p>Unlike REST caching which caches by URL, Apollo's Cache is <strong>Normalized</strong>. It flattens all returned data into a flat table based on the item's <code>__typename</code> and <code>id</code>. This is incredibly powerful: if a query fetches a user's name on a profile page, and a separate query fetches the same user on a comments page, Apollo shares the exact same object in the cache. A mutation updating the user's name will instantly update BOTH pages across the entire app without needing specific code.</p>
+
+<pre><code>import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+
+// 1. Initialize Apollo
+const client = new ApolloClient({
+  uri: 'https://api.example.com/graphql',
+  cache: new InMemoryCache()
+});
+
+// 2. Wrap App
+function App() {
+  return (
+    &lt;ApolloProvider client={client}&gt;
+      &lt;MyRootComponent /&gt;
+    &lt;/ApolloProvider&gt;
+  );
+}</code></pre>
+
+<h2>useQuery — Declarative Fetching</h2>
+<pre><code>import { gql, useQuery } from '@apollo/client';
+
+// The GraphQL Document
+const GET_DOGS = gql`
+  query GetDogs {
+    dogs {
+      id
+      breed
+      name
+    }
+  }
+`;
+
+function DogsList() {
+  // Apollo handles loading status, errors, and caching automatically
+  const { loading, error, data } = useQuery(GET_DOGS);
+
+  if (loading) return 'Loading...';
+  if (error) return `Error! ${error.message}`;
+
+  return (
+    &lt;ul&gt;
+      {data.dogs.map(dog =&gt; (
+        &lt;li key={dog.id}&gt;{dog.name} - {dog.breed}&lt;/li&gt;
+      ))}
+    &lt;/ul&gt;
+  );
+}</code></pre>
+
+<h2>useMutation — Updating Server State</h2>
+<p>Mutations modify data on the server. If the mutation returns the modified object with its <code>id</code>, Apollo automatically updates the cache and re-renders any component viewing that object.</p>
+
+<pre><code>const UPDATE_DOG = gql`
+  mutation UpdateDogParams($id: ID!, $name: String!) {
+    updateDog(id: $id, name: $name) {
+      id
+      name  # Returning the id and changed fields allows Apollo to auto-update the cache!
+    }
+  }
+`;
+
+function EditDog({ id }) {
+  // mutateFunction is what you call to execute the GraphQL mutation
+  const [updateDog, { data, loading, error }] = useMutation(UPDATE_DOG);
+
+  const handleSubmit = (newName) =&gt; {
+    updateDog({ variables: { id, name: newName } });
+  };
+
+  return (
+    &lt;button onClick={() =&gt; handleSubmit('Rex')}&gt;
+      {loading ? 'Saving...' : 'Rename to Rex'}
+    &lt;/button&gt;
+  );
+}</code></pre>
+
+<h2>Managing Local (Client-Only) State</h2>
+<p>You can use Apollo Client to manage local UI state alongside remote data. Apollo accomplishes this through <strong>Reactive Variables</strong>, allowing components to react automatically when local variables change independently of GraphQL operations.</p>
+
+<pre><code>import { makeVar, useReactiveVar } from '@apollo/client';
+
+// 1. Define a reactive variable (outside component)
+export const cartItemsVar = makeVar([]);
+
+// 2. Update it from any component
+function AddToCart({ item }) {
+  const addToCart = () =&gt; {
+    const currentItems = cartItemsVar();
+    cartItemsVar([...currentItems, item]);
+  };
+  return &lt;button onClick={addToCart}&gt;Add&lt;/button&gt;;
+}
+
+// 3. React to it in a different component
+function CartHeader() {
+  const cartItems = useReactiveVar(cartItemsVar);
+  return &lt;div&gt;Items in Cart: {cartItems.length}&lt;/div&gt;;
+}</code></pre>
+
+<h2>Type Policies for Cache Customization</h2>
+<p>Oftentimes, you need to control how arrays are cached, exactly what field acts as the ID, or implement pagination (like infinite scrolling). You do this with Type Policies when instantiating the cache.</p>
+
+<pre><code>const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        feed: {
+          // A merge function to handle cursor-based pagination
+          // We tell Apollo to append new fetched pages to the existing array in cache
+          merge(existing = [], incoming) {
+            return [...existing, ...incoming];
+          },
+        },
+      },
+    },
+    Book: {
+      // If the backend returns "isbn" instead of "id", tell Apollo to identify it by isbn
+      keyFields: ["isbn"],
+    }
+  }
+});</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always return the mutated object's <code>id</code> along with the modified fields from mutations. This guarantees Apollo's normalized cache updates UI seamlessly without manual intervention.</li>
+  <li>If a mutation adds a NEW item to an array or DELETES an item, you must manually update the cache in the mutation's <code>update</code> function. Automatic cache updates only work for modifying existing items.</li>
+  <li>Avoid storing heavy server data in Redux when using Apollo. Let the <code>InMemoryCache</code> be your single source of truth for remote state.</li>
+</ul>

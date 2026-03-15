@@ -1,0 +1,10 @@
+{
+    "id": "5-computerVisionNlp",
+    "title": "Computer Vision & NLP",
+    "description": "Advanced topics in image processing, object detection, and natural language understanding.",
+    "order": 5,
+    "subjects": [
+        "1-computerVision",
+        "2-nlp"
+    ]
+}

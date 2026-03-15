@@ -1,0 +1,4 @@
+{
+    "name": "OAuth 2.0 & Social Logins",
+    "description": "Understanding the OAuth 2.0 authorization framework. Implementing Single Sign-On (SSO) and social logins (Google, GitHub) using Passport.js and authorization code flows."
+}

@@ -1,0 +1,6 @@
+[
+  "Start by defining the Span interface with traceId (32 hex chars), spanId (16 hex chars), parentSpanId, name, timestamps, attributes, and events. Generate IDs using random hex characters.",
+  "For W3C context propagation, the traceparent header format is '00-{traceId}-{spanId}-{flags}'. Extract parses this header; inject creates it from a span's context.",
+  "When creating a child span: use the SAME traceId as the parent, generate a NEW spanId, and set parentSpanId to the parent's spanId. If no parent context exists, start a new trace.",
+  "To build the trace tree, create a map of spanId->span, find the root (no parentSpanId), then recursively attach children. The critical path is the longest chain of sequential spans."
+]

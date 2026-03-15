@@ -1,0 +1,19 @@
+<h1>dbt CI/CD & Deployments</h1>
+<p>Because Data Warehouses now serve extremely critical financial models and machine learning pipelines, Data Engineering teams must adopt rigorous software engineering practices. You cannot simply modify a production SQL query directly on the live database. If you drop a column that the Executive Dashboard relies on, the entire business will halt.</p>
+<p>This is where <strong>Continuous Integration and Continuous Deployment (CI/CD)</strong> strategies are deployed across dbt architectures.</p>
+
+<h2>Version Control (Git)</h2>
+<p>The foundation of dbt is that every single data model, macro, and test is physically represented as plain text <code>.sql</code> and <code>.yml</code> files. Because they are text files, they can be checked into a Git repository.</p>
+<p>When a Data Engineer needs to add a new aggregation to the <code>fct_sales</code> table, they create a new feature branch, modify the SQL locally, test it, and then submit a Pull Request.</p>
+
+<h2>Continuous Integration (Slim CI)</h2>
+<p>When the Pull Request is submitted, how do you mathematically guarantee your modified query won't crash the production database? You use an automated CI pipeline (like GitHub Actions, dbt Cloud, or GitLab CI).</p>
+<p>Running <code>dbt run</code> across a massive 1-Petabyte Enterprise Data Warehouse might take 12 hours and cost thousands of dollars just for a single Pull Request. dbt solves this elegantly via <strong>Slim CI (State-Based Execution)</strong>.</p>
+<pre><code class="language-bash"># Run only models that were physically changed, and their direct downstream children
+dbt run --select state:modified+ --defer --state path/to/prod/manifest
+</code></pre>
+<p>With Slim CI, dbt logically compares your newly submitted Pull Request code against the exact current state of Production (via the <code>manifest.json</code> file). If you only modified the <code>stg_users</code> model, dbt recognizes that and <em>only</em> executes <code>stg_users</code> and any downstream models directly dependent on it. A 12-hour CI pipeline instantly becomes a secure 2-minute test.</p>
+
+<h2>Continuous Deployment</h2>
+<p>Once the CI Pipeline validates that the SQL compiles perfectly and passes all predefined data validation tests securely, a Senior Engineer physically reviews the Pull Request and clicks 'Merge'.</p>
+<p>Upon merging into the <code>main</code> branch, the CD pipeline automatically takes over definitively. It triggers the production orchestrator (like Apache Airflow or dbt Cloud) to securely deploy the freshly merged SQL files reliably into the live, production Snowflake data warehouse logically.</p>

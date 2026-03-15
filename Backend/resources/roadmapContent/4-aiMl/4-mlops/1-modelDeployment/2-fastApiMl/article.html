@@ -1,0 +1,128 @@
+<h1>Serving ML Models with FastAPI</h1>
+<p>FastAPI is the de-facto standard for building ML inference APIs in Python. It is built on Starlette and Pydantic, which means you get async I/O, automatic OpenAPI documentation, and strict request/response validation — all of which matter enormously for production ML services.</p>
+
+<h2>Why FastAPI Over Flask for ML?</h2>
+<ul>
+  <li><strong>Async support:</strong> FastAPI is built on asyncio. You can handle many concurrent requests without blocking the event loop on non-model work (database lookups, logging).</li>
+  <li><strong>Pydantic validation:</strong> Input features are automatically validated and type-coerced before ever reaching your model. A malformed request returns a 422 with descriptive errors, not a cryptic model crash.</li>
+  <li><strong>Auto-generated docs:</strong> Every endpoint gets interactive Swagger UI at <code>/docs</code> and a ReDoc page at <code>/redoc</code> automatically — your ML endpoint is self-documenting.</li>
+  <li><strong>Speed:</strong> FastAPI is one of the fastest Python web frameworks, approaching Node.js-level performance on I/O-bound workloads.</li>
+</ul>
+
+<h2>Project Structure</h2>
+<pre><code>ml_api/
+├── app/
+│   ├── main.py          # FastAPI app and route registration
+│   ├── models/
+│   │   ├── classifier.pkl  # Serialized sklearn model
+│   │   └── scaler.pkl      # Fitted StandardScaler
+│   ├── schemas.py       # Pydantic request/response models
+│   └── predictor.py     # Model loading and inference logic
+├── Dockerfile
+└── requirements.txt</code></pre>
+
+<h2>Building a Complete ML API</h2>
+<pre><code># schemas.py — Define strict input/output contracts  
+from pydantic import BaseModel, Field
+from typing import Literal
+
+class SentimentRequest(BaseModel):
+    text: str = Field(..., min_length=1, max_length=2000, 
+                      description="The text to classify")
+    language: Literal["en", "es", "fr"] = "en"
+
+class SentimentResponse(BaseModel):
+    sentiment: Literal["positive", "negative", "neutral"]
+    confidence: float = Field(..., ge=0.0, le=1.0)
+    model_version: str</code></pre>
+
+<pre><code># main.py — The FastAPI application
+from fastapi import FastAPI, HTTPException
+from contextlib import asynccontextmanager
+import joblib
+
+# Store model in app state — loaded ONCE at startup, not per-request
+ml_models = {}
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Load model into memory when server starts
+    ml_models["sentiment"] = joblib.load("models/sentiment.pkl")
+    ml_models["vectorizer"] = joblib.load("models/tfidf.pkl")
+    print("Models loaded successfully")
+    yield
+    # Cleanup on shutdown
+    ml_models.clear()
+
+app = FastAPI(
+    title="Sentiment Analysis API",
+    version="2.0.0",
+    lifespan=lifespan
+)
+
+@app.post("/v2/predict/sentiment", response_model=SentimentResponse)
+async def predict_sentiment(request: SentimentRequest):
+    if request.language != "en":
+        raise HTTPException(
+            status_code=422,
+            detail=f"Language '{request.language}' not yet supported"
+        )
+    features = ml_models["vectorizer"].transform([request.text])
+    proba = ml_models["sentiment"].predict_proba(features)[0]
+    labels = ["negative", "neutral", "positive"]
+    predicted_idx = proba.argmax()
+    return SentimentResponse(
+        sentiment=labels[predicted_idx],
+        confidence=round(float(proba[predicted_idx]), 4),
+        model_version="2.0.0"
+    )
+
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy", "models_loaded": list(ml_models.keys())}</code></pre>
+
+<h2>Handling Slow Models with Background Tasks</h2>
+<p>If your model takes 2+ seconds to run, you shouldn't make the client wait. Instead, accept the job and return a job ID, then process asynchronously.</p>
+<pre><code">from fastapi import BackgroundTasks
+import uuid, asyncio
+
+job_results = {}  # In production, use Redis
+
+async def run_inference(job_id: str, text: str):
+    await asyncio.sleep(0)  # yield to event loop
+    result = ml_models["sentiment"].predict([text])[0]
+    job_results[job_id] = {"status": "done", "result": result}
+
+@app.post("/v2/predict/async")
+async def predict_async(request: SentimentRequest, bg: BackgroundTasks):
+    job_id = str(uuid.uuid4())
+    job_results[job_id] = {"status": "processing"}
+    bg.add_task(run_inference, job_id, request.text)
+    return {"job_id": job_id, "status_url": f"/v2/jobs/{job_id}"}
+
+@app.get("/v2/jobs/{job_id}")
+async def get_job(job_id: str):
+    return job_results.get(job_id, {"error": "Job not found"})</code></pre>
+
+<h2>Adding Request Logging and Latency Tracking</h2>
+<pre><code">import time
+from fastapi import Request
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    start = time.monotonic()
+    response = await call_next(request)
+    duration_ms = (time.monotonic() - start) * 1000
+    print(f"{request.method} {request.url.path} "
+          f"→ {response.status_code} in {duration_ms:.1f}ms")
+    response.headers["X-Process-Time"] = f"{duration_ms:.1f}ms"
+    return response</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always load models at startup using the <code>lifespan</code> context manager — never inside the route handler.</li>
+  <li>Add a <code>/health</code> endpoint that verifies models are loaded; use it for Kubernetes readiness probes.</li>
+  <li>Use Pydantic's <code>Field</code> validators to reject bad input before it reaches the model.</li>
+  <li>Run FastAPI with Uvicorn + Gunicorn in production: <code>gunicorn -w 4 -k uvicorn.workers.UvicornWorker app.main:app</code>.</li>
+  <li>Pin your <code>scikit-learn</code> version in <code>requirements.txt</code> — a minor version change can break <code>joblib.load()</code>.</li>
+</ul>

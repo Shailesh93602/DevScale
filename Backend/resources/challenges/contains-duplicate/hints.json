@@ -1,0 +1,5 @@
+[
+  "Consider how you might do this by comparing every pair of elements. The time complexity would be O(n²), can we do better?",
+  "Try sorting the array first. If there are duplicates, they will be adjacent to each other. What's the time complexity of sorting?",
+  "To achieve O(n) runtime, you need a data structure that offers fast O(1) lookups. A Hash Set is perfect for tracking elements you've already seen as you iterate."
+]

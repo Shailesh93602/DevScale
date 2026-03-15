@@ -1,0 +1,94 @@
+<h1>Prisma ORM — Type-Safe Database Access</h1>
+<p>Prisma is a next-generation ORM for Node.js and TypeScript. It replaces raw SQL and traditional ORMs with a type-safe, intuitive API that is generated from your schema.</p>
+
+<h2>Schema Definition</h2>
+<pre><code>// prisma/schema.prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  posts     Post[]   // One-to-many relation
+
+  @@index([email])   // Add index
+}
+
+model Post {
+  id        Int       @id @default(autoincrement())
+  title     String
+  content   String?
+  published Boolean   @default(false)
+  author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  Int
+  tags      Tag[]     // Many-to-many via implicit join table
+}
+
+model Tag {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  posts Post[]
+}
+
+enum Role { USER ADMIN MODERATOR }</code></pre>
+
+<h2>Migrations</h2>
+<pre><code># Create a new migration
+npx prisma migrate dev --name add_user_role
+
+# Apply to production
+npx prisma migrate deploy
+
+# Reset dev database (⚠️ drops all data)
+npx prisma migrate reset
+
+# Introspect existing DB (reverse: DB → schema)
+npx prisma db pull</code></pre>
+
+<h2>Prisma Client — CRUD Operations</h2>
+<pre><code>import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
+
+// Create
+const user = await prisma.user.create({
+  data: { email: "alice@example.com", name: "Alice" },
+});
+
+// Read
+const users = await prisma.user.findMany({
+  where: { role: "ADMIN" },
+  include: { posts: { where: { published: true }, take: 5 } },
+  orderBy: { createdAt: "desc" },
+  skip: 0, take: 10, // Pagination
+});
+
+// Update
+await prisma.user.update({
+  where: { id: 1 },
+  data: { name: "Alice Smith" },
+});
+
+// Upsert — update if exists, create if not
+await prisma.user.upsert({
+  where: { email: "alice@example.com" },
+  update: { name: "Alice Updated" },
+  create: { email: "alice@example.com", name: "Alice New" },
+});
+
+// Delete
+await prisma.user.delete({ where: { id: 1 } });
+
+// Transactions
+await prisma.$transaction([
+  prisma.account.update({ where: { id: 1 }, data: { balance: { decrement: 100 } } }),
+  prisma.account.update({ where: { id: 2 }, data: { balance: { increment: 100 } } }),
+]);</code></pre>

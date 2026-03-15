@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary security mechanism behind a Magic Link authentication flow?",
+            "options": [
+                "It uses biometric scanners attached to the PC",
+                "It shifts the burden of trust to the user's email provider; if they can successfully log into their email account to click the link, they prove they own the identity",
+                "It generates a permanent password that is hidden in the website's CSS",
+                "It utilizes the Blockchain to verify the user"
+            ],
+            "answer": "It shifts the burden of trust to the user's email provider; if they can successfully log into their email account to click the link, they prove they own the identity",
+            "explanation": "Magic Links bypass the need for an application-specific password. By sending a highly secure, randomly generated, short-lived token to the user's inbox, you are inherently verifying that the user currently possesses their email account credentials."
+        },
+        {
+            "question": "When implementing Magic Links, why must the server immediately delete or invalidate the magic token from the database the first time it is successfully clicked?",
+            "options": [
+                "To save space on the database hard drive",
+                "Because Node.js cannot process the same token string twice",
+                "To prevent 'Replay Attacks' or forward-sharing. If the user forwards the email to a friend (or a hacker intercepts it), the link will no longer be valid and cannot be used to log in again.",
+                "To force the user to pay for premium access"
+            ],
+            "answer": "To prevent 'Replay Attacks' or forward-sharing. If the user forwards the email to a friend (or a hacker intercepts it), the link will no longer be valid and cannot be used to log in again.",
+            "explanation": "A Magic Link token acts as a temporary, plaintext password. It must be strictly single-use. If it is not deleted instantly upon use, an attacker who compromises the email a day later could still use the link."
+        },
+        {
+            "question": "Why are WebAuthn (Passkeys) using the device's secure enclave considered mathematically immune to Phishing?",
+            "options": [
+                "Because Passkeys require an iris scan which cannot be faked on the internet",
+                "Because an antivirus program intercepts fake websites natively",
+                "Because the private key never leaves the device's hardware chip, and the device inherently ties the key to the specific Domain Origin (e.g. apple.com). The device will absolutely refuse to sign a challenge for a fake website (e.g. appIe.com)",
+                "Because they use Google's ReCaptcha automatically"
+            ],
+            "answer": "Because the private key never leaves the device's hardware chip, and the device inherently ties the key to the specific Domain Origin (e.g. apple.com). The device will absolutely refuse to sign a challenge for a fake website (e.g. appIe.com)",
+            "explanation": "Even if a user is tricked by a perfect clone of a website, the underlying browser/device API looks at the actual URL. Because the URL doesn't perfectly correspond with the Domain used to register the Passkey, the hardware refuses to authenticate them."
+        },
+        {
+            "question": "During a WebAuthn login flow, what does the server send to the client browser to initiate the authentication?",
+            "options": [
+                "A 6-digit SMS OTP",
+                "A JSON Web Token containing their username",
+                "A cryptographically random 'Challenge' string that the device must subsequently sign with its Private Key",
+                "A request for the user's plaintext password"
+            ],
+            "answer": "A cryptographically random 'Challenge' string that the device must subsequently sign with its Private Key",
+            "explanation": "The server generates a random challenge and tells the browser, 'Prove you are Bob by signing this random string.' The device signs it mathematically and sends it back. Only Bob's physical phone has the private key required to generate a valid signature for that specific challenge."
+        },
+        {
+            "question": "What is a major security flaw commonly associated with relying strictly on SMS-based OTPs (One-Time Passwords)?",
+            "options": [
+                "SMS messages take hours to deliver globally",
+                "SMS messages can be compromised via SIM-swapping attacks, where a hacker tricks a telecom provider into transferring the victim's phone number to the hacker's device",
+                "SMS text messages can only contain numbers, making them easy to guess",
+                "Twilio charges thousands of dollars per single text message"
+            ],
+            "answer": "SMS messages can be compromised via SIM-swapping attacks, where a hacker tricks a telecom provider into transferring the victim's phone number to the hacker's device",
+            "explanation": "While better than nothing, SMS is vulnerable to social engineering against cell providers. Hackers easily steal phone numbers, meaning the 6-digit codes are sent directly to the hacker, bypassing the passwordless protection completely."
+        }
+    ]
+}

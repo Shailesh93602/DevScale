@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "A fraud detection model achieves 99.8% accuracy on a test set where fraud is 0.2% of transactions. What is fundamentally wrong with using accuracy as the evaluation metric here?",
+            "options": [
+                "Accuracy is a valid metric — 99.8% is excellent fraud detection performance.",
+                "A model that predicts 'not fraud' for EVERY transaction achieves 99.8% accuracy while detecting zero fraud cases. When classes are severely imbalanced, accuracy is dominated by the majority class and provides no information about the model's ability to detect the minority class. Precision, recall, F1, and PR-AUC are the correct metrics.",
+                "The model should be evaluated on a balanced test set only.",
+                "Accuracy is too slow to compute for time-sensitive fraud detection systems."
+            ],
+            "answer": "A model that predicts 'not fraud' for EVERY transaction achieves 99.8% accuracy while detecting zero fraud cases. When classes are severely imbalanced, accuracy is dominated by the majority class and provides no information about the model's ability to detect the minority class. Precision, recall, F1, and PR-AUC are the correct metrics.",
+            "explanation": "This 'accuracy paradox' is one of the most common ML mistakes in production. Every classification project with imbalanced data must immediately discard accuracy as the primary metric."
+        },
+        {
+            "question": "SHAP shows that 'support_calls=8' adds +0.35 to the churn prediction for a specific customer, while 'support_calls=1' adds only +0.02 for another customer. What does this individual-level SHAP interpretation enable that global feature importance cannot?",
+            "options": [
+                "SHAP individual values are more accurate than global importance for predicting churn.",
+                "Global feature importance gives the average effect of a feature across all customers. Individual SHAP values explain WHY THIS SPECIFIC customer got THIS SPECIFIC prediction — enabling actionable interventions (call this specific high-risk customer's account manager), regulatory compliance explanations (explain why this specific loan was denied), and identifying unusual customer patterns.",
+                "SHAP individual values sum to 1.0, making them easier to interpret than percentages.",
+                "Global feature importance cannot be computed for ensemble models like Random Forest."
+            ],
+            "answer": "Global feature importance gives the average effect of a feature across all customers. Individual SHAP values explain WHY THIS SPECIFIC customer got THIS SPECIFIC prediction — enabling actionable interventions (call this specific high-risk customer's account manager), regulatory compliance explanations (explain why this specific loan was denied), and identifying unusual customer patterns.",
+            "explanation": "EU GDPR Article 22 requires that automated decisions (like credit denials) be explainable to affected individuals. SHAP individual explanations make this technically feasible: 'Your loan was denied primarily because your debt-to-income ratio (+0.42) and short employment history (+0.31) exceeded our risk threshold.'"
+        },
+        {
+            "question": "Why is 'class_weight=balanced' in sklearn classifiers generally a better starting point for handling imbalanced data than SMOTE, despite SMOTE being more sophisticated?",
+            "options": [
+                "Class weights are more accurate; SMOTE introduces synthetic noise.",
+                "class_weight='balanced' requires zero code changes beyond a single parameter, doesn't modify the training data, cannot introduce data leakage, and works with cross-validation automatically. SMOTE requires the imblearn library, careful pipeline wrapping to prevent leakage, and adds computational cost. SMOTE's advantage is that it can help in cases where class weights alone reach their ceiling.",
+                "SMOTE only works with binary classification; class weights work for multi-class.",
+                "class_weight='balanced' works for all sklearn algorithms; SMOTE works only with tree models."
+            ],
+            "answer": "class_weight='balanced' requires zero code changes beyond a single parameter, doesn't modify the training data, cannot introduce data leakage, and works with cross-validation automatically. SMOTE requires the imblearn library, careful pipeline wrapping to prevent leakage, and adds computational cost. SMOTE's advantage is that it can help in cases where class weights alone reach their ceiling.",
+            "explanation": "Production ML principle: always start with the simplest approach that might work. class_weight='balanced' resolves most imbalanced dataset problems with zero risk of leakage. SMOTE is an escalation step if the simpler approach is insufficient."
+        }
+    ]
+}

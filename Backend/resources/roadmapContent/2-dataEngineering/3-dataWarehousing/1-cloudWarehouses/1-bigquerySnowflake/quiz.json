@@ -1,0 +1,74 @@
+{
+    "title": "Cloud Data Warehouses Quiz",
+    "description": "Test your BigQuery, Snowflake, and data warehousing knowledge.",
+    "passingScore": 80,
+    "timeLimit": 8,
+    "questions": [
+        {
+            "question": "What is the key difference between OLTP and OLAP databases?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "OLAP uses SQL; OLTP does not",
+                    "isCorrect": false
+                },
+                {
+                    "text": "OLTP is row-oriented for transactional operations; OLAP is columnar for analytics on large datasets",
+                    "isCorrect": true
+                },
+                {
+                    "text": "OLAP stores more rows than OLTP",
+                    "isCorrect": false
+                },
+                {
+                    "text": "They are identical — OLAP is just a newer term for OLTP",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What benefit does table partitioning provide in BigQuery?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It duplicates data for redundancy",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Queries can skip entire partitions, scanning less data and reducing cost and latency",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It compresses data into a smaller file",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It splits the table across multiple BigQuery projects",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In a star schema, what is the purpose of a Fact table?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "To store descriptive attributes about entities like customers and products",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To store measurable events/transactions with foreign keys to dimension tables",
+                    "isCorrect": true
+                },
+                {
+                    "text": "To cache frequently queried results",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To define relationships between dimension tables",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,118 @@
+{
+    "title": "Secrets Management Quiz",
+    "description": "Test your knowledge on Vaults, dynamic secrets, and avoiding hardcoded credentials.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Which of the following describes an severe anti-pattern for handling API keys?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Injecting them into the application via a secure CI/CD pipeline.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Committing them to a private GitHub repository alongside the source code.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Fetching them dynamically from AWS Secrets Manager on application boot.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Storing them in a Vault with strict access policies.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How does a system like AWS Secrets Manager or HashiCorp Vault securely provide a password to an application?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It emails the password to the lead developer daily.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It writes the password to a public S3 bucket temporarily.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The application authenticates itself to the Vault upon boot, and the Vault serves the decrypted secret directly into the application's memory over a secure connection.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It hardcodes the password into the Docker image during the build process.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the massive security advantage of utilizing 'Dynamic Secrets' as implemented by HashiCorp Vault?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "They prevent all DDoS attacks.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "They are completely free to use.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Instead of returning a static password, the Vault creates a brand-new set of credentials with a short time-to-live (TTL) that automatically expire, rendering stolen credentials useless very quickly.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "They use biometric fingerprint scanners to authorize database access.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "If your team uses GitOps and you must store Kubernetes Secrets via YAML files in your Git repository, how do you do this securely?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "By using tools like Bitnami Sealed Secrets to asymmetrically encrypt the YAML file before committing, relying on a private key inside the cluster to decrypt it.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "By just Base64 encoding the values.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By keeping the repository strictly private, as that provides perfect security.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By deleting the Git history every 30 days.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why is storing secrets in a plain-text local `.env` file on a production server dangerous?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The `.env` file limits the application's RAM usage.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Node.js cannot read `.env` files efficiently.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "AWS automatically deletes files named `.env`.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "If a vulnerability like a Directory Traversal attack exists in the app, hackers can simply instruct the server to read and return the file's contents.",
+                    "isCorrect": true
+                }
+            ]
+        }
+    ]
+}

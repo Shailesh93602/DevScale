@@ -1,0 +1,74 @@
+<h1>iOS & Android App Store Submission</h1>
+<p>Submitting an app to the App Store is the final mile of mobile development — and historically the most confusing. EAS Submit abstracts away most of the complexity, but understanding the underlying certificates, provisioning, and store listing requirements is essential for when things go wrong.</p>
+
+<h2>iOS App Store: Certificates & Provisioning</h2>
+<pre><code class="language-text">iOS Build Chain:
+  Apple Developer Account ($99/year)
+        ↓
+  Signing Certificate (identifies YOU as the developer)
+        ↓
+  App ID (unique bundle identifier: com.mycompany.myapp)
+        ↓
+  Provisioning Profile (links Certificate + App ID + Device list/All devices)
+        ↓
+  Signed .ipa file → App Store Connect
+
+EAS handles all of this automatically with:
+  eas credentials   # View and manage your certificates
+  eas build --platform ios --profile production
+  # EAS creates certificates and provisioning automatically
+</code></pre>
+<pre><code class="language-bash"># App Store Connect listing (required before first submission):
+# 1. Create new app in App Store Connect (appstoreconnect.apple.com)
+# 2. Set: Bundle ID, App Name, Primary Language, Category
+# 3. Provide: Icons (1024x1024 PNG), Screenshots (various device sizes)
+# 4. Write: App Description, Keywords (100 chars — critical for ASO!), Support URL
+
+# EAS Submit — automated submission to App Store
+eas submit --platform ios --latest  # Submit the latest EAS build
+# Or specify a build ID:
+eas submit --platform ios --id BUILD_ID
+</code></pre>
+
+<h2>Android Google Play Submission</h2>
+<pre><code class="language-bash"># Generate Android keystore (do this ONCE, save forever — losing it = can't update your app)
+# EAS manages this automatically — just run:
+eas credentials --platform android
+
+# Build production AAB (Android App Bundle — smaller than APK, required by Play Store)
+eas build --platform android --profile production
+
+# google-service-account.json for automated submission
+# Download from: Google Play Console → Setup → API access → Create service account
+
+# EAS Submit to Play Store
+eas submit --platform android --latest
+
+# Or manually upload in Play Console → Production → Create new release → Upload AAB
+</code></pre>
+
+<h2>App Store Optimization (ASO) Checklist</h2>
+<pre><code class="language-text">✅ App Name: include primary keyword (e.g., "Budgety: Budget & Finance Tracker")
+✅ Subtitle (iOS): secondary keyword phrase, 30 chars
+✅ Keywords (iOS): comma-separated, 100 chars total — research competitor keywords
+✅ Description: first 3 lines visible without "Read more" — make them compelling
+✅ Screenshots: show the 3 most compelling UI moments, add text overlay callouts
+✅ Preview Video: dramatically increases conversion rate (+25-30%)
+✅ Ratings: implement in-app rating prompt (SKStoreReviewRequest / ReviewManager)
+   Best time to prompt: right after user completes a core happy path action
+
+Versioning strategy:
+  app.json version: "1.2.0"          ← What users see (marketing version)
+  buildNumber / versionCode          ← Auto-incremented by EAS, must be monotonically increasing
+  
+  eas.json "autoIncrement": true     ← EAS increments buildNumber automatically
+</code></pre>
+
+<h2>Staged Rollout (Android)</h2>
+<pre><code class="language-text">Google Play allows staged rollout to % of users:
+  5% → monitor crash rate and ratings → 20% → 50% → 100%
+  
+  If crash rate spikes: halt rollout instantly before reaching all users
+  iOS App Store: phased release over 7 days (10% → 20% → 50% → 100%)
+                  Can pause/stop at any phase if issues detected
+</code></pre>

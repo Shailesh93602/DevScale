@@ -1,0 +1,10 @@
+[
+  { "input": "{\"n\": 2}", "output": "1", "explanation": "F(2) = 1", "is_hidden": false },
+  { "input": "{\"n\": 3}", "output": "2", "explanation": "F(3) = 2", "is_hidden": false },
+  { "input": "{\"n\": 4}", "output": "3", "explanation": "F(4) = 3", "is_hidden": false },
+  { "input": "{\"n\": 0}", "output": "0", "explanation": "F(0) = 0", "is_hidden": true },
+  { "input": "{\"n\": 1}", "output": "1", "explanation": "F(1) = 1", "is_hidden": true },
+  { "input": "{\"n\": 10}", "output": "55", "explanation": "F(10) = 55", "is_hidden": true },
+  { "input": "{\"n\": 20}", "output": "6765", "explanation": "F(20) = 6765", "is_hidden": true },
+  { "input": "{\"n\": 30}", "output": "832040", "explanation": "F(30) = 832040", "is_hidden": true }
+]

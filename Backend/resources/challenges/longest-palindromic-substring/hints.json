@@ -1,0 +1,6 @@
+[
+  "How can we reuse a previously computed palindrome to compute a larger palindrome?",
+  "If 'aba' is a palindrome, is 'xabax' a palindrome? Yes, since the outer characters match.",
+  "Instead of exploring all possible O(n²) substrings, iterate through each character in the string and consider it as the 'center' of a palindrome.",
+  "Since a palindrome can have an even or odd length, there are 2n - 1 possible centers. Expand outward from each center and update the maximum length found so far."
+]

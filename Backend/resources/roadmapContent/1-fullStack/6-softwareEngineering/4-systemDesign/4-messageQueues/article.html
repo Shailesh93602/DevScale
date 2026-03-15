@@ -1,0 +1,22 @@
+<h1>Message Queues & Async Processing</h1>
+<p>When an application receives a massive spike in traffic (e.g., Black Friday sales), the web servers might be able to handle the incoming HTTP requests, but the underlying database will quickly crash under the extreme load of complex operations. To protect your core infrastructure, you must decouple the system using a <strong>Message Queue</strong>.</p>
+
+<h2>Synchronous vs Asynchronous Communication</h2>
+<p>In standard Synchronous processing, a user clicks "Checkout", the server bills the credit card, sends an email receipt, resizes a profile photo, and finally returns a 200 OK response. If resizing the photo takes 5 seconds, the user is stuck staring at a loading spinner.</p>
+<p>In Asynchronous processing, the server only performs the critical steps (billing the card) synchronously. It then instantly places a "Message" into a Queue for the remaining tasks (send email, resize photo) and returns the 200 OK immediately.</p>
+
+<h2>The Publisher-Subscriber Model</h2>
+<p>A Message Queue (like RabbitMQ or Apache Kafka) acts as a highly durable buffer between services.</p>
+<ul>
+  <li><strong>Producers (Publishers):</strong> The main web servers. They do not do the heavy lifting. They simply publish a structured JSON message to an Exchange. e.g., <code>{"type": "user_signup", "id": 123}</code>.</li>
+  <li><strong>The Queue:</strong> A durable pipeline that holds messages safely in memory (or disk) until they can be processed. If the workers crash, the queue holds the messages securely without data loss.</li>
+  <li><strong>Consumers (Subscribers):</strong> Dedicated background worker nodes that constantly pull messages off the queue and process them slowly.</li>
+</ul>
+
+<h2>Buffering Massive Traffic Spikes</h2>
+<p>If 10,000 users upload profile photos simultaneously, your Node.js server cannot resize 10,000 images at once without exhausting its RAM. Instead, the web server accepts the uploads instantly and pushes 10,000 messages into RabbitMQ.</p>
+<p>You might only have 5 Background Image Processing Workers. Those 5 workers will slowly pull 5 messages at a time from the queue, completely protecting the database and CPU from the spike. It might take 20 minutes to process the queue, but the system never crashes.</p>
+
+<h2>Apache Kafka vs RabbitMQ</h2>
+<p><strong>RabbitMQ:</strong> A traditional message broker focused on complex routing. Once a consumer successfully reads and processes a message, RabbitMQ explicitly deletes the message from the queue forever.</p>
+<p><strong>Apache Kafka:</strong> Conceptually an "Event Streaming Platform" or Distributed Commit Log. Kafka securely persists all historical messages permanently on disk. When a consumer reads a message, it merely updates an "offset" pointer. This allows entirely new services to connect to Kafka a year later and mathematically "replay" every single event from the beginning of time.</p>

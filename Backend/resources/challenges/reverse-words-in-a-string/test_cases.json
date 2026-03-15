@@ -1,0 +1,10 @@
+[
+  { "input": "{\"s\":\"the sky is blue\"}", "output": "\"blue is sky the\"", "explanation": "Standard sentence", "is_hidden": false },
+  { "input": "{\"s\":\"  hello world  \"}", "output": "\"world hello\"", "explanation": "Leading and trailing spaces skipped", "is_hidden": false },
+  { "input": "{\"s\":\"a good   example\"}", "output": "\"example good a\"", "explanation": "Multiple spaces compressed to single", "is_hidden": false },
+  { "input": "{\"s\":\"  Bob    Loves  Alice   \"}", "output": "\"Alice Loves Bob\"", "explanation": "Heavily padded string", "is_hidden": true },
+  { "input": "{\"s\":\"word\"}", "output": "\"word\"", "explanation": "Single word", "is_hidden": true },
+  { "input": "{\"s\":\"   singleword   \"}", "output": "\"singleword\"", "explanation": "Single word with padding", "is_hidden": true },
+  { "input": "{\"s\":\"a b c d e f g\"}", "output": "\"g f e d c b a\"", "explanation": "Many single letter words", "is_hidden": true },
+  { "input": "{\"s\":\"1 2 3\"}", "output": "\"3 2 1\"", "explanation": "Numbers", "is_hidden": true }
+]

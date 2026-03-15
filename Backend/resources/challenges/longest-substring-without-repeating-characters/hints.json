@@ -1,0 +1,6 @@
+[
+  "Use a Sliding Window approach. Maintain a `left` pointer and a `right` pointer to represent the current substring.",
+  "As you move the `right` pointer, check if the character already exists in your current window.",
+  "You can use a HashSet to track characters in the window. If you see a duplicate, keep removing characters from the `left` until the duplicate is gone.",
+  "Optimization: Instead of a Set, use a HashMap to store the character and its exact index. This lets you jump the `left` pointer directly past the last seen index instead of stepping one by one."
+]

@@ -1,0 +1,118 @@
+{
+    "title": "AWS IAM Quiz",
+    "description": "Test your knowledge on IAM policies, roles, users, and security principles.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the Principle of Least Privilege?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Granting everyone AdministratorAccess so they can do their jobs without asking for permission.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Granting only the exact, minimum permissions necessary to perform a specific task.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Using IAM Roles only for third-party access.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Avoiding the use of Multi-Factor Authentication (MFA).",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which AWS IAM component is designed specifically to be assumed by an AWS service (like an EC2 instance) rather than being assigned long-term static credentials?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "IAM User",
+                    "isCorrect": false
+                },
+                {
+                    "text": "IAM Policy",
+                    "isCorrect": false
+                },
+                {
+                    "text": "IAM Group",
+                    "isCorrect": false
+                },
+                {
+                    "text": "IAM Role",
+                    "isCorrect": true
+                }
+            ]
+        },
+        {
+            "question": "In the context of an IAM Policy JSON document, what does the 'Resource' field specify?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The type of EC2 instance to launch.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The specific AWS entity (like a specific S3 bucket ARN) that the actions apply to.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The user attempting to make the API call.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The encryption key used to protect the data.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "If an IAM user has no policies attached to them, what access do they have by default?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Read-Only access to all services.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Administrator access.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Implicit Deny to all services.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "They can only access the billing console.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why is it dangerous to hardcode AWS Access Keys into your application's source code?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Access keys expire after 1 hour automatically.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Compiling the code with keys breaks the compiler.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "If the source code is pushed to a public repository like GitHub, bots will steal the keys and mine cryptocurrency on your account within minutes.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "AWS charges extra for hardcoded keys.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

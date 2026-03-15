@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "Why is using AsyncStorage to store JWT access tokens a security vulnerability, and what is the correct approach?",
+            "options": [
+                "AsyncStorage is too slow for JWT storage — MMKV should be used instead.",
+                "AsyncStorage stores data as unencrypted plain text in a file accessible to anyone with physical device access or root/jailbreak access. A JWT access token in AsyncStorage can be extracted from a backed-up device (iTunes backup, adb backup), rooted Android device, or jailbroken iOS device. Expo SecureStore uses iOS Keychain and Android Keystore — hardware-backed encrypted storage that is accessible ONLY to your app and cannot be extracted even on rooted/jailbroken devices.",
+                "AsyncStorage tokens expire after 24 hours automatically — you must use SecureStore for persistence.",
+                "The vulnerability is theoretical — no real attacks exploit AsyncStorage on mobile."
+            ],
+            "answer": "AsyncStorage stores data as unencrypted plain text in a file accessible to anyone with physical device access or root/jailbreak access. A JWT access token in AsyncStorage can be extracted from a backed-up device (iTunes backup, adb backup), rooted Android device, or jailbroken iOS device. Expo SecureStore uses iOS Keychain and Android Keystore — hardware-backed encrypted storage that is accessible ONLY to your app and cannot be extracted even on rooted/jailbroken devices.",
+            "explanation": "This is a real attack vector: 'Juice jacking' (malicious USB charger) + phone backup extraction can steal AsyncStorage data. PCI DSS compliance requires payment tokens in hardware-backed storage. For most apps: use SecureStore for JWT tokens and any sensitive credentials, AsyncStorage only for non-sensitive preferences."
+        },
+        {
+            "question": "In the Axios token refresh interceptor, why must pendingRequests queue other 401 requests while token refresh is in progress?",
+            "options": [
+                "Queuing is a performance optimization to prevent duplicate API calls within 1 second.",
+                "Without the queue: multiple parallel API calls fail simultaneously with 401 → each independently triggers a token refresh → multiple refresh requests hit the backend → refresh tokens may be single-use (rotated) → second refresh attempt fails (token already used) → user is logged out despite the first refresh succeeding. The queue prevents this 'refresh storm': the first 401 triggers ONE refresh, all others wait for it to complete, then replay with the new token.",
+                "The queue prevents the refresh endpoint from being called more than once per second.",
+                "Queuing 401 requests is required by OAuth 2.0 specification RFC 6749."
+            ],
+            "answer": "Without the queue: multiple parallel API calls fail simultaneously with 401 → each independently triggers a token refresh → multiple refresh requests hit the backend → refresh tokens may be single-use (rotated) → second refresh attempt fails (token already used) → user is logged out despite the first refresh succeeding. The queue prevents this 'refresh storm': the first 401 triggers ONE refresh, all others wait for it to complete, then replay with the new token.",
+            "explanation": "This is a race condition that becomes more likely as apps make more parallel API calls (React Query prefetching, parallel data fetches). The isRefreshing flag + pendingRequests queue is the standard pattern for single-instance refresh with multiple-waiter replay. Production apps must implement this to avoid phantom logouts."
+        },
+        {
+            "question": "Apple's App Store requires Sign in with Apple if your app offers ANY third-party social login (Google, Facebook, etc.). What is the technical reason developers must implement this?",
+            "options": [
+                "Apple Sign-In is optional — it's only recommended, not required.",
+                "Apple's App Store Review Guideline 4.8 explicitly states: apps that offer third-party social login must also offer Sign in with Apple as an option. Technically: iOS developers must import expo-apple-authentication, implement the sign-in flow, send the identityToken to their backend for verification using Apple's public keys (JWT verification), and handle the first-time-only name/email fields. Apps that skip this are rejected during review. The guideline exists to give users a privacy-preserving login option without sharing email with third parties.",
+                "Apple Sign-In is only required for apps in the Health & Fitness category.",
+                "Sign in with Apple is mandatory only for new apps — existing apps with Google login are exempt."
+            ],
+            "answer": "Apple's App Store Review Guideline 4.8 explicitly states: apps that offer third-party social login must also offer Sign in with Apple as an option. Technically: iOS developers must import expo-apple-authentication, implement the sign-in flow, send the identityToken to their backend for verification using Apple's public keys (JWT verification), and handle the first-time-only name/email fields. Apps that skip this are rejected during review. The guideline exists to give users a privacy-preserving login option without sharing email with third parties.",
+            "explanation": "Apple Sign-In also offers 'Hide My Email' — Apple generates a proxy email address (e.g., randomstring@privaterelay.appleid.com) and forwards to the real email. Your backend receives the proxy. This is the privacy feature Apple designed this requirement around. Backend note: use Apple's REST API or a library like apple-auth to verify identityToken."
+        }
+    ]
+}

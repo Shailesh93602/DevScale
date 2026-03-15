@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary architectural goal of the Singleton Pattern?",
+            "options": [
+                "To allow infinite generic object instantiation",
+                "To rigorously ensure that severely only one single instance of a class exists across the entire application runtime, and to strictly provide a simple global access point to it.",
+                "To chain database queries together",
+                "To isolate UI components"
+            ],
+            "answer": "To rigorously ensure that severely only one single instance of a class exists across the entire application runtime, and to strictly provide a simple global access point to it.",
+            "explanation": "If you create 5 separate PostgreSQL connection pools, your app will crash. The Singleton guarantees your entire system shares exactly one database pool connection."
+        },
+        {
+            "question": "How does a Singleton class mathematically prevent other developers from instantiating it with the `new` keyword?",
+            "options": [
+                "By dynamically throwing a Javascript Error during runtime.",
+                "By enforcing a strictly `private` constructor natively, making it a severe compiler error to attempt instantiation globally outside of the class itself.",
+                "By utilizing the Factory method.",
+                "By deleting the constructor completely."
+            ],
+            "answer": "By enforcing a strictly `private` constructor natively, making it a severe compiler error to attempt instantiation globally outside of the class itself.",
+            "explanation": "The only way to access the class is by calling the public static `getInstance()` method, which safely manages the internal private constructor."
+        },
+        {
+            "question": "What distinct coupling problem does the 'Factory Method' explicitly solve in complex enterprise applications?",
+            "options": [
+                "It aggressively couples your interface down to the specific hardware.",
+                "It decouples the exact complex logic required to instantiate an object completely away from the specific business layer code that simply needs to use the resulting object safely.",
+                "It prevents variables from mutating.",
+                "It completely replaces standard asynchronous Promises."
+            ],
+            "answer": "It decouples the exact complex logic required to instantiate an object completely away from the specific business layer code that simply needs to use the resulting object safely.",
+            "explanation": "Your payment route shouldn't know how to construct a Stripe processor. It should simply ask the `PaymentFactory` to correctly build and return a safe, ready-to-use processor."
+        },
+        {
+            "question": "What specifically is a visual hallmark of implementing the 'Builder Pattern' successfully natively?",
+            "options": [
+                "Strict recursive function loops.",
+                "Elegant Fluent Interfaces (Method Chaining), where methods return `this` sequentially, allowing you cleanly build an object step-by-step (e.g., `new Car().setEngine().setWheels().build()`).",
+                "Utilizing the `switch` statement dynamically.",
+                "Relying explicitly entirely on Global Variables."
+            ],
+            "answer": "Elegant Fluent Interfaces (Method Chaining), where methods return `this` sequentially, allowing you cleanly build an object step-by-step (e.g., `new Car().setEngine().setWheels().build()`).",
+            "explanation": "This solves the problem of having a massive constructor function that takes 15 confusing Boolean arguments in a row."
+        },
+        {
+            "question": "If you need to construct a highly complex Pizza object natively, where a user can specifically select 15 different optional toppings sequentially smoothly, which specific pattern cleanly prevents constructor argument overload?",
+            "options": [
+                "Singleton",
+                "Builder",
+                "Observer",
+                "Adapter"
+            ],
+            "answer": "Builder",
+            "explanation": "The Builder is perfectly designed for step-by-step construction of complex objects, abstracting away the heavy configurations."
+        }
+    ]
+}

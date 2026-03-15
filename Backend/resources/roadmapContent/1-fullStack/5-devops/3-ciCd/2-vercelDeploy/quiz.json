@@ -1,0 +1,118 @@
+{
+    "title": "Vercel Deployment Quiz",
+    "description": "Test your knowledge of deploying apps on Vercel.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What happens automatically when you push to main on a Vercel-connected repo?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A pull request is created",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A production deployment is triggered",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The database is migrated",
+                    "isCorrect": false
+                },
+                {
+                    "text": "An email notification is sent only",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What prefix must Next.js env vars have to be accessible on the client/browser?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "PUBLIC_",
+                    "isCorrect": false
+                },
+                {
+                    "text": "NEXT_PUBLIC_",
+                    "isCorrect": true
+                },
+                {
+                    "text": "BROWSER_",
+                    "isCorrect": false
+                },
+                {
+                    "text": "CLIENT_",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does Vercel create for every pull request?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A database snapshot",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A unique preview deployment URL",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A Docker container",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A code review bot comment only",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which Vercel config file is used to set up URL rewrites?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "next.config.js",
+                    "isCorrect": false
+                },
+                {
+                    "text": "vercel.json",
+                    "isCorrect": true
+                },
+                {
+                    "text": ".vercelrc",
+                    "isCorrect": false
+                },
+                {
+                    "text": "package.json",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which command deploys your project to production on Vercel CLI?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "vercel deploy",
+                    "isCorrect": false
+                },
+                {
+                    "text": "vercel publish",
+                    "isCorrect": false
+                },
+                {
+                    "text": "vercel --prod",
+                    "isCorrect": true
+                },
+                {
+                    "text": "vercel release",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

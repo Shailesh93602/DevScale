@@ -1,0 +1,4 @@
+{
+    "name": "Seq2Seq Models & Machine Translation",
+    "description": "Building models that transform one sequence into another. Understanding the encoder-decoder architecture, attention mechanisms in seq2seq, beam search decoding, modern neural machine translation with transformer models, sequence-to-sequence tasks beyond translation (summarization, question answering, code generation), and evaluation with BLEU and ROUGE scores."
+}

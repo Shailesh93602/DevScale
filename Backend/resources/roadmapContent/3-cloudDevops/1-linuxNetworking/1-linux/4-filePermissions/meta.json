@@ -1,0 +1,4 @@
+{
+    "name": "File Permissions & Ownership",
+    "description": "Mastering Linux security at the filesystem level. Understanding the permission model (read/write/execute), octal notation, chmod/chown commands, setuid/setgid bits, and Access Control Lists (ACLs)."
+}

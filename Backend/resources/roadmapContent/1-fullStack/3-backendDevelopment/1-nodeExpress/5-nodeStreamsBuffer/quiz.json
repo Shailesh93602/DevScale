@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is a major advantage of using Streams to serve large files (e.g., video) over using fs.readFileSync?",
+            "options": [
+                "Streams encrypt the file data automatically",
+                "fs.readFileSync uses 100% of the CPU, while streams use GPU processing",
+                "Streams process data in small chunks, meaning the server's RAM usage remains extremely low regardless of file size",
+                "Streams are required for connecting to SQL databases"
+            ],
+            "answer": "Streams process data in small chunks, meaning the server's RAM usage remains extremely low regardless of file size",
+            "explanation": "fs.readFileSync attempts to load the entire 2GB file into memory at once, crashing the server. Streams read and send the file piece by piece (typically 64kb at a time), keeping memory footprint negligible."
+        },
+        {
+            "question": "What is the primary role of the pipe() method in Node.js?",
+            "options": [
+                "To spawn a child process in the terminal",
+                "To securely tunnel data out of a private network",
+                "To take data emitted from a Readable stream and push it seamlessly into a Writable stream, automatically handling flow control",
+                "To connect a MongoDB pipeline query to an Express route"
+            ],
+            "answer": "To take data emitted from a Readable stream and push it seamlessly into a Writable stream, automatically handling flow control",
+            "explanation": "readable.pipe(writable) is the most powerful streaming mechanism. You can instantly plug a file-read stream into an HTTP response stream with one line of code."
+        },
+        {
+            "question": "In the context of streams, what is 'Backpressure'?",
+            "options": [
+                "A condition where the Readable stream is sending data much faster than the Writable stream can consume it.",
+                "A network timeout error issued by HTTP 2.0 servers.",
+                "Compression applied to a file using Zlib.",
+                "Reversing the flow of data from Writable to Readable."
+            ],
+            "answer": "A condition where the Readable stream is sending data much faster than the Writable stream can consume it.",
+            "explanation": "If your disk reads at 100MB/s but the user's internet downloads at 1MB/s, backpressure builds up. The pipe() function automatically pauses the file read stream when the network write stream gets backed up, resuming when it's clear."
+        },
+        {
+            "question": "What kind of stream is the Express 'res' (Response) object?",
+            "options": [
+                "Readable Stream",
+                "Writable Stream",
+                "Transform Stream",
+                "WebSocket Stream"
+            ],
+            "answer": "Writable Stream",
+            "explanation": "In Express/Node HTTP, the incoming request 'req' is a Readable Stream, and the outgoing response 'res' is a Writable Stream. You write data TO the client."
+        },
+        {
+            "question": "What is a Node.js Buffer?",
+            "options": [
+                "A memory cache for HTML files",
+                "A class used for interacting with string and raw binary data allocation outside the V8 heap engine",
+                "An asynchronous promise resolver",
+                "A routing mechanism in Express"
+            ],
+            "answer": "A class used for interacting with string and raw binary data allocation outside the V8 heap engine",
+            "explanation": "Because old JavaScript couldn't handle binary data natively, Node introduced Buffers to read/write hexadecimal binary data for networking and file system tasks."
+        }
+    ]
+}

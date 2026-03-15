@@ -1,0 +1,20 @@
+{
+  "title": "Sum Root to Leaf Numbers",
+  "slug": "sum-root-to-leaf-numbers",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["tree","depth-first-search","binary-tree"],
+  "company_tags": ["Facebook","Amazon","Microsoft"],
+  "topic_tags": ["trees","depth-first search"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "The `root` of a binary tree containing digits from `0` to `9`.",
+  "output_format": "The total sum of all root-to-leaf numbers.",
+  "example_input": "root = [1,2,3]",
+  "example_output": "25",
+  "constraints": "- The number of nodes in the tree is in the range `[1, 1000]`.\n- `0 <= Node.val <= 9`\n- The depth of the tree will not exceed `10`.",
+  "function_signature": "function sumNumbers(root: TreeNode | null): number {}",
+  "status": "ACTIVE"
+}

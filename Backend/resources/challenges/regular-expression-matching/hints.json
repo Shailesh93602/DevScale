@@ -1,0 +1,6 @@
+[
+  "Think about the pattern character by character. The tricky part is handling '*' which depends on the character before it.",
+  "For 'x*', you have two choices: use zero occurrences of x (skip x*) or use one occurrence and keep x* available.",
+  "Define dp[i][j] = does s[0..i-1] match p[0..j-1]? Handle the '*' case by checking dp[i][j-2] (zero matches) and dp[i-1][j] (one or more matches if char matches).",
+  "Don't forget: patterns like 'a*' or '.*' can match an empty string. Initialize dp[0][j] for patterns with '*'."
+]

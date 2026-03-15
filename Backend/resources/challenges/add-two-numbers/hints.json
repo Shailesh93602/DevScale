@@ -1,0 +1,6 @@
+[
+  "Simulate the addition digit by digit, just like you would do it on paper.",
+  "Maintain a `carry` variable (initially 0). For each position, add `l1.val + l2.val + carry`.",
+  "The digit for the current position is `sum % 10`. The carry for the next position is `Math.floor(sum / 10)`.",
+  "Use a dummy head node and advance pointers for `l1`, `l2`, and the result list until both lists are exhausted AND carry is 0."
+]

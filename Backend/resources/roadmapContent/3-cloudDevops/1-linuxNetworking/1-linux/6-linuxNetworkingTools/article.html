@@ -1,0 +1,74 @@
+<h1>Linux Networking Tools</h1>
+<p>When a production server is unreachable, a microservice is timing out, or a firewall rule is blocking traffic, the Linux network diagnostic toolkit is your first line of defense. These tools let you inspect ports, trace packets, debug DNS, and analyze active connections entirely from the command line — no GUI required.</p>
+
+<h2>curl & wget: HTTP Testing</h2>
+<pre><code class="language-bash"># Test an API endpoint with full request/response headers
+curl -v https://api.example.com/health
+
+# POST a JSON body and show response headers
+curl -X POST https://api.example.com/users \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{"name": "Alice"}' \
+  -w "\nHTTP Status: %{http_code}\n"
+
+# Test if a port is open on a remote host (without netcat)
+curl -v telnet://database.internal:5432
+
+# Download a file silently (useful in scripts)
+wget -q https://releases.example.com/app-v2.0.tar.gz -O /opt/app.tar.gz
+</code></pre>
+
+<h2>ss & netstat: Inspecting Connections and Ports</h2>
+<p><code>ss</code> is the modern, faster replacement for <code>netstat</code>. Use it to see which ports are listening and what connections are established:</p>
+<pre><code class="language-bash"># Show all listening TCP ports (critical: see what's exposed)
+ss -tlnp
+
+# The flags: -t=TCP, -l=listening, -n=numeric (no DNS lookup), -p=process name
+# Output shows: port, state, and the process name/PID
+
+# See all established connections to port 443
+ss -tnp state established '( dport = :443 or sport = :443 )'
+
+# Check if PostgreSQL (port 5432) is actually listening
+ss -tlnp | grep 5432
+</code></pre>
+
+<h2>nmap: Port Scanning</h2>
+<pre><code class="language-bash"># Scan which ports are open on a remote host
+nmap -p 1-1000 192.168.1.100
+
+# Check a specific service port
+nmap -p 443,80,8080 api.example.com
+
+# Detect OS and service versions (useful for audits)
+sudo nmap -sV -O 10.0.1.50
+</code></pre>
+
+<h2>tcpdump: Packet-Level Inspection</h2>
+<p><code>tcpdump</code> captures raw network packets. It's the most powerful debugging tool when you need to see exactly what bytes are being sent over the wire:</p>
+<pre><code class="language-bash"># Capture all traffic on eth0 interface
+sudo tcpdump -i eth0
+
+# Capture only HTTP traffic (port 80) and save to file for Wireshark analysis
+sudo tcpdump -i eth0 port 80 -w /tmp/capture.pcap
+
+# Watch traffic from a specific IP address in real-time
+sudo tcpdump -i eth0 host 10.0.0.5 -n
+
+# Capture and display packet contents (ASCII)
+sudo tcpdump -i eth0 port 8080 -A
+</code></pre>
+
+<h2>SSH Tunneling</h2>
+<p>SSH tunnels let you securely forward traffic through an SSH connection — invaluable for accessing services behind a firewall:</p>
+<pre><code class="language-bash"># Local Port Forwarding: access remote DB on your localhost
+# Access the remote PostgreSQL (only accessible from the server) on localhost:5433
+ssh -L 5433:database.internal:5432 user@bastion.example.com
+
+# Now connect: psql -h localhost -p 5433 -U admin mydb
+
+# Dynamic SOCKS Proxy (use SSH as a proxy server)
+ssh -D 1080 user@bastion.example.com
+# Then configure your browser to use SOCKS5 proxy on localhost:1080
+</code></pre>

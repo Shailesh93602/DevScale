@@ -1,0 +1,64 @@
+<h1>AWS Databases: RDS, DynamoDB & ElastiCache</h1>
+<p>AWS offers a purpose-built database for virtually every workload. Choosing the right database service dramatically impacts your application's performance, cost, and operational complexity. The three most important managed database services are RDS, DynamoDB, and ElastiCache.</p>
+
+<h2>Amazon RDS: Managed Relational Databases</h2>
+<p><strong>Amazon RDS (Relational Database Service)</strong> provides managed instances of PostgreSQL, MySQL, MariaDB, Oracle, and SQL Server. AWS handles automated backups, OS patching, minor version upgrades, and failure detection.</p>
+
+<h3>Multi-AZ vs Read Replicas</h3>
+<pre><code class="language-text">Multi-AZ Deployment:
+├─ PRIMARY instance (us-east-1a) — handles all reads AND writes
+└─ STANDBY instance (us-east-1b) — synchronous replica, NO read traffic served
+   └─ Automatic failover if primary fails (typically 60-120 seconds)
+   └─ Purpose: HIGH AVAILABILITY, not performance
+
+Read Replicas:
+├─ PRIMARY instance — handles all writes
+├─ Read Replica 1 (us-east-1a) — serves SELECT queries, asynchronous replication
+├─ Read Replica 2 (us-east-1b) — serves SELECT queries
+└─ Read Replica 3 (us-east-1c) — serves SELECT queries
+   └─ Purpose: READ SCALABILITY, not failover
+</code></pre>
+<p>Production best practice: Combine both. Use Multi-AZ for HA, and add Read Replicas to offload analytics queries from the primary instance.</p>
+
+<h2>Amazon DynamoDB: Managed NoSQL at Scale</h2>
+<p><strong>Amazon DynamoDB</strong> is AWS's fully managed, serverless NoSQL key-value and document database. It delivers consistent single-digit millisecond latency at any scale, from 1 item to 1 billion items, with no tuning required.</p>
+
+<h3>Single-Table Design</h3>
+<p>DynamoDB is optimized for specific access patterns defined upfront. The most powerful DynamoDB pattern is single-table design — storing multiple entity types in one table:</p>
+<pre><code class="language-text">Table: e-commerce
+
+PK (Partition Key)       SK (Sort Key)            Attributes
+─────────────────────────────────────────────────────────────
+USER#usr_123             PROFILE                  {email, name, created}
+USER#usr_123             ORDER#ord_001            {total, status, date}
+USER#usr_123             ORDER#ord_002            {total, status, date}
+PRODUCT#prod_456         DETAILS                  {name, price, stock}
+PRODUCT#prod_456         REVIEW#rev_001           {rating, text, user}
+</code></pre>
+<p>A single DynamoDB query with <code>PK = USER#usr_123</code> returns the user's profile AND all their orders in one round trip — no JOINs needed.</p>
+
+<h3>DynamoDB Streams & Global Tables</h3>
+<p>DynamoDB Streams emit a real-time record of every change (INSERT, MODIFY, DELETE) to a table — enabling event-driven Lambda triggers. Global Tables replicate a DynamoDB table across multiple AWS regions in under 1 second for ultra-low latency global applications.</p>
+
+<h2>Amazon ElastiCache: In-Memory Caching</h2>
+<p><strong>Amazon ElastiCache</strong> provides managed Redis and Memcached clusters. Used as a caching layer in front of RDS to absorb repetitive read traffic:</p>
+<pre><code class="language-python">import redis
+
+cache = redis.Redis(host='my-redis.cache.amazonaws.com', port=6379)
+
+def get_user(user_id: str):
+    cache_key = f"user:{user_id}"
+    
+    # Check cache first (microseconds)
+    cached = cache.get(cache_key)
+    if cached:
+        return json.loads(cached)
+    
+    # Cache miss — query RDS (milliseconds)
+    user = db.execute("SELECT * FROM users WHERE id = %s", [user_id]).fetchone()
+    
+    # Store in cache for 5 minutes (TTL = 300 seconds)
+    cache.setex(cache_key, 300, json.dumps(user))
+    return user
+</code></pre>
+<p>ElastiCache Redis also supports sorted sets (leaderboards), pub/sub messaging, distributed locks, and session storage — making it the most versatile caching solution in the AWS ecosystem.</p>

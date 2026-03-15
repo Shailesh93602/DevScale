@@ -1,0 +1,6 @@
+[
+  "Consider setting up a 'dummy' head node. It allows you to easily return `dummy.next` at the end and avoids edge cases where the initial list is empty.",
+  "Maintain a pointer `current` that starts at the `dummy` node.",
+  "While both `list1` and `list2` are not null, compare their values. Attach the smaller node to `current.next` and move forward the pointer of the list you just pulled from.",
+  "Once you exhaust one list, the other list might still have remaining nodes. Since the remaining nodes are already sorted, you can simply attach the rest of that list to your `current` node."
+]

@@ -1,0 +1,67 @@
+<h1>Neural Networks & Backpropagation</h1>
+<p>Neural networks are computational models loosely inspired by biological brains. They learn by adjusting millions of numerical parameters through a process called backpropagation.</p>
+
+<h2>The Neuron</h2>
+<pre><code># A neuron: weighted sum of inputs → activation function → output
+# output = activation(w₁x₁ + w₂x₂ + ... wₙxₙ + bias)
+
+# Activation functions:
+# ReLU(x) = max(0, x)           — default for hidden layers
+# Sigmoid(x) = 1/(1+e^(-x))    — binary classification output (0-1)
+# Softmax(x)                    — multiclass output (probabilities sum to 1)
+# Tanh(x)                       — alternative hidden layer activation</code></pre>
+
+<h2>Building Neural Networks with PyTorch</h2>
+<pre><code>import torch
+import torch.nn as nn
+
+class ChurnPredictor(nn.Module):
+    def __init__(self, input_dim: int):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(input_dim, 128),
+            nn.BatchNorm1d(128),   # Normalise activations for stable training
+            nn.ReLU(),
+            nn.Dropout(0.3),       # Randomly zero 30% of neurons (regularisation)
+            nn.Linear(128, 64),
+            nn.ReLU(),
+            nn.Dropout(0.2),
+            nn.Linear(64, 1),
+            nn.Sigmoid()           # Binary output
+        )
+
+    def forward(self, x: torch.Tensor) -&gt; torch.Tensor:
+        return self.net(x)
+
+model = ChurnPredictor(input_dim=X_train.shape[1])
+print(model)</code></pre>
+
+<h2>Training Loop</h2>
+<pre><code">optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-4)
+criterion = nn.BCELoss()   # Binary Cross-Entropy
+
+X_train_t = torch.FloatTensor(X_train)
+y_train_t = torch.FloatTensor(y_train).unsqueeze(1)
+
+for epoch in range(100):
+    model.train()                     # Enable dropout + batch norm training mode
+    optimizer.zero_grad()             # Reset gradients
+    predictions = model(X_train_t)    # Forward pass
+    loss = criterion(predictions, y_train_t)  # Compute loss
+    loss.backward()                   # Backpropagation
+    optimizer.step()                  # Update weights
+
+    if epoch % 10 == 0:
+        model.eval()                  # Disable dropout for evaluation
+        with torch.no_grad():
+            val_preds = model(X_val_t)
+            val_loss = criterion(val_preds, y_val_t)
+        print(f"Epoch {epoch}: train_loss={loss:.4f}, val_loss={val_loss:.4f}")</code></pre>
+
+<h2>Backpropagation Intuition</h2>
+<ul>
+  <li><strong>Forward pass</strong> — compute predictions and loss.</li>
+  <li><strong>loss.backward()</strong> — uses chain rule to compute ∂loss/∂w for every weight.</li>
+  <li><strong>optimizer.step()</strong> — moves weights slightly in the direction that reduces loss.</li>
+  <li>Repeat millions of times → weights converge to minimise loss.</li>
+</ul>

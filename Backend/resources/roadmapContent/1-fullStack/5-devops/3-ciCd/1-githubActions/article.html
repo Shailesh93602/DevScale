@@ -1,0 +1,95 @@
+<h1>GitHub Actions CI/CD</h1>
+<p><strong>GitHub Actions</strong> is a built-in CI/CD platform that lets you automate workflows triggered by GitHub events (push, pull request, release, etc.). Workflows are defined as YAML files inside <code>.github/workflows/</code>.</p>
+
+<h2>Core Concepts</h2>
+<ul>
+  <li><strong>Workflow</strong> — a YAML file defining automated processes</li>
+  <li><strong>Job</strong> — a set of steps that run on the same runner</li>
+  <li><strong>Step</strong> — a single task (run a command or use an action)</li>
+  <li><strong>Runner</strong> — a server that executes the job (ubuntu-latest, windows-latest, macos-latest)</li>
+  <li><strong>Action</strong> — a reusable unit (e.g., <code>actions/checkout</code>, <code>actions/setup-node</code>)</li>
+</ul>
+
+<h2>Basic CI Workflow</h2>
+<pre><code># .github/workflows/ci.yml
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Run tests
+        run: npm test</code></pre>
+
+<h2>Using Secrets</h2>
+<p>Store sensitive data in GitHub → Settings → Secrets and Variables:</p>
+<pre><code>- name: Deploy
+  env:
+    DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    JWT_SECRET: ${{ secrets.JWT_SECRET }}
+  run: npm run migrate && npm run deploy</code></pre>
+
+<h2>Matrix Builds (Test on Multiple Node Versions)</h2>
+<pre><code>jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci && npm test</code></pre>
+
+<h2>Docker Build and Push</h2>
+<pre><code>- name: Build and push Docker image
+  uses: docker/build-push-action@v5
+  with:
+    push: true
+    tags: myapp:latest
+    context: .</code></pre>
+
+<h2>Dependent Jobs</h2>
+<pre><code>jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: npm test
+
+  deploy:
+    needs: test          # only runs if test passes
+    runs-on: ubuntu-latest
+    steps:
+      - run: npm run deploy</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Use <code>npm ci</code> instead of <code>npm install</code> for reproducible installs.</li>
+  <li>Cache <code>node_modules</code> using <code>actions/cache</code> to speed up runs.</li>
+  <li>Pin action versions with SHA hashes for security (e.g., <code>actions/checkout@abc1234</code>).</li>
+  <li>Keep workflows small and focused — one job per concern.</li>
+</ul>

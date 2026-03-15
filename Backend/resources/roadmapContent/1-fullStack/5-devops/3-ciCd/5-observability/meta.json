@@ -1,0 +1,4 @@
+{
+    "name": "Observability & APM",
+    "description": "Fixing production bugs efficiently. Integrating Sentry for error tracking, structuring Winston logs, and utilizing APM tools like Datadog to instantly monitor database latency and overall health."
+}

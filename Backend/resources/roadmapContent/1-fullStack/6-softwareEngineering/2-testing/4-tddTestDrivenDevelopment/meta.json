@@ -1,0 +1,4 @@
+{
+    "name": "Test-Driven Development (TDD)",
+    "description": "Understanding the Red-Green-Refactor development cycle. Writing your tests before you write a single line of application code to drive cleaner architectures and robust implementations."
+}

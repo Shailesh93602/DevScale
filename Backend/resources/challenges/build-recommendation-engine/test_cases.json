@@ -1,0 +1,62 @@
+[
+  {
+    "input": {"ratings": [[5,3,0,1],[4,0,0,1],[1,1,0,5],[1,0,0,4],[0,1,5,4]], "userId": 0, "numRecs": 2},
+    "output": {"recommendations": [2]},
+    "explanation": "User 0 has not rated item 2. Predict using similar users.",
+    "is_hidden": false
+  },
+  {
+    "input": {"ratings": [[5,0,0],[0,5,0],[0,0,5]], "userId": 0, "numRecs": 2},
+    "output": {"recommendations": [1, 2]},
+    "explanation": "No similar users (orthogonal), predictions default to 0, return by item index",
+    "is_hidden": false
+  },
+  {
+    "input": {"ratings": [[5,4,3,0],[5,4,0,0],[5,0,0,0]], "userId": 0, "numRecs": 1},
+    "output": {"recommendations": [3]},
+    "explanation": "Only item 3 is unrated for user 0",
+    "is_hidden": false
+  },
+  {
+    "input": {"ratings": [[1,2,3,4,5],[5,4,3,2,0],[1,2,3,0,0]], "userId": 0, "numRecs": 0},
+    "output": {"recommendations": []},
+    "explanation": "Zero recommendations requested",
+    "is_hidden": false
+  },
+  {
+    "input": {"ratings": [[5,5,0,0,0],[5,5,4,0,0],[5,5,0,4,0],[1,1,0,0,5]], "userId": 0, "numRecs": 3},
+    "output": {"recommendations": [2, 3, 4]},
+    "explanation": "User 0 has 3 unrated items, recommend all sorted by predicted rating",
+    "is_hidden": true
+  },
+  {
+    "input": {"ratings": [[4,0,5,0],[4,3,5,1],[0,3,0,1],[4,3,5,0]], "userId": 0, "numRecs": 2},
+    "output": {"recommendations": [1, 3]},
+    "explanation": "Predict ratings for items 1 and 3 using collaborative filtering",
+    "is_hidden": true
+  },
+  {
+    "input": {"ratings": [[0,0,0,0],[5,4,3,2],[3,4,5,2]], "userId": 0, "numRecs": 4},
+    "output": {"recommendations": [0, 1, 2, 3]},
+    "explanation": "User 0 has rated nothing; all items unrated",
+    "is_hidden": true
+  },
+  {
+    "input": {"ratings": [[5,5,5,5],[5,5,5,0]], "userId": 1, "numRecs": 1},
+    "output": {"recommendations": [3]},
+    "explanation": "Very similar user, predict item 3 rating as 5",
+    "is_hidden": true
+  },
+  {
+    "input": {"ratings": [[1,0],[0,1],[1,0],[0,1],[1,0]], "userId": 0, "numRecs": 1},
+    "output": {"recommendations": [1]},
+    "explanation": "Binary ratings, predict user 0's rating for item 1",
+    "is_hidden": true
+  },
+  {
+    "input": {"ratings": [[3,0,0,0,0],[0,3,0,0,0],[0,0,3,0,0],[0,0,0,3,0],[0,0,0,0,3]], "userId": 2, "numRecs": 4},
+    "output": {"recommendations": [0, 1, 3, 4]},
+    "explanation": "No overlap between users, all predictions are 0",
+    "is_hidden": true
+  }
+]

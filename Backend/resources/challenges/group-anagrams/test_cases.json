@@ -1,0 +1,9 @@
+[
+  { "input": "{\"strs\":[\"eat\",\"tea\",\"tan\",\"ate\",\"nat\",\"bat\"]}", "output": "[[\"bat\"],[\"nat\",\"tan\"],[\"ate\",\"eat\",\"tea\"]]", "explanation": "Classic example with 3 groups", "is_hidden": false },
+  { "input": "{\"strs\":[\"\"]}", "output": "[[\"\"]]", "explanation": "Empty string", "is_hidden": false },
+  { "input": "{\"strs\":[\"a\"]}", "output": "[[\"a\"]]", "explanation": "Single character", "is_hidden": false },
+  { "input": "{\"strs\":[\"ill\",\"lli\",\"lii\"]}", "output": "[[\"ill\",\"lli\"],[\"lii\"]]", "explanation": "Similar frequency characters", "is_hidden": true },
+  { "input": "{\"strs\":[\"ddddddg\",\"dgggggg\"]}", "output": "[[\"ddddddg\"],[\"dgggggg\"]]", "explanation": "Same characters, different counts", "is_hidden": true },
+  { "input": "{\"strs\":[\"a\",\"b\",\"c\",\"a\"]}", "output": "[[\"a\",\"a\"],[\"b\"],[\"c\"]]", "explanation": "Multiple single characters", "is_hidden": true },
+  { "input": "{\"strs\":[\"\",\"\",\"\"]}", "output": "[[\"\",\"\",\"\"]]", "explanation": "Multiple empty strings", "is_hidden": true }
+]

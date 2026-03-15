@@ -1,0 +1,10 @@
+{
+  "typescript": "function mergeKArrays(arrays: number[][]): number[] {\n    \n};",
+  "javascript": "/**\n * @param {number[][]} arrays\n * @return {number[]}\n */\nvar mergeKArrays = function(arrays) {\n    \n};",
+  "python": "class Solution:\n    def mergeKArrays(self, arrays: List[List[int]]) -> List[int]:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public int[] mergeKArrays(int[][] arrays) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> mergeKArrays(vector<vector<int>>& arrays) {\n        \n    }\n};",
+  "go": "func mergeKArrays(arrays [][]int) []int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn merge_k_arrays(arrays: Vec<Vec<i32>>) -> Vec<i32> {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int[] MergeKArrays(int[][] arrays) {\n        \n    }\n}"
+}

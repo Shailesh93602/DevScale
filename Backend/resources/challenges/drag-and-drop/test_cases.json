@@ -1,0 +1,62 @@
+[
+  {
+    "input": { "items": ["A", "B", "C", "D"], "operations": [{ "type": "move", "from": 0, "to": 2 }] },
+    "output": ["B", "C", "A", "D"],
+    "explanation": "Move A from index 0 to index 2",
+    "is_hidden": false
+  },
+  {
+    "input": { "items": [1, 2, 3], "operations": [{ "type": "swap", "a": 0, "b": 2 }] },
+    "output": [3, 2, 1],
+    "explanation": "Swap first and last elements",
+    "is_hidden": false
+  },
+  {
+    "input": { "items": ["X", "Y", "Z"], "operations": [{ "type": "move", "from": 0, "to": 2 }, { "type": "undo" }] },
+    "output": ["X", "Y", "Z"],
+    "explanation": "Move then undo — back to original",
+    "is_hidden": false
+  },
+  {
+    "input": { "items": [1, 2, 3, 4, 5], "operations": [{ "type": "move", "from": 4, "to": 0 }] },
+    "output": [5, 1, 2, 3, 4],
+    "explanation": "Move last item to first position",
+    "is_hidden": true
+  },
+  {
+    "input": { "items": ["A", "B"], "operations": [{ "type": "swap", "a": 0, "b": 1 }, { "type": "swap", "a": 0, "b": 1 }] },
+    "output": ["A", "B"],
+    "explanation": "Double swap restores original order",
+    "is_hidden": true
+  },
+  {
+    "input": { "items": [1, 2, 3], "operations": [{ "type": "move", "from": 0, "to": 2 }, { "type": "move", "from": 0, "to": 1 }, { "type": "undo" }, { "type": "undo" }] },
+    "output": [1, 2, 3],
+    "explanation": "Multiple undos restore to original",
+    "is_hidden": true
+  },
+  {
+    "input": { "items": ["A", "B", "C"], "operations": [{ "type": "move", "from": 0, "to": 2 }, { "type": "reset" }] },
+    "output": ["A", "B", "C"],
+    "explanation": "Reset restores original order",
+    "is_hidden": true
+  },
+  {
+    "input": { "items": [1], "operations": [{ "type": "move", "from": 0, "to": 0 }] },
+    "output": [1],
+    "explanation": "Single item — move to same position is no-op",
+    "is_hidden": true
+  },
+  {
+    "input": { "items": [1, 2, 3, 4], "operations": [{ "type": "swap", "a": 1, "b": 3 }, { "type": "move", "from": 0, "to": 3 }] },
+    "output": [4, 2, 1, 3],
+    "explanation": "Swap then move — compound operations",
+    "is_hidden": true
+  },
+  {
+    "input": { "items": ["A", "B", "C"], "operations": [{ "type": "undo" }] },
+    "output": ["A", "B", "C"],
+    "explanation": "Undo with no history — no change",
+    "is_hidden": true
+  }
+]

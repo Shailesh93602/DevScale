@@ -1,0 +1,165 @@
+<h1>Dimensionality Reduction: PCA, t-SNE &amp; UMAP</h1>
+<p>Real-world datasets often have hundreds or thousands of features. Dimensionality reduction compresses these into a smaller set of features while preserving the most important structure. It serves two critical purposes in ML: <strong>visualization</strong> (projecting high-dimensional data to 2D/3D to understand cluster structure) and <strong>feature compression</strong> (reducing noise and computational cost before training).</p>
+
+<h2>Principal Component Analysis (PCA)</h2>
+<p>PCA finds the directions (principal components) of maximum variance in the data. The first principal component is the axis along which the data varies the most; the second is orthogonal to it and captures the next most variance. Projecting onto the top K components reduces dimensions while retaining the most information:</p>
+
+<pre><code>import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+from sklearn.datasets import load_digits, fetch_olivetti_faces
+
+# ─── Basic PCA on Digits dataset (64 features → 2D for visualization) ───────
+digits = load_digits()
+X = digits.data        # 1797 images × 64 pixel features
+y = digits.target      # Digit labels 0–9
+
+# Scale before PCA — PCA is sensitive to feature scale!
+X_scaled = StandardScaler().fit_transform(X)
+
+# Fit PCA and project to 2 components for visualization
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X_scaled)
+
+print(f"Original shape:  {X.shape}")            # (1797, 64)
+print(f"Reduced shape:   {X_pca.shape}")        # (1797, 2)
+print(f"Variance retained: {pca.explained_variance_ratio_.sum():.2%}")  # ≈ 28.5%
+
+plt.figure(figsize=(8, 6))
+scatter = plt.scatter(X_pca[:, 0], X_pca[:, 1], c=y, cmap='tab10', s=15, alpha=0.8)
+plt.colorbar(scatter, ticks=range(10))
+plt.title('Digits Dataset — PCA (2 Components)')
+plt.xlabel(f'PC1 ({pca.explained_variance_ratio_[0]:.1%} variance)')
+plt.ylabel(f'PC2 ({pca.explained_variance_ratio_[1]:.1%} variance)')
+plt.show()</code></pre>
+
+<h3>Choosing the Number of Components</h3>
+<pre><code># Explained variance ratio — how much information does each component carry?
+pca_full = PCA().fit(X_scaled)
+cumulative_variance = np.cumsum(pca_full.explained_variance_ratio_)
+
+# How many components to retain 95% of variance?
+n_components_95 = np.argmax(cumulative_variance >= 0.95) + 1
+print(f"Components for 95% variance: {n_components_95}")  # ≈ 41 (out of 64)
+
+plt.figure(figsize=(8, 4))
+plt.plot(cumulative_variance, marker='o', linewidth=1, markersize=3)
+plt.axhline(y=0.95, color='red', linestyle='--', label='95% threshold')
+plt.axvline(x=n_components_95, color='green', linestyle='--')
+plt.xlabel('Number of Components')
+plt.ylabel('Cumulative Explained Variance')
+plt.title('PCA — Explained Variance by Components')
+plt.legend()
+plt.grid(alpha=0.3)
+plt.show()
+
+# Retain 95% variance for ML tasks:
+pca_95 = PCA(n_components=0.95)  # Pass float to auto-select n for target variance
+X_compressed = pca_95.fit_transform(X_scaled)
+print(f"Compressed shape: {X_compressed.shape}")  # 64 → ~41 features</code></pre>
+
+<h2>t-SNE — Non-Linear Visualization</h2>
+<p>PCA is linear — it struggles to reveal complex, non-linear cluster structure. <strong>t-SNE (t-Distributed Stochastic Neighbor Embedding)</strong> models pairwise similarity as probability distributions and finds a low-dimensional embedding that preserves local neighborhood structure:</p>
+<pre><code>from sklearn.manifold import TSNE
+
+# t-SNE is computationally expensive — usually applied to a PCA-reduced representation first
+# (PCA: 64 → 30 for speed, then t-SNE: 30 → 2 for visualization)
+pca_30 = PCA(n_components=30)
+X_pca30 = pca_30.fit_transform(X_scaled)
+
+tsne = TSNE(
+    n_components=2,
+    perplexity=30,      # Controls local vs global structure balance (5–50 typical)
+    learning_rate='auto',
+    n_iter=1000,
+    random_state=42
+)
+X_tsne = tsne.fit_transform(X_pca30)
+
+plt.figure(figsize=(8, 6))
+scatter = plt.scatter(X_tsne[:, 0], X_tsne[:, 1], c=y, cmap='tab10', s=15, alpha=0.8)
+plt.colorbar(scatter, ticks=range(10))
+plt.title('Digits Dataset — t-SNE (Much Better Cluster Separation!)')
+plt.axis('off')  # t-SNE axes have no meaningful units
+plt.show()</code></pre>
+
+<h2>UMAP — Faster Non-Linear Dimensionality Reduction</h2>
+<p>UMAP (Uniform Manifold Approximation and Projection) is the modern successor to t-SNE — much faster on large datasets and better at preserving global structure:</p>
+<pre><code>pip install umap-learn</code></pre>
+<pre><code>import umap
+
+reducer = umap.UMAP(
+    n_components=2,
+    n_neighbors=15,       # Controls local vs global tradeoff (like t-SNE perplexity)
+    min_dist=0.1,         # How tightly to pack points in the embedding
+    metric='euclidean',
+    random_state=42
+)
+X_umap = reducer.fit_transform(X_scaled)
+
+# UMAP also works for 3D visualization
+reducer_3d = umap.UMAP(n_components=3, random_state=42)
+X_umap_3d = reducer_3d.fit_transform(X_scaled)
+
+# UMAP can also be used as a feature extractor (transform new data):
+# reducer.transform(X_new)  ← t-SNE cannot do this!</code></pre>
+
+<h2>Autoencoders (Deep Learning Approach)</h2>
+<p>For very high-dimensional data (images, audio), neural network autoencoders learn a compressed representation (called the <strong>bottleneck</strong> or <strong>latent space</strong>) that captures the essential structure:</p>
+<pre><code>import torch
+import torch.nn as nn
+
+class Autoencoder(nn.Module):
+    def __init__(self, input_dim=784, latent_dim=32):
+        super().__init__()
+        # Encoder: compress 784 → 32
+        self.encoder = nn.Sequential(
+            nn.Linear(input_dim, 256),
+            nn.ReLU(),
+            nn.Linear(256, 64),
+            nn.ReLU(),
+            nn.Linear(64, latent_dim)
+        )
+        # Decoder: reconstruct 32 → 784
+        self.decoder = nn.Sequential(
+            nn.Linear(latent_dim, 64),
+            nn.ReLU(),
+            nn.Linear(64, 256),
+            nn.ReLU(),
+            nn.Linear(256, input_dim),
+            nn.Sigmoid()  # Output pixels in [0, 1]
+        )
+
+    def forward(self, x):
+        latent = self.encoder(x)
+        reconstruction = self.decoder(latent)
+        return reconstruction, latent
+
+# Training: minimize reconstruction loss (MSE between input and output)
+model = Autoencoder()
+optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+criterion = nn.MSELoss()
+
+# Get compressed representations for clustering or visualization:
+with torch.no_grad():
+    _, latent_codes = model(X_tensor)  # Shape: (n_samples, 32)</code></pre>
+
+<h2>Comparison Guide</h2>
+<table>
+  <thead><tr><th>Method</th><th>Type</th><th>Preserves</th><th>Scalability</th><th>Best For</th></tr></thead>
+  <tbody>
+    <tr><td>PCA</td><td>Linear</td><td>Global variance</td><td>✅ Very fast</td><td>Feature compression before ML, noise reduction</td></tr>
+    <tr><td>t-SNE</td><td>Non-linear</td><td>Local neighborhoods</td><td>⚠️ Slow (O(n²))</td><td>Visualization only, &lt;50K samples</td></tr>
+    <tr><td>UMAP</td><td>Non-linear</td><td>Local + global</td><td>✅ Fast</td><td>Visualization + feature extraction</td></tr>
+    <tr><td>Autoencoder</td><td>Neural</td><td>Learned structure</td><td>✅ Scalable</td><td>Images, audio, sequence compression</td></tr>
+  </tbody>
+</table>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always scale features before PCA/t-SNE/UMAP — without scaling, features with large ranges dominate the decomposition.</li>
+  <li>Use PCA first to reduce to ~50 dimensions, then apply t-SNE/UMAP — this dramatically speeds up t-SNE while preserving most information.</li>
+  <li>t-SNE axes have no meaningful units — distances between clusters are not interpretable. Use it only for visual pattern discovery, not for engineering features.</li>
+  <li>UMAP's <code>transform()</code> method enables transforming new data using the fitted embedding — t-SNE cannot do this, making UMAP the better choice when you need to project future data points.</li>
+</ul>

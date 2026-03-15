@@ -1,0 +1,84 @@
+<h1>Log Aggregation Pipelines</h1>
+<p>In a distributed system with 50 microservices running across 200 pods, logs are generated across thousands of files and stdout streams simultaneously. A <strong>log aggregation pipeline</strong> is the infrastructure that collects all of these dispersed log streams, transforms them into a consistent format, and routes them to the right destinations — all reliably and at scale.</p>
+
+<h2>The Pipeline Architecture</h2>
+<pre><code class="language-text">Sources → Collector/Shipper → Aggregator/Processor → Destinations
+
+[K8s Pods]     [Fluent Bit]    [Logstash/Vector]     [Elasticsearch]
+[EC2 Apps]  →  [on each node] → [central cluster]  →  [Loki]
+[Lambda]       [lightweight]   [parse, enrich,]       [S3 archive]
+[API Gateway]               →  [filter, route]    →   [Datadog]
+</code></pre>
+
+<h2>Fluent Bit: The Lightweight Log Shipper</h2>
+<p><strong>Fluent Bit</strong> is deployed as a DaemonSet in Kubernetes (one instance per node) to collect container logs from all pods and forward them. It's extremely memory-efficient (< 1MB RAM), making it the standard choice for K8s log collection:</p>
+<pre><code class="language-yaml"># fluent-bit-config.yaml — Kubernetes DaemonSet config
+[INPUT]
+    Name              tail
+    Path              /var/log/containers/*.log
+    Parser            docker
+    Tag               kube.*
+    Refresh_Interval  5
+
+[FILTER]
+    Name                kubernetes
+    Match               kube.*
+    Kube_URL            https://kubernetes.default.svc:443
+    Merge_Log           On      # Parse JSON logs into structured fields
+    K8s-Logging.Parser  On      # Use pod annotation to choose parser
+
+[FILTER]
+    Name    grep
+    Match   *
+    Exclude log  ^\s*$          # Drop empty log lines
+
+[OUTPUT]
+    Name            loki
+    Match           *
+    Host            loki.monitoring.svc
+    Port            3100
+    Labels          job=fluent-bit, env=production
+    Label_keys      $app,$namespace  # Use K8s labels as Loki labels
+</code></pre>
+
+<h2>Logstash Pipeline Stages</h2>
+<p>For more complex transformations — parsing, enriching with GeoIP, anonymizing PII, routing by content — <strong>Logstash</strong> provides a powerful pipeline DSL:</p>
+<pre><code class="language-ruby"># logstash.conf — Parse, enrich, and route API access logs
+input {
+  beats { port => 5044 }
+}
+
+filter {
+  # Parse the raw log line using grok pattern
+  grok {
+    match => { "message" => "%{IP:client_ip} %{WORD:method} %{URIPATH:path} %{NUMBER:status} %{NUMBER:response_time_ms}" }
+  }
+  
+  # Enrich with GeoIP location data
+  geoip { source => "client_ip" }
+  
+  # Anonymize PII — mask last two octets of IP
+  mutate {
+    gsub => ["client_ip", "(\d+\.\d+)\.\d+\.\d+", "\1.x.x"]
+  }
+  
+  # Drop health check logs to reduce volume
+  if [path] == "/health" { drop {} }
+}
+
+output {
+  if [status] >= 500 {
+    elasticsearch { index => "errors-%{+YYYY.MM.dd}" }
+  } else {
+    loki { url => "http://loki:3100/loki/api/v1/push" }
+  }
+}
+</code></pre>
+
+<h2>Log Retention Policy</h2>
+<pre><code class="language-text">Retention Decision Framework:
+├── Hot (0-7 days):   Elasticsearch / Loki          Fast queries, high cost
+├── Warm (7-90 days): Elasticsearch ILM rollover    Medium cost, slower queries  
+└── Cold (90+ days):  S3 Glacier                   Low cost, compliance archive
+</code></pre>
+<p>Apply different retention periods based on log type: security audit logs typically need 7 years (compliance), application debug logs need 30 days, performance metrics need 13 months (year-over-year comparison).</p>

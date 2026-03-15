@@ -1,0 +1,40 @@
+<h1>Sensors and Hooks</h1>
+<p>While standard Airflow Operators (like the <code>PythonOperator</code> or <code>BashOperator</code>) execute active tasks on an explicit schedule, data pipelines often need to interact seamlessly with third-party external systems. You might need to wait for a massive CSV file to appear in an AWS S3 bucket before triggering your transformation script. You accomplish this using <strong>Sensors</strong> and <strong>Hooks</strong>.</p>
+
+<h2>Airflow Hooks: Secure Connections</h2>
+<p>A Hook is an interface allowing Airflow to safely talk to external platforms (Postgres, AWS, Slack, Snowflake) without hardcoding passwords directly into your Python DAG files.</p>
+<pre><code class="language-python">from airflow.providers.postgres.hooks.postgres import PostgresHook
+
+def fetch_user_data():
+    # Airflow securely manages the database connection strings internally in its UI
+    hook = PostgresHook(postgres_conn_id='production_db_secure')
+    conn = hook.get_conn()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM users WHERE status = 'active'")
+    return cursor.fetchall()
+</code></pre>
+<p>By using Hooks, the Data Engineering team can centrally manage all database passwords and API Tokens strictly via the Airflow Web UI. The actual Python code simply references an abstract `conn_id` string.</p>
+
+<h2>Airflow Sensors: Conditional Waiting</h2>
+<p>A <strong>Sensor</strong> is a special type of Operator designed specifically to wait for a certain condition to become true before explicitly moving onto the next downstream task in the DAG.</p>
+<p>For example, if the Marketing Team promises to upload a massive sales file to S3 every day "around 5 PM", you cannot simply schedule your pipeline to run exactly at 5:01 PM, because humans are often late. If the file is missing, the pipeline crashes.</p>
+<pre><code class="language-python">from airflow.providers.amazon.aws.sensors.s3 import S3KeySensor
+
+# This task will continuously poll AWS S3 until the specific file finally arrives
+wait_for_file = S3KeySensor(
+    task_id='wait_for_daily_sales_csv',
+    bucket_key='s3://marketing-bucket/daily_sales_{{ ds }}.csv',
+    aws_conn_id='aws_default',
+    poke_interval=60 * 5, # Check S3 once every 5 minutes
+    timeout=60 * 60 * 2,  # Fail if it doesn't arrive within 2 hours
+    dag=dag
+)
+</code></pre>
+<p>Sensors are critical for building reliable, event-driven architectures. Instead of arbitrarily guessing when data might be ready, Sensors politely wait, polling external metrics consistently.</p>
+
+<h2>Sensor Modes</h2>
+<p>Sensors operate in two primary modes:</p>
+<ul>
+  <li><strong>Poke (Default):</strong> The Sensor occupies an active Airflow worker slot for the entire duration of the wait. If relying on many sensors, this can cause a severe deadlock as all your computing power is wasted just "waiting".</li>
+  <li><strong>Reschedule:</strong> The Sensor checks the condition, and if failing, immediately gives up its worker slot and goes to sleep. It actively wakes up 5 minutes later to check again. You should always utilize Reschedule mode for tasks that might wait longer than a few minutes.</li>
+</ul>

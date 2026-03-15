@@ -1,0 +1,4 @@
+{
+    "name": "Model Monitoring & Drift Detection",
+    "description": "Keeping ML models accurate after deployment. Understanding Concept Drift and Data Drift, implementing automated statistical tests to detect model degradation, and triggering retraining pipelines."
+}

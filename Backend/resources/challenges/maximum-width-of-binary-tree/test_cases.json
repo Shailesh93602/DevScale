@@ -1,0 +1,10 @@
+[
+  {"input":"{\"root\":[1,3,2,5,3,null,9]}","output":"4","explanation":"Width 4 at level 3","is_hidden":false},
+  {"input":"{\"root\":[1,3,2,5,null,null,9,6,null,7]}","output":"7","explanation":"Width 7 at level 4","is_hidden":false},
+  {"input":"{\"root\":[1,3,2,5]}","output":"2","explanation":"Width 2 at level 2","is_hidden":false},
+  {"input":"{\"root\":[1]}","output":"1","explanation":"Single node","is_hidden":true},
+  {"input":"{\"root\":[1,2,null,3,null,4]}","output":"1","explanation":"Straight line tree left","is_hidden":true},
+  {"input":"{\"root\":[1,null,2,null,3,null,4]}","output":"1","explanation":"Straight line tree right","is_hidden":true},
+  {"input":"{\"root\":[1,1,1,1,1,1,1]}","output":"4","explanation":"Full binary tree depth 3","is_hidden":true},
+  {"input":"{\"root\":[1,3,null,5,4]}","output":"2","explanation":"Skipped right node in level 2","is_hidden":true}
+]

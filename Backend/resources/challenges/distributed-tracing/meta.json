@@ -1,0 +1,19 @@
+{
+  "title": "Implement Distributed Tracing",
+  "slug": "distributed-tracing",
+  "difficulty": "Hard",
+  "category": "devops",
+  "points": 150,
+  "tags": ["distributed-tracing", "observability", "opentelemetry", "jaeger", "microservices"],
+  "company_tags": ["Uber", "Google", "Netflix", "Datadog", "Lightstep"],
+  "topic_tags": ["Distributed Tracing", "OpenTelemetry", "Observability", "Microservices"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "A list of microservices with their endpoints and dependencies (call graph)",
+  "output_format": "Tracing middleware, span creation logic, context propagation, and trace analysis functions",
+  "example_input": "{ services: ['api-gateway', 'user-service', 'order-service'], callGraph: { 'api-gateway': ['user-service', 'order-service'] } }",
+  "example_output": "Tracing middleware that creates spans, propagates context via headers, and builds trace trees",
+  "constraints": "- Must implement W3C Trace Context propagation\\n- Must support parent-child span relationships\\n- Must handle async operations\\n- Must include span attributes and events\\n- Must implement sampling",
+  "function_signature": "function createTracer(serviceName: string): { startSpan: (name: string, parentContext?: SpanContext) => Span; middleware: () => Middleware; extractContext: (headers: Record<string, string>) => SpanContext }",
+  "status": "ACTIVE"
+}

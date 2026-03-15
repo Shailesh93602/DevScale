@@ -1,0 +1,6 @@
+[
+  "Think about what the maximum reachable position is from index 0. Can you extend that as you move forward?",
+  "At each index i, you can reach up to i + nums[i]. Keep track of the farthest position you can reach.",
+  "If at any point your current index i exceeds the farthest reachable position, you're stuck and can't proceed.",
+  "A single pass with a greedy approach works: maintain maxReach, update it at each step, and check if you can reach the end."
+]

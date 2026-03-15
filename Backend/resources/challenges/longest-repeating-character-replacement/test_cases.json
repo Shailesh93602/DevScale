@@ -1,0 +1,10 @@
+[
+  { "input": "{\"s\":\"ABAB\", \"k\":2}", "output": "4", "explanation": "Replace two A's with B's or vice-versa", "is_hidden": false },
+  { "input": "{\"s\":\"AABABBA\", \"k\":1}", "output": "4", "explanation": "Change middle A to B", "is_hidden": false },
+  { "input": "{\"s\":\"A\", \"k\":0}", "output": "1", "explanation": "Single character", "is_hidden": true },
+  { "input": "{\"s\":\"ABAA\", \"k\":0}", "output": "2", "explanation": "k=0 means just finding the longest identical substring", "is_hidden": true },
+  { "input": "{\"s\":\"ABBB\", \"k\":2}", "output": "4", "explanation": "Sufficient k to replace all discrepancies", "is_hidden": true },
+  { "input": "{\"s\":\"BAAAB\", \"k\":2}", "output": "5", "explanation": "Changing the end characters", "is_hidden": true },
+  { "input": "{\"s\":\"CDEFG\", \"k\":2}", "output": "3", "explanation": "All unique characters, k allows linking up to 3", "is_hidden": true },
+  { "input": "{\"s\":\"AABA\", \"k\":0}", "output": "2", "explanation": "Can't bridge the gap", "is_hidden": true }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "input": "{\"Customers\": [{\"id\": 1, \"name\": \"Joe\"}, {\"id\": 2, \"name\": \"Henry\"}, {\"id\": 3, \"name\": \"Sam\"}, {\"id\": 4, \"name\": \"Max\"}], \"Orders\": [{\"id\": 1, \"customerId\": 3}, {\"id\": 2, \"customerId\": 1}]}",
+    "output": "[{\"Customers\": \"Henry\"}, {\"Customers\": \"Max\"}]",
+    "explanation": "Henry and Max never placed orders.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Customers\": [{\"id\": 1, \"name\": \"Alice\"}], \"Orders\": []}",
+    "output": "[{\"Customers\": \"Alice\"}]",
+    "explanation": "No orders exist, so Alice never ordered.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Customers\": [{\"id\": 1, \"name\": \"Alice\"}, {\"id\": 2, \"name\": \"Bob\"}], \"Orders\": [{\"id\": 1, \"customerId\": 1}, {\"id\": 2, \"customerId\": 2}]}",
+    "output": "[]",
+    "explanation": "Both customers have orders.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Customers\": [{\"id\": 1, \"name\": \"A\"}, {\"id\": 2, \"name\": \"B\"}, {\"id\": 3, \"name\": \"C\"}, {\"id\": 4, \"name\": \"D\"}, {\"id\": 5, \"name\": \"E\"}], \"Orders\": [{\"id\": 1, \"customerId\": 2}]}",
+    "output": "[{\"Customers\": \"A\"}, {\"Customers\": \"C\"}, {\"Customers\": \"D\"}, {\"Customers\": \"E\"}]",
+    "explanation": "Only customer B has an order.",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"Customers\": [{\"id\": 1, \"name\": \"Alice\"}], \"Orders\": [{\"id\": 1, \"customerId\": 1}, {\"id\": 2, \"customerId\": 1}]}",
+    "output": "[]",
+    "explanation": "Alice has multiple orders, so she is not in the result.",
+    "is_hidden": true
+  }
+]

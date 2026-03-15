@@ -1,0 +1,6 @@
+{
+    "id": "2-objectDetection",
+    "title": "Object Detection and Segmentation",
+    "description": "Locating multiple objects within an image using bounding boxes and pixel-level masks.",
+    "order": 2
+}

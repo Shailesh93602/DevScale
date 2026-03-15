@@ -1,0 +1,10 @@
+[
+  { "input": "{\"k\": 2, \"prices\": [2,4,1]}", "output": "2", "explanation": "One transaction: buy@2,sell@4", "is_hidden": false },
+  { "input": "{\"k\": 2, \"prices\": [3,2,6,5,0,3]}", "output": "7", "explanation": "Two transactions for max profit", "is_hidden": false },
+  { "input": "{\"k\": 1, \"prices\": [1,2]}", "output": "1", "explanation": "Single transaction", "is_hidden": false },
+  { "input": "{\"k\": 1, \"prices\": [7,6,4,3,1]}", "output": "0", "explanation": "No profit with 1 transaction", "is_hidden": true },
+  { "input": "{\"k\": 100, \"prices\": [1,2,3,4,5]}", "output": "4", "explanation": "k large, greedy approach", "is_hidden": true },
+  { "input": "{\"k\": 2, \"prices\": [1,2,4,2,5,7,2,4,9,0]}", "output": "13", "explanation": "Two optimal transactions", "is_hidden": true },
+  { "input": "{\"k\": 1, \"prices\": [3,3,3]}", "output": "0", "explanation": "Flat prices", "is_hidden": true },
+  { "input": "{\"k\": 3, \"prices\": [1,4,2,7,3,9]}", "output": "15", "explanation": "Three transactions", "is_hidden": true }
+]

@@ -1,0 +1,74 @@
+{
+    "title": "Advanced SQL Quiz",
+    "description": "Test your window functions and CTE knowledge.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the difference between RANK() and DENSE_RANK()?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "They are identical",
+                    "isCorrect": false
+                },
+                {
+                    "text": "RANK() skips numbers after ties (1,1,3); DENSE_RANK() does not skip (1,1,2)",
+                    "isCorrect": true
+                },
+                {
+                    "text": "DENSE_RANK() requires an ORDER BY; RANK() does not",
+                    "isCorrect": false
+                },
+                {
+                    "text": "RANK() works on integers only; DENSE_RANK() works on all types",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does PARTITION BY do in a window function?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It splits the table into separate tables",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It divides rows into groups over which the window function is independently calculated",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It filters rows before the window function runs",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It creates an index on the partitioned column",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is a CTE (Common Table Expression)?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A permanent database view",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A named temporary result set defined with WITH, which can be referenced in the main query",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A stored procedure",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A compressed table for faster queries",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

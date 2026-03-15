@@ -1,0 +1,4 @@
+{
+    "name": "Declaration Merging & Global Augmentation",
+    "description": "Extending existing types from third-party libraries. Understanding how interfaces and namespaces merge, and augmenting global scopes like Window or Express Request."
+}

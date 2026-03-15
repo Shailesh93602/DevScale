@@ -1,0 +1,4 @@
+{
+    "name": "Flink Windowing",
+    "description": "Tumbling, sliding, and session windows, handling late data with watermarks."
+}

@@ -1,0 +1,74 @@
+{
+    "title": "NumPy & Pandas Quiz",
+    "description": "Test your Python data manipulation skills.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the main advantage of NumPy arrays over Python lists for numerical computation?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "They support mixed data types",
+                    "isCorrect": false
+                },
+                {
+                    "text": "They are vectorised — operations apply element-wise without Python loops, using compiled C code",
+                    "isCorrect": true
+                },
+                {
+                    "text": "They use less memory by default",
+                    "isCorrect": false
+                },
+                {
+                    "text": "They automatically handle missing data",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does df.groupby('department').agg({'salary': 'mean'}) return?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The first salary per department",
+                    "isCorrect": false
+                },
+                {
+                    "text": "All salaries sorted by department",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The average salary aggregated for each unique department",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A filtered DataFrame where department is the index",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why is Parquet file format preferred over CSV for large data files?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It is a human-readable text format",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It uses columnar storage enabling fast column reads and efficient compression",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It is the only format Pandas can read",
+                    "isCorrect": false
+                },
+                {
+                    "text": "CSV files cannot store numeric data",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

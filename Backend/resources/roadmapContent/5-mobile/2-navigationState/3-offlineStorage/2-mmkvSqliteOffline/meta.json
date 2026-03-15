@@ -1,0 +1,4 @@
+{
+    "name": "MMKV, SQLite & Offline-First Architecture",
+    "description": "Building apps that work reliably without internet connectivity. Comparing AsyncStorage vs MMKV (10x faster synchronous storage for small data), using Expo SQLite for relational on-device data, WatermelonDB for large datasets with sync, implementing an offline-first architecture with optimistic UI, conflict resolution strategies, and background sync when connectivity is restored."
+}

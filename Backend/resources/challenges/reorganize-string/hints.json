@@ -1,0 +1,1 @@
+["Use a Max-Heap to keep track of the most frequent characters.", "At each step, pop the top two most frequent characters from the heap. Append them to the result string.", "If a character's frequency drops to 0, don't push it back into the heap. Otherwise, push it back."]

@@ -1,0 +1,6 @@
+[
+  "Start with the VPC and use cidrsubnet() to dynamically compute subnet CIDRs. Use a data source for aws_availability_zones instead of hardcoding AZ names.",
+  "Create public subnets with map_public_ip_on_launch=true and an Internet Gateway. Private subnets need a NAT Gateway (placed in a public subnet) for outbound internet access.",
+  "For security groups, use the principle of least privilege. The database SG should reference the app SG ID (not a CIDR block) to only allow traffic from application instances.",
+  "Use variables for all configurable values, locals for computed values, and outputs for resource IDs that other configurations might need. Tag all resources consistently."
+]

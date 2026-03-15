@@ -1,0 +1,4 @@
+{
+    "name": "Redis: Advanced Data Structures & Patterns",
+    "description": "Redis beyond simple key-value storage. Using Sorted Sets for leaderboards and time-series data, Streams for event sourcing and message queues (Redis Streams as a lightweight Kafka alternative), implementing distributed locks with Redlock algorithm, pub/sub messaging, Redis Search (RediSearch) for full-text search, and HyperLogLog for probabilistic unique visitor counting at scale."
+}

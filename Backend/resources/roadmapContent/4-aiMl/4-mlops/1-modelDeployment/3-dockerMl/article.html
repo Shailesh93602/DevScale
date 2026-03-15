@@ -1,0 +1,120 @@
+<h1>Containerizing ML Models with Docker</h1>
+<p>A model that works on your laptop may fail in production because the server has a different Python version, a different version of scikit-learn, or is missing a system library. Docker solves this permanently — you package your entire runtime environment (Python version, all libraries, system dependencies, and model weights) into a single, reproducible container image.</p>
+
+<h2>Why Docker for ML?</h2>
+<ul>
+  <li><strong>Reproducibility:</strong> The same Docker image runs identically on your laptop, the CI/CD pipeline, and the Kubernetes cluster.</li>
+  <li><strong>Dependency isolation:</strong> A project needing TensorFlow 2.12 and another needing TensorFlow 2.15 can coexist on the same server in separate containers.</li>
+  <li><strong>Portability:</strong> Push to a container registry (AWS ECR, GCP Artifact Registry, Docker Hub) and deploy anywhere in seconds.</li>
+  <li><strong>Scaling:</strong> Kubernetes can spin up 50 copies of your inference container in under a minute.</li>
+</ul>
+
+<h2>Writing a Production-Grade Dockerfile</h2>
+<pre><code># Use official Python slim image — smaller than full python:3.11
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies first (layer cached separately)
+RUN apt-get update && apt-get install -y \
+    libgomp1 \   # Required by LightGBM / XGBoost
+    curl \       # For health check
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy and install Python dependencies BEFORE source code
+# This layer is cached unless requirements.txt changes
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy model artifacts
+COPY models/ ./models/
+
+# Copy application source code
+COPY app/ ./app/
+
+# Don't run as root in production
+RUN useradd -m -u 1000 mluser
+USER mluser
+
+# Expose the inference port
+EXPOSE 8000
+
+# Health check — Kubernetes probes this to know if the container is ready
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+  CMD curl -f http://localhost:8000/health || exit 1
+
+# Start FastAPI with 2 Uvicorn workers
+CMD ["gunicorn", "-w", "2", "-k", "uvicorn.workers.UvicornWorker", \
+     "--bind", "0.0.0.0:8000", "--timeout", "120", "app.main:app"]</code></pre>
+
+<h2>Multi-Stage Builds (Smaller Images)</h2>
+<p>Packages like PyTorch require large build tools to compile. You can use a two-stage build: a heavy "builder" stage that compiles everything, and a lean "runtime" stage that copies only the installed packages — dramatically reducing the final image size.</p>
+<pre><code"># Stage 1: Install dependencies (the "builder")
+FROM python:3.11 AS builder
+WORKDIR /install
+COPY requirements.txt .
+RUN pip install --no-cache-dir --prefix=/install/packages -r requirements.txt
+
+# Stage 2: Lean runtime image
+FROM python:3.11-slim AS runtime
+WORKDIR /app
+# Copy only the installed packages from the builder stage
+COPY --from=builder /install/packages /usr/local
+COPY models/ ./models/
+COPY app/ ./app/
+EXPOSE 8000
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]</code></pre>
+
+<h2>requirements.txt — Pin Exact Versions</h2>
+<pre><code>fastapi==0.111.0
+uvicorn[standard]==0.29.0
+gunicorn==22.0.0
+scikit-learn==1.4.2
+numpy==1.26.4
+joblib==1.4.0
+pydantic==2.7.1
+
+# Generate with: pip freeze > requirements.txt
+# Or use: pip-compile for deterministic dependency resolution</code></pre>
+
+<h2>Building and Running Locally</h2>
+<pre><code"># Build the image (run from the project root)
+docker build -t sentiment-api:v2.1 .
+
+# Run locally, mounting your .env file for secrets
+docker run -p 8000:8000 \
+  --env-file .env \
+  --memory="2g" \   # Limit RAM to prevent OOM
+  sentiment-api:v2.1
+
+# Test the running container
+curl -X POST http://localhost:8000/v2/predict/sentiment \
+  -H "Content-Type: application/json" \
+  -d '{"text": "This product is amazing!"}'
+
+# Check container logs
+docker logs <container_id> --follow</code></pre>
+
+<h2>Pushing to AWS ECR (Elastic Container Registry)</h2>
+<pre><code"># Authenticate Docker to ECR
+aws ecr get-login-password --region us-east-1 | \
+  docker login --username AWS --password-stdin \
+  123456789.dkr.ecr.us-east-1.amazonaws.com
+
+# Tag image for ECR
+docker tag sentiment-api:v2.1 \
+  123456789.dkr.ecr.us-east-1.amazonaws.com/sentiment-api:v2.1
+
+# Push to ECR
+docker push 123456789.dkr.ecr.us-east-1.amazonaws.com/sentiment-api:v2.1
+
+# Now K8s, ECS, or any service can pull this image from ECR</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always use a specific image tag (e.g., <code>python:3.11-slim</code>) not <code>latest</code> — <code>latest</code> changes unexpectedly and breaks reproducibility.</li>
+  <li>Copy <code>requirements.txt</code> and run <code>pip install</code> before copying your source code so Docker's layer cache avoids reinstalling packages when only code changes.</li>
+  <li>Never bake secrets (API keys, DB passwords) into the image. Use environment variables or a secrets manager.</li>
+  <li>Keep images small. <code>python:3.11-slim</code> is ~130MB vs <code>python:3.11</code> at ~900MB. Smaller images = faster deployments and smaller attack surface.</li>
+</ul>

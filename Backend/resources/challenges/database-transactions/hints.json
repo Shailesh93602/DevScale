@@ -1,0 +1,6 @@
+[
+  "Store a version number with each record. Increment it on every successful write. At commit time, check if the version you read matches the current version - if not, another transaction modified the data.",
+  "Buffer all writes in a transaction-local writeSet Map. Only apply them to the actual data store during commit, after validating that no conflicts exist. This ensures atomicity.",
+  "For conflict detection, maintain a readSet that tracks which keys were read and at what version. During commit validation, iterate through the readSet and compare each version against the current version in the store.",
+  "Implement withTransaction() as a retry loop. If commit fails due to conflict, create a new transaction and re-execute the function with fresh data. Limit retries (e.g., max 3) to prevent infinite loops on hot keys."
+]

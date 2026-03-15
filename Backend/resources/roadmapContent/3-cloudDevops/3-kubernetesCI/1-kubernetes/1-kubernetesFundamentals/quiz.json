@@ -1,0 +1,74 @@
+{
+    "title": "Kubernetes Quiz",
+    "description": "Test your Kubernetes orchestration knowledge.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the smallest deployable unit in Kubernetes?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Container",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Pod — one or more containers sharing network and storage",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Deployment",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Node",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the difference between a liveness probe and a readiness probe?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "They are identical",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Liveness probe restarts unhealthy containers; readiness probe controls whether traffic is sent to the pod",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Liveness is for startup; readiness is for production",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Readiness checks CPU; liveness checks memory",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does 'kubectl rollout undo deployment/api-server' do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Deletes the deployment",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Rolls back to the previous deployment revision",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Pauses the deployment rollout",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Restarts all pods in the deployment",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

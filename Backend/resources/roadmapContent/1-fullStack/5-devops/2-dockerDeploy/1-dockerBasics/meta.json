@@ -1,0 +1,4 @@
+{
+    "name": "Docker & Cloud Deployment",
+    "description": "Dockerfiles, docker-compose, deploying to Render/Railway/AWS."
+}

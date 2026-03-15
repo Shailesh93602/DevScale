@@ -1,0 +1,4 @@
+{
+    "name": "Advanced Pandas & Vectorization",
+    "description": "Mastering high-performance data manipulation. Understanding Vectorization to avoid slow loops, mastering complex GroupBy aggregations, and leveraging rolling Window Functions for time-series data."
+}

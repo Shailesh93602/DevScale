@@ -1,0 +1,74 @@
+{
+    "title": "GitHub Actions CI/CD Quiz",
+    "description": "Test your GitHub Actions pipeline knowledge.",
+    "passingScore": 80,
+    "timeLimit": 8,
+    "questions": [
+        {
+            "question": "What does 'needs: test' do in a GitHub Actions job?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It marks the job as optional",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It declares a dependency — this job only runs after the 'test' job completes successfully",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It requires manual approval before the job runs",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It runs the test job in parallel with the current job",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How should you store sensitive values like API keys in GitHub Actions?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "In the workflow YAML file as plain text",
+                    "isCorrect": false
+                },
+                {
+                    "text": "In a .env file committed to the repository",
+                    "isCorrect": false
+                },
+                {
+                    "text": "As GitHub Secrets, accessed via ${{ secrets.MY_SECRET }}",
+                    "isCorrect": true
+                },
+                {
+                    "text": "In a separate public configuration file",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does the 'matrix' strategy in GitHub Actions allow?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Running jobs in sequence with dependencies",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Running the same job in parallel with different configurations (e.g., multiple Node.js versions)",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Cross-repository workflow triggers",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Deploying to multiple environments sequentially",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

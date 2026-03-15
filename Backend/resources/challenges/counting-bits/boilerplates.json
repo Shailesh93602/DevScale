@@ -1,0 +1,27 @@
+[
+  {
+    "language": "typescript",
+    "slug": "typescript",
+    "code": "function countBits(n: number): number[] {\n  \n};"
+  },
+  {
+    "language": "javascript",
+    "slug": "javascript",
+    "code": "/**\n * @param {number} n\n * @return {number[]}\n */\nvar countBits = function(n) {\n    \n};"
+  },
+  {
+    "language": "python",
+    "slug": "python",
+    "code": "class Solution:\n    def countBits(self, n: int) -> List[int]:\n        "
+  },
+  {
+    "language": "java",
+    "slug": "java",
+    "code": "class Solution {\n    public int[] countBits(int n) {\n        \n    }\n}"
+  },
+  {
+    "language": "cpp",
+    "slug": "cpp",
+    "code": "class Solution {\npublic:\n    vector<int> countBits(int n) {\n        \n    }\n};"
+  }
+]

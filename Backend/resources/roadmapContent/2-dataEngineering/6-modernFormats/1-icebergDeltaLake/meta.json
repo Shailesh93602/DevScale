@@ -1,0 +1,9 @@
+{
+    "id": "1-icebergDeltaLake",
+    "title": "Apache Iceberg & Delta Lake",
+    "description": "ACID-compliant open table formats for the data lakehouse pattern — enabling reliable updates, deletes, and time travel on petabyte-scale object storage.",
+    "order": 1,
+    "topics": [
+        "1-tableFormats"
+    ]
+}

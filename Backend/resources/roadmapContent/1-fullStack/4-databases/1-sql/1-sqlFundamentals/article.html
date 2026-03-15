@@ -1,0 +1,75 @@
+<h1>SQL Fundamentals</h1>
+<p>SQL (Structured Query Language) is the universal language for relational databases. Whether you use PostgreSQL, MySQL, or SQLite, the core SQL is the same.</p>
+
+<h2>Core CRUD Operations</h2>
+<pre><code>-- SELECT — Read data
+SELECT id, name, email FROM users WHERE active = true ORDER BY name ASC LIMIT 10;
+
+-- INSERT — Create data
+INSERT INTO users (name, email, password_hash) VALUES ('Alice', 'alice@example.com', '...');
+
+-- UPDATE — Modify data
+UPDATE users SET last_login = NOW() WHERE id = 1;
+
+-- DELETE — Remove data
+DELETE FROM users WHERE id = 1;</code></pre>
+
+<h2>Filtering & Sorting</h2>
+<pre><code>SELECT * FROM products
+WHERE category = 'Electronics'
+  AND price BETWEEN 100 AND 500
+  AND name LIKE '%phone%'    -- Wildcard search
+ORDER BY price DESC
+LIMIT 20 OFFSET 40;           -- Pagination: page 3 at 20/page</code></pre>
+
+<h2>JOINs</h2>
+<pre><code>-- INNER JOIN: only rows with matches in BOTH tables
+SELECT u.name, p.title, p.created_at
+FROM posts p
+INNER JOIN users u ON p.user_id = u.id
+WHERE u.active = true;
+
+-- LEFT JOIN: all rows from left table, matched rows from right (or NULL)
+SELECT u.name, COUNT(p.id) AS post_count
+FROM users u
+LEFT JOIN posts p ON p.user_id = u.id
+GROUP BY u.id, u.name
+ORDER BY post_count DESC;</code></pre>
+
+<h2>Aggregations</h2>
+<pre><code>SELECT
+  category,
+  COUNT(*)             AS total_products,
+  AVG(price)           AS avg_price,
+  MIN(price)           AS min_price,
+  MAX(price)           AS max_price,
+  SUM(stock_quantity)  AS total_stock
+FROM products
+GROUP BY category
+HAVING COUNT(*) &gt; 5    -- Filter AFTER grouping (WHERE filters before)
+ORDER BY avg_price DESC;</code></pre>
+
+<h2>Transactions — ACID Guarantees</h2>
+<pre><code>BEGIN;
+  UPDATE accounts SET balance = balance - 500 WHERE id = 1;
+  UPDATE accounts SET balance = balance + 500 WHERE id = 2;
+
+  -- If anything fails, rollback all changes
+  SAVEPOINT after_transfer;
+COMMIT; -- Or ROLLBACK; to undo everything
+
+-- ACID Properties:
+-- Atomicity: all or nothing
+-- Consistency: database stays in valid state
+-- Isolation: concurrent transactions don't interfere
+-- Durability: committed data survives crashes</code></pre>
+
+<h2>Indexes — Query Performance</h2>
+<pre><code>-- Without index: PostgreSQL scans every row (O(n))
+-- With index: uses B-tree to jump directly (O(log n))
+
+CREATE INDEX idx_users_email ON users(email);
+CREATE INDEX idx_posts_user_created ON posts(user_id, created_at DESC);
+
+-- EXPLAIN ANALYZE to check if indexes are used
+EXPLAIN ANALYZE SELECT * FROM users WHERE email = 'alice@example.com';</code></pre>

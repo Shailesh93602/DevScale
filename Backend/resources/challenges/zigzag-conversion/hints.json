@@ -1,0 +1,7 @@
+[
+  "Create an array of strings, one for each row.",
+  "Iterate through the string, appending each character to the string in the current row.",
+  "Maintain a 'current row' variable and a 'direction' variable.",
+  "When you hit the top row (row 0) or the bottom row (numRows - 1), flip the direction variable.",
+  "Finally, join all the rows together."
+]

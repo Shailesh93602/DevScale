@@ -1,0 +1,4 @@
+{
+    "name": "Flink Deployments & Connectors",
+    "description": "Running Apache Flink jobs in production reliably. Exploring deployment modes (Session vs Application vs Per-Job), and connecting Flink natively to Kafka, JDBC databases, and Cloud Object Stores."
+}

@@ -1,0 +1,4 @@
+{
+    "name": "SQL Window Functions",
+    "description": "Using ROW_NUMBER, RANK, LAG, LEAD, and aggregate window functions for advanced analytics."
+}

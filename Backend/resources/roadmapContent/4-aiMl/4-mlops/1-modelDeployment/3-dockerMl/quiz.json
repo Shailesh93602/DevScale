@@ -1,0 +1,118 @@
+{
+    "title": "Docker for ML Deployment Quiz",
+    "description": "Test your knowledge of containerizing ML models for reproducible, production-ready deployment.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "In a Dockerfile, why should you COPY requirements.txt and RUN pip install BEFORE copying your application source code?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Because Docker requires files to be copied in alphabetical order",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To leverage Docker's layer caching — the expensive pip install step is only re-run when requirements.txt changes, not on every code change",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Source code can only be read after packages are installed",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It reduces the final image size by compressing the packages",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the key benefit of a multi-stage Docker build for an ML image?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It trains multiple ML models simultaneously",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It reduces the final runtime image size by discarding build-time tools and dependencies in the final stage",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It allows the container to scale horizontally on its own",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It speeds up model inference by 10x",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the risk of using `FROM python:3.11` with the `latest` tag instead of a specific tag like `python:3.11-slim`?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "latest is not a valid Docker tag and will cause a build error",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The base image can update without warning, breaking reproducibility and potentially changing installed system libraries",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The image will not work on Linux servers",
+                    "isCorrect": false
+                },
+                {
+                    "text": "pip install will be slower on the latest tag",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How should you provide database passwords and API keys to a running Docker container?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Hardcode them into the Dockerfile using ENV instructions and commit to git",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Write them inside the source code files",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Inject them as environment variables at runtime using --env-file or a secrets manager like AWS Secrets Manager",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Bake them into the model pickle file",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does the HEALTHCHECK instruction in a Dockerfile do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It validates the model's accuracy against a test dataset on startup",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It defines a command Docker runs periodically to check if the container is healthy, used by orchestrators like Kubernetes to route traffic",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It checks for security vulnerabilities in the installed packages",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It pings the Docker Hub registry to check for image updates",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

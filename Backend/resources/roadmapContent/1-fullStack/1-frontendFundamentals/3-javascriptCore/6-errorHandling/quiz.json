@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What does the finally block in a try/catch statement guarantee?",
+            "options": [
+                "It only runs when an error is caught",
+                "It always runs, regardless of whether an error was thrown or caught",
+                "It runs only when no error occurs",
+                "It prevents errors from propagating"
+            ],
+            "answer": "It always runs, regardless of whether an error was thrown or caught",
+            "explanation": "The finally block executes after try (and catch if there was an error), making it ideal for cleanup code like hiding spinners or closing connections."
+        },
+        {
+            "question": "How do you create a custom error class in JavaScript?",
+            "options": [
+                "function CustomError() { this.message = msg; }",
+                "class CustomError extends Error { constructor(msg) { super(msg); } }",
+                "class CustomError { throw() { throw new Error(); } }",
+                "const CustomError = new Error.extend();"
+            ],
+            "answer": "class CustomError extends Error { constructor(msg) { super(msg); } }",
+            "explanation": "Custom errors extend the built-in Error class. You must call super(message) to properly initialize the error, and should set this.name for easy identification."
+        },
+        {
+            "question": "What does the optional chaining operator (?.) do?",
+            "options": [
+                "It makes a property optional in TypeScript",
+                "It short-circuits and returns undefined if the left-hand value is null or undefined",
+                "It checks if a method exists before calling it",
+                "It creates an optional function parameter"
+            ],
+            "answer": "It short-circuits and returns undefined if the left-hand value is null or undefined",
+            "explanation": "user?.address?.city returns undefined instead of throwing a TypeError if user or address is null/undefined, enabling safe property access in chains."
+        },
+        {
+            "question": "How should you handle unhandled Promise rejections globally?",
+            "options": [
+                "Wrap all code in try/catch",
+                "Listen for the 'unhandledrejection' event on the window object",
+                "Use Promise.allSettled()",
+                "Set a global error handler with Promise.onRejection()"
+            ],
+            "answer": "Listen for the 'unhandledrejection' event on the window object",
+            "explanation": "window.addEventListener('unhandledrejection', handler) catches Promise rejections that were not handled with .catch() anywhere in the code."
+        },
+        {
+            "question": "What is the purpose of re-throwing an error in a catch block?",
+            "options": [
+                "To create a new error with a better message",
+                "To handle the error in the catch block AND propagate it further",
+                "To pass errors that you can't handle locally up to a caller that can handle them",
+                "To log the error to the console"
+            ],
+            "answer": "To pass errors that you can't handle locally up to a caller that can handle them",
+            "explanation": "If a catch block handles only specific errors (e.g., ValidationError), it should re-throw unexpected errors so they propagate to a higher-level handler instead of being silently swallowed."
+        }
+    ]
+}

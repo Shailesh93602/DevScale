@@ -1,0 +1,118 @@
+{
+    "title": "WebSockets in React Native Quiz",
+    "description": "Test your knowledge of WebSocket connections, Socket.io, real-time patterns, and cleanup.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the fundamental difference between HTTP and WebSocket communication?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "HTTP is encrypted while WebSocket communicates in plaintext",
+                    "isCorrect": false
+                },
+                {
+                    "text": "WebSocket maintains a persistent bidirectional connection so both client and server can send messages at any time; HTTP requires a new request for each data exchange",
+                    "isCorrect": true
+                },
+                {
+                    "text": "HTTP supports multiple concurrent connections; WebSocket only allows one connection per app",
+                    "isCorrect": false
+                },
+                {
+                    "text": "WebSocket is built on UDP while HTTP uses TCP",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why should you check `ws.readyState === WebSocket.OPEN` before calling `ws.send()`?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "send() is 3x slower when the socket is not fully initialised",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Calling send() on a closing or closed WebSocket throws an error; checking the state ensures you only send on an active connection",
+                    "isCorrect": true
+                },
+                {
+                    "text": "You must wait for OPEN state before listening for messages with onmessage",
+                    "isCorrect": false
+                },
+                {
+                    "text": "WebSocket.OPEN is a permission flag that must be set before the server accepts messages",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does Socket.io's event acknowledgement pattern (the callback in `socket.emit()`) provide that vanilla WebSockets don't?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It provides message encryption for sensitive data",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It provides guaranteed delivery confirmation — you know the server received and processed the event, not just that it was sent",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It allows messages to be sent to multiple socket rooms simultaneously",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It compresses the message payload to reduce bandwidth",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why should you disconnect a WebSocket when the React Native app goes to the background?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "iOS and Android forcefully kill WebSocket connections when apps are backgrounded",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Backgrounded apps cannot receive WebSocket messages due to OS restrictions",
+                    "isCorrect": false
+                },
+                {
+                    "text": "An open WebSocket connection keeps the CPU active, consuming unnecessary battery; disconnecting and reconnecting on foreground is more power-efficient",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The WebSocket server drops connections from backgrounded apps automatically",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What happens if you forget to close a WebSocket in a useEffect cleanup function?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Nothing — WebSockets automatically close when the component unmounts",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A memory leak and ghost connection — the socket persists, continues receiving messages, and calling setState on the unmounted component causes errors",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The component will be unable to re-mount until the connection times out",
+                    "isCorrect": false
+                },
+                {
+                    "text": "React Native crashes the app to prevent orphaned connections",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

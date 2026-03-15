@@ -1,0 +1,118 @@
+{
+    "title": "ELK Stack Quiz",
+    "description": "Test your knowledge on Centralized Logging, Elasticsearch, Logstash, and Filebeat.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the primary problem that the ELK Stack is designed to solve in a cloud architecture?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It prevents Distributed Denial of Service (DDoS) attacks.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It acts as a primary relational database for processing financial transactions.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It provides a mechanism to deploy code across multiple servers simultaneously.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It centralizes logs from dozens of distributed servers into a single searchable repository.",
+                    "isCorrect": true
+                }
+            ]
+        },
+        {
+            "question": "Which component of the ELK Stack acts as a highly scalable search engine capable of performing full-text searches across terabytes of log data?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Cassandra",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Kibana",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Elasticsearch",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Logstash",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does a lightweight agent like Filebeat do when deployed on a web server?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It compiles the source code locally.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It intercepts network traffic to block unauthorized IPs.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It scans the logs for credit card numbers and encrypts them.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It simply tails local log files on the disk and forwards the data quickly to a central logging pipeline.",
+                    "isCorrect": true
+                }
+            ]
+        },
+        {
+            "question": "Which ELK component provides the web-based graphical user interface for engineers to type search queries and view dashboards?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Elasticsearch",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Grafana",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Logstash",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Kibana",
+                    "isCorrect": true
+                }
+            ]
+        },
+        {
+            "question": "What is 'Structured Logging', a modern best practice?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Logging only when an Error occurs, omitting Info and Debug.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Encrypting the log files so they cannot be read with traditional tools.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Configuring your application to output logs explicitly formatted as JSON rather than raw text strings, enabling faster ingestion.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Sending logs via email strictly to administrators.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

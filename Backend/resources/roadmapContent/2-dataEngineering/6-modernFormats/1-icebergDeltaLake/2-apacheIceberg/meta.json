@@ -1,0 +1,4 @@
+{
+    "name": "Apache Iceberg: ACID on Data Lakes",
+    "description": "Understanding how Apache Iceberg brings transactional database guarantees to raw files on S3. Exploring ACID transactions, schema evolution, hidden partitioning, and time travel queries."
+}

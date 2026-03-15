@@ -1,0 +1,6 @@
+[
+  "Use two pointers to create a window `[left, right]`. First, expand `right` until you have a valid window (contains all chars in `t`).",
+  "Once the window is valid, contract from `left` until the window is no longer valid. Every valid window found is a candidate for the shortest window.",
+  "To efficiently check if a window is valid, use a frequency map. Instead of repeatedly checking the whole map, maintain a `have` and `need` counter.",
+  "When `have === need`, the window is valid. Compare its length to the minimum found so far."
+]

@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the main advantage of CSS Custom Properties over Sass variables?",
+            "options": [
+                "CSS variables compile faster",
+                "CSS variables can be changed at runtime with JavaScript and participate in the cascade",
+                "CSS variables support math operations",
+                "CSS variables are supported in IE11"
+            ],
+            "answer": "CSS variables can be changed at runtime with JavaScript and participate in the cascade",
+            "explanation": "Unlike Sass variables which are compiled away at build time, CSS custom properties are live in the browser and can be updated dynamically via JavaScript or media queries."
+        },
+        {
+            "question": "What syntax is used to access a CSS variable named --color-primary?",
+            "options": [
+                "$(--color-primary)",
+                "@color-primary",
+                "var(--color-primary)",
+                "css(--color-primary)"
+            ],
+            "answer": "var(--color-primary)",
+            "explanation": "CSS custom properties are accessed using the var() function: var(--property-name, optional-fallback)."
+        },
+        {
+            "question": "Where should global CSS variables be defined?",
+            "options": [
+                "In the body selector",
+                "In the :root selector",
+                "In the html selector",
+                "In the * selector"
+            ],
+            "answer": "In the :root selector",
+            "explanation": ":root represents the highest-level element (the html element) and has higher specificity, making variables defined there available globally throughout the document."
+        },
+        {
+            "question": "How do you implement dark mode using CSS variables?",
+            "options": [
+                "Duplicate all CSS with different colour values",
+                "Use JavaScript to change all inline styles",
+                "Redefine variable values within a [data-theme='dark'] selector or prefers-color-scheme media query",
+                "Use the inverted CSS filter on the body"
+            ],
+            "answer": "Redefine variable values within a [data-theme='dark'] selector or prefers-color-scheme media query",
+            "explanation": "By redefining :root variables in a dark theme selector, all components that use those variables automatically update without any additional CSS changes."
+        },
+        {
+            "question": "What is the fallback syntax for var() when a variable might not be set?",
+            "options": [
+                "var(--color, fallback)",
+                "var(--color || fallback)",
+                "var(--color, 'fallback')",
+                "var(--color ?? fallback)"
+            ],
+            "answer": "var(--color, fallback)",
+            "explanation": "The second argument to var() is the fallback value, used when the custom property is not defined: var(--color-accent, #f43f5e)."
+        }
+    ]
+}

@@ -1,0 +1,173 @@
+<h1>Supabase Integration in React Native</h1>
+<p>Supabase is an open-source Firebase alternative — a fully managed Backend-as-a-Service (BaaS) that provides a PostgreSQL database, authentication, file storage, and real-time subscriptions out of the box. For mobile developers, Supabase dramatically accelerates backend development: instead of building and maintaining a Node.js API, you can read and write data directly from your React Native app using auto-generated APIs, while keeping your data secure with Row Level Security (RLS) policies.</p>
+
+<h2>Setup & Installation</h2>
+<pre><code>npm install @supabase/supabase-js
+npm install @react-native-async-storage/async-storage
+# Required for auth token persistence in React Native
+
+# Expo-specific URL polyfill
+npm install react-native-url-polyfill</code></pre>
+
+<pre><code>// src/lib/supabase.ts
+import 'react-native-url-polyfill/auto';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    // Use AsyncStorage so auth sessions persist between app restarts
+    storage: AsyncStorage,
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: false,  // Required for React Native (no window.location)
+  },
+});</code></pre>
+
+<h2>Authentication</h2>
+<pre><code>// Sign up with email + password
+const { data, error } = await supabase.auth.signUp({
+  email: 'user@example.com',
+  password: 'SecurePassword123!',
+  options: {
+    data: { firstName: 'Shailesh', lastName: 'Chaudhary' }
+  }
+});
+
+// Sign in
+const { data: session, error } = await supabase.auth.signInWithPassword({
+  email: 'user@example.com',
+  password: 'SecurePassword123!'
+});
+
+// Sign out
+await supabase.auth.signOut();
+
+// Listen to auth state changes (put this in your root component)
+useEffect(() => {
+  const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN') navigation.replace('Home');
+    if (event === 'SIGNED_OUT') navigation.replace('Login');
+  });
+  return () => listener.subscription.unsubscribe();
+}, []);</code></pre>
+
+<h2>Querying the Database</h2>
+<pre><code>// SELECT — fetch user's orders with related items
+const { data: orders, error } = await supabase
+  .from('orders')
+  .select(`
+    id,
+    created_at,
+    total,
+    status,
+    order_items (
+      id,
+      quantity,
+      products (name, image_url, price)
+    )
+  `)
+  .eq('user_id', session.user.id)
+  .order('created_at', { ascending: false })
+  .limit(20);
+
+// INSERT — create a new order
+const { data: newOrder, error } = await supabase
+  .from('orders')
+  .insert({
+    user_id: session.user.id,
+    total: 4999,
+    status: 'pending'
+  })
+  .select()   // Return the created row
+  .single();  // Unwrap from array
+
+// UPDATE — mark order as shipped
+const { error } = await supabase
+  .from('orders')
+  .update({ status: 'shipped', shipped_at: new Date().toISOString() })
+  .eq('id', orderId)
+  .eq('user_id', session.user.id);  // RLS double-check
+
+// DELETE
+const { error } = await supabase
+  .from('cart_items')
+  .delete()
+  .eq('id', cartItemId);</code></pre>
+
+<h2>Real-Time Subscriptions</h2>
+<pre><code>// Listen for new messages in a chat room (PostgreSQL NOTIFY → client push)
+useEffect(() => {
+  const subscription = supabase
+    .channel(`room-${roomId}`)
+    .on(
+      'postgres_changes',
+      {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'messages',
+        filter: `room_id=eq.${roomId}`,
+      },
+      (payload) => {
+        setMessages(prev => [...prev, payload.new as Message]);
+      }
+    )
+    .subscribe();
+
+  return () => { supabase.removeChannel(subscription); };
+}, [roomId]);</code></pre>
+
+<h2>File Storage</h2>
+<pre><code>import * as ImagePicker from 'expo-image-picker';
+
+const uploadAvatar = async () => {
+  const result = await ImagePicker.launchImageLibraryAsync({ quality: 0.7 });
+  if (result.canceled) return;
+
+  const asset = result.assets[0];
+  const fileName = `avatars/${session.user.id}-${Date.now()}.jpg`;
+
+  // Convert to ArrayBuffer for upload
+  const response = await fetch(asset.uri);
+  const blob = await response.blob();
+  const arrayBuffer = await blob.arrayBuffer();
+
+  const { error } = await supabase.storage
+    .from('user-uploads')
+    .upload(fileName, arrayBuffer, { contentType: 'image/jpeg', upsert: true });
+
+  if (!error) {
+    // Get a public URL for the uploaded file
+    const { data: { publicUrl } } = supabase.storage
+      .from('user-uploads')
+      .getPublicUrl(fileName);
+    
+    // Save the URL to the user's profile
+    await supabase.from('profiles').update({ avatar_url: publicUrl })
+      .eq('id', session.user.id);
+  }
+};</code></pre>
+
+<h2>Row Level Security (RLS) — The Key to Direct DB Access</h2>
+<p>RLS allows you to define policies in PostgreSQL that automatically enforce authorization rules on every query — no backend API layer needed for basic CRUD:</p>
+<pre><code>-- SQL policies run in Supabase SQL Editor
+-- Users can only see their own orders
+CREATE POLICY "Users can view own orders"
+  ON orders FOR SELECT
+  USING (auth.uid() = user_id);
+
+-- Users can only insert orders for themselves
+CREATE POLICY "Users can create own orders"
+  ON orders FOR INSERT
+  WITH CHECK (auth.uid() = user_id);</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always enable RLS on every table that contains user data — without it, any authenticated user can read all rows from any table.</li>
+  <li>Use the <code>EXPO_PUBLIC_SUPABASE_ANON_KEY</code> on the client — this key obeys RLS policies. Never put your service role key in the mobile app.</li>
+  <li>Use <code>supabase-js</code> v2's typed client by generating types from your schema: <code>supabase gen types typescript --project-id YOUR_ID > src/types/supabase.ts</code>.</li>
+  <li>For complex operations involving multiple tables, use Supabase Edge Functions (Deno) to keep business logic server-side and avoid race conditions.</li>
+</ul>

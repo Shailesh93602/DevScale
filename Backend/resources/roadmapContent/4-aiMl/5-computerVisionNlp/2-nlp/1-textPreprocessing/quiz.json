@@ -1,0 +1,118 @@
+{
+    "title": "Text Preprocessing Quiz",
+    "description": "Test your knowledge of text cleaning, tokenization strategies, and vectorization for NLP pipelines.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What does the '##' prefix mean in BERT's WordPiece tokenizer output (e.g., '##ness')?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The token is a stop word that should be ignored",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The token is a hashtag from social media text",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The token is a continuation subword — it follows directly from the previous token without a space",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The token has low TF-IDF weight and will be masked during training",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why does modern subword tokenization (BPE, WordPiece) solve a problem that word-level tokenization cannot?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Subword tokenization is much faster to compute",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It eliminates the out-of-vocabulary problem — any unseen word can be split into known subword pieces",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Subword tokenization removes stop words automatically",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It converts text to lowercase before splitting",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In TF-IDF, a word that appears in almost every document in the corpus will receive a high or low IDF score?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "High — very common words are the most important features",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Low — IDF penalizes words that appear in many documents because they carry little discriminative information",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Zero — TF-IDF does not score common words at all",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It depends on the term frequency in the specific document",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "When should you apply stop word removal (removing words like 'the', 'is', 'are')?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Always — stop words are never informative",
+                    "isCorrect": false
+                },
+                {
+                    "text": "For classical ML with bag-of-words or TF-IDF features; NOT for transformers, which need stop words for grammatical context",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Only when training data has fewer than 1000 documents",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Only for non-English languages",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does the `attention_mask` tensor returned by a Hugging Face tokenizer indicate?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Which words the model should focus on for the target task",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The importance weights assigned to each token by the self-attention mechanism",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A binary mask (1 for real tokens, 0 for padding tokens) that tells the model which positions to process and which to ignore",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The mask used by dropout regularization during training",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

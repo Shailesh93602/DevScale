@@ -1,0 +1,26 @@
+[
+  {
+    "input": "{\"Transactions\": [{\"id\": 121, \"country\": \"US\", \"state\": \"approved\", \"amount\": 1000, \"trans_date\": \"2018-12-18\"}, {\"id\": 122, \"country\": \"US\", \"state\": \"declined\", \"amount\": 2000, \"trans_date\": \"2018-12-19\"}, {\"id\": 123, \"country\": \"US\", \"state\": \"approved\", \"amount\": 2000, \"trans_date\": \"2019-01-01\"}, {\"id\": 124, \"country\": \"DE\", \"state\": \"approved\", \"amount\": 2000, \"trans_date\": \"2019-01-07\"}]}",
+    "output": "[{\"month\": \"2018-12\", \"country\": \"US\", \"trans_count\": 2, \"approved_count\": 1, \"trans_total_amount\": 3000, \"approved_total_amount\": 1000}, {\"month\": \"2019-01\", \"country\": \"US\", \"trans_count\": 1, \"approved_count\": 1, \"trans_total_amount\": 2000, \"approved_total_amount\": 2000}, {\"month\": \"2019-01\", \"country\": \"DE\", \"trans_count\": 1, \"approved_count\": 1, \"trans_total_amount\": 2000, \"approved_total_amount\": 2000}]",
+    "explanation": "US has 2 transactions in Dec 2018, 1 in Jan 2019. DE has 1 in Jan 2019.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Transactions\": [{\"id\": 1, \"country\": \"US\", \"state\": \"declined\", \"amount\": 500, \"trans_date\": \"2020-01-15\"}]}",
+    "output": "[{\"month\": \"2020-01\", \"country\": \"US\", \"trans_count\": 1, \"approved_count\": 0, \"trans_total_amount\": 500, \"approved_total_amount\": 0}]",
+    "explanation": "One declined transaction.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Transactions\": [{\"id\": 1, \"country\": \"US\", \"state\": \"approved\", \"amount\": 100, \"trans_date\": \"2020-01-01\"}, {\"id\": 2, \"country\": \"US\", \"state\": \"approved\", \"amount\": 200, \"trans_date\": \"2020-01-15\"}, {\"id\": 3, \"country\": \"US\", \"state\": \"declined\", \"amount\": 300, \"trans_date\": \"2020-01-20\"}]}",
+    "output": "[{\"month\": \"2020-01\", \"country\": \"US\", \"trans_count\": 3, \"approved_count\": 2, \"trans_total_amount\": 600, \"approved_total_amount\": 300}]",
+    "explanation": "3 transactions total, 2 approved (100+200=300), total amount 600.",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"Transactions\": [{\"id\": 1, \"country\": \"US\", \"state\": \"approved\", \"amount\": 100, \"trans_date\": \"2020-01-01\"}, {\"id\": 2, \"country\": \"UK\", \"state\": \"approved\", \"amount\": 200, \"trans_date\": \"2020-01-01\"}, {\"id\": 3, \"country\": \"US\", \"state\": \"approved\", \"amount\": 300, \"trans_date\": \"2020-02-01\"}]}",
+    "output": "[{\"month\": \"2020-01\", \"country\": \"US\", \"trans_count\": 1, \"approved_count\": 1, \"trans_total_amount\": 100, \"approved_total_amount\": 100}, {\"month\": \"2020-01\", \"country\": \"UK\", \"trans_count\": 1, \"approved_count\": 1, \"trans_total_amount\": 200, \"approved_total_amount\": 200}, {\"month\": \"2020-02\", \"country\": \"US\", \"trans_count\": 1, \"approved_count\": 1, \"trans_total_amount\": 300, \"approved_total_amount\": 300}]",
+    "explanation": "Multiple months and countries.",
+    "is_hidden": true
+  }
+]

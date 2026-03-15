@@ -1,0 +1,4 @@
+{
+    "name": "Regression & Classification Algorithms Deep Dive",
+    "description": "Deep understanding of fundamental supervised learning algorithms. Linear Regression with regularization (Ridge, Lasso, ElasticNet), Logistic Regression and the sigmoid function, how the bias-variance tradeoff manifests across different algorithms, and when to prefer simpler interpretable models over complex ones."
+}

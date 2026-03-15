@@ -1,0 +1,5 @@
+[
+  "Since rows are sorted and each row's first element > previous row's last element, the matrix is effectively one long sorted array.",
+  "You can treat the 2D matrix as a 1D sorted array of size m*n, and run a standard binary search.",
+  "Map a 1D index `mid` to 2D coordinates: `row = Math.floor(mid / n)`, `col = mid % n`."
+]

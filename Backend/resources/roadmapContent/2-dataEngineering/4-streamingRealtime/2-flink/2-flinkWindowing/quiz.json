@@ -1,0 +1,118 @@
+{
+    "title": "Flink Windowing & Watermarks Quiz",
+    "description": "Test your knowledge on Tumbling, Sliding, and Session windows, along with handling late data.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Which Flink window type is dynamic in size and closes only after a defined period of inactivity?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Tumbling Windows",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Sliding Windows",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Session Windows",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Global Windows",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What happens in a Flink Tumbling Window configuration where the size is 1 hour?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Windows are overlapping.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Each event belongs to exactly one non-overlapping window.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Each event belongs to multiple windows.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Windows expand dynamically.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the primary purpose of a Watermark in Flink streaming?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "To filter out duplicate events.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To promise Flink that no further events with an older timestamp will arrive, allowing the window to close.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "To force a snapshot (Checkpoint) of the internal RocksDB state.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To synchronize data between JobManagers and TaskManagers.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "If a Watermark threshold is reached and a window computes and outputs its result, what does Flink do if it receives a 'Allowed Lateness' configuration?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It throws an Error and forces a JobManager restart.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It stores the late data in a Zookeeper queue.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It fires the window logic again, emitting an updated result for that window.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It completely ignores the late data.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is a 'Side Output' in Flink windowing logic used for?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Replicating data for High Availability.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Separating metrics and telemetry into a different Kafka topic.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Routing events that are later than the Allowed Lateness into a dead-letter stream rather than dropping them.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Splitting a single stream into batch files on S3.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

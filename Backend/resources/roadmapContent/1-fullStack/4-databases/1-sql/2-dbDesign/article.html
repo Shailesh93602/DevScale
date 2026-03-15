@@ -1,0 +1,52 @@
+<h1>Database Design & Normalization</h1>
+<p>Good database design prevents data anomalies, reduces redundancy, and ensures data integrity. Normalization is the systematic process of achieving this.</p>
+
+<h2>Relationships</h2>
+<pre><code>-- One-to-Many: one user has many posts
+users (id, name, email)
+posts (id, user_id REFERENCES users(id), title, content)
+
+-- Many-to-Many: posts can have many tags; tags apply to many posts
+posts        (id, title)
+tags         (id, name)
+post_tags    (post_id, tag_id, PRIMARY KEY (post_id, tag_id)) -- junction table
+
+-- One-to-One: user has one profile
+users    (id, email)
+profiles (user_id REFERENCES users(id) UNIQUE, bio, avatar_url)</code></pre>
+
+<h2>Primary Keys & Foreign Keys</h2>
+<pre><code>CREATE TABLE orders (
+  id         UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id    INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  status     VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending','paid','shipped')),
+  total      DECIMAL(10,2) NOT NULL CHECK (total &gt; 0),
+  created_at TIMESTAMP DEFAULT NOW()
+);</code></pre>
+
+<h2>Normalization Forms</h2>
+<ul>
+  <li><strong>1NF</strong> — Each column holds atomic values; no repeating groups. ✅ Store tags in a separate table, not a comma-separated string.</li>
+  <li><strong>2NF</strong> — Every non-key column depends on the ENTIRE primary key (no partial dependencies).</li>
+  <li><strong>3NF</strong> — No transitive dependencies — non-key columns depend only on the primary key.</li>
+</ul>
+<pre><code>-- ❌ Un-normalized (3NF violation): city determines country — remove country, store it via a cities table
+users (id, name, city, country)
+
+-- ✅ Normalized
+users  (id, name, city_id)
+cities (id, name, country_id)
+countries (id, name)</code></pre>
+
+<h2>Indexing Strategy</h2>
+<pre><code>-- Index columns used in WHERE, JOIN ON, and ORDER BY
+-- Foreign keys (Postgres doesn't auto-index FKs!)
+CREATE INDEX idx_posts_user_id  ON posts(user_id);
+CREATE INDEX idx_orders_status  ON orders(status) WHERE status = 'pending'; -- Partial index
+
+-- Composite index — column ORDER matters!
+-- Useful for: WHERE user_id = ? + ORDER BY created_at DESC
+CREATE INDEX idx_posts_user_created ON posts(user_id, created_at DESC);</code></pre>
+
+<h2>When NOT to Normalize</h2>
+<p>For read-heavy analytics or OLAP workloads, <strong>denormalization</strong> (intentional redundancy) can dramatically improve query performance by reducing expensive joins. Always profile before optimizing.</p>

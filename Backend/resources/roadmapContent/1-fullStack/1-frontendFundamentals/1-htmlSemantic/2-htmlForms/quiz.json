@@ -1,0 +1,96 @@
+{
+    "title": "HTML Forms Quiz",
+    "description": "Test your understanding of form elements, input types, and validation attributes.",
+    "passingScore": 80,
+    "timeLimit": 8,
+    "questions": [
+        {
+            "question": "Which attribute forces the user to fill an input before submitting?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "validate",
+                    "isCorrect": false
+                },
+                {
+                    "text": "mandatory",
+                    "isCorrect": false
+                },
+                {
+                    "text": "required",
+                    "isCorrect": true
+                },
+                {
+                    "text": "important",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which input type automatically validates email format in the browser?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "type=\"text\"",
+                    "isCorrect": false
+                },
+                {
+                    "text": "type=\"email\"",
+                    "isCorrect": true
+                },
+                {
+                    "text": "type=\"username\"",
+                    "isCorrect": false
+                },
+                {
+                    "text": "type=\"input\"",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the purpose of the <label> element's \"for\" attribute?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "To style the label with CSS",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To associate the label with an input by matching the input's id",
+                    "isCorrect": true
+                },
+                {
+                    "text": "To set the form action URL",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To group multiple inputs",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which HTTP method should you use for submitting sensitive form data like passwords?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "GET",
+                    "isCorrect": false
+                },
+                {
+                    "text": "POST",
+                    "isCorrect": true
+                },
+                {
+                    "text": "PUT",
+                    "isCorrect": false
+                },
+                {
+                    "text": "PATCH",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

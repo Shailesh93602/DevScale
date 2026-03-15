@@ -1,0 +1,12 @@
+[
+  { "input": "{\"nums\":[2,0,2,1,1,0]}", "output": "[0,0,1,1,2,2]", "explanation": "Standard case", "is_hidden": false },
+  { "input": "{\"nums\":[2,0,1]}", "output": "[0,1,2]", "explanation": "One of each", "is_hidden": false },
+  { "input": "{\"nums\":[0]}", "output": "[0]", "explanation": "Single element", "is_hidden": true },
+  { "input": "{\"nums\":[1,1,1,1]}", "output": "[1,1,1,1]", "explanation": "All identical elements", "is_hidden": true },
+  { "input": "{\"nums\":[2,2,2,0,0,0]}", "output": "[0,0,0,2,2,2]", "explanation": "Only 0s and 2s", "is_hidden": true },
+  { "input": "{\"nums\":[1,2,0]}", "output": "[0,1,2]", "explanation": "Reverse order", "is_hidden": true },
+  { "input": "{\"nums\":[0,1,2,0,1,2,0,1,2]}", "output": "[0,0,0,1,1,1,2,2,2]", "explanation": "Repeating sequence", "is_hidden": true },
+  { "input": "{\"nums\":[2,1,0,2,1,0]}", "output": "[0,0,1,1,2,2]", "explanation": "Decreasing order", "is_hidden": true },
+  { "input": "{\"nums\":[0,0,1,1,2,2]}", "output": "[0,0,1,1,2,2]", "explanation": "Already sorted", "is_hidden": true },
+  { "input": "{\"nums\":[1,0]}", "output": "[0,1]", "explanation": "Just two elements out of order", "is_hidden": true }
+]

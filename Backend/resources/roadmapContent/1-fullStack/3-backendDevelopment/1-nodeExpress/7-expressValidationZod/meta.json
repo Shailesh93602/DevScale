@@ -1,0 +1,4 @@
+{
+    "name": "Request Validation with Zod",
+    "description": "Validating incoming Express requests (body, params, queries) strictly using Zod schemas to ensure type safety and prevent malformed data from reaching controllers."
+}

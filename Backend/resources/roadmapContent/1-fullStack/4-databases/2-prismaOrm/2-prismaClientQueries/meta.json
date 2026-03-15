@@ -1,0 +1,4 @@
+{
+    "name": "Prisma Client & Queries",
+    "description": "Mastering database interactions. Utilizing the fully typed Prisma Client to execute complex CRUD operations, filter data using nested inputs, and structure payloads with Select and Include."
+}

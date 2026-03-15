@@ -1,0 +1,4 @@
+{
+    "name": "Detox E2E Testing & CI Integration",
+    "description": "Automating end-to-end testing for React Native apps. Writing Detox test scenarios that run on real simulators and devices, setting up descriptor matchers (by testID, text, type), testing navigation flows, mocking network requests in Detox, integrating Detox tests into a CI pipeline (GitHub Actions), and comparing Detox vs Maestro for E2E testing workflows."
+}

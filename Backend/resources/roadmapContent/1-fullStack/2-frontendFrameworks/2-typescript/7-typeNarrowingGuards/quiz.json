@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is type narrowing in TypeScript?",
+            "options": [
+                "Reducing the memory footprint of a variable",
+                "The process of refining a broad type (like a union) into a more specific type using JavaScript control flow",
+                "Converting a TypeScript interface into a JavaScript object",
+                "Using the 'as' keyword to assert a type"
+            ],
+            "answer": "The process of refining a broad type (like a union) into a more specific type using JavaScript control flow",
+            "explanation": "TypeScript watches JavaScript control flow (if/else, switch, typeof) to automatically narrow a variable's type, allowing you to safely call methods specific to that narrower type."
+        },
+        {
+            "question": "What is the return type signature required to create a Custom Type Predicate function?",
+            "options": [
+                "returns boolean",
+                "yields Type",
+                "variableName is Type",
+                "asserts variableName"
+            ],
+            "answer": "variableName is Type",
+            "explanation": "Functions returning 'argName is Type' (e.g., 'function isString(val: any): val is string') act as type guards. If the function returns true, TypeScript narrows 'val' to 'string' in the calling context."
+        },
+        {
+            "question": "Why is 'unknown' safer than 'any'?",
+            "options": [
+                "'unknown' automatically converts strings to numbers",
+                "'unknown' requires you to mathematically prove the type",
+                "'unknown' forces you to perform type checking (narrowing) before you can access properties or call methods on the variable",
+                "'unknown' is resolved at compile time, while 'any' is resolved at runtime"
+            ],
+            "answer": "'unknown' forces you to perform type checking (narrowing) before you can access properties or call methods on the variable",
+            "explanation": "'any' turns off the type checker entirely. 'unknown' means the type isn't known yet, so TypeScript forbids performing operations on it until you use typeof, instanceof, or custom guards to narrow it."
+        },
+        {
+            "question": "How is the 'never' type used for Exhaustiveness Checking in switch statements?",
+            "options": [
+                "It prevents the switch statement from executing",
+                "Assigning a variable to a 'never' type in the default block causes a compile error if there are unhandled cases in a union",
+                "It breaks out of infinite loops automatically",
+                "It replaces the need for break statements"
+            ],
+            "answer": "Assigning a variable to a 'never' type in the default block causes a compile error if there are unhandled cases in a union",
+            "explanation": "If all union cases are handled, the variable's type falls to 'never' in the default block, which is valid. If a new case is added to the union later but missed in the switch, the type in 'default' will be the missed case, causing a compile error when assigned to 'never'."
+        },
+        {
+            "question": "What does an Assertion Function do?",
+            "options": [
+                "It returns a boolean indicating if an assertion passed",
+                "It throws an error if a condition is false, letting TypeScript assume the condition is true for all code following the function call",
+                "It asserts that a variable is equal to another variable",
+                "It halts the TypeScript compiler"
+            ],
+            "answer": "It throws an error if a condition is false, letting TypeScript assume the condition is true for all code following the function call",
+            "explanation": "Using the 'asserts condition' signature, assertion functions (like NodeJS's assert) throw runtime errors when they fail. TypeScript uses this control flow logic to narrow types without requiring wrapping code in an 'if' block."
+        }
+    ]
+}

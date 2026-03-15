@@ -1,0 +1,76 @@
+<h1>Structural Design Patterns</h1>
+<p>Structural patterns explain how to assemble objects and classes into larger, more complex structures, while keeping these structures completely flexible and efficient.</p>
+
+<h2>1. The Adapter Pattern</h2>
+<p>The Adapter pattern allows objects with incompatible interfaces to successfully collaborate. It acts as a wrapper between an existing class and a newly required interface.</p>
+<p>For example, imagine you have a legacy system that expects data in XML format, but your modern API only provides data in JSON.</p>
+<pre><code>// The modern API providing JSON data
+class ModernApi {
+  public getJsonData(): string {
+    return '{"user": "John", "age": 30}';
+  }
+}
+
+// The legacy system that explicitly requires XML
+interface LegacySystem {
+  processXmlData(xml: string): void;
+}
+
+// The Adapter wrapper smoothly translates between the two incompatible systems
+class JsonToXmlAdapter implements LegacySystem {
+  private api: ModernApi;
+
+  constructor(api: ModernApi) {
+    this.api = api;
+  }
+
+  public processXmlData(): void {
+    const json = this.api.getJsonData();
+    // Complex mathematical conversion logic happens here...
+    const xml = `&lt;user&gt;John&lt;/user&gt;&lt;age&gt;30&lt;/age&gt;`;
+    
+    console.log("Safely processing adapted XML data:", xml);
+  }
+}
+
+const api = new ModernApi();
+const adapter = new JsonToXmlAdapter(api);
+adapter.processXmlData(); // Successfully executes dynamically!
+</code></pre>
+
+<h2>2. The Decorator Pattern</h2>
+<p>The Decorator pattern lets you mathematically attach new behaviors or responsibilities to individual objects dynamically at runtime, without explicitly altering their actual code or completely rewriting the entire class hierarchy.</p>
+<pre><code>interface Notifier { send(message: string): void; }
+
+// The Concrete Component
+class BasicEmailNotifier implements Notifier {
+  send(message: string) { console.log(`Sending email: ${message}`); }
+}
+
+// The Base Decorator safely holding a reference to the wrapped object
+class NotifierDecorator implements Notifier {
+  protected wrappee: Notifier;
+  constructor(notifier: Notifier) { this.wrappee = notifier; }
+  send(message: string) { this.wrappee.send(message); }
+}
+
+// A Concrete Decorator successfully adding SMS functionality dynamically
+class SmsDecorator extends NotifierDecorator {
+  send(message: string) {
+    super.send(message);
+    console.log(`Sending SMS fallback safely: ${message}`);
+  }
+}
+
+// Usage: Dynamically layering behaviors
+let notifier = new BasicEmailNotifier();
+notifier = new SmsDecorator(notifier);
+
+// This cleanly securely triggers BOTH the Email and the SMS perfectly
+notifier.send("Server down!"); 
+</code></pre>
+
+<h2>3. The Facade Pattern</h2>
+<p>The Facade Pattern completely shields client code from the terrifying complexities of a massive, heavily nested subsystem by providing a single, simplified, high-level interface.</p>
+<p>Instead of manually calling highly complex classes for Video Formatting, Rendering, Codec Extraction, and Audio Syncing, you strictly build a simplified `VideoConverterFacade` wrapper class that cleanly completely hides all those complex methods.</p>
+<p>You then simply call `facade.convertFile("myvideo.mp4")`, and the Facade expertly coordinates the vast underlying complexity smoothly securely on your behalf.</p>

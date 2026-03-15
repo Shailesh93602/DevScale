@@ -1,0 +1,4 @@
+{
+    "name": "Authentication & Security",
+    "description": "JWT auth, session management, password hashing, and API security best practices."
+}

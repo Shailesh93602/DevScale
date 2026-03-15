@@ -1,0 +1,74 @@
+{
+    "title": "CSS Animations Quiz",
+    "description": "Test your knowledge of CSS transitions, keyframes, and animation performance.",
+    "passingScore": 80,
+    "timeLimit": 8,
+    "questions": [
+        {
+            "question": "Which CSS properties should you prefer animating for the best performance?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "width and height",
+                    "isCorrect": false
+                },
+                {
+                    "text": "margin and padding",
+                    "isCorrect": false
+                },
+                {
+                    "text": "transform and opacity",
+                    "isCorrect": true
+                },
+                {
+                    "text": "color and background-color",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What CSS rule defines named keyframe-based animations?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "@transition",
+                    "isCorrect": false
+                },
+                {
+                    "text": "@animate",
+                    "isCorrect": false
+                },
+                {
+                    "text": "@keyframes",
+                    "isCorrect": true
+                },
+                {
+                    "text": "@motion",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does animation-fill-mode: forwards do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Plays the animation in reverse",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Keeps the element in its final animated state after the animation finishes",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Makes the animation play forwards then backwards",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Sets the animation to run only once",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

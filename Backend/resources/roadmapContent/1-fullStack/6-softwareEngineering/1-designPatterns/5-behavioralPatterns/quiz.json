@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What core web architecture pattern fundamentally relies exclusively on the Observer Design Pattern?",
+            "options": [
+                "React Component State and Pub/Sub Event Systems",
+                "Linear Regression Algorithms",
+                "PostgreSQL Table Schemas",
+                "HTML Semantic Tags"
+            ],
+            "answer": "React Component State and Pub/Sub Event Systems",
+            "explanation": "When React state changes, it automatically notifies all dependent UI components to re-render. A WeatherStation's `setTemp()` function loops through all attached displays and triggers their `update()` methods."
+        },
+        {
+            "question": "What is the primary code-smell that the Strategy Pattern perfectly eliminates?",
+            "options": [
+                "Memory leaks in global variables.",
+                "Massive, deeply nested `if-else` or `switch` statements containing wildly different business logic branches.",
+                "Private static instances.",
+                "Method Chaining loops."
+            ],
+            "answer": "Massive, deeply nested `if-else` or `switch` statements containing wildly different business logic branches.",
+            "explanation": "If your Shopping Cart has a 500-line switch statement handling CreditCards vs PayPal vs Apple Pay, the Strategy Pattern cleanly extracts each algorithm into its own isolated class, making them interchangeable at runtime."
+        },
+        {
+            "question": "What advanced system functionality does the Command Pattern gracefully enable by encapsulating method calls into isolated objects?",
+            "options": [
+                "Automatic Database indexing.",
+                "Task Queueing and robust Undo/Redo stacks.",
+                "Global DOM manipulation.",
+                "CSS specific animations."
+            ],
+            "answer": "Task Queueing and robust Undo/Redo stacks.",
+            "explanation": "By storing commands in an Array Stack before executing them, you can pop the last command off the stack and run its dedicated `undo()` method effortlessly."
+        }
+    ]
+}

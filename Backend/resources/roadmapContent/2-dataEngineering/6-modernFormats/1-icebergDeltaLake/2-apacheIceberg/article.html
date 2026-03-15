@@ -1,0 +1,39 @@
+<h1>Apache Iceberg: ACID on Data Lakes</h1>
+<p>Before open table formats like Apache Iceberg existed, updating data in a Data Lake was a nightmare. If you wanted to delete all records for a specific user from a collection of Parquet files on S3 (for GDPR compliance), you had to:</p>
+<ol>
+  <li>Read the entire massive Parquet file into Spark.</li>
+  <li>Filter out the user's records in memory.</li>
+  <li>Rewrite the entire file back to S3.</li>
+  <li>Hope that no other job was reading the file while you were overwriting it (there was no locking mechanism).</li>
+</ol>
+<p>Apache Iceberg solved all of this by introducing a metadata layer on top of standard Parquet files that brings full <strong>ACID transaction guarantees</strong> to the Data Lake.</p>
+
+<h2>The Iceberg Metadata Layer</h2>
+<p>An Iceberg Table is not just a folder of Parquet files. It's a structured hierarchy of metadata files:</p>
+<ul>
+  <li><strong>Metadata Files:</strong> JSON files describing the current table schema, partition specifications, and pointers to Snapshot files.</li>
+  <li><strong>Snapshot files (Manifest Lists):</strong> Each snapshot represents the table's state at a specific point in time. When you INSERT or DELETE rows, Iceberg creates a new snapshot rather than modifying existing files.</li>
+  <li><strong>Manifest Files:</strong> Track which specific Parquet data files belong to a given snapshot, along with column-level statistics for each file.</li>
+</ul>
+
+<h2>ACID Transactions & Schema Evolution</h2>
+<p>Because Iceberg manages snapshots immutably, it can provide ACID guarantees natively:</p>
+<ul>
+  <li><strong>Atomicity:</strong> An INSERT of 1 million rows either fully succeeds (creating a new snapshot) or fully fails. There is no partial write visible to concurrent readers.</li>
+  <li><strong>Isolation:</strong> A Spark job reading the table will read a consistent snapshot even while another Spark job is simultaneously writing new data.</li>
+</ul>
+<p>Iceberg also handles <strong>Safe Schema Evolution</strong>. You can add a new column, rename an existing column, or drop a column without rewriting any Parquet files. Iceberg's metadata layer handles the mapping transparently.</p>
+
+<h2>Time Travel Queries</h2>
+<pre><code class="language-sql">-- Query the table exactly as it appeared at a specific timestamp
+SELECT * FROM analytics.user_events
+  TIMESTAMP AS OF '2024-01-15 00:00:00';
+
+-- Query a specific historical snapshot by snapshot ID
+SELECT * FROM analytics.user_events
+  FOR VERSION AS OF 8483296678498373637;
+</code></pre>
+<p>Because old snapshots are preserved, Time Travel allows you to instantly recover from accidental deletes, run reproducible historical analyses, and debug data quality issues by comparing the table at different points in time.</p>
+
+<h2>Hidden Partitioning</h2>
+<p>In traditional Hive-style partitioning, users must manually specify partition columns in every query: <code>WHERE dt='2024-01-15'</code>. Iceberg's <strong>Hidden Partitioning</strong> automatically applies partition filters based on query predicates, meaning users just write <code>WHERE event_time BETWEEN '...' AND '...'</code> and Iceberg silently prunes irrelevant partitions without the user needing to know the underlying partition scheme.</p>

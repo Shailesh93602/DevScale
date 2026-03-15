@@ -1,0 +1,6 @@
+[
+  "You need to calculate the total revenue for each customer across all years.",
+  "Use GROUP BY customer_id with SUM(revenue) to get each customer's total.",
+  "Filter for positive totals using HAVING SUM(revenue) > 0.",
+  "Remember: HAVING filters after GROUP BY, while WHERE filters before."
+]

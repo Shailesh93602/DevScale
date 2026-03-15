@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "A suspicious DeleteBucket API call appears in CloudTrail logs. The sourceIPAddress is an unfamiliar IP in a foreign country, and the bucketName is 'production-backups'. What is the correct first action?",
+            "options": [
+                "Delete the IAM user immediately and recreate everything.",
+                "Immediately deactivate (not delete) the specific Access Key used for this call to stop further damage. Preserve the key metadata for forensic investigation, then query CloudTrail for all actions taken by this key in the past 30 days to assess the full blast radius before taking further action.",
+                "Restore the deleted bucket from a backup and consider the incident resolved.",
+                "Change the root account password and enable MFA on all IAM accounts."
+            ],
+            "answer": "Immediately deactivate (not delete) the specific Access Key used for this call to stop further damage. Preserve the key metadata for forensic investigation, then query CloudTrail for all actions taken by this key in the past 30 days to assess the full blast radius before taking further action.",
+            "explanation": "Deleting the access key would destroy forensic evidence. Deactivating it stops the attacker immediately while preserving the key ID needed to query CloudTrail for all related API calls. Knowing the blast radius (what else did they access?) is critical before notifying affected parties."
+        },
+        {
+            "question": "What specific feature of AWS CloudTrail's S3 storage with Object Lock (WORM) makes it meet compliance audit requirements that standard S3 storage cannot?",
+            "options": [
+                "Object Lock compresses log files to reduce storage costs by 80%.",
+                "Object Lock (Write Once, Read Many) prevents log files from being modified or deleted for a specified retention period — even by the AWS root account. This ensures the audit trail is tamper-proof and cannot be retroactively altered after a security incident, which is required by SOC2, PCI-DSS, and ISO 27001.",
+                "Object Lock enables faster Athena queries against CloudTrail logs.",
+                "Object Lock encrypts logs with a customer-managed KMS key."
+            ],
+            "answer": "Object Lock (Write Once, Read Many) prevents log files from being modified or deleted for a specified retention period — even by the AWS root account. This ensures the audit trail is tamper-proof and cannot be retroactively altered after a security incident, which is required by SOC2, PCI-DSS, and ISO 27001.",
+            "explanation": "In a breach scenario, an attacker who gains root AWS access might try to delete CloudTrail logs to cover their tracks. Object Lock in Compliance mode (not Governance mode) prevents deletion by anyone — including root — for the configured period."
+        },
+        {
+            "question": "Why does a 'blameless post-incident review' produce better security outcomes than an approach that identifies and punishes the engineer who caused an incident?",
+            "options": [
+                "Blameless reviews are faster because they skip the investigation phase.",
+                "When incidents lead to blame and punishment, engineers hide mistakes, avoid reporting near-misses, and don't propose improvements out of self-protection. Blameless reviews assume engineers acted reasonably given what they knew — the goal is to find systemic gaps (missing tooling, unclear processes, inadequate monitoring) that allowed the incident to happen, and fix those gaps.",
+                "A blameless approach satisfies GDPR requirements for personal data breach handling.",
+                "Blameless reviews eliminate the need for runbooks by treating each incident uniquely."
+            ],
+            "answer": "When incidents lead to blame and punishment, engineers hide mistakes, avoid reporting near-misses, and don't propose improvements out of self-protection. Blameless reviews assume engineers acted reasonably given what they knew — the goal is to find systemic gaps (missing tooling, unclear processes, inadequate monitoring) that allowed the incident to happen, and fix those gaps.",
+            "explanation": "Google SRE research found that organizations with blameless culture resolve incidents faster, produce more action items per review, and have lower recurrence rates for the same incident type. Fear prevents the honest reporting needed to improve."
+        }
+    ]
+}

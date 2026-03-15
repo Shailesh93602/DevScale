@@ -1,0 +1,6 @@
+[
+  "Unlike the maximum subarray sum problem, a negative number here could be very useful if it's multiplied by another negative number later on.",
+  "Because of negative numbers, you need to keep track of both the maximum product so far AND the minimum (most negative) product so far.",
+  "When you encounter a negative number, the maximum product ending at that position could come from the minimum product ending at the previous position multiplied by this negative number.",
+  "You can swap the max and min when the current number is negative, then compute the new max and min using `Math.max(nums[i], max * nums[i])`."
+]

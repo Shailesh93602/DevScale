@@ -1,0 +1,4 @@
+{
+    "name": "Partitions and Consumer Groups",
+    "description": "Understanding how Kafka scales horizontally. Deep dive into topic partitioning mathematically, offsets securely, and how Consumer Groups share workloads without data duplication."
+}

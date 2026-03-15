@@ -1,0 +1,12 @@
+[
+  { "input": "{\"head\":[1,2,3,4,5],\"left\":2,\"right\":4}", "output": "[1,4,3,2,5]", "explanation": "Reverse middle portion", "is_hidden": false },
+  { "input": "{\"head\":[5],\"left\":1,\"right\":1}", "output": "[5]", "explanation": "Single node, left=right", "is_hidden": false },
+  { "input": "{\"head\":[1,2,3,4,5],\"left\":1,\"right\":5}", "output": "[5,4,3,2,1]", "explanation": "Reverse entire list", "is_hidden": false },
+  { "input": "{\"head\":[1,2,3,4,5],\"left\":1,\"right\":1}", "output": "[1,2,3,4,5]", "explanation": "Left equals right, no change", "is_hidden": true },
+  { "input": "{\"head\":[1,2,3,4,5],\"left\":1,\"right\":3}", "output": "[3,2,1,4,5]", "explanation": "Reverse from the start", "is_hidden": true },
+  { "input": "{\"head\":[1,2,3,4,5],\"left\":3,\"right\":5}", "output": "[1,2,5,4,3]", "explanation": "Reverse at the end", "is_hidden": true },
+  { "input": "{\"head\":[1,2],\"left\":1,\"right\":2}", "output": "[2,1]", "explanation": "Two nodes, reverse both", "is_hidden": true },
+  { "input": "{\"head\":[3,5],\"left\":1,\"right\":2}", "output": "[5,3]", "explanation": "Two nodes, reverse both", "is_hidden": true },
+  { "input": "{\"head\":[1,2,3,4,5,6,7,8],\"left\":3,\"right\":6}", "output": "[1,2,6,5,4,3,7,8]", "explanation": "Reverse middle section in longer list", "is_hidden": true },
+  { "input": "{\"head\":[-1,-2,-3,-4,-5],\"left\":2,\"right\":4}", "output": "[-1,-4,-3,-2,-5]", "explanation": "Negative values", "is_hidden": true }
+]

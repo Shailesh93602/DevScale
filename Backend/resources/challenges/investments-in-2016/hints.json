@@ -1,0 +1,6 @@
+[
+  "You need two conditions: shared tiv_2015 AND unique location.",
+  "For condition 1: find tiv_2015 values that appear more than once using GROUP BY + HAVING COUNT(*) > 1.",
+  "For condition 2: find (lat, lon) pairs that appear exactly once using GROUP BY + HAVING COUNT(*) = 1.",
+  "Combine both conditions with AND and sum the tiv_2016 values."
+]

@@ -1,0 +1,1 @@
+["Use a HashMap to map original nodes to their clones. This prevents infinite loops with cycles.", "Use DFS or BFS. When you visit a node, if it's already in the HashMap, just return its clone (don't recurse again).", "For each unvisited neighbor, recursively clone it and add to the current clone's neighbors list."]

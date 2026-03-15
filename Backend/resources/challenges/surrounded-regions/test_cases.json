@@ -1,0 +1,10 @@
+[
+  {"input":"{\"board\":[[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"O\",\"O\",\"X\"],[\"X\",\"X\",\"O\",\"X\"],[\"X\",\"O\",\"X\",\"X\"]]}","output":"[[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"O\",\"X\",\"X\"]]","explanation":"Standard example","is_hidden":false},
+  {"input":"{\"board\":[[\"X\"]]}","output":"[[\"X\"]]","explanation":"Single 'X'","is_hidden":false},
+  {"input":"{\"board\":[[\"O\"]]}","output":"[[\"O\"]]","explanation":"Single 'O' is on border","is_hidden":false},
+  {"input":"{\"board\":[[\"X\",\"X\",\"X\"],[\"X\",\"O\",\"X\"],[\"X\",\"X\",\"X\"]]}","output":"[[\"X\",\"X\",\"X\"],[\"X\",\"X\",\"X\"],[\"X\",\"X\",\"X\"]]","explanation":"Perfectly surrounded O","is_hidden":true},
+  {"input":"{\"board\":[[\"O\",\"O\",\"O\"],[\"O\",\"O\",\"O\"],[\"O\",\"O\",\"O\"]]}","output":"[[\"O\",\"O\",\"O\"],[\"O\",\"O\",\"O\"],[\"O\",\"O\",\"O\"]]","explanation":"All 'O's, none surrounded","is_hidden":true},
+  {"input":"{\"board\":[[\"O\",\"X\",\"X\"],[\"X\",\"O\",\"X\"],[\"X\",\"X\",\"O\"]]}","output":"[[\"O\",\"X\",\"X\"],[\"X\",\"X\",\"X\"],[\"X\",\"X\",\"O\"]]","explanation":"Diagonal O's","is_hidden":true},
+  {"input":"{\"board\":[[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"O\",\"X\",\"X\"],[\"X\",\"O\",\"O\",\"X\"],[\"X\",\"O\",\"X\",\"X\"],[\"X\",\"X\",\"X\",\"X\"]]}","output":"[[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"X\",\"X\",\"X\"]]","explanation":"Large surrounded region","is_hidden":true},
+  {"input":"{\"board\":[[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"O\",\"X\",\"X\"],[\"X\",\"O\",\"O\",\"X\"],[\"O\",\"O\",\"X\",\"X\"],[\"X\",\"X\",\"X\",\"X\"]]}","output":"[[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"O\",\"X\",\"X\"],[\"X\",\"O\",\"O\",\"X\"],[\"O\",\"O\",\"X\",\"X\"],[\"X\",\"X\",\"X\",\"X\"]]","explanation":"O touches border","is_hidden":true}
+]

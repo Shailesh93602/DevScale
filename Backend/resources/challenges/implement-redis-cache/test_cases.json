@@ -1,0 +1,62 @@
+[
+  {
+    "input": "SET 'user:1' {\"name\":\"Alice\"} TTL=300; GET 'user:1'",
+    "output": "{\"name\":\"Alice\"}",
+    "explanation": "Basic set and get operation returns the stored value. Cache HIT.",
+    "is_hidden": false
+  },
+  {
+    "input": "GET 'nonexistent-key'",
+    "output": "null",
+    "explanation": "Getting a non-existent key returns null. Cache MISS.",
+    "is_hidden": false
+  },
+  {
+    "input": "SET 'temp' 'data' TTL=1; WAIT 2s; GET 'temp'",
+    "output": "null",
+    "explanation": "After TTL expires, the key is no longer available and returns null.",
+    "is_hidden": false
+  },
+  {
+    "input": "getOrSet('user:1', fetchFromDB, 300) called twice",
+    "output": "First call: DB fetch + cache SET. Second call: cache HIT, no DB call.",
+    "explanation": "Cache-aside pattern fetches from DB on miss and serves from cache on subsequent requests.",
+    "is_hidden": false
+  },
+  {
+    "input": "SET 'user:1:profile' {...}; SET 'user:1:posts' [...]; SET 'user:2:profile' {...}; invalidatePattern('user:1:*')",
+    "output": "2 keys deleted",
+    "explanation": "Pattern invalidation deletes all matching keys (user:1:profile and user:1:posts) but not user:2:profile.",
+    "is_hidden": false
+  },
+  {
+    "input": "Fill cache to maxSize (10000 entries); SET new key",
+    "output": "New key stored, oldest accessed key evicted",
+    "explanation": "LRU eviction removes the least recently accessed entry when cache is full.",
+    "is_hidden": true
+  },
+  {
+    "input": "100 concurrent getOrSet calls for same expired key",
+    "output": "Only 1 DB fetch occurs, all 100 requests get the same result",
+    "explanation": "Cache stampede prevention ensures only one request fetches from the source. Others wait for the same promise.",
+    "is_hidden": true
+  },
+  {
+    "input": "mget(['key1', 'key2', 'key3']) where key2 does not exist",
+    "output": "[value1, null, value3]",
+    "explanation": "Multi-get returns an array with values for existing keys and null for missing keys.",
+    "is_hidden": true
+  },
+  {
+    "input": "Multiple operations then getStats()",
+    "output": "{\"hits\": 5, \"misses\": 3, \"evictions\": 0, \"size\": 8, \"hitRate\": 0.625}",
+    "explanation": "Statistics accurately track cache hits, misses, and compute hit rate.",
+    "is_hidden": true
+  },
+  {
+    "input": "SET key with value > 1MB",
+    "output": "Error: Value exceeds maximum size of 1MB",
+    "explanation": "Values exceeding the size limit are rejected with an appropriate error.",
+    "is_hidden": true
+  }
+]

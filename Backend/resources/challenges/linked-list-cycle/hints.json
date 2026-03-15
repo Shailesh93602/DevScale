@@ -1,0 +1,6 @@
+[
+  "The simplest way is to use a Hash Set. As you iterate through the list, add each node to the set. If you ever encounter a node that is already in the set, there's a cycle.",
+  "Using a Hash Set takes O(N) space. Can you do it in O(1) space?",
+  "Imagine two runners on a track. One is running fast and one is running slow. If the track is a straight line, the fast runner will finish first. If the track is a circle, passing the finish line means you just keep running... and eventually, the fast runner will lap the slow runner!",
+  "Use a 'slow' pointer that moves 1 step at a time, and a 'fast' pointer that moves 2 steps at a time. If they ever point to the same node, there is a cycle."
+]

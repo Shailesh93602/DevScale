@@ -1,0 +1,6 @@
+[
+  "This is a 'next greater element' problem. Consider using a stack.",
+  "Maintain a stack of indices where temperatures are in decreasing order.",
+  "When you encounter a temperature warmer than the stack's top, pop and record the distance.",
+  "Each index is pushed and popped at most once, giving O(n) time complexity."
+]

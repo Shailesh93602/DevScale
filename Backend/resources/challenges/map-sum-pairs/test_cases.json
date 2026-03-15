@@ -1,0 +1,7 @@
+[
+  {"input":"{\"commands\":[\"MapSum\",\"insert\",\"sum\",\"insert\",\"sum\"], \"args\":[[],[\"apple\",3],[\"ap\"],[\"app\",2],[\"ap\"]]}","output":"[null,null,3,null,5]","explanation":"Basic apple test","is_hidden":false},
+  {"input":"{\"commands\":[\"MapSum\",\"insert\",\"sum\",\"insert\",\"sum\"], \"args\":[[],[\"a\",1],[\"b\"],[\"b\",2],[\"b\"]]}","output":"[null,null,0,null,2]","explanation":"Disjoint checks","is_hidden":false},
+  {"input":"{\"commands\":[\"MapSum\",\"insert\",\"insert\",\"sum\"], \"args\":[[],[\"apple\",3],[\"apple\",5],[\"apple\"]]}","output":"[null,null,null,5]","explanation":"Overriding value","is_hidden":true},
+  {"input":"{\"commands\":[\"MapSum\",\"sum\",\"insert\",\"sum\"], \"args\":[[],[\"xyz\"],[\"xy\", 10],[\"xyz\"]]}","output":"[null,0,null,0]","explanation":"Empty prefix match checks","is_hidden":true},
+  {"input":"{\"commands\":[\"MapSum\",\"insert\",\"insert\",\"insert\",\"insert\",\"sum\"], \"args\":[[],[\"a\",10],[\"ab\",5],[\"abc\",1],[\"a\",100],[\"ab\"]]}","output":"[null,null,null,null,null,6]","explanation":"Override root but query prefix","is_hidden":true}
+]

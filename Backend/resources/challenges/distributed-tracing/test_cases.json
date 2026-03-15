@@ -1,0 +1,50 @@
+[
+  {
+    "input": "{\"action\": \"startSpan\", \"serviceName\": \"api-gateway\", \"spanName\": \"GET /users\"}",
+    "output": "Span with 32-char traceId, 16-char spanId, name 'GET /users', startTime set, status UNSET",
+    "explanation": "Basic span creation with proper ID generation",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"action\": \"extractContext\", \"headers\": {\"traceparent\": \"00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01\"}}",
+    "output": "SpanContext with traceId=4bf92f3577b34da6a3ce929d0e0e4736, spanId=00f067aa0ba902b7, traceFlags=1",
+    "explanation": "W3C traceparent header parsing",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"action\": \"childSpan\", \"parentTraceId\": \"4bf92f3577b34da6a3ce929d0e0e4736\", \"parentSpanId\": \"00f067aa0ba902b7\"}",
+    "output": "Child span with same traceId as parent, new spanId, parentSpanId=00f067aa0ba902b7",
+    "explanation": "Child span inherits traceId but gets new spanId",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"action\": \"injectContext\", \"traceId\": \"abc123\", \"spanId\": \"def456\", \"flags\": 1}",
+    "output": "Headers with traceparent: '00-abc123-def456-01'",
+    "explanation": "Context injection creates proper W3C traceparent header",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"action\": \"extractContext\", \"headers\": {}}",
+    "output": "undefined (no traceparent header, starts new trace)",
+    "explanation": "Missing traceparent should return undefined, caller starts new trace",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"action\": \"buildTree\", \"spans\": [{\"spanId\": \"a\", \"parentSpanId\": null}, {\"spanId\": \"b\", \"parentSpanId\": \"a\"}, {\"spanId\": \"c\", \"parentSpanId\": \"a\"}]}",
+    "output": "Tree with root span 'a', children ['b', 'c']",
+    "explanation": "Trace tree reconstruction from flat span list",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"action\": \"spanAttributes\", \"serviceName\": \"api\"}",
+    "output": "Span with setAttribute, addEvent, setStatus methods. After end(), has endTime and duration.",
+    "explanation": "Span lifecycle: create, add attributes/events, set status, end",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"action\": \"middleware\", \"method\": \"POST\", \"path\": \"/orders\", \"statusCode\": 201}",
+    "output": "Span with http.method=POST, http.url=/orders, http.status_code=201, status=OK",
+    "explanation": "Express middleware automatically creates spans with HTTP attributes",
+    "is_hidden": true
+  }
+]

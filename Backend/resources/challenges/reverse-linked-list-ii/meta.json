@@ -1,0 +1,19 @@
+{
+  "title": "Reverse Linked List II",
+  "slug": "reverse-linked-list-ii",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["linked-list"],
+  "company_tags": ["Facebook", "Amazon", "Microsoft", "Bloomberg", "Google"],
+  "topic_tags": ["linked lists"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "The head of a singly linked list and two integers `left` and `right`.",
+  "output_format": "The head of the list after reversing nodes from position `left` to position `right`.",
+  "example_input": "head = [1,2,3,4,5], left = 2, right = 4",
+  "example_output": "[1,4,3,2,5]",
+  "constraints": "- The number of nodes in the list is `n`.\n- `1 <= n <= 500`\n- `-500 <= Node.val <= 500`\n- `1 <= left <= right <= n`",
+  "function_signature": "function reverseBetween(head: ListNode | null, left: number, right: number): ListNode | null {}",
+  "status": "ACTIVE"
+}

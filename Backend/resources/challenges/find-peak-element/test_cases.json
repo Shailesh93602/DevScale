@@ -1,0 +1,12 @@
+[
+  { "input": "{\"nums\": [1,2,3,1]}", "output": "2", "explanation": "3 is the peak at index 2.", "is_hidden": false },
+  { "input": "{\"nums\": [1,2,1,3,5,6,4]}", "output": "5", "explanation": "6 at index 5 is a peak (1 at index 1 also valid).", "is_hidden": false },
+  { "input": "{\"nums\": [1]}", "output": "0", "explanation": "Single element is always a peak.", "is_hidden": false },
+  { "input": "{\"nums\": [3,2,1]}", "output": "0", "explanation": "Descending array, first element is peak.", "is_hidden": true },
+  { "input": "{\"nums\": [1,2,3]}", "output": "2", "explanation": "Ascending array, last element is peak.", "is_hidden": true },
+  { "input": "{\"nums\": [2,1]}", "output": "0", "explanation": "Two elements, first is larger.", "is_hidden": true },
+  { "input": "{\"nums\": [1,2]}", "output": "1", "explanation": "Two elements, second is larger.", "is_hidden": true },
+  { "input": "{\"nums\": [1,6,5,4,3,2,1]}", "output": "1", "explanation": "Peak at index 1 (value 6).", "is_hidden": true },
+  { "input": "{\"nums\": [1,3,2,4,1]}", "output": "1", "explanation": "Index 1 or 3 are both valid peaks.", "is_hidden": true },
+  { "input": "{\"nums\": [5,3,1,2,4]}", "output": "0", "explanation": "Index 0 or 4 are both valid peaks.", "is_hidden": true }
+]

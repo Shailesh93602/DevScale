@@ -1,0 +1,74 @@
+{
+    "title": "Redux Toolkit Quiz",
+    "description": "Test your Redux Toolkit knowledge.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is a Redux 'slice'?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A UI component connected to Redux",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A bundle of reducer logic and actions for one feature of the application",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A middleware for handling side effects",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A selector that returns part of the state",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why can you 'mutate' state directly inside Redux Toolkit reducers?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "RTK uses Immer under the hood, which converts mutations into immutable updates",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Redux no longer requires immutability in v2",
+                    "isCorrect": false
+                },
+                {
+                    "text": "RTK uses Object.freeze to prevent actual mutations",
+                    "isCorrect": false
+                },
+                {
+                    "text": "You cannot — it will throw a runtime error",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does createAsyncThunk handle?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Synchronous state updates",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Async operations with automatic pending/fulfilled/rejected action dispatching",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Caching of API responses",
+                    "isCorrect": false
+                },
+                {
+                    "text": "React component lifecycle",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

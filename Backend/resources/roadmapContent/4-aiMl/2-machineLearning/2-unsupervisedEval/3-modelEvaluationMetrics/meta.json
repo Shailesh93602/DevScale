@@ -1,0 +1,4 @@
+{
+    "name": "Model Evaluation Metrics",
+    "description": "Accuracy, Precision, Recall, F1-Score, ROC-AUC, and Cross-Validation."
+}

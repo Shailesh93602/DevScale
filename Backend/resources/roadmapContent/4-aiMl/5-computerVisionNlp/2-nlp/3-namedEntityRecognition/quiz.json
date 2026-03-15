@@ -1,0 +1,118 @@
+{
+    "title": "Named Entity Recognition Quiz",
+    "description": "Test your knowledge of NER, BIO tagging, spaCy, and fine-tuning transformer models for entity extraction.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "In the BIO tagging scheme, what does the 'I-ORG' tag represent?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The beginning of an Organization entity",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A token that is inside (continuing) a multi-token Organization entity",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A token that is outside all named entities, belonging to an Organization context",
+                    "isCorrect": false
+                },
+                {
+                    "text": "An invalid or uncertain entity prediction",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the GPE entity type in spaCy's NER system?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "General Purpose Entity — a catch-all for unclassified entities",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Geopolitical Entity — countries, cities, states, and other politically defined locations",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Grammatical Phrase Entity — noun phrases extracted by the parser",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Group of People Entity — collective human groups",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In a NER training annotation, what does the tuple (23, 32, 'DRUG_NAME') represent?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Line 23, column 32, with entity label DRUG_NAME",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The entity spans character positions 23 to 32 in the text and has the label DRUG_NAME",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Token index 23, with 32 tokens in total, labeled DRUG_NAME",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Sentence 23, paragraph 32 in the document corpus",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why is F1-score per entity type a more useful evaluation metric than overall accuracy for NER?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "F1-score is always more accurate than accuracy for any classification task",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Overall accuracy is dominated by the 'O' (outside) tag which is very common, hiding poor performance on rare but important entity types",
+                    "isCorrect": true
+                },
+                {
+                    "text": "F1-score accounts for entity type confidence, while accuracy does not",
+                    "isCorrect": false
+                },
+                {
+                    "text": "NER models cannot be evaluated with accuracy because all predictions are multi-label",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the minimum recommended number of annotated examples per entity type when fine-tuning a NER model?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "10–20 examples — transformer models are few-shot learners",
+                    "isCorrect": false
+                },
+                {
+                    "text": "50–100 examples should be sufficient for all tasks",
+                    "isCorrect": false
+                },
+                {
+                    "text": "500–1000 examples per entity type for reliable generalization",
+                    "isCorrect": true
+                },
+                {
+                    "text": "At least 1 million examples — NER requires massive labeled datasets",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

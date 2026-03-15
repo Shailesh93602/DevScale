@@ -1,0 +1,19 @@
+{
+  "title": "Implement Promise.all",
+  "slug": "implement-promise-all",
+  "difficulty": "Medium",
+  "category": "frontend",
+  "points": 100,
+  "tags": ["javascript", "promises", "async", "concurrency"],
+  "company_tags": ["Google", "Meta", "Amazon", "Stripe", "Bloomberg"],
+  "topic_tags": ["Promises", "Async Programming", "Concurrency"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An array of promises (or values)",
+  "output_format": "A promise that resolves with an array of results when all input promises resolve, or rejects if any rejects",
+  "example_input": "promiseAll([Promise.resolve(1), Promise.resolve(2)])",
+  "example_output": "Promise<[1, 2]>",
+  "constraints": "Input is an iterable of promises or plain values. Order of results matches input order.",
+  "function_signature": "function promiseAll<T>(promises: Array<T | Promise<T>>): Promise<T[]>",
+  "status": "ACTIVE"
+}

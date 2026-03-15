@@ -1,0 +1,99 @@
+<h1>Detox E2E Testing & CI Integration</h1>
+<p>Unit tests tell you that individual functions work. Integration tests tell you that components work together. End-to-end (E2E) tests tell you that your actual app, running on a real device simulator, works the way a user would use it. Detox automates real user flows — tapping buttons, typing text, and verifying screen content — against your actual compiled app.</p>
+
+<h2>Detox Setup</h2>
+<pre><code class="language-bash">npm install -g detox-cli
+npm install --save-dev detox @types/detox
+
+# Initialize Detox configuration
+detox init
+
+# Build the app for testing (debug build with test support)
+detox build --configuration ios.sim.debug
+detox build --configuration android.emu.debug
+</code></pre>
+<pre><code class="language-javascript">// .detoxrc.js — Detox configuration
+module.exports = {
+  testRunner: {
+    args: { '$0': 'jest', config: 'e2e/jest.config.js' },
+    jest: { setupTimeout: 120000 }
+  },
+  apps: {
+    'ios.debug': {
+      type: 'ios.app',
+      binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/MyApp.app',
+      build: 'xcodebuild -scheme MyApp -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build'
+    },
+    'android.debug': {
+      type: 'android.apk',
+      binaryPath: 'android/app/build/outputs/apk/debug/app-debug.apk',
+      build: 'cd android && ./gradlew assembleDebug assembleAndroidTest'
+    }
+  },
+  devices: {
+    simulator: { type: 'ios.simulator', device: { type: 'iPhone 15 Pro' } },
+    emulator: { type: 'android.emulator', device: { avdName: 'Pixel_7_API_34' } }
+  },
+  configurations: {
+    'ios.sim.debug': { device: 'simulator', app: 'ios.debug' },
+    'android.emu.debug': { device: 'emulator', app: 'android.debug' }
+  }
+};
+</code></pre>
+
+<h2>Writing E2E Tests</h2>
+<pre><code class="language-javascript">// e2e/login.test.js
+describe('Login Flow', () => {
+  beforeAll(async () => {
+    await device.launchApp({ newInstance: true });
+  });
+
+  beforeEach(async () => {
+    await device.reloadReactNative();  // Fresh state per test
+  });
+
+  it('should show login screen on launch', async () => {
+    await expect(element(by.id('login-screen'))).toBeVisible();
+    await expect(element(by.id('email-input'))).toBeVisible();
+    await expect(element(by.id('password-input'))).toBeVisible();
+  });
+
+  it('should login with valid credentials', async () => {
+    await element(by.id('email-input')).typeText('test@example.com');
+    await element(by.id('password-input')).typeText('password123');
+    await element(by.id('login-button')).tap();
+
+    // Wait for navigation to complete (home screen)
+    await waitFor(element(by.id('home-screen'))).toBeVisible().withTimeout(5000);
+    await expect(element(by.text('Welcome, Test User!'))).toBeVisible();
+  });
+
+  it('should show error for invalid credentials', async () => {
+    await element(by.id('email-input')).typeText('wrong@email.com');
+    await element(by.id('password-input')).typeText('wrongpass');
+    await element(by.id('login-button')).tap();
+
+    await waitFor(element(by.id('error-message'))).toBeVisible().withTimeout(3000);
+    await expect(element(by.text('Invalid credentials'))).toBeVisible();
+  });
+});
+</code></pre>
+
+<h2>CI Integration (GitHub Actions)</h2>
+<pre><code class="language-yaml"># .github/workflows/e2e.yml
+name: E2E Tests
+on: [pull_request]
+jobs:
+  e2e-ios:
+    runs-on: macos-14    # macOS required for iOS tests
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - run: npm ci
+      - name: Build Detox
+        run: detox build --configuration ios.sim.debug
+      - name: Run Detox Tests
+        run: detox test --configuration ios.sim.debug --ci
+        # --ci: disables interactive prompts, treats artifacts as normal files
+</code></pre>

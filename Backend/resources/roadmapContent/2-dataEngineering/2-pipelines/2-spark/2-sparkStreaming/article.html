@@ -1,0 +1,84 @@
+<h1>Spark Streaming</h1>
+<p><strong>Spark Structured Streaming</strong> is a scalable, fault-tolerant stream processing engine built on Spark SQL. It treats a live data stream as a continuously appended table, letting you write the same DataFrame/SQL code you use for batch processing.</p>
+
+<h2>Core Concepts</h2>
+<ul>
+  <li><strong>Source</strong> — where data comes in (Kafka, files, socket)</li>
+  <li><strong>DataFrame/Dataset</strong> — unbounded table of streaming records</li>
+  <li><strong>Output Modes</strong> — how results are written: <code>append</code>, <code>complete</code>, <code>update</code></li>
+  <li><strong>Trigger</strong> — how often Spark processes new data</li>
+  <li><strong>Watermark</strong> — how long to wait for late-arriving data</li>
+  <li><strong>Sink</strong> — where output goes (Kafka, DB, files, console)</li>
+</ul>
+
+<h2>Reading from Kafka</h2>
+<pre><code>from pyspark.sql import SparkSession
+
+spark = SparkSession.builder \
+    .appName("kafka-streaming") \
+    .getOrCreate()
+
+df = spark.readStream \
+    .format("kafka") \
+    .option("kafka.bootstrap.servers", "localhost:9092") \
+    .option("subscribe", "orders") \
+    .load()
+
+# Kafka gives binary value — cast and parse
+from pyspark.sql.functions import col, from_json
+from pyspark.sql.types import StructType, StringType, DoubleType
+
+schema = StructType() \
+    .add("order_id", StringType()) \
+    .add("amount", DoubleType()) \
+    .add("user_id", StringType())
+
+orders = df.select(
+    from_json(col("value").cast("string"), schema).alias("data")
+).select("data.*")</code></pre>
+
+<h2>Transformations on Streams</h2>
+<pre><code>from pyspark.sql.functions import window, sum as spark_sum
+
+# Windowed aggregation (5-min windows, sliding every 1 min)
+result = orders \
+    .withWatermark("event_time", "10 minutes") \
+    .groupBy(window("event_time", "5 minutes", "1 minute"), "user_id") \
+    .agg(spark_sum("amount").alias("total"))</code></pre>
+
+<h2>Writing Output</h2>
+<pre><code># Write to console (for debugging)
+query = result.writeStream \
+    .outputMode("update") \
+    .format("console") \
+    .trigger(processingTime="10 seconds") \
+    .start()
+
+# Write to Kafka
+query = result.writeStream \
+    .format("kafka") \
+    .option("kafka.bootstrap.servers", "localhost:9092") \
+    .option("topic", "order_summaries") \
+    .option("checkpointLocation", "/checkpoints/orders") \
+    .start()
+
+query.awaitTermination()</code></pre>
+
+<h2>Checkpointing for Fault Tolerance</h2>
+<p>Always set a checkpoint location — Spark saves offsets here so it can recover from failures:</p>
+<pre><code>.option("checkpointLocation", "s3://bucket/checkpoints/stream-name")</code></pre>
+
+<h2>Output Modes</h2>
+<ul>
+  <li><strong>append</strong> — only new rows (no aggregations, or final results only)</li>
+  <li><strong>update</strong> — only changed rows (ideal for live aggregations)</li>
+  <li><strong>complete</strong> — all result rows every trigger (small result tables only)</li>
+</ul>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always set a watermark to bound state size for time-based aggregations.</li>
+  <li>Use <code>processingTime</code> triggers (e.g., every 10 seconds) for near-real-time.</li>
+  <li>Monitor backlog via Spark UI → Structured Streaming tab.</li>
+  <li>Process Kafka from earliest offset in development, latest in production.</li>
+</ul>

@@ -1,0 +1,4 @@
+{
+    "name": "Flink Stateful Stream Processing",
+    "description": "Going beyond simple transformations. Mastering how Apache Flink maintains persistent, fault-tolerant state across infinite streams of real-time data using managed keyed state and Checkpointing."
+}

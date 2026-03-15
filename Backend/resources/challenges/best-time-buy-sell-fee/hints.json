@@ -1,0 +1,6 @@
+[
+  "Track two states: cash (not holding) and hold (holding stock).",
+  "When selling: cash = max(cash, hold + price - fee). The fee is deducted on each sell.",
+  "When buying: hold = max(hold, cash - price).",
+  "The fee prevents small trades from being profitable, unlike the no-fee version."
+]

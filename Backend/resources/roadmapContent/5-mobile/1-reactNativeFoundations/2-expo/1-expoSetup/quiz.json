@@ -1,0 +1,118 @@
+{
+    "title": "Expo Framework Quiz",
+    "description": "Test your knowledge on Expo Go, EAS Builds, and OTA Updates.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the primary advantage of utilizing 'Expo' over the bare 'React Native CLI' when starting a new mobile project?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Expo forces the app to render using an HTML WebView.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Expo abstracts away all the agonizing complexity of bridging native iOS (Xcode) and Android (Studio) code, allowing developers to build complex native apps writing 100% pure JavaScript/TypeScript.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Expo allows you to write PHP to build mobile apps.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "There are no advantages; Expo is entirely deprecated.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "During development, how does the 'Expo Go' mobile application drastically speed up developer productivity?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It writes the React Native code for you using AI.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It allows developers to simply scan a QR code to instantly stream their live development app via Wi-Fi to a physical phone with hot-reloading, avoiding tedious physical USB cable compiling.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It bypasses the Apple App Store temporarily.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It automatically generates automated unit tests.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "You are a developer using a Microsoft Windows computer. You need to compile your new React Native app into an `.ipa` file to upload to the Apple App Store. How does Expo solve your hardware problem?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "By rendering a virtual Mac operating system using Docker locally.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By utilizing 'EAS Build' (Expo Application Services), which packages your code and compiles it remotely on Expo's cloud-hosted Mac servers, returning the finished Apple file to your PC.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Windows PCs actually can compile iOS code natively.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By converting the app into an Android APK.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is an 'Over-The-Air' (OTA) Update in the context of Expo?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A feature that allows you to push Javascript fixes (like typos) directly to users' phones instantly over the internet, completely bypassing the notoriously slow 3-day Apple App Store review process.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A method to update the physical iOS operating system.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A system for updating API backend servers without downtime.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A method requiring users to plug their phone into a PC.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "If your application requires accessing the phone's native GPS Location hardware, how do you handle this securely using Expo?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "You must manually edit the `AndroidManifest.xml` and `Info.plist` files via Java.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "You cannot; Expo does not support native APIs.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By running `npx expo install expo-location`, which automatically installs the pre-built, robust native bridging packages instantly without touching native files.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "By utilizing a web browser geolocation hook.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

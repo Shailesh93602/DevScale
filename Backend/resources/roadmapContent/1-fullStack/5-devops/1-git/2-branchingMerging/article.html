@@ -1,0 +1,71 @@
+<h1>Branching & Conflict Resolution</h1>
+<p>Git allows multiple developers to work on the exact same codebase simultaneously. This is achieved through <strong>Branching</strong>. A branch is essentially an independent timeline of your project. You can break things on your branch, and the <code>main</code> production branch remains completely unaffected.</p>
+
+<h2>Feature Branching Workflow</h2>
+<p>In modern software teams, no one commits directly to the <code>main</code> branch. Instead, for every new task, a developer creates a <strong>Feature Branch</strong>.</p>
+
+<pre><code># 1. Start from main
+git checkout main
+git pull
+
+# 2. Create and switch to a new feature branch
+git checkout -b feature/login-page
+
+# 3. Make your code changes...
+# 4. Stage and commit your changes securely isolated in your branch
+git add .
+git commit -m "feat: implement OAuth login"
+
+# 5. Push your branch to the central GitHub server
+git push origin feature/login-page
+</code></pre>
+<p>Once pushed, you open a Pull Request (PR) on GitHub. Your teammates review your code, and if approved, it is mathematically <strong>Merged</strong> into <code>main</code>.</p>
+
+<h2>Types of Merges</h2>
+<p>When you merge <code>feature/login-page</code> into <code>main</code>, Git calculates how to combine the two timelines.</p>
+
+<h3>1. Fast-Forward Merge</h3>
+<p>If no one else has touched <code>main</code> since you created your branch, Git simply moves the <code>main</code> pointer forward to point to your new commits. The history remains a perfectly straight, linear line.</p>
+
+<h3>2. The Merge Commit (Recursive)</h3>
+<p>If another developer merged <em>their</em> branch into <code>main</code> while you were still working on yours, the timelines have diverged. Git must mathematically stitch them back together by creating a brand new, special commit called a <strong>Merge Commit</strong>. This commit has two parents and permanently ties the two divergent branches back into one.</p>
+
+<h2>Resolving Merge Conflicts</h2>
+<p>Most of the time, Git's auto-merging algorithm perfectly combines code. If Developer A edits Line 5, and Developer B edits Line 50, Git seamlessly merges them.</p>
+<p>However, a <strong>Merge Conflict</strong> occurs when two developers modify the exact same line of the exact same file.</p>
+
+<pre><code># When merging your branch into main...
+git merge feature/login-page
+
+# Output:
+# Auto-merging src/App.js
+# CONFLICT (content): Merge conflict in src/App.js
+# Automatic merge failed; fix conflicts and then commit the result.
+</code></pre>
+
+<h3>Reading Conflict Markers</h3>
+<p>If you open <code>src/App.js</code>, Git has injected special markers indicating exactly where the collision happened:</p>
+
+<pre><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD (Current branch: main)
+&lt;button&gt;Sign In to Account&lt;/button&gt;
+=======
+&lt;button&gt;Login via Google&lt;/button&gt;
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/login-page (Incoming branch)
+</code></pre>
+
+<p>To resolve it, you must <strong>manually edit the file</strong> to decide which version to keep (or combine them). Once the file looks exactly how you want it, you delete the `&lt;&lt;&lt;`, `===`, and `&gt;&gt;&gt;` symbol lines.</p>
+
+<pre><code># The resolved code:
+&lt;button&gt;Sign In via Google&lt;/button&gt;
+</code></pre>
+
+<p>Finally, you tell Git that the conflict is mathematically resolved by staging the file and committing it:</p>
+<pre><code>git add src/App.js
+git commit -m "Merge branch feature/login-page and resolve App.js conflict"
+</code></pre>
+
+<h2>Best Practices to Avoid Conflicts</h2>
+<ul>
+  <li>Keep your feature branches small and short-lived. Work lasting 3 weeks on a branch will inevitably conflict massively.</li>
+  <li>Run <code>git pull origin main</code> frequently to pull your teammates' changes down into your local environment early.</li>
+</ul>

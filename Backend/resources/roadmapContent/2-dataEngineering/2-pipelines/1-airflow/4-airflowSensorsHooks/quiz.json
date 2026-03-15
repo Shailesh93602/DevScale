@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary architectural purpose of utilizing an Airflow 'Hook' instead of writing a raw Python `psycopg2` database connection directly in your DAG?",
+            "options": [
+                "Hooks perfectly compile SQL code into Typescript files.",
+                "Hooks allow Airflow to securely abstract connection credentials to the central Airflow UI, completely preventing developers from accidentally hardcoding raw database passwords into Git repositories.",
+                "Hooks generate automated CSS variables for data tables.",
+                "Hooks translate bash commands into active Windows PowerShell scripts."
+            ],
+            "answer": "Hooks allow Airflow to securely abstract connection credentials to the central Airflow UI, completely preventing developers from accidentally hardcoding raw database passwords into Git repositories.",
+            "explanation": "Security is paramount. The Hook securely fetches the sensitive credentials stored inside Airflow's internal encrypted database at runtime."
+        },
+        {
+            "question": "What fundamental role does an Airflow 'Sensor' fulfill within a data pipeline?",
+            "options": [
+                "It acts specifically as a physical temperature monitor.",
+                "It acts as a dynamic blocking gate, explicitly pausing the DAG and repeatedly polling an external system (like waiting for a file to appear in an S3 bucket) before officially allowing downstream tasks to execute.",
+                "It aggressively compresses big data outputs.",
+                "It instantly rewrites monolithic SQL queries."
+            ],
+            "answer": "It acts as a dynamic blocking gate, explicitly pausing the DAG and repeatedly polling an external system (like waiting for a file to appear in an S3 bucket) before officially allowing downstream tasks to execute.",
+            "explanation": "If your ETL script requires a file, scheduling it strictly for 5:00 PM is dangerous if the file arrives at 5:10 PM. A Sensor safely waits."
+        },
+        {
+            "question": "Why is utilizing the 'Reschedule' mode critical when a Sensor might need to wait several hours for a specific condition?",
+            "options": [
+                "Reschedule mode formats the output JSON correctly.",
+                "In default 'Poke' mode, a sensor permanently occupies a critical computing worker slot while it waits. 'Reschedule' immediately frees that worker slot so other tasks can run, waking the sensor up later.",
+                "Reschedule mode encrypts the HTTP protocol.",
+                "Poke mode forces a server restart."
+            ],
+            "answer": "In default 'Poke' mode, a sensor permanently occupies a critical computing worker slot while it waits. 'Reschedule' immediately frees that worker slot so other tasks can run, waking the sensor up later.",
+            "explanation": "If you only have 10 workers available, having 10 default sensors waiting 2 hours for a file will cause an immediate cluster deadlock."
+        }
+    ]
+}

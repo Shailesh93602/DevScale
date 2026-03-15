@@ -1,0 +1,20 @@
+{
+  "title": "Path Sum",
+  "slug": "path-sum",
+  "difficulty": "Easy",
+  "category": "algorithms",
+  "points": 50,
+  "tags": ["tree","depth-first-search","breadth-first-search","binary-tree"],
+  "company_tags": ["Amazon","Bloomberg","Microsoft","Apple"],
+  "topic_tags": ["trees","depth-first search"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "The root of a binary tree and an integer `targetSum`.",
+  "output_format": "`true` if the tree has a root-to-leaf path such that adding up all the values along the path equals `targetSum`.",
+  "example_input": "root = [5,4,8,11,null,13,4,7,2,null,null,null,1], targetSum = 22",
+  "example_output": "true",
+  "constraints": "- The number of nodes in the tree is in the range `[0, 5000]`.\n- `-1000 <= Node.val <= 1000`\n- `-1000 <= targetSum <= 1000`",
+  "function_signature": "function hasPathSum(root: TreeNode | null, targetSum: number): boolean {}",
+  "status": "ACTIVE"
+}

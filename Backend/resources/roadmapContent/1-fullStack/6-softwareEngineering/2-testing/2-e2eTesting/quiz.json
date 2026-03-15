@@ -1,0 +1,24 @@
+{
+    "questions": [
+        {
+            "question": "Which of these is a popular modern E2E testing framework?",
+            "options": [
+                "React Native",
+                "Playwright",
+                "Redux",
+                "Express"
+            ],
+            "correctAnswer": 1,
+            "explanation": "Playwright and Cypress are common tools for simulating browser interactions."
+        },
+        {
+            "question": "True or False: E2E tests are generally faster to execute than Unit tests.",
+            "options": [
+                "True",
+                "False"
+            ],
+            "correctAnswer": 1,
+            "explanation": "False. E2E tests are significantly slower because they involve real browsers and network operations."
+        }
+    ]
+}

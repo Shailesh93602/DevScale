@@ -1,0 +1,12 @@
+[
+  {"input":"{\"grid\":[[\"1\",\"1\",\"1\",\"1\",\"0\"],[\"1\",\"1\",\"0\",\"1\",\"0\"],[\"1\",\"1\",\"0\",\"0\",\"0\"],[\"0\",\"0\",\"0\",\"0\",\"0\"]]}","output":"1","explanation":"One big island","is_hidden":false},
+  {"input":"{\"grid\":[[\"1\",\"1\",\"0\",\"0\",\"0\"],[\"1\",\"1\",\"0\",\"0\",\"0\"],[\"0\",\"0\",\"1\",\"0\",\"0\"],[\"0\",\"0\",\"0\",\"1\",\"1\"]]}","output":"3","explanation":"Three separate islands","is_hidden":false},
+  {"input":"{\"grid\":[[\"1\"]]}","output":"1","explanation":"Single land cell","is_hidden":false},
+  {"input":"{\"grid\":[[\"0\"]]}","output":"0","explanation":"Single water cell","is_hidden":true},
+  {"input":"{\"grid\":[[\"1\",\"0\"],[\"0\",\"1\"]]}","output":"2","explanation":"Diagonal not connected","is_hidden":true},
+  {"input":"{\"grid\":[[\"1\",\"1\"],[\"1\",\"1\"]]}","output":"1","explanation":"2x2 all land","is_hidden":true},
+  {"input":"{\"grid\":[[\"1\",\"0\",\"1\",\"0\",\"1\"]]}","output":"3","explanation":"Alternating single row","is_hidden":true},
+  {"input":"{\"grid\":[[\"1\"],[\"0\"],[\"1\"],[\"0\"],[\"1\"]]}","output":"3","explanation":"Alternating single column","is_hidden":true},
+  {"input":"{\"grid\":[[\"1\",\"1\",\"1\"],[\"0\",\"1\",\"0\"],[\"1\",\"1\",\"1\"]]}","output":"1","explanation":"Ring shape still one island","is_hidden":true},
+  {"input":"{\"grid\":[[\"0\",\"0\",\"0\"],[\"0\",\"0\",\"0\"],[\"0\",\"0\",\"0\"]]}","output":"0","explanation":"All water","is_hidden":true}
+]

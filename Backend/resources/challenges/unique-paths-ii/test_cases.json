@@ -1,0 +1,12 @@
+[
+  { "input": "{\"obstacleGrid\": [[0,0,0],[0,1,0],[0,0,0]]}", "output": "2", "explanation": "Two paths around the center obstacle", "is_hidden": false },
+  { "input": "{\"obstacleGrid\": [[0,1],[0,0]]}", "output": "1", "explanation": "One path: Down then Right", "is_hidden": false },
+  { "input": "{\"obstacleGrid\": [[1]]}", "output": "0", "explanation": "Start is blocked", "is_hidden": false },
+  { "input": "{\"obstacleGrid\": [[0]]}", "output": "1", "explanation": "1x1 grid with no obstacle", "is_hidden": true },
+  { "input": "{\"obstacleGrid\": [[0,0],[1,0]]}", "output": "1", "explanation": "One path: Right then Down", "is_hidden": true },
+  { "input": "{\"obstacleGrid\": [[0,0],[0,1]]}", "output": "0", "explanation": "Destination is blocked", "is_hidden": true },
+  { "input": "{\"obstacleGrid\": [[0,0,0,0],[0,0,0,0],[0,0,0,0]]}", "output": "10", "explanation": "No obstacles, same as unique paths 3x4", "is_hidden": true },
+  { "input": "{\"obstacleGrid\": [[0,1,0],[0,0,0],[0,0,0]]}", "output": "4", "explanation": "Obstacle at (0,1)", "is_hidden": true },
+  { "input": "{\"obstacleGrid\": [[0,0,0],[1,0,0],[0,0,0]]}", "output": "4", "explanation": "Obstacle at (1,0)", "is_hidden": true },
+  { "input": "{\"obstacleGrid\": [[0,0,1],[0,1,0],[1,0,0]]}", "output": "1", "explanation": "Diagonal obstacles, only one path", "is_hidden": true }
+]

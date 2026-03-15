@@ -1,0 +1,26 @@
+{
+    "questions": [
+        {
+            "question": "What does the 'S' in SOLID stand for?",
+            "options": [
+                "Simple Logic",
+                "Single Responsibility",
+                "System Security",
+                "Structural Stability"
+            ],
+            "correctAnswer": 1,
+            "explanation": "SRP states that a class should have only one reason to change."
+        },
+        {
+            "question": "Which principle suggests that software should be 'open for extension but closed for modification'?",
+            "options": [
+                "LSP",
+                "DIP",
+                "OCP",
+                "ISP"
+            ],
+            "correctAnswer": 2,
+            "explanation": "The Open/Closed Principle (OCP) encourages adding features through inheritance or composition without modifying existing source code."
+        }
+    ]
+}

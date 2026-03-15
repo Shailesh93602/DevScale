@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What fundamental problem with standard React State do 'Signals' aim to solve?",
+            "options": [
+                "State variables cannot hold arrays",
+                "Global state updates trigger top-down re-renders of the entire component tree, requiring heavy memoization",
+                "Context API is deprecated",
+                "Server Side Rendering fails with hooks"
+            ],
+            "answer": "Global state updates trigger top-down re-renders of the entire component tree, requiring heavy memoization",
+            "explanation": "In standard React, a state change re-executes the component function and diffs the Virtual DOM. Signals (like Preact Signals) track subscriptions directly to DOM text nodes, completely bypassing component re-renders for maximum performance."
+        },
+        {
+            "question": "How do you define a reactive Signal globally in a module, outside of a component?",
+            "options": [
+                "const count = new React.Signal(0)",
+                "const count = useState(0)",
+                "const count = signal(0)",
+                "window.signal = 0"
+            ],
+            "answer": "const count = signal(0)",
+            "explanation": "Signals do not rely on React's lifecycle hooks. They can be instantiated globally using `const name = signal('value')` and directly imported and utilized by any component."
+        },
+        {
+            "question": "How do you mutate a Signal's value?",
+            "options": [
+                "By calling its dispatcher: setCount(1)",
+                "By directly re-assigning its value property: count.value = 1",
+                "Using a Redux dispatch action: dispatch({ type: 'CHANGE' })",
+                "By calling count.update(1)"
+            ],
+            "answer": "By directly re-assigning its value property: count.value = 1",
+            "explanation": "Signals are mutable wrappers. Assigning to `signal.value` automatically triggers the signal to broadcast updates to any component or effect that is currently reading it."
+        },
+        {
+            "question": "What happens when you pass a Signal directly into JSX elements like <p>{count}</p> (using the Preact Signals library)?",
+            "options": [
+                "It renders [object Object]",
+                "It crashes the application needing a conversion to string",
+                "The signal reaches directly into the real DOM to update the text node whenever it changes, skipping React's diffing entirely",
+                "It forces the entire application to re-render to ensure safety"
+            ],
+            "answer": "The signal reaches directly into the real DOM to update the text node whenever it changes, skipping React's diffing entirely",
+            "explanation": "This is the 'magic' render bypassing feature. Because the library intercepts the UI binding, a mutated signal updates the DOM node directly without firing the React component function again."
+        },
+        {
+            "question": "How do `computed` signals differ from standard signals?",
+            "options": [
+                "Computed signals must run on a backend server",
+                "Computed signals read from other signals and automatically update and cache their derivation whenever a dependency changes",
+                "Computed signals only calculate mathematics",
+                "Computed signals require manual dependency arrays like useMemo"
+            ],
+            "answer": "Computed signals read from other signals and automatically update and cache their derivation whenever a dependency changes",
+            "explanation": "If `const double = computed(() => count.value * 2)` is declared, `double` acts exactly like a signal. It tracks `count` automatically (no dependency arrays) and caches the result until `count` changes."
+        }
+    ]
+}

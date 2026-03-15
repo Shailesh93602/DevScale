@@ -1,0 +1,12 @@
+[
+  { "input": "{\"root\":[5,3,6,2,4,null,7],\"key\":3}", "output": "[5,4,6,2,null,null,7]", "explanation": "Delete node with two children, replace with in-order successor", "is_hidden": false },
+  { "input": "{\"root\":[5,3,6,2,4,null,7],\"key\":0}", "output": "[5,3,6,2,4,null,7]", "explanation": "Key not found, tree unchanged", "is_hidden": false },
+  { "input": "{\"root\":[],\"key\":0}", "output": "[]", "explanation": "Empty tree", "is_hidden": false },
+  { "input": "{\"root\":[1],\"key\":1}", "output": "[]", "explanation": "Delete the only node (root)", "is_hidden": true },
+  { "input": "{\"root\":[5,3,6,2,4,null,7],\"key\":7}", "output": "[5,3,6,2,4]", "explanation": "Delete leaf node", "is_hidden": true },
+  { "input": "{\"root\":[5,3,6,2,4,null,7],\"key\":6}", "output": "[5,3,7,2,4]", "explanation": "Delete node with one child", "is_hidden": true },
+  { "input": "{\"root\":[5,3,6,2,4,null,7],\"key\":5}", "output": "[6,3,7,2,4]", "explanation": "Delete root node with two children", "is_hidden": true },
+  { "input": "{\"root\":[2,1],\"key\":2}", "output": "[1]", "explanation": "Delete root with only left child", "is_hidden": true },
+  { "input": "{\"root\":[1,null,2],\"key\":1}", "output": "[2]", "explanation": "Delete root with only right child", "is_hidden": true },
+  { "input": "{\"root\":[10,5,15,3,7,12,20,1,4,6,8],\"key\":5}", "output": "[10,6,15,3,7,12,20,1,4,null,8]", "explanation": "Delete internal node with two children in larger tree", "is_hidden": true }
+]

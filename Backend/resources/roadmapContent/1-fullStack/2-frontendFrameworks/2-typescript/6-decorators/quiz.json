@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What are TypeScript decorators primarily used for in frameworks like NestJS?",
+            "options": [
+                "Adding CSS styles to classes",
+                "Annotating classes and their members to add metadata and modify behavior (routing, DI, validation)",
+                "Compiling TypeScript faster",
+                "Replacing interface definitions"
+            ],
+            "answer": "Annotating classes and their members to add metadata and modify behavior (routing, DI, validation)",
+            "explanation": "Decorators like @Controller(), @Get(), @Injectable() in NestJS annotate classes with metadata that the framework reads at runtime to wire up routing, dependency injection, and more."
+        },
+        {
+            "question": "What tsconfig settings must be enabled to use TypeScript decorators?",
+            "options": [
+                "useDecorators: true",
+                "experimentalDecorators: true and emitDecoratorMetadata: true",
+                "target: ES5",
+                "strictMode: false"
+            ],
+            "answer": "experimentalDecorators: true and emitDecoratorMetadata: true",
+            "explanation": "experimentalDecorators enables decorator syntax, and emitDecoratorMetadata emits type metadata for use with reflect-metadata, required by frameworks like NestJS for dependency injection."
+        },
+        {
+            "question": "What does a method decorator allow you to do?",
+            "options": [
+                "Only rename methods",
+                "Wrap, replace, or augment method behavior by modifying its property descriptor",
+                "Make methods private",
+                "Add TypeScript types to methods"
+            ],
+            "answer": "Wrap, replace, or augment method behavior by modifying its property descriptor",
+            "explanation": "Method decorators receive (target, propertyKey, descriptor) and can replace descriptor.value with a wrapper function that adds logging, caching, authorization, etc."
+        },
+        {
+            "question": "What are cross-cutting concerns in the context of decorators?",
+            "options": [
+                "Concerns that cross multiple programming languages",
+                "Behaviors (like logging, caching, validation) shared across many classes that don't belong in business logic",
+                "Concerns that affect multiple CSS files",
+                "Functions that call across module boundaries"
+            ],
+            "answer": "Behaviors (like logging, caching, validation) shared across many classes that don't belong in business logic",
+            "explanation": "Cross-cutting concerns are behaviors needed across the codebase (logging, auth, caching) that clutter business logic when written inline. Decorators implement them cleanly as annotations."
+        },
+        {
+            "question": "What is reflect-metadata used for in TypeScript decorator projects?",
+            "options": [
+                "To reflect JavaScript object properties",
+                "To capture and access type metadata at runtime for dependency injection",
+                "To create reflection-based mirrors of classes",
+                "To debug TypeScript type information"
+            ],
+            "answer": "To capture and access type metadata at runtime for dependency injection",
+            "explanation": "reflect-metadata allows storing and retrieving metadata (like class dependency types) on objects at runtime. With emitDecoratorMetadata: true, TypeScript emits type information that DI frameworks like NestJS use to inject dependencies."
+        }
+    ]
+}

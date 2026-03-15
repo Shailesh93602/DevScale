@@ -1,0 +1,6 @@
+[
+  "Think about what happens at each point in time. How many meetings are active simultaneously?",
+  "Separate start times and end times into two sorted arrays. Use two pointers to sweep through events.",
+  "When a start time comes before the next end time, a new room is needed. When an end time comes, a room is freed.",
+  "The maximum number of simultaneously active meetings at any point equals the minimum rooms required."
+]

@@ -1,0 +1,118 @@
+{
+    "title": "FlatList Optimization Quiz",
+    "description": "Test your knowledge of React Native FlatList performance patterns, windowed rendering, and image caching.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Why is FlatList more performant than ScrollView + .map() for long lists?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "FlatList renders all items at startup to pre-cache them",
+                    "isCorrect": false
+                },
+                {
+                    "text": "FlatList uses windowed rendering — only items visible on screen (plus a buffer) are mounted at any time, recycling instances as the user scrolls",
+                    "isCorrect": true
+                },
+                {
+                    "text": "FlatList automatically compresses images to reduce memory usage",
+                    "isCorrect": false
+                },
+                {
+                    "text": "ScrollView does not support touch events, so FlatList must be used",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the primary benefit of providing a `getItemLayout` prop to FlatList?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It enables horizontal scrolling instead of vertical",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It pre-computes all item positions so FlatList doesn't need to dynamically measure heights, enabling fast scrollToIndex and improving overall scroll performance",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It automatically memoizes each item to prevent re-renders",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It limits the list to a maximum number of rendered items",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why should the renderItem function be wrapped in useCallback before passing to FlatList?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "FlatList requires all props to be callback functions",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A new function reference on every render causes all visible items to re-render; useCallback keeps the reference stable",
+                    "isCorrect": true
+                },
+                {
+                    "text": "useCallback makes the rendering happen on the native thread",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Without useCallback, FlatList cannot call the renderItem function",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does `onEndReachedThreshold={0.5}` tell FlatList?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Only load 50% of the total items in the dataset",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Trigger the onEndReached callback when the user has scrolled past 50% of the entire list",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Trigger the onEndReached callback when the user is within 50% of a screen-height from the bottom of the rendered content",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Cache only 50% of items in the windowed buffer",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What advantage does react-native-fast-image have over the built-in Image component in lists?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It supports animated GIFs natively",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It caches images to disk and uses better memory management, so images in list items are loaded from cache on scroll rather than re-fetched from the network",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It renders images on the JS thread, avoiding bridge overhead",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It requires no internet connection as it stores all images in the bundle",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

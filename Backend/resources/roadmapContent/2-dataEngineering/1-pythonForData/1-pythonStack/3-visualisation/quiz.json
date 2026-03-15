@@ -1,0 +1,118 @@
+{
+    "title": "Data Visualisation Quiz",
+    "description": "Test your knowledge of Matplotlib, Seaborn, and Plotly.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Which library is best for creating interactive, web-ready charts in Python?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Matplotlib",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Seaborn",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Plotly",
+                    "isCorrect": true
+                },
+                {
+                    "text": "NumPy",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which Seaborn function visualises the correlation between all numeric columns?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "sns.pairplot()",
+                    "isCorrect": false
+                },
+                {
+                    "text": "sns.heatmap(df.corr())",
+                    "isCorrect": true
+                },
+                {
+                    "text": "sns.boxplot()",
+                    "isCorrect": false
+                },
+                {
+                    "text": "sns.scatterplot()",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does `plt.tight_layout()` do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Saves the figure to disk",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Adjusts subplots to prevent overlapping labels",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Sets a tight axis range",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Removes whitespace from the chart border",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which Matplotlib function creates multiple charts in a grid layout?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "plt.figure()",
+                    "isCorrect": false
+                },
+                {
+                    "text": "plt.subplot()",
+                    "isCorrect": false
+                },
+                {
+                    "text": "plt.subplots()",
+                    "isCorrect": true
+                },
+                {
+                    "text": "plt.grid()",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which chart type is best for showing the distribution of a single numeric variable?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Bar chart",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Pie chart",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Histogram",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Line chart",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

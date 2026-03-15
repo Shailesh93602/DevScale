@@ -1,0 +1,116 @@
+<h1>Weights & Biases (W&B): ML Experiment Tracking at Scale</h1>
+<p>While MLflow is excellent for self-hosted tracking, <strong>Weights & Biases (W&B)</strong> is the cloud-hosted experiment platform used by teams at OpenAI, Hugging Face, and Samsung. It offers a richer, more collaborative experience — especially for deep learning workloads — with real-time metric streaming, interactive dashboards, and built-in hyperparameter optimization.</p>
+
+<h2>W&B vs MLflow: When to Choose Which</h2>
+<table>
+  <thead>
+    <tr><th>Feature</th><th>MLflow</th><th>Weights & Biases</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Hosting</td><td>Self-hosted or Managed</td><td>Cloud SaaS (also on-prem)</td></tr>
+    <tr><td>Deep Learning support</td><td>Good</td><td>Excellent (native PyTorch/JAX)</td></tr>
+    <tr><td>Hyperparameter sweeps</td><td>Manual / plugins</td><td>Built-in Sweep engine</td></tr>
+    <tr><td>Team collaboration</td><td>Basic</td><td>Rich dashboards, reports</td></tr>
+    <tr><td>Cost</td><td>Free (self-hosted)</td><td>Free tier + paid plans</td></tr>
+  </tbody>
+</table>
+
+<h2>Basic Integration</h2>
+<pre><code>import wandb
+import torch
+import torch.nn as nn
+
+# Initialize a W&B run — this creates a run on your W&B dashboard
+run = wandb.init(
+    project="image_classification",
+    name="resnet50-lr0.001-batch64",
+    config={
+        "learning_rate": 0.001,
+        "batch_size": 64,
+        "epochs": 30,
+        "optimizer": "AdamW",
+        "architecture": "ResNet50"
+    }
+)
+
+# Access config safely from wandb.config
+lr = wandb.config.learning_rate
+
+model = resnet50().to(device)
+optimizer = torch.optim.AdamW(model.parameters(), lr=lr)
+
+for epoch in range(wandb.config.epochs):
+    train_loss = train_one_epoch(model, train_loader, optimizer)
+    val_loss, val_acc = evaluate(model, val_loader)
+
+    # Log metrics — they stream to the dashboard in real-time
+    wandb.log({
+        "epoch": epoch,
+        "train_loss": train_loss,
+        "val_loss": val_loss,
+        "val_accuracy": val_acc,
+        "learning_rate": optimizer.param_groups[0]["lr"]
+    })
+
+# Save the final model as a W&B Artifact
+artifact = wandb.Artifact("resnet50_classifier", type="model")
+torch.save(model.state_dict(), "model.pt")
+artifact.add_file("model.pt")
+run.log_artifact(artifact)
+run.finish()</code></pre>
+
+<h2>W&B Sweeps — Automated Hyperparameter Optimization</h2>
+<p>A Sweep automates the search over your hyperparameter space. You define the search space and strategy, and W&B manages launching and tracking all the runs.</p>
+<pre><code"># sweep.yaml — define the search configuration
+sweep_config = {
+    "method": "bayes",  # Bayesian optimization (smarter than grid search)
+    "metric": {"name": "val_accuracy", "goal": "maximize"},
+    "parameters": {
+        "learning_rate": {"distribution": "log_uniform_values", "min": 1e-5, "max": 1e-1},
+        "batch_size": {"values": [32, 64, 128]},
+        "dropout": {"distribution": "uniform", "min": 0.1, "max": 0.5}
+    }
+}
+
+def train_sweep():
+    with wandb.init() as run:
+        config = run.config
+        model = build_model(dropout=config.dropout)
+        optimizer = torch.optim.Adam(model.parameters(), lr=config.learning_rate)
+        # ... training loop ...
+        wandb.log({"val_accuracy": val_acc})
+
+# Initialize the sweep and get a sweep ID
+sweep_id = wandb.sweep(sweep_config, project="image_classification")
+
+# Launch 20 Bayesian-optimized runs
+wandb.agent(sweep_id, function=train_sweep, count=20)</code></pre>
+
+<h2>W&B Artifacts — Dataset and Model Versioning</h2>
+<pre><code"># Versioning a dataset as a W&B Artifact
+with wandb.init(project="data_pipeline") as run:
+    dataset_artifact = wandb.Artifact(
+        "customer_churn_dataset",
+        type="dataset",
+        description="Processed churn dataset v3 — includes new loyalty features",
+        metadata={"num_rows": 120000, "features": 45, "split": "80/10/10"}
+    )
+    dataset_artifact.add_dir("data/processed/")
+    run.log_artifact(dataset_artifact)
+
+# In the training run, declare what input artifact you used
+with wandb.init(project="image_classification") as run:
+    # This creates a DAG: training_run → uses → customer_churn_dataset:v3
+    artifact = run.use_artifact("customer_churn_dataset:v3")
+    data_dir = artifact.download()</code></pre>
+
+<h2>W&B Reports for Team Communication</h2>
+<p>W&B Reports are shareable, editable documents that embed live charts from your experiments. Teams use them to document findings, share results with stakeholders, and keep a lab notebook of model development progress — all without needing a separate presentation tool.</p>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Set your W&B API key as the environment variable <code>WANDB_API_KEY</code> rather than calling <code>wandb.login()</code> in code — keeps credentials out of your notebooks.</li>
+  <li>Use <code>wandb.config</code> to define all hyperparameters at run init, not as variables in code. This ensures W&B captures them even if the run crashes mid-training.</li>
+  <li>Use Artifacts for datasets — this creates a full lineage graph showing exactly which dataset version produced which model version.</li>
+  <li>Tag runs (<code>run.tags = ["baseline", "resnet50"]</code>) to make filtering in the dashboard easier.</li>
+</ul>

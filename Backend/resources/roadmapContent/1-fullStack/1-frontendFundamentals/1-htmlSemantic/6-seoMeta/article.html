@@ -1,0 +1,85 @@
+<h1>SEO & Meta Tags in HTML</h1>
+<p>Search Engine Optimization (SEO) begins in the <code>&lt;head&gt;</code> of your HTML document. The right meta tags influence how search engines <strong>index your page</strong> and how your content appears in search results and social media previews.</p>
+
+<h2>Essential Meta Tags</h2>
+<pre><code>&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Best Running Shoes 2024 | ShoeStore&lt;/title&gt;
+  &lt;meta name="description" content="Discover the top 10 running shoes of 2024 for all budgets. Expert reviews, buyer's guide, and price comparisons."&gt;
+  &lt;meta name="robots" content="index, follow"&gt;
+  &lt;link rel="canonical" href="https://example.com/running-shoes"&gt;
+&lt;/head&gt;</code></pre>
+<ul>
+  <li><strong>title</strong> — Most important SEO tag. Keep under 60 characters. Place primary keyword first.</li>
+  <li><strong>description</strong> — Shown in search results. Keep 150-160 characters. Write to entice clicks.</li>
+  <li><strong>robots</strong> — Controls crawler behaviour. Use <code>noindex</code> for pages you don't want indexed.</li>
+  <li><strong>canonical</strong> — Prevents duplicate content issues by specifying the preferred URL.</li>
+</ul>
+
+<h2>Open Graph Tags (Social Media)</h2>
+<p>Open Graph tags control how your page appears when shared on Facebook, LinkedIn, and WhatsApp:</p>
+<pre><code>&lt;meta property="og:title" content="Best Running Shoes 2024"&gt;
+&lt;meta property="og:description" content="Top 10 running shoes reviewed by experts."&gt;
+&lt;meta property="og:image" content="https://example.com/og-running-shoes.jpg"&gt;
+&lt;meta property="og:image:width" content="1200"&gt;
+&lt;meta property="og:image:height" content="630"&gt;
+&lt;meta property="og:url" content="https://example.com/running-shoes"&gt;
+&lt;meta property="og:type" content="article"&gt;
+&lt;meta property="og:site_name" content="ShoeStore"&gt;</code></pre>
+<p><strong>OG image recommendation:</strong> 1200×630px. This is shown as a large preview card on most platforms.</p>
+
+<h2>Twitter Card Tags</h2>
+<pre><code>&lt;meta name="twitter:card" content="summary_large_image"&gt;
+&lt;meta name="twitter:site" content="@ShoeStore"&gt;
+&lt;meta name="twitter:creator" content="@AuthorHandle"&gt;
+&lt;meta name="twitter:title" content="Best Running Shoes 2024"&gt;
+&lt;meta name="twitter:description" content="Top 10 running shoes reviewed by experts."&gt;
+&lt;meta name="twitter:image" content="https://example.com/twitter-running-shoes.jpg"&gt;</code></pre>
+<p>Card types: <code>summary</code> (small image), <code>summary_large_image</code> (large banner), <code>app</code> (app install), <code>player</code> (video).</p>
+
+<h2>Structured Data with JSON-LD</h2>
+<p>JSON-LD is Google's preferred format for structured data markup. It enables rich results (star ratings, FAQs, breadcrumbs, etc.) in search:</p>
+<pre><code>&lt;script type="application/ld+json"&gt;
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Best Running Shoes 2024",
+  "author": {
+    "@type": "Person",
+    "name": "Jane Smith"
+  },
+  "datePublished": "2024-01-15",
+  "dateModified": "2024-03-01",
+  "image": "https://example.com/og-running-shoes.jpg",
+  "publisher": {
+    "@type": "Organization",
+    "name": "ShoeStore",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://example.com/logo.png"
+    }
+  }
+}
+&lt;/script&gt;</code></pre>
+
+<h2>Favicon & App Icons</h2>
+<pre><code>&lt;link rel="icon" href="/favicon.ico" sizes="any"&gt;
+&lt;link rel="icon" href="/icon.svg" type="image/svg+xml"&gt;
+&lt;link rel="apple-touch-icon" href="/apple-touch-icon.png"&gt;
+&lt;link rel="manifest" href="/site.webmanifest"&gt;</code></pre>
+
+<h2>Hreflang for International Sites</h2>
+<p>If your site serves multiple languages, tell search engines which language/region each page targets:</p>
+<pre><code>&lt;link rel="alternate" hreflang="en" href="https://example.com/en/"&gt;
+&lt;link rel="alternate" hreflang="fr" href="https://example.com/fr/"&gt;
+&lt;link rel="alternate" hreflang="x-default" href="https://example.com/"&gt;</code></pre>
+
+<h2>Best Practices Summary</h2>
+<ul>
+  <li>Every page must have a unique <code>&lt;title&gt;</code> and <code>&lt;meta name="description"&gt;</code>.</li>
+  <li>Use <code>&lt;link rel="canonical"&gt;</code> to avoid duplicate content penalties.</li>
+  <li>Always include Open Graph tags for better social sharing previews.</li>
+  <li>Add JSON-LD structured data to qualify for rich results in Google.</li>
+  <li>Test with Google's Rich Results Test and Facebook's Sharing Debugger.</li>
+</ul>

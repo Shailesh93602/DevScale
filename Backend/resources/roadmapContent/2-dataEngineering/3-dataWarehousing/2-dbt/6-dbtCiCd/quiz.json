@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What specifically is the massive architectural advantage of treating dbt SQL projects fundamentally as standard 'Software Engineering' code?",
+            "options": [
+                "It compiles SQL into Javascript React hooks.",
+                "Because dbt models are just plain text '.sql' files, they can be securely placed under strict Version Control (like Git/GitHub), allowing Data Engineering teams to safely utilize feature branches, peer reviews, and Pull Requests before modifying production databases.",
+                "It compresses CSS stylesheets efficiently.",
+                "It aggressively automatically indexes MongoDB databases."
+            ],
+            "answer": "Because dbt models are just plain text '.sql' files, they can be securely placed under strict Version Control (like Git/GitHub), allowing Data Engineering teams to safely utilize feature branches, peer reviews, and Pull Requests before modifying production databases.",
+            "explanation": "You should never type a raw SQL UPDATE statement into a live production console. Always check the code into Git first."
+        },
+        {
+            "question": "Regarding automated Pull Request testing, what does an automated 'CI/CD Pipeline' fundamentally accomplish in a dbt project?",
+            "options": [
+                "It checks for typos in HTML files securely.",
+                "When an engineer submits a Pull Request, an automated server (like GitHub Actions) wakes up, clones the Git repository, implicitly compiles the SQL logically, and executes isolated test runs to mathematically guarantee the code won't break the live database.",
+                "It dynamically changes database firewall rules.",
+                "It automatically deploys Webpack bundlers."
+            ],
+            "answer": "When an engineer submits a Pull Request, an automated server (like GitHub Actions) wakes up, clones the Git repository, implicitly compiles the SQL logically, and executes isolated test runs to mathematically guarantee the code won't break the live database.",
+            "explanation": "A CI pipeline acts as an automated robot that verifies exactly what would happen before a human explicitly clicks 'Merge'."
+        },
+        {
+            "question": "How does dbt 'Slim CI' systematically drastically solve the severe time and financial compute cost of continuously testing a massive Petabyte-scale enterprise Data Warehouse during a Pull Request?",
+            "options": [
+                "It strictly ignores all error messages effectively.",
+                "By utilizing 'State-Based Execution,' dbt intelligently checks the production 'manifest.json' and securely explicitly executes ONLY the strictly specific `.sql` models that were physically modified in your Git branch (and their direct downstream children), turning a 12-hour full test into a cheap 2-minute test.",
+                "It compresses Python scripts natively.",
+                "It securely encrypts all SQL queries intelligently."
+            ],
+            "answer": "By utilizing 'State-Based Execution,' dbt intelligently checks the production 'manifest.json' and securely explicitly executes ONLY the strictly specific `.sql` models that were physically modified in your Git branch (and their direct downstream children), turning a 12-hour full test into a cheap 2-minute test.",
+            "explanation": "If your PR only changes the 'USA Marketing' table, Slim CI prevents dbt from completely unnecessarily recompiling the massive 'Global Sales' table."
+        }
+    ]
+}

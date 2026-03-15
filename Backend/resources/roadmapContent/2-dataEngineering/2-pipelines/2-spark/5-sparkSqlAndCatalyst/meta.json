@@ -1,0 +1,4 @@
+{
+    "name": "Spark SQL and the Catalyst Optimizer",
+    "description": "Running massive analytical queries concurrently. Utilizing Spark SQL arrays, leveraging Window Functions, and deeply understanding how the internal Catalyst Optimizer intelligently rewrites expensive execution plans."
+}

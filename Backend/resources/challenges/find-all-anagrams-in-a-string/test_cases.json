@@ -1,0 +1,12 @@
+[
+  { "input": "{\"s\":\"cbaebabacd\", \"p\":\"abc\"}", "output": "[0,6]", "explanation": "Standard case", "is_hidden": false },
+  { "input": "{\"s\":\"abab\", \"p\":\"ab\"}", "output": "[0,1,2]", "explanation": "Overlapping instances", "is_hidden": false },
+  { "input": "{\"s\":\"a\", \"p\":\"a\"}", "output": "[0]", "explanation": "Single identical character", "is_hidden": true },
+  { "input": "{\"s\":\"a\", \"p\":\"ab\"}", "output": "[]", "explanation": "p longer than s", "is_hidden": true },
+  { "input": "{\"s\":\"ab\", \"p\":\"a\"}", "output": "[0]", "explanation": "p shorter than s", "is_hidden": true },
+  { "input": "{\"s\":\"baa\", \"p\":\"aa\"}", "output": "[1]", "explanation": "Duplicate characters in p", "is_hidden": true },
+  { "input": "{\"s\":\"aaaa\", \"p\":\"aa\"}", "output": "[0,1,2]", "explanation": "Repeated same character", "is_hidden": true },
+  { "input": "{\"s\":\"abcde\", \"p\":\"f\"}", "output": "[]", "explanation": "p characters not in s", "is_hidden": true },
+  { "input": "{\"s\":\"xyzxyzxyzxyz\", \"p\":\"zyx\"}", "output": "[0,1,2,3,4,5,6,7,8,9]", "explanation": "Multiple continuous anagrams", "is_hidden": true },
+  { "input": "{\"s\":\"af\", \"p\":\"be\"}", "output": "[]", "explanation": "Different characters", "is_hidden": true }
+]

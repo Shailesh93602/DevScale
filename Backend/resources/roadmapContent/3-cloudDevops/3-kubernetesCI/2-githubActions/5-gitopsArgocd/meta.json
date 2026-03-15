@@ -1,0 +1,4 @@
+{
+    "name": "GitOps with ArgoCD",
+    "description": "Implementing GitOps for Kubernetes deployments. Understanding the GitOps principles of declarative infrastructure, using Git as the single source of truth, and deploying ArgoCD to automatically sync Kubernetes cluster state with a Git repository — enabling auditable, reproducible deployments."
+}

@@ -1,0 +1,118 @@
+{
+    "title": "Data Wrangling Quiz",
+    "description": "Test your knowledge of cleaning and transforming data with Pandas.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Which pandas method shows non-null counts and data types?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "df.describe()",
+                    "isCorrect": false
+                },
+                {
+                    "text": "df.info()",
+                    "isCorrect": true
+                },
+                {
+                    "text": "df.head()",
+                    "isCorrect": false
+                },
+                {
+                    "text": "df.dtypes",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which method drops all rows where a specific column has NaN?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "df.dropna()",
+                    "isCorrect": false
+                },
+                {
+                    "text": "df.dropna(subset=['column'])",
+                    "isCorrect": true
+                },
+                {
+                    "text": "df.fillna(subset=['column'])",
+                    "isCorrect": false
+                },
+                {
+                    "text": "df.remove_nulls()",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does `df.groupby('category').agg({'price': 'mean'})` compute?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The total sum of price per category",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The mean price for each category",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The highest price per category",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The count of rows per category",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which pandas merge how parameter is equivalent to SQL LEFT JOIN?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "how='inner'",
+                    "isCorrect": false
+                },
+                {
+                    "text": "how='outer'",
+                    "isCorrect": false
+                },
+                {
+                    "text": "how='left'",
+                    "isCorrect": true
+                },
+                {
+                    "text": "how='right'",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which file format is most efficient for storing large pandas DataFrames?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "CSV",
+                    "isCorrect": false
+                },
+                {
+                    "text": "JSON",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Parquet",
+                    "isCorrect": true
+                },
+                {
+                    "text": "TXT",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

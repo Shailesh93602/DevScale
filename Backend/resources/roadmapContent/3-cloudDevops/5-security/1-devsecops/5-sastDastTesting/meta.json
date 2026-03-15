@@ -1,0 +1,4 @@
+{
+    "name": "SAST, DAST & Penetration Testing",
+    "description": "Implementing automated security testing at every stage of the SDLC. Using SAST tools (Semgrep, SonarQube) to find vulnerabilities in source code, DAST tools (OWASP ZAP, Burp Suite) to test running applications, and understanding penetration testing methodology for pre-production security validation."
+}

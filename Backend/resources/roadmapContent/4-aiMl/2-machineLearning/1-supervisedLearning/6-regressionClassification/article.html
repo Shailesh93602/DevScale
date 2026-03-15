@@ -1,0 +1,84 @@
+<h1>Regression & Classification Algorithms Deep Dive</h1>
+<p>Before gradient boosting and neural networks, linear models built the foundation of machine learning. Understanding them deeply reveals why regularization works, the mathematical nature of the bias-variance tradeoff, and when simpler models remain the superior choice.</p>
+
+<h2>Linear Regression with Regularization</h2>
+<pre><code class="language-python">from sklearn.linear_model import Ridge, Lasso, ElasticNet
+from sklearn.model_selection import cross_val_score
+import numpy as np
+
+# Unregularized Linear Regression: minimizes sum of squared errors (SSE)
+# Problem: with many features, overfits and coefficients become unstable
+
+# Ridge (L2): penalizes sum of squared coefficients
+# Effect: shrinks all coefficients toward (but not to) zero
+# Best when: all features have some predictive value
+ridge = Ridge(alpha=1.0)  # alpha controls regularization strength — tune this!
+
+# Lasso (L1): penalizes sum of |coefficients|
+# Effect: drives unimportant coefficients exactly to zero (automatic feature selection)
+# Best when: many features are irrelevant
+lasso = Lasso(alpha=0.01)
+
+# ElasticNet: combines L1 + L2
+# Best when: many correlated features exist (Lasso picks one arbitrarily; ElasticNet groups them)
+elastic = ElasticNet(alpha=0.01, l1_ratio=0.5)  # 50% L1, 50% L2
+
+# Always use cross-validation to select alpha
+alphas = np.logspace(-4, 2, 50)  # Test 50 alpha values from 0.0001 to 100
+best_alpha = None
+best_cv_score = -np.inf
+
+for alpha in alphas:
+    model = Ridge(alpha=alpha)
+    cv_rmse = -cross_val_score(model, X, y, cv=5, scoring='neg_root_mean_squared_error').mean()
+    if cv_rmse > best_cv_score:
+        best_cv_score = cv_rmse
+        best_alpha = alpha
+</code></pre>
+
+<h2>Logistic Regression</h2>
+<pre><code class="language-python">from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
+
+# IMPORTANT: Logistic Regression requires feature scaling! (unlike tree models)
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X_train)
+
+# Despite the name, Logistic Regression is a CLASSIFICATION model
+# It uses the sigmoid function to squash linear output to [0, 1] probability:
+# P(y=1|x) = 1 / (1 + exp(-wTx + b))
+
+lr = LogisticRegression(
+    C=1.0,              # C = 1/lambda (inverse regularization strength)
+    penalty='l2',       # Default: Ridge-like regularization
+    solver='lbfgs',     # Best for small-medium datasets
+    max_iter=1000,
+    class_weight='balanced'  # Useful for imbalanced datasets
+)
+lr.fit(X_scaled, y_train)
+
+# Coefficients are interpretable: log-odds ratios
+print("Feature importances (log-odds):")
+for feature, coef in zip(feature_names, lr.coef_[0]):
+    print(f"  {feature}: {coef:.3f}")  # Positive = increases P(churn), negative = decreases
+</code></pre>
+
+<h2>The Bias-Variance Tradeoff</h2>
+<pre><code class="language-text">Total Error = Bias² + Variance + Irreducible Noise
+
+High Bias (Underfitting):
+  - Model is too simple to capture true patterns
+  - Train error = high, Test error = high
+  - Fix: more complex model, more features
+
+High Variance (Overfitting):
+  - Model memorizes training data including noise
+  - Train error = low, Test error = high
+  - Fix: more data, regularization, simpler model, feature selection
+
+Algorithm Bias-Variance Spectrum:
+Low Variance ←────────────────────────→ High Variance
+High Bias                               Low Bias
+Linear Regression → Random Forest → Full Decision Tree
+Logistic Regression → Gradient Boosting → Neural Network (overfit)
+</code></pre>

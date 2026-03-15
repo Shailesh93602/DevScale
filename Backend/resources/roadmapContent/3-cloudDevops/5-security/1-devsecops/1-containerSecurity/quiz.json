@@ -1,0 +1,118 @@
+{
+    "title": "Container Security Quiz",
+    "description": "Test your knowledge on running as non-root, minimal images, and avoiding host breakouts.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the primary risk of allowing the main process in a Docker container to run as 'root'?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It consumes significantly more CPU and RAM resources.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because containers share the host's kernel, a compromised root process in a container makes breaking out and compromising the entire host server much easier.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Docker Hub will refuse to host the image.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It prevents Kubernetes from load balancing the container properly.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which Dockerfile directive should be used to switch to a less-privileged assigned user right before the final `CMD` execution?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "SWITCH_USER",
+                    "isCorrect": false
+                },
+                {
+                    "text": "USER",
+                    "isCorrect": true
+                },
+                {
+                    "text": "RUN_AS",
+                    "isCorrect": false
+                },
+                {
+                    "text": "PRIVILEGE",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the primary security benefit of utilizing Google 'Distroless' Docker images?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "They automatically update themselves to patch vulnerabilities while running.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "They encrypt all network traffic leaving the container via HTTPS.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "They omit operating system utilities, including package managers and basic shells like bash, drastically reducing the attack surface for hackers.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "They bypass Docker and execute directly on the bare-metal hardware.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How does enforcing a 'readOnlyRootFilesystem' policy protect a cloud application?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It encrypts the database passwords so users can't read them.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It stops hackers who have breached the application from being able to download and save malware/scripts to the container's disk.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It prevents DDoS attacks by blocking incoming POST requests.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It makes the container run exclusively in the CPU cache.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What role does an open-source tool like 'Falco' play in a Kubernetes cluster?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It provisions initial IAM roles automatically.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It is an Ingress controller used for routing internet traffic securely.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It scans static Dockerfiles for bad practices before they are built.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It acts as a runtime security monitor, interacting with the Linux Kernel to alert on suspicious behavior like unexpected shell executions inside pods.",
+                    "isCorrect": true
+                }
+            ]
+        }
+    ]
+}

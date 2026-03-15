@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "Which selector type has the highest specificity?",
+            "options": [
+                "Class selector (.btn)",
+                "Element selector (div)",
+                "ID selector (#header)",
+                "Pseudo-class (:hover)"
+            ],
+            "answer": "ID selector (#header)",
+            "explanation": "ID selectors have a specificity score of 0,1,0,0, making them higher than class (0,0,1,0) and element (0,0,0,1) selectors."
+        },
+        {
+            "question": "What is the specificity score of the selector: .nav > li:hover?",
+            "options": [
+                "0,0,1,1",
+                "0,0,2,1",
+                "0,0,2,0",
+                "0,1,1,0"
+            ],
+            "answer": "0,0,2,1",
+            "explanation": ".nav is 1 class (0,0,1,0), :hover is 1 pseudo-class (0,0,1,0), and li is 1 element (0,0,0,1). Total: 0,0,2,1."
+        },
+        {
+            "question": "What is the difference between :is() and :where() pseudo-classes?",
+            "options": [
+                "They are identical in all ways",
+                ":is() takes the specificity of its most specific argument; :where() always has 0 specificity",
+                ":where() takes the specificity of its most specific argument; :is() always has 0 specificity",
+                ":is() only works in modern browsers; :where() is widely supported"
+            ],
+            "answer": ":is() takes the specificity of its most specific argument; :where() always has 0 specificity",
+            "explanation": ":where() is useful for base/reset styles because its 0 specificity makes it easy for component-level styles to override it."
+        },
+        {
+            "question": "What does the :has() selector enable that wasn't possible in CSS before?",
+            "options": [
+                "Styling child elements",
+                "Selecting the parent element based on its children",
+                "Selecting siblings",
+                "Applying animations"
+            ],
+            "answer": "Selecting the parent element based on its children",
+            "explanation": ":has() is the long-awaited 'parent selector' — it allows styling an element based on what it contains, e.g., .card:has(img) to style cards that contain images."
+        },
+        {
+            "question": "Which CSS declaration wins when two rules have the same specificity?",
+            "options": [
+                "The first rule in the stylesheet",
+                "The one with !important",
+                "The last rule in the stylesheet",
+                "The shortest selector"
+            ],
+            "answer": "The last rule in the stylesheet",
+            "explanation": "When specificity is equal, the cascade resolves the conflict by source order — the rule that appears later in the stylesheet wins."
+        }
+    ]
+}

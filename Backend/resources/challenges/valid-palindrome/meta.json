@@ -1,0 +1,39 @@
+{
+  "title": "Valid Palindrome",
+  "slug": "valid-palindrome",
+  "difficulty": "Easy",
+  "category": "algorithms",
+  "points": 50,
+  "tags": [
+    "string",
+    "two-pointers"
+  ],
+  "company_tags": [
+    "Facebook",
+    "Microsoft",
+    "Uber"
+  ],
+  "topic_tags": [
+    "strings",
+    "two pointers"
+  ],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "A string `s`.",
+  "output_format": "`true` if `s` is a palindrome, `false` otherwise.",
+  "example_input": "s = \"A man, a plan, a canal: Panama\"",
+  "example_output": "true",
+  "constraints": "- `1 <= s.length <= 2 * 10^5`\n- `s` consists only of printable ASCII characters.",
+  "function_signature": "function isPalindrome(s: string): boolean {}",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,4 @@
+{
+    "name": "dbt (data build tool)",
+    "description": "Transforming data in the warehouse with SQL models, tests, and documentation."
+}

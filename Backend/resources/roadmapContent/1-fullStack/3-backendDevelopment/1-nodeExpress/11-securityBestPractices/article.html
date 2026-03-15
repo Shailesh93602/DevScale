@@ -1,0 +1,91 @@
+<h1>Express Security Best Practices</h1>
+<p>Modern backend APIs are under constant attack from automated bots and malicious actors. Securing an Express application means defending against the OWASP Top 10 vulnerabilities, including XSS, Injection, and DDoS attacks. Relying on default Express settings is highly dangerous.</p>
+
+<h2>1. Helmet: Secure HTTP Headers</h2>
+<p>By default, Express sends headers that identify the server (<code>X-Powered-By: Express</code>), which tells hackers exactly which exploits to try. Express also lacks dozens of modern security headers (like Content Security Policy, X-XSS-Protection, and Strict-Transport-Security).</p>
+<p>The <strong>Helmet</strong> middleware automatically fixes all of this by setting 15+ secure HTTP headers instantly.</p>
+
+<pre><code>const express = require('express');
+const helmet = require('helmet');
+const app = express();
+
+// Must be the VERY FIRST middleware in your app!
+app.use(helmet());</code></pre>
+
+<h2>2. CORS (Cross-Origin Resource Sharing)</h2>
+<p>By default, if you have an API running at <code>api.example.com</code>, a hacker can build a malicious website at <code>evil.com</code> that makes Fetch/XHR requests to your API using the victim's browser (and cookies!). Configuring CORS restricts which domains are allowed to call your API from a browser.</p>
+
+<pre><code>const cors = require('cors');
+
+// ❌ DANGEROUS: Allows ANY website in the world to access your API
+// app.use(cors()); 
+
+// ✅ SECURE: Only allows requests from your specific frontend domains
+const corsOptions = {
+  origin: ['https://www.myfrontend.com', 'https://admin.myfrontend.com'],
+  optionsSuccessStatus: 200, 
+  credentials: true // Required if you are sending HttpOnly cookies!
+};
+
+app.use(cors(corsOptions));</code></pre>
+
+<h2>3. Rate Limiting (Preventing Brute Force / DDoS)</h2>
+<p>If you don't limit how many requests a user can make, a hacker can easily write a script to guess 10,000 passwords per second on your <code>/login</code> route, or crash your server by requesting heavy database queries over and over (Denial of Service).</p>
+
+<pre><code>const rateLimit = require('express-rate-limit');
+
+// 1. General Rate Limiter for all routes
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes window
+  max: 100, // Limit each IP to 100 requests per window
+  message: "Too many requests from this IP, please try again after 15 minutes"
+});
+app.use(globalLimiter);
+
+// 2. Strict Rate Limiter specifically for authentication routes
+const authLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 5, // Limit each IP to 5 failed login requests per hour
+  message: "Too many login attempts, please try again after an hour"
+});
+app.use('/api/auth/login', authLimiter);</code></pre>
+
+<h2>4. Preventing NoSQL Injection (MongoDB)</h2>
+<p>SQL Injection is famous, but NoSQL databases like MongoDB are also vulnerable. If you allow users to pass objects directly into a query without sanitization, hackers can use query operators (like <code>$gt</code>, <code>$ne</code>) to bypass authentication.</p>
+
+<pre><code>// ❌ THE VULNERABILITY
+// If the hacker sends req.body as { "email": { "$gt": "" }, "password": { "$gt": "" } }
+// The query evaluates to "Find a user where email is greater than nothing", which returns the first user (often an Admin) and logs them in!
+app.post('/login', async (req, res) =&gt; {
+  const user = await User.findOne(req.body); 
+});
+
+// ✅ THE FIX: Use express-mongo-sanitize
+const mongoSanitize = require('express-mongo-sanitize');
+
+// Removes any keys in req.body, req.query, or req.params that begin with a '$' or '.'
+app.use(mongoSanitize());
+
+// Also, strictly extract expected strings rather than passing the whole req.body object
+app.post('/login', async (req, res) =&gt; {
+  const email = String(req.body.email);
+  const password = String(req.body.password);
+  const user = await User.findOne({ email, password }); 
+});</code></pre>
+
+<h2>5. Preventing Cross-Site Scripting (XSS)</h2>
+<p>If a user enters <code>&lt;script&gt;alert('Hacked!');&lt;/script&gt;</code> as their username, and you display that username to other users, their browsers will execute the malicious code. The server must sanitize all incoming user data.</p>
+<pre><code>const xss = require('xss-clean');
+
+// Intercepts all req.body/query/params and strips out HTML/script tags
+app.use(xss());</code></pre>
+
+<h2>6. Environment Variables & Secrets</h2>
+<p>Never hardcode API keys, database URLs, or JWT Secrets in your source code. Use the <code>dotenv</code> package to load them from a <code>.env</code> file, and ensure <code>.env</code> is added to your <code>.gitignore</code> so it is never pushed to GitHub.</p>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Keep your dependencies updated using <code>npm audit</code> to find and fix known vulnerabilities in third-party packages.</li>
+  <li>Avoid using <code>eval()</code> or <code>setTimeout('string')</code> at all costs; they execute arbitrary strings as code.</li>
+  <li>Always run <code>app.disable('x-powered-by')</code> if you aren't using Helmet to obscure that you are running Express.</li>
+</ul>

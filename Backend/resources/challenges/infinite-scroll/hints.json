@@ -1,0 +1,6 @@
+[
+  "Track currentPage, isLoading flag, and hasMore flag as closure variables.",
+  "In loadMore, first check if already loading or no more data — return early if so.",
+  "After fetching, check if returned items < pageSize. If so, set hasMore to false.",
+  "Use try/finally to ensure the loading flag is always reset, even if the fetch fails."
+]

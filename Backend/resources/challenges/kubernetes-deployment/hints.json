@@ -1,0 +1,6 @@
+[
+  "Start with the Deployment spec. Set strategy to RollingUpdate with maxUnavailable: 0 and maxSurge: 1 for zero-downtime deployments.",
+  "Add resource requests at 50% of limits for proper scheduling. Include both liveness probe (detects deadlocks) and readiness probe (controls traffic) with appropriate delays.",
+  "Create a ClusterIP Service with selector matching your Deployment labels. The port (80) maps to targetPort (container port). Use autoscaling/v2 for HPA with CPU-based scaling.",
+  "Add pod anti-affinity to spread replicas across nodes. Set security context with runAsNonRoot: true. Configure HPA scaleDown stabilization to prevent thrashing."
+]

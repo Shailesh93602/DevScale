@@ -1,0 +1,6 @@
+{
+    "id": "1-jestRN",
+    "title": "Unit Testing with Jest",
+    "description": "Fundamental techniques for testing React Native components and business logic using Jest and React Native Testing Library.",
+    "order": 1
+}

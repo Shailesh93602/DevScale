@@ -1,0 +1,97 @@
+<h1>Feature Engineering & Data Preprocessing</h1>
+<p>"Garbage in, garbage out" — no machine learning model can compensate for poorly prepared data. Feature engineering is often cited as the highest-leverage activity in applied ML, frequently contributing more to model performance than the choice of algorithm itself.</p>
+
+<h2>Handling Missing Values</h2>
+<pre><code class="language-python">import pandas as pd
+from sklearn.impute import SimpleImputer, KNNImputer
+
+df = pd.read_csv("housing.csv")
+
+# Understand the missingness pattern first
+print(df.isnull().sum())
+print(df.isnull().mean() * 100)  # % missing per column
+
+# Strategy 1: Simple imputation
+# Numerical: use median (robust to outliers)
+# Categorical: use most frequent value (mode)
+num_imputer = SimpleImputer(strategy='median')
+cat_imputer = SimpleImputer(strategy='most_frequent')
+
+# Strategy 2: KNN imputation — uses similar rows to infer missing values
+knn_imputer = KNNImputer(n_neighbors=5)
+
+# Strategy 3: Drop — only when < 1% missing and not correlated with target
+df_clean = df.dropna(subset=['target_price'])  # Only if essential
+</code></pre>
+
+<h2>Encoding Categorical Variables</h2>
+<pre><code class="language-python">from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder
+import pandas as pd
+
+# One-Hot Encoding — for nominal categories (no inherent order)
+# 'color': ['red', 'blue', 'green'] → [1,0,0], [0,1,0], [0,0,1]
+# Use when: &lt;= 10 unique values, tree-based models
+encoder = OneHotEncoder(sparse_output=False, handle_unknown='ignore')
+color_encoded = encoder.fit_transform(df[['color']])
+
+# Ordinal Encoding — for ordered categories
+# 'size': ['small', 'medium', 'large'] → [0, 1, 2]
+ordinal = OrdinalEncoder(categories=[['small', 'medium', 'large']])
+df['size_encoded'] = ordinal.fit_transform(df[['size']])
+
+# Target Encoding — for high cardinality categoricals (e.g., zip codes)
+# Replaces each category with the mean target value for that category
+# ⚠️ Always use cross-validation to avoid target leakage
+df['zip_encoded'] = df.groupby('zip_code')['price'].transform('mean')
+</code></pre>
+
+<h2>Feature Scaling</h2>
+<pre><code class="language-python">from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
+
+# Standardization (Z-score): mean=0, std=1
+# USE FOR: neural networks, linear models, SVMs, PCA, k-means
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X_train)
+
+# Normalization (Min-Max): scales to [0, 1] range
+# USE FOR: when you need bounded output (neural network image inputs)
+normalizer = MinMaxScaler()
+
+# Robust Scaler: uses median and IQR — resistant to outliers
+# USE FOR: data with significant outliers
+robust = RobustScaler()
+
+# ⚠️ CRITICAL: Always fit on training data ONLY, then transform both train and test
+# Fitting on test data = data leakage = falsely optimistic metrics
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)   # Only transform, not fit!
+</code></pre>
+
+<h2>Building Sklearn Pipelines</h2>
+<pre><code class="language-python">from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
+
+# Define transformations for different column types
+numeric_transformer = Pipeline(steps=[
+    ('imputer', SimpleImputer(strategy='median')),
+    ('scaler', StandardScaler())
+])
+categorical_transformer = Pipeline(steps=[
+    ('imputer', SimpleImputer(strategy='most_frequent')),
+    ('encoder', OneHotEncoder(handle_unknown='ignore'))
+])
+
+preprocessor = ColumnTransformer(transformers=[
+    ('num', numeric_transformer, ['age', 'income', 'sqft']),
+    ('cat', categorical_transformer, ['city', 'property_type'])
+])
+
+# The Pipeline guarantees no data leakage — all preprocessing is fit on training data
+full_pipeline = Pipeline(steps=[
+    ('preprocessor', preprocessor),
+    ('model', RandomForestRegressor(n_estimators=100))
+])
+
+full_pipeline.fit(X_train, y_train)
+predictions = full_pipeline.predict(X_test)
+</code></pre>

@@ -1,0 +1,6 @@
+[
+  "Start by defining your GraphQL schema with types (User, Post, Comment) and their relationships. Each type needs resolvers for its relational fields (e.g., User.posts, Post.author).",
+  "The N+1 problem occurs when resolving lists of related entities. If you fetch 10 posts and each needs its author, that is 1 query for posts + 10 queries for authors. Use a DataLoader to batch those 10 author lookups into a single batch query.",
+  "Implement a DataLoader by collecting all requested keys during a single tick of the event loop, then executing one batch function that fetches all values at once. Cache results to avoid re-fetching within the same request.",
+  "Add query depth limiting to prevent abuse. Walk the parsed query AST and reject queries that nest deeper than your maximum allowed depth (e.g., 5 levels). Also consider adding query complexity analysis based on the expected cost of each field."
+]

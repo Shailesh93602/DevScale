@@ -1,0 +1,6 @@
+[
+  "Start by initializing weights to zeros. The prediction is a dot product of features and weights plus a bias term.",
+  "The gradient of MSE with respect to weights is: dw = (2/n) * X^T * (predictions - y). Update weights by subtracting learningRate * gradient.",
+  "Don't forget to also compute and update the bias gradient: db = (2/n) * sum(predictions - y).",
+  "For numerical stability, consider normalizing your features before training, or use a small enough learning rate to prevent divergence."
+]

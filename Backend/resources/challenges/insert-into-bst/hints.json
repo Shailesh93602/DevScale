@@ -1,0 +1,6 @@
+[
+  "In a BST, where should a new value be placed? It always becomes a new leaf node.",
+  "Compare val with the current node's value to decide whether to go left or right.",
+  "When you reach a null position, that's where the new node should be inserted.",
+  "You can do this recursively (return new node at null base case) or iteratively (track parent and attach the node)."
+]

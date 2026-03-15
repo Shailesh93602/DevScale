@@ -1,0 +1,48 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary architectural motivation for breaking a massive Monolithic application into distributed Microservices?",
+            "options": [
+                "To make Git merges faster.",
+                "To allow massive engineering teams to develop, test, scale, and deploy autonomous features independently without risking the entire monolithic codebase crashing due to a localized bug.",
+                "To force frontend developers to learn backend logic.",
+                "To automatically generate CSS tokens."
+            ],
+            "answer": "To allow massive engineering teams to develop, test, scale, and deploy autonomous features independently without risking the entire monolithic codebase crashing due to a localized bug.",
+            "explanation": "If the Recommendations engine crashes, the core Shopping Cart checkout flow remains completely unaffected."
+        },
+        {
+            "question": "What is the structural role of an API Gateway in a Microservices ecosystem?",
+            "options": [
+                "To compile Typescript files into minified Webpack Javascript chunks.",
+                "To serve as the single unified entry point for all frontend client traffic, handling critical cross-cutting concerns like user authentication, SSL decryption, rate limiting, and intelligent HTTP request routing.",
+                "To query the SQL database directly and join relational tables.",
+                "To render heavy React components natively on the server."
+            ],
+            "answer": "To serve as the single unified entry point for all frontend client traffic, handling critical cross-cutting concerns like user authentication, SSL decryption, rate limiting, and intelligent HTTP request routing.",
+            "explanation": "The React app simply calls `api.myapp.com`. The Gateway figures out exactly which of the 50 hidden microservices should handle the request."
+        },
+        {
+            "question": "In a distributed Microservices architecture, what design pattern explicitly replaces monolithic SQL ACID Transactions when dealing with multiple separate databases?",
+            "options": [
+                "The Factory Design Pattern.",
+                "The Saga Pattern, coordinating a sequence of local database transactions and publishing events to trigger compensating rollback actions if a step fails.",
+                "The Model View Controller Pattern.",
+                "The React Hooks Architecture."
+            ],
+            "answer": "The Saga Pattern, coordinating a sequence of local database transactions and publishing events to trigger compensating rollback actions if a step fails.",
+            "explanation": "You cannot wrap a standard PostgreSQL `BEGIN` transaction around an HTTP call to a separate Node.js server. The Saga pattern handles failure rollbacks across network boundaries."
+        },
+        {
+            "question": "Why is Event-Driven Communication via a Message Queue heavily preferred over standard synchronous HTTP REST calls between internal Microservices?",
+            "options": [
+                "Because HTTP connections require manual memory allocation.",
+                "Because if Service A relies synchronously on an HTTP response from Service B, a crash in Service B will instantly trigger a cascading crash in Service A. Event queues enforce true architectural isolation.",
+                "Because REST is no longer supported by modern Node servers.",
+                "Because GraphQL queries cannot traverse network layers."
+            ],
+            "answer": "Because if Service A relies synchronously on an HTTP response from Service B, a crash in Service B will instantly trigger a cascading crash in Service A. Event queues enforce true architectural isolation.",
+            "explanation": "Decoupling Microservices with a central Queue protects the entire ecosystem from catastrophic chain-reaction outages."
+        }
+    ]
+}

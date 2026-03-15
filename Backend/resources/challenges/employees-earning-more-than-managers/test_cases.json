@@ -1,0 +1,38 @@
+[
+  {
+    "input": "{\"Employee\": [{\"id\": 1, \"name\": \"Joe\", \"salary\": 70000, \"managerId\": 3}, {\"id\": 2, \"name\": \"Henry\", \"salary\": 80000, \"managerId\": 4}, {\"id\": 3, \"name\": \"Sam\", \"salary\": 60000, \"managerId\": null}, {\"id\": 4, \"name\": \"Max\", \"salary\": 90000, \"managerId\": null}]}",
+    "output": "[{\"Employee\": \"Joe\"}]",
+    "explanation": "Joe earns 70000, more than manager Sam (60000).",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Employee\": [{\"id\": 1, \"name\": \"Alice\", \"salary\": 50000, \"managerId\": 2}, {\"id\": 2, \"name\": \"Bob\", \"salary\": 60000, \"managerId\": null}]}",
+    "output": "[]",
+    "explanation": "Alice earns less than her manager Bob.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Employee\": [{\"id\": 1, \"name\": \"A\", \"salary\": 100000, \"managerId\": 2}, {\"id\": 2, \"name\": \"B\", \"salary\": 50000, \"managerId\": null}]}",
+    "output": "[{\"Employee\": \"A\"}]",
+    "explanation": "A earns 100000, more than manager B (50000).",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Employee\": [{\"id\": 1, \"name\": \"CEO\", \"salary\": 200000, \"managerId\": null}]}",
+    "output": "[]",
+    "explanation": "No manager means no comparison possible.",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"Employee\": [{\"id\": 1, \"name\": \"A\", \"salary\": 50000, \"managerId\": 2}, {\"id\": 2, \"name\": \"B\", \"salary\": 50000, \"managerId\": null}]}",
+    "output": "[]",
+    "explanation": "Equal salary does not count as earning more.",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"Employee\": [{\"id\": 1, \"name\": \"X\", \"salary\": 90000, \"managerId\": 3}, {\"id\": 2, \"name\": \"Y\", \"salary\": 80000, \"managerId\": 3}, {\"id\": 3, \"name\": \"Z\", \"salary\": 70000, \"managerId\": null}]}",
+    "output": "[{\"Employee\": \"X\"}, {\"Employee\": \"Y\"}]",
+    "explanation": "Both X and Y earn more than their manager Z.",
+    "is_hidden": true
+  }
+]

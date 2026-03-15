@@ -1,0 +1,6 @@
+[
+  "Think about the last characters of both strings. If they match, no operation is needed for them.",
+  "If they don't match, consider all three operations: insert, delete, replace. Each corresponds to a different subproblem.",
+  "dp[i][j] = min operations to convert word1[0..i-1] to word2[0..j-1]. Base cases: dp[i][0] = i (delete all), dp[0][j] = j (insert all).",
+  "If characters match: dp[i][j] = dp[i-1][j-1]. Otherwise: dp[i][j] = 1 + min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1])."
+]

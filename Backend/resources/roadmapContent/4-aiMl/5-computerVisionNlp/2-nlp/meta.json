@@ -1,0 +1,11 @@
+{
+    "id": "2-nlp",
+    "title": "Natural Language Processing (NLP)",
+    "description": "Understanding and processing human language with deep learning.",
+    "order": 2,
+    "topics": [
+        "1-textPreprocessing",
+        "2-bertEmbeddings",
+        "3-namedEntityRecognition"
+    ]
+}

@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary architectural purpose of utilizing 'Spark SQL' instead of the standard Python DataFrame API methods?",
+            "options": [
+                "Spark SQL directly connects to PostgreSQL instances.",
+                "Spark SQL enables Data Analysts and non-programmers to natively execute predefined ANSI SQL analytical queries directly against raw file formats (CSV, JSON, Parquet) reliably without writing complex Python logic.",
+                "Spark SQL translates HTML inputs into MongoDB objects.",
+                "Spark SQL automatically generates CSS stylesheets natively."
+            ],
+            "answer": "Spark SQL enables Data Analysts and non-programmers to natively execute predefined ANSI SQL analytical queries directly against raw file formats (CSV, JSON, Parquet) reliably without writing complex Python logic.",
+            "explanation": "You can expose a 1-Terabyte Parquet log stream as a temporary view, and your business intelligence team can query it directly using familiar SQL statements."
+        },
+        {
+            "question": "Regarding the core Apache Spark processing engine, what specifically is the foundational role of the 'Catalyst Optimizer'?",
+            "options": [
+                "It manages garbage collection limits optimally.",
+                "It mathematically parses queries, analyzes the underlying structural schema, and intelligently heavily rewrites the logical code into a significantly faster, optimized Physical Execution Plan natively before executing the job.",
+                "It compiles SQL into Ruby scripts.",
+                "It handles network authentication cleanly."
+            ],
+            "answer": "It mathematically parses queries, analyzes the underlying structural schema, and intelligently heavily rewrites the logical code into a significantly faster, optimized Physical Execution Plan natively before executing the job.",
+            "explanation": "If you write a terribly slow nested query, Catalyst understands your intent and rewrites the physical execution to accomplish the result efficiently."
+        },
+        {
+            "question": "When the Catalyst Optimizer deploys 'Predicate Pushdown', what physical advantage is inherently gained dynamically?",
+            "options": [
+                "It aggressively deletes HTTP routing structures.",
+                "It intelligently 'pushes' WHERE filters (predicates) down to the very beginning of the computation pipeline optimally, aggressively discarding millions of irrelevant rows early before they are ever loaded into active expensive cluster memory.",
+                "It physically moves data warehouses into localized hard drives.",
+                "It disables CSS variable rendering."
+            ],
+            "answer": "It intelligently 'pushes' WHERE filters (predicates) down to the very beginning of the computation pipeline optimally, aggressively discarding millions of irrelevant rows early before they are ever loaded into active expensive cluster memory.",
+            "explanation": "If you join tables and then filter by 'age > 18', Catalyst magically filters 'age > 18' first immediately during the read phase, making the subsequent join 100x faster."
+        }
+    ]
+}

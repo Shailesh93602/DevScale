@@ -1,0 +1,19 @@
+{
+  "title": "Implement JWT Authentication",
+  "slug": "implement-jwt-auth",
+  "difficulty": "Medium",
+  "category": "backend",
+  "points": 100,
+  "tags": ["authentication", "jwt", "security", "middleware"],
+  "company_tags": ["Auth0", "Amazon", "Google", "Stripe", "Meta"],
+  "topic_tags": ["JWT", "Authentication", "Authorization", "Middleware", "Security"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "User credentials for login, JWT token for protected routes",
+  "output_format": "JWT tokens on login, protected resource data or error responses",
+  "example_input": "POST /auth/login { \"email\": \"user@test.com\", \"password\": \"secret123\" }",
+  "example_output": "{ \"accessToken\": \"eyJhbGciOiJIUzI1NiIs...\", \"refreshToken\": \"eyJhbGciOiJIUzI1NiIs...\", \"expiresIn\": 3600 }",
+  "constraints": "Access tokens expire in 1 hour. Refresh tokens expire in 7 days. Must validate token signature and expiration. Must hash passwords with bcrypt.",
+  "function_signature": "class AuthService { register(email: string, password: string): Promise<User>; login(email: string, password: string): Promise<TokenPair>; verifyToken(token: string): Promise<TokenPayload>; refreshToken(refreshToken: string): Promise<TokenPair>; }",
+  "status": "ACTIVE"
+}

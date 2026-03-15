@@ -1,0 +1,10 @@
+{
+  "typescript": "function validPath(n: number, edges: number[][], start: number, end: number): boolean {\n    \n};",
+  "javascript": "/**\n * @param {number} n\n * @param {number[][]} edges\n * @param {number} start\n * @param {number} end\n * @return {boolean}\n */\nvar validPath = function(n, edges, start, end) {\n    \n};",
+  "python": "class Solution:\n    def validPath(self, n: int, edges: List[List[int]], start: int, end: int) -> bool:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public boolean validPath(int n, int[][] edges, int start, int end) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool validPath(int n, vector<vector<int>>& edges, int start, int end) {\n        \n    }\n};",
+  "go": "func validPath(n int, edges [][]int, start int, end int) bool {\n    \n}",
+  "rust": "impl Solution {\n    pub fn valid_path(n: i32, edges: Vec<Vec<i32>>, start: i32, end: i32) -> bool {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public bool ValidPath(int n, int[][] edges, int start, int end) {\n        \n    }\n}"
+}

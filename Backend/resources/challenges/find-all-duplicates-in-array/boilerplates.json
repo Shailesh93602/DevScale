@@ -1,0 +1,10 @@
+{
+  "typescript": "// TODO\n  // Your code here\n}",
+  "javascript": "/**\n * @param {TODO} param\n * @return {TODO}\n */\nvar solve = function() {\n  // Your code here\n};",
+  "python": "class Solution:\n    def solve(self) -> None:\n        # Your code here\n        pass",
+  "java": "import java.util.*;\n\nclass Solution {\n    public void solve() {\n        // Your code here\n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    void solve() {\n        // Your code here\n    }\n};",
+  "go": "func solve() {\n    // Your code here\n}",
+  "rust": "impl Solution {\n    pub fn solve() {\n        // Your code here\n    }\n}",
+  "csharp": "public class Solution {\n    public void Solve() {\n        // Your code here\n    }\n}"
+}

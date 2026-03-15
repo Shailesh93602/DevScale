@@ -1,0 +1,4 @@
+{
+    "name": "Kafka Connect",
+    "description": "Piping data in and out of Kafka from standard sources and sinks like relational databases or AWS S3."
+}

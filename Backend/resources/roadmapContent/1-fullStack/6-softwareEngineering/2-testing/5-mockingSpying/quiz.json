@@ -1,0 +1,48 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary technical reason why Unit Tests must NEVER execute raw HTTP requests against external APIs like Stripe or SendGrid?",
+            "options": [
+                "Because HTTP requests are too fast to assert properly.",
+                "External APIs are incredibly slow, require active internet connections, cause severe rate-limiting issues on your test suite, and may execute destructive real-world actions like charging credit cards.",
+                "Because Jest natively blocks all HTTP traffic by default.",
+                "Because APIs require GraphQL architectures."
+            ],
+            "answer": "External APIs are incredibly slow, require active internet connections, cause severe rate-limiting issues on your test suite, and may execute destructive real-world actions like charging credit cards.",
+            "explanation": "Unit tests must run in milliseconds and be 100% disconnected from the internet. Hitting Stripe 500 times an hour during CI/CD will result in a banned account."
+        },
+        {
+            "question": "What specifically is a 'Mock' in the context of Javascript testing frameworks like Jest?",
+            "options": [
+                "A script that runs on GitHub Actions.",
+                "A synthetically fabricated Javascript object or function that completely replaces a real external dependency, precisely programmed to instantly return predetermined fake data safely in isolation.",
+                "A CSS styling sheet applied to the DOM.",
+                "A compiled Typescript file."
+            ],
+            "answer": "A synthetically fabricated Javascript object or function that completely replaces a real external dependency, precisely programmed to instantly return predetermined fake data safely in isolation.",
+            "explanation": "If your function relies on a Database, you mock the Database connection to instantly return an empty array, bypassing the SQL server entirely."
+        },
+        {
+            "question": "How does a 'Spy' fundamentally differ from a 'Mock' statically?",
+            "options": [
+                "A Spy cannot be used in Typescript.",
+                "A Spy attaches a silent tracker strictly to an existing real function to record precisely how many times it was called and what specific arguments it received, without necessarily replacing its logic.",
+                "A Spy runs infinitely in the background.",
+                "A Spy deletes the function entirely."
+            ],
+            "answer": "A Spy attaches a silent tracker strictly to an existing real function to record precisely how many times it was called and what specific arguments it received, without necessarily replacing its logic.",
+            "explanation": "Spies (e.g. `jest.spyOn()` ) are perfect for asserting that your code executed `console.log()` or `analytics.track()` with the exact correct nested payload."
+        },
+        {
+            "question": "What Architectural benefit does Mocking provide when isolating regression bugs?",
+            "options": [
+                "It increases the binary file size of the backend.",
+                "If an external module breaks, only that specific module's Unit tests fail. All other components that mock that module safely continue to pass, pinpointing the exact location of the bug immediately.",
+                "It generates free SSL certificates.",
+                "It prevents DOM updates asynchronously."
+            ],
+            "answer": "If an external module breaks, only that specific module's Unit tests fail. All other components that mock that module safely continue to pass, pinpointing the exact location of the bug immediately.",
+            "explanation": "If you don't mock, a broken Database connection will cause 500 different Unit Tests across 40 files to crash simultaneously, making it practically impossible to locate the root cause."
+        }
+    ]
+}

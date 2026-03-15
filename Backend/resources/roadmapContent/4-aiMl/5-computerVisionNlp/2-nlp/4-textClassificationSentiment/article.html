@@ -1,0 +1,88 @@
+<h1>Text Classification & Sentiment Analysis</h1>
+<p>Text classification assigns predefined categories to text — sentiment labels to reviews, intents to chatbot messages, topics to news articles. It's one of the most widely deployed NLP tasks in production. Modern approaches range from simple TF-IDF + logistic regression (fast, interpretable) to fine-tuned BERT models (state-of-the-art accuracy).</p>
+
+<h2>Baseline: TF-IDF + Logistic Regression</h2>
+<pre><code class="language-python">from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import Pipeline
+from sklearn.model_selection import cross_val_score
+import numpy as np
+
+# TF-IDF: Term Frequency-Inverse Document Frequency
+# Represents each document as a sparse vector of word importance scores
+# Common words (the, is, a) get low weight (high DF); rare discriminative words get high weight
+
+texts = ["The product quality is excellent!", "Terrible experience, never buying again"]
+labels = [1, 0]  # 1=positive, 0=negative
+
+# Build a production-quality baseline pipeline
+baseline_pipeline = Pipeline([
+    ('tfidf', TfidfVectorizer(
+        max_features=50000,      # Vocabulary size cap
+        ngram_range=(1, 2),      # Include bigrams (e.g., "not good" vs "good")
+        min_df=3,                # Ignore terms appearing in &lt; 3 documents
+        max_df=0.95,             # Ignore terms in > 95% of documents (stop words effect)
+        sublinear_tf=True,       # Log-scale TF: tf = 1 + log(tf) — reduces skew from common words
+        analyzer='word',
+        strip_accents='unicode'
+    )),
+    ('classifier', LogisticRegression(C=5.0, class_weight='balanced', max_iter=1000))
+])
+
+# Often achieves 85-90% accuracy on binary sentiment with minimal compute
+cv_scores = cross_val_score(baseline_pipeline, texts, labels, cv=5, scoring='f1')
+print(f"Baseline F1: {cv_scores.mean():.3f} ± {cv_scores.std():.3f}")
+</code></pre>
+
+<h2>BERT Fine-Tuning for Superior Accuracy</h2>
+<pre><code class="language-python">from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trainer, TrainingArguments
+import torch
+from datasets import Dataset
+
+# Use DistilBERT — 97% BERT performance at 40% smaller, 60% faster
+model_name = "distilbert-base-uncased"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels=2)
+
+def tokenize_function(examples):
+    return tokenizer(
+        examples["text"],
+        truncation=True,
+        max_length=512,
+        padding="max_length"
+    )
+
+# Create HuggingFace dataset from pandas
+train_dataset = Dataset.from_pandas(train_df[['text', 'label']])
+val_dataset = Dataset.from_pandas(val_df[['text', 'label']])
+tokenized_train = train_dataset.map(tokenize_function, batched=True)
+tokenized_val = val_dataset.map(tokenize_function, batched=True)
+
+# Fine-tuning configuration
+training_args = TrainingArguments(
+    output_dir="./sentiment-model",
+    num_train_epochs=3,
+    per_device_train_batch_size=16,
+    per_device_eval_batch_size=32,
+    learning_rate=2e-5,           # Small LR for fine-tuning pretrained models
+    warmup_ratio=0.1,             # Warmup for 10% of training steps
+    evaluation_strategy="epoch",
+    save_strategy="best",
+    load_best_model_at_end=True,
+    metric_for_best_model="f1"
+)
+
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    train_dataset=tokenized_train,
+    eval_dataset=tokenized_val,
+)
+trainer.train()
+
+# Zero-shot classification — no fine-tuning needed!
+from transformers import pipeline
+classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
+result = classifier("This product broke after two days!", candidate_labels=["positive", "negative", "neutral"])
+print(result)  # {'labels': ['negative', 'neutral', 'positive'], 'scores': [0.94, 0.04, 0.02]}
+</code></pre>

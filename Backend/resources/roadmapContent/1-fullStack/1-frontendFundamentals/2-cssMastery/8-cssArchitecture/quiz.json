@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "In BEM naming convention, what separates a Block from its Element?",
+            "options": [
+                "Single underscore _",
+                "Double underscore __",
+                "Single dash -",
+                "Double dash --"
+            ],
+            "answer": "Double underscore __",
+            "explanation": "BEM uses double underscores (__) for elements (e.g., .card__title) and double dashes (--) for modifiers (e.g., .card--featured)."
+        },
+        {
+            "question": "What problem do CSS Modules solve?",
+            "options": [
+                "They make CSS load faster",
+                "They prevent global class name collisions by scoping styles locally to each component",
+                "They add TypeScript support to CSS",
+                "They compile CSS to JavaScript"
+            ],
+            "answer": "They prevent global class name collisions by scoping styles locally to each component",
+            "explanation": "CSS Modules transform class names to unique identifiers at build time (e.g., .button becomes .Button_button__3xkY8), ensuring styles don't bleed between components."
+        },
+        {
+            "question": "What does the 'is-active' class prefix represent in the SMACSS methodology?",
+            "options": [
+                "A base style",
+                "A layout rule",
+                "A state (JavaScript-driven)",
+                "A theme override"
+            ],
+            "answer": "A state (JavaScript-driven)",
+            "explanation": "In SMACSS, the 'is-' prefix (is-active, is-hidden, is-open) is reserved for State rules — styles that are toggled by JavaScript."
+        },
+        {
+            "question": "What is the primary benefit of the utility-first CSS approach?",
+            "options": [
+                "CSS files are completely eliminated",
+                "Styles are written in JavaScript",
+                "High composability without writing new CSS for every component",
+                "Better browser performance"
+            ],
+            "answer": "High composability without writing new CSS for every component",
+            "explanation": "Utility-first CSS allows rapid UI development by combining small, single-purpose classes directly in HTML, reducing the need to create new CSS selectors for every variation."
+        },
+        {
+            "question": "What is the '7-1 pattern' in CSS architecture?",
+            "options": [
+                "7 CSS files compiled into 1",
+                "7 folders of Sass partials imported into 1 main file",
+                "7 breakpoints with 1 base stylesheet",
+                "7 component types with 1 global stylesheet"
+            ],
+            "answer": "7 folders of Sass partials imported into 1 main file",
+            "explanation": "The 7-1 pattern organizes Sass into 7 purpose-specific folders (abstracts, base, components, layout, pages, themes, vendors) with a single main.scss that imports them all."
+        }
+    ]
+}

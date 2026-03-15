@@ -1,0 +1,6 @@
+[
+  "Think of 4 states: first buy, first sell, second buy, second sell.",
+  "For each day, update each state greedily. buy1 = max(buy1, -price), sell1 = max(sell1, buy1 + price).",
+  "The second buy uses profit from first sell: buy2 = max(buy2, sell1 - price).",
+  "sell2 = max(sell2, buy2 + price). The answer is sell2."
+]

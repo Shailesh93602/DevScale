@@ -1,0 +1,19 @@
+{
+  "title": "Build a Drag and Drop List",
+  "slug": "drag-and-drop",
+  "difficulty": "Hard",
+  "category": "frontend",
+  "points": 150,
+  "tags": ["javascript", "dom", "events", "drag-and-drop", "ui"],
+  "company_tags": ["Google", "Meta", "Atlassian", "Notion", "Monday"],
+  "topic_tags": ["DOM Manipulation", "Event Handling", "Drag and Drop API"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An array of items and drag/drop event sequences",
+  "output_format": "The reordered array after applying drag-and-drop operations",
+  "example_input": "reorder(['A', 'B', 'C'], { dragIndex: 0, dropIndex: 2 })",
+  "example_output": "['B', 'C', 'A']",
+  "constraints": "Array length >= 1. Indices are valid. Items can be any type.",
+  "function_signature": "function createDragDropList<T>(items: T[]): DragDropList<T>",
+  "status": "ACTIVE"
+}

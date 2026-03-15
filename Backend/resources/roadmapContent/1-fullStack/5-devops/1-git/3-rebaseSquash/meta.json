@@ -1,0 +1,4 @@
+{
+    "name": "Rebasing & History Rewrite",
+    "description": "Keeping the history clean. Using git rebase to maintain a linear commit history, interactively squashing multiple rapid commits into one, and safely Force Pushing."
+}

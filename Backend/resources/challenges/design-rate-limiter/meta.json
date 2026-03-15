@@ -1,0 +1,19 @@
+{
+  "title": "Design a Rate Limiter",
+  "slug": "design-rate-limiter",
+  "difficulty": "Medium",
+  "category": "system_design",
+  "points": 100,
+  "tags": ["rate-limiting", "api-security", "distributed-systems", "algorithms"],
+  "company_tags": ["Google", "Amazon", "Cloudflare", "Stripe", "Netflix"],
+  "topic_tags": ["Rate Limiting", "Token Bucket", "Sliding Window", "Distributed Systems", "Redis"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "API requests with client identifiers and rate limit configurations",
+  "output_format": "Allow/deny decisions with remaining quota and retry-after headers",
+  "example_input": "rateLimiter.isAllowed('client-1', { maxRequests: 100, windowMs: 60000 })",
+  "example_output": "{ \"allowed\": true, \"remaining\": 99, \"resetAt\": 1705312800000 }",
+  "constraints": "Must support multiple algorithms (token bucket, sliding window). Must work in distributed environment. Must handle 100K+ decisions per second. Must support per-client and per-endpoint limits.",
+  "function_signature": "class RateLimiter { isAllowed(clientId: string, config?: RateLimitConfig): RateLimitResult; configure(rules: RateLimitRule[]): void; getUsage(clientId: string): UsageStats; }",
+  "status": "ACTIVE"
+}

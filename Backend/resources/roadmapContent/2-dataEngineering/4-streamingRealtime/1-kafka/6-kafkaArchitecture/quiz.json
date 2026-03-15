@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "In a Kafka cluster, what specific role does the 'Controller Broker' uniquely hold compared to a standard Broker?",
+            "options": [
+                "The Controller Broker handles only external HTTP REST API requests.",
+                "The Controller Broker is a single elected Broker responsible for managing all cluster metadata, including tracking which Brokers are alive, which Broker is the Partition Leader, and orchestrating partition leader elections when failures occur.",
+                "The Controller Broker compresses all messages before they hit disk.",
+                "The Controller Broker is responsible for topic schema validation."
+            ],
+            "answer": "The Controller Broker is a single elected Broker responsible for managing all cluster metadata, including tracking which Brokers are alive, which Broker is the Partition Leader, and orchestrating partition leader elections when failures occur.",
+            "explanation": "Think of the Controller Broker as the cluster manager. It watches over the other brokers and acts immediately if one crashes."
+        },
+        {
+            "question": "What is the primary architectural purpose of configuring a 'Replication Factor' of 3 when creating a Kafka Topic?",
+            "options": [
+                "It triples the speed of message compression.",
+                "It ensures that each Partition's data is copied to 3 separate Broker servers simultaneously, so if any single Broker crashes, one of the remaining two Replicas is instantly elected as the new Leader with zero data loss.",
+                "It allows 3 separate Consumer Groups to read simultaneously.",
+                "It reduces the number of Partitions to a maximum of 3."
+            ],
+            "answer": "It ensures that each Partition's data is copied to 3 separate Broker servers simultaneously, so if any single Broker crashes, one of the remaining two Replicas is instantly elected as the new Leader with zero data loss.",
+            "explanation": "The entire point of replication is Fault Tolerance. If you have replication factor 1 and the broker hosting that partition crashes, all its data is gone forever."
+        },
+        {
+            "question": "What specific operational burden does the modern Kafka 'KRaft' mode completely eliminate from a Kafka deployment?",
+            "options": [
+                "The need for SSL certificates.",
+                "The mandatory external Apache ZooKeeper cluster, which was previously required to store all cluster metadata. KRaft handles metadata management internally via the Raft consensus algorithm, drastically simplifying Kafka operations.",
+                "The requirement for at least 3 partition replicas.",
+                "The need to configure Consumer Groups manually."
+            ],
+            "answer": "The mandatory external Apache ZooKeeper cluster, which was previously required to store all cluster metadata. KRaft handles metadata management internally via the Raft consensus algorithm, drastically simplifying Kafka operations.",
+            "explanation": "Running Kafka and ZooKeeper side by side meant maintaining two complex distributed systems. KRaft removes ZooKeeper entirely, making Kafka self-sufficient."
+        }
+    ]
+}

@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "A web application must handle unpredictable traffic spikes — sometimes 1,000 requests/minute, sometimes 50,000 requests/minute. Which EC2 feature automatically handles this elasticity?",
+            "options": [
+                "EC2 Spot Instances automatically add capacity during traffic spikes.",
+                "An Auto Scaling Group (ASG) — it monitors CloudWatch metrics like CPU or request count and automatically launches additional EC2 instances when load increases, then terminates them when load drops, ensuring you only pay for capacity you actually use.",
+                "EC2 Placement Groups distribute load across availability zones automatically.",
+                "AWS Elastic IPs automatically assign more IPs during traffic spikes."
+            ],
+            "answer": "An Auto Scaling Group (ASG) — it monitors CloudWatch metrics like CPU or request count and automatically launches additional EC2 instances when load increases, then terminates them when load drops, ensuring you only pay for capacity you actually use.",
+            "explanation": "An ASG with a target tracking policy (e.g., maintain average CPU at 60%) is the standard architecture for elastic, cost-efficient web applications. More traffic = more instances, less traffic = fewer instances."
+        },
+        {
+            "question": "What is a Lambda 'Cold Start' and when does it create a real production problem?",
+            "options": [
+                "A cold start occurs when Lambda runs in a cold AWS region with fewer resources.",
+                "A cold start is the latency added (100ms-2s) when AWS provisions a fresh container environment for a Lambda function that hasn't been invoked recently. It creates a real problem for latency-sensitive APIs where users notice the first request after inactivity is significantly slower than subsequent requests.",
+                "A cold start means the Lambda function failed to connect to the database.",
+                "A cold start is when Lambda scales down to zero and the function code is deleted."
+            ],
+            "answer": "A cold start is the latency added (100ms-2s) when AWS provisions a fresh container environment for a Lambda function that hasn't been invoked recently. It creates a real problem for latency-sensitive APIs where users notice the first request after inactivity is significantly slower than subsequent requests.",
+            "explanation": "For a financial trading API where every millisecond counts, cold starts are unacceptable. Provisioned Concurrency keeps a specified number of execution environments 'warm' at all times."
+        },
+        {
+            "question": "For a long-running containerized microservice that processes jobs continuously, why is ECS Fargate generally preferred over AWS Lambda?",
+            "options": [
+                "Lambda does not support Docker containers at all.",
+                "Lambda has a maximum execution time of 15 minutes, making it unsuitable for long-running processes. ECS Fargate runs containers that stay alive indefinitely, supports persistent connections (e.g., database connection pools), and has no per-invocation time limits.",
+                "ECS Fargate is always cheaper than Lambda for any workload.",
+                "Lambda cannot access a VPC, blocking database connections."
+            ],
+            "answer": "Lambda has a maximum execution time of 15 minutes, making it unsuitable for long-running processes. ECS Fargate runs containers that stay alive indefinitely, supports persistent connections (e.g., database connection pools), and has no per-invocation time limits.",
+            "explanation": "Lambda = stateless, short-lived event handlers. ECS Fargate = long-running container services, worker queues, and APIs with persistent DB connection pools. Both are 'serverless' in the sense that you don't manage servers."
+        }
+    ]
+}

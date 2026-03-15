@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the fundamental difference between media queries (@media) and container queries (@container), and when should each be used?",
+            "options": [
+                "Media queries are for desktop; container queries are for mobile — they target different devices.",
+                "Media queries respond to the VIEWPORT size — they're page-level and affect how the whole layout behaves at different screen sizes. Container queries respond to the SIZE OF THE COMPONENT'S PARENT CONTAINER — enabling components to be responsive to where they're placed, not just the screen size. Use @media for: hiding navigation, changing column counts in the page grid, switching between mobile/tablet/desktop layouts. Use @container for: individual components (cards, product tiles, widgets) that may appear in different contexts (narrow sidebar vs wide main area) and need different layouts in each context.",
+                "Container queries are faster than media queries because they don't require layout recalculation.",
+                "Container queries replace media queries entirely — @media is deprecated in CSS 4."
+            ],
+            "answer": "Media queries respond to the VIEWPORT size — they're page-level and affect how the whole layout behaves at different screen sizes. Container queries respond to the SIZE OF THE COMPONENT'S PARENT CONTAINER — enabling components to be responsive to where they're placed, not just the screen size. Use @media for: hiding navigation, changing column counts in the page grid, switching between mobile/tablet/desktop layouts. Use @container for: individual components (cards, product tiles, widgets) that may appear in different contexts (narrow sidebar vs wide main area) and need different layouts in each context.",
+            "explanation": "Problem container queries solve: a ProductCard used in a 3-column grid (300px wide) needs a different layout than the same ProductCard in a featured hero section (800px wide). With @media, you need to know how wide the card will be on different screens — fragile. With @container, the CardProductcomponent adapts to whatever container it's placed in — truly reusable."
+        },
+        {
+            "question": "What problem do CSS Cascade Layers (@layer) solve, and how do they change the traditional specificity rules?",
+            "options": [
+                "Cascade layers allow multiple CSS files to be loaded in parallel, improving performance.",
+                "Without layers: specificity wars between your styles and third-party CSS (Bootstrap, material-ui) require increasingly specific selectors or !important hacks to win. With @layer: you define an explicit priority order (e.g., @layer reset, base, components, utilities). Styles in later layers WIN over earlier layers REGARDLESS of selector specificity. Your utility classes (last layer) automatically override component styles (earlier layer) even if the component's selector is more specific. This eliminates specificity escalation entirely.",
+                "Cascade layers enable CSS scoping — classes in one layer don't affect elements in other layers.",
+                "Cascade layers are a Sass feature that was adopted into native CSS in 2023."
+            ],
+            "answer": "Without layers: specificity wars between your styles and third-party CSS (Bootstrap, material-ui) require increasingly specific selectors or !important hacks to win. With @layer: you define an explicit priority order (e.g., @layer reset, base, components, utilities). Styles in later layers WIN over earlier layers REGARDLESS of selector specificity. Your utility classes (last layer) automatically override component styles (earlier layer) even if the component's selector is more specific. This eliminates specificity escalation entirely.",
+            "explanation": "Key insight: @import url('bootstrap.css') layer(bootstrap) puts ALL of Bootstrap's styles in the 'bootstrap' layer. If bootstrap is declared BEFORE your components layer, YOUR styles automatically win — no more fighting Bootstrap specificity with !important. This is the definitive solution to the CSS specificity arms race."
+        },
+        {
+            "question": "The :has() selector is sometimes called the 'parent selector.' What did CSS developers have to use before :has() to achieve parent-based styling, and why was it problematic?",
+            "options": [
+                "Before :has(), CSS could style parents using the > child combinator in reverse.",
+                "CSS had NO native parent selector before :has(). Developers needed JavaScript: document.querySelectorAll('tr').forEach(row => { if (row.querySelector('input:checked')) row.classList.add('selected'); }). This code must re-run on every checkbox change (addEventListener), adds JS coupling to visual concerns, is fragile on dynamic content, and adds bundle size. :has() achieves tr:has(input:checked) { background: blue } declaratively in CSS with zero JavaScript — the browser's CSS engine handles it natively at layout time.",
+                "CSS had a :parent() pseudo-class that was renamed to :has() in CSS 4.",
+                "Before :has(), developers used CSS custom properties (variables) to communicate state from child to parent."
+            ],
+            "answer": "CSS had NO native parent selector before :has(). Developers needed JavaScript: document.querySelectorAll('tr').forEach(row => { if (row.querySelector('input:checked')) row.classList.add('selected'); }). This code must re-run on every checkbox change (addEventListener), adds JS coupling to visual concerns, is fragile on dynamic content, and adds bundle size. :has() achieves tr:has(input:checked) { background: blue } declaratively in CSS with zero JavaScript — the browser's CSS engine handles it natively at layout time.",
+            "explanation": ":has() browser support: Chrome 105+, Safari 15.4+, Firefox 121+ (2024). As of 2024, ~95% global browser support. Use it for: nav items with active links, form sections that show/hide based on child input values, card layouts that change when they contain an image, any scenario where parent appearance depends on child state."
+        }
+    ]
+}

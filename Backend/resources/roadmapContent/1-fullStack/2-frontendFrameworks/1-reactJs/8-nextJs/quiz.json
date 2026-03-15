@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What directive makes a Next.js component a Client Component?",
+            "options": [
+                "import 'client'",
+                "'use client'",
+                "export client = true",
+                "// @client"
+            ],
+            "answer": "'use client'",
+            "explanation": "Adding 'use client' at the top of a file marks that file and all components imported into it as Client Components that run in the browser."
+        },
+        {
+            "question": "What is the main advantage of React Server Components?",
+            "options": [
+                "They run faster due to JIT compilation",
+                "They fetch data and render HTML on the server, sending zero JavaScript to the client",
+                "They enable server-side event handlers",
+                "They automatically cache all database queries"
+            ],
+            "answer": "They fetch data and render HTML on the server, sending zero JavaScript to the client",
+            "explanation": "Server Components render on the server, reducing client-side JavaScript bundle size, improving performance, and allowing direct database/API access without client-side fetch waterfalls."
+        },
+        {
+            "question": "What does revalidatePath() do in Next.js?",
+            "options": [
+                "Re-renders the component on the client",
+                "Purges the Next.js cache for a specific path, causing fresh data on the next request",
+                "Validates the URL format",
+                "Redirects to a different path"
+            ],
+            "answer": "Purges the Next.js cache for a specific path, causing fresh data on the next request",
+            "explanation": "After a mutation (e.g., creating a product via a Server Action), revalidatePath('/products') tells Next.js to regenerate that page on the next visit."
+        },
+        {
+            "question": "What is the benefit of using Suspense boundaries strategically in Next.js?",
+            "options": [
+                "It makes all components load faster",
+                "It allows independent sections to stream in as data resolves, avoiding UI blockers",
+                "It enables client-side caching",
+                "It prevents hydration errors"
+            ],
+            "answer": "It allows independent sections to stream in as data resolves, avoiding UI blockers",
+            "explanation": "Wrapping slow components in separate Suspense boundaries allows fast parts of the page to render immediately while slow parts show skeletons and stream in when their data is ready."
+        },
+        {
+            "question": "What is the purpose of generateStaticParams in Next.js?",
+            "options": [
+                "To validate URL parameters on the server",
+                "To pre-generate all dynamic route pages at build time",
+                "To generate mock data for testing",
+                "To create API route handlers for dynamic paths"
+            ],
+            "answer": "To pre-generate all dynamic route pages at build time",
+            "explanation": "generateStaticParams returns a list of params (e.g., all blog slugs), and Next.js pre-renders a static page for each, making them extremely fast to serve."
+        }
+    ]
+}

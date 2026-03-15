@@ -1,0 +1,118 @@
+{
+    "title": "BERT & Embeddings Quiz",
+    "description": "Test your knowledge of contextual embeddings, BERT fine-tuning, and semantic search.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What makes BERT's embeddings 'contextual', unlike Word2Vec embeddings?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "BERT uses larger vocabulary sizes so it can handle more words",
+                    "isCorrect": false
+                },
+                {
+                    "text": "BERT attends to all surrounding words when computing each token's vector, so the same word gets different vectors in different contexts",
+                    "isCorrect": true
+                },
+                {
+                    "text": "BERT is bidirectional, meaning it reads text from right to left",
+                    "isCorrect": false
+                },
+                {
+                    "text": "BERT was trained on a larger dataset than Word2Vec",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What learning rate should you use when fine-tuning BERT and why?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "A high rate like 0.1 to quickly adapt the large model to your task",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A standard rate like 0.001 as commonly used for training from scratch",
+                    "isCorrect": false
+                },
+                {
+                    "text": "A very small rate like 2e-5 to avoid catastrophic forgetting of the pretrained knowledge",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Learning rate doesn't matter for fine-tuning pretrained models",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why is the `sentence-transformers` library recommended over raw BERT for semantic similarity tasks?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "sentence-transformers models are always larger and more accurate than BERT",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Raw BERT's [CLS] token is a poor sentence representation; sentence-transformers are specifically trained to produce meaningful sentence-level embeddings via mean pooling and contrastive learning",
+                    "isCorrect": true
+                },
+                {
+                    "text": "sentence-transformers can handle images as well as text",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It is impossible to use BERT without the sentence-transformers library",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In a semantic search system, why are document embeddings computed once and cached, rather than recomputed on every query?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The embedding model can forget the documents if they are not recomputed frequently",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Document text changes frequently so embeddings must stay fresh",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Embedding computation is expensive; since static documents don't change, caching avoids redundant computation and dramatically reduces search latency",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Cached embeddings are more accurate than freshly computed ones",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which BERT variant is the best choice when inference speed is the top priority?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "bert-base-uncased — the original is always optimal",
+                    "isCorrect": false
+                },
+                {
+                    "text": "roberta-large — larger models are always faster due to better hardware optimization",
+                    "isCorrect": false
+                },
+                {
+                    "text": "distilbert-base-uncased — 60% smaller, 2x faster, while retaining 97% of BERT's accuracy",
+                    "isCorrect": true
+                },
+                {
+                    "text": "multilingual-e5-large — it supports more languages and thus handles queries faster",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

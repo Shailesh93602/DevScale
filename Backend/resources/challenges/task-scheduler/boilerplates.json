@@ -1,0 +1,10 @@
+{
+  "typescript": "function leastInterval(tasks: string[], n: number): number {\n    \n};",
+  "javascript": "/**\n * @param {character[]} tasks\n * @param {number} n\n * @return {number}\n */\nvar leastInterval = function(tasks, n) {\n    \n};",
+  "python": "class Solution:\n    def leastInterval(self, tasks: List[str], n: int) -> int:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public int leastInterval(char[] tasks, int n) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int leastInterval(vector<char>& tasks, int n) {\n        \n    }\n};",
+  "go": "func leastInterval(tasks []byte, n int) int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn least_interval(tasks: Vec<char>, n: i32) -> i32 {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int LeastInterval(char[] tasks, int n) {\n        \n    }\n}"
+}

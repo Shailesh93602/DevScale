@@ -1,0 +1,1 @@
+["Use a Depth-First Search (DFS) or Breadth-First Search (BFS) to traverse the tree.", "At each node, the accumulated number becomes `current_val * 10 + node.val`.", "If you reach a leaf node (no left and right children), return the accumulated number. Otherwise, return the sum of the left and right subtrees' results."]

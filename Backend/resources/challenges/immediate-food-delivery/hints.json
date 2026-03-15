@@ -1,0 +1,6 @@
+[
+  "First, identify each customer's first order — the one with the earliest order_date.",
+  "Use a subquery with MIN(order_date) GROUP BY customer_id to find first orders.",
+  "An order is immediate when order_date = customer_pref_delivery_date.",
+  "Calculate percentage: 100.0 * COUNT(immediate first orders) / COUNT(all first orders), rounded to 2 decimal places."
+]

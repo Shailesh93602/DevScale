@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What primary problem do Finite State Machines (like XState) solve in frontend development?",
+            "options": [
+                "They make styling components easier with state-based utility classes",
+                "They remove 'impossible states' caused by messy combinations of independent boolean flags (like `isLoading` and `isError` both being true)",
+                "They replace the need for an SQL database",
+                "They automatically bundle your React code"
+            ],
+            "answer": "They remove 'impossible states' caused by messy combinations of independent boolean flags (like `isLoading` and `isError` both being true)",
+            "explanation": "A finite state machine dictates that the application can only be in exactly ONE state at any given time (e.g., 'loading' OR 'error'), strictly defining the transitions between them."
+        },
+        {
+            "question": "In XState, how are changes between states triggered?",
+            "options": [
+                "By setting state values using setState()",
+                "By calling standard REST APIs",
+                "By sending an Event (usually an object with a 'type' property) to the machine",
+                "By mutating the document object model directly"
+            ],
+            "answer": "By sending an Event (usually an object with a 'type' property) to the machine",
+            "explanation": "In an XState component, you call send({ type: 'FETCH' }). The machine listens for the 'FETCH' event and automatically transitions to the next defined state if the transition is allowed."
+        },
+        {
+            "question": "What happens if you send an event to a state machine, but no transition is defined for that event in the current state?",
+            "options": [
+                "The machine crashes with a runtime error",
+                "The machine automatically transitions back to the initial state",
+                "Nothing happens. The machine ignores the event and stays in its current state.",
+                "The machine creates a new dynamic state on the fly"
+            ],
+            "answer": "Nothing happens. The machine ignores the event and stays in its current state.",
+            "explanation": "State machines are explicit. If you are in the 'idle' state and send a 'RESOLVE_ERROR' event, the machine will ignore it, preventing bugs caused by out-of-order events."
+        },
+        {
+            "question": "In XState terminology, what is 'Context' used for?",
+            "options": [
+                "Accessing the React Context API directly",
+                "Storing the DOM reference elements",
+                "Tracking quantitative or extended data that doesn't fit into finite states, like user input strings or arrays of fetched data",
+                "Caching the visual charts for the machine"
+            ],
+            "answer": "Tracking quantitative or extended data that doesn't fit into finite states, like user input strings or arrays of fetched data",
+            "explanation": "While 'states' hold the qualitative state (e.g., 'loading', 'idle'), 'context' holds the infinite/quantitative data (e.g., the array of users, the search string, the retry count)."
+        },
+        {
+            "question": "What is a major advantage of extracting frontend logic into an XState machine?",
+            "options": [
+                "It eliminates the need for unit testing",
+                "The logic is fully decoupled from the UI framework and can be visualized as a flowchart mathematically",
+                "It compiles exactly to CSS transitions",
+                "It speeds up network latency"
+            ],
+            "answer": "The logic is fully decoupled from the UI framework and can be visualized as a flowchart mathematically",
+            "explanation": "XState has tooling that reads the exact machine code to generate a visual statechart Diagram. Because it isn't tied to React, the exact same machine code works in Vue, Node, or vanilla JS."
+        }
+    ]
+}

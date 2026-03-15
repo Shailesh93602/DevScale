@@ -1,0 +1,55 @@
+<h1>The Foundation: HTML5 Basics</h1>
+<p>HTML (HyperText Markup Language) is the backbone of every web page. It defines the <strong>structure and meaning</strong> of content. Other technologies — CSS for styling and JavaScript for behaviour — build on top of it.</p>
+
+<h2>The Standard Boilerplate</h2>
+<p>Every HTML5 document starts with the same skeleton:</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;My Page&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Hello World&lt;/h1&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+<h2>Key Head Elements</h2>
+<ul>
+  <li><code>&lt;meta charset="UTF-8"&gt;</code> — Ensures text renders correctly in all languages.</li>
+  <li><code>&lt;meta name="viewport"&gt;</code> — Critical for mobile-responsive design.</li>
+  <li><code>&lt;title&gt;</code> — Appears in the browser tab and Google search results.</li>
+</ul>
+
+<h2>Semantic HTML</h2>
+<p>Semantic elements convey <em>meaning</em>, not just appearance. They improve both accessibility and SEO:</p>
+<pre><code>&lt;header&gt;  — Site-wide header / navigation
+&lt;nav&gt;     — Navigation links
+&lt;main&gt;    — Primary page content (one per page)
+&lt;section&gt; — Thematic grouping of content
+&lt;article&gt; — Self-contained piece of content (blog post, news item)
+&lt;aside&gt;   — Sidebar / supplementary content
+&lt;footer&gt;  — Site-wide or section footer</code></pre>
+
+<h2>Block vs Inline Elements</h2>
+<p><strong>Block elements</strong> take the full width available and start on a new line:</p>
+<p><code>&lt;div&gt;</code>, <code>&lt;p&gt;</code>, <code>&lt;h1&gt;–&lt;h6&gt;</code>, <code>&lt;ul&gt;</code>, <code>&lt;section&gt;</code>, <code>&lt;article&gt;</code></p>
+<p><strong>Inline elements</strong> flow within text without breaking the line:</p>
+<p><code>&lt;span&gt;</code>, <code>&lt;a&gt;</code>, <code>&lt;strong&gt;</code>, <code>&lt;em&gt;</code>, <code>&lt;img&gt;</code>, <code>&lt;code&gt;</code></p>
+
+<h2>Heading Hierarchy</h2>
+<p>Headings <code>&lt;h1&gt;</code>–<code>&lt;h6&gt;</code> define a document's outline. Use them in order and never skip levels:</p>
+<pre><code>&lt;h1&gt;Page Title (one per page)&lt;/h1&gt;
+  &lt;h2&gt;Major Section&lt;/h2&gt;
+    &lt;h3&gt;Subsection&lt;/h3&gt;
+      &lt;h4&gt;Sub-subsection&lt;/h4&gt;</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always declare <code>&lt;!DOCTYPE html&gt;</code> as the very first line.</li>
+  <li>Use semantic tags over generic <code>&lt;div&gt;</code> whenever possible.</li>
+  <li>Keep exactly one <code>&lt;h1&gt;</code> per page for proper SEO hierarchy.</li>
+  <li>Add <code>alt</code> attributes to all <code>&lt;img&gt;</code> tags for accessibility.</li>
+  <li>Always specify the <code>lang</code> attribute on <code>&lt;html&gt;</code>.</li>
+</ul>

@@ -1,0 +1,60 @@
+<h1>File Permissions & Ownership</h1>
+<p>Linux is a multi-user operating system, and every single file and directory on the system has a clear ownership model and permission set controlling exactly who can read it, write to it, or execute it. Understanding this model is non-negotiable for any DevOps engineer or system administrator working in production Linux environments.</p>
+
+<h2>The Permission Model</h2>
+<p>When you run <code>ls -la</code> in a terminal, you'll see output like:</p>
+<pre><code class="language-bash">-rwxr-xr-- 1 deploy devops 4096 Mar 10 08:30 deploy.sh
+drwxr-x--- 2 root   root   4096 Mar 10 08:00 secrets/
+</code></pre>
+<p>The first 10 characters break down as follows:</p>
+<ul>
+  <li><strong>Character 1:</strong> File type. <code>-</code> = regular file, <code>d</code> = directory, <code>l</code> = symlink</li>
+  <li><strong>Characters 2-4:</strong> <strong>Owner</strong> permissions (User)</li>
+  <li><strong>Characters 5-7:</strong> <strong>Group</strong> permissions</li>
+  <li><strong>Characters 8-10:</strong> <strong>Others</strong> (everyone else) permissions</li>
+</ul>
+<p>Each set of 3 characters represents <code>r</code> (read), <code>w</code> (write), <code>x</code> (execute). A <code>-</code> means that permission is denied.</p>
+
+<h2>The chmod Command</h2>
+<p>You change permissions with <code>chmod</code>. There are two modes: symbolic and octal.</p>
+<pre><code class="language-bash"># Symbolic mode: give owner execute, remove others write
+chmod u+x,o-w deploy.sh
+
+# Octal mode: the most common form in production scripts
+# r=4, w=2, x=1 — add them up per group
+chmod 755 deploy.sh   # Owner: rwx (7), Group: r-x (5), Others: r-x (5)
+chmod 600 .ssh/id_rsa  # Owner: rw- (6), Group: --- (0), Others: --- (0)
+chmod 644 index.html   # Owner: rw- (6), Group: r-- (4), Others: r-- (4)
+</code></pre>
+
+<h2>The chown Command</h2>
+<p>Ownership is managed with <code>chown</code>. The root user can change any file's owner; regular users can only change files they own.</p>
+<pre><code class="language-bash"># Change owner to 'nginx', group to 'www-data'
+sudo chown nginx:www-data /var/www/html/index.html
+
+# Recursively change ownership of an entire directory tree
+sudo chown -R deploy:devops /opt/application/
+</code></pre>
+
+<h2>Special Permission Bits: setuid, setgid, and Sticky Bit</h2>
+<ul>
+  <li><strong>setuid (4000):</strong> When set on an executable, the program runs with the permissions of the <em>file owner</em>, not the user who launched it. This is how <code>/usr/bin/passwd</code> allows regular users to modify <code>/etc/shadow</code> (which is owned by root).</li>
+  <li><strong>setgid (2000):</strong> When set on a directory, new files created inside inherit the directory's group, not the creating user's primary group. Critical for shared collaborative directories.</li>
+  <li><strong>Sticky Bit (1000):</strong> When set on a directory, only the file's owner can delete or rename that file, even if others have write access. Used on <code>/tmp</code> so users cannot delete each other's temporary files.</li>
+</ul>
+<pre><code class="language-bash">chmod 1777 /tmp          # Sticky bit + full permissions
+chmod 2755 /shared-dir   # setgid on shared directory
+ls -la /tmp  # Shows as drwxrwxrwt — the 't' indicates sticky bit
+</code></pre>
+
+<h2>Access Control Lists (ACLs)</h2>
+<p>Standard Unix permissions only allow one owner and one group. <strong>ACLs</strong> extend this, allowing you to grant specific permissions to multiple individual users and groups:</p>
+<pre><code class="language-bash"># Grant alice read/write access to a specific file
+setfacl -m u:alice:rw /opt/project/config.json
+
+# Grant the 'contractors' group read-only access
+setfacl -m g:contractors:r /opt/project/config.json
+
+# View the current ACL entries
+getfacl /opt/project/config.json
+</code></pre>

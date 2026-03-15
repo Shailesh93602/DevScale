@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What specifically does the Multer middleware do in an Express application?",
+            "options": [
+                "It compresses video files before sending them to the client",
+                "It translates JSON request bodies into JavaScript objects",
+                "It parses incoming requests with the 'multipart/form-data' encoding type, primarily used for file uploads",
+                "It serves static filesystem directories directly to the browser"
+            ],
+            "answer": "It parses incoming requests with the 'multipart/form-data' encoding type, primarily used for file uploads",
+            "explanation": "Express's built-in body-parser (express.json()) cannot handle multipart binary data. Multer intercepts these requests, extracts the binary file stream, and attaches it to the req.file object."
+        },
+        {
+            "question": "Why should you never write uploaded files to the local server disk (diskStorage) in a professional production environment?",
+            "options": [
+                "Local disk storage is significantly slower than RAM",
+                "It prevents the Node application from being stateless and horizontally scalable; if you have 3 servers, a file uploaded to Server A cannot be accessed by Server B",
+                "Node.js does not have permission to write to the local filesystem",
+                "Cloud storage like S3 is completely free"
+            ],
+            "answer": "It prevents the Node application from being stateless and horizontally scalable; if you have 3 servers, a file uploaded to Server A cannot be accessed by Server B",
+            "explanation": "Modern backends run in ephemeral containers (like Docker/Kubernetes) that are destroyed and recreated constantly. Saving files to the local disk means those files disappear when the container restarts. Files must go to persistent external storage like AWS S3."
+        },
+        {
+            "question": "How do you protect your server from being quickly taken offline by a user uploading a massive 50GB file?",
+            "options": [
+                "By configuring a tight 'fileSize' property within Multer's 'limits' configuration object",
+                "By relying on the frontend React app to prevent large files from being selected",
+                "By analyzing req.headers['content-length'] inside the controller",
+                "By using the 'memoryStorage' engine instead of 'diskStorage'"
+            ],
+            "answer": "By configuring a tight 'fileSize' property within Multer's 'limits' configuration object",
+            "explanation": "Multer's limits.fileSize property automatically aborts the upload and throws an error the millisecond the incoming stream surpasses the byte limit, protecting the server's disk and memory without waiting for the whole file to transfer."
+        },
+        {
+            "question": "What is the best way to determine if an uploaded file is actually a PNG image?",
+            "options": [
+                "Check if the file's original name ends in .png (e.g., file.originalname.endsWith('.png'))",
+                "Inspect the file.mimetype property provided by Multer within the fileFilter configuration",
+                "Scan the file with an antivirus software library",
+                "Wait for it to save to the disk and attempt to open it with fs.readFile"
+            ],
+            "answer": "Inspect the file.mimetype property provided by Multer within the fileFilter configuration",
+            "explanation": "File extensions can be trivially faked by a malicious user renaming 'virus.exe' to 'image.png'. The mimetype is derived from the file's internal headers and is much more reliable for filtering (e.g. 'image/png')."
+        },
+        {
+            "question": "In the route definition `app.post('/upload', upload.single('avatar'), controller)`, what does the string 'avatar' represent?",
+            "options": [
+                "The directory name where the file will be saved",
+                "The expected name of the HTML form field containing the uploaded file",
+                "A required CSS class on the frontend form",
+                "The final filename of the image on the server"
+            ],
+            "answer": "The expected name of the HTML form field containing the uploaded file",
+            "explanation": "The string passed to upload.single() tells Multer exactly which form-data key to look for. If the frontend HTML input is <input type='file' name='profile_pic'>, the backend must use upload.single('profile_pic')."
+        }
+    ]
+}

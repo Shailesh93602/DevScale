@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What primary limitation of standard HTTP requests do WebSockets overcome?",
+            "options": [
+                "HTTP requests cannot transmit JSON data efficiently",
+                "HTTP is strictly unidirectional (client requests, server responds); the server cannot proactively push data to the client without a request",
+                "HTTP demands all data be securely encrypted using TLS",
+                "HTTP is restricted to a maximum of 4 request headers"
+            ],
+            "answer": "HTTP is strictly unidirectional (client requests, server responds); the server cannot proactively push data to the client without a request",
+            "explanation": "In standard HTTP, the server cannot say 'Hey client, here makes a new chat message!' unless the client specifically asks. WebSockets maintain an open, bi-directional pipe allowing the server to push new data instantly."
+        },
+        {
+            "question": "Why is Socket.io generally preferred over the native browser WebSocket API in production?",
+            "options": [
+                "It uses a completely different protocol that is 100x faster than WebSockets",
+                "It provides essential resilience features like automatic reconnections and graceful fallback to HTTP long-polling if a corporate firewall blocks standard WebSocket ports",
+                "Native WebSockets only work in the Chrome browser",
+                "Socket.io automatically translates MySQL queries into JSON"
+            ],
+            "answer": "It provides essential resilience features like automatic reconnections and graceful fallback to HTTP long-polling if a corporate firewall blocks standard WebSocket ports",
+            "explanation": "While native WebSockets are great, they involve heavy manual boilerplate to handle broken connections. Socket.io handles dropped WiFi reconnections automatically and ensures older/restrictive networks can still communicate."
+        },
+        {
+            "question": "When setting up Socket.io with Express, why must you attach Socket.io to a manually created `httpServer = createServer(app)` instead of directly to the `app`?",
+            "options": [
+                "Because Express is an asynchronous framework and Socket.io is synchronous",
+                "Because Socket.io requires the underlying core HTTP Node server instance to intercept the 'Upgrade' header that transitions an HTTP connection into a WebSocket connection",
+                "Because Express cannot route traffic to ports other than 80",
+                "Because creating a new server bypasses CORS restrictions"
+            ],
+            "answer": "Because Socket.io requires the underlying core HTTP Node server instance to intercept the 'Upgrade' header that transitions an HTTP connection into a WebSocket connection",
+            "explanation": "A WebSocket starts its life as a standard HTTP GET request with an 'Upgrade: websocket' header. Socket.io needs access to the raw HTTP server, not just the Express routing layer, to process this protocol upgrade."
+        },
+        {
+            "question": "What is the difference between `io.emit()` and `socket.broadcast.emit()`?",
+            "options": [
+                "`io.emit()` sends only text; `socket.broadcast.emit()` sends binary buffers",
+                "`io.emit()` sends the message to every connected client; `socket.broadcast.emit()` sends the message to every connected client EXCEPT the sender",
+                "`io.emit()` sends to a specific room; `socket.broadcast` sends to all rooms",
+                "They are entirely identical in behavior"
+            ],
+            "answer": "`io.emit()` sends the message to every connected client; `socket.broadcast.emit()` sends the message to every connected client EXCEPT the sender",
+            "explanation": "If User A sends a chat message, you might use socket.broadcast so Users B and C receive it, but User A doesn't get an echo of their own message back from the server."
+        },
+        {
+            "question": "If you deploy your Node.js application to three separate servers (horizontal scaling) behind a Load Balancer, what critical problem occurs with Socket.io, and how is it solved?",
+            "options": [
+                "The Load Balancer crashes; Solved by using UDP instead of TCP",
+                "Users on Server 1 cannot receive WebSocket messages broadcasted by Users on Server 2; Solved by connecting all servers using the Socket.io Redis Adapter",
+                "The JWT tokens become invalid; Solved by sharing the secret key",
+                "The database becomes locked; Solved by using SQLite"
+            ],
+            "answer": "Users on Server 1 cannot receive WebSocket messages broadcasted by Users on Server 2; Solved by connecting all servers using the Socket.io Redis Adapter",
+            "explanation": "WebSockets are stateful tcp connections locked into the RAM of the specific server they connected to. A Redis database acts as a Pub/Sub middleman, synchronizing WebSocket 'emits' across all your physical servers."
+        }
+    ]
+}

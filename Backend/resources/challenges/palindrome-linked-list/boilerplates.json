@@ -1,0 +1,10 @@
+{
+  "typescript": "/**\n * Definition for singly-linked list.\n * class ListNode {\n *     val: number\n *     next: ListNode | null\n *     constructor(val?: number, next?: ListNode | null) {\n *         this.val = (val===undefined ? 0 : val)\n *         this.next = (next===undefined ? null : next)\n *     }\n * }\n */\n\nfunction isPalindrome(head: ListNode | null): boolean {\n    \n};",
+  "javascript": "/**\n * @param {ListNode} head\n * @return {boolean}\n */\nvar isPalindrome = function(head) {\n    \n};",
+  "python": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution:\n    def isPalindrome(self, head: Optional[ListNode]) -> bool:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public boolean isPalindrome(ListNode head) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool isPalindrome(ListNode* head) {\n        \n    }\n};",
+  "go": "func isPalindrome(head *ListNode) bool {\n    \n}",
+  "rust": "impl Solution {\n    pub fn is_palindrome(head: Option<Box<ListNode>>) -> bool {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public bool IsPalindrome(ListNode head) {\n        \n    }\n}"
+}

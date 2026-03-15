@@ -1,0 +1,19 @@
+{
+  "title": "Daily Temperatures",
+  "slug": "daily-temperatures",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["stack", "monotonic-stack", "array"],
+  "company_tags": ["Google", "Amazon", "Facebook", "Microsoft"],
+  "topic_tags": ["stack", "monotonic stack", "arrays"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An array of integers `temperatures` representing daily temperatures.",
+  "output_format": "An array `answer` where `answer[i]` is the number of days you have to wait after day `i` to get a warmer temperature. If no future warmer day, `answer[i] = 0`.",
+  "example_input": "temperatures = [73,74,75,71,69,72,76,73]",
+  "example_output": "[1,1,4,2,1,1,0,0]",
+  "constraints": "- `1 <= temperatures.length <= 10^5`\n- `30 <= temperatures[i] <= 100`",
+  "function_signature": "function dailyTemperatures(temperatures: number[]): number[] {}",
+  "status": "ACTIVE"
+}

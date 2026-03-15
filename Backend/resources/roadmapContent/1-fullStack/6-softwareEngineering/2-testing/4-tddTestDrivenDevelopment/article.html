@@ -1,0 +1,33 @@
+<h1>Test-Driven Development (TDD)</h1>
+<p>In traditional software engineering, developers write the logic of an application first, test it manually in their browser, and then write a few Unit Tests afterwards.</p>
+<p><strong>Test-Driven Development (TDD)</strong> structurally reverses this exact process: You write your test <em>before</em> you write a single line of actual application code.</p>
+
+<h2>The Red-Green-Refactor Cycle</h2>
+<p>The core methodology of TDD is built around a strict three-step lifecycle.</p>
+
+<h3>Step 1: The Red Phase</h3>
+<p>You write exactly one failing test for a tiny slice of functionality. The test defines how you want your future Javascript API to behave.</p>
+<pre><code>// mathUtils.test.ts
+import { addNumbers } from "./mathUtils";
+
+test("addNumbers should add two positive integers correctly", () =&gt; {
+  expect(addNumbers(5, 7)).toBe(12);
+});
+</code></pre>
+<p>When you execute this, Jest fails immediately because `addNumbers` does not even exist yet. The test is "Red".</p>
+
+<h3>Step 2: The Green Phase</h3>
+<p>You write the absolute bare minimum amount of production code required to make that specific test pass. You do not worry about performance, design patterns, or future edge cases.</p>
+<pre><code>// mathUtils.ts
+export function addNumbers(a: number, b: number): number {
+  return a + b; 
+}
+</code></pre>
+<p>The test now outputs a "Green" success message.</p>
+
+<h3>Step 3: The Refactor Phase</h3>
+<p>Now that the test is passing, the code works. But the code might be ugly or inefficient. In the Refactor phase, you alter the code to make it clean, apply design patterns, and remove duplication.</p>
+<p>Because you already have a Green test, you can refactor confidently. If you accidentally break the logic while refactoring, the test will instantly turn Red and alert you.</p>
+
+<h2>The Architectural Benefits of TDD</h2>
+<p>TDD forces you to think about the "Interface" of your code before you think about the "Implementation". Since you must write the test first, you naturally design your functions to be modular, decoupled, and easy to test. It prevents you from building massive, untestable spaghetti-code functions.</p>

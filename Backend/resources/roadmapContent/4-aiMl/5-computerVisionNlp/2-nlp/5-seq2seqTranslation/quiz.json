@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "Why does beam search with num_beams=4 typically produce higher quality translations than greedy decoding (num_beams=1), and what is the tradeoff?",
+            "options": [
+                "Beam search generates 4 complete translations and returns the longest one.",
+                "Greedy decoding picks the single highest probability token at each step — this locally optimal choice can lead to globally suboptimal translations (the token that looks best now may lead to a dead end later). Beam search tracks 4 candidate sequences simultaneously, exploring more of the probability space before committing. Tradeoff: beam search is ~4x slower than greedy and sometimes produces repetitive, overly conservative outputs ('safer' sequences get higher beam scores).",
+                "Beam search uses 4 separate translation models and averages their outputs.",
+                "Beam search applies 4 rounds of post-processing to improve grammatical correctness."
+            ],
+            "answer": "Greedy decoding picks the single highest probability token at each step — this locally optimal choice can lead to globally suboptimal translations (the token that looks best now may lead to a dead end later). Beam search tracks 4 candidate sequences simultaneously, exploring more of the probability space before committing. Tradeoff: beam search is ~4x slower than greedy and sometimes produces repetitive, overly conservative outputs ('safer' sequences get higher beam scores).",
+            "explanation": "For creative tasks: use sampling (temperature + top_p) for diverse, creative outputs. For translation/summarization: use beam search for reliable, higher-quality outputs. Research trend: 'minimum Bayes risk' decoding generates many samples and selects the one with highest average similarity — beating beam search quality."
+        },
+        {
+            "question": "Why is ROUGE-L preferred over ROUGE-1 and ROUGE-2 as the primary metric for evaluating abstractive summarization quality?",
+            "options": [
+                "ROUGE-L is faster to compute than ROUGE-1 for long documents.",
+                "ROUGE-1 and ROUGE-2 measure unigram/bigram overlap — a summary that uses the exact same words but in a different order or structure scores the same. ROUGE-L measures the Longest Common Subsequence, capturing sentence-level structure and the ordering of key information. For abstractive summarization (where the model paraphrases rather than extracts), ROUGE-L better captures whether the summary covers the right information in a coherent sequence.",
+                "ROUGE-L penalizes summaries that are longer than the reference, preventing verbose models.",
+                "ROUGE-L is the only ROUGE metric that handles tokenization differences between languages."
+            ],
+            "answer": "ROUGE-1 and ROUGE-2 measure unigram/bigram overlap — a summary that uses the exact same words but in a different order or structure scores the same. ROUGE-L measures the Longest Common Subsequence, capturing sentence-level structure and the ordering of key information. For abstractive summarization (where the model paraphrases rather than extracts), ROUGE-L better captures whether the summary covers the right information in a coherent sequence.",
+            "explanation": "A scrambled summary 'profits Amazon record reported 2024' has identical ROUGE-1 as 'Amazon reported record profits in 2024' but is unreadable. ROUGE-L captures the sequential coherence — the LCS of the scrambled version with the reference is shorter, so ROUGE-L correctly penalizes it."
+        },
+        {
+            "question": "The no_repeat_ngram_size=3 parameter in Hugging Face's generate() function prevents specific patterns. What exact problem does it solve?",
+            "options": [
+                "It prevents the model from generating 3-word phrases that don't appear in the training data.",
+                "It prevents the model from repeating any 3-gram (3-word sequence) that has already appeared in the generated output. Without this, language models tend to get stuck in repetitive loops: 'The company announced strong results. The company announced strong results. The company announced strong results.' This 'repetition trap' is a known failure mode of autoregressive generation, and no_repeat_ngram_size forces the model to generate novel continuations.",
+                "It limits each output sentence to a maximum of 3 repeated words.",
+                "It ensures at least 3 different topics are covered in the generated summary."
+            ],
+            "answer": "It prevents the model from repeating any 3-gram (3-word sequence) that has already appeared in the generated output. Without this, language models tend to get stuck in repetitive loops: 'The company announced strong results. The company announced strong results. The company announced strong results.' This 'repetition trap' is a known failure mode of autoregressive generation, and no_repeat_ngram_size forces the model to generate novel continuations.",
+            "explanation": "Repetition loops happen because the model assigns high probability to continuing with the same sequence it just generated. no_repeat_ngram_size=3 sets the probability of any previously seen trigram to zero — forcing the model to find alternative, non-repetitive continuations. Common values: 3 for short texts, 4-5 for long documents."
+        }
+    ]
+}

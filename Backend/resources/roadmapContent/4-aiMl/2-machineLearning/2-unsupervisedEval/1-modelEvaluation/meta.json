@@ -1,0 +1,4 @@
+{
+    "name": "Model Evaluation & Feature Engineering",
+    "description": "Cross-validation, bias-variance tradeoff, confusion matrix, ROC-AUC, and feature selection."
+}

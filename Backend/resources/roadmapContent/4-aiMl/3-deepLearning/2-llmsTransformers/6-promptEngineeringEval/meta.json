@@ -1,0 +1,4 @@
+{
+    "name": "Prompt Engineering & LLM Evaluation",
+    "description": "Engineering effective prompts to maximize LLM performance without fine-tuning. Covering zero-shot, few-shot, chain-of-thought, and tree-of-thought prompting. Structured output with JSON mode and function calling. Evaluating LLM outputs with BLEU, ROUGE, and LLM-as-judge frameworks. Building prompt templates for production reliability."
+}

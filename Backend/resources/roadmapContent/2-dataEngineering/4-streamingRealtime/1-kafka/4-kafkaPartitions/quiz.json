@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "Regarding data ordering natively within Apache Kafka, what is the strict architectural guarantee?",
+            "options": [
+                "Kafka guarantees perfect chronological order across the entire global Topic regardless of infrastructure.",
+                "Kafka mathematically guarantees sequential ordering strictly only within a single isolated Partition, but makes absolutely no guarantees regarding order across multiple different partitions.",
+                "Kafka permanently scrambles all message orders to maximize network bandwidth.",
+                "Kafka sorts all strings alphabetically before writing them to disk."
+            ],
+            "answer": "Kafka mathematically guarantees sequential ordering strictly only within a single isolated Partition, but makes absolutely no guarantees regarding order across multiple different partitions.",
+            "explanation": "If a transaction must be sequential, you must ensure both events share the exact same 'Partition Key' so they are routed to the same partition sequentially."
+        },
+        {
+            "question": "What is the primary architectural purpose of assigning multiple individual applications to the exact same Kafka 'Consumer Group'?",
+            "options": [
+                "To explicitly delete old log messages safely.",
+                "To strictly ensure that every single application mathematically receives an exact duplicate copy of all network messages.",
+                "To allow Kafka to intelligently divide the Topic's Partitions among the applications, gracefully sharing the massive streaming workload safely and securely without any data duplication.",
+                "To forcefully translate JSON outputs into GraphQL."
+            ],
+            "answer": "To allow Kafka to intelligently divide the Topic's Partitions among the applications, gracefully sharing the massive streaming workload safely and securely without any data duplication.",
+            "explanation": "If 5 workers share the same group ID, Kafka acts as a fair load-balancer, uniquely partitioning the data uniquely among them."
+        },
+        {
+            "question": "What happens if a Kafka Topic currently has exactly 4 Partitions, but your active Consumer Group explicitly contains 6 identical backend applications?",
+            "options": [
+                "Kafka instantly safely creates 2 new partitions dynamically.",
+                "Kafka flawlessly assigns 1 partition to each of the first 4 applications, and the remaining 2 applications will structurally remain entirely idle, doing completely nothing.",
+                "Kafka encrypts the data flawlessly across all nodes.",
+                "Kafka crashes completely logically intentionally."
+            ],
+            "answer": "Kafka flawlessly assigns 1 partition to each of the first 4 applications, and the remaining 2 applications will structurally remain entirely idle, doing completely nothing.",
+            "explanation": "A single partition can never be read by two workers in the same group, otherwise data would be duplicated."
+        }
+    ]
+}

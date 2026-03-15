@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "A FlatList with 500 items renders very slowly during initial display and flickers when scrolling fast. Which combination of props will most significantly improve performance?",
+            "options": [
+                "Increase maxToRenderPerBatch to 100 and set removeClippedSubviews to false.",
+                "Add getItemLayout (if items have fixed height), wrap renderItem in useCallback, and add keyExtractor using the item's unique ID. getItemLayout eliminates the need to measure each item's height before calculating scroll position — enabling instant jumping and preventing flicker. useCallback prevents renderItem from being a new function reference on every render, avoiding unnecessary re-renders.",
+                "Set initialNumToRender=500 to pre-render all items and eliminate loading.",
+                "Replace keyExtractor with the array index for better performance."
+            ],
+            "answer": "Add getItemLayout (if items have fixed height), wrap renderItem in useCallback, and add keyExtractor using the item's unique ID. getItemLayout eliminates the need to measure each item's height before calculating scroll position — enabling instant jumping and preventing flicker. useCallback prevents renderItem from being a new function reference on every render, avoiding unnecessary re-renders.",
+            "explanation": "getItemLayout is the single highest-impact FlatList optimization. Without it, FlatList must measure every rendered item to compute scroll offsets — causing jank. With it, scroll position calculation is O(1) math. The 3 props together (getItemLayout + useCallback renderItem + proper keyExtractor) typically reduce FlatList frame drops by 70-90%."
+        },
+        {
+            "question": "When should you choose FlashList over FlatList in a production React Native app?",
+            "options": [
+                "FlashList should always replace FlatList — it is strictly better in all scenarios.",
+                "Choose FlashList when your FlatList has: 100+ items, fast scrolling with blank white flicker despite optimization, or memory pressure causing crashes on low-end Android. FlashList recycles native cell views (like UITableView/RecyclerView) instead of rendering/unmounting JS components — dramatically reducing memory and eliminating blank-flicker. Requirement: provide estimatedItemSize for accurate virtualization.",
+                "Use FlashList only when items have variable height — FlatList handles fixed-height lists better.",
+                "FlashList is preferred only for horizontal lists; FlatList is better for vertical lists."
+            ],
+            "answer": "Choose FlashList when your FlatList has: 100+ items, fast scrolling with blank white flicker despite optimization, or memory pressure causing crashes on low-end Android. FlashList recycles native cell views (like UITableView/RecyclerView) instead of rendering/unmounting JS components — dramatically reducing memory and eliminating blank-flicker. Requirement: provide estimatedItemSize for accurate virtualization.",
+            "explanation": "Shopify benchmarked FlashList against FlatList on an e-commerce product list: FlashList used 78% less memory and had zero blank frames during fast scrolling vs FlatList's 30% blank frame rate at aggressive scroll speeds. estimatedItemSize is mandatory and directly impacts virtualization accuracy."
+        },
+        {
+            "question": "Why must you NOT use the array index as the keyExtractor value in a FlatList that supports deletion, reordering, or insertion of items?",
+            "options": [
+                "Using index causes type errors because keyExtractor must return a string, not a number.",
+                "When items are deleted, reordered, or inserted, array indices shift. React Native reconciles components using keys — if the key for 'item at position 3' becomes a completely different item's data, React Native reuses the existing component and just updates its props, causing visual glitches, animation bugs, and stale state. Stable, unique IDs (database IDs) tell React which physical item a component represents, enabling correct reconciliation.",
+                "Array index keys cause FlatList to disable windowed rendering.",
+                "keyExtractor must return a value starting with a letter, not a digit."
+            ],
+            "answer": "When items are deleted, reordered, or inserted, array indices shift. React Native reconciles components using keys — if the key for 'item at position 3' becomes a completely different item's data, React Native reuses the existing component and just updates its props, causing visual glitches, animation bugs, and stale state. Stable, unique IDs (database IDs) tell React which physical item a component represents, enabling correct reconciliation.",
+            "explanation": "Bug demo: You have items [A(0), B(1), C(2)]. Delete B. Array becomes [A(0), C(1)]. React sees: key=1 component now shows C's data — it reuses what was the B component and updates its content. Any internal state in B's component (animation progress, expanded state) is WRONG for C. Stable IDs prevent this entirely."
+        }
+    ]
+}

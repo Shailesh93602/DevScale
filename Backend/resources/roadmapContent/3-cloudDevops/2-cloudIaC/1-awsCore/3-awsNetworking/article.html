@@ -1,0 +1,46 @@
+<h1>AWS Networking: VPC, Subnets & Routing</h1>
+<p>AWS Networking is the foundation of all cloud security and infrastructure. Every EC2 instance, Lambda function (usually), and RDS database you provision lives inside an isolated, private network boundary called an <strong>Amazon Virtual Private Cloud (VPC)</strong>. A VPC gives you complete control over your virtual networking environment, including IP address ranges, subnets, route tables, and network gateways.</p>
+
+<h2>The VPC & IPv4 CIDR Blocks</h2>
+<p>When you create a VPC, you assign it an IPv4 CIDR block (e.g., <code>10.0.0.0/16</code>). This defines the total pool of private IP addresses available in the network. A <code>/16</code> VPC provides 65,536 distinct IP addresses. By default, resources inside a VPC can communicate with each other freely across all Availability Zones, but the VPC is entirely cut off from the public Internet.</p>
+
+<h2>Subnets and Availability Zones</h2>
+<p>You cannot launch an EC2 instance directly into a VPC; you must launch it into a <strong>Subnet</strong>. Subnets divide your VPC's large CIDR block into smaller, manageable chunks (e.g., <code>10.0.1.0/24</code> provides 256 IPs).</p>
+<p>Crucially, a VPC spans an entire AWS Region (like <code>us-east-1</code>: N. Virginia), but <strong>a Subnet is strictly tied to a single Availability Zone (AZ)</strong> (like <code>us-east-1a</code>). To achieve High Availability—surviving an entire data center going offline—you must architect your application across multiple subnets in different AZs.</p>
+
+<h2>Public vs. Private Subnets and the Internet Gateway</h2>
+<p>The distinction between a "Public" and "Private" subnet is solely determined by <strong>Routing rules</strong>.</p>
+<ul>
+  <li><strong>Internet Gateway (IGW):</strong> A horizontally scaled, redundant VPC component that allows communication between your VPC and the Internet.</li>
+  <li><strong>Public Subnet:</strong> A subnet whose Route Table contains a default route (<code>0.0.0.0/0</code>) pointing directly to the Internet Gateway. Instances here (like Load Balancers or jump hosts) must have an Elastic IP or Auto-assigned Public IP to be reachable from the outside.</li>
+  <li><strong>Private Subnet:</strong> A subnet whose Route Table does <em>not</em> point to the IGW. Instances in a private subnet (like backend Node.js servers or RDS databases) cannot be accessed directly from the Internet, making them inherently secure from external hacking attempts.</li>
+</ul>
+
+<h2>NAT Gateways: Giving Internet Access to Private Resources</h2>
+<p>If your backend server in a Private Subnet needs to download a security patch using <code>apt-get</code> or hit a third-party API (like Stripe), it needs a way to reach the Internet. It cannot use the IGW because it has no Public IP address.</p>
+<p>The solution is a <strong>NAT Gateway (Network Address Translation)</strong>. You provision the NAT Gateway in your <em>Public Subnet</em> (where it gets an Elastic IP). You then update the Private Subnet's Route Table: <em>"Send all Internet traffic to the NAT Gateway."</em></p>
+<p>The NAT Gateway proxies the traffic to the Internet, receives the response, and forwards it back to the private instance. <strong>It only allows outbound connections</strong>. Hackers on the outside cannot initiate a connection inward through a NAT.</p>
+
+<pre><code># Standard 3-Tier Web Architecture Route Tables
+
+# Public Subnet Route Table (For Load Balancers / Bastions / NAT Gateway)
+Destination    Target
+10.0.0.0/16    local        # Internal VPC communication is default and implied
+0.0.0.0/0      igw-idxxx    # All internet traffic goes to Internet Gateway
+
+# Private Subnet Route Table (For App Servers / Databases)
+Destination    Target
+10.0.0.0/16    local        # Internal communication
+0.0.0.0/0      nat-idxxx    # Outbound internet traffic goes to NAT in Public Subnet</code></pre>
+
+<h2>Network ACLs vs. Security Groups</h2>
+<p>AWS provides two layers of firewalls to secure your VPC:</p>
+
+<h3>1. Security Groups (Stateful, Instance-level)</h3>
+<p>Act as a virtual firewall tied directly to an EC2 instance (or RDS database). They operate on an "allow-list" basis—all traffic is denied by default. <strong>Stateful</strong> means if an inbound request is allowed (e.g., port 443), the return traffic is automatically allowed, regardless of outbound rules. Standard architectural practice places the Load Balancer in an "HTTP/S Allowed" Security Group, and the Backend Servers in a Security Group that only accepts inbound traffic from the Load Balancer's Security Group ID.</p>
+
+<h3>2. Network ACLs (Stateless, Subnet-level)</h3>
+<p>Act as a firewall at the Subnet boundary, affecting all instances inside. They process numbered rules in order (e.g., Allow port 80 at rule 100, Deny Blocklist IP at rule 200). <strong>Stateless</strong> means you must explicitly allow both inbound and outbound return traffic. Generally left open by default and only used to forcefully block specific malicious IP ranges.</p>
+
+<h2>VPC Peering & Transit Gateway</h2>
+<p>By default, two VPCs cannot communicate. If you have a "Production VPC" and a "Shared Services/Jenkins VPC", you connect them using <strong>VPC Peering</strong>. This uses the private AWS backbone (not the public internet) to link the networks, provided their CIDR blocks do not overlap. For complex architectures with 50+ VPCs, you use an <strong>AWS Transit Gateway</strong> to manage routing centrally like a hub-and-spoke model.</p>

@@ -1,0 +1,4 @@
+{
+    "name": "Clean Architecture & DDD",
+    "description": "Scaling codebases to 100,000+ lines. Decoupling the business logic entirely from frameworks, databases, and UI utilizing Domain-Driven Design and strict physical boundary constraints."
+}

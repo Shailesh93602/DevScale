@@ -1,0 +1,118 @@
+{
+    "title": "GitHub Actions & Docker Quiz",
+    "description": "Test your knowledge on CI pipelines, tagging Docker images, and GitHub contexts.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What happens on the GitHub Actions servers when a workflow is triggered?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It executes the commands strictly on the developer's laptop.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It spins up a temporary virtual machine or container (a runner), clones the code, and executes the defined steps.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It instantly deploys the code directly to AWS via SSH.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It compiles the source code into binary.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why is it considered a bad practice to rely solely on the 'latest' Docker image tag for production deployments?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Because 'latest' is a mutable tag; if a pod restarts, it might pull an unverified newer build unexpectedly.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Because DockerHub charges extra fees for hosting images explicitly labeled 'latest'.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because Kubernetes cannot parse the word 'latest'.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because 'latest' is reserved strictly for local development.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the recommended method for tagging Docker images built via CI/CD for enterprise applications?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Using a simple incrementing integer (+1, +2).",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Tagging them dynamically with the developer's first name.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Tagging them with an immutable, unique identifier like the short Git Commit SHA (${{ github.sha }}).",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Leaving the tag entirely blank.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In a GitHub Actions YAML file, what does 'uses: actions/checkout@v3' do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It clones the Git repository into the temporary runner so the subsequent commands can access the code.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It creates a new Git branch.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It checks out (purchases) a new EC2 instance from AWS.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It commits any changes made during the test run back to the repository.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the primary technical benefit of utilizing Docker layer caching (actions/cache) in a GitHub Actions workflow?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It automatically tests the code for syntax errors.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It prevents unauthorized users from executing deployments.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It drastically reduces build execution times by reusing unchanged Docker layers (like downloaded npm dependencies) from previous runs.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It creates a backup copy of the image on Amazon S3.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

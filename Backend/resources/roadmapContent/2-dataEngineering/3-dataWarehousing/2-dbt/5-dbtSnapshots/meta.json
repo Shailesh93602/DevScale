@@ -1,0 +1,4 @@
+{
+    "name": "Slowly Changing Dimensions (Snapshots)",
+    "description": "Understanding Type 2 Slowly Changing Dimensions natively. Exploring how dbt Snapshots fundamentally track row-level historical changes over long time periods securely."
+}

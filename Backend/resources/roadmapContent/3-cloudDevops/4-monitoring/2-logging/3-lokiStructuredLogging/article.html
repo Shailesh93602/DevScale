@@ -1,0 +1,59 @@
+<h1>Loki & Structured Logging</h1>
+<p>Traditional log management systems like Elasticsearch index the full text of every log line, making them powerful but extremely expensive at scale. <strong>Grafana Loki</strong> takes a fundamentally different approach inspired by Prometheus: it only indexes <em>metadata labels</em> (not the log content), storing log streams cheaply in object storage. Combined with structured JSON logging, Loki enables powerful log analysis at a fraction of the cost of Elasticsearch.</p>
+
+<h2>Loki's Label-Based Architecture</h2>
+<pre><code class="language-text">Loki stores logs as streams, identified by label sets:
+
+{app="api", env="production", namespace="backend"}     → log stream 1
+{app="worker", env="production", namespace="backend"}  → log stream 2
+{app="api", env="staging", namespace="backend"}        → log stream 3
+
+When querying, Loki first filters by labels (fast, indexed), 
+then performs grep over the matching log streams only (scalable).
+</code></pre>
+
+<h2>Structured Logging in Applications</h2>
+<p>The key to getting value from Loki is <strong>structured logging</strong> — every log line is a JSON object with consistent, queryable fields rather than free-form text strings:</p>
+<pre><code class="language-python"># ❌ Bad: unstructured text log (extremely hard to query)
+logger.error(f"Payment failed for user {user_id} amount {amount} error: connection timeout")
+
+# ✅ Good: structured JSON (every field is queryable)
+import structlog
+log = structlog.get_logger()
+
+log.error("payment_failed",
+    user_id=user_id,
+    amount=amount,
+    currency="USD",
+    error_type="connection_timeout",
+    payment_provider="stripe",
+    duration_ms=3245,
+    trace_id=current_trace_id()
+)
+# Outputs: {"level":"error","event":"payment_failed","user_id":"usr_123","amount":99.99,...}
+</code></pre>
+
+<h2>LogQL: Loki's Query Language</h2>
+<pre><code class="language-logql"># Find all error logs from the production API in the last hour
+{app="api", env="production"} |= "error"
+
+# Parse JSON log lines and filter by a specific field value
+{app="api"} | json | error_type = "connection_timeout"
+
+# Count payment failures by payment_provider over time (metrics from logs)
+sum by (payment_provider) (
+  count_over_time(
+    {app="api"} | json | event = "payment_failed" [5m]
+  )
+)
+
+# Find all requests slower than 2 seconds
+{app="api"} | json | duration_ms > 2000
+</code></pre>
+
+<h2>Correlating Logs with Traces in Grafana</h2>
+<p>Loki's integration with Grafana enables a powerful workflow: when investigating a slow trace in Grafana Tempo, you can click "View Logs" and Grafana automatically constructs a LogQL query for all logs with the same <code>trace_id</code> — instantly showing the exact log lines emitted during that specific request's execution across all services:</p>
+<pre><code class="language-logql"># Automatically generated when clicking from a trace to its logs
+{namespace="production"} | json | trace_id = "abc123def456"
+</code></pre>
+<p>This "jump to logs from trace" capability eliminates the context switching of copying a trace ID, opening a separate log tool, and manually constructing a search — the entire investigation stays in one Grafana dashboard.</p>

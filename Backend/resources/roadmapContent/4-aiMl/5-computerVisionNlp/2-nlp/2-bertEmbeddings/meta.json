@@ -1,0 +1,6 @@
+{
+    "id": "2-bertEmbeddings",
+    "title": "BERT and Contextual Embeddings",
+    "description": "Understanding Transformer-based models and how they represent word meaning through context.",
+    "order": 2
+}

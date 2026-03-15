@@ -1,0 +1,50 @@
+[
+  {
+    "input": { "columns": 12, "gap": "16px", "breakpoints": { "sm": 640, "md": 768 } },
+    "output": { "has_grid_container": true, "has_col_classes": 12, "has_media_queries": 2 },
+    "explanation": "12-column grid with 2 breakpoints generates container + 12 base classes + 2 media queries",
+    "is_hidden": false
+  },
+  {
+    "input": { "columns": 4, "gap": "8px", "breakpoints": {} },
+    "output": { "has_grid_container": true, "has_col_classes": 4, "has_media_queries": 0 },
+    "explanation": "4-column grid with no breakpoints — only base classes",
+    "is_hidden": false
+  },
+  {
+    "input": { "columns": 6, "gap": "1rem", "breakpoints": { "md": 768 } },
+    "output": { "has_grid_container": true, "has_col_classes": 6, "has_media_queries": 1 },
+    "explanation": "6-column grid with rem gap and one breakpoint",
+    "is_hidden": false
+  },
+  {
+    "input": { "columns": 1, "gap": "0", "breakpoints": {} },
+    "output": { "has_grid_container": true, "has_col_classes": 1, "has_media_queries": 0 },
+    "explanation": "Single column grid — minimal output",
+    "is_hidden": true
+  },
+  {
+    "input": { "columns": 24, "gap": "20px", "breakpoints": { "sm": 640, "md": 768, "lg": 1024, "xl": 1280 } },
+    "output": { "has_grid_container": true, "has_col_classes": 24, "has_media_queries": 4 },
+    "explanation": "24-column grid with 4 breakpoints — maximum complexity",
+    "is_hidden": true
+  },
+  {
+    "input": { "columns": 3, "gap": "10px", "breakpoints": { "lg": 1024, "sm": 640 } },
+    "output": { "breakpoints_sorted": true, "first_breakpoint": 640, "second_breakpoint": 1024 },
+    "explanation": "Breakpoints are sorted ascending regardless of input order",
+    "is_hidden": true
+  },
+  {
+    "input": { "columns": 12, "gap": "16px", "breakpoints": { "sm": 640 } },
+    "output": { "contains": ["display: grid", "repeat(12, 1fr)", "gap: 16px", "@media (min-width: 640px)"] },
+    "explanation": "CSS output contains correct CSS syntax",
+    "is_hidden": true
+  },
+  {
+    "input": { "columns": 2, "gap": "4px", "breakpoints": { "md": 768 } },
+    "output": { "contains": [".col-1", ".col-2", ".col-md-1", ".col-md-2"] },
+    "explanation": "Both base and responsive classes generated correctly",
+    "is_hidden": true
+  }
+]

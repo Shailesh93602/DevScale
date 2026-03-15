@@ -1,0 +1,12 @@
+[
+  {
+    "language": "typescript",
+    "slug": "typescript",
+    "code": "import { Request, Response, NextFunction } from 'express';\n\nfunction csrfProtection(req: Request, res: Response, next: NextFunction): void {\n  // Your code here\n}"
+  },
+  {
+    "language": "javascript",
+    "slug": "javascript",
+    "code": "/**\n * @param {import('express').Request} req\n * @param {import('express').Response} res\n * @param {import('express').NextFunction} next\n */\nfunction csrfProtection(req, res, next) {\n  // Your code here\n}"
+  }
+]

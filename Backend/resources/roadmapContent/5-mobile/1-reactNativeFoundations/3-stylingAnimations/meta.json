@@ -1,0 +1,7 @@
+{
+  "name": "Styling & Animations",
+  "description": "Using StyleSheet, Flexbox, Reanimated, and Lottie to create fluid Mobile UI.",
+  "topics": [
+    "1-stylingAnimations"
+  ]
+}

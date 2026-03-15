@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "Why must a StandardScaler be fit ONLY on training data, and why is fitting it on the combined train+test data a critical mistake?",
+            "options": [
+                "Fitting on all data is faster — the mistake is purely about performance.",
+                "Fitting the scaler on test data constitutes 'data leakage' — the model implicitly sees information about the test set's distribution (its mean and standard deviation) during training. This produces falsely optimistic evaluation metrics that don't reflect real-world performance, since in production the model processes completely unseen data.",
+                "StandardScaler cannot mathematically fit on more than the training set size.",
+                "Fitting on test data causes the scaler to lose its stored mean and variance values."
+            ],
+            "answer": "Fitting the scaler on test data constitutes 'data leakage' — the model implicitly sees information about the test set's distribution (its mean and standard deviation) during training. This produces falsely optimistic evaluation metrics that don't reflect real-world performance, since in production the model processes completely unseen data.",
+            "explanation": "A model trained with this mistake achieves 94% test accuracy in evaluation but drops to 81% in production. The fix is simple: scaler.fit_transform(X_train), then scaler.transform(X_test) — always transform test data with statistics computed from training data only."
+        },
+        {
+            "question": "When should you use One-Hot Encoding vs Target Encoding for categorical variables, and what risk does Target Encoding introduce?",
+            "options": [
+                "Use One-Hot for binary categories; Target Encoding for all multi-class categories.",
+                "One-Hot works for low-cardinality nominal features (≤10 categories, e.g., color). Target Encoding is better for high-cardinality features (e.g., 50,000 zip codes) where One-Hot would create 50,000 sparse columns. Target Encoding risk: it encodes the target variable into features, requiring careful cross-validation to prevent target leakage.",
+                "Target Encoding is always superior to One-Hot Encoding for neural networks.",
+                "One-Hot Encoding requires sorted categories; Target Encoding does not."
+            ],
+            "answer": "One-Hot works for low-cardinality nominal features (≤10 categories, e.g., color). Target Encoding is better for high-cardinality features (e.g., 50,000 zip codes) where One-Hot would create 50,000 sparse columns. Target Encoding risk: it encodes the target variable into features, requiring careful cross-validation to prevent target leakage.",
+            "explanation": "For a zip_code column with 50,000 unique values: One-Hot creates a 50,000-column sparse matrix. Target encoding replaces each zip code with one number (mean house price for that zip). Fewer columns, no sparsity, retains predictive signal."
+        },
+        {
+            "question": "What is the key benefit of wrapping preprocessing and model training in a single sklearn Pipeline rather than applying them as separate, sequential steps?",
+            "options": [
+                "Pipelines run preprocessing in parallel on multiple CPUs.",
+                "A Pipeline guarantees that all preprocessing (imputation, scaling, encoding) is fit only on training data and correctly applied to validation/test data during cross-validation — eliminating data leakage. Without a Pipeline, applying cross-validation after separate preprocessing steps leaks information about validation folds into the trained transformer.",
+                "Pipelines make the code shorter but provide no technical correctness benefit.",
+                "Pipelines enable early stopping of preprocessing if the model converges."
+            ],
+            "answer": "A Pipeline guarantees that all preprocessing (imputation, scaling, encoding) is fit only on training data and correctly applied to validation/test data during cross-validation — eliminating data leakage. Without a Pipeline, applying cross-validation after separate preprocessing steps leaks information about validation folds into the trained transformer.",
+            "explanation": "In cross_val_score with a Pipeline: for each fold, the preprocessor is fit on the training split and transforms the validation split. Without a Pipeline, you'd fit the preprocessor on all data before cross-validation begins — this leaks the validation fold's statistics."
+        }
+    ]
+}

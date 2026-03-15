@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "Why is cross-entropy loss used for classification tasks rather than Mean Squared Error (MSE)?",
+            "options": [
+                "Cross-entropy is computationally faster than MSE for matrix operations.",
+                "Cross-entropy is derived from maximum likelihood estimation over probability distributions — minimizing it directly maximizes the probability of predicting the correct class. MSE penalizes confident wrong predictions too weakly and creates flat gradient regions that slow learning near saturation of sigmoid/softmax outputs.",
+                "MSE cannot handle multiple output classes; cross-entropy was designed for multi-class.",
+                "Cross-entropy automatically normalizes predictions to sum to 1 like softmax does."
+            ],
+            "answer": "Cross-entropy is derived from maximum likelihood estimation over probability distributions — minimizing it directly maximizes the probability of predicting the correct class. MSE penalizes confident wrong predictions too weakly and creates flat gradient regions that slow learning near saturation of sigmoid/softmax outputs.",
+            "explanation": "For a binary classifier predicting 0.01 when the true label is 1.0: MSE loss = (1-0.01)^2 = 0.98 (moderate), BCE loss = -log(0.01) = 4.6 (large). Cross-entropy severely punishes confident wrong predictions, creating strong learning signal."
+        },
+        {
+            "question": "What does it mean for two features X and Y to have Mutual Information (MI) = 0, and what does high MI imply for feature selection?",
+            "options": [
+                "MI=0 means X and Y have identical distributions.",
+                "MI=0 means knowing X provides zero information about Y — they are statistically independent, making X useless for predicting Y regardless of the ML model used. High MI means knowing X significantly reduces uncertainty about Y, indicating X is highly predictive and should be retained during feature selection.",
+                "MI=0 means X and Y have a perfectly linear relationship.",
+                "MI=0 means X and Y are negatively correlated."
+            ],
+            "answer": "MI=0 means knowing X provides zero information about Y — they are statistically independent, making X useless for predicting Y regardless of the ML model used. High MI means knowing X significantly reduces uncertainty about Y, indicating X is highly predictive and should be retained during feature selection.",
+            "explanation": "Unlike Pearson correlation (which only detects linear relationships), MI detects any statistical dependence — including non-linear patterns. A sine-wave relationship between X and Y has correlation ≈ 0 but high MI."
+        },
+        {
+            "question": "In a Variational Autoencoder (VAE), the loss function includes both reconstruction loss AND a KL divergence term. What does the KL term enforce?",
+            "options": [
+                "The KL term ensures the decoder produces high-resolution images.",
+                "The KL divergence term measures how different the learned latent distribution is from a standard Gaussian N(0,1). Including it in the loss forces the encoder to produce a smooth, continuous, well-organized latent space — ensuring that when you sample random vectors from N(0,1), the decoder generates meaningful outputs rather than noise.",
+                "The KL term prevents gradient vanishing in the encoder's convolutional layers.",
+                "The KL term acts as L2 regularization on the decoder's weight matrices."
+            ],
+            "answer": "The KL divergence term measures how different the learned latent distribution is from a standard Gaussian N(0,1). Including it in the loss forces the encoder to produce a smooth, continuous, well-organized latent space — ensuring that when you sample random vectors from N(0,1), the decoder generates meaningful outputs rather than noise.",
+            "explanation": "Without the KL term (just reconstruction loss), the VAE overfits by memorizing training examples in isolated latent regions. With KL regularization, similar images cluster together in latent space, enabling interpolation between concepts."
+        }
+    ]
+}

@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "An application generates 500GB of access logs daily. Logs are actively queried for the first 30 days, occasionally queried for 60 days, then must be kept for 7 years for compliance. What is the most cost-efficient S3 storage strategy?",
+            "options": [
+                "Store everything in S3 Standard to ensure fast access always.",
+                "Use an S3 Lifecycle Policy: S3 Standard (0-30 days) → S3 Standard-IA (30-90 days) → S3 Glacier Flexible (90 days - 7 years). This automatically transitions objects to cheaper tiers as access frequency decreases.",
+                "Store all logs in EBS volumes for fast querying.",
+                "Use S3 Glacier Deep Archive from day 1 to minimize costs immediately."
+            ],
+            "answer": "Use an S3 Lifecycle Policy: S3 Standard (0-30 days) → S3 Standard-IA (30-90 days) → S3 Glacier Flexible (90 days - 7 years). This automatically transitions objects to cheaper tiers as access frequency decreases.",
+            "explanation": "S3 Deep Archive from day 1 would make the first 30 days of queries take 12+ hours per retrieval. Lifecycle policies automatically optimize cost without sacrificing availability when you need it."
+        },
+        {
+            "question": "Why cannot Amazon EBS volumes be used to share data between multiple EC2 instances running simultaneously?",
+            "options": [
+                "EBS volumes do not support the NFS protocol required for sharing.",
+                "EBS is block storage attached to a single EC2 instance at a time (like a physical hard drive plugged into one server). For concurrent multi-instance access, you need Amazon EFS which provides a shared NFS file system, or S3 for object-level sharing.",
+                "EBS volumes are too slow for multi-instance access patterns.",
+                "Sharing is possible but requires the io2 Block Express volume type."
+            ],
+            "answer": "EBS is block storage attached to a single EC2 instance at a time (like a physical hard drive plugged into one server). For concurrent multi-instance access, you need Amazon EFS which provides a shared NFS file system, or S3 for object-level sharing.",
+            "explanation": "This is a fundamental architectural constraint — EBS cannot physically be attached read-write to two EC2 instances simultaneously (unlike EFS which is a network file system designed for concurrent mounting)."
+        },
+        {
+            "question": "A machine learning team trains models on 10 different EC2 GPU instances simultaneously and needs all instances to read the same large training dataset files and write their model checkpoints to shared storage. Which AWS storage service fits this requirement?",
+            "options": [
+                "Amazon EBS with gp3 volumes replicated across instances.",
+                "Amazon EFS — it provides a fully managed NFS file system that can be mounted simultaneously by multiple EC2 instances, ECS tasks, and Lambda functions, allowing all 10 GPU instances to read and write shared files concurrently.",
+                "Amazon S3 — EC2 instances can mount S3 as a local file system.",
+                "Amazon DynamoDB — it supports concurrent key-value operations."
+            ],
+            "answer": "Amazon EFS — it provides a fully managed NFS file system that can be mounted simultaneously by multiple EC2 instances, ECS tasks, and Lambda functions, allowing all 10 GPU instances to read and write shared files concurrently.",
+            "explanation": "EFS is specifically designed for the 'shared file system' use case. Training datasets and model checkpoints that multiple compute nodes need to access simultaneously are the canonical EFS use case."
+        }
+    ]
+}

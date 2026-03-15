@@ -1,0 +1,115 @@
+<h1>React State & Core Hooks</h1>
+<p>Hooks are functions that let you "hook into" React state and lifecycle features from functional components. They were introduced in React 16.8 and are now the standard way to write React.</p>
+
+<h2>useState — Local Component State</h2>
+<pre><code>import { useState } from "react";
+
+function Counter() {
+  const [count, setCount] = useState(0); // [state, setter]
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;Count: {count}&lt;/p&gt;
+      &lt;button onClick={() =&gt; setCount(count + 1)}&gt;+&lt;/button&gt;
+      &lt;button onClick={() =&gt; setCount(count - 1)}&gt;-&lt;/button&gt;
+      &lt;button onClick={() =&gt; setCount(0)}&gt;Reset&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}
+
+// Functional updater pattern (safe for async updates)
+setCount(prev =&gt; prev + 1);</code></pre>
+
+<h2>State with Objects & Arrays</h2>
+<pre><code>// Always create new references — never mutate state directly!
+const [user, setUser] = useState({ name: "Alice", age: 30 });
+
+// ❌ Wrong: mutates state directly
+user.name = "Bob"; setUser(user);
+
+// ✅ Correct: spread to create new object
+setUser(prev =&gt; ({ ...prev, name: "Bob" }));
+
+// Arrays
+const [items, setItems] = useState(["Apple"]);
+setItems(prev =&gt; [...prev, "Banana"]);      // Add
+setItems(prev =&gt; prev.filter(i =&gt; i !== "Apple")); // Remove</code></pre>
+
+<h2>useEffect — Side Effects</h2>
+<pre><code>import { useEffect, useState } from "react";
+
+function UserProfile({ userId }: { userId: number }) {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() =&gt; {
+    setLoading(true);
+    fetch(`/api/users/${userId}`)
+      .then(r =&gt; r.json())
+      .then(data =&gt; { setUser(data); setLoading(false); });
+
+    // Cleanup function (runs on unmount or before next effect)
+    return () =&gt; { /* cancel requests, clear timers */ };
+  }, [userId]); // Dependency array — re-runs when userId changes
+
+  if (loading) return &lt;p&gt;Loading...&lt;/p&gt;;
+  return &lt;h2&gt;{user?.name}&lt;/h2&gt;;
+}</code></pre>
+
+<h2>useEffect Dependency Array</h2>
+<pre><code>useEffect(() =&gt; { /* ... */ });          // Runs after EVERY render
+useEffect(() =&gt; { /* ... */ }, []);      // Runs ONCE (on mount)
+useEffect(() =&gt; { /* ... */ }, [id]);    // Runs when `id` changes</code></pre>
+
+<h2>useRef — Persistent Values Without Re-render</h2>
+<pre><code>import { useRef } from "react";
+
+function Timer() {
+  const timerRef = useRef&lt;NodeJS.Timeout | null&gt;(null);
+  const inputRef = useRef&lt;HTMLInputElement&gt;(null);
+
+  const start = () =&gt; {
+    timerRef.current = setInterval(() =&gt; console.log("tick"), 1000);
+  };
+  const stop = () =&gt; clearInterval(timerRef.current!);
+
+  // Accessing DOM elements directly
+  const focusInput = () =&gt; inputRef.current?.focus();
+
+  return &lt;input ref={inputRef} /&gt;;
+}</code></pre>
+
+<h2>useContext — Avoid Prop Drilling</h2>
+<pre><code>const ThemeContext = React.createContext("light");
+
+function App() {
+  return (
+    &lt;ThemeContext.Provider value="dark"&gt;
+      &lt;Toolbar /&gt;        {/* No need to pass theme down */}
+    &lt;/ThemeContext.Provider&gt;
+  );
+}
+
+function ThemedButton() {
+  const theme = useContext(ThemeContext); // "dark"
+  return &lt;button className={`btn-${theme}`}&gt;Click&lt;/button&gt;;
+}</code></pre>
+
+<h2>Custom Hooks</h2>
+<pre><code>// Encapsulate reusable stateful logic
+function useLocalStorage&lt;T&gt;(key: string, initial: T) {
+  const [value, setValue] = useState&lt;T&gt;(() =&gt; {
+    const stored = localStorage.getItem(key);
+    return stored ? JSON.parse(stored) : initial;
+  });
+
+  const set = (newValue: T) =&gt; {
+    setValue(newValue);
+    localStorage.setItem(key, JSON.stringify(newValue));
+  };
+
+  return [value, set] as const;
+}
+
+// Usage
+const [theme, setTheme] = useLocalStorage("theme", "light");</code></pre>

@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What type is React.ChangeEvent<HTMLInputElement> used for?",
+            "options": [
+                "Typing the onChange handler for any HTML element",
+                "Typing the onChange handler specifically for <input> elements",
+                "Typing mouse click events on input elements",
+                "Typing keyboard events on input elements"
+            ],
+            "answer": "Typing the onChange handler specifically for <input> elements",
+            "explanation": "React provides specific event types for each element: ChangeEvent<HTMLInputElement> for inputs, ChangeEvent<HTMLSelectElement> for selects, etc."
+        },
+        {
+            "question": "What TypeScript pattern should be used for useReducer action types?",
+            "options": [
+                "Enums",
+                "String literals",
+                "Discriminated unions",
+                "Type aliases"
+            ],
+            "answer": "Discriminated unions",
+            "explanation": "Discriminated unions (type Action = { type: 'A' } | { type: 'B'; payload: X }) allow TypeScript to narrow the exact action type in each switch case, providing type-safe access to payload."
+        },
+        {
+            "question": "How do you type a generic React component that accepts a list of any type?",
+            "options": [
+                "function List(props: any) {}",
+                "function List<T>(props: ListProps<T>) {}",
+                "function List(items: object[]) {}",
+                "function List(props: T extends {}) {}"
+            ],
+            "answer": "function List<T>(props: ListProps<T>) {}",
+            "explanation": "Generic component syntax function List<T>(...) where ListProps<T> uses the type parameter T, allowing TypeScript to infer the specific type when the component is used."
+        },
+        {
+            "question": "What TypeScript type should be used for an element that accepts ANY React-renderable content (string, number, JSX, fragments)?",
+            "options": [
+                "ReactElement",
+                "JSX.Element",
+                "ReactNode",
+                "ReactChild"
+            ],
+            "answer": "ReactNode",
+            "explanation": "React.ReactNode is the most permissive type — it accepts ReactElement, string, number, boolean, null, undefined, arrays, and fragments. Use it for 'children' props."
+        },
+        {
+            "question": "Why should you use 'as AuthContextType' instead of null as the createContext default when using TypeScript?",
+            "options": [
+                "Because TypeScript requires a non-null default",
+                "To avoid checking for null in every consumer and to provide the interface shape to TypeScript",
+                "Because null causes a runtime error",
+                "Because Context doesn't accept null values"
+            ],
+            "answer": "To avoid checking for null in every consumer and to provide the interface shape to TypeScript",
+            "explanation": "Using {} as AuthContextType (or a typed sentinel) prevents TypeScript from widening the context type to include null, when you guarantee it's always used within a Provider."
+        }
+    ]
+}

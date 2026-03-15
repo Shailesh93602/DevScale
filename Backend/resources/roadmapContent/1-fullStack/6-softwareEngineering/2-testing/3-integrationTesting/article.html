@@ -1,0 +1,39 @@
+<h1>Integration Testing</h1>
+<p>Unit Tests focus on an isolated function or a single component. However, even if your isolated <code>calculateTax()</code> function works perfectly, your application might still crash when multiple systems try to collaborate. <strong>Integration Testing</strong> bridges this gap by verifying that different pieces of your application (Routing, Controllers, Middleware, and Databases) interact flawlessly.</p>
+
+<h2>Testing APIs with Supertest</h2>
+<p>In the Node.js ecosystem, the industry standard library for testing HTTP endpoints is <strong>Supertest</strong>. It allows you to fire real HTTP requests against your Express app without actually binding it to a live network port.</p>
+
+<pre><code>import request from "supertest";
+import app from "../src/app"; // Your Express app instance
+
+describe("POST /api/users", () =&gt; {
+  it("should create a new user and return 201 status", async () =&gt; {
+    const response = await request(app)
+      .post("/api/users")
+      .send({ email: "test@example.com", password: "Password123" })
+      .expect(201); // Supertest asserts the status code natively
+
+    // We can then assert against the returned JSON payload
+    expect(response.body).toHaveProperty("id");
+    expect(response.body.email).toBe("test@example.com");
+  });
+});
+</code></pre>
+<p>Notice that this single test verifies the Router correctly matched the URL, the Body Parser middleware correctly extracted the JSON, the Controller processed the logic, the Database created the record, and the Server sent the exact response back.</p>
+
+<h2>Managing the Test Database</h2>
+<p>Integration tests that mutate a database run the massive risk of polluting your local development database. If your test creates a user named "test@example.com", and you run the test twice, the second test might fail due to a "Unique Constraint" error.</p>
+<p>To safely run integration tests, you must follow the <strong>Setup and Teardown</strong> lifecycle flawlessly:</p>
+<ol>
+  <li><strong>Before All:</strong> Connect specifically to an isolated Test Database (e.g., `test_db` instead of `dev_db`).</li>
+  <li><strong>Before Each:</strong> Wipe the database tables completely clean to ensure a pristine state for the next test.</li>
+  <li><strong>Run Test:</strong> Execute the Supertest HTTP request.</li>
+  <li><strong>After All:</strong> Safely disconnect the Prisma Client or Mongoose connection to prevent open-handle warnings.</li>
+</ol>
+<pre><code>// Example Jest Teardown Lifecycle
+beforeEach(async () =&gt; {
+  // Wipe the User table clean before every single test
+  await prisma.user.deleteMany(); 
+});
+</code></pre>

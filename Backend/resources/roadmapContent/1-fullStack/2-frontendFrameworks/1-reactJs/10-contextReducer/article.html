@@ -1,0 +1,124 @@
+<h1>Advanced Context & useReducer</h1>
+<p>As complex state grows, <code>useState</code> can become difficult to manage, and prop drilling creates tightly coupled components. Pairing <code>useReducer</code> with the Context API is React's native solution for scalable component architectures.</p>
+
+<h2>The useReducer Hook</h2>
+<p><code>useReducer</code> is preferable to <code>useState</code> when you have complex state logic involving multiple sub-values, or when the next state depends on the previous one. It formalizes state updates through an <strong>action</strong> dispatch model.</p>
+<pre><code>import { useReducer } from 'react';
+
+const initialState = { count: 0, error: null };
+
+// Reducer function: pure, predictable
+function counterReducer(state, action) {
+  switch (action.type) {
+    case 'increment':
+      return { ...state, count: state.count + action.payload, error: null };
+    case 'decrement':
+      if (state.count === 0) return { ...state, error: 'Cannot go below 0' };
+      return { ...state, count: state.count - 1, error: null };
+    default:
+      throw new Error(`Unknown action: ${action.type}`);
+  }
+}
+
+function Counter() {
+  const [state, dispatch] = useReducer(counterReducer, initialState);
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;Count: {state.count}&lt;/p&gt;
+      {state.error &amp;&amp; &lt;p className="error"&gt;{state.error}&lt;/p&gt;}
+      &lt;button onClick={() =&gt; dispatch({ type: 'increment', payload: 1 })}&gt;+1&lt;/button&gt;
+      &lt;button onClick={() =&gt; dispatch({ type: 'decrement' })}&gt;-1&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+<h2>The Problem with Singleton Context</h2>
+<p>When you put both state data and the update function (dispatch) into a single Context, <strong>every component that consumes that Context will re-render whenever the state changes</strong> — even if that component only needs the dispatch function to trigger actions!</p>
+
+<pre><code>// ❌ ANTI-PATTERN: The massive singleton context
+const AppContext = createContext();
+
+function AppProvider({ children }) {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  // Any change to state causes the value object to be a new reference
+  return (
+    &lt;AppContext.Provider value={{ state, dispatch }}&gt;
+      {children}
+    &lt;/AppContext.Provider&gt;
+  );
+}
+
+// Even though this Button only uses dispatch, it re-renders entirely when state changes
+function ClearButton() {
+  const { dispatch } = useContext(AppContext);
+  return &lt;button onClick={() =&gt; dispatch({ type: 'clear' })}&gt;Clear&lt;/button&gt;;
+}</code></pre>
+
+<h2>The Solution: Separating State and Dispatch</h2>
+<p>To optimize performance, separate the state and the dispatch function into two different contexts. Since <code>dispatch</code> is guaranteed by React to have a stable reference, components consuming the Dispatch context will <strong>never</strong> unnecessarily re-render.</p>
+
+<pre><code>import { createContext, useContext, useReducer } from 'react';
+
+// 1. Create two separate contexts
+const TasksStateContext = createContext(null);
+const TasksDispatchContext = createContext(null);
+
+// 2. Wrap them together in a Provider Component
+export function TasksProvider({ children }) {
+  const [tasks, dispatch] = useReducer(tasksReducer, []);
+
+  return (
+    &lt;TasksStateContext.Provider value={tasks}&gt;
+      &lt;TasksDispatchContext.Provider value={dispatch}&gt;
+        {children}
+      &lt;/TasksDispatchContext.Provider&gt;
+    &lt;/TasksStateContext.Provider&gt;
+  );
+}
+
+// 3. Create Custom Custom Hooks for safety
+export function useTasks() {
+  const context = useContext(TasksStateContext);
+  if (context === null) {
+    throw new Error('useTasks must be used within TasksProvider');
+  }
+  return context;
+}
+
+export function useTasksDispatch() {
+  const context = useContext(TasksDispatchContext);
+  if (context === null) {
+    throw new Error('useTasksDispatch must be used within TasksProvider');
+  }
+  return context;
+}</code></pre>
+
+<h2>Using the Optimized Contexts</h2>
+<pre><code>// Only re-renders when task list changes
+function TaskList() {
+  const tasks = useTasks();
+  return (
+    &lt;ul&gt;
+      {tasks.map(task =&gt; &lt;li key={task.id}&gt;{task.text}&lt;/li&gt;)}
+    &lt;/ul&gt;
+  );
+}
+
+// 🚀 Highly optimized: NEVER re-renders when tasks change!
+// It only reads the stable dispatch function.
+function AddTaskButton() {
+  const dispatch = useTasksDispatch();
+  return (
+    &lt;button onClick={() =&gt; dispatch({ type: 'ADD_DEFAULT' })}&gt;
+      Add Task
+    &lt;/button&gt;
+  );
+}</code></pre>
+
+<h2>When Context + Reducer is Overkill</h2>
+<ul>
+  <li>If the state is asynchronous (fetching from a server), use <strong>React Query</strong> or SWR instead.</li>
+  <li>If the state is changing rapidly (like dragging elements at 60fps), use a library like <strong>Zustand</strong>, <strong>Jotai</strong>, or simple local state to avoid Context's inherent render propagation limitations.</li>
+  <li>If it's just a simple <code>isOpen</code> bool, Stick to <code>useState</code> and pass it down one or two levels. Context is for widely shared business logic.</li>
+</ul>

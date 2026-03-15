@@ -1,0 +1,146 @@
+<h1>GraphQL in React Native</h1>
+<p>REST APIs return fixed data structures — a <code>GET /users/:id</code> endpoint returns all user fields, whether you need them or not. <strong>GraphQL</strong> solves this by letting the client specify exactly what data it needs in a single request. For mobile apps running on potentially slow connections, this "ask for exactly what you need" approach reduces payload sizes, combines multiple resource requests into one, and dramatically simplifies data fetching logic.</p>
+
+<h2>GraphQL vs REST for Mobile</h2>
+<table>
+  <thead><tr><th>Aspect</th><th>REST</th><th>GraphQL</th></tr></thead>
+  <tbody>
+    <tr><td>Data fetching</td><td>Multiple endpoints, over-fetch or under-fetch</td><td>Single endpoint, ask for exactly what you need</td></tr>
+    <tr><td>Multiple resources</td><td>N requests for N resource types</td><td>One request for all related resources</td></tr>
+    <tr><td>Versioning</td><td>v1, v2, v3 endpoints</td><td>Schema evolution with deprecations</td></tr>
+    <tr><td>Bandwidth</td><td>Fixed response shape (over-fetches on mobile)</td><td>Minimal — only requested fields are returned</td></tr>
+  </tbody>
+</table>
+
+<h2>Apollo Client Setup</h2>
+<pre><code">npm install @apollo/client graphql</code></pre>
+<pre><code">// src/api/apolloClient.ts
+import { ApolloClient, InMemoryCache, createHttpLink, ApolloLink } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const httpLink = createHttpLink({
+  uri: 'https://api.yourapp.com/graphql',
+});
+
+// Attach auth token to every request
+const authLink = setContext(async (_, { headers }) => {
+  const token = await AsyncStorage.getItem('auth_token');
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : '',
+    },
+  };
+});
+
+export const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache(),
+});</code></pre>
+
+<h2>Wrapping the App with ApolloProvider</h2>
+<pre><code"">// App.tsx
+import { ApolloProvider } from '@apollo/client';
+import { client } from './src/api/apolloClient';
+
+export default function App() {
+  return (
+    <ApolloProvider client={client}>
+      <NavigationContainer>
+        <RootStack />
+      </NavigationContainer>
+    </ApolloProvider>
+  );
+}</code></pre>
+
+<h2>Querying Data with useQuery</h2>
+<pre><code"">import { gql, useQuery } from '@apollo/client';
+import { View, Text, FlatList, ActivityIndicator } from 'react-native';
+
+// Define the query — request ONLY the fields you need
+const GET_USER_PROFILE = gql`
+  query GetUserProfile($userId: ID!) {
+    user(id: $userId) {
+      id
+      firstName
+      lastName
+      avatar
+      # Friends, orders, etc. NOT requested — Apollo sends nothing extra
+      recentOrders(limit: 5) {
+        id
+        total
+        status
+        createdAt
+      }
+    }
+  }
+`;
+
+const ProfileScreen = ({ userId }: { userId: string }) => {
+  const { data, loading, error, refetch } = useQuery(GET_USER_PROFILE, {
+    variables: { userId },
+    fetchPolicy: 'cache-and-network',  // Show cached data instantly, refresh in background
+  });
+
+  if (loading && !data) return <ActivityIndicator />;
+  if (error) return <Text>Error: {error.message}</Text>;
+
+  const { user } = data;
+  return (
+    <View>
+      <Text>{user.firstName} {user.lastName}</Text>
+      <FlatList
+        data={user.recentOrders}
+        keyExtractor={item => item.id}
+        renderItem={({ item }) => <Text>{item.status} — ${item.total}</Text>}
+      />
+    </View>
+  );
+};</code></pre>
+
+<h2>Mutations — Writing Data</h2>
+<pre><code"">import { gql, useMutation } from '@apollo/client';
+
+const UPDATE_PROFILE = gql`
+  mutation UpdateProfile($input: UpdateProfileInput!) {
+    updateProfile(input: $input) {
+      id
+      firstName
+      lastName
+    }
+  }
+`;
+
+const EditProfileScreen = () => {
+  const [updateProfile, { loading, error }] = useMutation(UPDATE_PROFILE, {
+    // Optimistic UI — update cache immediately without waiting for server
+    optimisticResponse: {
+      updateProfile: {
+        __typename: 'User',
+        id: currentUser.id,
+        firstName: newFirstName,
+        lastName: newLastName,
+      }
+    },
+    onCompleted: () => {
+      Alert.alert('Profile updated successfully!');
+    }
+  });
+
+  const handleSave = () => {
+    updateProfile({
+      variables: { input: { firstName: newFirstName, lastName: newLastName } }
+    });
+  };
+
+  return <Button title="Save" onPress={handleSave} disabled={loading} />;
+};</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Co-locate your GraphQL queries with the components that use them — this makes it immediately clear what data each component needs.</li>
+  <li>Use <code>fetchPolicy: 'cache-and-network'</code> for screens that need fresh data but should also render immediately from cache.</li>
+  <li>Use optimistic responses for mutations that update simple fields (name, bio, avatar) — it makes the app feel instant.</li>
+  <li>Use <a href="https://www.graphql-code-generator.com" target="_blank">GraphQL Code Generator</a> to auto-generate TypeScript types from your schema — eliminates hand-written types for every query.</li>
+</ul>

@@ -1,0 +1,118 @@
+{
+    "title": "Detox E2E Testing Quiz",
+    "description": "Test your knowledge of end-to-end testing with Detox, selectors, actions, and CI integration.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the fundamental difference between Jest unit tests and Detox E2E tests?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Jest uses JavaScript while Detox uses TypeScript",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Jest tests components in isolation on Node.js; Detox runs full user flows on a real/simulated device controlling the actual app UI",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Detox is only for Android; Jest is for iOS",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Jest requires a simulator; Detox runs entirely in Node.js",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why is `by.id('testID')` the most reliable Detox selector compared to `by.text()`?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "testID is faster to query than text content",
+                    "isCorrect": false
+                },
+                {
+                    "text": "testID values don't depend on displayed text which can change with localization, A/B tests, or copy edits — they remain stable regardless of visible content",
+                    "isCorrect": true
+                },
+                {
+                    "text": "by.text() is only valid on Android and not on iOS simulators",
+                    "isCorrect": false
+                },
+                {
+                    "text": "testID selectors are evaluated natively, reducing bridge overhead",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why should you use `waitFor(element(...)).toBeVisible().withTimeout(5000)` instead of just `expect(element(...)).toBeVisible()`?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The simpler form is deprecated and will be removed in Detox v21",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Navigation, animations, and network calls are asynchronous — the element may not be visible immediately; waitFor polls until visible or timeout",
+                    "isCorrect": true
+                },
+                {
+                    "text": "withTimeout is required by the testing framework or the test will crash",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It prevents memory leaks by automatically destroying element references after 5 seconds",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does `await device.reloadReactNative()` do in a beforeEach block?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Reinstalls the app binary from scratch, including all native modules",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Reloads the JavaScript bundle only, resetting React state but keeping native module state — faster than a full app restart",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Clears AsyncStorage and SecureStore so each test starts with no persisted data",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Restarts the Metro bundler and updates the JS bundle to the latest code",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "For which scenarios should you write Detox E2E tests rather than Jest unit tests?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "For every function and component in the codebase to maximize coverage",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Only for navigation between screens, not for any business logic",
+                    "isCorrect": false
+                },
+                {
+                    "text": "For critical business flows that span multiple screens — login, checkout, onboarding — where integration failures between components matter most",
+                    "isCorrect": true
+                },
+                {
+                    "text": "For testing utility functions because Detox is more accurate than Jest",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

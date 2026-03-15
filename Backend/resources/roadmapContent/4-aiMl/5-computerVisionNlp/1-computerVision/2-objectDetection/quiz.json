@@ -1,0 +1,118 @@
+{
+    "title": "Object Detection Quiz",
+    "description": "Test your knowledge of bounding boxes, YOLO, NMS, and evaluation metrics for object detection.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What does a bounding box in XYWH format represent?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "X-min, Y-min, Width, Height of the top-left corner and box dimensions",
+                    "isCorrect": false
+                },
+                {
+                    "text": "X-center, Y-center, Width, Height — the center point and dimensions of the box",
+                    "isCorrect": true
+                },
+                {
+                    "text": "X-max, Y-max, Width, Height of the bottom-right corner",
+                    "isCorrect": false
+                },
+                {
+                    "text": "X-offset, Y-offset of the box relative to the previous frame in a video",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What problem does Non-Maximum Suppression (NMS) solve in object detection?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It speeds up the forward pass by skipping empty image regions",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It removes duplicate overlapping bounding boxes, keeping only the highest-confidence detection per object",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It resizes the input image to the required resolution",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It filters out background pixels from the image before detection",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the key architectural difference between YOLO and two-stage detectors like Faster R-CNN?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "YOLO requires more training data than Faster R-CNN",
+                    "isCorrect": false
+                },
+                {
+                    "text": "YOLO can only detect one object per image, while Faster R-CNN detects multiple",
+                    "isCorrect": false
+                },
+                {
+                    "text": "YOLO processes the image in a single forward pass predicting all boxes at once, while two-stage detectors first propose regions then classify them separately",
+                    "isCorrect": true
+                },
+                {
+                    "text": "YOLO only works on GPU while Faster R-CNN can run on CPU",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does mAP@50 measure in object detection evaluation?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Mean accuracy at 50% training completion",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The mean of Average Precision across all classes, using an IoU threshold of 0.5 to determine if a detection is correct",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The model's speed in processing 50 frames per second",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The percentage of images where the model detects at least 50% of objects",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "When fine-tuning a YOLO model on custom data, what is the recommended starting point?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Always train from random weights (Xavier initialization) for best results on custom tasks",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Start from a pretrained model (e.g., trained on COCO) and fine-tune — this requires far less data and converges much faster",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Use only the last layer of a pretrained model and freeze all other weights permanently",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Download ground truth labels from COCO and merge them with your custom labels",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

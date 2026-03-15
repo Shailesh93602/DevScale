@@ -1,0 +1,62 @@
+[
+  {
+    "input": { "operations": [["on", "click", "handler1"], ["emit", "click", "data"]] },
+    "output": { "handler1_calls": [["data"]] },
+    "explanation": "Basic on + emit — handler receives the emitted data",
+    "is_hidden": false
+  },
+  {
+    "input": { "operations": [["on", "click", "handler1"], ["on", "click", "handler2"], ["emit", "click", "data"]] },
+    "output": { "handler1_calls": [["data"]], "handler2_calls": [["data"]] },
+    "explanation": "Multiple listeners on same event — both called",
+    "is_hidden": false
+  },
+  {
+    "input": { "operations": [["on", "click", "handler1"], ["off", "click", "handler1"], ["emit", "click", "data"]] },
+    "output": { "handler1_calls": [] },
+    "explanation": "off removes the listener — handler not called after removal",
+    "is_hidden": false
+  },
+  {
+    "input": { "operations": [["once", "init", "handler1"], ["emit", "init"], ["emit", "init"]] },
+    "output": { "handler1_calls": [[]] },
+    "explanation": "once — handler fires on first emit only",
+    "is_hidden": true
+  },
+  {
+    "input": { "operations": [["emit", "nolisteners"]] },
+    "output": {},
+    "explanation": "Emitting event with no listeners — no error",
+    "is_hidden": true
+  },
+  {
+    "input": { "operations": [["on", "data", "handler1"], ["emit", "data", 1, 2, 3]] },
+    "output": { "handler1_calls": [[1, 2, 3]] },
+    "explanation": "Multiple arguments forwarded to handler",
+    "is_hidden": true
+  },
+  {
+    "input": { "operations": [["on", "a", "handler1"], ["on", "b", "handler2"], ["emit", "a", "x"], ["emit", "b", "y"]] },
+    "output": { "handler1_calls": [["x"]], "handler2_calls": [["y"]] },
+    "explanation": "Different events are independent",
+    "is_hidden": true
+  },
+  {
+    "input": { "operations": [["on", "test", "handler1"], ["emit", "test", "a"], ["emit", "test", "b"], ["emit", "test", "c"]] },
+    "output": { "handler1_calls": [["a"], ["b"], ["c"]] },
+    "explanation": "Same listener called for each emit",
+    "is_hidden": true
+  },
+  {
+    "input": { "operations": [["on", "test", "handler1"], ["on", "test", "handler1"], ["emit", "test", "x"]] },
+    "output": { "handler1_calls": [["x"], ["x"]] },
+    "explanation": "Same handler registered twice — called twice per emit",
+    "is_hidden": true
+  },
+  {
+    "input": { "operations": [["off", "nonexistent", "handler1"]] },
+    "output": {},
+    "explanation": "off on nonexistent event — no error",
+    "is_hidden": true
+  }
+]

@@ -1,0 +1,6 @@
+[
+  "This is a standard binary search problem. What happens when the target isn't found?",
+  "When binary search terminates without finding the target, the left pointer indicates the insertion position.",
+  "The left pointer always stops at the first index where nums[index] >= target.",
+  "Handle edge cases: target smaller than all elements (insert at 0) and larger than all (insert at end)."
+]

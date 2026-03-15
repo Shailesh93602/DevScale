@@ -1,0 +1,62 @@
+[
+  {
+    "input": { "type": "basic", "values": [1, 2, 3] },
+    "output": { "next_calls": [1, 2, 3], "complete_called": true },
+    "explanation": "Basic observable emits values then completes",
+    "is_hidden": false
+  },
+  {
+    "input": { "type": "fromPromise", "resolves": 42 },
+    "output": { "next_calls": [42], "complete_called": true },
+    "explanation": "fromPromise emits resolved value then completes",
+    "is_hidden": false
+  },
+  {
+    "input": { "type": "fromPromise", "rejects": "error" },
+    "output": { "error_called": true, "error_value": "error" },
+    "explanation": "fromPromise with rejected promise calls error callback",
+    "is_hidden": false
+  },
+  {
+    "input": { "type": "map", "values": [1, 2, 3], "transform": "x => x * 2" },
+    "output": { "next_calls": [2, 4, 6] },
+    "explanation": "Map transforms each emitted value",
+    "is_hidden": true
+  },
+  {
+    "input": { "type": "filter", "values": [1, 2, 3, 4, 5], "predicate": "x => x % 2 === 0" },
+    "output": { "next_calls": [2, 4] },
+    "explanation": "Filter only passes values matching the predicate",
+    "is_hidden": true
+  },
+  {
+    "input": { "type": "chain", "values": [1, 2, 3, 4], "filter": "x => x > 2", "map": "x => x * 10" },
+    "output": { "next_calls": [30, 40] },
+    "explanation": "Chained filter then map",
+    "is_hidden": true
+  },
+  {
+    "input": { "type": "unsubscribe", "values": [1, 2, 3, 4, 5], "unsubscribe_after": 2 },
+    "output": { "next_calls": [1, 2] },
+    "explanation": "Unsubscribe stops further emissions",
+    "is_hidden": true
+  },
+  {
+    "input": { "type": "complete_stops", "values": [1, 2], "extra_after_complete": [3, 4] },
+    "output": { "next_calls": [1, 2], "complete_called": true },
+    "explanation": "Values emitted after complete are ignored",
+    "is_hidden": true
+  },
+  {
+    "input": { "type": "error_stops", "values": [1], "error": "fail", "extra_after_error": [2, 3] },
+    "output": { "next_calls": [1], "error_called": true },
+    "explanation": "Values emitted after error are ignored",
+    "is_hidden": true
+  },
+  {
+    "input": { "type": "empty", "values": [] },
+    "output": { "next_calls": [], "complete_called": true },
+    "explanation": "Empty observable just completes",
+    "is_hidden": true
+  }
+]

@@ -1,0 +1,37 @@
+<h1>Data Quality & Contract Testing</h1>
+<p>When you build a standard web application, you rely heavily on Unit Testing using tools like Jest to ensure your code logic works correctly. However, in Data Engineering, your code might be flawless, but if a third-party API suddenly changes the name of a column from <code>User_ID</code> to <code>userId</code>, your pipeline will crash. This is called a "Data Quality Incident." Data Engineers must test the actual data itself.</p>
+
+<h2>Unit Testing with Pytest</h2>
+<p>Before testing the actual Big Data files, you must ensure that your data transformation functions are bug-free. In Python, the industry standard framework is <strong>Pytest</strong>. It is simple, powerful, and requires less boilerplate code than the built-in <code>unittest</code> module.</p>
+<pre><code class="language-python"># test_transforms.py
+from transforms import clean_currency_string
+
+def test_clean_currency_string_removes_dollars():
+    assert clean_currency_string("$1,000.50") == 1000.50
+
+def test_clean_currency_string_handles_euros():
+    assert clean_currency_string("€500") == 500.00
+</code></pre>
+<p>Just run the command <code>pytest</code> in your terminal, and it will automatically discover and execute all functions starting with the word <code>test_</code>.</p>
+
+<h2>Data Quality Contracts</h2>
+<p>If your `clean_currency_string` function works perfectly, but the raw CSV file this morning unexpectedly contains the string "FREE" instead of a dollar amount, your pipeline will crash with a <code>ValueError</code>.</p>
+<p>To prevent bad data from polluting your centralized Data Warehouse, you must enforce a strict <strong>Data Contract</strong>. A Data Contract is a test that runs against the dataset before the data is allowed to enter the pipeline.</p>
+
+<h2>Great Expectations</h2>
+<p><strong>Great Expectations (GX)</strong> is the leading Python library for data quality testing. Instead of writing custom SQL or complex Pandas validation scripts, GX allows you to define declarative "Expectations."</p>
+<pre><code class="language-python">import great_expectations as gx
+
+# Load a massive generic CSV dataset
+df = gx.read_csv("daily_transactions.csv")
+
+# Define strict business logic constraints explicitly
+df.expect_column_values_to_not_be_null("transaction_id")
+df.expect_column_values_to_be_between("age", min_value=18, max_value=99)
+df.expect_column_values_to_match_regex("email", regex="^\\S+@\\S+\\.\\S+$")
+df.expect_column_values_to_be_unique("user_id")
+
+# Execute the validation and generate an HTML report natively
+results = df.validate()
+</code></pre>
+<p>If the `validate()` method returns a failure, the Airflow orchestrator will halt the entire DAG pipeline, alert the engineering team via Slack, and prevent the corrupted CSV file from ruining the production dashboard.</p>

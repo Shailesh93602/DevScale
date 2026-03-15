@@ -1,0 +1,4 @@
+{
+    "name": "Exploratory Data Analysis (EDA)",
+    "description": "Systematically understanding a dataset before modeling. Learning to compute and interpret descriptive statistics, identify data quality issues, find correlations and patterns using Pandas and Seaborn, and develop data intuition that guides model selection and feature engineering decisions."
+}

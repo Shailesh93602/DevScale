@@ -1,0 +1,11 @@
+{
+    "id": "5-backendIntegration",
+    "title": "Backend Integration & Security",
+    "description": "Connecting your mobile app to external services and securing user data.",
+    "order": 5,
+    "subjects": [
+        "1-networking",
+        "2-auth",
+        "3-supabase"
+    ]
+}

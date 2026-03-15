@@ -1,0 +1,4 @@
+{
+    "name": "Microservices with Node.js & Message Queues",
+    "description": "Designing and building Node.js microservices that communicate via message queues. Understanding when microservices make sense vs monolith, implementing service-to-service communication with BullMQ and Redis, event-driven architecture with publish/subscribe patterns, designing for eventual consistency, handling distributed transactions with the Saga pattern, and inter-service HTTP communication with circuit breakers."
+}

@@ -1,0 +1,74 @@
+{
+    "title": "LLMs & RAG Quiz",
+    "description": "Test your LLM, prompt engineering, and RAG knowledge.",
+    "passingScore": 80,
+    "timeLimit": 8,
+    "questions": [
+        {
+            "question": "What problem does RAG (Retrieval-Augmented Generation) solve?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It makes LLMs generate faster responses",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It gives LLMs access to up-to-date or private knowledge by retrieving relevant documents at query time",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It trains LLMs on new tasks without full fine-tuning",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It reduces the cost of LLM API calls",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does 'temperature' control in an LLM API call?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The GPU temperature during inference",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The randomness/creativity of outputs — lower = more deterministic, higher = more creative",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The number of output tokens generated",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The size of the model's context window",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is 'few-shot prompting'?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Fine-tuning the LLM on a small dataset",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Providing example input-output pairs in the prompt to guide the model's response format and behaviour",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Limiting the model to short responses",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Running multiple prompts and selecting the best result",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

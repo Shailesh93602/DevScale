@@ -1,0 +1,74 @@
+{
+    "title": "Docker & Deployment Quiz",
+    "description": "Test your Docker and cloud deployment knowledge.",
+    "passingScore": 80,
+    "timeLimit": 8,
+    "questions": [
+        {
+            "question": "What is the difference between a Docker image and a Docker container?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "They are the same thing",
+                    "isCorrect": false
+                },
+                {
+                    "text": "An image is a read-only blueprint; a container is a running instance of that image",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Images run on the cloud; containers run locally",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Containers are bigger versions of images",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the advantage of multi-stage Docker builds?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "They enable running multiple applications in one container",
+                    "isCorrect": false
+                },
+                {
+                    "text": "They produce smaller production images by excluding build tools and dev dependencies",
+                    "isCorrect": true
+                },
+                {
+                    "text": "They speed up the Docker build process",
+                    "isCorrect": false
+                },
+                {
+                    "text": "They allow the app to run on multiple operating systems simultaneously",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does 'docker compose up -d' do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Builds the Docker image only",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Starts all services defined in docker-compose.yml in detached (background) mode",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Downloads the latest Docker updates",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Removes all stopped containers",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary architectural purpose of the MongoDB Aggregation Framework compared to standard `.find()` queries?",
+            "options": [
+                "It acts strictly as an Indexing tool to speed up document insertions",
+                "It allows you to push complex, dataset-wide analytical processing (like calculating sums, averages, and group analytics across millions of rows) directly down to the database engine natively, rather than sending millions of rows over the network to process inefficiently via JavaScript loops",
+                "It generates PDF reports natively",
+                "It forces MongoDB to adopt a strict SQL schema table system temporarily"
+            ],
+            "answer": "It allows you to push complex, dataset-wide analytical processing (like calculating sums, averages, and group analytics across millions of rows) directly down to the database engine natively, rather than sending millions of rows over the network to process inefficiently via JavaScript loops",
+            "explanation": "If a backend fetches 1,000,000 rows into an array to compute an average using `.reduce()`, the Node.js server will immediately crash due to Out of Memory. Aggregation does the math natively inside the C++ MongoDB engine and only returns the final number."
+        },
+        {
+            "question": "In a MongoDB Aggregation Pipeline, why is it considered critical to place the `$match` stage as early in the array as physically possible?",
+            "options": [
+                "To ensure it aligns mathematically with the API's CORS configurations",
+                "Because `$match` is a filtering stage. By discarding irrelevant documents immediately (leveraging indexes), it minimizes memory usage and drastically speeds up the calculation times for all subsequent stages like `$group` and `$sort`",
+                "Because `$match` deletes data permanently",
+                "Because MongoDB throws a syntax error if `$match` is placed horizontally beneath `$sort`"
+            ],
+            "answer": "Because `$match` is a filtering stage. By discarding irrelevant documents immediately (leveraging indexes), it minimizes memory usage and drastically speeds up the calculation times for all subsequent stages like `$group` and `$sort`",
+            "explanation": "If the collection has 10 million rows, and you only want to analyze 'COMPLETED' orders today, a `$match` placed first drops 9.9 million rows from the pipeline instantaneously. Doing grouping math on 100,000 rows is infinitely faster."
+        },
+        {
+            "question": "What specifically does the `_id` field mathematically represent when defined inside a `$group` aggregation stage?",
+            "options": [
+                "It generates a new globally unique UUID for the resulting array block",
+                "It explicitly defines the exact criteria or field by which the documents should be grouped together (e.g., grouped by `$storeLocation` or `$categoryName`)",
+                "It forces the pipeline to overwrite the document's original primary key",
+                "It retrieves the current Unix timestamp automatically"
+            ],
+            "answer": "It explicitly defines the exact criteria or field by which the documents should be grouped together (e.g., grouped by `$storeLocation` or `$categoryName`)",
+            "explanation": "In SQL, you write `GROUP BY storeLocation`. In MongoDB's `$group` stage, mapping data to the `_id: \"$storeLocation\"` property accomplishes this exact identical grouping methodology."
+        },
+        {
+            "question": "If you want to append completely new fields or manipulate existing fields by executing calculations (e.g., multiplying `price * quantity`) as data passes through the pipeline, which stage should you use?",
+            "options": [
+                "$unwind",
+                "$limit",
+                "$project",
+                "$lookup"
+            ],
+            "answer": "$project",
+            "explanation": "The `$project` stage acts as a reshaper. It determines exactly which properties are passed to the next stage, excluding unneeded properties, renaming keys, and generating computed fields dynamically based on expressions."
+        },
+        {
+            "question": "How does the MongoDB `$lookup` aggregation stage structurally differ from Mongoose's `.populate()` method?",
+            "options": [
+                "`$lookup` converts NO-SQL collections into XML trees exclusively",
+                "Mongoose `.populate()` triggers an automated HTTP webhook. `$lookup` does not.",
+                "`$lookup` executes a true Left Outer Join entirely inside the native MongoDB database engine level. `.populate()` runs multiple separate `.find()` queries and artificially merges the JSON results inside the Node.js memory layer.",
+                "`$lookup` requires data to be perfectly cached in Redis"
+            ],
+            "answer": "`$lookup` executes a true Left Outer Join entirely inside the native MongoDB database engine level. `.populate()` runs multiple separate `.find()` queries and artificially merges the JSON results inside the Node.js memory layer.",
+            "explanation": "Because `$lookup` is native to the database engine, it is significantly faster for executing queries against massive datasets since it completely eliminates the network round-trip overhead of dispatching a second query from Node.js."
+        }
+    ]
+}

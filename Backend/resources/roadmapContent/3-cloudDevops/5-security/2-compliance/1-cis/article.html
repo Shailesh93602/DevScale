@@ -1,0 +1,134 @@
+<h1>CIS Benchmarks: Hardening Infrastructure at Scale</h1>
+<p>When you provision a fresh EC2 instance, create a new AWS account, or bootstrap a Kubernetes cluster, the <strong>default configuration is optimized for convenience, not security</strong>. Root SSH is enabled, all traffic is allowed, audit logging is disabled, and passwords have no complexity requirements. The <strong>Center for Internet Security (CIS)</strong> is a non-profit that publishes consensus-based, peer-reviewed checklists defining exactly how to harden these systems to the standard used by banks, militaries, and major enterprises.</p>
+
+<h2>The Two Hardening Levels</h2>
+<ul>
+  <li><strong>Level 1 (Practical Security):</strong> Recommendations that deliver meaningful security improvements with minimal disruption to normal application functionality. <em>Every production system should implement Level 1.</em></li>
+  <li><strong>Level 2 (Defense in Depth):</strong> Extremely aggressive configurations intended for high-security environments (defense, government, healthcare). Level 2 implementations will break standard applications — test thoroughly before applying.</li>
+</ul>
+
+<h2>CIS AWS Foundations Benchmark — Key Controls</h2>
+<p>The AWS benchmark defines controls across IAM, logging, networking, and monitoring. Here's how to automate compliance with Terraform:</p>
+<pre><code"">## terraform/aws_cis_foundations.tf
+
+## CIS 1.2 — Ensure MFA is enabled for the root account (must be done manually)
+## CIS 1.5 — IAM password policy requirements
+resource "aws_iam_account_password_policy" "cis_compliant" {
+  minimum_password_length        = 14
+  require_uppercase_characters   = true
+  require_lowercase_characters   = true
+  require_numbers                = true
+  require_symbols                = true
+  allow_users_to_change_password = true
+  max_password_age               = 90   # Force rotation every 90 days
+  password_reuse_prevention      = 24   # Cannot reuse last 24 passwords
+}
+
+## CIS 2.1 — CloudTrail enabled in all regions with encryption
+resource "aws_cloudtrail" "cis_trail" {
+  name                          = "cis-management-trail"
+  s3_bucket_name                = aws_s3_bucket.cloudtrail_logs.id
+  include_global_service_events = true
+  is_multi_region_trail         = true  # Required: must cover all regions
+  enable_log_file_validation    = true  # Detects tampered log files
+  kms_key_id                    = aws_kms_key.cloudtrail.arn  # Encryption at rest
+}
+
+## CIS 4.1 — No Security Group allows SSH from 0.0.0.0/0
+resource "aws_security_group_rule" "deny_all_inbound" {
+  type        = "ingress"
+  from_port   = 22
+  to_port     = 22
+  protocol    = "tcp"
+  cidr_blocks = ["10.0.0.0/8"]  # Only VPN/corporate CIDR, never 0.0.0.0/0
+  security_group_id = aws_security_group.bastion.id
+}</code></pre>
+
+<h2>Automating Kubernetes Compliance with kube-bench</h2>
+<p>kube-bench is the open-source tool that automatically evaluates your cluster against the CIS Kubernetes Benchmark and generates a detailed pass/fail report:</p>
+<pre><code">## Run kube-bench as a Kubernetes Job
+kubectl apply -f - <<EOF
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kube-bench
+spec:
+  template:
+    spec:
+      hostPID: true
+      containers:
+      - name: kube-bench
+        image: aquasec/kube-bench:latest
+        command: ["kube-bench"]
+        volumeMounts:
+        - name: var-lib-etcd
+          mountPath: /var/lib/etcd
+          readOnly: true
+        - name: etc-kubernetes
+          mountPath: /etc/kubernetes
+          readOnly: true
+      restartPolicy: Never
+      volumes:
+      - name: var-lib-etcd
+        hostPath:
+          path: /var/lib/etcd
+      - name: etc-kubernetes
+        hostPath:
+          path: /etc/kubernetes
+EOF
+
+## Check the output
+kubectl logs job/kube-bench
+
+## Example output:
+## [PASS] 1.1.1 Ensure that the API server pod specification file permissions are set to 600
+## [FAIL] 1.1.2 Ensure that the API server pod spec file ownership is set to root:root
+## [PASS] 1.2.1 Ensure that anonymous requests to the API server are disabled
+## [FAIL] 1.2.6 Ensure that the --kubelet-certificate-authority argument is set
+##
+## == Summary ==
+## 76 checks PASS | 11 checks FAIL | 3 checks WARN</code></pre>
+
+<h2>AWS Security Hub — Continuous CIS Monitoring</h2>
+<pre><code"">## Enable AWS Security Hub with CIS standard via Terraform
+resource "aws_securityhub_account" "main" {}
+
+resource "aws_securityhub_standards_subscription" "cis" {
+  depends_on    = [aws_securityhub_account.main]
+  standards_arn = "arn:aws:securityhub:::ruleset/cis-aws-foundations-benchmark/v/1.2.0"
+}
+
+## Security Hub now continuously evaluates all your AWS accounts and regions
+## Dashboard shows your CIS compliance score (e.g., "89% compliant")
+## Failed controls generate findings you can route to Jira, Slack, or PagerDuty</code></pre>
+
+<h2>CIS Ubuntu Linux Benchmark — Key Controls</h2>
+<pre><code"">#!/bin/bash
+# CIS Ubuntu 22.04 Level 1 hardening script
+
+## CIS 1.6.1 — Restrict core dumps (prevent memory dumping of sensitive data)
+echo "hard core 0" >> /etc/security/limits.conf
+echo "fs.suid_dumpable = 0" >> /etc/sysctl.d/60-cis.conf
+
+## CIS 3.1.1 — Disable IPv6 if not used
+echo "net.ipv6.conf.all.disable_ipv6 = 1" >> /etc/sysctl.d/60-cis.conf
+
+## CIS 3.3.2 — Disable source routing (prevents IP spoofing attacks)
+echo "net.ipv4.conf.all.accept_source_route = 0" >> /etc/sysctl.d/60-cis.conf
+
+## CIS 5.2 — SSH Hardening
+sed -i 's/#PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
+sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
+echo "Protocol 2" >> /etc/ssh/sshd_config
+echo "MaxAuthTries 3" >> /etc/ssh/sshd_config
+
+sysctl -p /etc/sysctl.d/60-cis.conf
+systemctl restart ssh</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Use Terraform to provision CIS-compliant infrastructure from day zero — retrofitting security controls onto existing infrastructure is error-prone and time-consuming.</li>
+  <li>Run kube-bench and AWS Security Hub reports in CI — treat compliance failures like test failures that block deployments.</li>
+  <li>Start with Level 1 benchmarks; only apply Level 2 for systems processing regulated data (PCI-DSS, HIPAA) after thorough testing in a staging environment.</li>
+  <li>Subscribe to CVE databases and CIS Benchmark update notifications — benchmarks are revised as new threats emerge.</li>
+</ul>

@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "In a Terraform CI/CD pipeline with a 'Plan on PR, Apply on Merge' workflow, what specific security benefit does the Plan step on PR review provide?",
+            "options": [
+                "The Plan step encrypts all terraform.tfstate changes before they are committed.",
+                "It generates a human-readable preview of every resource that will be created, modified, or destroyed — allowing engineers to review and catch dangerous changes (like accidentally deleting a production database) BEFORE they are applied, using the same peer review process as application code.",
+                "The Plan step automatically applies fixes to any security misconfigurations it detects.",
+                "The Plan step locks the production environment to prevent other changes during review."
+            ],
+            "answer": "It generates a human-readable preview of every resource that will be created, modified, or destroyed — allowing engineers to review and catch dangerous changes (like accidentally deleting a production database) BEFORE they are applied, using the same peer review process as application code.",
+            "explanation": "Seeing '1 resource to destroy: aws_rds_instance.production_db' in a PR plan output before applying is a critical safety net. Without this, an engineer might silently delete production data."
+        },
+        {
+            "question": "Why is OIDC-based authentication (IAM role assumption via GitHub Actions) preferred over storing AWS Access Keys as GitHub repository secrets?",
+            "options": [
+                "OIDC is faster than Access Keys, reducing CI/CD pipeline execution time.",
+                "Access Keys are long-lived credentials that create a persistent security risk if ever leaked or compromised. OIDC issues short-lived tokens valid only for a single job run, scoped to a specific repository — no stored secrets means no secret to steal.",
+                "GitHub Secrets has a 1KB size limit that prevents storing Access Keys.",
+                "AWS Access Keys cannot be used with multi-region deployments."
+            ],
+            "answer": "Access Keys are long-lived credentials that create a persistent security risk if ever leaked or compromised. OIDC issues short-lived tokens valid only for a single job run, scoped to a specific repository — no stored secrets means no secret to steal.",
+            "explanation": "If an Access Key is accidentally committed to a public repo, it must be immediately rotated. With OIDC, there is no long-lived credential to rotate — GitHub's identity token is the authentication mechanism."
+        },
+        {
+            "question": "What is 'infrastructure drift' and why does it create serious problems for Terraform-managed infrastructure over time?",
+            "options": [
+                "Drift means Terraform's AWS provider plugin has fallen behind the latest AWS API.",
+                "Drift occurs when someone makes direct manual changes to AWS resources (e.g., via the console) that are not captured in Terraform code. Over time, the Terraform state diverges from reality — causing the next 'terraform apply' to try reversing those manual changes, potentially causing outages.",
+                "Drift refers to Terraform applying changes to the wrong AWS region.",
+                "Drift is when Terraform module versions gradually become incompatible."
+            ],
+            "answer": "Drift occurs when someone makes direct manual changes to AWS resources (e.g., via the console) that are not captured in Terraform code. Over time, the Terraform state diverges from reality — causing the next 'terraform apply' to try reversing those manual changes, potentially causing outages.",
+            "explanation": "An SRE manually opens a Security Group port during an incident, then forgets to update Terraform. The next deploy reverts the Security Group back, re-causing the original incident. Drift detection catches this proactively."
+        }
+    ]
+}

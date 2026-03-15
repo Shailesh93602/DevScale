@@ -1,0 +1,68 @@
+<h1>NumPy & Pandas for Machine Learning</h1>
+<p>Before training any ML model, you need to understand, clean, and transform your data. NumPy and Pandas are the standard tools for this.</p>
+
+<h2>Loading & Exploring Data</h2>
+<pre><code>import pandas as pd
+import numpy as np
+
+df = pd.read_csv("titanic.csv")
+df.head()
+df.info()             # Column types + null counts
+df.describe()         # Statistical summary
+df.isnull().sum()     # Missing values per column
+df["survived"].value_counts()  # Class distribution
+df.corr()             # Correlation matrix</code></pre>
+
+<h2>Feature Engineering</h2>
+<pre><code"># Creating new features from existing ones
+df["family_size"] = df["sibsp"] + df["parch"] + 1
+df["is_alone"] = (df["family_size"] == 1).astype(int)
+df["title"] = df["name"].str.extract(r',\s*([^.]+)\.')
+
+# Encoding categorical variables
+df["sex_encoded"] = df["sex"].map({"male": 0, "female": 1})
+df = pd.get_dummies(df, columns=["embarked"], prefix="emb")   # One-hot encoding
+
+# Handling missing values
+df["age"].fillna(df["age"].median(), inplace=True)
+df.dropna(subset=["cabin"], inplace=True)</code></pre>
+
+<h2>Feature Scaling (Critical for many ML algorithms)</h2>
+<pre><code>from sklearn.preprocessing import StandardScaler, MinMaxScaler
+
+# StandardScaler: mean=0, std=1 — use for models assuming normal distribution
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)  # Fit on train, transform train
+X_test_scaled  = scaler.transform(X_test)        # Transform test (same parameters!)
+
+# MinMaxScaler: range [0, 1] — use for neural networks, image data
+minmax = MinMaxScaler()
+X_scaled = minmax.fit_transform(X)</code></pre>
+
+<h2>Preparing Features for ML</h2>
+<pre><code>from sklearn.model_selection import train_test_split
+
+# Select features and target
+features = ["pclass", "sex_encoded", "age", "family_size", "fare"]
+X = df[features].values   # Convert to NumPy array
+y = df["survived"].values
+
+# Split into train/validation/test
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y  # stratify preserves class balance
+)
+
+print(f"Train: {X_train.shape}, Test: {X_test.shape}")
+print(f"Positive rate: {y_train.mean():.2%}")</code></pre>
+
+<h2>EDA — Exploratory Data Analysis</h2>
+<pre><code>import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Distribution plots
+df["age"].hist(bins=30, figsize=(10, 4))
+sns.boxplot(x="survived", y="age", data=df)
+
+# Correlation heatmap
+plt.figure(figsize=(10, 8))
+sns.heatmap(df.corr(), annot=True, cmap="coolwarm", fmt=".2f")</code></pre>

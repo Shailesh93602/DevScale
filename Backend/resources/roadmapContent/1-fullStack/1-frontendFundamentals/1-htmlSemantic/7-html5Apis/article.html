@@ -1,0 +1,135 @@
+<h1>HTML5 APIs & Browser Features</h1>
+<p>HTML5 introduced dozens of powerful browser APIs that allow web applications to do things previously only possible in native apps — without any plugins. These APIs are accessed through JavaScript but are part of the browser environment.</p>
+
+<h2>Web Storage API</h2>
+<p>Two storage mechanisms for persisting data client-side:</p>
+<pre><code>// localStorage — persists indefinitely (survives browser restarts)
+localStorage.setItem('theme', 'dark');
+const theme = localStorage.getItem('theme');   // 'dark'
+localStorage.removeItem('theme');
+localStorage.clear();  // remove all items
+
+// sessionStorage — cleared when the tab is closed
+sessionStorage.setItem('cart', JSON.stringify({ items: 3 }));
+const cart = JSON.parse(sessionStorage.getItem('cart'));</code></pre>
+<p>Both store strings only. Use <code>JSON.stringify()</code> and <code>JSON.parse()</code> for objects. Max ~5–10MB per origin.</p>
+
+<h2>Geolocation API</h2>
+<pre><code>if ('geolocation' in navigator) {
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const { latitude, longitude, accuracy } = position.coords;
+      console.log(`You are at ${latitude}, ${longitude}`);
+    },
+    (error) => {
+      console.error('Location error:', error.message);
+    },
+    { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+  );
+}
+
+// Watch continuous position updates (great for maps)
+const watchId = navigator.geolocation.watchPosition(successCallback);
+navigator.geolocation.clearWatch(watchId); // stop watching</code></pre>
+
+<h2>History API</h2>
+<p>Manipulate browser history without full page refreshes — the foundation of Single Page Applications (SPAs):</p>
+<pre><code>// Push a new URL to history (no page reload)
+history.pushState({ page: 'about' }, 'About', '/about');
+
+// Replace current history entry
+history.replaceState({ page: 'home' }, 'Home', '/');
+
+// Navigate programmatically
+history.back();    // same as browser back button
+history.forward();
+history.go(-2);    // go 2 steps back
+
+// Listen for back/forward navigation
+window.addEventListener('popstate', (event) => {
+  console.log('Navigated to:', event.state);
+});</code></pre>
+
+<h2>Canvas API</h2>
+<p>The <code>&lt;canvas&gt;</code> element provides a 2D drawing surface for graphics, charts, games, and image manipulation:</p>
+<pre><code>&lt;canvas id="myCanvas" width="400" height="200"&gt;&lt;/canvas&gt;
+
+&lt;script&gt;
+const canvas = document.getElementById('myCanvas');
+const ctx = canvas.getContext('2d');
+
+// Draw a gradient rectangle
+const gradient = ctx.createLinearGradient(0, 0, 400, 0);
+gradient.addColorStop(0, '#6366f1');
+gradient.addColorStop(1, '#8b5cf6');
+ctx.fillStyle = gradient;
+ctx.fillRect(0, 0, 400, 200);
+
+// Draw text
+ctx.fillStyle = 'white';
+ctx.font = 'bold 32px Inter, sans-serif';
+ctx.textAlign = 'center';
+ctx.fillText('Hello Canvas!', 200, 110);
+&lt;/script&gt;</code></pre>
+
+<h2>Web Workers</h2>
+<p>Web Workers run JavaScript in a background thread — keeping the main UI thread unblocked during heavy computation:</p>
+<pre><code>// main.js
+const worker = new Worker('worker.js');
+worker.postMessage({ numbers: [1, 2, 3, 4, 5, 1000000] });
+worker.onmessage = (event) => {
+  console.log('Sum from worker:', event.data.result);
+};
+
+// worker.js
+self.onmessage = function(event) {
+  const sum = event.data.numbers.reduce((a, b) => a + b, 0);
+  self.postMessage({ result: sum });
+};</code></pre>
+
+<h2>Drag and Drop API</h2>
+<pre><code>&lt;div draggable="true" id="draggable"&gt;Drag me!&lt;/div&gt;
+&lt;div id="dropzone"&gt;Drop here&lt;/div&gt;
+
+&lt;script&gt;
+const draggable = document.getElementById('draggable');
+const dropzone = document.getElementById('dropzone');
+
+draggable.addEventListener('dragstart', (e) => {
+  e.dataTransfer.setData('text/plain', 'dragged-item');
+});
+
+dropzone.addEventListener('dragover', (e) => e.preventDefault()); // allow drop
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  const data = e.dataTransfer.getData('text/plain');
+  dropzone.textContent = `Received: ${data}`;
+});
+&lt;/script&gt;</code></pre>
+
+<h2>Intersection Observer API</h2>
+<p>Efficiently detect when elements enter/leave the viewport — perfect for lazy loading and infinite scroll:</p>
+<pre><code>const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target); // stop observing after first trigger
+    }
+  });
+}, { threshold: 0.1 }); // trigger when 10% visible
+
+document.querySelectorAll('.animate-on-scroll').forEach(el => {
+  observer.observe(el);
+});</code></pre>
+
+<h2>Summary of Key HTML5 APIs</h2>
+<ul>
+  <li><strong>localStorage / sessionStorage</strong> — Client-side data persistence</li>
+  <li><strong>Geolocation</strong> — Device location access</li>
+  <li><strong>History API</strong> — SPA routing without page reloads</li>
+  <li><strong>Canvas</strong> — 2D graphics and image manipulation</li>
+  <li><strong>Web Workers</strong> — Background JavaScript threads</li>
+  <li><strong>Drag &amp; Drop</strong> — Native drag interactions</li>
+  <li><strong>Intersection Observer</strong> — Viewport visibility detection</li>
+  <li><strong>Fetch API</strong> — Modern HTTP requests (replaces XMLHttpRequest)</li>
+</ul>

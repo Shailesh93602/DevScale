@@ -1,0 +1,58 @@
+<h1>Kubernetes Storage: PVs, PVCs & StorageClasses</h1>
+<p>Kubernetes pods are ephemeral by design — when a pod is deleted or crashes, all data written to its container filesystem is permanently lost. For stateful applications like databases (PostgreSQL, MySQL, Redis), or any application that needs to persist data beyond a pod's lifecycle, Kubernetes provides a decoupled storage model: <strong>Persistent Volumes (PV)</strong> and <strong>Persistent Volume Claims (PVC)</strong>.</p>
+
+<h2>The PV / PVC Abstraction</h2>
+<ul>
+  <li><strong>Persistent Volume (PV):</strong> A piece of physical storage in the cluster — could be an AWS EBS volume, an Azure Disk, an NFS share, or a local SSD. Provisioned by a cluster administrator (or automatically by a StorageClass). PVs have a lifecycle independent of any pod.</li>
+  <li><strong>Persistent Volume Claim (PVC):</strong> A request for storage by a user or application. The developer says "I need 20Gi of ReadWriteOnce storage" — they don't need to know where or how the storage is physically provisioned.</li>
+</ul>
+<pre><code class="language-yaml"># pvc.yaml — The application requests storage
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-data
+  namespace: production
+spec:
+  accessModes:
+    - ReadWriteOnce      # Can be mounted by exactly ONE pod at a time
+  storageClassName: gp3  # References a StorageClass for dynamic provisioning
+  resources:
+    requests:
+      storage: 50Gi
+---
+# deployment.yaml — Mount the PVC into the PostgreSQL pod
+spec:
+  containers:
+  - name: postgres
+    image: postgres:16
+    volumeMounts:
+    - mountPath: /var/lib/postgresql/data
+      name: postgres-storage
+  volumes:
+  - name: postgres-storage
+    persistentVolumeClaim:
+      claimName: postgres-data
+</code></pre>
+
+<h2>StorageClasses: Dynamic Provisioning</h2>
+<p>In the past, a cluster admin had to manually pre-create EBS volumes and register them as PVs. <strong>StorageClasses</strong> enable <em>dynamic provisioning</em> — when a PVC is created, Kubernetes automatically provisions the underlying storage (e.g., creates an EBS volume in AWS) and binds it to the PVC:</p>
+<pre><code class="language-yaml"># StorageClass for AWS EKS — auto-creates EBS gp3 volumes on demand
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: gp3
+provisioner: ebs.csi.aws.com
+volumeBindingMode: WaitForFirstConsumer  # Don't create until pod is scheduled
+parameters:
+  type: gp3
+  encrypted: "true"
+</code></pre>
+
+<h2>Access Modes</h2>
+<pre><code class="language-text">ReadWriteOnce (RWO): Mounted read-write by ONE node only — AWS EBS, Azure Disk
+ReadOnlyMany  (ROX): Mounted read-only by MANY nodes
+ReadWriteMany (RWX): Mounted read-write by MANY nodes — AWS EFS (NFS), Ceph
+</code></pre>
+
+<h2>StatefulSets for Ordered, Stable Deployments</h2>
+<p>Regular Deployments give pods random names (e.g., <code>postgres-65d4b8c9f-x2kqp</code>). For databases and clustered apps that need <strong>stable, predictable hostnames</strong> and <strong>ordered deployment</strong>, use a <strong>StatefulSet</strong>. StatefulSets give pods stable names like <code>postgres-0</code>, <code>postgres-1</code>, <code>postgres-2</code>, with each pod having its own dedicated PVC that persists across pod restarts.</p>

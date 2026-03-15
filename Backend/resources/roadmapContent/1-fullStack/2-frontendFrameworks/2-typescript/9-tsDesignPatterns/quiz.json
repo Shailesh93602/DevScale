@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What problem does the Factory Method pattern solve?",
+            "options": [
+                "It speeds up object instantiation",
+                "It eliminates the need to use direct 'new ClassName()' calls in the client code, allowing sub-classes to decide which specific object to create",
+                "It creates factories that produce physical hardware",
+                "It prevents objects from being garbage collected"
+            ],
+            "answer": "It eliminates the need to use direct 'new ClassName()' calls in the client code, allowing sub-classes to decide which specific object to create",
+            "explanation": "By putting instantiation logic behind an interface method, you decouple your main architecture from specific concrete classes. Your app just knows it needs an 'OsButton' and the Factory decides if it returns a 'MacButton' or 'WindowsButton'."
+        },
+        {
+            "question": "Which design pattern is best used when you have a constructor with 10 different optional parameters, making instantiation highly confusing?",
+            "options": [
+                "Observer Pattern",
+                "Strategy Pattern",
+                "Singleton Pattern",
+                "Builder Pattern"
+            ],
+            "answer": "Builder Pattern",
+            "explanation": "The Builder pattern extracts object construction code out of its own class and organizes it into separate 'build' steps (like methods returning 'this' for chaining), completely eliminating the Telescoping Constructor anti-pattern."
+        },
+        {
+            "question": "What is the core feature of the Strategy Pattern?",
+            "options": [
+                "It enforces that only one instance of a class can ever exist",
+                "It encapsulates a family of algorithms into separate classes, allowing the client to switch between them dynamically at runtime",
+                "It caches the results of expensive function calls",
+                "It observes DOM mutations automatically"
+            ],
+            "answer": "It encapsulates a family of algorithms into separate classes, allowing the client to switch between them dynamically at runtime",
+            "explanation": "Instead of a massive switch statement inside a payment processor class, you define PaymentStrategy interfaces. You can swap out 'PayPalStrategy' for 'StripeStrategy' on the fly without changing the core ShoppingCart logic."
+        },
+        {
+            "question": "What popular frontend concept is heavily based on the Observer Pattern?",
+            "options": [
+                "CSS Grid Layouts",
+                "State management libraries (like Redux) and Pub/Sub Event Emitters",
+                "Local Storage API",
+                "The Virtual DOM"
+            ],
+            "answer": "State management libraries (like Redux) and Pub/Sub Event Emitters",
+            "explanation": "The Observer pattern (A Subject maintaining a list of Observers and notifying them of changes) is the exact mechanism Redux uses to notify React components when the global state changes."
+        },
+        {
+            "question": "When implementing the Builder pattern in TypeScript for method chaining, what type should the builder methods return?",
+            "options": [
+                "void",
+                "boolean",
+                "this (the builder instance itself)",
+                "The final constructed object"
+            ],
+            "answer": "this (the builder instance itself)",
+            "explanation": "To achieve a fluent API like builder.table('x').limit(5), each method must mutate the builder's state and then 'return this', passing the builder instance down the chain until build() or get() is called."
+        }
+    ]
+}

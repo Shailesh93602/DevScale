@@ -1,0 +1,19 @@
+{
+  "title": "Game Play Analysis I",
+  "slug": "game-play-analysis",
+  "difficulty": "Easy",
+  "category": "databases",
+  "points": 50,
+  "tags": ["sql", "aggregation", "group-by"],
+  "company_tags": ["Amazon", "Apple", "Facebook"],
+  "topic_tags": ["SQL", "Aggregation", "MIN"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Table: Activity with columns player_id (int), device_id (int), event_date (date), games_played (int)",
+  "output_format": "Result table with columns player_id and first_login showing each player's first login date",
+  "example_input": "Table: Activity\n| player_id | device_id | event_date | games_played |\n| 1         | 2         | 2016-03-01 | 5            |\n| 1         | 2         | 2016-05-02 | 6            |\n| 2         | 3         | 2017-06-25 | 1            |\n| 3         | 1         | 2016-03-02 | 0            |\n| 3         | 4         | 2018-07-03 | 5            |",
+  "example_output": "| player_id | first_login |\n| 1         | 2016-03-01  |\n| 2         | 2017-06-25  |\n| 3         | 2016-03-02  |",
+  "constraints": "- (player_id, event_date) is the primary key\n- Each row records a player's activity on a given date",
+  "function_signature": "-- Write your SQL query below",
+  "status": "ACTIVE"
+}

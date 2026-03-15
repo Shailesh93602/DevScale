@@ -1,0 +1,90 @@
+<h1>Node Streams & Buffers</h1>
+<p>When dealing with large amounts of data, reading an entire file into memory before processing it is a recipe for crashing your server with an "Out of Memory" error. Node.js solves this with <strong>Buffers</strong> and <strong>Streams</strong>, allowing you to process data piece by piece (chunk by chunk).</p>
+
+<h2>What is a Buffer?</h2>
+<p>JavaScript originally had no mechanism for manipulating raw binary data. A <code>Buffer</code> is a globally available Node.js class that represents a fixed-size chunk of memory allocated outside V8's heap. Buffers store raw binary data (represented as hexadecimal arrays).</p>
+
+<pre><code>// Creating a buffer from a string
+const buf = Buffer.from('Hello World', 'utf8');
+console.log(buf); // &lt;Buffer 48 65 6c 6c 6f 20 57 6f 72 6c 64&gt; (Hex representations of characters)
+console.log(buf.toString()); // 'Hello World'
+
+// Allocating a specific size
+const emptyBuf = Buffer.alloc(10); // 10 bytes initialized to zero</code></pre>
+
+<h2>The Four Types of Streams</h2>
+<p>Streams are collections of data that might not be available all at once and don't have to fit in memory. They extend the <code>EventEmitter</code> class. </p>
+<ol>
+  <li><strong>Readable:</strong> Data can be read (e.g., <code>fs.createReadStream()</code>, <code>req</code> in Express).</li>
+  <li><strong>Writable:</strong> Data can be written to (e.g., <code>fs.createWriteStream()</code>, <code>res</code> in Express).</li>
+  <li><strong>Duplex:</strong> Both Readable and Writable (e.g., net.Socket).</li>
+  <li><strong>Transform:</strong> A type of Duplex stream where the output is calculated from the input (e.g., <code>zlib.createGzip()</code>).</li>
+</ol>
+
+<h2>The Memory Crash (Reading files synchronously)</h2>
+<p>Imagine reading a 2GB video file to serve to a client. <code>fs.readFileSync()</code> will attempt to load all 2GB into the server's RAM. If 5 users request the video, your server uses 10GB of RAM and crashes instantly.</p>
+
+<pre><code>// ❌ TERRIBLE for large files
+app.get('/video', (req, res) =&gt; {
+  const file = fs.readFileSync('movie.mp4'); 
+  res.send(file); 
+});</code></pre>
+
+<h2>The Solution: Piping Streams</h2>
+<p>The <code>pipe()</code> method is the easiest way to consume streams. It takes data from a Readable stream and writes it to a Writable stream chunk by chunk automatically handling backpressure.</p>
+
+<pre><code>// ✅ EXCELLENT for large files
+app.get('/video-stream', (req, res) =&gt; {
+  // Sets correct header for video
+  res.writeHead(200, { 'Content-Type': 'video/mp4' });
+  
+  // Creates a stream. Data is read in ~64kb chunks.
+  const src = fs.createReadStream('movie.mp4');
+  
+  // As chunks are read, they are piped DIRECTLY to the response object 
+  // (which is a Writable stream). Memory usage stays under 1MB!
+  src.pipe(res);
+});</code></pre>
+
+<h2>Handling Backpressure</h2>
+<p>Backpressure occurs when the pipeline reads data from a source much faster than it can write it to the destination. Because network conditions vary, <code>fs.createReadStream()</code> can read a disk file at 100MB/s, but the user's internet can only receive 2MB/s. </p>
+<p>The <code>pipe()</code> method handles backpressure automatically. If the writable stream's internal buffer fills up, <code>.pipe()</code> tells the readable stream to pause reading until the writer drains its buffer.</p>
+
+<h2>Event-Based Stream Processing</h2>
+<p>Sometimes you need to intercept the stream data to modify or log it before sending it. You can listen to the <code>data</code> and <code>end</code> events.</p>
+
+<pre><code>const src = fs.createReadStream('massive-log-file.txt');
+
+let chunkCount = 0;
+
+// Every time a new Buffer chunk is ready, this fires
+src.on('data', (chunk) =&gt; {
+  chunkCount++;
+  console.log(`Received ${chunk.length} bytes of raw data`);
+  // chunk is a Buffer. You can call chunk.toString() if it's text.
+});
+
+src.on('end', () =&gt; {
+  console.log(`Finished reading. Received ${chunkCount} chunks.`);
+});
+
+src.on('error', (err) =&gt; {
+  console.error('An error occurred during streaming', err);
+});</code></pre>
+
+<h2>Transform Streams (Zipping on the fly)</h2>
+<p>Transform streams are extremely powerful. You can pipe a file read stream into a gzip transform stream, and pipe the result directly to the HTTP response, compressing data on the fly.</p>
+<pre><code>const zlib = require('zlib');
+
+app.get('/download-zipped', (req, res) =&gt; {
+  res.writeHead(200, {
+    'Content-Type': 'application/gzip',
+    'Content-Disposition': 'attachment; filename="data.txt.gz"'
+  });
+
+  const rawFile = fs.createReadStream('data.txt');
+  const zipper = zlib.createGzip(); // Transform Stream
+
+  // Read File -&gt; Zip It -&gt; Send to Client
+  rawFile.pipe(zipper).pipe(res);
+});</code></pre>

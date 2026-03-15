@@ -1,0 +1,56 @@
+[
+  {
+    "input": { "fn": "add(a,b) => a+b", "calls": [[1, 2], [1, 2], [3, 4]] },
+    "output": { "results": [3, 3, 7], "fn_call_count": 2 },
+    "explanation": "Second call with (1,2) returns cached result; (3,4) is a new computation",
+    "is_hidden": false
+  },
+  {
+    "input": { "fn": "square(n) => n*n", "calls": [[5], [5], [5]] },
+    "output": { "results": [25, 25, 25], "fn_call_count": 1 },
+    "explanation": "Three identical calls — function only called once",
+    "is_hidden": false
+  },
+  {
+    "input": { "fn": "identity(x) => x", "calls": [["hello"], ["world"], ["hello"]] },
+    "output": { "results": ["hello", "world", "hello"], "fn_call_count": 2 },
+    "explanation": "String arguments work as cache keys",
+    "is_hidden": false
+  },
+  {
+    "input": { "fn": "add(a,b) => a+b", "calls": [[1, 2], [2, 1]] },
+    "output": { "results": [3, 3], "fn_call_count": 2 },
+    "explanation": "Different argument order = different cache key",
+    "is_hidden": true
+  },
+  {
+    "input": { "fn": "zero() => 0", "calls": [[], [], []] },
+    "output": { "results": [0, 0, 0], "fn_call_count": 1 },
+    "explanation": "No-argument function cached after first call",
+    "is_hidden": true
+  },
+  {
+    "input": { "fn": "concat(a,b,c) => a+b+c", "calls": [["a", "b", "c"], ["a", "b", "c"], ["x", "y", "z"]] },
+    "output": { "results": ["abc", "abc", "xyz"], "fn_call_count": 2 },
+    "explanation": "Three-argument function with string args",
+    "is_hidden": true
+  },
+  {
+    "input": { "fn": "negate(x) => -x", "calls": [[1], [2], [3], [1], [2], [3]] },
+    "output": { "results": [-1, -2, -3, -1, -2, -3], "fn_call_count": 3 },
+    "explanation": "Each unique arg computed once, repeated calls cached",
+    "is_hidden": true
+  },
+  {
+    "input": { "fn": "identity(x) => x", "calls": [[null], [null], [0], [false], [0]] },
+    "output": { "results": [null, null, 0, false, 0], "fn_call_count": 3 },
+    "explanation": "Falsy values are cached correctly and distinguished",
+    "is_hidden": true
+  },
+  {
+    "input": { "fn": "first(a,b) => a", "calls": [[1, 2]] },
+    "output": { "results": [1], "fn_call_count": 1 },
+    "explanation": "Single call — no caching needed",
+    "is_hidden": true
+  }
+]

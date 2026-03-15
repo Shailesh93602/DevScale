@@ -1,0 +1,6 @@
+[
+  "You need the earliest date for each player. Which aggregate function finds the smallest value?",
+  "Use MIN(event_date) to find the first login date.",
+  "Group by player_id to get results per player.",
+  "SELECT player_id, MIN(event_date) AS first_login FROM Activity GROUP BY player_id;"
+]

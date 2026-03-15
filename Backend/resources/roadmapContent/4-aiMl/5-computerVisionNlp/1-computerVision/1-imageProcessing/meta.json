@@ -1,0 +1,6 @@
+{
+    "id": "1-imageProcessing",
+    "title": "Image Processing and Augmentation",
+    "description": "Techniques for manipulating and enhancing image data for deep learning.",
+    "order": 1
+}

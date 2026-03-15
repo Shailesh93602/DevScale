@@ -1,0 +1,4 @@
+{
+    "name": "Terraform Testing & Security Scanning",
+    "description": "Ensuring infrastructure code is correct and secure before it reaches production. Writing Terraform unit tests with Terratest, validating configs with terraform validate and tflint, and scanning for security misconfigurations with Checkov and tfsec."
+}

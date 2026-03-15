@@ -1,0 +1,19 @@
+{
+  "title": "Gas Station",
+  "slug": "gas-station",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["greedy", "array"],
+  "company_tags": ["Amazon", "Google", "Bloomberg", "Microsoft"],
+  "topic_tags": ["greedy", "arrays"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Two integer arrays `gas` and `cost` of length `n`, where `gas[i]` is the gas available at station `i` and `cost[i]` is the gas needed to travel to station `i+1`.",
+  "output_format": "Return the starting gas station index if you can travel around the circuit once, otherwise return `-1`.",
+  "example_input": "gas = [1,2,3,4,5], cost = [3,4,5,1,2]",
+  "example_output": "3",
+  "constraints": "- `n == gas.length == cost.length`\n- `1 <= n <= 10^5`\n- `0 <= gas[i], cost[i] <= 10^4`",
+  "function_signature": "function canCompleteCircuit(gas: number[], cost: number[]): number {}",
+  "status": "ACTIVE"
+}

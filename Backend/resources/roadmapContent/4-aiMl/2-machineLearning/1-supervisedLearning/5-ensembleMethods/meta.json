@@ -1,0 +1,4 @@
+{
+    "name": "Ensemble Methods & Model Stacking",
+    "description": "Combining multiple models to achieve better predictions than any single model. Understanding bagging (variance reduction), boosting (bias reduction), voting classifiers and regressors, stacking with meta-learners, and blending. Learning when ensemble methods provide diminishing returns vs. single strong models."
+}

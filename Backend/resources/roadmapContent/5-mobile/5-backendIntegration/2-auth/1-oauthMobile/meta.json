@@ -1,0 +1,6 @@
+{
+    "id": "1-oauthMobile",
+    "title": "OAuth and Social Login",
+    "description": "Implementing secure social authentication with Google, Apple, and Facebook.",
+    "order": 1
+}

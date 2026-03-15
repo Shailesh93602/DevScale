@@ -1,0 +1,4 @@
+{
+    "name": "Docker Compose",
+    "description": "Orchestrating multiple containers natively. Using docker-compose.yml to simultaneously boot and network a React Frontend, a Node.js Backend, and a PostgreSQL database in a single command."
+}

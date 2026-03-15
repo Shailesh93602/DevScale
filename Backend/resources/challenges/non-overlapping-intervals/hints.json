@@ -1,0 +1,6 @@
+[
+  "This is the classic interval scheduling problem. Think about which intervals to keep rather than which to remove.",
+  "Sort intervals by end time. Greedily select the next interval that doesn't overlap with the last selected one.",
+  "The answer is: total intervals - maximum non-overlapping intervals you can keep.",
+  "When two intervals overlap, always prefer keeping the one that ends earlier — it leaves more room for future intervals."
+]

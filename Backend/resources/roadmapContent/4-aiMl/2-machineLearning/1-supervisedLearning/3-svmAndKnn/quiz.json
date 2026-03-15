@@ -1,0 +1,118 @@
+{
+    "title": "SVM & k-NN Quiz",
+    "description": "Test your knowledge on Hyperplanes, the Kernel Trick, and Euclidean distance.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the primary geometric goal of a Support Vector Machine (SVM) when classifying linearly separable data?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "To cluster the data into concentric rings.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To draw thousands of decision trees and average the slope.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To locate a 'Hyperplane' that maximizes the mathematical distance (margin) between the separating line and the nearest distinct classified data points.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "To calculate the probability curve using Bayes Theorem.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "When data points CANNOT be separated by a straight line in lower dimensions, what famous mathematical concept do SVMs utilize to project the points into a higher dimension to find a solution?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The Softmax Function",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Gradient Descent",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Matrix Factorization",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The Kernel Trick",
+                    "isCorrect": true
+                }
+            ]
+        },
+        {
+            "question": "Why is the k-Nearest Neighbors (k-NN) algorithm often referred to as a 'Lazy Learner' in Machine Learning data science?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Because it doesn't actually 'train' or calculate mathematical weights during a training phase; it simply memorizes the training data and performs calculations dynamically only when queried.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Because it refuses to run unless the data is small.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because it only uses a tiny subset of the available data.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because it is written exclusively in Python.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "If you are running a k-NN classification algorithm, what happens if you set the hyperparameter `k = 1`?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The model will violently overfit to noise, classifying any new dot identically to the single closest point regardless of surrounding clusters.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The model will perfectly generalize the data.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The model throws a DivisionByZero Error internally.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The algorithm essentially turns into Linear Regression.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What happens if you set the 'k' hyperparameter in a k-NN model to equal the exact total number of points in your entire dataset?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The algorithm will predict randomly.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It will always perfectly classify the new point.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It will always just blindly predict whichever class label currently happens to be the absolute majority across the dataset for every single query.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It will execute an SQL JOIN query.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

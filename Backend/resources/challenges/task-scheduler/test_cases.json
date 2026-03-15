@@ -1,0 +1,9 @@
+[
+  {"input":"{\"tasks\":[\"A\",\"A\",\"A\",\"B\",\"B\",\"B\"], \"n\":2}","output":"8","explanation":"A->B->idle->A->B->idle->A->B","is_hidden":false},
+  {"input":"{\"tasks\":[\"A\",\"C\",\"A\",\"B\",\"D\",\"B\"], \"n\":1}","output":"6","explanation":"No idles needed","is_hidden":false},
+  {"input":"{\"tasks\":[\"A\",\"A\",\"A\",\"B\",\"B\",\"B\"], \"n\":0}","output":"6","explanation":"n=0 so no cooldown","is_hidden":false},
+  {"input":"{\"tasks\":[\"A\",\"A\",\"A\",\"A\",\"A\",\"A\",\"B\",\"C\",\"D\",\"E\",\"F\",\"G\"], \"n\":2}","output":"16","explanation":"High frequency A","is_hidden":true},
+  {"input":"{\"tasks\":[\"A\",\"A\",\"B\",\"B\",\"C\",\"C\",\"D\",\"D\",\"E\",\"E\",\"F\",\"F\",\"G\",\"G\",\"H\",\"H\",\"I\",\"I\",\"J\",\"J\",\"K\",\"K\",\"L\",\"L\",\"M\",\"M\",\"N\",\"N\",\"O\",\"O\",\"P\",\"P\",\"Q\",\"Q\",\"R\",\"R\",\"S\",\"S\",\"T\",\"T\",\"U\",\"U\",\"V\",\"V\",\"W\",\"W\",\"X\",\"X\",\"Y\",\"Y\",\"Z\",\"Z\"], \"n\":2}","output":"52","explanation":"All letters twice","is_hidden":true},
+  {"input":"{\"tasks\":[\"A\",\"B\",\"A\"], \"n\":2}","output":"4","explanation":"A->B->idle->A","is_hidden":true},
+  {"input":"{\"tasks\":[\"A\",\"A\",\"A\"], \"n\":1}","output":"5","explanation":"Only idles","is_hidden":true}
+]

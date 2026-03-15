@@ -1,0 +1,81 @@
+<h1>Helm: The Kubernetes Package Manager</h1>
+<p>Deploying a production-grade application to Kubernetes requires, at minimum, a Deployment, a Service, an Ingress, a ConfigMap, one or more Secrets, a HorizontalPodAutoscaler, and PodDisruptionBudgets. That's 7+ YAML manifests to write, maintain, templatize for different environments, version, and share. <strong>Helm</strong> is the solution — it is the standard package manager for Kubernetes that bundles all these related resources into a single, versioned, reusable unit called a <strong>Chart</strong>.</p>
+
+<h2>Core Helm Concepts</h2>
+<ul>
+  <li><strong>Chart:</strong> A package of Kubernetes resource templates + default configuration values</li>
+  <li><strong>Release:</strong> A deployed instance of a Chart. You can install the same Chart multiple times with different configs (e.g., release "myapp-staging" and "myapp-production")</li>
+  <li><strong>Repository:</strong> A collection of Charts (e.g., Artifact Hub, Bitnami, your company's private registry)</li>
+  <li><strong>Values:</strong> Configuration parameters that customize a Chart's templates per environment</li>
+</ul>
+
+<h2>Chart Directory Structure</h2>
+<pre><code class="language-bash">my-api/
+├── Chart.yaml          # Chart metadata (name, version, description, dependencies)
+├── values.yaml         # Default configuration values
+├── values-staging.yaml # Staging environment overrides
+├── values-prod.yaml    # Production environment overrides
+└── templates/
+    ├── deployment.yaml
+    ├── service.yaml
+    ├── ingress.yaml
+    └── hpa.yaml
+</code></pre>
+
+<h2>Go Template Syntax in Helm</h2>
+<pre><code class="language-yaml"># templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-api      # Release name is injected at install time
+  labels:
+    app.kubernetes.io/version: {{ .Chart.Version }}
+spec:
+  replicas: {{ .Values.replicaCount }}   # From values.yaml
+  template:
+    spec:
+      containers:
+      - name: api
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        resources:
+          requests:
+            memory: {{ .Values.resources.requests.memory | quote }}
+</code></pre>
+<pre><code class="language-yaml"># values.yaml — defaults
+replicaCount: 2
+image:
+  repository: mycompany/api
+  tag: "latest"
+resources:
+  requests:
+    memory: "256Mi"
+
+# values-prod.yaml — production overrides ONLY
+replicaCount: 8
+image:
+  tag: "v2.4.1"   # Pin to a specific version in production
+resources:
+  requests:
+    memory: "1Gi"
+</code></pre>
+
+<h2>Essential Helm Commands</h2>
+<pre><code class="language-bash"># Install a release (deploy to cluster)
+helm install myapp-prod ./my-api -f values-prod.yaml --namespace production
+
+# Upgrade a running release (rolling update)
+helm upgrade myapp-prod ./my-api -f values-prod.yaml --set image.tag=v2.5.0
+
+# Preview what would be applied (dry run)
+helm upgrade myapp-prod ./my-api --dry-run --debug
+
+# Rollback to the previous release version
+helm rollback myapp-prod 1    # Roll back to revision 1
+
+# View release history
+helm history myapp-prod
+
+# Install popular community charts
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm install my-postgres bitnami/postgresql --set auth.password=mysecretpass
+</code></pre>

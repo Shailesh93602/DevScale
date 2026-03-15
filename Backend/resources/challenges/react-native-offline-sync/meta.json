@@ -1,0 +1,19 @@
+{
+  "title": "React Native Offline Data Sync",
+  "slug": "react-native-offline-sync",
+  "difficulty": "Hard",
+  "category": "mobile",
+  "points": 150,
+  "tags": ["offline-first", "sync", "conflict-resolution"],
+  "company_tags": ["Google", "Notion", "Linear"],
+  "topic_tags": ["Mobile", "Offline Sync", "Conflict Resolution"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Local changes queue, remote state, and sync timestamp",
+  "output_format": "Merged state with conflicts resolved",
+  "example_input": "{\"local\": [{\"id\": 1, \"data\": \"local_v\", \"timestamp\": 100}], \"remote\": [{\"id\": 1, \"data\": \"remote_v\", \"timestamp\": 90}], \"lastSync\": 80}",
+  "example_output": "{\"merged\": [{\"id\": 1, \"data\": \"local_v\", \"timestamp\": 100}], \"conflicts\": []}",
+  "constraints": "Timestamps are Unix milliseconds, last-write-wins for conflict resolution",
+  "function_signature": "function syncData(local: SyncItem[], remote: SyncItem[], lastSync: number): SyncResult",
+  "status": "ACTIVE"
+}

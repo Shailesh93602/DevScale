@@ -1,0 +1,83 @@
+<h1>SQL Query Optimisation</h1>
+<p>A slow query can cripple an application. Query optimisation is the art of making SQL run faster by understanding how the database engine executes your code and applying strategic improvements.</p>
+
+<h2>The EXPLAIN Plan</h2>
+<p>Always start with <code>EXPLAIN</code> (or <code>EXPLAIN ANALYZE</code> in PostgreSQL) to see how the database executes your query:</p>
+<pre><code>EXPLAIN ANALYZE
+SELECT * FROM orders WHERE customer_id = 42 AND status = 'completed';
+
+-- Look for:
+-- Seq Scan → full table scan (bad for large tables)
+-- Index Scan → using an index (good)
+-- Hash Join vs Nested Loop → join strategy
+-- Cost, Rows, actual time columns</code></pre>
+
+<h2>Indexing Strategies</h2>
+<pre><code>-- Single column index
+CREATE INDEX idx_orders_customer ON orders(customer_id);
+
+-- Composite index (order matters — most selective column first)
+CREATE INDEX idx_orders_cust_status ON orders(customer_id, status);
+
+-- Partial index (index only a subset of rows)
+CREATE INDEX idx_active_users ON users(email) WHERE active = true;
+
+-- Covering index (includes all columns the query needs)
+CREATE INDEX idx_covering ON orders(customer_id) INCLUDE (total, created_at);</code></pre>
+
+<h2>Common Slow Query Patterns to Avoid</h2>
+<pre><code>-- ❌ Function on indexed column → disables index
+WHERE UPPER(email) = 'USER@EXAMPLE.COM'
+-- ✅ Fix: store email lowercase; use generated column
+
+-- ❌ Leading wildcard → full scan
+WHERE name LIKE '%Smith%'
+-- ✅ Use full-text search: tsvector/GIN index
+
+-- ❌ SELECT * fetches unneeded columns
+SELECT * FROM large_table WHERE ...
+-- ✅ Select only what you need
+
+-- ❌ N+1 in application: fetching related rows in a loop
+-- ✅ Use JOIN or IN clause to batch fetch</code></pre>
+
+<h2>Query Rewriting</h2>
+<pre><code>-- Subquery (often slow)
+SELECT * FROM orders
+WHERE customer_id IN (SELECT id FROM customers WHERE country = 'IN');
+
+-- Rewrite as JOIN (usually faster)
+SELECT o.* FROM orders o
+JOIN customers c ON o.customer_id = c.id
+WHERE c.country = 'IN';</code></pre>
+
+<h2>Partitioning Large Tables</h2>
+<pre><code>-- Range partition by date
+CREATE TABLE orders (
+    id BIGINT,
+    created_at DATE,
+    amount DECIMAL
+) PARTITION BY RANGE (created_at);
+
+CREATE TABLE orders_2024 PARTITION OF orders
+    FOR VALUES FROM ('2024-01-01') TO ('2025-01-01');
+
+-- Queries with date filters only scan relevant partition</code></pre>
+
+<h2>Vacuuming & Statistics (PostgreSQL)</h2>
+<pre><code>-- Update table statistics so planner makes good choices
+ANALYZE orders;
+
+-- Reclaim space and update statistics
+VACUUM ANALYZE orders;</code></pre>
+
+<h2>Optimisation Checklist</h2>
+<ul>
+  <li>✅ Indexes on all JOIN and WHERE columns</li>
+  <li>✅ Avoid functions on indexed columns in WHERE</li>
+  <li>✅ Use SELECT only needed columns</li>
+  <li>✅ Prefer JOINs over correlated subqueries</li>
+  <li>✅ Partition tables with billions of rows</li>
+  <li>✅ Run ANALYZE regularly to keep statistics fresh</li>
+  <li>✅ Limit result sets with pagination</li>
+</ul>

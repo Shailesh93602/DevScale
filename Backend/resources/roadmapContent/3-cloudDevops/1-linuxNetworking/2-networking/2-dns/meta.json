@@ -1,0 +1,4 @@
+{
+    "name": "DNS Fundamentals",
+    "description": "Domain Name System, A records, CNAMEs, propagation, and troubleshooting with dig."
+}

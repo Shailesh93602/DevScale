@@ -1,0 +1,118 @@
+{
+    "title": "Model Evaluation Metrics Quiz",
+    "description": "Test your knowledge on Accuracy, Precision, Recall, F1-Scores, and the Confusion Matrix.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Why is simple 'Accuracy' a highly misleading and dangerous metric when evaluating a model trained on heavily imbalanced datasets (e.g., detecting a rare disease affecting 0.1% of patients)?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Because Python calculates Accuracy using integer division, losing decimal precision.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It isn't; Accuracy is always the gold standard.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because a 'dumb' model that simply predicts 'Healthy' 100% of the time, without intelligently looking at any data, would technically achieve 99.9% Accuracy while completely failing its objective.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Because it requires manual calculus to compute.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In a Confusion Matrix assessing a Cancer Detection AI, what represents a catastrophic 'False Negative'?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The model accurately predicting a patient is healthy.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The model incorrectly predicting a completely healthy patient has cancer, causing stress and requiring further testing.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The model incorrectly predicting a patient is healthy when they actually possess a dangerous, cancerous tumor, sending them home without treatment.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The model accurately detecting the tumor.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "If you are designing a rigorous Email Spam Filter, what classification metric should you optimize if your absolute highest priority is ensuring a legitimate 'Job Offer' email is never accidentally tossed into the Spam folder?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Recall",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Gradient Slope",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Mean Squared Error",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Precision",
+                    "isCorrect": true
+                }
+            ]
+        },
+        {
+            "question": "Which specific Machine Learning evaluation metric provides a balanced 'Harmonic Mean' between Precision and Recall, producing a single, highly reliable score?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The F1-Score",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The Alpha-Beta Metric",
+                    "isCorrect": false
+                },
+                {
+                    "text": "R-Squared",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Cohen's Kappa",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the primary statistical goal of performing rigorous 'k-Fold Cross-Validation' on your dataset prior to deploying a model to production?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "To double the physical size of the training dataset using deepfakes.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To artificially inject missing null values.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To prove the model's robustness by sequentially rotating different 'chunks' of the dataset as the test set multiple times, ensuring the model didn't just get lucky on a single straightforward 80/20 data split.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "To convert Python objects into TensorFlow execution graphs.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

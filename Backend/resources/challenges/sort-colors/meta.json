@@ -1,0 +1,41 @@
+{
+  "title": "Sort Colors",
+  "slug": "sort-colors",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": [
+    "array",
+    "two-pointers",
+    "sorting"
+  ],
+  "company_tags": [
+    "Amazon",
+    "Microsoft",
+    "Facebook",
+    "Yahoo"
+  ],
+  "topic_tags": [
+    "arrays",
+    "sorting"
+  ],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer array `nums`.",
+  "output_format": "The sorted array (modifying in-place).",
+  "example_input": "nums = [2,0,2,1,1,0]",
+  "example_output": "[0,0,1,1,2,2]",
+  "constraints": "- `n == nums.length`\n- `1 <= n <= 300`\n- `nums[i]` is either `0`, `1`, or `2`.",
+  "function_signature": "function sortColors(nums: number[]): void {}",
+  "status": "ACTIVE"
+}

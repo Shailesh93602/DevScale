@@ -1,0 +1,74 @@
+{
+    "title": "CSS Flexbox Quiz",
+    "description": "Validate your Flexbox layout knowledge.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Which Flexbox property distributes space BETWEEN items along the main axis?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "align-items",
+                    "isCorrect": false
+                },
+                {
+                    "text": "justify-content",
+                    "isCorrect": true
+                },
+                {
+                    "text": "flex-direction",
+                    "isCorrect": false
+                },
+                {
+                    "text": "align-content",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does flex: 1 mean?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The item has a fixed width of 1px",
+                    "isCorrect": false
+                },
+                {
+                    "text": "flex-grow:1, flex-shrink:1, flex-basis:0 — item grows to fill available space",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The item is the first element in the container",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The item does not participate in flex layout",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How do you make flex items wrap to the next line when they overflow the container?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "flex-direction: wrap",
+                    "isCorrect": false
+                },
+                {
+                    "text": "flex-wrap: wrap",
+                    "isCorrect": true
+                },
+                {
+                    "text": "align-content: wrap",
+                    "isCorrect": false
+                },
+                {
+                    "text": "overflow: wrap",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

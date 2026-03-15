@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the single most critical 'Dependency Rule' dictated by Clean Architecture?",
+            "options": [
+                "Dependencies must always point downwards towards the Database layer.",
+                "Dependencies can only strictly point inwards towards the core Domain Rules. Inner layers must know absolutely nothing about outer layers (like Frameworks or Databases).",
+                "Dependencies must be resolved async utilizing Promises.",
+                "Dependencies must be injected dynamically via NPM."
+            ],
+            "answer": "Dependencies can only strictly point inwards towards the core Domain Rules. Inner layers must know absolutely nothing about outer layers (like Frameworks or Databases).",
+            "explanation": "Your core `User` object should not import `mongoose`. If you swap Express for Fastify, or MongoDB for Postgres, the core business rules remain 100% untouched."
+        },
+        {
+            "question": "In a Clean Architecture model, where do specific Application Use Cases (e.g., `RegisterUser`) reside?",
+            "options": [
+                "In the outermost Infrastructure layer.",
+                "In the Application Logic layer, immediately wrapping the core Domain Entities.",
+                "Directly inside the React components.",
+                "Inside the SQL Triggers."
+            ],
+            "answer": "In the Application Logic layer, immediately wrapping the core Domain Entities.",
+            "explanation": "Use Cases orchestrate the workflow. They fetch data via generic repositories, pass it down to Domain Entities for calculation, and define what the system actually does."
+        },
+        {
+            "question": "What is the fundamental goal of establishing a 'Ubiquitous Language' in Domain-Driven Design (DDD)?",
+            "options": [
+                "Translating code into Python and Javascript.",
+                "Ensuring the Developers, Database Architects, and Product Managers use the exact same Domain Terminology everywhere, perfectly aligning the code natively to the actual real-world business.",
+                "Encrypting languages for security.",
+                "Creating a global CSS theme."
+            ],
+            "answer": "Ensuring the Developers, Database Architects, and Product Managers use the exact same Domain Terminology everywhere, perfectly aligning the code natively to the actual real-world business.",
+            "explanation": "If sales calls them 'Guests', marketing calls them 'Subscribers', and engineering calls them 'Users', chaos ensues. A Ubiquitous Language forces absolute naming consistency across all boundaries."
+        }
+    ]
+}

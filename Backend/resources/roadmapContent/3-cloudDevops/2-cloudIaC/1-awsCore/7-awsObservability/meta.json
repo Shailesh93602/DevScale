@@ -1,0 +1,4 @@
+{
+    "name": "AWS Observability: CloudWatch & X-Ray",
+    "description": "Monitoring AWS infrastructure and applications in production. Building CloudWatch dashboards and alarms, using CloudWatch Logs Insights to query logs, and implementing distributed tracing with AWS X-Ray to diagnose latency across microservices."
+}

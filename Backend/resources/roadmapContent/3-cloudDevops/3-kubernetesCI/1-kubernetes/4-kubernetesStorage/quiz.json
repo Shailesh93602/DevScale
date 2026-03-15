@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "A PostgreSQL database pod is deleted and recreated. Without a PersistentVolumeClaim, what happens to all the database data?",
+            "options": [
+                "The data is automatically backed up to S3 before the pod is deleted.",
+                "All data is permanently lost — Kubernetes pods use ephemeral container storage by default. When the pod is deleted, its filesystem is destroyed. PVCs are required to persist any data beyond a pod's lifecycle.",
+                "The data is stored in the pod's ConfigMap, which persists across restarts.",
+                "The data is preserved in the pod's etcd record until the cluster is reset."
+            ],
+            "answer": "All data is permanently lost — Kubernetes pods use ephemeral container storage by default. When the pod is deleted, its filesystem is destroyed. PVCs are required to persist any data beyond a pod's lifecycle.",
+            "explanation": "This is the fundamental reason you should NEVER run a production database in Kubernetes without a PVC. The container's writable layer is ephemeral and disappears with the pod."
+        },
+        {
+            "question": "What is the operational benefit of StorageClass dynamic provisioning over manually pre-creating PersistentVolumes?",
+            "options": [
+                "Dynamic provisioning is faster because it skips the container image pull step.",
+                "With dynamic provisioning, when a developer creates a PVC, Kubernetes automatically provisions the actual cloud storage (e.g., creates an AWS EBS gp3 volume with the correct size) and binds it — eliminating the manual admin step of pre-creating specific-sized PVs before developers can use them.",
+                "Dynamic provisioning makes PVs accessible from outside the cluster.",
+                "Dynamic provisioning enables ReadWriteMany access mode for all storage types."
+            ],
+            "answer": "With dynamic provisioning, when a developer creates a PVC, Kubernetes automatically provisions the actual cloud storage (e.g., creates an AWS EBS gp3 volume with the correct size) and binds it — eliminating the manual admin step of pre-creating specific-sized PVs before developers can use them.",
+            "explanation": "Without dynamic provisioning, a cluster admin must guess in advance how much storage is needed and create a menu of PVs. With StorageClasses, the right-sized storage is created on-demand when requested."
+        },
+        {
+            "question": "Why should a PostgreSQL Primary/Replica cluster in Kubernetes use a StatefulSet instead of a standard Deployment?",
+            "options": [
+                "StatefulSets support more container types than Deployments.",
+                "StatefulSets provide stable, predictable pod hostnames (postgres-0, postgres-1, postgres-2) and ordered startup/shutdown sequences — essential for clustered databases where replicas must connect to a specific primary by hostname, and the primary must start before replicas.",
+                "StatefulSets automatically configure PostgreSQL replication settings.",
+                "Deployments cannot use PersistentVolumeClaims, only StatefulSets can."
+            ],
+            "answer": "StatefulSets provide stable, predictable pod hostnames (postgres-0, postgres-1, postgres-2) and ordered startup/shutdown sequences — essential for clustered databases where replicas must connect to a specific primary by hostname, and the primary must start before replicas.",
+            "explanation": "A PostgreSQL replica configured to replicate from 'postgres-0' must always be able to find 'postgres-0' by that exact hostname. With a regular Deployment, pod names are random GUIDs that change every restart."
+        }
+    ]
+}

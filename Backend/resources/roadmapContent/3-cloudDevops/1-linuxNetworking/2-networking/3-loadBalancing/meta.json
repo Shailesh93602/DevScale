@@ -1,0 +1,4 @@
+{
+    "name": "Load Balancing",
+    "description": "Distributing traffic using Nginx, HAProxy, AWS ALB, and health checks."
+}

@@ -1,0 +1,4 @@
+{
+    "name": "Dimensionality Reduction",
+    "description": "Feature extraction and space reduction using PCA, t-SNE, and UMAP."
+}

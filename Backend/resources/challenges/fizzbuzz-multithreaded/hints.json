@@ -1,0 +1,6 @@
+[
+  "Use a shared counter variable that all four functions read and advance.",
+  "Each function should loop until counter exceeds n, checking if current number matches its condition.",
+  "Only one function should match for any given number: fizzbuzz (div by 15), fizz (div by 3), buzz (div by 5), or number (none).",
+  "After processing, increment the counter so the next function can proceed with the next number."
+]

@@ -1,0 +1,136 @@
+.card {
+  width: 370px;
+  height: 270px;
+  background: linear-gradient(
+    120deg,
+    rgb(57, 255, 196) 0%,
+    rgb(68, 22, 206) 100%
+  );
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  border-radius: 15px;
+  transition: all 0.5s ease;
+  margin: auto;
+}
+
+.card::before {
+  content: 'Dart';
+  position: absolute;
+  width: 0px;
+  height: 60px;
+  border-left: 30px solid #3a486f;
+  border-right: 30px solid #3a486f;
+  border-bottom: 10px solid transparent;
+  top: -10px;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 8px;
+  text-transform: uppercase;
+  transition: all 0.5s ease;
+}
+
+.svg-icon {
+  width: 5em;
+  height: 5em;
+  fill: #3a486f;
+}
+
+.svgContainer {
+  height: 100px;
+  width: 100px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.svgContainer svg {
+  position: absolute;
+  overflow: visible;
+}
+
+.dartboard {
+  width: 2em;
+  height: 2em;
+  padding: 6px;
+  border: 3px solid #3a486f;
+  border-radius: 50%;
+  transition: all 0.5s ease;
+  transform: scale(2) rotate(34deg);
+}
+
+.eyehole {
+  transform: scale(1.2) rotate(-270deg);
+  transition: all 0.5s ease;
+}
+
+.batman {
+  transition: all 0.4s ease-in;
+  transform: rotate(55deg) translate(240px, -45px) scale(1.2);
+}
+
+.svg-fill-primary {
+  fill: #242424;
+}
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  text-align: center;
+  gap: 10px;
+  align-items: center;
+}
+
+.card span {
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.card-info p {
+  color: #3a486f;
+  font-weight: 600;
+}
+
+.card-info .challengeButton {
+  text-decoration: none;
+  background-color: #343434;
+  color: white;
+  padding: 5px 15px;
+  border-radius: 10px;
+  box-sizing: border-box;
+  transition: all 0.5s ease;
+}
+
+.card:hover {
+  box-shadow: 10px 10px 15px 0px rgba(0, 0, 0, 0.83);
+}
+
+.card:hover .batman {
+  transform: rotate(-50deg) translate(12px, 2px);
+}
+
+.card:hover .eyehole {
+  transform: scale(1);
+}
+
+.card:hover .dartboard {
+  transform: scale(1) rotate(0deg) translate(0, 0);
+}
+
+.challengeButton:hover {
+  background-color: #3a486f;
+}
+
+.card:hover::before {
+  border-left: 30px solid #182445;
+  border-right: 30px solid #182445;
+  border-bottom: 10px solid transparent;
+  top: -15px;
+}

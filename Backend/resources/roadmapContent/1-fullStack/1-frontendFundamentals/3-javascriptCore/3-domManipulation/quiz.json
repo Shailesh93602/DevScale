@@ -1,0 +1,74 @@
+{
+    "title": "DOM Manipulation Quiz",
+    "description": "Test your DOM selection, mutation, and event handling skills.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Which method returns ALL elements matching a CSS selector?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "getElementById()",
+                    "isCorrect": false
+                },
+                {
+                    "text": "querySelector()",
+                    "isCorrect": false
+                },
+                {
+                    "text": "querySelectorAll()",
+                    "isCorrect": true
+                },
+                {
+                    "text": "getElementsBySelector()",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the difference between textContent and innerHTML?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "They are identical",
+                    "isCorrect": false
+                },
+                {
+                    "text": "textContent sets plain text safely; innerHTML parses and renders HTML tags",
+                    "isCorrect": true
+                },
+                {
+                    "text": "innerHTML is safer because it escapes HTML",
+                    "isCorrect": false
+                },
+                {
+                    "text": "textContent only works on block elements",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is event delegation?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Adding event listeners to every child element individually",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Adding a single listener to a parent to handle events for its current and future children",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Preventing an event from firing",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Delegating events to server-side processing",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

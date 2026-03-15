@@ -1,0 +1,4 @@
+{
+    "name": "Flink Event Time & Watermarks",
+    "description": "Handling the fundamental challenge of out-of-order events reliably. Understanding the critical distinction between Event Time and Processing Time, and using Watermarks to gracefully trigger window computations."
+}

@@ -1,0 +1,4 @@
+{
+    "name": "Dockerfile & Images",
+    "description": "Packaging your code into a portable box. Writing a robust Dockerfile for Node.js, understanding layers and caching, minimizing image size using Alpine Linux, and multi-stage builds."
+}

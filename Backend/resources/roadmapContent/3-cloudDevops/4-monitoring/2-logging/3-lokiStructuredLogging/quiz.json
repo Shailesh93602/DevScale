@@ -1,0 +1,37 @@
+{
+    "questions": [
+        {
+            "question": "What is the fundamental architectural difference between Grafana Loki and Elasticsearch for log storage, and what trade-off does this create?",
+            "options": [
+                "Loki stores logs in memory; Elasticsearch stores logs on disk.",
+                "Loki only indexes metadata labels (app, namespace, env) and stores log content as compressed chunks in object storage. Elasticsearch indexes the full text of every log line. Loki is dramatically cheaper and simpler to operate but requires knowing your label schema upfront. Elasticsearch is more expensive but supports ad-hoc full-text search across any field.",
+                "Loki uses SQL for queries; Elasticsearch uses its own DSL.",
+                "Elasticsearch can only handle structured logs; Loki handles both structured and unstructured."
+            ],
+            "answer": "Loki only indexes metadata labels (app, namespace, env) and stores log content as compressed chunks in object storage. Elasticsearch indexes the full text of every log line. Loki is dramatically cheaper and simpler to operate but requires knowing your label schema upfront. Elasticsearch is more expensive but supports ad-hoc full-text search across any field.",
+            "explanation": "A 1TB/day log volume in Elasticsearch might cost $10,000/month in cluster costs. The same volume in Loki with S3 storage might cost $200/month. The trade-off is that Loki requires structured logs with consistent labels for efficient querying."
+        },
+        {
+            "question": "Why is structured JSON logging (e.g., using structlog) vastly superior to printf-style string log messages in a production system?",
+            "options": [
+                "JSON logs are compressed better than text logs, reducing storage costs.",
+                "Structured JSON logs emit each piece of information as a named field (user_id, amount, error_type) that can be individually indexed, filtered, and aggregated. Free-form string logs require fragile regex patterns (grok) to extract information, which break whenever the string format changes — and often can't be queried at all without extraction.",
+                "JSON logs are parsed faster by the CPU than string concatenation.",
+                "Structured logs automatically include timestamps while string logs do not."
+            ],
+            "answer": "Structured JSON logs emit each piece of information as a named field (user_id, amount, error_type) that can be individually indexed, filtered, and aggregated. Free-form string logs require fragile regex patterns (grok) to extract information, which break whenever the string format changes — and often can't be queried at all without extraction.",
+            "explanation": "With string logs: 'Payment failed for user usr_123 amount 99.99 error: timeout' — to find all payment failures over $50, you need a complex regex. With JSON: filter where event='payment_failed' AND amount > 50. One is a LogQL query, the other is a nightmare."
+        },
+        {
+            "question": "Why is Fluent Bit deployed as a Kubernetes DaemonSet rather than as a sidecar container within each application pod?",
+            "options": [
+                "Fluent Bit cannot run as a sidecar because it requires privileged container access.",
+                "A DaemonSet runs exactly one Fluent Bit pod per node, which collects logs from ALL pods on that node by reading /var/log/containers/ — one shipper serves everything. A sidecar approach would add a Fluent Bit container to every application pod, multiplying resource usage by the number of pods and creating a maintenance burden.",
+                "DaemonSet pods have access to host networking while sidecar pods do not.",
+                "Fluent Bit only supports DaemonSet deployment in Kubernetes."
+            ],
+            "answer": "A DaemonSet runs exactly one Fluent Bit pod per node, which collects logs from ALL pods on that node by reading /var/log/containers/ — one shipper serves everything. A sidecar approach would add a Fluent Bit container to every application pod, multiplying resource usage by the number of pods and creating a maintenance burden.",
+            "explanation": "With 200 pods across 20 nodes: DaemonSet = 20 Fluent Bit instances. Sidecar = 200 Fluent Bit instances. At even 50MB RAM each, that's 10GB vs 1GB just for log shipping."
+        }
+    ]
+}

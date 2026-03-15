@@ -1,0 +1,133 @@
+<h1>Error Handling & Debugging in JavaScript</h1>
+<p>Robust applications handle failures gracefully. JavaScript provides structured mechanisms for catching errors, creating custom error types, and debugging issues in production.</p>
+
+<h2>try / catch / finally</h2>
+<pre><code>try {
+  const data = JSON.parse(invalidJsonString); // throws SyntaxError
+  processData(data);
+} catch (error) {
+  // error is an Error object with: name, message, stack
+  console.error(`${error.name}: ${error.message}`);
+  // Handle gracefully (show user feedback, log to service)
+} finally {
+  // Always runs — cleanup code (close connections, hide spinners)
+  hideLoadingSpinner();
+}</code></pre>
+
+<h2>The Error Object</h2>
+<p>JavaScript has several built-in error types:</p>
+<ul>
+  <li><code>Error</code> — Generic base type</li>
+  <li><code>SyntaxError</code> — Invalid JavaScript syntax</li>
+  <li><code>TypeError</code> — Wrong type (e.g., calling null as a function)</li>
+  <li><code>ReferenceError</code> — Accessing an undefined variable</li>
+  <li><code>RangeError</code> — Value out of valid range</li>
+  <li><code>URIError</code> — Bad URI encoding</li>
+</ul>
+
+<h2>Custom Error Classes</h2>
+<pre><code>class ValidationError extends Error {
+  constructor(field, message) {
+    super(message);
+    this.name = 'ValidationError';
+    this.field = field;
+  }
+}
+
+class NetworkError extends Error {
+  constructor(statusCode, message) {
+    super(message);
+    this.name = 'NetworkError';
+    this.statusCode = statusCode;
+  }
+}
+
+// Usage
+function validateAge(age) {
+  if (typeof age !== 'number') throw new ValidationError('age', 'Age must be a number');
+  if (age &lt; 0 || age &gt; 150) throw new ValidationError('age', 'Age must be between 0 and 150');
+}
+
+try {
+  validateAge('twenty');
+} catch (error) {
+  if (error instanceof ValidationError) {
+    console.log(`Field "${error.field}" failed: ${error.message}`);
+  } else {
+    throw error; // re-throw unexpected errors
+  }
+}</code></pre>
+
+<h2>Async Error Handling</h2>
+<pre><code>// With async/await
+async function fetchUser(id) {
+  try {
+    const response = await fetch(`/api/users/${id}`);
+    if (!response.ok) {
+      throw new NetworkError(response.status, `HTTP ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    if (error instanceof NetworkError) {
+      if (error.statusCode === 404) return null;
+      throw error; // re-throw for caller to handle
+    }
+    throw error;
+  }
+}
+
+// With Promise chains
+fetch('/api/data')
+  .then(res => res.json())
+  .catch(err => console.error('Fetch failed:', err))
+  .finally(() => setLoading(false));</code></pre>
+
+<h2>Global Error Handlers</h2>
+<pre><code>// Catch uncaught synchronous errors
+window.addEventListener('error', (event) => {
+  console.error('Unhandled error:', event.error);
+  // Log to monitoring service (Sentry, DataDog, etc.)
+});
+
+// Catch unhandled promise rejections
+window.addEventListener('unhandledrejection', (event) => {
+  console.error('Unhandled promise rejection:', event.reason);
+  event.preventDefault(); // prevent default console warning
+});</code></pre>
+
+<h2>Debugging with Chrome DevTools</h2>
+<ul>
+  <li><strong>console.log / warn / error / table</strong> — Basic logging with different severity levels.</li>
+  <li><strong>debugger</strong> — Insert a breakpoint in code: <code>debugger;</code></li>
+  <li><strong>Breakpoints</strong> — Click line numbers in Sources panel to pause execution.</li>
+  <li><strong>Watch expressions</strong> — Monitor variable values in the Scope panel.</li>
+  <li><strong>console.time / timeEnd</strong> — Measure execution time:
+    <pre><code>console.time('sort');
+arr.sort();
+console.timeEnd('sort'); // sort: 2.034ms</code></pre>
+  </li>
+  <li><strong>console.trace()</strong> — Print a stack trace to the current call location.</li>
+</ul>
+
+<h2>Defensive Programming Patterns</h2>
+<pre><code>// Optional chaining — avoid TypeError: Cannot read property of undefined
+const city = user?.address?.city ?? 'Unknown';
+
+// Nullish coalescing — safe default values
+const limit = config.limit ?? 10;
+
+// Guard clauses — fail fast
+function processOrder(order) {
+  if (!order) throw new Error('Order is required');
+  if (!order.items?.length) throw new ValidationError('items', 'Order must have items');
+  // happy path below
+}</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always handle errors in async functions — never leave a Promise without <code>.catch()</code>.</li>
+  <li>Create custom error classes for domain-specific errors.</li>
+  <li>Use <code>instanceof</code> to distinguish error types.</li>
+  <li>Re-throw errors you can't handle locally.</li>
+  <li>Use optional chaining (<code>?.</code>) and nullish coalescing (<code>??</code>) for defensive access.</li>
+</ul>

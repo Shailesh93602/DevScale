@@ -1,0 +1,88 @@
+<h1>LLMs, RAG & Prompt Engineering</h1>
+<p>Large Language Models have transformed AI. Understanding how to use them effectively — through prompt engineering, RAG, and APIs — is a critical skill for modern developers.</p>
+
+<h2>How LLMs Work (High Level)</h2>
+<ul>
+  <li>LLMs are transformer-based neural networks trained on billions of documents.</li>
+  <li>They predict the next token (word piece) given all previous tokens.</li>
+  <li>GPT-4, Claude, Gemini, Llama — all follow this paradigm.</li>
+  <li>Key concepts: <strong>context window</strong> (how much text they can "see"), <strong>tokens</strong> (not words — ~4 chars), <strong>temperature</strong> (randomness of output).</li>
+</ul>
+
+<h2>Using OpenAI API</h2>
+<pre><code>from openai import OpenAI
+
+client = OpenAI(api_key="sk-...")
+
+# Chat completion
+response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {"role": "system", "content": "You are an expert Python tutor. Explain concepts clearly with examples."},
+        {"role": "user",   "content": "Explain list comprehensions in Python"}
+    ],
+    temperature=0.3,       # 0=deterministic, 1=creative
+    max_tokens=500,
+)
+print(response.choices[0].message.content)</code></pre>
+
+<h2>Prompt Engineering Best Practices</h2>
+<pre><code># 1. Be specific — give context and constraints
+BAD:  "Write code to sort a list"
+GOOD: "Write a Python function that sorts a list of dictionaries by the 'date' key (ISO 8601 format) in descending order. Include type hints and docstring."
+
+# 2. Few-shot prompting — provide examples
+user_message = """
+Classify the sentiment as POSITIVE, NEGATIVE, or NEUTRAL.
+
+Examples:
+"I love this product!" → POSITIVE
+"It broke after one day" → NEGATIVE
+"It arrived on time" → NEUTRAL
+
+Classify: "The battery lasts about 8 hours, which is acceptable."
+"""
+
+# 3. Chain of thought — ask the model to reason step by step
+"Let's think through this step by step:"
+
+# 4. Output formatting
+"Respond as valid JSON only: {\"sentiment\": \"...\", \"confidence\": 0.0-1.0}"</code></pre>
+
+<h2>RAG — Retrieval-Augmented Generation</h2>
+<pre><code"># Problem: LLMs have outdated knowledge and can hallucinate
+# RAG solution: Retrieve relevant context → inject into prompt → generate
+
+# Step 1: Embed documents into a vector database
+from openai import OpenAI
+import chromadb
+
+client = OpenAI()
+
+def create_embedding(text: str) -&gt; list[float]:
+    return client.embeddings.create(model="text-embedding-3-small", input=text).data[0].embedding
+
+# Step 2: At query time — find relevant documents
+def rag_query(question: str, db: chromadb.Collection) -&gt; str:
+    q_embedding = create_embedding(question)
+
+    # Semantic search — find top 3 most relevant chunks
+    results = db.query(query_embeddings=[q_embedding], n_results=3)
+    context = "\n---\n".join(results["documents"][0])
+
+    # Step 3: Inject context into prompt
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": f"Answer based on this context:\n{context}"},
+            {"role": "user", "content": question}
+        ]
+    )
+    return response.choices[0].message.content</code></pre>
+
+<h2>Fine-tuning vs RAG</h2>
+<ul>
+  <li><strong>RAG</strong> — Update knowledge via retrieval. No training needed. Good for dynamic/frequently updated data.</li>
+  <li><strong>Fine-tuning</strong> — Train the model to behave differently (tone, format, task). Good for style/behaviour changes.</li>
+  <li><strong>Few-shot prompting</strong> — Cheapest option; provide examples in the prompt. Start here.</li>
+</ul>

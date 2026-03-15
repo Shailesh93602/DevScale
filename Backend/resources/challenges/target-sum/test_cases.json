@@ -1,0 +1,12 @@
+[
+  { "input": "{\"nums\": [1,1,1,1,1], \"target\": 3}", "output": "5", "explanation": "5 ways to assign +/- to get sum 3", "is_hidden": false },
+  { "input": "{\"nums\": [1], \"target\": 1}", "output": "1", "explanation": "+1 = 1", "is_hidden": false },
+  { "input": "{\"nums\": [1,0], \"target\": 1}", "output": "2", "explanation": "+1+0 and +1-0 both equal 1", "is_hidden": false },
+  { "input": "{\"nums\": [1], \"target\": 2}", "output": "0", "explanation": "Cannot reach 2 with just [1]", "is_hidden": true },
+  { "input": "{\"nums\": [0,0,0,0,0], \"target\": 0}", "output": "32", "explanation": "Each 0 can be + or -, 2^5 = 32", "is_hidden": true },
+  { "input": "{\"nums\": [1,2,1], \"target\": 0}", "output": "2", "explanation": "+1+2-1-2=0 type combinations", "is_hidden": true },
+  { "input": "{\"nums\": [2,3,5], \"target\": 0}", "output": "1", "explanation": "+2+3-5 = 0", "is_hidden": true },
+  { "input": "{\"nums\": [100], \"target\": -100}", "output": "1", "explanation": "-100 = -100", "is_hidden": true },
+  { "input": "{\"nums\": [1,2,3,4,5], \"target\": 3}", "output": "3", "explanation": "3 valid assignments", "is_hidden": true },
+  { "input": "{\"nums\": [7,9,3,8,0,2,4,8,3,9], \"target\": 0}", "output": "0", "explanation": "Total=53 which is odd, (53+0)/2 not integer", "is_hidden": true }
+]

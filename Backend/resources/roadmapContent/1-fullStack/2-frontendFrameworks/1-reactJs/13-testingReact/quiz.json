@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the core philosophy of React Testing Library?",
+            "options": [
+                "Test components by inspecting their internal state (e.g., useState variables)",
+                "Test components the same way a software user interacts with them (via DOM elements, text, and roles)",
+                "Write 100% test coverage using Snapshot tests",
+                "Test every single function separately before testing the UI component"
+            ],
+            "answer": "Test components the same way a software user interacts with them (via DOM elements, text, and roles)",
+            "explanation": "RTL discourages testing implementation details (like accessing internal state), because refactoring a component without changing its visual output shouldn't break a test. It focuses on DOM queries."
+        },
+        {
+            "question": "Which of the following React Testing Library queries is recommended as your first choice for finding elements?",
+            "options": [
+                "getByTestId",
+                "getByText",
+                "getByRole",
+                "getByPlaceholderText"
+            ],
+            "answer": "getByRole",
+            "explanation": "getByRole (e.g., 'button', 'heading', 'link') forces you to write accessible HTML. If you can't find an element by its role, an actual user using a screen reader likely can't interact with it either."
+        },
+        {
+            "question": "What query method should be used to assert that an element is NOT in the document?",
+            "options": [
+                "getByRole",
+                "queryByRole",
+                "findByRole",
+                "assertNotByRole"
+            ],
+            "answer": "queryByRole",
+            "explanation": "getBy... throws an error if an element is not found, snapping the test. queryBy... returns null if the element isn't found, allowing you to use expect(element).toBeNull() or expect(element).not.toBeInTheDocument()."
+        },
+        {
+            "question": "Why is the @testing-library/user-event package preferred over the fireEvent utility?",
+            "options": [
+                "It executes tests much faster than fireEvent",
+                "It accurately simulates full browser interactions, like firing focus and keyboard events continuously when typing",
+                "It supports Testing Library in Vue and Angular automatically",
+                "It does not require async/await syntax"
+            ],
+            "answer": "It accurately simulates full browser interactions, like firing focus and keyboard events continuously when typing",
+            "explanation": "fireEvent.change() only triggers a 'change' event on an input. userEvent.type() accurately simulates focus, multiple keydown/keypress/keyup events, and handles cursor position, mirroring actual user input."
+        },
+        {
+            "question": "What does a 'findBy...' query (e.g., findByText) return, and when is it used?",
+            "options": [
+                "A string; used for asserting text content directly",
+                "A mock element; used for testing animations",
+                "A Promise; used for waiting for elements that load asynchronously (like after an API call)",
+                "An array of elements; used when multiple items exist"
+            ],
+            "answer": "A Promise; used for waiting for elements that load asynchronously (like after an API call)",
+            "explanation": "findBy queries combine a query with a 'waitFor' wrapper. The query repeatedly checks the DOM until the element appears or it times out, making it essential for testing asynchronous states."
+        }
+    ]
+}

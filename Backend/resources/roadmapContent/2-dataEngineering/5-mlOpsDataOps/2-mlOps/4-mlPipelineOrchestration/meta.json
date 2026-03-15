@@ -1,0 +1,4 @@
+{
+    "name": "ML Pipeline Orchestration",
+    "description": "Automating the end-to-end machine learning lifecycle. Exploring how platforms like Kubeflow and Apache Airflow orchestrate data preprocessing, model training, evaluation, and deployment as reproducible ML Pipelines."
+}

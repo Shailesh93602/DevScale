@@ -1,0 +1,6 @@
+[
+  "What happens if you sort the intervals by their start time?",
+  "After sorting, overlapping intervals will be adjacent. Compare each interval with the last merged one.",
+  "If the current interval's start is <= the last merged interval's end, they overlap — extend the end.",
+  "Use a result array. Initialize with the first interval and scan through the rest, merging or appending."
+]

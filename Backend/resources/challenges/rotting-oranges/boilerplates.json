@@ -1,0 +1,10 @@
+{
+  "typescript": "function orangesRotting(grid: number[][]): number {\n    \n};",
+  "javascript": "/**\n * @param {number[][]} grid\n * @return {number}\n */\nvar orangesRotting = function(grid) {\n    \n};",
+  "python": "class Solution:\n    def orangesRotting(self, grid: List[List[int]]) -> int:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public int orangesRotting(int[][] grid) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int orangesRotting(vector<vector<int>>& grid) {\n        \n    }\n};",
+  "go": "func orangesRotting(grid [][]int) int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn oranges_rotting(grid: Vec<Vec<i32>>) -> i32 {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int OrangesRotting(int[][] grid) {\n        \n    }\n}"
+}

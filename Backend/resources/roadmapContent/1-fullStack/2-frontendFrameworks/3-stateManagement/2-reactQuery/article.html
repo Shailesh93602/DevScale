@@ -1,0 +1,87 @@
+<h1>React Query (TanStack Query) — Server State</h1>
+<p>React Query solves <strong>server state</strong> — remote data that needs to be fetched, cached, and kept in sync. It replaces most manual loading/error/data state management.</p>
+
+<h2>Client State vs Server State</h2>
+<ul>
+  <li><strong>Client State</strong> — UI state you own: modals open/closed, theme, form inputs. Use useState/Redux.</li>
+  <li><strong>Server State</strong> — Data from an API: users, products, posts. Use React Query.</li>
+</ul>
+
+<h2>Setup</h2>
+<pre><code>npm install @tanstack/react-query
+
+// main.tsx
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+const queryClient = new QueryClient();
+
+&lt;QueryClientProvider client={queryClient}&gt;
+  &lt;App /&gt;
+&lt;/QueryClientProvider&gt;</code></pre>
+
+<h2>useQuery — Fetching Data</h2>
+<pre><code>import { useQuery } from "@tanstack/react-query";
+
+async function fetchUsers(): Promise&lt;User[]&gt; {
+  const res = await fetch("/api/users");
+  if (!res.ok) throw new Error("Failed to fetch users");
+  return res.json();
+}
+
+function UserList() {
+  const { data: users, isLoading, isError, error } = useQuery({
+    queryKey: ["users"],       // Unique cache key
+    queryFn: fetchUsers,
+    staleTime: 5 * 60 * 1000, // Data is fresh for 5 minutes
+    gcTime: 10 * 60 * 1000,   // Keep in cache for 10 minutes
+  });
+
+  if (isLoading) return &lt;Skeleton /&gt;;
+  if (isError)   return &lt;p&gt;Error: {error.message}&lt;/p&gt;;
+
+  return &lt;ul&gt;{users.map(u =&gt; &lt;li key={u.id}&gt;{u.name}&lt;/li&gt;)}&lt;/ul&gt;;
+}</code></pre>
+
+<h2>Query Keys — The Cache Key</h2>
+<pre><code>// Static
+useQuery({ queryKey: ["users"] });
+
+// Dynamic — refetches when userId changes (like useEffect deps)
+useQuery({ queryKey: ["users", userId], queryFn: () =&gt; fetchUser(userId) });
+
+// Nested
+useQuery({ queryKey: ["users", userId, "posts"] });</code></pre>
+
+<h2>useMutation — Creating/Updating Data</h2>
+<pre><code>import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+function CreatePostForm() {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (newPost: CreatePostDto) =&gt;
+      fetch("/api/posts", { method: "POST", body: JSON.stringify(newPost) }).then(r =&gt; r.json()),
+    onSuccess: () =&gt; {
+      // Invalidate and refetch the posts list
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
+    onError: (error) =&gt; console.error("Failed:", error),
+  });
+
+  return (
+    &lt;button
+      onClick={() =&gt; mutation.mutate({ title: "New Post", content: "..." })}
+      disabled={mutation.isPending}
+    &gt;
+      {mutation.isPending ? "Creating..." : "Create Post"}
+    &lt;/button&gt;
+  );
+}</code></pre>
+
+<h2>Key Benefits</h2>
+<ul>
+  <li><strong>Automatic caching</strong> — same query key = shared cache.</li>
+  <li><strong>Background refetching</strong> — keeps data fresh without user action.</li>
+  <li><strong>Deduplication</strong> — multiple components requesting same data = one request.</li>
+  <li><strong>Optimistic updates</strong> — update UI instantly, revert on error.</li>
+  <li><strong>Pagination &amp; infinite scroll</strong> — built-in support.</li>
+</ul>

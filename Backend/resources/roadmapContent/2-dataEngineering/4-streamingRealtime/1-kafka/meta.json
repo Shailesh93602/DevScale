@@ -1,0 +1,4 @@
+{
+    "name": "Apache Kafka",
+    "description": "Distributed event streaming platform. Covers fundamentals, Kafka Streams, and Kafka Connect."
+}

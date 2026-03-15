@@ -1,0 +1,4 @@
+{
+    "name": "LLM Agents & Tool Use",
+    "description": "Building autonomous AI agents that use tools to accomplish multi-step tasks. Understanding the ReAct (Reasoning + Acting) framework, building agents with LangChain and LlamaIndex, implementing tool calling with OpenAI function calling API, memory systems (short-term conversation and long-term vector memory), multi-agent orchestration, and guardrails for agent safety."
+}

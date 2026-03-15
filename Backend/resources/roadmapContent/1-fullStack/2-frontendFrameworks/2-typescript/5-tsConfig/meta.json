@@ -1,0 +1,4 @@
+{
+    "name": "TypeScript Configuration & Tooling",
+    "description": "tsconfig.json options, strict mode, module resolution, path aliases, declaration files (.d.ts), and integrating TypeScript with Vite and ESLint."
+}

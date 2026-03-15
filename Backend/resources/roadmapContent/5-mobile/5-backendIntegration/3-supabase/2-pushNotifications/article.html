@@ -1,0 +1,184 @@
+<h1>Push Notifications in React Native (Expo)</h1>
+<p>Push notifications are messages sent by a server to a user's device even when the app is closed or in the background. They are one of the most powerful user engagement tools — re-engagement, order status updates, chat messages, and flash sales all rely on push. In React Native with Expo, the <strong>Expo Notifications</strong> library provides a cross-platform API that abstracts over Apple's APNs (Apple Push Notification service) and Google's FCM (Firebase Cloud Messaging).</p>
+
+<h2>How Push Notifications Work</h2>
+<ol>
+  <li><strong>Register:</strong> The app requests notification permissions and gets a unique <strong>Expo Push Token</strong> for this device + installation.</li>
+  <li><strong>Store:</strong> You send this token to your backend and store it in the database linked to the user.</li>
+  <li><strong>Send:</strong> Your backend calls the Expo Push Notifications API with the token + message payload.</li>
+  <li><strong>Deliver:</strong> Expo's servers forward it to APNs (iOS) or FCM (Android), which deliver it to the device.</li>
+</ol>
+
+<h2>Installation & Permissions</h2>
+<pre><code>npx expo install expo-notifications expo-device expo-constants
+
+# Also required:
+# iOS: add push notification entitlement in Xcode or via eas.json
+# Android: FCM is automatically configured by Expo EAS</code></pre>
+
+<pre><code>import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
+import Constants from 'expo-constants';
+import { Platform } from 'react-native';
+
+// ─── Step 1: Set default notification behavior ────────────────────────────
+// This controls how notifications appear when the app is in the FOREGROUND
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,  // Show banner even when app is open
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
+
+// ─── Step 2: Request permission and get the push token ───────────────────
+async function registerForPushNotifications(): Promise<string | null> {
+  // Physical device required — simulators/emulators cannot receive push
+  if (!Device.isDevice) {
+    console.warn('Push notifications require a physical device');
+    return null;
+  }
+
+  // Check existing permission status
+  const { status: existingStatus } = await Notifications.getPermissionsAsync();
+  let finalStatus = existingStatus;
+
+  // Request if not already granted
+  if (existingStatus !== 'granted') {
+    const { status } = await Notifications.requestPermissionsAsync();
+    finalStatus = status;
+  }
+
+  if (finalStatus !== 'granted') {
+    console.warn('Push notification permission denied');
+    return null;
+  }
+
+  // Android requires a notification channel to be created
+  if (Platform.OS === 'android') {
+    await Notifications.setNotificationChannelAsync('default', {
+      name: 'Default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#6C63FF',
+    });
+  }
+
+  // Get the Expo push token
+  const token = await Notifications.getExpoPushTokenAsync({
+    projectId: Constants.expoConfig?.extra?.eas?.projectId,
+  });
+
+  return token.data;  // e.g., "ExponentPushToken[xxxxxx]"
+}</code></pre>
+
+<h2>Registering the Token with Your Backend</h2>
+<pre><code>// In your root App component or auth flow
+const App = () => {
+  const { session } = useAuth();
+
+  useEffect(() => {
+    if (!session) return;
+
+    const setupNotifications = async () => {
+      const token = await registerForPushNotifications();
+      if (!token) return;
+
+      // Save to your backend — store alongside user record
+      await fetch('https://api.yourapp.com/users/push-token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({ pushToken: token, platform: Platform.OS }),
+      });
+    };
+
+    setupNotifications();
+  }, [session]);
+
+  return <NavigationContainer>...</NavigationContainer>;
+};</code></pre>
+
+<h2>Handling Notifications (Foreground, Background, and Taps)</h2>
+<pre><code>useEffect(() => {
+  // ─── Foreground notification received ────────────────────────────────
+  const foregroundSubscription = Notifications.addNotificationReceivedListener(
+    notification => {
+      console.log('Notification received while in foreground:', notification);
+      // You can update in-app UI based on notification data
+    }
+  );
+
+  // ─── User tapped a notification ──────────────────────────────────────
+  const tapSubscription = Notifications.addNotificationResponseReceivedListener(
+    response => {
+      const { data } = response.notification.request.content;
+      // Navigate to relevant screen based on notification type
+      if (data.type === 'new_message') {
+        navigation.navigate('Chat', { roomId: data.roomId });
+      } else if (data.type === 'order_update') {
+        navigation.navigate('OrderDetail', { orderId: data.orderId });
+      }
+    }
+  );
+
+  return () => {
+    foregroundSubscription.remove();
+    tapSubscription.remove();
+  };
+}, [navigation]);</code></pre>
+
+<h2>Sending Notifications from Your Backend</h2>
+<pre><code>// Node.js backend — send a push notification
+const { Expo } = require('expo-server-sdk');
+const expo = new Expo();
+
+async function sendPushNotification(
+  pushToken: string,
+  title: string,
+  body: string,
+  data: Record<string, unknown>
+) {
+  if (!Expo.isExpoPushToken(pushToken)) {
+    console.error(`Invalid push token: ${pushToken}`);
+    return;
+  }
+
+  const messages = [{
+    to: pushToken,
+    sound: 'default',
+    title,
+    body,
+    data,  // Custom data accessible in the tap handler
+    badge: 1,
+  }];
+
+  // Expo SDK batches and handles APNs/FCM automatically
+  const chunks = expo.chunkPushNotifications(messages);
+  for (const chunk of chunks) {
+    try {
+      const receipts = await expo.sendPushNotificationsAsync(chunk);
+      console.log('Push receipts:', receipts);
+    } catch (error) {
+      console.error('Push send failed:', error);
+    }
+  }
+}
+
+// Example: notify the buyer when their order ships
+await sendPushNotification(
+  user.pushToken,
+  '📦 Your order has shipped!',
+  'Your order #1234 is on its way. Track it here.',
+  { type: 'order_update', orderId: '1234' }
+);</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always store the push token server-side against the user — re-fetch it on every app launch because tokens can change (reinstall, OS update, device transfer).</li>
+  <li>Handle notification permission denial gracefully — show an in-app explanation of the benefit before prompting, and provide an alternative (badge counts, in-app inbox) if denied.</li>
+  <li>Use notification <code>data</code> payload to enable deep linking — tapping a "new message" notification should open that specific conversation, not the app home screen.</li>
+  <li>Check Expo push receipt status — a <code>DeviceNotRegistered</code> error means the user uninstalled the app; remove their token from your database immediately.</li>
+</ul>

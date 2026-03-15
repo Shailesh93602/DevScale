@@ -1,0 +1,4 @@
+{
+    "name": "Flink Basics",
+    "description": "Stateful stream processing, event time processing, job managers, and task managers."
+}

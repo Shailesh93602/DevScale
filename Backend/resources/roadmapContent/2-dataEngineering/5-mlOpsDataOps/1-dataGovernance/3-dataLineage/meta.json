@@ -1,0 +1,4 @@
+{
+    "name": "Data Lineage & Observability",
+    "description": "Tracing data's journey from source to dashboard. Understanding Data Lineage tools, deploying Monte Carlo or Soda for end-to-end data observability, and detecting silent data quality failures."
+}

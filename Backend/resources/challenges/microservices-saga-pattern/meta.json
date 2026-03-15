@@ -1,0 +1,19 @@
+{
+  "title": "Microservices: Saga Pattern",
+  "slug": "microservices-saga-pattern",
+  "difficulty": "Hard",
+  "category": "backend",
+  "points": 150,
+  "tags": ["microservices", "saga", "distributed-systems", "compensation"],
+  "company_tags": ["Uber", "Netflix", "Amazon", "Stripe", "Airbnb"],
+  "topic_tags": ["Saga Pattern", "Distributed Transactions", "Compensation", "Orchestration", "Choreography"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Ordered sequence of saga steps with execute and compensate functions",
+  "output_format": "Saga execution result with status and compensation log if failed",
+  "example_input": "saga.addStep({ name: 'reserve-inventory', execute: reserveInventory, compensate: releaseInventory }); saga.addStep({ name: 'charge-payment', execute: chargePayment, compensate: refundPayment }); saga.execute(orderData);",
+  "example_output": "{ \"status\": \"completed\", \"steps\": [{ \"name\": \"reserve-inventory\", \"status\": \"completed\" }, { \"name\": \"charge-payment\", \"status\": \"completed\" }] }",
+  "constraints": "Must execute steps in order. Must compensate in reverse order on failure. Must handle compensation failures. Must support both orchestration and choreography patterns. Must be idempotent.",
+  "function_signature": "class SagaOrchestrator { addStep(step: SagaStep): void; execute(context: any): Promise<SagaResult>; getStatus(sagaId: string): SagaStatus; }",
+  "status": "ACTIVE"
+}

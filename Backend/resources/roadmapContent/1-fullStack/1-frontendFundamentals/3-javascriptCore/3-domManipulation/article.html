@@ -1,0 +1,82 @@
+<h1>DOM Manipulation with JavaScript</h1>
+<p>The DOM (Document Object Model) is the browser's in-memory tree representation of your HTML. JavaScript can read and mutate this tree to dynamically update what the user sees without reloading the page.</p>
+
+<h2>Selecting Elements</h2>
+<pre><code>// By ID — fastest, returns one element or null
+const hero = document.getElementById("hero");
+
+// By CSS selector — returns first match
+const btn = document.querySelector(".btn-primary");
+const firstCard = document.querySelector("section > .card");
+
+// By CSS selector — returns all matches as NodeList
+const allCards = document.querySelectorAll(".card");
+allCards.forEach(card => card.classList.add("loaded"));</code></pre>
+
+<h2>Reading & Modifying Content</h2>
+<pre><code>const heading = document.querySelector("h1");
+
+// Read content
+heading.textContent;     // Plain text (strips HTML tags)
+heading.innerHTML;       // HTML string including tags
+
+// Write content
+heading.textContent = "New Title";           // Safer — no XSS risk
+heading.innerHTML = "&lt;span&gt;New&lt;/span&gt; Title"; // Parses HTML — ⚠️ XSS risk with user data</code></pre>
+
+<h2>Classes & Inline Styles</h2>
+<pre><code>const el = document.querySelector(".card");
+
+// Class manipulation (preferred over inline styles)
+el.classList.add("active", "visible");
+el.classList.remove("hidden");
+el.classList.toggle("expanded");         // Add if absent, remove if present
+el.classList.contains("active");        // → true or false
+el.classList.replace("old", "new");
+
+// Inline styles (only for dynamic JS-driven values)
+el.style.backgroundColor = "#6366f1";
+el.style.transform = "translateY(-4px)";</code></pre>
+
+<h2>Creating & Inserting Elements</h2>
+<pre><code>const newCard = document.createElement("div");
+newCard.className = "card";
+newCard.textContent = "New Item";
+
+const container = document.querySelector(".grid");
+container.appendChild(newCard);        // At end
+container.prepend(newCard);            // At start
+container.before(newCard);             // Before the container itself
+existingEl.insertAdjacentElement("afterend", newCard);
+
+// Template literals approach (simpler for complex HTML)
+container.insertAdjacentHTML("beforeend", `
+  &lt;div class="card"&gt;
+    &lt;h3&gt;New Card&lt;/h3&gt;
+    &lt;p&gt;Created dynamically&lt;/p&gt;
+  &lt;/div&gt;
+`);</code></pre>
+
+<h2>Event Listeners</h2>
+<pre><code>const btn = document.querySelector("#submit-btn");
+
+// Add listener
+btn.addEventListener("click", function(event) {
+  event.preventDefault(); // Stop form submission / default action
+  console.log("Button clicked!", event.target);
+});
+
+// Event delegation — handle events on parent for dynamic children
+document.querySelector(".card-list").addEventListener("click", (e) => {
+  if (e.target.matches(".card button")) {
+    const card = e.target.closest(".card");
+    card.remove();
+  }
+});</code></pre>
+
+<h2>Removing Elements & Attributes</h2>
+<pre><code>el.remove(); // Remove element from DOM
+
+el.getAttribute("href");
+el.setAttribute("href", "https://example.com");
+el.removeAttribute("disabled");</code></pre>

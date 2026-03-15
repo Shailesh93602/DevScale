@@ -1,0 +1,6 @@
+[
+  "If hand.length is not divisible by groupSize, it's immediately impossible.",
+  "Count the frequency of each card. The smallest card must start some group.",
+  "Sort the unique cards. For each card with remaining count, try to form a group of consecutive cards starting from it.",
+  "When forming a group from card `x`, you need `x, x+1, x+2, ..., x+groupSize-1` all to have sufficient counts."
+]

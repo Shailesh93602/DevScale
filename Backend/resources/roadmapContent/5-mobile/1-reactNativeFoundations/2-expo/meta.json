@@ -1,0 +1,7 @@
+{
+  "name": "Expo & Build Tools",
+  "description": "Setting up with Expo, the managed workflow, EAS Build, and debugging.",
+  "topics": [
+    "1-expoSetup"
+  ]
+}

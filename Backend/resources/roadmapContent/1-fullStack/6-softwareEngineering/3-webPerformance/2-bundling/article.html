@@ -1,0 +1,133 @@
+<h1>Web Bundling &amp; Build Optimization</h1>
+<p>Modern web applications import hundreds of JavaScript modules, TypeScript files, CSS, and images. <strong>Bundlers</strong> combine and optimize all these assets into production-ready files that browsers can load efficiently. Understanding bundling is critical for shipping fast applications because the bundle size and loading strategy directly control how fast users see your application.</p>
+
+<h2>Why Bundle?</h2>
+<ul>
+  <li><strong>HTTP overhead</strong>: Loading 500 separate ES module files creates 500 HTTP requests, each with its own round-trip latency. Bundling reduces this to 1–5 requests.</li>
+  <li><strong>Dead code elimination</strong>: Bundlers remove code you import but never call.</li>
+  <li><strong>Ahead-of-time compilation</strong>: TypeScript is compiled, JSX is transformed, and CSS is processed at build time — not at runtime.</li>
+  <li><strong>Minification</strong>: Variable names are shortened, whitespace is removed, reducing file size by 60–80%.</li>
+</ul>
+
+<h2>Vite — The Modern Build Tool</h2>
+<p>Vite (French for "quick") is the dominant modern build tool. It uses native ES modules during development (no bundling — instant HMR) and Rollup for production builds:</p>
+<pre><code># Create a new Vite + React + TypeScript project
+npm create vite@latest my-app -- --template react-ts
+cd my-app && npm install && npm run dev
+
+# vite.config.ts
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [react()],
+  build: {
+    target: 'es2020',         // Browser compatibility target
+    minify: 'esbuild',        // Fast minification
+    sourcemap: false,         // Disable in production (enable for debugging)
+    rollupOptions: {
+      output: {
+        // Split vendor libraries into separate chunks
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom'],
+          'vendor-router': ['react-router-dom'],
+          'vendor-ui': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
+        },
+      },
+    },
+  },
+});</code></pre>
+
+<h2>Tree Shaking</h2>
+<p>Tree shaking eliminates exported functions that are never imported — only possible with ES Module <code>import</code>/<code>export</code> syntax (not CommonJS <code>require</code>):</p>
+<pre><code>// 🚫 Bad: Imports the entire lodash library (~540KB)!
+import _ from 'lodash';
+const result = _.debounce(fn, 300);
+
+// ✅ Good: Imports only the debounce function (~2KB)
+import debounce from 'lodash-es/debounce';
+const result = debounce(fn, 300);
+
+// ✅ Even better: Use a modern, tree-shakeable alternative
+import { debounce } from 'perfect-debounce';  // 100 bytes
+
+// Verify your bundle contains no dead code:
+npx vite-bundle-visualizer   # Opens interactive treemap of bundle contents</code></pre>
+
+<h2>Code Splitting</h2>
+<p>Rather than sending a 2MB JavaScript bundle for the homepage, code splitting lets the browser download only the code needed for the current page — loading other routes on demand:</p>
+<pre><code>// React Router v6 with lazy loading
+import { lazy, Suspense } from 'react';
+import { Routes, Route } from 'react-router-dom';
+
+// These components are in separate chunks — loaded only when navigated to
+const Dashboard = lazy(() => import('./pages/Dashboard'));       // ~80KB
+const Analytics = lazy(() => import('./pages/Analytics'));      // ~200KB (Chart.js etc.)
+const AdminPanel = lazy(() => import('./pages/AdminPanel'));    // ~120KB
+
+function App() {
+  return (
+    &lt;Suspense fallback={&lt;div className="loading-spinner" /&gt;}&gt;
+      &lt;Routes&gt;
+        &lt;Route path="/" element={&lt;Home /&gt;} /&gt;                   {/* Always loaded */}
+        &lt;Route path="/dashboard" element={&lt;Dashboard /&gt;} /&gt;   {/* Loaded on demand */}
+        &lt;Route path="/analytics" element={&lt;Analytics /&gt;} /&gt;   {/* Loads only if user goes here */}
+        &lt;Route path="/admin" element={&lt;AdminPanel /&gt;} /&gt;       {/* Loads only for admins */}
+      &lt;/Routes&gt;
+    &lt;/Suspense&gt;
+  );
+}</code></pre>
+
+<h2>Asset Optimization</h2>
+<pre><code># vite.config.ts — Image and asset optimization
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  build: {
+    assetsInlineLimit: 4096,  // Inline assets smaller than 4KB as base64 (removes HTTP request)
+    rollupOptions: {
+      output: {
+        assetFileNames: 'assets/[name]-[hash][extname]',  // Content hash in filename
+        chunkFileNames: 'chunks/[name]-[hash].js',        // Hash enables long-lived caching
+        entryFileNames: '[name]-[hash].js',
+      }
+    }
+  },
+  // CSS is automatically code-split per page
+  css: { devSourcemap: true }
+});</code></pre>
+
+<h2>Bundle Analysis</h2>
+<pre><code># Analyze what's taking up space in your bundle
+npm install --save-dev rollup-plugin-visualizer
+
+# Add to vite.config.ts:
+import { visualizer } from 'rollup-plugin-visualizer';
+plugins: [react(), visualizer({ open: true, template: 'treemap' })]
+
+# After npm run build — opens an interactive bundle map:
+# If you see 'moment.js' (280KB) or all of 'lodash', you have a problem to fix!</code></pre>
+
+<h2>Caching Strategy for Bundles</h2>
+<p>Content-hashed filenames enable infinitely long cache TTLs — the file content determines the hash, so browsers always fetch the correct version:</p>
+<pre><code># Set these headers on your static file server (Nginx, Vercel, AWS S3+CloudFront):
+# For hashed assets (main-abc123.js, vendor-def456.js):
+Cache-Control: public, max-age=31536000, immutable  # 1 year
+
+# For index.html (un-hashed — must always be fresh):
+Cache-Control: no-cache
+
+# This way: users download new JS only when it actually changes.
+# If you only change Dashboard.tsx, only the dashboard chunk re-downloads.
+# Vendor libraries (React, etc.) stay cached unless their version changes.</code></pre>
+
+<h2>Build Tool Comparison</h2>
+<table>
+  <thead><tr><th>Tool</th><th>Dev HMR Speed</th><th>Config Complexity</th><th>Best For</th></tr></thead>
+  <tbody>
+    <tr><td>Vite</td><td>Instant (ESM)</td><td>Low</td><td>New projects, React/Vue/Svelte</td></tr>
+    <tr><td>Webpack</td><td>Slow–Medium</td><td>High</td><td>Complex enterprise, specific loaders</td></tr>
+    <tr><td>Turbopack</td><td>Instant (Rust)</td><td>Low (via Next.js)</td><td>Next.js projects</td></tr>
+    <tr><td>esbuild</td><td>Ultra-fast</td><td>Low</td><td>Build tooling, GoLang-speed transforms</td></tr>
+  </tbody>
+</table>

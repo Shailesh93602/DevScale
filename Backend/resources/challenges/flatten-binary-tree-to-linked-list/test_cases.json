@@ -1,0 +1,10 @@
+[
+  {"input":"{\"root\":[1,2,5,3,4,null,6]}","output":"[1,null,2,null,3,null,4,null,5,null,6]","explanation":"Pre-order flattening","is_hidden":false},
+  {"input":"{\"root\":[]}","output":"[]","explanation":"Empty tree","is_hidden":false},
+  {"input":"{\"root\":[0]}","output":"[0]","explanation":"Single node","is_hidden":false},
+  {"input":"{\"root\":[1,2]}","output":"[1,null,2]","explanation":"Left child only","is_hidden":true},
+  {"input":"{\"root\":[1,null,2]}","output":"[1,null,2]","explanation":"Already a list","is_hidden":true},
+  {"input":"{\"root\":[1,2,3]}","output":"[1,null,2,null,3]","explanation":"Both children","is_hidden":true},
+  {"input":"{\"root\":[3,2,4,1]}","output":"[3,null,2,null,1,null,4]","explanation":"Left subtree goes first","is_hidden":true},
+  {"input":"{\"root\":[1,2,5,3,4,null,6,null,null,null,null,null,null]}","output":"[1,null,2,null,3,null,4,null,5,null,6]","explanation":"Same as example 1 explicit nulls","is_hidden":true}
+]

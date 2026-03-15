@@ -1,0 +1,19 @@
+{
+  "title": "Design a News Feed System",
+  "slug": "design-news-feed",
+  "difficulty": "Hard",
+  "category": "system_design",
+  "points": 200,
+  "tags": ["social-media", "feeds", "distributed-systems", "database-design"],
+  "company_tags": ["Facebook", "Twitter", "Instagram", "LinkedIn"],
+  "topic_tags": ["Feed Architecture", "Push vs Pull Model", "Caching", "Fan-out", "Database Sharding"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "User IDs wishing to fetch their feed, containing posts from friends and followed entities",
+  "output_format": "A list of posts ordered by relevance or time, including post metadata",
+  "example_input": "feedService.getFeed(userId='user-123', limit=20)",
+  "example_output": "[{ 'postId': 'p1', 'content': 'Hello world!', 'author': 'user-456', 'timestamp': 1705312800 }]",
+  "constraints": "Must handle millions of users with thousands of follows. Response time under 200ms. Support media attachments and rich content. Highly available and eventually consistent.",
+  "function_signature": "class NewsFeedService { getFeed(userId: string, options: FeedOptions): Post[]; publishPost(userId: string, content: string): Post; fanOut(postId: string): void; }",
+  "status": "ACTIVE"
+}

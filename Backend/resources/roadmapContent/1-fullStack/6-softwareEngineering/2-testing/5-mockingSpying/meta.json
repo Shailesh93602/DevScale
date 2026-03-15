@@ -1,0 +1,4 @@
+{
+    "name": "Mocking, Spying, & Stubs",
+    "description": "Isolating the code being tested. Utilizing tools like Jest Mocks and Spies to simulate external APIs, bypass database connections, and assert that functions were called with correct deeply nested arguments."
+}

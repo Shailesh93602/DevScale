@@ -1,0 +1,118 @@
+{
+    "title": "dbt Testing Quiz",
+    "description": "Test your knowledge of dbt generic tests, singular tests, and freshness checks.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What happens if a dbt singular test (custom SQL query) returns 0 rows?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The test raises a warning.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The test is skipped.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The test passes.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The test fails and breaks the pipeline.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which of the following is NOT one of the built-in generic tests included natively in dbt core?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "unique",
+                    "isCorrect": false
+                },
+                {
+                    "text": "not_null",
+                    "isCorrect": false
+                },
+                {
+                    "text": "relationships",
+                    "isCorrect": false
+                },
+                {
+                    "text": "match_regex",
+                    "isCorrect": true
+                }
+            ]
+        },
+        {
+            "question": "Where are generic tests typically configured in a dbt project?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Inside the corresponding .sql model file using Jinja blocks.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "In a schema.yml (or models.yml) file under the model's column definitions.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "In the dbt_project.yml configuration.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "In a Python script that wraps the dbt execution.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which command runs the models AND their tests together in topological order?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "dbt run && dbt test",
+                    "isCorrect": false
+                },
+                {
+                    "text": "dbt build",
+                    "isCorrect": true
+                },
+                {
+                    "text": "dbt execute --with-tests",
+                    "isCorrect": false
+                },
+                {
+                    "text": "dbt test --all",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the primary purpose of a 'source freshness' check in dbt?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "To verify that raw source tables have been updated within an acceptable timeframe before running models.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "To clear the dbt target directory cache.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To check if the dbt core version is up to date.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To ensure that views are materialized as tables to retain query freshness.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

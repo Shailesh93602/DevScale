@@ -1,0 +1,12 @@
+[
+  { "input": "{\"s\": \"12\"}", "output": "2", "explanation": "AB (1,2) or L (12)", "is_hidden": false },
+  { "input": "{\"s\": \"226\"}", "output": "3", "explanation": "BZ (2,26), VF (22,6), BBF (2,2,6)", "is_hidden": false },
+  { "input": "{\"s\": \"06\"}", "output": "0", "explanation": "Leading zero makes it invalid", "is_hidden": false },
+  { "input": "{\"s\": \"1\"}", "output": "1", "explanation": "Only A", "is_hidden": true },
+  { "input": "{\"s\": \"0\"}", "output": "0", "explanation": "0 alone is invalid", "is_hidden": true },
+  { "input": "{\"s\": \"10\"}", "output": "1", "explanation": "Only J (10)", "is_hidden": true },
+  { "input": "{\"s\": \"27\"}", "output": "1", "explanation": "27 > 26, so only BG (2,7)", "is_hidden": true },
+  { "input": "{\"s\": \"11106\"}", "output": "2", "explanation": "AAJF (1,1,10,6) or KJF (11,10,6)", "is_hidden": true },
+  { "input": "{\"s\": \"2101\"}", "output": "1", "explanation": "Only UAA (21,0,1) -> actually TA (21,01 invalid) -> (2,10,1) = BJA", "is_hidden": true },
+  { "input": "{\"s\": \"1111111111\"}", "output": "89", "explanation": "Same as Fibonacci(11)=89", "is_hidden": true }
+]

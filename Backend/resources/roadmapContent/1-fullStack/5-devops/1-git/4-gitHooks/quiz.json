@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary architectural purpose of utilizing a 'Git Hook' (specifically the `pre-commit` hook) within a modern software engineering team workflow?",
+            "options": [
+                "To encrypt all source code files before uploading to the server",
+                "To execute automated scripts natively exactly milliseconds before a developer successfully generates a commit block, allowing the system to violently reject code that inherently fails formatting, linting, or basic unit tests natively",
+                "To deploy the code immediately to AWS serverless architecture globally",
+                "To rewrite history mathematically using rebasing natively"
+            ],
+            "answer": "To execute automated scripts natively exactly milliseconds before a developer successfully generates a commit block, allowing the system to violently reject code that inherently fails formatting, linting, or basic unit tests natively",
+            "explanation": "You cannot rely on people simply remembering to format their code. By intercepting the `git commit` command itself, you guarantee that 100% of all code entering the timeline physically complies with team standards."
+        },
+        {
+            "question": "Why do modern JavaScript infrastructure ecosystems rely heavily on the 'Husky' library rather than manually writing bash scripts inside the native `.git/hooks/` directory?",
+            "options": [
+                "Because native Git hooks execute exclusively on Python interpreters",
+                "Because files placed natively inside the hidden `.git/hooks` folder are strictly excluded from version control and never synchronized across the team. Husky natively solves this by generating mapped hooks within the shared public codebase so the entire team automatically inherits the enforcement protocols",
+                "Because Husky provides a massive GUI dashboard for project management",
+                "Because Husky forces all commits to be digitally signed globally"
+            ],
+            "answer": "Because files placed natively inside the hidden `.git/hooks` folder are strictly excluded from version control and never synchronized across the team. Husky natively solves this by generating mapped hooks within the shared public codebase so the entire team automatically inherits the enforcement protocols",
+            "explanation": "If Developer A writes a brilliant hook to prevent buggy code, they want Developer B to automatically start using it. Adding `\"prepare\": \"husky install\"` locally ensures every team member's laptop enforces the exact same rules natively upon downloading dependencies."
+        },
+        {
+            "question": "If your team sets up a Husky `pre-commit` hook that executes `npm run lint` natively across a massive 15,000-file mono-repo, what specific severe workflow bottleneck will inevitably emerge?",
+            "options": [
+                "MongoDB cluster crash natively",
+                "The system will inherently lock the `main` branch permanently",
+                "The developer will experience an excruciating 10+ minute delay literally every single time they type `git commit`, analyzing 14,999 identical files that mathematically haven't changed, destroying development velocity",
+                "The Git cryptographic hashes will collide mathematically"
+            ],
+            "answer": "The developer will experience an excruciating 10+ minute delay literally every single time they type `git commit`, analyzing 14,999 identical files that mathematically haven't changed, destroying development velocity",
+            "explanation": "If you just altered 2 lines in 1 specific CSS file, parsing all 15,000 files to check for semicolon errors is incredibly wasteful. Developers will simply start deleting the hooks completely to save time natively."
+        },
+        {
+            "question": "What is the specific architectural purpose of pairing the `lint-staged` NPM package alongside a Husky `pre-commit` workflow natively?",
+            "options": [
+                "To compress files on the server permanently",
+                "To drastically optimize the workflow bottleneck by mathematically restricting the execution of Linters, Formatters, and script analysis strictly exclusively to the 2 or 3 exact physical files that the developer just currently placed inside the Git Stage natively",
+                "To translate JavaScript code into WebAssembly instantly",
+                "To execute a remote HTTP webhook"
+            ],
+            "answer": "To drastically optimize the workflow bottleneck by mathematically restricting the execution of Linters, Formatters, and script analysis strictly exclusively to the 2 or 3 exact physical files that the developer just currently placed inside the Git Stage natively",
+            "explanation": "By executing `npx lint-staged` inside the husky pre-commit file, it guarantees the formatting executes in less than a second, while still perfectly ensuring that no broken text enters the final commit log."
+        },
+        {
+            "question": "If a Husky-managed script (like `npm test` or `eslint`) detects a colossal error inside the codebase during the exact execution of the `pre-commit` hook loop, what explicitly happens?",
+            "options": [
+                "Husky forcefully overrides the error and commits the code automatically natively",
+                "The script natively returns a mathematical 'Non-Zero Exit Code' which instructs the core Git algorithm to violently halt the entire process immediately, effectively ensuring the timeline commit is fundamentally discarded and never generated natively",
+                "Husky emails the project manager natively",
+                "Husky temporarily forks the branch natively"
+            ],
+            "answer": "The script natively returns a mathematical 'Non-Zero Exit Code' which instructs the core Git algorithm to violently halt the entire process immediately, effectively ensuring the timeline commit is fundamentally discarded and never generated natively",
+            "explanation": "When an error occurs, you see 'pre-commit hook failed'. The commit is stopped dead in its tracks. You are physically forced to fix the error in VSCode, run `git add` again, and retry the commit."
+        }
+    ]
+}

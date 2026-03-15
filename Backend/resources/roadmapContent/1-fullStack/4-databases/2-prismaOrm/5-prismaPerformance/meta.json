@@ -1,0 +1,4 @@
+{
+    "name": "Advanced: Transactions & Raw SQL",
+    "description": "Pushing the ORM to its absolute limit. Processing financial operations securely using Interactive Transactions, executing raw SQL mathematically, and optimizing connection pooling metrics with PgBouncer."
+}

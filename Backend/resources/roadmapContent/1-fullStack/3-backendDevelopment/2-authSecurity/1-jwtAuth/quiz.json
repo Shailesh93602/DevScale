@@ -1,0 +1,74 @@
+{
+    "title": "JWT Authentication Quiz",
+    "description": "Test your JWT and authentication implementation knowledge.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What are the 3 parts of a JSON Web Token?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Username, Password, Role",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Header, Payload, Signature",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Token, Secret, Expiry",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Algorithm, Data, Hash",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why is storing JWTs in localStorage considered a security risk?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "localStorage is too slow",
+                    "isCorrect": false
+                },
+                {
+                    "text": "localStorage is accessible to JavaScript, making tokens vulnerable to XSS attacks",
+                    "isCorrect": true
+                },
+                {
+                    "text": "JWTs are too large for localStorage",
+                    "isCorrect": false
+                },
+                {
+                    "text": "localStorage doesn't persist across page reloads",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why do we hash passwords with bcrypt before storing them?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "To compress the password and save database space",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To encrypt passwords so they can be decrypted later",
+                    "isCorrect": false
+                },
+                {
+                    "text": "So that even if the database is breached, passwords cannot be reversed to plain text",
+                    "isCorrect": true
+                },
+                {
+                    "text": "To meet minimum password length requirements",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,118 @@
+{
+    "title": "Fine-Tuning LLMs Quiz",
+    "description": "Test your knowledge on LoRA, QLoRA, Quantization, and PEFT.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the primary business and technical purpose of 'Fine-Tuning' an open-source Large Language Model (LLM)?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "To compress the model so it can be emailed as an attachment.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To leverage a model's vast preexisting general intelligence by retraining it slightly on a localized, proprietary dataset (like company support transcripts) to specialize its output without the $10M cost of training from scratch.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "To automatically debug the Python application utilizing the API.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To translate the LLM out of English into binary machine code.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why is 'Full Parameter Fine-Tuning' generally completely inaccessible for an average solo developer or small startup utilizing a modern, powerful LLM (e.g., 70 Billion weights)?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Because it mathematically requires loading the entire model and associated gradient states into GPU memory simultaneously, demanding thousands of dollars of enterprise A100 hardware hardware.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Because it requires explicit permission from the United States government.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because Python doesn't support integers larger than 1 Billion natively.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because open-source licenses strictly forbid it.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What specific engineering breakthrough does the 'LoRA' (Low-Rank Adaptation) PEFT technique bring to model training?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It completely freezes the massive, original neural network and injects tiny, highly compressed mathematical matrices (adapters) into the transformer, calculating expensive gradient updates exclusively for the tiny matrices.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It automatically mines cryptocurrency simultaneously.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It skips the training step by brute-forcing a SQL database.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It executes purely using the CPU instead of the GPU.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How does 'Quantization' function in the context of running massive AI models on consumer-grade hardware?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It splits the model into chunks and stores them sequentially on the hard drive.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It mathematically compresses the multi-dimensional weights of the model by reducing their precision (e.g., shrinking 16-bit floats down to 4-bit integers), drastically lowering the VRAM required to load the model.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It compresses the API responses using standard gzip format.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It removes random words from the training dataset to save space.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does the combination technique 'QLoRA' allow engineers to do computationally?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Query an LLM rapidly.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It combines massive Quantization (loading the base model in 4-bit) with LoRA training, shrinking the computational hardware requirements so dramatically that cutting-edge AI can be fine-tuned directly on a standard 24GB gaming GPU locally.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It enables LLMs to generate high-resolution images.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It guarantees perfect model accuracy.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,13 @@
+{
+    "title": "Mobile App Development",
+    "description": "Build cross-platform iOS and Android apps with React Native, covering navigation, state management, native APIs, and publishing.",
+    "tags": "Mobile,React,Frontend,Performance",
+    "difficulty": "MEDIUM",
+    "main_concepts": [
+        "1-reactNativeFoundations",
+        "2-navigationState",
+        "3-nativeApiPublishing",
+        "4-performance",
+        "5-backendIntegration"
+    ]
+}

@@ -1,0 +1,105 @@
+<h1>BERT & Text Embeddings</h1>
+<p>The biggest breakthrough in NLP over the past decade was the realization that a single <strong>pre-trained language model</strong> could be fine-tuned for almost any text task — sentiment analysis, question answering, named entity recognition, text classification — with far less data than training from scratch. <strong>BERT</strong> (Bidirectional Encoder Representations from Transformers) was the model that kicked off this revolution. Understanding BERT means understanding how modern NLP actually works.</p>
+
+<h2>What BERT Is and Why It's Different</h2>
+<p>Before BERT, word embeddings like Word2Vec gave each word a single fixed vector. The word "bank" had the same vector whether you meant "river bank" or "financial bank." BERT generates <strong>contextual embeddings</strong> — the vector for each word is computed by attending to all other words in the sentence simultaneously. "Bank" in "I went to the bank to deposit money" gets a completely different vector than in "I sat on the bank of the river."</p>
+<p>BERT is <strong>bidirectional</strong> — it reads the entire sentence at once, allowing it to use both left and right context for every token. This is fundamentally different from GPT-style models, which are unidirectional (left-to-right only).</p>
+
+<h2>Using Pretrained BERT for Sentence Embeddings</h2>
+<pre><code">from transformers import AutoTokenizer, AutoModel
+import torch
+import torch.nn.functional as F
+
+# Use sentence-transformers — optimized for generating sentence embeddings
+from sentence_transformers import SentenceTransformer
+
+model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+
+sentences = [
+    "The cat sat on the mat",
+    "A feline rested on the rug",     # Semantically similar
+    "Machine learning is fascinating"  # Unrelated
+]
+
+# Encode all sentences — returns numpy array of shape (3, 384)
+embeddings = model.encode(sentences, normalize_embeddings=True)
+
+# Cosine similarity — 1.0 = identical, 0.0 = orthogonal, -1.0 = opposite
+similarity_0_1 = (embeddings[0] * embeddings[1]).sum()
+similarity_0_2 = (embeddings[0] * embeddings[2]).sum()
+print(f"Cat/Feline similarity: {similarity_0_1:.3f}")    # → 0.872 (very similar)
+print(f"Cat/ML similarity:     {similarity_0_2:.3f}")    # → 0.062 (unrelated)</code></pre>
+
+<h2>Fine-Tuning BERT for Text Classification</h2>
+<pre><code"">from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trainer, TrainingArguments
+import torch
+from datasets import Dataset
+
+# Load pretrained BERT-based tokenizer and model
+tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
+model = AutoModelForSequenceClassification.from_pretrained(
+    "bert-base-uncased",
+    num_labels=3  # Negative / Neutral / Positive
+)
+
+# Tokenize dataset
+def tokenize(examples):
+    return tokenizer(examples["text"], truncation=True, padding="max_length", max_length=128)
+
+train_dataset = Dataset.from_dict({"text": texts, "label": labels})
+tokenized_dataset = train_dataset.map(tokenize, batched=True)
+
+# Fine-tune
+training_args = TrainingArguments(
+    output_dir="./bert_sentiment",
+    num_train_epochs=3,
+    per_device_train_batch_size=16,
+    warmup_steps=100,
+    learning_rate=2e-5,    # Critical: very small LR for fine-tuning
+    evaluation_strategy="epoch",
+    save_strategy="epoch",
+    load_best_model_at_end=True
+)
+
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    train_dataset=tokenized_dataset
+)
+trainer.train()</code></pre>
+
+<h2>Semantic Search with Embeddings</h2>
+<p>Text embeddings enable semantic search — finding documents by meaning, not exact keyword match. This is the core of any RAG (Retrieval Augmented Generation) system:</p>
+<pre><code"">import numpy as np
+
+# Knowledge base
+documents = ["Python is fast for data science", "JavaScript runs in the browser",
+             "React is a frontend framework", "FastAPI is great for ML APIs"]
+doc_embeddings = model.encode(documents, normalize_embeddings=True)
+
+def semantic_search(query: str, top_k: int = 2):
+    query_embedding = model.encode([query], normalize_embeddings=True)
+    # Cosine similarity via dot product (normalized vectors)
+    similarities = (doc_embeddings @ query_embedding.T).squeeze()
+    top_indices = np.argsort(similarities)[::-1][:top_k]
+    return [(documents[i], float(similarities[i])) for i in top_indices]
+
+results = semantic_search("What can I use to build web APIs in Python?")
+# → [("FastAPI is great for ML APIs", 0.81), ("Python is fast for data science", 0.54)]</code></pre>
+
+<h2>BERT Variants — Choosing the Right Model</h2>
+<ul>
+  <li><strong>bert-base-uncased:</strong> The original. Good for general English tasks. 110M parameters.</li>
+  <li><strong>distilbert-base-uncased:</strong> 60% smaller, 97% of BERT's accuracy, 2x faster. Use when speed matters.</li>
+  <li><strong>roberta-base:</strong> Improved training procedure over BERT — typically outperforms BERT on most benchmarks.</li>
+  <li><strong>all-MiniLM-L6-v2:</strong> (sentence-transformers) Purpose-built for semantic similarity and search. Very fast at 384 dimensions.</li>
+  <li><strong>multilingual-e5-large:</strong> For multilingual semantic search across 100+ languages.</li>
+</ul>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Fine-tune with a very small learning rate (2e-5 to 5e-5). Higher LRs cause catastrophic forgetting — the model "forgets" its pretrained knowledge.</li>
+  <li>For classification tasks, fine-tuning even just 3 epochs with 1000 labeled examples often beats a classical ML model trained on millions of features.</li>
+  <li>Use <code>sentence-transformers</code> for semantic similarity tasks — raw BERT's <code>[CLS]</code> token is a poor sentence representation.</li>
+  <li>Cache your embeddings for static datasets — re-computing embeddings for the same documents on every search query is wasteful.</li>
+</ul>

@@ -1,0 +1,1 @@
+["This is topological sort. You need to output the order, not just check for cycles.", "Use Kahn's Algorithm (BFS with in-degree) or DFS post-order traversal to generate topological ordering.", "Build adjacency list and in-degree array. Start BFS with all nodes of in-degree 0. Add processed nodes to result. If result has all numCourses, return it; otherwise return []."]

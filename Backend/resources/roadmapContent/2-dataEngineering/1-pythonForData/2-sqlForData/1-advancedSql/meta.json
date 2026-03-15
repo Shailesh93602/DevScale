@@ -1,0 +1,4 @@
+{
+    "name": "Advanced SQL — Window Functions & CTEs",
+    "description": "ROW_NUMBER, RANK, LAG/LEAD, CTEs, recursive queries, and EXPLAIN ANALYZE."
+}

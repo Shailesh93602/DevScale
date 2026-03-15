@@ -1,0 +1,132 @@
+<h1>Docker: Multi-Stage Builds, Compose & Production</h1>
+<p>Multi-stage builds are one of Docker's most impactful features — they let you use a large build environment (Node + TypeScript + build tools) and produce a tiny production image containing only the compiled output and runtime. A typical Next.js image shrinks from 2GB to 150MB with multi-stage builds.</p>
+
+<h2>Multi-Stage Dockerfile for Node.js/TypeScript</h2>
+<pre><code class="language-dockerfile"># Stage 1: Dependencies
+FROM node:20-alpine AS deps
+WORKDIR /app
+COPY package*.json ./
+# Install ONLY production deps (skip devDependencies in final image)
+RUN npm ci --only=production
+
+# Stage 2: Builder
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci               # Install all deps (including devDependencies for TypeScript)
+COPY . .
+RUN npm run build        # Compile TypeScript → JS dist/
+
+# Stage 3: Production runner (smallest possible image)
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+# Security: never run as root!
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nodeuser
+USER nodeuser
+
+# Copy ONLY what's needed from previous stages
+COPY --from=deps    /app/node_modules ./node_modules
+COPY --from=builder /app/dist         ./dist
+COPY --from=builder /app/package.json ./package.json
+
+# No build tools, no source code, no devDependencies in final image!
+EXPOSE 3000
+CMD ["node", "dist/index.js"]
+</code></pre>
+
+<h2>Layer Caching: Ordering Instructions for Speed</h2>
+<pre><code class="language-dockerfile"># BAD: copy everything first — ANY file change invalidates the npm install cache
+FROM node:20-alpine
+WORKDIR /app
+COPY . .               # One JS file change → npm ci re-runs (3+ minutes)
+RUN npm ci
+RUN npm run build
+CMD ["node", "dist/index.js"]
+
+# GOOD: copy package files first — npm ci only re-runs when package.json changes
+FROM node:20-alpine
+WORKDIR /app
+COPY package*.json ./  # Only package files first
+RUN npm ci             # This layer is CACHED unless package.json changes
+COPY . .               # Source code changes only invalidate from here
+RUN npm run build
+CMD ["node", "dist/index.js"]
+
+# Docker caches each layer (instruction) — if the cache is valid, it reuses it.
+# Order: least-changing → most-changing (OS deps → npm deps → source → config)
+</code></pre>
+
+<h2>Docker Compose for Local Development</h2>
+<pre><code class="language-yaml"># docker-compose.yml — full local dev environment
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev     # Use dev Dockerfile with hot reload
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@db:5432/myapp
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - .:/app                       # Mount source code for hot reload
+      - /app/node_modules            # Don't mount host node_modules into container
+    depends_on:
+      db:
+        condition: service_healthy   # Wait until DB passes healthcheck
+      redis:
+        condition: service_started
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: myapp
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persist data across restarts
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+volumes:
+  postgres_data:
+</code></pre>
+<pre><code class="language-bash"># Common Docker Compose commands
+docker compose up -d        # Start all services in background
+docker compose logs -f api  # Follow API logs
+docker compose exec api sh  # Shell into running API container
+docker compose down -v      # Stop and remove containers + volumes
+docker compose ps           # Show running services
+</code></pre>
+
+<h2>Docker Security Best Practices</h2>
+<pre><code class="language-dockerfile"># Never put secrets in Dockerfile (they're visible in image history!)
+# BAD:
+ENV API_KEY=super-secret-key-123
+
+# GOOD: use runtime environment variables or Docker secrets
+# In production: inject via container orchestration (Kubernetes secrets, ECS task definitions)
+
+# Use specific version tags (never :latest in production)
+# BAD:  FROM node:latest
+# GOOD: FROM node:20.11.0-alpine3.19
+
+# Scan your images for vulnerabilities
+# docker scout quickview myapp:latest
+# trivy image myapp:latest
+
+# Read-only filesystem where possible
+docker run --read-only --tmpfs /tmp myapp:latest
+</code></pre>

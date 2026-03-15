@@ -1,0 +1,19 @@
+{
+  "title": "Counting Bits",
+  "slug": "counting-bits",
+  "difficulty": "Easy",
+  "category": "algorithms",
+  "points": 50,
+  "tags": ["dynamic-programming", "bit-manipulation"],
+  "company_tags": ["amazon", "google", "facebook"],
+  "topic_tags": ["Dynamic Programming", "Bit Manipulation"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer `n`.",
+  "output_format": "An array `ans` of length `n + 1` such that for each `i` (`0 <= i <= n`), `ans[i]` is the number of 1's in the binary representation of `i`.",
+  "example_input": "n = 5",
+  "example_output": "[0,1,1,2,1,2]",
+  "constraints": "0 <= n <= 10^5",
+  "function_signature": "function countBits(n: number): number[]",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,6 @@
+[
+  "Simple O(n) space approach: collect all node values into an array and check if the array is a palindrome using two pointers.",
+  "For O(1) space: find the middle of the list using slow/fast pointers.",
+  "Reverse the second half of the list in-place.",
+  "Compare the first half and the reversed second half node by node. If all values match, it's a palindrome."
+]

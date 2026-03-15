@@ -1,0 +1,4 @@
+{
+    "name": "TypeScript Design Patterns",
+    "description": "Implementing classic Gang of Four design patterns (Factory, Builder, Strategy, Observer) using modern TypeScript features, interfaces, and classes."
+}

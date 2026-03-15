@@ -1,0 +1,6 @@
+[
+  "Start by checking if the value is a primitive (null, number, string, boolean, undefined). If so, return it directly.",
+  "For objects and arrays, create a new container and recursively clone each property/element.",
+  "Handle special types like Date (use new Date(obj.getTime())) and RegExp (use new RegExp(obj.source, obj.flags)).",
+  "Use a WeakMap to track already-cloned objects and handle circular references without infinite recursion."
+]

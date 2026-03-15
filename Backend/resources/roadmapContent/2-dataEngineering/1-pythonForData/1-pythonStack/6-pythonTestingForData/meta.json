@@ -1,0 +1,4 @@
+{
+    "name": "Data Quality & Contract Testing",
+    "description": "Ensuring data integrity in pipelines. Writing robust unit tests with Pytest, validating data schemas automatically, and using Great Expectations for strict data quality contracts."
+}

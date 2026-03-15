@@ -1,0 +1,56 @@
+[
+  {
+    "input": { "calls": [{ "args": [], "time": 0 }], "interval": 100, "wait_after": 150 },
+    "output": { "call_count": 1 },
+    "explanation": "Single call fires immediately on leading edge",
+    "is_hidden": false
+  },
+  {
+    "input": { "calls": [{ "args": [], "time": 0 }, { "args": [], "time": 30 }, { "args": [], "time": 60 }], "interval": 100, "wait_after": 150 },
+    "output": { "call_count": 2 },
+    "explanation": "Three rapid calls — leading at t=0, trailing at t=100",
+    "is_hidden": false
+  },
+  {
+    "input": { "calls": [{ "args": ["a"], "time": 0 }, { "args": ["b"], "time": 50 }, { "args": ["c"], "time": 90 }], "interval": 100, "wait_after": 150 },
+    "output": { "call_count": 2, "first_args": ["a"], "last_args": ["c"] },
+    "explanation": "Leading uses first args, trailing uses latest args",
+    "is_hidden": false
+  },
+  {
+    "input": { "calls": [{ "args": [], "time": 0 }, { "args": [], "time": 200 }, { "args": [], "time": 400 }], "interval": 100, "wait_after": 150 },
+    "output": { "call_count": 3 },
+    "explanation": "Calls spaced beyond interval — each fires immediately",
+    "is_hidden": true
+  },
+  {
+    "input": { "calls": [], "interval": 100, "wait_after": 150 },
+    "output": { "call_count": 0 },
+    "explanation": "No calls — function never fires",
+    "is_hidden": true
+  },
+  {
+    "input": { "calls": [{ "args": [1], "time": 0 }, { "args": [2], "time": 10 }, { "args": [3], "time": 20 }, { "args": [4], "time": 110 }, { "args": [5], "time": 120 }], "interval": 100, "wait_after": 250 },
+    "output": { "call_count": 4 },
+    "explanation": "Two bursts — leading+trailing for each",
+    "is_hidden": true
+  },
+  {
+    "input": { "calls": [{ "args": [1, 2, 3], "time": 0 }], "interval": 50, "wait_after": 100 },
+    "output": { "call_count": 1, "first_args": [1, 2, 3] },
+    "explanation": "Multiple arguments forwarded correctly",
+    "is_hidden": true
+  },
+  {
+    "input": { "calls": [{ "args": [], "time": 0 }, { "args": [], "time": 5 }, { "args": [], "time": 10 }, { "args": [], "time": 15 }, { "args": [], "time": 20 }, { "args": [], "time": 25 }, { "args": [], "time": 30 }, { "args": [], "time": 35 }, { "args": [], "time": 40 }, { "args": [], "time": 45 }], "interval": 50, "wait_after": 100 },
+    "output": { "call_count": 2 },
+    "explanation": "Many rapid calls within one interval — leading + trailing only",
+    "is_hidden": true
+  },
+  {
+    "input": { "calls": [{ "args": [], "time": 0 }], "interval": 0, "wait_after": 50 },
+    "output": { "call_count": 1 },
+    "explanation": "Zero interval — fires immediately",
+    "is_hidden": true
+  }
+]

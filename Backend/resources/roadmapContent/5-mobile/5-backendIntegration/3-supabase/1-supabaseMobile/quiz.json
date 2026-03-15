@@ -1,0 +1,118 @@
+{
+    "title": "Supabase Mobile Integration Quiz",
+    "description": "Test your knowledge of Supabase setup, authentication, real-time subscriptions, and Row Level Security.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "Why is `detectSessionInUrl: false` required in the Supabase client configuration for React Native?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "React Native uses a different authentication protocol than web browsers",
+                    "isCorrect": false
+                },
+                {
+                    "text": "React Native has no window.location object — session tokens are passed via deep link callbacks, not URL parameters the SDK can auto-detect",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It improves performance by skipping URL parsing on every API call",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It is required to enable AsyncStorage as the auth storage backend",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What is the purpose of Row Level Security (RLS) in Supabase when accessed directly from a mobile app?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It compresses database rows to reduce network bandwidth",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It enforces authorization rules at the database level so each user can only access their own rows — replacing the need for a backend API to enforce ownership",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It limits the number of rows returned per query to prevent memory issues on mobile",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It automatically encrypts sensitive columns like passwords and email addresses",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In Supabase real-time subscriptions, what underlying mechanism does Postgres use to push changes to connected clients?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "HTTP long-polling — Supabase polls the database every 100ms for changes",
+                    "isCorrect": false
+                },
+                {
+                    "text": "PostgreSQL's LISTEN/NOTIFY mechanism broadcasts changes from the database to connected WebSocket clients via the Supabase Realtime server",
+                    "isCorrect": true
+                },
+                {
+                    "text": "GraphQL subscriptions — Supabase converts all real-time events to GraphQL format",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Server-Sent Events — the database sends one-way change events via HTTP/2",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which Supabase API key should be used in a mobile app, and why?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The service role key — it has full access to bypass RLS policies",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The anon (public) key — it obeys RLS policies and is safe to expose; the service role key would bypass all security policies if embedded in the app",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A custom generated key from the Supabase dashboard's mobile section",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Either key is safe since both are encrypted in transit",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does `.select().single()` do after a Supabase `.insert()` call?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It fetches all rows from the table after the insert completes",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It returns the newly inserted row as a single object instead of an array, and throws if zero or multiple rows are returned",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It locks the row so it cannot be updated by other concurrent requests",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It validates that the inserted data matches the table schema before committing",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

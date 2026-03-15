@@ -1,0 +1,6 @@
+[
+  "Think about ranking employees within each department by salary. Which ranking function handles 'unique' salary values correctly?",
+  "DENSE_RANK() assigns the same rank to equal values and doesn't skip ranks — perfect for 'top N unique' problems.",
+  "Use DENSE_RANK() OVER (PARTITION BY departmentId ORDER BY salary DESC) and filter for rank <= 3.",
+  "Alternatively, for each employee count how many distinct higher salaries exist in their department. If fewer than 3, they're in the top 3."
+]

@@ -1,0 +1,8 @@
+[
+  {
+    "input": "GET /auth/me",
+    "output": "200 OK",
+    "explanation": "Valid authorized request routed to Auth Service",
+    "is_hidden": false
+  }
+]

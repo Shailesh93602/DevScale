@@ -1,0 +1,1 @@
+["A tree is symmetric if the left subtree is a mirror of the right subtree.", "Write a helper function isMirror(left, right) that checks if two trees are mirrors of each other.", "Two trees are mirrors if: both are null (true), or both are non-null AND their values are equal AND left.left mirrors right.right AND left.right mirrors right.left."]

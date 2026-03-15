@@ -1,0 +1,7 @@
+[
+  "The naive approach takes two passes: one to count the length of the list, and a second to find the (length - n) node.",
+  "To do it in one pass, maintain two pointers: `fast` and `slow`.",
+  "First, advance the `fast` pointer `n` steps ahead of `slow`.",
+  "Then, advance both `fast` and `slow` simultaneously until `fast` reaches the end of the list. At this point, `slow` will be exactly `n` nodes from the end!",
+  "To make edge cases easy (like removing the very first node), start `slow` and `fast` at a newly created `dummy` node that points to `head`."
+]

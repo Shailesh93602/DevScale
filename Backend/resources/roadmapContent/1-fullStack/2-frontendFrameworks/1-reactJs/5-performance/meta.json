@@ -1,0 +1,4 @@
+{
+    "name": "Performance Optimization",
+    "description": "useMemo, useCallback, React.memo, code splitting, and lazy loading."
+}

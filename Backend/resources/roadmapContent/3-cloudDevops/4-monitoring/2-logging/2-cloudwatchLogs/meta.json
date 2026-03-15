@@ -1,0 +1,4 @@
+{
+    "name": "CloudWatch Logs",
+    "description": "AWS native logging, Log Groups, metrics filters, and alarms."
+}

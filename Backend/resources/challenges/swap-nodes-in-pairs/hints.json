@@ -1,0 +1,7 @@
+[
+  "Since you need to change pointers, keeping a dummy node at the beginning helps you cleanly handle the new head.",
+  "You need to keep track of the 'previous' node, the 'first' node of the pair, and the 'second' node of the pair.",
+  "To swap 'first' and 'second': the 'previous' node points to 'second'. The 'first' node points to 'second.next'. The 'second' node points to 'first'.",
+  "After swapping, advance 'previous' to be the 'first' node (which is now in the second position) and continue.",
+  "This can also be solved very cleanly using recursion! For any node, you just swap it with its next node, and point its new 'next' to the recursively swapped remaining list."
+]

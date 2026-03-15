@@ -1,0 +1,138 @@
+<h1>Biometric Authentication in React Native</h1>
+<p>Passwords are easy to forget and weak ones get compromised. Biometric authentication — fingerprint (Touch ID), face recognition (Face ID), and iris scanning — lets users authenticate with something they physically are, not something they have to remember. Modern smartphones include dedicated secure hardware enclaves (Apple's Secure Enclave, Android's StrongBox) that process biometrics without ever exposing the raw data to the app or the OS.</p>
+
+<h2>How Biometric Auth Works on Mobile</h2>
+<p>It's critical to understand what biometric auth does and does NOT do:</p>
+<ul>
+  <li>The device's secure hardware stores and verifies the biometric template locally — your app code and your server never receive the fingerprint or face data.</li>
+  <li>Biometric auth approves access to a cryptographic key stored in the hardware keystore (iOS Keychain / Android Keystore). Your app then uses that key to decrypt a stored secret (like a refresh token).</li>
+  <li>You're not sending biometrics to your backend. You're using biometrics to <em>unlock</em> locally-stored credentials.</li>
+</ul>
+
+<h2>Using expo-local-authentication</h2>
+<pre><code">import * as LocalAuthentication from 'expo-local-authentication';
+
+// ─── Step 1: Check device capability ─────────────────────────────────────
+const checkBiometricSupport = async () => {
+  const isCompatible = await LocalAuthentication.hasHardwareAsync();
+  if (!isCompatible) {
+    return { supported: false, reason: 'No biometric hardware found' };
+  }
+  
+  const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+  if (!isEnrolled) {
+    return { supported: false, reason: 'No biometrics enrolled in device settings' };
+  }
+  
+  const supportedTypes = await LocalAuthentication.supportedAuthenticationTypesAsync();
+  const typeNames = supportedTypes.map(type => {
+    switch (type) {
+      case LocalAuthentication.AuthenticationType.FINGERPRINT: return 'Fingerprint';
+      case LocalAuthentication.AuthenticationType.FACIAL_RECOGNITION: return 'Face ID';
+      case LocalAuthentication.AuthenticationType.IRIS: return 'Iris';
+    }
+  });
+  
+  return { supported: true, types: typeNames };
+};
+
+// ─── Step 2: Authenticate ─────────────────────────────────────────────────
+const authenticateWithBiometrics = async (): Promise<boolean> => {
+  const { supported, reason } = await checkBiometricSupport();
+  if (!supported) {
+    Alert.alert('Biometrics Unavailable', reason);
+    return false;
+  }
+
+  const result = await LocalAuthentication.authenticateAsync({
+    promptMessage: 'Verify your identity to access the app',
+    fallbackLabel: 'Use PIN instead',     // Button shown if biometric fails
+    cancelLabel: 'Cancel',
+    disableDeviceFallback: false,          // Allow PIN/pattern as fallback
+  });
+
+  return result.success;
+};</code></pre>
+
+<h2>Full Implementation: Biometric-Protected Login</h2>
+<pre><code"">import * as SecureStore from 'expo-secure-store';
+import * as LocalAuthentication from 'expo-local-authentication';
+
+const STORED_TOKEN_KEY = 'biometric_protected_token';
+
+// Called after successful password login — save token for future biometric access
+export const enableBiometricLogin = async (authToken: string) => {
+  await SecureStore.setItemAsync(STORED_TOKEN_KEY, authToken, {
+    // Require biometric auth to read this value
+    requireAuthentication: true,
+  });
+};
+
+// Called on app open — try biometric unlock
+export const biometricLogin = async (): Promise<string | null> => {
+  const { supported } = await checkBiometricSupport();
+  if (!supported) return null;
+
+  try {
+    // SecureStore with requireAuthentication automatically triggers biometric prompt
+    const token = await SecureStore.getItemAsync(STORED_TOKEN_KEY, {
+      requireAuthentication: true,
+    });
+    return token;  // Returns the stored token if biometric succeeds
+  } catch {
+    return null;   // Biometric cancelled or failed
+  }
+};
+
+// Usage in app startup
+const AppInitializer = () => {
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const tryBiometricLogin = async () => {
+      const token = await biometricLogin();
+      if (token) {
+        // Token unlocked — user is authenticated
+        navigation.replace('Home');
+      } else {
+        // Fall back to password login
+        navigation.replace('Login');
+      }
+      setLoading(false);
+    };
+    tryBiometricLogin();
+  }, []);
+
+  return loading ? <ActivityIndicator /> : null;
+};</code></pre>
+
+<h2>Handling Edge Cases</h2>
+<pre><code"">// Handle all possible biometric outcomes
+const result = await LocalAuthentication.authenticateAsync({ ... });
+
+switch (result.error) {
+  case 'not_enrolled':
+    Alert.alert('Please set up Face ID/Fingerprint in device Settings first');
+    break;
+  case 'lockout':
+    Alert.alert('Too many failed attempts. Please use your PIN to unlock.');
+    break;
+  case 'user_cancel':
+    // User cancelled — do nothing, let them use password login
+    break;
+  case 'system_cancel':
+    // OS interrupted (phone call, notification) — show a retry option
+    break;
+  default:
+    if (!result.success) {
+      Alert.alert('Authentication failed. Please try again.');
+    }
+}</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Always provide a fallback (PIN/password) for users who haven't enrolled biometrics or whose biometric fails repeatedly.</li>
+  <li>Use <code>SecureStore</code> with <code>requireAuthentication: true</code> rather than triggering biometrics separately — this ties the biometric approval directly to the key access in the hardware keystore.</li>
+  <li>Never use biometrics as the <em>only</em> authentication method — biometrics on Android can be spoofed on unpatched devices. Treat biometrics as a convenience layer over your password/token system.</li>
+  <li>Offer biometric login as opt-in, not opt-out — ask users to enable it after their first successful password login.</li>
+</ul>

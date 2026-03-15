@@ -1,0 +1,12 @@
+[
+  { "input": "{\"strs\":[\"lint\",\"code\",\"love\",\"you\"]}", "output": "[\"lint\",\"code\",\"love\",\"you\"]", "explanation": "Basic list of strings", "is_hidden": false },
+  { "input": "{\"strs\":[\"we\", \"say\", \":\", \"yes\"]}", "output": "[\"we\", \"say\", \":\", \"yes\"]", "explanation": "List with special characters", "is_hidden": false },
+  { "input": "{\"strs\":[]}", "output": "[]", "explanation": "Empty list", "is_hidden": true },
+  { "input": "{\"strs\":[\"\"]}", "output": "[\"\"]", "explanation": "List containing one empty string", "is_hidden": true },
+  { "input": "{\"strs\":[\"\",\"\",\"\"]}", "output": "[\"\",\"\",\"\"]", "explanation": "List containing multiple empty strings", "is_hidden": true },
+  { "input": "{\"strs\":[\"123\",\"456\"]}", "output": "[\"123\",\"456\"]", "explanation": "Numbers only", "is_hidden": true },
+  { "input": "{\"strs\":[\"a#b#c\",\"d#e#f\"]}", "output": "[\"a#b#c\",\"d#e#f\"]", "explanation": "Contains separator character", "is_hidden": true },
+  { "input": "{\"strs\":[\"4#lint\",\"5#code\"]}", "output": "[\"4#lint\",\"5#code\"]", "explanation": "Contains encoded format inside original string", "is_hidden": true },
+  { "input": "{\"strs\":[\" \",\"  \"]}", "output": "[\" \",\"  \"]", "explanation": "Spaces only", "is_hidden": true },
+  { "input": "{\"strs\":[\"very long string with lots of content inside it to break naive parsing limits and \", \"another really long one here\"]}", "output": "[\"very long string with lots of content inside it to break naive parsing limits and \", \"another really long one here\"]", "explanation": "Long string content", "is_hidden": true }
+]

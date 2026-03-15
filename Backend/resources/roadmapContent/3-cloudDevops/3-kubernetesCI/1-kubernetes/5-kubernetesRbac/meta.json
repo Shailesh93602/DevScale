@@ -1,0 +1,4 @@
+{
+    "name": "Kubernetes RBAC & Security Contexts",
+    "description": "Securing Kubernetes clusters with fine-grained access control. Understanding RBAC Roles, ClusterRoles, and RoleBindings for API authentication; configuring Pod Security Contexts (runAsNonRoot, readOnlyRootFilesystem, capabilities); and using Network Policies to isolate pod traffic."
+}

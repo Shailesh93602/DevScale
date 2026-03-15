@@ -1,0 +1,118 @@
+{
+    "title": "Data Catalogs Quiz",
+    "description": "Test your knowledge of data catalog metadata, lineage, DataHub, and governance practices.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What specific type of metadata does 'data lineage' in a catalog capture?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The original source code of the ETL pipeline that created the table",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The upstream tables/pipelines that produce a dataset and the downstream reports/dashboards that consume it",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The column-level descriptions and business glossary terms for a table",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The version history of schema changes over time",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why is it important to integrate data catalog registration into CI/CD pipelines rather than doing it manually?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "CI/CD pipelines are faster than manual registration tools",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Manual metadata registration is always forgotten — automation ensures the catalog stays current automatically every time a pipeline runs or a schema changes",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Regulatory compliance requires automated catalog updates in all industries",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Manual registration doesn't support column-level metadata",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does a 'data tier' classification (Bronze/Silver/Gold) in a catalog indicate?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "The cost tier of the cloud storage used to store the data",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The data quality and transformation level: Bronze = raw/ingested, Silver = cleaned, Gold = business-ready aggregations",
+                    "isCorrect": true
+                },
+                {
+                    "text": "The access level required to query the data (Bronze = public, Gold = restricted)",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The age of the data — Bronze is recent, Gold is archival",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why is column-level lineage more valuable than table-level lineage for PII compliance?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Column-level lineage is easier to compute than table-level lineage",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It allows auditors to trace exactly which columns containing sensitive data flow into which downstream reports, dashboards, or ML models",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Table-level lineage doesn't work across different database platforms",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Column-level lineage automatically encrypts PII fields in the catalog",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does the DataHub ingestion recipe YAML's `profiling.enabled: true` setting typically collect?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "CPU and memory usage profiles of the query engine",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Statistical summaries of tables such as row counts, column null rates, min/max values, and top values — used for data quality assessments",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Query execution plans for the top 10 most expensive queries",
+                    "isCorrect": false
+                },
+                {
+                    "text": "User access patterns and which engineers query which tables most frequently",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

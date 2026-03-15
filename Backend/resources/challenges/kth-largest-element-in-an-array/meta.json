@@ -1,0 +1,20 @@
+{
+  "title": "Kth Largest Element in an Array",
+  "slug": "kth-largest-element-in-an-array",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["array","divide-and-conquer","sorting","heap","quickselect"],
+  "company_tags": ["Amazon","Facebook","Microsoft","Google","Apple"],
+  "topic_tags": ["heaps","priority queue","sorting"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer array `nums` and an integer `k`.",
+  "output_format": "The `k`th largest element in the array.",
+  "example_input": "nums = [3,2,1,5,6,4], k = 2",
+  "example_output": "5",
+  "constraints": "- `1 <= k <= nums.length <= 10^5`\n- `-10^4 <= nums[i] <= 10^4`",
+  "function_signature": "function findKthLargest(nums: number[], k: number): number {}",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,19 @@
+{
+  "title": "The Dining Philosophers",
+  "slug": "dining-philosophers",
+  "difficulty": "Medium",
+  "category": "concurrency",
+  "points": 100,
+  "tags": ["concurrency", "deadlock", "resource-ordering"],
+  "company_tags": ["Google", "Microsoft", "Amazon"],
+  "topic_tags": ["Concurrency", "Deadlock Prevention", "Resource Ordering"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Number of philosophers and number of eating rounds",
+  "output_format": "Sequence of actions (pick up forks, eat, put down forks) without deadlock",
+  "example_input": "{\"numPhilosophers\": 5, \"rounds\": 1}",
+  "example_output": "{\"valid\": true, \"deadlockFree\": true}",
+  "constraints": "1 <= numPhilosophers <= 10, 1 <= rounds <= 100",
+  "function_signature": "function diningPhilosophers(n: number, rounds: number): { actions: string[][]; deadlockFree: boolean }",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the recommended maximum character length for an HTML <title> tag for SEO?",
+            "options": [
+                "30 characters",
+                "60 characters",
+                "100 characters",
+                "160 characters"
+            ],
+            "answer": "60 characters",
+            "explanation": "Search engines typically display only the first 50-60 characters of a title tag. Longer titles get truncated in results."
+        },
+        {
+            "question": "What is the purpose of the canonical link tag?",
+            "options": [
+                "To redirect users to a different page",
+                "To specify the preferred URL for duplicate content",
+                "To improve page loading speed",
+                "To declare the charset of the document"
+            ],
+            "answer": "To specify the preferred URL for duplicate content",
+            "explanation": "The canonical tag tells search engines which URL is the 'master' version when the same content exists at multiple URLs, preventing duplicate content penalties."
+        },
+        {
+            "question": "What Open Graph image size is recommended for the best social media preview?",
+            "options": [
+                "600×315",
+                "800×600",
+                "1200×630",
+                "1920×1080"
+            ],
+            "answer": "1200×630",
+            "explanation": "1200×630px is the recommended size for og:image as it displays well on Facebook, LinkedIn, and most social platforms."
+        },
+        {
+            "question": "What format does Google prefer for structured data markup?",
+            "options": [
+                "Microdata",
+                "RDFa",
+                "JSON-LD",
+                "XML"
+            ],
+            "answer": "JSON-LD",
+            "explanation": "Google recommends JSON-LD for structured data as it is easy to implement and doesn't require mixing with HTML markup."
+        },
+        {
+            "question": "Which meta robots value would prevent a page from appearing in search results?",
+            "options": [
+                "content='nofollow'",
+                "content='noindex'",
+                "content='noarchive'",
+                "content='nocache'"
+            ],
+            "answer": "content='noindex'",
+            "explanation": "The 'noindex' directive tells search engine crawlers not to include the page in their index, removing it from search results."
+        }
+    ]
+}

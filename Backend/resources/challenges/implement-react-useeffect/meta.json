@@ -1,0 +1,19 @@
+{
+  "title": "Implement React useEffect Hook",
+  "slug": "implement-react-useeffect",
+  "difficulty": "Hard",
+  "category": "frontend",
+  "points": 150,
+  "tags": ["javascript", "react", "hooks", "side-effects"],
+  "company_tags": ["Meta", "Google", "Amazon", "Netflix"],
+  "topic_tags": ["React Internals", "Side Effects", "Dependency Tracking"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "An effect callback and optional dependency array",
+  "output_format": "Runs the effect when dependencies change; runs cleanup before re-running",
+  "example_input": "useEffect(() => { subscribe(); return () => unsubscribe(); }, [id])",
+  "example_output": "Effect runs when id changes, cleanup runs before next effect",
+  "constraints": "Dependencies compared with Object.is. No deps = run every render. [] = run once.",
+  "function_signature": "function useEffect(effect: () => void | (() => void), deps?: any[]): void",
+  "status": "ACTIVE"
+}

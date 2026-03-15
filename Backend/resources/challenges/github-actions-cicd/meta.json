@@ -1,0 +1,19 @@
+{
+  "title": "CI/CD Pipeline with GitHub Actions",
+  "slug": "github-actions-cicd",
+  "difficulty": "Hard",
+  "category": "devops",
+  "points": 150,
+  "tags": ["ci-cd", "github-actions", "automation", "testing", "deployment"],
+  "company_tags": ["GitHub", "Microsoft", "Google", "Stripe", "Shopify"],
+  "topic_tags": ["CI/CD", "GitHub Actions", "Automated Testing", "Deployment"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Project configuration with language, test framework, deployment target, and branch strategy",
+  "output_format": "Complete GitHub Actions workflow YAML with CI and CD jobs",
+  "example_input": "{ language: 'node', testCmd: 'npm test', deployTarget: 'aws-ecs', branches: { main: 'production', develop: 'staging' } }",
+  "example_output": "GitHub Actions YAML with lint, test, build, and deploy jobs with proper dependencies and environment protection",
+  "constraints": "- Must include lint, test, build, and deploy stages\\n- Jobs must have proper dependencies (needs)\\n- Must use environment protection rules for production\\n- Must cache dependencies for speed\\n- Must use secrets for credentials",
+  "function_signature": "function generateCICDPipeline(config: { language: string; testCmd: string; buildCmd: string; deployTarget: string; branches: Record<string, string> }): string",
+  "status": "ACTIVE"
+}

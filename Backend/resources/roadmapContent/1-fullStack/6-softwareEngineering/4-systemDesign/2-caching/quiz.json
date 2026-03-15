@@ -1,0 +1,26 @@
+{
+    "questions": [
+        {
+            "question": "Which of these is a popular in-memory data store frequently used for caching?",
+            "options": [
+                "MySQL",
+                "Redis",
+                "PostgreSQL",
+                "SQLite"
+            ],
+            "correctAnswer": 1,
+            "explanation": "Redis is optimized for speed by storing data primarily in memory."
+        },
+        {
+            "question": "The 'Write-Through' strategy is best for systems that:",
+            "options": [
+                "Prioritize write speed over data consistency",
+                "Require immediate consistency between cache and permanent store",
+                "Handle extremely low volume",
+                "Only serve read requests"
+            ],
+            "correctAnswer": 1,
+            "explanation": "Write-Through updates both concurrently, ensuring they are always in sync."
+        }
+    ]
+}

@@ -1,0 +1,42 @@
+{
+  "title": "Linked List Cycle",
+  "slug": "linked-list-cycle",
+  "difficulty": "Easy",
+  "category": "algorithms",
+  "points": 50,
+  "tags": [
+    "hash-table",
+    "linked-list",
+    "two-pointers"
+  ],
+  "company_tags": [
+    "Amazon",
+    "Microsoft",
+    "Apple",
+    "Google",
+    "Yahoo"
+  ],
+  "topic_tags": [
+    "linked lists",
+    "two pointers"
+  ],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "The `head` of a linked list.",
+  "output_format": "`true` if there is a cycle in the linked list, otherwise `false`.",
+  "example_input": "head = [3,2,0,-4], pos = 1",
+  "example_output": "true",
+  "constraints": "- The number of the nodes in the list is in the range `[0, 10^4]`.\n- `-10^5 <= Node.val <= 10^5`\n- `pos` is `-1` or a **valid index** in the linked-list.",
+  "function_signature": "function hasCycle(head: ListNode | null): boolean {}",
+  "status": "ACTIVE"
+}

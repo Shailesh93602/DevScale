@@ -1,0 +1,14 @@
+{
+    "title": "AI & Machine Learning",
+    "description": "Learn Python for data science, machine learning algorithms, neural networks with PyTorch, and deploying ML systems.",
+    "tags": "AI,MachineLearning,Python,DataAnalysis,MLOps",
+    "difficulty": "HARD",
+    "main_concepts": [
+        "1-pythonMath",
+        "2-machineLearning",
+        "3-deepLearning",
+        "4-mlops",
+        "5-computerVisionNlp",
+        "6-llmIntegration"
+    ]
+}

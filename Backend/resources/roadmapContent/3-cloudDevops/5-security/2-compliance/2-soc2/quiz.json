@@ -1,0 +1,118 @@
+{
+    "title": "SOC 2 Compliance Quiz",
+    "description": "Test your knowledge on Trust Services Criteria, logging, and change management.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the primary business reason for a SaaS company to undergo a SOC 2 audit?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "To guarantee their software is completely bug-free.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To prove to enterprise clients that their infrastructure, data handling, and internal company processes are secure and trustworthy, unlocking massive enterprise sales.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Because it is legally required by the United States Federal Government for all websites.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "To automatically patch vulnerabilities in the operating system.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which of the five SOC 2 'Trust Services Criteria' is strictly mandatory for all companies undergoing the audit?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Privacy",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Security",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Processing Integrity",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Availability",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "During a SOC 2 audit, you are asked who has direct administrative access to the production databases. What is the most compliant and secure answer?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "All developers, to ensure they can debug issues quickly.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Access is completely disabled for everyone, including pipeline robots; the database is immutable.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Only the automated CI/CD pipeline service accounts and a very restricted number of senior engineers using monitored, temporary 'break-glass' credentials.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Only the CEO and the Legal team.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How do DevOps teams prove to a SOC 2 auditor that 'Change Management' controls are strictly enforced?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "By demonstrating that the CI/CD pipeline and GitHub repository utilize strict branch protection, preventing unreviewed code from ever reaching the production branch.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "By showing them screenshots of the developers promising not to break things.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By deleting commit logs older than 30 days to hide undocumented changes.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By allowing developers to bypass Git and upload files straight via FTP.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which AWS capability is considered absolutely essential to proving compliance regarding 'Monitoring & Logging' to a SOC 2 auditor?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Amazon Lex",
+                    "isCorrect": false
+                },
+                {
+                    "text": "AWS CloudTrail, because it immutably logs every single API call and action taken by any user or service across the entire AWS account history.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "AWS CodeDeploy",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Amazon SQS",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

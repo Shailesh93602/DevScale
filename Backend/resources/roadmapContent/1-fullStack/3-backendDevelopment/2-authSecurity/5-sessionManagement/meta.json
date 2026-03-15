@@ -1,0 +1,4 @@
+{
+    "name": "Stateful Session Management",
+    "description": "Moving beyond stateless JWTs. Building highly secure, stateful session architectures using HttpOnly secure cookies and an ultra-fast Redis cache for instant session revocation and tracking."
+}

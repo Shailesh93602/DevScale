@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What output order does the following code produce?\nconsole.log('A');\nsetTimeout(() => console.log('B'), 0);\nPromise.resolve().then(() => console.log('C'));\nconsole.log('D');",
+            "options": [
+                "A, B, C, D",
+                "A, D, B, C",
+                "A, D, C, B",
+                "A, C, D, B"
+            ],
+            "answer": "A, D, C, B",
+            "explanation": "Synchronous code runs first (A, D), then microtasks like Promise callbacks (C), then macrotasks like setTimeout (B) — even with 0ms delay."
+        },
+        {
+            "question": "What is the difference between named and default exports in ES modules?",
+            "options": [
+                "Named exports use curly braces when importing; default exports don't",
+                "Default exports are faster to load",
+                "Named exports can only be functions; default exports can be anything",
+                "There is no practical difference"
+            ],
+            "answer": "Named exports use curly braces when importing; default exports don't",
+            "explanation": "Named: import { add } from './math'. Default: import add from './math'. A module can have multiple named exports but only one default export."
+        },
+        {
+            "question": "What is the Microtask Queue used for in the browser event loop?",
+            "options": [
+                "Processing setTimeout and setInterval callbacks",
+                "Processing Promise callbacks (.then/.catch) and MutationObserver",
+                "Handling UI rendering tasks",
+                "Executing Web Worker messages"
+            ],
+            "answer": "Processing Promise callbacks (.then/.catch) and MutationObserver",
+            "explanation": "The Microtask Queue has higher priority than the Macrotask Queue and is fully drained after each task, before the next macrotask runs."
+        },
+        {
+            "question": "What does 'type=\"module\"' do when added to a script tag?",
+            "options": [
+                "Loads the script asynchronously",
+                "Enables ES module imports/exports and activates strict mode",
+                "Makes the script run before the DOM is ready",
+                "Enables TypeScript syntax"
+            ],
+            "answer": "Enables ES module imports/exports and activates strict mode",
+            "explanation": "Script modules are deferred by default, have their own scope, are always in strict mode, and support import/export syntax."
+        },
+        {
+            "question": "What is the advantage of dynamic imports (await import())?",
+            "options": [
+                "They load modules faster than static imports",
+                "They allow conditional and lazy loading of modules, reducing initial bundle size",
+                "They bypass the module cache",
+                "They allow importing from remote URLs"
+            ],
+            "answer": "They allow conditional and lazy loading of modules, reducing initial bundle size",
+            "explanation": "Dynamic imports return a Promise and only load the module when called, enabling code splitting and lazy loading expensive libraries only when they're needed."
+        }
+    ]
+}

@@ -1,0 +1,118 @@
+{
+    "title": "React Native Styling Quiz",
+    "description": "Test your knowledge on Flexbox, the StyleSheet API, and Reanimated.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "How do developers predominantly apply styling in React Native, marking a massive departure from traditional web development?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "By writing pure HTML inside the components.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By importing external `.css` or `.scss` files globally at the root.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By defining CamelCase JavaScript objects using the `StyleSheet.create()` API and passing them seamlessly via the `style` prop.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "By utilizing Tailwind CSS classes exclusively.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What layout engine is fundamentally mandatory for positioning UI elements across all React Native applications globally?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Absolute Pixel Positioning",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Flexbox (via the Yoga engine).",
+                    "isCorrect": true
+                },
+                {
+                    "text": "CSS Grid Frameworks",
+                    "isCorrect": false
+                },
+                {
+                    "text": "HTML Tables",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Regarding the React Native implementation of Flexbox, what is the single biggest difference compared exactly against standard Web CSS?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "It does not support `justifyContent`.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "It throws errors if `alignItems` is applied.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "The default `flexDirection` is `column` (top-to-bottom) rather than `row` (left-to-right).",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It uses `display: inline` by default.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why did the community adopt the 'React Native Reanimated' library as the industry standard for executing complex mobile animations?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Because it acts as a wrapper around the physical HTML canvas tag.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because it physically runs the animation exclusively on the native UI thread, guaranteeing a perfectly smooth 60fps experience even if the Javascript thread completely freezes while processing data.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Because it is required to bypass the Apple App Store.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because it automatically converts PNGs into Vector Graphics.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "If a mobile designer builds a breathtakingly complex loading animation using Adobe After Effects, what is the best strategy for a developer to implement it effortlessly in React Native?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "By meticulously rewriting the entire animation exactly in raw Javascript code line-by-line.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By exporting the robust Adobe animation flawlessly as a tiny JSON file utilizing 'Lottie' and rendering the JSON directly in the app natively.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "By recording the animation as an enormous `.mp4` video and looping it.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By generating a thousand `.png` frames and cycling through them manually.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

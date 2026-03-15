@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "Why does React Hook Form use uncontrolled inputs by default?",
+            "options": [
+                "Because it doesn't support controlled inputs",
+                "To avoid re-renders on every keystroke, making forms significantly more performant",
+                "Because uncontrolled inputs have better accessibility",
+                "To avoid TypeScript type errors"
+            ],
+            "answer": "To avoid re-renders on every keystroke, making forms significantly more performant",
+            "explanation": "By using a ref-based approach with uncontrolled inputs, RHF avoids React state updates on every keypress. It only reads form values on submit, drastically reducing renders."
+        },
+        {
+            "question": "What does zodResolver do when used with React Hook Form?",
+            "options": [
+                "Converts Zod schemas to TypeScript interfaces",
+                "Connects a Zod validation schema to RHF so validation runs automatically on submit",
+                "Resolves import paths for Zod",
+                "Creates a Zod schema from a form structure automatically"
+            ],
+            "answer": "Connects a Zod validation schema to RHF so validation runs automatically on submit",
+            "explanation": "zodResolver(@hookform/resolvers/zod) integrates Zod validation with RHF, automatically validating against the schema and populating formState.errors with messages."
+        },
+        {
+            "question": "What is useFieldArray used for in React Hook Form?",
+            "options": [
+                "Creating array-type custom inputs",
+                "Managing dynamic lists of form fields (add/remove/reorder)",
+                "Validating array fields",
+                "Creating multi-select inputs"
+            ],
+            "answer": "Managing dynamic lists of form fields (add/remove/reorder)",
+            "explanation": "useFieldArray provides fields, append(), remove(), move(), insert() and swap() methods for managing dynamic field lists like tag inputs, line items, or team member lists."
+        },
+        {
+            "question": "What is the purpose of setError() in React Hook Form?",
+            "options": [
+                "To throw a JavaScript error",
+                "To programmatically add validation errors, typically from server responses",
+                "To set the error boundary state",
+                "To mark all fields as invalid"
+            ],
+            "answer": "To programmatically add validation errors, typically from server responses",
+            "explanation": "setError('email', { message: 'Email already taken' }) displays a server-side validation error inline on the field, giving users clear feedback without custom error display logic."
+        },
+        {
+            "question": "What does the 'isDirty' flag from React Hook Form formState indicate?",
+            "options": [
+                "The form has validation errors",
+                "At least one field value has changed from its default value",
+                "The form has been submitted at least once",
+                "The form contains unsafe input values"
+            ],
+            "answer": "At least one field value has changed from its default value",
+            "explanation": "isDirty is true when any field's current value differs from its defaultValue. Use it to disable the submit button when nothing has changed, preventing unnecessary API calls."
+        }
+    ]
+}

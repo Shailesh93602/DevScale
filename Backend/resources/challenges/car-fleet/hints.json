@@ -1,0 +1,6 @@
+[
+  "Calculate the time each car takes to reach the target: (target - position) / speed.",
+  "Sort cars by position from closest to target to farthest.",
+  "Process from closest to target. If a car behind takes longer to arrive, it forms a new fleet.",
+  "A car that arrives faster than the car ahead merges into that car's fleet."
+]

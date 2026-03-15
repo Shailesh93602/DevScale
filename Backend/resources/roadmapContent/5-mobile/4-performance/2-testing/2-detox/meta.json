@@ -1,0 +1,6 @@
+{
+    "id": "2-detox",
+    "title": "E2E Testing with Detox",
+    "description": "Gray-box end-to-end testing for React Native apps on real devices and simulators.",
+    "order": 2
+}

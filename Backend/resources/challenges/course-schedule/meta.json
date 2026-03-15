@@ -1,0 +1,20 @@
+{
+  "title": "Course Schedule",
+  "slug": "course-schedule",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["depth-first-search","breadth-first-search","graph","topological-sort"],
+  "company_tags": ["Amazon","Spotify","Facebook","Apple","Google","Microsoft"],
+  "topic_tags": ["graphs","topological sort","depth-first search"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer `numCourses` and an array of prerequisites `prerequisites[i] = [ai, bi]` indicating you must take course `bi` first before taking course `ai`.",
+  "output_format": "`true` if you can finish all courses, `false` otherwise.",
+  "example_input": "numCourses = 2, prerequisites = [[1,0]]",
+  "example_output": "true",
+  "constraints": "- `1 <= numCourses <= 2000`\n- `0 <= prerequisites.length <= 5000`\n- `prerequisites[i].length == 2`\n- `0 <= ai, bi < numCourses`\n- All the pairs `prerequisites[i]` are **unique**.",
+  "function_signature": "function canFinish(numCourses: number, prerequisites: number[][]): boolean {}",
+  "status": "ACTIVE"
+}

@@ -1,0 +1,4 @@
+{
+    "name": "Fine-Tuning LLMs",
+    "description": "Transfer learning, LoRA, QLoRA, and adapting models to custom datasets using PEFT."
+}

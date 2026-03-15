@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What specifically happens when you execute the CLI command `npx prisma generate`?",
+            "options": [
+                "It compiles native SQLite code into PostgreSQL format automatically",
+                "It reads all of your React frontend files and injects GraphQL into them",
+                "It parses your `schema.prisma` file, analyzes the database structure, and generates a massively customized, heavily strictly typed TypeScript client library directly into your `node_modules/@prisma/client` folder natively",
+                "It creates the physical `.env` file containing connection passwords"
+            ],
+            "answer": "It parses your `schema.prisma` file, analyzes the database structure, and generates a massively customized, heavily strictly typed TypeScript client library directly into your `node_modules/@prisma/client` folder natively",
+            "explanation": "This is Prisma's superpower. Because the library is generated uniquely for YOUR database, your code editor instantly knows all your table names, column names, and relations perfectly via autocomplete."
+        },
+        {
+            "question": "If you are querying a User and wish to automatically execute a JOIN to ALSO fetch all of the Posts that User has authored at the same time, which Prisma keyword do you use?",
+            "options": [
+                "join: ['posts']",
+                "append: { posts: true }",
+                "populate: { posts: true }",
+                "include: { posts: true }"
+            ],
+            "answer": "include: { posts: true }",
+            "explanation": "The `include` directive tells Prisma to fetch the relations attached to the primary model. Prisma translates this mathematically into a `LEFT JOIN` or multiple batched `SELECT` queries seamlessly."
+        },
+        {
+            "question": "What is the critical rule regarding using the `select` and `include` directives together on the exact same root query level in Prisma?",
+            "options": [
+                "They must be separated by an asynchronous wait statement",
+                "You cannot use `select` and `include` on the exact same object level. If you are using `select` to grab specific columns, you must execute the relational fetch directly inside the `select` block instead of using `include`",
+                "The `select` must legally resolve completely before `include` triggers",
+                "They must be typed as generic arrays natively"
+            ],
+            "answer": "You cannot use `select` and `include` on the exact same object level. If you are using `select` to grab specific columns, you must execute the relational fetch directly inside the `select` block instead of using `include`",
+            "explanation": "Doing `{ select: { name: true }, include: { posts: true } }` throws a syntax error. Prisma forces you to be explicit: `{ select: { name: true, posts: true } }`."
+        },
+        {
+            "question": "What is the primary advantage of utilizing Prisma's 'Nested Writes' feature? (e.g., `user.create({ data: { posts: { create: [...] } } })`)",
+            "options": [
+                "It encrypts foreign keys",
+                "It creates the Parent record, automatically captures the newly generated primary key (ID), and instantly inserts all the Child records mapping them accurately to that new ID, all wrapped perfectly inside a single atomic Database Transaction inherently",
+                "It allows writing API route handlers recursively",
+                "It bypasses strict typing algorithms"
+            ],
+            "answer": "It creates the Parent record, automatically captures the newly generated primary key (ID), and instantly inserts all the Child records mapping them accurately to that new ID, all wrapped perfectly inside a single atomic Database Transaction inherently",
+            "explanation": "If you do this manually, you must do: User = create. Posts = createMany(author: User.id). A nested write does it atomically natively without you having to manually wire up the Foreign Keys."
+        },
+        {
+            "question": "Which set of Prisma methods is specifically designed for analyzing mathematical calculations across multiple rows directly inside the DB engine (such as calculating totals, averages, and group counts)?",
+            "options": [
+                "reduce()",
+                "aggregate() and groupBy()",
+                "analyzeMany()",
+                "calculate()"
+            ],
+            "answer": "aggregate() and groupBy()",
+            "explanation": "Using `prisma.order.aggregate({ _sum: { amount: true } })` pushes the SUM logic directly to PostgreSQL instead of forcing the Node.js server to loop through arrays using standard array math."
+        }
+    ]
+}

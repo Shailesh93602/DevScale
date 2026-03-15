@@ -1,0 +1,118 @@
+{
+    "title": "CIS Benchmarks Quiz",
+    "description": "Test your knowledge on hardening systems, Level constraints, and automated auditing.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "What is the primary purpose of the Center for Internet Security (CIS) Benchmarks?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "They provide a legal framework for prosecuting software piracy.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "They provide globally recognized, consensus-driven technical guidelines detailing exactly how to harden and secure configurations for OS, Cloud, and Kubernetes environments.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "They dictate the color schemes and user interface laws for federal websites.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "They replace traditional Anti-Virus software.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why is it generally bad practice to deploy a production application directly on the default, out-of-the-box configuration of an Operating System or Cloud environment?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Default configurations are notoriously slow and laggy.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Because vendors (like AWS or canonical) explicitly forbid deploying production apps on default settings via their EULA.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Default configurations are almost universally optimized to prioritize user convenience and ease-of-use rather than stringent security.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "It is completely fine and recommended to use default configurations for production.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which of the following describes the difference between Level 1 and Level 2 CIS recommendations?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Level 1 is exclusively for hardware firewalls, Level 2 is for software firewalls.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Level 1 provides practical security enhancements that shouldn't disrupt applications; Level 2 is extremely aggressive security for sensitive environments that can and will break legacy applications.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Level 1 applies only to Windows, Level 2 exclusively applies to Linux distributions.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "There is no functional difference; the levels simply categorize them alphabetically.",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Which of the following would NOT typically be found as a requirement inside the CIS AWS Foundations Benchmark?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Ensuring IAM password policies require specific characters and length.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Ensuring no Security Groups allow SSH access from 0.0.0.0/0 (the whole internet).",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Ensuring that the company mandates a specific dress code for remote workers logging into the AWS console.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Ensuring CloudTrail is actively encrypting logs globally across all regions.",
+                    "is   Correct": false
+                }
+            ]
+        },
+        {
+            "question": "In a modern enterprise, how do DevOps teams typically ensure their enormous Kubernetes clusters comply with the massive list of CIS rules continuously?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "By manually reviewing configuration files line-by-line during the monthly meeting.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By asking the developers nicely to remember the rules before committing code.",
+                    "isCorrect": false
+                },
+                {
+                    "text": "By executing automated auditing tools like Kube-bench within CI/CD pipelines to instantly generate pass/fail reports against the official benchmarks.",
+                    "isCorrect": true
+                },
+                {
+                    "text": "By completely disabling external networking so the cluster cannot be scanned.",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}

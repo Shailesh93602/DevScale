@@ -1,0 +1,71 @@
+<h1>Terraform Testing & Security Scanning</h1>
+<p>Infrastructure-as-code without automated testing is infrastructure-as-guesswork. A Terraform configuration that deploys an EC2 instance with port 22 open to the world (<code>0.0.0.0/0</code>), no encryption at rest, or a public S3 bucket will pass <code>terraform plan</code> and apply just fine — but you've just created a critical security vulnerability. Security scanning and automated tests catch these problems before they reach production.</p>
+
+<h2>Static Validation: terraform validate & tflint</h2>
+<pre><code class="language-bash"># Built-in: checks HCL syntax and internal references are valid
+terraform validate
+
+# tflint: checks for provider-specific mistakes and style issues
+# Install: brew install tflint (macOS) or download from GitHub
+tflint --recursive
+
+# tflint will catch errors like:
+# - Using an invalid EC2 instance type (e.g., "t3.nanos" doesn't exist)
+# - Missing required variables in module calls
+# - Deprecated resource attributes
+</code></pre>
+
+<h2>Security Scanning: Checkov & tfsec</h2>
+<pre><code class="language-bash"># Checkov: scans Terraform for 1000+ security and compliance misconfigurations
+pip install checkov
+checkov -d ./infrastructure/ --framework terraform
+
+# Example findings Checkov will report:
+# FAILED: CKV_AWS_18 - S3 bucket does not have access logging enabled
+# FAILED: CKV_AWS_19 - S3 bucket does not have server-side encryption enabled  
+# FAILED: CKV_AWS_23 - Security Group allows ingress from 0.0.0.0/0 on port 22
+
+# tfsec: lightweight, fast alternative to Checkov
+brew install tfsec
+tfsec ./infrastructure/
+</code></pre>
+
+<h2>Integration Testing with Terratest</h2>
+<p><strong>Terratest</strong> is a Go library that writes real integration tests for infrastructure code — it actually deploys resources to AWS, runs assertions, and then destroys them:</p>
+<pre><code class="language-go">// vpc_test.go — Integration test for a VPC Terraform module
+func TestVPCModule(t *testing.T) {
+    t.Parallel()
+
+    terraformOptions := &terraform.Options{
+        TerraformDir: "../modules/vpc",
+        Vars: map[string]interface{}{
+            "vpc_cidr":     "10.0.0.0/16",
+            "environment":  "test",
+        },
+    }
+
+    // Deploy the VPC, and destroy it at the end of the test
+    defer terraform.Destroy(t, terraformOptions)
+    terraform.InitAndApply(t, terraformOptions)
+
+    // Get outputs and make assertions
+    vpcId := terraform.Output(t, terraformOptions, "vpc_id")
+    assert.NotEmpty(t, vpcId)
+
+    // Verify the VPC actually has the correct CIDR
+    client := ec2.New(session.Must(session.NewSession()))
+    vpc, _ := client.DescribeVpcs(&ec2.DescribeVpcsInput{VpcIds: []*string{&vpcId}})
+    assert.Equal(t, "10.0.0.0/16", *vpc.Vpcs[0].CidrBlock)
+}
+</code></pre>
+
+<h2>Adding to CI Pipeline</h2>
+<pre><code class="language-yaml"># In your GitHub Actions Terraform workflow — run before plan/apply
+- name: Run tflint
+  run: tflint --recursive
+
+- name: Run Checkov
+  run: checkov -d . --framework terraform --output cli --quiet
+  continue-on-error: false  # Block the pipeline if security issues found
+</code></pre>
+<p>This transforms security scanning from a quarterly manual audit into an automated gate on every pull request — security engineers get immediate feedback before any insecure infrastructure is ever deployed.</p>

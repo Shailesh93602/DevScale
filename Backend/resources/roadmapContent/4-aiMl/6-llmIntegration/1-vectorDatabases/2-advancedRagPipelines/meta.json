@@ -1,0 +1,4 @@
+{
+    "name": "Advanced RAG Pipelines & Retrieval Optimization",
+    "description": "Building production-grade retrieval-augmented generation systems beyond naive RAG. Implementing hybrid search (dense + sparse), reranking with cross-encoders, chunking strategies, hierarchical indexing, query expansion, and multi-hop reasoning. Evaluating RAG quality with RAGAS framework and debugging retrieval failures systematically."
+}

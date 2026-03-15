@@ -1,0 +1,4 @@
+{
+    "name": "Bundle Optimization & Image Performance",
+    "description": "Reducing app startup time and memory footprint. Using Metro bundler tree shaking, lazy loading screens with React.lazy/Suspense in navigation, optimizing images with expo-image (WebP, blurhash placeholders, progressive loading), reducing JavaScript bundle size by auditing dependencies, using react-native-bundle-visualizer to find large modules, and profiling startup time with Flipper."
+}

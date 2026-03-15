@@ -1,0 +1,11 @@
+{
+    "id": "1-optimization",
+    "title": "App Optimization",
+    "description": "Techniques for improving the speed and responsiveness of React Native apps.",
+    "order": 1,
+    "topics": [
+        "1-memoization",
+        "2-flatListOptimization",
+        "3-hermes"
+    ]
+}

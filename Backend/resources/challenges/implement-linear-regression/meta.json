@@ -1,0 +1,19 @@
+{
+  "title": "Implement Linear Regression from Scratch",
+  "slug": "implement-linear-regression",
+  "difficulty": "Medium",
+  "category": "machine_learning",
+  "points": 100,
+  "tags": ["regression", "gradient-descent", "supervised-learning"],
+  "company_tags": ["Google", "Amazon", "Meta"],
+  "topic_tags": ["Machine Learning", "Statistics", "Optimization"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Training data as arrays of feature vectors X and target values y, plus test feature vectors",
+  "output_format": "Predicted values for test data and learned weights/bias",
+  "example_input": "{\"X_train\": [[1], [2], [3], [4]], \"y_train\": [2, 4, 6, 8], \"X_test\": [[5], [6]]}",
+  "example_output": "{\"predictions\": [10, 12], \"weights\": [2], \"bias\": 0}",
+  "constraints": "1 <= n_samples <= 10000, 1 <= n_features <= 100, learning_rate > 0",
+  "function_signature": "function linearRegression(X_train: number[][], y_train: number[], X_test: number[][], learningRate?: number, epochs?: number): { predictions: number[]; weights: number[]; bias: number }",
+  "status": "ACTIVE"
+}

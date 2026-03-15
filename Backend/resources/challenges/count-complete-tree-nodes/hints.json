@@ -1,0 +1,1 @@
+["A complete binary tree has a special property: compute height by going leftmost and rightmost. If they're equal, the subtree is a perfect binary tree with 2^h - 1 nodes.", "If left height equals right height, that whole subtree is full, count it as 2^h - 1 nodes and recurse only on the other side.", "This gives O(log^2 N) time complexity instead of O(N)."]

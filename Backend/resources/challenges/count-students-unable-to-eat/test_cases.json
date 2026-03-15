@@ -1,0 +1,32 @@
+[
+  {
+    "input": "{\"Students\": [{\"student_id\": 1, \"preference\": 1}, {\"student_id\": 2, \"preference\": 1}, {\"student_id\": 3, \"preference\": 0}, {\"student_id\": 4, \"preference\": 0}], \"Sandwiches\": [{\"sandwich_id\": 1, \"type\": 0, \"position\": 1}, {\"sandwich_id\": 2, \"type\": 1, \"position\": 2}, {\"sandwich_id\": 3, \"type\": 0, \"position\": 3}, {\"sandwich_id\": 4, \"type\": 1, \"position\": 4}]}",
+    "output": "[{\"count\": 0}]",
+    "explanation": "Equal number of each preference and each type, so all can eat.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Students\": [{\"student_id\": 1, \"preference\": 1}, {\"student_id\": 2, \"preference\": 1}, {\"student_id\": 3, \"preference\": 1}], \"Sandwiches\": [{\"sandwich_id\": 1, \"type\": 0, \"position\": 1}, {\"sandwich_id\": 2, \"type\": 1, \"position\": 2}, {\"sandwich_id\": 3, \"type\": 1, \"position\": 3}]}",
+    "output": "[{\"count\": 1}]",
+    "explanation": "3 students want type 1 but only 2 type-1 sandwiches exist. 1 student can't eat.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Students\": [{\"student_id\": 1, \"preference\": 0}, {\"student_id\": 2, \"preference\": 0}], \"Sandwiches\": [{\"sandwich_id\": 1, \"type\": 0, \"position\": 1}, {\"sandwich_id\": 2, \"type\": 0, \"position\": 2}]}",
+    "output": "[{\"count\": 0}]",
+    "explanation": "All students prefer type 0 and all sandwiches are type 0.",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"Students\": [{\"student_id\": 1, \"preference\": 0}, {\"student_id\": 2, \"preference\": 0}, {\"student_id\": 3, \"preference\": 0}], \"Sandwiches\": [{\"sandwich_id\": 1, \"type\": 1, \"position\": 1}, {\"sandwich_id\": 2, \"type\": 1, \"position\": 2}, {\"sandwich_id\": 3, \"type\": 1, \"position\": 3}]}",
+    "output": "[{\"count\": 3}]",
+    "explanation": "All students want type 0 but all sandwiches are type 1. Nobody eats.",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"Students\": [{\"student_id\": 1, \"preference\": 1}], \"Sandwiches\": [{\"sandwich_id\": 1, \"type\": 1, \"position\": 1}]}",
+    "output": "[{\"count\": 0}]",
+    "explanation": "Single student gets their preferred sandwich.",
+    "is_hidden": true
+  }
+]

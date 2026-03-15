@@ -1,0 +1,7 @@
+[
+  {"input":"{\"commands\":[\"KthLargest\",\"add\",\"add\",\"add\",\"add\",\"add\"], \"args\":[[3,[4,5,8,2]],[3],[5],[10],[9],[4]]}","output":"[null,4,5,5,8,8]","explanation":"Standard stream","is_hidden":false},
+  {"input":"{\"commands\":[\"KthLargest\",\"add\",\"add\",\"add\",\"add\"], \"args\":[[1,[]],[-3],[-2],[-4],[0]]}","output":"[null,-3,-2,-2,0]","explanation":"K=1, empty initial array","is_hidden":false},
+  {"input":"{\"commands\":[\"KthLargest\",\"add\",\"add\"], \"args\":[[2,[0]],[-1],[1]]}","output":"[null,-1,0]","explanation":"Negative numbers","is_hidden":true},
+  {"input":"{\"commands\":[\"KthLargest\",\"add\",\"add\",\"add\"], \"args\":[[1,[2,3]],[1],[5],[0]]}","output":"[null,3,5,5]","explanation":"K=1 with multiple args","is_hidden":true},
+  {"input":"{\"commands\":[\"KthLargest\",\"add\"], \"args\":[[4,[7,7,7,7,8,3]],[2]]}","output":"[null,7]","explanation":"Duplicate values","is_hidden":true}
+]

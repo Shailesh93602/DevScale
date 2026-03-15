@@ -1,0 +1,137 @@
+<h1>Next.js App Router & Server Components</h1>
+<p>Next.js App Router (introduced in v13) is a paradigm shift in React development. It brings <strong>React Server Components (RSC)</strong> to the mainstream, enabling components to fetch data and render on the server without shipping JavaScript to the client.</p>
+
+<h2>App Router File Conventions</h2>
+<pre><code>app/
+  ├── layout.tsx        # Root layout (wraps all pages)
+  ├── page.tsx          # Home route: /
+  ├── loading.tsx       # Automatic loading UI for suspense
+  ├── error.tsx         # Error boundary for this route
+  ├── not-found.tsx     # 404 handler
+  ├── dashboard/
+  │   ├── layout.tsx    # Dashboard nested layout
+  │   ├── page.tsx      # /dashboard route
+  │   └── settings/
+  │       └── page.tsx  # /dashboard/settings route
+  └── api/
+      └── users/
+          └── route.ts  # API route: GET/POST /api/users</code></pre>
+
+<h2>Server Components vs Client Components</h2>
+<pre><code>// Server Component (default) — runs on server, no JS sent to client
+// Can: fetch data directly, access DB, read env vars
+// Cannot: use useState, useEffect, event handlers, browser APIs
+
+// app/products/page.tsx
+async function ProductsPage() {
+  // Direct DB/API call — no useEffect, no loading state
+  const products = await fetch('https://api.example.com/products', {
+    next: { revalidate: 3600 } // cache for 1 hour
+  }).then(r => r.json());
+
+  return (
+    &lt;main&gt;
+      {products.map(p =&gt; (
+        &lt;ProductCard key={p.id} product={p} /&gt;
+      ))}
+    &lt;/main&gt;
+  );
+}
+
+// Client Component — runs in browser, can use hooks
+// 'use client' directive at the top of the file
+
+'use client';
+
+import { useState } from 'react';
+
+function AddToCartButton({ productId }) {
+  const [added, setAdded] = useState(false);
+
+  return (
+    &lt;button onClick={() =&gt; setAdded(true)}&gt;
+      {added ? '✓ Added' : 'Add to Cart'}
+    &lt;/button&gt;
+  );
+}</code></pre>
+
+<h2>Server Actions</h2>
+<p>Server Actions allow you to run server-side code directly from form submissions or event handlers — no API route needed:</p>
+<pre><code>'use server';
+
+// actions/products.ts
+export async function createProduct(formData: FormData) {
+  const name = formData.get('name') as string;
+  const price = Number(formData.get('price'));
+
+  // Direct DB call — runs on server
+  await db.product.create({ data: { name, price } });
+  revalidatePath('/products'); // invalidate Next.js cache
+}
+
+// In a Server Component (no 'use client' needed!)
+import { createProduct } from '@/actions/products';
+
+function NewProductForm() {
+  return (
+    &lt;form action={createProduct}&gt;
+      &lt;input name="name" placeholder="Product name" /&gt;
+      &lt;input name="price" type="number" /&gt;
+      &lt;button type="submit"&gt;Create Product&lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+
+<h2>Data Fetching Strategies</h2>
+<pre><code>// Static (build time) — fastest, no revalidation
+const data = await fetch(url, { cache: 'force-cache' });
+
+// Incremental Static Regeneration — revalidate every N seconds
+const data = await fetch(url, { next: { revalidate: 60 } });
+
+// Dynamic (every request) — always fresh
+const data = await fetch(url, { cache: 'no-store' });
+
+// Tag-based revalidation
+const data = await fetch(url, { next: { tags: ['products'] } });
+// Then revalidate programmatically:
+revalidateTag('products');</code></pre>
+
+<h2>Parallel Data Fetching with Suspense Streaming</h2>
+<pre><code>// app/dashboard/page.tsx
+import { Suspense } from 'react';
+
+async function Dashboard() {
+  return (
+    &lt;div&gt;
+      &lt;Suspense fallback={&lt;RevenueCardSkeleton /&gt;}&gt;
+        &lt;RevenueCard /&gt;  {/* fetches its own data */}
+      &lt;/Suspense&gt;
+      &lt;Suspense fallback={&lt;LatestInvoicesSkeleton /&gt;}&gt;
+        &lt;LatestInvoices /&gt; {/* fetches independently */}
+      &lt;/Suspense&gt;
+    &lt;/div&gt;
+  );
+}
+// Result: both sections load in parallel and stream in as they resolve</code></pre>
+
+<h2>Dynamic Routes & generateStaticParams</h2>
+<pre><code>// app/blog/[slug]/page.tsx
+export async function generateStaticParams() {
+  const posts = await fetch('/api/posts').then(r =&gt; r.json());
+  return posts.map(post =&gt; ({ slug: post.slug }));
+}
+
+async function BlogPost({ params }: { params: { slug: string } }) {
+  const post = await fetch(`/api/posts/${params.slug}`).then(r =&gt; r.json());
+  return &lt;article&gt;&lt;h1&gt;{post.title}&lt;/h1&gt;...&lt;/article&gt;;
+}</code></pre>
+
+<h2>Best Practices</h2>
+<ul>
+  <li>Default to Server Components — only add <code>'use client'</code> when you need interactivity or browser APIs.</li>
+  <li>Push Client Components to the leaves of the component tree.</li>
+  <li>Use parallel routes with Suspense to avoid waterfall data fetching.</li>
+  <li>Use Server Actions for form mutations instead of separate API routes.</li>
+  <li>Use <code>generateStaticParams</code> to pre-render dynamic routes at build time.</li>
+</ul>

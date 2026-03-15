@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "question": "What is the primary purpose of the 'Helmet' middleware in Express?",
+            "options": [
+                "It encrypts the entire Node.js server to prevent malware infections",
+                "It automatically patches vulnerabilities in NPM dependencies",
+                "It obscures the 'X-Powered-By' header and sets 15+ modern security HTTP headers (like Content Security Policy and Strict-Transport-Security) to defend against common attack vectors",
+                "It acts as a physical firewall layer that filters incoming traffic before it hits the Node.js instances"
+            ],
+            "answer": "It obscures the 'X-Powered-By' header and sets 15+ modern security HTTP headers (like Content Security Policy and Strict-Transport-Security) to defend against common attack vectors",
+            "explanation": "Express provides zero security headers by default and openly advertises 'X-Powered-By: Express'. Helmet instantly fixes this by applying well-researched, hardened HTTP response headers the moment it is initialized as middleware."
+        },
+        {
+            "question": "Why must you strictly configure CORS origins instead of using the default `app.use(cors())`?",
+            "options": [
+                "Default CORS enables a 'wildcard' origin (*), which allows any malicious website on the internet to make authenticated API requests to your backend using a victim's browser session",
+                "Because default CORS blocks all traffic, including your own frontend React app",
+                "Default CORS slows down the server by adding massive HTTP response headers natively",
+                "It forces the browser to bypass HTTPS requirements and downgrade to HTTP automatically"
+            ],
+            "answer": "Default CORS enables a 'wildcard' origin (*), which allows any malicious website on the internet to make authenticated API requests to your backend using a victim's browser session",
+            "explanation": "If your API is api.com and valid frontend is admin.com, configuring CORS strictly ensures browsers will block evil.com from making Fetch/XHR requests to api.com on behalf of an unwitting logged-in user."
+        },
+        {
+            "question": "How do you defend your /login route from brute-force password guessing attacks?",
+            "options": [
+                "By enforcing 20-character passwords",
+                "By encrypting the database with an AES-256 key automatically",
+                "By utilizing 'express-rate-limit' middleware to block an IP address temporarily if it attempts to log in too many times within a specific time window (e.g., max 5 attempts per hour)",
+                "By using JWTs exclusively"
+            ],
+            "answer": "By utilizing 'express-rate-limit' middleware to block an IP address temporarily if it attempts to log in too many times within a specific time window (e.g., max 5 attempts per hour)",
+            "explanation": "Rate limiting is the only defense against automated credential stuffing. If an attacker's bot script tries 10,000 passwords a second, rate limiters detect the volume from that IP and reject all further requests with a 429 Too Many Requests status."
+        },
+        {
+            "question": "How does a NoSQL Injection attack typically work against a MongoDB/Mongoose database?",
+            "options": [
+                "An attacker injects standard SQL syntax like 'DROP TABLE users' into a text field, which Mongoose blindly executes globally",
+                "The attacker exploits server hardware vulnerabilities to read random memory addresses",
+                "The attacker structures their JSON payload to include MongoDB query operators (like { \\\"$gt\\\": \\\"\\\" }) instead of a string, tricking the query into evaluating as 'true' and bypassing authentication checks",
+                "The attacker uploads a malformed image file containing MongoDB binary blobs"
+            ],
+            "answer": "The attacker structures their JSON payload to include MongoDB query operators (like { \\\"$gt\\\": \\\"\\\" }) instead of a string, tricking the query into evaluating as 'true' and bypassing authentication checks",
+            "explanation": "If a developer writes User.findOne(req.body), and the hacker sends { email: { $gt: '' }, password: { $gt: '' } }, the database interprets it as 'Find a user where email is greater than empty string', which always returns the first document (often an admin user) regardless of the password."
+        },
+        {
+            "question": "What is the industry-standard way to manage sensitive production configuration data like Database URLs and JWT Secrets in a Node.js project?",
+            "options": [
+                "Hardcode them globally in a config.js file and use Git encryption",
+                "Store them in the server's package.json dependencies object natively",
+                "Store them in a `.env` file loaded via the 'dotenv' module, and ensuring the `.env` file is heavily .gitignored so secrets are never pushed to a remote repository",
+                "Write them into a JWT token payload to retrieve on boot"
+            ],
+            "answer": "Store them in a `.env` file loaded via the 'dotenv' module, and ensuring the `.env` file is heavily .gitignored so secrets are never pushed to a remote repository",
+            "explanation": "Secrets must exist uniquely on the production server (in environment variables) and never in source control. Storing them in code guarantees they will eventually be leaked or scraped by automated GitHub bots."
+        }
+    ]
+}

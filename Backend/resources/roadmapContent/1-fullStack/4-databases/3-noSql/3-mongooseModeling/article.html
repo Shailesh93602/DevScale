@@ -1,0 +1,92 @@
+<h1>Mongoose Modeling & Schema</h1>
+<p>MongoDB is inherently "schema-less." You can insert a document into a collection with <code>{"name": "Alice"}</code> and the very next document as <code>{"age": 42, "color": "blue"}</code>. While this provides incredible flexibility during early development, it is a nightmare for maintenance and data integrity in large applications.</p>
+<p>To enforce structure, the Node.js ecosystem relies on <strong>Mongoose</strong>, an Object Data Modeling (ODM) library.</p>
+
+<h2>Defining a Schema & Model</h2>
+<p>A Schema acts as the blueprint. It strictly defines the allowed fields, their data types, and standard validation rules (like required fields or minimum values). Once defined, the schema is compiled into a <strong>Model</strong>, which behaves as the interface to execute queries for that specific collection.</p>
+
+<pre><code>const mongoose = require('mongoose');
+
+// 1. Defining the Blueprint (Schema)
+const userSchema = new mongoose.Schema({
+  username: { 
+    type: String, 
+    required: true, 
+    unique: true, // Automatically builds a MongoDB Index to prevent duplicates 
+    trim: true,   // Strips whitespace automatically
+    minlength: 3
+  },
+  email: { 
+    type: String, 
+    required: true,
+    match: /.+\@.+\..+/ // RegEx validation
+  },
+  role: {
+    type: String,
+    enum: ['USER', 'ADMIN'], // Value MUST be one of these strictly
+    default: 'USER'
+  },
+  // Sub-documents: Nesting an array of objects
+  addresses: [{
+    street: String,
+    city: String
+  }]
+}, { 
+  timestamps: true // Automatically generates 'createdAt' and 'updatedAt'
+});
+
+// 2. Compiling the Model
+// 'User' will automatically map to the 'users' collection in the database.
+const User = mongoose.model('User', userSchema);
+module.exports = User;</code></pre>
+
+<h2>References & Population (JOINs)</h2>
+<p>Because MongoDB is not a relational database, there is no generic SQL <code>JOIN</code> command. To create relationships between collections, you store the <code>ObjectId</code> of the target document.</p>
+
+<pre><code>const postSchema = new mongoose.Schema({
+  title: String,
+  body: String,
+  // This field strictly references an ID from the 'User' collection
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  }
+});
+const Post = mongoose.model('Post', postSchema);</code></pre>
+
+<p>To retrieve a post along with the author's actual data (not just the ID string), Mongoose provides the <code>populate()</code> method. Under the hood, Mongoose queries the Post, extracts the ID, instantly executes a second query to the User collection, and merges the data in Node.js.</p>
+
+<pre><code>// ❌ Returns: { title: "Hello", author: "64xyz789c..." }
+const post = await Post.findById(postId);
+
+// ✅ Returns: { title: "Hello", author: { name: "Alice", email: "..." } }
+const populatedPost = await Post.findById(postId).populate('author');
+
+// Optionally, only populate specific fields for performance!
+const optimized = await Post.findById(postId)
+                            .populate('author', 'username email -_id');</code></pre>
+
+<h2>Middleware (Pre and Post Hooks)</h2>
+<p>Mongoose allows you to define functions that run automatically before (pre) or after (post) specific database actions. This is incredibly useful for executing automated logic like hashing passwords before saving a user!</p>
+
+<pre><code>const bcrypt = require('bcryptjs');
+
+// Run this function BEFORE executing the 'save' command
+userSchema.pre('save', async function(next) {
+  // 'this' refers to the exact document being saved
+  
+  // Only hash the password if it has been modified (or is new)
+  if (!this.isModified('password')) return next();
+
+  // Hash the plaintext password into a secure string
+  this.password = await bcrypt.hash(this.password, 10);
+  
+  next(); // Tell Mongoose to proceed with saving to the database
+});</code></pre>
+
+<h2>Statics vs Methods</h2>
+<ul>
+  <li><strong>Instance Methods:</strong> Functions attached to an exact row/document (e.g., <code>user.comparePassword('123')</code>). They are defined via `userSchema.methods`.</li>
+  <li><strong>Static Methods:</strong> Functions attached to the entire Model, useful for custom finders (e.g., <code>User.findByEmail('test@test.com')</code>). They are defined via `userSchema.statics`.</li>
+</ul>

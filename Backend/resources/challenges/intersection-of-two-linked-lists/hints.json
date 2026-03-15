@@ -1,0 +1,6 @@
+[
+  "A simple approach: put all nodes of listA into a HashSet, then traverse listB — the first node found in the HashSet is the intersection.",
+  "For O(1) space: imagine instead of two separate lists, you form a cycle by connecting the tail of listA to the head of listB, and the tail of listB to the head of listA.",
+  "If two pointers (one from headA, one from headB) both traverse their own list then switch to the other when they hit null, they will meet at the intersection point (or both land on null if no intersection).",
+  "The key insight: both pointers travel (m + n) total nodes. If they intersect, they will meet at the intersection. If not, they both hit null simultaneously."
+]

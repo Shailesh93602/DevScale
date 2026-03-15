@@ -1,0 +1,4 @@
+{
+    "name": "Mobile State with Zustand & AsyncStorage",
+    "description": "Lightweight state management and persisted storage for mobile applications."
+}

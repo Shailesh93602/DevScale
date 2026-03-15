@@ -1,0 +1,62 @@
+[
+  {
+    "input": "POST /auth/register { \"email\": \"alice@example.com\", \"password\": \"Str0ngPass\", \"name\": \"Alice\" }",
+    "output": "{ \"user\": { \"id\": \"...\", \"email\": \"alice@example.com\", \"name\": \"Alice\" }, \"accessToken\": \"...\", \"refreshToken\": \"...\", \"expiresIn\": 3600 }",
+    "explanation": "Successful registration returns user object (without password) and a token pair. Status: 201.",
+    "is_hidden": false
+  },
+  {
+    "input": "POST /auth/register { \"email\": \"alice@example.com\", \"password\": \"Str0ngPass\", \"name\": \"Alice\" }",
+    "output": "{ \"error\": \"Email already registered\", \"statusCode\": 409 }",
+    "explanation": "Duplicate registration returns 409 Conflict.",
+    "is_hidden": false
+  },
+  {
+    "input": "POST /auth/register { \"email\": \"bob@example.com\", \"password\": \"weak\" }",
+    "output": "{ \"error\": \"Password must be at least 8 characters with uppercase, lowercase, and a number\", \"statusCode\": 400 }",
+    "explanation": "Weak password is rejected with a descriptive error.",
+    "is_hidden": false
+  },
+  {
+    "input": "POST /auth/login { \"email\": \"alice@example.com\", \"password\": \"Str0ngPass\" }",
+    "output": "{ \"accessToken\": \"eyJ...\", \"refreshToken\": \"eyJ...\", \"expiresIn\": 3600 }",
+    "explanation": "Successful login returns access and refresh tokens.",
+    "is_hidden": false
+  },
+  {
+    "input": "POST /auth/login { \"email\": \"alice@example.com\", \"password\": \"wrongpassword\" }",
+    "output": "{ \"error\": \"Invalid email or password\", \"statusCode\": 401 }",
+    "explanation": "Wrong password returns generic error to prevent user enumeration.",
+    "is_hidden": false
+  },
+  {
+    "input": "GET /api/profile (with valid Bearer token)",
+    "output": "{ \"id\": \"...\", \"email\": \"alice@example.com\", \"name\": \"Alice\" }",
+    "explanation": "Protected route returns user data when valid access token is provided.",
+    "is_hidden": false
+  },
+  {
+    "input": "GET /api/profile (no Authorization header)",
+    "output": "{ \"error\": \"No token provided\", \"statusCode\": 401 }",
+    "explanation": "Missing token returns 401 Unauthorized.",
+    "is_hidden": true
+  },
+  {
+    "input": "GET /api/profile (with expired token)",
+    "output": "{ \"error\": \"Token expired\", \"statusCode\": 401 }",
+    "explanation": "Expired access token returns 401 with specific error message.",
+    "is_hidden": true
+  },
+  {
+    "input": "POST /auth/refresh { \"refreshToken\": \"valid-refresh-token\" }",
+    "output": "{ \"accessToken\": \"new-eyJ...\", \"refreshToken\": \"new-eyJ...\", \"expiresIn\": 3600 }",
+    "explanation": "Valid refresh token returns a new token pair. The old refresh token is invalidated (rotation).",
+    "is_hidden": true
+  },
+  {
+    "input": "POST /auth/refresh { \"refreshToken\": \"already-used-token\" }",
+    "output": "{ \"error\": \"Refresh token has been revoked\", \"statusCode\": 401 }",
+    "explanation": "Reusing a rotated refresh token is rejected, preventing token replay attacks.",
+    "is_hidden": true
+  }
+]

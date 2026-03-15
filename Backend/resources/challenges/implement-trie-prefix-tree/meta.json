@@ -1,0 +1,20 @@
+{
+  "title": "Implement Trie (Prefix Tree)",
+  "slug": "implement-trie-prefix-tree",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["hash-table","string","design","trie"],
+  "company_tags": ["Amazon","Microsoft","Google","Twitter"],
+  "topic_tags": ["tries","design"],
+  "supported_languages": ["typescript","javascript","python","java","cpp","go","rust","csharp"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "A series of function calls to `insert`, `search`, and `startsWith`.",
+  "output_format": "Boolean values indicating if the word or prefix exists in the Trie.",
+  "example_input": "[\"Trie\", \"insert\", \"search\", \"search\", \"startsWith\", \"insert\", \"search\"]\n[[], [\"apple\"], [\"apple\"], [\"app\"], [\"app\"], [\"app\"], [\"app\"]]",
+  "example_output": "[null, null, true, false, true, null, true]",
+  "constraints": "- `1 <= word.length, prefix.length <= 2000`\n- `word` and `prefix` consist only of lowercase English letters.\n- At most `3 * 10^4` calls in total will be made to `insert`, `search`, and `startsWith`.",
+  "function_signature": "class Trie { constructor() {} insert(word: string): void {} search(word: string): boolean {} startsWith(prefix: string): boolean {} }",
+  "status": "ACTIVE"
+}

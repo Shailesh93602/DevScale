@@ -1,0 +1,6 @@
+[
+  "The maximum depth is essentially height of the tree. If you know the height of the left subtree and the right subtree, you can easily find the height of the node.",
+  "You can use recursion. A node's maximum depth is 1 + the maximum of its left and right children's depth.",
+  "Consider what the base case of your recursion is. A null node has a depth of 0.",
+  "Alternatively, you could do a level-order traversal using a queue (BFS). The depth is simply the number of levels you traverse."
+]

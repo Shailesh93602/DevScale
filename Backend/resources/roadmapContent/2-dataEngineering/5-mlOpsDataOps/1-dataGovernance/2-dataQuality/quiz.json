@@ -1,0 +1,118 @@
+{
+    "title": "Data Quality with Great Expectations Quiz",
+    "description": "Test your knowledge of data validation, expectation suites, checkpoints, and pipeline integration.",
+    "passingScore": 80,
+    "timeLimit": 10,
+    "questions": [
+        {
+            "question": "In Great Expectations, what is the relationship between an Expectation Suite and a Checkpoint?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "They are synonyms — both describe a set of validation rules",
+                    "isCorrect": false
+                },
+                {
+                    "text": "An Expectation Suite contains the validation rules; a Checkpoint configures how and when to run those rules against a batch of data and what to do with the results",
+                    "isCorrect": true
+                },
+                {
+                    "text": "A Checkpoint contains expectations; a Suite runs them on a schedule",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Expectation Suites are for pandas; Checkpoints are for Spark",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "Why should data quality validations run BEFORE transformations in a pipeline, not after?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Transformations cannot run if validation hasn't been registered first",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Running complex transformations on bad data wastes compute resources and pollutes downstream tables — it's far cheaper to fail fast at the source",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Post-transform validation is always inaccurate because transformations change the data schema",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Pre-transform validation catches performance bottlenecks before they reach the transformation step",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "What does `expect_table_row_count_to_be_between(min_value=1000)` protect against?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Tables growing too large and consuming excessive storage",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Empty or near-empty dataset bugs where a pipeline bug caused no records to be ingested — common with broken source connections or API failures",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Duplicate rows that cause double-counting in downstream reports",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Slow query performance on tables with fewer than 1000 rows",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "How should Expectation Suites be stored and version-controlled?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "In the Great Expectations Data Docs web UI only",
+                    "isCorrect": false
+                },
+                {
+                    "text": "In git alongside the pipeline code — data quality expectations are as fundamental as unit tests and should be reviewed and versioned like code",
+                    "isCorrect": true
+                },
+                {
+                    "text": "In a database table separate from the codebase for easier runtime access",
+                    "isCorrect": false
+                },
+                {
+                    "text": "In S3 as JSON files managed by a dedicated team outside engineering",
+                    "isCorrect": false
+                }
+            ]
+        },
+        {
+            "question": "In the Airflow integration, what does `fail_task_on_validation_failure=True` in the GreatExpectationsOperator do?",
+            "points": 10,
+            "options": [
+                {
+                    "text": "Retries the Airflow task automatically when validation fails",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Sends an email to the data owner but allows the DAG to continue",
+                    "isCorrect": false
+                },
+                {
+                    "text": "Marks the Airflow task as FAILED when any expectation fails, stopping downstream tasks from running on bad data",
+                    "isCorrect": true
+                },
+                {
+                    "text": "Logs a warning and continues but skips the transformation step",
+                    "isCorrect": false
+                }
+            ]
+        }
+    ]
+}
