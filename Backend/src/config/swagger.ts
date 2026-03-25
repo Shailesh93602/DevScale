@@ -5,16 +5,16 @@ const options: swaggerJsdoc.Options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'EduScale API Documentation',
+      title: 'MR Engineers API Documentation',
       version,
-      description: 'API documentation for EduScale platform',
+      description: 'API documentation for MR Engineers platform',
       license: {
         name: 'MIT',
         url: 'https://opensource.org/licenses/MIT',
       },
       contact: {
         name: 'API Support',
-        email: 'shailesh93602@gmail.com',
+        email: 'support@EduScales.com',
       },
     },
     servers: [

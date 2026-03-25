@@ -10,29 +10,26 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 const defaultUsers = [
   {
-    email: 'admin@eduscale.io',
+    email: 'admin@EduScales.com',
     username: 'admin',
     password: 'Admin@123',
-    first_name: 'Admin',
-    last_name: 'User',
+    full_name: 'Admin User',
     role: 'ADMIN',
     is_verified: true,
   },
   {
-    email: 'moderator@eduscale.io',
+    email: 'moderator@EduScales.com',
     username: 'moderator',
     password: 'Mod@123',
-    first_name: 'Moderator',
-    last_name: 'User',
+    full_name: 'Moderator User',
     role: 'MODERATOR',
     is_verified: true,
   },
   {
-    email: 'demo@eduscale.io',
-    username: 'demo',
-    password: 'Demo@123',
-    first_name: 'Demo',
-    last_name: 'User',
+    email: 'shailesh@EduScales.com',
+    username: 'shailesh',
+    password: 'Shailesh@123',
+    full_name: 'Shailesh Chaudhari',
     role: 'ADMIN',
     is_verified: true,
   },
@@ -45,8 +42,7 @@ async function createUserInSupabase(userData: (typeof defaultUsers)[0]) {
       password: userData.password,
       email_confirm: true,
       user_metadata: {
-        first_name: userData.first_name,
-        last_name: userData.last_name,
+        full_name: userData.full_name,
         username: userData.username,
       },
     });
@@ -84,8 +80,7 @@ async function createUserInDatabase(
       update: {
         supabase_id: supabaseId,
         username: userData.username,
-        first_name: userData.first_name,
-        last_name: userData.last_name,
+        full_name: userData.full_name,
         is_verified: userData.is_verified,
         role_id: role.id,
       },
@@ -93,8 +88,7 @@ async function createUserInDatabase(
         email: userData.email,
         supabase_id: supabaseId,
         username: userData.username,
-        first_name: userData.first_name,
-        last_name: userData.last_name,
+        full_name: userData.full_name,
         is_verified: userData.is_verified,
         role_id: role.id,
       },
@@ -111,11 +105,12 @@ async function createUserInDatabase(
 async function seedUsers() {
   try {
     for (const userData of defaultUsers) {
-      // Check if user already exists in Supabase Auth
-      const { data: existingUsers } = await supabase.auth.admin.listUsers();
-      const existingUser = existingUsers?.users?.find(
-        (u) => u.email === userData.email
-      );
+      // Check if user already exists in Supabase
+      const { data: existingUser } = await supabase
+        .from('users')
+        .select('id')
+        .eq('email', userData.email)
+        .single();
 
       let supabaseUser;
 

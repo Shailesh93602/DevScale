@@ -355,7 +355,7 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
               className={cn(
                 'flex h-8 w-8 items-center justify-center rounded-full transition-colors duration-300',
                 activeStep >= step
-                  ? 'bg-purple-700 text-white'
+                  ? 'bg-primary text-primary-foreground'
                   : 'bg-muted text-muted-foreground',
               )}
               role="button"

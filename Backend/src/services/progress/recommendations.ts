@@ -2,7 +2,7 @@ import { Status } from '@prisma/client';
 import logger from '../../utils/logger';
 import { getUserProgress } from './analytics';
 
-import prisma from '../../lib/prisma';
+import prisma from '@/lib/prisma';
 
 // Add this interface for the completed topics
 interface CompletedTopic {

@@ -11,14 +11,12 @@ export const RoadmapStep = ({
   description,
   icon: Icon,
   index,
-  roadmapId,
 }: {
   id: string;
   name: string;
   description: string;
   icon: React.ElementType;
   index: number;
-  roadmapId: string;
 }) => (
   <motion.div
     className="flex items-start rounded-lg bg-accent p-4 shadow-md transition-shadow duration-300 hover:shadow-lg"
@@ -35,7 +33,7 @@ export const RoadmapStep = ({
       <p className="mt-1 text-muted-foreground">{description}</p>
       {id && (
         <a
-          href={`/resources/${id}?roadmapId=${roadmapId}`}
+          href={`/resources/${id}`}
           target="_blank"
           className="mt-2 inline-block text-primary transition-colors duration-200 hover:text-primary2 hover:underline"
         >
