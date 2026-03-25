@@ -341,7 +341,7 @@ export default function EditProfilePage() {
         </div>
 
         <Card className="overflow-hidden border-none bg-card shadow-xl ring-1 ring-border/50">
-          <CardHeader className="from-primary/10 via-purple-500/5 border-b border-border/50 bg-gradient-to-r to-transparent p-8">
+          <CardHeader className="from-primary/10 border-b border-border/50 bg-gradient-to-r via-purple-500/5 to-transparent p-8">
             <div className="flex items-center gap-4">
               <div className="bg-primary/10 rounded-2xl p-3 text-primary shadow-inner">
                 <Pencil className="h-8 w-8" />
@@ -448,7 +448,7 @@ export default function EditProfilePage() {
                                   <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
                                 )}
                                 {usernameStatus === 'available' && (
-                                  <CheckCircle2 className="text-green-500 h-5 w-5 duration-300 animate-in zoom-in" />
+                                  <CheckCircle2 className="h-5 w-5 text-green-500 duration-300 animate-in zoom-in" />
                                 )}
                                 {usernameStatus === 'taken' && (
                                   <XCircle className="text-red-500 h-5 w-5 duration-300 animate-in zoom-in" />
@@ -457,7 +457,7 @@ export default function EditProfilePage() {
                             </div>
                             <FormDescription className="ml-1 mt-2 min-h-[0.5rem] text-xs">
                               {usernameStatus === 'available' && (
-                                <span className="text-green-600 font-bold">
+                                <span className="font-bold text-green-600">
                                   Username is available!
                                 </span>
                               )}
@@ -500,10 +500,10 @@ export default function EditProfilePage() {
 
                   {/* SECTION: PROFESSIONAL PROFILE */}
                   <section className="space-y-8">
-                    <div className="text-blue-500/80 flex items-center gap-3 text-sm font-bold uppercase tracking-widest">
+                    <div className="flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-blue-500/80">
                       <Briefcase className="h-5 w-5" />
                       <span>Professional Profile</span>
-                      <div className="from-blue-500/20 ml-2 h-[1px] flex-1 bg-gradient-to-r to-transparent" />
+                      <div className="ml-2 h-[1px] flex-1 bg-gradient-to-r from-blue-500/20 to-transparent" />
                     </div>
 
                     <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
@@ -641,10 +641,10 @@ export default function EditProfilePage() {
 
                   {/* SECTION: ACADEMIC HISTORY */}
                   <section className="space-y-8">
-                    <div className="text-green-600/80 flex items-center gap-3 text-sm font-bold uppercase tracking-widest">
+                    <div className="flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-green-600/80">
                       <GraduationCap className="h-5 w-5" />
                       <span>Academic History</span>
-                      <div className="from-green-600/20 ml-2 h-[1px] flex-1 bg-gradient-to-r to-transparent" />
+                      <div className="ml-2 h-[1px] flex-1 bg-gradient-to-r from-green-600/20 to-transparent" />
                     </div>
 
                     <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
@@ -710,10 +710,10 @@ export default function EditProfilePage() {
 
                   {/* SECTION: ONLINE PRESENCE */}
                   <section className="space-y-8">
-                    <div className="text-orange-500/80 flex items-center gap-3 text-sm font-bold uppercase tracking-widest">
+                    <div className="flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-orange-500/80">
                       <Globe className="h-5 w-5" />
                       <span>Online Presence</span>
-                      <div className="from-orange-500/20 ml-2 h-[1px] flex-1 bg-gradient-to-r to-transparent" />
+                      <div className="ml-2 h-[1px] flex-1 bg-gradient-to-r from-orange-500/20 to-transparent" />
                     </div>
 
                     <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
