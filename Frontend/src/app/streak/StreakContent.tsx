@@ -63,7 +63,7 @@ const StreakContent = () => {
               <CardTitle className="text-sm font-medium">
                 Current Streak
               </CardTitle>
-              <Flame className="text-orange-500 h-4 w-4" />
+              <Flame className="h-4 w-4 text-orange-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
@@ -77,7 +77,7 @@ const StreakContent = () => {
               <CardTitle className="text-sm font-medium">
                 Longest Streak
               </CardTitle>
-              <Award className="text-purple-500 h-4 w-4" />
+              <Award className="h-4 w-4 text-purple-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
@@ -91,7 +91,7 @@ const StreakContent = () => {
               <CardTitle className="text-sm font-medium">
                 Streak Start
               </CardTitle>
-              <Calendar className="text-blue-500 h-4 w-4" />
+              <Calendar className="h-4 w-4 text-blue-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
@@ -105,7 +105,7 @@ const StreakContent = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Time</CardTitle>
-              <Clock className="text-green-500 h-4 w-4" />
+              <Clock className="h-4 w-4 text-green-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">

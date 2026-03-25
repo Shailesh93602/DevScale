@@ -18,8 +18,6 @@ test.describe('Branding Verification', () => {
 
   test('about page mentions Shailesh Chaudhari', async ({ page }) => {
     await page.goto('/about');
-    await expect(
-      page.locator('text=Shailesh Chaudhari').first(),
-    ).toBeVisible();
+    await expect(page.locator('text=Shailesh Chaudhari').first()).toBeVisible();
   });
 });

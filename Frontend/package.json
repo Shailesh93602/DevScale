@@ -5,11 +5,12 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "build": "prettier --check . && next build",
     "format": "prettier --write .",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
