@@ -29,6 +29,7 @@ import { toast } from 'react-toastify';
 import { debounce } from 'lodash';
 import { useIntersection } from '@/hooks/useIntersection';
 import { CreateRoadmap } from './create-roadmap';
+import { motion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
@@ -38,7 +39,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useRouter } from 'next/navigation';
-import { useSelector } from 'react-redux';
 import { useRoadmapSocial } from '@/hooks/useRoadmapSocial';
 import {
   useRoadmaps,
@@ -46,7 +46,6 @@ import {
   ApiResponse,
   RoadmapsResponse,
 } from '@/hooks/useRoadmapApi';
-import { logger } from '@/lib/logger';
 
 // Import the shared RoadmapCard component
 import RoadmapCard, {
@@ -150,8 +149,8 @@ const TrendingRoadmaps = ({ roadmaps }: { roadmaps: IRoadmap[] }) => {
 const FeaturedRoadmapsSkeleton = () => (
   <div className="mb-12">
     <div className="mb-6 flex items-center justify-between">
-      <div className="h-8 w-48 animate-pulse rounded bg-muted"></div>
-      <div className="h-8 w-24 animate-pulse rounded bg-muted"></div>
+      <div className="h-8 w-48 animate-pulse rounded bg-gray-200"></div>
+      <div className="h-8 w-24 animate-pulse rounded bg-gray-200"></div>
     </div>
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {Array(6)
@@ -166,8 +165,8 @@ const FeaturedRoadmapsSkeleton = () => (
 const TrendingRoadmapsSkeleton = () => (
   <div className="mb-12">
     <div className="mb-6 flex items-center justify-between">
-      <div className="h-8 w-48 animate-pulse rounded bg-muted"></div>
-      <div className="h-8 w-24 animate-pulse rounded bg-muted"></div>
+      <div className="h-8 w-48 animate-pulse rounded bg-gray-200"></div>
+      <div className="h-8 w-24 animate-pulse rounded bg-gray-200"></div>
     </div>
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {Array(6)
@@ -180,9 +179,6 @@ const TrendingRoadmapsSkeleton = () => (
 );
 
 const RoadmapPage = () => {
-  const currentUser = useSelector(
-    (state: { user: { user: { id?: string } } }) => state?.user?.user,
-  );
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [categories, setCategories] = useState<RoadmapCategory[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -199,9 +195,8 @@ const RoadmapPage = () => {
   const [isFeaturedLoading, setIsFeaturedLoading] = useState(true);
   const [isTrendingLoading, setIsTrendingLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const isLoadingMoreRef = useRef(false);
 
-  // Filter object for non-pagination params (used to detect filter changes)
+  // Create filter object for useRoadmaps hook
   const filters: RoadmapFilters = useMemo(() => {
     return {
       categories: selectedCategories,
@@ -212,55 +207,31 @@ const RoadmapPage = () => {
         | 'all',
       sortBy: sortBy as 'popular' | 'recent' | 'rating' | 'enrolled',
       search: searchQuery,
+      page,
       limit: ITEMS_PER_PAGE,
     };
-  }, [selectedCategories, difficultyFilter, sortBy, searchQuery]);
-
-  // Full filters including page — used when actually fetching
-  const filtersWithPage: RoadmapFilters = useMemo(() => {
-    return { ...filters, page };
-  }, [filters, page]);
+  }, [selectedCategories, difficultyFilter, sortBy, searchQuery, page]);
 
   // Use the updated useRoadmaps hook
   const {
     data: roadmapsData,
-    meta: roadmapsMeta,
     isLoading,
     refetch: fetchRoadmapsData,
-  } = useRoadmaps(activeTab !== 'discover' ? filtersWithPage : undefined);
+  } = useRoadmaps(activeTab !== 'discover' ? filters : undefined);
 
   const [getCategories] = useAxiosGet<RoadmapCategory[]>(
-    '/roadmaps/categories',
+    '/api/roadmaps/categories',
   );
 
   // Create separate API hooks for featured and trending roadmaps
-  const [getFeaturedRoadmaps] = useAxiosGet<IRoadmap[]>('/roadmaps');
-  const [getTrendingRoadmaps] = useAxiosGet<IRoadmap[]>('/roadmaps');
-
-  // Stable refs for the execute functions — prevents re-triggering the effect
-  // on every render when the hook returns a new function reference
-  const getFeaturedRoadmapsRef = useRef(getFeaturedRoadmaps);
-  const getTrendingRoadmapsRef = useRef(getTrendingRoadmaps);
-  useEffect(() => {
-    getFeaturedRoadmapsRef.current = getFeaturedRoadmaps;
-  });
-  useEffect(() => {
-    getTrendingRoadmapsRef.current = getTrendingRoadmaps;
-  });
+  const [getFeaturedRoadmaps] =
+    useAxiosGet<ApiResponse<RoadmapsResponse>>('/api/roadmaps');
+  const [getTrendingRoadmaps] =
+    useAxiosGet<ApiResponse<RoadmapsResponse>>('/api/roadmaps');
 
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const isIntersecting = useIntersection(loadMoreRef);
   const router = useRouter();
-
-  // Check URL parameters for create modal
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const searchParams = new URLSearchParams(window.location.search);
-      if (searchParams.get('create') === 'true') {
-        setIsCreateModalOpen(true);
-      }
-    }
-  }, []);
 
   // Fetch categories only once on component mount
   useEffect(() => {
@@ -270,7 +241,7 @@ const RoadmapPage = () => {
         const response = await getCategories();
         setCategories(response?.data ?? []);
       } catch (error) {
-        logger.error('Error fetching categories:', error);
+        console.error('Error fetching categories:', error);
         toast.error(
           'Unable to load roadmap categories. Please check your internet connection and refresh the page.',
         );
@@ -280,100 +251,73 @@ const RoadmapPage = () => {
     };
 
     fetchCategories();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [getCategories]);
 
   // Fetch featured and trending roadmaps only when in discover tab
-  // Dependency is ONLY activeTab — execute functions are read via stable refs
   useEffect(() => {
-    if (activeTab !== 'discover') return;
+    if (activeTab === 'discover') {
+      const fetchFeaturedAndTrending = async () => {
+        setIsFeaturedLoading(true);
+        setIsTrendingLoading(true);
+        try {
+          // Use separate API calls for featured and trending
+          const featuredResponse = await getFeaturedRoadmaps({
+            params: { type: 'featured' },
+          });
+          setFeaturedRoadmaps(featuredResponse?.data?.data?.recommended || []);
 
-    let cancelled = false;
-
-    const fetchFeaturedAndTrending = async () => {
-      setIsFeaturedLoading(true);
-      setIsTrendingLoading(true);
-      try {
-        const [featuredResponse, trendingResponse] = await Promise.all([
-          getFeaturedRoadmapsRef.current({ params: { type: 'featured' } }),
-          getTrendingRoadmapsRef.current({ params: { type: 'trending' } }),
-        ]);
-
-        if (!cancelled) {
-          setFeaturedRoadmaps(featuredResponse?.data || []);
-          setTrendingRoadmaps(trendingResponse?.data || []);
-        }
-      } catch (error) {
-        if (!cancelled) {
-          logger.error('Error fetching featured/trending roadmaps:', error);
-        }
-      } finally {
-        if (!cancelled) {
+          const trendingResponse = await getTrendingRoadmaps({
+            params: { type: 'trending' },
+          });
+          setTrendingRoadmaps(trendingResponse?.data?.data?.recommended || []);
+        } catch (error) {
+          console.error('Error fetching featured/trending roadmaps:', error);
+        } finally {
           setIsFeaturedLoading(false);
           setIsTrendingLoading(false);
         }
-      }
-    };
+      };
 
-    fetchFeaturedAndTrending();
+      fetchFeaturedAndTrending();
+    }
+  }, [activeTab, getFeaturedRoadmaps, getTrendingRoadmaps]);
 
-    // Cleanup: mark as cancelled if the tab changes before completion
-    return () => {
-      cancelled = true;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTab]);
-
-  // Handle infinite scroll — use ref for guard to avoid re-triggering when state resets
+  // Handle infinite scroll
   useEffect(() => {
     if (
       isIntersecting &&
       hasMore &&
-      !isLoadingMoreRef.current &&
+      !isLoadingMore &&
       activeTab !== 'discover'
     ) {
-      isLoadingMoreRef.current = true;
       setIsLoadingMore(true);
       setPage((prev) => prev + 1);
     }
-  }, [isIntersecting, hasMore, activeTab]);
+  }, [isIntersecting, hasMore, isLoadingMore, activeTab]);
 
   // Update roadmaps state when data changes
   useEffect(() => {
-    if (roadmapsData) {
-      const actualRoadmaps: any[] = roadmapsData || [];
+    if (roadmapsData?.data) {
       if (page === 1) {
-        setRoadmaps(actualRoadmaps);
+        setRoadmaps(roadmapsData.data.recommended || []);
       } else {
-        setRoadmaps((prev) => [...prev, ...actualRoadmaps]);
+        setRoadmaps((prev) => [
+          ...prev,
+          ...(roadmapsData.data.recommended || []),
+        ]);
       }
 
-      const meta = roadmapsMeta as any;
-      if (meta && typeof meta.hasNextPage === 'boolean') {
-        setHasMore(meta.hasNextPage);
-      } else {
-        setHasMore(actualRoadmaps.length === ITEMS_PER_PAGE);
-      }
+      setHasMore(roadmapsData.data.recommended?.length === ITEMS_PER_PAGE);
       setIsLoadingMore(false);
-      isLoadingMoreRef.current = false;
     }
-  }, [roadmapsData, roadmapsMeta, page]);
+  }, [roadmapsData, page]);
 
-  // Fetch roadmaps when filters change (not page — pagination is handled by infinite scroll)
+  // Fetch roadmaps when filters change
   useEffect(() => {
     if (activeTab !== 'discover') {
       fetchRoadmapsData();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTab, filters]);
-
-  // Fetch next page when page changes (separate from filter changes)
-  useEffect(() => {
-    if (page > 1 && activeTab !== 'discover') {
-      fetchRoadmapsData();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
+  }, [activeTab, filters, fetchRoadmapsData]);
 
   // Debounced search handler
   const handleSearch = useCallback(
@@ -396,15 +340,6 @@ const RoadmapPage = () => {
     setSortBy(value);
     setPage(1);
     setRoadmaps([]);
-  }, []);
-
-  const handleTabChange = useCallback((tab: string) => {
-    setActiveTab(tab);
-    setPage(1);
-    setRoadmaps([]);
-    setHasMore(false);
-    setIsLoadingMore(false);
-    isLoadingMoreRef.current = false;
   }, []);
 
   const handleCategoryChange = useCallback((categoryId: string) => {
@@ -440,7 +375,7 @@ const RoadmapPage = () => {
     }
     if (activeTab === 'created') {
       return roadmaps?.filter(
-        (roadmap) => roadmap?.author?.id === currentUser?.id,
+        (roadmap) => roadmap?.author?.id === 'current_user_id',
       );
     }
     if (activeTab === 'bookmarked') {
@@ -462,11 +397,12 @@ const RoadmapPage = () => {
         </div>
 
         <div className="mx-auto max-w-3xl text-center">
-          <div>
-            <Badge
-              variant="outline"
-              className="mb-6 px-4 py-1.5 font-medium text-foreground"
-            >
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <Badge variant="outline" className="mb-6 px-4 py-1.5 text-primary">
               <Award className="mr-2 h-4 w-4" /> Engineering Career Growth
             </Badge>
             <h1 className="bg-gradient-to-br from-foreground to-foreground/80 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-6xl">
@@ -480,12 +416,13 @@ const RoadmapPage = () => {
 
             <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
               <Button
-                className="group flex items-center gap-2 px-6 py-6 text-base"
+                className="hover:bg-primary/90 group flex items-center gap-2 bg-primary px-6 py-6 text-base"
                 onClick={() => setIsCreateModalOpen(true)}
               >
                 <Plus size={18} /> Create Roadmap
               </Button>
               <Button
+                variant="outline"
                 className="group flex items-center gap-2 px-6 py-6 text-base"
                 onClick={() => router.push('/career-roadmap/roadmaps')}
               >
@@ -493,7 +430,7 @@ const RoadmapPage = () => {
                 <ChevronRight className="transition-transform group-hover:translate-x-1" />
               </Button>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
 
@@ -504,7 +441,7 @@ const RoadmapPage = () => {
           <Tabs
             value={activeTab}
             className="w-full"
-            onValueChange={handleTabChange}
+            onValueChange={setActiveTab}
           >
             <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <TabsList className="w-full sm:w-auto">
@@ -528,10 +465,7 @@ const RoadmapPage = () => {
 
               <div className="flex items-center gap-2">
                 <Select value={sortBy} onValueChange={handleSortChange}>
-                  <SelectTrigger
-                    className="w-[140px]"
-                    aria-label="Sort Roadmaps"
-                  >
+                  <SelectTrigger className="w-[140px]">
                     <SelectValue placeholder="Sort by" />
                   </SelectTrigger>
                   <SelectContent>
@@ -543,11 +477,7 @@ const RoadmapPage = () => {
                 </Select>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      aria-label="View Settings"
-                    >
+                    <Button variant="ghost" size="icon">
                       <Settings size={16} />
                     </Button>
                   </DropdownMenuTrigger>
@@ -576,10 +506,7 @@ const RoadmapPage = () => {
                     value={difficultyFilter}
                     onValueChange={handleDifficultyChange}
                   >
-                    <SelectTrigger
-                      className="w-full sm:w-[180px]"
-                      aria-label="Filter by Difficulty"
-                    >
+                    <SelectTrigger className="w-full sm:w-[180px]">
                       <SelectValue placeholder="All Difficulties" />
                     </SelectTrigger>
                     <SelectContent>
@@ -598,7 +525,7 @@ const RoadmapPage = () => {
                         {selectedCategories.length > 0 && (
                           <Badge
                             variant="secondary"
-                            className="ml-1 flex h-5 w-5 items-center justify-center rounded-full p-0 text-xs"
+                            className="ml-1 h-5 w-5 rounded-full p-0 text-xs"
                           >
                             {selectedCategories.length}
                           </Badge>
@@ -631,10 +558,10 @@ const RoadmapPage = () => {
                                       className="flex items-center justify-between rounded-lg p-2"
                                     >
                                       <div className="flex items-center gap-2">
-                                        <div className="h-6 w-6 animate-pulse rounded-full bg-muted"></div>
-                                        <div className="h-4 w-24 animate-pulse rounded bg-muted"></div>
+                                        <div className="h-6 w-6 animate-pulse rounded-full bg-gray-200"></div>
+                                        <div className="h-4 w-24 animate-pulse rounded bg-gray-200"></div>
                                       </div>
-                                      <div className="h-4 w-4 animate-pulse rounded bg-muted"></div>
+                                      <div className="h-4 w-4 animate-pulse rounded bg-gray-200"></div>
                                     </div>
                                   ))
                               : categories.map((category) => (
@@ -697,23 +624,22 @@ const RoadmapPage = () => {
                         className="gap-1 px-2 py-1"
                       >
                         {category?.name || 'Category'}
-                        <Button
-                          variant="ghost"
-                          size="icon"
+                        <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            setPage(1);
-                            setRoadmaps([]);
                             setSelectedCategories((prev) =>
                               prev.filter((id) => id !== categoryId),
                             );
+                            if (activeTab !== 'discover') {
+                              setTimeout(() => fetchRoadmapsData(), 0);
+                            }
                           }}
-                          className="ml-1 h-3.5 w-3.5 rounded-full p-0 hover:bg-muted"
+                          className="ml-1 rounded-full p-0.5 hover:bg-muted"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="10"
-                            height="10"
+                            width="12"
+                            height="12"
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
@@ -724,7 +650,7 @@ const RoadmapPage = () => {
                             <line x1="18" y1="6" x2="6" y2="18"></line>
                             <line x1="6" y1="6" x2="18" y2="18"></line>
                           </svg>
-                        </Button>
+                        </button>
                       </Badge>
                     );
                   })}
@@ -736,37 +662,15 @@ const RoadmapPage = () => {
             <TabsContent value="discover" className="mt-6">
               {isFeaturedLoading ? (
                 <FeaturedRoadmapsSkeleton />
-              ) : featuredRoadmaps?.length > 0 ? (
+              ) : (
                 <FeaturedRoadmaps roadmaps={featuredRoadmaps} />
-              ) : null}
+              )}
 
               {isTrendingLoading ? (
                 <TrendingRoadmapsSkeleton />
-              ) : trendingRoadmaps?.length > 0 ? (
+              ) : (
                 <TrendingRoadmaps roadmaps={trendingRoadmaps} />
-              ) : null}
-
-              {!isFeaturedLoading &&
-                !isTrendingLoading &&
-                featuredRoadmaps?.length === 0 &&
-                trendingRoadmaps?.length === 0 && (
-                  <div className="flex h-60 flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
-                    <Sparkles
-                      size={48}
-                      className="mb-4 text-muted-foreground"
-                    />
-                    <h3 className="mb-2 text-xl font-medium">
-                      No roadmaps available yet
-                    </h3>
-                    <p className="mb-4 text-muted-foreground">
-                      Be the first to create a roadmap and share your knowledge
-                      with the community.
-                    </p>
-                    <Button onClick={() => setIsCreateModalOpen(true)}>
-                      <Plus size={16} className="mr-2" /> Create Roadmap
-                    </Button>
-                  </div>
-                )}
+              )}
             </TabsContent>
 
             <TabsContent value="enrolled" className="mt-6">
@@ -791,7 +695,7 @@ const RoadmapPage = () => {
                   </p>
                   <Button
                     variant="outline"
-                    onClick={() => handleTabChange('discover')}
+                    onClick={() => setActiveTab('discover')}
                   >
                     Explore Roadmaps
                   </Button>
@@ -852,7 +756,7 @@ const RoadmapPage = () => {
                   </p>
                   <Button
                     variant="outline"
-                    onClick={() => handleTabChange('discover')}
+                    onClick={() => setActiveTab('discover')}
                   >
                     Explore Roadmaps
                   </Button>

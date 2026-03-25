@@ -19,12 +19,14 @@ import { Button } from '@/components/ui/button';
 // Lazy load components
 const BattleCard = lazy(() => import('./BattleCard'));
 
-// Pagination meta data structure
-interface PaginationMeta {
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
+interface ApiResponse {
+  data: Battle[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
 }
 
 interface BattleListProps {
@@ -40,7 +42,7 @@ export const BattleList: React.FC<BattleListProps> = ({
   const { filters, setFilters } = useBattleStore();
   const [searchTerm, setSearchTerm] = useState(filters.search);
 
-  const [execute, state] = useAxiosGet<Battle[]>('/battles');
+  const [execute, state] = useAxiosGet<ApiResponse>('/api/battles');
 
   useEffect(() => {
     if (initialFilters) {
@@ -82,9 +84,8 @@ export const BattleList: React.FC<BattleListProps> = ({
     setFilters({ ...filters, page: newPage });
   };
 
-  const renderPagination = () => {
-    if (!state.meta?.pagination) return null;
-    const { currentPage: page, lastPage: totalPages } = state.meta.pagination;
+  const renderPagination = (data: ApiResponse) => {
+    const { page, totalPages } = data.meta;
     if (totalPages <= 1) return null;
 
     return (
@@ -135,10 +136,10 @@ export const BattleList: React.FC<BattleListProps> = ({
             <Skeleton key={i} className="h-[200px]" />
           ))}
         </div>
-      ) : state.data && state.data.length > 0 ? (
+      ) : state.data ? (
         <>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {state.data.map((battle) => (
+            {state.data.data.map((battle) => (
               <Suspense
                 key={battle.id}
                 fallback={<Skeleton className="h-[200px]" />}
@@ -147,44 +148,9 @@ export const BattleList: React.FC<BattleListProps> = ({
               </Suspense>
             ))}
           </div>
-          {renderPagination()}
+          {renderPagination(state.data)}
         </>
-      ) : (
-        <div className="border-primary/20 col-span-full rounded-xl border border-dashed bg-card py-16 text-center shadow-inner">
-          <div className="mx-auto flex max-w-[400px] flex-col items-center justify-center p-4">
-            <div className="bg-primary/10 mb-4 flex h-20 w-20 items-center justify-center rounded-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="40"
-                height="40"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-primary"
-              >
-                <polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5" />
-                <line x1="13" y1="19" x2="19" y2="13" />
-                <line x1="16" y1="16" x2="20" y2="20" />
-                <line x1="19" y1="21" x2="21" y2="19" />
-                <polyline points="14.5 6.5 18 3 21 3 21 6 17.5 9.5" />
-                <line x1="5" y1="14" x2="9" y2="18" />
-                <line x1="7" y1="17" x2="4" y2="20" />
-                <line x1="3" y1="19" x2="5" y2="21" />
-              </svg>
-            </div>
-            <h3 className="mb-2 text-xl font-bold tracking-tight">
-              No battles found
-            </h3>
-            <p className="mb-6 text-center text-sm text-muted-foreground">
-              We couldn't find any battles matching your criteria. Be the first
-              to start a new challenge!
-            </p>
-          </div>
-        </div>
-      )}
+      ) : null}
     </div>
   );
 };

@@ -24,8 +24,9 @@ import { Parser } from 'json2csv';
 import BaseRepository from './baseRepository';
 import UserRepository from './userRepository';
 
-import prisma from '../lib/prisma';
+import prisma from '@/lib/prisma';
 
+// TODO: Review this file
 export default class AdminDashboardRepository extends BaseRepository<
   PrismaClient['user']
 > {
@@ -139,11 +140,11 @@ export default class AdminDashboardRepository extends BaseRepository<
   ) {
     const timeFilter = timeRange
       ? {
-        created_at: {
-          gte: timeRange.start,
-          lte: timeRange.end,
-        },
-      }
+          created_at: {
+            gte: timeRange.start,
+            lte: timeRange.end,
+          },
+        }
       : {};
 
     switch (metric) {
@@ -241,8 +242,7 @@ export default class AdminDashboardRepository extends BaseRepository<
           user: {
             select: {
               id: true,
-              first_name: true,
-              last_name: true,
+              full_name: true,
               email: true,
             },
           },
@@ -264,8 +264,7 @@ export default class AdminDashboardRepository extends BaseRepository<
           author: {
             select: {
               id: true,
-              first_name: true,
-              last_name: true,
+              full_name: true,
             },
           },
         },

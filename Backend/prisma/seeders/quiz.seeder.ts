@@ -1,63 +1,61 @@
 import { PrismaClient } from '@prisma/client';
-import { quizzes } from '../../resources/quizzes/index';
+import { quizzes } from '../../resources/quizzes';
 
 const prisma = new PrismaClient();
 
 const seedQuizzes = async () => {
   try {
     for (const quizData of quizzes) {
-      let topic = await prisma.topic.findFirst({
+      const topic = await prisma.topic.upsert({
         where: { title: quizData.topicName },
-      });
-      if (!topic) {
-        topic = await prisma.topic.create({
-          data: {
-            title: quizData.topicName,
-            description: quizData.topicName,
-            order: 0
-          }
-        });
-      }
-
-      let quiz = await prisma.quiz.findFirst({
-        where: { topic_id: topic.id },
+        update: { title: quizData.topicName },
+        create: { title: quizData.topicName },
       });
 
-      if (!quiz) {
-        quiz = await prisma.quiz.create({
-          data: {
-            topic_id: topic.id,
-            passing_score: quizData.passingMarks,
+      const quiz = await prisma.quiz.upsert({
+        where: {
+          topicId_passingScore: {
+            topicId: topic.id,
+            passingScore: quizData.passingMarks,
           },
-        });
-      }
+        },
+        update: {},
+        create: {
+          topicId: topic.id,
+          passingScore: quizData.passingMarks,
+        },
+      });
 
       for (const questionData of quizData.questions) {
-        let question = await prisma.quizQuestion.findFirst({
-          where: { quiz_id: quiz.id, question: questionData.question }
-        });
-        if (!question) {
-          question = await prisma.quizQuestion.create({
-            data: {
-              quiz_id: quiz.id,
+        const question = await prisma.quizQuestion.upsert({
+          where: {
+            quizId_question: {
+              quizId: quiz.id,
               question: questionData.question,
             },
-          });
-        }
+          },
+          update: {},
+          create: {
+            quizId: quiz.id,
+            question: questionData.question,
+          },
+        });
 
         for (const option of questionData.options) {
-          const existingOpt = await prisma.quizOption.findFirst({
-            where: { quiz_question_id: question.id, answer_text: option.answerText }
-          });
-          if (!existingOpt) {
-            await prisma.quizOption.create({
-              data: {
-                quiz_question_id: question.id,
-                answer_text: option.answerText,
-                is_correct: option.isCorrect,
+          await prisma.quizOption.upsert({
+            where: {
+              quizQuestionId_answerText: {
+                quizQuestionId: question.id,
+                answerText: option.answerText,
               },
-            });
-          }
+            },
+            update: { is_correct: option.isCorrect },
+            create: {
+              quiz_question_id: question.id,
+              answer_text: option.answerText,
+              is_correct: option.isCorrect,
+            },
+          });
         }
       }
     }

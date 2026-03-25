@@ -1,4 +1,4 @@
-import { initializeApp } from './app.logic';
+import { initializeApp } from '@/app';
 
 import { UserRoutes } from './routes/userRoutes';
 import { StreakRoutes } from './routes/streakRoutes';

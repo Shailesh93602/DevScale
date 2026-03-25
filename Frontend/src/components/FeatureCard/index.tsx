@@ -27,7 +27,7 @@ const FeatureCard = ({
 }) => {
   return (
     <motion.div
-      className="from-[var(--primary)]/20 to-[var(--primary2)]/20 hover:from-[var(--primary)]/30 hover:to-[var(--primary2)]/30 group relative flex cursor-pointer flex-col items-center rounded-xl border border-border bg-card/80 bg-gradient-to-br p-8 shadow-lg backdrop-blur-md transition-shadow duration-300 hover:shadow-2xl"
+      className="from-[var(--primary)]/20 to-[var(--primary2)]/20 hover:from-[var(--primary)]/30 hover:to-[var(--primary2)]/30 group relative flex cursor-pointer flex-col items-center rounded-xl border border-neutral-200 bg-white/80 bg-gradient-to-br p-8 shadow-lg backdrop-blur-md transition-shadow duration-300 hover:shadow-2xl dark:border-neutral-700 dark:bg-neutral-900/80"
       initial={{ opacity: 0, y: 30, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.5, delay }}

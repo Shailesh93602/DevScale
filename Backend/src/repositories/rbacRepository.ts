@@ -1,7 +1,7 @@
 import { PrismaClient, Role, Permission } from '@prisma/client';
 import BaseRepository from './baseRepository';
 
-import prisma from '../lib/prisma';
+import prisma from '@/lib/prisma';
 
 export class RBACRepository extends BaseRepository<PrismaClient['role']> {
   constructor() {
@@ -61,6 +61,8 @@ export class RBACRepository extends BaseRepository<PrismaClient['role']> {
   async createPermission(data: {
     name: string;
     description?: string;
+    resource: string;
+    action: string;
     key: string;
   }): Promise<Permission> {
     return prisma.permission.create({ data });
@@ -71,7 +73,8 @@ export class RBACRepository extends BaseRepository<PrismaClient['role']> {
     data: {
       name?: string;
       description?: string;
-      key?: string;
+      resource?: string;
+      action?: string;
     }
   ): Promise<Permission> {
     return prisma.permission.update({
@@ -86,6 +89,7 @@ export class RBACRepository extends BaseRepository<PrismaClient['role']> {
     });
   }
 
+  // TODO: Update this implementation
   async checkPermission(
     userId: string,
     resource: string,
@@ -96,23 +100,25 @@ export class RBACRepository extends BaseRepository<PrismaClient['role']> {
       include: {
         role: {
           include: {
-            permissions: {
-              include: {
-                permission: true,
-              },
-            },
+            permissions: true,
           },
         },
       },
     });
-
     if (!user || !user.role) {
       return false;
     }
+    const permissions = user.role.permissions;
 
-    const requiredKey = `${resource}:${action}`;
-    return user.role.permissions.some(
-      (rp) => rp.permission.key === requiredKey || rp.permission.key === '*'
-    );
+    for (const permission of permissions) {
+      // TODO: Update this logic
+      if (
+        permission.permission_id === resource &&
+        permission.permission_id === action
+      )
+        return true;
+    }
+
+    return false;
   }
 }
