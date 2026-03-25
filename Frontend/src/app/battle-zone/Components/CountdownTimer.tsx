@@ -155,7 +155,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
     if (isCompleted) {
       return (
         <div className="flex items-center justify-center gap-2">
-          <Play className="text-green-500 h-5 w-5" />
+          <Play className="h-5 w-5 text-green-500" />
           <span className="text-green-500">Ready to start!</span>
         </div>
       );
@@ -268,12 +268,18 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
             </div>
           </CardTitle>
           {showWarning && (
-            <Badge variant="outline" className="bg-yellow/10 text-yellow">
+            <Badge
+              variant="outline"
+              className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
+            >
               Starting Soon
             </Badge>
           )}
           {isCompleted && (
-            <Badge variant="outline" className="bg-green/10 text-green">
+            <Badge
+              variant="outline"
+              className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+            >
               Ready
             </Badge>
           )}
@@ -287,7 +293,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
             <div className="space-y-2">
               <Progress value={calculateProgress()} className="h-2" />
               {showWarning && (
-                <div className="flex items-center gap-2 text-xs text-yellow">
+                <div className="flex items-center gap-2 text-xs text-yellow-600 dark:text-yellow-400">
                   <AlertCircle className="h-3 w-3" />
                   <span>Battle starting soon! Get ready!</span>
                 </div>

@@ -1,12 +1,12 @@
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET } from '../config';
+import { JWT_SECRET } from '@/config';
 import { createAppError } from './createAppError';
 
 export const verifyToken = (token: string): { userId: string } => {
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
     return decoded;
-  } catch {
+  } catch (error) {
     throw createAppError('Invalid token', 401);
   }
 };

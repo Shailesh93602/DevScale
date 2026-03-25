@@ -50,7 +50,12 @@ interface LeaderboardProps {
   initialFilters?: Partial<LeaderboardFilters>;
 }
 
-type LeaderboardResponse = LeaderboardEntry[];
+interface LeaderboardResponse {
+  data: LeaderboardEntry[];
+  total: number;
+  page: number;
+  limit: number;
+}
 
 export const Leaderboard: React.FC<LeaderboardProps> = ({
   battleId,
@@ -144,6 +149,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
         </Select>
       </div>
 
+      {/* Leaderboard Table */}
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -219,14 +225,14 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
                   Failed to load leaderboard
                 </TableCell>
               </TableRow>
-            ) : state.data?.length === 0 ? (
+            ) : state.data?.data.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} className="h-24 text-center">
                   No results found
                 </TableCell>
               </TableRow>
             ) : (
-              state.data?.map((entry) => (
+              state.data?.data.map((entry) => (
                 <TableRow key={entry.userId}>
                   <TableCell className="font-medium">
                     <div className="flex items-center gap-2">
@@ -257,28 +263,24 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
       </div>
 
       {/* Pagination */}
-      {state.meta?.pagination?.total &&
-        (state.meta.pagination.total as number) > filters.limit && (
-          <div className="flex justify-center gap-2">
-            <Button
-              variant="outline"
-              onClick={() => handlePageChange(filters.page - 1)}
-              disabled={filters.page === 1}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => handlePageChange(filters.page + 1)}
-              disabled={
-                filters.page * filters.limit >=
-                (state.meta.pagination.total as number)
-              }
-            >
-              Next
-            </Button>
-          </div>
-        )}
+      {state.data && state.data.total > filters.limit && (
+        <div className="flex justify-center gap-2">
+          <Button
+            variant="outline"
+            onClick={() => handlePageChange(filters.page - 1)}
+            disabled={filters.page === 1}
+          >
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => handlePageChange(filters.page + 1)}
+            disabled={filters.page * filters.limit >= state.data.total}
+          >
+            Next
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

@@ -13,23 +13,6 @@ import storage from 'redux-persist/lib/storage';
 import userReducer from './features/user/userSlice';
 import loaderReducer from './features/loader/loaderSlice';
 
-const createNoopStorage = () => {
-  return {
-    getItem() {
-      return Promise.resolve(null);
-    },
-    setItem(_key: string, value: unknown) {
-      return Promise.resolve(value);
-    },
-    removeItem() {
-      return Promise.resolve();
-    },
-  };
-};
-
-const persistStorage =
-  typeof window !== 'undefined' ? storage : createNoopStorage();
-
 const rootReducer = combineReducers({
   user: userReducer,
   loader: loaderReducer,
@@ -37,7 +20,7 @@ const rootReducer = combineReducers({
 
 const persistConfig = {
   key: 'root',
-  storage: persistStorage,
+  storage,
   whitelist: ['user'], // Only persist user data
   blacklist: ['loader'], // Don't persist loader state
 };

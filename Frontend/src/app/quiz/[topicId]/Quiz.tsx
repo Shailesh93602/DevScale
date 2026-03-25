@@ -1,9 +1,8 @@
 'use client';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { useAxiosPost } from '@/hooks/useAxios';
-import { Button } from '@/components/ui/button';
 
 export default function Quiz({ topicId }: { topicId: string }) {
   const [score] = useState(0);
@@ -26,9 +25,9 @@ export default function Quiz({ topicId }: { topicId: string }) {
     }
   };
   return (
-    <div className="container mx-auto p-8">
-      <h1 className="mb-6 text-3xl font-bold">Quiz for Topic {topicId}</h1>
-      <Button onClick={handleQuizSubmit}>Submit Quiz</Button>
+    <div>
+      <h1>Quiz for Topic {topicId}</h1>
+      <button onClick={handleQuizSubmit}>Submit Quiz</button>
     </div>
   );
 }

@@ -100,7 +100,7 @@ export const Header = () => {
   return (
     <div className="relative left-0 top-0 mx-auto w-full max-w-7xl px-4 py-10 md:py-20">
       <h1 className="text-2xl font-bold text-white md:text-7xl">
-        Welcome To <br /> EduScale
+        Welcome To <br /> Mr Engineers
       </h1>
       <p className="mt-8 max-w-2xl text-base text-white md:text-xl">
         Empowering the next generation of programmers with cutting-edge

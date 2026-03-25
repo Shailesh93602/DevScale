@@ -54,7 +54,7 @@ export const createChallengeValidation = Joi.object({
     'any.required': 'Test case output is required',
   }),
   language: Joi.string()
-    .valid('javascript', 'python', 'java', 'cpp', 'go')
+    .valid(...['javascript', 'python', 'java', 'cpp'])
     .required()
     .messages({
       'any.required': 'Language is required',
@@ -67,30 +67,10 @@ export const submitChallengeValidation = Joi.object({
     'any.required': 'Code is required',
   }),
   language: Joi.string()
-    .valid('javascript', 'python', 'java', 'cpp', 'go')
+    .valid(...['javascript', 'python', 'java', 'cpp'])
     .required()
     .messages({
       'any.required': 'Language is required',
       'any.only': 'Unsupported programming language',
     }),
-});
-
-export const runCodeValidation = Joi.object({
-  code: Joi.string().required().messages({
-    'any.required': 'Code is required',
-  }),
-  language: Joi.string().required().messages({
-    'any.required': 'Language is required',
-  }),
-  input: Joi.string().optional().allow(''),
-  challengeId: Joi.string().optional(),
-  challenge_id: Joi.string().optional(),
-  challengeTitle: Joi.string().optional(),
-  id: Joi.string().optional(),
-});
-
-export const saveDraftValidation = Joi.object({
-  challengeId: Joi.string().required(),
-  code: Joi.string().required(),
-  language: Joi.string().required(),
 });

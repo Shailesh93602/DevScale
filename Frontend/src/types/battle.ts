@@ -92,9 +92,35 @@ export interface BattleFilters {
 }
 
 export interface PaginatedResponse<T> {
-  items: T[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
+  data: T[];
+  meta: {
+    total: number;
+    currentPage: number;
+    totalPages: number;
+    limit: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+  };
+}
+
+export interface BattleResponse {
+  data: Battle[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
+export interface BattlesResponse {
+  data: Battle[];
+  meta: {
+    total: number;
+    currentPage: number;
+    totalPages: number;
+    limit: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+  };
 }

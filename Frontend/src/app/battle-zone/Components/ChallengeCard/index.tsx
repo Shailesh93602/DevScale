@@ -8,7 +8,12 @@ export default function ChallengeCard() {
       <div className="flex w-max flex-col gap-8">
         <span>Challenge your opponents</span>
         <p>Conquer Challenges and Rise as a Champion in our BattleZone.</p>
-        <Button onClick={() => {}}>Challenge</Button>
+        <Button
+          onClick={() => {}}
+          className="bg-primary text-white hover:bg-primary2"
+        >
+          Challenge
+        </Button>
       </div>
     </div>
   );

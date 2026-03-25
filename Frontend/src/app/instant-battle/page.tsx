@@ -55,29 +55,29 @@ export default function InstantBattlePage() {
   }, [timeLeft, opponentFound, battleData, router]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="w-full max-w-lg rounded-lg bg-card p-6 text-center shadow-md">
-        <h1 className="mb-6 text-3xl font-bold text-foreground">
+    <div className="flex min-h-screen items-center justify-center bg-white dark:bg-gray-800">
+      <div className="w-full max-w-lg rounded-lg bg-blue-50 p-6 text-center shadow-md dark:bg-gray-900">
+        <h1 className="mb-6 text-3xl font-bold text-gray-900 dark:text-gray-100">
           Waiting for Opponent
         </h1>
         {!opponentFound ? (
           <>
-            <p className="mb-4 text-lg text-muted-foreground">
+            <p className="mb-4 text-lg text-gray-700 dark:text-gray-300">
               Please wait while we find an opponent for you...
             </p>
-            <div className="mb-4 h-2.5 w-full rounded-full bg-muted">
+            <div className="mb-4 h-2.5 w-full rounded-full bg-gray-200">
               <div
-                className="h-2.5 rounded-full bg-blue transition-all duration-1000"
+                className="h-2.5 rounded-full bg-blue-500 transition-all duration-1000"
                 style={{ width: `${((60 - timeLeft) / 60) * 100}%` }}
               ></div>
             </div>
-            <p className="mb-6 text-muted-foreground">
+            <p className="mb-6 text-gray-700 dark:text-gray-300">
               Time left: {timeLeft} seconds
             </p>
             <Loader />
           </>
         ) : (
-          <p className="text-lg text-muted-foreground">
+          <p className="text-lg text-gray-700 dark:text-gray-300">
             Opponent found! Starting battle...
           </p>
         )}

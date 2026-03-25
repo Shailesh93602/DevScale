@@ -34,11 +34,11 @@ export const mobileSchema = yup
 // Custom validation methods
 yup.addMethod(yup.string, 'username', function () {
   return this.required('Username required')
-    .min(8, 'Username must be at least 8 characters')
+    .min(3, 'Username must be at least 3 characters')
     .max(30, 'Username must be less than 30 characters')
     .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9/!@#$%^&*])/,
-      'Username must contain uppercase, lowercase, and a number or special character',
+      /^\w+$/,
+      'Username can only contain letters, numbers, and underscores',
     );
 });
 
@@ -57,14 +57,10 @@ export const loginSchema = yup.object({
 });
 
 export const registerSchema = yup.object({
-  first_name: yup
+  name: yup
     .string()
-    .required('First name is required')
-    .max(50, 'First name must be less than 50 characters'),
-  last_name: yup
-    .string()
-    .required('Last name is required')
-    .max(50, 'Last name must be less than 50 characters'),
+    .required('Full name is required')
+    .max(100, 'Name must be less than 100 characters'),
   email: emailSchema,
   password: passwordSchema(),
   confirmPassword: yup
@@ -86,8 +82,7 @@ export const resetPasswordSchema = yup.object({
 });
 
 export const profileSchema = yup.object({
-  firstName: yup.string().required('First name is required'),
-  lastName: yup.string().required('Last name is required'),
+  fullName: yup.string().required('Full name is required'),
   dob: yup.date().required('Date of birth is required'),
   gender: yup.string().required('Gender is required'),
   mobile: mobileSchema,
@@ -120,24 +115,23 @@ export const profileSchema = yup.object({
 });
 
 export const detailsSchema = yup.object().shape({
-  first_name: yup.string().required('First name is required'),
-  last_name: yup.string().required('Last name is required'),
+  full_name: yup.string().required('Full name is required'),
   username: yup
     .string()
     .required('Username is required')
-    .min(8, 'Username must be at least 8 characters')
-    .max(30, 'Username cannot be longer than 30 characters')
+    .min(3, 'Username must be at least 3 characters')
+    .max(20, 'Username cannot be longer than 20 characters')
     .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9/!@#$%^&*])/,
-      'Username must contain uppercase, lowercase, and numeric/special characters',
+      /^\w+$/,
+      'Username can only contain letters, numbers, and underscores',
     ),
   bio: yup.string().defined(),
-  avatarUrl: yup.string().url('Invalid Avatar URL').defined(),
+  avatarUrl: yup.string().url('Invalid URL').defined(),
   address: yup.string().defined(),
-  githubUrl: yup.string().url('Invalid GitHub URL').defined(),
-  linkedinUrl: yup.string().url('Invalid LinkedIn URL').defined(),
-  twitterUrl: yup.string().url('Invalid Twitter URL').defined(),
-  websiteUrl: yup.string().url('Invalid Website URL').defined(),
+  githubUrl: yup.string().url('Invalid URL').defined(),
+  linkedinUrl: yup.string().url('Invalid URL').defined(),
+  twitterUrl: yup.string().url('Invalid URL').defined(),
+  websiteUrl: yup.string().url('Invalid URL').defined(),
   specialization: yup.string().defined(),
   college: yup.string().defined(),
   graduationYear: yup.number().positive().integer().defined(),

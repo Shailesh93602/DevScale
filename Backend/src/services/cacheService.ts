@@ -7,19 +7,7 @@ type CacheOptions = {
   prefix?: string;
 };
 
-export const redis = new Redis(REDIS_URL, {
-  maxRetriesPerRequest: 3,
-  retryStrategy(times) {
-    if (times > 3) return null;
-    return Math.min(times * 50, 2000);
-  },
-});
-
-redis.on('error', (err: any) => {
-  if (err.code !== 'ECONNREFUSED') {
-    logger.error('Redis Cache Error:', err);
-  }
-});
+const redis = new Redis(REDIS_URL);
 
 export async function getCache<T>(key: string): Promise<T | null> {
   try {
