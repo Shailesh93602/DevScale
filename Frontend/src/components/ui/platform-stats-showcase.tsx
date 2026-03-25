@@ -2,9 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useSelector } from 'react-redux';
 import { cn } from '@/lib/utils';
-import { CustomLink } from '@/components/ui/custom-link';
 import {
   FaTrophy,
   FaCode,
@@ -23,10 +21,6 @@ export const PlatformStatsShowcase = ({
   className,
 }: PlatformStatsShowcaseProps) => {
   const [activeTab, setActiveTab] = useState<number>(0);
-  const isAuthenticated = useSelector(
-    (state: { user: { isAuthenticated: boolean } }) =>
-      state?.user?.isAuthenticated,
-  );
 
   // Define the tabs with their content
   const tabs = [
@@ -51,7 +45,7 @@ export const PlatformStatsShowcase = ({
       testimonial: {
         quote:
           'The platform has been a game-changer for me. It helped me stay organized and focused on my learning goals.',
-        author: 'Alex R.',
+        author: 'John Doe',
       },
     },
     {
@@ -75,7 +69,7 @@ export const PlatformStatsShowcase = ({
       testimonial: {
         quote:
           'The community aspect is what sets this platform apart. It’s a great place to learn and connect with like-minded individuals.',
-        author: 'Sarah K.',
+        author: 'Jane Smith',
       },
     },
     {
@@ -140,16 +134,16 @@ export const PlatformStatsShowcase = ({
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded-xl bg-card shadow-xl',
+        'relative overflow-hidden rounded-xl bg-white shadow-xl dark:bg-gray-800',
         className,
       )}
     >
       {/* Background decorative elements */}
-      <div className="bg-primary/10 absolute -left-20 -top-20 h-40 w-40 rounded-full blur-3xl"></div>
-      <div className="absolute -bottom-20 -right-20 h-40 w-40 rounded-full bg-secondary/10 blur-3xl"></div>
+      <div className="absolute -left-20 -top-20 h-40 w-40 rounded-full bg-purple-500/10 blur-3xl"></div>
+      <div className="absolute -bottom-20 -right-20 h-40 w-40 rounded-full bg-blue-500/10 blur-3xl"></div>
 
       {/* Tab navigation */}
-      <div className="border-b border-border bg-muted/20">
+      <div className="border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-900">
         <div className="flex">
           {tabs.map((tab, index) => (
             <motion.button
@@ -157,8 +151,8 @@ export const PlatformStatsShowcase = ({
               className={cn(
                 'flex flex-1 items-center justify-center gap-2 border-b-2 px-4 py-4 text-sm font-medium transition-all duration-200 sm:text-base',
                 activeTab === index
-                  ? 'border-primary bg-card text-primary'
-                  : 'border-transparent text-muted-foreground hover:border-border hover:text-foreground',
+                  ? 'border-purple-500 bg-white text-purple-600 dark:border-purple-400 dark:bg-gray-800 dark:text-purple-400'
+                  : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:text-gray-300',
               )}
               onClick={() => setActiveTab(index)}
               whileHover={{ y: -2 }}
@@ -184,10 +178,10 @@ export const PlatformStatsShowcase = ({
             <div className="grid gap-6 md:grid-cols-2">
               {/* Left column - Content */}
               <div>
-                <h3 className="mb-2 text-2xl font-bold text-foreground">
+                <h3 className="mb-2 text-2xl font-bold text-gray-900 dark:text-white">
                   {tabs[activeTab].title}
                 </h3>
-                <p className="mb-6 text-muted-foreground">
+                <p className="mb-6 text-gray-600 dark:text-gray-300">
                   {tabs[activeTab].description}
                 </p>
 
@@ -196,18 +190,18 @@ export const PlatformStatsShowcase = ({
                   {tabs[activeTab].stats.map((stat, i) => (
                     <motion.div
                       key={i}
-                      className="flex flex-col items-center rounded-lg border border-border bg-muted/20 p-3 text-center"
+                      className="flex flex-col items-center rounded-lg border border-gray-200 bg-gray-50 p-3 text-center dark:border-gray-700 dark:bg-gray-900"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.1 }}
                     >
-                      <div className="bg-primary/10 mb-1 flex h-10 w-10 items-center justify-center rounded-full text-primary">
+                      <div className="mb-1 flex h-10 w-10 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900/30">
                         {stat.icon}
                       </div>
-                      <div className="mt-2 text-xl font-bold text-foreground">
+                      <div className="mt-2 text-xl font-bold text-gray-900 dark:text-white">
                         {stat.value}
                       </div>
-                      <div className="text-xs text-muted-foreground">
+                      <div className="text-xs text-gray-500 dark:text-gray-400">
                         {stat.label}
                       </div>
                     </motion.div>
@@ -216,19 +210,19 @@ export const PlatformStatsShowcase = ({
 
                 {/* Features */}
                 <div className="mb-6">
-                  <h4 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                  <h4 className="mb-3 text-sm font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">
                     Key Features
                   </h4>
                   <div className="space-y-2">
                     {tabs[activeTab].features.map((feature, i) => (
                       <motion.div
                         key={i}
-                        className="flex items-center rounded-lg border border-border bg-card p-3"
+                        className="flex items-center rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800"
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: i * 0.1 }}
                       >
-                        <div className="mr-3 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-success/20 text-success">
+                        <div className="mr-3 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-green-100 text-green-500 dark:bg-green-900/30">
                           <svg
                             width="12"
                             height="12"
@@ -244,7 +238,7 @@ export const PlatformStatsShowcase = ({
                             />
                           </svg>
                         </div>
-                        <span className="text-sm text-muted-foreground">
+                        <span className="text-sm text-gray-700 dark:text-gray-300">
                           {feature}
                         </span>
                       </motion.div>
@@ -254,15 +248,15 @@ export const PlatformStatsShowcase = ({
 
                 {/* Testimonial */}
                 <motion.div
-                  className="from-primary/5 rounded-xl bg-gradient-to-r to-secondary/5 p-4"
+                  className="rounded-xl bg-gradient-to-r from-purple-50 to-indigo-50 p-4 dark:from-purple-900/20 dark:to-indigo-900/20"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.5 }}
                 >
-                  <p className="mb-3 text-sm italic text-muted-foreground">
+                  <p className="mb-3 text-sm italic text-gray-700 dark:text-gray-300">
                     &ldquo;{tabs[activeTab].testimonial.quote}&rdquo;
                   </p>
-                  <p className="text-right text-xs font-medium text-muted-foreground">
+                  <p className="text-right text-xs font-medium text-gray-600 dark:text-gray-400">
                     — {tabs[activeTab].testimonial.author}
                   </p>
                 </motion.div>
@@ -271,21 +265,21 @@ export const PlatformStatsShowcase = ({
               {/* Right column - Visual */}
               <div className="flex items-center justify-center">
                 <motion.div
-                  className="from-primary/10 relative h-64 w-64 rounded-xl bg-gradient-to-br to-secondary/10 p-6"
+                  className="relative h-64 w-64 rounded-xl bg-gradient-to-br from-purple-100 to-indigo-100 p-6 dark:from-purple-900/30 dark:to-indigo-900/30"
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ delay: 0.2, type: 'spring', stiffness: 100 }}
                 >
                   <div className="flex h-full w-full items-center justify-center">
                     {/* Placeholder for actual images */}
-                    <div className="flex h-32 w-32 items-center justify-center rounded-full bg-card text-5xl text-primary shadow-lg">
+                    <div className="flex h-32 w-32 items-center justify-center rounded-full bg-white text-5xl text-purple-500 shadow-lg dark:bg-gray-800">
                       {tabs[activeTab].icon}
                     </div>
                   </div>
 
                   {/* Floating elements for visual interest */}
                   <motion.div
-                    className="absolute -right-4 -top-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg"
+                    className="absolute -right-4 -top-4 flex h-12 w-12 items-center justify-center rounded-full bg-purple-500 text-white shadow-lg"
                     animate={{
                       y: [0, -10, 0],
                       rotate: [0, 5, 0],
@@ -300,7 +294,7 @@ export const PlatformStatsShowcase = ({
                   </motion.div>
 
                   <motion.div
-                    className="absolute -bottom-4 -left-4 flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-secondary-foreground shadow-lg"
+                    className="absolute -bottom-4 -left-4 flex h-10 w-10 items-center justify-center rounded-full bg-blue-500 text-white shadow-lg"
                     animate={{
                       y: [0, 10, 0],
                       rotate: [0, -5, 0],
@@ -321,18 +315,18 @@ export const PlatformStatsShowcase = ({
       </div>
 
       {/* Call to action */}
-      <div className="border-t border-border bg-muted/20 p-4">
+      <div className="border-t border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900">
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
             Join thousands of engineers accelerating their careers
           </p>
-          <CustomLink
-            variant="default"
-            href={isAuthenticated ? '/dashboard' : '/auth/register'}
-            className="rounded-full px-6"
+          <motion.button
+            className="rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-2 text-sm font-medium text-white shadow-md hover:shadow-lg"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            {isAuthenticated ? 'Go to Dashboard' : 'Get Started Free'}
-          </CustomLink>
+            Get Started Free
+          </motion.button>
         </div>
       </div>
     </div>

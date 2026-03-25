@@ -28,7 +28,7 @@ const AchievementsCard = ({
     <div className="transform cursor-pointer rounded-lg bg-white p-6 shadow-lg transition duration-300 ease-in-out hover:scale-105 hover:bg-gray-100">
       <div className="flex items-center space-x-4">
         <div
-          className={`bg-blue-500 flex h-12 w-12 items-center justify-center rounded-full text-white ${imageClass}`}
+          className={`flex h-12 w-12 items-center justify-center rounded-full bg-blue-500 text-white ${imageClass}`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -52,7 +52,7 @@ const AchievementsCard = ({
             <Progress value={value} />
           </div>
         </div>
-        <div className="text-blue-500 mt-2 text-sm">{level}</div>
+        <div className="mt-2 text-sm text-blue-500">{level}</div>
       </div>
     </div>
   );

@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { roadmapCategories, roadmaps } from '../../resources/roadmaps/roadmap';
 
 const prisma = new PrismaClient();
-const admin = 'admin@eduscale.io';
+const admin = 'shailesh@EduScales.com';
 
 const seedDatabase = async () => {
   try {

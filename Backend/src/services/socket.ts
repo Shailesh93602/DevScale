@@ -1,8 +1,8 @@
-import { Server as SocketIOServer, Socket } from 'socket.io';
+import { Server as SocketIOServer } from 'socket.io';
 import { Server as HttpServer } from 'http';
-import logger from '../utils/logger';
-import { verifyToken } from '../utils/jwt';
-import { CORS_ORIGIN } from '../config';
+import logger from '@/utils/logger';
+import { verifyToken } from '@/utils/jwt';
+import { CORS_ORIGIN } from '@/config';
 
 // Define socket event types
 export enum SocketEvents {
@@ -35,7 +35,7 @@ interface DecodedToken {
 }
 
 // Define socket message types
-export interface SocketMessage<T = unknown> {
+export interface SocketMessage<T = any> {
   type: string;
   data: T;
 }
@@ -181,7 +181,7 @@ class SocketService {
     });
   }
 
-  private joinBattleRoom(socket: Socket, userId: string, battleId: string) {
+  private joinBattleRoom(socket: any, userId: string, battleId: string) {
     // Join the socket room for this battle
     socket.join(`battle:${battleId}`);
 
@@ -203,7 +203,7 @@ class SocketService {
     logger.info(`User ${userId} joined battle ${battleId}`);
   }
 
-  private leaveBattleRoom(socket: Socket, userId: string, battleId: string) {
+  private leaveBattleRoom(socket: any, userId: string, battleId: string) {
     // Leave the socket room for this battle
     socket.leave(`battle:${battleId}`);
 
@@ -227,7 +227,7 @@ class SocketService {
     logger.info(`User ${userId} left battle ${battleId}`);
   }
 
-  private handleChatMessage(socket: Socket, userId: string, data: ChatMessage) {
+  private handleChatMessage(socket: any, userId: string, data: ChatMessage) {
     const { battle_id, message } = data;
 
     // Validate message
@@ -256,7 +256,7 @@ class SocketService {
       .emit(SocketEvents.CHAT_MESSAGE, chatMessage);
   }
 
-  private handleDisconnect(socket: Socket, userId: string) {
+  private handleDisconnect(socket: any, userId: string) {
     // Remove socket from user tracking
     const userSockets = this.userSockets.get(userId) || [];
     const updatedSockets = userSockets.filter((id) => id !== socket.id);
@@ -335,7 +335,7 @@ class SocketService {
   }
 
   // Notify about battle completion
-  completeBattle(battleId: string, results: unknown) {
+  completeBattle(battleId: string, results: any) {
     if (!this.io) return;
     this.io.to(`battle:${battleId}`).emit(SocketEvents.BATTLE_COMPLETED, {
       battle_id: battleId,

@@ -1,9 +1,9 @@
 import { PrismaClient, Prisma } from '@prisma/client';
 import { createAppError } from '../utils/errorHandler';
-import { getCache, setCache, deleteCache } from '../services/cacheService';
+import { getCache, setCache, deleteCache } from '@/services/cacheService';
 import BaseRepository from './baseRepository';
 
-import prisma from '../lib/prisma';
+import prisma from '@/lib/prisma';
 
 export default class SystemConfigRepository extends BaseRepository<
   PrismaClient['systemConfig']

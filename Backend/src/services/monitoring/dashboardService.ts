@@ -1,3 +1,4 @@
+import { PerformanceMonitor } from './performanceMonitor';
 import { ErrorTracker } from './errorTracker';
 import { UsageAnalytics } from './usageAnalytics';
 import logger from '../../utils/logger';
@@ -75,7 +76,7 @@ export class DashboardService {
     return 0;
   }
 
-  private static calculateErrorRate(errors: Array<{ count: number }>): number {
+  private static calculateErrorRate(errors: any[]): number {
     const totalErrors = errors.reduce((sum, error) => sum + error.count, 0);
     const timeWindow = 3600; // 1 hour
     return totalErrors / timeWindow;

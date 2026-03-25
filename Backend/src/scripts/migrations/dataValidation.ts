@@ -1,6 +1,6 @@
 import logger from '../../utils/logger';
 
-import prisma from '../../lib/prisma';
+import prisma from '@/lib/prisma';
 
 interface ValidationResult {
   isValid: boolean;

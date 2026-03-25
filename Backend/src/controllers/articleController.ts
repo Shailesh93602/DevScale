@@ -2,8 +2,8 @@ import { Prisma, Status } from '@prisma/client';
 import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
 import { sendResponse } from '../utils/apiResponse';
-import logger from '../utils/logger';
-import { ArticleRepository } from '../repositories/articleRepository';
+import logger from '@/utils/logger';
+import { ArticleRepository } from '@/repositories/articleRepository';
 
 export default class ArticleController {
   private readonly articleRepository: ArticleRepository;

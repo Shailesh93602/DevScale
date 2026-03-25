@@ -28,7 +28,7 @@ export interface WeeklyActivity {
 
 export const useStreak = () => {
   const [getStreakStats] = useAxiosGet<StreakStats>('/streak/stats');
-  const [getWeeklyActivity] = useAxiosGet<WeeklyActivity[]>(
+  const [getWeeklyActivity] = useAxiosGet<{ data: WeeklyActivity[] }>(
     '/streak/weekly-activity',
   );
 

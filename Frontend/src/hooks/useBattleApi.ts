@@ -9,6 +9,9 @@ import {
   Battle,
   BattleFilters,
   BattleQuestion,
+  BattleResponse,
+  BattlesResponse,
+  PaginatedResponse,
 } from '@/types/battle';
 
 // Define the BattleLeaderboardEntry type if it doesn't exist in the battle types
@@ -26,21 +29,21 @@ export const useBattleApi = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [getBattles] = useAxiosGet<Battle[]>('/battles');
-  const [getBattle] = useAxiosGet<Battle>('/battles/{{id}}');
-  const [getBattleQuestions] = useAxiosGet<BattleQuestion[]>(
+  const [getBattles] = useAxiosGet<BattlesResponse>('/battles');
+  const [getBattle] = useAxiosGet<BattleResponse>('/battles/{{id}}');
+  const [getBattleQuestions] = useAxiosGet<PaginatedResponse<BattleQuestion>>(
     '/battles/{{id}}/questions',
   );
-  const [getBattleLeaderboard] = useAxiosGet<BattleLeaderboardEntry[]>(
-    '/battles/{{id}}/leaderboard',
-  );
-  const [createBattle] = useAxiosPost<Battle>('/battles/create');
-  const [updateBattle] = useAxiosPut<Battle>('/battles/{{id}}');
+  const [getBattleLeaderboard] = useAxiosGet<
+    PaginatedResponse<BattleLeaderboardEntry>
+  >('/battles/{{id}}/leaderboard');
+  const [createBattle] = useAxiosPost<BattleResponse>('/battles/create');
+  const [updateBattle] = useAxiosPut<BattleResponse>('/battles/{{id}}');
   const [deleteBattle] = useAxiosDelete<{ success: boolean }>(
     '/battles/{{id}}',
   );
-  const [joinBattle] = useAxiosPost<Battle>('/battles/{{id}}/join');
-  const [leaveBattle] = useAxiosPost<Battle>('/battles/{{id}}/leave');
+  const [joinBattle] = useAxiosPost<BattleResponse>('/battles/{{id}}/join');
+  const [leaveBattle] = useAxiosPost<BattleResponse>('/battles/{{id}}/leave');
   const [submitAnswer] = useAxiosPost<{ success: boolean; score: number }>(
     '/battles/submit',
   );

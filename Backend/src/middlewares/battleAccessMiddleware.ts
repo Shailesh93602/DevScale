@@ -1,11 +1,20 @@
 import { Request, Response, NextFunction } from 'express';
-import prisma from '../lib/prisma';
-import { createAppError } from '../utils/errorHandler';
-import { BattleStatus, Prisma } from '@prisma/client';
+import prisma from '@/lib/prisma';
+import { createAppError } from '@/utils/errorHandler';
+import { BattleStatus } from '@prisma/client';
 
-type BattleWithParticipants = Prisma.BattleGetPayload<{
-  include: { participants: true };
-}>;
+// Extend Express Request type to include battle and battleAccess
+declare global {
+  namespace Express {
+    interface Request {
+      battle?: any;
+      battleAccess?: {
+        isCreator: boolean;
+        isParticipant: boolean;
+      };
+    }
+  }
+}
 
 export const battleAccessMiddleware = async (
   req: Request,
@@ -42,11 +51,11 @@ export const battleAccessMiddleware = async (
 
     // Check if user is a participant
     const isParticipant = battle.participants.some(
-      (participant) => participant.user_id === userId
+      (p: any) => p.user_id === userId
     );
 
     // Add battle and access info to request
-    req.battle = battle as BattleWithParticipants;
+    req.battle = battle;
     req.battleAccess = {
       isCreator,
       isParticipant,

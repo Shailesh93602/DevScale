@@ -1,0 +1,131 @@
+import express, { Application } from 'express';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
+import compression from 'compression';
+import {
+  CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET,
+  CLOUDINARY_CLOUD_NAME,
+  CORS_ORIGIN,
+  PORT,
+} from './config';
+import { AppRoutes } from './routes/routes';
+import { errorHandler } from './middlewares/errorHandler';
+import logger from './utils/logger';
+import { v2 as cloudinary } from 'cloudinary';
+import prisma from './lib/prisma';
+import 'module-alias/register';
+import 'tsconfig-paths/register';
+
+declare const require: any;
+
+type MaybeServer = ReturnType<Application['listen']>;
+
+export class App {
+  public readonly app: Application;
+
+  constructor() {
+    this.app = express();
+    this.initializeCloudinary();
+    this.initializeMiddlewares();
+    this.initializeRoutes();
+    this.initializeErrorHandling();
+  }
+
+  private initializeCloudinary(): void {
+    cloudinary.config({
+      cloud_name: CLOUDINARY_CLOUD_NAME,
+      api_key: CLOUDINARY_API_KEY,
+      api_secret: CLOUDINARY_API_SECRET,
+    });
+  }
+
+  private initializeMiddlewares(): void {
+    this.app.use(compression()); // Add compression
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(cookieParser());
+    this.app.use(
+      cors({
+        origin: CORS_ORIGIN,
+        credentials: true,
+      })
+    );
+    this.app.use(
+      helmet({
+        contentSecurityPolicy:
+          process.env.NODE_ENV === 'production' ? undefined : false,
+        crossOriginEmbedderPolicy:
+          process.env.NODE_ENV === 'production' ? undefined : false,
+      })
+    );
+
+    const limiter = rateLimit({
+      windowMs: 15 * 60 * 1000,
+      max: 100,
+      standardHeaders: true,
+      legacyHeaders: false,
+      message: 'Too many requests from this IP, please try again later.',
+    });
+    this.app.use(limiter);
+  }
+
+  private initializeRoutes(): void {
+    const appRoutes = new AppRoutes();
+    this.app.use('/api/v1', appRoutes.getRouter());
+  }
+
+  private initializeErrorHandling(): void {
+    // Add default 404 handler
+    this.app.use((req, res, next) => {
+      res.status(404).json({ message: 'Route not found' });
+    });
+
+    // Add existing error handler
+    this.app.use(errorHandler);
+  }
+
+  private setupGracefulShutdown(server: MaybeServer): void {
+    const shutdown = () => {
+      logger.info(
+        'Shutdown signal received. Closing server and database connections.'
+      );
+      server.close(async () => {
+        logger.info('HTTP server closed.');
+        await prisma.$disconnect();
+        process.exit(0);
+      });
+    };
+
+    process.on('SIGTERM', shutdown);
+    process.on('SIGINT', shutdown);
+  }
+
+  public async start(): Promise<void> {
+    try {
+      await prisma.$connect();
+      logger.info('Connected to PostgreSQL database');
+
+      const server = this.app.listen(PORT, () => {
+        logger.info(`Server running on port ${PORT}`);
+      });
+
+      this.setupGracefulShutdown(server);
+    } catch (error) {
+      logger.error('Failed to start server:', error);
+      process.exit(1);
+    }
+  }
+}
+
+// Instantiate and conditionally start server
+const appInstance = new App();
+
+if (require.main === module) {
+  appInstance.start();
+}
+
+// Export the Express application for serverless (Vercel) or testing
+export default appInstance.app;
