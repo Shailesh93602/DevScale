@@ -50,9 +50,6 @@ type ResponseType =
   | 'COURSE_NOT_FOUND'
   | 'COURSE_ENROLLED'
   | 'COURSE_ALREADY_ENROLLED'
-  | 'ENROLLMENTS_FETCHED'
-  | 'ENROLLMENT_NOT_FOUND'
-  | 'ENROLLMENT_UPDATED'
   | 'USER_NOT_FOUND'
   | 'JOBS_FETCHED'
   | 'JOB_FETCHED'
@@ -159,6 +156,8 @@ type ResponseType =
   | 'ROADMAP_UNBOOKMARKED'
   | 'SOMETHING_WRONG'
   | 'MODERATION_QUEUE_FETCHED'
+  | 'AUDIT_LOGS_FETCHED'
+  | 'CONTENT_MODERATED'
   | 'DASHBOARD_STATS_FETCHED'
   | 'RECENT_ACTIVITIES_FETCHED'
   | 'LEARNING_PROGRESS_FETCHED'
@@ -171,10 +170,7 @@ type ResponseType =
   | 'COMMENT_LIKED'
   | 'COMMENT_UNLIKED'
   | 'BATTLE_STATUS_UPDATED'
-  | 'BATTLE_ARCHIVED'
-  | 'DRAFT_SAVED'
-  | 'DRAFT_FETCHED'
-  | 'CODE_EXECUTED';
+  | 'BATTLE_ARCHIVED';
 
 interface ResponseConfig {
   status: number;
@@ -417,21 +413,6 @@ const RESPONSE_MESSAGES: Record<ResponseType, ResponseConfig> = {
     status: 400,
     success: false,
     message: 'Already enrolled in this course',
-  },
-  ENROLLMENTS_FETCHED: {
-    status: 200,
-    success: true,
-    message: 'Enrollments retrieved successfully',
-  },
-  ENROLLMENT_NOT_FOUND: {
-    status: 404,
-    success: false,
-    message: 'Enrollment not found',
-  },
-  ENROLLMENT_UPDATED: {
-    status: 200,
-    success: true,
-    message: 'Enrollment updated successfully',
   },
   USER_NOT_FOUND: {
     status: 404,
@@ -799,11 +780,6 @@ const RESPONSE_MESSAGES: Record<ResponseType, ResponseConfig> = {
     success: true,
     message: 'Topic deleted successfully',
   },
-  CODE_EXECUTED: {
-    status: 200,
-    success: true,
-    message: 'Code executed successfully',
-  },
   RESOURCE_FETCHED: {
     status: 200,
     success: true,
@@ -1033,16 +1009,6 @@ const RESPONSE_MESSAGES: Record<ResponseType, ResponseConfig> = {
     status: 200,
     success: true,
     message: 'Battle archived successfully',
-  },
-  DRAFT_SAVED: {
-    status: 200,
-    success: true,
-    message: 'Progress saved successfully',
-  },
-  DRAFT_FETCHED: {
-    status: 200,
-    success: true,
-    message: 'Progress retrieved successfully',
   },
 };
 

@@ -1,3 +1,4 @@
+import { PrismaClient } from '@prisma/client';
 import { TransactionManager } from '../../utils/transactionManager';
 import prisma from '../../lib/prisma';
 

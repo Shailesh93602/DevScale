@@ -1,9 +1,19 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
+import { ActivityType } from '@prisma/client';
 
 import { catchAsync } from '../utils/catchAsync';
-import { sendResponse } from '../utils/apiResponse';
+import { sendResponse } from '@/utils/apiResponse';
+import * as Joi from 'joi';
 import { createAppError } from '../utils/errorHandler';
 import StreakRepository from '../repositories/streakRepository';
+
+const updateStreakSchema = Joi.object({
+  activityType: Joi.string()
+    .valid(...Object.values(ActivityType))
+    .required(),
+  minutesSpent: Joi.number().min(1).required(),
+  timezone: Joi.string().default('UTC'),
+});
 
 export class StreakController {
   private readonly streakRepo: StreakRepository;
@@ -59,6 +69,7 @@ export class StreakController {
       throw createAppError('User not authenticated', 401);
     }
 
+    const timezone = (req.query.timezone as string) || 'UTC';
     const weeklyActivity = await this.streakRepo.getWeeklyActivity(userId);
 
     sendResponse(res, 'WEEKLY_ACTIVITY_FETCHED', { data: weeklyActivity });

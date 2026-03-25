@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
-import { BattleRepository } from '../repositories/battleRepository';
-import logger from '../utils/logger';
-import { sendResponse } from '../utils/apiResponse';
-import { createAppError } from '../utils/errorHandler';
+import { BattleRepository } from '@/repositories/battleRepository';
+import logger from '@/utils/logger';
+import { sendResponse } from '@/utils/apiResponse';
+import { createAppError } from '@/utils/errorHandler';
 import { BattleStatus, BattleType, Difficulty, Length } from '@prisma/client';
-import battleSocketService from '../services/battleSocket';
-import socketService from '../services/socket';
+import battleSocketService from '@/services/battleSocket';
+import socketService from '@/services/socket';
 
 export default class BattleController {
   private readonly battleRepo: BattleRepository;

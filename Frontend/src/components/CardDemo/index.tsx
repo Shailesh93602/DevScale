@@ -1,6 +1,6 @@
 'use client';
 import { animate, AnimationSequence, motion } from 'framer-motion';
-import React, { ReactNode, useEffect, useRef } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import { cn } from '@/utils/cn';
 import { GoCopilot } from 'react-icons/go';
 
@@ -10,7 +10,7 @@ export function CardDemo() {
       <CardSkeletonContainer>
         <Skeleton />
       </CardSkeletonContainer>
-      <CardTitle>EduScale</CardTitle>
+      <CardTitle>Mr Engineer</CardTitle>
       <CardDescription>
         Personalized learning paths to accelerate your growth
       </CardDescription>
@@ -77,10 +77,10 @@ const Skeleton = () => {
           <ClaudeLogo className="h-4 w-4" />
         </Container>
         <Container className="circle-2 h-12 w-12">
-          <GoCopilot className="h-6 w-6 text-foreground" />
+          <GoCopilot className="h-6 w-6 dark:text-white" />
         </Container>
         <Container className="circle-3">
-          <OpenAILogo className="h-8 w-8 text-foreground" />
+          <OpenAILogo className="h-8 w-8 dark:text-white" />
         </Container>
         <Container className="circle-4 h-12 w-12">
           <MetaIconOutline className="h-6 w-6" />
@@ -99,45 +99,35 @@ const Skeleton = () => {
   );
 };
 const Sparkles = () => {
-  const sparkleData = useRef(
-    [...Array(12)].map(() => ({
-      moveX: Math.random() * 2 - 1,
-      moveY: Math.random() * 2 - 1,
-      opacity: Math.random(),
-      animTop: Math.random() * 100,
-      animLeft: Math.random() * 100,
-      duration: Math.random() * 2 + 4,
-      top: Math.random() * 100,
-      left: Math.random() * 100,
-    })),
-  );
-
+  const randomMove = () => Math.random() * 2 - 1;
+  const randomOpacity = () => Math.random();
+  const random = () => Math.random();
   return (
     <div className="absolute inset-0">
-      {sparkleData.current.map((s, i) => (
+      {[...Array(12)].map((_, i) => (
         <motion.span
           key={`star-${i}`}
           animate={{
-            top: `calc(${s.animTop}% + ${s.moveX}px)`,
-            left: `calc(${s.animLeft}% + ${s.moveY}px)`,
-            opacity: s.opacity,
+            top: `calc(${random() * 100}% + ${randomMove()}px)`,
+            left: `calc(${random() * 100}% + ${randomMove()}px)`,
+            opacity: randomOpacity(),
             scale: [1, 1.2, 0],
           }}
           transition={{
-            duration: s.duration,
+            duration: random() * 2 + 4,
             repeat: Infinity,
             ease: 'linear',
           }}
           style={{
             position: 'absolute',
-            top: `${s.top}%`,
-            left: `${s.left}%`,
+            top: `${random() * 100}%`,
+            left: `${random() * 100}%`,
             width: `2px`,
             height: `2px`,
             borderRadius: '50%',
             zIndex: 1,
           }}
-          className="inline-block bg-foreground"
+          className="inline-block bg-black dark:bg-white"
         ></motion.span>
       ))}
     </div>
@@ -154,7 +144,7 @@ export const Card = ({
   return (
     <div
       className={cn(
-        'group mx-auto w-full max-w-sm rounded-xl border border-[rgba(255,255,255,0.10)] bg-muted p-8 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.06)_inset]',
+        'group mx-auto w-full max-w-sm rounded-xl border border-[rgba(255,255,255,0.10)] bg-gray-100 p-8 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.06)_inset] dark:bg-[rgba(40,40,40,0.70)]',
         className,
       )}
     >
@@ -171,7 +161,12 @@ export const CardTitle = ({
   className?: string;
 }) => {
   return (
-    <h3 className={cn('py-2 text-lg font-semibold text-foreground', className)}>
+    <h3
+      className={cn(
+        'py-2 text-lg font-semibold text-gray-800 dark:text-white',
+        className,
+      )}
+    >
       {children}
     </h3>
   );
@@ -187,7 +182,7 @@ export const CardDescription = ({
   return (
     <p
       className={cn(
-        'max-w-sm text-sm font-normal text-muted-foreground',
+        'max-w-sm text-sm font-normal text-neutral-600 dark:text-neutral-400',
         className,
       )}
     >
@@ -211,7 +206,7 @@ export const CardSkeletonContainer = ({
         'z-40 h-[15rem] rounded-xl md:h-[20rem]',
         className,
         showGradient &&
-          'bg-muted [mask-image:radial-gradient(50%_50%_at_50%_50%,white_0%,transparent_100%)]',
+          'bg-neutral-300 [mask-image:radial-gradient(50%_50%_at_50%_50%,white_0%,transparent_100%)] dark:bg-[rgba(40,40,40,0.70)]',
       )}
     >
       {children}

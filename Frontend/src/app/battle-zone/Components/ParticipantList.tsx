@@ -34,7 +34,7 @@ const ParticipantList: React.FC<ParticipantListProps> = ({
 
   // Get rank badge color
   const getRankBadge = (index: number) => {
-    if (index === 0) return <Trophy className="text-yellow-500 h-4 w-4" />;
+    if (index === 0) return <Trophy className="h-4 w-4 text-yellow-500" />;
     if (index === 1) return <Medal className="h-4 w-4 text-gray-400" />;
     if (index === 2) return <Medal className="h-4 w-4 text-amber-700" />;
     return null;
@@ -45,25 +45,37 @@ const ParticipantList: React.FC<ParticipantListProps> = ({
     switch (status) {
       case 'active':
         return (
-          <Badge variant="outline" className="bg-green/10 text-green">
+          <Badge
+            variant="outline"
+            className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+          >
             Active
           </Badge>
         );
       case 'inactive':
         return (
-          <Badge variant="outline" className="bg-muted text-muted-foreground">
+          <Badge
+            variant="outline"
+            className="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300"
+          >
             Inactive
           </Badge>
         );
       case 'joined':
         return (
-          <Badge variant="outline" className="bg-blue/10 text-blue">
+          <Badge
+            variant="outline"
+            className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
+          >
             Joined
           </Badge>
         );
       case 'left':
         return (
-          <Badge variant="outline" className="bg-red/10 text-red">
+          <Badge
+            variant="outline"
+            className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
+          >
             Left
           </Badge>
         );

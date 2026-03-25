@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import helmet from 'helmet';
 import xss from 'xss-clean';
 import hpp from 'hpp';
+import mongoSanitize from 'express-mongo-sanitize';
 import csrf from 'csurf';
 import { createAppError } from '../utils/errorHandler';
 import logger from '../utils/logger';
@@ -13,6 +14,9 @@ export const xssProtection = xss();
 export const parameterProtection = hpp({
   whitelist: ['sort', 'page', 'limit', 'fields'], // Allow these query params to be duplicated
 });
+
+// Data Sanitization
+export const sanitizeData = mongoSanitize();
 
 // CSRF Protection
 export const csrfProtection = csrf({ cookie: true });

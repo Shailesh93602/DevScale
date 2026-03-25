@@ -4,7 +4,6 @@ import Navbar from '@/components/Navbar';
 import { toast } from 'react-toastify';
 import DOMPurify from 'dompurify';
 import { useAxiosGet, useAxiosPost } from '@/hooks/useAxios';
-import { Button } from '@/components/ui/button';
 
 interface IArticle {
   id: string;
@@ -26,7 +25,11 @@ export default function Article({ id }: { id: string }) {
     '/articles/{{articleId}}/moderation',
   );
 
-  const [getArticle] = useAxiosGet<IArticle>('/articles/{{articleId}}');
+  const [getArticle] = useAxiosGet<{
+    success?: boolean;
+    article: IArticle;
+    message?: string;
+  }>('/articles/{{articleId}}');
 
   const handleSaveNote = async () => {
     try {
@@ -51,11 +54,11 @@ export default function Article({ id }: { id: string }) {
     try {
       const response = await getArticle({}, { articleId: id });
 
-      if (response?.success) {
-        setArticle(response?.data as IArticle);
-        setModerationNotes((response?.data as IArticle)?.moderationNotes);
+      if (response?.data?.success) {
+        setArticle(response?.data?.article);
+        setModerationNotes(response?.data?.article?.moderationNotes);
       } else {
-        toast.error(response?.message ?? 'Failed to fetch article.');
+        toast.error(response?.data?.message ?? 'Failed to fetch article.');
       }
     } catch (error) {
       console.error('Error fetching article:', error);
@@ -72,38 +75,41 @@ export default function Article({ id }: { id: string }) {
       <div className="container mx-auto p-6">
         <h1 className="mb-6 text-3xl font-bold">{article?.title}</h1>
         <div className="mb-4">
-          <p className="text-foreground">By {article?.author?.username}</p>
-          <p className="text-muted-foreground">
+          <p className="text-gray-700 dark:text-white">
+            By {article?.author?.username}
+          </p>
+          <p className="text-gray-600 dark:text-gray-400">
             {new Date(article?.createdAt ?? '').toLocaleDateString()}
           </p>
         </div>
-        <div className="rounded-lg bg-card p-6 shadow-md">
+        <div className="rounded-lg bg-white p-6 shadow-md dark:bg-gray-800">
           <p
-            className="prose"
+            className="prose dark:prose-invert"
             dangerouslySetInnerHTML={{
               __html: sanitizeContent(article?.content ?? ''),
             }}
           ></p>
         </div>
-        <div className="mt-6 rounded-lg bg-muted p-4">
+        <div className="mt-6 rounded-lg bg-gray-100 p-4 dark:bg-gray-700">
           <h2 className="mb-4 text-xl font-semibold">Moderation Notes</h2>
           {moderationNotes ? (
             <p className="mb-4">{moderationNotes}</p>
           ) : (
-            <p className="mb-4 text-muted-foreground">
-              No moderation notes yet.
-            </p>
+            <p className="mb-4 text-gray-500">No moderation notes yet.</p>
           )}
           <textarea
-            className="w-full rounded-lg border bg-input p-2 text-foreground"
+            className="w-full rounded-lg border p-2 dark:bg-gray-600 dark:text-white"
             rows={4}
             value={newNote}
             onChange={(e) => setNewNote(e.target.value)}
             placeholder="Add moderation notes here..."
           />
-          <Button onClick={handleSaveNote} className="mt-4">
+          <button
+            onClick={handleSaveNote}
+            className="mt-4 rounded-lg bg-blue-500 px-4 py-2 text-white"
+          >
             Save Note
-          </Button>
+          </button>
         </div>
       </div>
     </>

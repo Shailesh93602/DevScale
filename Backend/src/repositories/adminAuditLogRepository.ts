@@ -7,7 +7,7 @@ import {
   AuditLogParams,
   ChangeHistoryParams,
   SecurityLogParams,
-} from '../types';
+} from '@/types';
 
 export default class AdminAuditLogRepository extends BaseRepository<
   typeof prisma.adminAuditLog

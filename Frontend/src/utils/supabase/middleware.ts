@@ -1,34 +1,10 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
-import {
-  isGuestOnlyRoute,
-  requiresAuthRoute,
-  requiresAdminRoute,
-} from '@/lib/public-routes';
 
-/**
- * Middleware — Server-side auth & RBAC guard
- *
- * Flow:
- * 1. Refresh Supabase session (CRITICAL — must be first)
- * 2. If user is NOT authenticated:
- *    - Allow public routes through
- *    - Redirect protected routes to /auth/login
- * 3. If user IS authenticated:
- *    - Redirect from auth pages (login/register) to /dashboard
- *    - For admin routes: read role from JWT custom claims
- *    - Allow everything else through
- *
- * Note: Admin role check in middleware uses JWT custom claims.
- * For this to work, Supabase must be configured to include the role
- * in the JWT via a custom claim. See: supabase/functions/set-role-claim
- *
- * If JWT custom claims are not set up yet, admin protection falls back
- * to the client-side RoleGuard component (still secure because the
- * server API also validates roles via authMiddleware + rbacMiddleware).
- */
 export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request });
+  let supabaseResponse = NextResponse.next({
+    request,
+  });
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -42,7 +18,9 @@ export async function updateSession(request: NextRequest) {
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value),
           );
-          supabaseResponse = NextResponse.next({ request });
+          supabaseResponse = NextResponse.next({
+            request,
+          });
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options),
           );
@@ -51,63 +29,61 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  // ─── CRITICAL: Do NOT add any code between createServerClient and getUser ──
-  // This call refreshes the session and prevents random logouts.
+  // Do not run code between createServerClient and
+  // supabase.auth.getUser(). A simple mistake could make it very hard to debug
+  // issues with users being randomly logged out.
+
+  // IMPORTANT: DO NOT REMOVE auth.getUser()
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  // ─────────────────────────────────────────────────────────────────────────────
 
-  const pathname = request.nextUrl.pathname;
-
-  // ── Unauthenticated user ───────────────────────────────────────────────────
+  // Handle non-authenticated users
   if (!user) {
-    if (requiresAuthRoute(pathname)) {
-      // Save the attempted URL so we can redirect back after login
-      const loginUrl = request.nextUrl.clone();
-      loginUrl.pathname = '/auth/login';
-      loginUrl.searchParams.set('callbackUrl', pathname);
-      return NextResponse.redirect(loginUrl);
-    }
-    // Public route — allow through
-    return supabaseResponse;
-  }
-
-  // ── Authenticated user ─────────────────────────────────────────────────────
-
-  // Prevent authenticated users from seeing auth pages
-  if (isGuestOnlyRoute(pathname)) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/dashboard';
-    return NextResponse.redirect(url);
-  }
-
-  // Redirect root to dashboard for authenticated users
-  if (pathname === '/') {
-    const url = request.nextUrl.clone();
-    url.pathname = '/dashboard';
-    return NextResponse.redirect(url);
-  }
-
-  // ── Admin route protection ─────────────────────────────────────────────────
-  if (requiresAdminRoute(pathname)) {
-    // Read role from Supabase JWT custom claims
-    // app_metadata.role is set by your backend/Supabase function when the user's role changes
-    const userRole =
-      (user.app_metadata?.role as string) ||
-      (user.user_metadata?.role as string);
-
-    const isAdmin = userRole?.toUpperCase() === 'ADMIN';
-
-    if (!isAdmin) {
-      // Not an admin — redirect to dashboard with a denied message
+    // Allow access to landing page, auth pages, and public pages
+    if (
+      request.nextUrl.pathname === '/' ||
+      request.nextUrl.pathname.startsWith('/auth') ||
+      request.nextUrl.pathname === '/about' ||
+      request.nextUrl.pathname === '/contact'
+    ) {
+      return supabaseResponse;
+    } else {
+      // Redirect to login for all other routes
       const url = request.nextUrl.clone();
-      url.pathname = '/dashboard';
-      url.searchParams.set('error', 'access_denied');
+      url.pathname = '/auth/login';
       return NextResponse.redirect(url);
     }
   }
 
-  // All good — let the request through with refreshed session cookies
+  // Handle authenticated users
+  // Redirect from landing page to dashboard
+  if (request.nextUrl.pathname === '/') {
+    const url = request.nextUrl.clone();
+    url.pathname = '/dashboard';
+    return NextResponse.redirect(url);
+  }
+
+  // Prevent authenticated users from accessing auth pages
+  if (request.nextUrl.pathname.startsWith('/auth')) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/dashboard';
+    return NextResponse.redirect(url);
+  }
+
+  // IMPORTANT: You *must* return the supabaseResponse object as it is.
+  // If you're creating a new response object with NextResponse.next() make sure to:
+  // 1. Pass the request in it, like so:
+  //    const myNewResponse = NextResponse.next({ request })
+  // 2. Copy over the cookies, like so:
+  //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
+  // 3. Change the myNewResponse object to fit your needs, but avoid changing
+  //    the cookies!
+  // 4. Finally:
+  //    return myNewResponse
+  // If this is not done, you may be causing the browser and server to go out
+  // of sync and terminate the user's session prematurely!
+
   return supabaseResponse;
 }

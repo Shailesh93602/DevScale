@@ -21,19 +21,19 @@ export const executeCode = async (
   params: ExecuteCodeParams
 ): Promise<ExecutionResult> => {
   try {
-    // Using Judge0 API for code execution with base64 encoding for stability
+    // Using Judge0 API for code execution
     const response = await axios.post(
-      'https://judge029.p.rapidapi.com/submissions?base64_encoded=true',
+      'https://judge0-ce.p.rapidapi.com/submissions',
       {
-        source_code: Buffer.from(params.code).toString('base64'),
+        source_code: params.code,
         language_id: getLanguageId(params.language),
-        stdin: Buffer.from(params.input).toString('base64'),
+        stdin: params.input,
         cpu_time_limit: params.timeLimit || 2,
         memory_limit: params.memoryLimit || 128000,
       },
       {
         headers: {
-          'X-RapidAPI-Host': 'judge029.p.rapidapi.com',
+          'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com',
           'X-RapidAPI-Key': COMPILER_CLIENT_SECRET,
         },
       }
@@ -44,44 +44,24 @@ export const executeCode = async (
     // Poll for results
     const result = await pollSubmissionResult(token);
 
-    // Decode base64 results
-    const decode = (str: string | null) => 
-      str ? Buffer.from(str, 'base64').toString('utf-8') : '';
-
-    const stdout = decode(result.stdout);
-    const stderr = decode(result.stderr);
-    const compileOutput = decode(result.compile_output);
-    const message = result.message ? decode(result.message) : '';
-
-    const combinedOutput = [compileOutput, stdout, stderr, message]
-      .filter(Boolean)
-      .join('\n')
-      .trim();
-
     return {
-      output: combinedOutput || 'Execution completed with no output.',
+      output: result.stdout || result.stderr || '',
       executionTime: result.time,
       memoryUsed: result.memory,
     };
-  } catch (error: any) {
+  } catch (error) {
     logger.error('Code execution error:', error);
-    
-    if (error.response?.status === 401) {
-      throw createAppError('Code execution API key is missing or invalid. Please check your Backend .env file.', 401);
-    }
-    
-    const message = error.response?.data?.error || error.response?.data?.message || error.message || 'Failed to execute code';
-    throw createAppError(`Code Execution Error: ${message}`, 500);
+    throw createAppError('Failed to execute code', 500);
   }
 };
 
 const pollSubmissionResult = async (token: string, maxAttempts = 10) => {
   for (let i = 0; i < maxAttempts; i++) {
     const response = await axios.get(
-      `https://judge029.p.rapidapi.com/submissions/${token}?base64_encoded=true`,
+      `https://judge0-ce.p.rapidapi.com/submissions/${token}`,
       {
         headers: {
-          'X-RapidAPI-Host': 'judge029.p.rapidapi.com',
+          'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com',
           'X-RapidAPI-Key': COMPILER_CLIENT_SECRET,
         },
       }
@@ -103,7 +83,7 @@ const getLanguageId = (language: string): number => {
     python: 71,
     java: 62,
     cpp: 54,
-    go: 60,
+    // Add more languages as needed
   };
 
   const id = languageMap[language.toLowerCase()];

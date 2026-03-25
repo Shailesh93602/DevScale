@@ -2,7 +2,7 @@ import { Difficulty } from '@prisma/client';
 import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
 import { sendResponse } from '../utils/apiResponse';
-import { ChallengeRepository } from '../repositories/challengeRepository';
+import { ChallengeRepository } from '@/repositories/challengeRepository';
 export default class ChallengeController {
   private readonly challengeRepo: ChallengeRepository;
 
@@ -22,7 +22,7 @@ export default class ChallengeController {
     );
 
     return sendResponse(res, 'CHALLENGES_FETCHED', {
-      data: result.data,
+      data: { challenges: result.data },
       meta: result.meta,
     });
   });
@@ -37,13 +37,13 @@ export default class ChallengeController {
       return sendResponse(res, 'CHALLENGE_NOT_FOUND');
     }
 
-    return sendResponse(res, 'CHALLENGE_FETCHED', { data: challenge });
+    return sendResponse(res, 'CHALLENGE_FETCHED', { data: { challenge } });
   });
 
   public createNewChallenge = catchAsync(
     async (req: Request, res: Response) => {
       const challenge = await this.challengeRepo.create(req.body);
-      return sendResponse(res, 'CHALLENGE_CREATED', { data: challenge });
+      return sendResponse(res, 'CHALLENGE_CREATED', { data: { challenge } });
     }
   );
 
@@ -54,14 +54,14 @@ export default class ChallengeController {
         where: { id },
         data: req.body,
       });
-      return sendResponse(res, 'CHALLENGE_UPDATED', { data: challenge });
+      return sendResponse(res, 'CHALLENGE_UPDATED', { data: { challenge } });
     }
   );
 
   public getChallengeStatistics = catchAsync(
     async (req: Request, res: Response) => {
       const stats = await this.challengeRepo.getChallengeStats();
-      return sendResponse(res, 'CHALLENGE_FETCHED', { data: stats });
+      return sendResponse(res, 'CHALLENGE_FETCHED', { data: { stats } });
     }
   );
 
@@ -74,7 +74,7 @@ export default class ChallengeController {
         tags: tags ? (tags as string).split(',') : undefined,
       });
 
-      return sendResponse(res, 'CHALLENGES_FETCHED', { data: challenges });
+      return sendResponse(res, 'CHALLENGES_FETCHED', { data: { challenges } });
     }
   );
 
@@ -98,7 +98,7 @@ export default class ChallengeController {
         time_spent,
       });
 
-      return sendResponse(res, 'CHALLENGE_SUBMITTED', { data: submission });
+      return sendResponse(res, 'CHALLENGE_SUBMITTED', { data: { submission } });
     }
   );
 
@@ -109,7 +109,7 @@ export default class ChallengeController {
         challengeId as string
       );
       return sendResponse(res, 'LEADERBOARD_FETCHED', {
-        data: leaderboard,
+        data: { leaderboard },
       });
     }
   );

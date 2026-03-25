@@ -180,11 +180,11 @@ export const BattleInterface: React.FC<BattleInterfaceProps> = ({
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <Trophy className="text-yellow-500 h-5 w-5" />
+            <Trophy className="h-5 w-5 text-yellow-500" />
             <span className="text-lg font-bold">{score.score}</span>
           </div>
           <div className="flex items-center gap-2">
-            <Timer className="text-blue-500 h-5 w-5" />
+            <Timer className="h-5 w-5 text-blue-500" />
             <span className="text-lg font-medium">{timeLeft}s</span>
           </div>
         </div>

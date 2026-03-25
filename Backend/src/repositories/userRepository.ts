@@ -1,7 +1,7 @@
 import { Prisma, User } from '@prisma/client';
 import BaseRepository from './baseRepository';
-import { createAppError } from '../utils/errorHandler';
-import logger from '../utils/logger';
+import { createAppError } from '@/utils/errorHandler';
+import logger from '@/utils/logger';
 import prisma from '../lib/prisma';
 
 export default class UserRepository extends BaseRepository<typeof prisma.user> {
@@ -74,8 +74,6 @@ export default class UserRepository extends BaseRepository<typeof prisma.user> {
         id: true,
         email: true,
         username: true,
-        first_name: true,
-        last_name: true,
         role: true,
         specialization: true,
         college: true,
@@ -159,71 +157,8 @@ export default class UserRepository extends BaseRepository<typeof prisma.user> {
         typeof group._count === 'number' ? group._count : 0;
     });
 
-    // Calculate completion rates per experience level
-    const userRoadmapsWithProgress = await this.prismaClient.userRoadmap.findMany({
-      include: {
-        user: {
-          select: {
-            experience_level: true,
-          },
-        },
-        roadmap: {
-          include: {
-            topics: {
-              select: {
-                topic_id: true,
-              },
-            },
-          },
-        },
-      },
-    });
-
-    const userCompletedTopics = await this.prismaClient.userProgress.findMany({
-      where: {
-        is_completed: true,
-      },
-      select: {
-        user_id: true,
-        topic_id: true,
-      },
-    });
-
-    // Group completed topics by user
-    const userCompletedMap = new Map<string, Set<string>>();
-    userCompletedTopics.forEach((p) => {
-      if (!p.topic_id) return;
-      if (!userCompletedMap.has(p.user_id)) {
-        userCompletedMap.set(p.user_id, new Set());
-      }
-      userCompletedMap.get(p.user_id)!.add(p.topic_id);
-    });
-
-    const experienceLevelProgress = new Map<string, { totalProgress: number; count: number }>();
-
-    userRoadmapsWithProgress.forEach((ur) => {
-      const level = ur.user.experience_level?.toLowerCase() || 'unknown';
-      const roadmapTopics = ur.roadmap.topics;
-      if (roadmapTopics.length === 0) return;
-
-      const userCompletedSet = userCompletedMap.get(ur.user_id);
-      const completedCount = roadmapTopics.filter((t) =>
-        t.topic_id ? userCompletedSet?.has(t.topic_id) : false
-      ).length;
-      const progress = (completedCount / roadmapTopics.length) * 100;
-
-      if (!experienceLevelProgress.has(level)) {
-        experienceLevelProgress.set(level, { totalProgress: 0, count: 0 });
-      }
-      const stats = experienceLevelProgress.get(level)!;
-      stats.totalProgress += progress;
-      stats.count++;
-    });
-
+    // TODO: Add actual logic here
     const completionRates: Record<string, number> = {};
-    experienceLevelProgress.forEach((stats, level) => {
-      completionRates[level] = Math.round(stats.totalProgress / stats.count);
-    });
 
     return {
       totalUsers,
@@ -261,8 +196,7 @@ export default class UserRepository extends BaseRepository<typeof prisma.user> {
       where.OR = [
         { username: { contains: query, mode: 'insensitive' } },
         { email: { contains: query, mode: 'insensitive' } },
-        { first_name: { contains: query, mode: 'insensitive' } },
-        { last_name: { contains: query, mode: 'insensitive' } },
+        { full_name: { contains: query, mode: 'insensitive' } },
       ];
     }
 
@@ -352,8 +286,16 @@ export default class UserRepository extends BaseRepository<typeof prisma.user> {
           break;
       }
 
+      // TODO: Update this with relevant common function
       transaction.push(
-        this.createActivityLog(user_id, `BULK_${action.toUpperCase()}`, params)
+        prisma.userActivityLog.create({
+          data: {
+            user_id,
+            action: `BULK_${action.toUpperCase()}`,
+            details: params as Prisma.InputJsonValue,
+            timestamp: new Date(),
+          },
+        })
       );
     }
 
@@ -391,24 +333,6 @@ export default class UserRepository extends BaseRepository<typeof prisma.user> {
     await this.update({
       where: { id },
       data: { role_id },
-    });
-  }
-
-  /**
-   * Creates a user activity log entry
-   */
-  private createActivityLog(
-    user_id: string,
-    action: string,
-    details?: Record<string, unknown>
-  ): Prisma.PrismaPromise<unknown> {
-    return prisma.userActivityLog.create({
-      data: {
-        user_id,
-        action,
-        details: details as Prisma.InputJsonValue,
-        timestamp: new Date(),
-      },
     });
   }
 }

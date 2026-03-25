@@ -26,34 +26,31 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
     {
       title: 'Active Battles',
       value: '12',
-      icon: <Zap className="text-yellow-500 h-5 w-5" />,
+      icon: <Zap className="h-5 w-5 text-yellow-500" />,
       color: 'text-yellow-500',
     },
     {
       title: 'Upcoming Battles',
       value: '8',
-      icon: <Clock className="text-blue-500 h-5 w-5" />,
+      icon: <Clock className="h-5 w-5 text-blue-500" />,
       color: 'text-blue-500',
     },
     {
       title: 'Total Participants',
       value: '45',
-      icon: <Users className="text-green-500 h-5 w-5" />,
+      icon: <Users className="h-5 w-5 text-green-500" />,
       color: 'text-green-500',
     },
     {
       title: 'Win Rate',
       value: '75%',
-      icon: <Target className="text-purple-500 h-5 w-5" />,
+      icon: <Target className="h-5 w-5 text-purple-500" />,
       color: 'text-purple-500',
     },
   ];
 
   // Get breadcrumb segments
-  const segments = pathname
-    .split('/')
-    .filter(Boolean)
-    .filter((s) => s !== 'battle-zone');
+  const segments = pathname.split('/').filter(Boolean);
   const isHomePage = pathname === '/battle-zone';
 
   return (
@@ -74,7 +71,7 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
                 <React.Fragment key={segment}>
                   <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   <Link
-                    href={`/battle-zone/${segments.slice(0, index + 1).join('/')}`}
+                    href={`/${segments.slice(0, index + 1).join('/')}`}
                     className={cn(
                       'text-sm font-medium',
                       index === segments.length - 1
@@ -82,10 +79,7 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
                         : 'text-muted-foreground hover:text-foreground',
                     )}
                   >
-                    {segment
-                      .split('-')
-                      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-                      .join(' ')}
+                    {segment.charAt(0).toUpperCase() + segment.slice(1)}
                   </Link>
                 </React.Fragment>
               ))}
@@ -130,27 +124,20 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
             <motion.div
               initial={{ opacity: 0, translateY: 20 }}
               animate={{ opacity: 1, translateY: 0 }}
-              className="border-primary/20 rounded-2xl border bg-card p-10 shadow-lg"
-              style={{
-                background:
-                  'linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--primary)/0.08) 100%)',
-              }}
+              className="rounded-lg border bg-card p-6 shadow-sm"
             >
-              <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+              <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-3xl font-extrabold tracking-tight">
-                    Welcome to Battle Zone! ⚡
+                  <h2 className="text-2xl font-bold">
+                    Welcome to Battle Zone!
                   </h2>
-                  <p className="mt-3 text-lg text-muted-foreground">
-                    Create your first battle and start competing with top-tier
-                    developers seamlessly.
+                  <p className="mt-2 text-muted-foreground">
+                    Create your first battle and start competing with other
+                    developers.
                   </p>
                 </div>
-                <Link href="/battle-zone/create" className="shrink-0">
-                  <Button
-                    size="lg"
-                    className="shadow-primary/30 flex items-center gap-2 rounded-xl px-8 shadow-md"
-                  >
+                <Link href="/battle-zone/create">
+                  <Button size="lg" className="flex items-center gap-2">
                     <Swords className="h-5 w-5" />
                     Create Your First Battle
                   </Button>
@@ -158,7 +145,7 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
               </div>
             </motion.div>
 
-            {/* Stats Cards - Temporarily removed because they were static
+            {/* Stats Cards */}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {quickStats.map((stat) => (
                 <motion.div
@@ -184,7 +171,7 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
                   </Card>
                 </motion.div>
               ))}
-            </div> */}
+            </div>
           </div>
         ) : (
           children

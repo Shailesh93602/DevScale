@@ -1,33 +1,20 @@
-// ─── Role / RBAC ─────────────────────────────────────────────────────────────
-// IMPORTANT: add new roles here; the system is designed for easy role extension
-export type UserRole = 'ADMIN' | 'STUDENT' | 'MODERATOR' | string;
-
-export interface IUserRole {
-  id: string;
-  name: UserRole;
-  description?: string;
-}
-
-// ─── User ─────────────────────────────────────────────────────────────────────
 export interface IUser {
   id: string;
   username: string;
-  first_name: string;
-  last_name: string;
+  fullName: string;
   email: string;
-  avatar_url: string;
+  avatarUrl: string;
   bio: string;
   address: string;
-  github_url: string;
-  linkedin_url: string;
-  twitter_url: string;
-  website_url: string;
+  githubUrl: string;
+  linkedinUrl: string;
+  twitterUrl: string;
+  websiteUrl: string;
   specialization: string;
   college: string;
-  graduation_year: number;
+  graduationYear: number;
   skills: string[];
-  experience_level: string;
-  role?: IUserRole | null;
+  experienceLevel: string;
 }
 
 export interface Comment {
@@ -43,8 +30,7 @@ export interface Comment {
   user: {
     id: string;
     username: string;
-    first_name: string;
-    last_name: string;
+    full_name: string;
     avatar_url: string | null;
   };
   replies: Comment[];

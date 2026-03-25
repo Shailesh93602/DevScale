@@ -78,12 +78,12 @@ export default function BattleDetailPage() {
   useEffect(() => {
     const loadBattle = async () => {
       const response = await fetchBattle(battleId);
-      if (response) {
-        setBattle(response);
+      if (response?.data) {
+        setBattle(response.data[0]);
 
         // Check if user has already joined
-        const userParticipant = response.participants?.find(
-          (p: { userId: string }) => p.userId === 'current_user', // Replace with actual user ID
+        const userParticipant = response.data[0].participants?.find(
+          (p) => p.userId === 'current_user', // Replace with actual user ID
         );
         setHasJoined(!!userParticipant);
       }
@@ -98,7 +98,7 @@ export default function BattleDetailPage() {
       if (hasJoined) {
         const response = await fetchBattleQuestions(battleId);
         if (response) {
-          setQuestions(response);
+          setQuestions(response.data);
         }
       }
     };
@@ -221,15 +221,15 @@ export default function BattleDetailPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'UPCOMING':
-        return 'bg-blue/10 text-blue';
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
       case 'IN_PROGRESS':
-        return 'bg-green/10 text-green';
+        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
       case 'COMPLETED':
-        return 'bg-muted text-muted-foreground';
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
       case 'CANCELLED':
-        return 'bg-red/10 text-red';
+        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
       default:
-        return 'bg-muted text-muted-foreground';
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
     }
   };
 
@@ -368,7 +368,9 @@ export default function BattleDetailPage() {
           <div
             key={entry.user_id}
             className={`flex items-center justify-between rounded-lg border p-4 ${
-              index === 0 ? 'border-yellow bg-yellow/10' : ''
+              index === 0
+                ? 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20'
+                : ''
             }`}
           >
             <div className="flex items-center gap-3">

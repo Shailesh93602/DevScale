@@ -84,7 +84,9 @@ export default function StatisticsPage() {
   const [statistics, setStatistics] = useState<StatisticsData | null>(null);
   const [timeframe, setTimeframe] = useState('all-time');
 
-  const [getStatistics] = useAxiosGet<StatisticsData>('/api/statistics');
+  const [getStatistics] = useAxiosGet<{ data: StatisticsData }>(
+    '/api/statistics',
+  );
 
   useEffect(() => {
     const fetchStatistics = async () => {
@@ -93,7 +95,7 @@ export default function StatisticsPage() {
         // In a real app, you would pass the timeframe as a query param
         const response = await getStatistics();
         if (response.data) {
-          setStatistics(response.data);
+          setStatistics(response.data.data);
         }
       } catch (error) {
         console.error('Failed to fetch statistics:', error);
@@ -280,10 +282,10 @@ export default function StatisticsPage() {
                       <Badge
                         className={
                           battle.result === 'win'
-                            ? 'bg-green/10 text-green'
+                            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
                             : battle.result === 'loss'
-                              ? 'bg-red/10 text-red'
-                              : 'bg-blue/10 text-blue'
+                              ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+                              : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
                         }
                       >
                         {battle.result === 'win'
@@ -361,10 +363,10 @@ export default function StatisticsPage() {
                   <div
                     className={`mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full ${
                       difficulty.difficulty === 'Easy'
-                        ? 'bg-green/10 text-green'
+                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
                         : difficulty.difficulty === 'Medium'
-                          ? 'bg-yellow/10 text-yellow'
-                          : 'bg-red/10 text-red'
+                          ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
+                          : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
                     }`}
                   >
                     {difficulty.difficulty === 'Easy' ? (
@@ -425,7 +427,9 @@ function StatCard({ title, value, description, icon, trend }: StatCardProps) {
         {trend && (
           <div
             className={`mt-2 flex items-center text-xs ${
-              trend.direction === 'up' ? 'text-green' : 'text-red'
+              trend.direction === 'up'
+                ? 'text-green-600 dark:text-green-400'
+                : 'text-red-600 dark:text-red-400'
             }`}
           >
             {trend.direction === 'up' ? (

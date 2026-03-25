@@ -101,7 +101,7 @@ export const CommentItem = ({
         setReplyContent('');
         setIsReplying(false);
         setShowReplies(true);
-        toast.success('Awesome! Your reply is now live ✨');
+        toast.success('Reply added successfully');
 
         // Update the parent comment with the new reply
         onCommentUpdate(updatedComment);
@@ -164,20 +164,14 @@ export const CommentItem = ({
         <Avatar className="h-10 w-10">
           <AvatarImage src={comment.user.avatar_url || ''} />
           <AvatarFallback>
-            {comment.user.first_name?.[0]?.toUpperCase() ||
-              comment.user.username[0].toUpperCase() ||
-              'U'}
+            {comment.user.full_name?.[0]?.toUpperCase() || 'U'}
           </AvatarFallback>
         </Avatar>
 
         <div className="flex-1">
           <div className="flex items-center justify-between">
             <div>
-              <span className="font-semibold">
-                {comment.user.first_name && comment.user.last_name
-                  ? `${comment.user.first_name} ${comment.user.last_name}`
-                  : comment.user.first_name || comment.user.username}
-              </span>
+              <span className="font-semibold">{comment.user.full_name}</span>
               <span className="ml-2 text-sm text-muted-foreground">
                 @{comment.user.username}
               </span>

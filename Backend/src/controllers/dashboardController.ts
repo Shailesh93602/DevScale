@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { catchAsync } from '../utils/catchAsync';
 import { DashboardRepository } from '../repositories/dashboardRepository';
 import { createAppError } from '../utils/createAppError';
-import { sendResponse } from '../utils/apiResponse';
+import { sendResponse } from '@/utils/apiResponse';
 
 export class DashboardController {
   private readonly dashboardRepo: DashboardRepository;

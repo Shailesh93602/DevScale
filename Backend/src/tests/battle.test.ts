@@ -1,57 +1,25 @@
-import { describe, it, expect, beforeAll, afterAll, jest } from '@jest/globals';
-import { BattleType, Difficulty, Length } from '@prisma/client';
+import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
+import { PrismaClient, BattleType, Difficulty, Length } from '@prisma/client';
 import { BattleRepository } from '../repositories/battleRepository';
 import { createAppError } from '../utils/createAppError';
-import prisma from '../lib/prisma';
-import { redis } from '../services/cacheService';
 
+const prisma = new PrismaClient();
 const battleRepo = new BattleRepository();
 
 describe('Battle Creation', () => {
-  jest.setTimeout(30000); // Increase timeout to 30 seconds
-
-  let topicId: string;
-  let userId: string;
-
   beforeAll(async () => {
     await prisma.$connect();
-
-    // Create a test user
-    const user = await prisma.user.create({
-      data: {
-        supabase_id: 'test-supabase-id-' + Date.now(),
-        email: 'test' + Date.now() + '@example.com',
-        username: 'testuser' + Date.now(),
-        first_name: 'Test',
-        last_name: 'User',
-      }
-    });
-    userId = user.id;
-
-    // Create a test topic
-    const topic = await prisma.topic.create({
-      data: {
-        title: 'Test Topic ' + Date.now(),
-        description: 'Test Topic Description',
-        order: 1,
-      }
-    });
-    topicId = topic.id;
   });
 
   afterAll(async () => {
-    // Cleanup
-    if (userId) await prisma.user.delete({ where: { id: userId } });
-    if (topicId) await prisma.topic.delete({ where: { id: topicId } });
     await prisma.$disconnect();
-    await redis.quit();
   });
 
   it('should create a battle with valid data', async () => {
     const battleData = {
       title: 'Test Battle',
       description: 'Test Description',
-      topic_id: topicId,
+      topic_id: 'test-topic-id',
       difficulty: Difficulty.MEDIUM,
       length: Length.short,
       max_participants: 10,
@@ -61,7 +29,7 @@ describe('Battle Creation', () => {
       time_per_question: 30,
       total_questions: 10,
       type: BattleType.INSTANT,
-      user_id: userId,
+      user_id: 'test-user-id',
     };
 
     const battle = await battleRepo.create({
@@ -87,7 +55,7 @@ describe('Battle Creation', () => {
     const invalidBattleData = {
       title: '', // Empty title
       description: 'Test Description',
-      topic_id: topicId,
+      topic_id: 'test-topic-id',
       difficulty: Difficulty.EASY,
       length: Length.short,
       max_participants: 0, // Invalid max participants
@@ -97,7 +65,7 @@ describe('Battle Creation', () => {
       time_per_question: 0, // Invalid time
       total_questions: 0, // Invalid questions
       type: BattleType.INSTANT,
-      user_id: userId,
+      user_id: 'test-user-id',
     };
 
     await expect(
@@ -121,7 +89,7 @@ describe('Battle Creation', () => {
     const invalidTimeData = {
       title: 'Test Battle',
       description: 'Test Description',
-      topic_id: topicId,
+      topic_id: 'test-topic-id',
       difficulty: Difficulty.MEDIUM,
       length: Length.short,
       max_participants: 10,
@@ -131,7 +99,7 @@ describe('Battle Creation', () => {
       time_per_question: 30,
       total_questions: 10,
       type: BattleType.INSTANT,
-      user_id: userId,
+      user_id: 'test-user-id',
     };
 
     await expect(

@@ -1,10 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useSelector } from 'react-redux';
 import { FaTwitter, FaLinkedin, FaGithub, FaDiscord } from 'react-icons/fa';
-import { BRANDING } from '@/constants';
-import { cn } from '@/lib/utils';
 import {
   quickLinks,
   resourceLinks,
@@ -14,16 +11,17 @@ import {
   companyInfo,
 } from '@/constants';
 
+// Map social media icons to their components
 const getSocialIcon = (iconName: string) => {
   switch (iconName) {
     case 'FaTwitter':
-      return <FaTwitter className="h-4 w-4" />;
+      return <FaTwitter className="h-6 w-6" />;
     case 'FaLinkedin':
-      return <FaLinkedin className="h-4 w-4" />;
+      return <FaLinkedin className="h-6 w-6" />;
     case 'FaGithub':
-      return <FaGithub className="h-4 w-4" />;
+      return <FaGithub className="h-6 w-6" />;
     case 'FaDiscord':
-      return <FaDiscord className="h-4 w-4" />;
+      return <FaDiscord className="h-6 w-6" />;
     default:
       return null;
   }
@@ -34,45 +32,36 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative z-10 border-t border-border bg-card text-card-foreground">
-      <div className="container mx-auto px-4 py-14">
-        {/* Footer Grid */}
-        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
-          {/* Brand Column */}
+    <footer className="relative z-10 border-t border-border bg-accent py-12 text-card-foreground">
+      <div className="container mx-auto px-4">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           <div>
-            <h3 className="gradient-text mb-3 inline-block text-base font-bold">
-              {companyInfo.name}
-            </h3>
-            <p className="mb-5 text-sm leading-relaxed text-muted-foreground">
+            <h3 className="mb-4 text-xl font-bold">{companyInfo.name}</h3>
+            <p className="mb-4 text-muted-foreground">
               {companyInfo.description}
             </p>
-            <div className="flex gap-2">
+            <div className="flex space-x-4">
+              {/* Social links */}
               {socialLinks.map((link) => (
                 <a
                   key={link.name}
                   href={link.href}
-                  className="hover:border-primary/30 hover:bg-primary/8 flex h-8 w-8 items-center justify-center rounded-lg border border-border text-muted-foreground no-underline transition-all duration-150 hover:text-primary"
+                  className="text-muted-foreground transition-colors hover:text-foreground"
                   aria-label={link.name}
-                  target="_blank"
-                  rel="noopener noreferrer"
                 >
                   {getSocialIcon(link.icon)}
                 </a>
               ))}
             </div>
           </div>
-
-          {/* Quick Links */}
           <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-widest text-muted-foreground">
-              Quick Links
-            </h3>
-            <ul className="space-y-2">
+            <h3 className="mb-4 text-lg font-semibold">Quick Links</h3>
+            <ul className="space-y-2 text-muted-foreground">
               {quickLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-sm text-muted-foreground no-underline transition-colors hover:text-foreground"
+                    className="transition-colors hover:text-foreground"
                   >
                     {link.name}
                   </Link>
@@ -80,18 +69,14 @@ export default function Footer() {
               ))}
             </ul>
           </div>
-
-          {/* Resources */}
           <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-widest text-muted-foreground">
-              Resources
-            </h3>
-            <ul className="space-y-2">
+            <h3 className="mb-4 text-lg font-semibold">Resources</h3>
+            <ul className="space-y-2 text-muted-foreground">
               {resourceLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-sm text-muted-foreground no-underline transition-colors hover:text-foreground"
+                    className="transition-colors hover:text-foreground"
                   >
                     {link.name}
                   </Link>
@@ -99,39 +84,32 @@ export default function Footer() {
               ))}
             </ul>
           </div>
-
-          {/* Contact */}
           <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-widest text-muted-foreground">
-              Contact
-            </h3>
-            <ul className="space-y-2">
-              {contactInfo.map((item) => (
-                <li key={item.id} className="text-sm text-muted-foreground">
-                  {item.text}
-                </li>
+            <h3 className="mb-4 text-lg font-semibold">Contact</h3>
+            <ul className="space-y-2 text-muted-foreground">
+              {contactInfo.map((item, index) => (
+                <li key={index}>{item.text}</li>
               ))}
             </ul>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-12 flex flex-col items-center gap-4 border-t border-border pt-8 sm:flex-row sm:justify-between">
-          <div className="flex flex-wrap justify-center gap-1 sm:justify-start">
+        {/* Bottom links and copyright */}
+        <div className="mt-12 border-t border-border pt-8">
+          <div className="mb-4 flex flex-wrap justify-center gap-4">
             {footerLinks.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
-                className={cn(
-                  'rounded-lg px-3 py-1.5 text-xs text-muted-foreground no-underline transition-colors hover:bg-accent hover:text-foreground',
-                  pathname === link.href && 'text-foreground',
-                )}
+                className={`px-3 py-2 text-muted-foreground transition-colors hover:text-foreground ${
+                  pathname === link.href ? 'text-foreground' : ''
+                }`}
               >
                 {link.name}
               </Link>
             ))}
           </div>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-center text-muted-foreground/70">
             &copy; {currentYear} {companyInfo.name}. All rights reserved.
           </p>
         </div>

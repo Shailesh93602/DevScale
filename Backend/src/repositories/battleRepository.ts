@@ -7,16 +7,17 @@ import {
   Prisma,
   Battle,
 } from '@prisma/client';
-import crypto from 'node:crypto';
 import BaseRepository from './baseRepository';
-import { createAppError } from '../utils/errorHandler';
-import prisma from '../lib/prisma';
-import logger from '../utils/logger';
+import { createAppError } from '@/utils/errorHandler';
+import prisma from '@/lib/prisma';
+import logger from '@/utils/logger';
 import {
+  getCache,
+  setCache,
   deleteCache,
   getOrSetCache,
-} from '../services/cacheService';
-import { PerformanceMonitor } from '../services/monitoring/performanceMonitor';
+} from '@/services/cacheService';
+import { PerformanceMonitor } from '@/services/monitoring/performanceMonitor';
 
 interface BattleListMeta {
   total: number;
@@ -28,7 +29,7 @@ interface BattleListMeta {
 }
 
 interface BattleListResponse {
-  data: unknown[];
+  data: any[];
   meta: BattleListMeta;
 }
 
@@ -36,22 +37,11 @@ export class BattleRepository extends BaseRepository<PrismaClient['battle']> {
   private static readonly CACHE_TTL = 3600; // 1 hour
   private static readonly BATTLE_CACHE_PREFIX = 'battle:';
   private static readonly BATTLE_LIST_CACHE_PREFIX = 'battle:list:';
+  private prisma: PrismaClient;
+
   constructor() {
     super(prisma.battle);
-  }
-
-  // @ts-expect-error BaseRepository return type is broader than Prisma client return type
-  async create(args: Prisma.BattleCreateArgs) {
-    // Validate time constraints
-    if (
-      args.data.start_time &&
-      args.data.end_time &&
-      new Date(args.data.start_time) >= new Date(args.data.end_time)
-    ) {
-      throw createAppError('End time must be after start time', 400);
-    }
-
-    return super.create(args);
+    this.prisma = new PrismaClient();
   }
 
   /**
@@ -217,7 +207,7 @@ export class BattleRepository extends BaseRepository<PrismaClient['battle']> {
               limit,
               totalPages: Math.ceil(total / limit),
               cacheControl: 'public, max-age=3600',
-              etag: crypto
+              etag: require('crypto')
                 .createHash('md5')
                 .update(JSON.stringify(battles))
                 .digest('hex'),
@@ -239,11 +229,7 @@ export class BattleRepository extends BaseRepository<PrismaClient['battle']> {
   /**
    * Update a battle
    */
-  async updateBattle(
-    id: string,
-    data: Prisma.BattleUpdateInput,
-    userId: string
-  ) {
+  async updateBattle(id: string, data: any, userId: string) {
     const startTime = Date.now();
     try {
       // First check if the battle exists and belongs to the user
@@ -789,7 +775,7 @@ export class BattleRepository extends BaseRepository<PrismaClient['battle']> {
   async updateBattleStatus(id: string, status: BattleStatus): Promise<Battle> {
     const startTime = Date.now();
     try {
-      const battle = await this.prismaClient.battle.update({
+      const battle = await this.prisma.battle.update({
         where: { id },
         data: { status },
         include: {

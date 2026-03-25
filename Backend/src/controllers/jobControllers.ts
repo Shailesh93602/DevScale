@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
 import { sendResponse } from '../utils/apiResponse';
-import JobRepository from '../repositories/jobRepository';
+import JobRepository from '@/repositories/jobRepository';
 
 export default class JobController {
   private readonly jobRepo: JobRepository;
@@ -13,7 +13,7 @@ export default class JobController {
     const jobs = await this.jobRepo.findMany({
       orderBy: { created_at: 'asc' },
     });
-    return sendResponse(res, 'JOBS_FETCHED', { data: jobs });
+    return sendResponse(res, 'JOBS_FETCHED', { data: { jobs } });
   });
 
   public getJob = catchAsync(async (req: Request, res: Response) => {
@@ -26,7 +26,7 @@ export default class JobController {
       return sendResponse(res, 'JOB_NOT_FOUND');
     }
 
-    return sendResponse(res, 'JOB_FETCHED', { data: job });
+    return sendResponse(res, 'JOB_FETCHED', { data: { job } });
   });
 
   public createJob = catchAsync(async (req: Request, res: Response) => {
@@ -40,7 +40,7 @@ export default class JobController {
       data: { title, description, company, location },
     });
 
-    return sendResponse(res, 'JOB_CREATED', { data: job });
+    return sendResponse(res, 'JOB_CREATED', { data: { job } });
   });
 
   public updateJob = catchAsync(async (req: Request, res: Response) => {
@@ -60,7 +60,7 @@ export default class JobController {
       return sendResponse(res, 'JOB_NOT_FOUND');
     }
 
-    return sendResponse(res, 'JOB_UPDATED', { data: updatedJob });
+    return sendResponse(res, 'JOB_UPDATED', { data: { job: updatedJob } });
   });
 
   public deleteJob = catchAsync(async (req: Request, res: Response) => {

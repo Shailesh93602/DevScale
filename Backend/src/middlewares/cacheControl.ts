@@ -10,7 +10,7 @@ interface CacheOptions {
 }
 
 // Helper function to safely stringify objects with circular references
-const safeStringify = (obj: unknown): string => {
+const safeStringify = (obj: any): string => {
   const seen = new WeakSet();
   return JSON.stringify(obj, (key, value) => {
     if (typeof value === 'object' && value !== null) {
@@ -40,20 +40,19 @@ export const cacheResponse = (options: CacheOptions) => {
       // Try to get from cache
       const cachedData = await getCache(cacheKey);
       if (cachedData) {
-        // ✅ Replay the original response body verbatim.
-        // Do NOT re-wrap in sendResponse('CACHE_HIT', { data: cachedData }) — that
-        // creates a double-nested envelope { data: { success, data: realArray, meta } }
-        // which breaks the frontend that reads response.data.data expecting the plain array.
-        const body =
-          typeof cachedData === 'string' ? JSON.parse(cachedData) : cachedData;
-        return res.json(body);
+        return sendResponse(res, 'CACHE_HIT', {
+          data:
+            typeof cachedData === 'string'
+              ? JSON.parse(cachedData)
+              : cachedData,
+        });
       }
 
       // Store original json function
       const originalJson = res.json;
 
       // Override json function to cache response
-      res.json = function (body: unknown) {
+      res.json = function (body: any) {
         try {
           // Only cache if body is not null/undefined
           if (body) {
