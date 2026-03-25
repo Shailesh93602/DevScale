@@ -5,7 +5,7 @@ import { swaggerSpec } from '../config/swagger';
 export const serveSwaggerDocs = swaggerUi.serve;
 export const setupSwaggerDocs = swaggerUi.setup(swaggerSpec, {
   customCss: '.swagger-ui .topbar { display: none }',
-  customSiteTitle: 'EduScale API Documentation',
+  customSiteTitle: 'MR Engineers API Documentation',
 });
 
 export const serveSwaggerJson = (req: Request, res: Response) => {

@@ -13,7 +13,7 @@
 ### Project Structure
 
 ```
-MrEngineer/
+EduScale/
 ├── CLAUDE.md           # Agent instructions
 ├── todo.md             # Project status tracking
 ├── .claude/

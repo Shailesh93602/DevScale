@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
-import LeaderboardRepository from '../repositories/leaderboardRepository';
-import { sendResponse } from '../utils/apiResponse';
+import LeaderboardRepository from '@/repositories/leaderboardRepository';
+import { sendResponse } from '@/utils/apiResponse';
 
 export default class LeaderboardController {
   private readonly leaderboardRepo: LeaderboardRepository;

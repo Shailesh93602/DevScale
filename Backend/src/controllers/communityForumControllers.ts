@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
 import { sendResponse } from '../utils/apiResponse';
-import { ForumRepository } from '../repositories/forumRepository';
+import { ForumRepository } from '@/repositories/forumRepository';
 export default class CommunityForumController {
   private readonly forumRepo: ForumRepository;
 

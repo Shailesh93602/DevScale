@@ -91,7 +91,10 @@ const ReadyStatusButton: React.FC<ReadyStatusButtonProps> = ({
   // Render different button states
   if (isCreator) {
     return (
-      <Badge variant="outline" className="bg-green/10 text-green">
+      <Badge
+        variant="outline"
+        className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+      >
         <CheckCircle className="mr-1 h-3 w-3" />
         Creator (Ready)
       </Badge>
@@ -103,7 +106,9 @@ const ReadyStatusButton: React.FC<ReadyStatusButtonProps> = ({
       variant={isReady ? 'default' : 'outline'}
       size="sm"
       className={`gap-2 ${
-        isReady ? 'bg-green-600 hover:bg-green-700 text-white' : 'border-dashed'
+        isReady
+          ? 'bg-green-600 text-white hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800'
+          : 'border-dashed'
       }`}
       onClick={toggleReadyStatus}
       disabled={disabled || isLoading || !isConnected}

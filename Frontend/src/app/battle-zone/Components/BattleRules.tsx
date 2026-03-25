@@ -24,29 +24,29 @@ const BattleRules: React.FC<BattleRulesProps> = ({ battle }) => {
     {
       title: 'Time Limit',
       description: `Each question has a ${battle.time_per_question} second time limit. Answer before time runs out.`,
-      icon: <Clock className="h-5 w-5 text-blue" />,
+      icon: <Clock className="h-5 w-5 text-blue-500" />,
     },
     {
       title: 'Scoring',
       description: `Each question is worth ${battle.points_per_question} points. Faster answers receive bonus points.`,
-      icon: <Award className="h-5 w-5 text-yellow" />,
+      icon: <Award className="h-5 w-5 text-yellow-500" />,
     },
     {
       title: 'Participation',
       description: `Up to ${battle.maxParticipants} participants can join this battle.`,
-      icon: <Users className="h-5 w-5 text-green" />,
+      icon: <Users className="h-5 w-5 text-green-500" />,
     },
     {
       title: 'Fair Play',
       description:
         'Use of external resources or assistance is not allowed during the battle.',
-      icon: <Shield className="h-5 w-5 text-purple" />,
+      icon: <Shield className="h-5 w-5 text-purple-500" />,
     },
     {
       title: 'Answers',
       description:
         'Once submitted, answers cannot be changed. Choose carefully!',
-      icon: <AlertTriangle className="h-5 w-5 text-orange" />,
+      icon: <AlertTriangle className="h-5 w-5 text-orange-500" />,
     },
   ];
 
@@ -102,14 +102,14 @@ const BattleRules: React.FC<BattleRulesProps> = ({ battle }) => {
             <div className="grid gap-6 md:grid-cols-2">
               {/* Dos */}
               <div className="space-y-3">
-                <h3 className="flex items-center gap-2 font-medium text-green">
+                <h3 className="flex items-center gap-2 font-medium text-green-600 dark:text-green-400">
                   <CheckCircle2 className="h-4 w-4" />
                   <span>Do&apos;s</span>
                 </h3>
                 <ul className="space-y-2">
                   {dos.map((item, index) => (
                     <li key={index} className="flex items-start gap-2 text-sm">
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-green" />
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -118,14 +118,14 @@ const BattleRules: React.FC<BattleRulesProps> = ({ battle }) => {
 
               {/* Don'ts */}
               <div className="space-y-3">
-                <h3 className="flex items-center gap-2 font-medium text-red">
+                <h3 className="text-red-600 dark:text-red-400 flex items-center gap-2 font-medium">
                   <XCircle className="h-4 w-4" />
                   <span>Don&apos;ts</span>
                 </h3>
                 <ul className="space-y-2">
                   {donts.map((item, index) => (
                     <li key={index} className="flex items-start gap-2 text-sm">
-                      <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-red" />
+                      <XCircle className="text-red-500 mt-0.5 h-4 w-4 flex-shrink-0" />
                       <span>{item}</span>
                     </li>
                   ))}

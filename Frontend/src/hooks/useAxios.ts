@@ -23,46 +23,9 @@ httpClient.interceptors.request.use(async (config) => {
   return config;
 });
 
-let isRedirecting = false;
-
-// Add response interceptor to handle 401 Unauthorized
-httpClient.interceptors.response.use(
-  (response) => response,
-  async (error: AxiosError) => {
-    // Only act on 401 Unauthorized if not already redirecting and in the browser
-    if (
-      error.response?.status === 401 &&
-      !isRedirecting &&
-      typeof window !== 'undefined'
-    ) {
-      isRedirecting = true;
-      try {
-        const supabase = createClient();
-        await supabase.auth.signOut();
-        const { logoutAction } = await import('@/app/auth/actions');
-        await logoutAction();
-      } catch (e) {
-        console.error('Logout sync failed:', e);
-      } finally {
-        document.cookie = 'token=; Max-Age=0; path=/;';
-
-        // Dynamically import router helpers to check if path requires auth
-        const { requiresAuthRoute } = await import('@/lib/public-routes');
-
-        if (requiresAuthRoute(window.location.pathname)) {
-          window.location.href = '/auth/login';
-        } else {
-          // If we're on a public route, just reset the lock without redirecting
-          isRedirecting = false;
-        }
-      }
-    }
-    return Promise.reject(error);
-  },
-);
-
 // Base API response interface
-interface BaseApiResponse<T = unknown> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+interface BaseApiResponse<T = any> {
   success: boolean;
   message: string;
   error: boolean;
@@ -73,9 +36,9 @@ interface BaseApiResponse<T = unknown> {
       perPage: number;
       currentPage: number;
       lastPage: number;
-      totalPages: number;
     };
-    [key: string]: unknown;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any;
   };
 }
 

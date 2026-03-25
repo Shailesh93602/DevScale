@@ -7,7 +7,6 @@ import PasswordInput from '@/components/PasswordInput';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import { toast } from 'react-toastify';
-import { logger } from '@/lib/logger';
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -26,12 +25,10 @@ export default function ResetPasswordPage() {
         password: data.password,
       });
       if (error) throw error;
+      router.push('/auth/login');
       toast.success('Password updated successfully!');
-      setTimeout(() => {
-        router.push('/auth/login');
-      }, 2000);
     } catch (error) {
-      logger.error('Error updating password:', error);
+      console.error('Error updating password:', error);
       toast.error('Error updating password. Please try again.');
     }
   };

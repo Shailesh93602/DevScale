@@ -98,7 +98,7 @@ export const StickyScroll = ({
                 containerClassName="rounded-full"
                 as="button"
                 href="/resources"
-                className="flex items-center space-x-2 bg-background text-foreground"
+                className="flex items-center space-x-2 bg-white text-black dark:bg-black dark:text-white"
               >
                 <AceternityLogo />
                 <span>Explore Resources</span>

@@ -73,8 +73,8 @@ export default function CommunityPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const [getUsers] = useAxiosGet<User[]>('/api/users');
-  const [getPosts] = useAxiosGet<Post[]>('/api/posts');
+  const [getUsers] = useAxiosGet<{ data: User[] }>('/api/users');
+  const [getPosts] = useAxiosGet<{ data: Post[] }>('/api/posts');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -86,11 +86,11 @@ export default function CommunityPage() {
         ]);
 
         if (usersResponse.data) {
-          setUsers(usersResponse.data || []);
+          setUsers(usersResponse.data.data || []);
         }
 
         if (postsResponse.data) {
-          setPosts(postsResponse.data || []);
+          setPosts(postsResponse.data.data || []);
         }
       } catch (error) {
         console.error('Failed to fetch community data:', error);
@@ -146,7 +146,7 @@ export default function CommunityPage() {
                 <div className="flex items-center justify-between">
                   <CardTitle>Battle Community</CardTitle>
                   <Badge variant="outline" className="flex items-center gap-1">
-                    <div className="bg-green-500 h-2 w-2 rounded-full"></div>
+                    <div className="h-2 w-2 rounded-full bg-green-500"></div>
                     <span>42 Online</span>
                   </Badge>
                 </div>
@@ -192,7 +192,7 @@ export default function CommunityPage() {
 
                     <TabsContent value="top" className="m-0 space-y-4">
                       {filteredUsers
-                        .toSorted((a, b) => (b.rank || 0) - (a.rank || 0))
+                        .sort((a, b) => (b.rank || 0) - (a.rank || 0))
                         .slice(0, 10)
                         .map((user) => (
                           <UserListItem key={user.id} user={user} />
@@ -326,7 +326,7 @@ function UserListItem({ user }: { user: User }) {
             </AvatarFallback>
           </Avatar>
           {user.is_online && (
-            <div className="bg-green-500 absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background"></div>
+            <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-green-500"></div>
           )}
         </div>
         <div>
@@ -509,18 +509,8 @@ function PostCard({ post }: { post: Post }) {
                         <p className="text-sm">{comment.content}</p>
                       </div>
                       <div className="mt-1 flex gap-4 text-xs text-muted-foreground">
-                        <Button
-                          variant="link"
-                          className="h-auto p-0 text-xs text-muted-foreground hover:text-primary"
-                        >
-                          Like
-                        </Button>
-                        <Button
-                          variant="link"
-                          className="h-auto p-0 text-xs text-muted-foreground hover:text-primary"
-                        >
-                          Reply
-                        </Button>
+                        <button>Like</button>
+                        <button>Reply</button>
                         <span>
                           {formatDistanceToNow(new Date(comment.created_at), {
                             addSuffix: true,

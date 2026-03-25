@@ -10,8 +10,8 @@ export default function Loader() {
   }
 
   return (
-    <div className="fixed z-10 flex h-screen w-screen items-center justify-center bg-background">
-      <div className="loader">EduScale</div>
+    <div className="fixed z-10 flex h-screen w-screen items-center justify-center bg-white dark:bg-gray-900">
+      <div className="loader">Mr Engineers</div>
       <style jsx>{`
         .loader {
           font-size: 4rem;

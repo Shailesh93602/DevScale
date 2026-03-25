@@ -8,7 +8,7 @@ const Section = ({
   children: ReactNode;
 }) => (
   <div className="mb-12">
-    <h3 className="mb-6 text-3xl font-bold text-foreground">{title}</h3>
+    <h3 className="mb-6 text-3xl font-bold dark:text-gray-200">{title}</h3>
     {children}
   </div>
 );

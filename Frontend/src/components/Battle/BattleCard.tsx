@@ -44,28 +44,28 @@ interface BattleCardProps {
 const getStatusColor = (status: BattleStatus) => {
   switch (status) {
     case 'UPCOMING':
-      return 'bg-blue/10 text-blue';
+      return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
     case 'IN_PROGRESS':
-      return 'bg-green/10 text-green';
+      return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
     case 'completed':
-      return 'bg-muted text-muted-foreground';
+      return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
     case 'cancelled':
-      return 'bg-red/10 text-red';
+      return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
     default:
-      return 'bg-muted text-muted-foreground';
+      return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
   }
 };
 
 const getDifficultyColor = (difficulty: string) => {
   switch (difficulty.toLowerCase()) {
     case 'easy':
-      return 'bg-green/10 text-green';
+      return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
     case 'medium':
-      return 'bg-yellow/10 text-yellow';
+      return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
     case 'hard':
-      return 'bg-red/10 text-red';
+      return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
     default:
-      return 'bg-muted text-muted-foreground';
+      return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
   }
 };
 

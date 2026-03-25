@@ -2,7 +2,6 @@ import { difficulties, lengths } from '@/constants';
 import { useAxiosGet, useAxiosPost } from '@/hooks/useAxios';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Button } from '@/components/ui/button';
 
 interface ISubject {
   id: string;
@@ -31,11 +30,15 @@ export default function CreateBattle({
   const [selectedLength, setSelectedLength] = useState<string>(lengths.MEDIUM);
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
-  const [createBattle] = useAxiosPost<{ id: string }>(
-    '/api/v1/api/battles/create',
-  );
-  const [getSubjects] = useAxiosGet<ISubject[]>('/api/subjects');
-  const [getTopicsBySubjectId] = useAxiosGet<ITopic[]>(
+  const [createBattle] = useAxiosPost<{
+    success?: boolean;
+    message?: string;
+    data?: {
+      id: string;
+    };
+  }>('/api/v1/api/battles/create');
+  const [getSubjects] = useAxiosGet<{ data: ISubject[] }>('/api/subjects');
+  const [getTopicsBySubjectId] = useAxiosGet<{ data: ITopic[] }>(
     '/api/subjects/{{subjectId}}/topics',
   );
 
@@ -65,11 +68,12 @@ export default function CreateBattle({
         throw new Error('No response data received');
       }
 
-      if (response.success && response.data?.id) {
-        toast.success(response.message || 'Battle created successfully!');
+      const data = response.data;
+      if (data.success && data.data?.id) {
+        toast.success(data.message || 'Battle created successfully!');
         handleClose();
       } else {
-        throw new Error(response.message || 'Failed to create battle');
+        throw new Error(data.message || 'Failed to create battle');
       }
     } catch (error) {
       const errorMessage =
@@ -101,7 +105,7 @@ export default function CreateBattle({
   useEffect(() => {
     const fetchSubjects = async () => {
       const response = await getSubjects();
-      setSubjects(response?.data || []);
+      setSubjects(response?.data?.data || []);
     };
     fetchSubjects();
   }, []);
@@ -113,33 +117,33 @@ export default function CreateBattle({
         { subjectId: selectedSubject },
       );
 
-      setTopics(response?.data || []);
+      setTopics(response?.data?.data || []);
     };
     if (selectedSubject) fetchTopics();
     else setTopics([]);
   }, [selectedSubject]);
 
   return (
-    <div className="relative w-full max-w-lg rounded-lg bg-card p-6 shadow-lg">
+    <div className="relative w-full max-w-lg rounded-lg bg-white p-6 shadow-lg dark:bg-gray-900">
       <input
         type="text"
         placeholder="Battle Title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        className="mb-4 w-full rounded-md border border-input bg-background p-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+        className="mb-4 w-full rounded-md border border-gray-300 bg-gray-50 p-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
       />
       <textarea
         placeholder="Battle Description"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         rows={4}
-        className="mb-4 w-full resize-none rounded-md border border-input bg-background p-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+        className="mb-4 w-full resize-none rounded-md border border-gray-300 bg-gray-50 p-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
       />
 
       <select
         value={selectedSubject}
         onChange={(e) => setSelectedSubject(e.target.value)}
-        className="mb-4 w-full rounded-md border border-input bg-background p-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+        className="mb-4 w-full rounded-md border border-gray-300 bg-gray-50 p-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
       >
         <option value="">Select Subject</option>
         {subjects?.map((subject) => (
@@ -151,7 +155,7 @@ export default function CreateBattle({
       <select
         value={selectedTopic}
         onChange={(e) => setSelectedTopic(e.target.value)}
-        className="mb-4 w-full rounded-md border border-input bg-background p-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+        className="mb-4 w-full rounded-md border border-gray-300 bg-gray-50 p-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
       >
         <option value="">Select Topic</option>
         {topics?.map((topic) => (
@@ -163,7 +167,7 @@ export default function CreateBattle({
       <select
         value={selectedDifficulty}
         onChange={(e) => setSelectedDifficulty(e.target.value)}
-        className="mb-4 w-full rounded-md border border-input bg-background p-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+        className="mb-4 w-full rounded-md border border-gray-300 bg-gray-50 p-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
       >
         {Object.values(difficulties)?.map((difficulty) => (
           <option key={difficulty} value={difficulty}>
@@ -174,7 +178,7 @@ export default function CreateBattle({
       <select
         value={selectedLength}
         onChange={(e) => setSelectedLength(e.target.value)}
-        className="mb-4 w-full rounded-md border border-input bg-background p-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+        className="mb-4 w-full rounded-md border border-gray-300 bg-gray-50 p-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
       >
         {Object.values(lengths)?.map((length) => (
           <option key={length} value={length}>
@@ -188,19 +192,22 @@ export default function CreateBattle({
           name="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          className="w-full rounded-md border border-input bg-background p-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+          className="w-full rounded-md border border-gray-300 bg-gray-50 p-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
         />
         <input
           type="time"
           name="time"
           value={time}
           onChange={(e) => setTime(e.target.value)}
-          className="w-full rounded-md border border-input bg-background p-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+          className="w-full rounded-md border border-gray-300 bg-gray-50 p-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
         />
       </div>
-      <Button onClick={handleCreate} className="mt-6 w-full py-6 text-lg">
+      <button
+        onClick={handleCreate}
+        className="mt-6 w-full rounded-md bg-blue-500 py-3 text-white transition duration-200 hover:bg-blue-600"
+      >
         Create Battle
-      </Button>
+      </button>
     </div>
   );
 }

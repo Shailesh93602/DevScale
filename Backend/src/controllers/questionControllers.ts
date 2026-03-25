@@ -2,8 +2,8 @@ import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
 import { createAppError } from '../utils/errorHandler';
 import Joi from 'joi';
-import QuizQuestionsRepository from '../repositories/quizQuestionsRepository';
-import { sendResponse } from '../utils/apiResponse';
+import QuizQuestionsRepository from '@/repositories/quizQuestionsRepository';
+import { sendResponse } from '@/utils/apiResponse';
 
 // Validation schemas
 const createQuestionSchema = Joi.object({

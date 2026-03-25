@@ -7,12 +7,12 @@ import {
 } from '@prisma/client';
 import { createAppError } from '../utils/errorHandler';
 import BaseRepository from './baseRepository';
-import logger from '../utils/logger';
-import { executeCode } from '../utils/codeExecutor';
-import { ChallengeData, ResourceStats, ChallengeSubmissionData } from '../types';
-import { invalidateCachePattern } from '../services/cacheService';
+import logger from '@/utils/logger';
+import { executeCode } from '@/utils/codeExecutor';
+import { ChallengeData, ResourceStats, SubmissionData } from '@/types';
+import { invalidateCachePattern } from '@/services/cacheService';
 
-import prisma from '../lib/prisma';
+import prisma from '@/lib/prisma';
 
 export class ChallengeRepository extends BaseRepository<
   PrismaClient['challenge']
@@ -73,7 +73,7 @@ export class ChallengeRepository extends BaseRepository<
     });
   }
 
-  async submitChallenge(data: ChallengeSubmissionData): Promise<ChallengeSubmission> {
+  async submitChallenge(data: SubmissionData): Promise<ChallengeSubmission> {
     const challenge = await this.getChallenge(data.challenge_id);
     const test_cases = await prisma.testCase.findMany({
       where: { challenge_id: data.challenge_id },
@@ -164,7 +164,8 @@ export class ChallengeRepository extends BaseRepository<
       this.count(),
       this.count({ where: { status: 'ACTIVE' } }),
       this.count({ where: { status: 'PENDING' } }),
-      this.prismaClient.contentReport.count({ where: { content_type: 'CHALLENGE' } }),
+      // TODO: Move this to relevant repo
+      prisma.contentReport.count({ where: { content_type: 'CHALLENGE' } }),
     ]);
 
     return { total, active, pending, reported };

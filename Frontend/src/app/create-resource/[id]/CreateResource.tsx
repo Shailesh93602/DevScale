@@ -5,7 +5,6 @@ import { hideLoader, showLoader } from '@/lib/features/loader/loaderSlice';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
-import { Button } from '@/components/ui/button';
 
 export default function CreateResource({ id }: { id: string }) {
   const [content, setContent] = useState('');
@@ -42,7 +41,7 @@ export default function CreateResource({ id }: { id: string }) {
     <>
       <Navbar />
       <div className="container mx-auto p-6">
-        <div className="mb-6 rounded-lg bg-card p-6 shadow-md">
+        <div className="mb-6 rounded-lg bg-white p-6 shadow-md dark:bg-gray-800">
           {/* <ReactQuill
             value={content}
             onChange={setContent}
@@ -72,7 +71,12 @@ export default function CreateResource({ id }: { id: string }) {
             }}
           /> */}
         </div>
-        <Button onClick={saveResource}>Save Resource</Button>
+        <button
+          onClick={saveResource}
+          className="rounded-lg bg-blue-500 px-4 py-2 text-white"
+        >
+          Save Resource
+        </button>
       </div>
     </>
   );

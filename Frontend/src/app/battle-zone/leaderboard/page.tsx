@@ -39,7 +39,9 @@ export default function LeaderboardPage() {
   const [timeframe, setTimeframe] = useState('all-time');
   const [category, setCategory] = useState('overall');
 
-  const [getLeaderboard] = useAxiosGet<LeaderboardEntry[]>('/api/leaderboard');
+  const [getLeaderboard] = useAxiosGet<{ data: LeaderboardEntry[] }>(
+    '/api/leaderboard',
+  );
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
@@ -48,7 +50,7 @@ export default function LeaderboardPage() {
         // In a real app, you would pass the timeframe and category as query params
         const response = await getLeaderboard();
         if (response.data) {
-          setLeaderboard(response.data || []);
+          setLeaderboard(response.data.data || []);
         }
       } catch (error) {
         console.error('Failed to fetch leaderboard:', error);
@@ -239,7 +241,7 @@ function LeaderboardTable({ entries }: { entries: LeaderboardEntry[] }) {
   const renderRankBadge = (rank: number) => {
     if (rank === 1) {
       return (
-        <div className="bg-yellow-500 flex h-8 w-8 items-center justify-center rounded-full text-white">
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-yellow-500 text-white">
           <Trophy className="h-4 w-4" />
         </div>
       );

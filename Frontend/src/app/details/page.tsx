@@ -29,8 +29,7 @@ const steps = [
 
 // Add explicit type for form values
 type FormValues = {
-  first_name: string;
-  last_name: string;
+  full_name: string;
   username: string;
   bio: string;
   avatarUrl: string;
@@ -48,7 +47,7 @@ type FormValues = {
 
 // Update stepFields definition
 const stepFields: (keyof FormValues)[][] = [
-  ['first_name', 'last_name', 'username', 'bio', 'avatarUrl'],
+  ['full_name', 'username', 'bio', 'avatarUrl'],
   ['address', 'githubUrl', 'linkedinUrl', 'twitterUrl', 'websiteUrl'],
   ['specialization', 'skills', 'experienceLevel'],
   ['college', 'graduationYear'],
@@ -58,22 +57,24 @@ const stepFields: (keyof FormValues)[][] = [
 const isLastStep = (step: number) => step === stepFields.length - 1;
 
 export default function ProfilePage() {
-  const [getUser, { data, isLoading: isGetUserLoading }] =
-    useAxiosGet<IUser>('/users/me');
+  const [getUser, { data, isLoading: isGetUserLoading }] = useAxiosGet<{
+    user: IUser;
+  }>('/users/me');
   const router = useRouter();
   const dispatch = useDispatch();
   const supabase = createClient();
   const [supabaseUser, setSupabaseUser] = useState<User | null>(null);
   const [currentStep, setCurrentStep] = useState(0);
 
-  const [postUserDetails, { isLoading }] = useAxiosPut<IUser>('/users/me');
+  const [postUserDetails, { isLoading }] = useAxiosPut<{ user: IUser }>(
+    '/users/me',
+  );
 
   const methods = useForm<FormValues>({
     resolver: yupResolver(detailsSchema),
     mode: 'onChange',
     defaultValues: {
-      first_name: supabaseUser?.user_metadata?.first_name || '',
-      last_name: supabaseUser?.user_metadata?.last_name || '',
+      full_name: supabaseUser?.user_metadata?.full_name || '',
       username: '',
       bio: '',
       avatarUrl: '',
@@ -93,8 +94,8 @@ export default function ProfilePage() {
   const onSubmit = async (data: FormValues) => {
     try {
       const response = await postUserDetails(data);
-      if (response?.data) {
-        dispatch(setUser({ user: response?.data }));
+      if (response?.data?.user) {
+        dispatch(setUser({ user: response?.data?.user }));
       } else {
         console.log('Error updating user details');
         toast.error('Error updating user details');
@@ -157,11 +158,11 @@ export default function ProfilePage() {
   }, []);
 
   useEffect(() => {
-    if (data) {
+    if (data?.user) {
       dispatch(
         setUser({
           detailsComplete: true,
-          user: data,
+          user: data.user,
         }),
       );
       router.push('/dashboard');
@@ -171,8 +172,7 @@ export default function ProfilePage() {
   useEffect(() => {
     if (supabaseUser) {
       methods.reset({
-        first_name: supabaseUser.user_metadata?.first_name || '',
-        last_name: supabaseUser.user_metadata?.last_name || '',
+        full_name: supabaseUser.user_metadata?.full_name || '',
         username: supabaseUser.user_metadata?.preferred_username || '',
         avatarUrl: supabaseUser.user_metadata?.avatar_url || '',
       });
@@ -187,7 +187,7 @@ export default function ProfilePage() {
     }
   };
 
-  if (isGetUserLoading && !data) {
+  if (isGetUserLoading && !data?.user) {
     return <Loader type="SiteLoader" />;
   }
 
@@ -217,10 +217,15 @@ export default function ProfilePage() {
               type="button"
               onClick={prevStep}
               disabled={currentStep === 0}
+              className="text-white hover:bg-primary2"
             >
               Previous
             </Button>
-            <Button type="submit" disabled={isLoading}>
+            <Button
+              type="submit"
+              className="text-white hover:bg-primary2"
+              disabled={isLoading}
+            >
               {isLastStep(currentStep) ? 'Submit' : 'Next'}
             </Button>
           </div>

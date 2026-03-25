@@ -129,7 +129,7 @@ export interface TestCase {
   is_hidden?: boolean;
 }
 
-export interface QuizSubmissionData {
+export interface SubmissionData {
   user_id: string;
   quiz_id: string;
   answers: Answer[];
@@ -196,14 +196,11 @@ export interface TestCase {
   isHidden?: boolean;
 }
 
-export interface ChallengeSubmissionData {
+export interface SubmissionData {
   code: string;
   language: string;
   user_id: string;
   challenge_id: string;
-  quiz_id?: string;
-  answers?: Record<string, string>;
-  time_spent?: number;
 }
 
 export interface JobData {

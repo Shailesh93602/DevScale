@@ -7,7 +7,7 @@ const icons = {
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
-      className="text-blue-600 mb-4 h-12 w-12"
+      className="mb-4 h-12 w-12 text-blue-600"
     >
       <path
         strokeLinecap="round"
@@ -23,7 +23,7 @@ const icons = {
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
-      className="text-blue-600 mb-4 h-12 w-12"
+      className="mb-4 h-12 w-12 text-blue-600"
     >
       <path
         strokeLinecap="round"
@@ -39,7 +39,7 @@ const icons = {
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
-      className="text-blue-600 mb-4 h-12 w-12"
+      className="mb-4 h-12 w-12 text-blue-600"
     >
       <path
         strokeLinecap="round"

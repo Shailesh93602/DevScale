@@ -1,0 +1,695 @@
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-06T14:20:31.681Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-06T14:20:31.979Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-06T14:20:31.980Z"}
+{"error":{"clientVersion":"6.5.0","code":"P2024","meta":{"connection_limit":17,"modelName":"User","timeout":10},"name":"PrismaClientKnownRequestError"},"level":"error","message":"Authentication failed","timestamp":"2025-04-06T15:21:28.488Z"}
+{"level":"error","message":"Unexpected Error Authentication failed","path":"GET /api/v1/roadmaps/2302c7f4-3dcf-498a-96dc-c8265ad254dd/comments","stack":"AppError: Authentication failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:45:10)","status":500,"timestamp":"2025-04-06T15:21:28.490Z"}
+{"level":"error","name":"AppError","statusCode":401,"timestamp":"2025-04-06T15:21:28.491Z"}
+{"error":{"clientVersion":"6.5.0","code":"P2024","meta":{"connection_limit":17,"modelName":"User","timeout":10},"name":"PrismaClientKnownRequestError"},"level":"error","message":"Authentication failed","timestamp":"2025-04-06T15:21:37.698Z"}
+{"level":"error","message":"Unexpected Error Authentication failed","path":"GET /api/v1/roadmaps/2302c7f4-3dcf-498a-96dc-c8265ad254dd/comments","stack":"AppError: Authentication failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:45:10)","status":500,"timestamp":"2025-04-06T15:21:37.702Z"}
+{"level":"error","name":"AppError","statusCode":401,"timestamp":"2025-04-06T15:21:37.703Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T03:06:23.393Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T03:06:23.983Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T03:06:23.986Z"}
+{"level":"error","message":"Unexpected Error \nInvalid `prisma.like.create()` invocation in\n/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/controllers/roadMapControllers.ts:354:23\n\n  351   return sendResponse(res, 'ROADMAP_UNLIKED', { data: null });\n  352 }\n  353 \n→ 354 await prisma.like.create(\nUnique constraint failed on the fields: (`user_id`,`roadmap_id`)","path":"POST /api/v1/roadmaps/2302c7f4-3dcf-498a-96dc-c8265ad254dd/like","stack":"PrismaClientKnownRequestError: \nInvalid `prisma.like.create()` invocation in\n/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/controllers/roadMapControllers.ts:354:23\n\n  351   return sendResponse(res, 'ROADMAP_UNLIKED', { data: null });\n  352 }\n  353 \n→ 354 await prisma.like.create(\nUnique constraint failed on the fields: (`user_id`,`roadmap_id`)\n    at Wn.handleRequestError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/@prisma/client/runtime/library.js:121:7534)\n    at Wn.handleAndLogRequestError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/@prisma/client/runtime/library.js:121:6858)\n    at Wn.request (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/@prisma/client/runtime/library.js:121:6565)\n    at async l (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/@prisma/client/runtime/library.js:130:10067)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/controllers/roadMapControllers.ts:354:5)","status":500,"timestamp":"2025-04-07T03:26:06.409Z"}
+{"level":"error","name":"PrismaClientKnownRequestError","statusCode":500,"timestamp":"2025-04-07T03:26:06.412Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T03:35:44.683Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T03:35:45.202Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T03:35:45.205Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T03:36:08.390Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T03:36:08.742Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T03:36:08.745Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T03:41:39.666Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T03:41:39.988Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T03:41:39.992Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T03:42:52.478Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T03:42:53.028Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T03:42:53.033Z"}
+{"level":"info","message":"SIGINT signal received.","timestamp":"2025-04-07T03:47:47.754Z"}
+{"level":"info","message":"HTTP server closed.","timestamp":"2025-04-07T03:47:47.757Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T16:01:01.330Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T16:01:02.157Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T16:01:02.160Z"}
+{"level":"error","message":"Unexpected Error Authorization token required","path":"GET /api/v1/users/me","stack":"AppError: Authorization token required\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:20:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:119:3)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at /Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/index.js:284:15\n    at Function.process_params (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/index.js:346:12)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/index.js:280:10)\n    at Function.handle (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/index.js:175:3)","status":500,"timestamp":"2025-04-07T16:17:01.268Z"}
+{"level":"error","name":"AppError","statusCode":401,"timestamp":"2025-04-07T16:17:01.271Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T16:23:49.992Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T16:23:50.639Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T16:23:50.644Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T16:35:40.104Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T16:35:40.753Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T16:35:40.756Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T16:35:47.544Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T16:35:48.096Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T16:35:48.099Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T16:35:56.281Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T16:35:56.648Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T16:35:56.651Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T16:36:07.738Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T16:36:08.159Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T16:36:08.161Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T16:36:47.778Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T16:36:48.169Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T16:36:48.172Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T16:38:34.389Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T16:38:34.970Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T16:38:34.975Z"}
+{"error":{"__isAuthError":true,"name":"AuthRetryableFetchError","status":0},"level":"warn","message":"Invalid authentication attempt","timestamp":"2025-04-07T16:51:49.233Z"}
+{"level":"error","message":"Unexpected Error Invalid authentication token","path":"GET /api/v1/roadMaps/categories","stack":"AppError: Invalid authentication token\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:30:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)","status":500,"timestamp":"2025-04-07T16:51:49.235Z"}
+{"level":"error","name":"AppError","statusCode":401,"timestamp":"2025-04-07T16:51:49.236Z"}
+{"error":{"__isAuthError":true,"name":"AuthRetryableFetchError","status":0},"level":"warn","message":"Invalid authentication attempt","timestamp":"2025-04-07T16:51:49.238Z"}
+{"level":"error","message":"Unexpected Error Invalid authentication token","path":"GET /api/v1/roadmaps?limit=6&type=featured","stack":"AppError: Invalid authentication token\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:30:19)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at runNextTicks (node:internal/process/task_queues:64:3)\n    at process.processImmediate (node:internal/timers:449:9)","status":500,"timestamp":"2025-04-07T16:51:49.239Z"}
+{"level":"error","name":"AppError","statusCode":401,"timestamp":"2025-04-07T16:51:49.239Z"}
+{"error":{"__isAuthError":true,"name":"AuthRetryableFetchError","status":0},"level":"warn","message":"Invalid authentication attempt","timestamp":"2025-04-07T16:51:49.240Z"}
+{"level":"error","message":"Unexpected Error Invalid authentication token","path":"GET /api/v1/roadmaps?limit=6&type=trending","stack":"AppError: Invalid authentication token\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:30:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)","status":500,"timestamp":"2025-04-07T16:51:49.240Z"}
+{"level":"error","name":"AppError","statusCode":401,"timestamp":"2025-04-07T16:51:49.240Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T16:55:48.641Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T16:55:49.218Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T16:55:49.221Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T16:56:02.012Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T16:56:02.581Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T16:56:02.585Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T16:56:24.317Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T16:56:24.724Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T16:56:24.728Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T16:56:48.555Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T16:56:49.040Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T16:56:49.043Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T16:57:14.677Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T16:57:15.452Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T16:57:15.456Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T16:57:39.146Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T16:57:39.659Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T16:57:39.661Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T16:58:14.360Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T16:58:15.093Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T16:58:15.096Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T16:58:45.183Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T16:58:46.531Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T16:58:46.536Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T16:59:03.007Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T16:59:05.035Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T16:59:05.039Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:08:22.297Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:08:23.303Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:08:23.308Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:08:54.952Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:08:55.660Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:08:55.664Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:09:37.080Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:09:37.620Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:09:37.622Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:09:49.925Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:09:50.592Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:09:50.596Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:10:00.033Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:10:00.587Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:10:00.590Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:10:16.296Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:10:16.657Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:10:16.661Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:10:28.882Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:10:29.375Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:10:29.379Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:10:32.332Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:10:32.870Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:10:32.874Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:10:41.051Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:10:41.590Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:10:41.594Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:12:26.106Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:12:26.698Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:12:26.702Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:12:46.086Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:12:46.630Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:12:46.634Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:13:05.032Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:13:05.539Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:13:05.543Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:13:10.407Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:13:10.957Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:13:10.961Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:13:26.816Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:13:27.419Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:13:27.422Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:13:47.014Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:13:47.829Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:13:47.833Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:14:07.853Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:14:08.396Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:14:08.398Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:14:20.234Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:14:20.805Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:14:20.808Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:14:37.372Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:14:37.849Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:14:37.853Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:14:45.975Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:14:46.519Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:14:46.522Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:15:24.448Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:15:25.016Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:15:25.020Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?limit=6&type=trending","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:30:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-07T17:21:33.721Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-07T17:21:33.722Z"}
+{"level":"error","message":"Unexpected Error Maximum call stack size exceeded","path":"GET /api/v1/roadmaps?limit=6&type=featured","stack":"RangeError: Maximum call stack size exceeded\n    at JSON.stringify (<anonymous>)\n    at ServerResponse.res.json (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/cacheControl.ts:42:33)\n    at sendResponse (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/apiResponse.ts:989:36)\n    at ServerResponse.res.json (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/cacheControl.ts:45:16)\n    at sendResponse (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/apiResponse.ts:989:36)\n    at ServerResponse.res.json (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/cacheControl.ts:45:16)\n    at sendResponse (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/apiResponse.ts:989:36)\n    at ServerResponse.res.json (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/cacheControl.ts:45:16)\n    at sendResponse (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/apiResponse.ts:989:36)\n    at ServerResponse.res.json (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/cacheControl.ts:45:16)","status":500,"timestamp":"2025-04-07T17:21:36.067Z"}
+{"level":"error","name":"RangeError","statusCode":500,"timestamp":"2025-04-07T17:21:36.067Z"}
+{"level":"error","message":"Unexpected Error Maximum call stack size exceeded","path":"GET /api/v1/roadmaps","stack":"RangeError: Maximum call stack size exceeded\n    at JSON.stringify (<anonymous>)\n    at ServerResponse.res.json (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/cacheControl.ts:42:33)\n    at sendResponse (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/apiResponse.ts:989:36)\n    at ServerResponse.res.json (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/cacheControl.ts:45:16)\n    at sendResponse (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/apiResponse.ts:989:36)\n    at ServerResponse.res.json (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/cacheControl.ts:45:16)\n    at sendResponse (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/apiResponse.ts:989:36)\n    at ServerResponse.res.json (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/cacheControl.ts:45:16)\n    at sendResponse (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/apiResponse.ts:989:36)\n    at ServerResponse.res.json (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/cacheControl.ts:45:16)","status":500,"timestamp":"2025-04-07T17:22:22.434Z"}
+{"level":"error","name":"RangeError","statusCode":500,"timestamp":"2025-04-07T17:22:22.435Z"}
+{"level":"info","message":"SIGINT signal received.","timestamp":"2025-04-07T17:23:40.734Z"}
+{"level":"info","message":"HTTP server closed.","timestamp":"2025-04-07T17:23:40.738Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:23:46.099Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:23:46.782Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:23:46.786Z"}
+{"level":"error","message":"Unexpected Error Maximum call stack size exceeded","path":"GET /api/v1/roadmaps","stack":"RangeError: Maximum call stack size exceeded\n    at JSON.stringify (<anonymous>)\n    at ServerResponse.res.json (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/cacheControl.ts:42:33)\n    at sendResponse (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/apiResponse.ts:989:36)\n    at ServerResponse.res.json (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/cacheControl.ts:45:16)\n    at sendResponse (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/apiResponse.ts:989:36)\n    at ServerResponse.res.json (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/cacheControl.ts:45:16)\n    at sendResponse (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/apiResponse.ts:989:36)\n    at ServerResponse.res.json (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/cacheControl.ts:45:16)\n    at sendResponse (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/apiResponse.ts:989:36)\n    at ServerResponse.res.json (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/cacheControl.ts:45:16)","status":500,"timestamp":"2025-04-07T17:24:02.840Z"}
+{"level":"error","name":"RangeError","statusCode":500,"timestamp":"2025-04-07T17:24:02.840Z"}
+{"level":"info","message":"SIGINT signal received.","timestamp":"2025-04-07T17:25:30.367Z"}
+{"level":"info","message":"HTTP server closed.","timestamp":"2025-04-07T17:25:30.368Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:27:54.000Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:27:54.632Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:27:54.633Z"}
+{"level":"error","message":"Unexpected Error Maximum call stack size exceeded","path":"GET /api/v1/roadmaps","stack":"RangeError: Maximum call stack size exceeded\n    at JSON.stringify (<anonymous>)\n    at ServerResponse.res.json (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/cacheControl.ts:42:33)\n    at sendResponse (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/apiResponse.ts:989:36)\n    at ServerResponse.res.json (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/cacheControl.ts:45:16)\n    at sendResponse (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/apiResponse.ts:989:36)\n    at ServerResponse.res.json (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/cacheControl.ts:45:16)\n    at sendResponse (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/apiResponse.ts:989:36)\n    at ServerResponse.res.json (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/cacheControl.ts:45:16)\n    at sendResponse (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/apiResponse.ts:989:36)\n    at ServerResponse.res.json (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/cacheControl.ts:45:16)","status":500,"timestamp":"2025-04-07T17:28:29.616Z"}
+{"level":"error","name":"RangeError","statusCode":500,"timestamp":"2025-04-07T17:28:29.617Z"}
+{"level":"error","message":"Unexpected Error Maximum call stack size exceeded","path":"GET /api/v1/roadmaps","stack":"RangeError: Maximum call stack size exceeded\n    at JSON.stringify (<anonymous>)\n    at ServerResponse.res.json (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/cacheControl.ts:42:33)\n    at sendResponse (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/apiResponse.ts:989:36)\n    at ServerResponse.res.json (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/cacheControl.ts:45:16)\n    at sendResponse (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/apiResponse.ts:989:36)\n    at ServerResponse.res.json (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/cacheControl.ts:45:16)\n    at sendResponse (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/apiResponse.ts:989:36)\n    at ServerResponse.res.json (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/cacheControl.ts:45:16)\n    at sendResponse (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/apiResponse.ts:989:36)\n    at ServerResponse.res.json (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/cacheControl.ts:45:16)","status":500,"timestamp":"2025-04-07T17:29:44.932Z"}
+{"level":"error","name":"RangeError","statusCode":500,"timestamp":"2025-04-07T17:29:44.933Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:31:38.152Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:31:38.805Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:31:38.808Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:31:43.260Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:31:43.754Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:31:43.757Z"}
+{"level":"info","message":"SIGINT signal received.","timestamp":"2025-04-07T17:33:49.418Z"}
+{"level":"info","message":"HTTP server closed.","timestamp":"2025-04-07T17:33:49.419Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:33:52.754Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:33:53.371Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:33:53.375Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=trending","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-07T17:35:43.184Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-07T17:35:43.185Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=trending","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-07T17:36:12.542Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-07T17:36:12.544Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=trending","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-07T17:36:13.351Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-07T17:36:13.351Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=trending","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-07T17:37:05.649Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-07T17:37:05.650Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=trending","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-07T17:37:06.094Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-07T17:37:06.095Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:49:06.713Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:49:07.333Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:49:07.338Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:49:09.189Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:49:09.606Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:49:09.611Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:49:16.789Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:49:17.292Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:49:17.296Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:49:19.351Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:49:19.774Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:49:19.778Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:49:25.582Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:49:26.056Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:49:26.060Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:49:27.554Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:49:28.126Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:49:28.130Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:49:39.999Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:49:41.251Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:49:41.256Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:49:42.964Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:49:43.494Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:49:43.498Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:50:06.326Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:50:07.086Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:50:07.486Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:50:07.490Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:50:08.345Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:50:09.125Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:50:09.129Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:50:10.521Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:50:11.762Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:50:11.766Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:50:28.852Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:50:29.621Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:50:29.625Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:51:03.533Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:51:04.096Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:51:04.100Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:53:31.715Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:53:32.235Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:53:32.239Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:53:40.259Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:53:40.671Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:53:40.675Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:53:49.164Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:53:49.540Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:53:49.544Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:54:00.239Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:54:00.701Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:54:00.705Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:54:11.539Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:54:11.918Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:54:11.922Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:54:27.592Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:54:28.042Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:54:28.045Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:54:40.125Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:54:40.592Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:54:40.596Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:55:09.852Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:55:10.574Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:55:10.578Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:56:24.372Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:56:24.780Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:56:24.784Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:56:35.576Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:56:36.066Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:56:36.071Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-07T17:56:41.802Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-07T17:56:42.193Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-07T17:56:42.196Z"}
+{"level":"info","message":"SIGINT signal received.","timestamp":"2025-04-07T17:57:11.463Z"}
+{"level":"info","message":"HTTP server closed.","timestamp":"2025-04-07T17:57:11.465Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-08T15:58:04.036Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-08T15:58:04.545Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-08T15:58:04.549Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-08T15:58:08.857Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-08T15:58:10.203Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=recommended","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-08T15:58:55.285Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-08T15:58:55.285Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=recommended","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-08T15:58:55.676Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-08T15:58:55.677Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=recommended","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-08T16:01:15.646Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-08T16:01:15.647Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=recommended","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-08T16:01:16.044Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-08T16:01:16.045Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=recommended","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-08T16:01:52.400Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-08T16:01:52.401Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=recommended","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-08T16:01:53.356Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-08T16:01:53.357Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=recommended","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-08T16:02:42.469Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-08T16:02:42.470Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=recommended","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-08T16:02:58.738Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-08T16:02:58.738Z"}
+{"level":"info","message":"SIGINT signal received.","timestamp":"2025-04-08T17:18:25.992Z"}
+{"level":"info","message":"HTTP server closed.","timestamp":"2025-04-08T17:18:25.993Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T01:54:36.683Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T01:54:37.233Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T01:54:37.237Z"}
+{"level":"info","message":"SIGINT signal received.","timestamp":"2025-04-10T02:52:14.904Z"}
+{"level":"info","message":"HTTP server closed.","timestamp":"2025-04-10T02:52:14.909Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T02:52:40.641Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T02:52:42.192Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T02:52:42.194Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:05:10.891Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:05:11.337Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:05:11.341Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:05:16.229Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:05:16.579Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:05:16.584Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:05:27.415Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:05:27.736Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:05:27.739Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:05:29.253Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:05:29.544Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:05:29.549Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:05:36.156Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:05:36.586Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:05:36.590Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:05:42.463Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:05:43.176Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:05:43.485Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:05:43.488Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:06:03.548Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:06:03.950Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:06:03.954Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:06:12.259Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:06:12.589Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:06:12.591Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:06:14.693Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:06:14.951Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:06:14.955Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:06:24.860Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:06:25.234Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:06:25.239Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:06:46.401Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:06:46.838Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:06:46.842Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:06:53.264Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:06:53.579Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:06:53.583Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:08:39.044Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:08:39.450Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:08:39.455Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:08:48.064Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:08:48.404Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:08:48.407Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:10:09.422Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:10:09.808Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:10:09.812Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:10:24.914Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:10:25.234Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:10:25.239Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:10:35.968Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:10:36.393Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:10:36.396Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:10:43.761Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:10:44.063Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:10:44.067Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:10:49.210Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:10:49.543Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:10:49.545Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:10:59.481Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:10:59.843Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:10:59.845Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:11:04.984Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:11:05.303Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:11:05.306Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:11:07.696Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:11:08.022Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:11:08.025Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:11:13.339Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:11:13.695Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:11:13.699Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:11:16.517Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:11:16.839Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:11:16.842Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:11:31.283Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:11:31.867Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:11:31.871Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:11:38.109Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:11:38.447Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:11:38.451Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:12:04.582Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:12:04.882Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:12:04.886Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:12:21.496Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:12:21.938Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:12:21.941Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:12:24.613Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:12:24.923Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:12:24.927Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:12:29.215Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:12:29.506Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:12:29.509Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:13:59.094Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:13:59.585Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:13:59.589Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:14:11.595Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:14:11.963Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:14:11.965Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:14:16.809Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:14:17.166Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:14:17.170Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:14:28.044Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:14:28.341Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:14:28.344Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:14:32.085Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:14:32.567Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:14:32.569Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:14:34.850Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:14:35.149Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:14:35.153Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:14:49.382Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:14:49.692Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:14:49.698Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:15:02.088Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:15:02.887Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:15:02.889Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:15:11.463Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:15:11.787Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:15:11.790Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:15:42.081Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:15:42.625Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:15:42.629Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:15:48.012Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:15:48.340Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:15:48.343Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:16:39.352Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:16:39.657Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:16:39.660Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:16:40.377Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:16:40.753Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:16:40.755Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:54:16.854Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:54:17.499Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:54:17.502Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:54:18.071Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:54:18.443Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:54:18.446Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:54:22.159Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:54:22.541Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:54:22.543Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:54:28.269Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:54:28.610Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:54:28.613Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:54:31.476Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:54:31.853Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:54:31.856Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:54:35.019Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:54:35.307Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:54:35.309Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:54:39.356Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:54:39.632Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:54:39.634Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:55:05.327Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:55:05.642Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:55:05.646Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:55:08.176Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:55:08.537Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:55:08.540Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:55:09.255Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:55:09.809Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:55:09.813Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:55:24.872Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:55:25.424Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:55:25.426Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:55:26.018Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:55:26.429Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:55:26.432Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:55:42.233Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:55:42.721Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:55:42.723Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:55:44.110Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:55:44.423Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:55:44.425Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:56:02.790Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:56:03.154Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:56:03.156Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:56:04.437Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:56:04.952Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:56:04.955Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:56:20.010Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:56:20.357Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:56:20.360Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:56:23.642Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:56:23.996Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:56:23.999Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:56:36.430Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:56:36.832Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:56:36.837Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:56:43.238Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:56:43.607Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:56:43.611Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:58:24.838Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:58:25.351Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:58:25.355Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:58:32.827Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:58:33.205Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:58:33.208Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:58:39.972Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:58:40.351Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:58:40.356Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T03:58:41.463Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T03:58:41.805Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T03:58:41.808Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T15:31:26.977Z"}
+{"clientVersion":"6.6.0","errorCode":"P1001","level":"error","message":"Failed to start server: Can't reach database server at `aws-0-ap-south-1.pooler.supabase.com:6543`\n\nPlease make sure your database server is running at `aws-0-ap-south-1.pooler.supabase.com:6543`.","name":"PrismaClientInitializationError","stack":"PrismaClientInitializationError: Can't reach database server at `aws-0-ap-south-1.pooler.supabase.com:6543`\n\nPlease make sure your database server is running at `aws-0-ap-south-1.pooler.supabase.com:6543`.\n    at r (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/@prisma/client/runtime/library.js:112:2565)\n    at App.start (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/index.ts:89:7)","timestamp":"2025-04-10T15:31:26.979Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T15:32:57.925Z"}
+{"clientVersion":"6.6.0","errorCode":"P1001","level":"error","message":"Failed to start server: Can't reach database server at `aws-0-ap-south-1.pooler.supabase.com:6543`\n\nPlease make sure your database server is running at `aws-0-ap-south-1.pooler.supabase.com:6543`.","name":"PrismaClientInitializationError","stack":"PrismaClientInitializationError: Can't reach database server at `aws-0-ap-south-1.pooler.supabase.com:6543`\n\nPlease make sure your database server is running at `aws-0-ap-south-1.pooler.supabase.com:6543`.\n    at r (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/@prisma/client/runtime/library.js:112:2565)\n    at App.start (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/index.ts:89:7)","timestamp":"2025-04-10T15:32:57.927Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-10T15:36:08.506Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-10T15:36:08.986Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-10T15:36:08.989Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=recommended","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-10T15:36:45.462Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-10T15:36:45.462Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=recommended","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-10T15:36:45.794Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-10T15:36:45.794Z"}
+{"level":"info","message":"SIGINT signal received.","timestamp":"2025-04-10T17:00:38.706Z"}
+{"level":"info","message":"HTTP server closed.","timestamp":"2025-04-10T17:00:38.709Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-11T03:32:04.370Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-11T03:32:05.926Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-11T03:32:05.931Z"}
+{"level":"info","message":"SIGINT signal received.","timestamp":"2025-04-11T03:45:05.716Z"}
+{"level":"info","message":"HTTP server closed.","timestamp":"2025-04-11T03:45:05.718Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-11T03:45:07.410Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-11T03:45:08.060Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-11T03:45:08.064Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-11T03:50:08.164Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-11T03:50:08.653Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-11T03:50:08.657Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-11T03:50:21.112Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-11T03:50:21.513Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-11T03:50:21.517Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-11T03:52:29.731Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-11T03:52:30.314Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-11T03:52:30.318Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-11T03:52:40.628Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-11T03:52:41.103Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-11T03:52:41.106Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-11T03:52:51.242Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-11T03:52:51.685Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-11T03:52:51.690Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-11T03:53:05.272Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-11T03:53:05.730Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-11T03:53:05.733Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-11T03:53:15.126Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-11T03:53:15.703Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-11T03:53:15.708Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-11T03:54:41.324Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-11T03:54:41.960Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-11T03:54:41.964Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-11T03:54:44.105Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-11T03:54:44.639Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-11T03:54:44.642Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-17T17:21:30.457Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-17T17:21:31.103Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-17T17:21:31.105Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-18T02:58:34.422Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-18T02:58:34.883Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-18T02:58:34.884Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=recommended","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-18T03:16:57.846Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-18T03:16:57.847Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=recommended","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-18T03:16:58.193Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-18T03:16:58.195Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=recommended","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-18T03:16:58.508Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-18T03:16:58.509Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=recommended","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-18T03:16:58.824Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-18T03:16:58.827Z"}
+{"level":"info","message":"SIGINT signal received.","timestamp":"2025-04-19T02:28:29.601Z"}
+{"level":"info","message":"HTTP server closed.","timestamp":"2025-04-19T02:28:29.604Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-19T02:59:21.820Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-19T02:59:24.922Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-19T02:59:24.924Z"}
+{"error":{"__isAuthError":true,"code":"bad_jwt","name":"AuthApiError","status":403},"level":"warn","message":"Invalid authentication attempt","timestamp":"2025-04-19T08:37:17.745Z"}
+{"level":"error","message":"Unexpected Error Invalid authentication token","path":"GET /api/v1/users/me","stack":"AppError: Invalid authentication token\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:30:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)","status":500,"timestamp":"2025-04-19T08:37:17.750Z"}
+{"level":"error","name":"AppError","statusCode":401,"timestamp":"2025-04-19T08:37:17.751Z"}
+{"error":{"__isAuthError":true,"code":"bad_jwt","name":"AuthApiError","status":403},"level":"warn","message":"Invalid authentication attempt","timestamp":"2025-04-19T08:37:18.626Z"}
+{"level":"error","message":"Unexpected Error Invalid authentication token","path":"GET /api/v1/users/me","stack":"AppError: Invalid authentication token\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:30:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)","status":500,"timestamp":"2025-04-19T08:37:18.626Z"}
+{"level":"error","name":"AppError","statusCode":401,"timestamp":"2025-04-19T08:37:18.626Z"}
+{"error":{"__isAuthError":true,"code":"bad_jwt","name":"AuthApiError","status":403},"level":"warn","message":"Invalid authentication attempt","timestamp":"2025-04-19T08:37:18.853Z"}
+{"level":"error","message":"Unexpected Error Invalid authentication token","path":"GET /api/v1/users/me","stack":"AppError: Invalid authentication token\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:30:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)","status":500,"timestamp":"2025-04-19T08:37:18.854Z"}
+{"level":"error","name":"AppError","statusCode":401,"timestamp":"2025-04-19T08:37:18.854Z"}
+{"error":{"__isAuthError":true,"code":"bad_jwt","name":"AuthApiError","status":403},"level":"warn","message":"Invalid authentication attempt","timestamp":"2025-04-19T08:37:18.999Z"}
+{"level":"error","message":"Unexpected Error Invalid authentication token","path":"GET /api/v1/users/me","stack":"AppError: Invalid authentication token\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:30:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)","status":500,"timestamp":"2025-04-19T08:37:19.000Z"}
+{"level":"error","name":"AppError","statusCode":401,"timestamp":"2025-04-19T08:37:19.000Z"}
+{"level":"info","message":"SIGINT signal received.","timestamp":"2025-04-19T10:40:45.696Z"}
+{"level":"info","message":"HTTP server closed.","timestamp":"2025-04-19T10:40:45.699Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-19T10:40:51.731Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-19T10:40:52.162Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-19T10:40:52.165Z"}
+{"error":{"__isAuthError":true,"name":"AuthRetryableFetchError","status":0},"level":"warn","message":"Invalid authentication attempt","timestamp":"2025-04-19T14:30:46.330Z"}
+{"level":"error","message":"Unexpected Error Invalid authentication token","path":"GET /api/v1/users/me","stack":"AppError: Invalid authentication token\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:30:19)","status":500,"timestamp":"2025-04-19T14:30:46.331Z"}
+{"level":"error","name":"AppError","statusCode":401,"timestamp":"2025-04-19T14:30:46.332Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=recommended","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-19T15:52:32.166Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-19T15:52:32.167Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=recommended","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-19T15:52:32.565Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-19T15:52:32.567Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=recommended","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-19T16:09:30.809Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-19T16:09:30.811Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=recommended","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-19T16:09:31.259Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-19T16:09:31.260Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=recommended","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-19T16:09:37.584Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-19T16:09:37.585Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=recommended","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-19T16:09:38.056Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-19T16:09:38.057Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=recommended","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-19T16:09:43.720Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-19T16:09:43.722Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=recommended","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-19T16:09:44.239Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-19T16:09:44.240Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=trending","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-19T16:09:59.073Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-19T16:09:59.074Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=trending","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-19T16:09:59.566Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-19T16:09:59.567Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=trending","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-19T16:10:00.041Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-19T16:10:00.041Z"}
+{"level":"error","message":"Unexpected Error Validation failed","path":"GET /api/v1/roadmaps?type=trending","stack":"AppError: Validation failed\n    at createAppError (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/utils/errorHandler.ts:45:17)\n    at <anonymous> (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/validateRequest.ts:22:19)\n    at Layer.handle [as handle_request] (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/node_modules/express/lib/router/route.js:149:13)\n    at authMiddleware (/Users/shaileshchaudhary/Desktop/Coding/mrengineer/Backend/src/middlewares/authMiddleware.ts:42:5)","status":500,"timestamp":"2025-04-19T16:10:00.541Z"}
+{"level":"error","name":"AppError","statusCode":400,"timestamp":"2025-04-19T16:10:00.542Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-19T17:23:15.901Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-19T17:23:16.432Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-19T17:23:16.435Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-19T17:23:23.438Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-19T17:23:24.342Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-19T17:23:24.346Z"}
+{"level":"info","message":"SIGINT signal received.","timestamp":"2025-04-19T17:35:41.638Z"}
+{"level":"info","message":"HTTP server closed.","timestamp":"2025-04-19T17:35:41.640Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-20T03:27:24.731Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-20T03:27:25.281Z"}
+{"level":"info","message":"Server running on port 50015","timestamp":"2025-04-20T03:27:25.285Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-20T03:31:13.255Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-20T03:31:13.721Z"}
+{"level":"info","message":"Server running on port 50015","timestamp":"2025-04-20T03:31:13.722Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-20T03:32:36.166Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-20T03:32:36.588Z"}
+{"level":"info","message":"Server running on port 50015","timestamp":"2025-04-20T03:32:36.590Z"}
+{"level":"info","message":"SIGINT signal received.","timestamp":"2025-04-20T03:34:08.188Z"}
+{"level":"info","message":"HTTP server closed.","timestamp":"2025-04-20T03:34:08.190Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-20T03:34:13.392Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-20T03:34:13.774Z"}
+{"level":"info","message":"Server running on port 50190","timestamp":"2025-04-20T03:34:13.775Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-20T03:35:22.389Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-20T03:35:22.708Z"}
+{"level":"info","message":"Server running on port 50190","timestamp":"2025-04-20T03:35:22.710Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-20T03:35:26.429Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-20T03:35:31.833Z"}
+{"level":"info","message":"SIGINT signal received.","timestamp":"2025-04-20T03:35:35.570Z"}
+{"level":"info","message":"HTTP server closed.","timestamp":"2025-04-20T03:35:35.571Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-20T03:35:40.772Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-20T03:35:41.225Z"}
+{"level":"info","message":"Server running on port 50295","timestamp":"2025-04-20T03:35:41.228Z"}
+{"level":"info","message":"SIGINT signal received.","timestamp":"2025-04-20T03:42:34.623Z"}
+{"level":"info","message":"HTTP server closed.","timestamp":"2025-04-20T03:42:34.625Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-20T03:45:00.876Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-20T03:45:01.460Z"}
+{"level":"info","message":"Server running on port 50804","timestamp":"2025-04-20T03:45:01.463Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-20T03:45:04.820Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-20T03:45:05.792Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-20T07:58:18.321Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-20T07:58:19.262Z"}
+{"level":"info","message":"SIGINT signal received.","timestamp":"2025-04-20T07:58:24.012Z"}
+{"level":"info","message":"HTTP server closed.","timestamp":"2025-04-20T07:58:24.013Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-20T07:58:32.883Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-20T07:58:33.738Z"}
+{"level":"info","message":"Server running on port 51041","timestamp":"2025-04-20T07:58:33.742Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-20T07:58:43.139Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-20T07:58:43.957Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-20T08:04:06.783Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-20T08:04:07.209Z"}
+{"level":"info","message":"Server running on port 51041","timestamp":"2025-04-20T08:04:07.210Z"}
+{"level":"info","message":"Shutdown signal received. Closing server and database connections.","timestamp":"2025-04-20T08:04:08.294Z"}
+{"level":"info","message":"HTTP server closed.","timestamp":"2025-04-20T08:04:08.294Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-20T08:04:30.725Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-20T08:04:31.071Z"}
+{"level":"info","message":"Server running on port 51292","timestamp":"2025-04-20T08:04:31.075Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-20T08:04:37.534Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-20T08:05:56.482Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-20T08:05:56.908Z"}
+{"level":"info","message":"Server running on port 51292","timestamp":"2025-04-20T08:05:56.910Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-20T08:06:04.681Z"}
+{"level":"info","message":"Shutdown signal received. Closing server and database connections.","timestamp":"2025-04-20T08:06:22.475Z"}
+{"level":"info","message":"HTTP server closed.","timestamp":"2025-04-20T08:06:22.477Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-20T08:06:40.511Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-20T08:06:40.857Z"}
+{"level":"info","message":"Server running on port 51380","timestamp":"2025-04-20T08:06:40.860Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-20T08:06:47.289Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-20T08:09:52.524Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-20T08:09:52.881Z"}
+{"level":"info","message":"Server running on port 51380","timestamp":"2025-04-20T08:09:52.884Z"}
+{"level":"info","message":"Shutdown signal received. Closing server and database connections.","timestamp":"2025-04-20T08:09:58.792Z"}
+{"level":"info","message":"HTTP server closed.","timestamp":"2025-04-20T08:09:58.793Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-20T08:10:25.841Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-20T08:10:26.151Z"}
+{"level":"info","message":"Server running on port 51450","timestamp":"2025-04-20T08:10:26.154Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-20T08:10:34.138Z"}
+{"level":"info","message":"Shutdown signal received. Closing server and database connections.","timestamp":"2025-04-20T08:11:59.809Z"}
+{"level":"info","message":"HTTP server closed.","timestamp":"2025-04-20T08:11:59.811Z"}
+{"level":"info","message":"Redis connected successfully","timestamp":"2025-04-20T08:33:14.026Z"}
+{"level":"info","message":"Connected to PostgreSQL database","timestamp":"2025-04-20T08:33:15.428Z"}
+{"level":"info","message":"Server running on port 4000","timestamp":"2025-04-20T08:33:15.431Z"}
+{"level":"info","message":"Shutdown signal received. Closing server and database connections.","timestamp":"2025-04-20T08:33:24.638Z"}
+{"level":"info","message":"HTTP server closed.","timestamp":"2025-04-20T08:33:24.640Z"}
