@@ -1,7 +1,8 @@
-import { Request, Response, NextFunction, RequestHandler } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import Redis from 'ioredis';
 import { REDIS_URL } from '../config';
 import logger from '../utils/logger';
+import { RequestHandler } from 'express';
 
 let redisClient: Redis | null = null;
 try {
@@ -10,10 +11,8 @@ try {
     maxRetriesPerRequest: 3,
   });
 
-  redisClient.on('error', (err: any) => {
-    if (err.code !== 'ECONNREFUSED') {
-      logger.error('Redis connection error:', err);
-    }
+  redisClient.on('error', (err) => {
+    logger.error('Redis connection error:', err);
     redisClient = null;
   });
 

@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import logger from '../utils/logger';
 
 interface TransformOptions {
-  transform: (data: unknown) => unknown;
+  transform: (data: any) => any;
   condition?: (req: Request) => boolean;
 }
 
@@ -18,7 +18,7 @@ export const transformResponse = (options: TransformOptions) => {
       const originalSend = res.json;
 
       // Override send function to transform response
-      res.json = function (body: unknown) {
+      res.json = function (body: any) {
         const transformedBody = options.transform(body);
         return originalSend.call(this, transformedBody);
       };
@@ -34,17 +34,15 @@ export const transformResponse = (options: TransformOptions) => {
 // Common transformers
 export const sanitizeResponse = transformResponse({
   transform: (data) => {
-    const sanitize = (obj: unknown): unknown => {
+    const sanitize = (obj: any): any => {
       if (!obj || typeof obj !== 'object') return obj;
 
       if (Array.isArray(obj)) {
         return obj.map(sanitize);
       }
 
-      const sanitized: Record<string, unknown> = {};
-      for (const [key, value] of Object.entries(
-        obj as Record<string, unknown>
-      )) {
+      const sanitized: any = {};
+      for (const [key, value] of Object.entries(obj)) {
         if (key.startsWith('_') || key === 'password') continue;
         sanitized[key] = sanitize(value);
       }
@@ -60,17 +58,15 @@ export const camelCaseResponse = transformResponse({
     const toCamelCase = (str: string) =>
       str.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
 
-    const convert = (obj: unknown): unknown => {
+    const convert = (obj: any): any => {
       if (!obj || typeof obj !== 'object') return obj;
 
       if (Array.isArray(obj)) {
         return obj.map(convert);
       }
 
-      const converted: Record<string, unknown> = {};
-      for (const [key, value] of Object.entries(
-        obj as Record<string, unknown>
-      )) {
+      const converted: any = {};
+      for (const [key, value] of Object.entries(obj)) {
         converted[toCamelCase(key)] = convert(value);
       }
       return converted;

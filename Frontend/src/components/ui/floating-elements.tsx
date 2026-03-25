@@ -12,7 +12,6 @@ interface FloatingElement {
   color: string;
   duration: number;
   delay: number;
-  opacity: number;
 }
 
 interface FloatingElementsProps {
@@ -60,9 +59,6 @@ export const FloatingElements = ({
           color: colors[Math.floor(Math.random() * colors.length)],
           duration: minDuration + Math.random() * (maxDuration - minDuration),
           delay: Math.random() * -20,
-          opacity:
-            opacityRange[0] +
-            Math.random() * (opacityRange[1] - opacityRange[0]),
         });
       }
 
@@ -85,7 +81,8 @@ export const FloatingElements = ({
 
   const renderShape = (element: FloatingElement, index: number) => {
     const shape = shapes[index % shapes.length];
-    const opacity = element.opacity;
+    const opacity =
+      opacityRange[0] + Math.random() * (opacityRange[1] - opacityRange[0]);
 
     // Extract key from common props
     const elementKey = element.id;

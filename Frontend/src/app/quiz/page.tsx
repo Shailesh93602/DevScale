@@ -1,7 +1,6 @@
 'use client';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
 
 const questions = [
   {
@@ -77,14 +76,17 @@ const Quiz = () => {
             >
               {questions[currentQuestion].answerOptions.map(
                 (answerOption, index) => (
-                  <Button
+                  <motion.button
                     key={index}
                     onClick={() =>
                       handleAnswerOptionClick(answerOption.isCorrect)
                     }
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="rounded-lg bg-blue-500 px-4 py-2 text-white shadow-md focus:outline-none"
                   >
                     {answerOption.answerText}
-                  </Button>
+                  </motion.button>
                 ),
               )}
             </motion.div>

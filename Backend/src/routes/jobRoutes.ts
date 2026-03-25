@@ -1,6 +1,6 @@
 import { BaseRouter } from './BaseRouter';
 import JobController from '../controllers/jobControllers';
-import { authMiddleware } from '../middlewares/authMiddleware';
+import { authMiddleware } from '@/middlewares/authMiddleware';
 
 export class JobRoutes extends BaseRouter {
   private readonly jobController: JobController;

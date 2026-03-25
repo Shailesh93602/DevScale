@@ -1,7 +1,7 @@
 import { Prisma, MainConcept, PrismaClient } from '@prisma/client';
 import BaseRepository from './baseRepository';
 
-import prisma from '../lib/prisma';
+import prisma from '@/lib/prisma';
 
 export class MainConceptRepository extends BaseRepository<
   PrismaClient['mainConcept']

@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
 import { AxiosError } from 'axios';
-import logger from '../utils/logger';
-import { DatabaseError } from '../types/errors';
+import logger from '@/utils/logger';
+import { DatabaseError } from '@/types/errors';
 
 // Custom error interface
 interface AppError extends Error {

@@ -12,10 +12,10 @@ import {
   FeatureRequestData,
   HelpArticleData,
   TicketData,
-} from '../types';
+} from '@/types';
 import BaseRepository from './baseRepository';
 
-import prisma from '../lib/prisma';
+import prisma from '@/lib/prisma';
 
 export default class SupportRepository extends BaseRepository<
   PrismaClient['supportTicket']

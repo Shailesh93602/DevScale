@@ -19,7 +19,7 @@ export const uploadToCloudinary = async (
 ): Promise<string> => {
   try {
     const result = await cloudinary.uploader.upload(file.path, {
-      folder: `eduscale/${folder}`,
+      folder: `mr_engineers/${folder}`,
     });
     return result.secure_url;
   } catch (error) {

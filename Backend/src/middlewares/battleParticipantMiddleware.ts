@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import prisma from '../lib/prisma';
-import { createAppError } from '../utils/errorHandler';
+import prisma from '@/lib/prisma';
+import { createAppError } from '@/utils/errorHandler';
 import { BattleStatus } from '@prisma/client';
 
 export const battleParticipantMiddleware = async (

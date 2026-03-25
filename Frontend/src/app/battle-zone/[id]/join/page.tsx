@@ -52,8 +52,8 @@ export default function JoinBattlePage() {
   useEffect(() => {
     const loadBattle = async () => {
       const response = await fetchBattle(battleId);
-      if (response) {
-        setBattle(response);
+      if (response && response.data[0]) {
+        setBattle(response.data[0]);
       }
     };
 
@@ -130,15 +130,15 @@ export default function JoinBattlePage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'UPCOMING':
-        return 'bg-blue/10 text-blue';
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
       case 'IN_PROGRESS':
-        return 'bg-green/10 text-green';
+        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
       case 'COMPLETED':
-        return 'bg-muted text-muted-foreground';
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
       case 'CANCELLED':
-        return 'bg-red/10 text-red';
+        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
       default:
-        return 'bg-muted text-muted-foreground';
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
     }
   };
 
@@ -146,13 +146,13 @@ export default function JoinBattlePage() {
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty.toLowerCase()) {
       case 'easy':
-        return 'bg-green/10 text-green';
+        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
       case 'medium':
-        return 'bg-yellow/10 text-yellow';
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
       case 'hard':
-        return 'bg-red/10 text-red';
+        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
       default:
-        return 'bg-muted text-muted-foreground';
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
     }
   };
 
@@ -284,23 +284,23 @@ export default function JoinBattlePage() {
                 <h3 className="mb-3 font-semibold">Battle Rules</h3>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="text-green-600 mt-0.5 h-4 w-4" />
+                    <CheckCircle className="mt-0.5 h-4 w-4 text-green-600" />
                     <span>
                       You must answer questions within the time limit.
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="text-green-600 mt-0.5 h-4 w-4" />
+                    <CheckCircle className="mt-0.5 h-4 w-4 text-green-600" />
                     <span>
                       Points are awarded based on correctness and speed.
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="text-green-600 mt-0.5 h-4 w-4" />
+                    <CheckCircle className="mt-0.5 h-4 w-4 text-green-600" />
                     <span>You can only submit one answer per question.</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="text-green-600 mt-0.5 h-4 w-4" />
+                    <CheckCircle className="mt-0.5 h-4 w-4 text-green-600" />
                     <span>The leaderboard is updated in real-time.</span>
                   </li>
                   <li className="flex items-start gap-2">
@@ -318,21 +318,21 @@ export default function JoinBattlePage() {
                 <h3 className="mb-3 font-semibold">What to Expect</h3>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-start gap-2">
-                    <Info className="text-blue-600 mt-0.5 h-4 w-4" />
+                    <Info className="mt-0.5 h-4 w-4 text-blue-600" />
                     <span>The battle will start at the scheduled time.</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Info className="text-blue-600 mt-0.5 h-4 w-4" />
+                    <Info className="mt-0.5 h-4 w-4 text-blue-600" />
                     <span>Questions will be presented one at a time.</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Info className="text-blue-600 mt-0.5 h-4 w-4" />
+                    <Info className="mt-0.5 h-4 w-4 text-blue-600" />
                     <span>
                       You can chat with other participants during the battle.
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Info className="text-blue-600 mt-0.5 h-4 w-4" />
+                    <Info className="mt-0.5 h-4 w-4 text-blue-600" />
                     <span>
                       Results will be available immediately after the battle
                       ends.

@@ -56,14 +56,14 @@ const QuestionPreview: React.FC<QuestionPreviewProps> = ({
       </CardHeader>
       <CardContent>
         {isPreview && !hasQuestions && (
-          <div className="mb-4 rounded-md bg-yellow/10 p-3">
+          <div className="mb-4 rounded-md bg-yellow-50 p-3 dark:bg-yellow-950">
             <div className="flex items-start gap-2">
-              <AlertCircle className="mt-0.5 h-4 w-4 text-yellow" />
+              <AlertCircle className="mt-0.5 h-4 w-4 text-yellow-600 dark:text-yellow-400" />
               <div>
-                <p className="text-sm font-medium text-yellow">
+                <p className="text-sm font-medium text-yellow-800 dark:text-yellow-300">
                   Sample Questions
                 </p>
-                <p className="text-xs text-yellow">
+                <p className="text-xs text-yellow-700 dark:text-yellow-400">
                   These are example questions. Actual questions will be
                   available when the battle starts.
                 </p>
