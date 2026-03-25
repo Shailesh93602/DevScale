@@ -10,7 +10,6 @@ import {
 import { useDispatch } from 'react-redux';
 import { hideLoader, showLoader } from '@/lib/features/loader/loaderSlice';
 import { useAxiosGet } from '@/hooks/useAxios';
-import { logger } from '@/lib/logger';
 
 const Page = () => {
   const [interviewQuestions, setInterviewQuestions] = useState<
@@ -30,8 +29,8 @@ const Page = () => {
   >([]);
 
   const dispatch = useDispatch();
-  const [getInterviewQuestions] = useAxiosGet<
-    {
+  const [getInterviewQuestions] = useAxiosGet<{
+    resource: {
       category: string;
       questions: {
         id: string;
@@ -43,17 +42,17 @@ const Page = () => {
           points: { id: string; title: string; description: string }[];
         };
       }[];
-    }[]
-  >('/resources/interview-questions');
+    }[];
+  }>('/resources/interview-questions');
 
   const fetchInterviewQuestions = async () => {
     try {
       dispatch(showLoader('fetching interview questions'));
       const response = await getInterviewQuestions();
       dispatch(hideLoader('fetching interview questions'));
-      setInterviewQuestions(response.data ?? []);
+      setInterviewQuestions(response.data?.resource ?? []);
     } catch (error) {
-      logger.error('Error fetching interview questions:', error);
+      console.error(error);
       dispatch(hideLoader('fetching interview questions'));
     }
   };
@@ -63,14 +62,14 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-secondary to-accent py-12">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200 py-12 dark:from-gray-900 dark:to-gray-800">
       <div className="mx-auto max-w-6xl px-6 lg:px-8">
-        <h1 className="mb-12 text-center text-5xl font-extrabold tracking-tight text-primary">
+        <h1 className="mb-12 text-center text-5xl font-extrabold tracking-tight text-indigo-800 dark:text-indigo-300">
           Interview Questions
         </h1>
         {interviewQuestions.map((category) => (
           <div key={category.category} className="mb-12">
-            <h2 className="mb-6 text-3xl font-bold text-primary">
+            <h2 className="mb-6 text-3xl font-bold text-indigo-700 dark:text-indigo-400">
               {category.category}
             </h2>
             <Accordion type="single" collapsible className="w-full space-y-6">
@@ -78,15 +77,15 @@ const Page = () => {
                 <AccordionItem
                   key={item.id}
                   value={item.id}
-                  className="overflow-hidden rounded-xl border border-border bg-card shadow-lg"
+                  className="overflow-hidden rounded-xl border border-indigo-100 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800"
                 >
-                  <AccordionTrigger className="px-8 py-6 transition-colors duration-300 ease-in-out hover:bg-accent">
-                    <span className="text-left text-xl font-semibold text-card-foreground">
+                  <AccordionTrigger className="px-8 py-6 transition-colors duration-300 ease-in-out hover:bg-indigo-50 dark:hover:bg-gray-700">
+                    <span className="text-left text-xl font-semibold text-gray-800 dark:text-gray-200">
                       {item.question}
                     </span>
                   </AccordionTrigger>
-                  <AccordionContent className="bg-muted px-8 py-6">
-                    <div className="text-lg leading-relaxed text-muted-foreground">
+                  <AccordionContent className="bg-indigo-50 px-8 py-6 dark:bg-gray-700">
+                    <div className="text-lg leading-relaxed text-gray-600 dark:text-gray-300">
                       <p className="mb-4">{item.answer.introduction}</p>
                       <ul className="mb-4 list-disc space-y-2 pl-5">
                         {item.answer.points.map((point) => (

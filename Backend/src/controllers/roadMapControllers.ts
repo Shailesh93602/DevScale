@@ -3,11 +3,10 @@ import { catchAsync } from '../utils/index';
 import { sendResponse } from '../utils/apiResponse';
 import RoadmapRepository from '../repositories/roadmapRepository';
 import { Prisma } from '@prisma/client';
-import UserRoadmapRepository from '../repositories/userRoadmapRepository';
-import RoadmapCategoryRepository from '../repositories/roadmapCategoryRepository';
-import prisma from '../lib/prisma';
-import { invalidatePattern, getCached, setCached } from '../services/memoryCache';
-import { createAppError } from '../utils/errorHandler';
+import UserRoadmapRepository from '@/repositories/userRoadmapRepository';
+import RoadmapCategoryRepository from '@/repositories/roadmapCategoryRepository';
+import prisma from '@/lib/prisma';
+import { createAppError } from '@/utils/errorHandler';
 
 export default class RoadmapController {
   private readonly roadmapRepo: RoadmapRepository;
@@ -29,30 +28,23 @@ export default class RoadmapController {
         is_public: true,
       };
 
-      // Apply type filters
-      switch (type) {
-        case 'featured':
-        case 'recommended':
-          whereClause = {
-            ...whereClause,
-            popularity: {
-              gt: 100,
-            },
-          };
-          break;
-        case 'trending':
-          // trending sorting is handled by default by the repository, but we want all public roadmaps
-          break;
-        case 'my-roadmaps':
-          if (userId) {
+      if (userId) {
+        switch (type) {
+          case 'featured':
+            whereClause = {
+              ...whereClause,
+              popularity: {
+                gt: 100,
+              },
+            };
+            break;
+          case 'my-roadmaps':
             whereClause = {
               ...whereClause,
               user_id: userId,
             };
-          }
-          break;
-        case 'enrolled':
-          if (userId) {
+            break;
+          case 'enrolled':
             whereClause = {
               ...whereClause,
               user_roadmaps: {
@@ -61,18 +53,15 @@ export default class RoadmapController {
                 },
               },
             };
-          }
-          break;
-        default:
-          // For 'all' type, we keep the default whereClause
-          break;
+            break;
+          default:
+            // For 'all' type, we keep the default whereClause
+            break;
+        }
       }
 
       const roadmaps = await this.roadmapRepo.getAllRoadmaps(req, whereClause);
-      return sendResponse(res, 'ROADMAPS_FETCHED', {
-        data: roadmaps.data,
-        meta: roadmaps.meta
-      });
+      return sendResponse(res, 'ROADMAPS_FETCHED', { data: roadmaps });
     } catch (error) {
       return sendResponse(res, 'ROADMAP_NOT_FOUND', { error: error as Error });
     }
@@ -107,7 +96,32 @@ export default class RoadmapController {
       });
     }
 
-    sendResponse(res, 'ROADMAP_FETCHED', { data: roadMap });
+    sendResponse(res, 'ROADMAP_FETCHED', { data: { roadMap } });
+  });
+
+  public createRoadMap = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user) {
+      return sendResponse(res, 'UNAUTHORIZED', {
+        error: 'User not authenticated',
+      });
+    }
+
+    const user_id = req.user.id;
+    const { title, description, content } = req.body;
+
+    if (!title || !description || !content) {
+      return sendResponse(res, 'INVALID_PAYLOAD', {
+        error: 'Invalid payload',
+      });
+    }
+
+    const newRoadMap = await this.roadmapRepo.createRoadmap({
+      title,
+      description,
+      author_id: user_id,
+    });
+
+    sendResponse(res, 'ROADMAP_CREATED', { data: newRoadMap });
   });
 
   public createRoadmap = catchAsync(async (req: Request, res: Response) => {
@@ -127,27 +141,19 @@ export default class RoadmapController {
       estimatedHours,
       isPublic,
       version,
-      tags = [],
-      mainConcepts = [],
+      tags,
+      mainConcepts,
     } = req.body;
-
-    // Map frontend difficulty values to Prisma enum
-    const difficultyMap: Record<string, any> = {
-      'BEGINNER': 'EASY',
-      'INTERMEDIATE': 'MEDIUM',
-      'ADVANCED': 'HARD',
-    };
-    const prismaDifficulty = difficultyMap[difficulty?.toUpperCase()] || difficulty;
 
     const createInput: Prisma.RoadmapCreateInput = {
       title,
       description,
       category: categoryId ? { connect: { id: categoryId } } : undefined,
-      difficulty: prismaDifficulty,
+      difficulty,
       estimatedHours,
       is_public: isPublic,
       version,
-      tags: Array.isArray(tags) ? tags.join(',') : '',
+      tags: tags.join(','),
       user: {
         connect: { id: userId },
       },
@@ -186,8 +192,7 @@ export default class RoadmapController {
           select: {
             id: true,
             username: true,
-            first_name: true,
-            last_name: true,
+            full_name: true,
           },
         },
         main_concepts: {
@@ -298,20 +303,12 @@ export default class RoadmapController {
       },
     });
 
-    invalidatePattern(`roadmap:detail:${roadmapId}`);
-    invalidatePattern(`roadmaps:list:${userId}`); // Invalidate user's list cache
-
     return sendResponse(res, 'ROADMAP_ENROLLED', { data: null });
   });
 
   public getRoadmapCategories = catchAsync(
     async (req: Request, res: Response) => {
-      const CATEGORIES_CACHE_KEY = 'roadmaps:categories:all';
-      let categories = getCached<any[]>(CATEGORIES_CACHE_KEY);
-      if (!categories) {
-        categories = await this.roadmapCategoryRepo.findMany();
-        setCached(CATEGORIES_CACHE_KEY, categories, 10 * 60); // 10 minutes
-      }
+      const categories = await this.roadmapCategoryRepo.findMany();
       return sendResponse(res, 'ROADMAP_CATEGORIES_FETCHED', {
         data: categories,
       });
@@ -328,29 +325,37 @@ export default class RoadmapController {
     const userId = req.user.id;
     const roadmapId = req.params.id;
 
-    // Lightweight existence check — avoid full getRoadmap() query
-    const roadmapExists = await prisma.roadmap.findUnique({
-      where: { id: roadmapId },
-      select: { id: true },
-    });
-    if (!roadmapExists) {
+    // Check if roadmap exists
+    const roadmap = await this.roadmapRepo.getRoadmap(roadmapId);
+    if (!roadmap) {
       return sendResponse(res, 'ROADMAP_NOT_FOUND', {
         error: 'Roadmap not found',
       });
     }
 
     const existingLike = await prisma.like.findFirst({
-      where: { user_id: userId, roadmap_id: roadmapId },
+      where: {
+        user_id: userId,
+        roadmap_id: roadmapId,
+      },
     });
 
     if (existingLike) {
-      await prisma.like.delete({ where: { id: existingLike.id } });
-      invalidatePattern(`roadmap:detail:${roadmapId}`);
+      await prisma.like.delete({
+        where: {
+          id: existingLike.id,
+        },
+      });
       return sendResponse(res, 'ROADMAP_UNLIKED', { data: null });
     }
 
-    await prisma.like.create({ data: { user_id: userId, roadmap_id: roadmapId } });
-    invalidatePattern(`roadmap:detail:${roadmapId}`);
+    await prisma.like.create({
+      data: {
+        user_id: userId,
+        roadmap_id: roadmapId,
+      },
+    });
+
     return sendResponse(res, 'ROADMAP_LIKED', { data: null });
   });
 
@@ -377,7 +382,6 @@ export default class RoadmapController {
           id: existingBookmark.id,
         },
       });
-      invalidatePattern(`roadmap:detail:${roadmapId}`);
       return sendResponse(res, 'ROADMAP_UNBOOKMARKED', { data: null });
     }
 
@@ -388,7 +392,6 @@ export default class RoadmapController {
       },
     });
 
-    invalidatePattern(`roadmap:detail:${roadmapId}`);
     return sendResponse(res, 'ROADMAP_BOOKMARKED', { data: null });
   });
 
@@ -405,31 +408,44 @@ export default class RoadmapController {
           Number(limit)
         );
 
-      // Batch: collect all comment + reply IDs, then fetch likes in ONE query
-      const allCommentIds = comments.flatMap((c) => [
-        c.id,
-        ...(c.replies || []).map((r: { id: string }) => r.id),
-      ]);
+      // Add isLiked field to each comment and its replies
+      const commentsWithLikes = await Promise.all(
+        comments.map(async (comment) => {
+          const [commentIsLiked, repliesWithLikes] = await Promise.all([
+            userId
+              ? prisma.like.findFirst({
+                  where: {
+                    user_id: userId,
+                    comment_id: comment.id,
+                  },
+                })
+              : Promise.resolve(false),
+            Promise.all(
+              (comment.replies || []).map(async (reply) => {
+                const replyIsLiked = userId
+                  ? await prisma.like.findFirst({
+                      where: {
+                        user_id: userId,
+                        comment_id: reply.id,
+                      },
+                    })
+                  : false;
 
-      const likedSet = new Set<string>();
-      if (userId && allCommentIds.length > 0) {
-        const likedComments = await prisma.like.findMany({
-          where: { user_id: userId, comment_id: { in: allCommentIds } },
-          select: { comment_id: true },
-        });
-        likedComments.forEach((l) => {
-          if (l.comment_id) likedSet.add(l.comment_id);
-        });
-      }
+                return {
+                  ...reply,
+                  isLiked: Boolean(replyIsLiked),
+                };
+              })
+            ),
+          ]);
 
-      const commentsWithLikes = comments.map((comment) => ({
-        ...comment,
-        isLiked: likedSet.has(comment.id),
-        replies: (comment.replies || []).map((reply: { id: string }) => ({
-          ...reply,
-          isLiked: likedSet.has(reply.id),
-        })),
-      }));
+          return {
+            ...comment,
+            isLiked: Boolean(commentIsLiked),
+            replies: repliesWithLikes,
+          };
+        })
+      );
 
       return sendResponse(res, 'COMMENTS_FETCHED', {
         data: commentsWithLikes,
@@ -504,8 +520,7 @@ export default class RoadmapController {
           select: {
             id: true,
             username: true,
-            first_name: true,
-            last_name: true,
+            full_name: true,
             avatar_url: true,
           },
         },
@@ -515,8 +530,7 @@ export default class RoadmapController {
               select: {
                 id: true,
                 username: true,
-                first_name: true,
-                last_name: true,
+                full_name: true,
                 avatar_url: true,
               },
             },

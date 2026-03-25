@@ -1,7 +1,7 @@
 import { PrismaClient, JobType } from '@prisma/client';
 import BaseRepository from './baseRepository';
 
-import prisma from '../lib/prisma';
+import prisma from '@/lib/prisma';
 
 export default class JobRepository extends BaseRepository<PrismaClient['job']> {
   constructor() {

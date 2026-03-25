@@ -13,7 +13,7 @@ export default function ResourcesPage() {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [availableTags, setAvailableTags] = useState<string[]>([]);
 
-  const [getUnpublishedTopics] = useAxiosGet<IResource[]>(
+  const [getUnpublishedTopics] = useAxiosGet<{ topics: IResource[] }>(
     '/topics/unpublished',
   );
 
@@ -24,10 +24,12 @@ export default function ResourcesPage() {
     try {
       const response = await getUnpublishedTopics();
       const data = response.data;
-      setResources(data ?? []);
+      setResources(data?.topics ?? []);
       setAvailableTags([
         ...new Set(
-          data?.flatMap((resource: { tags: string[] }) => resource.tags),
+          data?.topics?.flatMap(
+            (resource: { tags: string[] }) => resource.tags,
+          ),
         ),
       ] as string[]);
     } catch (error) {
@@ -66,9 +68,9 @@ export default function ResourcesPage() {
   return (
     <>
       <Navbar />
-      <div className="mx-auto bg-background p-6">
-        <div className="rounded-lg bg-card p-6 text-card-foreground shadow-md">
-          <h1 className="mb-6 text-3xl font-bold text-foreground">
+      <div className="mx-auto bg-white p-6 dark:bg-gray-800">
+        <div className="rounded-lg bg-blue-50 p-6 shadow-md dark:bg-gray-900">
+          <h1 className="mb-6 text-3xl font-bold text-gray-900 dark:text-gray-100">
             Available Topics
           </h1>
           <input
@@ -76,7 +78,7 @@ export default function ResourcesPage() {
             placeholder="Search topics..."
             value={searchTerm}
             onChange={handleSearch}
-            className="mb-6 w-full rounded-md border border-input bg-input p-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+            className="mb-6 w-full rounded-md border border-gray-300 bg-gray-50 p-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
           />
           <div className="mb-6">
             {availableTags.map((tag) => (
@@ -85,8 +87,8 @@ export default function ResourcesPage() {
                 onClick={() => handleTagSelection(tag)}
                 className={`m-1 rounded border p-2 ${
                   selectedTags.includes(tag)
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-muted text-foreground hover:bg-muted/80'
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100'
                 }`}
               >
                 {tag}
@@ -98,30 +100,30 @@ export default function ResourcesPage() {
               {filteredResources.map((resource) => (
                 <li
                   key={resource.id}
-                  className="rounded-lg bg-muted/20 p-6 shadow transition-shadow duration-200 hover:shadow-lg"
+                  className="rounded-lg bg-gray-50 p-6 shadow transition-shadow duration-200 hover:shadow-lg dark:bg-gray-800"
                 >
-                  <h2 className="text-2xl font-semibold text-foreground">
+                  <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
                     {resource.title}
                   </h2>
-                  <p className="text-muted-foreground">
+                  <p className="text-gray-700 dark:text-gray-300">
                     {resource.description}
                   </p>
                   <a
                     href={`/create-resource/${resource.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-2 block text-primary hover:underline"
+                    className="mt-2 block text-blue-500 hover:underline dark:text-blue-400"
                   >
                     Add Article
                   </a>
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-sm text-gray-500 dark:text-gray-400">
                     {resource.category}
                   </span>
                   <div className="mt-2">
                     {resource.tags?.map((tag) => (
                       <span
                         key={tag}
-                        className="mr-1 inline-block rounded-full bg-muted px-2 py-1 text-xs text-foreground"
+                        className="mr-1 inline-block rounded-full bg-gray-200 px-2 py-1 text-xs text-gray-900 dark:bg-gray-700 dark:text-gray-100"
                       >
                         {tag}
                       </span>
@@ -131,7 +133,7 @@ export default function ResourcesPage() {
               ))}
             </ul>
           ) : (
-            <p className="text-muted-foreground">No topics found.</p>
+            <p className="text-gray-700 dark:text-gray-300">No topics found.</p>
           )}
         </div>
       </div>

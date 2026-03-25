@@ -1,6 +1,7 @@
 import { User, UserRole } from '@prisma/client';
 import { User as SupabaseUser } from '@supabase/supabase-js';
 import { File } from 'express';
+import { File, Request } from 'express';
 
 declare module 'express-serve-static-core' {
   interface Request {
@@ -20,10 +21,5 @@ declare module 'express-serve-static-core' {
     file: File;
     apiVersion?: string;
     timezone?: string;
-    battle?: unknown;
-    battleAccess?: {
-      isCreator: boolean;
-      isParticipant: boolean;
-    };
   }
 }

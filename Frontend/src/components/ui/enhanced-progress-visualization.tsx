@@ -94,21 +94,21 @@ export const EnhancedProgressVisualization = ({
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded-xl bg-card p-6',
+        'relative overflow-hidden rounded-xl bg-white p-6 dark:bg-gray-800',
         className,
       )}
     >
       {/* Background decorative elements */}
-      <div className="bg-primary/10 absolute -left-20 -top-20 h-40 w-40 rounded-full blur-3xl"></div>
-      <div className="absolute -bottom-20 -right-20 h-40 w-40 rounded-full bg-secondary/10 blur-3xl"></div>
+      <div className="absolute -left-20 -top-20 h-40 w-40 rounded-full bg-purple-500/10 blur-3xl"></div>
+      <div className="absolute -bottom-20 -right-20 h-40 w-40 rounded-full bg-blue-500/10 blur-3xl"></div>
       <div className="absolute left-1/2 top-1/3 h-40 w-40 -translate-x-1/2 rounded-full bg-amber-500/10 blur-3xl"></div>
 
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
-        <h3 className="text-xl font-bold text-foreground">
+        <h3 className="text-xl font-bold text-gray-900 dark:text-white">
           Your Learning Dashboard
         </h3>
-        <div className="bg-primary/20 flex items-center rounded-full px-3 py-1 text-sm font-medium text-primary">
+        <div className="flex items-center rounded-full bg-purple-100 px-3 py-1 text-sm font-medium text-purple-800 dark:bg-purple-900/30 dark:text-purple-300">
           <FaTrophy className="mr-1" size={14} />
           Level {skills[activeSkill].level}
         </div>
@@ -126,14 +126,14 @@ export const EnhancedProgressVisualization = ({
             className="relative"
           >
             <div className="mb-2 flex items-center">
-              <div className="mr-3 flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary2 text-white shadow-lg">
+              <div className="mr-3 flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 text-white shadow-lg">
                 {skills[activeSkill].icon}
               </div>
               <div>
-                <h4 className="text-lg font-bold text-foreground">
+                <h4 className="text-lg font-bold text-gray-900 dark:text-white">
                   {skills[activeSkill].name}
                 </h4>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-gray-600 dark:text-gray-300">
                   {skills[activeSkill].description}
                 </p>
               </div>
@@ -142,14 +142,14 @@ export const EnhancedProgressVisualization = ({
             {/* Progress bar */}
             <div className="mt-4">
               <div className="mb-2 flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   Progress
                 </span>
-                <span className="text-sm font-bold text-primary">
+                <span className="text-sm font-bold text-purple-600 dark:text-purple-400">
                   {skills[activeSkill].progress}%
                 </span>
               </div>
-              <div className="h-3 w-full overflow-hidden rounded-full bg-muted">
+              <div className="h-3 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
                 <motion.div
                   className={`h-full rounded-full bg-gradient-to-r ${skills[activeSkill].color}`}
                   initial={{ width: 0 }}
@@ -161,7 +161,7 @@ export const EnhancedProgressVisualization = ({
 
             {/* Achievements */}
             <div className="mt-6">
-              <h5 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+              <h5 className="mb-3 text-sm font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">
                 Achievements
               </h5>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
@@ -171,9 +171,9 @@ export const EnhancedProgressVisualization = ({
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.3, delay: i * 0.1 }}
-                    className="flex items-center rounded-lg border border-border bg-muted/20 p-2 text-sm"
+                    className="flex items-center rounded-lg border border-gray-200 bg-gray-50 p-2 text-sm dark:border-gray-700 dark:bg-gray-900"
                   >
-                    <div className="bg-green-500 mr-2 h-2 w-2 rounded-full"></div>
+                    <div className="mr-2 h-2 w-2 rounded-full bg-green-500"></div>
                     {achievement}
                   </motion.div>
                 ))}
@@ -185,7 +185,7 @@ export const EnhancedProgressVisualization = ({
 
       {/* Interactive skill selector */}
       <div className="relative mt-8">
-        <h5 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+        <h5 className="mb-3 text-sm font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">
           Your Skills
         </h5>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -195,8 +195,8 @@ export const EnhancedProgressVisualization = ({
               className={cn(
                 'group relative cursor-pointer overflow-hidden rounded-xl border p-3 transition-all duration-300',
                 activeSkill === index
-                  ? 'bg-primary/10 border-primary'
-                  : 'hover:border-primary/50 hover:bg-primary/5 border-border bg-card',
+                  ? 'border-purple-500 bg-purple-50 dark:border-purple-500 dark:bg-purple-900/20'
+                  : 'border-gray-200 bg-white hover:border-purple-200 hover:bg-purple-50/50 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-purple-900 dark:hover:bg-purple-900/10',
               )}
               onClick={() => handleSkillClick(index)}
               onMouseEnter={() => setHoverIndex(index)}
@@ -205,16 +205,18 @@ export const EnhancedProgressVisualization = ({
               whileTap={{ scale: 0.98 }}
             >
               <div className="flex items-center justify-between">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 text-gray-700 dark:from-gray-700 dark:to-gray-800 dark:text-gray-300">
                   {skill.icon}
                 </div>
-                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-xs font-bold text-muted-foreground">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-xs font-bold text-gray-700 dark:bg-gray-700 dark:text-gray-300">
                   {skill.level}
                 </div>
               </div>
               <div className="mt-2">
-                <h6 className="font-medium text-foreground">{skill.name}</h6>
-                <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-muted">
+                <h6 className="font-medium text-gray-900 dark:text-white">
+                  {skill.name}
+                </h6>
+                <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
                   <div
                     className={`h-full rounded-full bg-gradient-to-r ${skill.color}`}
                     style={{ width: `${skill.progress}%` }}
@@ -230,7 +232,7 @@ export const EnhancedProgressVisualization = ({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
                     transition={{ duration: 0.2 }}
-                    className="from-primary/90 to-primary2/90 absolute inset-0 flex items-center justify-center bg-gradient-to-br text-white"
+                    className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-500/90 to-indigo-600/90 text-white"
                   >
                     <div className="text-center">
                       <div className="text-lg font-bold">{skill.progress}%</div>
@@ -246,7 +248,7 @@ export const EnhancedProgressVisualization = ({
 
       {/* Next milestone */}
       <motion.div
-        className="border-primary/20 bg-primary/5 mt-6 rounded-xl border p-4"
+        className="mt-6 rounded-xl border border-purple-200 bg-purple-50 p-4 dark:border-purple-900/50 dark:bg-purple-900/20"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
@@ -256,16 +258,16 @@ export const EnhancedProgressVisualization = ({
             <FaTrophy size={20} />
           </div>
           <div>
-            <h5 className="text-sm font-semibold text-muted-foreground">
+            <h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
               Next Milestone
             </h5>
-            <p className="text-base font-bold text-foreground">
+            <p className="text-base font-bold text-gray-900 dark:text-white">
               Complete 5 more challenges to reach Level{' '}
               {skills[activeSkill].level + 1}
             </p>
           </div>
         </div>
-        <div className="bg-primary/20 mt-3 h-2 w-full overflow-hidden rounded-full">
+        <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-purple-200 dark:bg-purple-800">
           <motion.div
             className="h-full rounded-full bg-gradient-to-r from-amber-400 to-amber-600"
             initial={{ width: 0 }}

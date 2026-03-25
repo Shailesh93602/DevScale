@@ -32,12 +32,18 @@ export interface StreakStats {
   dailyActivities: DailyActivity[];
 }
 
+export interface ApiResponse<T> {
+  data: T;
+  message: string;
+  status: number;
+}
+
 export const useStreakStats = () => {
-  return useAxiosGet<StreakStats>('/streak/stats');
+  return useAxiosGet<ApiResponse<StreakStats>>('/streak/stats');
 };
 
 export const useWeeklyActivity = () => {
-  return useAxiosGet<WeeklyActivity[]>('/streak/weekly-activity');
+  return useAxiosGet<ApiResponse<WeeklyActivity[]>>('/streak/weekly-activity');
 };
 
 export const useUpdateStreak = () => {

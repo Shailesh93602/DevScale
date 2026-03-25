@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button } from '@/components/ui/button';
 
 const BattleTopics = ({
   topics,
@@ -11,16 +10,19 @@ const BattleTopics = ({
   onChange: (topic: string) => void;
 }) => {
   return (
-    <div className="mb-4 flex flex-wrap gap-2">
+    <div className="mb-4 flex flex-wrap gap-1">
       {topics.map((topic) => (
-        <Button
+        <button
           key={topic}
           onClick={() => onChange(topic)}
-          variant={selectedTopic === topic ? 'default' : 'secondary'}
-          className="rounded-full"
+          className={`rounded-3xl px-4 py-2 ${
+            selectedTopic === topic
+              ? 'bg-blue-500 text-white'
+              : 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+          }`}
         >
           {topic}
-        </Button>
+        </button>
       ))}
     </div>
   );

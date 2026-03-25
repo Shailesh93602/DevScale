@@ -1,8 +1,8 @@
-# EduScale Platform Overview
+# CodeMentor Platform Overview
 
 ## 1. Platform Story & Use Cases
 
-EduScale is a comprehensive learning platform designed to help developers grow from beginners to experts. Users can follow structured roadmaps, participate in coding battles, join study groups, and receive mentorship from experienced developers. The platform combines traditional learning with interactive elements like quizzes, challenges, and peer-to-peer learning.
+CodeMentor is a comprehensive learning platform designed to help developers grow from beginners to experts. Users can follow structured roadmaps, participate in coding battles, join study groups, and receive mentorship from experienced developers. The platform combines traditional learning with interactive elements like quizzes, challenges, and peer-to-peer learning.
 
 A typical user journey might look like this: A beginner starts by selecting a roadmap (e.g., "Full Stack Development"), follows structured topics, completes quizzes to verify understanding, and practices with coding challenges. They can join study groups for collaborative learning, participate in forums for discussions, and even engage in coding battles to test their skills. Advanced users can contribute articles, mentor others, and create custom learning paths.
 

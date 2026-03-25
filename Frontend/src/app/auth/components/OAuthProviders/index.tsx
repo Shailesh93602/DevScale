@@ -25,9 +25,9 @@ export default function OAuthProviders() {
       });
 
       if (error) throw error;
-    } catch {
+    } catch (error) {
+      console.error('OAuth error:', error);
       setLoadingProvider(null);
-      // Log error to monitoring service in production
       toast.error('Error logging in. Please try again.');
     }
   };

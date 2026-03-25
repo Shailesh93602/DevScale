@@ -23,9 +23,8 @@ export const errorHandler: ErrorRequestHandler = (
   err: ErrorWithStatusCode,
   req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
-  void next;
   // Structured logging with logger
   if (err instanceof AppError) {
     logger.error('Application Error', {
@@ -46,8 +45,7 @@ export const errorHandler: ErrorRequestHandler = (
 
   // Error response handling
   const statusCode = err.statusCode || 500;
-  const isDev = process.env.NODE_ENV === 'development';
-  const message = (statusCode === 500 && !isDev) ? 'Internal server error' : err.message;
+  const message = statusCode === 500 ? 'Internal server error' : err.message;
 
   // Create a proper Error object
   const errorResponse = new Error(message);

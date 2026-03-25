@@ -13,7 +13,6 @@ export const RoadmapSection = ({
   description,
   subjects,
   index,
-  roadmapId,
 }: {
   name: string;
   description: string;
@@ -27,9 +26,10 @@ export const RoadmapSection = ({
     };
   }[];
   index: number;
-  roadmapId: string;
 }) => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
+
+  const completed = 50; // This should be calculated based on actual progress
 
   return (
     <motion.div
@@ -43,18 +43,18 @@ export const RoadmapSection = ({
       <div className="rounded-lg border-l-4 border-primary bg-card p-6 shadow-lg">
         <div className="mb-4 flex items-center justify-between">
           <h3 className="text-2xl font-bold text-primary">{name}</h3>
+          <ProgressCircle completed={completed} />
         </div>
         <p className="mb-6 text-card-foreground">{description}</p>
         <div className="space-y-4">
           {subjects?.map((step, stepIndex) => (
             <RoadmapStep
               key={step.id}
-              id={step.subject?.id || (step as any)?.subject_id}
+              id={step.id}
               name={step.subject?.title}
               description={step.subject?.description}
               icon={step.subject?.icon}
               index={stepIndex}
-              roadmapId={roadmapId}
             />
           ))}
         </div>

@@ -55,9 +55,9 @@ const EnrolledRoadmapCard: React.FC<EnrolledRoadmapCardProps> = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="overflow-hidden rounded-lg bg-card shadow-md"
+      className="overflow-hidden rounded-lg bg-white shadow-md dark:bg-gray-800"
     >
-      <div className="h-32 bg-muted">
+      <div className="h-32 bg-gray-200 dark:bg-gray-700">
         {thumbnail ? (
           <Image
             src={thumbnail}
@@ -67,8 +67,8 @@ const EnrolledRoadmapCard: React.FC<EnrolledRoadmapCardProps> = ({
             height={500}
           />
         ) : (
-          <div className="from-primary/20 flex h-full w-full items-center justify-center bg-gradient-to-br to-secondary/20">
-            <span className="text-lg font-semibold text-muted-foreground">
+          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-blue-500/20 to-purple-500/20 dark:from-blue-900/20 dark:to-purple-900/20">
+            <span className="text-lg font-semibold text-gray-500 dark:text-gray-400">
               {title.substring(0, 1)}
             </span>
           </div>
@@ -77,7 +77,7 @@ const EnrolledRoadmapCard: React.FC<EnrolledRoadmapCardProps> = ({
 
       <div className="p-4">
         <Link href={`/career-roadmap/${id}`}>
-          <h3 className="mb-1 line-clamp-1 text-lg font-semibold text-foreground hover:text-primary">
+          <h3 className="mb-1 line-clamp-1 text-lg font-semibold text-gray-900 hover:text-blue-600 dark:text-white dark:hover:text-blue-400">
             {title}
           </h3>
         </Link>
@@ -89,17 +89,19 @@ const EnrolledRoadmapCard: React.FC<EnrolledRoadmapCardProps> = ({
             fallback={author?.name?.charAt(0)?.toUpperCase()}
             size="xs"
           />
-          <span className="text-sm text-muted-foreground">{author?.name}</span>
+          <span className="text-sm text-gray-500 dark:text-gray-400">
+            {author?.name}
+          </span>
         </div>
 
-        <div className="mb-2 h-2 w-full overflow-hidden rounded-full bg-muted">
+        <div className="mb-2 h-2 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-gray-700">
           <div
             className={`h-full rounded-full ${progressBarColor}`}
             style={{ width: `${progressPercentage}%` }}
           />
         </div>
 
-        <div className="mb-4 flex justify-between text-sm text-muted-foreground">
+        <div className="mb-4 flex justify-between text-sm text-gray-500 dark:text-gray-400">
           <span>
             {completedTopics} of {totalTopics} topics
           </span>
@@ -107,16 +109,16 @@ const EnrolledRoadmapCard: React.FC<EnrolledRoadmapCardProps> = ({
         </div>
 
         {nextTopic && (
-          <div className="mt-4 rounded-md bg-muted/50 p-3">
-            <h4 className="mb-1 text-sm font-medium text-foreground">
+          <div className="mt-4 rounded-md bg-gray-50 p-3 dark:bg-gray-700/50">
+            <h4 className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
               Continue learning:
             </h4>
             <div className="flex items-center justify-between">
-              <p className="line-clamp-1 text-sm text-muted-foreground">
+              <p className="line-clamp-1 text-sm text-gray-600 dark:text-gray-400">
                 {nextTopic.title}
               </p>
               {nextTopic.estimatedTime && (
-                <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
                   <Clock size={12} />
                   <span>{nextTopic.estimatedTime}</span>
                 </div>
@@ -127,7 +129,7 @@ const EnrolledRoadmapCard: React.FC<EnrolledRoadmapCardProps> = ({
 
         <Link
           href={`/career-roadmap/${id}`}
-          className="hover:text-primary/80 mt-4 flex items-center justify-end text-sm font-medium text-primary"
+          className="mt-4 flex items-center justify-end text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
         >
           <span>Continue</span>
           <ChevronRight size={16} />

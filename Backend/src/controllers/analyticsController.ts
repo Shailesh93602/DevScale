@@ -1,14 +1,14 @@
 import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
 import { sendResponse } from '../utils/apiResponse';
-import { ChallengeStatus } from '@prisma/client';
-import UserRepository from '../repositories/userRepository';
-import UserProgressRepository from '../repositories/userProgressRepository';
-import ResourceRepository from '../repositories/resourceRepository';
-import { ChallengeRepository } from '../repositories/challengeRepository';
-import { createAppError } from '../utils/errorHandler';
+import { ChallengeStatus, PrismaClient } from '@prisma/client';
+import UserRepository from '@/repositories/userRepository';
+import UserProgressRepository from '@/repositories/userProgressRepository';
+import ResourceRepository from '@/repositories/resourceRepository';
+import { ChallengeRepository } from '@/repositories/challengeRepository';
+import { createAppError } from '@/utils/errorHandler';
 
-import prisma from '../lib/prisma';
+import prisma from '@/lib/prisma';
 export default class AnalyticsController {
   private readonly defaultStartDate: Date;
   private readonly userRepo: UserRepository;
@@ -144,6 +144,7 @@ export default class AnalyticsController {
 
     switch (reportType) {
       case 'user_activity':
+        // TODO: update this method if required in future
         reportData = await prisma.userActivityLog.findMany({
           where: {
             timestamp: {

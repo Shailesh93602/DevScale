@@ -37,7 +37,7 @@ export function Calendar({
         showPopperArrow={showPopperArrow}
         placeholderText={placeholderText}
         className="w-full rounded border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
-        calendarClassName="bg-card"
+        calendarClassName="bg-white dark:bg-gray-900"
         dayClassName={() => 'text-center'}
         renderCustomHeader={({ date, decreaseMonth, increaseMonth }) => (
           <div className="mb-2 flex items-center justify-between">

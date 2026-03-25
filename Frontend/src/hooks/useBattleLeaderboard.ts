@@ -13,12 +13,16 @@ interface LeaderboardEntry {
 }
 
 interface LeaderboardResponse {
-  entries: LeaderboardEntry[];
-  meta: {
-    total: number;
-    page: number;
-    limit: number;
-    totalPages: number;
+  success: boolean;
+  message: string;
+  data: {
+    entries: LeaderboardEntry[];
+    meta: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
   };
 }
 
@@ -33,8 +37,8 @@ export const useBattleLeaderboard = (battleId: string) => {
     setIsLoading(true);
     try {
       const response = await execute({ params: { page, limit } }, { battleId });
-      if (response?.data) {
-        return response.data;
+      if (response?.data?.data) {
+        return response.data.data;
       }
     } catch (error) {
       toast({
@@ -52,6 +56,6 @@ export const useBattleLeaderboard = (battleId: string) => {
     fetchLeaderboard,
     isLoading: isLoading || state.isLoading,
     error: state.error,
-    data: state.data,
+    data: state.data?.data,
   };
 };

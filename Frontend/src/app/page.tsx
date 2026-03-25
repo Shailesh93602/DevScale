@@ -17,6 +17,8 @@ import { FloatingElements } from '@/components/ui/floating-elements';
 import { AnimatedBattleCard } from '@/components/ui/animated-battle-card';
 import { MagneticButton } from '@/components/ui/magnetic-button';
 
+// TODO: this comment is ony for testing workflow, remove after testing is done
+
 export default function Home() {
   // Enhanced parallax effect for hero section
   const { scrollY } = useScroll();
@@ -289,23 +291,15 @@ export default function Home() {
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
         className="fixed bottom-8 right-8 z-50"
+        onClick={scrollToTop}
       >
-        <motion.button
-          onClick={scrollToTop}
+        <motion.div
           animate={{ translateY: [0, 10, 0] }}
           transition={{ repeat: Infinity, duration: 1.5 }}
-          className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-primary text-primary-foreground hover:bg-primary2"
+          className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-primary text-white hover:bg-primary2"
           whileHover={{ scale: 1.1 }}
-          aria-label="Scroll to top"
-          role="button"
         >
-          <svg
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden="true"
-          >
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
             <path
               d="M12 19V5M12 5l-6 6M12 5l6 6"
               stroke="currentColor"
@@ -314,7 +308,7 @@ export default function Home() {
               strokeLinejoin="round"
             />
           </svg>
-        </motion.button>
+        </motion.div>
       </motion.div>
     </main>
   );

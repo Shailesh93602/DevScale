@@ -26,8 +26,8 @@ export default function BattleLobbyPage() {
       try {
         const response = await fetchBattle(battleId);
 
-        if (response) {
-          const battle = response;
+        if (response?.data) {
+          const battle = response.data[0];
           setBattle(battle);
 
           // If battle is already in progress, redirect to battle page
@@ -56,8 +56,8 @@ export default function BattleLobbyPage() {
 
             // Refresh battle data
             const updatedResponse = await fetchBattle(battleId);
-            if (updatedResponse) {
-              setBattle(updatedResponse);
+            if (updatedResponse?.data) {
+              setBattle(updatedResponse.data[0]);
             }
           }
         }

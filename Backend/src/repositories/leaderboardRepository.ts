@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import BaseRepository from './baseRepository';
 
-import prisma from '../lib/prisma';
+import prisma from '@/lib/prisma';
 
 export default class LeaderboardRepository extends BaseRepository<
   PrismaClient['leaderboardEntry']
@@ -23,8 +23,7 @@ export default class LeaderboardRepository extends BaseRepository<
         user: {
           select: {
             id: true,
-            first_name: true,
-            last_name: true,
+            full_name: true,
             avatar_url: true,
           },
         },

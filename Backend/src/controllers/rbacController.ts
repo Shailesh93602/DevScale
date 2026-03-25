@@ -7,8 +7,8 @@ import {
   roleAssignmentSchema,
 } from '../validations/rbacValidations';
 import { sendResponse } from '../utils/apiResponse';
-import { catchAsync } from '../utils';
-import UserRepository from '../repositories/userRepository';
+import { catchAsync } from '@/utils';
+import UserRepository from '@/repositories/userRepository';
 
 export default class RBACController {
   private readonly rbacRepository: RBACRepository;
@@ -83,6 +83,6 @@ export default class RBACController {
       resource as string,
       action as string
     );
-    sendResponse(res, 'PERMISSION_CHECKED', { data: hasPermission });
+    sendResponse(res, 'PERMISSION_CHECKED', { data: { hasPermission } });
   });
 }

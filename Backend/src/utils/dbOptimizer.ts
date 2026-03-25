@@ -1,5 +1,6 @@
-import prisma from '../lib/prisma';
+import { PrismaClient } from '@prisma/client';
 import logger from './logger';
+import prisma from '@/lib/prisma';
 
 export class DbOptimizer {
   static async analyzeQueries(): Promise<void> {

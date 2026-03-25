@@ -3,16 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useAxiosGet } from '@/hooks/useAxios';
-import { Button } from '@/components/ui/button';
-import { EmptyState } from '@/components/ui/empty-state';
-import { FileText } from 'lucide-react';
-import { TableSkeleton } from './components/TableSkeleton';
 
 const MyArticles = () => {
   const [articles, setArticles] = useState<
     { id: string; title: string; status: string }[]
   >([]);
-  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const [getArticles] = useAxiosGet<{
     success?: boolean;
@@ -22,7 +17,6 @@ const MyArticles = () => {
 
   useEffect(() => {
     const fetchMyArticles = async () => {
-      setIsLoading(true);
       try {
         const response = await getArticles();
         if (response.data?.success) {
@@ -33,8 +27,6 @@ const MyArticles = () => {
       } catch (error) {
         console.error('Error fetching articles:', error);
         toast.error('Error fetching articles.');
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -49,82 +41,53 @@ const MyArticles = () => {
     router.push(`/viewComments/${id}`);
   };
 
-  if (isLoading) {
+  if (articles.length === 0) {
     return (
-      <div className="container mx-auto p-6">
-        <h1 className="mb-6 text-3xl font-bold text-foreground">My Articles</h1>
-        <TableSkeleton />
-      </div>
+      <>
+        <div className="container mx-auto p-6">
+          <p>No articles found.</p>
+        </div>
+      </>
     );
   }
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="mb-6 text-3xl font-bold text-foreground">My Articles</h1>
-
-      {articles.length === 0 ? (
-        <EmptyState
-          icon={FileText}
-          title="No articles yet"
-          description="You haven't written any articles yet. Start sharing your knowledge with the community!"
-          actionLabel="Write an Article"
-          onAction={() => router.push('/create-resource')}
-        />
-      ) : (
-        <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
-          <table className="w-full table-auto">
-            <thead>
-              <tr className="border-b border-border bg-muted/50">
-                <th className="px-4 py-3 text-left text-sm font-semibold text-foreground">
-                  Title
-                </th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-foreground">
-                  Status
-                </th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-foreground">
-                  Actions
-                </th>
+    <>
+      <div className="container mx-auto p-6">
+        <h1 className="mb-6 text-3xl font-bold">My Articles</h1>
+        <table className="w-full table-auto rounded-lg bg-white shadow-md dark:bg-gray-800">
+          <thead>
+            <tr>
+              <th className="px-4 py-2">Title</th>
+              <th className="px-4 py-2">Status</th>
+              <th className="px-4 py-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {articles.map((article) => (
+              <tr key={article.id}>
+                <td className="border px-4 py-2">{article.title}</td>
+                <td className="border px-4 py-2">{article.status}</td>
+                <td className="border px-4 py-2">
+                  <button
+                    onClick={() => handleEdit(article.id)}
+                    className="mr-2 rounded-lg bg-blue-500 px-3 py-1 text-white"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleViewComments(article.id)}
+                    className="rounded-lg bg-gray-500 px-3 py-1 text-white"
+                  >
+                    View Comments
+                  </button>
+                </td>
               </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {articles.map((article) => (
-                <tr
-                  key={article.id}
-                  className="transition-colors hover:bg-muted/50"
-                >
-                  <td className="px-4 py-3 text-sm text-foreground">
-                    {article.title}
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="bg-primary/10 inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium text-primary">
-                      {article.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex gap-2">
-                      <Button
-                        onClick={() => handleEdit(article.id)}
-                        size="sm"
-                        variant="outline"
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        onClick={() => handleViewComments(article.id)}
-                        variant="ghost"
-                        size="sm"
-                      >
-                        View Comments
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 };
 
