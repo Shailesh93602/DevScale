@@ -1,7 +1,8 @@
 import js from "@eslint/js";
 import tseslint from "typescript-eslint";
 
-export default tseslint.config(
+/** @type {import('eslint').Linter.Config[]} */
+export default [
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
@@ -14,4 +15,4 @@ export default tseslint.config(
       "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }]
     }
   }
-);
+];

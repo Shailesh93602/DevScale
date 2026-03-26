@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'node:path';
 // @ts-expect-error - module-alias might not have types
 import moduleAlias from 'module-alias';
 
@@ -18,7 +18,6 @@ moduleAlias.addAliases({
   '@routes': path.join(__dirname, '..', 'dist', 'routes'),
 });
 
-// @ts-expect-error - Vercel entry point
 import app from '../dist/main.js';
 
 export default app;

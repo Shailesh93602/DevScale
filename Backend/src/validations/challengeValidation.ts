@@ -54,7 +54,7 @@ export const createChallengeValidation = Joi.object({
     'any.required': 'Test case output is required',
   }),
   language: Joi.string()
-    .valid(...['javascript', 'python', 'java', 'cpp'])
+    .valid('javascript', 'python', 'java', 'cpp')
     .required()
     .messages({
       'any.required': 'Language is required',
@@ -67,7 +67,7 @@ export const submitChallengeValidation = Joi.object({
     'any.required': 'Code is required',
   }),
   language: Joi.string()
-    .valid(...['javascript', 'python', 'java', 'cpp'])
+    .valid('javascript', 'python', 'java', 'cpp')
     .required()
     .messages({
       'any.required': 'Language is required',

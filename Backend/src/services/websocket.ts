@@ -9,7 +9,7 @@ export class WebSocketService {
   connect() {
     this.socket = io(WS_URL, {
       auth: {
-        token: typeof localStorage !== 'undefined' ? localStorage.getItem('token') : null,
+        token: typeof localStorage === 'undefined' ? null : localStorage.getItem('token'),
       },
       reconnection: true,
       reconnectionAttempts: this.MAX_RECONNECT_ATTEMPTS,

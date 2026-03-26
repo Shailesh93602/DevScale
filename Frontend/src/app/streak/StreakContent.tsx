@@ -10,6 +10,7 @@ import { StreakStats } from '@/components/streak/StreakStats';
 import { ActivityTimeline } from '@/components/streak/ActivityTimeline';
 import { StreakSkeleton } from './components/StreakSkeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import type { StreakStats as StreakStatsType, WeeklyActivity, DailyActivity } from '@/hooks/useStreakApi';
 
 const StreakContent = () => {
   const [fetchStats, { data, isLoading: statsLoading, isError: statsError }] =
@@ -22,8 +23,8 @@ const StreakContent = () => {
       isError: activityError,
     },
   ] = useWeeklyActivity();
-  const stats = data && 'data' in data ? (data.data as any) : data;
-  const weeklyActivity = weeklyActivityData && 'data' in weeklyActivityData ? (weeklyActivityData.data as any) : weeklyActivityData;
+  const stats = (data?.data ?? data) as StreakStatsType | null;
+  const weeklyActivity = (weeklyActivityData?.data ?? weeklyActivityData) as WeeklyActivity[] | null;
 
   React.useEffect(() => {
     fetchStats();
@@ -110,7 +111,7 @@ const StreakContent = () => {
             <CardContent>
               <div className="text-2xl font-bold">
                 {stats?.dailyActivities?.reduce(
-                  (acc: number, curr: any) => acc + (curr.minutesSpent || 0),
+                  (acc: number, curr: DailyActivity) => acc + (curr.minutesSpent || 0),
                   0,
                 ) || 0}{' '}
                 mins
