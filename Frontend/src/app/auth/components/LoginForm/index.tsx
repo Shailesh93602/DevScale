@@ -33,7 +33,8 @@ const LoginForm = () => {
     setIsLoading(false);
 
     if (response?.success) {
-      router.push('/');
+      router.refresh();
+      router.push('/dashboard');
     } else if (response?.error) {
       setServerError(response.error);
     }
