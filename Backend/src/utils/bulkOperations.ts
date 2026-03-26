@@ -1,6 +1,6 @@
 import { PrismaClient, Difficulty } from '@prisma/client';
-
 import prisma from '../lib/prisma';
+import logger from './logger';
 
 export class BulkOperations {
   constructor(private readonly prismaClient: PrismaClient = prisma) {}
@@ -47,7 +47,7 @@ export class BulkOperations {
   }
 
   private static handleError(operation: string, error: unknown) {
-    console.error(`Bulk operation ${operation} failed:`, error);
+    logger.error(`Bulk operation ${operation} failed`, { error });
     return {
       success: false,
       message: `Bulk operation failed: ${error instanceof Error ? error.message : 'Unknown error'}`,

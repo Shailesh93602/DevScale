@@ -1,65 +1,53 @@
-// import fs from 'fs';
-// import os from 'os';
-// import path from 'path';
-// import winston from 'winston';
-// import TransportStream from 'winston-transport';
-// import { NODE_ENV } from '../config';
+import { AsyncLocalStorage } from 'node:async_hooks';
+import winston from 'winston';
+import { NODE_ENV } from '../config';
 
-// // Determine base directory for logs
-// const isServerless = !!process.env.VERCEL;
-// const baseDir = isServerless
-//   ? path.join(os.tmpdir(), 'logs')
-//   : path.join(process.cwd(), 'logs');
+// ─── Request Context (AsyncLocalStorage) ─────────────────────────────────────
+// Allows logger to pick up requestId from any call site within the same async
+// request chain without explicitly threading it through every function.
+interface RequestContext {
+  requestId: string;
+}
 
-// // Ensure local log directory exists
-// if (!isServerless && !fs.existsSync(baseDir)) {
-//   fs.mkdirSync(baseDir, { recursive: true });
-// }
+export const requestContext = new AsyncLocalStorage<RequestContext>();
 
-// // Define file transports
-// const fileTransports: TransportStream[] = [
-//   new winston.transports.File({
-//     filename: path.join(baseDir, 'error.log'),
-//     level: 'error',
-//   }),
-//   new winston.transports.File({
-//     filename: path.join(baseDir, 'combined.log'),
-//   }),
-// ];
+// ─── Winston Formats ──────────────────────────────────────────────────────────
+const jsonFormat = winston.format.combine(
+  winston.format.timestamp(),
+  winston.format.errors({ stack: true }),
+  winston.format.printf(({ timestamp, level, message, stack, ...meta }) => {
+    const ctx = requestContext.getStore();
+    return JSON.stringify({
+      timestamp,
+      level,
+      message,
+      requestId: ctx?.requestId,
+      ...(stack ? { stack } : {}),
+      ...meta,
+    });
+  })
+);
 
-// // Define console transport
-// const consoleTransport: TransportStream = new winston.transports.Console({
-//   format: winston.format.combine(
-//     winston.format.colorize(),
-//     winston.format.simple()
-//   ),
-// });
+const devFormat = winston.format.combine(
+  winston.format.colorize(),
+  winston.format.timestamp({ format: 'HH:mm:ss' }),
+  winston.format.printf(({ timestamp, level, message, ...meta }) => {
+    const ctx = requestContext.getStore();
+    const reqId = ctx?.requestId ? ` [${ctx.requestId.slice(0, 8)}]` : '';
+    const extra = Object.keys(meta).length ? ' ' + JSON.stringify(meta) : '';
+    return `${timestamp}${reqId} ${level}: ${message}${extra}`;
+  })
+);
 
-// // Choose transports based on environment
-// const transports: TransportStream[] =
-//   NODE_ENV === 'production'
-//     ? isServerless
-//       ? [] // Skip file transports on Vercel, rely on console
-//       : fileTransports
-//     : [...fileTransports, consoleTransport];
-
-// // Create logger
-// const logger = winston.createLogger({
-//   level: NODE_ENV === 'production' ? 'info' : 'debug',
-//   format: winston.format.combine(
-//     winston.format.timestamp(),
-//     winston.format.json()
-//   ),
-//   transports,
-// });
-
-// export default logger;
-
-const logger = {
-  info: (...args: unknown[]) => console.log('[INFO]', ...args),
-  debug: (...args: unknown[]) => console.debug('[DEBUG]', ...args),
-  error: (...args: unknown[]) => console.error('[ERROR]', ...args),
-  warn: (...args: unknown[]) => console.warn('[WARN]', ...args),
-};
+// ─── Logger Instance ──────────────────────────────────────────────────────────
+const logger = winston.createLogger({
+  level: NODE_ENV === 'production' ? 'info' : 'debug',
+  format: NODE_ENV === 'production' ? jsonFormat : devFormat,
+  transports: [
+    // Always write to stdout — in production containers, CloudWatch/Datadog
+    // collects from stdout via log driver. No file transports needed.
+    new winston.transports.Console(),
+  ],
+});
 
 export default logger;

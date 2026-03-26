@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import cloudinary from '../config/cloudinaryConfig.js';
 import { Readable } from 'stream';
+import logger from '../utils/logger';
 
 const uploadMiddleware = async (
   req: Request,
@@ -29,7 +30,7 @@ const uploadMiddleware = async (
     req.fileUrl = (result as { secure_url: string }).secure_url;
     next();
   } catch (error) {
-    console.error('Error uploading image:', error);
+    logger.error('Cloudinary upload failed', { error });
     res.status(500).json({ error: 'Failed to upload file to Cloudinary' });
     return;
   }
