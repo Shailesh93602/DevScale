@@ -76,12 +76,8 @@ test.describe('Roadmap interactions tests', () => {
     const likeBtn = page.locator('button[aria-label="Like"]').first();
 
     if (await likeBtn.isVisible()) {
-      const initialText = await likeBtn.innerText();
       await likeBtn.click();
       await page.waitForTimeout(1000);
-      const newText = await likeBtn.innerText();
-      // Expect state string to differ (eg if numbers are tracked)
-      // Expect to run correctly
     }
   });
 
