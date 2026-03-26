@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FaTwitter, FaLinkedin, FaGithub, FaDiscord } from 'react-icons/fa';
+import { FaXTwitter, FaLinkedin, FaGithub, FaDiscord } from 'react-icons/fa6';
 import {
   quickLinks,
   resourceLinks,
@@ -14,8 +14,8 @@ import {
 // Map social media icons to their components
 const getSocialIcon = (iconName: string) => {
   switch (iconName) {
-    case 'FaTwitter':
-      return <FaTwitter className="h-6 w-6" />;
+    case 'FaXTwitter':
+      return <FaXTwitter className="h-6 w-6" />;
     case 'FaLinkedin':
       return <FaLinkedin className="h-6 w-6" />;
     case 'FaGithub':
@@ -87,8 +87,8 @@ export default function Footer() {
           <div>
             <h3 className="mb-4 text-lg font-semibold">Contact</h3>
             <ul className="space-y-2 text-muted-foreground">
-              {contactInfo.map((item, index) => (
-                <li key={index}>{item.text}</li>
+              {contactInfo.map((item) => (
+                <li key={item.text}>{item.text}</li>
               ))}
             </ul>
           </div>
