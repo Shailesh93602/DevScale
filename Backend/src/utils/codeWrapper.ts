@@ -17,8 +17,8 @@ export const getFunctionName = (signature: string): string => {
     'struct',
   ];
 
-  const cleanSignature = signature.replaceAll(/[:][^,)]+/g, ''); // Simple strip of TS types like : string
-  const match = /([\w]+)\s*\(/.exec(cleanSignature);
+  const cleanSignature = signature.replaceAll(/:[^,)]+/g, ''); // Simple strip of TS types like : string
+  const match = /(\w+)\s*\(/.exec(cleanSignature);
 
   if (match) {
     const candidate = match[1];
@@ -28,11 +28,11 @@ export const getFunctionName = (signature: string): string => {
   }
 
   // Try to find "var name = function" or "const name =" patterns
-  const assignmentMatch = /(?:var|let|const)\s+([\w]+)\s*=/.exec(signature);
+  const assignmentMatch = /(?:var|let|const)\s+(\w+)\s*=/.exec(signature);
   if (assignmentMatch) return assignmentMatch[1];
 
   // Try harder if it's "function name"
-  const funcMatch = /(?:function|func|def)\s+([\w]+)/.exec(signature);
+  const funcMatch = /(?:function|func|def)\s+(\w+)/.exec(signature);
   if (funcMatch) return funcMatch[1];
 
   return 'solution'; // fallback
@@ -94,7 +94,7 @@ except Exception as e:
       if (code.includes('int main') || code.includes('void main')) {
         return code;
       }
-      return `
+      return String.raw`
 #include <iostream>
 #include <string>
 #include <vector>
@@ -109,11 +109,11 @@ int main() {
         input += line;
     }
     
-    // Use hex escapes for quotes to avoid template escaping issues: \\x22 is "
-    size_t firstQuote = input.find("\\x22:\\x22");
+    // Use hex escapes for quotes to avoid template escaping issues: \x22 is "
+    size_t firstQuote = input.find("\x22:\x22");
     if (firstQuote != std::string::npos) {
         size_t start = firstQuote + 3;
-        size_t end = input.find("\\x22", start);
+        size_t end = input.find("\x22", start);
         if (end != std::string::npos) {
             std::string val = input.substr(start, end - start);
             auto result = sol.${functionName}(val);
