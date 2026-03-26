@@ -263,7 +263,7 @@ export const socialLinks = [
 // Contact Information
 export const contactInfo = [
   {
-    text: 'contact@EduScales.com',
+    text: 'contact@eduscale.app',
   },
   {
     text: '+91 9313026530',
@@ -275,7 +275,7 @@ export const contactInfo = [
 
 // Company Information
 export const companyInfo = {
-  name: 'EduScales',
+  name: 'EduScale',
   description:
     'The all-in-one platform for engineering students to learn, grow, and succeed.',
 };
