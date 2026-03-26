@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { createClient, User } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
 import { createAppError } from '../utils/errorHandler';
 import logger from '../utils/logger';
 import prisma from '@/lib/prisma';

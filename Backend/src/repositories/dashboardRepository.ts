@@ -1,4 +1,3 @@
-import { PrismaClient } from '@prisma/client';
 import BaseRepository from './baseRepository';
 import prisma from '../lib/prisma';
 import { DashboardStats } from '@/types';

@@ -5,9 +5,7 @@ import {
   createBattleValidationSchema,
   updateBattleValidationSchema,
   battleIdValidation,
-  joinBattleValidationSchema,
   submitAnswerValidationSchema,
-  battleLeaderboardValidationSchema,
   updateBattleStatusValidationSchema,
   rescheduleBattleValidationSchema,
 } from '../validations/battleValidations';

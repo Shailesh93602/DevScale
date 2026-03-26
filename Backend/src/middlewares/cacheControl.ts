@@ -10,7 +10,7 @@ interface CacheOptions {
 }
 
 // Helper function to safely stringify objects with circular references
-const safeStringify = (obj: any): string => {
+const safeStringify = (obj: unknown): string => {
   const seen = new WeakSet();
   return JSON.stringify(obj, (key, value) => {
     if (typeof value === 'object' && value !== null) {
@@ -49,10 +49,10 @@ export const cacheResponse = (options: CacheOptions) => {
       }
 
       // Store original json function
-      const originalJson = res.json;
+      const originalJson = res.json.bind(res);
 
       // Override json function to cache response
-      res.json = function (body: any) {
+      res.json = (body: unknown) => {
         try {
           // Only cache if body is not null/undefined
           if (body) {
@@ -64,7 +64,7 @@ export const cacheResponse = (options: CacheOptions) => {
         } catch (error) {
           logger.error('Failed to cache response:', error);
         }
-        return originalJson.call(this, body);
+        return originalJson(body);
       };
 
       next();

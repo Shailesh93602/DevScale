@@ -13,18 +13,17 @@ import express, {
 } from 'express';
 import helmet from 'helmet';
 import hpp from 'hpp';
-import * as http from 'http';
-import path from 'path';
+import * as http from 'node:http';
+import path from 'node:path';
 import requestIp from 'request-ip';
 import sharp from 'sharp';
 import swaggerUi from 'swagger-ui-express';
 import { timeZones } from '@/common/constants/timezone.constants';
-import fs from 'fs';
-import fsPromise from 'fs/promises';
+import fs from 'node:fs';
+import fsPromise from 'node:fs/promises';
 import errorMiddleware, {
   notFoundMiddleware,
 } from './middlewares/errorMiddleware';
-import { StreakRoutes } from './routes/streakRoutes';
 import socketService from './services/socket';
 
 const app: Application = express();
@@ -43,15 +42,15 @@ const preventPrototypePollution = (
   next: NextFunction
 ) => {
   // Check if the request contains polluted data and remove it
-  const pollutingKeys = ['__proto__', 'constructor', 'prototype'];
+  const pollutingKeys = new Set(['__proto__', 'constructor', 'prototype']);
   for (const key in req.query) {
-    if (pollutingKeys.includes(key)) {
+    if (pollutingKeys.has(key)) {
       delete req.query[key];
     }
   }
   for (const key in req.body) {
-    if (pollutingKeys.includes(key)) {
-      delete req.query[key];
+    if (pollutingKeys.has(key)) {
+      delete req.body[key];
     }
   }
 
@@ -132,17 +131,6 @@ function initializeSwagger() {
     })
   );
 }
-
-// function initializeErrorHandling() {
-//   app.use(errorMiddleware);
-// }
-
-// const createHealthRoute = () => {
-//   app.get('/_health', (req: Request, res: Response) => {
-//     healthCheck();
-//     res.status(200).send('ok');
-//   });
-// };
 
 export const initializeApp = async (apiRoutes: Router[]) => {
   initializeMiddleWares();

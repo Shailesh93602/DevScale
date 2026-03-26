@@ -1,6 +1,6 @@
 import { PrismaClient, Difficulty, Status, QuizType } from '@prisma/client';
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 
 const prisma = new PrismaClient();
 const ADMIN_EMAIL = 'admin@eduscale.io';
@@ -36,7 +36,7 @@ interface TopicMeta {
 interface QuizQuestion {
   question: string;
   points?: number;
-  options: (Record<string, any> | string)[];
+  options: (Record<string, unknown> | string)[];
   correctAnswer?: number;
 }
 
@@ -72,8 +72,8 @@ function getOrderedDirs(parentPath: string): string[] {
       return fs.statSync(fullPath).isDirectory();
     })
     .sort((a, b) => {
-      const numA = parseInt(a.split('-')[0], 10);
-      const numB = parseInt(b.split('-')[0], 10);
+      const numA = Number.parseInt(a.split('-')[0], 10);
+      const numB = Number.parseInt(b.split('-')[0], 10);
       return numA - numB;
     });
 }
@@ -131,7 +131,7 @@ const seedDatabase = async () => {
       const difficultyValue = (() => {
         const diff = (rmMeta.difficulty || '').toUpperCase();
         if (diff === 'INTERMEDIATE') return Difficulty.MEDIUM;
-        if (Object.values(Difficulty).includes(diff as any)) return diff as Difficulty;
+        if (Object.values(Difficulty).includes(diff as Difficulty)) return diff as Difficulty;
         return Difficulty.EASY;
       })();
 
@@ -311,7 +311,8 @@ const seedDatabase = async () => {
                 if (q.options && q.options.length > 0) {
                   if (typeof q.options[0] === 'object') {
                     // Format A: { text: string, isCorrect: boolean }[]
-                    optionsData = (q.options as Record<string, any>[]).map((opt) => {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    optionsData = (q.options as { text: string }[]).map((opt: any) => {
                       // Handle typos like "is   Correct" found in some files
                       const isCorrect =
                         opt.isCorrect === true ||

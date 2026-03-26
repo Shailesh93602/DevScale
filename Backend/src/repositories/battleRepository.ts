@@ -11,12 +11,8 @@ import BaseRepository from './baseRepository';
 import { createAppError } from '@/utils/errorHandler';
 import prisma from '@/lib/prisma';
 import logger from '@/utils/logger';
-import {
-  getCache,
-  setCache,
-  deleteCache,
-  getOrSetCache,
-} from '@/services/cacheService';
+import crypto from 'node:crypto';
+import { deleteCache, getOrSetCache } from '@/services/cacheService';
 import { PerformanceMonitor } from '@/services/monitoring/performanceMonitor';
 
 interface BattleListMeta {
@@ -29,7 +25,7 @@ interface BattleListMeta {
 }
 
 interface BattleListResponse {
-  data: any[];
+  data: unknown[];
   meta: BattleListMeta;
 }
 
@@ -37,11 +33,8 @@ export class BattleRepository extends BaseRepository<PrismaClient['battle']> {
   private static readonly CACHE_TTL = 3600; // 1 hour
   private static readonly BATTLE_CACHE_PREFIX = 'battle:';
   private static readonly BATTLE_LIST_CACHE_PREFIX = 'battle:list:';
-  private prisma: PrismaClient;
-
   constructor() {
     super(prisma.battle);
-    this.prisma = new PrismaClient();
   }
 
   /**
@@ -207,7 +200,7 @@ export class BattleRepository extends BaseRepository<PrismaClient['battle']> {
               limit,
               totalPages: Math.ceil(total / limit),
               cacheControl: 'public, max-age=3600',
-              etag: require('crypto')
+              etag: crypto
                 .createHash('md5')
                 .update(JSON.stringify(battles))
                 .digest('hex'),
@@ -229,7 +222,11 @@ export class BattleRepository extends BaseRepository<PrismaClient['battle']> {
   /**
    * Update a battle
    */
-  async updateBattle(id: string, data: any, userId: string) {
+  async updateBattle(
+    id: string,
+    data: Prisma.BattleUpdateInput,
+    userId: string
+  ) {
     const startTime = Date.now();
     try {
       // First check if the battle exists and belongs to the user
@@ -775,7 +772,7 @@ export class BattleRepository extends BaseRepository<PrismaClient['battle']> {
   async updateBattleStatus(id: string, status: BattleStatus): Promise<Battle> {
     const startTime = Date.now();
     try {
-      const battle = await this.prisma.battle.update({
+      const battle = await prisma.battle.update({
         where: { id },
         data: { status },
         include: {

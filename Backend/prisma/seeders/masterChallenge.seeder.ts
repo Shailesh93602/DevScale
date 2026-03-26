@@ -1,4 +1,4 @@
-import { PrismaClient, Difficulty, ChallengeCategory, ChallengeStatus } from '@prisma/client';
+import { PrismaClient, Difficulty, ChallengeCategory, ChallengeStatus, Prisma } from '@prisma/client';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -30,8 +30,8 @@ interface ChallengeMeta {
 }
 
 interface TestCase {
-  input: any;
-  output: any;
+  input: unknown;
+  output: unknown;
   explanation?: string;
   is_hidden: boolean;
 }
@@ -70,6 +70,9 @@ function mapDifficulty(d: string): Difficulty {
     Medium: Difficulty.MEDIUM,
     Hard: Difficulty.HARD,
   };
+  const diff = d.toUpperCase();
+  if (diff === 'INTERMEDIATE') return Difficulty.MEDIUM;
+  if (Object.values(Difficulty).includes(diff as Difficulty)) return diff as Difficulty;
   return map[d] ?? Difficulty.EASY;
 }
 
@@ -194,7 +197,16 @@ const seedChallenges = async () => {
         const searchTags = [...(c.meta.topic_tags ?? []), ...c.meta.tags];
         const topicId = searchTags.map((t) => topicByTitle.get(t.toLowerCase())).find(Boolean) ?? null;
 
-        const exists = await prisma.challenge.findUnique({ where: { title: c.meta.title }, select: { id: true } });
+        if (!topicId) {
+          console.warn(`  ⚠️  [${idx + 1}/${challenges.length}] ${c.meta.title} — No matching topic found (skipped)`);
+          skipped++;
+          continue;
+        }
+
+        const exists = await prisma.challenge.findUnique({ 
+          where: { title: c.meta.title } as Prisma.ChallengeWhereUniqueInput, 
+          select: { id: true } 
+        });
 
         const data = {
           title: c.meta.title,
@@ -217,11 +229,11 @@ const seedChallenges = async () => {
           solutions: c.solution ? { typescript: c.solution } : undefined,
           boilerplates: c.boilerplates ?? undefined,
           status: (c.meta.status as ChallengeStatus) ?? ChallengeStatus.ACTIVE,
-          ...(topicId ? { topic_id: topicId } : {}),
+          topic: { connect: { id: topicId } },
         };
 
         const challenge = await prisma.challenge.upsert({
-          where: { title: c.meta.title },
+          where: { title: c.meta.title } as Prisma.ChallengeWhereUniqueInput,
           update: data,
           create: data,
         });

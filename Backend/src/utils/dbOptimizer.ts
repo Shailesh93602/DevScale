@@ -1,32 +1,8 @@
-import { PrismaClient } from '@prisma/client';
 import logger from './logger';
 import prisma from '@/lib/prisma';
 
 export class DbOptimizer {
-  static async analyzeQueries(): Promise<void> {
-    try {
-      // Enable query logging
-      prisma.$use(async (params, next) => {
-        const start = Date.now();
-        const result = await next(params);
-        const duration = Date.now() - start;
-
-        if (duration > 100) {
-          // Log slow queries (>100ms)
-          logger.warn('Slow query detected:', {
-            model: params.model,
-            action: params.action,
-            duration,
-            args: params.args,
-          });
-        }
-
-        return result;
-      });
-    } catch (error) {
-      logger.error('Query analysis error:', error);
-    }
-  }
+  // Slow query analysis is now implemented as a Prisma Extension in src/lib/prisma.ts
 
   static async vacuum(): Promise<void> {
     try {
