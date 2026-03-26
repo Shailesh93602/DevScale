@@ -55,9 +55,7 @@ export const battleAccessMiddleware = async (
     const isCreator = battle.user_id === userId;
 
     // Check if user is a participant
-    const isParticipant = battle.participants.some(
-      (p) => p.user_id === userId
-    );
+    const isParticipant = battle.participants.some((p) => p.user_id === userId);
 
     // Add battle and access info to request
     req.battle = battle;

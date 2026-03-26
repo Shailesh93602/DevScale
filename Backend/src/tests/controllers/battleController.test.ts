@@ -58,9 +58,9 @@ describe('BattleController', () => {
       };
 
       // Mock Repository method
-      (BattleRepository.prototype.create as unknown as jest.Mock).mockResolvedValue(
-        createdBattle as unknown as never
-      );
+      (
+        BattleRepository.prototype.create as unknown as jest.Mock
+      ).mockResolvedValue(createdBattle as unknown as never);
 
       // Call controller method
       await battleController.createBattle(
@@ -97,9 +97,9 @@ describe('BattleController', () => {
       // Expect error to be passed to next()
       expect(mockNext).toHaveBeenCalledWith(
         expect.objectContaining({
-            message: 'End time must be after start time',
-            statusCode: 400,
-          })
+          message: 'End time must be after start time',
+          statusCode: 400,
+        })
       );
     });
   });
