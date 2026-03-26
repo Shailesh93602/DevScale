@@ -64,7 +64,8 @@ const profileSchema = z.object({
     .string()
     .min(1, { error: 'Last name must be at least 1 character' })
     .max(50),
-  username: z.string()
+  username: z
+    .string()
     .min(3, { error: 'Username is not available' })
     .max(30, { error: 'Username is not available' })
     .regex(/^[a-z0-9_]+$/, { error: 'Username is not available' }),
@@ -85,10 +86,9 @@ const profileSchema = z.object({
   ),
   github_url: z
     .url({ error: 'Invalid URL format' })
-    .regex(
-      /^https?:\/\/(www\.)?github\.com\/[a-zA-Z0-9_-]+\/?$/,
-      { error: 'Invalid GitHub profile URL' },
-    )
+    .regex(/^https?:\/\/(www\.)?github\.com\/[a-zA-Z0-9_-]+\/?$/, {
+      error: 'Invalid GitHub profile URL',
+    })
     .optional()
     .or(z.literal('')),
   linkedin_url: z
@@ -101,13 +101,13 @@ const profileSchema = z.object({
     .or(z.literal('')),
   twitter_url: z
     .url({ error: 'Invalid URL format' })
-    .regex(
-      /^https?:\/\/(www\.)?(twitter|x)\.com\/[a-z0-9_]+\/?$/i,
-      { error: 'Invalid X/Twitter profile URL' },
-    )
+    .regex(/^https?:\/\/(www\.)?(twitter|x)\.com\/[a-z0-9_]+\/?$/i, {
+      error: 'Invalid X/Twitter profile URL',
+    })
     .optional()
     .or(z.literal('')),
-  website_url: z.url({ error: 'Invalid Website URL' })
+  website_url: z
+    .url({ error: 'Invalid Website URL' })
     .optional()
     .or(z.literal('')),
   address: z.string().optional().or(z.literal('')),
