@@ -25,6 +25,8 @@ import { QuizRouter } from './quizRoutes';
 import { RBACRoutes } from './rbacRoutes';
 import { SupportRoutes } from './supportRoutes';
 import { CodeRoutes } from './codeRoutes';
+import { AuthRoutes } from './authRoutes';
+
 export class AppRoutes {
   private readonly router: Router;
 
@@ -36,6 +38,9 @@ export class AppRoutes {
   private initializeRoutes(): void {
     // Health check route
     this.router.use('/health', new HealthCheckRoutes().getRouter());
+
+    // Auth routes (logout, cache refresh)
+    this.router.use('/auth', new AuthRoutes().getRouter());
 
     // Feature routes
     this.router.use('/users', new UserRoutes().getRouter());
