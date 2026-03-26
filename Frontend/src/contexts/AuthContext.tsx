@@ -191,19 +191,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const isAdmin = user?.role === UserRole.ADMIN;
   const isStudent = user?.role === UserRole.STUDENT;
 
-  const value = useMemo(() => ({
-    status,
-    isLoading: status === 'loading',
-    isAuthenticated: status === 'authenticated',
-    user,
-    session,
-    hasRole,
-    hasAnyRole,
-    isAdmin,
-    isStudent,
-    refreshUser,
-    signOut,
-  }), [status, user, session, hasRole, hasAnyRole, isAdmin, isStudent, refreshUser, signOut]);
+  const value = useMemo(
+    () => ({
+      status,
+      isLoading: status === 'loading',
+      isAuthenticated: status === 'authenticated',
+      user,
+      session,
+      hasRole,
+      hasAnyRole,
+      isAdmin,
+      isStudent,
+      refreshUser,
+      signOut,
+    }),
+    [
+      status,
+      user,
+      session,
+      hasRole,
+      hasAnyRole,
+      isAdmin,
+      isStudent,
+      refreshUser,
+      signOut,
+    ],
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

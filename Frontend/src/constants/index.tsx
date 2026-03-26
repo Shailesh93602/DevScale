@@ -241,7 +241,7 @@ export const socialLinks = [
   {
     name: 'Twitter',
     href: 'https://x.com/shaileshwork',
-    icon: 'FaTwitter',
+    icon: 'FaXTwitter',
   },
   {
     name: 'LinkedIn',

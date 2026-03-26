@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useRouter } from 'next/navigation';
+import { FaGithub, FaLinkedin, FaXTwitter } from 'react-icons/fa6';
 import {
   Form,
   FormControl,
@@ -17,7 +18,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import {
   Card,
@@ -34,9 +34,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
-  Github,
-  Linkedin,
-  Twitter,
   Globe,
   GraduationCap,
   Briefcase,
@@ -47,7 +44,6 @@ import {
   CheckCircle2,
   XCircle,
   Loader2,
-  AlertCircle,
   Code2,
   ArrowLeft,
   Save,
@@ -62,23 +58,22 @@ import { toast } from 'sonner';
 const profileSchema = z.object({
   first_name: z
     .string()
-    .min(2, 'First name must be at least 2 characters')
+    .min(2, { error: 'First name must be at least 2 characters' })
     .max(50),
   last_name: z
     .string()
-    .min(1, 'Last name must be at least 1 character')
+    .min(1, { error: 'Last name must be at least 1 character' })
     .max(50),
-  username: z
-    .string()
-    .min(3, 'Username is not available')
-    .max(30, 'Username is not available')
-    .regex(/^[a-z0-9_]+$/, 'Username is not available'),
-  email: z.string().email('Invalid email address'),
+  username: z.string()
+    .min(3, { error: 'Username is not available' })
+    .max(30, { error: 'Username is not available' })
+    .regex(/^[a-z0-9_]+$/, { error: 'Username is not available' }),
+  email: z.email({ error: 'Invalid email address' }),
   specialization: z.string().optional().or(z.literal('')),
   experience_level: z.string().optional().or(z.literal('')),
   bio: z
     .string()
-    .max(500, 'Bio cannot exceed 500 characters')
+    .max(500, { error: 'Bio cannot exceed 500 characters' })
     .optional()
     .or(z.literal('')),
   skills: z.string().optional().or(z.literal('')),
@@ -89,41 +84,36 @@ const profileSchema = z.object({
     z.number().min(1900).max(2100).optional(),
   ),
   github_url: z
-    .string()
-    .url('Invalid URL format')
+    .url({ error: 'Invalid URL format' })
     .regex(
       /^https?:\/\/(www\.)?github\.com\/[a-zA-Z0-9_-]+\/?$/,
-      'Invalid GitHub profile URL',
+      { error: 'Invalid GitHub profile URL' },
     )
     .optional()
     .or(z.literal('')),
   linkedin_url: z
-    .string()
-    .url('Invalid URL format')
+    .url({ error: 'Invalid URL format' })
     .regex(
       /^https?:\/\/(www\.)?linkedin\.com\/(in|company)\/[a-zA-Z0-9_-]+\/?$/,
-      'Invalid LinkedIn profile URL',
+      { error: 'Invalid LinkedIn profile URL' },
     )
     .optional()
     .or(z.literal('')),
   twitter_url: z
-    .string()
-    .url('Invalid URL format')
+    .url({ error: 'Invalid URL format' })
     .regex(
       /^https?:\/\/(www\.)?(twitter|x)\.com\/[a-z0-9_]+\/?$/i,
-      'Invalid X/Twitter profile URL',
+      { error: 'Invalid X/Twitter profile URL' },
     )
     .optional()
     .or(z.literal('')),
-  website_url: z
-    .string()
-    .url('Invalid Website URL')
+  website_url: z.url({ error: 'Invalid Website URL' })
     .optional()
     .or(z.literal('')),
   address: z.string().optional().or(z.literal('')),
   note: z
     .string()
-    .max(200, 'Note cannot exceed 200 characters')
+    .max(200, { error: 'Note cannot exceed 200 characters' })
     .optional()
     .or(z.literal('')),
 });
@@ -195,7 +185,7 @@ export default function EditProfilePage() {
         const response = await getProfile();
         if (response.success && response.data) {
           const userData = response.data.user ?? response.data;
-          setProfile(userData as UserProfile);
+          setProfile(userData);
           form.reset({
             first_name: userData.first_name || '',
             last_name: userData.last_name || '',
@@ -258,13 +248,13 @@ export default function EditProfilePage() {
         if (response.success && response.data !== null) {
           const available = response.data;
           setUsernameStatus(available ? 'available' : 'taken');
-          if (!available) {
+          if (available) {
+            form.clearErrors('username');
+          } else {
             form.setError('username', {
               type: 'manual',
               message: 'Username is not available',
             });
-          } else {
-            form.clearErrors('username');
           }
         } else {
           setUsernameStatus('error');
@@ -275,13 +265,13 @@ export default function EditProfilePage() {
       }
     };
 
-    if (debouncedUsername !== undefined) {
+    if (debouncedUsername === undefined) {
+      setUsernameStatus('idle');
+      form.clearErrors('username');
+    } else {
       // Clear errors first before format check
       form.clearErrors('username');
       checkUsername(debouncedUsername);
-    } else {
-      setUsernameStatus('idle');
-      form.clearErrors('username');
     }
   }, [debouncedUsername, getUsernameCheck, profile]);
 
@@ -693,7 +683,7 @@ export default function EditProfilePage() {
                                 onChange={(e) =>
                                   field.onChange(
                                     e.target.value
-                                      ? parseInt(e.target.value)
+                                      ? Number.parseInt(e.target.value)
                                       : undefined,
                                   )
                                 }
@@ -726,7 +716,7 @@ export default function EditProfilePage() {
                               GitHub URL
                             </FormLabel>
                             <div className="relative">
-                              <Github className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground/60" />
+                              <FaGithub className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground/60" />
                               <FormControl>
                                 <Input
                                   placeholder="https://github.com/username"
@@ -752,7 +742,7 @@ export default function EditProfilePage() {
                               LinkedIn URL
                             </FormLabel>
                             <div className="relative">
-                              <Linkedin className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground/60" />
+                              <FaLinkedin className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground/60" />
                               <FormControl>
                                 <Input
                                   placeholder="https://linkedin.com/in/username"
@@ -778,7 +768,7 @@ export default function EditProfilePage() {
                               X (Twitter) URL
                             </FormLabel>
                             <div className="relative">
-                              <Twitter className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground/60" />
+                              <FaXTwitter className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground/60" />
                               <FormControl>
                                 <Input
                                   placeholder="https://x.com/username"
