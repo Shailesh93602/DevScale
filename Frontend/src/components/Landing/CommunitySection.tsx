@@ -25,7 +25,7 @@ const CommunitySection: React.FC = () => (
         <Testimonial
           name="Rahul Sharma"
           role="Computer Science, IIT Delhi"
-          quote="EduScales helped me structure my learning journey and connect with like-minded peers. The roadmaps were exactly what I needed to prepare for placements."
+          quote="EduScale helped me structure my learning journey and connect with like-minded peers. The roadmaps were exactly what I needed to prepare for placements."
           image="/images/testimonial1.jpg"
           delay={0.1}
         />

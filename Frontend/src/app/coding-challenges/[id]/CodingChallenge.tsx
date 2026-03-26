@@ -26,7 +26,7 @@ main();`,
     python: `# Python boilerplate
 if __name__ == "__main__":
     print("Hello, World!")`,
-    java: `class EduScales {
+    java: `class Solution {
     public static void main(String[] args) {
         System.out.println("Hello, World!");
     }
