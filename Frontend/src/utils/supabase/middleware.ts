@@ -62,14 +62,24 @@ export async function updateSession(request: NextRequest) {
   if (request.nextUrl.pathname === '/') {
     const url = request.nextUrl.clone();
     url.pathname = '/dashboard';
-    return NextResponse.redirect(url);
+    const response = NextResponse.redirect(url);
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      const { name, value, ...options } = cookie;
+      response.cookies.set(name, value, options);
+    });
+    return response;
   }
 
   // Prevent authenticated users from accessing auth pages
   if (request.nextUrl.pathname.startsWith('/auth')) {
     const url = request.nextUrl.clone();
     url.pathname = '/dashboard';
-    return NextResponse.redirect(url);
+    const response = NextResponse.redirect(url);
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      const { name, value, ...options } = cookie;
+      response.cookies.set(name, value, options);
+    });
+    return response;
   }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.

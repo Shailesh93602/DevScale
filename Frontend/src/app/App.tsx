@@ -3,8 +3,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { usePathname, useRouter } from 'next/navigation';
-import { Provider } from 'react-redux';
-import { store, persistor } from '@/lib/store';
+import { persistor } from '@/lib/store';
 import { PersistGate } from 'redux-persist/integration/react';
 import { useAppDispatch } from '@/lib/hooks';
 import {
@@ -12,69 +11,58 @@ import {
   setAuthenticated,
   clearUser,
 } from '@/lib/features/user/userSlice';
-import { useAxiosGet } from '@/hooks/useAxios';
-import { IUser } from '@/types';
 import Loader from '@/components/Loader';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function App({ children }: { children: ReactNode }) {
-  const [isClient, setIsClient] = useState<boolean>(false);
+  const [isMounted, setIsMounted] = useState(false);
   const path = usePathname();
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const [getUserApi, { data, isLoading }] = useAxiosGet<{ user: IUser }>(
-    '/users/me',
-  );
+  const { user, status, isLoading: isAuthLoading } = useAuth();
 
   const isPublic = path === '/' || path?.startsWith('/auth');
 
+  // Initialize theme and mount state
   useEffect(() => {
-    setIsClient(true);
+    setIsMounted(true);
     const savedTheme = localStorage.getItem('theme') ?? 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
   }, []);
 
+  // Sync AuthContext with Redux
   useEffect(() => {
-    if (!isClient) return;
-
-    const validateUser = async () => {
-      try {
-        await getUserApi();
-      } catch (error) {
-        console.error('Authentication error:', error);
-        dispatch(setAuthenticated(false));
-        dispatch(clearUser());
-        if (!isPublic) router.push('/details');
-      }
-    };
-
-    validateUser();
-  }, [isClient, dispatch, router, isPublic, path]);
-
-  useEffect(() => {
-    if (data) {
-      if (data.user) {
-        dispatch(setUser({ user: data.user }));
-        dispatch(setAuthenticated(true));
-      } else {
-        dispatch(setAuthenticated(false));
-        dispatch(clearUser());
-      }
+    if (status === 'authenticated' && user) {
+      dispatch(setUser({ user }));
+      dispatch(setAuthenticated(true));
+    } else if (status === 'unauthenticated') {
+      dispatch(setAuthenticated(false));
+      dispatch(clearUser());
     }
-  }, [data]);
+  }, [status, user, dispatch]);
 
-  if (!isClient) return null;
+  // Handle protected route redirects only after mounting to avoid hydration mismatch
+  useEffect(() => {
+    if (!isMounted || isAuthLoading) return;
 
-  if (isLoading) return <Loader type="SiteLoader" />;
+    if (!isPublic && status === 'unauthenticated') {
+      router.push('/auth/login');
+    }
+  }, [isMounted, status, isAuthLoading, isPublic, router]);
 
+  // Return consistent structure for hydration
+  // Loader is rendered over the content instead of replacing it to avoid mismatch
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <div className="flex min-h-screen flex-col justify-between">
-          <Navbar isPublic={isPublic} />
+    <PersistGate loading={null} persistor={persistor}>
+      <div className="flex min-h-screen flex-col justify-between">
+        <Navbar isPublic={isPublic} />
+        <main className="flex-grow">
           {children}
-          <Footer />
-        </div>
-      </PersistGate>
-    </Provider>
+        </main>
+        <Footer />
+        {isAuthLoading && isMounted && <Loader type="SiteLoader" />}
+      </div>
+    </PersistGate>
   );
 }
+
