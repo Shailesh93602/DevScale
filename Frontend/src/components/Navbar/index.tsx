@@ -62,7 +62,7 @@ const Navbar = ({ isPublic }: { isPublic?: boolean }) => {
               href="/"
               className="text-xl font-bold text-primary hover:text-primary2"
             >
-              Mr.Eng
+              EduScale
             </Link>
           </div>
           <div className="hidden items-center space-x-4 md:flex">

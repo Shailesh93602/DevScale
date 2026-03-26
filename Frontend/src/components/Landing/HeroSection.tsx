@@ -41,7 +41,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
         transition={{ duration: 0.8, delay: 0.5 }}
         className="mx-auto mb-10 max-w-3xl text-lg text-foreground/90 md:text-xl"
       >
-        EduScales is the all-in-one platform for engineering students.
+        EduScale is the all-in-one platform for engineering students.
         Personalized roadmaps, community support, placement preparation, and
         interactive challenges—all designed to transform your learning
         experience.
