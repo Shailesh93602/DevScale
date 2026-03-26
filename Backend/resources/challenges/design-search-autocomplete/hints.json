@@ -1,4 +1,6 @@
 [
-  "TODO: Add hint 1",
-  "TODO: Add hint 2"
+  "A basic Trie allows you to find all words with a prefix, but how do you find the TOP results efficiently? Consider storing results at each node.",
+  "How will you handle frequency updates? Real-time updates to a distributed Trie are complex. Think about 'Offline Aggregation' and 'Snapshots'.",
+  "Think about sharding. How can you split a massive Trie across multiple servers? By first character? By consistent hashing?",
+  "What about caching? Client-side caching could significantly reduce the load on your backend."
 ]

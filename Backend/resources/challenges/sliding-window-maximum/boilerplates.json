@@ -1,0 +1,10 @@
+{
+  "typescript": "function maxSlidingWindow(nums: number[], k: number): number[] {\n    \n};",
+  "javascript": "/**\n * @param {number[]} nums\n * @param {number} k\n * @return {number[]}\n */\nvar maxSlidingWindow = function(nums, k) {\n    \n};",
+  "python": "class Solution:\n    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:\n        ",
+  "java": "class Solution {\n    public int[] maxSlidingWindow(int[] nums, int k) {\n        \n    }\n}",
+  "cpp": "class Solution {\npublic:\n    vector<int> maxSlidingWindow(vector<int>& nums, int k) {\n        \n    }\n};",
+  "go": "func maxSlidingWindow(nums []int, k int) []int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn max_sliding_window(nums: Vec<i32>, k: i32) -> Vec<i32> {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int[] MaxSlidingWindow(int[] nums, int k) {\n        \n    }\n}"
+}

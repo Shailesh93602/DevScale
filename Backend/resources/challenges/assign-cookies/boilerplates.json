@@ -1,0 +1,5 @@
+{
+  "typescript": "function findContentChildren(g: number[], s: number[]): number {\n    // Your code here\n}",
+  "javascript": "var findContentChildren = function(g, s) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def findContentChildren(self, g: List[int], s: List[int]) -> int:\n        # Your code here\n        pass"
+}

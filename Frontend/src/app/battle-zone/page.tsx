@@ -23,8 +23,14 @@ export default function BattleZonePage() {
   const handleJoinBattle = async (battleId: string) => {
     try {
       await joinExistingBattle(battleId);
-      router.push(`/battle-zone/${battleId}/lobby`);
-    } catch {
+      router.push(`/battle-zone/${battleId}`);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message.toLowerCase() : '';
+      // If user is already a participant, just navigate to the battle
+      if (msg.includes('already') || msg.includes('joined')) {
+        router.push(`/battle-zone/${battleId}`);
+        return;
+      }
       toast({
         title: 'Error',
         description: 'Failed to join battle. Please try again.',

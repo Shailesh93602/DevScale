@@ -40,5 +40,6 @@
   "example_output": "6",
   "constraints": "- The number of nodes in the tree is in the range `[2, 10^5]`.\n- `-10^9 <= Node.val <= 10^9`\n- All `Node.val` are **unique**.\n- `p != q`\n- `p` and `q` will exist in the BST.",
   "function_signature": "function lowestCommonAncestor(root: TreeNode | null, p: TreeNode | null, q: TreeNode | null): TreeNode | null {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

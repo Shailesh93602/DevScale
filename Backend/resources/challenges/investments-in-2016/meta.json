@@ -15,5 +15,6 @@
   "example_output": "| tiv_2016 |\n| 45.00    |",
   "constraints": "- pid is the primary key\n- Each row contains policyholder info\n- lat and lon represent city location",
   "function_signature": "-- Write your SQL query below",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

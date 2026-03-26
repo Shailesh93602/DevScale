@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nfunction knn(X_train: number[][], y_train: number[], X_test: number[][], k: number): { predictions: number[] }",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

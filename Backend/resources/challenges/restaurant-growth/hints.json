@@ -1,4 +1,6 @@
 [
-  "TODO: Add hint 1",
-  "TODO: Add hint 2"
+  "First, calculate the total amount for each date using GROUP BY visited_on.",
+  "Use SQL window functions like SUM(...) OVER (...) and AVG(...) OVER (...) to compute moving metrics.",
+  "The window should be defined as 'ROWS BETWEEN 6 PRECEDING AND CURRENT ROW'.",
+  "Filter out the first 6 entries as they don't have a full 7-day preceding window."
 ]

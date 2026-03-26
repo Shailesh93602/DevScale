@@ -18,7 +18,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Modal } from '@/components/ui/modal';
 import { useAxiosGet, useAxiosPost } from '@/hooks/useAxios';
 import { Badge } from '@/components/ui/badge';
-import { X, Plus, GripVertical } from 'lucide-react';
+import { X, Plus, GripVertical, Trash2 } from 'lucide-react';
 import {
   DragDropContext,
   Droppable,
@@ -111,15 +111,17 @@ interface TagsListProps {
 const TagsList = ({ tags, onRemove }: TagsListProps) => (
   <div className="flex flex-wrap gap-2">
     {tags.map((tag) => (
-      <Badge key={tag} variant="secondary" className="gap-1">
+      <Badge key={tag} variant="secondary" className="gap-1 pr-1">
         {tag}
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="icon"
           onClick={() => onRemove(tag)}
-          className="ml-1 rounded-full p-1 hover:bg-destructive/20"
+          className="h-4 w-4 rounded-full p-0 hover:bg-destructive/20"
         >
-          <X size={12} />
-        </button>
+          <X size={10} />
+        </Button>
       </Badge>
     ))}
   </div>
@@ -131,6 +133,7 @@ interface TopicFormProps {
   topicIndex: number;
   control: Control<FormData>;
   availableTopics: Topic[];
+  onRemove: () => void;
 }
 
 const TopicForm = ({
@@ -139,8 +142,20 @@ const TopicForm = ({
   topicIndex,
   control,
   availableTopics,
+  onRemove,
 }: TopicFormProps) => (
-  <div className="rounded-lg border bg-background p-3">
+  <div className="relative rounded-lg border bg-background p-3">
+    <div className="mb-1 flex justify-end">
+      <Button
+        type="button"
+        variant="ghost"
+        size="sm"
+        onClick={onRemove}
+        className="h-6 px-2 text-xs text-muted-foreground hover:text-destructive"
+      >
+        <Trash2 size={12} className="mr-1" /> Remove
+      </Button>
+    </div>
     <FormField
       control={control}
       name={`mainConcepts.${mainConceptIndex}.subjects.${subjectIndex}.topics.${topicIndex}.topic_id`}
@@ -174,6 +189,7 @@ interface SubjectFormProps {
   control: Control<FormData>;
   availableSubjects: Subject[];
   availableTopics: Topic[];
+  onRemove: () => void;
 }
 
 const SubjectForm = ({
@@ -182,6 +198,7 @@ const SubjectForm = ({
   control,
   availableSubjects,
   availableTopics,
+  onRemove,
 }: SubjectFormProps) => {
   const { watch, setValue } = useFormContext<FormData>();
   const topics =
@@ -253,8 +270,27 @@ const SubjectForm = ({
               topicIndex={topicIndex}
               control={control}
               availableTopics={availableTopics}
+              onRemove={() => {
+                const currentConcepts = watch('mainConcepts');
+                const updatedConcepts = [...currentConcepts];
+                updatedConcepts[mainConceptIndex].subjects[
+                  subjectIndex
+                ].topics.splice(topicIndex, 1);
+                setValue('mainConcepts', updatedConcepts);
+              }}
             />
           ))}
+        </div>
+        <div className="mt-2 flex justify-end">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={onRemove}
+            className="h-7 text-xs text-muted-foreground hover:text-destructive"
+          >
+            <Trash2 size={12} className="mr-1" /> Remove Subject
+          </Button>
         </div>
       </div>
     </div>
@@ -267,6 +303,7 @@ interface MainConceptFormProps {
   availableMainConcepts: MainConcept[];
   availableSubjects: Subject[];
   availableTopics: Topic[];
+  onRemove: () => void;
 }
 
 const MainConceptForm = ({
@@ -275,6 +312,7 @@ const MainConceptForm = ({
   availableMainConcepts,
   availableSubjects,
   availableTopics,
+  onRemove,
 }: MainConceptFormProps) => {
   const { watch, setValue } = useFormContext<FormData>();
   const subjects = watch(`mainConcepts.${mainConceptIndex}.subjects`) || [];
@@ -341,8 +379,28 @@ const MainConceptForm = ({
             control={control}
             availableSubjects={availableSubjects}
             availableTopics={availableTopics}
+            onRemove={() => {
+              const currentConcepts = watch('mainConcepts');
+              const updatedConcepts = [...currentConcepts];
+              updatedConcepts[mainConceptIndex].subjects.splice(
+                subjectIndex,
+                1,
+              );
+              setValue('mainConcepts', updatedConcepts);
+            }}
           />
         ))}
+      </div>
+      <div className="flex justify-end pt-2">
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={onRemove}
+          className="text-destructive hover:bg-destructive hover:text-destructive-foreground"
+        >
+          <Trash2 size={14} className="mr-1.5" /> Remove Concept
+        </Button>
       </div>
     </div>
   );
@@ -360,12 +418,10 @@ export function CreateRoadmap({
   const [topics, setTopics] = useState<Topic[]>([]);
   const [tagInput, setTagInput] = useState('');
 
-  const [createRoadmap] = useAxiosPost('/api/roadmaps');
-  const [getMainConcepts] = useAxiosGet<{ data: MainConcept[] }>(
-    '/api/main-concepts',
-  );
-  const [getSubjects] = useAxiosGet<{ data: Subject[] }>('/api/subjects');
-  const [getTopics] = useAxiosGet<{ data: Topic[] }>('/api/topics');
+  const [createRoadmap] = useAxiosPost('/roadmaps');
+  const [getMainConcepts] = useAxiosGet<MainConcept[]>('/main-concepts');
+  const [getSubjects] = useAxiosGet<Subject[]>('/subjects');
+  const [getTopics] = useAxiosGet<Topic[]>('/topics');
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -388,9 +444,9 @@ export function CreateRoadmap({
         const [mainConceptsResponse, subjectsResponse, topicsResponse] =
           await Promise.all([getMainConcepts(), getSubjects(), getTopics()]);
 
-        setMainConcepts(mainConceptsResponse.data.data);
-        setSubjects(subjectsResponse.data.data);
-        setTopics(topicsResponse.data.data);
+        setMainConcepts(mainConceptsResponse.data);
+        setSubjects(subjectsResponse.data);
+        setTopics(topicsResponse.data);
       } catch (error) {
         console.error('Error fetching data:', error);
         toast.error(
@@ -479,7 +535,9 @@ export function CreateRoadmap({
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Title</FormLabel>
+                  <FormLabel>
+                    Title <span className="text-destructive">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Input
                       placeholder="e.g., Complete Frontend Development Path"
@@ -497,7 +555,9 @@ export function CreateRoadmap({
               name="categoryId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Category</FormLabel>
+                  <FormLabel>
+                    Category <span className="text-destructive">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
@@ -526,7 +586,9 @@ export function CreateRoadmap({
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel>
+                  Description <span className="text-destructive">*</span>
+                </FormLabel>
                 <FormControl>
                   <Textarea
                     placeholder="Describe your roadmap and what learners will achieve..."
@@ -545,7 +607,9 @@ export function CreateRoadmap({
               name="difficulty"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Difficulty</FormLabel>
+                  <FormLabel>
+                    Difficulty <span className="text-destructive">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
@@ -573,7 +637,9 @@ export function CreateRoadmap({
               name="estimatedHours"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Estimated Hours</FormLabel>
+                  <FormLabel>
+                    Estimated Hours <span className="text-destructive">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -581,7 +647,9 @@ export function CreateRoadmap({
                       placeholder="e.g., 40"
                       className="bg-background"
                       {...field}
-                      onChange={(e) => field.onChange(parseInt(e.target.value))}
+                      onChange={(e) =>
+                        field.onChange(Number.parseInt(e.target.value))
+                      }
                     />
                   </FormControl>
                   <FormMessage />
@@ -635,7 +703,9 @@ export function CreateRoadmap({
 
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <FormLabel>Main Concepts</FormLabel>
+              <FormLabel>
+                Main Concepts <span className="text-destructive">*</span>
+              </FormLabel>
               <Button
                 type="button"
                 variant="outline"
@@ -673,6 +743,13 @@ export function CreateRoadmap({
                               availableMainConcepts={mainConcepts}
                               availableSubjects={subjects}
                               availableTopics={topics}
+                              onRemove={() => {
+                                const currentConcepts =
+                                  form.getValues('mainConcepts');
+                                const updatedConcepts = [...currentConcepts];
+                                updatedConcepts.splice(conceptIndex, 1);
+                                form.setValue('mainConcepts', updatedConcepts);
+                              }}
                             />
                           </div>
                         )}
@@ -689,10 +766,7 @@ export function CreateRoadmap({
             <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>
-            <Button
-              type="submit"
-              disabled={isSubmitting || !form.formState.isValid}
-            >
+            <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? 'Creating...' : 'Create Roadmap'}
             </Button>
           </div>

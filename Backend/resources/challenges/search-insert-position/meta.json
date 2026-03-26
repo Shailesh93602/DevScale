@@ -6,14 +6,25 @@
   "points": 50,
   "tags": ["binary-search", "array"],
   "company_tags": ["Google", "Amazon", "Apple", "Bloomberg"],
-  "topic_tags": ["binary search", "arrays"],
+  "topic_tags": ["arrays", "binary search"],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
   "time_limit_ms": 2000,
   "memory_limit_kb": 262144,
   "input_format": "A sorted array of distinct integers `nums` and an integer `target`.",
-  "output_format": "Return the index if target is found. If not, return the index where it would be inserted in order.",
+  "output_format": "Return the index if the target is found. If not, return the index where it would be if it were inserted in order.",
   "example_input": "nums = [1,3,5,6], target = 5",
   "example_output": "2",
-  "constraints": "- `1 <= nums.length <= 10^4`\n- `-10^4 <= nums[i] <= 10^4`\n- `nums` contains distinct values sorted in ascending order.\n- `-10^4 <= target <= 10^4`",
+  "constraints": "- `1 <= nums.length <= 10^4`\n- `-10^4 <= nums[i] <= 10^4`\n- `nums` contains **distinct** values sorted in **ascending** order.\n- `-10^4 <= target <= 10^4` ",
   "function_signature": "function searchInsert(nums: number[], target: number): number {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

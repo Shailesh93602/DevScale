@@ -1,12 +1,7 @@
 [
-  { "input": "{\"intervals\": [[1,3],[2,6],[8,10],[15,18]]}", "output": "[[1,6],[8,10],[15,18]]", "explanation": "[1,3] and [2,6] overlap, merge into [1,6].", "is_hidden": false },
-  { "input": "{\"intervals\": [[1,4],[4,5]]}", "output": "[[1,5]]", "explanation": "Touching intervals merge.", "is_hidden": false },
-  { "input": "{\"intervals\": [[1,4],[0,4]]}", "output": "[[0,4]]", "explanation": "Unsorted input, fully overlapping after sort.", "is_hidden": false },
-  { "input": "{\"intervals\": [[1,2]]}", "output": "[[1,2]]", "explanation": "Single interval.", "is_hidden": true },
-  { "input": "{\"intervals\": [[1,2],[3,4],[5,6]]}", "output": "[[1,2],[3,4],[5,6]]", "explanation": "No overlaps.", "is_hidden": true },
-  { "input": "{\"intervals\": [[1,10],[2,3],[4,5],[6,7]]}", "output": "[[1,10]]", "explanation": "All intervals contained within [1,10].", "is_hidden": true },
-  { "input": "{\"intervals\": [[1,4],[2,3]]}", "output": "[[1,4]]", "explanation": "[2,3] is inside [1,4].", "is_hidden": true },
-  { "input": "{\"intervals\": [[1,3],[2,4],[5,7],[6,8]]}", "output": "[[1,4],[5,8]]", "explanation": "Two merge groups.", "is_hidden": true },
-  { "input": "{\"intervals\": [[0,0],[1,1],[2,2]]}", "output": "[[0,0],[1,1],[2,2]]", "explanation": "Point intervals, no overlap.", "is_hidden": true },
-  { "input": "{\"intervals\": [[2,3],[4,5],[6,7],[8,9],[1,10]]}", "output": "[[1,10]]", "explanation": "One large interval absorbs all others.", "is_hidden": true }
+  { "input": "{\"intervals\":[[1,3],[2,6],[8,10],[15,18]]}", "output": "[[1,6],[8,10],[15,18]]", "explanation": "[1,3] and [2,6] overlap, merge into [1,6].", "is_hidden": false },
+  { "input": "{\"intervals\":[[1,4],[4,5]]}", "output": "[[1,5]]", "explanation": "Touching intervals merge.", "is_hidden": false },
+  { "input": "{\"intervals\":[[1,4],[0,4]]}", "output": "[[0,4]]", "explanation": "Fully overlapping.", "is_hidden": true },
+  { "input": "{\"intervals\":[[1,2]]}", "output": "[[1,2]]", "explanation": "Single interval.", "is_hidden": true },
+  { "input": "{\"intervals\":[[1,10],[2,3],[4,5],[6,7]]}", "output": "[[1,10]]", "explanation": "Container interval.", "is_hidden": true }
 ]

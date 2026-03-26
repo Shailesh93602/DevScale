@@ -1,4 +1,5 @@
 [
-  "TODO: Add hint 1",
-  "TODO: Add hint 2"
+  "The sum of numbers from 0 to n can be calculated using the formula: n * (n + 1) / 2.",
+  "Consider what happens if you XOR all numbers from 0 to n with all numbers in the array.",
+  "Sorting the array would also work, but can you do it in linear time?"
 ]

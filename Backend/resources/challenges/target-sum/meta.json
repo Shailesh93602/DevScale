@@ -15,5 +15,6 @@
   "example_output": "5",
   "constraints": "- `1 <= nums.length <= 20`\n- `0 <= nums[i] <= 1000`\n- `0 <= sum(nums[i]) <= 1000`\n- `-1000 <= target <= 1000`",
   "function_signature": "function findTargetSumWays(nums: number[], target: number): number {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

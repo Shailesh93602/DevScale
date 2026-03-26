@@ -1,10 +1,10 @@
 import { ExperienceLevel, PrismaClient } from '@prisma/client';
 import BaseRepository from './baseRepository';
-import logger from '@/utils/logger';
-import { createAppError } from '@/utils/errorHandler';
-import { deleteCache, getCache, setCache } from '@/services/cacheService';
+import logger from '../utils/logger';
+import { createAppError } from '../utils/errorHandler';
+import { deleteCache, getCache, setCache } from '../services/cacheService';
 
-import prisma from '@/lib/prisma';
+import prisma from '../lib/prisma';
 
 export default class UserProgressRepository extends BaseRepository<
   PrismaClient['userProgress']
@@ -91,7 +91,6 @@ export default class UserProgressRepository extends BaseRepository<
         is_completed: data.is_completed,
         completed_at: data.is_completed ? new Date() : null,
         time_spent: data.timeSpent ?? 0,
-        subject_id: '',
       },
     });
   }

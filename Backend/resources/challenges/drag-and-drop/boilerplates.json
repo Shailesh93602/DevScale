@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nfunction createDragDropList<T>(items: T[]): DragDropList<T>",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

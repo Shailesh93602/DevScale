@@ -9,7 +9,7 @@ export const RecommendedRoadmapCard: React.FC<RecommendedRoadmapCardProps> = ({
   roadmap,
 }) => {
   return (
-    <div className="rounded-lg border p-4 hover:bg-gray-50 dark:hover:bg-gray-800">
+    <div className="rounded-lg border p-4 hover:bg-muted/50">
       <div className="flex items-start gap-4">
         {roadmap?.thumbnail && (
           <Image
@@ -22,13 +22,13 @@ export const RecommendedRoadmapCard: React.FC<RecommendedRoadmapCardProps> = ({
         )}
         <div className="flex-1">
           <h3 className="text-lg font-semibold">{roadmap?.title}</h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-muted-foreground">
             By {roadmap?.author?.name}
           </p>
-          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+          <p className="mt-2 text-sm text-muted-foreground">
             {roadmap?.description}
           </p>
-          <div className="mt-4 flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+          <div className="mt-4 flex items-center gap-4 text-sm text-muted-foreground">
             <span>{roadmap?.topics} topics</span>
             <span>{roadmap?.enrollmentCount} enrolled</span>
             <span>{roadmap?.rating?.toFixed(1)} rating</span>

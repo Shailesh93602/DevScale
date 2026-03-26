@@ -37,7 +37,7 @@ const leaderboardData = [
   },
   {
     rank: 5,
-    name: 'Shailesh Chaudhari',
+    name: 'Vikram Raj',
     points: 2580,
     college: 'VIT Vellore',
     avatar: 'https://i.pravatar.cc/150?img=5',
@@ -64,7 +64,7 @@ const MedalIcon = ({
   if (rank === 1) {
     return (
       <div
-        className={`flex ${isEmbedded ? 'h-12 w-12 p-2.5' : 'h-14 w-14 p-3'} items-center justify-center rounded-full bg-gradient-to-br from-yellow-300 to-yellow-600 shadow-[0_0_15px_rgba(255,215,0,0.5)]`}
+        className={`flex ${isEmbedded ? 'h-12 w-12 p-2.5' : 'h-14 w-14 p-3'} from-yellow-300 to-yellow-600 items-center justify-center rounded-full bg-gradient-to-br shadow-[0_0_15px_rgba(255,215,0,0.5)]`}
       >
         <FaTrophy
           className={`${isEmbedded ? 'h-7 w-7' : 'h-8 w-8'} text-white drop-shadow-md`}
@@ -155,13 +155,13 @@ export default function WeeklyLeaderboard({
 
   return (
     <section
-      className={`relative z-10 overflow-hidden ${!isEmbedded ? 'bg-gradient-to-b from-[#1e293b] via-[#232946] to-[#18181b]' : ''} ${isEmbedded ? 'py-4' : 'py-10'} text-white`}
+      className={`relative z-10 overflow-hidden ${!isEmbedded ? 'bg-background' : ''} ${isEmbedded ? 'py-4' : 'py-10'} text-foreground`}
     >
       {/* Background decorative elements - only show when not embedded */}
       {!isEmbedded && (
-        <div className="absolute inset-0 z-0 overflow-hidden opacity-20">
-          <div className="absolute -left-20 top-20 h-64 w-64 rounded-full bg-purple-700 blur-3xl"></div>
-          <div className="absolute -right-20 bottom-20 h-64 w-64 rounded-full bg-blue-700 blur-3xl"></div>
+        <div className="absolute inset-0 z-0 overflow-hidden opacity-10">
+          <div className="absolute -left-20 top-20 h-64 w-64 rounded-full bg-primary blur-3xl"></div>
+          <div className="absolute -right-20 bottom-20 h-64 w-64 rounded-full bg-primary2 blur-3xl"></div>
         </div>
       )}
 
@@ -174,18 +174,18 @@ export default function WeeklyLeaderboard({
           className="mx-auto max-w-2xl text-center"
         >
           <h2
-            className={`${isEmbedded ? 'mb-1 text-2xl' : 'mb-3 text-3xl sm:text-4xl'} font-bold tracking-tight text-white drop-shadow-lg`}
+            className={`${isEmbedded ? 'mb-1 text-2xl' : 'mb-3 text-3xl sm:text-4xl'} font-bold tracking-tight text-foreground drop-shadow-lg`}
           >
             Weekly Leaderboard
           </h2>
           {!isEmbedded && (
-            <p className="mb-6 text-base text-gray-300 sm:text-lg">
+            <p className="mb-6 text-base text-muted-foreground sm:text-lg">
               Celebrate the top performers of the week! Compete, climb, and
               claim your spot among the best engineers.
             </p>
           )}
           {isEmbedded && (
-            <p className="mb-3 text-sm text-gray-300">
+            <p className="mb-3 text-sm text-muted-foreground">
               Compete, climb, and claim your spot among the best engineers.
             </p>
           )}
@@ -306,10 +306,10 @@ export default function WeeklyLeaderboard({
                     transition={{ delay: 0.9 + 0.1 * i, duration: 0.5 }}
                   >
                     <div
-                      className={`flex ${widths[podiumIdx]} flex-col items-center rounded-xl border border-gray-700/30 bg-white/10 px-3 py-2 backdrop-blur-md transition-all duration-300 hover:bg-white/15 hover:shadow-lg`}
+                      className={`flex ${widths[podiumIdx]} flex-col items-center rounded-xl border border-border/30 bg-card/10 px-3 py-2 backdrop-blur-md transition-all duration-300 hover:bg-card/20 hover:shadow-lg`}
                     >
                       <span
-                        className="w-full truncate text-center text-sm font-semibold text-white"
+                        className="w-full truncate text-center text-sm font-semibold text-foreground"
                         title={user.name}
                       >
                         {user.name}
@@ -325,7 +325,7 @@ export default function WeeklyLeaderboard({
                       >
                         {user.points.toLocaleString()} pts
                       </span>
-                      <span className="mt-0.5 text-[10px] text-gray-400">
+                      <span className="mt-0.5 text-[10px] text-muted-foreground">
                         {user.college}
                       </span>
                     </div>
@@ -346,13 +346,13 @@ export default function WeeklyLeaderboard({
             {leaderboardData.slice(3, 5).map((user, index) => (
               <motion.div
                 key={user.rank}
-                className="mb-1 flex items-center rounded-lg border border-gray-700/30 bg-white/5 p-1.5 backdrop-blur-sm transition-all duration-300 hover:bg-white/10"
+                className="mb-1 flex items-center rounded-lg border border-border/30 bg-card/10 p-1.5 backdrop-blur-sm transition-all duration-300 hover:bg-card/20"
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.3, delay: 1.2 + index * 0.1 }}
               >
-                <div className="mr-2 flex h-6 w-6 items-center justify-center rounded-full bg-gray-800 text-xs font-bold text-gray-300">
+                <div className="mr-2 flex h-6 w-6 items-center justify-center rounded-full bg-muted text-xs font-bold text-muted-foreground">
                   {user.rank}
                 </div>
                 <div className="mr-2">
@@ -361,7 +361,7 @@ export default function WeeklyLeaderboard({
                     alt={user.name}
                     width={28}
                     height={28}
-                    className="h-7 w-7 rounded-full border border-gray-700 object-cover"
+                    className="h-7 w-7 rounded-full border border-border object-cover"
                     unoptimized={user.avatar.startsWith('http')} // Skip optimization for external URLs
                     onError={(e) => {
                       e.currentTarget.style.display = 'none';
@@ -370,19 +370,19 @@ export default function WeeklyLeaderboard({
                       ).nextElementSibling?.classList.remove('hidden');
                     }}
                   />
-                  <div className="hidden h-7 w-7 items-center justify-center rounded-full bg-gray-700 text-xs font-bold text-white">
+                  <div className="hidden h-7 w-7 items-center justify-center rounded-full bg-muted text-xs font-bold text-muted-foreground">
                     {getInitials(user.name)}
                   </div>
                 </div>
                 <div className="flex-1">
-                  <div className="text-xs font-medium text-white">
+                  <div className="text-xs font-medium text-foreground">
                     {user.name}
                   </div>
-                  <div className="text-[10px] text-gray-400">
+                  <div className="text-[10px] text-muted-foreground">
                     {user.college}
                   </div>
                 </div>
-                <div className="text-right text-xs font-semibold text-gray-300">
+                <div className="text-right text-xs font-semibold text-muted-foreground">
                   {user.points.toLocaleString()} pts
                 </div>
               </motion.div>

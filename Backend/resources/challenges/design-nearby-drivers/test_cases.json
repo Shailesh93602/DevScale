@@ -1,0 +1,15 @@
+[
+  {
+    "input": "updateLocation('D1', 37.77, -122.41); findNearbyDrivers(37.77, -122.41, 1.0)",
+    "output": "['D1']",
+    "explanation": "Driver is exactly at the target location.",
+    "is_hidden": false
+  },
+  {
+    "input": "findNearbyDrivers(0, 0, 10.0)",
+    "output": "[]",
+    "explanation": "No drivers in empty cells.",
+    "is_hidden": false
+  }
+]
+

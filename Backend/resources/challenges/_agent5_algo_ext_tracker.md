@@ -100,12 +100,12 @@
 ## NEW CHALLENGES TO CREATE
 
 ### Greedy (20 new)
-- [ ] PENDING assign-cookies
-- [ ] PENDING lemonade-change
-- [ ] PENDING max-units-on-truck
-- [ ] PENDING partition-labels
-- [ ] PENDING min-arrows-burst-balloons
-- [ ] PENDING queue-reconstruction-by-height
+- [x] DONE assign-cookies
+- [x] DONE lemonade-change
+- [x] DONE max-units-on-truck
+- [x] DONE partition-labels
+- [x] DONE min-arrows-burst-balloons
+- [x] DONE queue-reconstruction-by-height
 - [ ] PENDING boats-to-save-people-greedy
 - [ ] PENDING bag-of-tokens
 - [ ] PENDING two-city-scheduling
@@ -144,10 +144,10 @@
 - [ ] PENDING graph-coloring
 
 ### Stack/Queue (12 new)
-- [ ] PENDING asteroid-collision
-- [ ] PENDING decode-string
-- [ ] PENDING next-greater-element-i
-- [ ] PENDING next-greater-element-ii
+- [x] DONE asteroid-collision
+- [x] DONE decode-string
+- [x] DONE next-greater-element-i
+- [x] DONE next-greater-element-ii
 - [ ] PENDING online-stock-span
 - [ ] PENDING remove-adjacent-duplicates
 - [ ] PENDING remove-adjacent-duplicates-ii
@@ -158,7 +158,7 @@
 - [ ] PENDING one-three-two-pattern
 
 ### Binary Search (10 new)
-- [ ] PENDING find-first-and-last-position
+- [x] DONE find-first-and-last-position
 - [ ] PENDING search-in-rotated-sorted-array-ii
 - [ ] PENDING find-minimum-rotated-sorted-array-ii
 - [ ] PENDING split-array-largest-sum
@@ -171,7 +171,7 @@
 
 ### Two Pointers (10 new)
 - [ ] PENDING boats-to-save-people
-- [ ] PENDING 3sum-closest
+- [x] DONE 3sum-closest
 - [ ] PENDING sort-array-by-parity
 - [ ] PENDING backspace-string-compare
 - [ ] PENDING minimum-size-subarray-sum

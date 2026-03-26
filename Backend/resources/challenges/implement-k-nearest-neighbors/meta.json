@@ -14,6 +14,7 @@
   "example_input": "{\"X_train\": [[1,1],[2,2],[3,3],[6,6],[7,7],[8,8]], \"y_train\": [0,0,0,1,1,1], \"X_test\": [[4,4],[7,6]], \"k\": 3}",
   "example_output": "{\"predictions\": [0, 1]}",
   "constraints": "1 <= k <= n_samples, 1 <= n_samples <= 10000, 1 <= n_features <= 100",
-  "function_signature": "function knn(X_train: number[][], y_train: number[], X_test: number[][], k: number): { predictions: number[] }",
-  "status": "ACTIVE"
+  "function_signature": "function knn(X_train: number[][], y_train: number[], X_test: number[][], k: number): { predictions: number[] } {}",
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

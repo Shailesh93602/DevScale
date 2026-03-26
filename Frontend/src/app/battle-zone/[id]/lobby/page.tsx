@@ -1,13 +1,14 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import BattleZoneLayout from '@/components/Battle/BattleZoneLayout';
 import { Battle } from '@/types/battle';
 import useBattleApi from '@/hooks/useBattleApi';
-import { toast } from 'react-toastify';
+import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 import BattleLobby from '../../Components/BattleLobby';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function BattleLobbyPage() {
   const params = useParams();
@@ -15,55 +16,64 @@ export default function BattleLobbyPage() {
   const battleId = params.id as string;
   const [battle, setBattle] = useState<Battle | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { user } = useAuth();
+  const { toast } = useToast();
   const { fetchBattle, joinExistingBattle, leaveExistingBattle } =
     useBattleApi();
+  const hasFetched = useRef(false);
+  const fetchBattleRef = useRef(fetchBattle);
+  fetchBattleRef.current = fetchBattle;
+  const joinExistingBattleRef = useRef(joinExistingBattle);
+  joinExistingBattleRef.current = joinExistingBattle;
 
   // Load battle details
   useEffect(() => {
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+
     const loadBattle = async () => {
       setIsLoading(true);
 
       try {
-        const response = await fetchBattle(battleId);
+        const response = await fetchBattleRef.current(battleId);
 
-        if (response?.data) {
-          const battle = response.data[0];
+        if (response) {
+          const battle = response;
           setBattle(battle);
 
           // If battle is already in progress, redirect to battle page
           if (battle.status === 'IN_PROGRESS') {
-            toast.info('Battle is already in progress. Redirecting...');
+            toast({ title: 'Battle is already in progress. Redirecting...' });
             router.push(`/battle-zone/${battleId}`);
             return;
           }
 
           // If battle is completed, redirect to battle page
-          if (battle.status === 'completed') {
-            toast.info('Battle is already completed. Redirecting...');
+          if (battle.status === 'COMPLETED') {
+            toast({ title: 'Battle is already completed. Redirecting...' });
             router.push(`/battle-zone/${battleId}`);
             return;
           }
 
           // Check if user has already joined
           const userParticipant = battle.participants?.find(
-            (p) => p.userId === 'current_user', // Replace with actual user ID
+            (p) => p.user_id === user?.id,
           );
 
           // If user hasn't joined, join the battle
           if (!userParticipant) {
-            await joinExistingBattle(battleId);
-            toast.success('You have joined the battle!');
+            await joinExistingBattleRef.current(battleId);
+            toast({ title: 'You have joined the battle!' });
 
             // Refresh battle data
-            const updatedResponse = await fetchBattle(battleId);
-            if (updatedResponse?.data) {
-              setBattle(updatedResponse.data[0]);
+            const updatedResponse = await fetchBattleRef.current(battleId);
+            if (updatedResponse) {
+              setBattle(updatedResponse);
             }
           }
         }
-      } catch (error) {
-        console.error('Failed to load battle:', error);
-        toast.error('Failed to load battle. Redirecting to battle zone...');
+      } catch {
+        toast({ title: 'Error', description: 'Failed to load battle. Redirecting...', variant: 'destructive' });
         router.push('/battle-zone');
       } finally {
         setIsLoading(false);
@@ -71,24 +81,23 @@ export default function BattleLobbyPage() {
     };
 
     loadBattle();
-  }, [battleId, fetchBattle, joinExistingBattle, router]);
+  }, [battleId, router, user?.id, toast]);
 
   // Handle start battle
-  const handleStartBattle = () => {
+  const handleStartBattle = useCallback(() => {
     router.push(`/battle-zone/${battleId}`);
-  };
+  }, [router, battleId]);
 
   // Handle leave battle
-  const handleLeaveBattle = async () => {
+  const handleLeaveBattle = useCallback(async () => {
     try {
       await leaveExistingBattle(battleId);
-      toast.success('You have left the battle');
+      toast({ title: 'You have left the battle' });
       router.push('/battle-zone');
-    } catch (error) {
-      console.error('Failed to leave battle:', error);
-      toast.error('Failed to leave battle');
+    } catch {
+      toast({ title: 'Error', description: 'Failed to leave battle', variant: 'destructive' });
     }
-  };
+  }, [leaveExistingBattle, battleId, toast, router]);
 
   return (
     <BattleZoneLayout>
@@ -117,7 +126,7 @@ export default function BattleLobbyPage() {
       ) : (
         <BattleLobby
           battle={battle}
-          currentUserId="current_user" // Replace with actual user ID
+          currentUserId={user?.id || ''}
           onStartBattle={handleStartBattle}
           onLeaveBattle={handleLeaveBattle}
         />

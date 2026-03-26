@@ -1,27 +1,10 @@
-[
-  {
-    "language": "typescript",
-    "slug": "typescript",
-    "code": "function countBits(n: number): number[] {\n  \n};"
-  },
-  {
-    "language": "javascript",
-    "slug": "javascript",
-    "code": "/**\n * @param {number} n\n * @return {number[]}\n */\nvar countBits = function(n) {\n    \n};"
-  },
-  {
-    "language": "python",
-    "slug": "python",
-    "code": "class Solution:\n    def countBits(self, n: int) -> List[int]:\n        "
-  },
-  {
-    "language": "java",
-    "slug": "java",
-    "code": "class Solution {\n    public int[] countBits(int n) {\n        \n    }\n}"
-  },
-  {
-    "language": "cpp",
-    "slug": "cpp",
-    "code": "class Solution {\npublic:\n    vector<int> countBits(int n) {\n        \n    }\n};"
-  }
-]
+{
+  "typescript": "function countBits(n: number): number[] {\n    \n};",
+  "javascript": "/**\n * @param {number} n\n * @return {number[]}\n */\nvar countBits = function(n) {\n    \n};",
+  "python": "class Solution:\n    def countBits(self, n: int) -> List[int]:\n        ",
+  "java": "class Solution {\n    public int[] countBits(int n) {\n        \n    }\n}",
+  "cpp": "class Solution {\npublic:\n    vector<int> countBits(int n) {\n        \n    }\n};",
+  "go": "func countBits(n int) []int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn count_bits(n: i32) -> Vec<i32> {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int[] CountBits(int n) {\n        \n    }\n}"
+}

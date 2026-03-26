@@ -1,3 +1,28 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  {
+    "input": "123",
+    "output": "321",
+    "is_hidden": false
+  },
+  {
+    "input": "-123",
+    "output": "-321",
+    "is_hidden": false
+  },
+  {
+    "input": "120",
+    "output": "21",
+    "is_hidden": false
+  },
+  {
+    "input": "0",
+    "output": "0",
+    "is_hidden": true
+  },
+  {
+    "input": "1534236469",
+    "output": "0",
+    "explanation": "Reversing results in overflow",
+    "is_hidden": true
+  }
 ]

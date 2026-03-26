@@ -50,14 +50,14 @@ export const BattleInterface: React.FC<BattleInterfaceProps> = ({
 
   // Fetch current question
   const [fetchQuestion, questionState] = useAxiosGet<BattleQuestion>(
-    `/api/battles/${battleId}/current-question`,
+    `/battles/${battleId}/current-question`,
   );
 
   // Submit answer
   const [submitAnswer, submitState] = useAxiosPost<
     { success: boolean; isCorrect: boolean; score: number },
     { answerId: string; timeSpent: number }
-  >(`/api/battles/${battleId}/submit-answer`);
+  >(`/battles/${battleId}/submit-answer`);
 
   // Timer effect
   useEffect(() => {
@@ -95,18 +95,11 @@ export const BattleInterface: React.FC<BattleInterfaceProps> = ({
     loadQuestion();
   }, [fetchQuestion, toast]);
 
-  // Auto-submit when time runs out
-  useEffect(() => {
-    if (timeLeft === 0 && selectedAnswer) {
-      handleSubmit();
-    }
-  }, [timeLeft]);
-
   const handleAnswerSelect = (answer: string) => {
     setSelectedAnswer(answer);
   };
 
-  const handleSubmit = async () => {
+  async function handleSubmit() {
     if (!selectedAnswer) return;
 
     try {
@@ -152,7 +145,7 @@ export const BattleInterface: React.FC<BattleInterfaceProps> = ({
         description: errorMessage,
       });
     }
-  };
+  }
 
   if (questionState.isLoading || !questionState.data) {
     return (
@@ -180,11 +173,11 @@ export const BattleInterface: React.FC<BattleInterfaceProps> = ({
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <Trophy className="h-5 w-5 text-yellow-500" />
+            <Trophy className="text-yellow-500 h-5 w-5" />
             <span className="text-lg font-bold">{score.score}</span>
           </div>
           <div className="flex items-center gap-2">
-            <Timer className="h-5 w-5 text-blue-500" />
+            <Timer className="text-blue-500 h-5 w-5" />
             <span className="text-lg font-medium">{timeLeft}s</span>
           </div>
         </div>

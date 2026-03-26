@@ -14,35 +14,19 @@ export default function BattlesPage() {
   // Parse search params for initial filters
   const initialFilters: BattleFilters = {
     status:
-      (searchParams.get('status') as
-        | 'pending'
-        | 'active'
-        | 'completed'
-        | 'cancelled'
-        | 'UPCOMING'
-        | 'IN_PROGRESS'
-        | 'all') || undefined,
-    length:
-      (searchParams.get('length') as 'short' | 'medium' | 'long') || undefined,
+      (searchParams.get('status') as BattleFilters['status']) || undefined,
     search: searchParams.get('search') || undefined,
     page: searchParams.get('page') ? parseInt(searchParams.get('page')!) : 1,
     limit: 12,
-    sortBy:
-      (searchParams.get('sort_by') as 'createdAt' | 'participants' | 'prize') ||
-      'createdAt',
-    sortOrder: (searchParams.get('sort_order') as 'asc' | 'desc') || 'desc',
+    sort_by: searchParams.get('sort_by') || undefined,
+    sort_order: (searchParams.get('sort_order') as 'asc' | 'desc') || 'desc',
   };
 
   const handleJoinBattle = async (battleId: string, status?: string) => {
     try {
       const response = await joinExistingBattle(battleId);
       if (response) {
-        // If battle is upcoming, redirect to lobby
-        if (status === 'UPCOMING') {
-          router.push(`/battle-zone/${battleId}/lobby`);
-        } else {
-          router.push(`/battle-zone/${battleId}`);
-        }
+        router.push(`/battle-zone/${battleId}`);
       }
     } catch (error) {
       console.error('Failed to join battle:', error);

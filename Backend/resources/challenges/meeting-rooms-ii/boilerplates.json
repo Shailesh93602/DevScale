@@ -1,0 +1,10 @@
+{
+  "typescript": "function minMeetingRooms(intervals: number[][]): number {\n    \n};",
+  "javascript": "/**\n * @param {number[][]} intervals\n * @return {number}\n */\nvar minMeetingRooms = function(intervals) {\n    \n};",
+  "python": "class Solution:\n    def minMeetingRooms(self, intervals: List[List[int]]) -> int:\n        ",
+  "java": "class Solution {\n    public int minMeetingRooms(int[][] intervals) {\n        \n    }\n}",
+  "cpp": "class Solution {\npublic:\n    int minMeetingRooms(vector<vector<int>>& intervals) {\n        \n    }\n};",
+  "go": "func minMeetingRooms(intervals [][]int) int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn min_meeting_rooms(intervals: Vec<Vec<i32>>) -> i32 {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int MinMeetingRooms(int[][] intervals) {\n        \n    }\n}"
+}

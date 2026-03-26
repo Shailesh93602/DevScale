@@ -1,0 +1,8 @@
+{
+  "typescript": "function findCheapestPrice(n: number, flights: number[][], src: number, dst: number, k: number): number {\n  // Your code here\n}",
+  "javascript": "/**\n * @param {number} n\n * @param {number[][]} flights\n * @param {number} src\n * @param {number} dst\n * @param {number} k\n * @return {number}\n */\nvar findCheapestPrice = function(n, flights, src, dst, k) {\n  // Your code here\n};",
+  "python": "class Solution:\n    def findCheapestPrice(self, n: int, flights: List[List[int]], src: int, dst: int, k: int) -> int:\n        # Your code here\n        pass",
+  "java": "class Solution {\n    public int findCheapestPrice(int n, int[][] flights, int src, int dst, int k) {\n        // Your code here\n    }\n}",
+  "cpp": "class Solution {\npublic:\n    int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {\n        // Your code here\n    }\n};"
+}
+

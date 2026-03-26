@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import Link from 'next/link';
+import { CustomLink } from '@/components/ui/custom-link';
+import { useSelector } from 'react-redux';
 import {
   FaTrophy,
   FaLaptopCode,
@@ -14,6 +15,12 @@ import {
   FaRoad,
 } from 'react-icons/fa';
 
+interface RootState {
+  user: {
+    isAuthenticated: boolean;
+  };
+}
+
 interface PlatformStatsShowcaseDarkProps {
   className?: string;
 }
@@ -22,6 +29,9 @@ export const PlatformStatsShowcaseDark = ({
   className,
 }: PlatformStatsShowcaseDarkProps) => {
   const [activeTab, setActiveTab] = useState<number>(0);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.user.isAuthenticated,
+  );
 
   // Define the tabs with their content
   const tabs = [
@@ -147,7 +157,7 @@ export const PlatformStatsShowcaseDark = ({
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded-xl bg-black text-white',
+        'relative overflow-hidden rounded-xl bg-card text-card-foreground',
         className,
       )}
     >
@@ -161,25 +171,25 @@ export const PlatformStatsShowcaseDark = ({
             animate={{ opacity: 1, translateY: 0 }}
             transition={{ delay: i * 0.1 }}
           >
-            <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-purple-800">
+            <div className="bg-primary/20 mb-3 flex h-14 w-14 items-center justify-center rounded-full text-primary">
               {stat.icon}
             </div>
             <div className="text-2xl font-bold">{stat.value}</div>
-            <div className="text-sm text-gray-400">{stat.label}</div>
+            <div className="text-sm text-muted-foreground">{stat.label}</div>
           </motion.div>
         ))}
       </div>
 
       {/* Tab navigation */}
-      <div className="flex border-t border-gray-800">
+      <div className="flex border-t border-border">
         {tabs.map((tab, index) => (
           <motion.button
             key={index}
             className={cn(
               'flex flex-1 items-center justify-center gap-2 border-t-2 px-4 py-4 text-sm font-medium transition-all duration-200',
               activeTab === index
-                ? 'border-purple-600 text-white'
-                : 'border-transparent text-gray-500 hover:text-gray-300',
+                ? 'border-primary text-foreground'
+                : 'border-transparent text-muted-foreground hover:text-foreground',
             )}
             onClick={() => setActiveTab(index)}
             whileHover={{ translateY: -2 }}
@@ -206,14 +216,14 @@ export const PlatformStatsShowcaseDark = ({
               <div className="w-full lg:w-1/2">
                 <div className="mb-8 space-y-6">
                   <div className="flex items-start">
-                    <div className="mr-4 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-purple-800">
+                    <div className="bg-primary/20 mr-4 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-primary">
                       {tabs[activeTab].icon}
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold text-white">
+                      <h3 className="text-xl font-bold text-foreground">
                         {tabs[activeTab].title}
                       </h3>
-                      <p className="text-gray-400">
+                      <p className="text-muted-foreground">
                         {tabs[activeTab].description}
                       </p>
                     </div>
@@ -230,7 +240,7 @@ export const PlatformStatsShowcaseDark = ({
                       animate={{ opacity: 1, translateX: 0 }}
                       transition={{ delay: i * 0.1 }}
                     >
-                      <div className="mr-3 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-purple-800 text-white">
+                      <div className="bg-primary/20 mr-3 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-primary">
                         <svg
                           width="12"
                           height="12"
@@ -246,7 +256,9 @@ export const PlatformStatsShowcaseDark = ({
                           />
                         </svg>
                       </div>
-                      <span className="text-sm text-gray-300">{feature}</span>
+                      <span className="text-sm text-muted-foreground">
+                        {feature}
+                      </span>
                     </motion.div>
                   ))}
                 </div>
@@ -255,20 +267,20 @@ export const PlatformStatsShowcaseDark = ({
               {/* Right column - Visual */}
               <div className="w-full lg:w-1/2">
                 <motion.div
-                  className="relative h-64 w-full rounded-xl bg-gray-900 p-6"
+                  className="relative h-64 w-full rounded-xl bg-muted p-6"
                   initial={{ scale: 0.95, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ delay: 0.2 }}
                 >
                   <div className="flex h-full w-full items-center justify-center">
                     <div className="text-center">
-                      <div className="mb-4 text-5xl text-purple-500">
+                      <div className="mb-4 text-5xl text-primary">
                         {tabs[activeTab].icon}
                       </div>
-                      <h4 className="text-xl font-bold text-white">
+                      <h4 className="text-xl font-bold text-foreground">
                         {tabs[activeTab].name}
                       </h4>
-                      <p className="mt-2 text-sm text-gray-400">
+                      <p className="mt-2 text-sm text-muted-foreground">
                         Explore our {tabs[activeTab].name.toLowerCase()} to
                         accelerate your learning
                       </p>
@@ -282,33 +294,21 @@ export const PlatformStatsShowcaseDark = ({
       </div>
 
       {/* Call to action */}
-      <div className="border-t border-gray-800 p-6">
-        <Link
-          href="/roadmaps"
-          className="group inline-flex items-center rounded-full bg-gradient-to-r from-purple-600 to-purple-800 px-6 py-3 text-lg font-semibold text-white transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/30"
+      <div className="border-t border-border p-6">
+        <CustomLink
+          variant="default"
+          size="lg"
+          href={isAuthenticated ? '/dashboard' : '/career-roadmap'}
         >
-          Explore Roadmaps
-          <motion.div
-            animate={{ translateX: [0, 5, 0] }}
-            transition={{
-              repeat: Infinity,
-              duration: 1.5,
-              ease: 'easeInOut',
-            }}
-          >
-            <svg
-              className="ml-2 h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </motion.div>
-        </Link>
+          {isAuthenticated ? 'Go to Dashboard' : 'Explore Roadmaps'}
+          <svg className="ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path
+              fillRule="evenodd"
+              d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </CustomLink>
       </div>
     </div>
   );

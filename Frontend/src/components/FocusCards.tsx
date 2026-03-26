@@ -140,7 +140,6 @@ export const FocusCards: React.FC<FocusCardsProps> = ({ roadmaps }) => {
             </Button>
             <Button
               size="sm"
-              className="hover:bg-primary/90 bg-primary"
               disabled={!roadmap?.id}
               onClick={() => {
                 if (!roadmap?.isEnrolled) {

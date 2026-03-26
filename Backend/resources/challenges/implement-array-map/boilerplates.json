@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nfunction myMap<T, U>(arr: T[], callback: (value: T, index: number, array: T[]) => U): U[]",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

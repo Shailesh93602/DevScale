@@ -1,0 +1,6 @@
+{
+  "typescript": "class MessageQueue {\n    produce(topic: string, message: any): void {\n        // Your code here\n    }\n\n    consume(topic: string, groupId: string): any[] {\n        // Your code here\n    }\n}",
+  "javascript": "class MessageQueue {\n    produce(topic, message) {\n        // Your code here\n    }\n\n    consume(topic, groupId) {\n        // Your code here\n    }\n}",
+  "python": "class MessageQueue:\n    def produce(self, topic: str, message: any) -> None:\n        # Your code here\n        pass\n\n    def consume(self, topic: str, group_id: str) -> list:\n        # Your code here\n        pass"
+}
+

@@ -1,0 +1,10 @@
+{
+  "typescript": "function reverse(x: number): number {\n  // Your code here\n}",
+  "javascript": "/**\n * @param {number} x\n * @return {number}\n */\nvar reverse = function(x) {\n  // Your code here\n};",
+  "python": "class Solution:\n    def reverse(self, x: int) -> int:\n        # Your code here\n        pass",
+  "java": "class Solution {\n    public int reverse(int x) {\n        // Your code here\n    }\n}",
+  "cpp": "class Solution {\npublic:\n    int reverse(int x) {\n        // Your code here\n    }\n};",
+  "go": "func reverse(x int) int {\n    // Your code here\n}",
+  "rust": "impl Solution {\n    pub fn reverse(x: i32) -> i32 {\n        // Your code here\n    }\n}",
+  "csharp": "public class Solution {\n    public int Reverse(int x) {\n        // Your code here\n    }\n}"
+}

@@ -1,8 +1,8 @@
 import { Server as SocketIOServer, Socket } from 'socket.io';
-import { Server as HttpServer } from 'node:http';
-import logger from '@/utils/logger';
-import { verifyToken } from '@/utils/jwt';
-import { CORS_ORIGIN } from '@/config';
+import { Server as HttpServer } from 'http';
+import logger from '../utils/logger';
+import { verifyToken } from '../utils/jwt';
+import { CORS_ORIGIN } from '../config';
 
 // Define socket event types
 export enum SocketEvents {
@@ -88,13 +88,37 @@ export interface ChatMessage {
 
 class SocketService {
   private io: SocketIOServer | null = null;
-  private readonly userSockets: Map<string, string[]> = new Map(); // userId -> socketIds
-  private readonly battleRooms: Map<string, Set<string>> = new Map(); // battleId -> userIds
+  private userSockets: Map<string, string[]> = new Map(); // userId -> socketIds
+  private battleRooms: Map<string, Set<string>> = new Map(); // battleId -> userIds
 
   initialize(server: HttpServer) {
     this.io = new SocketIOServer(server, {
       cors: {
-        origin: CORS_ORIGIN || '*',
+        origin: function (origin, callback) {
+          if (!origin) return callback(null, true);
+
+          if (process.env.NODE_ENV === 'production') {
+            const allowedOrigins = (CORS_ORIGIN || '')
+              .split(',')
+              .map((o) => o.trim())
+              .filter(Boolean);
+            if (
+              allowedOrigins.length === 0 ||
+              allowedOrigins.includes(origin)
+            ) {
+              return callback(null, true);
+            }
+            return callback(new Error('Origin not allowed by CORS'));
+          }
+
+          // Development: allow localhost + private network
+          const isAllowed =
+            /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin) ||
+            /^https?:\/\/(192\.168|10\.|172\.(1[6-9]|2\d|3[01]))\.\d{1,3}\.\d{1,3}(:\d+)?$/.test(
+              origin
+            );
+          callback(isAllowed ? null : new Error('Origin not allowed'), isAllowed);
+        },
         methods: ['GET', 'POST'],
         credentials: true,
       },
@@ -120,8 +144,8 @@ class SocketService {
           return next(new Error('Authentication token is missing'));
         }
 
-        const decoded = verifyToken(token) as DecodedToken;
-        if (!decoded?.userId) {
+        const decoded = (await verifyToken(token)) as DecodedToken;
+        if (!decoded || !decoded.userId) {
           return next(new Error('Invalid authentication token'));
         }
 
@@ -159,9 +183,12 @@ class SocketService {
 
       logger.info(`User ${userId} connected with socket ${socket.id}`);
 
-      // Handle battle join
+      // Handle battle join (also used for reconnect)
       socket.on(SocketEvents.BATTLE_JOIN, (data: { battle_id: string }) => {
         this.joinBattleRoom(socket, userId, data.battle_id);
+        // battle:state is sent by the battleSocketService via emitToSocket
+        // after the HTTP join call; on reconnect the client re-emits battle:join
+        // and the state broadcast is triggered externally by the controller.
       });
 
       // Handle battle leave
@@ -297,54 +324,59 @@ class SocketService {
     return this.userSockets.get(userId)?.length || 0;
   }
 
-  // Public methods for emitting events
+  // ── Public emit helpers ──────────────────────────────────────────────────
 
-  // Update battle state for all participants
+  /** Broadcast an event to everyone in a battle room */
+  emitToRoom(battleId: string, event: string, data: unknown) {
+    if (!this.io) return;
+    this.io.to(`battle:${battleId}`).emit(event, data);
+  }
+
+  /** Emit an event only to a specific socket ID (e.g. on reconnect) */
+  emitToSocket(socketId: string, event: string, data: unknown) {
+    if (!this.io) return;
+    this.io.to(socketId).emit(event, data);
+  }
+
+  /**
+   * Emit a private event to a specific user who is in a battle room.
+   * Finds the socket(s) for the user and emits individually.
+   */
+  emitToUser(battleId: string, userId: string, event: string, data: unknown) {
+    if (!this.io) return;
+    const socketIds = this.userSockets.get(userId) || [];
+    for (const sid of socketIds) {
+      this.io.to(sid).emit(event, data);
+    }
+  }
+
+  // ── Legacy helpers (kept for backwards compat during transition) ─────────
+
   updateBattleState(battleId: string, stateUpdate: BattleStateUpdate) {
-    if (!this.io) return;
-    this.io
-      .to(`battle:${battleId}`)
-      .emit(SocketEvents.BATTLE_STATE_UPDATE, stateUpdate);
-    logger.info(`Battle ${battleId} state updated: ${stateUpdate.status}`);
+    this.emitToRoom(battleId, SocketEvents.BATTLE_STATE_UPDATE, stateUpdate);
   }
 
-  // Update score for a participant
   updateScore(battleId: string, scoreUpdate: ScoreUpdate) {
-    if (!this.io) return;
-    this.io
-      .to(`battle:${battleId}`)
-      .emit(SocketEvents.BATTLE_SCORE_UPDATE, scoreUpdate);
+    this.emitToRoom(battleId, SocketEvents.BATTLE_SCORE_UPDATE, scoreUpdate);
   }
 
-  // Sync timer for all participants
   syncTimer(battleId: string, timerSync: TimerSync) {
-    if (!this.io) return;
-    this.io
-      .to(`battle:${battleId}`)
-      .emit(SocketEvents.BATTLE_TIMER_SYNC, timerSync);
+    this.emitToRoom(battleId, SocketEvents.BATTLE_TIMER_SYNC, timerSync);
   }
 
-  // Notify about question change
   changeQuestion(battleId: string, questionId: string, questionIndex: number) {
-    if (!this.io) return;
-    this.io.to(`battle:${battleId}`).emit(SocketEvents.BATTLE_QUESTION_CHANGE, {
+    this.emitToRoom(battleId, SocketEvents.BATTLE_QUESTION_CHANGE, {
       battle_id: battleId,
       question_id: questionId,
       question_index: questionIndex,
     });
   }
 
-  // Notify about battle completion
   completeBattle(battleId: string, results: unknown) {
-    if (!this.io) return;
-    this.io.to(`battle:${battleId}`).emit(SocketEvents.BATTLE_COMPLETED, {
-      battle_id: battleId,
-      results,
-    });
+    this.emitToRoom(battleId, SocketEvents.BATTLE_COMPLETED, { battle_id: battleId, results });
     logger.info(`Battle ${battleId} completed`);
   }
 
-  // Get connected users in a battle
   getConnectedUsers(battleId: string): string[] {
     return Array.from(this.battleRooms.get(battleId) || []);
   }

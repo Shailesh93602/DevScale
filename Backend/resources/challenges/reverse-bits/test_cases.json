@@ -1,3 +1,29 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  {
+    "input": "43261596",
+    "output": "964176192",
+    "is_hidden": false
+  },
+  {
+    "input": "1",
+    "output": "2147483648",
+    "explanation": "1 (0...01) becomes 10...0",
+    "is_hidden": false
+  },
+  {
+    "input": "0",
+    "output": "0",
+    "is_hidden": true
+  },
+  {
+    "input": "2147483647",
+    "output": "4294967294",
+    "is_hidden": true
+  },
+  {
+    "input": "4294967295",
+    "output": "4294967295",
+    "explanation": "All 1s remains all 1s",
+    "is_hidden": true
+  }
 ]

@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nfunction featureEngineeringPipeline(data: any[][], columns: string[], operations: string[]): { features: number[][]; column_names: string[] }",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

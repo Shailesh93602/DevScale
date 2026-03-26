@@ -1,0 +1,8 @@
+{
+  "typescript": "function findItinerary(tickets: string[][]): string[] {\n  // Your code here\n}",
+  "javascript": "/**\n * @param {string[][]} tickets\n * @return {string[]}\n */\nvar findItinerary = function(tickets) {\n  // Your code here\n};",
+  "python": "import collections\n\nclass Solution:\n    def findItinerary(self, tickets: List[List[str]]) -> List[str]:\n        # Your code here\n        pass",
+  "java": "import java.util.*;\n\nclass Solution {\n    public List<String> findItinerary(List<List<String>> tickets) {\n        // Your code here\n    }\n}",
+  "cpp": "class Solution {\npublic:\n    vector<string> findItinerary(vector<vector<string>>& tickets) {\n        // Your code here\n    }\n};",
+  "go": "func findItinerary(tickets [][]string) []string {\n    // Your code here\n}"
+}

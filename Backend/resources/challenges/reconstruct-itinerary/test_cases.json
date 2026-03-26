@@ -1,3 +1,17 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  {
+    "input": "[[\"MUC\",\"LHR\"],[\"JFK\",\"MUC\"],[\"SFO\",\"SJC\"],[\"LHR\",\"SFO\"]]",
+    "output": "[\"JFK\",\"MUC\",\"LHR\",\"SFO\",\"SJC\"]",
+    "is_hidden": false
+  },
+  {
+    "input": "[[\"JFK\",\"SFO\"],[\"JFK\",\"ATL\"],[\"SFO\",\"ATL\"],[\"ATL\",\"JFK\"],[\"ATL\",\"SFO\"]]",
+    "output": "[\"JFK\",\"ATL\",\"JFK\",\"SFO\",\"ATL\",\"SFO\"]",
+    "is_hidden": false
+  },
+  {
+    "input": "[[\"JFK\",\"KUL\"],[\"JFK\",\"NRT\"],[\"NRT\",\"JFK\"]]",
+    "output": "[\"JFK\",\"NRT\",\"JFK\",\"KUL\"]",
+    "is_hidden": true
+  }
 ]

@@ -48,7 +48,7 @@ const preventPrototypePollution = (
   }
   for (const key in req.body) {
     if (pollutingKeys.has(key)) {
-      delete req.body[key];
+      delete req.query[key];
     }
   }
 
@@ -131,7 +131,7 @@ function initializeSwagger() {
   app.use(
     '/api-docs/',
     swaggerUi.serve,
-    swaggerUi.setup(swaggerSpec as Record<string, unknown>, {
+    swaggerUi.setup(swaggerSpec as any, {
       customSiteTitle: 'API Documentation',
     })
   );

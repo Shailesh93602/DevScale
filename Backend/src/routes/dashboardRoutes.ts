@@ -25,6 +25,9 @@ export class DashboardRoutes extends BaseRouter {
     // Apply rate limiter to all dashboard routes
     this.router.use(this.dashboardLimiter);
 
+    // Aggregated summary endpoint — replaces 7 individual dashboard calls
+    this.router.get('/summary', this.dashboardController.getDashboardSummary);
+
     this.router.get('/stats', this.dashboardController.getDashboardStats);
     this.router.get(
       '/activities',

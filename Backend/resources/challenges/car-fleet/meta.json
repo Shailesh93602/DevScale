@@ -15,5 +15,6 @@
   "example_output": "3",
   "constraints": "- `n == position.length == speed.length`\n- `1 <= n <= 10^5`\n- `0 < target <= 10^6`\n- `0 <= position[i] < target`\n- `0 < speed[i] <= 10^6`",
   "function_signature": "function carFleet(target: number, position: number[], speed: number[]): number {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

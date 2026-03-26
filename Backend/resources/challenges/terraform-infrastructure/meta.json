@@ -14,6 +14,7 @@
   "example_input": "{ region: 'us-east-1', vpcCidr: '10.0.0.0/16', azCount: 3, instanceType: 't3.medium', dbEngine: 'postgres' }",
   "example_output": "Terraform configuration with VPC, public/private subnets, NAT gateway, EC2 ASG, RDS, and security groups",
   "constraints": "- Must use variables for all configurable values\\n- Must include proper tagging\\n- Must separate public and private subnets\\n- Must use security groups with least-privilege rules\\n- Must include outputs for key resource IDs",
-  "function_signature": "function generateTerraformConfig(config: { region: string; vpcCidr: string; azCount: number; instanceType: string; dbEngine: string }): string",
-  "status": "ACTIVE"
+  "function_signature": "function generateTerraformConfig(config: { region: string; vpcCidr: string; azCount: number; instanceType: string; dbEngine: string }): string {}",
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

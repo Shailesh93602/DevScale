@@ -38,5 +38,6 @@
   "example_output": "true",
   "constraints": "- The number of nodes in `root` is in the range `[1, 2000]`.\n- The number of nodes in `subRoot` is in the range `[1, 1000]`.\n- `-10^4 <= root.val <= 10^4`\n- `-10^4 <= subRoot.val <= 10^4`",
   "function_signature": "function isSubtree(root: TreeNode | null, subRoot: TreeNode | null): boolean {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

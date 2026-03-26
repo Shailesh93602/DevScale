@@ -14,6 +14,7 @@
   "example_input": "myMap([1, 2, 3], x => x * 2)",
   "example_output": "[2, 4, 6]",
   "constraints": "Callback receives (element, index, array). Must not mutate the original array.",
-  "function_signature": "function myMap<T, U>(arr: T[], callback: (value: T, index: number, array: T[]) => U): U[]",
-  "status": "ACTIVE"
+  "function_signature": "function myMap<T, U>(arr: T[], callback: (value: T, index: number, array: T[]) => U): U[] {}",
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

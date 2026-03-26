@@ -1,47 +1,47 @@
 # Design a News Feed System
 
-## Problem Description
-
-Design a scalable news feed system similar to Facebook or Twitter. A news feed is a constantly updating list of stories in the middle of your home page. It includes status updates, photos, videos, links, and app activities from people, pages, and groups you follow.
+Design a scalable and low-latency News Feed system similar to Facebook's News Feed, Twitter's Timeline, or Instagram's Feed. A news feed is a constantly updating list of stories from people, pages, and groups that a user follows.
 
 ## Requirements
 
 ### Functional Requirements
-1. **Publish Post**: A user can publish a new post.
-2. **View Feed**: A user can see a news feed containing posts from people they follow, sorted by time (reverse chronological) or relevance.
-3. **Follow/Unfollow**: Users can follow and unfollow other users.
+1. **Publish Post**: Users can publish text, image, or video posts.
+2. **Retrieve News Feed**: Users can see a list of posts from people they follow, ordered by time (reverse chronological) or a ranking algorithm.
+3. **Friendship/Following**: Users can follow and unfollow other users.
 
 ### Non-Functional Requirements
-1. **Low Latency**: Generating a news feed shouldn't take more than 200ms.
-2. **High Availability**: The system should be always available for reading feeds.
-3. **Scalability**: Support 300M+ daily active users and handle "celebrity" users with millions of followers.
-4. **Reliability**: A published post should eventually appear in all followers' feeds.
+1. **Low Latency**: Fetching the feed should be extremely fast (< 200ms).
+2. **High Availability**: Reading your feed is the most frequent operation; it must always be available.
+3. **Reliability**: Posts must not be lost once "published".
+4. **Scalability**: Support hundreds of millions of users and handle the high "fan-out" required when a celebrity (with millions of followers) posts.
 
-## API Design
+## Architecture Patterns to Consider
 
-```typescript
-class NewsFeedService {
-  /**
-   * Returns a list of posts for the user's news feed.
-   */
-  getFeed(userId: string, options: FeedOptions): Post[];
+### 1. The Pull Model (Fan-out on Load)
+News feed is generated at the time of the request.
+*   **Pros**: Efficient for users who post a lot but have few followers.
+*   **Cons**: Slow "get feed" operation as it requires joining multiple tables/shards.
 
-  /**
-   * Publishes a new post from a user.
-   */
-  publishPost(userId: string, content: string): Post;
-}
-```
+### 2. The Push Model (Fan-out on Write)
+News feed is pre-computed and stored in a "feed cache" for each user.
+*   **Pros**: Blazing fast reads.
+*   **Cons**: Massive "fan-out" overhead when a user with many followers posts.
+
+### 3. The Hybrid Model
+*   Use the **Push Model** for regular users.
+*   Use the **Pull Model** for celebrities (fans pull celebrity posts and merge them into their pre-computed feed on-the-fly).
 
 ## Examples
 
-### Example 1
-**User 1 follows User 2 and User 3.**
-User 2 posts at 10:00 AM.
-User 3 posts at 10:05 AM.
-**User 1's Feed**: `[Post from User 3, Post from User 2]`
+**Example Scenario**:
+1. User A follows B, C, and D.
+2. B posts a photo. The system "fans out" this post by adding its ID to the pre-computed feed caches of all B's followers (including A).
+3. A opens the app and calls `getFeed()`.
+4. The system fetches the list of post IDs from A's feed cache in Redis and returns the post details.
 
 ## Constraints
-- A user can follow up to 5,000 people.
-- A user can have millions of followers.
-- Posts can include text and media IDs.
+- Max 5,000 friends/follows per user.
+- Celebrity users can have 100M+ followers.
+- Storage: Posts are stored in a distributed NoSQL database (e.g., Cassandra).
+- Caching: Recent feeds are stored in a distributed memory store (e.g., Redis).
+

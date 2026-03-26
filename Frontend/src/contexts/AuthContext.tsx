@@ -19,13 +19,12 @@ import React, {
   useContext,
   useEffect,
   useState,
-  useMemo,
   useCallback,
   ReactNode,
 } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import type { Session } from '@supabase/supabase-js';
-import { UserRole, type IUser } from '@/types';
+import type { Session, User as SupabaseUser } from '@supabase/supabase-js';
+import type { IUser, UserRole } from '@/types';
 
 // ─── Auth State ───────────────────────────────────────────────────────────────
 export type AuthStatus = 'loading' | 'authenticated' | 'unauthenticated';
@@ -69,6 +68,62 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const supabase = createClient();
 
+  const buildFallbackUser = useCallback((currentSession: Session): IUser => {
+    const email = currentSession.user.email ?? '';
+    const fullName = (currentSession.user.user_metadata?.full_name as string | undefined) ?? '';
+    const [firstName = '', ...rest] = fullName.split(' ');
+    const lastName = rest.join(' ');
+
+    return {
+      id: currentSession.user.id,
+      username: email.split('@')[0] || 'user',
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      avatar_url: '',
+      bio: '',
+      address: '',
+      github_url: '',
+      linkedin_url: '',
+      twitter_url: '',
+      website_url: '',
+      specialization: '',
+      college: '',
+      graduation_year: new Date().getFullYear(),
+      skills: [],
+      experience_level: '',
+      role: null,
+    };
+  }, []);
+
+  const buildFallbackUserFromAuthUser = useCallback((authUser: SupabaseUser): IUser => {
+    const email = authUser.email ?? '';
+    const fullName = (authUser.user_metadata?.full_name as string | undefined) ?? '';
+    const [firstName = '', ...rest] = fullName.split(' ');
+    const lastName = rest.join(' ');
+
+    return {
+      id: authUser.id,
+      username: email.split('@')[0] || 'user',
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      avatar_url: '',
+      bio: '',
+      address: '',
+      github_url: '',
+      linkedin_url: '',
+      twitter_url: '',
+      website_url: '',
+      specialization: '',
+      college: '',
+      graduation_year: new Date().getFullYear(),
+      skills: [],
+      experience_level: '',
+      role: null,
+    };
+  }, []);
+
   /**
    * Fetch the full user profile (with role) from our backend.
    * We use a direct fetch here (not the useAxios hook) because:
@@ -110,8 +165,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } = await supabase.auth.getSession();
 
     if (!currentSession?.access_token) {
-      setUser(null);
-      setStatus('unauthenticated');
+      const {
+        data: { user: authUser },
+      } = await supabase.auth.getUser();
+
+      if (authUser) {
+        setUser(buildFallbackUserFromAuthUser(authUser));
+        setStatus('authenticated');
+      } else {
+        setUser(null);
+        setStatus('unauthenticated');
+      }
       return;
     }
 
@@ -120,10 +184,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(profile);
       setStatus('authenticated');
     } else {
-      setUser(null);
-      setStatus('unauthenticated');
+      // Keep user authenticated if Supabase session is valid even when profile API is unavailable.
+      setUser(buildFallbackUser(currentSession));
+      setStatus('authenticated');
     }
-  }, [supabase, fetchUserProfile]);
+  }, [supabase, fetchUserProfile, buildFallbackUser, buildFallbackUserFromAuthUser]);
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
@@ -143,9 +208,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       setSession(newSession);
 
-      if (event === 'SIGNED_OUT' || !newSession) {
+      if (event === 'SIGNED_OUT') {
         setUser(null);
         setStatus('unauthenticated');
+        return;
+      }
+
+      if (!newSession) {
+        const {
+          data: { user: authUser },
+        } = await supabase.auth.getUser();
+        if (!mounted) return;
+
+        if (authUser) {
+          setUser(buildFallbackUserFromAuthUser(authUser));
+          setStatus('authenticated');
+        } else {
+          setUser(null);
+          setStatus('unauthenticated');
+        }
         return;
       }
 
@@ -161,8 +242,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setUser(profile);
           setStatus('authenticated');
         } else {
-          setUser(null);
-          setStatus('unauthenticated');
+          // Do not downgrade to unauthenticated on transient profile API failures.
+          setUser(buildFallbackUser(newSession));
+          setStatus('authenticated');
         }
       }
     });
@@ -171,12 +253,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, [supabase, fetchUserProfile]);
+  }, [supabase, fetchUserProfile, buildFallbackUser, buildFallbackUserFromAuthUser]);
 
   // ─── RBAC Helpers ─────────────────────────────────────────────────────────
   const hasRole = useCallback(
     (role: UserRole): boolean => {
-      return user?.role === role;
+      if (!user?.role?.name) return false;
+      return user.role.name.toUpperCase() === role.toUpperCase();
     },
     [user],
   );
@@ -188,35 +271,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [hasRole],
   );
 
-  const isAdmin = user?.role === UserRole.ADMIN;
-  const isStudent = user?.role === UserRole.STUDENT;
+  const isAdmin = hasRole('ADMIN');
+  const isStudent = hasRole('STUDENT');
 
-  const value = useMemo(
-    () => ({
-      status,
-      isLoading: status === 'loading',
-      isAuthenticated: status === 'authenticated',
-      user,
-      session,
-      hasRole,
-      hasAnyRole,
-      isAdmin,
-      isStudent,
-      refreshUser,
-      signOut,
-    }),
-    [
-      status,
-      user,
-      session,
-      hasRole,
-      hasAnyRole,
-      isAdmin,
-      isStudent,
-      refreshUser,
-      signOut,
-    ],
-  );
+  const value: AuthContextValue = {
+    status,
+    isLoading: status === 'loading',
+    isAuthenticated: status === 'authenticated',
+    user,
+    session,
+    hasRole,
+    hasAnyRole,
+    isAdmin,
+    isStudent,
+    refreshUser,
+    signOut,
+  };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

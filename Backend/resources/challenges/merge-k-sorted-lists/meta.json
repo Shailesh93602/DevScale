@@ -40,5 +40,6 @@
   "example_output": "[1,1,2,3,4,4,5,6]",
   "constraints": "- `k == lists.length`\n- `0 <= k <= 10^4`\n- `0 <= lists[i].length <= 500`\n- `-10^4 <= lists[i][j] <= 10^4`\n- `lists[i]` is sorted in **ascending** order.\n- The sum of `lists[i].length` will not exceed `10^4`.",
   "function_signature": "function mergeKLists(lists: Array<ListNode | null>): ListNode | null {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

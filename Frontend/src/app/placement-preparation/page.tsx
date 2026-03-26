@@ -3,8 +3,9 @@
 import { PinContainer } from '@/components/3dPin';
 import { HoverEffect } from '@/components/CardHoverEffect';
 import { InfiniteMovingCards } from '@/components/InfiniteMovingCards';
-import { HoverBorderGradient } from '@/components/HoverBorderGradient';
 import { AceternityLogo } from '@/components/AceternityLogo';
+import { Button } from '@/components/ui/button';
+import { CustomLink } from '@/components/ui/custom-link';
 
 export default function PlacementPreparation() {
   // const router = useRouter();
@@ -141,7 +142,7 @@ export default function PlacementPreparation() {
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-5 lg:px-8">
-      {/* <h1 className="text-4xl font-bold dark:text-gray-200 text-gray-900 mb-6"> */}
+      {/* <h1 className="text-4xl font-bold text-foreground mb-6"> */}
       {/* Placement Preparation */}
       {/* </h1> */}
 
@@ -150,14 +151,14 @@ export default function PlacementPreparation() {
         <PinContainer title="coding-challenges" href="/coding-challenges">
           <div className="flex h-[20rem] w-[20rem] basis-full flex-col p-4 tracking-tight sm:basis-1/2">
             <h3 className="!m-0 max-w-xs !pb-2 text-base font-bold">
-              Mr Engineer
+              EduScale
             </h3>
             <div className="!m-0 !p-0 text-base font-normal">
               <span className="text-grayText">
-                conqueror your dream job by solving coding questions
+                conquer your dream job by solving coding questions
               </span>
             </div>
-            <div className="mt-4 flex w-full flex-1 rounded-lg bg-gradient-to-br from-violet-500 via-purple-500 to-blue-500" />
+            <div className="via-purple-500 to-blue-500 mt-4 flex w-full flex-1 rounded-lg bg-gradient-to-br from-violet-500" />
           </div>
         </PinContainer>
         <p className="mt-14">
@@ -166,15 +167,14 @@ export default function PlacementPreparation() {
           in placement exams.
         </p>
         <div className="pt-5">
-          <HoverBorderGradient
-            href="#"
-            containerClassName="rounded-full"
-            as="button"
-            className="flex items-center space-x-2 bg-primary text-white hover:bg-primary2"
+          <CustomLink
+            variant="default"
+            href="/coding-challenges"
+            className="flex items-center gap-2"
           >
             <AceternityLogo />
             <span>Start Practice Tests</span>
-          </HoverBorderGradient>
+          </CustomLink>
         </div>
       </div>
 
@@ -187,14 +187,10 @@ export default function PlacementPreparation() {
           we’ve got you covered.
         </p>
         <div className="pt-5">
-          <HoverBorderGradient
-            containerClassName="rounded-full"
-            as="button"
-            className="flex items-center space-x-2 bg-primary text-white hover:bg-primary2"
-          >
+          <Button className="flex items-center gap-2">
             <AceternityLogo />
             <span>Read Interview Tips</span>
-          </HoverBorderGradient>
+          </Button>
         </div>
       </div>
 
@@ -206,14 +202,10 @@ export default function PlacementPreparation() {
           effectively.
         </p>
         <div className="pt-5">
-          <HoverBorderGradient
-            containerClassName="rounded-full"
-            as="button"
-            className="flex items-center space-x-2 bg-primary text-white hover:bg-primary2"
-          >
+          <Button className="flex items-center gap-2">
             <AceternityLogo />
             <span>Build your Resume</span>
-          </HoverBorderGradient>
+          </Button>
         </div>
       </div>
 
@@ -232,15 +224,14 @@ export default function PlacementPreparation() {
           and experiences clearly.
         </p>
         <div className="pt-5">
-          <HoverBorderGradient
+          <CustomLink
+            variant="default"
             href="/interview-question"
-            containerClassName="rounded-full"
-            as="button"
-            className="flex items-center space-x-2 bg-primary text-white hover:bg-primary2"
+            className="flex items-center gap-2"
           >
             <AceternityLogo />
             <span>view Questions</span>
-          </HoverBorderGradient>
+          </CustomLink>
         </div>
       </div>
     </div>

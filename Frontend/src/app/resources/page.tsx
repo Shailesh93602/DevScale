@@ -15,6 +15,7 @@ import { HoverBorderGradient } from '@/components/HoverBorderGradient';
 import { AceternityLogo } from '@/components/AceternityLogo';
 import { useAxiosGet } from '@/hooks/useAxios';
 import { IResource } from '@/constants';
+import { logger } from '@/lib/logger';
 
 const ResourcesPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -25,7 +26,7 @@ const ResourcesPage = () => {
 
   const dispatch = useDispatch();
   const observerRef = useRef<IntersectionObserver>(null);
-  const [getResources] = useAxiosGet<{ data: IResource[] }>('/subjects');
+  const [getResources] = useAxiosGet<IResource[]>('/subjects');
 
   const fetchResources = async (
     searchTerm: string,
@@ -45,14 +46,14 @@ const ResourcesPage = () => {
         },
       });
 
-      const newResources: IResource[] = response.data?.data ?? [];
+      const newResources: IResource[] = response.data ?? [];
 
       setResources((prev) =>
         isAppending ? [...prev, ...newResources] : newResources,
       );
       setHasMore(newResources.length > 0);
     } catch (error) {
-      console.error('Error fetching resources:', error);
+      logger.error('Error fetching resources:', error);
       toast.error('Error fetching resources. Please try again.');
     } finally {
       dispatch(hideLoader('fetching resources'));
@@ -161,11 +162,11 @@ const ResourcesPage = () => {
               ))}
             </div>
           ) : (
-            <div className="rounded-md border-l-4 border-yellow-400 bg-yellow-50 p-4 dark:bg-yellow-900">
+            <div className="rounded-md border-l-4 border-warning bg-warning/15 p-4">
               <div className="flex">
                 <div className="flex-shrink-0">
                   <svg
-                    className="h-5 w-5 text-yellow-400"
+                    className="h-5 w-5 text-warning"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                     aria-hidden="true"
@@ -178,10 +179,10 @@ const ResourcesPage = () => {
                   </svg>
                 </div>
                 <div className="ml-3">
-                  <h3 className="text-sm font-medium text-yellow-800 dark:text-yellow-100">
+                  <h3 className="text-sm font-medium text-warning">
                     No resources found
                   </h3>
-                  <div className="mt-2 text-sm text-yellow-700 dark:text-yellow-200">
+                  <div className="mt-2 text-sm text-warning">
                     <p>
                       Try adjusting your search or browse our categories for
                       more options.
@@ -193,8 +194,8 @@ const ResourcesPage = () => {
           )}
 
           {loadingMore && (
-            <div className="mt-8 text-center text-gray-600 dark:text-gray-300">
-              <div className="inline-block h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-gray-900 dark:border-gray-100"></div>
+            <div className="mt-8 text-center text-muted-foreground">
+              <div className="inline-block h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-foreground"></div>
               <p className="mt-2">Loading more resources...</p>
             </div>
           )}

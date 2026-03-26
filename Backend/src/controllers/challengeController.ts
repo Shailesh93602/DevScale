@@ -2,13 +2,36 @@ import { Difficulty } from '@prisma/client';
 import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
 import { sendResponse } from '../utils/apiResponse';
-import { ChallengeRepository } from '@/repositories/challengeRepository';
+import { ChallengeRepository } from '../repositories/challengeRepository';
+import prisma from '../lib/prisma';
 export default class ChallengeController {
   private readonly challengeRepo: ChallengeRepository;
 
   constructor() {
     this.challengeRepo = new ChallengeRepository();
   }
+
+  public getChallengeCategories = catchAsync(async (_req: Request, res: Response) => {
+    const rows = await prisma.challenge.groupBy({
+      by: ['category', 'difficulty'],
+      _count: { _all: true },
+      orderBy: { category: 'asc' },
+    });
+
+    // Group into { category, count, difficulties[] }
+    const map = new Map<string, { category: string; count: number; difficulties: string[] }>();
+    for (const row of rows) {
+      const cat = row.category as string;
+      if (!map.has(cat)) map.set(cat, { category: cat, count: 0, difficulties: [] });
+      const entry = map.get(cat)!;
+      entry.count += row._count._all;
+      if (!entry.difficulties.includes(row.difficulty)) {
+        entry.difficulties.push(row.difficulty);
+      }
+    }
+
+    return sendResponse(res, 'CHALLENGES_FETCHED', { data: Array.from(map.values()) });
+  });
 
   public getChallenges = catchAsync(async (req: Request, res: Response) => {
     const { page = 1, limit = 10, search = '' } = req.query;
@@ -22,7 +45,7 @@ export default class ChallengeController {
     );
 
     return sendResponse(res, 'CHALLENGES_FETCHED', {
-      data: { challenges: result.data },
+      data: result.data,
       meta: result.meta,
     });
   });
@@ -37,13 +60,13 @@ export default class ChallengeController {
       return sendResponse(res, 'CHALLENGE_NOT_FOUND');
     }
 
-    return sendResponse(res, 'CHALLENGE_FETCHED', { data: { challenge } });
+    return sendResponse(res, 'CHALLENGE_FETCHED', { data: challenge });
   });
 
   public createNewChallenge = catchAsync(
     async (req: Request, res: Response) => {
       const challenge = await this.challengeRepo.create(req.body);
-      return sendResponse(res, 'CHALLENGE_CREATED', { data: { challenge } });
+      return sendResponse(res, 'CHALLENGE_CREATED', { data: challenge });
     }
   );
 
@@ -54,14 +77,14 @@ export default class ChallengeController {
         where: { id },
         data: req.body,
       });
-      return sendResponse(res, 'CHALLENGE_UPDATED', { data: { challenge } });
+      return sendResponse(res, 'CHALLENGE_UPDATED', { data: challenge });
     }
   );
 
   public getChallengeStatistics = catchAsync(
     async (req: Request, res: Response) => {
       const stats = await this.challengeRepo.getChallengeStats();
-      return sendResponse(res, 'CHALLENGE_FETCHED', { data: { stats } });
+      return sendResponse(res, 'CHALLENGE_FETCHED', { data: stats });
     }
   );
 
@@ -74,7 +97,7 @@ export default class ChallengeController {
         tags: tags ? (tags as string).split(',') : undefined,
       });
 
-      return sendResponse(res, 'CHALLENGES_FETCHED', { data: { challenges } });
+      return sendResponse(res, 'CHALLENGES_FETCHED', { data: challenges });
     }
   );
 
@@ -98,7 +121,7 @@ export default class ChallengeController {
         time_spent,
       });
 
-      return sendResponse(res, 'CHALLENGE_SUBMITTED', { data: { submission } });
+      return sendResponse(res, 'CHALLENGE_SUBMITTED', { data: submission });
     }
   );
 
@@ -109,7 +132,7 @@ export default class ChallengeController {
         challengeId as string
       );
       return sendResponse(res, 'LEADERBOARD_FETCHED', {
-        data: { leaderboard },
+        data: leaderboard,
       });
     }
   );

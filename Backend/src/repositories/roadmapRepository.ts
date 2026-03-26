@@ -1,7 +1,9 @@
 import { Prisma } from '@prisma/client';
 import { createAppError } from '../middlewares/errorHandler';
+import { getCached, setCached, invalidatePattern } from '../services/memoryCache';
 import BaseRepository from './baseRepository';
 import prisma from '../lib/prisma';
+import { isUuid } from '../utils/slugify';
 import {
   CommentData,
   ConceptData,
@@ -10,8 +12,8 @@ import {
   SubjectData,
   SubjectOrder,
   TopicData,
-} from '@/types';
-import { invalidateCachePattern } from '@/services/cacheService';
+} from '../types';
+import { invalidateCachePattern } from '../services/cacheService';
 import { Request } from 'express';
 
 export default class RoadmapRepository extends BaseRepository<
@@ -19,89 +21,6 @@ export default class RoadmapRepository extends BaseRepository<
 > {
   constructor() {
     super(prisma.roadmap);
-  }
-
-  private async createTopicEntries(
-    tx: Prisma.TransactionClient,
-    subjectId: string,
-    topics: TopicData[]
-  ) {
-    for (const topicData of topics) {
-      const topic = await tx.topic.create({
-        data: {
-          title: topicData.title,
-          description: topicData.description,
-          order: topicData.order,
-          content: topicData.content,
-          resources: topicData.resources,
-          prerequisites: topicData.prerequisites,
-        },
-      });
-
-      await tx.subjectTopic.create({
-        data: {
-          subject_id: subjectId,
-          topic_id: topic.id,
-          order: topicData.order,
-        },
-      });
-    }
-  }
-
-  private async createSubjectEntries(
-    tx: Prisma.TransactionClient,
-    conceptId: string,
-    subjects: SubjectData[]
-  ) {
-    for (const subjectData of subjects) {
-      const subject = await tx.subject.create({
-        data: {
-          title: subjectData.title,
-          description: subjectData.description,
-          order: subjectData.order,
-        },
-      });
-
-      await tx.mainConceptSubject.create({
-        data: {
-          main_concept_id: conceptId,
-          subject_id: subject.id,
-          order: subjectData.order,
-        },
-      });
-
-      if (subjectData.topics) {
-        await this.createTopicEntries(tx, subject.id, subjectData.topics);
-      }
-    }
-  }
-
-  private async createConceptEntries(
-    tx: Prisma.TransactionClient,
-    roadmapId: string,
-    concepts: ConceptData[]
-  ) {
-    for (const concept of concepts) {
-      const mainConcept = await tx.mainConcept.create({
-        data: {
-          name: concept.title,
-          description: concept.description,
-          order: concept.order,
-        },
-      });
-
-      await tx.roadmapMainConcept.create({
-        data: {
-          roadmap_id: roadmapId,
-          main_concept_id: mainConcept.id,
-          order: concept.order,
-        },
-      });
-
-      if (concept.subjects) {
-        await this.createSubjectEntries(tx, mainConcept.id, concept.subjects);
-      }
-    }
   }
 
   async createRoadmap(data: RoadmapData) {
@@ -117,7 +36,66 @@ export default class RoadmapRepository extends BaseRepository<
         });
 
         if (data.concepts) {
-          await this.createConceptEntries(tx, roadmap.id, data.concepts);
+          for (const concept of data.concepts) {
+            const mainConcept = await tx.mainConcept.create({
+              data: {
+                name: concept.title,
+                description: concept.description,
+                order: concept.order,
+              },
+            });
+
+            await tx.roadmapMainConcept.create({
+              data: {
+                roadmap_id: roadmap.id,
+                main_concept_id: mainConcept.id,
+                order: concept.order,
+              },
+            });
+
+            if (concept.subjects) {
+              for (const subjectData of concept.subjects) {
+                const subject = await tx.subject.create({
+                  data: {
+                    title: subjectData.title,
+                    description: subjectData.description,
+                    order: subjectData.order,
+                  },
+                });
+
+                await tx.mainConceptSubject.create({
+                  data: {
+                    main_concept_id: mainConcept.id,
+                    subject_id: subject.id,
+                    order: subjectData.order,
+                  },
+                });
+
+                if (subjectData.topics) {
+                  for (const topicData of subjectData.topics) {
+                    const topic = await tx.topic.create({
+                      data: {
+                        title: topicData.title,
+                        description: topicData.description,
+                        order: topicData.order,
+                        content: topicData.content,
+                        resources: topicData.resources,
+                        prerequisites: topicData.prerequisites,
+                      },
+                    });
+
+                    await tx.subjectTopic.create({
+                      data: {
+                        subject_id: subject.id,
+                        topic_id: topic.id,
+                        order: topicData.order,
+                      },
+                    });
+                  }
+                }
+              }
+            }
+          }
         }
 
         return roadmap;
@@ -131,128 +109,141 @@ export default class RoadmapRepository extends BaseRepository<
     }
   }
 
-  async getRoadmap(id: string, userId?: string) {
-    const roadmap = await this.prismaClient.roadmap.findUnique({
+  /** Resolves a slug or UUID to a canonical UUID. Throws 404 if not found. */
+  private async resolveRoadmapId(idOrSlug: string): Promise<string> {
+    if (isUuid(idOrSlug)) return idOrSlug;
+    const row = await this.prismaClient.roadmap.findUnique({
+      where: { slug: idOrSlug },
+      select: { id: true },
+    });
+    if (!row) throw createAppError('Roadmap not found', 404);
+    return row.id;
+  }
+
+  async getRoadmap(idOrSlug: string, userId?: string) {
+    const id = await this.resolveRoadmapId(idOrSlug);
+    const cacheKey = `roadmap:detail:${id}:${userId || 'anon'}`;
+    const cached = getCached<any>(cacheKey);
+    if (cached) return cached;
+
+    // 1. Fetch flat roadmap info + counts (+ likes/bookmarks if logged in)
+    const roadmapPromise = this.prismaClient.roadmap.findUnique({
       where: { id },
       include: {
-        user: {
-          select: {
-            id: true,
-            username: true,
-            full_name: true,
-            avatar_url: true,
-          },
-        },
-        category: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-        main_concepts: {
-          orderBy: { order: 'asc' },
-          include: {
-            main_concept: {
-              include: {
-                subjects: {
-                  orderBy: { order: 'asc' },
-                  include: {
-                    subject: {
-                      include: {
-                        topics: {
-                          orderBy: { order: 'asc' },
-                          include: {
-                            topic: {
-                              include: {
-                                articles: true,
-                                quizzes: true,
-                                challenges: true,
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-        topics: {
-          select: {
-            topic: {
-              select: {
-                id: true,
-                title: true,
-              },
-            },
-          },
-        },
+        user: { select: { id: true, username: true, first_name: true, last_name: true, avatar_url: true } },
+        category: { select: { id: true, name: true } },
         _count: {
           select: {
             likes: true,
-            comments: {
-              where: {
-                parent_id: null,
-              },
-            },
+            comments: { where: { parent_id: null } },
             user_roadmaps: true,
             topics: true,
           },
         },
-        likes: userId
-          ? {
-              where: {
-                user_id: userId,
-              },
-              select: {
-                id: true,
-              },
-            }
-          : false,
-        user_roadmaps: userId
-          ? {
-              where: {
-                user_id: userId,
-              },
-              select: {
-                id: true,
-              },
-            }
-          : false,
+        likes: userId ? { where: { user_id: userId }, select: { id: true } } : false,
+        user_roadmaps: userId ? { where: { user_id: userId }, select: { id: true } } : false,
       },
     });
+
+    // 2. Fetch the entire nested concept tree using a single raw SQL query with JSON aggregation.
+    // This offloads the heavy JOINs and array grouping to Postgres (written in C) instead of
+    // transferring thousands of flattened rows to Node.js for Prisma to group.
+    const conceptsPromise = this.prismaClient.$queryRaw<{ main_concepts: any }[]>`
+      SELECT 
+        COALESCE(
+          jsonb_agg(
+            jsonb_build_object(
+              'main_concept', jsonb_build_object(
+                'id', mc.id,
+                'name', mc.name,
+                'description', mc.description,
+                'order', mc."order",
+                'subjects', (
+                  SELECT COALESCE(
+                    jsonb_agg(
+                      jsonb_build_object(
+                        'id', rs.id,
+                        'order', rs."order",
+                        'subject', jsonb_build_object(
+                          'id', s.id,
+                          'title', s.title,
+                          'description', s.description,
+                          'order', s."order",
+                          'topics', (
+                            SELECT COALESCE(
+                              jsonb_agg(
+                                jsonb_build_object(
+                                  'id', rt.id,
+                                  'order', rt."order",
+                                  'topic', jsonb_build_object(
+                                    'id', t.id,
+                                    'title', t.title,
+                                    'description', t.description,
+                                    'order', t."order",
+                                    '_count', jsonb_build_object(
+                                      'articles', (SELECT count(*) FROM "Article" WHERE "Article".topic_id = t.id),
+                                      'quizzes', (SELECT count(*) FROM "Quiz" WHERE "Quiz".topic_id = t.id),
+                                      'challenges', (SELECT count(*) FROM "Challenge" WHERE "Challenge".topic_id = t.id)
+                                    )
+                                  )
+                                ) ORDER BY rt."order" ASC
+                              ), '[]'::jsonb)
+                            FROM "SubjectTopic" rt
+                            JOIN "Topic" t ON t.id = rt.topic_id
+                            WHERE rt.subject_id = s.id
+                          )
+                        )
+                      ) ORDER BY rs."order" ASC
+                    ), '[]'::jsonb) FROM "MainConceptSubject" rs
+                  JOIN "Subject" s ON s.id = rs.subject_id
+                  WHERE rs.main_concept_id = mc.id
+                )
+              )
+            ) ORDER BY rmc."order" ASC
+          ), '[]'::jsonb) AS main_concepts
+      FROM "RoadmapMainConcept" rmc
+      JOIN "MainConcept" mc ON mc.id = rmc.main_concept_id
+      WHERE rmc.roadmap_id = ${id}
+    `;
+
+    // 3. Optional: fetch user progress if logged in
+    const progressPromise = userId
+      ? this.prismaClient.userProgress.findMany({
+        where: {
+          user_id: userId,
+          topic: {
+            roadmaps: { some: { roadmap_id: id } }
+          }
+        },
+        select: { is_completed: true },
+      })
+      : Promise.resolve([]);
+
+    // Execute all queries in parallel
+    const [roadmap, conceptsResult, userProgress] = await Promise.all([
+      roadmapPromise,
+      conceptsPromise,
+      progressPromise
+    ]);
 
     if (!roadmap) {
       throw createAppError('Roadmap not found', 404);
     }
 
-    // Calculate progress based on user's progress in topics
+    // Process progress
     let progress = 0;
     if (userId && roadmap.user_roadmaps && roadmap.user_roadmaps.length > 0) {
-      // Get user's progress for this roadmap's topics
-      const userProgress = await this.prismaClient.userProgress.findMany({
-        where: {
-          user_id: userId,
-          topic_id: {
-            in: roadmap.topics.map((t) => t.topic.id),
-          },
-        },
-        select: {
-          is_completed: true,
-        },
-      });
-
       const completedTopics = userProgress.filter((p) => p.is_completed).length;
-      progress =
-        roadmap.topics.length > 0
-          ? Math.round((completedTopics / roadmap.topics.length) * 100)
-          : 0;
+      progress = roadmap._count.topics > 0
+        ? Math.round((completedTopics / roadmap._count.topics) * 100)
+        : 0;
     }
 
-    return {
+    const main_concepts = conceptsResult[0]?.main_concepts || [];
+
+    const result = {
       ...roadmap,
+      main_concepts,
       likesCount: roadmap._count.likes,
       commentsCount: roadmap._count.comments,
       bookmarksCount: roadmap._count.user_roadmaps,
@@ -261,11 +252,12 @@ export default class RoadmapRepository extends BaseRepository<
       steps: roadmap._count.topics,
       isEnrolled: Boolean(roadmap.user_roadmaps?.length),
       progress: progress,
-      estimatedTime: roadmap.estimatedHours
-        ? `${roadmap.estimatedHours} hours`
-        : undefined,
+      estimatedTime: roadmap.estimatedHours ? `${roadmap.estimatedHours} hours` : undefined,
       isFeatured: roadmap.popularity > 100,
     };
+
+    setCached(cacheKey, result, 120); // Cache for 2 mins
+    return result;
   }
 
   async getUserRoadmap(id: string, user_id: string) {
@@ -507,7 +499,6 @@ export default class RoadmapRepository extends BaseRepository<
       create: {
         user_id: userId,
         topic_id: topicId,
-        subject_id: '',
         is_completed: completed,
         completed_at: completed ? new Date() : null,
       },
@@ -527,12 +518,20 @@ export default class RoadmapRepository extends BaseRepository<
     } = req.query;
     const userId = req.user?.id;
 
+    // ─── Cache Key ───
+    // Cache key encodes all query params + userId (guests share a cache)
+    const cacheKey = `roadmaps:list:${userId || 'guest'}:${sort}:${page}:${limit}:${search}:${category || ''}:${difficulty || ''}:${JSON.stringify(where || {})}`;
+    const cached = getCached<{ data: any[]; meta: Record<string, unknown> }>(cacheKey);
+    if (cached) return cached;
+
     // Build where clause with additional filters
     const whereClause: Prisma.RoadmapWhereInput = {
       ...where,
-      ...(typeof category === 'string' ? { category_id: category } : {}),
-      ...(typeof difficulty === 'string'
-        ? { difficulty: difficulty.toUpperCase() as 'EASY' | 'MEDIUM' | 'HARD' }
+      ...(category
+        ? { category_id: { in: String(category).split(',') } }
+        : {}),
+      ...(difficulty
+        ? { difficulty: String(difficulty) as 'EASY' | 'MEDIUM' | 'HARD' }
         : {}),
     };
 
@@ -560,11 +559,27 @@ export default class RoadmapRepository extends BaseRepository<
         sortOptions = { field: 'popularity', direction: 'desc' };
     }
 
+    // Only include topics when a user is logged in (needed for progress calculation)
+    const topicsInclude = userId
+      ? {
+        topics: {
+          select: {
+            topic: {
+              select: {
+                id: true,
+                title: true,
+              },
+            },
+          },
+        },
+      }
+      : {};
+
     const roadmaps = (await this.paginate(
       {
         limit: Number(limit),
         page: Number(page),
-        search: typeof search === 'string' ? search : '',
+        search: String(search),
         sort: sortOptions,
       },
       ['title'],
@@ -574,7 +589,8 @@ export default class RoadmapRepository extends BaseRepository<
             select: {
               id: true,
               username: true,
-              full_name: true,
+              first_name: true,
+              last_name: true,
               avatar_url: true,
             },
           },
@@ -584,25 +600,7 @@ export default class RoadmapRepository extends BaseRepository<
               name: true,
             },
           },
-          main_concepts: {
-            select: {
-              main_concept: {
-                include: {
-                  subjects: true,
-                },
-              },
-            },
-          },
-          topics: {
-            select: {
-              topic: {
-                select: {
-                  id: true,
-                  title: true,
-                },
-              },
-            },
-          },
+          ...topicsInclude,
           _count: {
             select: {
               likes: true,
@@ -617,106 +615,100 @@ export default class RoadmapRepository extends BaseRepository<
           },
           likes: userId
             ? {
-                where: {
-                  user_id: userId,
-                },
-                select: {
-                  id: true,
-                },
-              }
+              where: {
+                user_id: userId,
+              },
+              select: {
+                id: true,
+              },
+            }
             : false,
           user_roadmaps: userId
             ? {
-                where: {
-                  user_id: userId,
-                },
-                select: {
-                  id: true,
-                },
-              }
+              where: {
+                user_id: userId,
+              },
+              select: {
+                id: true,
+              },
+            }
             : false,
         },
       },
       combinedWhere
     )) as unknown as {
-      data: Array<{
-        id: string;
-        title: string;
-        description: string;
-        popularity: number;
-        estimatedHours: number | null;
-        _count: {
-          likes: number;
-          comments: number;
-          user_roadmaps: number;
-          topics: number;
-        };
-        likes?: Array<{ id: string }>;
-        user_roadmaps?: Array<{ id: string }>;
-        topics: Array<{ topic: { id: string; title: string } }>;
-      }>;
-      meta: {
-        total: number;
-        currentPage: number;
-        totalPages: number;
-        limit: number;
-        hasNextPage: boolean;
-        hasPreviousPage: boolean;
-      };
+      data: Array<
+        {
+          id: string;
+          estimatedHours?: number | null;
+          popularity?: number;
+          _count: {
+            likes: number;
+            comments: number;
+            user_roadmaps: number;
+            topics: number;
+          };
+          likes?: Array<{ id: string }>;
+          user_roadmaps?: Array<{ id: string }>;
+          topics?: Array<{ topic: { id: string; title: string } }>;
+        }
+      >;
+      meta: Record<string, unknown>;
     };
 
     // If user is logged in, get progress for all roadmaps
     const userProgressMap: Record<string, number> = {};
-    if (userId) {
+    if (userId && roadmaps.data.length > 0) {
       // Get all topic IDs for these roadmaps
-      const roadmapTopicIds = roadmaps.data.flatMap((roadmap) =>
-        roadmap.topics.map((t: { topic: { id: string } }) => t.topic.id)
+      const roadmapTopicIds = (roadmaps.data as any[]).flatMap((roadmap) =>
+        (roadmap.topics || []).map((t: { topic: { id: string } }) => t.topic.id)
       );
 
-      // Get user's progress for all topics
-      const userProgress = await this.prismaClient.userProgress.findMany({
-        where: {
-          user_id: userId,
-          topic_id: {
-            in: roadmapTopicIds,
+      if (roadmapTopicIds.length > 0) {
+        // Get user's progress for all topics in ONE query
+        const userProgress = await this.prismaClient.userProgress.findMany({
+          where: {
+            user_id: userId,
+            topic_id: {
+              in: roadmapTopicIds,
+            },
+            is_completed: true, // Only fetch completed ones — we only need the count
           },
-        },
-        select: {
-          topic_id: true,
-          is_completed: true,
-        },
-      });
+          select: {
+            topic_id: true,
+          },
+        });
 
-      // Create a map of topic ID to completion status
-      const topicCompletionMap: Record<string, boolean> = {};
-      userProgress.forEach((progress) => {
-        if (progress.topic_id) {
-          topicCompletionMap[progress.topic_id] = progress.is_completed;
-        }
-      });
+        // Build a set of completed topic IDs (faster lookup)
+        const completedTopicIds = new Set(
+          userProgress.map((p) => p.topic_id).filter(Boolean) as string[]
+        );
 
-      // Calculate progress for each roadmap
-      roadmaps.data.forEach((roadmap) => {
-        if (roadmap.id) {
-          const roadmapTopics = roadmap.topics.map(
-            (t: { topic: { id: string } }) => t.topic.id
-          );
-          const completedTopics = roadmapTopics.filter(
-            (topicId: string) => topicCompletionMap[topicId] === true
-          ).length;
+        // Calculate progress for each roadmap
+        (roadmaps.data as any[]).forEach((roadmap) => {
+          if (roadmap.id && roadmap.topics) {
+            const roadmapTopics = roadmap.topics.map(
+              (t: { topic: { id: string } }) => t.topic.id
+            );
+            const completedCount = roadmapTopics.filter(
+              (topicId: string) => completedTopicIds.has(topicId)
+            ).length;
 
-          userProgressMap[roadmap.id] =
-            roadmapTopics.length > 0
-              ? Math.round((completedTopics / roadmapTopics.length) * 100)
-              : 0;
-        }
-      });
+            userProgressMap[roadmap.id] =
+              roadmapTopics.length > 0
+                ? Math.round((completedCount / roadmapTopics.length) * 100)
+                : 0;
+          }
+        });
+      }
     }
 
-    return {
+    const result = {
       ...roadmaps,
       data: roadmaps.data.map((roadmap) => ({
         ...roadmap,
+        // Remove heavy topics array from serialized response
+        topics: undefined,
         likesCount: roadmap._count.likes,
         commentsCount: roadmap._count.comments,
         bookmarksCount: roadmap._count.user_roadmaps,
@@ -728,9 +720,15 @@ export default class RoadmapRepository extends BaseRepository<
         estimatedTime: roadmap.estimatedHours
           ? `${roadmap.estimatedHours} hours`
           : undefined,
-        isFeatured: roadmap.popularity > 100,
+        isFeatured: (roadmap.popularity ?? 0) > 100,
       })),
     };
+
+    // Cache for 300s for guests, 120s for authenticated users
+    // (previously 60s/30s — too short, caused near-constant cache misses)
+    setCached(cacheKey, result, userId ? 120 : 300);
+
+    return result;
   }
 
   async deleteRoadmap(id: string): Promise<void> {
@@ -821,8 +819,8 @@ export default class RoadmapRepository extends BaseRepository<
             });
             if (subject.subject?.topics) {
               const subjectTopics = subject.subject?.topics?.map((topic) => ({
-                subject_id: subject.subject?.id || '',
-                topic_id: topic.topic?.id || '',
+                subject_id: subject.subject?.id,
+                topic_id: topic.topic?.id,
                 order: topic.topic?.order || 0,
               }));
               await tx.subjectTopic.createMany({
@@ -896,7 +894,8 @@ export default class RoadmapRepository extends BaseRepository<
           select: {
             id: true,
             username: true,
-            full_name: true,
+            first_name: true,
+            last_name: true,
             avatar_url: true,
           },
         },
@@ -906,7 +905,8 @@ export default class RoadmapRepository extends BaseRepository<
               select: {
                 id: true,
                 username: true,
-                full_name: true,
+                first_name: true,
+                last_name: true,
                 avatar_url: true,
               },
             },
@@ -941,7 +941,8 @@ export default class RoadmapRepository extends BaseRepository<
             select: {
               id: true,
               username: true,
-              full_name: true,
+              first_name: true,
+              last_name: true,
               avatar_url: true,
             },
           },
@@ -951,7 +952,8 @@ export default class RoadmapRepository extends BaseRepository<
                 select: {
                   id: true,
                   username: true,
-                  full_name: true,
+                  first_name: true,
+                  last_name: true,
                   avatar_url: true,
                 },
               },

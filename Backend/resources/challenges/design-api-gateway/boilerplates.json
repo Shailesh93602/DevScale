@@ -1,0 +1,7 @@
+{
+  "typescript": "class ApiGateway {\n    route(request: any): any {\n        // Your code here\n    }\n}",
+  "javascript": "class ApiGateway {\n    route(request) {\n        // Your code here\n    }\n}",
+  "python": "class ApiGateway:\n    def route(self, request):\n        # Your code here\n        pass",
+  "java": "class ApiGateway {\n    public Response route(Request request) {\n        // Your code here\n        return null;\n    }\n}",
+  "cpp": "class ApiGateway {\npublic:\n    Response route(Request request) {\n        // Your code here\n    }\n};"
+}

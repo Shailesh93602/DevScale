@@ -1,0 +1,10 @@
+{
+  "typescript": "function totalFruit(fruits: number[]): number {\n    \n};",
+  "javascript": "/**\n * @param {number[]} fruits\n * @return {number}\n */\nvar totalFruit = function(fruits) {\n    \n};",
+  "python": "class Solution:\n    def totalFruit(self, fruits: List[int]) -> int:\n        ",
+  "java": "class Solution {\n    public int totalFruit(int[] fruits) {\n        \n    }\n}",
+  "cpp": "class Solution {\npublic:\n    int totalFruit(vector<int>& fruits) {\n        \n    }\n};",
+  "go": "func totalFruit(fruits []int) int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn total_fruit(fruits: Vec<i32>) -> i32 {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int TotalFruit(int[] fruits) {\n        \n    }\n}"
+}

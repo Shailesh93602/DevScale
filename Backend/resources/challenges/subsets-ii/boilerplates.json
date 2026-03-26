@@ -1,0 +1,9 @@
+{
+  "typescript": "function subsetsWithDup(nums: number[]): number[][] {\n  // Your code here\n}",
+  "javascript": "/**\n * @param {number[]} nums\n * @return {number[][]}\n */\nvar subsetsWithDup = function(nums) {\n  // Your code here\n};",
+  "python": "class Solution:\n    def subsetsWithDup(self, nums: List[int]) -> List[List[int]]:\n        # Your code here\n        pass",
+  "java": "class Solution {\n    public List<List<Integer>> subsetsWithDup(int[] nums) {\n        // Your code here\n    }\n}",
+  "cpp": "class Solution {\npublic:\n    vector<vector<int>> subsetsWithDup(vector<int>& nums) {\n        // Your code here\n    }\n};",
+  "go": "func subsetsWithDup(nums []int) [][]int {\n    // Your code here\n}",
+  "rust": "impl Solution {\n    pub fn subsets_with_dup(nums: Vec<i32>) -> Vec<Vec<i32>> {\n        // Your code here\n    }\n}"
+}

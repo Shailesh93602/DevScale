@@ -26,7 +26,7 @@ const customLinkVariants = cva(
       variant: {
         /** Filled primary button */
         default:
-          'bg-primary text-white rounded-md shadow hover:bg-primary/90 no-underline',
+          'bg-primary text-primary-foreground rounded-md shadow hover:bg-primary/90 no-underline',
         /** Outlined / secondary button */
         secondary:
           'border border-primary bg-background text-primary rounded-md shadow-sm hover:bg-primary/10 no-underline',

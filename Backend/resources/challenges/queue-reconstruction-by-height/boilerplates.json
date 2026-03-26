@@ -1,0 +1,6 @@
+{
+  "typescript": "function reconstructQueue(people: number[][]): number[][] {\n    // Your code here\n}",
+  "javascript": "/**\n * @param {number[][]} people\n * @return {number[][]}\n */\nvar reconstructQueue = function(people) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def reconstructQueue(self, people: List[List[int]]) -> List[List[int]]:\n        # Your code here\n        pass"
+}
+

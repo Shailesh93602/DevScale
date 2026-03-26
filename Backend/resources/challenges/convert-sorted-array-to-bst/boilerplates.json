@@ -1,0 +1,5 @@
+{
+  "typescript": "function sortedArrayToBST(nums: number[]): TreeNode | null {\n    // Your code here\n}",
+  "javascript": "/**\n * @param {any} params\n * @return {any}\n */\nvar sortedArrayToBST = function(root) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def sortedArrayToBST(self, root) -> bool:\n        # Your code here\n        pass"
+}

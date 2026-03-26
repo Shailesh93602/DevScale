@@ -1,0 +1,5 @@
+{
+  "typescript": "function combinationSum4(nums: number[], target: number): number {\n    // Your code here\n}",
+  "javascript": "/**\n * @param {any} params\n * @return {any}\n */\nvar combinationSum4 = function(root) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def combinationSum4(self, root) -> bool:\n        # Your code here\n        pass"
+}

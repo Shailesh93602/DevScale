@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
@@ -37,6 +37,8 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
 
   const [isActive] = useState(autoStart);
   const [isCompleted, setIsCompleted] = useState(false);
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
 
   // Calculate initial time left
   useEffect(() => {
@@ -55,10 +57,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
           seconds: 0,
         });
 
-        if (onComplete) {
-          onComplete();
-        }
-
+        onCompleteRef.current?.();
         return;
       }
 
@@ -79,7 +78,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
     };
 
     calculateTimeLeft();
-  }, [targetTime, onComplete]);
+  }, [targetTime]);
 
   // Start countdown
   useEffect(() => {
@@ -101,10 +100,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
           seconds: 0,
         });
 
-        if (onComplete) {
-          onComplete();
-        }
-
+        onCompleteRef.current?.();
         return;
       }
 
@@ -125,7 +121,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isActive, isCompleted, targetTime, onComplete]);
+  }, [isActive, isCompleted, targetTime]);
 
   // Calculate total time (for progress bar)
   const calculateTotalTime = () => {
@@ -155,7 +151,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
     if (isCompleted) {
       return (
         <div className="flex items-center justify-center gap-2">
-          <Play className="h-5 w-5 text-green-500" />
+          <Play className="text-green-500 h-5 w-5" />
           <span className="text-green-500">Ready to start!</span>
         </div>
       );
@@ -268,18 +264,12 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
             </div>
           </CardTitle>
           {showWarning && (
-            <Badge
-              variant="outline"
-              className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
-            >
+            <Badge variant="outline" className="bg-yellow/10 text-yellow">
               Starting Soon
             </Badge>
           )}
           {isCompleted && (
-            <Badge
-              variant="outline"
-              className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-            >
+            <Badge variant="outline" className="bg-green/10 text-green">
               Ready
             </Badge>
           )}
@@ -293,7 +283,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
             <div className="space-y-2">
               <Progress value={calculateProgress()} className="h-2" />
               {showWarning && (
-                <div className="flex items-center gap-2 text-xs text-yellow-600 dark:text-yellow-400">
+                <div className="flex items-center gap-2 text-xs text-yellow">
                   <AlertCircle className="h-3 w-3" />
                   <span>Battle starting soon! Get ready!</span>
                 </div>

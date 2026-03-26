@@ -1,0 +1,8 @@
+{
+  "typescript": "function partition(s: string): string[][] {\n  // Your code here\n}",
+  "javascript": "/**\n * @param {string} s\n * @return {string[][]}\n */\nvar partition = function(s) {\n  // Your code here\n};",
+  "python": "class Solution:\n    def partition(self, s: str) -> List[List[str]]:\n        # Your code here\n        pass",
+  "java": "class Solution {\n    public List<List<String>> partition(String s) {\n        // Your code here\n    }\n}",
+  "cpp": "class Solution {\npublic:\n    vector<vector<string>> partition(string s) {\n        // Your code here\n    }\n};",
+  "go": "func partition(s string) [][]string {\n    // Your code here\n}"
+}

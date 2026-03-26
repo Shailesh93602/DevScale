@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { createAppError } from '../middlewares/errorHandler';
 import UserProgressRepository from '../repositories/userProgressRepository';
-import UserPointsRepository from '@/repositories/userPointsRepository';
-import { catchAsync } from '@/utils';
-import { sendResponse } from '@/utils/apiResponse';
+import UserPointsRepository from '../repositories/userPointsRepository';
+import { catchAsync } from '../utils';
+import { sendResponse } from '../utils/apiResponse';
 
 export default class UserProgressController {
   private readonly userProgressRepo: UserProgressRepository;

@@ -1,0 +1,10 @@
+{
+  "typescript": "function wordPattern(pattern: string, s: string): boolean {\n  // Your code here\n}",
+  "javascript": "/**\n * @param {string} pattern\n * @param {string} s\n * @return {boolean}\n */\nvar wordPattern = function(pattern, s) {\n  // Your code here\n};",
+  "python": "class Solution:\n    def wordPattern(self, pattern: str, s: str) -> bool:\n        # Your code here\n        pass",
+  "java": "class Solution {\n    public boolean wordPattern(String pattern, String s) {\n        // Your code here\n    }\n}",
+  "cpp": "class Solution {\npublic:\n    bool wordPattern(string pattern, string s) {\n        // Your code here\n    }\n};",
+  "go": "func wordPattern(pattern string, s string) bool {\n    // Your code here\n}",
+  "rust": "impl Solution {\n    pub fn word_pattern(pattern: String, s: String) -> bool {\n        // Your code here\n    }\n}",
+  "csharp": "public class Solution {\n    public bool WordPattern(string pattern, string s) {\n        // Your code here\n    }\n}"
+}

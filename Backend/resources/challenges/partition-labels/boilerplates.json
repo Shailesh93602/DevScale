@@ -1,0 +1,6 @@
+{
+  "typescript": "function partitionLabels(s: string): number[] {\n    // Your code here\n}",
+  "javascript": "/**\n * @param {string} s\n * @return {number[]}\n */\nvar partitionLabels = function(s) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def partitionLabels(self, s: str) -> List[int]:\n        # Your code here\n        pass"
+}
+

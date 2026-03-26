@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { difficulties, lengths } from '@/constants';
+import { difficulties } from '@/constants';
 
 export const battleFormSchema = yup.object({
   title: yup
@@ -9,58 +9,40 @@ export const battleFormSchema = yup.object({
     .max(200, 'Title must be less than 200 characters'),
   description: yup
     .string()
-    .required('Description is required')
-    .min(10, 'Description must be at least 10 characters'),
-  subjectId: yup.string().required('Subject is required'),
-  topicId: yup.string().required('Topic is required'),
+    .optional()
+    .max(500, 'Description must be less than 500 characters'),
   difficulty: yup
     .string()
     .required('Difficulty is required')
     .oneOf(Object.values(difficulties), 'Invalid difficulty level'),
-  length: yup
+  type: yup
     .string()
-    .required('Length is required')
-    .oneOf(Object.values(lengths), 'Invalid length'),
-  date: yup
-    .string()
-    .required('Date is required')
-    .test('is-future-date', 'Date must be in the future', function (value) {
-      if (!value) return false;
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const selectedDate = new Date(value);
-      selectedDate.setHours(0, 0, 0, 0);
-      return selectedDate >= today;
-    }),
-  time: yup.string().required('Time is required'),
+    .required('Type is required')
+    .oneOf(['QUICK', 'SCHEDULED', 'PRACTICE'], 'Invalid battle type'),
   maxParticipants: yup
     .number()
-    .transform((value) => (isNaN(value) ? undefined : value))
+    .transform((value) => (Number.isNaN(value) ? undefined : value))
     .nullable()
-    .default(10)
+    .default(6)
     .min(2, 'Minimum 2 participants required')
-    .max(100, 'Maximum 100 participants allowed'),
+    .max(10, 'Maximum 10 participants allowed'),
   pointsPerQuestion: yup
     .number()
-    .transform((value) => (isNaN(value) ? undefined : value))
+    .transform((value) => (Number.isNaN(value) ? undefined : value))
     .nullable()
-    .default(10)
-    .min(1, 'Minimum 1 point per question')
-    .max(100, 'Maximum 100 points per question'),
+    .default(100)
+    .min(10, 'Minimum 10 points per question')
+    .max(1000, 'Maximum 1000 points per question'),
   timePerQuestion: yup
     .number()
-    .transform((value) => (isNaN(value) ? undefined : value))
+    .transform((value) => (Number.isNaN(value) ? undefined : value))
     .nullable()
     .default(30)
-    .min(10, 'Minimum 10 seconds per question')
-    .max(600, 'Maximum 600 seconds (10 minutes) per question'),
-  totalQuestions: yup
-    .number()
-    .transform((value) => (isNaN(value) ? undefined : value))
-    .nullable()
-    .default(10)
-    .min(1, 'Minimum 1 question required')
-    .max(50, 'Maximum 50 questions allowed'),
+    .min(15, 'Minimum 15 seconds per question')
+    .max(60, 'Maximum 60 seconds per question'),
+  // Schedule fields (only required for SCHEDULED type)
+  date: yup.string().optional(),
+  time: yup.string().optional(),
 });
 
 export type BattleFormValues = yup.InferType<typeof battleFormSchema>;

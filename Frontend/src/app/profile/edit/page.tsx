@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useRouter } from 'next/navigation';
-import { FaGithub, FaLinkedin, FaXTwitter } from 'react-icons/fa6';
 import {
   Form,
   FormControl,
@@ -18,6 +17,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import {
   Card,
@@ -34,6 +34,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
+  Github,
+  Linkedin,
+  Twitter,
   Globe,
   GraduationCap,
   Briefcase,
@@ -44,6 +47,7 @@ import {
   CheckCircle2,
   XCircle,
   Loader2,
+  AlertCircle,
   Code2,
   ArrowLeft,
   Save,
@@ -58,23 +62,23 @@ import { toast } from 'sonner';
 const profileSchema = z.object({
   first_name: z
     .string()
-    .min(2, { error: 'First name must be at least 2 characters' })
+    .min(2, 'First name must be at least 2 characters')
     .max(50),
   last_name: z
     .string()
-    .min(1, { error: 'Last name must be at least 1 character' })
+    .min(1, 'Last name must be at least 1 character')
     .max(50),
   username: z
     .string()
-    .min(3, { error: 'Username is not available' })
-    .max(30, { error: 'Username is not available' })
-    .regex(/^[a-z0-9_]+$/, { error: 'Username is not available' }),
-  email: z.email({ error: 'Invalid email address' }),
+    .min(3, 'Username is not available')
+    .max(30, 'Username is not available')
+    .regex(/^[a-z0-9_]+$/, 'Username is not available'),
+  email: z.string().email('Invalid email address'),
   specialization: z.string().optional().or(z.literal('')),
   experience_level: z.string().optional().or(z.literal('')),
   bio: z
     .string()
-    .max(500, { error: 'Bio cannot exceed 500 characters' })
+    .max(500, 'Bio cannot exceed 500 characters')
     .optional()
     .or(z.literal('')),
   skills: z.string().optional().or(z.literal('')),
@@ -85,35 +89,41 @@ const profileSchema = z.object({
     z.number().min(1900).max(2100).optional(),
   ),
   github_url: z
-    .url({ error: 'Invalid URL format' })
-    .regex(/^https?:\/\/(www\.)?github\.com\/[a-zA-Z0-9_-]+\/?$/, {
-      error: 'Invalid GitHub profile URL',
-    })
+    .string()
+    .url('Invalid URL format')
+    .regex(
+      /^https?:\/\/(www\.)?github\.com\/[a-zA-Z0-9_-]+\/?$/,
+      'Invalid GitHub profile URL',
+    )
     .optional()
     .or(z.literal('')),
   linkedin_url: z
-    .url({ error: 'Invalid URL format' })
+    .string()
+    .url('Invalid URL format')
     .regex(
       /^https?:\/\/(www\.)?linkedin\.com\/(in|company)\/[a-zA-Z0-9_-]+\/?$/,
-      { error: 'Invalid LinkedIn profile URL' },
+      'Invalid LinkedIn profile URL',
     )
     .optional()
     .or(z.literal('')),
   twitter_url: z
-    .url({ error: 'Invalid URL format' })
-    .regex(/^https?:\/\/(www\.)?(twitter|x)\.com\/[a-z0-9_]+\/?$/i, {
-      error: 'Invalid X/Twitter profile URL',
-    })
+    .string()
+    .url('Invalid URL format')
+    .regex(
+      /^https?:\/\/(www\.)?(twitter|x)\.com\/[a-z0-9_]+\/?$/i,
+      'Invalid X/Twitter profile URL',
+    )
     .optional()
     .or(z.literal('')),
   website_url: z
-    .url({ error: 'Invalid Website URL' })
+    .string()
+    .url('Invalid Website URL')
     .optional()
     .or(z.literal('')),
   address: z.string().optional().or(z.literal('')),
   note: z
     .string()
-    .max(200, { error: 'Note cannot exceed 200 characters' })
+    .max(200, 'Note cannot exceed 200 characters')
     .optional()
     .or(z.literal('')),
 });
@@ -185,7 +195,7 @@ export default function EditProfilePage() {
         const response = await getProfile();
         if (response.success && response.data) {
           const userData = response.data.user ?? response.data;
-          setProfile(userData);
+          setProfile(userData as UserProfile);
           form.reset({
             first_name: userData.first_name || '',
             last_name: userData.last_name || '',
@@ -248,13 +258,13 @@ export default function EditProfilePage() {
         if (response.success && response.data !== null) {
           const available = response.data;
           setUsernameStatus(available ? 'available' : 'taken');
-          if (available) {
-            form.clearErrors('username');
-          } else {
+          if (!available) {
             form.setError('username', {
               type: 'manual',
               message: 'Username is not available',
             });
+          } else {
+            form.clearErrors('username');
           }
         } else {
           setUsernameStatus('error');
@@ -265,13 +275,13 @@ export default function EditProfilePage() {
       }
     };
 
-    if (debouncedUsername === undefined) {
-      setUsernameStatus('idle');
-      form.clearErrors('username');
-    } else {
+    if (debouncedUsername !== undefined) {
       // Clear errors first before format check
       form.clearErrors('username');
       checkUsername(debouncedUsername);
+    } else {
+      setUsernameStatus('idle');
+      form.clearErrors('username');
     }
   }, [debouncedUsername, getUsernameCheck, profile]);
 
@@ -331,7 +341,7 @@ export default function EditProfilePage() {
         </div>
 
         <Card className="overflow-hidden border-none bg-card shadow-xl ring-1 ring-border/50">
-          <CardHeader className="from-primary/10 border-b border-border/50 bg-gradient-to-r via-purple-500/5 to-transparent p-8">
+          <CardHeader className="from-primary/10 via-purple-500/5 border-b border-border/50 bg-gradient-to-r to-transparent p-8">
             <div className="flex items-center gap-4">
               <div className="bg-primary/10 rounded-2xl p-3 text-primary shadow-inner">
                 <Pencil className="h-8 w-8" />
@@ -438,7 +448,7 @@ export default function EditProfilePage() {
                                   <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
                                 )}
                                 {usernameStatus === 'available' && (
-                                  <CheckCircle2 className="h-5 w-5 text-green-500 duration-300 animate-in zoom-in" />
+                                  <CheckCircle2 className="text-green-500 h-5 w-5 duration-300 animate-in zoom-in" />
                                 )}
                                 {usernameStatus === 'taken' && (
                                   <XCircle className="text-red-500 h-5 w-5 duration-300 animate-in zoom-in" />
@@ -447,7 +457,7 @@ export default function EditProfilePage() {
                             </div>
                             <FormDescription className="ml-1 mt-2 min-h-[0.5rem] text-xs">
                               {usernameStatus === 'available' && (
-                                <span className="font-bold text-green-600">
+                                <span className="text-green-600 font-bold">
                                   Username is available!
                                 </span>
                               )}
@@ -490,10 +500,10 @@ export default function EditProfilePage() {
 
                   {/* SECTION: PROFESSIONAL PROFILE */}
                   <section className="space-y-8">
-                    <div className="flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-blue-500/80">
+                    <div className="text-blue-500/80 flex items-center gap-3 text-sm font-bold uppercase tracking-widest">
                       <Briefcase className="h-5 w-5" />
                       <span>Professional Profile</span>
-                      <div className="ml-2 h-[1px] flex-1 bg-gradient-to-r from-blue-500/20 to-transparent" />
+                      <div className="from-blue-500/20 ml-2 h-[1px] flex-1 bg-gradient-to-r to-transparent" />
                     </div>
 
                     <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
@@ -631,10 +641,10 @@ export default function EditProfilePage() {
 
                   {/* SECTION: ACADEMIC HISTORY */}
                   <section className="space-y-8">
-                    <div className="flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-green-600/80">
+                    <div className="text-green-600/80 flex items-center gap-3 text-sm font-bold uppercase tracking-widest">
                       <GraduationCap className="h-5 w-5" />
                       <span>Academic History</span>
-                      <div className="ml-2 h-[1px] flex-1 bg-gradient-to-r from-green-600/20 to-transparent" />
+                      <div className="from-green-600/20 ml-2 h-[1px] flex-1 bg-gradient-to-r to-transparent" />
                     </div>
 
                     <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
@@ -683,7 +693,7 @@ export default function EditProfilePage() {
                                 onChange={(e) =>
                                   field.onChange(
                                     e.target.value
-                                      ? Number.parseInt(e.target.value)
+                                      ? parseInt(e.target.value)
                                       : undefined,
                                   )
                                 }
@@ -700,10 +710,10 @@ export default function EditProfilePage() {
 
                   {/* SECTION: ONLINE PRESENCE */}
                   <section className="space-y-8">
-                    <div className="flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-orange-500/80">
+                    <div className="text-orange-500/80 flex items-center gap-3 text-sm font-bold uppercase tracking-widest">
                       <Globe className="h-5 w-5" />
                       <span>Online Presence</span>
-                      <div className="ml-2 h-[1px] flex-1 bg-gradient-to-r from-orange-500/20 to-transparent" />
+                      <div className="from-orange-500/20 ml-2 h-[1px] flex-1 bg-gradient-to-r to-transparent" />
                     </div>
 
                     <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
@@ -716,7 +726,7 @@ export default function EditProfilePage() {
                               GitHub URL
                             </FormLabel>
                             <div className="relative">
-                              <FaGithub className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground/60" />
+                              <Github className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground/60" />
                               <FormControl>
                                 <Input
                                   placeholder="https://github.com/username"
@@ -742,7 +752,7 @@ export default function EditProfilePage() {
                               LinkedIn URL
                             </FormLabel>
                             <div className="relative">
-                              <FaLinkedin className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground/60" />
+                              <Linkedin className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground/60" />
                               <FormControl>
                                 <Input
                                   placeholder="https://linkedin.com/in/username"
@@ -768,7 +778,7 @@ export default function EditProfilePage() {
                               X (Twitter) URL
                             </FormLabel>
                             <div className="relative">
-                              <FaXTwitter className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground/60" />
+                              <Twitter className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground/60" />
                               <FormControl>
                                 <Input
                                   placeholder="https://x.com/username"

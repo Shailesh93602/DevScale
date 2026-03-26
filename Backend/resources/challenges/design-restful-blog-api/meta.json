@@ -15,5 +15,6 @@
   "example_output": "{ \"id\": 1, \"title\": \"Hello World\", \"content\": \"My first post\", \"author\": \"john\", \"createdAt\": \"2024-01-01T00:00:00Z\" }",
   "constraints": "Must support CRUD operations for posts and comments. Must follow REST conventions. Must handle errors with proper HTTP status codes.",
   "function_signature": "class BlogAPI { createPost(req, res): void; getPost(req, res): void; updatePost(req, res): void; deletePost(req, res): void; listPosts(req, res): void; addComment(req, res): void; }",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

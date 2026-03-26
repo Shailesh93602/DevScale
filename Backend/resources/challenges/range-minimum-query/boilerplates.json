@@ -1,0 +1,6 @@
+{
+  "typescript": "class SparseTable {\n    constructor(nums: number[]) {\n        // Your code here\n    }\n\n    query(l: number, r: number): number {\n        // Your code here\n    }\n}",
+  "javascript": "/**\n * @param {number[]} nums\n */\nvar SparseTable = function(nums) {\n    // Your code here\n};\n\n/** \n * @param {number} l \n * @param {number} r\n * @return {number}\n */\nSparseTable.prototype.query = function(l, r) {\n    // Your code here\n};",
+  "python": "class SparseTable:\n    def __init__(self, nums: List[int]):\n        # Your code here\n        pass\n\n    def query(self, l: int, r: int) -> int:\n        # Your code here\n        pass"
+}
+

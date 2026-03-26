@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nfunction processNotification(notification: Notification, preferences: UserPreferences, currentHour: number): NotificationResult",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

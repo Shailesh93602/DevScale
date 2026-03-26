@@ -1,7 +1,21 @@
 import Redis from 'ioredis';
 import { REDIS_URL } from '../config';
 
-const redisConnection = new Redis(REDIS_URL);
+const redisConnection = new Redis(REDIS_URL, {
+  maxRetriesPerRequest: 3,
+  retryStrategy(times) {
+    if (times > 3) {
+      return null;
+    }
+    return Math.min(times * 50, 2000);
+  },
+});
+
+redisConnection.on('error', (err: any) => {
+  if (err.code !== 'ECONNREFUSED') {
+    console.error('Redis Error:', err);
+  }
+});
 
 export class RedisClient {
   static async hset(

@@ -15,5 +15,6 @@
   "example_output": "4",
   "constraints": "- `1 <= nums.length <= 2500`\n- `-10^4 <= nums[i] <= 10^4`",
   "function_signature": "function lengthOfLIS(nums: number[]): number {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

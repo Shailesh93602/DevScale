@@ -15,5 +15,6 @@
   "example_output": "3",
   "constraints": "- `0 <= word1.length, word2.length <= 500`\n- `word1` and `word2` consist of lowercase English letters.",
   "function_signature": "function minDistance(word1: string, word2: string): number {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

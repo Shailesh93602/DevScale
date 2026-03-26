@@ -1,4 +1,5 @@
 [
-  "TODO: Add hint 1",
-  "TODO: Add hint 2"
+  "Create a map or two arrays for values and their corresponding Roman symbols, including the subtraction cases (like 4, 9, 40, etc.).",
+  "Iterate through the values from largest to smallest.",
+  "At each step, subtract as many instances of the value as possible and append the symbol."
 ]

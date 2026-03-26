@@ -1,0 +1,5 @@
+{
+  "typescript": "class RateLimiter { isAllowed(clientId: string, config?: RateLimitConfig): RateLimitResult; configure(rules: RateLimitRule[]): void; getUsage(clientId: string): UsageStats; } {\n    // Conceptual implementation\n}",
+  "javascript": "class RateLimiter {\n    constructor() {\n        // Initialize\n    }\n}",
+  "python": "class RateLimiter:\n    def __init__(self):\n        pass"
+}

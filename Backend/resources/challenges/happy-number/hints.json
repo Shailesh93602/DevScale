@@ -1,4 +1,5 @@
 [
-  "TODO: Add hint 1",
-  "TODO: Add hint 2"
+  "Use a Hash Set to keep track of numbers you've already seen in the process.",
+  "If you encounter a number already in the set, a cycle exists and you'll never reach 1.",
+  "Try using Floyd's Cycle-Finding Algorithm (Slow and Fast pointers) for constant space complexity."
 ]

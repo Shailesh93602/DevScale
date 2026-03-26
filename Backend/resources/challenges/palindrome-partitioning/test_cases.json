@@ -1,3 +1,22 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  {
+    "input": "aab",
+    "output": "[[\"a\",\"a\",\"b\"],[\"aa\",\"b\"]]",
+    "is_hidden": false
+  },
+  {
+    "input": "a",
+    "output": "[[\"a\"]]",
+    "is_hidden": false
+  },
+  {
+    "input": "efe",
+    "output": "[[\"e\",\"f\",\"e\"],[\"efe\"]]",
+    "is_hidden": true
+  },
+  {
+    "input": "ab",
+    "output": "[[\"a\",\"b\"]]",
+    "is_hidden": true
+  }
 ]

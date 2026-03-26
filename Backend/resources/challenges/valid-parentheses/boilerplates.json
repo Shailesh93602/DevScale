@@ -1,10 +1,10 @@
 {
-  "typescript": "function isValid(s: string): boolean {\n\n};",
-  "javascript": "/**\n * @param {string} s\n * @return {boolean}\n */\nvar isValid = function(s) {\n\n};",
-  "python": "class Solution:\n    def isValid(self, s: str) -> bool:\n        pass",
-  "java": "import java.util.*;\n\nclass Solution {\n    public boolean isValid(String s) {\n        \n    }\n}",
-  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool isValid(string s) {\n        \n    }\n};",
-  "go": "func isValid(s string) bool {\n\t\n}",
+  "typescript": "function isValid(s: string): boolean {\n    \n};",
+  "javascript": "/**\n * @param {string} s\n * @return {boolean}\n */\nvar isValid = function(s) {\n    \n};",
+  "python": "class Solution:\n    def isValid(self, s: str) -> bool:\n        ",
+  "java": "class Solution {\n    public boolean isValid(String s) {\n        \n    }\n}",
+  "cpp": "class Solution {\npublic:\n    bool isValid(string s) {\n        \n    }\n};",
+  "go": "func isValid(s string) bool {\n    \n}",
   "rust": "impl Solution {\n    pub fn is_valid(s: String) -> bool {\n        \n    }\n}",
   "csharp": "public class Solution {\n    public bool IsValid(string s) {\n        \n    }\n}"
 }

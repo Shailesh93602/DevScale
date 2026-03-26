@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useBattleWebSocket, useBattleState } from '@/hooks/useBattleWebSocket';
-import { Battle } from '@/types/battle';
+import { useBattleSocket } from '@/hooks/useBattleWebSocket';
+import { Battle, BattleStatus } from '@/types/battle';
 import {
   Users,
   MessageSquare,
@@ -60,72 +60,65 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
   const [isCreator, setIsCreator] = useState(false);
   const [canStartNow, setCanStartNow] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
-  const battleState = useBattleState(battle.id);
-  const { sendToBattle, isConnected } = useBattleWebSocket(
-    'battle:state_update',
-    battle.id,
-    () => {},
-  );
+  const [isLeaving, setIsLeaving] = useState(false);
+  const [hasConnectedOnce, setHasConnectedOnce] = useState(false);
+  const [wsStatus, setWsStatus] = useState<BattleStatus | null>(null);
+
+  const { isConnected, on } = useBattleSocket(battle.id);
+
+  // Listen for status changes
+  useEffect(() => {
+    return on('battle:status_changed', ({ status }) => {
+      setWsStatus(status as BattleStatus);
+    });
+  }, [on]);
 
   // Check if current user is the creator
   useEffect(() => {
-    setIsCreator(battle.user_id === currentUserId);
-  }, [battle.user_id, currentUserId]);
+    setIsCreator(battle.creator.id === currentUserId);
+  }, [battle.creator.id, currentUserId]);
 
-  // Check if battle can be started now
   useEffect(() => {
-    // Can start now if:
-    // 1. User is the creator
-    // 2. All participants are ready
-    // 3. Battle is in UPCOMING status
-    // 4. There's at least 2 participants
+    if (isConnected) {
+      setHasConnectedOnce(true);
+    }
+  }, [isConnected]);
+
+  useEffect(() => {
     setCanStartNow(
       isCreator &&
         allParticipantsReady &&
-        battle.status === 'UPCOMING' &&
-        battle.currentParticipants >= 2,
+        (battle.status === 'WAITING' || battle.status === 'LOBBY') &&
+        battle.current_participants >= 2,
     );
-  }, [
-    isCreator,
-    allParticipantsReady,
-    battle.status,
-    battle.currentParticipants,
-  ]);
+  }, [isCreator, allParticipantsReady, battle.status, battle.current_participants]);
 
-  // Listen for battle state updates
+  const onStartBattleRef = useRef(onStartBattle);
+  onStartBattleRef.current = onStartBattle;
+
   useEffect(() => {
-    if (battleState?.status === 'IN_PROGRESS') {
+    if (wsStatus === 'IN_PROGRESS') {
       toast({
         title: 'Battle Started',
         description: 'The battle has begun! Get ready to compete!',
       });
 
-      // Redirect to battle page
-      if (onStartBattle) {
-        onStartBattle();
+      if (onStartBattleRef.current) {
+        onStartBattleRef.current();
       }
     }
-  }, [battleState, onStartBattle, toast]);
+  }, [wsStatus, toast]);
 
-  // Handle start battle
   const handleStartBattle = async () => {
     if (!canStartNow || isStarting) return;
 
     setIsStarting(true);
     try {
-      // Send start battle event
-      sendToBattle('battle:state_update', {
-        battle_id: battle.id,
-        status: 'IN_PROGRESS',
-        current_participants: battle.currentParticipants,
-      });
-
       toast({
         title: 'Starting Battle',
         description: 'The battle is about to begin...',
       });
-    } catch (error) {
-      console.error('Failed to start battle:', error);
+    } catch {
       toast({
         title: 'Error',
         description: 'Failed to start battle. Please try again.',
@@ -135,8 +128,9 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
     }
   };
 
-  // Handle leave battle
   const handleLeaveBattle = async () => {
+    if (isLeaving) return;
+    setIsLeaving(true);
     try {
       if (onLeaveBattle) {
         await onLeaveBattle();
@@ -146,17 +140,16 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
         description: 'You have left the battle lobby.',
       });
       router.push('/battle-zone');
-    } catch (error) {
-      console.error('Failed to leave battle:', error);
+    } catch {
       toast({
         title: 'Error',
         description: 'Failed to leave battle. Please try again.',
         variant: 'destructive',
       });
+      setIsLeaving(false);
     }
   };
 
-  // Handle share battle
   const handleShareBattle = () => {
     const battleUrl = `${window.location.origin}/battle-zone/${battle.id}`;
 
@@ -164,11 +157,10 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
       navigator
         .share({
           title: `Join my battle: ${battle.title}`,
-          text: `Join my coding battle on ${battle.topic.title}!`,
+          text: `Join my coding battle on ${battle.topic?.title ?? battle.title}!`,
           url: battleUrl,
         })
-        .catch((error) => {
-          console.error('Error sharing:', error);
+        .catch(() => {
           copyToClipboard(battleUrl);
         });
     } else {
@@ -176,26 +168,18 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
     }
   };
 
-  // Copy to clipboard helper
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).then(
       () => {
-        toast({
-          title: 'Battle link copied to clipboard!',
-          variant: 'default',
-        });
+        toast({ title: 'Battle link copied to clipboard!', variant: 'default' });
       },
       () => {
-        toast({
-          title: 'Failed to copy battle link',
-          variant: 'destructive',
-        });
+        toast({ title: 'Failed to copy battle link', variant: 'destructive' });
       },
     );
   };
 
-  // Calculate time until battle starts
-  const startTime = battle.startDate ? new Date(battle.startDate) : null;
+  const startTime = battle.start_time ? new Date(battle.start_time) : null;
   const timeLeft = startTime ? formatDistanceToNow(startTime) : '';
 
   return (
@@ -214,15 +198,15 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
       >
         <div className="flex items-center gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">
-              {battle.title}
-            </h1>
+            <h1 className="text-2xl font-bold tracking-tight">{battle.title}</h1>
             <p className="mt-1 text-muted-foreground">
               Waiting for participants to join and get ready
             </p>
           </div>
           <Badge
-            variant={isConnected ? 'default' : 'destructive'}
+            variant={
+              isConnected ? 'default' : hasConnectedOnce ? 'destructive' : 'secondary'
+            }
             className="animate-pulse"
           >
             {isConnected ? (
@@ -230,7 +214,11 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
             ) : (
               <WifiOff className="mr-2 h-4 w-4" />
             )}
-            {isConnected ? 'Connected' : 'Disconnected'}
+            {isConnected
+              ? 'Connected'
+              : hasConnectedOnce
+                ? 'Reconnecting...'
+                : 'Connecting...'}
           </Badge>
         </div>
 
@@ -239,16 +227,18 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
             variant="outline"
             size="sm"
             onClick={handleLeaveBattle}
+            disabled={isLeaving || isStarting}
             className="group"
           >
             <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
-            Leave
+            {isLeaving ? 'Leaving...' : 'Leave'}
           </Button>
 
           <Button
             variant="outline"
             size="sm"
             onClick={handleShareBattle}
+            disabled={isLeaving || isStarting}
             className="group"
           >
             <Share2 className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
@@ -259,7 +249,7 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
             <Button
               size="sm"
               onClick={handleStartBattle}
-              disabled={!canStartNow || isStarting}
+              disabled={!canStartNow || isStarting || isLeaving}
               className={cn(
                 'group transition-all duration-300',
                 canStartNow && 'hover:scale-105',
@@ -281,9 +271,9 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
         </div>
       </motion.div>
 
-      {/* Battle status */}
+      {/* Battle status alert */}
       <AnimatePresence>
-        {battle.status === 'UPCOMING' && (
+        {(battle.status === 'WAITING' || battle.status === 'LOBBY') && (
           <motion.div
             initial={{ opacity: 0, translateY: 20 }}
             animate={{ opacity: 1, translateY: 0 }}
@@ -330,9 +320,9 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
             <TabsContent value="participants" className="mt-6">
               <LobbyParticipantList
                 battleId={battle.id}
-                maxParticipants={battle.maxParticipants}
+                maxParticipants={battle.max_participants}
                 currentUserId={currentUserId}
-                creatorId={battle.user_id}
+                creatorId={battle.creator.id}
                 onAllReady={setAllParticipantsReady}
               />
             </TabsContent>
@@ -353,20 +343,17 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
 
         {/* Right column */}
         <div className="space-y-6">
-          <CountdownTimer
-            targetTime={battle.startDate}
-            title="Battle starts in"
-            size="md"
-            onComplete={() => {
-              toast({
-                title: 'Battle is starting!',
-                variant: 'default',
-              });
-              if (onStartBattle) {
-                onStartBattle();
-              }
-            }}
-          />
+          {battle.start_time && (
+            <CountdownTimer
+              targetTime={battle.start_time}
+              title="Battle starts in"
+              size="md"
+              onComplete={() => {
+                toast({ title: 'Battle is starting!', variant: 'default' });
+                if (onStartBattle) onStartBattle();
+              }}
+            />
+          )}
 
           <BattleRules battle={battle} />
         </div>
@@ -382,7 +369,7 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
             </div>
             <Badge
               variant={
-                battle.status === 'UPCOMING'
+                battle.status === 'WAITING' || battle.status === 'LOBBY'
                   ? 'default'
                   : battle.status === 'IN_PROGRESS'
                     ? 'secondary'
@@ -398,8 +385,7 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
             <div className="flex items-center space-x-2">
               <Users className="h-4 w-4 text-muted-foreground" />
               <span>
-                {battle.currentParticipants}/{battle.maxParticipants}{' '}
-                Participants
+                {battle.current_participants}/{battle.max_participants} Participants
               </span>
             </div>
             <div className="flex items-center space-x-2">
@@ -408,7 +394,7 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
             </div>
             <div className="flex items-center space-x-2">
               <Trophy className="h-4 w-4 text-muted-foreground" />
-              <span>{battle.points_per_question} points per question</span>
+              <span>{battle.points_per_question ?? 0} points per question</span>
             </div>
             <div className="flex items-center space-x-2">
               <AlertCircle className="h-4 w-4 text-muted-foreground" />
@@ -423,39 +409,36 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
         <CardHeader>
           <CardTitle>Participants</CardTitle>
           <CardDescription>
-            {battle.currentParticipants} of {battle.maxParticipants} spots
-            filled
+            {battle.current_participants} of {battle.max_participants} spots filled
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <Progress
-              value={
-                (battle.currentParticipants / battle.maxParticipants) * 100
-              }
+              value={(battle.current_participants / battle.max_participants) * 100}
               className="h-2"
             />
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {battle.participants?.map((participant) => (
                 <div
-                  key={participant.userId}
+                  key={participant.user_id}
                   className="flex items-center space-x-4 rounded-lg border p-4"
                 >
                   <Avatar>
-                    <AvatarImage src={participant.user.avatar} />
+                    <AvatarImage src={participant.user.avatar_url ?? undefined} />
                     <AvatarFallback>
-                      {participant.user.name.charAt(0).toUpperCase()}
+                      {participant.user.username.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1 space-y-1">
                     <p className="text-sm font-medium leading-none">
-                      {participant.user.name}
+                      {participant.user.username}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {participant.joinedAt ? 'Ready' : 'Not Ready'}
+                      {participant.status === 'READY' ? 'Ready' : 'Not Ready'}
                     </p>
                   </div>
-                  {participant.userId === battle.user_id && (
+                  {participant.user_id === battle.creator.id && (
                     <Badge variant="secondary">Creator</Badge>
                   )}
                 </div>
@@ -470,15 +453,12 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
         <Button
           variant="outline"
           onClick={handleLeaveBattle}
-          disabled={isStarting}
+          disabled={isStarting || isLeaving}
         >
-          Leave Battle
+          {isLeaving ? 'Leaving Battle...' : 'Leave Battle'}
         </Button>
         {isCreator && (
-          <Button
-            onClick={handleStartBattle}
-            disabled={!canStartNow || isStarting}
-          >
+          <Button onClick={handleStartBattle} disabled={!canStartNow || isStarting}>
             {isStarting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

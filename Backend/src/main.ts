@@ -18,6 +18,7 @@ import { errorHandler } from './middlewares/errorHandler';
 import logger from './utils/logger';
 import { v2 as cloudinary } from 'cloudinary';
 import prisma from './lib/prisma';
+import socketService from './services/socket';
 
 declare const require: NodeRequire;
 
@@ -50,7 +51,41 @@ export class App {
     this.app.use(cookieParser());
     this.app.use(
       cors({
-        origin: CORS_ORIGIN || '*',
+        origin: function (origin, callback) {
+          // Allow requests with no origin (mobile apps, curl, etc.)
+          if (!origin) return callback(null, true);
+
+          if (process.env.NODE_ENV === 'production') {
+            // In production, only allow origins from CORS_ORIGIN env var
+            const allowedOrigins = (CORS_ORIGIN || '')
+              .split(',')
+              .map((o) => o.trim())
+              .filter(Boolean);
+            if (
+              allowedOrigins.length === 0 ||
+              allowedOrigins.includes(origin)
+            ) {
+              return callback(null, true);
+            }
+            return callback(
+              new Error(`Origin ${origin} not allowed by CORS`)
+            );
+          }
+
+          // In development, allow localhost and private network IPs
+          const isLocalhost =
+            /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+          const isPrivateNetwork =
+            /^https?:\/\/(192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})(:\d+)?$/.test(
+              origin
+            );
+
+          if (isLocalhost || isPrivateNetwork) {
+            return callback(null, true);
+          }
+
+          return callback(new Error(`Origin ${origin} not allowed by CORS`));
+        },
         credentials: true,
       })
     );
@@ -112,6 +147,9 @@ export class App {
       const server = this.app.listen(PORT, () => {
         logger.info(`Server running on port ${PORT}`);
       });
+
+      // Initialize WebSocket server
+      socketService.initialize(server);
 
       this.setupGracefulShutdown(server);
     } catch (error) {

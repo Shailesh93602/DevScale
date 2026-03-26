@@ -14,6 +14,7 @@
   "example_input": "saga.addStep({ name: 'reserve-inventory', execute: reserveInventory, compensate: releaseInventory }); saga.addStep({ name: 'charge-payment', execute: chargePayment, compensate: refundPayment }); saga.execute(orderData);",
   "example_output": "{ \"status\": \"completed\", \"steps\": [{ \"name\": \"reserve-inventory\", \"status\": \"completed\" }, { \"name\": \"charge-payment\", \"status\": \"completed\" }] }",
   "constraints": "Must execute steps in order. Must compensate in reverse order on failure. Must handle compensation failures. Must support both orchestration and choreography patterns. Must be idempotent.",
-  "function_signature": "class SagaOrchestrator { addStep(step: SagaStep): void; execute(context: any): Promise<SagaResult>; getStatus(sagaId: string): SagaStatus; }",
-  "status": "ACTIVE"
+  "function_signature": "class SagaOrchestrator { addStep(step: SagaStep): void { /* ... */ }\nexecute(context: any): Promise<SagaResult> { /* ... */ }\ngetStatus(sagaId: string): SagaStatus { /* ... */ } }",
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

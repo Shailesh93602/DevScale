@@ -1,0 +1,5 @@
+{
+  "typescript": "function canPartition(nums: number[]): boolean {\n    // Your code here\n}",
+  "javascript": "/**\n * @param {any} params\n * @return {any}\n */\nvar canPartition = function(root) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def canPartition(self, root) -> bool:\n        # Your code here\n        pass"
+}

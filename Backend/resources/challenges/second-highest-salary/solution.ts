@@ -1,1 +1,9 @@
-// TODO: Add reference solution
+// Optimal SQL Solution
+const solution = `
+SELECT (
+  SELECT DISTINCT salary
+  FROM Employee
+  ORDER BY salary DESC
+  LIMIT 1 OFFSET 1
+) AS SecondHighestSalary;
+`;

@@ -26,22 +26,8 @@ const FeaturesSection: React.FC = () => (
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         <FeatureCard
           icon={
-            <span style={{ position: 'relative', display: 'inline-block' }}>
-              <Image
-                src="/icons/roadmap.svg"
-                alt="Personalized Roadmaps"
-                width={48}
-                height={48}
-                className="feature-image"
-                priority
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  (
-                    e.target as HTMLElement
-                  ).nextElementSibling?.classList.remove('hidden');
-                }}
-              />
-              <FaCogs className="hidden text-4xl text-primary" />
+            <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+              <FaCogs className="text-4xl text-primary" />
             </span>
           }
           title="Personalized Roadmaps"
@@ -51,22 +37,8 @@ const FeaturesSection: React.FC = () => (
         />
         <FeatureCard
           icon={
-            <span style={{ position: 'relative', display: 'inline-block' }}>
-              <Image
-                src="/icons/community.svg"
-                alt="Active Community"
-                width={48}
-                height={48}
-                className="feature-image"
-                priority
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  (
-                    e.target as HTMLElement
-                  ).nextElementSibling?.classList.remove('hidden');
-                }}
-              />
-              <FaUsers className="hidden text-4xl text-primary" />
+            <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+              <FaUsers className="text-4xl text-primary" />
             </span>
           }
           title="Active Community"
@@ -76,22 +48,8 @@ const FeaturesSection: React.FC = () => (
         />
         <FeatureCard
           icon={
-            <span style={{ position: 'relative', display: 'inline-block' }}>
-              <Image
-                src="/icons/interview.svg"
-                alt="Placement Preparation"
-                width={48}
-                height={48}
-                className="feature-image"
-                priority
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  (
-                    e.target as HTMLElement
-                  ).nextElementSibling?.classList.remove('hidden');
-                }}
-              />
-              <FaBriefcase className="hidden text-4xl text-primary" />
+            <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+              <FaBriefcase className="text-4xl text-primary" />
             </span>
           }
           title="Placement Preparation"
@@ -101,22 +59,8 @@ const FeaturesSection: React.FC = () => (
         />
         <FeatureCard
           icon={
-            <span style={{ position: 'relative', display: 'inline-block' }}>
-              <Image
-                src="/icons/battle.svg"
-                alt="Battle Zone"
-                width={48}
-                height={48}
-                className="feature-image"
-                priority
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  (
-                    e.target as HTMLElement
-                  ).nextElementSibling?.classList.remove('hidden');
-                }}
-              />
-              <FaGamepad className="hidden text-4xl text-primary" />
+            <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+              <FaGamepad className="text-4xl text-primary" />
             </span>
           }
           title="Battle Zone"
@@ -126,22 +70,8 @@ const FeaturesSection: React.FC = () => (
         />
         <FeatureCard
           icon={
-            <span style={{ position: 'relative', display: 'inline-block' }}>
-              <Image
-                src="/icons/achievement.svg"
-                alt="Achievements & Badges"
-                width={48}
-                height={48}
-                className="feature-image"
-                priority
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  (
-                    e.target as HTMLElement
-                  ).nextElementSibling?.classList.remove('hidden');
-                }}
-              />
-              <FaMedal className="hidden text-4xl text-primary" />
+            <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+              <FaMedal className="text-4xl text-primary" />
             </span>
           }
           title="Achievements & Badges"
@@ -151,22 +81,8 @@ const FeaturesSection: React.FC = () => (
         />
         <FeatureCard
           icon={
-            <span style={{ position: 'relative', display: 'inline-block' }}>
-              <Image
-                src="/icons/resources.svg"
-                alt="Curated Resources"
-                width={48}
-                height={48}
-                className="feature-image"
-                priority
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  (
-                    e.target as HTMLElement
-                  ).nextElementSibling?.classList.remove('hidden');
-                }}
-              />
-              <FaBook className="hidden text-4xl text-primary" />
+            <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+              <FaBook className="text-4xl text-primary" />
             </span>
           }
           title="Curated Resources"

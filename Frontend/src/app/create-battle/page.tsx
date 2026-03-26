@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { useAxiosPost } from '@/hooks/useAxios';
 
 const majorTopics = ['DSA', 'OOPs', 'JavaScript', 'Python', 'Java'];
@@ -43,34 +44,37 @@ export default function CreateBattlePage() {
         toast.success(data.message);
         router.push('/battle-zone');
       }
-    } catch (error) {
-      console.error(error);
+    } catch {
+      toast.error('Failed to create battle. Please try again.');
     }
   };
 
   return (
-    <div className="mx-auto max-w-lg bg-white p-6 dark:bg-gray-800">
-      <div className="rounded-lg bg-blue-50 p-6 shadow-md dark:bg-gray-900">
-        <h1 className="mb-6 text-3xl font-bold text-gray-900 dark:text-gray-100">
+    <div className="mx-auto max-w-lg bg-background p-6">
+      <div className="rounded-lg bg-card p-6 shadow-md">
+        <h1 className="mb-6 text-3xl font-bold text-foreground">
           Create New Battle
         </h1>
         <input
           type="text"
           placeholder="Battle Title"
+          aria-label="Battle Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="mb-4 w-full rounded-md border border-gray-300 bg-gray-50 p-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+          className="mb-4 w-full rounded-md border border-input bg-background p-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
         />
         <textarea
           placeholder="Battle Description"
+          aria-label="Battle Description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="mb-4 w-full rounded-md border border-gray-300 bg-gray-50 p-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+          className="mb-4 w-full rounded-md border border-input bg-background p-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
         ></textarea>
         <select
           value={selectedMajorTopic}
+          aria-label="Select Major Topic"
           onChange={(e) => setSelectedMajorTopic(e.target.value)}
-          className="mb-4 w-full rounded-md border border-gray-300 bg-gray-50 p-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+          className="mb-4 w-full rounded-md border border-input bg-background p-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
         >
           {majorTopics.map((topic) => (
             <option key={topic} value={topic}>
@@ -80,8 +84,9 @@ export default function CreateBattlePage() {
         </select>
         <select
           value={selectedDifficulty}
+          aria-label="Select Difficulty"
           onChange={(e) => setSelectedDifficulty(e.target.value)}
-          className="mb-4 w-full rounded-md border border-gray-300 bg-gray-50 p-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+          className="mb-4 w-full rounded-md border border-input bg-background p-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
         >
           {difficulties.map((difficulty) => (
             <option key={difficulty} value={difficulty}>
@@ -91,8 +96,9 @@ export default function CreateBattlePage() {
         </select>
         <select
           value={selectedLength}
+          aria-label="Select Length"
           onChange={(e) => setSelectedLength(e.target.value)}
-          className="mb-4 w-full rounded-md border border-gray-300 bg-gray-50 p-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+          className="mb-4 w-full rounded-md border border-input bg-background p-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
         >
           {lengths.map((length) => (
             <option key={length} value={length}>
@@ -103,23 +109,22 @@ export default function CreateBattlePage() {
         <Input
           type="date"
           name="date"
+          aria-label="Battle Date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          className="mb-4 w-full rounded-md border border-gray-300 bg-gray-50 p-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+          className="mb-4 w-full rounded-md border border-input bg-background p-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
         />
         <Input
           type="time"
           name="time"
+          aria-label="Battle Time"
           value={time}
           onChange={(e) => setTime(e.target.value)}
-          className="mb-4 w-full rounded-md border border-gray-300 bg-gray-50 p-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+          className="mb-4 w-full rounded-md border border-input bg-background p-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
         />
-        <button
-          onClick={handleCreate}
-          className="w-full rounded-md bg-blue-500 px-4 py-2 text-white transition duration-200 hover:bg-blue-600"
-        >
+        <Button onClick={handleCreate} className="w-full">
           Create Battle
-        </button>
+        </Button>
       </div>
     </div>
   );

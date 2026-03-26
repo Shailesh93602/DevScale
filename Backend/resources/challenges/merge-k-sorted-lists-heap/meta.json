@@ -16,5 +16,6 @@
   "example_output": "[1,1,2,3,4,4,5,6]",
   "constraints": "- `k == arrays.length`\n- `0 <= k <= 10^4`\n- `0 <= arrays[i].length <= 500`\n- `-10^4 <= arrays[i][j] <= 10^4`\n- `arrays[i]` is sorted in ascending order.\n- The sum of `arrays[i].length` will not exceed `10^4`.",
   "function_signature": "function mergeKArrays(arrays: number[][]): number[] {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nclass JobQueue { add(type: string, payload: any, options?: JobOptions): Promise<Job>; process(type: string, handler: JobHandler): void; getJob(id: string): Promise<Job>; getStats(): QueueStats; }",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

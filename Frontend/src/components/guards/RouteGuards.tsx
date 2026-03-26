@@ -16,7 +16,7 @@ import { ReactNode, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import Loader from '@/components/Loader';
-import { UserRole } from '@/types';
+import type { UserRole } from '@/types';
 
 // ─── Auth Guard ───────────────────────────────────────────────────────────────
 interface AuthGuardProps {
@@ -32,23 +32,25 @@ export function AuthGuard({
   redirectTo = '/auth/login',
   fallback,
 }: AuthGuardProps) {
-  const { status, isAuthenticated } = useAuth();
+  const { status, isAuthenticated, session } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.replace(redirectTo);
     }
-  }, [status, isAuthenticated, router, redirectTo]);
+  }, [status, router, redirectTo]);
 
-  if (status === 'loading' || !isAuthenticated) {
-    // Show fallback/skeleton while loading OR while awaiting the redirect to login.
-    // Previously returning null here caused the visible blank screen between the
-    // redirect trigger (useEffect) and the actual navigation completing.
-    return fallback ? <>{fallback}</> : <Loader type="SiteLoader" />;
-  }
+  // Already confirmed authenticated — render children.
+  if (isAuthenticated) return <>{children}</>;
 
-  return <>{children}</>;
+  // Session exists (Supabase cookie confirmed it) but user profile (/me) is still loading.
+  // Render children immediately so the page can start fetching its own data in parallel,
+  // instead of blocking for the full /me round-trip (which can take 4+ s on cold start).
+  if (session !== null && status === 'loading') return <>{children}</>;
+
+  // Show fallback/loader while waiting for session OR while awaiting the redirect.
+  return fallback ? <>{fallback}</> : <Loader type="SiteLoader" />;
 }
 
 // ─── Role Guard ───────────────────────────────────────────────────────────────

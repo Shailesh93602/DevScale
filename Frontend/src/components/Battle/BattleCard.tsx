@@ -4,33 +4,28 @@ import { useRouter } from 'next/navigation';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Progress } from '@/components/ui/progress';
 import { Battle, BattleStatus } from '@/types/battle';
 import {
   Clock,
   Calendar,
   Users,
-  Award,
-  BarChart,
   Timer,
   ChevronRight,
   Swords,
-  Trophy,
+  BarChart,
   Loader2,
+  BookOpen,
+  HelpCircle,
+  Trophy,
+  Play,
 } from 'lucide-react';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
 interface BattleCardProps {
@@ -39,34 +34,58 @@ interface BattleCardProps {
   onView?: (battleId: string) => void;
   variant?: 'default' | 'compact';
   isLoading?: boolean;
+  currentUserId?: string;
 }
 
-const getStatusColor = (status: BattleStatus) => {
-  switch (status) {
-    case 'UPCOMING':
-      return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
-    case 'IN_PROGRESS':
-      return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
-    case 'completed':
-      return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
-    case 'cancelled':
-      return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
-    default:
-      return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
-  }
+const STATUS_LABELS: Record<string, string> = {
+  WAITING: 'Waiting',
+  LOBBY: 'Lobby',
+  IN_PROGRESS: 'Live',
+  COMPLETED: 'Completed',
+  CANCELLED: 'Cancelled',
+};
+
+const STATUS_COLORS: Record<string, string> = {
+  WAITING: 'bg-blue-500/15 text-blue-600 border-blue-500/20',
+  LOBBY: 'bg-amber-500/15 text-amber-600 border-amber-500/20',
+  IN_PROGRESS: 'bg-emerald-500/15 text-emerald-600 border-emerald-500/20',
+  COMPLETED: 'bg-muted text-muted-foreground',
+  CANCELLED: 'bg-destructive/10 text-destructive border-destructive/20',
+};
+
+const STATUS_BAR_COLORS: Record<string, string> = {
+  WAITING: 'border-t-blue-500',
+  LOBBY: 'border-t-amber-500',
+  IN_PROGRESS: 'border-t-emerald-500',
+  COMPLETED: 'border-t-muted-foreground',
+  CANCELLED: 'border-t-destructive',
+};
+
+const DIFFICULTY_LABELS: Record<string, string> = {
+  EASY: 'Easy',
+  MEDIUM: 'Medium',
+  HARD: 'Hard',
 };
 
 const getDifficultyColor = (difficulty: string) => {
   switch (difficulty.toLowerCase()) {
     case 'easy':
-      return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+      return 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20';
     case 'medium':
-      return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
+      return 'bg-amber-500/10 text-amber-600 border-amber-500/20';
     case 'hard':
-      return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
+      return 'bg-red-500/10 text-red-600 border-red-500/20';
     default:
-      return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
+      return 'bg-muted text-muted-foreground';
   }
+};
+
+const SOURCE_TYPE_LABELS: Record<string, string> = {
+  topic: 'Topic',
+  subject: 'Subject',
+  main_concept: 'Concept',
+  roadmap: 'Roadmap',
+  dsa: 'DSA',
 };
 
 const BattleCard: React.FC<BattleCardProps> = ({
@@ -75,75 +94,144 @@ const BattleCard: React.FC<BattleCardProps> = ({
   onView,
   variant = 'default',
   isLoading = false,
+  currentUserId,
 }) => {
   const router = useRouter();
   const isCompact = variant === 'compact';
   const [isJoining, setIsJoining] = React.useState(false);
-  const [joinError, setJoinError] = React.useState<string | null>(null);
+
+  const isUserJoined = currentUserId
+    ? battle.participants.some((p) => p.user_id === currentUserId)
+    : false;
+  const isFull = battle.current_participants >= battle.max_participants;
+  const participantPercent = Math.round(
+    (battle.current_participants / battle.max_participants) * 100,
+  );
+  const battleRef = battle.slug ?? battle.id;
 
   const handleJoin = async () => {
-    if (onJoin && !isJoining) {
-      setIsJoining(true);
-      setJoinError(null);
-      try {
-        await onJoin(battle.id, battle.status);
-      } catch (err) {
-        setJoinError(
-          err instanceof Error ? err.message : 'Failed to join battle',
-        );
-      } finally {
-        setIsJoining(false);
-      }
+    if (isJoining) return;
+    // If user is already a participant, just navigate — no API call needed
+    if (isUserJoined) {
+      router.push(`/battle-zone/${battleRef}`);
+      return;
     }
+    setIsJoining(true);
+    if (onJoin) {
+      onJoin(battle.id, battle.status);
+    }
+    setIsJoining(false);
   };
 
   const handleView = () => {
     if (onView) {
       onView(battle.id);
     } else {
-      router.push(`/battle-zone/${battle.id}`);
+      router.push(`/battle-zone/${battleRef}`);
     }
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return format(date, 'MMM dd, yyyy');
-  };
-
-  const formatTime = (dateString: string) => {
-    const date = new Date(dateString);
-    return format(date, 'h:mm a');
-  };
-
-  const getTimeUntilStart = (startTime: string) => {
-    const start = new Date(startTime);
-    return formatDistanceToNow(start, { addSuffix: true });
-  };
-
-  const renderBattleTypeIcon = () => {
-    switch (battle.type) {
-      case 'INSTANT':
-        return <Timer className="h-4 w-4" />;
-      case 'SCHEDULED':
-        return <Calendar className="h-4 w-4" />;
-      case 'TOURNAMENT':
-        return <Trophy className="h-4 w-4" />;
-      case 'PRACTICE':
-        return <BarChart className="h-4 w-4" />;
-      default:
-        return <Swords className="h-4 w-4" />;
+  const getSourceLabel = () => {
+    if (battle.topic?.title) return { label: battle.topic.title, icon: BookOpen };
+    if (battle.question_source_type) {
+      return {
+        label: SOURCE_TYPE_LABELS[battle.question_source_type] ?? battle.question_source_type,
+        icon: BookOpen,
+      };
     }
+    return null;
+  };
+
+  const getTimeLabel = () => {
+    if (battle.status === 'IN_PROGRESS') {
+      return { text: 'Battle is live now', color: 'text-emerald-600' };
+    }
+    if ((battle.status === 'WAITING' || battle.status === 'LOBBY') && battle.start_time) {
+      const start = new Date(battle.start_time);
+      const diffMs = start.getTime() - Date.now();
+      const isUrgent = diffMs > 0 && diffMs < 3600_000; // < 1 hour
+      return {
+        text: `Starts ${formatDistanceToNow(start, { addSuffix: true })}`,
+        color: isUrgent ? 'text-amber-600' : 'text-muted-foreground',
+      };
+    }
+    if (battle.status === 'COMPLETED') {
+      return { text: 'Battle ended', color: 'text-muted-foreground' };
+    }
+    return null;
+  };
+
+  const renderPrimaryButton = () => {
+    const commonDisabled = isJoining;
+
+    if (isUserJoined) {
+      return (
+        <Button className="flex-1" onClick={handleJoin} disabled={commonDisabled}>
+          {battle.status === 'IN_PROGRESS' ? (
+            <><Play className="mr-2 h-4 w-4" /> Resume Battle</>
+          ) : (
+            <><Swords className="mr-2 h-4 w-4" /> Enter Battle</>
+          )}
+        </Button>
+      );
+    }
+
+    if (battle.status === 'WAITING' || battle.status === 'LOBBY') {
+      if (isFull) {
+        return (
+          <Button className="flex-1" variant="outline" disabled>
+            <Users className="mr-2 h-4 w-4" /> Battle Full
+          </Button>
+        );
+      }
+      return (
+        <Button className="flex-1" onClick={handleJoin} disabled={commonDisabled}>
+          {isJoining ? (
+            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Joining...</>
+          ) : (
+            <><Swords className="mr-2 h-4 w-4" /> Join Battle</>
+          )}
+        </Button>
+      );
+    }
+
+    if (battle.status === 'IN_PROGRESS') {
+      return (
+        <Button className="flex-1" variant="outline" onClick={handleView}>
+          <Play className="mr-2 h-4 w-4" /> Watch Live
+        </Button>
+      );
+    }
+
+    if (battle.status === 'COMPLETED') {
+      return (
+        <Button className="flex-1" variant="outline" onClick={handleView}>
+          <Trophy className="mr-2 h-4 w-4" /> View Results
+        </Button>
+      );
+    }
+
+    return null;
   };
 
   if (isLoading) {
     return (
       <Card className="w-full overflow-hidden">
         <div className="animate-pulse">
-          <div className="h-32 bg-muted" />
-          <div className="space-y-3 p-4">
-            <div className="h-4 w-3/4 rounded bg-muted" />
-            <div className="h-4 w-1/2 rounded bg-muted" />
+          <div className="h-1 bg-muted" />
+          <div className="space-y-3 p-5">
+            <div className="flex gap-2">
+              <div className="h-5 w-16 rounded-full bg-muted" />
+              <div className="h-5 w-12 rounded-full bg-muted" />
+            </div>
+            <div className="h-6 w-3/4 rounded bg-muted" />
+            <div className="h-4 w-full rounded bg-muted" />
             <div className="h-4 w-2/3 rounded bg-muted" />
+            <div className="h-2 w-full rounded-full bg-muted" />
+          </div>
+          <div className="flex gap-2 px-5 pb-5">
+            <div className="h-9 flex-1 rounded bg-muted" />
+            <div className="h-9 w-28 rounded bg-muted" />
           </div>
         </div>
       </Card>
@@ -152,47 +240,36 @@ const BattleCard: React.FC<BattleCardProps> = ({
 
   if (isCompact) {
     return (
-      <Card className="w-full overflow-hidden transition-all hover:shadow-md">
-        <div className="flex items-start p-4">
-          <div className="flex-1">
-            <div className="flex items-center gap-2">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Badge className={getStatusColor(battle.status)}>
-                      {battle.status}
-                    </Badge>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Battle Status: {battle.status}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Badge className={getDifficultyColor(battle.difficulty)}>
-                      {battle.difficulty}
-                    </Badge>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Difficulty Level: {battle.difficulty}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+      <Card
+        className={cn(
+          'w-full overflow-hidden border-l-4 transition-all hover:shadow-md',
+          STATUS_BAR_COLORS[battle.status]?.replace('border-t', 'border-l') ??
+            'border-l-muted-foreground',
+        )}
+      >
+        <div className="flex items-center gap-3 p-4">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <Badge className={cn('text-xs', STATUS_COLORS[battle.status])}>
+                {STATUS_LABELS[battle.status] ?? battle.status}
+              </Badge>
+              <Badge variant="outline" className={cn('text-xs', getDifficultyColor(battle.difficulty))}>
+                {DIFFICULTY_LABELS[battle.difficulty] ?? battle.difficulty}
+              </Badge>
             </div>
-            <h3 className="mt-2 text-lg font-semibold">{battle.title}</h3>
-            <div className="mt-1 flex items-center text-sm text-muted-foreground">
-              <Users className="mr-1 h-4 w-4" />
-              {battle.currentParticipants}/{battle.maxParticipants} participants
+            <h3 className="font-semibold truncate">{battle.title}</h3>
+            <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1">
+                <Users className="h-3 w-3" />
+                {battle.current_participants}/{battle.max_participants}
+              </span>
+              <span className="flex items-center gap-1">
+                <HelpCircle className="h-3 w-3" />
+                {battle.total_questions}Q
+              </span>
             </div>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleView}
-            aria-label="View battle details"
-          >
+          <Button variant="ghost" size="sm" onClick={handleView} aria-label="View battle details">
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
@@ -200,145 +277,136 @@ const BattleCard: React.FC<BattleCardProps> = ({
     );
   }
 
+  const source = getSourceLabel();
+  const timeLabel = getTimeLabel();
+
   return (
-    <Card className="w-full overflow-hidden transition-all hover:shadow-md">
-      <CardHeader className="pb-2">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Badge className={getStatusColor(battle.status)}>
-                    {battle.status}
-                  </Badge>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Battle Status: {battle.status}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <Badge variant="outline" className="flex items-center gap-1">
-              {renderBattleTypeIcon()}
-              {battle.type}
+    <Card
+      className={cn(
+        'group w-full overflow-hidden border-t-2 transition-all duration-200 hover:shadow-lg',
+        STATUS_BAR_COLORS[battle.status] ?? 'border-t-muted-foreground',
+      )}
+    >
+      <CardHeader className="pb-3 pt-4">
+        {/* Badges row */}
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
+            <Badge
+              className={cn(
+                'font-medium',
+                STATUS_COLORS[battle.status],
+                battle.status === 'WAITING' && 'animate-pulse',
+              )}
+            >
+              {STATUS_LABELS[battle.status] ?? battle.status}
             </Badge>
+            <Badge variant="outline" className="flex items-center gap-1 capitalize text-xs">
+              {battle.type === 'QUICK' && <Timer className="h-3 w-3" />}
+              {battle.type === 'SCHEDULED' && <Calendar className="h-3 w-3" />}
+              {battle.type === 'PRACTICE' && <BarChart className="h-3 w-3" />}
+              {battle.type.toLowerCase()}
+            </Badge>
+            {isUserJoined && (
+              <Badge className="bg-primary/10 text-primary border-primary/20 text-xs">
+                Joined
+              </Badge>
+            )}
           </div>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Badge className={getDifficultyColor(battle.difficulty)}>
-                  {battle.difficulty}
-                </Badge>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Difficulty Level: {battle.difficulty}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <Badge className={cn('shrink-0 text-xs font-medium', getDifficultyColor(battle.difficulty))}>
+            {DIFFICULTY_LABELS[battle.difficulty] ?? battle.difficulty}
+          </Badge>
         </div>
-        <CardTitle className="mt-2">{battle.title}</CardTitle>
-        <CardDescription className="line-clamp-2">
-          {battle.description}
-        </CardDescription>
+
+        {/* Title */}
+        <h3 className="mt-2 text-lg font-bold leading-tight line-clamp-2 group-hover:text-primary transition-colors">
+          {battle.title}
+        </h3>
+
+        {/* Description */}
+        {battle.description && (
+          <p className="text-sm text-muted-foreground line-clamp-2 mt-0.5">
+            {battle.description}
+          </p>
+        )}
       </CardHeader>
-      <CardContent className="pb-2">
-        <div className="grid gap-2 text-sm">
-          <div className="flex items-center gap-2">
-            <Award className="h-4 w-4 text-muted-foreground" />
-            <span>Topic: {battle.topic.title}</span>
+
+      <CardContent className="pb-3 space-y-3">
+        {/* Key stats row */}
+        <div className="flex items-center gap-4 text-sm">
+          <div className="flex items-center gap-1.5 text-muted-foreground">
+            <HelpCircle className="h-4 w-4 shrink-0" />
+            <span className="font-medium text-foreground">{battle.total_questions}</span>
+            <span>questions</span>
           </div>
-          <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-            <span>
-              Starts: {formatDate(battle.startDate)} at{' '}
-              {formatTime(battle.startDate)}
-            </span>
+          <div className="flex items-center gap-1.5 text-muted-foreground">
+            <Timer className="h-4 w-4 shrink-0" />
+            <span className="font-medium text-foreground">{battle.time_per_question}s</span>
+            <span>each</span>
           </div>
-          <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4 text-muted-foreground" />
-            <span>{getTimeUntilStart(battle.startDate)}</span>
+          <div className="flex items-center gap-1.5 text-muted-foreground">
+            <Trophy className="h-4 w-4 shrink-0" />
+            <span className="font-medium text-foreground">{battle.points_per_question}</span>
+            <span>pts</span>
           </div>
-          <div className="flex items-center gap-2">
-            <Users className="h-4 w-4 text-muted-foreground" />
-            <span>
-              {battle.currentParticipants}/{battle.maxParticipants} participants
-            </span>
+        </div>
+
+        {/* Source */}
+        {source && (
+          <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+            <source.icon className="h-4 w-4 shrink-0" />
+            <span className="truncate">{source.label}</span>
           </div>
-          <div className="mt-2 flex items-center gap-2">
-            <Avatar className="h-6 w-6">
-              <AvatarImage
-                src={battle.user.avatar_url}
-                alt={battle.user.username}
-              />
-              <AvatarFallback>
-                {battle.user.username.charAt(0).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-            <span className="text-xs text-muted-foreground">
-              Created by {battle.user.username}
-            </span>
+        )}
+
+        {/* Time label */}
+        {timeLabel && (
+          <div className={cn('flex items-center gap-1.5 text-sm font-medium', timeLabel.color)}>
+            <Clock className="h-4 w-4 shrink-0" />
+            <span>{timeLabel.text}</span>
           </div>
+        )}
+
+        {/* Participant progress */}
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center gap-1.5 text-muted-foreground">
+              <Users className="h-4 w-4" />
+              <span>
+                <span className="font-semibold text-foreground">{battle.current_participants}</span>
+                <span> / {battle.max_participants} players</span>
+              </span>
+            </div>
+            {isFull && (
+              <span className="text-xs text-amber-600 font-medium">Full</span>
+            )}
+          </div>
+          <Progress value={participantPercent} className="h-1.5" />
+        </div>
+
+        {/* Creator */}
+        <div className="flex items-center gap-2 pt-0.5">
+          <Avatar className="h-5 w-5">
+            <AvatarImage
+              src={battle.creator.avatar_url ?? undefined}
+              alt={battle.creator.username}
+            />
+            <AvatarFallback className="text-[10px]">
+              {battle.creator.username.charAt(0).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          <span className="text-xs text-muted-foreground">
+            by <span className="font-medium text-foreground">{battle.creator.username}</span>
+          </span>
         </div>
       </CardContent>
-      <CardFooter className="flex justify-between pt-2">
-        {battle.status === 'UPCOMING' && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleJoin}
-            disabled={isJoining}
-            className={cn(
-              'min-w-[100px]',
-              isJoining && 'cursor-not-allowed opacity-70',
-            )}
-          >
-            {isJoining ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Joining...
-              </>
-            ) : (
-              'Join Battle'
-            )}
-          </Button>
-        )}
-        {battle.status === 'IN_PROGRESS' && (
-          <Button
-            variant="default"
-            size="sm"
-            onClick={handleJoin}
-            disabled={isJoining}
-            className={cn(
-              'min-w-[100px]',
-              isJoining && 'cursor-not-allowed opacity-70',
-            )}
-          >
-            {isJoining ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Entering...
-              </>
-            ) : (
-              'Enter Battle'
-            )}
-          </Button>
-        )}
-        {battle.status === 'completed' && (
-          <Button variant="outline" size="sm" onClick={handleView}>
-            View Results
-          </Button>
-        )}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handleView}
-          aria-label="View battle details"
-        >
-          View Details
+
+      <CardFooter className="pt-0 pb-4 flex gap-2">
+        {renderPrimaryButton()}
+        <Button variant="ghost" size="sm" onClick={handleView} className="shrink-0">
+          Details
+          <ChevronRight className="ml-1 h-3 w-3" />
         </Button>
       </CardFooter>
-      {joinError && (
-        <div className="px-4 pb-2 text-sm text-destructive">{joinError}</div>
-      )}
     </Card>
   );
 };

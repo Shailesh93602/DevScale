@@ -1,433 +1,343 @@
 import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
-import { BattleRepository } from '@/repositories/battleRepository';
-import logger from '@/utils/logger';
-import { sendResponse } from '@/utils/apiResponse';
-import { createAppError } from '@/utils/errorHandler';
-import { BattleStatus, BattleType, Difficulty, Length } from '@prisma/client';
-import battleSocketService from '@/services/battleSocket';
-import socketService from '@/services/socket';
+import { BattleRepository } from '../repositories/battleRepository';
+import logger from '../utils/logger';
+import { sendResponse } from '../utils/apiResponse';
+import { createAppError } from '../utils/errorHandler';
+import { BattleType, Difficulty } from '@prisma/client';
+import battleSocketService from '../services/battleSocket';
+import {
+  getQuestionPool,
+  getAntiRepeatExclusions,
+  QuestionSourceType,
+} from '../services/questionPoolService';
 
 export default class BattleController {
-  private readonly battleRepo: BattleRepository;
+  private readonly repo: BattleRepository;
 
   constructor() {
-    this.battleRepo = new BattleRepository();
+    this.repo = new BattleRepository();
   }
 
-  /**
-   * Get all battles with pagination, filtering, and sorting
-   */
-  public getBattles = catchAsync(async (req: Request, res: Response) => {
-    const {
-      page,
-      limit,
-      search,
-      status,
-      difficulty,
-      type,
-      length,
-      topic_id,
-      user_id,
-      sort_by,
-      sort_order,
-    } = req.query;
+  // ── Browse ──────────────────────────────────────────────────────────────
 
-    const result = await this.battleRepo.getBattles({
+  /**
+   * GET /battles/global-stats
+   * Returns aggregate counts for the Battle Zone header bar.
+   * Single SQL query, 30s cached — replaces the old ?limit=100 hack.
+   */
+  getGlobalStats = catchAsync(async (_req: Request, res: Response) => {
+    const stats = await this.repo.getGlobalStats();
+    sendResponse(res, 'BATTLE_GLOBAL_STATS_FETCHED', { data: stats });
+  });
+
+  getBattles = catchAsync(async (req: Request, res: Response) => {
+    const { page, limit, search, status, difficulty, type, topic_id, user_id, sort_by, sort_order } = req.query;
+
+    const result = await this.repo.getBattles({
       page: page ? parseInt(page as string) : undefined,
       limit: limit ? parseInt(limit as string) : undefined,
-      search: search as string,
-      status: status as BattleStatus,
-      difficulty: difficulty as Difficulty,
-      type: type as BattleType,
-      length: length as Length,
-      topic_id: topic_id as string,
-      user_id: user_id as string,
-      sort_by: sort_by as string,
-      sort_order: sort_order as 'asc' | 'desc',
+      search: search as string | undefined,
+      status: status as Parameters<typeof this.repo.getBattles>[0]['status'],
+      difficulty: difficulty as Difficulty | undefined,
+      type: type as BattleType | undefined,
+      topic_id: topic_id as string | undefined,
+      user_id: user_id as string | undefined,
+      sort_by: sort_by as string | undefined,
+      sort_order: sort_order as 'asc' | 'desc' | undefined,
     });
 
-    sendResponse(res, 'BATTLES_FETCHED', {
-      data: result.data,
-      meta: result.meta,
+    sendResponse(res, 'BATTLES_FETCHED', { data: result.data, meta: result.meta });
+  });
+
+  // ── Detail ──────────────────────────────────────────────────────────────
+
+  getBattle = catchAsync(async (req: Request, res: Response) => {
+    const battle = await this.repo.getBattleDetails(req.params.id);
+    sendResponse(res, 'BATTLE_FETCHED', { data: battle });
+  });
+
+  // ── Question Pool (preview, no correct answers) ─────────────────────────
+
+  getQuestionPool = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user?.id) throw createAppError('Unauthorized', 401);
+
+    const { type, id, difficulty, categories, count } = req.query;
+
+    const parsedCategories = categories
+      ? (categories as string).split(',').map((c) => c.trim()).filter(Boolean)
+      : undefined;
+
+    const result = await getQuestionPool({
+      type: type as QuestionSourceType,
+      id: id as string,
+      difficulty: difficulty as string | undefined,
+      categories: parsedCategories,
+      count: count ? parseInt(count as string) : undefined,
+    });
+
+    const responseType = result.total_available === 0 ? 'QUESTION_POOL_EMPTY' : 'QUESTION_POOL_FETCHED';
+
+    // Strip correct_answer before sending as preview
+    const preview = result.questions.map(({ correct_answer: _ca, ...q }) => q);
+
+    sendResponse(res, responseType, {
+      data: { questions: preview, total_available: result.total_available },
     });
   });
 
-  /**
-   * Get a single battle by ID with detailed information
-   */
-  public getBattle = catchAsync(async (req: Request, res: Response) => {
-    try {
-      const { id } = req.params;
-      const battle = await this.battleRepo.getBattleDetails(id);
-      sendResponse(res, 'BATTLE_FETCHED', { data: battle });
-    } catch (error) {
-      logger.error('Error fetching battle: ', error);
-      throw createAppError('Battle not found', 404);
-    }
-  });
+  // ── Create ──────────────────────────────────────────────────────────────
 
-  /**
-   * Create a new battle
-   */
-  public createBattle = catchAsync(async (req: Request, res: Response) => {
-    // Check if user is authenticated
-    if (!req.user || !req.user.id) {
-      throw createAppError('User not authenticated', 401);
-    }
+  createBattle = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user?.id) throw createAppError('Unauthorized', 401);
 
     const {
-      title,
-      description,
-      topic_id,
-      difficulty,
-      length,
-      type,
-      max_participants,
-      start_time,
-      end_time,
-      points_per_question,
-      time_per_question,
-      total_questions,
+      title, description, topic_id, question_source, difficulty, type,
+      max_participants, total_questions, time_per_question,
+      points_per_question, start_time,
     } = req.body;
 
-    // Additional validation checks if needed
-    if (new Date(start_time) >= new Date(end_time)) {
-      throw createAppError('End time must be after start time', 400);
+    const resolvedTotalQuestions = total_questions ?? 10;
+
+    // If question_source provided, fetch pool now so we can seed atomically
+    let autoQuestions: Awaited<ReturnType<typeof getQuestionPool>>['questions'] | undefined;
+    if (question_source) {
+      const excludeIds = await getAntiRepeatExclusions(
+        question_source.type as QuestionSourceType,
+        question_source.id,
+      );
+      const pool = await getQuestionPool({
+        type: question_source.type as QuestionSourceType,
+        id: question_source.id,
+        difficulty: question_source.difficulty ?? difficulty,
+        categories: question_source.categories,
+        count: question_source.count ?? resolvedTotalQuestions,
+        exclude_question_ids: excludeIds,
+      });
+      if (pool.questions.length === 0) {
+        throw createAppError(
+          'No questions available for the selected source. Try a broader selection.',
+          422,
+        );
+      }
+      autoQuestions = pool.questions;
     }
 
-    // Create the battle
-    const battle = await this.battleRepo.create({
-      data: {
-        title,
-        description,
-        topic_id,
-        difficulty,
-        length,
-        type,
-        max_participants: max_participants || 10,
-        start_time: new Date(start_time),
-        end_time: new Date(end_time),
-        points_per_question: points_per_question || 10,
-        time_per_question: time_per_question || 30,
-        total_questions: total_questions || 10,
-        user_id: req.user.id,
-        status: 'UPCOMING', // Default status
-      },
-      include: {
-        topic: true,
-        user: {
-          select: {
-            id: true,
-            username: true,
-            avatar_url: true,
-          },
-        },
-      },
+    const battle = await this.repo.createBattle({
+      title,
+      description,
+      topic_id: topic_id ?? null,
+      difficulty,
+      type,
+      max_participants: max_participants ?? 6,
+      total_questions: autoQuestions
+        ? Math.min(autoQuestions.length, resolvedTotalQuestions)
+        : resolvedTotalQuestions,
+      time_per_question: time_per_question ?? 30,
+      points_per_question: points_per_question ?? 100,
+      start_time: start_time ? new Date(start_time) : undefined,
+      user_id: req.user.id,
+      question_source_type: question_source?.type ?? null,
+      question_source_id: question_source?.id ?? null,
     });
 
-    logger.info(`Battle created: ${battle.id} by user: ${req.user.id}`);
+    // Auto-seed questions if source was provided
+    if (autoQuestions && autoQuestions.length > 0) {
+      const questionsToAdd = autoQuestions.slice(0, battle.total_questions);
+      await this.repo.addQuestionsFromPool(battle.id, questionsToAdd);
+      logger.info(`Auto-seeded ${questionsToAdd.length} questions into battle ${battle.id}`);
+    }
 
-    // Initialize battle real-time features
     battleSocketService.initializeBattle(battle.id);
 
-    // Return the created battle
+    logger.info(`Battle created: ${battle.id} by user ${req.user.id}`);
     sendResponse(res, 'BATTLE_CREATED', { data: battle });
   });
 
-  /**
-   * Update an existing battle
-   */
-  public updateBattle = catchAsync(async (req: Request, res: Response) => {
-    // Check if user is authenticated
-    if (!req.user || !req.user.id) {
-      throw createAppError('User not authenticated', 401);
-    }
+  // ── Join ────────────────────────────────────────────────────────────────
+
+  joinBattle = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user?.id) throw createAppError('Unauthorized', 401);
 
     const { id } = req.params;
-    const updatedBattle = await this.battleRepo.updateBattle(
-      id,
-      req.body,
-      req.user.id
-    );
+    const result = await this.repo.joinBattle(id, req.user.id);
 
-    logger.info(`Battle updated: ${id} by user: ${req.user.id}`);
-    sendResponse(res, 'BATTLE_UPDATED', { data: updatedBattle });
-  });
-
-  /**
-   * Delete a battle or mark it as cancelled
-   */
-  public deleteBattle = catchAsync(async (req: Request, res: Response) => {
-    // Check if user is authenticated
-    if (!req.user || !req.user.id) {
-      throw createAppError('User not authenticated', 401);
-    }
-
-    const { id } = req.params;
-    await this.battleRepo.deleteBattle(id, req.user.id);
-
-    logger.info(`Battle deleted/cancelled: ${id} by user: ${req.user.id}`);
-    sendResponse(res, 'BATTLE_DELETED');
-  });
-
-  /**
-   * Join a battle
-   */
-  public joinBattle = catchAsync(async (req: Request, res: Response) => {
-    // Check if user is authenticated
-    if (!req.user || !req.user.id) {
-      throw createAppError('User not authenticated', 401);
-    }
-
-    const { id } = req.params;
-    const result = await this.battleRepo.joinBattle(id, req.user.id);
-
-    // Notify all participants about the new participant via WebSocket
-    battleSocketService.handleParticipantJoin(id, req.user.id);
-
-    // Join the WebSocket room for this battle
-    socketService.updateBattleState(id, {
-      battle_id: id,
-      status: result.battle.status,
-      current_participants: result.battle.current_participants,
+    await battleSocketService.handleParticipantJoined(id, {
+      id: req.user.id,
+      username: req.user.username || 'Unknown',
+      avatar_url: req.user.avatar_url,
     });
 
     logger.info(`User ${req.user.id} joined battle ${id}`);
     sendResponse(res, 'BATTLE_JOINED', { data: result });
   });
 
-  /**
-   * Update battle status with proper validation
-   */
-  public updateBattleStatus = catchAsync(
-    async (req: Request, res: Response) => {
-      // Check if user is authenticated
-      if (!req.user || !req.user.id) {
-        throw createAppError('User not authenticated', 401);
-      }
+  // ── Leave ────────────────────────────────────────────────────────────────
 
-      const { id } = req.params;
-      const { status } = req.body;
+  leaveBattle = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user?.id) throw createAppError('Unauthorized', 401);
 
-      // Validate status
-      if (!status || !Object.values(BattleStatus).includes(status)) {
-        throw createAppError('Invalid battle status', 400);
-      }
+    const { id } = req.params;
+    await this.repo.leaveBattle(id, req.user.id);
 
-      // Get current battle status
-      const battle = await this.battleRepo.findUnique({
-        where: { id },
-        select: {
-          status: true,
-          user_id: true,
-          current_participants: true,
-          max_participants: true,
-          start_time: true,
-          end_time: true,
-        },
-      });
+    await battleSocketService.handleParticipantLeft(id, req.user.id);
 
-      if (!battle) {
-        throw createAppError('Battle not found', 404);
-      }
+    logger.info(`User ${req.user.id} left battle ${id}`);
+    sendResponse(res, 'BATTLE_LEFT');
+  });
 
-      // Check if user is the creator
-      if (battle.user_id !== req.user.id) {
-        throw createAppError(
-          'Only the battle creator can update the status',
-          403
-        );
-      }
+  // ── Ready ────────────────────────────────────────────────────────────────
 
-      // Validate status transitions
-      const currentStatus = battle.status;
-      const newStatus = status as BattleStatus;
+  markReady = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user?.id) throw createAppError('Unauthorized', 401);
 
-      // Define valid status transitions
-      const validTransitions: Record<BattleStatus, BattleStatus[]> = {
-        UPCOMING: ['IN_PROGRESS', 'CANCELLED'],
-        IN_PROGRESS: ['COMPLETED', 'CANCELLED'],
-        COMPLETED: [], // No transitions allowed from completed
-        CANCELLED: [], // No transitions allowed from cancelled
-        ARCHIVED: [], // No transitions allowed from archived
-      };
+    const { id } = req.params;
+    const participant = await this.repo.markReady(id, req.user.id);
 
-      // Check if the transition is valid
-      if (!validTransitions[currentStatus].includes(newStatus)) {
-        throw createAppError(
-          `Cannot transition battle from ${currentStatus} to ${newStatus}`,
-          400
-        );
-      }
+    await battleSocketService.handleParticipantReady(id, req.user.id);
 
-      // Additional validation for specific transitions
-      if (newStatus === 'IN_PROGRESS') {
-        // Check if battle has enough participants
-        if (battle.current_participants < 2) {
-          throw createAppError(
-            'Battle needs at least 2 participants to start',
-            400
-          );
-        }
+    logger.info(`User ${req.user.id} ready in battle ${id}`);
+    sendResponse(res, 'BATTLE_READY', { data: participant });
+  });
 
-        // Check if start time has been reached
-        if (battle.start_time && new Date(battle.start_time) > new Date()) {
-          throw createAppError(
-            'Battle cannot start before its scheduled start time',
-            400
-          );
-        }
-      }
+  // ── Open Lobby (creator manually opens lobby for QUICK/PRACTICE battles) ─
 
-      // Update the battle status
-      const updatedBattle = await this.battleRepo.updateBattle(
-        id,
-        { status: newStatus },
-        req.user.id
-      );
+  openLobby = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user?.id) throw createAppError('Unauthorized', 401);
 
-      // Handle specific status changes
-      if (newStatus === 'IN_PROGRESS') {
-        // Start the battle in the socket service
-        await battleSocketService.startBattle(id);
-      } else if (newStatus === 'COMPLETED') {
-        // End the battle in the socket service
-        await battleSocketService.endBattle(id);
-      } else if (newStatus === 'CANCELLED') {
-        // Notify participants about cancellation
-        socketService.updateBattleState(id, {
-          battle_id: id,
-          status: 'CANCELLED',
-          current_participants: battle.current_participants,
-        });
-      }
+    const { id } = req.params;
+    await this.repo.updateStatus(id, req.user.id, 'LOBBY');
 
-      logger.info(
-        `Battle ${id} status updated from ${currentStatus} to ${newStatus} by user ${req.user.id}`
-      );
-      sendResponse(res, 'BATTLE_STATUS_UPDATED', { data: updatedBattle });
-    }
-  );
+    battleSocketService.notifyStatusChanged(id, 'LOBBY');
+    logger.info(`Battle ${id} moved to LOBBY by creator ${req.user.id}`);
+    sendResponse(res, 'BATTLE_STATUS_UPDATED');
+  });
 
-  /**
-   * Get battle questions
-   */
-  public getBattleQuestions = catchAsync(
-    async (req: Request, res: Response) => {
-      // Check if user is authenticated
-      if (!req.user || !req.user.id) {
-        throw createAppError('User not authenticated', 401);
-      }
+  // ── Start (creator manually starts) ────────────────────────────────────
 
-      const { id } = req.params;
-      const questions = await this.battleRepo.getBattleQuestions(
-        id,
-        req.user.id
-      );
+  startBattle = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user?.id) throw createAppError('Unauthorized', 401);
 
-      sendResponse(res, 'QUESTIONS_FETCHED', { data: questions });
-    }
-  );
+    const { id } = req.params;
+    await this.repo.startBattle(id, req.user.id);
 
-  /**
-   * Submit an answer to a battle question
-   */
-  public submitAnswer = catchAsync(async (req: Request, res: Response) => {
-    // Check if user is authenticated
-    if (!req.user || !req.user.id) {
-      throw createAppError('User not authenticated', 401);
-    }
+    // Delegate to socket service which handles IN_PROGRESS transition + question broadcasting
+    await battleSocketService.startBattle(id);
 
-    const { battle_id, question_id, answer, time_taken } = req.body;
+    logger.info(`Battle ${id} started by creator ${req.user.id}`);
+    sendResponse(res, 'BATTLE_STARTED');
+  });
 
-    const result = await this.battleRepo.submitAnswer(
+  // ── Cancel ────────────────────────────────────────────────────────────────
+
+  cancelBattle = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user?.id) throw createAppError('Unauthorized', 401);
+
+    const { id } = req.params;
+    await this.repo.cancelBattle(id, req.user.id);
+
+    battleSocketService.cleanup(id);
+    battleSocketService.notifyStatusChanged(id, 'CANCELLED');
+
+    logger.info(`Battle ${id} cancelled by ${req.user.id}`);
+    sendResponse(res, 'BATTLE_CANCELLED');
+  });
+
+  // ── Add questions (creator only) ──────────────────────────────────────────
+
+  addBattleQuestions = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user?.id) throw createAppError('Unauthorized', 401);
+
+    const { id } = req.params;
+    const { questions } = req.body;
+
+    const result = await this.repo.addQuestions(id, req.user.id, questions);
+
+    logger.info(`${questions.length} questions added to battle ${id} by ${req.user.id}`);
+    sendResponse(res, 'BATTLE_QUESTIONS_ADDED', { data: result });
+  });
+
+  // ── Questions ────────────────────────────────────────────────────────────
+
+  getBattleQuestions = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user?.id) throw createAppError('Unauthorized', 401);
+
+    const questions = await this.repo.getBattleQuestions(req.params.id, req.user.id);
+    sendResponse(res, 'QUESTIONS_FETCHED', { data: questions });
+  });
+
+  // ── Submit answer ─────────────────────────────────────────────────────────
+
+  submitAnswer = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user?.id) throw createAppError('Unauthorized', 401);
+
+    const { battle_id, question_id, selected_option, time_taken_ms } = req.body;
+
+    const result = await this.repo.submitAnswer(
       battle_id,
       question_id,
       req.user.id,
-      answer,
-      time_taken
+      Number(selected_option),
+      Number(time_taken_ms)
     );
 
-    // Update score in real-time via WebSocket
-    battleSocketService.handleScoreUpdate(
-      battle_id,
-      req.user.id,
-      result.participant.score
-    );
+    // Fire socket events (answer result, leaderboard, possible completion)
+    await battleSocketService.handleAnswerSubmitted(battle_id, req.user.id, result);
 
-    logger.info(
-      `User ${req.user.id} submitted answer for question ${question_id} in battle ${battle_id}`
-    );
-    sendResponse(res, 'ANSWER_SUBMITTED', { data: result });
+    logger.info(`User ${req.user.id} answered Q ${question_id} in battle ${battle_id}`);
+    sendResponse(res, 'ANSWER_SUBMITTED', {
+      data: {
+        is_correct: result.is_correct,
+        points_earned: result.points_earned,
+        correct_answer: result.correct_answer,
+        explanation: result.explanation,
+        leaderboard: result.leaderboard,
+        participant_done: result.participant_done,
+      },
+    });
   });
 
-  /**
-   * Get battle leaderboard
-   */
-  public getBattleLeaderboard = catchAsync(
-    async (req: Request, res: Response) => {
-      const { id } = req.params;
-      const { limit, page } = req.query;
+  // ── Leaderboard ────────────────────────────────────────────────────────────
 
-      const leaderboard = await this.battleRepo.getBattleLeaderboard(
-        id,
-        limit ? parseInt(limit as string) : undefined,
-        page ? parseInt(page as string) : undefined
-      );
-
-      sendResponse(res, 'LEADERBOARD_FETCHED', {
-        data: leaderboard.data,
-        meta: leaderboard.meta,
-      });
-    }
-  );
-
-  /**
-   * Reschedule a battle
-   */
-  public rescheduleBattle = catchAsync(async (req: Request, res: Response) => {
-    // Check if user is authenticated
-    if (!req.user || !req.user.id) {
-      throw createAppError('User not authenticated', 401);
-    }
-
-    const { id } = req.params;
-    const { start_time, end_time } = req.body;
-
-    // Convert string dates to Date objects
-    const startTime = new Date(start_time);
-    const endTime = new Date(end_time);
-
-    // Validate dates
-    if (isNaN(startTime.getTime()) || isNaN(endTime.getTime())) {
-      throw createAppError('Invalid date format', 400);
-    }
-
-    const updatedBattle = await this.battleRepo.rescheduleBattle(
-      id,
-      req.user.id,
-      startTime,
-      endTime
-    );
-
-    logger.info(`Battle ${id} rescheduled by user ${req.user.id}`);
-    sendResponse(res, 'BATTLE_UPDATED', { data: updatedBattle });
+  getBattleLeaderboard = catchAsync(async (req: Request, res: Response) => {
+    const leaderboard = await this.repo.getBattleLeaderboard(req.params.id);
+    sendResponse(res, 'LEADERBOARD_FETCHED', { data: leaderboard });
   });
 
-  /**
-   * Archive a battle
-   */
-  public archiveBattle = catchAsync(async (req: Request, res: Response) => {
-    // Check if user is authenticated
-    if (!req.user || !req.user.id) {
-      throw createAppError('User not authenticated', 401);
-    }
+  // ── Results ────────────────────────────────────────────────────────────────
 
-    const { id } = req.params;
-    const archivedBattle = await this.battleRepo.archiveBattle(id, req.user.id);
+  getBattleResults = catchAsync(async (req: Request, res: Response) => {
+    const results = await this.repo.getBattleResults(req.params.id);
+    sendResponse(res, 'BATTLE_RESULTS_FETCHED', { data: results });
+  });
 
-    logger.info(`Battle ${id} archived by user ${req.user.id}`);
-    sendResponse(res, 'BATTLE_ARCHIVED', { data: archivedBattle });
+  getMyResults = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user?.id) throw createAppError('Unauthorized', 401);
+    const results = await this.repo.getMyResults(req.params.id, req.user.id);
+    sendResponse(res, 'BATTLE_MY_RESULTS_FETCHED', { data: results });
+  });
+
+  // ── My battles ────────────────────────────────────────────────────────────
+
+  getMyBattles = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user?.id) throw createAppError('Unauthorized', 401);
+
+    const { page, limit } = req.query;
+    const result = await this.repo.getMyBattles(
+      req.user.id,
+      page ? parseInt(page as string) : 1,
+      limit ? parseInt(limit as string) : 10
+    );
+    sendResponse(res, 'BATTLES_FETCHED', { data: result.data, meta: result.meta });
+  });
+
+  // ── Statistics ────────────────────────────────────────────────────────────
+
+  getStatistics = catchAsync(async (req: Request, res: Response) => {
+    if (!req.user?.id) throw createAppError('Unauthorized', 401);
+    const timeframe = req.query.timeframe as string | undefined;
+    const stats = await this.repo.getUserStats(req.user.id, timeframe);
+    sendResponse(res, 'STATISTICS_FETCHED', { data: stats });
   });
 }
+

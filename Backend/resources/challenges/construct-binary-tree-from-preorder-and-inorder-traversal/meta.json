@@ -16,5 +16,6 @@
   "example_output": "[3,9,20,null,null,15,7]",
   "constraints": "- `1 <= preorder.length <= 3000`\n- `inorder.length == preorder.length`\n- `-3000 <= preorder[i], inorder[i] <= 3000`\n- `preorder` and `inorder` consist of **unique** values.\n- Each value of `inorder` also appears in `preorder`.\n- `preorder` is **guaranteed** to be the preorder traversal of the tree.\n- `inorder` is **guaranteed** to be the inorder traversal of the tree.",
   "function_signature": "function buildTree(preorder: number[], inorder: number[]): TreeNode | null {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

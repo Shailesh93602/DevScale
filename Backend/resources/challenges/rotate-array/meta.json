@@ -35,5 +35,6 @@
   "example_output": "[5,6,7,1,2,3,4]",
   "constraints": "- `1 <= nums.length <= 10^5`\n- `-2^31 <= nums[i] <= 2^31 - 1`\n- `0 <= k <= 10^5`",
   "function_signature": "function rotate(nums: number[], k: number): void {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

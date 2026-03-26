@@ -14,6 +14,7 @@
   "example_input": "{\"notification\": {\"title\": \"Sale!\", \"body\": \"50% off\", \"channel\": \"promotions\", \"priority\": \"high\"}, \"preferences\": {\"enabled\": true, \"channels\": [\"promotions\"], \"quietHours\": {\"start\": 22, \"end\": 7}}, \"currentHour\": 10}",
   "example_output": "{\"shouldDeliver\": true, \"notification\": {\"title\": \"Sale!\", \"body\": \"50% off\", \"channel\": \"promotions\", \"priority\": \"high\"}}",
   "constraints": "Channels are strings, quietHours use 24h format, priority: low|normal|high|urgent",
-  "function_signature": "function processNotification(notification: Notification, preferences: UserPreferences, currentHour: number): NotificationResult",
-  "status": "ACTIVE"
+  "function_signature": "function processNotification(notification: Notification, preferences: UserPreferences, currentHour: number): NotificationResult {}",
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

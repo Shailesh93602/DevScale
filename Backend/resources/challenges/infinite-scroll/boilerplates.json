@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nfunction createInfiniteScroll(config: InfiniteScrollConfig): InfiniteScrollController",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

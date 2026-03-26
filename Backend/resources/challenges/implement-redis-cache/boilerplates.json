@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nclass CacheService { get(key: string): Promise<any>; set(key: string, value: any, ttl?: number): Promise<void>; delete(key: string): Promise<void>; getOrSet(key: string, fetcher: () => Promise<any>, ttl?: number): Promise<any>; }",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

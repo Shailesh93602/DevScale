@@ -15,5 +15,6 @@
   "example_output": "| Customers |\n| Henry     |\n| Max       |",
   "constraints": "- 1 <= Customers.id <= 10^4\n- 1 <= Orders.id <= 10^4\n- customerId references Customers.id",
   "function_signature": "-- Write your SQL query below",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

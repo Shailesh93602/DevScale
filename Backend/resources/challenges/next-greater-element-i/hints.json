@@ -1,0 +1,6 @@
+[
+  "Since nums1 is a subset of nums2, you can pre-calculate the next greater elements for all numbers in nums2.",
+  "Consider using a 'Monotonic Stack'. What should happen when you encounter a number larger than the current top of the stack?",
+  "Store the results in a Hash Map for fast lookup when iterating through nums1."
+]
+

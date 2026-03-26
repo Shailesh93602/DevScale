@@ -7,7 +7,7 @@ function minWindow(s: string, t: string): string {
 
   const windowCounts = new Map<string, number>();
   let have = 0;
-  const need = countT.size;
+  let need = countT.size;
 
   let minLen = Infinity;
   let bestWindow = [-1, -1];

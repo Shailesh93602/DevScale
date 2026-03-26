@@ -10,7 +10,7 @@ function wallsAndGates(rooms: number[][]): void {
   }
 
   const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
-  const dist = 1;
+  let dist = 1;
 
   while (queue.length > 0) {
     const size = queue.length;

@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nfunction generateCICDPipeline(config: { language: string; testCmd: string; buildCmd: string; deployTarget: string; branches: Record<string, string> }): string",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

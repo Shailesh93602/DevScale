@@ -1,0 +1,5 @@
+{
+  "typescript": "function inorderSuccessor(root: TreeNode | null, p: TreeNode): TreeNode | null {\n    // Your code here\n}",
+  "javascript": "/**\n * @param {any} params\n * @return {any}\n */\nvar inorderSuccessor = function(root) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def inorderSuccessor(self, root) -> bool:\n        # Your code here\n        pass"
+}

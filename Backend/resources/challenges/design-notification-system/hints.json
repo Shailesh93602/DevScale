@@ -1,4 +1,6 @@
 [
-  "TODO: Add hint 1",
-  "TODO: Add hint 2"
+  "How do you handle provider outages? You need a retry mechanism with exponential backoff.",
+  "Consider how to prevent users from being spammed. Look into Rate Limiting and Deduplication.",
+  "The system should be decoupled. Producers should just drop a message in a queue, and workers should process them.",
+  "Think about how you'll store user preferences and devices. A highly available NoSQL database or a Cache might be needed."
 ]

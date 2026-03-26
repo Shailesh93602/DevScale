@@ -1,3 +1,17 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  {
+    "input": "[\"MyCircularQueue\", \"enQueue\", \"enQueue\", \"enQueue\", \"enQueue\", \"Rear\", \"isFull\", \"deQueue\", \"enQueue\", \"Rear\"]\n[[3], [1], [2], [3], [4], [], [], [], [4], []]",
+    "output": "[null, true, true, true, false, 3, true, true, true, 4]",
+    "is_hidden": false
+  },
+  {
+    "input": "[\"MyCircularQueue\", \"Front\", \"Rear\", \"isEmpty\", \"isFull\"]\n[[5], [], [], [], []]",
+    "output": "[null, -1, -1, true, false]",
+    "is_hidden": false
+  },
+  {
+    "input": "[\"MyCircularQueue\", \"enQueue\", \"deQueue\", \"isEmpty\"]\n[[1], [10], [], []]",
+    "output": "[null, true, true, true]",
+    "is_hidden": true
+  }
 ]

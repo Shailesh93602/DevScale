@@ -1,8 +1,20 @@
 [
   {
-    "input": "set('k1', 'v1'), get('k1')",
-    "output": "'v1'",
-    "explanation": "Basic set and get operation",
+    "input": "set('user:1', {data: '...'}, 10), get('user:1')",
+    "output": "{data: '...'}",
+    "explanation": "Successful storage and retrieval within TTL.",
     "is_hidden": false
+  },
+  {
+    "input": "set('k', 'v', 1), wait 1s, get('k')",
+    "output": "null",
+    "explanation": "Correct expiration after TTL passes.",
+    "is_hidden": false
+  },
+  {
+    "input": "Exceed capacity by 1",
+    "output": "Least recently used key evicted",
+    "explanation": "Eviction policy should free up space.",
+    "is_hidden": true
   }
 ]

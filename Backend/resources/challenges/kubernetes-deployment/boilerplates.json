@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nfunction generateK8sManifests(config: { name: string; image: string; replicas: number; port: number; resources: { cpu: string; memory: string } }): string",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

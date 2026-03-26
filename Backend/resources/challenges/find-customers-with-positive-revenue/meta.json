@@ -15,5 +15,6 @@
   "example_output": "| customer_id |\n| 1           |\n| 3           |",
   "constraints": "- 1 <= customer_id <= 10^4\n- revenue can be negative, zero, or positive",
   "function_signature": "-- Write your SQL query below",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

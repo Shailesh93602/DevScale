@@ -1,0 +1,10 @@
+{
+  "typescript": "function hammingWeight(n: number): number {\n  // Your code here\n}",
+  "javascript": "/**\n * @param {number} n\n * @return {number}\n */\nvar hammingWeight = function(n) {\n  // Your code here\n};",
+  "python": "class Solution:\n    def hammingWeight(self, n: int) -> int:\n        # Your code here\n        pass",
+  "java": "class Solution {\n    public int hammingWeight(int n) {\n        // Your code here\n    }\n}",
+  "cpp": "class Solution {\npublic:\n    int hammingWeight(uint32_t n) {\n        // Your code here\n    }\n};",
+  "go": "func hammingWeight(num uint32) int {\n    // Your code here\n}",
+  "rust": "impl Solution {\n    pub fn hamming_weight(n: u32) -> i32 {\n        // Your code here\n    }\n}",
+  "csharp": "public class Solution {\n    public int HammingWeight(uint n) {\n        // Your code here\n    }\n}"
+}

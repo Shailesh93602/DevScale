@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nfunction throttle(fn: (...args: any[]) => void, interval: number): (...args: any[]) => void",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

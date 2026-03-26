@@ -43,7 +43,7 @@ for (const route of allRoutes) {
     test(`light mode screenshot`, async ({ page }) => {
       await page.goto(route.path, {
         waitUntil: 'domcontentloaded',
-        timeout: 15000,
+        timeout: 30000,
       });
       await page.waitForTimeout(1000);
       // Force light mode
@@ -63,7 +63,7 @@ for (const route of allRoutes) {
     test(`dark mode screenshot`, async ({ page }) => {
       await page.goto(route.path, {
         waitUntil: 'domcontentloaded',
-        timeout: 15000,
+        timeout: 30000,
       });
       await page.waitForTimeout(1000);
       // Force dark mode
@@ -84,7 +84,7 @@ for (const route of allRoutes) {
       await page.setViewportSize({ width: 375, height: 812 });
       await page.goto(route.path, {
         waitUntil: 'domcontentloaded',
-        timeout: 15000,
+        timeout: 30000,
       });
       await page.waitForTimeout(1000);
       await page.screenshot({

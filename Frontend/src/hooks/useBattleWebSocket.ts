@@ -1,341 +1,271 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { io, Socket } from 'socket.io-client';
+import { useAuth } from '@/contexts/AuthContext';
+import { createClient } from '@/utils/supabase/client';
+import { LeaderboardEntry } from '@/types/battle';
 
-interface LocalBattleEventMap {
-  'battle:state_update': BattleStateUpdateEvent;
-  'battle:question': BattleQuestionEvent;
-  'battle:answer': BattleAnswerEvent;
-  'battle:participant_join': BattleParticipantEvent;
-  'battle:participant_leave': BattleParticipantEvent;
-  'battle:participant_ready': BattleParticipantEvent;
-  'battle:score_update': BattleScoreEvent;
-  'battle:complete': BattleCompleteEvent;
-  'chat:message': ChatMessageEvent;
-  'battle:timer_sync': TimerSyncEvent;
-  'battle:join': { battle_id: string };
-}
+// ── Socket event shapes (matching backend battleSocket.ts) ──────────────────
 
-interface BattleStateUpdateEvent {
-  battle_id: string;
-  status: string;
-  current_participants: number;
-  current_question_index?: number;
-  time_remaining?: number;
-}
+export interface BattleEventMap {
+  // Status lifecycle
+  'battle:status_changed': { status: string };
+  'battle:countdown': { seconds_remaining: number };
+  'battle:started': { started_at: number };
+  'battle:completed': { winner_id: string | null; leaderboard: LeaderboardEntry[] };
 
-interface BattleQuestionEvent {
-  battle_id: string;
-  question_id: string;
-  question: string;
-  options: string[];
-  time_limit: number;
-}
+  // Question flow
+  'battle:question': {
+    index: number;
+    total_questions: number;
+    question_id: string;
+    time_limit: number;
+    ends_at: number;
+  };
+  'battle:timer_tick': { seconds_remaining: number };
 
-interface BattleAnswerEvent {
-  battle_id: string;
-  question_id: string;
-  user_id: string;
-  answer: string;
-  is_correct: boolean;
-  time_taken: number;
-}
+  // Answers
+  'battle:answer_result': {
+    is_correct: boolean;
+    points_earned: number;
+    correct_answer: number;
+    explanation?: string | null;
+  };
+  'battle:score_update': { leaderboard: LeaderboardEntry[] };
 
-interface BattleParticipantEvent {
-  battle_id: string;
-  user_id: string;
-  username: string;
-  avatar_url: string;
-  is_ready?: boolean;
-  status: string;
-}
+  // Participants
+  'battle:participant_joined': { user: { id: string; username: string; avatar_url?: string | null }; total_count: number };
+  'battle:participant_ready': { user_id: string; ready_count: number; total_count: number };
+  'battle:participant_left': { user_id: string; total_count: number };
 
-interface BattleScoreEvent {
-  battle_id: string;
-  user_id: string;
-  score: number;
-  rank: number;
-  username: string;
-}
+  // Reconnect state snapshot
+  'battle:state': {
+    status: string;
+    current_question_index: number;
+    question_ends_at: number | null;
+    leaderboard: LeaderboardEntry[];
+    participants: Array<{
+      user_id: string;
+      username: string;
+      avatar_url?: string | null;
+      status: string;
+      score: number;
+      rank: number;
+    }>;
+  };
 
-interface BattleCompleteEvent {
-  battle_id: string;
-  results: {
+  // Chat
+  'chat:message': {
+    battle_id: string;
     user_id: string;
     username: string;
-    avatar_url: string;
-    score: number;
-    rank: number;
-  }[];
+    avatar_url?: string;
+    message: string;
+    timestamp: number;
+  };
+
+  // Client → server
+  'battle:join': { battle_id: string };
+  'battle:leave': { battle_id: string };
 }
 
-interface ChatMessageEvent {
-  battle_id: string;
-  message: string;
-  timestamp: number;
-  username: string;
-  avatar_url: string;
-  user_id: string;
+async function getAuthToken(): Promise<string | null> {
+  try {
+    const supabase = createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    return session?.access_token ?? null;
+  } catch {
+    return null;
+  }
 }
 
-interface TimerSyncEvent {
-  battle_id: string;
-  question_id: string;
-  time_remaining: number;
+// ── Shared socket singleton per battle ──────────────────────────────────────
+
+const sockets = new Map<string, Socket>();
+
+function getSocket(battleId: string, token: string | null): Socket {
+  if (sockets.has(battleId)) return sockets.get(battleId)!;
+
+  const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL ?? '';
+  const wsUrl = process.env.NEXT_PUBLIC_WS_URL || apiBase.replace(/\/api\/v1\/?$/, '') || 'http://localhost:5000';
+
+  const socket = io(wsUrl, {
+    path: '/socket.io',
+    transports: ['websocket'],
+    reconnection: true,
+    reconnectionAttempts: 10,
+    reconnectionDelay: 1000,
+    reconnectionDelayMax: 5000,
+    auth: token ? { token } : undefined,
+  });
+
+  socket.on('connect', () => {
+    socket.emit('battle:join', { battle_id: battleId });
+  });
+
+  sockets.set(battleId, socket);
+  return socket;
 }
 
-// Hook for using battle WebSocket events
-export const useBattleWebSocket = <T extends keyof LocalBattleEventMap>(
-  event: T,
-  battleId: string,
-  callback: (data: LocalBattleEventMap[T]) => void,
-) => {
+function releaseSocket(battleId: string) {
+  const socket = sockets.get(battleId);
+  if (socket) {
+    socket.emit('battle:leave', { battle_id: battleId });
+    socket.disconnect();
+    sockets.delete(battleId);
+  }
+}
+
+// ── Primary hook ─────────────────────────────────────────────────────────────
+
+export function useBattleSocket(battleId: string) {
   const { toast } = useToast();
   const socketRef = useRef<Socket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
-
-  const connect = useCallback(() => {
-    if (socketRef.current?.connected) return;
-
-    const socket = io(
-      process.env.NEXT_PUBLIC_WS_URL || 'http://localhost:3001',
-      {
-        path: '/socket.io',
-        transports: ['websocket'],
-        autoConnect: true,
-        reconnection: true,
-        reconnectionAttempts: 5,
-        reconnectionDelay: 1000,
-        reconnectionDelayMax: 5000,
-      },
-    );
-
-    socket.on('connect', () => {
-      setIsConnected(true);
-      socket.emit('join:battle', { battle_id: battleId });
-    });
-
-    socket.on('disconnect', () => {
-      setIsConnected(false);
-    });
-
-    socket.on('error', (error) => {
-      console.error('WebSocket error:', error);
-      toast({
-        title: 'Connection Error',
-        description: 'Failed to connect to battle server. Please try again.',
-        variant: 'destructive',
-      });
-    });
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    socket.on(event, callback as any);
-
-    socketRef.current = socket;
-  }, [battleId, event, callback, toast]);
-
-  const disconnect = useCallback(() => {
-    if (socketRef.current) {
-      socketRef.current.emit('leave:battle', { battle_id: battleId });
-      socketRef.current.disconnect();
-      socketRef.current = null;
-      setIsConnected(false);
-    }
-  }, [battleId]);
-
-  const sendToBattle = useCallback(
-    async <T extends keyof LocalBattleEventMap>(
-      event: T,
-      data: Omit<LocalBattleEventMap[T], 'battleId'>,
-    ) => {
-      if (!socketRef.current?.connected) {
-        throw new Error('Not connected to WebSocket server');
-      }
-
-      return new Promise<void>((resolve, reject) => {
-        socketRef.current?.emit(
-          event,
-          { ...data, battleId },
-          (response: { success: boolean; error?: string }) => {
-            if (response.success) {
-              resolve();
-            } else {
-              reject(new Error(response.error || 'Failed to send message'));
-            }
-          },
-        );
-      });
-    },
-    [battleId],
-  );
+  const initialized = useRef(false);
 
   useEffect(() => {
-    connect();
+    if (!battleId || initialized.current) return;
+    initialized.current = true;
+
+    getAuthToken().then((token) => {
+      const socket = getSocket(battleId, token);
+      socketRef.current = socket;
+
+      const onConnect = () => setIsConnected(true);
+      const onDisconnect = () => setIsConnected(false);
+      const onError = (err: Error) => {
+        if (!err.message.includes('Authentication')) {
+          toast({ title: 'Connection Error', description: 'Failed to connect to battle server.', variant: 'destructive' });
+        }
+      };
+
+      socket.on('connect', onConnect);
+      socket.on('disconnect', onDisconnect);
+      socket.on('connect_error', onError);
+
+      if (socket.connected) setIsConnected(true);
+    });
 
     return () => {
-      disconnect();
+      // Don't destroy socket on unmount — let consumers call disconnect explicitly
     };
-  }, [connect, disconnect]);
+  }, [battleId, toast]);
 
-  return {
-    isConnected,
-    sendToBattle,
-  };
-};
-
-// Hook for using battle chat
-export const useBattleChat = (battleId: string) => {
-  const { isConnected, sendToBattle } = useBattleWebSocket(
-    'chat:message',
-    battleId,
-    () => {},
+  const on = useCallback(
+    <E extends keyof BattleEventMap>(event: E, handler: (data: BattleEventMap[E]) => void): (() => void) => {
+      const s = socketRef.current;
+      s?.on(event as string, handler as (data: unknown) => void);
+      return () => { s?.off(event as string, handler as (data: unknown) => void); };
+    },
+    []
   );
-  const [messages, setMessages] = useState<
-    LocalBattleEventMap['chat:message'][]
-  >([]);
 
-  // Listen for chat messages
+  const emit = useCallback(
+    <E extends keyof BattleEventMap>(event: E, data: BattleEventMap[E]) => {
+      socketRef.current?.emit(event as string, data);
+    },
+    []
+  );
+
+  const disconnect = useCallback(() => {
+    releaseSocket(battleId);
+    socketRef.current = null;
+    setIsConnected(false);
+  }, [battleId]);
+
+  return { isConnected, on, emit, disconnect, socket: socketRef };
+}
+
+// ── Convenience hooks ────────────────────────────────────────────────────────
+
+export function useBattleChat(battleId: string) {
+  const { user } = useAuth();
+  const { isConnected, on, emit } = useBattleSocket(battleId);
+  const [messages, setMessages] = useState<BattleEventMap['chat:message'][]>([]);
+
   useEffect(() => {
-    if (!battleId || !isConnected) return;
-
-    const handleChatMessage = (data: LocalBattleEventMap['chat:message']) => {
-      setMessages((prev) => [...prev, data]);
-    };
-
-    const unsubscribe = addEventListener('chat:message', (data: unknown) => {
-      if (
-        typeof data === 'object' &&
-        data !== null &&
-        'battle_id' in data &&
-        data.battle_id === battleId
-      ) {
-        handleChatMessage(data as LocalBattleEventMap['chat:message']);
+    return on('chat:message', (msg) => {
+      if (msg.battle_id === battleId) {
+        setMessages((prev) => [...prev, msg]);
       }
     });
+  }, [battleId, on]);
 
-    return unsubscribe;
-  }, [battleId, isConnected]);
-
-  // Send chat message
-  const sendMessage = (message: string) => {
-    if (!message.trim()) return;
-
-    sendToBattle('chat:message', {
-      message: message.trim(),
-      timestamp: Date.now(),
-      battle_id: battleId,
-      username: 'current_user',
-      avatar_url: 'current_user_avatar',
-      user_id: 'current_user',
-    });
-  };
-
-  return {
-    messages,
-    sendMessage,
-    isConnected,
-  };
-};
-
-// Hook for using battle timer
-export const useBattleTimer = (battleId: string) => {
-  const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
-  const [questionId, setQuestionId] = useState<string | null>(null);
-  const [isActive, setIsActive] = useState(false);
-
-  // Listen for timer sync events
-  useBattleWebSocket('battle:timer_sync', battleId, (data) => {
-    setQuestionId(data.question_id);
-    setTimeRemaining(data.time_remaining);
-    setIsActive(true);
-  });
-
-  // Countdown timer
-  useEffect(() => {
-    if (timeRemaining === null || !isActive) return;
-
-    const interval = setInterval(() => {
-      setTimeRemaining((prev) => {
-        if (prev === null || prev <= 0) {
-          clearInterval(interval);
-          setIsActive(false);
-          return 0;
-        }
-        return prev - 1;
+  const sendMessage = useCallback(
+    (message: string) => {
+      if (!message.trim() || !user?.id) return;
+      emit('chat:message', {
+        battle_id: battleId,
+        user_id: user.id,
+        username: user.username || 'Anonymous',
+        avatar_url: user.avatar_url || '',
+        message: message.trim(),
+        timestamp: Date.now(),
       });
-    }, 1000);
+    },
+    [battleId, emit, user]
+  );
 
-    return () => clearInterval(interval);
-  }, [timeRemaining, isActive]);
+  return { messages, sendMessage, isConnected };
+}
 
-  return {
-    timeRemaining,
-    questionId,
-    isActive,
-  };
-};
+export function useBattleTimer(battleId: string) {
+  const { on } = useBattleSocket(battleId);
+  const [secondsRemaining, setSecondsRemaining] = useState<number | null>(null);
+  const [endsAt, setEndsAt] = useState<number | null>(null);
 
-// Hook for using battle state
-export const useBattleState = (battleId: string) => {
-  const [battleState, setBattleState] = useState<
-    LocalBattleEventMap['battle:state_update'] | null
-  >(null);
+  useEffect(() => {
+    const offTick = on('battle:timer_tick', (data) => setSecondsRemaining(data.seconds_remaining));
+    const offQ = on('battle:question', (data) => {
+      setSecondsRemaining(data.time_limit);
+      setEndsAt(data.ends_at);
+    });
+    return () => { offTick(); offQ(); };
+  }, [on]);
 
-  // Listen for battle state updates
-  useBattleWebSocket('battle:state_update', battleId, (data) => {
-    setBattleState(data);
-  });
+  return { secondsRemaining, endsAt };
+}
 
-  return battleState;
-};
+export function useBattleLeaderboard(battleId: string) {
+  const { on } = useBattleSocket(battleId);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
 
-// Hook for using battle leaderboard
-export const useBattleLeaderboard = (battleId: string) => {
-  const [leaderboard, setLeaderboard] = useState<
-    LocalBattleEventMap['battle:score_update'][]
-  >([]);
+  useEffect(() => {
+    return on('battle:score_update', (data) => setLeaderboard(data.leaderboard));
+  }, [on]);
 
-  // Listen for score updates
-  useBattleWebSocket('battle:score_update', battleId, (data) => {
+  const seedLeaderboard = useCallback((entries: LeaderboardEntry[]) => {
     setLeaderboard((prev) => {
-      // Update existing entry or add new one
-      const exists = prev.some((entry) => entry.user_id === data.user_id);
-      if (exists) {
-        return prev
-          .map((entry) => (entry.user_id === data.user_id ? data : entry))
-          .sort((a, b) => a.rank - b.rank);
-      } else {
-        return [...prev, data].sort((a, b) => a.rank - b.rank);
-      }
+      if (prev.length > 0) return prev; // ws data takes precedence
+      return entries;
     });
-  });
+  }, []);
 
-  return leaderboard;
-};
+  return { leaderboard, seedLeaderboard };
+}
 
-// Hook for using battle participants
-export const useBattleParticipants = (battleId: string) => {
-  const [participants, setParticipants] = useState<
-    Map<string, LocalBattleEventMap['battle:participant_join']>
-  >(new Map());
+// ── Legacy / compat exports ──────────────────────────────────────────────────
 
-  // Listen for participant join events
-  useBattleWebSocket('battle:participant_join', battleId, (data) => {
-    setParticipants((prev) => {
-      const newMap = new Map(prev);
-      newMap.set(data.user_id, data);
-      return newMap;
+export const useBattleWebSocket = useBattleSocket;
+
+export function useBattleParticipants(battleId: string) {
+  const { on } = useBattleSocket(battleId);
+  const [joined, setJoined] = useState<{ user_id: string; username: string; avatar_url?: string | null }[]>([]);
+
+  useEffect(() => {
+    const offJoin = on('battle:participant_joined', ({ user }) => {
+      setJoined((prev) =>
+        prev.some((u) => u.user_id === user.id)
+          ? prev
+          : [...prev, { user_id: user.id, username: user.username, avatar_url: user.avatar_url }],
+      );
     });
-  });
-
-  // Listen for participant leave events
-  useBattleWebSocket('battle:participant_leave', battleId, (data) => {
-    setParticipants((prev) => {
-      const newMap = new Map(prev);
-      newMap.delete(data.user_id);
-      return newMap;
+    const offLeave = on('battle:participant_left', ({ user_id }) => {
+      setJoined((prev) => prev.filter((u) => u.user_id !== user_id));
     });
-  });
+    return () => { offJoin(); offLeave(); };
+  }, [on]);
 
-  return Array.from(participants.values());
-};
+  return joined;
+}

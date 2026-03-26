@@ -1,0 +1,6 @@
+{
+  "typescript": "function findMinArrowShots(points: number[][]): number {\n    // Your code here\n}",
+  "javascript": "/**\n * @param {number[][]} points\n * @return {number}\n */\nvar findMinArrowShots = function(points) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def findMinArrowShots(self, points: List[List[int]]) -> int:\n        # Your code here\n        pass"
+}
+

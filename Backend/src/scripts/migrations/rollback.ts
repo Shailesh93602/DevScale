@@ -3,7 +3,7 @@ import logger from '../../utils/logger';
 import fs from 'fs';
 import path from 'path';
 
-import prisma from '@/lib/prisma';
+import prisma from '../../lib/prisma';
 
 interface RollbackPoint {
   timestamp: string;

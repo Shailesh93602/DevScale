@@ -1,3 +1,27 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  {
+    "input": "\"AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT\"",
+    "output": "[\"AAAAACCCCC\",\"CCCCCAAAAA\"]",
+    "is_hidden": false
+  },
+  {
+    "input": "\"AAAAAAAAAAAAA\"",
+    "output": "[\"AAAAAAAAAA\"]",
+    "is_hidden": false
+  },
+  {
+    "input": "\"ABCDEFGHIJK\"",
+    "output": "[]",
+    "is_hidden": true
+  },
+  {
+    "input": "\"AAAAAAAAAAA\"",
+    "output": "[\"AAAAAAAAAA\"]",
+    "is_hidden": true
+  },
+  {
+    "input": "\"GAGAGAGAGAGAGAGAGAGAGA\"",
+    "output": "[\"GAGAGAGAGA\",\"AGAGAGAGAG\"]",
+    "is_hidden": true
+  }
 ]

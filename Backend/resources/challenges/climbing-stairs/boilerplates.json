@@ -1,0 +1,5 @@
+{
+  "typescript": "function climbStairs(n: number): number {\n    // Your code here\n}",
+  "javascript": "/**\n * @param {any} params\n * @return {any}\n */\nvar climbStairs = function(root) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def climbStairs(self, root) -> bool:\n        # Your code here\n        pass"
+}

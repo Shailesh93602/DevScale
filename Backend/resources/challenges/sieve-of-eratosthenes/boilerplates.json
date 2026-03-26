@@ -1,0 +1,10 @@
+{
+  "typescript": "function countPrimes(n: number): number {\n  // Your code here\n}",
+  "javascript": "/**\n * @param {number} n\n * @return {number}\n */\nvar countPrimes = function(n) {\n  // Your code here\n};",
+  "python": "class Solution:\n    def countPrimes(self, n: int) -> int:\n        # Your code here\n        pass",
+  "java": "class Solution {\n    public int countPrimes(int n) {\n        // Your code here\n    }\n}",
+  "cpp": "class Solution {\npublic:\n    int countPrimes(int n) {\n        // Your code here\n    }\n};",
+  "go": "func countPrimes(n int) int {\n    // Your code here\n}",
+  "rust": "impl Solution {\n    pub fn count_primes(n: i32) -> i32 {\n        // Your code here\n    }\n}",
+  "csharp": "public class Solution {\n    public int CountPrimes(int n) {\n        // Your code here\n    }\n}"
+}

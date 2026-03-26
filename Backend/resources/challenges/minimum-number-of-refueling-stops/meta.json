@@ -16,5 +16,6 @@
   "example_output": "2",
   "constraints": "- `1 <= target, startFuel <= 10^9`\n- `0 <= stations.length <= 500`\n- `1 <= position_i < position_{i+1} < target`\n- `1 <= fuel_i < 10^9`",
   "function_signature": "function minRefuelStops(target: number, startFuel: number, stations: number[][]): number {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

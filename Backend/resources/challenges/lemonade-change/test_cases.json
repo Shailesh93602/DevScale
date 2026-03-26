@@ -1,0 +1,19 @@
+[
+  {
+    "input": "[5,5,5,10,20]",
+    "output": "true",
+    "explanation": "Collected 3x$5. Used 1x$5 for $10. Used 1x$10 and 1x$5 for $20.",
+    "is_hidden": false
+  },
+  {
+    "input": "[5,5,10,10,20]",
+    "output": "false",
+    "explanation": "Cannot give change for the last $20 bill.",
+    "is_hidden": false
+  },
+  {
+    "input": "[5,5,5,5,20,20,5,5,20,5]",
+    "output": "false",
+    "is_hidden": true
+  }
+]

@@ -15,7 +15,16 @@ import {
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Search, Trophy, Medal, Award, Users, BarChart } from 'lucide-react';
+import {
+  Search,
+  Trophy,
+  Medal,
+  Award,
+  Users,
+  BarChart,
+  Swords,
+  CheckCircle,
+} from 'lucide-react';
 import { useAxiosGet } from '@/hooks/useAxios';
 
 interface LeaderboardEntry {
@@ -39,9 +48,7 @@ export default function LeaderboardPage() {
   const [timeframe, setTimeframe] = useState('all-time');
   const [category, setCategory] = useState('overall');
 
-  const [getLeaderboard] = useAxiosGet<{ data: LeaderboardEntry[] }>(
-    '/api/leaderboard',
-  );
+  const [getLeaderboard] = useAxiosGet<LeaderboardEntry[]>('/leaderboard');
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
@@ -50,7 +57,7 @@ export default function LeaderboardPage() {
         // In a real app, you would pass the timeframe and category as query params
         const response = await getLeaderboard();
         if (response.data) {
-          setLeaderboard(response.data.data || []);
+          setLeaderboard(response.data || []);
         }
       } catch (error) {
         console.error('Failed to fetch leaderboard:', error);
@@ -67,26 +74,37 @@ export default function LeaderboardPage() {
     entry.username.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  // Mock data for stats
+  const totalBattles = leaderboard.reduce(
+    (sum, entry) => sum + entry.battles_participated,
+    0,
+  );
+  const averageScore = leaderboard.length
+    ? leaderboard.reduce((sum, entry) => sum + entry.score, 0) /
+      leaderboard.length
+    : 0;
+
+  // Derived stats from leaderboard response
   const stats = [
     {
       label: 'Total Battles',
-      value: '1,248',
+      value: totalBattles.toLocaleString(),
       icon: <Swords className="h-5 w-5 text-primary" />,
     },
     {
       label: 'Active Users',
-      value: '842',
+      value: leaderboard.length.toLocaleString(),
       icon: <Users className="h-5 w-5 text-primary" />,
     },
     {
-      label: 'Questions Answered',
-      value: '24,680',
+      label: 'Total Wins',
+      value: leaderboard
+        .reduce((sum, entry) => sum + entry.battles_won, 0)
+        .toLocaleString(),
       icon: <CheckCircle className="h-5 w-5 text-primary" />,
     },
     {
       label: 'Avg. Score',
-      value: '76.4',
+      value: averageScore.toFixed(1),
       icon: <BarChart className="h-5 w-5 text-primary" />,
     },
   ];
@@ -241,7 +259,7 @@ function LeaderboardTable({ entries }: { entries: LeaderboardEntry[] }) {
   const renderRankBadge = (rank: number) => {
     if (rank === 1) {
       return (
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-yellow-500 text-white">
+        <div className="bg-yellow-500 flex h-8 w-8 items-center justify-center rounded-full text-white">
           <Trophy className="h-4 w-4" />
         </div>
       );
@@ -331,48 +349,5 @@ function LeaderboardTable({ entries }: { entries: LeaderboardEntry[] }) {
         </div>
       ))}
     </div>
-  );
-}
-
-// Missing component definition
-function Swords(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5" />
-      <line x1="13" x2="19" y1="19" y2="13" />
-      <polyline points="9.5 6.5 21 18 21 21 18 21 6.5 9.5" />
-      <line x1="5" x2="11" y1="11" y2="5" />
-    </svg>
-  );
-}
-
-function CheckCircle(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-      <polyline points="22 4 12 14.01 9 11.01" />
-    </svg>
   );
 }

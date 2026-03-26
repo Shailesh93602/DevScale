@@ -1,45 +1,41 @@
 # Design a Notification System
 
-## Problem Description
-
-Design a scalable notification system capable of sending massive numbers of messages to users across multiple channels, including Push notifications, SMS, and Email.
+Design a highly scalable and reliable notification system that can deliver messages through various channels such as Push Notifications (iOS/Android), SMS, and Email.
 
 ## Requirements
 
 ### Functional Requirements
-1. **Multi-channel Support**: Deliver through APNS/FCM (Push), Twilio (SMS), and SES/SendGrid (Email).
-2. **Prioritization**: Support different priority levels (e.g., Transactional vs. Marketing).
-3. **Deduplication**: Prevent sending the same notification multiple times to the same user.
-4. **Retry Mechanism**: Automatically retry failed deliveries with exponential backoff.
-5. **DND / User Prefs**: Respect user-defined quiet hours and channel preferences.
+1. **Multi-Channel Support**: Support Apple Push Notification service (APNs), Firebase Cloud Messaging (FCM), SMS (e.g., Twilio), and Email (e.g., AWS SES).
+2. **User Preferences**: Honor user-defined settings for which channels they want to receive notifications on.
+3. **Prioritization**: Support urgent (transactional) vs. non-urgent (promotional) categories.
+4. **Retry Mechanism**: If a 3rd-party provider fails, the system should automatically retry.
+5. **Deduplication**: Prevent sending duplicate messages to users if the same trigger occurs multiple times.
 
 ### Non-Functional Requirements
-1. **Low Latency**: High-priority notifications should be delivered in seconds.
-2. **High Scalability**: Support a surge of 10M+ notifications during peak events (e.g., Black Friday).
-3. **High Availability**: The system must not lose notifications if a provider is down.
+1. **Scalability**: Handle bursts of millions of notifications per minute.
+2. **High Availability**: The system should be resilient to individual component or provider failures.
+3. **Low Latency**: For high-priority messages, delivery should occur in near real-time.
 
-## API Design
+## System Architecture
 
-```typescript
-class NotificationService {
-  /**
-   * Triggers a notification sending process.
-   */
-  notify(userId: string, payload: NotificationPayload): string;
-
-  /**
-   * Updates user notification preferences.
-   */
-  updateSettings(userId: string, settings: UserSettings): void;
-}
-```
+Key components to include in your design:
+*   **Notification Store**: Database to store user settings, devices, and notification history.
+*   **Rate Limiter**: Prevent overloading the system or 3rd-party providers.
+*   **Message Queues**: Decouple the request ingestion from the actual sending process.
+*   **Workers**: Specialized processes for each channel (Email, SMS, Push) that poll queues and interact with providers.
+*   **Analytics/Tracking**: Log clicks, opens (for email), and delivery statuses.
 
 ## Examples
 
-**Input**: `notify("user_123", {title: "Security Alert", body: "Login from new device", priority: "HIGH"})`
-**Result**: System determines user prefers Push + Email -> Queues both -> Worker sends to FCM and SES.
+**Example Scenario**:
+1. User A triggers a "Password Change" event.
+2. The system checks User A's settings and sees they have Email enabled.
+3. The system queues an Email job.
+4. The Email Worker picks up the job, formats a template, and calls AWS SES API.
+5. System logs "Sent" and later updates to "Delivered" via a webhook from SES.
 
 ## Constraints
-- Integration with various 3rd party APIs with different rate limits.
-- Tracking delivery status and click-through rates.
-- Handling massive fan-out (e.g., celebrity post notification).
+- Max payload size for push notifications: 4KB.
+- Handle massive fan-out (e.g., a "Breaking News" alert to 100M users).
+- Deduplication key: Use a hash of `(userId, messageCode, optionalData)` to avoid duplicates.
+

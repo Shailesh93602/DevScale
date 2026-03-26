@@ -37,5 +37,6 @@
   "example_output": "[0,0,1,1,2,2]",
   "constraints": "- `n == nums.length`\n- `1 <= n <= 300`\n- `nums[i]` is either `0`, `1`, or `2`.",
   "function_signature": "function sortColors(nums: number[]): void {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

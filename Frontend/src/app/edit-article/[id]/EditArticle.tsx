@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { hideLoader, showLoader } from '@/lib/features/loader/loaderSlice';
 import Navbar from '@/components/Navbar';
 import { useAxiosGet, useAxiosPost } from '@/hooks/useAxios';
+import { Button } from '@/components/ui/button';
 
 // const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -73,7 +74,7 @@ export default function EditArticle({ id }: { id: string }) {
     <>
       <Navbar />
       <div className="container mx-auto p-6">
-        <div className="mb-6 rounded-lg bg-white p-6 shadow-md dark:bg-gray-800">
+        <div className="mb-6 rounded-lg bg-card p-6 shadow-md">
           {/* <ReactQuill
             value={content}
             onChange={setContent}
@@ -97,12 +98,7 @@ export default function EditArticle({ id }: { id: string }) {
             }}
           /> */}
         </div>
-        <button
-          onClick={handleUpdateArticle}
-          className="rounded-lg bg-blue-500 px-4 py-2 text-white"
-        >
-          Update Article
-        </button>
+        <Button onClick={handleUpdateArticle}>Update Article</Button>
       </div>
     </>
   );

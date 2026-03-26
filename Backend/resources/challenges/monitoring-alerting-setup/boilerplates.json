@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nfunction generateMonitoringConfig(config: { serviceName: string; slo: { availability: number; latencyP99Ms: number }; alertChannels: string[] }): { prometheusRules: string; grafanaDashboard: string; alertmanagerConfig: string }",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

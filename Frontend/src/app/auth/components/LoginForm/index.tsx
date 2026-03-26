@@ -7,11 +7,12 @@ import { loginSchema } from '@/lib/validations';
 import Link from 'next/link';
 import PasswordInput from '@/components/PasswordInput';
 import { login } from '@/app/auth/actions';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
 const LoginForm = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [serverError, setServerError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -29,12 +30,25 @@ const LoginForm = () => {
     const formData = new FormData();
     formData.append('email', data.email);
     formData.append('password', data.password);
+
     const response = await login(formData);
+
     setIsLoading(false);
 
     if (response?.success) {
+      // router.refresh() re-syncs the Supabase session cookie from the server to the client.
+      // Without this, AuthContext may not have processed the SIGNED_IN event yet when the
+      // dashboard mounts, causing a blank screen until Supabase fires onAuthStateChange.
       router.refresh();
-      router.push('/dashboard');
+
+      // Use callbackUrl if set by middleware (e.g., user tried to visit a protected page)
+      // Otherwise go to /dashboard. Never redirect back to auth pages.
+      const callbackUrl = searchParams.get('callbackUrl');
+      const isValidCallback =
+        callbackUrl &&
+        callbackUrl.startsWith('/') &&
+        !callbackUrl.startsWith('/auth');
+      router.push(isValidCallback ? callbackUrl : '/dashboard');
     } else if (response?.error) {
       setServerError(response.error);
     }
@@ -43,22 +57,54 @@ const LoginForm = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
-        <Input {...register('email')} placeholder="Email" className="w-fu" />
+        <label
+          htmlFor="login-email"
+          className="mb-2 block text-sm font-medium text-foreground"
+        >
+          Email
+        </label>
+        <Input
+          {...register('email')}
+          id="login-email"
+          type="email"
+          placeholder="you@example.com"
+          className="w-full"
+          aria-invalid={!!errors.email}
+          aria-describedby={errors.email ? 'login-email-error' : undefined}
+        />
         {errors.email && (
-          <p className="mt-1 text-sm text-destructive">
+          <p
+            id="login-email-error"
+            role="alert"
+            className="mt-1 text-sm text-destructive"
+          >
             {errors.email.message as string}
           </p>
         )}
       </div>
       <div>
+        <label
+          htmlFor="login-password"
+          className="mb-2 block text-sm font-medium text-foreground"
+        >
+          Password
+        </label>
         <PasswordInput
           register={register}
           name="password"
-          placeholder="Password"
+          id="login-password"
+          placeholder="••••••••"
           error={errors.password?.message as string}
         />
       </div>
-      {serverError && <p className="text-sm text-destructive">{serverError}</p>}
+      {serverError && (
+        <p
+          role="alert"
+          className="rounded-md bg-destructive/10 p-3 text-sm text-destructive"
+        >
+          {serverError}
+        </p>
+      )}
       <div className="flex items-center justify-between">
         <Link
           href="/auth/forgot-password"
@@ -68,7 +114,7 @@ const LoginForm = () => {
         </Link>
       </div>
       <Button type="submit" className="w-full" disabled={isLoading}>
-        {isLoading ? 'Logging in...' : 'Log in'}
+        {isLoading ? 'Signing in...' : 'Sign in'}
       </Button>
     </form>
   );

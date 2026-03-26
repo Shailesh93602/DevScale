@@ -1,0 +1,14 @@
+[
+  {
+    "input": "seq.nextId()",
+    "output": "Number (greater than 0)",
+    "explanation": "Generating a unique 64-bit ID.",
+    "is_hidden": false
+  },
+  {
+    "input": "Two consecutive calls",
+    "output": "Two unique, monotonically increasing IDs",
+    "explanation": "Verifying uniqueness and sortability.",
+    "is_hidden": true
+  }
+]

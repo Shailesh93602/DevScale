@@ -28,15 +28,15 @@ export const navItems: NavItem[] = [
 ];
 
 export const publicNavItems: NavItem[] = [
+  { path: '/', label: 'Home' },
   { path: '/about', label: 'About Us' },
   { path: '/contact', label: 'Contact' },
-  { path: '/auth/login', label: 'Login' },
 ];
 
 export const profileItems: ProfileItem[] = [
   { path: '/profile', label: 'Profile', icon: <FiUser /> },
   { path: '/settings', label: 'Settings', icon: <FiSettings /> },
-  { path: '/auth/logout', label: 'Logout', icon: <FiLogOut /> },
+  { path: '/logout', label: 'Logout', icon: <FiLogOut /> },
 ];
 
 export const battleZoneItems: BattleZoneItem[] = [

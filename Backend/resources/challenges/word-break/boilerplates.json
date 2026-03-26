@@ -1,0 +1,5 @@
+{
+  "typescript": "function wordBreak(s: string, wordDict: string[]): boolean {\n    // Your code here\n}",
+  "javascript": "/**\n * @param {any} params\n * @return {any}\n */\nvar wordBreak = function(root) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def wordBreak(self, root) -> bool:\n        # Your code here\n        pass"
+}

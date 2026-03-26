@@ -1,0 +1,6 @@
+{
+  "sql": "/* Write your T-SQL query statement below */\nSELECT\n\nFROM Sales s\nJOIN Product p ON s.product_id = p.product_id;",
+  "mysql": "# Write your MySQL query statement below\nSELECT\n\nFROM Sales s\nJOIN Product p ON s.product_id = p.product_id;",
+  "postgresql": "-- Write your PostgreSQL query statement below\nSELECT\n\nFROM Sales s\nJOIN Product p ON s.product_id = p.product_id;"
+}
+

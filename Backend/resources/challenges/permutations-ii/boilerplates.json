@@ -1,0 +1,10 @@
+{
+  "typescript": "function permuteUnique(nums: number[]): number[][] {\n  // Your code here\n}",
+  "javascript": "/**\n * @param {number[]} nums\n * @return {number[][]}\n */\nvar permuteUnique = function(nums) {\n  // Your code here\n};",
+  "python": "class Solution:\n    def permuteUnique(self, nums: List[int]) -> List[List[int]]:\n        # Your code here\n        pass",
+  "java": "class Solution {\n    public List<List<Integer>> permuteUnique(int[] nums) {\n        // Your code here\n    }\n}",
+  "cpp": "class Solution {\npublic:\n    vector<vector<int>> permuteUnique(vector<int>& nums) {\n        // Your code here\n    }\n};",
+  "go": "func permuteUnique(nums []int) [][]int {\n    // Your code here\n}",
+  "rust": "impl Solution {\n    pub fn permute_unique(nums: Vec<i32>) -> Vec<Vec<i32>> {\n        // Your code here\n    }\n}",
+  "csharp": "public class Solution {\n    public IList<IList<int>> PermuteUnique(int[] nums) {\n        // Your code here\n    }\n}"
+}

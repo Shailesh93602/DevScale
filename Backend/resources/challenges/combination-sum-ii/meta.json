@@ -6,14 +6,25 @@
   "points": 100,
   "tags": ["array", "backtracking", "sorting"],
   "company_tags": ["amazon", "facebook", "google", "airbnb"],
-  "topic_tags": ["Array", "Backtracking", "Sorting"],
+  "topic_tags": ["arrays", "backtracking"],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
   "time_limit_ms": 2000,
   "memory_limit_kb": 262144,
   "input_format": "An array of integers `candidates` and a target integer `target`.",
   "output_format": "A list of all unique combinations where the chosen numbers sum to `target`. Each number in `candidates` may only be used **once** in the combination.",
   "example_input": "candidates = [10,1,2,7,6,1,5], target = 8",
   "example_output": "[[1,1,6],[1,2,5],[1,7],[2,6]]",
-  "constraints": "1 <= candidates.length <= 100\n1 <= candidates[i] <= 50\n1 <= target <= 30",
-  "function_signature": "function combinationSum2(candidates: number[], target: number): number[][]",
-  "status": "ACTIVE"
+  "constraints": "- `1 <= candidates.length <= 100`\n- `1 <= candidates[i] <= 50`\n- `1 <= target <= 30` ",
+  "function_signature": "function combinationSum2(candidates: number[], target: number): number[][] {}",
+  "status": "ACTIVE",
+  "is_production_ready": true
 }
