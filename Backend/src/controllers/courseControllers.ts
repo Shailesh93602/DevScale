@@ -26,7 +26,37 @@ export default class CourseController {
   });
 
   public enrollCourse = catchAsync(async (req: Request, res: Response) => {
-    // TODO: implement this method
-    return sendResponse(res, 'COURSE_ENROLLED');
+    const { id: courseId } = req.params;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return sendResponse(res, 'UNAUTHORIZED');
+    }
+
+    // Check if course exists
+    const course = await prisma.course.findUnique({
+      where: { id: courseId },
+    });
+
+    if (!course) {
+      return sendResponse(res, 'COURSE_NOT_FOUND');
+    }
+
+    // Create or find enrollment
+    const enrollment = await prisma.courseEnrollment.upsert({
+      where: {
+        user_id_course_id: {
+          user_id: userId,
+          course_id: courseId,
+        },
+      },
+      update: {}, // If already enrolled, do nothing
+      create: {
+        user_id: userId,
+        course_id: courseId,
+      },
+    });
+
+    return sendResponse(res, 'COURSE_ENROLLED', { data: { enrollment } });
   });
 }

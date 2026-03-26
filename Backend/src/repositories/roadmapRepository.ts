@@ -21,6 +21,89 @@ export default class RoadmapRepository extends BaseRepository<
     super(prisma.roadmap);
   }
 
+  private async createTopicEntries(
+    tx: Prisma.TransactionClient,
+    subjectId: string,
+    topics: TopicData[]
+  ) {
+    for (const topicData of topics) {
+      const topic = await tx.topic.create({
+        data: {
+          title: topicData.title,
+          description: topicData.description,
+          order: topicData.order,
+          content: topicData.content,
+          resources: topicData.resources,
+          prerequisites: topicData.prerequisites,
+        },
+      });
+
+      await tx.subjectTopic.create({
+        data: {
+          subject_id: subjectId,
+          topic_id: topic.id,
+          order: topicData.order,
+        },
+      });
+    }
+  }
+
+  private async createSubjectEntries(
+    tx: Prisma.TransactionClient,
+    conceptId: string,
+    subjects: SubjectData[]
+  ) {
+    for (const subjectData of subjects) {
+      const subject = await tx.subject.create({
+        data: {
+          title: subjectData.title,
+          description: subjectData.description,
+          order: subjectData.order,
+        },
+      });
+
+      await tx.mainConceptSubject.create({
+        data: {
+          main_concept_id: conceptId,
+          subject_id: subject.id,
+          order: subjectData.order,
+        },
+      });
+
+      if (subjectData.topics) {
+        await this.createTopicEntries(tx, subject.id, subjectData.topics);
+      }
+    }
+  }
+
+  private async createConceptEntries(
+    tx: Prisma.TransactionClient,
+    roadmapId: string,
+    concepts: ConceptData[]
+  ) {
+    for (const concept of concepts) {
+      const mainConcept = await tx.mainConcept.create({
+        data: {
+          name: concept.title,
+          description: concept.description,
+          order: concept.order,
+        },
+      });
+
+      await tx.roadmapMainConcept.create({
+        data: {
+          roadmap_id: roadmapId,
+          main_concept_id: mainConcept.id,
+          order: concept.order,
+        },
+      });
+
+      if (concept.subjects) {
+        await this.createSubjectEntries(tx, mainConcept.id, concept.subjects);
+      }
+    }
+  }
+
   async createRoadmap(data: RoadmapData) {
     try {
       return await this.prismaClient.$transaction(async (tx) => {
@@ -34,66 +117,7 @@ export default class RoadmapRepository extends BaseRepository<
         });
 
         if (data.concepts) {
-          for (const concept of data.concepts) {
-            const mainConcept = await tx.mainConcept.create({
-              data: {
-                name: concept.title,
-                description: concept.description,
-                order: concept.order,
-              },
-            });
-
-            await tx.roadmapMainConcept.create({
-              data: {
-                roadmap_id: roadmap.id,
-                main_concept_id: mainConcept.id,
-                order: concept.order,
-              },
-            });
-
-            if (concept.subjects) {
-              for (const subjectData of concept.subjects) {
-                const subject = await tx.subject.create({
-                  data: {
-                    title: subjectData.title,
-                    description: subjectData.description,
-                    order: subjectData.order,
-                  },
-                });
-
-                await tx.mainConceptSubject.create({
-                  data: {
-                    main_concept_id: mainConcept.id,
-                    subject_id: subject.id,
-                    order: subjectData.order,
-                  },
-                });
-
-                if (subjectData.topics) {
-                  for (const topicData of subjectData.topics) {
-                    const topic = await tx.topic.create({
-                      data: {
-                        title: topicData.title,
-                        description: topicData.description,
-                        order: topicData.order,
-                        content: topicData.content,
-                        resources: topicData.resources,
-                        prerequisites: topicData.prerequisites,
-                      },
-                    });
-
-                    await tx.subjectTopic.create({
-                      data: {
-                        subject_id: subject.id,
-                        topic_id: topic.id,
-                        order: topicData.order,
-                      },
-                    });
-                  }
-                }
-              }
-            }
-          }
+          await this.createConceptEntries(tx, roadmap.id, data.concepts);
         }
 
         return roadmap;
@@ -506,9 +530,9 @@ export default class RoadmapRepository extends BaseRepository<
     // Build where clause with additional filters
     const whereClause: Prisma.RoadmapWhereInput = {
       ...where,
-      ...(category ? { category_id: String(category) } : {}),
-      ...(difficulty
-        ? { difficulty: String(difficulty) as 'EASY' | 'MEDIUM' | 'HARD' }
+      ...(typeof category === 'string' ? { category_id: category } : {}),
+      ...(typeof difficulty === 'string'
+        ? { difficulty: difficulty.toUpperCase() as 'EASY' | 'MEDIUM' | 'HARD' }
         : {}),
     };
 
@@ -540,7 +564,7 @@ export default class RoadmapRepository extends BaseRepository<
       {
         limit: Number(limit),
         page: Number(page),
-        search: String(search),
+        search: typeof search === 'string' ? search : '',
         sort: sortOptions,
       },
       ['title'],
