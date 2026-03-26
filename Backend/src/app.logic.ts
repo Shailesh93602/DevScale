@@ -138,6 +138,15 @@ function initializeSwagger() {
 }
 
 export const initializeApp = async (apiRoutes: Router[]) => {
+  process.on('unhandledRejection', (reason) => {
+    logger.error('Unhandled promise rejection', { reason });
+    process.exit(1);
+  });
+  process.on('uncaughtException', (error: Error) => {
+    logger.error('Uncaught exception', { error: error.message, stack: error.stack });
+    process.exit(1);
+  });
+
   initializeMiddleWares();
   initializeRoutes(apiRoutes.map((router) => ({ router })));
   initializeSwagger();

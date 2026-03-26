@@ -1,8 +1,10 @@
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import { Server as HttpServer } from 'http';
+import { createAdapter } from '@socket.io/redis-adapter';
+import Redis from 'ioredis';
 import logger from '../utils/logger';
 import { verifyToken } from '../utils/jwt';
-import { CORS_ORIGIN } from '../config';
+import { CORS_ORIGIN, REDIS_URL } from '../config';
 
 // Define socket event types
 export enum SocketEvents {
@@ -86,12 +88,28 @@ export interface ChatMessage {
   timestamp: number;
 }
 
+// Redis key helpers — all socket state lives here so it's shared across all server instances
+const USER_SOCKETS_KEY = (userId: string) => `eduscale:sockets:${userId}`;
+const BATTLE_USERS_KEY = (battleId: string) => `eduscale:battle:users:${battleId}`;
+const SOCKET_TTL = 24 * 60 * 60; // 1 day — auto-expire orphaned keys
+
 class SocketService {
   private io: SocketIOServer | null = null;
-  private userSockets: Map<string, string[]> = new Map(); // userId -> socketIds
-  private battleRooms: Map<string, Set<string>> = new Map(); // battleId -> userIds
+  // Redis clients — pub/sub must be separate connections per Socket.io adapter requirements
+  private pubClient: Redis | null = null;
+  private subClient: Redis | null = null;
+  // Local fallback Maps used only during Redis initialisation or when Redis is unavailable
+  private userSockets: Map<string, string[]> = new Map();
+  private battleRooms: Map<string, Set<string>> = new Map();
 
   initialize(server: HttpServer) {
+    // Create dedicated pub/sub Redis connections for the adapter
+    this.pubClient = new Redis(REDIS_URL);
+    this.subClient = this.pubClient.duplicate();
+
+    this.pubClient.on('error', (err) => logger.error('Socket.io pubClient Redis error', { err }));
+    this.subClient.on('error', (err) => logger.error('Socket.io subClient Redis error', { err }));
+
     this.io = new SocketIOServer(server, {
       cors: {
         origin: function (origin, callback) {
@@ -124,10 +142,13 @@ class SocketService {
       },
     });
 
+    // Wire the Redis adapter — enables room broadcasts across multiple server instances
+    this.io.adapter(createAdapter(this.pubClient, this.subClient));
+
     this.setupMiddleware();
     this.setupEventHandlers();
 
-    logger.info('WebSocket server initialized');
+    logger.info('WebSocket server initialized with Redis adapter');
   }
 
   private setupMiddleware() {
@@ -175,11 +196,11 @@ class SocketService {
         return;
       }
 
-      // Track user connections
-      if (!this.userSockets.has(userId)) {
-        this.userSockets.set(userId, []);
-      }
-      this.userSockets.get(userId)?.push(socket.id);
+      // Track user connections in Redis
+      this.pubClient?.sadd(USER_SOCKETS_KEY(userId), socket.id).catch(() => {
+        this.userSockets.set(userId, [...(this.userSockets.get(userId) || []), socket.id]);
+      });
+      this.pubClient?.expire(USER_SOCKETS_KEY(userId), SOCKET_TTL).catch(() => {});
 
       logger.info(`User ${userId} connected with socket ${socket.id}`);
 
@@ -209,16 +230,15 @@ class SocketService {
   }
 
   private joinBattleRoom(socket: Socket, userId: string, battleId: string) {
-    // Join the socket room for this battle
     socket.join(`battle:${battleId}`);
 
-    // Track user in battle room
-    if (!this.battleRooms.has(battleId)) {
-      this.battleRooms.set(battleId, new Set());
-    }
-    this.battleRooms.get(battleId)?.add(userId);
+    // Track user ↔ battle membership in Redis
+    this.pubClient?.sadd(BATTLE_USERS_KEY(battleId), userId).catch(() => {
+      if (!this.battleRooms.has(battleId)) this.battleRooms.set(battleId, new Set());
+      this.battleRooms.get(battleId)?.add(userId);
+    });
+    this.pubClient?.expire(BATTLE_USERS_KEY(battleId), SOCKET_TTL).catch(() => {});
 
-    // Notify others that user joined
     socket.to(`battle:${battleId}`).emit(SocketEvents.BATTLE_PARTICIPANT_JOIN, {
       battle_id: battleId,
       user_id: userId,
@@ -231,43 +251,37 @@ class SocketService {
   }
 
   private leaveBattleRoom(socket: Socket, userId: string, battleId: string) {
-    // Leave the socket room for this battle
     socket.leave(`battle:${battleId}`);
 
-    // Remove user from battle room tracking
-    this.battleRooms.get(battleId)?.delete(userId);
-    if (this.battleRooms.get(battleId)?.size === 0) {
-      this.battleRooms.delete(battleId);
-    }
+    this.pubClient?.srem(BATTLE_USERS_KEY(battleId), userId).catch(() => {
+      this.battleRooms.get(battleId)?.delete(userId);
+    });
 
-    // Notify others that user left
-    socket
-      .to(`battle:${battleId}`)
-      .emit(SocketEvents.BATTLE_PARTICIPANT_LEAVE, {
-        battle_id: battleId,
-        user_id: userId,
-        username: socket.data.user?.username || 'Anonymous',
-        avatar_url: socket.data.user?.avatar_url,
-        status: 'left',
-      } as ParticipantUpdate);
+    socket.to(`battle:${battleId}`).emit(SocketEvents.BATTLE_PARTICIPANT_LEAVE, {
+      battle_id: battleId,
+      user_id: userId,
+      username: socket.data.user?.username || 'Anonymous',
+      avatar_url: socket.data.user?.avatar_url,
+      status: 'left',
+    } as ParticipantUpdate);
 
     logger.info(`User ${userId} left battle ${battleId}`);
   }
 
-  private handleChatMessage(socket: Socket, userId: string, data: ChatMessage) {
+  private async handleChatMessage(socket: Socket, userId: string, data: ChatMessage) {
     const { battle_id, message } = data;
 
-    // Validate message
-    if (!battle_id || !message || message.trim() === '') {
-      return;
-    }
+    if (!battle_id || !message || message.trim() === '') return;
 
-    // Check if user is in this battle
-    if (!this.battleRooms.get(battle_id)?.has(userId)) {
-      return;
+    // Verify user is in this battle (Redis-backed, cross-server safe)
+    let isMember = false;
+    try {
+      isMember = (await this.pubClient?.sismember(BATTLE_USERS_KEY(battle_id), userId)) === 1;
+    } catch {
+      isMember = this.battleRooms.get(battle_id)?.has(userId) ?? false;
     }
+    if (!isMember) return;
 
-    // Create message object
     const chatMessage: ChatMessage = {
       battle_id,
       user_id: userId,
@@ -277,51 +291,55 @@ class SocketService {
       timestamp: Date.now(),
     };
 
-    // Broadcast to all users in the battle
-    this.io
-      ?.to(`battle:${battle_id}`)
-      .emit(SocketEvents.CHAT_MESSAGE, chatMessage);
+    this.io?.to(`battle:${battle_id}`).emit(SocketEvents.CHAT_MESSAGE, chatMessage);
   }
 
-  private handleDisconnect(socket: Socket, userId: string) {
-    // Remove socket from user tracking
-    const userSockets = this.userSockets.get(userId) || [];
-    const updatedSockets = userSockets.filter((id) => id !== socket.id);
+  private async handleDisconnect(socket: Socket, userId: string) {
+    // Remove this socket from the user's Redis set
+    try {
+      await this.pubClient?.srem(USER_SOCKETS_KEY(userId), socket.id);
+      const remaining = await this.pubClient?.scard(USER_SOCKETS_KEY(userId));
 
-    if (updatedSockets.length === 0) {
-      this.userSockets.delete(userId);
-    } else {
-      this.userSockets.set(userId, updatedSockets);
-    }
-
-    // Handle leaving all battle rooms
-    this.battleRooms.forEach((users, battleId) => {
-      if (users.has(userId) && this.getUserSocketCount(userId) === 0) {
-        users.delete(userId);
-
-        // Notify others that user left
-        socket
-          .to(`battle:${battleId}`)
-          .emit(SocketEvents.BATTLE_PARTICIPANT_LEAVE, {
-            battle_id: battleId,
-            user_id: userId,
-            username: socket.data.user?.username || 'Anonymous',
-            avatar_url: socket.data.user?.avatar_url,
-            status: 'left',
-          } as ParticipantUpdate);
-
-        if (users.size === 0) {
-          this.battleRooms.delete(battleId);
+      // Only remove from battle rooms when user has no remaining connections
+      if (!remaining || remaining === 0) {
+        const battleIds = await this.pubClient?.keys(BATTLE_USERS_KEY('*')) ?? [];
+        for (const key of battleIds) {
+          const isMember = await this.pubClient?.sismember(key, userId);
+          if (isMember) {
+            const battleId = key.replace('eduscale:battle:users:', '');
+            await this.pubClient?.srem(key, userId);
+            socket.to(`battle:${battleId}`).emit(SocketEvents.BATTLE_PARTICIPANT_LEAVE, {
+              battle_id: battleId,
+              user_id: userId,
+              username: socket.data.user?.username || 'Anonymous',
+              avatar_url: socket.data.user?.avatar_url,
+              status: 'left',
+            } as ParticipantUpdate);
+          }
         }
       }
-    });
+    } catch {
+      // Fallback: clean up in-memory maps
+      const updatedSockets = (this.userSockets.get(userId) || []).filter((id) => id !== socket.id);
+      if (updatedSockets.length === 0) {
+        this.userSockets.delete(userId);
+        this.battleRooms.forEach((users, battleId) => {
+          if (users.has(userId)) {
+            users.delete(userId);
+            socket.to(`battle:${battleId}`).emit(SocketEvents.BATTLE_PARTICIPANT_LEAVE, {
+              battle_id: battleId,
+              user_id: userId,
+              username: socket.data.user?.username || 'Anonymous',
+              status: 'left',
+            } as ParticipantUpdate);
+          }
+        });
+      } else {
+        this.userSockets.set(userId, updatedSockets);
+      }
+    }
 
     logger.info(`User ${userId} disconnected socket ${socket.id}`);
-  }
-
-  // Get the number of active sockets for a user
-  private getUserSocketCount(userId: string): number {
-    return this.userSockets.get(userId)?.length || 0;
   }
 
   // ── Public emit helpers ──────────────────────────────────────────────────
@@ -339,14 +357,22 @@ class SocketService {
   }
 
   /**
-   * Emit a private event to a specific user who is in a battle room.
-   * Finds the socket(s) for the user and emits individually.
+   * Emit a private event to a specific user.
+   * With the Redis adapter, io.to(socketId) is routed to the correct server automatically.
    */
-  emitToUser(battleId: string, userId: string, event: string, data: unknown) {
+  async emitToUser(battleId: string, userId: string, event: string, data: unknown) {
     if (!this.io) return;
-    const socketIds = this.userSockets.get(userId) || [];
-    for (const sid of socketIds) {
-      this.io.to(sid).emit(event, data);
+    try {
+      const socketIds = await this.pubClient?.smembers(USER_SOCKETS_KEY(userId)) ?? [];
+      for (const sid of socketIds) {
+        this.io.to(sid).emit(event, data);
+      }
+    } catch {
+      // Fallback to in-memory map
+      const socketIds = this.userSockets.get(userId) || [];
+      for (const sid of socketIds) {
+        this.io.to(sid).emit(event, data);
+      }
     }
   }
 
@@ -377,8 +403,12 @@ class SocketService {
     logger.info(`Battle ${battleId} completed`);
   }
 
-  getConnectedUsers(battleId: string): string[] {
-    return Array.from(this.battleRooms.get(battleId) || []);
+  async getConnectedUsers(battleId: string): Promise<string[]> {
+    try {
+      return await this.pubClient?.smembers(BATTLE_USERS_KEY(battleId)) ?? [];
+    } catch {
+      return Array.from(this.battleRooms.get(battleId) || []);
+    }
   }
 }
 

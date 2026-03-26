@@ -19,6 +19,8 @@ import logger from './utils/logger';
 import { v2 as cloudinary } from 'cloudinary';
 import prisma from './lib/prisma';
 import socketService from './services/socket';
+import { redis } from './services/cacheService';
+import { RedisStore } from 'rate-limit-redis';
 
 declare const require: NodeRequire;
 
@@ -104,6 +106,9 @@ export class App {
       standardHeaders: true,
       legacyHeaders: false,
       message: 'Too many requests from this IP, please try again later.',
+      store: new RedisStore({
+        sendCommand: (...args: string[]) => redis.call(...args as [string, ...string[]]),
+      }),
     });
     this.app.use(limiter);
   }
@@ -140,6 +145,17 @@ export class App {
   }
 
   public async start(): Promise<void> {
+    // Process-level safety nets — must be set before anything can throw
+    process.on('unhandledRejection', (reason) => {
+      logger.error('Unhandled promise rejection', { reason });
+      process.exit(1);
+    });
+
+    process.on('uncaughtException', (error) => {
+      logger.error('Uncaught exception', { error: error.message, stack: error.stack });
+      process.exit(1);
+    });
+
     try {
       await prisma.$connect();
       logger.info('Connected to PostgreSQL database');
