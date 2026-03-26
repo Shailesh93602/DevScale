@@ -8,7 +8,10 @@ export interface RealtimeUpdate<T> {
 }
 
 export class RealtimeService {
-  private subscribers: Map<string, Set<(data: any) => void>> = new Map();
+  private readonly subscribers: Map<
+    string,
+    Set<(data: RealtimeUpdate<unknown>) => void>
+  > = new Map();
 
   initialize() {
     wsService.connect();
@@ -16,7 +19,7 @@ export class RealtimeService {
   }
 
   private setupEventHandlers() {
-    wsService.subscribe<RealtimeUpdate<any>>('data_update', (update) => {
+    wsService.subscribe<RealtimeUpdate<unknown>>('data_update', (update) => {
       const subscribers = this.subscribers.get(update.entity);
       subscribers?.forEach((callback) => callback(update));
     });
@@ -26,14 +29,18 @@ export class RealtimeService {
     if (!this.subscribers.has(entity)) {
       this.subscribers.set(entity, new Set());
     }
-    this.subscribers.get(entity)?.add(callback);
+    this.subscribers
+      .get(entity)
+      ?.add(callback as (update: RealtimeUpdate<unknown>) => void);
   }
 
   unsubscribe<T>(
     entity: string,
     callback: (update: RealtimeUpdate<T>) => void
   ) {
-    this.subscribers.get(entity)?.delete(callback);
+    this.subscribers
+      .get(entity)
+      ?.delete(callback as (update: RealtimeUpdate<unknown>) => void);
   }
 
   cleanup() {

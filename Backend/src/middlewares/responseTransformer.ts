@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import logger from '../utils/logger';
 
 interface TransformOptions {
-  transform: (data: any) => any;
+  transform: (data: unknown) => unknown;
   condition?: (req: Request) => boolean;
 }
 
@@ -14,13 +14,11 @@ export const transformResponse = (options: TransformOptions) => {
         return next();
       }
 
-      // Store original send function
-      const originalSend = res.json;
-
-      // Override send function to transform response
-      res.json = function (body: any) {
+      // Override json function to transform response
+      const originalJson = res.json.bind(res);
+      res.json = (body: unknown) => {
         const transformedBody = options.transform(body);
-        return originalSend.call(this, transformedBody);
+        return originalJson(transformedBody);
       };
 
       next();
@@ -34,14 +32,14 @@ export const transformResponse = (options: TransformOptions) => {
 // Common transformers
 export const sanitizeResponse = transformResponse({
   transform: (data) => {
-    const sanitize = (obj: any): any => {
+    const sanitize = (obj: unknown): unknown => {
       if (!obj || typeof obj !== 'object') return obj;
 
       if (Array.isArray(obj)) {
         return obj.map(sanitize);
       }
 
-      const sanitized: any = {};
+      const sanitized: Record<string, unknown> = {};
       for (const [key, value] of Object.entries(obj)) {
         if (key.startsWith('_') || key === 'password') continue;
         sanitized[key] = sanitize(value);
@@ -56,16 +54,16 @@ export const sanitizeResponse = transformResponse({
 export const camelCaseResponse = transformResponse({
   transform: (data) => {
     const toCamelCase = (str: string) =>
-      str.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
+      str.replaceAll(/_([a-z])/g, (g) => g[1].toUpperCase());
 
-    const convert = (obj: any): any => {
+    const convert = (obj: unknown): unknown => {
       if (!obj || typeof obj !== 'object') return obj;
 
       if (Array.isArray(obj)) {
         return obj.map(convert);
       }
 
-      const converted: any = {};
+      const converted: Record<string, unknown> = {};
       for (const [key, value] of Object.entries(obj)) {
         converted[toCamelCase(key)] = convert(value);
       }

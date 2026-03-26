@@ -10,7 +10,6 @@ import {
   SubjectData,
   SubjectOrder,
   TopicData,
-  PaginatedResult,
 } from '@/types';
 import { invalidateCachePattern } from '@/services/cacheService';
 import { Request } from 'express';
@@ -616,29 +615,35 @@ export default class RoadmapRepository extends BaseRepository<
       },
       combinedWhere
     )) as unknown as {
-      data: Array<
-        any & {
-          id: string;
-          _count: {
-            likes: number;
-            comments: number;
-            user_roadmaps: number;
-            topics: number;
-          };
-          likes?: Array<{ id: string }>;
-          user_roadmaps?: Array<{ id: string }>;
-          topics: Array<{ topic: { id: string; title: string } }>;
-        }
-      >;
-      meta: any;
+      data: Array<{
+        id: string;
+        title: string;
+        description: string;
+        popularity: number;
+        estimatedHours: number | null;
+        _count: {
+          likes: number;
+          comments: number;
+          user_roadmaps: number;
+          topics: number;
+        };
+        likes?: Array<{ id: string }>;
+        user_roadmaps?: Array<{ id: string }>;
+        topics: Array<{ topic: { id: string; title: string } }>;
+      }>;
+      meta: {
+        total: number;
+        currentPage: number;
+        totalPages: number;
+        limit: number;
+        hasNextPage: boolean;
+        hasPreviousPage: boolean;
+      };
     };
 
     // If user is logged in, get progress for all roadmaps
     const userProgressMap: Record<string, number> = {};
     if (userId) {
-      // Get all roadmap IDs
-      const roadmapIds = roadmaps.data.map((roadmap) => roadmap.id);
-
       // Get all topic IDs for these roadmaps
       const roadmapTopicIds = roadmaps.data.flatMap((roadmap) =>
         roadmap.topics.map((t: { topic: { id: string } }) => t.topic.id)

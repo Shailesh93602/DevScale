@@ -18,9 +18,9 @@ export type ResponseType =
   | 'CONTENT_MODERATED'
   | 'BATTLE_STATUS_UPDATED';
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   status: ResponseType;
   message?: string;
   data?: T;
-  error?: any;
+  error?: unknown;
 }

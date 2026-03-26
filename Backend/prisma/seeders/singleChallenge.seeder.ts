@@ -1,4 +1,4 @@
-import { PrismaClient, Difficulty, ChallengeCategory, ChallengeStatus } from '@prisma/client';
+import { PrismaClient, Difficulty, ChallengeCategory, ChallengeStatus, Prisma } from '@prisma/client';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
@@ -25,8 +25,8 @@ interface ChallengeMeta {
 }
 
 interface TestCase {
-  input: any;
-  output: any;
+  input: unknown;
+  output: unknown;
   explanation?: string;
   is_hidden: boolean;
 }
@@ -57,7 +57,7 @@ async function seedSingleChallenge(targetSlug: string) {
       : null;
 
     const challenge = await prisma.challenge.upsert({
-      where: { title: meta.title },
+      where: { title: meta.title } as Prisma.ChallengeWhereUniqueInput,
       update: {
         description,
         points: meta.points,
