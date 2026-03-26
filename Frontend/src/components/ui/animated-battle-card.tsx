@@ -107,7 +107,7 @@ export const AnimatedBattleCard = ({
     <motion.div
       ref={cardRef}
       className={cn(
-        'relative overflow-hidden rounded-xl bg-gradient-to-br from-gray-900/80 to-gray-800/80 p-1',
+        'relative overflow-hidden rounded-xl bg-gradient-to-br from-background/80 to-muted/80 p-1',
         className,
       )}
       onMouseMove={handleMouseMove}
@@ -140,7 +140,7 @@ export const AnimatedBattleCard = ({
       {/* Card content with 3D effect */}
       <motion.div
         className={cn(
-          'relative z-10 flex h-full flex-col overflow-hidden rounded-lg bg-card p-6 dark:bg-gray-900/90',
+          'relative z-10 flex h-full flex-col overflow-hidden rounded-lg bg-card p-6',
           contentClassName,
         )}
         style={{
@@ -196,7 +196,7 @@ export const AnimatedBattleCard = ({
 
         {/* Description with floating effect */}
         <motion.p
-          className="mb-4 text-card-foreground/80 dark:text-gray-300"
+          className="mb-4 text-muted-foreground"
           style={{
             transformStyle: 'preserve-3d',
             transform: 'translateZ(30px)',

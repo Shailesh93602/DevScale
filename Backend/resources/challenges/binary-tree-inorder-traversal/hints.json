@@ -1,0 +1,6 @@
+[
+  "Inorder traversal visits nodes in the order: Left, Root, Right.",
+  "Consider using recursion for a simple implementation.",
+  "For the iterative approach, you can use a stack to keep track of nodes.",
+  "Can you think of a way to do it in O(1) space? Research Morris Traversal."
+]

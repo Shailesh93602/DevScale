@@ -15,5 +15,6 @@
   "example_output": "3",
   "constraints": "- `1 <= nums.length <= 100`\n- `0 <= nums[i] <= 1000`",
   "function_signature": "function rob(nums: number[]): number {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

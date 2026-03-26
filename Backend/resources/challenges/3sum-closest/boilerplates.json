@@ -1,0 +1,6 @@
+{
+  "typescript": "function threeSumClosest(nums: number[], target: number): number {\n    // Your code here\n}",
+  "javascript": "/**\n * @param {number[]} nums\n * @param {number} target\n * @return {number}\n */\nvar threeSumClosest = function(nums, target) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def threeSumClosest(self, nums: List[int], target: int) -> int:\n        # Your code here\n        pass"
+}
+

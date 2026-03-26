@@ -43,7 +43,7 @@ const RoadmapSection: React.FC<RoadmapSectionProps> = ({
         {steps.map((step, idx) => (
           <motion.div
             key={step.id}
-            className="flex flex-col items-center rounded-xl border border-neutral-200 bg-white/80 p-8 shadow-lg backdrop-blur-md transition-shadow duration-300 hover:shadow-2xl dark:border-neutral-700 dark:bg-neutral-900/80"
+            className="flex flex-col items-center rounded-xl border border-border bg-card/80 p-8 shadow-lg backdrop-blur-md transition-shadow duration-300 hover:shadow-2xl"
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

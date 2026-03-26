@@ -1,0 +1,21 @@
+{
+  "title": "Minimum Number of Arrows to Burst Balloons",
+  "slug": "min-arrows-burst-balloons",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["Greedy", "Sorting", "Array"],
+  "company_tags": ["Google", "Facebook", "Amazon", "Microsoft"],
+  "topic_tags": ["Greedy"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "2D integer array points.",
+  "output_format": "Minimum number of arrows required.",
+  "example_input": "points = [[10,16],[2,8],[1,6],[7,12]]",
+  "example_output": "2",
+  "constraints": "points.length <= 10^5",
+  "function_signature": "function findMinArrowShots(points: number[][]): number {}",
+  "status": "ACTIVE",
+  "is_production_ready": true
+}
+

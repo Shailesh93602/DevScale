@@ -1,3 +1,27 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  {
+    "input": "3749",
+    "output": "MMMDCCXLIX",
+    "is_hidden": false
+  },
+  {
+    "input": "58",
+    "output": "LVIII",
+    "is_hidden": false
+  },
+  {
+    "input": "1994",
+    "output": "MCMXCIV",
+    "is_hidden": false
+  },
+  {
+    "input": "3",
+    "output": "III",
+    "is_hidden": true
+  },
+  {
+    "input": "3999",
+    "output": "MMMCMXCIX",
+    "is_hidden": true
+  }
 ]

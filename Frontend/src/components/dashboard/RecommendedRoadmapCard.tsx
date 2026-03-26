@@ -38,9 +38,9 @@ const RecommendedRoadmapCard: React.FC<RecommendedRoadmapCardProps> = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="overflow-hidden rounded-lg bg-white shadow-md dark:bg-gray-800"
+      className="overflow-hidden rounded-lg bg-card shadow-md"
     >
-      <div className="relative h-40 bg-gray-200 dark:bg-gray-700">
+      <div className="relative h-40 bg-muted">
         {thumbnail ? (
           <Image
             src={thumbnail}
@@ -50,8 +50,8 @@ const RecommendedRoadmapCard: React.FC<RecommendedRoadmapCardProps> = ({
             height={500}
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-indigo-500/20 to-pink-500/20 dark:from-indigo-900/20 dark:to-pink-900/20">
-            <span className="text-2xl font-semibold text-gray-500 dark:text-gray-400">
+          <div className="from-primary/20 flex h-full w-full items-center justify-center bg-gradient-to-br to-secondary/20">
+            <span className="text-2xl font-semibold text-muted-foreground">
               {title.substring(0, 1)}
             </span>
           </div>
@@ -64,20 +64,20 @@ const RecommendedRoadmapCard: React.FC<RecommendedRoadmapCardProps> = ({
 
       <div className="p-4">
         <Link href={`/career-roadmap/${id}`}>
-          <h3 className="mb-1 line-clamp-1 text-lg font-semibold text-gray-900 hover:text-blue-600 dark:text-white dark:hover:text-blue-400">
+          <h3 className="mb-1 line-clamp-1 text-lg font-semibold text-foreground hover:text-primary">
             {title}
           </h3>
         </Link>
 
-        <div className="mb-3 text-sm text-gray-500 dark:text-gray-400">
+        <div className="mb-3 text-sm text-muted-foreground">
           By {author?.name}
         </div>
 
-        <p className="mb-3 line-clamp-2 text-sm text-gray-600 dark:text-gray-300">
+        <p className="mb-3 line-clamp-2 text-sm text-muted-foreground">
           {truncateText(description, 120)}
         </p>
 
-        <div className="mb-3 text-xs italic text-gray-500 dark:text-gray-400">
+        <div className="mb-3 text-xs italic text-muted-foreground">
           {matchReason}
         </div>
 
@@ -87,7 +87,7 @@ const RecommendedRoadmapCard: React.FC<RecommendedRoadmapCardProps> = ({
             <span className="font-semibold">{rating?.toFixed(1)}</span>
           </div>
 
-          <div className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
+          <div className="flex items-center gap-1 text-sm text-muted-foreground">
             <Users size={14} />
             <span>{formatNumber(enrollmentCount)}</span>
             <span className="ml-2">{topics} topics</span>
@@ -96,7 +96,7 @@ const RecommendedRoadmapCard: React.FC<RecommendedRoadmapCardProps> = ({
 
         <Link
           href={`/career-roadmap/${id}`}
-          className="bg--primary mt-4 block w-full rounded-md bg-primary py-2 text-center text-sm font-medium text-white hover:bg-primary2"
+          className="bg--primary hover:bg-primary/90 mt-4 block w-full rounded-md bg-primary py-2 text-center text-sm font-medium text-primary-foreground"
         >
           Explore Roadmap
         </Link>

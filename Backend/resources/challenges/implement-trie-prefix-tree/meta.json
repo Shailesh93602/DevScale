@@ -16,5 +16,6 @@
   "example_output": "[null, null, true, false, true, null, true]",
   "constraints": "- `1 <= word.length, prefix.length <= 2000`\n- `word` and `prefix` consist only of lowercase English letters.\n- At most `3 * 10^4` calls in total will be made to `insert`, `search`, and `startsWith`.",
   "function_signature": "class Trie { constructor() {} insert(word: string): void {} search(word: string): boolean {} startsWith(prefix: string): boolean {} }",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

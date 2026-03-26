@@ -15,5 +15,6 @@
   "example_output": "[5,4,6,2,null,null,7]",
   "constraints": "- The number of nodes in the tree is in the range `[0, 10^4]`.\n- `-10^5 <= Node.val <= 10^5`\n- Each node has a unique value.\n- `key` is a valid BST node value.\n- The root of the BST should not change after deletion, unless the root is deleted.",
   "function_signature": "function deleteNode(root: TreeNode | null, key: number): TreeNode | null {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

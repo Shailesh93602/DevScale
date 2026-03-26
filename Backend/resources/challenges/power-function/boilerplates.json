@@ -1,0 +1,10 @@
+{
+  "typescript": "function myPow(x: number, n: number): number {\n  // Your code here\n}",
+  "javascript": "/**\n * @param {number} x\n * @param {number} n\n * @return {number}\n */\nvar myPow = function(x, n) {\n  // Your code here\n};",
+  "python": "class Solution:\n    def myPow(self, x: float, n: int) -> float:\n        # Your code here\n        pass",
+  "java": "class Solution {\n    public double myPow(double x, int n) {\n        // Your code here\n    }\n}",
+  "cpp": "class Solution {\npublic:\n    double myPow(double x, int n) {\n        // Your code here\n    }\n};",
+  "go": "func myPow(x float64, n int) float64 {\n    // Your code here\n}",
+  "rust": "impl Solution {\n    pub fn my_pow(x: f64, n: i32) -> f64 {\n        // Your code here\n    }\n}",
+  "csharp": "public class Solution {\n    public double MyPow(double x, int n) {\n        // Your code here\n    }\n}"
+}

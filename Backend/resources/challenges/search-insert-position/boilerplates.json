@@ -1,0 +1,10 @@
+{
+  "typescript": "function searchInsert(nums: number[], target: number): number {\n    \n};",
+  "javascript": "/**\n * @param {number[]} nums\n * @param {number} target\n * @return {number}\n */\nvar searchInsert = function(nums, target) {\n    \n};",
+  "python": "class Solution:\n    def searchInsert(self, nums: List[int], target: int) -> int:\n        ",
+  "java": "class Solution {\n    public int searchInsert(int[] nums, int target) {\n        \n    }\n}",
+  "cpp": "class Solution {\npublic:\n    int searchInsert(vector<int>& nums, int target) {\n        \n    }\n};",
+  "go": "func searchInsert(nums []int, target int) int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn search_insert(nums: Vec<i32>, target: i32) -> i32 {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int SearchInsert(int[] nums, int target) {\n        \n    }\n}"
+}

@@ -4,7 +4,7 @@ function featureEngineeringPipeline(
   operations: string[]
 ): { features: number[][]; column_names: string[] } {
   const n = data.length;
-  const resultColumns: { name: string; values: number[] }[] = [];
+  let resultColumns: { name: string; values: number[] }[] = [];
 
   const colMap = new Map<string, any[]>();
   for (let j = 0; j < columns.length; j++) {

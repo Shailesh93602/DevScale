@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nclass FizzBuzzMT { fizz(printFizz: () => void): Promise<void>; buzz(printBuzz: () => void): Promise<void>; fizzbuzz(printFizzBuzz: () => void): Promise<void>; number(printNumber: (n: number) => void): Promise<void> }",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

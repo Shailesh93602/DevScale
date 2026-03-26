@@ -1,0 +1,21 @@
+{
+  "title": "Asteroid Collision",
+  "slug": "asteroid-collision",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["Stack", "Array", "Simulation"],
+  "company_tags": ["Google", "Amazon", "Microsoft", "Lyft"],
+  "topic_tags": ["Stack"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "An integer array asteroids.",
+  "output_format": "The state of the asteroids after all collisions.",
+  "example_input": "asteroids = [5,10,-5]",
+  "example_output": "[5,10]",
+  "constraints": "asteroids.length <= 10^4",
+  "function_signature": "function asteroidCollision(asteroids: number[]): number[] {}",
+  "status": "ACTIVE",
+  "is_production_ready": true
+}
+

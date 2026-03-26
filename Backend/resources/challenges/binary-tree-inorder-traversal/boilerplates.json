@@ -1,0 +1,5 @@
+{
+  "typescript": "function inorderTraversal(root: TreeNode | null): number[] {\n    // Your code here\n}",
+  "javascript": "var inorderTraversal = function(root) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def inorderTraversal(self, root: Optional[TreeNode]) -> List[int]:\n        # Your code here\n        pass"
+}

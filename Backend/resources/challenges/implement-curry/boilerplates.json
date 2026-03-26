@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nfunction curry(fn: (...args: any[]) => any): (...args: any[]) => any",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

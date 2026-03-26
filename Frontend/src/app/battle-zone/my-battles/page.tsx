@@ -1,30 +1,61 @@
 'use client';
 
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import BattleZoneLayout from '@/components/Battle/BattleZoneLayout';
 import { BattleList } from '@/components/Battle/BattleList';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import useBattleApi from '@/hooks/useBattleApi';
+import { useAuth } from '@/contexts/AuthContext';
+import { BattleFilters } from '@/types/battle';
 
 export default function MyBattlesPage() {
   const router = useRouter();
   const { joinExistingBattle } = useBattleApi();
+  const { user } = useAuth();
+  const [activeTab, setActiveTab] = useState<
+    'created' | 'joined' | 'upcoming' | 'completed'
+  >('created');
 
   const handleJoinBattle = async (battleId: string, status?: string) => {
     try {
       const response = await joinExistingBattle(battleId);
       if (response) {
-        // If battle is upcoming, redirect to lobby
-        if (status === 'UPCOMING') {
-          router.push(`/battle-zone/${battleId}/lobby`);
-        } else {
-          router.push(`/battle-zone/${battleId}`);
-        }
+        router.push(`/battle-zone/${battleId}`);
       }
     } catch (error) {
       console.error('Failed to join battle:', error);
     }
   };
+
+  const activeFilters = useMemo<BattleFilters>(() => {
+    switch (activeTab) {
+      case 'created':
+        return {
+          user_id: user?.id,
+          limit: 12,
+          page: 1,
+        };
+      case 'upcoming':
+        return {
+          status: 'WAITING' as const,
+          limit: 12,
+          page: 1,
+        };
+      case 'completed':
+        return {
+          status: 'COMPLETED',
+          limit: 12,
+          page: 1,
+        };
+      case 'joined':
+      default:
+        return {
+          limit: 12,
+          page: 1,
+        };
+    }
+  }, [activeTab, user?.id]);
 
   return (
     <BattleZoneLayout>
@@ -36,7 +67,14 @@ export default function MyBattlesPage() {
           </p>
         </div>
 
-        <Tabs defaultValue="created">
+        <Tabs
+          value={activeTab}
+          onValueChange={(value) =>
+            setActiveTab(
+              value as 'created' | 'joined' | 'upcoming' | 'completed',
+            )
+          }
+        >
           <TabsList className="w-full">
             <TabsTrigger value="created" className="flex-1">
               Created by Me
@@ -51,53 +89,12 @@ export default function MyBattlesPage() {
               Completed
             </TabsTrigger>
           </TabsList>
-
-          <TabsContent value="created" className="mt-6">
-            <BattleList
-              initialFilters={{
-                user_id: 'current_user', // This would be replaced with actual user ID
-                limit: 12,
-                page: 1,
-              }}
-              onJoinBattle={handleJoinBattle}
-            />
-          </TabsContent>
-
-          <TabsContent value="joined" className="mt-6">
-            <BattleList
-              initialFilters={{
-                // This would filter for battles the user has joined
-                limit: 12,
-                page: 1,
-              }}
-              onJoinBattle={handleJoinBattle}
-            />
-          </TabsContent>
-
-          <TabsContent value="upcoming" className="mt-6">
-            <BattleList
-              initialFilters={{
-                status: 'UPCOMING',
-                // This would filter for battles the user is part of
-                limit: 12,
-                page: 1,
-              }}
-              onJoinBattle={handleJoinBattle}
-            />
-          </TabsContent>
-
-          <TabsContent value="completed" className="mt-6">
-            <BattleList
-              initialFilters={{
-                status: 'completed',
-                // This would filter for battles the user is part of
-                limit: 12,
-                page: 1,
-              }}
-              onJoinBattle={handleJoinBattle}
-            />
-          </TabsContent>
         </Tabs>
+
+        <BattleList
+          initialFilters={activeFilters}
+          onJoinBattle={handleJoinBattle}
+        />
       </div>
     </BattleZoneLayout>
   );

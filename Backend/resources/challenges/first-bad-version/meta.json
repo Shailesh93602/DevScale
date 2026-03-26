@@ -7,13 +7,24 @@
   "tags": ["binary-search"],
   "company_tags": ["Facebook", "Google", "Amazon", "Microsoft"],
   "topic_tags": ["binary search"],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
   "time_limit_ms": 2000,
   "memory_limit_kb": 262144,
-  "input_format": "An integer `n` (total versions) and a hidden integer `bad` (first bad version).",
+  "input_format": "An integer `n` (total versions). You have access to a pre-defined API `isBadVersion(version: number): boolean`.",
   "output_format": "Return the first bad version number.",
   "example_input": "n = 5, bad = 4",
   "example_output": "4",
-  "constraints": "- `1 <= bad <= n <= 2^31 - 1`",
+  "constraints": "- `1 <= bad <= n <= 2^31 - 1` ",
   "function_signature": "function firstBadVersion(n: number): number {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

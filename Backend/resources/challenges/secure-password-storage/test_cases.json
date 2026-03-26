@@ -1,3 +1,17 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  {
+    "input": "[\"PasswordManager\", \"hash_password\", \"verify_password\"]\n[[], [\"secret123\"], [\"secret123\", \"HASH\"]]",
+    "output": "[null, \"HASH\", true]",
+    "is_hidden": false
+  },
+  {
+    "input": "[\"PasswordManager\", \"hash_password\", \"verify_password\"]\n[[], [\"password123\"], [\"wrongpass\", \"HASH\"]]",
+    "output": "[null, \"HASH\", false]",
+    "is_hidden": false
+  },
+  {
+    "input": "[\"PasswordManager\", \"hash_password\", \"hash_password\"]\n[[], [\"samePass\"], [\"samePass\"]]",
+    "output": "[null, \"HASH1\", \"HASH2\"] // HASH1 != HASH2 due to salt",
+    "is_hidden": true
+  }
 ]

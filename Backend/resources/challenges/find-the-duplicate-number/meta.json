@@ -40,5 +40,6 @@
   "example_output": "2",
   "constraints": "- `1 <= n <= 10^5`\n- `nums.length == n + 1`\n- `1 <= nums[i] <= n`\n- All the integers in `nums` appear only **once** except for **precisely one integer** which appears **two or more** times.",
   "function_signature": "function findDuplicate(nums: number[]): number {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

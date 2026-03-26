@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import axios from 'axios';
 import { catchAsync } from '../utils/index';
-import { createAppError } from '@/utils/errorHandler';
-import { sendResponse } from '@/utils/apiResponse';
+import { createAppError } from '../utils/errorHandler';
+import { sendResponse } from '../utils/apiResponse';
 
 export default class PredictionController {
   public predict = catchAsync(async (req: Request, res: Response) => {

@@ -1,0 +1,9 @@
+{
+  "typescript": "class DSU {\n  constructor(n: number) {\n    // Initialize your DSU\n  }\n\n  find(i: number): number {\n    // Your code here\n  }\n\n  union(i: number, j: number): void {\n    // Your code here\n  }\n}",
+  "javascript": "class DSU {\n  constructor(n) {\n    // Initialize your DSU\n  }\n\n  find(i) {\n    // Your code here\n  }\n\n  union(i, j) {\n    // Your code here\n  }\n}",
+  "python": "class DSU:\n    def __init__(self, n):\n        # Your code here\n        pass\n\n    def find(self, i):\n        # Your code here\n        pass\n\n    def union(self, i, j):\n        # Your code here\n        pass",
+  "java": "class DSU {\n    public DSU(int n) {\n        // Your code here\n    }\n\n    public int find(int i) {\n        // Your code here\n        return -1;\n    }\n\n    public void union(int i, int j) {\n        // Your code here\n    }\n}",
+  "cpp": "class DSU {\npublic:\n    DSU(int n) {\n        // Your code here\n    }\n\n    int find(int i) {\n        // Your code here\n    }\n\n    void unite(int i, int j) {\n        // Your code here\n    }\n};",
+  "go": "type DSU struct {\n    // Your fields\n}\n\nfunc NewDSU(n int) *DSU {\n    // Your code here\n}\n\nfunc (d *DSU) Find(i int) int {\n    // Your code here\n}\n\nfunc (d *DSU) Union(i, j int) {\n    // Your code here\n}",
+  "rust": "struct DSU {\n    // Your fields\n}\n\nimpl DSU {\n    fn new(n: usize) -> Self {\n        // Your code here\n    }\n\n    fn find(&mut self, i: usize) -> usize {\n        // Your code here\n    }\n\n    fn union(&mut self, i: usize, j: usize) {\n        // Your code here\n    }\n}"
+}

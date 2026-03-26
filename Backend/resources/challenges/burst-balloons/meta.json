@@ -15,5 +15,6 @@
   "example_output": "167",
   "constraints": "- `n == nums.length`\n- `1 <= n <= 300`\n- `0 <= nums[i] <= 100`",
   "function_signature": "function maxCoins(nums: number[]): number {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

@@ -16,5 +16,6 @@
   "example_output": "true",
   "constraints": "- `1 <= n <= 2000`\n- `0 <= edges.length <= 5000`\n- `edges[i].length == 2`\n- `0 <= ai, bi < n`\n- `ai != bi`\n- There are no self-loops or repeated edges.",
   "function_signature": "function validTree(n: number, edges: number[][]): boolean {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

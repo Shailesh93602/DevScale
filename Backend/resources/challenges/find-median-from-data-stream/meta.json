@@ -16,5 +16,6 @@
   "example_output": "[null, null, null, 1.5, null, 2.0]",
   "constraints": "- `-10^5 <= num <= 10^5`\n- There will be at least one element in the data structure before calling `findMedian`.\n- At most `5 * 10^4` calls will be made to `addNum` and `findMedian`.",
   "function_signature": "class MedianFinder { constructor() {} addNum(num: number): void {} findMedian(): number {} }",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

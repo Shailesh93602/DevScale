@@ -1,65 +1,66 @@
 'use client';
-import { ReactNode, useEffect, useState } from 'react';
+
+/**
+ * App.tsx — Root Application Shell
+ *
+ * Responsibilities:
+ * - Renders Navbar, Footer, and page content
+ * - Syncs auth user into Redux (for components that still read from Redux)
+ * - Does NOT perform auth checks here — that's AuthContext's job
+ * - Does NOT redirect — that's the middleware + RouteGuards' job
+ *
+ * The blink was caused by:
+ * 1. `isLoading` returning <Loader> on EVERY route change (the API was called on each path change)
+ * 2. Redirecting to '/' after login, then middleware redirecting to /dashboard (double-redirect)
+ * This is now fixed by using AuthContext which only fetches once per session.
+ */
+
+import { ReactNode, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { usePathname, useRouter } from 'next/navigation';
-import { persistor } from '@/lib/store';
-import { PersistGate } from 'redux-persist/integration/react';
 import { useAppDispatch } from '@/lib/hooks';
 import {
   setUser,
   setAuthenticated,
   clearUser,
 } from '@/lib/features/user/userSlice';
-import Loader from '@/components/Loader';
 import { useAuth } from '@/contexts/AuthContext';
 
-export default function App({ children }: { children: ReactNode }) {
-  const [isMounted, setIsMounted] = useState(false);
-  const path = usePathname();
-  const router = useRouter();
+function AuthSyncToRedux() {
+  const { user, isAuthenticated, status } = useAuth();
   const dispatch = useAppDispatch();
-  const { user, status, isLoading: isAuthLoading } = useAuth();
 
-  const isPublic = path === '/' || path?.startsWith('/auth');
-
-  // Initialize theme and mount state
+  /**
+   * Sync AuthContext → Redux so that existing components using Redux
+   * selectors continue to work without any changes.
+   * Only runs when auth status actually changes.
+   */
   useEffect(() => {
-    setIsMounted(true);
-    const savedTheme = localStorage.getItem('theme') ?? 'light';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-  }, []);
+    if (status === 'loading') return;
 
-  // Sync AuthContext with Redux
-  useEffect(() => {
-    if (status === 'authenticated' && user) {
+    if (isAuthenticated && user) {
       dispatch(setUser({ user }));
       dispatch(setAuthenticated(true));
-    } else if (status === 'unauthenticated') {
-      dispatch(setAuthenticated(false));
+    } else {
       dispatch(clearUser());
+      dispatch(setAuthenticated(false));
     }
-  }, [status, user, dispatch]);
+  }, [status, isAuthenticated, user, dispatch]);
 
-  // Handle protected route redirects only after mounting to avoid hydration mismatch
-  useEffect(() => {
-    if (!isMounted || isAuthLoading) return;
+  return null; // render nothing — this is just a sync component
+}
 
-    if (!isPublic && status === 'unauthenticated') {
-      router.push('/auth/login');
-    }
-  }, [isMounted, status, isAuthLoading, isPublic, router]);
-
-  // Return consistent structure for hydration
-  // Loader is rendered over the content instead of replacing it to avoid mismatch
+export default function App({ children }: { children: ReactNode }) {
   return (
-    <PersistGate loading={null} persistor={persistor}>
+    <>
+      {/* Sync auth state into Redux (backward compat) */}
+      <AuthSyncToRedux />
+
       <div className="flex min-h-screen flex-col justify-between">
-        <Navbar isPublic={isPublic} />
-        <main className="flex-grow">{children}</main>
+        <Navbar />
+        <main className="flex-grow pt-[60px]">{children}</main>
         <Footer />
-        {isAuthLoading && isMounted && <Loader type="SiteLoader" />}
       </div>
-    </PersistGate>
+    </>
   );
 }

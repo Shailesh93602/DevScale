@@ -2,6 +2,7 @@ import { BaseRouter } from './BaseRouter';
 import ChallengeController from '../controllers/challengeController';
 import { authMiddleware } from '../middlewares/authMiddleware';
 import { validateRequest } from '../middlewares/validateRequest';
+import { camelCaseResponse } from '../middlewares/responseTransformer';
 import {
   createChallengeValidation,
   submitChallengeValidation,
@@ -14,10 +15,12 @@ export class ChallengeRoutes extends BaseRouter {
     super();
     this.challengeController = new ChallengeController();
     this.router.use(authMiddleware);
+    this.router.use(camelCaseResponse);
   }
 
   protected initializeRoutes(): void {
-    // Public routes
+    // Static paths before /:id
+    this.router.get('/categories', this.challengeController.getChallengeCategories);
     this.router.get('/', this.challengeController.getChallenges);
     this.router.get(
       '/leaderboard',

@@ -1,3 +1,12 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  {
+    "input": "[\"DSU\", \"union\", \"union\", \"find\", \"find\", \"union\", \"find\"]\n[[5], [0, 1], [1, 2], [0], [3], [2, 4], [4]]",
+    "output": "[null, null, null, 2, 3, null, 2]",
+    "is_hidden": false
+  },
+  {
+    "input": "[\"DSU\", \"union\", \"find\"]\n[[10], [0, 9], [0]]",
+    "output": "[null, null, 9]",
+    "is_hidden": false
+  }
 ]

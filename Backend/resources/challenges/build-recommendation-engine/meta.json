@@ -15,5 +15,6 @@
   "example_output": "{\"recommendations\": [2, 3]}",
   "constraints": "1 <= users <= 1000, 1 <= items <= 1000, ratings are 0-5 where 0 means unrated",
   "function_signature": "function recommend(ratings: number[][], userId: number, numRecs: number): { recommendations: number[] }",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

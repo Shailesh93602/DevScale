@@ -1,4 +1,6 @@
 [
-  "TODO: Add hint 1",
-  "TODO: Add hint 2"
+  "This is a classic 'Gaps and Islands' problem. You need to group consecutive dates together.",
+  "Consider using `ROW_NUMBER()` or subtracting a sequence from the dates to create a group identifier.",
+  "First, use `UNION ALL` to combine the tables, and filter for only the year 2019.",
+  "Once grouped, use `MIN` and `MAX` to find the start and end dates of each period."
 ]

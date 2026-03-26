@@ -1,3 +1,27 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  {
+    "input": "{\"pattern\": \"abba\", \"s\": \"dog cat cat dog\"}",
+    "output": "true",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"pattern\": \"abba\", \"s\": \"dog cat cat fish\"}",
+    "output": "false",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"pattern\": \"aaaa\", \"s\": \"dog cat cat dog\"}",
+    "output": "false",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"pattern\": \"abba\", \"s\": \"dog dog dog dog\"}",
+    "output": "false",
+    "is_hidden": true
+  },
+  {
+    "input": "{\"pattern\": \"abc\", \"s\": \"b c a\"}",
+    "output": "true",
+    "is_hidden": true
+  }
 ]

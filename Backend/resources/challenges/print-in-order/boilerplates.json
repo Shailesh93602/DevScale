@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nclass OrderedPrinter { first(cb: () => void): Promise<void>; second(cb: () => void): Promise<void>; third(cb: () => void): Promise<void> }",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

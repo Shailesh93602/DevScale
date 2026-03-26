@@ -36,5 +36,6 @@
   "example_output": "\"bab\"",
   "constraints": "- `1 <= s.length <= 1000`\n- `s` consist of only digits and English letters.",
   "function_signature": "function longestPalindrome(s: string): string {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

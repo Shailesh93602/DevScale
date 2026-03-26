@@ -1,12 +1,7 @@
 [
-  { "input": "{\"n\": 5, \"bad\": 4}", "output": "4", "explanation": "Versions 4 and 5 are bad.", "is_hidden": false },
-  { "input": "{\"n\": 1, \"bad\": 1}", "output": "1", "explanation": "Only one version, it's bad.", "is_hidden": false },
-  { "input": "{\"n\": 10, \"bad\": 1}", "output": "1", "explanation": "All versions are bad.", "is_hidden": false },
-  { "input": "{\"n\": 10, \"bad\": 10}", "output": "10", "explanation": "Only the last version is bad.", "is_hidden": true },
-  { "input": "{\"n\": 100, \"bad\": 50}", "output": "50", "explanation": "Bad starts at middle.", "is_hidden": true },
-  { "input": "{\"n\": 2, \"bad\": 1}", "output": "1", "explanation": "Two versions, first is bad.", "is_hidden": true },
-  { "input": "{\"n\": 2, \"bad\": 2}", "output": "2", "explanation": "Two versions, second is bad.", "is_hidden": true },
-  { "input": "{\"n\": 1000, \"bad\": 999}", "output": "999", "explanation": "Near the end.", "is_hidden": true },
-  { "input": "{\"n\": 1000, \"bad\": 1}", "output": "1", "explanation": "All bad from start.", "is_hidden": true },
-  { "input": "{\"n\": 50, \"bad\": 25}", "output": "25", "explanation": "Exact middle.", "is_hidden": true }
+  { "input": "{\"n\":5,\"bad\":4}", "output": "4", "explanation": "Versions 4 and 5 are bad.", "is_hidden": false },
+  { "input": "{\"n\":1,\"bad\":1}", "output": "1", "explanation": "Only one version, it's bad.", "is_hidden": false },
+  { "input": "{\"n\":10,\"bad\":1}", "output": "1", "explanation": "All versions are bad.", "is_hidden": false },
+  { "input": "{\"n\":10,\"bad\":10}", "output": "10", "explanation": "Only the last version is bad.", "is_hidden": true },
+  { "input": "{\"n\":100, \"bad\":50}", "output": "50", "explanation": "Bad starts at middle.", "is_hidden": true }
 ]

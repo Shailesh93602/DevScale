@@ -1,4 +1,6 @@
 [
-  "TODO: Add hint 1",
-  "TODO: Add hint 2"
+  "This is a shortest path problem with an edge-count constraint.",
+  "Consider using BFS or Bellman-Ford. Why is standard Dijkstra slightly more complex to adapt?",
+  "In BFS, each level of the search corresponds to the number of stops taken.",
+  "Make sure you only update the minimum distance if you can reach a city within the allowed number of stops."
 ]

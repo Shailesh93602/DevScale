@@ -1,4 +1,6 @@
 [
-  "TODO: Add hint 1",
-  "TODO: Add hint 2"
+  "To get a random element in O(1), you usually need an array. But removing from an array is O(N).",
+  "To find if an element exists in O(1), you usually need a Hash Map.",
+  "What if you combine both? Store values in an array and their indices in a Hash Map.",
+  "When removing an element, can you swap it with the last element of the array to make the removal O(1)?"
 ]

@@ -6,12 +6,12 @@ import {
   QuizType,
 } from '@prisma/client';
 import BaseRepository from './baseRepository';
-import { QuizData, SubmissionData, TestCase } from '@/types';
-import { executeCode } from '@/utils/codeExecutor';
-import logger from '@/utils/logger';
-import { createAppError } from '@/utils/errorHandler';
+import { QuizData, QuizSubmissionData, TestCase } from '../types';
+import { executeCode } from '../utils/codeExecutor';
+import logger from '../utils/logger';
+import { createAppError } from '../utils/errorHandler';
 
-import prisma from '@/lib/prisma';
+import prisma from '../lib/prisma';
 
 export default class QuizRepository extends BaseRepository<
   PrismaClient['quiz']
@@ -37,11 +37,11 @@ export default class QuizRepository extends BaseRepository<
             type: q.type,
             options: q.options
               ? {
-                  create: q.options.map((option) => ({
-                    text: option,
-                    is_correct: option === q.correct_answer,
-                  })),
-                }
+                create: q.options.map((option) => ({
+                  text: option,
+                  is_correct: option === q.correct_answer,
+                })),
+              }
               : undefined,
             correct_answer: q.correct_answer,
             points: q.points,
@@ -55,7 +55,7 @@ export default class QuizRepository extends BaseRepository<
     });
   }
 
-  async submitQuiz(data: SubmissionData): Promise<QuizSubmission> {
+  async submitQuiz(data: QuizSubmissionData): Promise<QuizSubmission> {
     const quiz = await prisma.quiz.findUnique({
       where: { id: data.quiz_id },
       include: { questions: true },
@@ -219,7 +219,6 @@ export default class QuizRepository extends BaseRepository<
       create: {
         user_id,
         topic_id,
-        subject_id: '',
         is_completed: true,
         completed_at: new Date(),
       },
@@ -235,14 +234,14 @@ export default class QuizRepository extends BaseRepository<
       where: {
         user_id_topic_id: {
           user_id,
-          topic_id: topic_id ?? '',
+          topic_id: topic_id as any,
         },
       },
       update: { is_completed: true, completed_at: new Date() },
       create: {
         user_id,
         subject_id,
-        topic_id: topic_id ?? '',
+        topic_id,
         is_completed: true,
         completed_at: new Date(),
       },
@@ -266,7 +265,6 @@ export default class QuizRepository extends BaseRepository<
       },
       create: {
         user_id,
-        subject_id: '',
         topic_id,
         is_completed: true,
         completed_at: new Date(),

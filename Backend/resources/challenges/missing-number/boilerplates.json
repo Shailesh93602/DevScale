@@ -1,0 +1,10 @@
+{
+  "typescript": "function missingNumber(nums: number[]): number {\n  // Your code here\n}",
+  "javascript": "/**\n * @param {number[]} nums\n * @return {number}\n */\nvar missingNumber = function(nums) {\n  // Your code here\n};",
+  "python": "class Solution:\n    def missingNumber(self, nums: List[int]) -> int:\n        # Your code here\n        pass",
+  "java": "class Solution {\n    public int missingNumber(int[] nums) {\n        // Your code here\n    }\n}",
+  "cpp": "class Solution {\npublic:\n    int missingNumber(vector<int>& nums) {\n        // Your code here\n    }\n};",
+  "go": "func missingNumber(nums []int) int {\n    // Your code here\n}",
+  "rust": "impl Solution {\n    pub fn missing_number(nums: Vec<i32>) -> i32 {\n        // Your code here\n    }\n}",
+  "csharp": "public class Solution {\n    public int MissingNumber(int[] nums) {\n        // Your code here\n    }\n}"
+}

@@ -1,0 +1,20 @@
+{
+  "title": "Assign Cookies",
+  "slug": "assign-cookies",
+  "difficulty": "Easy",
+  "category": "algorithms",
+  "points": 50,
+  "tags": ["Greedy", "Sorting", "Two Pointers"],
+  "company_tags": ["Google", "Amazon"],
+  "topic_tags": ["Greedy"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "Two integer arrays g (greed factors) and s (cookie sizes).",
+  "output_format": "The maximum number of content children.",
+  "example_input": "g = [1,2,3], s = [1,1]",
+  "example_output": "1",
+  "constraints": "g.length, s.length <= 3 * 10^4",
+  "function_signature": "function findContentChildren(g: number[], s: number[]): number {}",
+  "status": "ACTIVE",
+  "is_production_ready": true
+}

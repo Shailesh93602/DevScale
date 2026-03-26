@@ -15,5 +15,6 @@
   "example_output": "| Employee |\n| Joe      |",
   "constraints": "- 1 <= Employee.id <= 10^4\n- managerId references Employee.id or is NULL\n- No employee is their own manager",
   "function_signature": "-- Write your SQL query below",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

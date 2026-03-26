@@ -15,5 +15,6 @@
   "example_output": "| id | student |\n| 1  | Doris   |\n| 2  | Abbot   |\n| 3  | Green   |\n| 4  | Emerson |\n| 5  | Jeames  |",
   "constraints": "- 1 <= id <= 10^4\n- id is continuous starting from 1\n- student is a non-empty string",
   "function_signature": "-- Write your SQL query below",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

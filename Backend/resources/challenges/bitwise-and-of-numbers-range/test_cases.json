@@ -1,23 +1,7 @@
 [
-  {
-    "input": { "left": 5, "right": 7 },
-    "output": 4,
-    "explanation": "5 (101), 6 (110), 7 (111). Common prefix is 100 (4).",
-    "is_hidden": false
-  },
-  {
-    "input": { "left": 0, "right": 0 },
-    "output": 0,
-    "is_hidden": false
-  },
-  {
-    "input": { "left": 10, "right": 11 },
-    "output": 10,
-    "is_hidden": true
-  },
-  {
-    "input": { "left": 1, "right": 10 },
-    "output": 0,
-    "is_hidden": true
-  }
+  { "input": "{\"left\":5, \"right\":7}", "output": "4", "explanation": "5 (101), 6 (110), 7 (111). Common prefix is 100 (4).", "is_hidden": false },
+  { "input": "{\"left\":0, \"right\":0}", "output": "0", "explanation": "Zero range", "is_hidden": false },
+  { "input": "{\"left\":1, \"right\":2147483647}", "output": "0", "explanation": "Large range becomes zero", "is_hidden": false },
+  { "input": "{\"left\":10, \"right\":11}", "output": "10", "explanation": "Small range non-zero", "is_hidden": true },
+  { "input": "{\"left\":1, \"right\":10}", "output": "0", "explanation": "Multiple switches", "is_hidden": true }
 ]

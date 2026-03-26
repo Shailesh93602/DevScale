@@ -1,0 +1,10 @@
+{
+  "typescript": "function dailyTemperatures(temperatures: number[]): number[] {\n    \n};",
+  "javascript": "/**\n * @param {number[]} temperatures\n * @return {number[]}\n */\nvar dailyTemperatures = function(temperatures) {\n    \n};",
+  "python": "class Solution:\n    def dailyTemperatures(self, temperatures: List[int]) -> List[int]:\n        ",
+  "java": "class Solution {\n    public int[] dailyTemperatures(int[] temperatures) {\n        \n    }\n}",
+  "cpp": "class Solution {\npublic:\n    vector<int> dailyTemperatures(vector<int>& temperatures) {\n        \n    }\n};",
+  "go": "func dailyTemperatures(temperatures []int) []int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn daily_temperatures(temperatures: Vec<i32>) -> Vec<i32> {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int[] DailyTemperatures(int[] temperatures) {\n        \n    }\n}"
+}

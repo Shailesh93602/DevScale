@@ -1,18 +1,10 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
-  "buildCommand": "export TS_NODE_BASEURL=./dist &&   export TS_NODE_BASEURL=./dist && npm run build",
-  "devCommand": "npm run dev",
-  "builds": [
+  "buildCommand": "npm run build",
+  "rewrites": [
     {
-      "src": "dist/index.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "dist/index.js"
+      "source": "/(.*)",
+      "destination": "/api/index.ts"
     }
   ]
 }

@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET } from '@/config';
+import { JWT_SECRET } from '../config';
 import { createAppError } from './createAppError';
 
 export const verifyToken = (token: string): { userId: string } => {

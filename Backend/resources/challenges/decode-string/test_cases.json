@@ -1,0 +1,19 @@
+[
+  {
+    "input": "\"3[a]2[bc]\"",
+    "output": "\"aaabcbc\"",
+    "explanation": "3 'a's followed by 2 'bc's.",
+    "is_hidden": false
+  },
+  {
+    "input": "\"3[a2[c]]\"",
+    "output": "\"accaccacc\"",
+    "explanation": "Nesting: 'a' + 2 'c's repeated 3 times.",
+    "is_hidden": false
+  },
+  {
+    "input": "\"2[abc]3[cd]ef\"",
+    "output": "\"abcabccdcdcdef\"",
+    "is_hidden": true
+  }
+]

@@ -1,0 +1,5 @@
+{
+  "typescript": "function sanitizeHTML(input: string): string {\n    // Your code here\n}",
+  "javascript": "function sanitizeHTML(input) {\n    // Your code here\n}",
+  "python": "def sanitize_html(input_str: str) -> str:\n    # Your code here\n    pass"
+}

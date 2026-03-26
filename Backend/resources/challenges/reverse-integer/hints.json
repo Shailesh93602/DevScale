@@ -1,4 +1,5 @@
 [
-  "TODO: Add hint 1",
-  "TODO: Add hint 2"
+  "To extract the last digit of a number, use the modulo operator (sum % 10).",
+  "To remove the last digit, use integer division (Math.floor(n / 10)).",
+  "Be careful with overflow: a 32-bit signed integer can only store values between -2^31 and 2^31 - 1."
 ]

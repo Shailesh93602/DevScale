@@ -1,11 +1,11 @@
 import fs from 'fs/promises';
 import { Request, Response } from 'express';
 import path from 'path';
-import prisma from '../prisma';
+import prisma from '../lib/prisma';
 import { catchAsync } from '../utils';
 import Joi from 'joi';
-import { sendResponse } from '@/utils/apiResponse';
-import { createAppError } from '@/utils/errorHandler';
+import { sendResponse } from '../utils/apiResponse';
+import { createAppError } from '../utils/errorHandler';
 
 // Root directory of the project (for resource file paths)
 const projectRoot = process.cwd();
@@ -15,7 +15,7 @@ export default class ResourceController {
     const subjects = await prisma.subject.findMany({
       orderBy: { created_at: 'asc' },
     });
-    sendResponse(res, 'SUBJECTS_FETCHED', { data: { subjects } });
+    sendResponse(res, 'SUBJECTS_FETCHED', { data: subjects });
   });
 
   // Topics
@@ -24,7 +24,7 @@ export default class ResourceController {
       where: { subjects: { some: { id: req.params.id } } },
       orderBy: { created_at: 'asc' },
     });
-    sendResponse(res, 'TOPICS_FETCHED', { data: { topics } });
+    sendResponse(res, 'TOPICS_FETCHED', { data: topics });
   });
 
   public addTopic = catchAsync(async (req: Request, res: Response) => {
@@ -37,7 +37,7 @@ export default class ResourceController {
         order: 0,
       },
     });
-    sendResponse(res, 'TOPIC_ADDED', { data: { topic } });
+    sendResponse(res, 'TOPIC_ADDED', { data: topic });
   });
 
   // Resources Listing
@@ -46,17 +46,17 @@ export default class ResourceController {
     const resources = await prisma.subject.findMany({
       where: search
         ? {
-            OR: [
-              { title: { contains: search, mode: 'insensitive' } },
-              { description: { contains: search, mode: 'insensitive' } },
-            ],
-          }
+          OR: [
+            { title: { contains: search, mode: 'insensitive' } },
+            { description: { contains: search, mode: 'insensitive' } },
+          ],
+        }
         : undefined,
       take: limit,
       skip: offset,
       orderBy: { created_at: 'asc' },
     });
-    sendResponse(res, 'RESOURCES_FETCHED', { data: { resources } });
+    sendResponse(res, 'RESOURCES_FETCHED', { data: resources });
   });
 
   // Specific Resource by ID
@@ -86,7 +86,7 @@ export default class ResourceController {
       throw createAppError('Invalid subjects array', 400);
     }
     const created = await prisma.subject.createMany({ data: subjects });
-    sendResponse(res, 'SUBJECTS_CREATED', { data: { subjects: created } });
+    sendResponse(res, 'SUBJECTS_CREATED', { data: created });
   });
 
   // Bulk Delete Subjects
@@ -105,13 +105,13 @@ export default class ResourceController {
     const article = await prisma.article.create({
       data: { title, content, author_id, topic_id },
     });
-    sendResponse(res, 'ARTICLE_CREATED', { data: { article } });
+    sendResponse(res, 'ARTICLE_CREATED', { data: article });
   });
 
   public getArticle = catchAsync(async (req: Request, res: Response) => {
     const topic_id = req.params.id;
     const articles = await prisma.article.findMany({ where: { topic_id } });
-    sendResponse(res, 'ARTICLES_FETCHED', { data: { articles } });
+    sendResponse(res, 'ARTICLES_FETCHED', { data: articles });
   });
 
   public selectArticle = catchAsync(async (req: Request, res: Response) => {
@@ -120,7 +120,7 @@ export default class ResourceController {
       where: { id: articleId },
       data: { status: 'APPROVED' },
     });
-    sendResponse(res, 'ARTICLE_UPDATED', { data: { articles: article } });
+    sendResponse(res, 'ARTICLE_UPDATED', { data: article });
   });
 
   // Interview Questions from JSON file
@@ -134,7 +134,7 @@ export default class ResourceController {
       const data = await fs.readFile(filePath, 'utf8');
       const interviewQuestions = JSON.parse(data);
       sendResponse(res, 'INTERVIEW_QUESTIONS_FETCHED', {
-        data: { interviewQuestions },
+        data: interviewQuestions,
       });
     }
   );
@@ -152,7 +152,7 @@ export default class ResourceController {
         status: 'PENDING',
       },
     });
-    sendResponse(res, 'RESOURCE_CREATED', { data: { article } });
+    sendResponse(res, 'RESOURCE_CREATED', { data: article });
   });
 
   // Validation schema for resource creation

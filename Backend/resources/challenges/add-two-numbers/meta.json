@@ -38,5 +38,6 @@
   "example_output": "[7,0,8]",
   "constraints": "- The number of nodes in each linked list is in the range `[1, 100]`.\n- `0 <= Node.val <= 9`\n- It is guaranteed that the list represents a number that does not have leading zeros.",
   "function_signature": "function addTwoNumbers(l1: ListNode | null, l2: ListNode | null): ListNode | null {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

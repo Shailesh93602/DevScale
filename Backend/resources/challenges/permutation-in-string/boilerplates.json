@@ -1,0 +1,10 @@
+{
+  "typescript": "function checkInclusion(s1: string, s2: string): boolean {\n    \n};",
+  "javascript": "/**\n * @param {string} s1\n * @param {string} s2\n * @return {boolean}\n */\nvar checkInclusion = function(s1, s2) {\n    \n};",
+  "python": "class Solution:\n    def checkInclusion(self, s1: str, s2: str) -> bool:\n        ",
+  "java": "class Solution {\n    public boolean checkInclusion(String s1, String s2) {\n        \n    }\n}",
+  "cpp": "class Solution {\npublic:\n    bool checkInclusion(string s1, string s2) {\n        \n    }\n};",
+  "go": "func checkInclusion(s1 string, s2 string) bool {\n    \n}",
+  "rust": "impl Solution {\n    pub fn check_inclusion(s1: String, s2: String) -> bool {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public bool CheckInclusion(string s1, string s2) {\n        \n    }\n}"
+}

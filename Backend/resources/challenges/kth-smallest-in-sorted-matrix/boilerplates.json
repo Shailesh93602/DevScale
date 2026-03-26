@@ -1,0 +1,9 @@
+{
+  "typescript": "function kthSmallest(matrix: number[][], k: number): number {\n  // Your code here\n}",
+  "javascript": "/**\n * @param {number[][]} matrix\n * @param {number} k\n * @return {number}\n */\nvar kthSmallest = function(matrix, k) {\n  // Your code here\n};",
+  "python": "class Solution:\n    def kthSmallest(self, matrix: List[List[int]], k: int) -> int:\n        # Your code here\n        pass",
+  "java": "class Solution {\n    public int kthSmallest(int[][] matrix, int k) {\n        // Your code here\n    }\n}",
+  "cpp": "class Solution {\npublic:\n    int kthSmallest(vector<vector<int>>& matrix, int k) {\n        // Your code here\n    }\n};",
+  "go": "func kthSmallest(matrix [][]int, k int) int {\n    // Your code here\n}",
+  "rust": "impl Solution {\n    pub fn kth_smallest(matrix: Vec<Vec<i32>>, k: i32) -> i32 {\n        // Your code here\n    }\n}"
+}

@@ -14,12 +14,12 @@ type FilterOperator =
 interface FilterCondition {
   field: string;
   operator: FilterOperator;
-  value: Prisma.JsonValue;
+  value: unknown;
 }
 
 export class FilterBuilder {
   static buildWhereClause(filters: FilterCondition[]): Prisma.JsonObject {
-    const whereClause: Prisma.JsonObject = {};
+    const whereClause: Record<string, unknown> = {};
 
     for (const filter of filters) {
       const { field, operator, value } = filter;
@@ -50,28 +50,26 @@ export class FilterBuilder {
           whereClause[field] = { in: value };
           break;
         case 'between':
-          if (Array.isArray(value)) {
-            whereClause[field] = {
-              gte: value[0],
-              lte: value[1],
-            };
-          }
+          whereClause[field] = {
+            gte: (value as unknown[])[0],
+            lte: (value as unknown[])[1],
+          };
           break;
       }
     }
 
-    return whereClause;
+    return whereClause as Prisma.JsonObject;
   }
 
   static buildOrderByClause(
     sortFields: { field: string; direction: 'asc' | 'desc' }[]
   ): Prisma.JsonObject {
-    const orderBy: Prisma.JsonObject = {};
+    const orderBy: Record<string, unknown> = {};
 
     for (const sort of sortFields) {
       orderBy[sort.field] = sort.direction;
     }
 
-    return orderBy;
+    return orderBy as Prisma.JsonObject;
   }
 }

@@ -1,0 +1,10 @@
+{
+  "typescript": "class MyStack {\n    constructor() {}\n\n    push(x: number): void {\n\n    }\n\n    pop(): number {\n\n    }\n\n    top(): number {\n\n    }\n\n    empty(): boolean {\n\n    }\n}",
+  "javascript": "var MyStack = function() {\n    \n};\n\nMyStack.prototype.push = function(x) {\n    \n};\n\nMyStack.prototype.pop = function() {\n    \n};\n\nMyStack.prototype.top = function() {\n    \n};\n\nMyStack.prototype.empty = function() {\n    \n};",
+  "python": "class MyStack:\n    def __init__(self):\n        pass\n\n    def push(self, x: int) -> None:\n        pass\n\n    def pop(self) -> int:\n        pass\n\n    def top(self) -> int:\n        pass\n\n    def empty(self) -> bool:\n        pass",
+  "java": "class MyStack {\n    public MyStack() {\n        \n    }\n    \n    public void push(int x) {\n        \n    }\n    \n    public int pop() {\n        \n    }\n    \n    public int top() {\n        \n    }\n    \n    public boolean empty() {\n        \n    }\n}",
+  "cpp": "class MyStack {\npublic:\n    MyStack() {\n        \n    }\n    \n    void push(int x) {\n        \n    }\n    \n    int pop() {\n        \n    }\n    \n    int top() {\n        \n    }\n    \n    bool empty() {\n        \n    }\n};",
+  "go": "type MyStack struct {\n    \n}\n\nfunc Constructor() MyStack {\n    \n}\n\nfunc (this *MyStack) Push(x int)  {\n    \n}\n\nfunc (this *MyStack) Pop() int {\n    \n}\n\nfunc (this *MyStack) Top() int {\n    \n}\n\nfunc (this *MyStack) Empty() bool {\n    \n}",
+  "rust": "struct MyStack {\n\n}\n\nimpl MyStack {\n    fn new() -> Self {\n        \n    }\n    \n    fn push(&self, x: i32) {\n        \n    }\n    \n    fn pop(&self) -> i32 {\n        \n    }\n    \n    fn top(&self) -> i32 {\n        \n    }\n    \n    fn empty(&self) -> bool {\n        \n    }\n}",
+  "csharp": "public class MyStack {\n    public MyStack() {\n        \n    }\n    \n    public void Push(int x) {\n        \n    }\n    \n    public int Pop() {\n        \n    }\n    \n    public int Top() {\n        \n    }\n    \n    public bool Empty() {\n        \n    }\n}"
+}

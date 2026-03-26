@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nfunction recommend(ratings: number[][], userId: number, numRecs: number): { recommendations: number[] }",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

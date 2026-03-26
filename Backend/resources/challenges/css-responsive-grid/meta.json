@@ -14,6 +14,7 @@
   "example_input": "createGrid({ columns: 12, gap: '16px', breakpoints: { sm: 640, md: 768, lg: 1024 } })",
   "example_output": "CSS string for a 12-column responsive grid",
   "constraints": "1 <= columns <= 24, breakpoints must be valid pixel values",
-  "function_signature": "function createGrid(config: GridConfig): string",
-  "status": "ACTIVE"
+  "function_signature": "function createGrid(config: GridConfig): string {}",
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

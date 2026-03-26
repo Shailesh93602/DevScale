@@ -6,14 +6,14 @@ import {
   Article,
 } from '@prisma/client';
 import { createAppError } from '../utils/errorHandler';
-import logger from '@/utils/logger';
+import logger from '../utils/logger';
 import BaseRepository from './baseRepository';
-import { invalidateCachePattern } from '@/services/cacheService';
-import { ArticleFilters } from '@/types';
-import { uploadToCloudinary } from '@/utils/cloudinary';
-import { ContentFilter } from '@/utils/contentFilter';
+import { invalidateCachePattern } from '../services/cacheService';
+import { ArticleFilters } from '../types';
+import { uploadToCloudinary } from '../utils/cloudinary';
+import { ContentFilter } from '../utils/contentFilter';
 
-import prisma from '@/lib/prisma';
+import prisma from '../lib/prisma';
 
 export class ArticleRepository extends BaseRepository<PrismaClient['article']> {
   constructor() {

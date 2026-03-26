@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nclass TransactionManager { begin(): Transaction; commit(tx: Transaction): Promise<CommitResult>; rollback(tx: Transaction): void; withTransaction<T>(fn: (tx: Transaction) => Promise<T>): Promise<T>; }",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

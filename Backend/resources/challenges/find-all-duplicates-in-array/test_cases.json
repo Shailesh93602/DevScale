@@ -1,3 +1,8 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  { "input": "{\"nums\":[4,3,2,7,8,2,3,1]}", "output": "[2,3]", "explanation": "2 and 3 appear twice", "is_hidden": false },
+  { "input": "{\"nums\":[1,1,2]}", "output": "[1]", "explanation": "1 appears twice", "is_hidden": false },
+  { "input": "{\"nums\":[1]}", "output": "[]", "explanation": "No duplicates", "is_hidden": false },
+  { "input": "{\"nums\":[10,2,5,10,9,1,1,4,3,7]}", "output": "[10,1]", "explanation": "10 and 1 appear twice", "is_hidden": true },
+  { "input": "{\"nums\":[1,2,3,4,5]}", "output": "[]", "explanation": "No duplicates in sequential array", "is_hidden": true },
+  { "input": "{\"nums\":[2,2]}", "output": "[2]", "explanation": "Smallest double array", "is_hidden": true }
 ]

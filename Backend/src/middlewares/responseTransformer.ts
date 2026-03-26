@@ -14,11 +14,13 @@ export const transformResponse = (options: TransformOptions) => {
         return next();
       }
 
-      // Override json function to transform response
-      const originalJson = res.json.bind(res);
-      res.json = (body: unknown) => {
+      // Store original send function
+      const originalSend = res.json;
+
+      // Override send function to transform response
+      res.json = function (body: unknown) {
         const transformedBody = options.transform(body);
-        return originalJson(transformedBody);
+        return originalSend.call(this, transformedBody);
       };
 
       next();
@@ -40,7 +42,9 @@ export const sanitizeResponse = transformResponse({
       }
 
       const sanitized: Record<string, unknown> = {};
-      for (const [key, value] of Object.entries(obj)) {
+      for (const [key, value] of Object.entries(
+        obj as Record<string, unknown>
+      )) {
         if (key.startsWith('_') || key === 'password') continue;
         sanitized[key] = sanitize(value);
       }
@@ -54,7 +58,7 @@ export const sanitizeResponse = transformResponse({
 export const camelCaseResponse = transformResponse({
   transform: (data) => {
     const toCamelCase = (str: string) =>
-      str.replaceAll(/_([a-z])/g, (g) => g[1].toUpperCase());
+      str.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
 
     const convert = (obj: unknown): unknown => {
       if (!obj || typeof obj !== 'object') return obj;
@@ -64,7 +68,9 @@ export const camelCaseResponse = transformResponse({
       }
 
       const converted: Record<string, unknown> = {};
-      for (const [key, value] of Object.entries(obj)) {
+      for (const [key, value] of Object.entries(
+        obj as Record<string, unknown>
+      )) {
         converted[toCamelCase(key)] = convert(value);
       }
       return converted;

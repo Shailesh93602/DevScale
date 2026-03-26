@@ -37,5 +37,6 @@
   "example_output": "[1,1,2,3,4,4]",
   "constraints": "- The number of nodes in both lists is in the range `[0, 50]`.\n- `-100 <= Node.val <= 100`\n- Both `list1` and `list2` are sorted in non-decreasing order.",
   "function_signature": "function mergeTwoLists(list1: ListNode | null, list2: ListNode | null): ListNode | null {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

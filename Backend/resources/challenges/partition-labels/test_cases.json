@@ -1,0 +1,18 @@
+[
+  {
+    "input": "\"ababcbacadefegdehijhklij\"",
+    "output": "[9,7,8]",
+    "explanation": "Partitions: 'ababcbaca', 'defegde', 'hijhklij'.",
+    "is_hidden": false
+  },
+  {
+    "input": "\"eccbbbbdec\"",
+    "output": "[10]",
+    "is_hidden": false
+  },
+  {
+    "input": "\"a\"",
+    "output": "[1]",
+    "is_hidden": true
+  }
+]

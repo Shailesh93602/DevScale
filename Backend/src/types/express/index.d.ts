@@ -20,5 +20,10 @@ declare module 'express-serve-static-core' {
     file: File;
     apiVersion?: string;
     timezone?: string;
+    battle?: unknown;
+    battleAccess?: {
+      isCreator: boolean;
+      isParticipant: boolean;
+    };
   }
 }

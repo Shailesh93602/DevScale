@@ -1,0 +1,6 @@
+{
+  "typescript": "function distanceK(root: TreeNode | null, target: number, k: number): number[] {\n    // Your code here\n}",
+  "javascript": "var distanceK = function(root, target, k) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def distanceK(self, root: TreeNode, target: TreeNode, k: int) -> List[int]:\n        # Your code here\n        pass"
+}
+

@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nfunction generateDockerfile(config: { baseImage: string; buildCmd: string; startCmd: string; port: number }): string",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

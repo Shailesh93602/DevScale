@@ -1,0 +1,5 @@
+{
+  "typescript": "interface SyncItem {\n  id: number;\n  data: string;\n  timestamp: number;\n  deleted?: boolean;\n}\n\ninterface SyncResult {\n  merged: SyncItem[];\n  conflicts: {\n    id: number;\n    local: SyncItem;\n    remote: SyncItem;\n    winner: \"local\" | \"remote\";\n  }[];\n  toUpload: SyncItem[];\n  toDownload: SyncItem[];\n}\n\nfunction syncData(\n  local: SyncItem[],\n  remote: SyncItem[],\n  lastSync: number\n): SyncResult {\n  // Your code here\n}",
+  "javascript": "/**\n * @param {Object[]} local\n * @param {Object[]} remote\n * @param {number} lastSync\n * @return {Object}\n */\nfunction syncData(local, remote, lastSync) {\n  // Your code here\n}"
+}
+

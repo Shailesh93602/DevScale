@@ -15,5 +15,6 @@
   "example_output": "{\"valid\": true, \"deadlockFree\": true}",
   "constraints": "1 <= numPhilosophers <= 10, 1 <= rounds <= 100",
   "function_signature": "function diningPhilosophers(n: number, rounds: number): { actions: string[][]; deadlockFree: boolean }",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

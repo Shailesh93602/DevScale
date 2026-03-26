@@ -15,5 +15,6 @@
   "example_output": "2",
   "constraints": "- `m == obstacleGrid.length`\n- `n == obstacleGrid[i].length`\n- `1 <= m, n <= 100`\n- `obstacleGrid[i][j]` is `0` or `1`.",
   "function_signature": "function uniquePathsWithObstacles(obstacleGrid: number[][]): number {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

@@ -1,0 +1,6 @@
+[
+  "How can you simulate a circular array without actually duplicating it?",
+  "Consider iterating through the array twice (using modulo) to give every element a chance to see elements 'behind' it.",
+  "Use a monotonic stack to store indices of elements that are waiting for their next greater element."
+]
+

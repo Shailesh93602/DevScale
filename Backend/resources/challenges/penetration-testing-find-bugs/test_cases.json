@@ -1,3 +1,8 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  {
+    "input": "Input code provided in description.",
+    "output": "[{\"line\": 6, \"type\": \"SQL Injection\"}, {\"line\": 7, \"type\": \"Cross-Site Scripting (XSS)\"}, {\"line\": 11, \"type\": \"Server-Side Request Forgery (SSRF)\"}, {\"line\": 18, \"type\": \"Insecure Direct Object Reference (IDOR)\"}]",
+    "explanation": "Identifying all 4 major flaws in the provided Node.js snippet.",
+    "is_hidden": false
+  }
 ]

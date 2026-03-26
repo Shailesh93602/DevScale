@@ -180,7 +180,7 @@ export const quickLinks = [
   },
   {
     name: 'Interview Prep',
-    href: '/interview-prep',
+    href: '/interview-question',
   },
   {
     name: 'Battle Zone',
@@ -195,20 +195,20 @@ export const quickLinks = [
 // Resource Links
 export const resourceLinks = [
   {
-    name: 'Blog',
-    href: '/blog',
+    name: 'Blogs',
+    href: '/blogs',
   },
   {
-    name: 'Tutorials',
-    href: '/tutorials',
+    name: 'Coding Challenges',
+    href: '/coding-challenges',
   },
   {
     name: 'FAQ',
     href: '/faq',
   },
   {
-    name: 'Support',
-    href: '/support',
+    name: 'Contact',
+    href: '/contact',
   },
 ];
 
@@ -220,15 +220,11 @@ export const footerLinks = [
   },
   {
     name: 'About Us',
-    href: '/about-us',
+    href: '/about',
   },
   {
     name: 'Contact Us',
-    href: '/contact-us',
-  },
-  {
-    name: 'Blogs',
-    href: '/blogs',
+    href: '/contact',
   },
   {
     name: 'Discussion Forums',
@@ -240,22 +236,22 @@ export const footerLinks = [
 export const socialLinks = [
   {
     name: 'Twitter',
-    href: 'https://x.com/shaileshwork',
-    icon: 'FaXTwitter',
+    href: 'https://twitter.com/eduscale',
+    icon: 'FaTwitter',
   },
   {
     name: 'LinkedIn',
-    href: 'https://www.linkedin.com/in/shaileshbhaichaudhari/',
+    href: 'https://www.linkedin.com/company/eduscale',
     icon: 'FaLinkedin',
   },
   {
     name: 'GitHub',
-    href: 'https://github.com/shailesh93602',
+    href: 'https://github.com/eduscale',
     icon: 'FaGithub',
   },
   {
     name: 'Discord',
-    href: '#',
+    href: 'https://discord.gg/eduscale',
     icon: 'FaDiscord',
   },
 ];
@@ -263,13 +259,12 @@ export const socialLinks = [
 // Contact Information
 export const contactInfo = [
   {
-    text: 'contact@eduscale.app',
+    id: 'email',
+    text: 'contact@exaveltech.com',
   },
   {
-    text: '+91 9313026530',
-  },
-  {
-    text: 'Ahmedabad, India',
+    id: 'team',
+    text: 'EduScale Team',
   },
 ];
 
@@ -280,6 +275,46 @@ export const companyInfo = {
     'The all-in-one platform for engineering students to learn, grow, and succeed.',
 };
 
+// Branding constants
+export const BRANDING = {
+  name: 'EduScale',
+  description:
+    'The all-in-one platform for engineering students to learn, grow, and succeed.',
+  developer: 'EduScale Team',
+  contactEmail: 'support@eduscale.com',
+  trustedColleges: [
+    'IIT Delhi',
+    'NIT Trichy',
+    'BITS Pilani',
+    'VIT Vellore',
+    'DTU Delhi',
+    'COEP Pune',
+  ],
+  testimonials: [
+    {
+      name: 'Rahul Sharma',
+      role: 'Computer Science, IIT Delhi',
+      quote:
+        'EduScale helped me structure my learning journey and connect with like-minded peers. The roadmaps were exactly what I needed to prepare for placements.',
+      image: 'https://i.pravatar.cc/150?img=11',
+    },
+    {
+      name: 'Priya Patel',
+      role: 'Electronics Engineering, BITS Pilani',
+      quote:
+        'The community support is incredible! I got answers to my questions within minutes, and the company-specific preparation guides were invaluable for my interviews.',
+      image: 'https://i.pravatar.cc/150?img=32',
+    },
+    {
+      name: 'Arjun Mehta',
+      role: 'Mechanical Engineering, NIT Trichy',
+      quote:
+        "Battle Zone challenges pushed me to improve my problem-solving skills. I've earned several achievement badges that actually impressed recruiters during my interviews!",
+      image: 'https://i.pravatar.cc/150?img=12',
+    },
+  ],
+};
+
 // CTA Links
 export const ctaLinks = {
   getStarted: {
@@ -288,7 +323,7 @@ export const ctaLinks = {
   },
   learnMore: {
     name: 'Learn More',
-    href: '/about-us',
+    href: '/about',
   },
   battleZone: {
     name: 'Will you make it to the top?',

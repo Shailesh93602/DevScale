@@ -1,0 +1,7 @@
+{
+  "typescript": "class TreeAncestor {\n    constructor(n: number, adj: number[][], root: number) {\n        // Your code here\n    }\n\n    getLCA(u: number, v: number): number {\n        // Your code here\n    }\n}",
+  "javascript": "/**\n * @param {number} n\n * @param {number[][]} adj\n * @param {number} root\n */\nvar TreeAncestor = function(n, adj, root) {\n    // Your code here\n};\n\n/** \n * @param {number} u \n * @param {number} v\n * @return {number}\n */\nTreeAncestor.prototype.getLCA = function(u, v) {\n    // Your code here\n};",
+  "python": "class TreeAncestor:\n    def __init__(self, n: int, adj: List[List[int]], root: int):\n        # Your code here\n        pass\n\n    def getLCA(self, u: int, v: int) -> int:\n        # Your code here\n        pass",
+  "java": "class TreeAncestor {\n    public TreeAncestor(int n, int[][] adj, int root) {\n        // Your code here\n    }\n    \n    public int getLCA(int u, int v) {\n        // Your code here\n    }\n}",
+  "cpp": "class TreeAncestor {\npublic:\n    TreeAncestor(int n, vector<vector<int>>& adj, int root) {\n        // Your code here\n    }\n    \n    int getLCA(int u, int v) {\n        // Your code here\n    }\n};"
+}

@@ -15,5 +15,6 @@
   "example_output": "| getNthHighestSalary(2) |\n| 200                    |",
   "constraints": "- 1 <= N <= 10^4\n- 1 <= Employee.id <= 10^4\n- Salary can have duplicates",
   "function_signature": "-- Write your SQL query below",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

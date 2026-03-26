@@ -1,0 +1,10 @@
+{
+  "typescript": "function titleToNumber(columnTitle: string): number {\n  // Your code here\n}",
+  "javascript": "/**\n * @param {string} columnTitle\n * @return {number}\n */\nvar titleToNumber = function(columnTitle) {\n  // Your code here\n};",
+  "python": "class Solution:\n    def titleToNumber(self, columnTitle: str) -> int:\n        # Your code here\n        pass",
+  "java": "class Solution {\n    public int titleToNumber(String columnTitle) {\n        // Your code here\n    }\n}",
+  "cpp": "class Solution {\npublic:\n    int titleToNumber(string columnTitle) {\n        // Your code here\n    }\n};",
+  "go": "func titleToNumber(columnTitle string) int {\n    // Your code here\n}",
+  "rust": "impl Solution {\n    pub fn title_to_number(column_title: String) -> i32 {\n        // Your code here\n    }\n}",
+  "csharp": "public class Solution {\n    public int TitleToNumber(string columnTitle) {\n        // Your code here\n    }\n}"
+}

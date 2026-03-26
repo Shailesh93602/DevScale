@@ -8,36 +8,36 @@ import { ctaLinks } from '@/constants';
 const leaderboardData = [
   {
     rank: 1,
-    name: 'Shaileshbhai Chaudhari',
-    points: 2890,
+    name: 'Abhinav',
+    points: 1540,
     college: 'IIT Bombay',
-    avatar: 'https://i.pravatar.cc/150?img=1', // Using pravatar.cc for placeholder avatars
+    avatar: 'https://i.pravatar.cc/150?img=1',
   },
   {
     rank: 2,
-    name: 'Shailesh Chaudhari',
-    points: 2780,
+    name: 'Adarsh',
+    points: 1420,
     college: 'IIT Kharagpur',
     avatar: 'https://i.pravatar.cc/150?img=2',
   },
   {
     rank: 3,
-    name: 'Shaileshbhai',
-    points: 2690,
+    name: 'Aryan',
+    points: 1380,
     college: 'BITS Pilani',
     avatar: 'https://i.pravatar.cc/150?img=3',
   },
   {
     rank: 4,
-    name: 'Shailesh',
-    points: 2610,
+    name: 'Vikas',
+    points: 1250,
     college: 'IIT Delhi',
     avatar: 'https://i.pravatar.cc/150?img=4',
   },
   {
     rank: 5,
-    name: 'Shailesh P. Chaudhari',
-    points: 2580,
+    name: 'Deepak',
+    points: 1100,
     college: 'VIT Vellore',
     avatar: 'https://i.pravatar.cc/150?img=5',
   },
@@ -46,7 +46,7 @@ const leaderboardData = [
 // Medal icon component
 const MedalIcon = ({ rank }: { rank: number }) => {
   if (rank === 1) {
-    return <FaTrophy className="h-8 w-8 text-yellow-500" />;
+    return <FaTrophy className="text-yellow-500 h-8 w-8" />;
   } else if (rank === 2) {
     return <FaMedal className="h-8 w-8 text-gray-400" />;
   } else if (rank === 3) {
@@ -67,7 +67,7 @@ const SimpleWeeklyLeaderboard: React.FC<WeeklyLeaderboardProps> = () => {
   const podiumOrder = [1, 0, 2];
 
   return (
-    <div className="relative overflow-hidden rounded-xl bg-card px-4 py-6 text-card-foreground dark:bg-[#1e293b] dark:text-white">
+    <div className="relative overflow-hidden rounded-xl bg-card px-4 py-6 text-card-foreground shadow-lg">
       {/* Background decorative elements */}
       <div className="absolute inset-0 z-0 overflow-hidden opacity-10">
         <div className="absolute -left-20 top-20 h-64 w-64 rounded-full bg-primary blur-3xl"></div>
@@ -76,8 +76,10 @@ const SimpleWeeklyLeaderboard: React.FC<WeeklyLeaderboardProps> = () => {
 
       {/* Header */}
       <div className="relative z-10 mb-6 text-center">
-        <h2 className="text-2xl font-bold">Weekly Leaderboard</h2>
-        <p className="mt-1 text-center text-sm text-muted-foreground dark:text-gray-300">
+        <h2 className="text-2xl font-bold text-foreground">
+          Weekly Leaderboard
+        </h2>
+        <p className="mt-1 text-center text-sm text-muted-foreground">
           Compete, climb, and claim your spot among the best engineers.
         </p>
       </div>
@@ -97,10 +99,10 @@ const SimpleWeeklyLeaderboard: React.FC<WeeklyLeaderboardProps> = () => {
 
           const textColor =
             user.rank === 1
-              ? 'text-yellow-500 dark:text-yellow-300'
+              ? 'text-warning'
               : user.rank === 2
-                ? 'text-gray-500 dark:text-gray-300'
-                : 'text-amber-600 dark:text-amber-400';
+                ? 'text-muted-foreground'
+                : 'text-orange-500';
 
           // Determine height based on rank
           const podiumHeight =
@@ -109,7 +111,7 @@ const SimpleWeeklyLeaderboard: React.FC<WeeklyLeaderboardProps> = () => {
           return (
             <div key={user.rank} className="flex flex-col items-center">
               {/* Avatar */}
-              <div className="mb-2 h-14 w-14 overflow-hidden rounded-full border-2 border-gray-200/50 shadow-md dark:border-white/50">
+              <div className="mb-2 h-14 w-14 overflow-hidden rounded-full border-2 border-border shadow-md">
                 <Image
                   src={user.avatar}
                   alt={user.name}
@@ -137,14 +139,14 @@ const SimpleWeeklyLeaderboard: React.FC<WeeklyLeaderboardProps> = () => {
               </div>
 
               {/* User info */}
-              <div className="mt-2 w-full rounded-md bg-gray-100/90 p-2 text-center shadow-sm dark:bg-white/10">
-                <div className="truncate text-sm font-semibold text-gray-900 dark:text-white">
+              <div className="mt-2 w-full rounded-md bg-muted/50 p-2 text-center shadow-sm">
+                <div className="truncate text-sm font-semibold text-foreground">
                   {user.name}
                 </div>
                 <div className={`text-sm font-medium ${textColor}`}>
                   {user.points.toLocaleString()} pts
                 </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">
+                <div className="text-xs text-muted-foreground">
                   {user.college}
                 </div>
               </div>
@@ -158,9 +160,9 @@ const SimpleWeeklyLeaderboard: React.FC<WeeklyLeaderboardProps> = () => {
         {leaderboardData.slice(3, 5).map((user) => (
           <div
             key={user.rank}
-            className="flex items-center rounded-lg bg-gray-100/80 p-2 shadow-sm dark:bg-white/5"
+            className="flex items-center rounded-lg bg-muted/30 p-2 shadow-sm"
           >
-            <div className="mr-2 flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-xs font-bold text-gray-700 shadow-sm dark:bg-gray-800 dark:text-gray-300">
+            <div className="mr-2 flex h-6 w-6 items-center justify-center rounded-full bg-muted text-xs font-bold text-muted-foreground shadow-sm">
               {user.rank}
             </div>
             <div className="mr-2">
@@ -169,19 +171,19 @@ const SimpleWeeklyLeaderboard: React.FC<WeeklyLeaderboardProps> = () => {
                 alt={user.name}
                 width={28}
                 height={28}
-                className="h-7 w-7 rounded-full border border-gray-300 object-cover shadow-sm dark:border-gray-700"
+                className="h-7 w-7 rounded-full border border-border object-cover shadow-sm"
                 unoptimized={user.avatar.startsWith('http')}
               />
             </div>
             <div className="flex-1">
-              <div className="text-xs font-medium text-gray-900 dark:text-white">
+              <div className="text-xs font-medium text-foreground">
                 {user.name}
               </div>
-              <div className="text-[10px] text-gray-500 dark:text-gray-400">
+              <div className="text-[10px] text-muted-foreground">
                 {user.college}
               </div>
             </div>
-            <div className="text-right text-xs font-semibold text-gray-700 dark:text-gray-300">
+            <div className="text-right text-xs font-semibold text-muted-foreground">
               {user.points.toLocaleString()} pts
             </div>
           </div>
@@ -192,7 +194,7 @@ const SimpleWeeklyLeaderboard: React.FC<WeeklyLeaderboardProps> = () => {
       <div className="relative z-10 mt-4 text-center">
         <Link
           href={ctaLinks.battleZone.href}
-          className="dark:text-primary-light text-sm font-medium text-primary hover:text-primary2 dark:hover:text-primary"
+          className="text-sm font-medium text-primary transition-colors hover:text-primary2"
         >
           {ctaLinks.battleZone.name} →
         </Link>

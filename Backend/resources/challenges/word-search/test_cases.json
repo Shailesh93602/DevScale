@@ -1,3 +1,17 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  {
+    "input": "{\"board\": [[\"A\",\"B\",\"C\",\"E\"],[\"S\",\"F\",\"C\",\"S\"],[\"A\",\"D\",\"E\",\"E\"]], \"word\": \"ABCCED\"}",
+    "output": "true",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"board\": [[\"A\",\"B\",\"C\",\"E\"],[\"S\",\"F\",\"C\",\"S\"],[\"A\",\"D\",\"E\",\"E\"]], \"word\": \"SEE\"}",
+    "output": "true",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"board\": [[\"A\",\"B\",\"C\",\"E\"],[\"S\",\"F\",\"C\",\"S\"],[\"A\",\"D\",\"E\",\"E\"]], \"word\": \"ABCB\"}",
+    "output": "false",
+    "is_hidden": false
+  }
 ]

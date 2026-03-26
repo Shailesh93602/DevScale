@@ -50,6 +50,9 @@ type ResponseType =
   | 'COURSE_NOT_FOUND'
   | 'COURSE_ENROLLED'
   | 'COURSE_ALREADY_ENROLLED'
+  | 'ENROLLMENTS_FETCHED'
+  | 'ENROLLMENT_NOT_FOUND'
+  | 'ENROLLMENT_UPDATED'
   | 'USER_NOT_FOUND'
   | 'JOBS_FETCHED'
   | 'JOB_FETCHED'
@@ -96,6 +99,8 @@ type ResponseType =
   | 'BATTLE_UPDATED'
   | 'BATTLE_DELETED'
   | 'BATTLE_JOINED'
+  | 'BATTLE_LEFT'
+  | 'STATISTICS_FETCHED'
   | 'ANSWER_SUBMITTED'
   | 'CHATS_FETCHED'
   | 'CHAT_FETCHED'
@@ -169,9 +174,19 @@ type ResponseType =
   | 'COMMENT_UNLIKED'
   | 'BATTLE_STATUS_UPDATED'
   | 'BATTLE_ARCHIVED'
+  | 'BATTLE_READY'
+  | 'BATTLE_STARTED'
+  | 'BATTLE_CANCELLED'
+  | 'BATTLE_RESULTS_FETCHED'
   | 'DRAFT_SAVED'
   | 'DRAFT_FETCHED'
-  | 'CODE_EXECUTED';
+  | 'CODE_EXECUTED'
+  | 'BATTLE_QUESTIONS_ADDED'
+  | 'DASHBOARD_SUMMARY_FETCHED'
+  | 'BATTLE_GLOBAL_STATS_FETCHED'
+  | 'QUESTION_POOL_FETCHED'
+  | 'QUESTION_POOL_EMPTY'
+  | 'BATTLE_MY_RESULTS_FETCHED';
 
 interface ResponseConfig {
   status: number;
@@ -415,6 +430,21 @@ const RESPONSE_MESSAGES: Record<ResponseType, ResponseConfig> = {
     success: false,
     message: 'Already enrolled in this course',
   },
+  ENROLLMENTS_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Enrollments retrieved successfully',
+  },
+  ENROLLMENT_NOT_FOUND: {
+    status: 404,
+    success: false,
+    message: 'Enrollment not found',
+  },
+  ENROLLMENT_UPDATED: {
+    status: 200,
+    success: true,
+    message: 'Enrollment updated successfully',
+  },
   USER_NOT_FOUND: {
     status: 404,
     success: false,
@@ -645,6 +675,16 @@ const RESPONSE_MESSAGES: Record<ResponseType, ResponseConfig> = {
     success: true,
     message: 'Battle joined successfully',
   },
+  BATTLE_LEFT: {
+    status: 200,
+    success: true,
+    message: 'Battle left successfully',
+  },
+  STATISTICS_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Statistics fetched successfully',
+  },
   ANSWER_SUBMITTED: {
     status: 200,
     success: true,
@@ -780,6 +820,11 @@ const RESPONSE_MESSAGES: Record<ResponseType, ResponseConfig> = {
     status: 200,
     success: true,
     message: 'Topic deleted successfully',
+  },
+  CODE_EXECUTED: {
+    status: 200,
+    success: true,
+    message: 'Code executed successfully',
   },
   RESOURCE_FETCHED: {
     status: 200,
@@ -1014,17 +1059,62 @@ const RESPONSE_MESSAGES: Record<ResponseType, ResponseConfig> = {
   DRAFT_SAVED: {
     status: 200,
     success: true,
-    message: 'Draft saved successfully',
+    message: 'Progress saved successfully',
   },
   DRAFT_FETCHED: {
     status: 200,
     success: true,
-    message: 'Draft fetched successfully',
+    message: 'Progress retrieved successfully',
   },
-  CODE_EXECUTED: {
+  BATTLE_READY: {
     status: 200,
     success: true,
-    message: 'Code executed successfully',
+    message: 'Ready status updated',
+  },
+  BATTLE_STARTED: {
+    status: 200,
+    success: true,
+    message: 'Battle started successfully',
+  },
+  BATTLE_CANCELLED: {
+    status: 200,
+    success: true,
+    message: 'Battle cancelled successfully',
+  },
+  BATTLE_RESULTS_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Battle results retrieved successfully',
+  },
+  BATTLE_MY_RESULTS_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Your battle results retrieved successfully',
+  },
+  BATTLE_QUESTIONS_ADDED: {
+    status: 201,
+    success: true,
+    message: 'Questions added to battle successfully',
+  },
+  DASHBOARD_SUMMARY_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Dashboard summary fetched successfully',
+  },
+  BATTLE_GLOBAL_STATS_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Battle global stats fetched successfully',
+  },
+  QUESTION_POOL_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Question pool fetched successfully',
+  },
+  QUESTION_POOL_EMPTY: {
+    status: 200,
+    success: true,
+    message: 'No questions available for the selected source',
   },
 };
 

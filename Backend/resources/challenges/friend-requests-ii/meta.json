@@ -15,5 +15,6 @@
   "example_output": "| id | num |\n| 3  | 3   |",
   "constraints": "- There are no duplicate accepted friend requests\n- requester_id != accepter_id\n- Each row represents a unique accepted friend request",
   "function_signature": "-- Write your SQL query below",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

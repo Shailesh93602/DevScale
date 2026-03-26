@@ -2,6 +2,7 @@ import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
+import { getInitials } from '@/lib/avatar';
 
 const avatarVariants = cva(
   'relative flex shrink-0 overflow-hidden rounded-full',
@@ -55,8 +56,8 @@ const Avatar: React.FC<AvatarProps> = ({
           height={500}
         />
       ) : (
-        <div className="flex h-full w-full items-center justify-center bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400">
-          {fallback || alt.charAt(0)?.toUpperCase() || 'U'}
+        <div className="flex h-full w-full items-center justify-center bg-muted font-semibold text-muted-foreground">
+          {fallback || getInitials(alt)}
         </div>
       )}
     </div>

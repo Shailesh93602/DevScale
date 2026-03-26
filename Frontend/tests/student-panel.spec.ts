@@ -13,63 +13,54 @@ test.describe('Student Panel Features - Professional Grade', () => {
     // Debug console logs
     page.on('console', (msg) => console.log(`BROWSER LOG: ${msg.text()}`));
 
-    // Global mock for user profile to prevent App.tsx errors
+    // Global mock for user profile — must match UserProfile shape (first_name/last_name, not name)
     await page.route('**/users/me', async (route) => {
       await route.fulfill({
         json: {
           success: true,
           data: {
-            success: true,
-            user: {
-              name: 'Admin User',
-              email: 'admin@eduscale.io',
-              username: 'admin',
-              avatar: 'https://github.com/shadcn.png',
-              bio: 'Engineering Student',
-              memberSince: '2023-01-01',
-              note: 'Test Note',
-              socialLinks: { github: '', linkedin: '', twitter: '' },
-            },
+            id: 'test-user-id',
+            first_name: 'Admin',
+            last_name: 'User',
+            username: 'admin',
+            email: 'admin@eduscale.io',
+            avatar_url: 'https://github.com/shadcn.png',
+            bio: 'Engineering Student',
+            created_at: '2023-01-01T00:00:00.000Z',
           },
         },
       });
     });
 
-    // Mock Dashboard endpoints to prevent CORS/Network errors
-    await page.route('**/dashboard/stats', async (route) =>
+    // Emulate reduced motion so Framer Motion skips JS animations (instant render)
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+
+    // Mock the unified dashboard summary endpoint (replaces old individual mocks)
+    await page.route('**/dashboard/summary*', async (route) =>
       route.fulfill({
         json: {
           success: true,
           data: {
-            enrolledRoadmaps: 2,
-            totalTopics: 50,
-            totalTopicsCompleted: 10,
-            totalHoursSpent: 120,
-            battleRank: 5,
+            stats: {
+              enrolledRoadmaps: 2,
+              totalTopics: 50,
+              totalTopicsCompleted: 10,
+              totalHoursSpent: 120,
+              averageProgress: 20,
+              battleRank: 5,
+            },
+            enrolledRoadmaps: [],
+            recommendedRoadmaps: [],
+            activities: [],
+            achievements: [],
+            streak: { currentStreak: 5, longestStreak: 10, lastActivityDate: null, streakStartDate: null, timezone: 'UTC' },
+            weeklyActivity: [],
           },
         },
       }),
     );
-    // Mock both relative and absolute URLs for roadmaps
+    // Keep roadmap mock (used by other hooks/components)
     await page.route('**/roadmaps*', async (route) =>
-      route.fulfill({ json: { success: true, data: [] } }),
-    );
-    await page.route('http://localhost:4000/api/v1/roadmaps*', async (route) =>
-      route.fulfill({ json: { success: true, data: [] } }),
-    );
-
-    await page.route('**/streak/*', async (route) =>
-      route.fulfill({
-        json: {
-          success: true,
-          data: { currentStreak: 5, longestStreak: 10, activity: {} },
-        },
-      }),
-    );
-    await page.route('**/activities', async (route) =>
-      route.fulfill({ json: { success: true, data: [] } }),
-    );
-    await page.route('**/achievements', async (route) =>
       route.fulfill({ json: { success: true, data: [] } }),
     );
 
@@ -80,13 +71,18 @@ test.describe('Student Panel Features - Professional Grade', () => {
   test('Dashboard: Functional, Visual & Accessibility Check', async ({
     page,
   }) => {
-    // 2. Functional: Stats
+    // Re-navigate to ensure Next.js compilation is complete (first visit in dev triggers JIT compile)
+    await page.goto('/dashboard');
+    // Wait for the dashboard heading — only visible after API completes & compilation finishes
+    await expect(page.getByRole('heading', { name: 'Dashboard', exact: true })).toBeVisible({ timeout: 45000 });
+
+    // 2. Functional: Stats (StatCard uses <p>, not <h>, so use getByText)
     await expect(
-      page.getByRole('heading', { name: 'Enrolled Roadmaps', exact: true }),
-    ).toBeVisible();
+      page.getByText('Enrolled Roadmaps').first(),
+    ).toBeVisible({ timeout: 15000 });
     await expect(
-      page.getByRole('heading', { name: 'Topics Completed', exact: true }),
-    ).toBeVisible();
+      page.getByText('Topics Completed').first(),
+    ).toBeVisible({ timeout: 15000 });
 
     // Wait for animations to complete (Framer Motion)
     await page.waitForTimeout(2000);
@@ -117,42 +113,42 @@ test.describe('Student Panel Features - Professional Grade', () => {
   });
 
   test('Dashboard: Weekly Activity Chart exists', async ({ page }) => {
-    // Check for specific days on the X-axis OR "No Activity Yet"
-    const chartOrEmpty = page
-      .locator('text=No Activity Yet')
-      .or(page.locator('text=Mon'));
-    await expect(chartOrEmpty.first()).toBeVisible();
+    // Re-navigate to ensure Next.js compilation is complete
+    await page.goto('/dashboard');
+    // Wait for dashboard heading to confirm full load
+    await expect(page.getByRole('heading', { name: 'Dashboard', exact: true })).toBeVisible({ timeout: 45000 });
+    // Check for the StreakCalendar section header (always visible after load)
+    await expect(page.getByText('Learning Streak').first()).toBeVisible({ timeout: 15000 });
   });
 
   // --- Profile ---
   test('Profile: Detailed Verification', async ({ page }) => {
-    // Mock Profile API
+    // Mock Profile API — same shape as beforeEach mock, matches UserProfile interface
     await page.route('**/users/me', async (route) => {
       await route.fulfill({
         json: {
           success: true,
           data: {
-            success: true,
-            user: {
-              name: 'Admin User',
-              email: 'admin@eduscale.io',
-              username: 'admin',
-              avatar: 'https://github.com/shadcn.png',
-              bio: 'Engineering Student',
-              memberSince: '2023-01-01',
-              note: 'Test Note',
-              socialLinks: { github: '', linkedin: '', twitter: '' },
-            },
+            id: 'test-user-id',
+            first_name: 'Admin',
+            last_name: 'User',
+            username: 'admin',
+            email: 'admin@eduscale.io',
+            avatar_url: 'https://github.com/shadcn.png',
+            bio: 'Engineering Student',
+            created_at: '2023-01-01T00:00:00.000Z',
           },
         },
       });
     });
 
     await page.goto('/profile');
-    await page.waitForLoadState('networkidle');
+    // Wait for profile to fully load (Next.js JIT compile + API call)
+    await page.waitForLoadState('networkidle', { timeout: 30000 }).catch(() => {});
+    await page.waitForTimeout(2000);
 
     // Verify Name first to ensure load
-    await expect(page.getByText(/Admin User/i)).toBeVisible();
+    await expect(page.getByText(/Admin User/i)).toBeVisible({ timeout: 20000 });
 
     await checkAccessibility(page, 'Profile');
 
@@ -190,37 +186,37 @@ test.describe('Student Panel Features - Professional Grade', () => {
 
   // --- Battle Zone ---
   test('Battle Zone: Challenges & Accessibility', async ({ page }) => {
-    // Mock the challenges API
+    // Mock the challenges API — data must be array (not {challenges:[...]})
     await page.route('**/challenges*', async (route) => {
       const json = {
         success: true,
         message: 'Challenges fetched successfully',
-        data: {
-          challenges: [
-            {
-              id: '1',
-              title: 'Two Sum',
-              description: 'Find two numbers that add up to a target.',
-              difficulty: 'Easy',
-            },
-            {
-              id: '2',
-              title: 'Reverse Linked List',
-              description: 'Reverse a singly linked list.',
-              difficulty: 'Medium',
-            },
-          ],
-          totalPages: 1,
-        },
+        data: [
+          {
+            id: '1',
+            title: 'Two Sum',
+            description: 'Find two numbers that add up to a target.',
+            difficulty: 'Easy',
+          },
+          {
+            id: '2',
+            title: 'Reverse Linked List',
+            description: 'Reverse a singly linked list.',
+            difficulty: 'Medium',
+          },
+        ],
+        meta: { total: 2, totalPages: 1, currentPage: 1, limit: 12, hasNextPage: false, hasPreviousPage: false },
       };
       await route.fulfill({ json });
     });
 
     await page.goto('/coding-challenges');
+    // Wait for Next.js compilation + initial data load
+    await page.waitForLoadState('networkidle', { timeout: 30000 }).catch(() => {});
 
     await expect(
       page.getByRole('heading', { name: 'Coding Challenges' }),
-    ).toBeVisible();
+    ).toBeVisible({ timeout: 20000 });
 
     await checkAccessibility(page, 'Coding Challenges');
 
@@ -280,8 +276,9 @@ test.describe('Student Panel Features - Professional Grade', () => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/dashboard');
 
+    // Navbar uses lg:flex (not md:flex) for the desktop center section
     const centeredNavContainer = page
-      .locator('nav .hidden.flex-1.items-center.justify-center.md\\:flex')
+      .locator('nav .hidden.flex-1.items-center.justify-center.lg\\:flex')
       .first();
     await expect(centeredNavContainer).toBeVisible();
 

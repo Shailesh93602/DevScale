@@ -1,62 +1,24 @@
 # Editorial — React Native Offline Data Sync
 
-## Approach: Last-Write-Wins Merge
+### The Challenge of Offline-First
+Offline-first applications allow users to keep working without a network connection. When they reconnect, we must "synchronize" the local changes (queued while offline) with the remote changes (made by other users or devices).
 
-### Algorithm
-1. Build maps of local and remote items by ID
-2. Find all unique IDs across both sets
-3. For each ID, determine if it was modified locally, remotely, or both since lastSync
-4. If both modified: conflict - resolve with last-write-wins (higher timestamp)
-5. If only one modified: take that version
-6. Track items to upload (local wins) and download (remote wins)
+### Conflict Resolution: Last-Write-Wins (LWW)
+In this challenge, we use one of the simplest but most effective conflict resolution strategies: **Last-Write-Wins**. By assigning a timestamp to every modification, we can decide that whichever change happened later is the "truth".
 
-### TypeScript Solution
+### Implementation Strategy
+1.  **Normalization**: Use hash maps to store `local` and `remote` items by their ID. This allows $O(1)$ lookup for the "other" version of an item.
+2.  **ID Iteration**: Iterate through the union of all unique IDs present in either local or remote states.
+3.  **Condition Checking**:
+    *   **Is local changed?** `local.timestamp > lastSync`
+    *   **Is remote changed?** `remote.timestamp > lastSync`
+4.  **Action Logic**:
+    *   If **both** changed: Pick the one with the higher timestamp. record a conflict.
+    *   If **only local** changed: The local change is "fresh", and there's no remote competition. Upload it.
+    *   If **only remote** changed: A remote change occurred that we haven't seen. Download it.
+    *   If **neither** changed: Use the version we have (either should be the same as they were at `lastSync`).
+5.  **Soft Deletion**: We must respect the `deleted` flag. Even if an item wins the conflict, it should only be included in the `merged` result if it hasn't been deleted.
 
-```typescript
-function syncData(
-  local: SyncItem[],
-  remote: SyncItem[],
-  lastSync: number
-): SyncResult {
-  const localMap = new Map(local.map(item => [item.id, item]));
-  const remoteMap = new Map(remote.map(item => [item.id, item]));
-  const allIds = new Set([...localMap.keys(), ...remoteMap.keys()]);
-
-  const merged: SyncItem[] = [];
-  const conflicts: any[] = [];
-  const toUpload: SyncItem[] = [];
-  const toDownload: SyncItem[] = [];
-
-  for (const id of allIds) {
-    const localItem = localMap.get(id);
-    const remoteItem = remoteMap.get(id);
-
-    const localModified = localItem && localItem.timestamp > lastSync;
-    const remoteModified = remoteItem && remoteItem.timestamp > lastSync;
-
-    if (localModified && remoteModified) {
-      const winner = localItem!.timestamp >= remoteItem!.timestamp ? "local" : "remote";
-      const winnerItem = winner === "local" ? localItem! : remoteItem!;
-      conflicts.push({ id, local: localItem, remote: remoteItem, winner });
-      if (!winnerItem.deleted) merged.push(winnerItem);
-      if (winner === "local") toUpload.push(winnerItem);
-      else toDownload.push(winnerItem);
-    } else if (localModified) {
-      if (!localItem!.deleted) merged.push(localItem!);
-      toUpload.push(localItem!);
-    } else if (remoteModified) {
-      if (!remoteItem!.deleted) merged.push(remoteItem!);
-      toDownload.push(remoteItem!);
-    } else {
-      const item = localItem || remoteItem;
-      if (item && !item.deleted) merged.push(item);
-    }
-  }
-
-  return { merged, conflicts, toUpload, toDownload };
-}
-```
-
-### Complexity
-- **Time**: O(n + m) where n=local items, m=remote items
-- **Space**: O(n + m) for maps
+### Complexity Analysis
+- **Time Complexity**: $O(N + M)$ where $N$ is the number of local items and $M$ is the number of remote items. We iterate through each item exactly once.
+- **Space Complexity**: $O(N + M)$ to store the maps and the result sets.

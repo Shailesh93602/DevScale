@@ -15,5 +15,6 @@
   "example_output": "{\"molecules\": [\"HHO\", \"HHO\"]}",
   "constraints": "Input length is always divisible by 3, with exactly 2x Hs as Os",
   "function_signature": "class H2O { hydrogen(releaseHydrogen: () => void): Promise<void>; oxygen(releaseOxygen: () => void): Promise<void> }",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

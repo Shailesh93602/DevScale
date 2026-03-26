@@ -1,0 +1,10 @@
+{
+  "typescript": "function evalRPN(tokens: string[]): number {\n    \n};",
+  "javascript": "/**\n * @param {string[]} tokens\n * @return {number}\n */\nvar evalRPN = function(tokens) {\n    \n};",
+  "python": "class Solution:\n    def evalRPN(self, tokens: List[str]) -> int:\n        ",
+  "java": "class Solution {\n    public int evalRPN(String[] tokens) {\n        \n    }\n}",
+  "cpp": "class Solution {\npublic:\n    int evalRPN(vector<string>& tokens) {\n        \n    }\n};",
+  "go": "func evalRPN(tokens []string) int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn eval_rpn(tokens: Vec<String>) -> i32 {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int EvalRPN(string[] tokens) {\n        \n    }\n}"
+}

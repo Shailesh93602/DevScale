@@ -14,6 +14,7 @@
   "example_input": "{ name: 'api', image: 'api:v1.0', replicas: 3, port: 3000, resources: { cpu: '500m', memory: '512Mi' } }",
   "example_output": "Kubernetes Deployment, Service (ClusterIP), HPA, and Ingress manifests as YAML",
   "constraints": "- Deployment must include resource requests and limits\\n- Must have liveness and readiness probes\\n- Must use rolling update strategy\\n- Service must expose correct port\\n- HPA must scale based on CPU",
-  "function_signature": "function generateK8sManifests(config: { name: string; image: string; replicas: number; port: number; resources: { cpu: string; memory: string } }): string",
-  "status": "ACTIVE"
+  "function_signature": "function generateK8sManifests(config: { name: string; image: string; replicas: number; port: number; resources: { cpu: string; memory: string } }): string {}",
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

@@ -5,8 +5,8 @@ import {
   getBooksSchema,
   getResourcesSchema,
 } from '../validations/placementValidation';
-import PlacementRepository from '@/repositories/placementRepository';
-import { sendResponse } from '@/utils/apiResponse';
+import PlacementRepository from '../repositories/placementRepository';
+import { sendResponse } from '../utils/apiResponse';
 
 export default class PlacementController {
   private readonly placementRepo: PlacementRepository;

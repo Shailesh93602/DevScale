@@ -1,0 +1,10 @@
+{
+  "typescript": "function eraseOverlapIntervals(intervals: number[][]): number {\n    \n};",
+  "javascript": "/**\n * @param {number[][]} intervals\n * @return {number}\n */\nvar eraseOverlapIntervals = function(intervals) {\n    \n};",
+  "python": "class Solution:\n    def eraseOverlapIntervals(self, intervals: List[List[int]]) -> int:\n        ",
+  "java": "class Solution {\n    public int eraseOverlapIntervals(int[][] intervals) {\n        \n    }\n}",
+  "cpp": "class Solution {\npublic:\n    int eraseOverlapIntervals(vector<vector<int>>& intervals) {\n        \n    }\n};",
+  "go": "func eraseOverlapIntervals(intervals [][]int) int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn erase_overlap_intervals(intervals: Vec<Vec<i32>>) -> i32 {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int EraseOverlapIntervals(int[][] intervals) {\n        \n    }\n}"
+}

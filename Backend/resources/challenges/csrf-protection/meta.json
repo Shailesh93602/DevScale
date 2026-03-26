@@ -4,16 +4,21 @@
   "difficulty": "Medium",
   "category": "security",
   "points": 100,
-  "tags": ["web-security", "node", "express", "middleware"],
+  "tags": ["security", "web", "middleware"],
   "company_tags": ["okta", "auth0", "stripe"],
-  "topic_tags": ["Security", "Web Development", "Backend"],
+  "topic_tags": ["security", "web development"],
+  "supported_languages": [
+    "typescript",
+    "javascript"
+  ],
   "time_limit_ms": 1000,
   "memory_limit_kb": 262144,
   "input_format": "Implement a middleware function that checks for a CSRF token in the request headers.",
   "output_format": "The middleware should call `next()` if the token is valid, or return a 403 response if it's missing or invalid.",
   "example_input": "POST request with 'X-CSRF-TOKEN' header.",
-  "example_output": "Status 200 (Success) or 403 (Forbidden).",
-  "constraints": "Only state-changing methods (POST, PUT, DELETE, PATCH) should be checked.",
-  "function_signature": "function csrfProtection(req: Request, res: Response, next: NextFunction): void",
-  "status": "ACTIVE"
+  "example_output": "Status 200 or 403.",
+  "constraints": "- Only state-changing methods (POST, PUT, DELETE, PATCH) should be checked.\n- Token should be validated from `req.headers['x-csrf-token']`.",
+  "function_signature": "function csrfProtection(req: any, res: any, next: any): void {}",
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

@@ -1,4 +1,5 @@
 [
-  "TODO: Add hint 1",
-  "TODO: Add hint 2"
+  "Use an array of fixed size k and two pointers (head and tail) to keep track of the start and end of the queue.",
+  "Use the modulo operator (%) to wrap the pointers around when they reach the end of the array.",
+  "Consider keeping a count of the current size of the queue to easily implement isEmpty() and isFull()."
 ]

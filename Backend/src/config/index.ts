@@ -24,6 +24,7 @@ const {
   SUPABASE_ANON_KEY,
   REDIS_URL,
   WS_URL,
+  SUPABASE_JWT_SECRET,
 } = process.env as { [key: string]: string };
 
 export {
@@ -47,4 +48,5 @@ export {
   SUPABASE_ANON_KEY,
   REDIS_URL,
   WS_URL,
+  SUPABASE_JWT_SECRET,
 };

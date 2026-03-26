@@ -25,5 +25,6 @@
   "example_output": "[24,12,8,6]",
   "constraints": "- `2 <= nums.length <= 10^5`\n- `-30 <= nums[i] <= 30`\n- The product of any prefix or suffix of `nums` is guaranteed to fit in a 32-bit integer.",
   "function_signature": "function productExceptSelf(nums: number[]): number[] {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }
