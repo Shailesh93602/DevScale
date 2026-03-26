@@ -4,6 +4,7 @@ import { catchAsync } from '../utils';
 import { sendResponse } from '../utils/apiResponse';
 import logger from '../utils/logger';
 import { ArticleRepository } from '../repositories/articleRepository';
+import { sanitizeText, sanitizeRichText } from '../utils/sanitize';
 
 export default class ArticleController {
   private readonly articleRepository: ArticleRepository;
@@ -70,7 +71,8 @@ export default class ArticleController {
     async (req: Request, res: Response) => {
       try {
         const { id } = req.params;
-        const { title, content } = req.body;
+        const title = req.body.title ? sanitizeText(req.body.title) : undefined;
+        const content = req.body.content ? sanitizeRichText(req.body.content) : undefined;
 
         if (!title && !content) {
           return sendResponse(res, 'ARTICLE_NOT_FOUND', {
