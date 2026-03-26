@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { Schema } from 'joi';
 import { createAppError } from '../utils/errorHandler';
+import logger from '../utils/logger';
 
 type RequestPart = 'body' | 'query' | 'params';
 
@@ -18,7 +19,7 @@ export const validateRequest = (schema: Schema, type: RequestPart = 'body') => {
         message: detail.message.replace(/['"]/g, ''),
       }));
 
-      console.error('Validation errors:', errors);
+      logger.warn('Request validation failed', { errors });
       return next(createAppError('Validation failed', 400, { errors }));
     }
 

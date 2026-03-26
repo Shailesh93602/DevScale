@@ -1,5 +1,6 @@
 import { io, Socket } from 'socket.io-client';
 import { WS_URL } from '../config';
+import logger from '../utils/logger';
 
 export class WebSocketService {
   private socket: Socket | null = null;
@@ -22,16 +23,16 @@ export class WebSocketService {
     if (!this.socket) return;
 
     this.socket.on('connect', () => {
-      console.log('WebSocket connected');
+      logger.info('WebSocket client connected');
       this.reconnectAttempts = 0;
     });
 
     this.socket.on('disconnect', (reason) => {
-      console.log('WebSocket disconnected:', reason);
+      logger.info('WebSocket client disconnected', { reason });
     });
 
     this.socket.on('error', (error) => {
-      console.error('WebSocket error:', error);
+      logger.error('WebSocket client error', { error });
     });
   }
 
