@@ -3,7 +3,7 @@
  * Used as a fallback when Redis is unavailable or for simple, non-distributed caching needs
  */
 
-const cache = new Map<string, { data: any; expiresAt: number }>();
+const cache = new Map<string, { data: unknown; expiresAt: number }>();
 
 /**
  * Get an item from the cache

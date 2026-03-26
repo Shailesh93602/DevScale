@@ -19,7 +19,7 @@ import prisma from './lib/prisma';
 import 'module-alias/register';
 import 'tsconfig-paths/register';
 
-declare const require: any;
+declare const require: NodeJS.Require;
 
 type MaybeServer = ReturnType<Application['listen']>;
 
@@ -79,7 +79,7 @@ export class App {
 
   private initializeErrorHandling(): void {
     // Add default 404 handler
-    this.app.use((req, res, next) => {
+    this.app.use((req, res) => {
       res.status(404).json({ message: 'Route not found' });
     });
 

@@ -1,6 +1,6 @@
 import { BaseRouter } from './BaseRouter';
 import ChallengeController from '../controllers/challengeController';
-import { authMiddleware, authorizeRoles } from '../middlewares/authMiddleware';
+import { authMiddleware } from '../middlewares/authMiddleware';
 import { validateRequest } from '../middlewares/validateRequest';
 import {
   createChallengeValidation,

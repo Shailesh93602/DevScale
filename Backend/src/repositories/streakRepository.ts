@@ -5,11 +5,9 @@ import prisma from '../lib/prisma';
 import {
   StreakStats,
   DailyActivity,
-  UpdateStreakInput,
   StreakValidationResult,
   StreakCalculationResult,
 } from '../types/streak';
-import { createAppError } from '@/utils/errorHandler';
 
 interface UpdateStreakParams {
   activityType: ActivityType;

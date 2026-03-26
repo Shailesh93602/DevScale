@@ -163,7 +163,7 @@ model BattleLeaderboard {
 
 model Challenge {
   id                 String                @id @default(uuid())
-  title              String
+  title              String                @unique
   description        String                @db.Text
   points             Int
   difficulty         Difficulty
@@ -177,6 +177,7 @@ model Challenge {
   time_limit         Int?
   memory_limit       Int?
   tags               String[]
+  company_tags       String[]
   test_cases         TestCase[]
   solutions          Json?
   created_at         DateTime              @default(now())

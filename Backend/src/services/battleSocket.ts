@@ -1,22 +1,17 @@
-import socketService, {
-  BattleStateUpdate,
-  ParticipantUpdate,
-  ScoreUpdate,
-  TimerSync,
-} from './socket';
+import socketService, { ScoreUpdate } from './socket';
 import logger from '@/utils/logger';
 import prisma from '@/lib/prisma';
 import { BattleStatus } from '@prisma/client';
 
 class BattleSocketService {
   // Map to track active battle timers
-  private battleTimers: Map<string, NodeJS.Timeout> = new Map();
+  private readonly battleTimers: Map<string, NodeJS.Timeout> = new Map();
 
   // Map to track battle question timers
-  private questionTimers: Map<string, NodeJS.Timeout> = new Map();
+  private readonly questionTimers: Map<string, NodeJS.Timeout> = new Map();
 
   // Map to track battle state
-  private battleStates: Map<
+  private readonly battleStates: Map<
     string,
     {
       status: BattleStatus;
@@ -44,21 +39,6 @@ class BattleSocketService {
         logger.error(`Cannot initialize battle ${battleId}: Battle not found`);
         return;
       }
-
-      // Add null checks for start and end times
-      const battleStartTime = battle.start_time
-        ? battle.start_time.getTime()
-        : null;
-      const battleEndTime = battle.end_time ? battle.end_time.getTime() : null;
-
-      // Update the battle state
-      const battleState = {
-        battleId: battle.id,
-        status: battle.status,
-        currentParticipants: battle.current_participants,
-        startTime: battleStartTime,
-        endTime: battleEndTime,
-      };
 
       // Schedule battle start if it's in the future
       const now = Date.now();
@@ -316,13 +296,6 @@ class BattleSocketService {
       }
 
       // Notify all participants about the new participant
-      const participantUpdate: ParticipantUpdate = {
-        battle_id: battleId,
-        user_id: userId,
-        username: user.username,
-        avatar_url: user.avatar_url || undefined,
-        status: 'joined',
-      };
 
       socketService.updateBattleState(battleId, {
         battle_id: battleId,

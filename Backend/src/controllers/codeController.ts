@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { Prisma } from '@prisma/client';
 import { catchAsync } from '../utils';
 import { sendResponse } from '../utils/apiResponse';
 import { executeCode } from '../utils/codeExecutor';
@@ -81,12 +82,14 @@ export default class CodeController {
       challengeTitle
     );
 
-    let challenge: any = null;
+    let challenge: Prisma.ChallengeGetPayload<{
+      include: { test_cases: true };
+    }> | null = null;
 
     if (challengeId) {
       try {
         // Try finding by ID first, then by title if it's a string
-        challenge = await this.challengeRepo.findFirst({
+        const foundChallenge = await this.challengeRepo.findFirst({
           where: {
             OR: [
               { id: challengeId },
@@ -96,6 +99,10 @@ export default class CodeController {
           },
           include: { test_cases: true },
         });
+
+        challenge = foundChallenge as unknown as Prisma.ChallengeGetPayload<{
+          include: { test_cases: true };
+        }>;
 
         if (challenge) {
           console.log('[DEBUG] Found challenge for wrapping:', challenge.title);
@@ -114,14 +121,11 @@ export default class CodeController {
     }
 
     const result = await (async () => {
-      const results: any[] = [];
       const testCasesToRun = [];
 
       if (challenge && challenge.test_cases?.length > 0) {
         // Run all public test cases
-        const publicCases = challenge.test_cases.filter(
-          (tc: any) => !tc.is_hidden
-        );
+        const publicCases = challenge.test_cases.filter((tc) => !tc.is_hidden);
         testCasesToRun.push(...publicCases);
       } else {
         // Basic execution with provided input or default
@@ -157,11 +161,13 @@ export default class CodeController {
             executionTime: execResult.executionTime,
             memoryUsed: execResult.memoryUsed,
           };
-        } catch (err: any) {
+        } catch (err: unknown) {
+          const errorMessage =
+            err instanceof Error ? err.message : 'Execution Error';
           return {
             input: tc.input,
             expectedOutput: tc.output,
-            actualOutput: err.message || 'Execution Error',
+            actualOutput: errorMessage,
             status: 'Error',
             executionTime: 0,
             memoryUsed: 0,
