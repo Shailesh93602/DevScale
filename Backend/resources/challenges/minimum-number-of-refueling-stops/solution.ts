@@ -45,7 +45,7 @@ class MaxHeap {
 export function minRefuelStops(target: number, startFuel: number, stations: number[][]): number {
   const maxHeap = new MaxHeap();
   let currentFuel = startFuel;
-  let currentPosition = 0;
+  const currentPosition = 0;
   let stops = 0;
   let stationIndex = 0;
 

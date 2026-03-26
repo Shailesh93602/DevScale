@@ -5,6 +5,7 @@ import { BattleStatus } from '@prisma/client';
 
 // Extend Express Request type to include battle and battleAccess
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     interface Request {
       battle?: any;

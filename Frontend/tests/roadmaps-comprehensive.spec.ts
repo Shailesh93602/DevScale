@@ -35,15 +35,16 @@ test.describe('Comprehensive Roadmap Feature Validation (Smoke & Load)', () => {
 
       // Perform feature-specific logic
       switch (scenario.feature) {
-        case 'listing':
+        case 'listing': {
           // Check that at least some roadmaps are listed or page title exists
           const title = page.locator('h1', { hasText: /(roadmap|explore)/i });
           if ((await title.count()) > 0) {
             await expect(title.first()).toBeVisible({ timeout: 5000 });
           }
           break;
+        }
 
-        case 'create':
+        case 'create': {
           // Validate presence of Create/Add button
           const createBtn = page
             .getByRole('button', { name: /create|new|add/i })
@@ -53,9 +54,10 @@ test.describe('Comprehensive Roadmap Feature Validation (Smoke & Load)', () => {
             // Simulate interaction without submitting
           }
           break;
+        }
 
         case 'edit':
-        case 'delete':
+        case 'delete': {
           // We check if any options menu exists for roadmaps to edit/delete
           const moreOptions = page
             .locator('button[aria-label="More options"]')
@@ -64,9 +66,10 @@ test.describe('Comprehensive Roadmap Feature Validation (Smoke & Load)', () => {
             await moreOptions.hover();
           }
           break;
+        }
 
         case 'like':
-        case 'bookmark':
+        case 'bookmark': {
           // Check specific action buttons
           const actionBtn = page
             .locator(
@@ -77,10 +80,11 @@ test.describe('Comprehensive Roadmap Feature Validation (Smoke & Load)', () => {
             await actionBtn.hover();
           }
           break;
+        }
 
         case 'enroll':
         case 'progress':
-        case 'achievements':
+        case 'achievements': {
           // Navigate into the first roadmap to check these deeper features if present
           const firstRoadmap = page.locator('a[href*="/roadmap/"]').first();
           if (await firstRoadmap.isVisible()) {
@@ -88,14 +92,16 @@ test.describe('Comprehensive Roadmap Feature Validation (Smoke & Load)', () => {
             // Optional: await firstRoadmap.click(); await expect(page).toHaveURL(/.*roadmap.*/);
           }
           break;
+        }
 
-        case 'comment':
+        case 'comment': {
           // Focus comment inputs if available on UI
           const commentInput = page.getByPlaceholder(/comment/i).first();
           if (await commentInput.isVisible()) {
             await commentInput.focus();
           }
           break;
+        }
       }
 
       // Add small intentional delay to distribute network hits across workers

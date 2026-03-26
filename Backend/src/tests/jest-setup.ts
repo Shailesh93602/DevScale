@@ -1,3 +1,4 @@
+/* global afterAll */
 // Global Jest setup/teardown file
 // This file runs after each test file
 

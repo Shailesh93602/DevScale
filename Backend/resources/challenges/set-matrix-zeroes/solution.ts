@@ -1,8 +1,8 @@
 // O(1) Space solution — Use first row/col as markers
 function setZeroes(matrix: number[][]): void {
   const m = matrix.length, n = matrix[0].length;
-  let firstRowZero = matrix[0].includes(0);
-  let firstColZero = matrix.some(row => row[0] === 0);
+  const firstRowZero = matrix[0].includes(0);
+  const firstColZero = matrix.some(row => row[0] === 0);
 
   for (let r = 1; r < m; r++)
     for (let c = 1; c < n; c++)

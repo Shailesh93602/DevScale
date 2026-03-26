@@ -1,0 +1,11 @@
+
+> EduScale_Backend@1.0.0 build
+> tsc && tsc-alias
+
+src/controllers/codeController.ts(24,32): error TS2339: Property 'challengeDraft' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/codeController.ts(41,30): error TS2345: Argument of type '"DRAFT_SAVED"' is not assignable to parameter of type 'ResponseType'.
+src/controllers/codeController.ts(50,32): error TS2345: Argument of type '"DRAFT_FETCHED"' is not assignable to parameter of type 'ResponseType'.
+src/controllers/codeController.ts(53,32): error TS2339: Property 'challengeDraft' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/codeController.ts(63,30): error TS2345: Argument of type '"DRAFT_FETCHED"' is not assignable to parameter of type 'ResponseType'.
+src/controllers/codeController.ts(160,30): error TS2345: Argument of type '"CODE_EXECUTED"' is not assignable to parameter of type 'ResponseType'.
+src/middlewares/securityMiddleware.ts(5,27): error TS2307: Cannot find module 'express-mongo-sanitize' or its corresponding type declarations.

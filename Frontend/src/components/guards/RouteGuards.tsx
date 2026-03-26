@@ -16,7 +16,7 @@ import { ReactNode, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import Loader from '@/components/Loader';
-import type { UserRole } from '@/types';
+import { UserRole } from '@/types';
 
 // ─── Auth Guard ───────────────────────────────────────────────────────────────
 interface AuthGuardProps {
