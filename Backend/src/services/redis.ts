@@ -1,5 +1,6 @@
 import Redis from 'ioredis';
 import { REDIS_URL } from '../config';
+import logger from '../utils/logger';
 
 const redisConnection = new Redis(REDIS_URL, {
   maxRetriesPerRequest: 3,
@@ -11,9 +12,9 @@ const redisConnection = new Redis(REDIS_URL, {
   },
 });
 
-redisConnection.on('error', (err: any) => {
+redisConnection.on('error', (err: Error & { code?: string }) => {
   if (err.code !== 'ECONNREFUSED') {
-    console.error('Redis Error:', err);
+    logger.error('Redis connection error', { message: err.message, code: err.code });
   }
 });
 
