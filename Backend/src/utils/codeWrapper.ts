@@ -42,7 +42,7 @@ export const wrapCode = (
   code: string,
   language: string,
   challenge: Challenge,
-  input: string
+  _input: string
 ): string => {
   const functionName = getFunctionName(challenge.function_signature);
 

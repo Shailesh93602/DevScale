@@ -1,6 +1,5 @@
-import { PrismaClient } from '@prisma/client';
 import { createAppError } from '../utils/errorHandler';
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 import logger from '../utils/logger';
 
 import prisma from '@/lib/prisma';

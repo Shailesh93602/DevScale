@@ -1,9 +1,9 @@
 export class DatabaseError extends Error {
   status?: number;
   code?: string;
-  data?: any;
+  data?: unknown;
 
-  constructor(message: string, status?: number, code?: string, data?: any) {
+  constructor(message: string, status?: number, code?: string, data?: unknown) {
     super(message);
     this.name = 'DatabaseError';
     this.status = status;
@@ -16,9 +16,9 @@ export class DatabaseError extends Error {
 export class ValidationError extends Error {
   status: number;
   code?: string;
-  data?: any;
+  data?: unknown;
 
-  constructor(message: string, data?: any) {
+  constructor(message: string, data?: unknown) {
     super(message);
     this.name = 'ValidationError';
     this.status = 400;

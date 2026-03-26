@@ -7,7 +7,7 @@ interface FieldSelection {
 
 export class FieldSelector {
   static buildSelect(selection: FieldSelection): Prisma.JsonObject {
-    const select: any = {};
+    const select: Prisma.JsonObject = {};
 
     // Handle basic field selection
     if (selection.fields) {
