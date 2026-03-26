@@ -1,4 +1,4 @@
-import { Facebook, Twitter, Github } from 'lucide-react';
+import { FaFacebook, FaGithub, FaXTwitter } from 'react-icons/fa6';
 import { Button } from '@/components/ui/button';
 import { FC, ReactNode } from 'react';
 
@@ -17,9 +17,9 @@ const SocialIcon = ({ Icon }: { Icon: FC<{ className: string }> }) => (
 export function SocialIcons() {
   return (
     <div className="flex justify-center space-x-4">
-      <SocialIcon Icon={Facebook} />
-      <SocialIcon Icon={Twitter} />
-      <SocialIcon Icon={Github} />
+      <SocialIcon Icon={FaFacebook} />
+      <SocialIcon Icon={FaXTwitter} />
+      <SocialIcon Icon={FaGithub} />
     </div>
   );
 }
