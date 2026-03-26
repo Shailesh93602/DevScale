@@ -30,7 +30,8 @@
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "verify": "npm run lint && npm run test",
-    "deploy:prepare": "npm run build:clean && npm run verify"
+    "deploy:prepare": "npm run build:clean && npm run verify",
+    "type-check": "tsc --noEmit"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
