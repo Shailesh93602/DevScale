@@ -4,27 +4,49 @@ import { createAppError } from '../utils/errorHandler';
 import logger from '../utils/logger';
 import prisma from '../lib/prisma';
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
+import { redis } from '../services/cacheService';
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_ANON_KEY!
 );
 
-// ─── Simple In-Memory Cache ───
-// Caches auth results for 30 seconds to speed up concurrent requests (like dashboard load)
-const authCache = new Map<string, { user: any; userData: any; expires: number }>();
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes (JWT is valid for 1 hour)
+// ─── Redis Auth Cache ───
+// Token is hashed with SHA-256 before use as a cache key — never store raw JWTs as keys.
+const AUTH_CACHE_TTL_SECONDS = 5 * 60; // 5 minutes
+const AUTH_CACHE_PREFIX = 'eduscale:auth:';
 
-// Periodic cleanup of expired cache entries
-setInterval(() => {
-  const now = Date.now();
-  for (const [token, data] of authCache.entries()) {
-    if (data.expires < now) authCache.delete(token);
+const tokenCacheKey = (token: string) =>
+  AUTH_CACHE_PREFIX + crypto.createHash('sha256').update(token).digest('hex');
+
+const getAuthCache = async (token: string) => {
+  try {
+    const raw = await redis.get(tokenCacheKey(token));
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null; // cache miss is non-fatal
   }
-}, 60 * 1000);
+};
 
-export const clearAuthCache = (token: string) => {
-  authCache.delete(token);
+const setAuthCache = async (token: string, user: unknown, userData: unknown) => {
+  try {
+    await redis.setex(
+      tokenCacheKey(token),
+      AUTH_CACHE_TTL_SECONDS,
+      JSON.stringify({ user, userData })
+    );
+  } catch {
+    // cache write failure is non-fatal — request still succeeds
+  }
+};
+
+export const clearAuthCache = async (token: string) => {
+  try {
+    await redis.del(tokenCacheKey(token));
+  } catch {
+    // non-fatal
+  }
 };
 
 
@@ -50,8 +72,8 @@ export const authMiddleware = async (
     }
 
     // ─── Cache Lookup ───
-    const cached = authCache.get(token);
-    if (cached && cached.expires > Date.now()) {
+    const cached = await getAuthCache(token);
+    if (cached) {
       req.user = cached.userData;
       req.supabaseUser = cached.user;
       return next();
@@ -126,12 +148,8 @@ export const authMiddleware = async (
       }
     }
 
-    // Store in cache
-    authCache.set(token, {
-      user,
-      userData,
-      expires: Date.now() + CACHE_TTL,
-    });
+    // Store in Redis cache
+    await setAuthCache(token, user, userData);
 
     req.user = userData;
     req.supabaseUser = user;
@@ -153,8 +171,8 @@ export const optionalAuthMiddleware = async (
   if (!token) return next();
 
   // ─── Cache Lookup ───
-  const cached = authCache.get(token);
-  if (cached && cached.expires > Date.now()) {
+  const cached = await getAuthCache(token);
+  if (cached) {
     req.user = cached.userData;
     req.supabaseUser = cached.user;
     return next();
@@ -190,12 +208,7 @@ export const optionalAuthMiddleware = async (
         include: { role: true },
       }) as any;
       if (userData) {
-        // Store in cache
-        authCache.set(token, {
-          user,
-          userData,
-          expires: Date.now() + CACHE_TTL,
-        });
+        await setAuthCache(token, user, userData);
         req.user = userData;
         req.supabaseUser = user;
       }
