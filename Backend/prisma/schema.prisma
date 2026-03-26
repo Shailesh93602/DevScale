@@ -182,6 +182,7 @@ model Challenge {
   created_at         DateTime              @default(now())
   updated_at         DateTime              @updatedAt
   submissions        ChallengeSubmission[]
+  challenge_drafts   ChallengeDraft[]
   topic_id           String
   topic              Topic                 @relation(fields: [topic_id], references: [id])
   status             ChallengeStatus       @default(PENDING)
@@ -646,6 +647,7 @@ model User {
   user_activity_logs              UserActivityLog[]
   contents                        Content[]
   moderations                     ContentModeration[]
+  challenge_drafts                ChallengeDraft[]
   user_streak                     UserStreak?
   daily_activities                UserDailyActivity[]
 
@@ -787,8 +789,24 @@ model ChallengeSubmission {
   feedback       String?          @db.Text
   created_at     DateTime         @default(now())
   updated_at     DateTime         @updatedAt
-  challenge      Challenge        @relation(fields: [challenge_id], references: [id])
-  user           User             @relation(fields: [user_id], references: [id])
+  challenge      Challenge        @relation(fields: [challenge_id], references: [id], onDelete: Cascade)
+  user           User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model ChallengeDraft {
+  id           String   @id @default(uuid())
+  user_id      String
+  challenge_id String
+  language     String
+  code         String   @db.Text
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  user         User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  challenge    Challenge @relation(fields: [challenge_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, challenge_id, language], name: "user_challenge_language")
+  @@index([user_id])
+  @@index([challenge_id])
 }
 
 model Certificate {

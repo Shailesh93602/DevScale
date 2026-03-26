@@ -7,11 +7,11 @@ function maxProduct(nums: number[]): number {
   let result = nums[0];
   
   for (let i = 1; i < nums.length; i++) {
-    let curr = nums[i];
+    const curr = nums[i];
     
     // When curr is negative, the potential maximum becomes the minimum, and vice versa.
     if (curr < 0) {
-      let temp = max_so_far;
+      const temp = max_so_far;
       max_so_far = min_so_far;
       min_so_far = temp;
     }
