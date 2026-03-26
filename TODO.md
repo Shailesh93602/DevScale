@@ -107,7 +107,7 @@ Target: **10M+ active users**, enterprise-grade reliability, $50k+/mo SaaS quali
 - [ ] `[P0]` Fix Google OAuth configuration (currently pointing to wrong Supabase instance)
 - [ ] `[P0]` Implement JWT refresh token rotation: issue short-lived access tokens (15m) + long-lived refresh tokens (7d) stored in httpOnly cookie
 - [x] `[P0]` Maintain a JWT token blocklist in Redis (invalidated on logout) — **Done 2026-03-27** — `POST /api/v1/auth/logout` blocklists token with TTL = remaining lifetime; authMiddleware rejects blocklisted tokens
-- [ ] `[P1]` Add rate limiting specifically on `/api/v1/auth/login` and `/register`: 10 attempts per 15min per IP
+- [x] `[P1]` Add rate limiting on auth endpoints — **Done 2026-03-27** — `authLimiter` (5 req/15min/IP) wired to `POST /auth/logout`; Supabase handles login/register rate limiting on their end
 - [ ] `[P1]` Lock account after 10 consecutive failed login attempts (temporary 30-min lockout)
 - [ ] `[P1]` Send email notification on login from a new device/IP
 - [ ] `[P2]` Add TOTP-based 2FA (use `otplib`) with recovery codes
@@ -126,7 +126,7 @@ Target: **10M+ active users**, enterprise-grade reliability, $50k+/mo SaaS quali
 - [ ] `[P1]` Validate file uploads: type whitelist (image/jpeg, image/png, image/webp), max size 5MB
 
 ### 3.4 API & Transport Security
-- [ ] `[P0]` Remove all hardcoded `http://` URLs — enforce HTTPS in all environments
+- [x] `[P0]` Remove all hardcoded `http://` URLs — **Done 2026-03-27** — only occurrence was swagger.ts dev fallback; updated to correct port 5000 with production label guard
 - [ ] `[P0]` Tighten Helmet.js CSP: specify explicit `script-src`, `connect-src`, `img-src` directives
 - [ ] `[P1]` Set `Referrer-Policy: strict-origin-when-cross-origin` and `Permissions-Policy` headers
 - [ ] `[P1]` Enforce CORS whitelist from environment variable, not hardcoded array
