@@ -8,7 +8,7 @@
  * Space: O(n) for n state hooks
  */
 function createHooksSystem() {
-  let states: any[] = [];
+  const states: any[] = [];
   let hookIndex = 0;
 
   function useState<T>(initialValue: T): [T, (newValue: T | ((prev: T) => T)) => void] {

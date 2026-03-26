@@ -7,7 +7,7 @@ type CacheOptions = {
   prefix?: string;
 };
 
-const redis = new Redis(REDIS_URL);
+export const redis = new Redis(REDIS_URL);
 
 export async function getCache<T>(key: string): Promise<T | null> {
   try {

@@ -19,12 +19,13 @@ import React, {
   useContext,
   useEffect,
   useState,
+  useMemo,
   useCallback,
   ReactNode,
 } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import type { Session } from '@supabase/supabase-js';
-import type { IUser, UserRole } from '@/types';
+import { UserRole, type IUser } from '@/types';
 
 // ─── Auth State ───────────────────────────────────────────────────────────────
 export type AuthStatus = 'loading' | 'authenticated' | 'unauthenticated';
@@ -175,8 +176,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // ─── RBAC Helpers ─────────────────────────────────────────────────────────
   const hasRole = useCallback(
     (role: UserRole): boolean => {
-      if (!user?.role?.name) return false;
-      return user.role.name.toUpperCase() === role.toUpperCase();
+      return user?.role === role;
     },
     [user],
   );
@@ -188,10 +188,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [hasRole],
   );
 
-  const isAdmin = hasRole('ADMIN');
-  const isStudent = hasRole('STUDENT');
+  const isAdmin = user?.role === UserRole.ADMIN;
+  const isStudent = user?.role === UserRole.STUDENT;
 
-  const value: AuthContextValue = {
+  const value = useMemo(() => ({
     status,
     isLoading: status === 'loading',
     isAuthenticated: status === 'authenticated',
@@ -203,7 +203,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isStudent,
     refreshUser,
     signOut,
-  };
+  }), [status, user, session, hasRole, hasAnyRole, isAdmin, isStudent, refreshUser, signOut]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

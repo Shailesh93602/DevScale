@@ -156,8 +156,6 @@ type ResponseType =
   | 'ROADMAP_UNBOOKMARKED'
   | 'SOMETHING_WRONG'
   | 'MODERATION_QUEUE_FETCHED'
-  | 'AUDIT_LOGS_FETCHED'
-  | 'CONTENT_MODERATED'
   | 'DASHBOARD_STATS_FETCHED'
   | 'RECENT_ACTIVITIES_FETCHED'
   | 'LEARNING_PROGRESS_FETCHED'
@@ -170,7 +168,10 @@ type ResponseType =
   | 'COMMENT_LIKED'
   | 'COMMENT_UNLIKED'
   | 'BATTLE_STATUS_UPDATED'
-  | 'BATTLE_ARCHIVED';
+  | 'BATTLE_ARCHIVED'
+  | 'DRAFT_SAVED'
+  | 'DRAFT_FETCHED'
+  | 'CODE_EXECUTED';
 
 interface ResponseConfig {
   status: number;
@@ -1009,6 +1010,21 @@ const RESPONSE_MESSAGES: Record<ResponseType, ResponseConfig> = {
     status: 200,
     success: true,
     message: 'Battle archived successfully',
+  },
+  DRAFT_SAVED: {
+    status: 200,
+    success: true,
+    message: 'Draft saved successfully',
+  },
+  DRAFT_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Draft fetched successfully',
+  },
+  CODE_EXECUTED: {
+    status: 200,
+    success: true,
+    message: 'Code executed successfully',
   },
 };
 

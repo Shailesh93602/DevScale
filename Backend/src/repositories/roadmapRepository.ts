@@ -634,7 +634,7 @@ export default class RoadmapRepository extends BaseRepository<
     };
 
     // If user is logged in, get progress for all roadmaps
-    let userProgressMap: Record<string, number> = {};
+    const userProgressMap: Record<string, number> = {};
     if (userId) {
       // Get all roadmap IDs
       const roadmapIds = roadmaps.data.map((roadmap) => roadmap.id);

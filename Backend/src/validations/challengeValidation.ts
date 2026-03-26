@@ -74,3 +74,14 @@ export const submitChallengeValidation = Joi.object({
       'any.only': 'Unsupported programming language',
     }),
 });
+
+export const runCodeValidation = Joi.object({
+  code: Joi.string().required(),
+  language: Joi.string().valid('javascript', 'python', 'java', 'cpp').required(),
+});
+
+export const saveDraftValidation = Joi.object({
+  challengeId: Joi.string().required(),
+  code: Joi.string().required(),
+  language: Joi.string().valid('javascript', 'python', 'java', 'cpp').required(),
+});
