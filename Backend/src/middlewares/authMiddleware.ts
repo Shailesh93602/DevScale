@@ -4,13 +4,25 @@ import { createAppError } from '../utils/errorHandler';
 import logger from '../utils/logger';
 import prisma from '../lib/prisma';
 import jwt from 'jsonwebtoken';
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 import { redis } from '../services/cacheService';
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_ANON_KEY!
 );
+
+// ─── Token Blocklist ─────────────────────────────────────────────────────────
+const TOKEN_BLOCKLIST_PREFIX = 'eduscale:auth:blocklist:';
+
+const isTokenBlocklisted = async (token: string): Promise<boolean> => {
+  try {
+    const key = TOKEN_BLOCKLIST_PREFIX + crypto.createHash('sha256').update(token).digest('hex');
+    return (await redis.exists(key)) === 1;
+  } catch {
+    return false; // fail open — don't block requests on Redis downtime
+  }
+};
 
 // ─── Redis Auth Cache ───
 // Token is hashed with SHA-256 before use as a cache key — never store raw JWTs as keys.
@@ -69,6 +81,11 @@ export const authMiddleware = async (
 
     if (!token) {
       return next(createAppError('Authorization token required', 401));
+    }
+
+    // ─── Blocklist Check ───
+    if (await isTokenBlocklisted(token)) {
+      return next(createAppError('Token has been revoked', 401));
     }
 
     // ─── Cache Lookup ───

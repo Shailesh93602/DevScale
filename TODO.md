@@ -106,7 +106,7 @@ Target: **10M+ active users**, enterprise-grade reliability, $50k+/mo SaaS quali
 ### 3.1 Authentication
 - [ ] `[P0]` Fix Google OAuth configuration (currently pointing to wrong Supabase instance)
 - [ ] `[P0]` Implement JWT refresh token rotation: issue short-lived access tokens (15m) + long-lived refresh tokens (7d) stored in httpOnly cookie
-- [ ] `[P0]` Maintain a JWT refresh token blocklist in Redis (invalidated on logout/password change)
+- [x] `[P0]` Maintain a JWT token blocklist in Redis (invalidated on logout) — **Done 2026-03-27** — `POST /api/v1/auth/logout` blocklists token with TTL = remaining lifetime; authMiddleware rejects blocklisted tokens
 - [ ] `[P1]` Add rate limiting specifically on `/api/v1/auth/login` and `/register`: 10 attempts per 15min per IP
 - [ ] `[P1]` Lock account after 10 consecutive failed login attempts (temporary 30-min lockout)
 - [ ] `[P1]` Send email notification on login from a new device/IP
