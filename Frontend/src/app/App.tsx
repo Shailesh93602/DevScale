@@ -56,13 +56,10 @@ export default function App({ children }: { children: ReactNode }) {
     <PersistGate loading={null} persistor={persistor}>
       <div className="flex min-h-screen flex-col justify-between">
         <Navbar isPublic={isPublic} />
-        <main className="flex-grow">
-          {children}
-        </main>
+        <main className="flex-grow">{children}</main>
         <Footer />
         {isAuthLoading && isMounted && <Loader type="SiteLoader" />}
       </div>
     </PersistGate>
   );
 }
-
