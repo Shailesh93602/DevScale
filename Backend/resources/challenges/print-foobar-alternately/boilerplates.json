@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nclass FooBar { foo(printFoo: () => void): Promise<void>; bar(printBar: () => void): Promise<void> }",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

@@ -1,0 +1,10 @@
+{
+  "typescript": "function sortedSquares(nums: number[]): number[] {\n    \n};",
+  "javascript": "/**\n * @param {number[]} nums\n * @return {number[]}\n */\nvar sortedSquares = function(nums) {\n    \n};",
+  "python": "class Solution:\n    def sortedSquares(self, nums: List[int]) -> List[int]:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public int[] sortedSquares(int[] nums) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> sortedSquares(vector<int>& nums) {\n        \n    }\n};",
+  "go": "func sortedSquares(nums []int) []int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn sorted_squares(nums: Vec<i32>) -> Vec<i32> {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int[] SortedSquares(int[] nums) {\n        \n    }\n}"
+}

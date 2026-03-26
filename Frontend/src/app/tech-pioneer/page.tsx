@@ -1,4 +1,10 @@
 import Link from 'next/link';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Tech Pioneer',
+  description: 'Explore cutting-edge technology courses and resources.',
+};
 
 const TechPioneer = () => (
   <div>

@@ -357,16 +357,13 @@ const TechInterestAssessment = () => {
 
   return (
     <section className="flex min-h-screen items-center justify-center bg-background py-12 text-foreground transition duration-300 ease-in-out">
-      <div className="w-full max-w-lg rounded-lg bg-card p-10 shadow-lg dark:bg-gray-800 dark:text-white">
+      <div className="w-full max-w-lg rounded-lg bg-card p-10 text-card-foreground shadow-lg">
         <div className="mb-8 text-center">
-          <Link
-            href="/"
-            className="text-4xl font-extrabold text-blue-700 dark:text-blue-800"
-          >
+          <Link href="/" className="text-4xl font-extrabold text-primary">
             EduScale
           </Link>
         </div>
-        <h1 className="mb-6 text-center text-3xl font-semibold dark:text-gray-100">
+        <h1 className="mb-6 text-center text-3xl font-semibold text-foreground">
           Tech Interest Assessment
         </h1>
         <Form {...form}>
@@ -378,17 +375,11 @@ const TechInterestAssessment = () => {
               }`}
             >
               {step > 1 && (
-                <Button
-                  type="submit"
-                  className="mt-4 w-max bg-blue-600 py-3 text-white transition duration-200 ease-in-out hover:bg-blue-700"
-                >
+                <Button type="submit" className="mt-4 w-max py-3">
                   Previous
                 </Button>
               )}
-              <Button
-                type="submit"
-                className="mt-4 w-max bg-blue-600 py-3 text-white transition duration-200 ease-in-out hover:bg-blue-700"
-              >
+              <Button type="submit" className="mt-4 w-max py-3">
                 {step < 5 ? 'Next' : 'Submit'}
               </Button>
             </div>

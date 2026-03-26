@@ -10,11 +10,6 @@ import { StreakStats } from '@/components/streak/StreakStats';
 import { ActivityTimeline } from '@/components/streak/ActivityTimeline';
 import { StreakSkeleton } from './components/StreakSkeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import type {
-  StreakStats as StreakStatsType,
-  WeeklyActivity,
-  DailyActivity,
-} from '@/hooks/useStreakApi';
 
 const StreakContent = () => {
   const [fetchStats, { data, isLoading: statsLoading, isError: statsError }] =
@@ -27,10 +22,8 @@ const StreakContent = () => {
       isError: activityError,
     },
   ] = useWeeklyActivity();
-  const stats = (data?.data ?? data) as StreakStatsType | null;
-  const weeklyActivity = (weeklyActivityData?.data ?? weeklyActivityData) as
-    | WeeklyActivity[]
-    | null;
+  const stats = data;
+  const weeklyActivity = weeklyActivityData;
 
   React.useEffect(() => {
     fetchStats();
@@ -70,7 +63,7 @@ const StreakContent = () => {
               <CardTitle className="text-sm font-medium">
                 Current Streak
               </CardTitle>
-              <Flame className="h-4 w-4 text-orange-500" />
+              <Flame className="text-orange-500 h-4 w-4" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
@@ -84,7 +77,7 @@ const StreakContent = () => {
               <CardTitle className="text-sm font-medium">
                 Longest Streak
               </CardTitle>
-              <Award className="h-4 w-4 text-purple-500" />
+              <Award className="text-purple-500 h-4 w-4" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
@@ -98,7 +91,7 @@ const StreakContent = () => {
               <CardTitle className="text-sm font-medium">
                 Streak Start
               </CardTitle>
-              <Calendar className="h-4 w-4 text-blue-500" />
+              <Calendar className="text-blue-500 h-4 w-4" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
@@ -112,13 +105,12 @@ const StreakContent = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Time</CardTitle>
-              <Clock className="h-4 w-4 text-green-500" />
+              <Clock className="text-green-500 h-4 w-4" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
                 {stats?.dailyActivities?.reduce(
-                  (acc: number, curr: DailyActivity) =>
-                    acc + (curr.minutesSpent || 0),
+                  (acc, curr) => acc + curr.minutesSpent,
                   0,
                 ) || 0}{' '}
                 mins

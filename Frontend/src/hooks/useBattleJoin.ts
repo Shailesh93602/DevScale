@@ -3,15 +3,9 @@ import { useAxiosPost } from './useAxios';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 
-interface BattleJoinData {
+interface BattleJoinResponse {
   id: string;
   status: string;
-}
-
-interface BattleJoinResponse {
-  success: boolean;
-  message: string;
-  data: BattleJoinData;
 }
 
 export const useBattleJoin = () => {
@@ -26,13 +20,13 @@ export const useBattleJoin = () => {
     setIsJoining(true);
     try {
       const response = await execute(undefined, undefined, { battleId });
-      if (response?.data?.data?.id) {
+      if (response?.data?.id) {
         toast({
           title: 'Success',
           description: 'Successfully joined the battle!',
         });
-        router.push(`/battle-zone/${response.data.data.id}`);
-        return response.data.data;
+        router.push(`/battle-zone/${response.data.id}`);
+        return response.data;
       }
     } catch (error) {
       toast({

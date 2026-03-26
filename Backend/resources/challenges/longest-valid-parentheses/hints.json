@@ -1,4 +1,5 @@
 [
-  "TODO: Add hint 1",
-  "TODO: Add hint 2"
+  "Can you use a stack to keep track of the indices of characters?",
+  "What should you store in the stack for characters that cannot be part of a valid substring?",
+  "Try a dynamic programming approach where dp[i] represents the length of the longest valid parentheses substring ending at index i."
 ]

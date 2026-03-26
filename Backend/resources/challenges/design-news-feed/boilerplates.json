@@ -1,0 +1,6 @@
+{
+  "typescript": "class NewsFeedService {\n    publishPost(userId: string, content: string): any {\n        // Your code here\n    }\n\n    getFeed(userId: string): any[] {\n        // Your code here\n    }\n}",
+  "javascript": "class NewsFeedService {\n    publishPost(userId, content) {\n        // Your code here\n    }\n\n    getFeed(userId) {\n        // Your code here\n    }\n}",
+  "python": "class NewsFeedService:\n    def publish_post(self, user_id: str, content: str) -> dict:\n        # Your code here\n        pass\n\n    def get_feed(self, user_id: str) -> list:\n        # Your code here\n        pass"
+}
+

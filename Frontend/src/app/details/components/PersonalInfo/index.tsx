@@ -61,14 +61,25 @@ export function PersonalInfo() {
 
   return (
     <div className="space-y-4">
-      <div>
-        <Label htmlFor="full_name">Full Name</Label>
-        <Input id="full_name" {...register('full_name')} />
-        {errors.full_name && (
-          <p className="mt-1 text-sm text-destructive">
-            {errors.full_name.message as string}
-          </p>
-        )}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div>
+          <Label htmlFor="first_name">First Name</Label>
+          <Input id="first_name" {...register('first_name')} />
+          {errors.first_name && (
+            <p className="mt-1 text-sm text-destructive">
+              {errors.first_name.message as string}
+            </p>
+          )}
+        </div>
+        <div>
+          <Label htmlFor="last_name">Last Name</Label>
+          <Input id="last_name" {...register('last_name')} />
+          {errors.last_name && (
+            <p className="mt-1 text-sm text-destructive">
+              {errors.last_name.message as string}
+            </p>
+          )}
+        </div>
       </div>
       <div>
         <Label htmlFor="username">Username</Label>

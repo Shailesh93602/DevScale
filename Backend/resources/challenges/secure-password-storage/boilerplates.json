@@ -1,0 +1,6 @@
+{
+  "typescript": "import * as crypto from 'crypto';\n\nclass PasswordManager {\n  hash_password(password: string): string {\n    // Your code here\n  }\n\n  verify_password(password: string, hashed_password: string): boolean {\n    // Your code here\n  }\n}",
+  "javascript": "const crypto = require('crypto');\n\nclass PasswordManager {\n  hash_password(password) {\n    // Your code here\n  }\n\n  verify_password(password, hashed_password) {\n    // Your code here\n  }\n}",
+  "python": "import hashlib\nimport os\n\nclass PasswordManager:\n    def hash_password(self, password: str) -> str:\n        # Your code here\n        pass\n\n    def verify_password(self, password: str, hashed_password: str) -> bool:\n        # Your code here\n        pass",
+  "java": "import java.security.NoSuchAlgorithmException;\nimport java.security.spec.InvalidKeySpecException;\n\nclass PasswordManager {\n    public String hashPassword(String password) {\n        // Your code here\n        return null;\n    }\n\n    public boolean verifyPassword(String password, String hashedPassword) {\n        // Your code here\n        return false;\n    }\n}"
+}

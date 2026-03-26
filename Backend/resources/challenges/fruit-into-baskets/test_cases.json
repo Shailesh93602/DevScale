@@ -1,3 +1,6 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  { "input": "{\"fruits\":[1,2,1]}", "output": "3", "explanation": "Collect all three fruits.", "is_hidden": false },
+  { "input": "{\"fruits\":[0,1,2,2]}", "output": "3", "explanation": "Pick [1,2,2].", "is_hidden": false },
+  { "input": "{\"fruits\":[1,2,3,2,2]}", "output": "4", "explanation": "Pick [2,3,2,2].", "is_hidden": false },
+  { "input": "{\"fruits\":[3,3,3,1,2,1,1,2,3,3,4]}", "output": "5", "explanation": "Pick [1,2,1,1,2].", "is_hidden": true }
 ]

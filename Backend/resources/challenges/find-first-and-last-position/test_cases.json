@@ -1,0 +1,23 @@
+[
+  {
+    "input": "[5,7,7,8,8,10], 8",
+    "output": "[3,4]",
+    "explanation": "8 starts at index 3 and ends at index 4.",
+    "is_hidden": false
+  },
+  {
+    "input": "[5,7,7,8,8,10], 6",
+    "output": "[-1,-1]",
+    "is_hidden": false
+  },
+  {
+    "input": "[1], 1",
+    "output": "[0,0]",
+    "is_hidden": true
+  },
+  {
+    "input": "[1, 1, 1, 1, 1], 1",
+    "output": "[0,4]",
+    "is_hidden": true
+  }
+]

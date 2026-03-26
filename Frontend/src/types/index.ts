@@ -1,29 +1,33 @@
-export enum UserRole {
-  USER = 'USER',
-  ADMIN = 'ADMIN',
-  MODERATOR = 'MODERATOR',
-  INSTRUCTOR = 'INSTRUCTOR',
-  STUDENT = 'STUDENT',
+// ─── Role / RBAC ─────────────────────────────────────────────────────────────
+// IMPORTANT: add new roles here; the system is designed for easy role extension
+export type UserRole = 'ADMIN' | 'STUDENT' | 'MODERATOR' | string;
+
+export interface IUserRole {
+  id: string;
+  name: UserRole;
+  description?: string;
 }
 
+// ─── User ─────────────────────────────────────────────────────────────────────
 export interface IUser {
   id: string;
   username: string;
-  fullName: string;
+  first_name: string;
+  last_name: string;
   email: string;
-  avatarUrl: string;
+  avatar_url: string;
   bio: string;
   address: string;
-  githubUrl: string;
-  linkedinUrl: string;
-  twitterUrl: string;
-  websiteUrl: string;
+  github_url: string;
+  linkedin_url: string;
+  twitter_url: string;
+  website_url: string;
   specialization: string;
   college: string;
-  graduationYear: number;
+  graduation_year: number;
   skills: string[];
-  experienceLevel: string;
-  role: UserRole;
+  experience_level: string;
+  role?: IUserRole | null;
 }
 
 export interface Comment {
@@ -39,7 +43,8 @@ export interface Comment {
   user: {
     id: string;
     username: string;
-    full_name: string;
+    first_name: string;
+    last_name: string;
     avatar_url: string | null;
   };
   replies: Comment[];

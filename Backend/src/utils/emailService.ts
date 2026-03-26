@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer';
 import Queue from 'bull';
 import { MAIL_ADDRESS, MAIL_PASSWORD, REDIS_URL } from '../config';
 import logger from './logger';
-import prisma from '@/lib/prisma';
+import prisma from '../lib/prisma';
 
 interface EmailData {
   to: string;

@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nclass EventEmitter { on(event: string, cb: Function): void; off(event: string, cb: Function): void; emit(event: string, ...args: any[]): void; once(event: string, cb: Function): void; }",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

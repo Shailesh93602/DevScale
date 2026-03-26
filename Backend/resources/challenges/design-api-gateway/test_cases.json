@@ -1,8 +1,20 @@
 [
   {
-    "input": "GET /auth/me",
-    "output": "200 OK",
-    "explanation": "Valid authorized request routed to Auth Service",
+    "input": "GET /orders/123 with valid auth",
+    "output": "200 OK (Routed to OrderService)",
+    "explanation": "Standard authorized request routing.",
     "is_hidden": false
+  },
+  {
+    "input": "GET /orders/123 without auth",
+    "output": "401 Unauthorized",
+    "explanation": "Missing authorization header should be blocked.",
+    "is_hidden": false
+  },
+  {
+    "input": "Multiple requests exceeding rate limit",
+    "output": "429 Too Many Requests",
+    "explanation": "Rate limiting protects downstream services.",
+    "is_hidden": true
   }
 ]

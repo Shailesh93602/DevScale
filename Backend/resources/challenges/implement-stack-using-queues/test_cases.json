@@ -1,3 +1,17 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  {
+    "input": "[\"MyStack\", \"push\", \"push\", \"top\", \"pop\", \"empty\"]\n[[], [1], [2], [], [], []]",
+    "output": "[null, null, null, 2, 2, false]",
+    "is_hidden": false
+  },
+  {
+    "input": "[\"MyStack\", \"push\", \"pop\", \"empty\"]\n[[], [10], [], []]",
+    "output": "[null, null, 10, true]",
+    "is_hidden": false
+  },
+  {
+    "input": "[\"MyStack\", \"empty\"]\n[[], []]",
+    "output": "[null, true]",
+    "is_hidden": true
+  }
 ]

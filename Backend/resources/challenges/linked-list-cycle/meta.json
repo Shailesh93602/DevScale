@@ -38,5 +38,6 @@
   "example_output": "true",
   "constraints": "- The number of the nodes in the list is in the range `[0, 10^4]`.\n- `-10^5 <= Node.val <= 10^5`\n- `pos` is `-1` or a **valid index** in the linked-list.",
   "function_signature": "function hasCycle(head: ListNode | null): boolean {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

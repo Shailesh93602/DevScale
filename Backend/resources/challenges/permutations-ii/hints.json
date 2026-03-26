@@ -1,4 +1,5 @@
 [
-  "TODO: Add hint 1",
-  "TODO: Add hint 2"
+  "The key is to avoid generating duplicate permutations.",
+  "First, sort the input array so duplicates are adjacent.",
+  "In your backtracking function, only use a duplicate element if its preceding duplicate has already been used in the current permutation."
 ]

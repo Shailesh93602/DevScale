@@ -1,0 +1,5 @@
+{
+  "typescript": "function findTargetSumWays(nums: number[], target: number): number {\n    // Your code here\n}",
+  "javascript": "/**\n * @param {any} params\n * @return {any}\n */\nvar findTargetSumWays = function(root) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def findTargetSumWays(self, root) -> bool:\n        # Your code here\n        pass"
+}

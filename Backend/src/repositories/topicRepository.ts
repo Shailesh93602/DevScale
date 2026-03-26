@@ -1,7 +1,7 @@
 import { PrismaClient, Topic } from '@prisma/client';
 import BaseRepository from './baseRepository';
 
-import prisma from '@/lib/prisma';
+import prisma from '../lib/prisma';
 
 export default class TopicRepository extends BaseRepository<
   PrismaClient['topic']

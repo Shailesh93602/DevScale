@@ -1,3 +1,17 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  {
+    "input": "{\"headers\": {\"Employee\": [\"id\", \"salary\"]}, \"rows\": {\"Employee\": [[1, 100], [2, 200], [3, 300]]}}",
+    "output": "{\"headers\": [\"SecondHighestSalary\"], \"values\": [[200]]}",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"headers\": {\"Employee\": [\"id\", \"salary\"]}, \"rows\": {\"Employee\": [[1, 100]]}}",
+    "output": "{\"headers\": [\"SecondHighestSalary\"], \"values\": [[null]]}",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"headers\": {\"Employee\": [\"id\", \"salary\"]}, \"rows\": {\"Employee\": [[1, 100], [2, 100]]}}",
+    "output": "{\"headers\": [\"SecondHighestSalary\"], \"values\": [[null]]}",
+    "is_hidden": true
+  }
 ]

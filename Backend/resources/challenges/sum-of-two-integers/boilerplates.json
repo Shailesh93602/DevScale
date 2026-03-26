@@ -1,0 +1,10 @@
+{
+  "typescript": "function getSum(a: number, b: number): number {\n  // Your code here\n}",
+  "javascript": "/**\n * @param {number} a\n * @param {number} b\n * @return {number}\n */\nvar getSum = function(a, b) {\n  // Your code here\n};",
+  "python": "class Solution:\n    def getSum(self, a: int, b: int) -> int:\n        # Your code here\n        pass",
+  "java": "class Solution {\n    public int getSum(int a, int b) {\n        // Your code here\n    }\n}",
+  "cpp": "class Solution {\npublic:\n    int getSum(int a, int b) {\n        // Your code here\n    }\n};",
+  "go": "func getSum(a int, b int) int {\n    // Your code here\n}",
+  "rust": "impl Solution {\n    pub fn get_sum(a: i32, b: i32) -> i32 {\n        // Your code here\n    }\n}",
+  "csharp": "public class Solution {\n    public int GetSum(int a, int b) {\n        // Your code here\n    }\n}"
+}

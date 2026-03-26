@@ -16,5 +16,6 @@
   "example_output": "3",
   "constraints": "- The number of nodes in the tree is in the range `[1, 10^4]`.\n- `-100 <= Node.val <= 100`",
   "function_signature": "function diameterOfBinaryTree(root: TreeNode | null): number {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

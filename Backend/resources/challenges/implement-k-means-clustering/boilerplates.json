@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nfunction kMeans(data: number[][], k: number, maxIterations?: number): { assignments: number[]; centroids: number[][] }",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

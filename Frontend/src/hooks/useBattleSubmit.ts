@@ -14,14 +14,10 @@ interface BattleSubmitData {
 }
 
 interface BattleSubmitResponse {
-  success: boolean;
-  message: string;
-  data: {
-    score: number;
-    correctAnswers: number;
-    totalQuestions: number;
-    timeSpent: number;
-  };
+  score: number;
+  correctAnswers: number;
+  totalQuestions: number;
+  timeSpent: number;
 }
 
 export const useBattleSubmit = () => {
@@ -37,12 +33,12 @@ export const useBattleSubmit = () => {
       const response = await execute(data, undefined, {
         battleId: data.battleId,
       });
-      if (response?.data?.data) {
+      if (response?.data) {
         toast({
           title: 'Success',
-          description: `Battle completed! Score: ${response.data.data.score}`,
+          description: `Battle completed! Score: ${response.data.score}`,
         });
-        return response.data.data;
+        return response.data;
       }
     } catch (error) {
       toast({

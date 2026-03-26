@@ -14,6 +14,7 @@
   "example_input": "curry(fn)(1)(2)(3)",
   "example_output": "fn(1, 2, 3)",
   "constraints": "fn has a fixed arity (fn.length > 0)",
-  "function_signature": "function curry(fn: (...args: any[]) => any): (...args: any[]) => any",
-  "status": "ACTIVE"
+  "function_signature": "function curry(fn: (...args: any[]) => any): (...args: any[]) => any {}",
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

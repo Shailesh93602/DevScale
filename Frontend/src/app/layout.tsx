@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://EduScale.vercel.app',
+    url: 'https://eduscale.exaveltech.com',
     title: 'EduScale | All-in-One Engineering Learning Platform',
     description:
       'Personalized roadmaps, community support, and interactive challenges for engineering students.',

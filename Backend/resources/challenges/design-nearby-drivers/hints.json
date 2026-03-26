@@ -1,0 +1,7 @@
+[
+  "Standard SQL indexes are 1D. How do you handle a search that needs to filter by TWO dimensions simultaneously?",
+  "Consider Geohashing: How can you represent a grid cell as a single string or integer?",
+  "If a user is at the very edge of a grid cell, which other cells should you search to ensure you don't miss nearby drivers?",
+  "Think about Quadtrees: How can you recursively divide the 2D space into smaller quadrants as the number of drivers increases?"
+]
+

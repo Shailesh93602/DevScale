@@ -8,11 +8,11 @@ export const createRoadmapValidation = Joi.object({
     'any.required': 'Description is required',
   }),
   difficulty: Joi.string()
-    .valid('beginner', 'intermediate', 'advanced')
+    .valid('BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'EASY', 'MEDIUM', 'HARD')
     .required()
     .messages({
       'any.required': 'Difficulty is required',
-      'any.only': 'Invalid difficulty level',
+      'any.only': 'Invalid difficulty level. Use BEGINNER, INTERMEDIATE, or ADVANCED.',
     }),
   estimatedHours: Joi.number().optional().integer().min(1).messages({
     'number.base': 'Estimated hours must be a number',
@@ -69,6 +69,6 @@ export const roadmapQueryValidation = Joi.object({
     .default(''),
   sort: Joi.string().valid('popular', 'recent', 'rating').allow('').default(''),
   type: Joi.string()
-    .valid('all', 'featured', 'my-roadmaps', 'enrolled')
+    .valid('all', 'featured', 'trending', 'my-roadmaps', 'enrolled', 'recommended')
     .default('all'),
 });

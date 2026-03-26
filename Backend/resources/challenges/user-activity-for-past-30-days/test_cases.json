@@ -1,3 +1,14 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  {
+    "input": "Activity table: [[1, 1, '2019-07-20', 'scroll'], [2, 1, '2019-07-20', 'click'], [3, 1, '2019-06-20', 'scroll']]",
+    "output": "[['2019-07-20', 2]]",
+    "explanation": "Only 2019-07-20 is within the window. User 1 and 2 were active.",
+    "is_hidden": false
+  },
+  {
+    "input": "Activity: [[1, 1, '2019-06-28', 'open'], [1, 2, '2019-06-28', 'scroll']]",
+    "output": "[['2019-06-28', 1]]",
+    "explanation": "Multiple activities by the same user count once.",
+    "is_hidden": true
+  }
 ]

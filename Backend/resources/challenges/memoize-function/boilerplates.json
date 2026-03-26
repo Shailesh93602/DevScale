@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nfunction memoize<T extends (...args: any[]) => any>(fn: T): T",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

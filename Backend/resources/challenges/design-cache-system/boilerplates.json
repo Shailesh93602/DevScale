@@ -1,0 +1,6 @@
+{
+  "typescript": "class DistributedCache {\n    get(key: string): any {\n        // Your code here\n    }\n    set(key: string, value: any, ttl?: number): void {\n        // Your code here\n    }\n}",
+  "javascript": "class DistributedCache {\n    get(key) {\n        // Your code here\n    }\n    set(key, value, ttl) {\n        // Your code here\n    }\n}",
+  "python": "class DistributedCache:\n    def get(self, key):\n        # Your code here\n        pass\n    def set(self, key, value, ttl=None):\n        # Your code here\n        pass",
+  "java": "class DistributedCache {\n    public Object get(String key) {\n        // Your code here\n        return null;\n    }\n    public void set(String key, Object value, Integer ttl) {\n        // Your code here\n    }\n}"
+}

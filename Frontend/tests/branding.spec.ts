@@ -8,7 +8,7 @@ test.describe('Branding Verification', () => {
     const footer = page.locator('footer');
     await footer.scrollIntoViewIfNeeded();
     await expect(footer.locator('text=EduScale').first()).toBeVisible();
-    await expect(footer.locator('text=shailesh93602@gmail.com')).toBeVisible();
+    await expect(footer.locator('text=contact@exaveltech.com')).toBeVisible();
   });
 
   test('navbar has EduScale logo text', async ({ page }) => {
@@ -16,8 +16,10 @@ test.describe('Branding Verification', () => {
     await expect(page.locator('nav a:has-text("EduScale")')).toBeVisible();
   });
 
-  test('about page mentions Shailesh Chaudhari', async ({ page }) => {
+  test('about page mentions Exavel Technologies', async ({ page }) => {
     await page.goto('/about');
-    await expect(page.locator('text=Shailesh Chaudhari').first()).toBeVisible();
+    await expect(
+      page.locator('text=Exavel Technologies').first(),
+    ).toBeVisible();
   });
 });

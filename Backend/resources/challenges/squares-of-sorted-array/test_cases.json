@@ -1,3 +1,7 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  { "input": "{\"nums\":[-4,-1,0,3,10]}", "output": "[0,1,9,16,100]", "explanation": "[-4,-1,0,3,10] squared becomes [16,1,0,9,100], sorted is [0,1,9,16,100]", "is_hidden": false },
+  { "input": "{\"nums\":[-7,-3,2,3,11]}", "output": "[4,9,9,49,121]", "explanation": "Mixed negatives and positives", "is_hidden": false },
+  { "input": "{\"nums\":[-1]}", "output": "[1]", "explanation": "Single element", "is_hidden": true },
+  { "input": "{\"nums\":[0,1,2,3]}", "output": "[0,1,4,9]", "explanation": "Already sorted positives", "is_hidden": true },
+  { "input": "{\"nums\":[-5,-4,-3,-2,-1]}", "output": "[1,4,9,16,25]", "explanation": "All negatives", "is_hidden": true }
 ]

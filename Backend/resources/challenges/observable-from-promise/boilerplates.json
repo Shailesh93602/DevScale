@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nclass Observable<T> { subscribe(observer: Observer<T>): Subscription; }",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

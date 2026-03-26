@@ -1,0 +1,6 @@
+{
+  "typescript": "function asteroidCollision(asteroids: number[]): number[] {\n    // Your code here\n}",
+  "javascript": "/**\n * @param {number[]} asteroids\n * @return {number[]}\n */\nvar asteroidCollision = function(asteroids) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def asteroidCollision(self, asteroids: List[int]) -> List[int]:\n        # Your code here\n        pass"
+}
+

@@ -1,4 +1,6 @@
 [
-  "TODO: Add hint 1",
-  "TODO: Add hint 2"
+  "The Sparse Table precalculates answers for all ranges with lengths equal to powers of two.",
+  "Consider how any range [L, R] can be covered by TWO overlapping ranges of the same power-of-two length.",
+  "Preprocessing the logs will help you find the largest power of two that fits within a range in O(1).",
+  "The Sparse Table only works for functions that are idempotent (like min, max, gcd)."
 ]

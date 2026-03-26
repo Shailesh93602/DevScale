@@ -1,27 +1,10 @@
-[
-  {
-    "language": "typescript",
-    "slug": "typescript",
-    "code": "function rangeBitwiseAnd(left: number, right: number): number {\n  \n};"
-  },
-  {
-    "language": "javascript",
-    "slug": "javascript",
-    "code": "/**\n * @param {number} left\n * @param {number} right\n * @return {number}\n */\nvar rangeBitwiseAnd = function(left, right) {\n    \n};"
-  },
-  {
-    "language": "python",
-    "slug": "python",
-    "code": "class Solution:\n    def rangeBitwiseAnd(self, left: int, right: int) -> int:\n        "
-  },
-  {
-    "language": "java",
-    "slug": "java",
-    "code": "class Solution {\n    public int rangeBitwiseAnd(int left, int right) {\n        \n    }\n}"
-  },
-  {
-    "language": "cpp",
-    "slug": "cpp",
-    "code": "class Solution {\npublic:\n    int rangeBitwiseAnd(int left, int right) {\n        \n    }\n};"
-  }
-]
+{
+  "typescript": "function rangeBitwiseAnd(left: number, right: number): number {\n    \n};",
+  "javascript": "/**\n * @param {number} left\n * @param {number} right\n * @return {number}\n */\nvar rangeBitwiseAnd = function(left, right) {\n    \n};",
+  "python": "class Solution:\n    def rangeBitwiseAnd(self, left: int, right: int) -> int:\n        ",
+  "java": "class Solution {\n    public int rangeBitwiseAnd(int left, int right) {\n        \n    }\n}",
+  "cpp": "class Solution {\npublic:\n    int rangeBitwiseAnd(int left, int right) {\n        \n    }\n};",
+  "go": "func rangeBitwiseAnd(left int, right int) int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn range_bitwise_and(left: i32, right: i32) -> i32 {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int RangeBitwiseAnd(int left, int right) {\n        \n    }\n}"
+}

@@ -17,10 +17,10 @@ test.describe('Public UI Regression', () => {
       await expect(page.locator('nav a:has-text("EduScale")')).toBeVisible({
         timeout: 20000,
       });
-      await expect(page.locator('nav a:has-text("Login")')).toBeVisible({
+      await expect(page.getByRole('navigation').getByRole('link', { name: 'Log in' })).toBeVisible({
         timeout: 20000,
       });
-      await expect(page.locator('nav a:has-text("Get Started")')).toBeVisible({
+      await expect(page.getByRole('navigation').getByRole('link', { name: 'Get Started' })).toBeVisible({
         timeout: 20000,
       });
     }

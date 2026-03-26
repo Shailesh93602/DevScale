@@ -1,69 +1,51 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { format } from 'date-fns';
-import { BattleFormValues } from './battleFormValidation';
 import { Progress } from '@/components/ui/progress';
-import { Users, Award, Timer, BarChart } from 'lucide-react';
+import { Users, Award, Timer, BookOpen } from 'lucide-react';
 
-interface BattlePreviewProps {
-  formValues: BattleFormValues;
-  subjectName: string;
-  topicName: string;
+interface BattlePreviewFormValues {
+  title: string;
+  description?: string;
+  difficulty: string;
+  type: 'QUICK' | 'SCHEDULED' | 'PRACTICE';
+  maxParticipants?: number | null;
+  pointsPerQuestion?: number | null;
+  timePerQuestion?: number | null;
+  date?: string;
+  time?: string;
+  questionSource?: { label: string; count: number };
 }
 
-const BattlePreview: React.FC<BattlePreviewProps> = ({
-  formValues,
-  subjectName,
-  topicName,
-}) => {
+interface BattlePreviewProps {
+  formValues: BattlePreviewFormValues;
+}
+
+const BattlePreview: React.FC<BattlePreviewProps> = ({ formValues }) => {
   const {
     title,
     description,
     difficulty,
-    length,
+    type,
+    maxParticipants = 6,
+    pointsPerQuestion = 100,
+    timePerQuestion = 30,
     date,
     time,
-    maxParticipants = 10,
-    pointsPerQuestion = 10,
-    timePerQuestion = 30,
-    totalQuestions = 10,
+    questionSource,
   } = formValues;
 
-  const startTime = new Date(`${date}T${time}`);
-  const endTime = new Date(startTime);
-  const duration =
-    timePerQuestion && totalQuestions
-      ? Math.round((timePerQuestion * totalQuestions) / 60)
-      : 0;
-  endTime.setMinutes(endTime.getMinutes() + duration);
-
-  // Calculate difficulty level for progress bar
   const getDifficultyValue = () => {
     switch (difficulty?.toLowerCase()) {
-      case 'easy':
-        return 33;
-      case 'medium':
-        return 66;
-      case 'hard':
-        return 100;
-      default:
-        return 50;
+      case 'easy': return 33;
+      case 'hard': return 100;
+      default: return 66;
     }
   };
 
-  // Calculate length value for progress bar
-  const getLengthValue = () => {
-    switch (length?.toLowerCase()) {
-      case 'short':
-        return 33;
-      case 'medium':
-        return 66;
-      case 'long':
-        return 100;
-      default:
-        return 50;
-    }
-  };
+  const estimatedDuration =
+    timePerQuestion && questionSource?.count
+      ? Math.round((timePerQuestion * questionSource.count) / 60)
+      : null;
 
   return (
     <Card className="w-full">
@@ -72,16 +54,16 @@ const BattlePreview: React.FC<BattlePreviewProps> = ({
           <span>{title || 'Untitled Battle'}</span>
           <div className="flex gap-2">
             <Badge variant="outline" className="capitalize">
-              {difficulty}
+              {difficulty?.toLowerCase()}
             </Badge>
-            <Badge variant="outline" className="capitalize">
-              {length}
+            <Badge variant="secondary" className="capitalize">
+              {type?.toLowerCase()}
             </Badge>
           </div>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="space-y-2">
+        <div className="space-y-1">
           <h4 className="font-medium">Description</h4>
           <p className="text-sm text-muted-foreground">
             {description || 'No description provided'}
@@ -89,76 +71,60 @@ const BattlePreview: React.FC<BattlePreviewProps> = ({
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
-          <div className="space-y-2">
-            <h4 className="font-medium">Subject & Topic</h4>
+          <div className="space-y-1">
+            <h4 className="font-medium">Question Source</h4>
             <p className="text-sm text-muted-foreground">
-              {subjectName} {topicName && `• ${topicName}`}
+              {questionSource
+                ? `${questionSource.label} (${questionSource.count} questions)`
+                : 'Not selected yet'}
             </p>
           </div>
 
-          <div className="space-y-2">
-            <h4 className="font-medium">Schedule</h4>
-            <p className="text-sm text-muted-foreground">
-              Starts: {format(startTime, 'PPP p')}
-              <br />
-              Ends: {format(endTime, 'PPP p')}
-            </p>
-          </div>
+          {type === 'SCHEDULED' && date && time && (
+            <div className="space-y-1">
+              <h4 className="font-medium">Scheduled Start</h4>
+              <p className="text-sm text-muted-foreground">
+                {date} at {time}
+              </p>
+            </div>
+          )}
 
           <div className="space-y-2">
             <h4 className="font-medium">Battle Settings</h4>
-            <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <Users className="h-4 w-4" />
-                <span>Max Participants:</span>
+            <div className="grid grid-cols-2 gap-1 text-sm text-muted-foreground">
+              <div className="flex items-center gap-1">
+                <Users className="h-3 w-3" /> Max Players:
               </div>
-              <div>{maxParticipants}</div>
-              <div className="flex items-center gap-2">
-                <Award className="h-4 w-4" />
-                <span>Points per Question:</span>
+              <span>{maxParticipants}</span>
+              <div className="flex items-center gap-1">
+                <Award className="h-3 w-3" /> Points/Question:
               </div>
-              <div>{pointsPerQuestion}</div>
-              <div className="flex items-center gap-2">
-                <Timer className="h-4 w-4" />
-                <span>Time per Question:</span>
+              <span>{pointsPerQuestion}</span>
+              <div className="flex items-center gap-1">
+                <Timer className="h-3 w-3" /> Seconds/Question:
               </div>
-              <div>{timePerQuestion ?? 30}s</div>
-              <div className="flex items-center gap-2">
-                <BarChart className="h-4 w-4" />
-                <span>Total Questions:</span>
+              <span>{timePerQuestion}s</span>
+              <div className="flex items-center gap-1">
+                <BookOpen className="h-3 w-3" /> Questions:
               </div>
-              <div>{totalQuestions ?? 10}</div>
+              <span>{questionSource?.count ?? '—'}</span>
             </div>
           </div>
 
-          <div className="space-y-2">
-            <h4 className="font-medium">Total Duration</h4>
-            <p className="text-sm text-muted-foreground">
-              {Math.round(duration / 60)} minutes
-            </p>
-          </div>
+          {estimatedDuration !== null && (
+            <div className="space-y-1">
+              <h4 className="font-medium">Estimated Duration</h4>
+              <p className="text-sm text-muted-foreground">{estimatedDuration} minutes</p>
+            </div>
+          )}
         </div>
 
-        <div className="mt-6 space-y-4">
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <h4 className="font-medium">Difficulty Level</h4>
-              <span className="text-sm capitalize text-muted-foreground">
-                {difficulty}
-              </span>
-            </div>
-            <Progress value={getDifficultyValue()} className="h-2" />
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <h4 className="font-medium">Difficulty Level</h4>
+            <span className="text-sm capitalize text-muted-foreground">{difficulty?.toLowerCase()}</span>
           </div>
-
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <h4 className="font-medium">Battle Length</h4>
-              <span className="text-sm capitalize text-muted-foreground">
-                {length}
-              </span>
-            </div>
-            <Progress value={getLengthValue()} className="h-2" />
-          </div>
+          <Progress value={getDifficultyValue()} className="h-2" />
         </div>
       </CardContent>
     </Card>

@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
-import { sendResponse } from '@/utils/apiResponse';
-import { createAppError } from '@/utils/errorHandler';
-import ChatRepository from '@/repositories/chatRepository';
+import { sendResponse } from '../utils/apiResponse';
+import { createAppError } from '../utils/errorHandler';
+import ChatRepository from '../repositories/chatRepository';
 
 export default class ChatController {
   private readonly chatRepo: ChatRepository;
@@ -30,16 +30,14 @@ export default class ChatController {
   });
 
   public createChat = catchAsync(async (req: Request, res: Response) => {
-    const { participants } = req.body;
+    const { participants, message } = req.body;
     if (!participants || participants.length < 2) {
       throw createAppError('Invalid payload', 400);
     }
 
-    // TODO: implement this method
-
     const newChat = await this.chatRepo.create({
       data: {
-        message: '',
+        message: message || '',
         user1: { connect: { id: participants[0] } },
         user2: { connect: { id: participants[1] } },
       },

@@ -35,10 +35,9 @@ export class RoadMapRoutes extends BaseRouter {
       this.bindRoute(this.roadMapController.getRoadmapCategories)
     );
 
-    // Public routes
+    // Public routes — no auth required for listing
     this.router.get(
       '/',
-      authMiddleware,
       validateQuery(roadmapQueryValidation),
       this.roadmapLimiter,
       (req: Request, res: Response, next: NextFunction) => {
@@ -51,6 +50,13 @@ export class RoadMapRoutes extends BaseRouter {
     this.router.get(
       '/:id',
       authMiddleware,
+      (req: Request, res: Response, next: NextFunction) => {
+        const cacheMiddleware = cacheResponse({
+          duration: 120,
+          key: (r) => `roadmap:detail:${r.params.id}:${r.user?.id || 'anon'}`,
+        });
+        cacheMiddleware(req, res, next).catch(next);
+      },
       this.bindRoute(this.roadMapController.getRoadMap)
     );
 
@@ -99,7 +105,7 @@ export class RoadMapRoutes extends BaseRouter {
       authMiddleware,
       // authorizeRoles('admin', 'instructor'),
       validateRequest(createRoadmapValidation),
-      this.bindRoute(this.roadMapController.createRoadMap)
+      this.bindRoute(this.roadMapController.createRoadmap)
     );
 
     this.router.post(

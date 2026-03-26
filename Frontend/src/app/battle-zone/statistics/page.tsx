@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import BattleZoneLayout from '@/components/Battle/BattleZoneLayout';
 import {
   Card,
@@ -22,7 +23,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
-  LineChart,
+  LineChart as LineChartIcon,
   Trophy,
   Clock,
   Award,
@@ -34,8 +35,41 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   Percent,
+  AlertCircle,
 } from 'lucide-react';
 import { useAxiosGet } from '@/hooks/useAxios';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  ResponsiveContainer,
+} from 'recharts';
+
+// Raw shape returned by the backend (snake_case)
+interface RawStatsResponse {
+  total_battles?: number; totalBattles?: number;
+  wins?: number; battlesWon?: number;
+  completed_battles?: number;
+  win_rate?: number; winRate?: number;
+  total_score?: number; totalPoints?: number;
+  averageScore?: number;
+  questions_answered?: number; questionsAnswered?: number;
+  correct_answers?: number; correctAnswers?: number;
+  accuracy?: number;
+  avg_time_ms?: number; averageTime?: number;
+  top_topics?: RawTopic[]; topTopics?: RawTopic[];
+  recent_battles?: RawBattle[]; recentBattles?: RawBattle[];
+  performance_by_difficulty?: RawDifficulty[]; performanceByDifficulty?: RawDifficulty[];
+  performance_by_topic?: RawTopic[]; performanceByTopic?: RawTopic[];
+  performance_over_time?: RawWeek[]; performanceOverTime?: RawWeek[];
+}
+interface RawTopic { topic?: string; name?: string; avg_score?: number; score?: number; battles?: number; win_rate?: number; accuracy?: number; }
+interface RawBattle { id: string; title?: string; ended_at?: string; date?: string; result?: string; score?: number; rank?: number; totalParticipants?: number; }
+interface RawDifficulty { difficulty?: string; win_rate?: number; accuracy?: number; battles?: number; }
+interface RawWeek { week?: string; date?: string; avg_score?: number; score?: number; wins?: number; battles?: number; accuracy?: number; }
 
 interface StatisticsData {
   totalBattles: number;
@@ -80,25 +114,81 @@ interface StatisticsData {
 }
 
 export default function StatisticsPage() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [statistics, setStatistics] = useState<StatisticsData | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [timeframe, setTimeframe] = useState('all-time');
 
-  const [getStatistics] = useAxiosGet<{ data: StatisticsData }>(
-    '/api/statistics',
-  );
+  const [getStatistics] = useAxiosGet<StatisticsData>('/battles/statistics/me');
 
   useEffect(() => {
     const fetchStatistics = async () => {
       setIsLoading(true);
+      setErrorMessage(null);
       try {
-        // In a real app, you would pass the timeframe as a query param
-        const response = await getStatistics();
-        if (response.data) {
-          setStatistics(response.data.data);
+        const response = await getStatistics({ params: { timeframe } });
+        if (response.success && response.data) {
+          // Normalize snake_case API response → camelCase StatisticsData
+          const d = response.data as unknown as RawStatsResponse;
+          const normalized: StatisticsData = {
+            totalBattles: d.total_battles ?? d.totalBattles ?? 0,
+            battlesWon: d.wins ?? d.battlesWon ?? 0,
+            battlesLost: (d.completed_battles ?? 0) - (d.wins ?? 0),
+            winRate: d.win_rate ?? d.winRate ?? 0,
+            totalPoints: d.total_score ?? d.totalPoints ?? 0,
+            averageScore: (d.completed_battles ?? 0) > 0
+              ? Math.round((d.total_score ?? 0) / (d.completed_battles ?? 1))
+              : (d.averageScore ?? 0),
+            questionsAnswered: d.questions_answered ?? d.questionsAnswered ?? 0,
+            correctAnswers: d.correct_answers ?? d.correctAnswers ?? 0,
+            accuracy: d.accuracy ?? 0,
+            averageTime: d.avg_time_ms != null
+              ? Math.round(d.avg_time_ms / 1000)
+              : (d.averageTime ?? 0),
+            topTopics: (d.top_topics ?? d.topTopics ?? []).map((t: any) => ({
+              topic: t.topic ?? t.name ?? '',
+              score: t.avg_score ?? t.score ?? 0,
+              battles: t.battles ?? 0,
+            })),
+            recentBattles: (d.recent_battles ?? d.recentBattles ?? []).map((b: any) => ({
+              id: b.id,
+              title: b.title ?? 'Battle',
+              date: b.ended_at ? new Date(b.ended_at).toLocaleDateString() : (b.date ?? ''),
+              result: b.result === 'won' ? 'win' : b.result === 'lost' ? 'loss' : (b.result ?? 'ongoing'),
+              score: b.score ?? 0,
+              rank: b.rank ?? 0,
+              totalParticipants: b.totalParticipants ?? 0,
+            })),
+            performanceByDifficulty: (d.performance_by_difficulty ?? d.performanceByDifficulty ?? []).map((x: any) => ({
+              difficulty: x.difficulty
+                ? x.difficulty.charAt(0).toUpperCase() + x.difficulty.slice(1).toLowerCase()
+                : '',
+              accuracy: x.win_rate ?? x.accuracy ?? 0,
+              battles: x.battles ?? 0,
+            })),
+            performanceByTopic: (d.performance_by_topic ?? d.performanceByTopic ?? []).map((x: any) => ({
+              topic: x.topic ?? '',
+              accuracy: x.win_rate ?? x.accuracy ?? 0,
+              battles: x.battles ?? 0,
+            })),
+            performanceOverTime: (d.performance_over_time ?? d.performanceOverTime ?? []).map((x: any) => ({
+              date: x.week ?? x.date ?? '',
+              score: x.avg_score ?? x.score ?? 0,
+              accuracy: x.wins != null && x.battles > 0
+                ? Math.round((x.wins / x.battles) * 100)
+                : (x.accuracy ?? 0),
+            })),
+          };
+          setStatistics(normalized);
+        } else {
+          setStatistics(null);
+          setErrorMessage(response.message || 'Unable to load statistics.');
         }
       } catch (error) {
         console.error('Failed to fetch statistics:', error);
+        setStatistics(null);
+        setErrorMessage('Failed to fetch statistics. Please try again.');
       } finally {
         setIsLoading(false);
       }
@@ -108,7 +198,7 @@ export default function StatisticsPage() {
   }, [timeframe]);
 
   // Render loading state
-  if (isLoading || !statistics) {
+  if (isLoading) {
     return (
       <BattleZoneLayout>
         <div className="space-y-6">
@@ -123,6 +213,20 @@ export default function StatisticsPage() {
             <Skeleton className="h-[300px]" />
             <Skeleton className="h-[300px]" />
           </div>
+        </div>
+      </BattleZoneLayout>
+    );
+  }
+
+  if (errorMessage || !statistics) {
+    return (
+      <BattleZoneLayout>
+        <div className="flex min-h-[300px] flex-col items-center justify-center text-center">
+          <AlertCircle className="mb-3 h-10 w-10 text-destructive" />
+          <h2 className="text-xl font-semibold">Statistics unavailable</h2>
+          <p className="mt-2 text-muted-foreground">
+            {errorMessage || 'No statistics available yet.'}
+          </p>
         </div>
       </BattleZoneLayout>
     );
@@ -152,7 +256,7 @@ export default function StatisticsPage() {
               </SelectContent>
             </Select>
 
-            <Button variant="outline" size="icon">
+            <Button variant="outline" size="icon" disabled title="Export coming soon">
               <Download className="h-4 w-4" />
             </Button>
           </div>
@@ -165,10 +269,6 @@ export default function StatisticsPage() {
             value={`${statistics.winRate}%`}
             description={`${statistics.battlesWon} of ${statistics.totalBattles} battles`}
             icon={<Trophy className="h-5 w-5 text-primary" />}
-            trend={{
-              value: 5.2,
-              direction: 'up',
-            }}
           />
 
           <StatCard
@@ -176,10 +276,6 @@ export default function StatisticsPage() {
             value={`${statistics.accuracy}%`}
             description={`${statistics.correctAnswers} of ${statistics.questionsAnswered} questions`}
             icon={<Target className="h-5 w-5 text-primary" />}
-            trend={{
-              value: 2.1,
-              direction: 'up',
-            }}
           />
 
           <StatCard
@@ -187,10 +283,6 @@ export default function StatisticsPage() {
             value={statistics.averageScore.toString()}
             description={`${statistics.totalPoints} total points earned`}
             icon={<Award className="h-5 w-5 text-primary" />}
-            trend={{
-              value: 1.8,
-              direction: 'down',
-            }}
           />
 
           <StatCard
@@ -198,10 +290,6 @@ export default function StatisticsPage() {
             value={`${statistics.averageTime}s`}
             description="Average time per question"
             icon={<Clock className="h-5 w-5 text-primary" />}
-            trend={{
-              value: 0.5,
-              direction: 'down',
-            }}
           />
         </div>
 
@@ -215,16 +303,42 @@ export default function StatisticsPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="h-[300px] w-full">
-                {/* This would be a real chart in a production app */}
-                <div className="flex h-full items-center justify-center rounded-md border border-dashed">
-                  <div className="flex flex-col items-center text-center">
-                    <LineChart className="mb-2 h-10 w-10 text-muted-foreground" />
-                    <p className="text-sm text-muted-foreground">
-                      Performance chart would be rendered here
-                    </p>
+              <div className="h-[280px] w-full sm:h-[300px]">
+                {statistics.performanceOverTime.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={statistics.performanceOverTime}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+                      <YAxis tick={{ fontSize: 12 }} />
+                      <Tooltip />
+                      <Line
+                        type="monotone"
+                        dataKey="score"
+                        stroke="hsl(var(--primary))"
+                        strokeWidth={2}
+                        dot={false}
+                        name="Score"
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="accuracy"
+                        stroke="hsl(var(--secondary-foreground))"
+                        strokeWidth={2}
+                        dot={false}
+                        name="Accuracy"
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="flex h-full items-center justify-center rounded-md border border-dashed">
+                    <div className="flex flex-col items-center text-center">
+                      <LineChartIcon className="mb-2 h-10 w-10 text-muted-foreground" />
+                      <p className="text-sm text-muted-foreground">
+                        No performance data available yet
+                      </p>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -236,6 +350,11 @@ export default function StatisticsPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
+                {statistics.performanceByTopic.length === 0 && (
+                  <p className="py-4 text-center text-sm text-muted-foreground">
+                    No topic data yet — complete some battles first.
+                  </p>
+                )}
                 {statistics.performanceByTopic.map((topic, index) => (
                   <div key={index}>
                     <div className="mb-1 flex items-center justify-between">
@@ -261,6 +380,11 @@ export default function StatisticsPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
+                {statistics.recentBattles.length === 0 && (
+                  <p className="py-4 text-center text-sm text-muted-foreground">
+                    No battles yet. Join your first battle to see history here!
+                  </p>
+                )}
                 {statistics.recentBattles.map((battle, index) => (
                   <div
                     key={index}
@@ -282,10 +406,10 @@ export default function StatisticsPage() {
                       <Badge
                         className={
                           battle.result === 'win'
-                            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+                            ? 'bg-green-500/15 text-green-700'
                             : battle.result === 'loss'
-                              ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
-                              : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
+                              ? 'bg-red-500/15 text-red-700'
+                              : 'bg-blue-500/15 text-blue-700'
                         }
                       >
                         {battle.result === 'win'
@@ -300,7 +424,7 @@ export default function StatisticsPage() {
               </div>
             </CardContent>
             <CardFooter>
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full" onClick={() => router.push('/battle-zone/my')}>
                 View All Battles
               </Button>
             </CardFooter>
@@ -341,8 +465,8 @@ export default function StatisticsPage() {
               </div>
             </CardContent>
             <CardFooter>
-              <Button variant="outline" className="w-full">
-                View All Topics
+              <Button variant="outline" className="w-full" onClick={() => router.push('/battle-zone')}>
+                Browse All Battles
               </Button>
             </CardFooter>
           </Card>
@@ -363,10 +487,10 @@ export default function StatisticsPage() {
                   <div
                     className={`mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full ${
                       difficulty.difficulty === 'Easy'
-                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+                        ? 'bg-green-500/15 text-green-700'
                         : difficulty.difficulty === 'Medium'
-                          ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
-                          : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+                          ? 'bg-yellow-500/15 text-yellow-700'
+                          : 'bg-red-500/15 text-red-700'
                     }`}
                   >
                     {difficulty.difficulty === 'Easy' ? (
@@ -427,9 +551,7 @@ function StatCard({ title, value, description, icon, trend }: StatCardProps) {
         {trend && (
           <div
             className={`mt-2 flex items-center text-xs ${
-              trend.direction === 'up'
-                ? 'text-green-600 dark:text-green-400'
-                : 'text-red-600 dark:text-red-400'
+              trend.direction === 'up' ? 'text-green' : 'text-red'
             }`}
           >
             {trend.direction === 'up' ? (

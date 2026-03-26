@@ -33,5 +33,6 @@
   "example_output": "\"1211\"",
   "constraints": "- `1 <= n <= 30`",
   "function_signature": "function countAndSay(n: number): string {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

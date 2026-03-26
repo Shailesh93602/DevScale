@@ -1,0 +1,10 @@
+{
+  "typescript": "function findRepeatedDnaSequences(s: string): string[] {\n  // Your code here\n}",
+  "javascript": "/**\n * @param {string} s\n * @return {string[]}\n */\nvar findRepeatedDnaSequences = function(s) {\n  // Your code here\n};",
+  "python": "class Solution:\n    def findRepeatedDnaSequences(self, s: str) -> List[str]:\n        # Your code here\n        pass",
+  "java": "class Solution {\n    public List<String> findRepeatedDnaSequences(String s) {\n        // Your code here\n    }\n}",
+  "cpp": "class Solution {\npublic:\n    vector<string> findRepeatedDnaSequences(string s) {\n        // Your code here\n    }\n};",
+  "go": "func findRepeatedDnaSequences(s string) []string {\n    // Your code here\n}",
+  "rust": "impl Solution {\n    pub fn find_repeated_dna_sequences(s: String) -> Vec<String> {\n        // Your code here\n    }\n}",
+  "csharp": "public class Solution {\n    public IList<string> FindRepeatedDnaSequences(string s) {\n        // Your code here\n    }\n}"
+}

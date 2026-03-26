@@ -15,7 +15,7 @@ export const emailTemplates = {
 
   welcome: `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <h1>Welcome to MR Engineers!</h1>
+      <h1>Welcome to EduScale!</h1>
       <p>Hi {{username}},</p>
       <p>We're excited to have you on board. Here are some things you can do to get started:</p>
       <ul>

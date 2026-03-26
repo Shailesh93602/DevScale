@@ -1,3 +1,27 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  {
+    "input": "121",
+    "output": "true",
+    "is_hidden": false
+  },
+  {
+    "input": "-121",
+    "output": "false",
+    "is_hidden": false
+  },
+  {
+    "input": "10",
+    "output": "false",
+    "is_hidden": false
+  },
+  {
+    "input": "0",
+    "output": "true",
+    "is_hidden": true
+  },
+  {
+    "input": "12321",
+    "output": "true",
+    "is_hidden": true
+  }
 ]

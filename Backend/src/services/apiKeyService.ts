@@ -1,8 +1,8 @@
 import { createAppError } from '../utils/errorHandler';
-import crypto from 'node:crypto';
+import crypto from 'crypto';
 import logger from '../utils/logger';
 
-import prisma from '@/lib/prisma';
+import prisma from '../lib/prisma';
 
 export const generateApiKey = async (
   user_id: string,

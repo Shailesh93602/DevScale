@@ -1,50 +1,29 @@
 # Design a Distributed Cache
 
-## Problem Description
-
 Design a distributed, in-memory key-value cache system similar to Redis or Memcached. The system should provide low-latency data access and be scalable across multiple nodes to handle massive amounts of data and high request rates.
 
 ## Requirements
 
 ### Functional Requirements
-1. **Get/Set/Delete**: Standard key-value operations.
-2. **TTL (Time To Live)**: Keys should expire after a specified duration.
-3. **Eviction Policy**: Support LRU (Least Recently Used) or LFU (Least Frequently Used) when memory is full.
-4. **Consistency**: Support configurable consistency levels (Strict vs. Eventual).
+1. **Basic Operations**: Support `get`, `set`, and `delete`.
+2. **Expirations (TTL)**: Keys should expire and be automatically deleted after a specified duration.
+3. **Memory Management**: Support eviction policies like **LRU (Least Recently Used)** or **LFU (Least Frequently Used)** when the allocated memory is full.
+4. **Data Partitioning**: Distribute data across multiple nodes to handle more data than a single machine's RAM.
 
 ### Non-Functional Requirements
-1. **Low Latency**: Read and write operations should take < 1-2 milliseconds.
-2. **Scalability**: Horizontal scaling through consistent hashing to minimize data remapping when adding/removing nodes.
-3. **Fault Tolerance**: Replication of data across multiple nodes to prevent data loss on failure.
-4. **Availability**: The system must remain available even if some nodes are down.
-
-## API Design
-
-```typescript
-class DistributedCache {
-  /**
-   * Retrieves value for a key.
-   */
-  get(key: string): any;
-
-  /**
-   * Stores a value with optional TTL (seconds).
-   */
-  set(key: string, value: any, ttl?: number): void;
-
-  /**
-   * Explicitly removes a key.
-   */
-  remove(key: string): void;
-}
-```
+1. **Low Latency**: Performance should be in the sub-millisecond range for memory-bound operations.
+2. **Scalability**: Seamless horizontal scaling using algorithms like **Consistent Hashing**.
+3. **Availability & Reliability**: Data should be replicated to prevent loss if a single node fails.
 
 ## Examples
 
-**Input**: `cache.set("user:session:1", {id: 1, name: "Alice"}, 3600)`
-**Input**: `cache.get("user:session:1")` -> `{id: 1, name: "Alice"}`
+**Example Scenario**:
+- **Operation**: `cache.set("user:101", { name: "John Doe" }, 300)`
+- **Operation**: `cache.get("user:101")`
+- **Result**: `{ name: "John Doe" }`
+- **Wait 301 seconds**: `cache.get("user:101")` returns `null`.
 
 ## Constraints
-- Memory capacity per node is finite (e.g., 64GB).
-- Network bandwidth considerations between clients and cache nodes.
-- Handle "Thundering Herd" or "Cache Stampede" scenarios.
+- Finite memory per node (e.g., 64GB).
+- High throughput requirement (100k+ operations per second).
+- Handle edge cases like **Cache Stampede** and **Hot Keys**.

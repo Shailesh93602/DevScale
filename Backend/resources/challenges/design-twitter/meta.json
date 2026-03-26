@@ -16,5 +16,6 @@
   "example_output": "[null, null, [5], null, null, [6, 5], null, [5]]",
   "constraints": "- `1 <= userId, followerId, followeeId <= 500`\n- `0 <= tweetId <= 10^4`\n- All tweets have unique IDs.\n- At most `3 * 10^4` calls will be made to methods.",
   "function_signature": "class Twitter { constructor() {} postTweet(userId: number, tweetId: number): void {} getNewsFeed(userId: number): number[] {} follow(followerId: number, followeeId: number): void {} unfollow(followerId: number, followeeId: number): void {} }",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

@@ -14,6 +14,7 @@
   "example_input": "{\"url\": \"myapp://products/123?ref=home\", \"routes\": [{\"pattern\": \"products/:id\", \"screen\": \"ProductDetail\"}]}",
   "example_output": "{\"screen\": \"ProductDetail\", \"params\": {\"id\": \"123\"}, \"query\": {\"ref\": \"home\"}}",
   "constraints": "URL follows standard deep link format, routes use :param for path parameters",
-  "function_signature": "function parseDeepLink(url: string, routes: Route[]): { screen: string; params: Record<string, string>; query: Record<string, string> } | null",
-  "status": "ACTIVE"
+  "function_signature": "function parseDeepLink(url: string, routes: Route[]): { screen: string; params: Record<string, string>; query: Record<string, string> } | null {}",
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

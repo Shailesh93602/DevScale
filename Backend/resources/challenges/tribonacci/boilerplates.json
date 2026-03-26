@@ -1,0 +1,5 @@
+{
+  "typescript": "function tribonacci(n: number): number {\n    // Your code here\n}",
+  "javascript": "/**\n * @param {any} params\n * @return {any}\n */\nvar tribonacci = function(root) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def tribonacci(self, root) -> bool:\n        # Your code here\n        pass"
+}

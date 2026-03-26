@@ -1,0 +1,6 @@
+[
+  "Start by sorting the array to use the two-pointer approach correctly.",
+  "Fix one element and use two pointers (left and right) to find the best pair for the remaining sum.",
+  "Track the minimum difference between the target and your current sum as you iterate."
+]
+

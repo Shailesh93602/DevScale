@@ -4,16 +4,27 @@
   "difficulty": "Medium",
   "category": "algorithms",
   "points": 100,
-  "tags": ["greedy", "hash-map", "sorting"],
+  "tags": ["greedy", "hash-table", "sorting"],
   "company_tags": ["Google", "Amazon", "Microsoft"],
   "topic_tags": ["greedy", "hash tables", "sorting"],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
   "time_limit_ms": 2000,
   "memory_limit_kb": 262144,
-  "input_format": "An integer array `hand` representing cards and an integer `groupSize`.",
-  "output_format": "Return `true` if the cards can be rearranged into groups of `groupSize` consecutive cards, `false` otherwise.",
+  "input_format": "An integer array `hand` where `hand[i]` is the value written on the `ith` card and an integer `groupSize`.",
+  "output_format": "`true` if you can rearrange the cards such that each group is of size `groupSize`, and consists of `groupSize` consecutive cards.",
   "example_input": "hand = [1,2,3,6,2,3,4,7,8], groupSize = 3",
   "example_output": "true",
-  "constraints": "- `1 <= hand.length <= 10^4`\n- `0 <= hand[i] <= 10^9`\n- `1 <= groupSize <= hand.length`",
+  "constraints": "- `1 <= hand.length <= 10^4`\n- `0 <= hand[i] <= 10^9`\n- `1 <= groupSize <= hand.length` ",
   "function_signature": "function isNStraightHand(hand: number[], groupSize: number): boolean {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

@@ -1,42 +1,6 @@
 [
-  {
-    "input": {
-      "method": "POST",
-      "headers": { "x-csrf-token": "valid_token" },
-      "session": { "csrfToken": "valid_token" }
-    },
-    "output": "next()",
-    "explanation": "Valid token in header matches session token for POST request.",
-    "is_hidden": false
-  },
-  {
-    "input": {
-      "method": "POST",
-      "headers": { "x-csrf-token": "wrong_token" },
-      "session": { "csrfToken": "valid_token" }
-    },
-    "output": "res.status(403).send('Invalid or missing CSRF token')",
-    "explanation": "Token mismatch returns 403.",
-    "is_hidden": false
-  },
-  {
-    "input": {
-      "method": "GET",
-      "headers": {},
-      "session": { "csrfToken": "valid_token" }
-    },
-    "output": "next()",
-    "explanation": "GET method is safe and skips validation.",
-    "is_hidden": true
-  },
-  {
-    "input": {
-      "method": "DELETE",
-      "headers": {},
-      "session": { "csrfToken": "valid_token" }
-    },
-    "output": "res.status(403).send('Invalid or missing CSRF token')",
-    "explanation": "Missing header for unsafe method returns 403.",
-    "is_hidden": true
-  }
+  { "input": "{\"method\":\"POST\",\"headers\":{\"x-csrf-token\":\"valid_token\"},\"session\":{\"csrfToken\":\"valid_token\"}}", "output": "next()", "explanation": "Valid token in header matches session token for POST request.", "is_hidden": false },
+  { "input": "{\"method\":\"POST\",\"headers\":{\"x-csrf-token\":\"wrong_token\"},\"session\":{\"csrfToken\":\"valid_token\"}}", "output": "403", "explanation": "Token mismatch returns 403.", "is_hidden": false },
+  { "input": "{\"method\":\"GET\",\"headers\":{},\"session\":{\"csrfToken\":\"valid_token\"}}", "output": "next()", "explanation": "GET method is safe and skips validation.", "is_hidden": true },
+  { "input": "{\"method\":\"DELETE\",\"headers\":{},\"session\":{\"csrfToken\":\"valid_token\"}}", "output": "403", "explanation": "Missing header for unsafe method returns 403.", "is_hidden": true }
 ]

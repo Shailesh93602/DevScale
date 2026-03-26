@@ -1,0 +1,9 @@
+{
+  "typescript": "function exist(board: string[][], word: string): boolean {\n  // Your code here\n}",
+  "javascript": "/**\n * @param {character[][]} board\n * @param {string} word\n * @return {boolean}\n */\nvar exist = function(board, word) {\n  // Your code here\n};",
+  "python": "class Solution:\n    def exist(self, board: List[List[str]], word: str) -> bool:\n        # Your code here\n        pass",
+  "java": "class Solution {\n    public boolean exist(char[][] board, String word) {\n        // Your code here\n    }\n}",
+  "cpp": "class Solution {\npublic:\n    bool exist(vector<vector<char>>& board, string word) {\n        // Your code here\n    }\n};",
+  "go": "func exist(board [][]byte, word string) bool {\n    // Your code here\n}",
+  "rust": "impl Solution {\n    pub fn exist(board: Vec<Vec<char>>, word: String) -> bool {\n        // Your code here\n    }\n}"
+}

@@ -1,4 +1,6 @@
 [
-  "TODO: Add hint 1",
-  "TODO: Add hint 2"
+  "A standard segment tree can do point updates in O(log N). For range updates, you need something more.",
+  "Look into 'Lazy Propagation'. How can you delay updates to children until they are actually needed?",
+  "The size of the tree array for N elements should be at least 4*N.",
+  "In the lazy array, store the pending values to be added to the children."
 ]

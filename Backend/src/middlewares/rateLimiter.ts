@@ -1,8 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, RequestHandler } from 'express';
 import Redis from 'ioredis';
 import { REDIS_URL } from '../config';
 import logger from '../utils/logger';
-import { RequestHandler } from 'express';
 
 let redisClient: Redis | null = null;
 try {
@@ -11,8 +10,10 @@ try {
     maxRetriesPerRequest: 3,
   });
 
-  redisClient.on('error', (err) => {
-    logger.error('Redis connection error:', err);
+  redisClient.on('error', (err: any) => {
+    if (err.code !== 'ECONNREFUSED') {
+      logger.error('Redis connection error:', err);
+    }
     redisClient = null;
   });
 
@@ -27,6 +28,7 @@ interface RateLimitOptions {
   windowMs?: number;
   max?: number;
   message?: string;
+  keyPrefix?: string;
 }
 
 export const createRateLimiter = (
@@ -36,6 +38,7 @@ export const createRateLimiter = (
     windowMs = 15 * 60 * 1000, // 15 minutes
     max = 100, // 100 requests per window
     message = 'Too many requests, please try again later',
+    keyPrefix = 'rate-limit',
   } = options;
 
   return (req: Request, res: Response, next: NextFunction): void => {
@@ -44,7 +47,7 @@ export const createRateLimiter = (
       return;
     }
 
-    const key = `rate-limit:${req.ip}`;
+    const key = `${keyPrefix}:${req.ip}`;
     const windowInSeconds = Math.floor(windowMs / 1000);
 
     redisClient

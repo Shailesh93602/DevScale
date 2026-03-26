@@ -1,0 +1,5 @@
+{
+  "typescript": "class FreqStack { push(val: number): void; pop(): number; } {\n    // Your code here\n}",
+  "javascript": "/**\n * @param {any} params\n * @return {any}\n */\nvar class FreqStack { push = function(root) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def class FreqStack { push(self, root) -> bool:\n        # Your code here\n        pass"
+}

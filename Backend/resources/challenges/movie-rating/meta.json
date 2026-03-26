@@ -15,5 +15,6 @@
   "example_output": "| results  |\n| Daniel   |\n| Frozen   |",
   "constraints": "- (movie_id, user_id) is the primary key of MovieRating\n- movie_id references Movies\n- user_id references Users",
   "function_signature": "-- Write your SQL query below",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

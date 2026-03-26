@@ -14,6 +14,7 @@
   "example_input": "{\"n\": 5}",
   "example_output": "{\"result\": \"0102030405\"}",
   "constraints": "1 <= n <= 1000",
-  "function_signature": "class ZeroEvenOdd { zero(printZero: () => void): Promise<void>; even(printEven: (n: number) => void): Promise<void>; odd(printOdd: (n: number) => void): Promise<void> }",
-  "status": "ACTIVE"
+  "function_signature": "class ZeroEvenOdd { constructor(n: number) {} async zero(printZero: () => void): Promise<void> {} async even(printEven: (n: number) => void): Promise<void> {} async odd(printOdd: (n: number) => void): Promise<void> {} }",
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

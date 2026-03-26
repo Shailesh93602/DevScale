@@ -1,0 +1,6 @@
+{
+  "sql": "# Write your T-SQL query statement below\nSELECT\n\nFROM Activity;",
+  "mysql": "# Write your MySQL query statement below\nSELECT\n\nFROM Activity;",
+  "postgresql": "-- Write your PostgreSQL query statement below\nSELECT\n\nFROM Activity;"
+}
+

@@ -15,5 +15,7 @@
   "example_output": "3",
   "constraints": "- `1 <= prices.length <= 5000`\n- `0 <= prices[i] <= 1000`",
   "function_signature": "function maxProfit(prices: number[]): number {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }
+

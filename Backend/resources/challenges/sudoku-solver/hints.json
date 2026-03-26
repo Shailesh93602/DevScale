@@ -1,4 +1,5 @@
 [
-  "TODO: Add hint 1",
-  "TODO: Add hint 2"
+  "Use backtracking to explore possibilities for each empty cell.",
+  "You need to verify if placing a number in a cell is valid according to Sudoku rules (row, column, and 3x3 box).",
+  "To optimize, pre-calculate which numbers are already in each row, column, and box using sets."
 ]

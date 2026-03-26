@@ -1,0 +1,10 @@
+{
+  "typescript": "function singleNumber(nums: number[]): number {\n  // Your code here\n}",
+  "javascript": "/**\n * @param {number[]} nums\n * @return {number}\n */\nvar singleNumber = function(nums) {\n  // Your code here\n};",
+  "python": "class Solution:\n    def singleNumber(self, nums: List[int]) -> int:\n        # Your code here\n        pass",
+  "java": "class Solution {\n    public int singleNumber(int[] nums) {\n        // Your code here\n    }\n}",
+  "cpp": "class Solution {\npublic:\n    int singleNumber(vector<int>& nums) {\n        // Your code here\n    }\n};",
+  "go": "func singleNumber(nums []int) int {\n    // Your code here\n}",
+  "rust": "impl Solution {\n    pub fn single_number(nums: Vec<i32>) -> i32 {\n        // Your code here\n    }\n}",
+  "csharp": "public class Solution {\n    public int SingleNumber(int[] nums) {\n        // Your code here\n    }\n}"
+}

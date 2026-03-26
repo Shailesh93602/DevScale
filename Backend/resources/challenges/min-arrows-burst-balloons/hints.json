@@ -1,0 +1,6 @@
+[
+  "This is like finding the number of disjoint intervals. Try sorting the intervals first.",
+  "Which coordinate is more important for making a greedy decision: the start or the end?",
+  "If you sort by the end position, you can always shoot the arrow at the end position of the first balloon to maximize the overlap with subsequent balloons."
+]
+

@@ -1,0 +1,5 @@
+{
+  "typescript": "function minDistance(word1: string, word2: string): number {\n    // Your code here\n}",
+  "javascript": "/**\n * @param {any} params\n * @return {any}\n */\nvar minDistance = function(root) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def minDistance(self, root) -> bool:\n        # Your code here\n        pass"
+}

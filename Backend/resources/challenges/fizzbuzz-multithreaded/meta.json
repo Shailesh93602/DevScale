@@ -15,5 +15,6 @@
   "example_output": "{\"result\": [\"1\",\"2\",\"fizz\",\"4\",\"buzz\",\"fizz\",\"7\",\"8\",\"fizz\",\"buzz\",\"11\",\"fizz\",\"13\",\"14\",\"fizzbuzz\"]}",
   "constraints": "1 <= n <= 10000",
   "function_signature": "class FizzBuzzMT { fizz(printFizz: () => void): Promise<void>; buzz(printBuzz: () => void): Promise<void>; fizzbuzz(printFizzBuzz: () => void): Promise<void>; number(printNumber: (n: number) => void): Promise<void> }",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

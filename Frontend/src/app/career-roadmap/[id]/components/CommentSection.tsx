@@ -53,7 +53,7 @@ export const CommentSection = ({ roadmapId }: CommentSectionProps) => {
       if (response?.success && response.data) {
         setComments((prev) => [response.data, ...prev]);
         setNewComment('');
-        toast.success('Comment added successfully');
+        toast.success('Great! Your comment is now live ✨');
       }
     } catch (error) {
       console.error('Error posting comment:', error);

@@ -1,0 +1,6 @@
+[
+  "Find the last occurrence of each character in the string first. A hash map or array of size 26 works well.",
+  "As you iterate through the string, maintain the 'furthest' last index seen so far. That's your current partition's boundary.",
+  "When your current index matches that furthest boundary, you've found a complete partition."
+]
+

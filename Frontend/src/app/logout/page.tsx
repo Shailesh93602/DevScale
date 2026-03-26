@@ -1,22 +1,21 @@
 'use client';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useDispatch } from 'react-redux';
-import { clearUser } from '@/lib/features/user/userSlice';
+import { useAuth } from '@/contexts/AuthContext';
+import Loader from '@/components/Loader';
 
-export default function Logout() {
+export default function LogoutPage() {
   const router = useRouter();
-  const dispatch = useDispatch();
-
-  const logout = async () => {
-    dispatch(clearUser());
-    document.cookie = 'token=; Max-Age=0; path=/;';
-    router.push('/auth/login');
-  };
+  const { signOut } = useAuth();
 
   useEffect(() => {
-    logout();
-  }, [router]);
+    const performLogout = async () => {
+      await signOut();
+      router.replace('/auth/login');
+    };
 
-  return null;
+    performLogout();
+  }, [signOut, router]);
+
+  return <Loader type="SiteLoader" />;
 }

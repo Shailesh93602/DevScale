@@ -1,3 +1,17 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  {
+    "input": "{\"headers\": {\"Weather\": [\"id\", \"recordDate\", \"temperature\"]}, \"rows\": {\"Weather\": [[1, \"2015-01-01\", 10], [2, \"2015-01-02\", 25], [3, \"2015-01-03\", 20], [4, \"2015-01-04\", 30]]}}",
+    "output": "{\"headers\": [\"id\"], \"values\": [[2], [4]]}",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"headers\": {\"Weather\": [\"id\", \"recordDate\", \"temperature\"]}, \"rows\": {\"Weather\": [[1, \"2015-01-01\", 10]]}}",
+    "output": "{\"headers\": [\"id\"], \"values\": []}",
+    "is_hidden": false
+  },
+  {
+    "input": "{\"headers\": {\"Weather\": [\"id\", \"recordDate\", \"temperature\"]}, \"rows\": {\"Weather\": [[1, \"2015-01-01\", 10], [2, \"2015-01-02\", 10]]}}",
+    "output": "{\"headers\": [\"id\"], \"values\": []}",
+    "is_hidden": true
+  }
 ]

@@ -39,5 +39,6 @@
   "example_output": "true",
   "constraints": "- The number of nodes in both trees is in the range `[0, 100]`.\n- `-10^4 <= Node.val <= 10^4`",
   "function_signature": "function isSameTree(p: TreeNode | null, q: TreeNode | null): boolean {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

@@ -11,8 +11,41 @@ interface StatCardProps {
     value: number;
     isPositive: boolean;
   };
-  color?: 'blue' | 'green' | 'purple' | 'orange' | 'default';
+  color?: 'blue' | 'green' | 'purple' | 'orange' | 'red' | 'default';
 }
+
+const colorConfig = {
+  blue: {
+    icon: 'text-blue bg-blue/10',
+    accent: 'from-blue/5 to-transparent',
+    glow: 'shadow-blue/10',
+  },
+  green: {
+    icon: 'text-green bg-green/10',
+    accent: 'from-green/5 to-transparent',
+    glow: 'shadow-green/10',
+  },
+  purple: {
+    icon: 'text-purple bg-purple/10',
+    accent: 'from-purple/5 to-transparent',
+    glow: 'shadow-purple/10',
+  },
+  orange: {
+    icon: 'text-orange bg-orange/10',
+    accent: 'from-orange/5 to-transparent',
+    glow: 'shadow-orange/10',
+  },
+  red: {
+    icon: 'text-red bg-red/10',
+    accent: 'from-red/5 to-transparent',
+    glow: 'shadow-red/10',
+  },
+  default: {
+    icon: 'bg-muted text-muted-foreground',
+    accent: 'from-muted/40 to-transparent',
+    glow: '',
+  },
+};
 
 const StatCard: React.FC<StatCardProps> = ({
   title,
@@ -22,61 +55,55 @@ const StatCard: React.FC<StatCardProps> = ({
   trend,
   color = 'default',
 }) => {
-  const colorClasses = {
-    blue: 'bg-blue-50 text-blue-500 dark:bg-blue-900/20 dark:text-blue-400',
-    green:
-      'bg-green-50 text-green-500 dark:bg-green-900/20 dark:text-green-400',
-    purple:
-      'bg-purple-50 text-purple-500 dark:bg-purple-900/20 dark:text-purple-400',
-    orange:
-      'bg-orange-50 text-orange-500 dark:bg-orange-900/20 dark:text-orange-400',
-    default: 'bg-gray-50 text-gray-500 dark:bg-gray-800 dark:text-gray-400',
-  };
-
-  const iconColorClass = colorClasses[color];
+  const config = colorConfig[color];
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="flex h-full flex-col justify-between rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800"
+      transition={{ duration: 0.35, ease: 'easeOut' }}
+      className="group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-border bg-card p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
+      style={{ boxShadow: 'var(--shadow-md)' }}
     >
-      <div className="flex items-start justify-between">
-        <div>
-          <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
-            {title}
-          </h3>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-            {value}
-          </p>
-        </div>
+      {/* Subtle gradient background glow */}
+      <div
+        className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${config.accent} opacity-70`}
+      />
+
+      {/* Content */}
+      <div className="relative flex items-start justify-between">
+        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+          {title}
+        </p>
         {Icon && (
-          <div className={`rounded-full p-2 ${iconColorClass}`}>
-            <Icon size={20} />
+          <div
+            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${config.icon} transition-transform duration-300 group-hover:scale-105`}
+          >
+            <Icon size={18} />
           </div>
         )}
       </div>
 
-      {(description || trend) && (
-        <div className="mt-4">
-          {trend && (
-            <div
-              className={`inline-flex items-center text-sm ${trend.isPositive ? 'text-green-500' : 'text-red-500'}`}
-            >
-              <span>
+      <div className="relative">
+        <p className="mt-3 text-2xl font-bold tracking-tight text-foreground">
+          {value}
+        </p>
+
+        {(description || trend) && (
+          <div className="mt-1.5 flex items-center gap-1.5">
+            {trend && (
+              <span
+                className={`inline-flex items-center text-xs font-semibold ${trend.isPositive ? 'text-green' : 'text-red'}`}
+              >
                 {trend.isPositive ? '↑' : '↓'} {Math.abs(trend.value)}%
               </span>
-            </div>
-          )}
-          {description && (
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              {trend ? ' ' : ''}
-              {description}
-            </p>
-          )}
-        </div>
-      )}
+            )}
+            {description && (
+              <p className="text-xs text-muted-foreground">{description}</p>
+            )}
+          </div>
+        )}
+      </div>
     </motion.div>
   );
 };

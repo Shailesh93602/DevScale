@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { RoadmapSection } from './components/RoadmapSection';
 import { Timeline } from './components/Timeline';
-import { useAxiosGet } from '@/hooks/useAxios';
+import { useAxiosGet, useAxiosPost } from '@/hooks/useAxios';
 import { CommentSection } from './components/CommentSection';
 import {
   MessageCircle,
@@ -18,11 +18,13 @@ import {
   Heart,
   Bookmark,
   Share2,
+  CheckCircle,
 } from 'lucide-react';
 import { useRoadmapSocial } from '@/hooks/useRoadmapSocial';
 import { RoadmapAuthor } from '@/hooks/useRoadmapApi';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -62,6 +64,8 @@ interface RoadmapDetails {
   difficulty?: 'beginner' | 'intermediate' | 'advanced';
   createdAt: string;
   updatedAt: string;
+  created_at?: string;
+  updated_at?: string;
   isEnrolled?: boolean;
   isFeatured?: boolean;
   likesCount: number;
@@ -82,7 +86,7 @@ const RoadmapSkeleton = () => {
       <div className="from-primary/5 relative rounded-2xl bg-gradient-to-b to-transparent p-8">
         <div className="grid gap-8 lg:grid-cols-2">
           {/* Left Column Skeleton */}
-          <div className="space-y-6 rounded-2xl bg-white/60 p-8 dark:bg-slate-900/60">
+          <div className="space-y-6 rounded-2xl bg-card/60 p-8">
             <div className="space-y-4">
               <div className="flex gap-2">
                 <Skeleton className="h-6 w-24" />
@@ -107,13 +111,10 @@ const RoadmapSkeleton = () => {
 
           {/* Right Column Skeleton */}
           <div className="space-y-6">
-            <div className="rounded-2xl bg-white/60 p-8 dark:bg-slate-900/60">
+            <div className="rounded-2xl bg-card/60 p-8">
               <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
                 {[1, 2, 3, 4].map((i) => (
-                  <div
-                    key={i}
-                    className="rounded-xl bg-white p-4 dark:bg-slate-800"
-                  >
+                  <div key={i} className="rounded-xl bg-card p-4">
                     <Skeleton className="mx-auto h-6 w-6" />
                     <Skeleton className="mx-auto mt-2 h-8 w-12" />
                     <Skeleton className="mx-auto mt-1 h-3 w-16" />
@@ -136,8 +137,8 @@ const RoadmapSkeleton = () => {
       <div className="space-y-12">
         {[1, 2, 3].map((section) => (
           <div key={section} className="relative pl-8">
-            <div className="absolute left-0 top-0 h-full w-px bg-slate-200 dark:bg-slate-800" />
-            <div className="absolute -left-2 top-2 h-4 w-4 rounded-full border-2 border-primary bg-white dark:bg-slate-950" />
+            <div className="absolute left-0 top-0 h-full w-px bg-border" />
+            <div className="absolute -left-2 top-2 h-4 w-4 rounded-full border-2 border-primary bg-background" />
             <div className="space-y-4">
               <Skeleton className="h-8 w-64" />
               <Skeleton className="h-20 w-full" />
@@ -145,7 +146,7 @@ const RoadmapSkeleton = () => {
                 {[1, 2, 3].map((item) => (
                   <div
                     key={item}
-                    className="rounded-lg border p-4 dark:border-slate-800"
+                    className="rounded-lg border border-border p-4"
                   >
                     <Skeleton className="h-6 w-32" />
                     <Skeleton className="mt-2 h-16 w-full" />
@@ -177,11 +178,11 @@ export default function CareerPathPage() {
     null,
   );
 
-  const [getRoadmapDetails] = useAxiosGet<{
-    roadMap: RoadmapDetails & {
+  const [getRoadmapDetails] = useAxiosGet<
+    RoadmapDetails & {
       main_concepts: IRoadmap[];
-    };
-  }>('roadmaps/{{careerId}}');
+    }
+  >('/roadmaps/{{careerId}}');
 
   const [socialActionLoading, setSocialActionLoading] = useState<{
     like: boolean;
@@ -190,6 +191,33 @@ export default function CareerPathPage() {
     like: false,
     bookmark: false,
   });
+
+  const [isEnrolling, setIsEnrolling] = useState(false);
+  const [enrollInRoadmap] = useAxiosPost('/roadmaps/enroll');
+
+  const handleEnroll = async () => {
+    if (isEnrolling || !careerId) return;
+    setIsEnrolling(true);
+    try {
+      const response = await enrollInRoadmap({ roadmapId: careerId });
+      if (response?.success) {
+        toast.success("Awesome! You're now enrolled ✨");
+        if (roadmapDetails) {
+          setRoadmapDetails({
+            ...roadmapDetails,
+            isEnrolled: true,
+            enrollmentCount: (roadmapDetails.enrollmentCount || 0) + 1,
+          });
+        }
+      } else {
+        toast.error('Failed to enroll. Please try again.');
+      }
+    } catch (e) {
+      toast.error('Failed to enroll. Please try again.');
+    } finally {
+      setIsEnrolling(false);
+    }
+  };
 
   const [optimisticState, setOptimisticState] = useState<{
     isLiked: boolean;
@@ -214,7 +242,10 @@ export default function CareerPathPage() {
     dispatch(showLoader('fetching roadmap'));
     try {
       const detailsResponse = await getRoadmapDetails({}, { careerId });
-      const roadmapData = detailsResponse.data?.roadMap;
+      const roadmapDataRaw = detailsResponse.data as any;
+      const roadmapData = roadmapDataRaw?.data
+        ? roadmapDataRaw.data
+        : roadmapDataRaw;
 
       if (roadmapData) {
         setRoadmapDetails(roadmapData);
@@ -249,7 +280,7 @@ export default function CareerPathPage() {
     try {
       setSocialActionLoading((prev) => ({ ...prev, [type]: true }));
 
-      // Optimistic update
+      // Optimistic update — applied immediately before the request
       if (type === 'like') {
         setOptimisticState((prev) =>
           prev
@@ -276,15 +307,8 @@ export default function CareerPathPage() {
         );
       }
 
+      // Fire the API action — optimistic state already shows the update
       await action(careerId);
-      const detailsResponse = await getRoadmapDetails({}, { careerId });
-      const roadmapData = detailsResponse.data?.roadMap;
-
-      if (roadmapData) {
-        setRoadmapDetails(roadmapData);
-        // Maintain the roadmap state from the main_concepts in the response
-        setRoadmap(roadmapData.main_concepts || []);
-      }
     } catch {
       // Revert optimistic update on error
       if (roadmapDetails) {
@@ -315,9 +339,7 @@ export default function CareerPathPage() {
     }
   };
 
-  if (!roadmapDetails) return null;
-
-  const tags = roadmapDetails.tags ? roadmapDetails.tags.split(',') : [];
+  const tags = roadmapDetails?.tags ? roadmapDetails.tags.split(',') : [];
 
   const currentState = optimisticState ||
     roadmapDetails || {
@@ -328,24 +350,24 @@ export default function CareerPathPage() {
     };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
+    <div className="min-h-screen bg-background">
       <ParallaxProvider>
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Card className="relative mt-8 border-none bg-white shadow-xl dark:bg-slate-900">
+          <Card className="relative mt-8 border-none bg-card shadow-xl">
             <Tabs
               value={activeTab}
               onValueChange={setActiveTab}
               className="w-full"
             >
               {/* Sticky Tabs Navigation */}
-              <div className="sticky top-0 z-40 bg-white shadow-md dark:bg-slate-900">
-                <div className="border-b border-slate-200 px-6 dark:border-slate-800">
+              <div className="sticky top-0 z-40 bg-card shadow-md">
+                <div className="border-b border-border px-6">
                   <TabsList className="h-16 w-full justify-start gap-8 bg-transparent">
                     <TabsTrigger
                       value="content"
                       className="group relative h-full data-[state=active]:bg-transparent"
                     >
-                      <span className="relative z-10 font-medium text-slate-600 transition-colors group-data-[state=active]:text-primary dark:text-slate-400 dark:group-data-[state=active]:text-primary">
+                      <span className="relative z-10 font-medium text-muted-foreground transition-colors group-data-[state=active]:text-primary">
                         Content
                       </span>
                       <span className="absolute bottom-0 left-0 h-0.5 w-full bg-transparent transition-all duration-300 group-data-[state=active]:h-1 group-data-[state=active]:bg-primary" />
@@ -355,16 +377,16 @@ export default function CareerPathPage() {
                       className="group relative h-full data-[state=active]:bg-transparent"
                       onClick={handleCommentClick}
                     >
-                      <span className="relative z-10 flex items-center gap-2 font-medium text-slate-600 transition-colors group-data-[state=active]:text-primary dark:text-slate-400 dark:group-data-[state=active]:text-primary">
+                      <span className="relative z-10 flex items-center gap-2 font-medium text-muted-foreground transition-colors group-data-[state=active]:text-primary">
                         <MessageCircle className="h-4 w-4" />
-                        Comments ({roadmapDetails.commentsCount})
+                        Comments ({roadmapDetails?.commentsCount || 0})
                       </span>
                       <span className="absolute bottom-0 left-0 h-0.5 w-full bg-transparent transition-all duration-300 group-data-[state=active]:h-1 group-data-[state=active]:bg-primary" />
                     </TabsTrigger>
                   </TabsList>
                 </div>
                 {/* Gradient overlay for smooth transition */}
-                <div className="absolute -bottom-8 left-0 right-0 h-8 bg-gradient-to-b from-white dark:from-slate-900" />
+                <div className="absolute -bottom-8 left-0 right-0 h-8 bg-gradient-to-b from-card" />
               </div>
 
               <div className="relative">
@@ -380,11 +402,11 @@ export default function CareerPathPage() {
                         {/* Hero Section */}
                         <div className="relative mt-8">
                           <div className="from-primary/20 via-primary/5 relative rounded-2xl bg-gradient-to-b to-transparent p-8">
-                            <div className="bg-grid-black/[0.02] dark:bg-grid-white/[0.02] absolute inset-0 rounded-2xl" />
+                            <div className="bg-grid-foreground/[0.02] absolute inset-0 rounded-2xl" />
                             <div className="relative">
                               <div className="grid gap-8 lg:grid-cols-2">
                                 {/* Left Column - Title and Meta */}
-                                <div className="flex flex-col justify-center space-y-6 rounded-2xl bg-white/60 p-8 backdrop-blur-sm dark:bg-slate-900/60">
+                                <div className="flex flex-col justify-center space-y-6 rounded-2xl bg-card/60 p-8 backdrop-blur-sm">
                                   <div className="space-y-4">
                                     <div className="flex items-center space-x-2">
                                       <Badge
@@ -396,16 +418,16 @@ export default function CareerPathPage() {
                                       {roadmapDetails.isFeatured && (
                                         <Badge
                                           variant="secondary"
-                                          className="bg-amber-500/10 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400"
+                                          className="bg-orange/10 text-orange"
                                         >
                                           FEATURED
                                         </Badge>
                                       )}
                                     </div>
-                                    <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
+                                    <h1 className="text-4xl font-bold tracking-tight text-foreground">
                                       {roadmapDetails.title}
                                     </h1>
-                                    <p className="text-lg text-slate-600 dark:text-slate-300">
+                                    <p className="text-lg text-muted-foreground">
                                       {roadmapDetails.description}
                                     </p>
                                   </div>
@@ -415,14 +437,14 @@ export default function CareerPathPage() {
                                       <Badge
                                         key={tag}
                                         variant="secondary"
-                                        className="bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                                        className="bg-muted text-muted-foreground"
                                       >
                                         {tag}
                                       </Badge>
                                     ))}
                                   </div>
 
-                                  <div className="flex items-center space-x-4 rounded-lg bg-white/80 p-4 shadow-sm dark:bg-slate-800/80">
+                                  <div className="flex items-center space-x-4 rounded-lg bg-card/80 p-4 shadow-sm">
                                     <Avatar className="ring-primary/10 h-12 w-12 ring-2">
                                       <AvatarImage
                                         src={
@@ -439,14 +461,15 @@ export default function CareerPathPage() {
                                       </AvatarFallback>
                                     </Avatar>
                                     <div>
-                                      <p className="font-medium text-slate-900 dark:text-white">
+                                      <p className="font-medium text-foreground">
                                         {roadmapDetails?.user?.full_name ||
                                           roadmapDetails?.user?.username}
                                       </p>
-                                      <p className="text-sm text-slate-500 dark:text-slate-400">
+                                      <p className="text-sm text-muted-foreground">
                                         Updated{' '}
                                         {new Date(
-                                          roadmapDetails.updatedAt,
+                                          roadmapDetails.updated_at ||
+                                            roadmapDetails.updatedAt,
                                         ).toLocaleDateString()}
                                       </p>
                                     </div>
@@ -455,49 +478,49 @@ export default function CareerPathPage() {
 
                                 {/* Right Column - Stats and Actions */}
                                 <div className="flex flex-col justify-center space-y-6">
-                                  <Card className="overflow-hidden border-none bg-white/60 p-8 shadow-xl backdrop-blur-sm dark:bg-slate-900/60">
+                                  <Card className="overflow-hidden border-none bg-card/60 p-8 shadow-xl backdrop-blur-sm">
                                     <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
-                                      <div className="rounded-xl bg-white p-4 text-center shadow-sm dark:bg-slate-800">
+                                      <div className="rounded-xl bg-card p-4 text-center shadow-sm">
                                         <BookOpen className="mx-auto h-6 w-6 text-primary" />
-                                        <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">
+                                        <p className="mt-2 text-2xl font-semibold text-foreground">
                                           {roadmap.length}
                                         </p>
-                                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                                        <p className="text-sm text-muted-foreground">
                                           Steps
                                         </p>
                                       </div>
-                                      <div className="rounded-xl bg-white p-4 text-center shadow-sm dark:bg-slate-800">
+                                      <div className="rounded-xl bg-card p-4 text-center shadow-sm">
                                         <Users className="mx-auto h-6 w-6 text-primary" />
-                                        <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">
+                                        <p className="mt-2 text-2xl font-semibold text-foreground">
                                           {roadmapDetails.enrollmentCount || 0}
                                         </p>
-                                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                                        <p className="text-sm text-muted-foreground">
                                           Enrolled
                                         </p>
                                       </div>
-                                      <div className="rounded-xl bg-white p-4 text-center shadow-sm dark:bg-slate-800">
+                                      <div className="rounded-xl bg-card p-4 text-center shadow-sm">
                                         <Clock className="mx-auto h-6 w-6 text-primary" />
-                                        <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">
+                                        <p className="mt-2 text-2xl font-semibold text-foreground">
                                           {roadmapDetails.estimatedTime ||
                                             '---'}
                                         </p>
-                                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                                        <p className="text-sm text-muted-foreground">
                                           Duration
                                         </p>
                                       </div>
-                                      <div className="rounded-xl bg-white p-4 text-center shadow-sm dark:bg-slate-800">
+                                      <div className="rounded-xl bg-card p-4 text-center shadow-sm">
                                         <Award className="mx-auto h-6 w-6 text-primary" />
-                                        <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">
+                                        <p className="mt-2 text-2xl font-semibold text-foreground">
                                           {roadmapDetails.progress || 0}%
                                         </p>
-                                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                                        <p className="text-sm text-muted-foreground">
                                           Complete
                                         </p>
                                       </div>
                                     </div>
 
                                     {roadmapDetails.progress !== undefined && (
-                                      <div className="mt-8 rounded-lg bg-white p-4 dark:bg-slate-800">
+                                      <div className="mt-8 rounded-lg bg-card p-4">
                                         <Progress
                                           value={roadmapDetails.progress}
                                           className="h-2"
@@ -508,7 +531,8 @@ export default function CareerPathPage() {
                                     {/* New Social Actions Design */}
                                     <div className="mt-8 flex items-center justify-between gap-4">
                                       <div className="flex items-center gap-6">
-                                        <button
+                                        <Button
+                                          variant="ghost"
                                           onClick={() =>
                                             handleSocialAction(
                                               handleLike,
@@ -517,7 +541,7 @@ export default function CareerPathPage() {
                                           }
                                           disabled={socialActionLoading.like}
                                           className={cn(
-                                            'group flex items-center gap-2 transition-all duration-200',
+                                            'group flex h-auto items-center gap-2 p-0 transition-all duration-200 hover:bg-transparent',
                                             'disabled:opacity-70',
                                             socialActionLoading.like &&
                                               'scale-95',
@@ -526,44 +550,43 @@ export default function CareerPathPage() {
                                           <div
                                             className={cn(
                                               'flex h-10 w-10 items-center justify-center rounded-full transition-all duration-200',
-                                              'bg-slate-100 dark:bg-slate-800',
+                                              'bg-muted',
                                               !currentState.isLiked &&
-                                                'group-hover:bg-red-50 dark:group-hover:bg-red-900/20',
+                                                'group-hover:bg-red/10',
                                               currentState.isLiked &&
-                                                'bg-red-50 dark:bg-red-900/20',
-                                              socialActionLoading.like &&
-                                                'scale-95',
+                                                'bg-red/10',
                                             )}
                                           >
                                             <Heart
                                               fill={
                                                 currentState.isLiked
-                                                  ? 'currentColor'
+                                                  ? '#ef4444'
                                                   : 'none'
                                               }
                                               className={cn(
                                                 'h-5 w-5 transition-all duration-200',
-                                                'text-slate-600 dark:text-slate-400',
+                                                'text-muted-foreground',
                                                 !currentState.isLiked &&
-                                                  'group-hover:text-red-500 dark:group-hover:text-red-400',
+                                                  'group-hover:text-red-500',
                                                 currentState.isLiked &&
-                                                  'text-red-500 dark:text-red-400',
+                                                  'text-red-500',
                                               )}
                                             />
                                           </div>
                                           <span
                                             className={cn(
                                               'text-sm font-medium transition-all duration-200',
-                                              'text-slate-600 dark:text-slate-400',
+                                              'text-muted-foreground',
                                               currentState.isLiked &&
-                                                'text-red-500 dark:text-red-400',
+                                                'text-red-500',
                                             )}
                                           >
                                             {currentState.likesCount}
                                           </span>
-                                        </button>
+                                        </Button>
 
-                                        <button
+                                        <Button
+                                          variant="ghost"
                                           onClick={() =>
                                             handleSocialAction(
                                               handleBookmark,
@@ -574,7 +597,7 @@ export default function CareerPathPage() {
                                             socialActionLoading.bookmark
                                           }
                                           className={cn(
-                                            'group flex items-center gap-2 transition-all duration-200',
+                                            'group flex h-auto items-center gap-2 p-0 transition-all duration-200 hover:bg-transparent',
                                             'disabled:opacity-70',
                                             socialActionLoading.bookmark &&
                                               'scale-95',
@@ -583,50 +606,68 @@ export default function CareerPathPage() {
                                           <div
                                             className={cn(
                                               'flex h-10 w-10 items-center justify-center rounded-full transition-all duration-200',
-                                              'bg-slate-100 dark:bg-slate-800',
+                                              'bg-muted',
                                               !currentState.isBookmarked &&
-                                                'group-hover:bg-amber-50 dark:group-hover:bg-amber-900/20',
+                                                'group-hover:bg-orange-500/15',
                                               currentState.isBookmarked &&
-                                                'bg-amber-50 dark:bg-amber-900/20',
-                                              socialActionLoading.bookmark &&
-                                                'scale-95',
+                                                'bg-orange-500/15',
                                             )}
                                           >
                                             <Bookmark
                                               fill={
                                                 currentState.isBookmarked
-                                                  ? 'currentColor'
+                                                  ? '#f97316'
                                                   : 'none'
                                               }
                                               className={cn(
                                                 'h-5 w-5 transition-all duration-200',
-                                                'text-slate-600 dark:text-slate-400',
+                                                'text-muted-foreground',
                                                 !currentState.isBookmarked &&
-                                                  'group-hover:text-amber-500 dark:group-hover:text-amber-400',
+                                                  'group-hover:text-orange-500',
                                                 currentState.isBookmarked &&
-                                                  'text-amber-500 dark:text-amber-400',
+                                                  'text-orange-500',
                                               )}
                                             />
                                           </div>
                                           <span
                                             className={cn(
                                               'text-sm font-medium transition-all duration-200',
-                                              'text-slate-600 dark:text-slate-400',
+                                              'text-muted-foreground',
                                               currentState.isBookmarked &&
-                                                'text-amber-500 dark:text-amber-400',
+                                                'text-orange-500',
                                             )}
                                           >
                                             {currentState.bookmarksCount}
                                           </span>
-                                        </button>
+                                        </Button>
                                       </div>
 
-                                      <button
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
                                         onClick={handleShare}
-                                        className="hover:bg-primary/10 dark:hover:bg-primary/20 group flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 transition-all dark:bg-slate-800"
+                                        className="hover:bg-primary/10 h-10 w-10 rounded-full bg-muted transition-all"
                                       >
-                                        <Share2 className="h-5 w-5 text-slate-600 transition-colors group-hover:text-primary dark:text-slate-400 dark:group-hover:text-primary" />
-                                      </button>
+                                        <Share2 className="h-5 w-5 text-muted-foreground transition-colors hover:text-primary" />
+                                      </Button>
+
+                                      {!roadmapDetails?.isEnrolled && (
+                                        <Button
+                                          onClick={handleEnroll}
+                                          disabled={isEnrolling}
+                                          className="ml-2 font-semibold"
+                                        >
+                                          {isEnrolling
+                                            ? 'Enrolling...'
+                                            : 'Enroll Now'}
+                                        </Button>
+                                      )}
+                                      {roadmapDetails?.isEnrolled && (
+                                        <div className="ml-2 inline-flex items-center gap-2 rounded-xl bg-success/10 border border-success/20 px-6 py-2.5 text-sm font-bold text-success animate-fade-up">
+                                          <CheckCircle size={14} />
+                                          Enrolled
+                                        </div>
+                                      )}
                                     </div>
                                   </Card>
                                 </div>
@@ -645,6 +686,7 @@ export default function CareerPathPage() {
                                 description={section.main_concept?.description}
                                 subjects={section.main_concept?.subjects}
                                 index={index}
+                                roadmapId={careerId}
                               />
                             ))}
                           </Timeline>

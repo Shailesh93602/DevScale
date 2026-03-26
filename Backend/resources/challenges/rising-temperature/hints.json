@@ -1,4 +1,5 @@
 [
-  "TODO: Add hint 1",
-  "TODO: Add hint 2"
+  "You need to compare each row with another row from the same table.",
+  "Consider using a self-join on the Weather table.",
+  "The join condition should check if the difference between record dates is exactly 1 day."
 ]

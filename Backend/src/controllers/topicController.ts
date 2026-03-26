@@ -2,13 +2,16 @@ import { Request, Response } from 'express';
 import { catchAsync } from '../utils/index';
 import { sendResponse } from '../utils/apiResponse';
 import TopicRepository from '../repositories/topicRepository';
+import QuizRepository from '../repositories/quizRepository';
 import { Prisma } from '@prisma/client';
 
 export default class TopicController {
   private readonly topicRepo: TopicRepository;
+  private readonly quizRepo: QuizRepository;
 
   constructor() {
     this.topicRepo = new TopicRepository();
+    this.quizRepo = new QuizRepository();
   }
 
   public getAllTopics = catchAsync(async (req: Request, res: Response) => {
@@ -25,9 +28,9 @@ export default class TopicController {
 
   public getArticlesForTopic = catchAsync(
     async (req: Request, res: Response) => {
-      const { topicId } = req.params;
+      const { id } = req.params;
       const topic = (await this.topicRepo.findUnique({
-        where: { id: topicId },
+        where: { id },
         include: { articles: true },
       })) as Prisma.TopicInclude;
 
@@ -41,29 +44,42 @@ export default class TopicController {
 
   public getQuizByTopicId = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const quiz = await this.topicRepo.findUnique({ where: { id } });
+    const topic = (await this.topicRepo.findUnique({
+      where: { id },
+      include: {
+        quizzes: {
+          include: {
+            questions: {
+              include: {
+                options: true
+              }
+            }
+          }
+        }
+      },
+    })) as any;
 
-    if (!quiz) {
+    if (!topic || !topic.quizzes || topic.quizzes.length === 0) {
       return sendResponse(res, 'QUIZ_NOT_FOUND');
     }
 
-    return sendResponse(res, 'QUIZ_FETCHED', { data: quiz });
+    return sendResponse(res, 'QUIZ_FETCHED', { data: topic.quizzes[0] });
   });
 
   public submitQuiz = catchAsync(async (req: Request, res: Response) => {
-    // const userId = req.user.id;
-    // const { topic_id, answers } = req.body;
+    const userId = req.user.id;
+    const { quiz_id, answers, time_spent } = req.body;
 
-    // TODO: implement this function
-    // const result = await this.topicRepo.submitQuiz(userId, topic_id, answers);
-    return sendResponse(
-      res,
-      // result.is_passed
-      req.user.id ? 'QUIZ_PASSED' : 'QUIZ_FAILED'
-      // {
-      // data: result,
-      // }
-    );
+    const result = await this.quizRepo.submitQuiz({
+      user_id: userId,
+      quiz_id,
+      answers,
+      time_spent,
+    });
+
+    return sendResponse(res, result.is_passed ? 'QUIZ_PASSED' : 'QUIZ_FAILED', {
+      data: result,
+    });
   });
 
   public getArticleByTopicId = catchAsync(

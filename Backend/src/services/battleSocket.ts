@@ -1,448 +1,338 @@
-import socketService, { ScoreUpdate } from './socket';
-import logger from '@/utils/logger';
-import prisma from '@/lib/prisma';
-import { BattleStatus } from '@prisma/client';
+import socketService from './socket';
+import logger from '../utils/logger';
+import prisma from '../lib/prisma';
+import { BattleRepository } from '../repositories/battleRepository';
+
+const battleRepo = new BattleRepository();
+
+// ─── Types ─────────────────────────────────────────────────────────────────
+
+interface BattleState {
+  currentQuestionIndex: number;
+  questionStartedAt: number;
+  questionEndsAt: number;
+  questionTimerInterval: NodeJS.Timeout | null;
+  questionTimeoutHandle: NodeJS.Timeout | null;
+  lobbyCountdownHandle: ReturnType<typeof setInterval> | null;
+  startScheduleHandle: NodeJS.Timeout | null;
+}
+
+// ─── Service ────────────────────────────────────────────────────────────────
 
 class BattleSocketService {
-  // Map to track active battle timers
-  private readonly battleTimers: Map<string, NodeJS.Timeout> = new Map();
+  private states = new Map<string, BattleState>();
 
-  // Map to track battle question timers
-  private readonly questionTimers: Map<string, NodeJS.Timeout> = new Map();
+  // ── Init (called after battle creation) ───────────────────────────────
 
-  // Map to track battle state
-  private readonly battleStates: Map<
-    string,
-    {
-      status: BattleStatus;
-      currentQuestionIndex: number;
-      startTime: number;
-      endTime: number;
-    }
-  > = new Map();
-
-  /**
-   * Initialize a battle's real-time features
-   */
   async initializeBattle(battleId: string) {
     try {
-      const battle = await prisma.battle.findUnique({
-        where: { id: battleId },
-        include: {
-          questions: {
-            orderBy: { order: 'asc' },
-          },
-        },
-      });
+      const battle = await prisma.battle.findUnique({ where: { id: battleId } });
+      if (!battle) return;
 
-      if (!battle) {
-        logger.error(`Cannot initialize battle ${battleId}: Battle not found`);
-        return;
+      if (battle.type === 'SCHEDULED' && battle.start_time) {
+        const lobbyOpenAt = battle.start_time.getTime() - 60_000;
+        const delay = lobbyOpenAt - Date.now();
+        if (delay > 0) {
+          const handle = setTimeout(() => this.transitionToLobby(battleId), delay);
+          this.getOrCreateState(battleId).startScheduleHandle = handle;
+          logger.info(`Battle ${battleId}: lobby opens in ${Math.round(delay / 1000)}s`);
+        } else if (delay > -60_000) {
+          // Already within lobby window
+          await this.transitionToLobby(battleId);
+        }
       }
-
-      // Schedule battle start if it's in the future
-      const now = Date.now();
-      const scheduledStartTime = battle.start_time?.getTime();
-
-      if (
-        scheduledStartTime &&
-        scheduledStartTime > now &&
-        battle.status === 'UPCOMING'
-      ) {
-        const delay = scheduledStartTime - now;
-
-        // Schedule battle to start automatically
-        const timer = setTimeout(() => {
-          this.startBattle(battleId);
-        }, delay);
-
-        this.battleTimers.set(battleId, timer);
-
-        logger.info(`Battle ${battleId} scheduled to start in ${delay}ms`);
-      }
-    } catch (error) {
-      logger.error(`Error initializing battle ${battleId}:`, error);
+    } catch (err) {
+      logger.error(`initializeBattle ${battleId}:`, err);
     }
   }
 
-  /**
-   * Start a battle
-   */
+  // ── Lobby ──────────────────────────────────────────────────────────────
+
+  async transitionToLobby(battleId: string) {
+    try {
+      const battle = await prisma.battle.update({
+        where: { id: battleId },
+        data: { status: 'LOBBY' },
+      });
+
+      socketService.emitToRoom(battleId, 'battle:status_changed', { status: 'LOBBY' });
+      logger.info(`Battle ${battleId} → LOBBY`);
+
+      if (battle.type === 'SCHEDULED' && battle.start_time) {
+        this.runLobbyCountdown(battleId, battle.start_time.getTime());
+      }
+    } catch (err) {
+      logger.error(`transitionToLobby ${battleId}:`, err);
+    }
+  }
+
+  private runLobbyCountdown(battleId: string, startAtMs: number) {
+    const state = this.getOrCreateState(battleId);
+    if (state.lobbyCountdownHandle) clearInterval(state.lobbyCountdownHandle);
+
+    const tick = setInterval(async () => {
+      const secondsRemaining = Math.ceil((startAtMs - Date.now()) / 1000);
+      if (secondsRemaining <= 0) {
+        clearInterval(tick);
+        state.lobbyCountdownHandle = null;
+        await this.startBattle(battleId);
+        return;
+      }
+      socketService.emitToRoom(battleId, 'battle:countdown', { seconds_remaining: secondsRemaining });
+    }, 1000);
+
+    state.lobbyCountdownHandle = tick;
+  }
+
+  // ── Start ──────────────────────────────────────────────────────────────
+
   async startBattle(battleId: string) {
     try {
-      // Update battle status in database
-      const battle = await prisma.battle.update({
-        where: { id: battleId },
-        data: { status: 'IN_PROGRESS' },
-        include: {
-          questions: {
-            orderBy: { order: 'asc' },
-          },
-        },
-      });
-
-      // Clear any existing timer
-      if (this.battleTimers.has(battleId)) {
-        clearTimeout(this.battleTimers.get(battleId));
-        this.battleTimers.delete(battleId);
+      const state = this.getOrCreateState(battleId);
+      if (state.lobbyCountdownHandle) {
+        clearInterval(state.lobbyCountdownHandle);
+        state.lobbyCountdownHandle = null;
       }
 
-      // Update battle state
-      const battleState = this.battleStates.get(battleId);
-      if (battleState) {
-        battleState.status = 'IN_PROGRESS';
-      } else {
-        this.battleStates.set(battleId, {
-          status: 'IN_PROGRESS',
-          currentQuestionIndex: -1,
-          startTime: battle.start_time?.getTime() || 0,
-          endTime: battle.end_time?.getTime() || 0,
-        });
-      }
-
-      // Notify all participants
-      socketService.updateBattleState(battleId, {
-        battle_id: battleId,
-        status: 'IN_PROGRESS',
-        current_participants: battle.current_participants,
+      await prisma.battle.update({ where: { id: battleId }, data: { status: 'IN_PROGRESS' } });
+      await prisma.battleParticipant.updateMany({
+        where: { battle_id: battleId, status: { in: ['JOINED', 'READY'] } },
+        data: { status: 'PLAYING' },
       });
 
-      // Start the first question after a short delay
-      setTimeout(() => {
-        this.moveToNextQuestion(battleId);
-      }, 3000);
+      socketService.emitToRoom(battleId, 'battle:started', { started_at: Date.now() });
+      logger.info(`Battle ${battleId} → IN_PROGRESS`);
 
-      logger.info(`Battle ${battleId} started`);
-    } catch (error) {
-      logger.error(`Error starting battle ${battleId}:`, error);
+      setTimeout(() => this.broadcastQuestion(battleId, 0), 2000);
+    } catch (err) {
+      logger.error(`startBattle ${battleId}:`, err);
     }
   }
 
-  /**
-   * Move to the next question in the battle
-   */
-  async moveToNextQuestion(battleId: string) {
+  // ── Questions ──────────────────────────────────────────────────────────
+
+  async broadcastQuestion(battleId: string, index: number) {
     try {
-      const battleState = this.battleStates.get(battleId);
-      if (!battleState) {
-        logger.error(
-          `Cannot move to next question: Battle ${battleId} state not found`
-        );
+      const state = this.getOrCreateState(battleId);
+      if (state.questionTimerInterval) clearInterval(state.questionTimerInterval);
+      if (state.questionTimeoutHandle) clearTimeout(state.questionTimeoutHandle);
+      state.questionTimerInterval = null;
+      state.questionTimeoutHandle = null;
+
+      const questions = await prisma.battleQuestion.findMany({
+        where: { battle_id: battleId },
+        orderBy: { order: 'asc' },
+      });
+
+      if (index >= questions.length) {
+        await this.endBattle(battleId);
         return;
       }
 
-      // Get battle with questions
+      const question = questions[index];
+      const now = Date.now();
+      const endsAt = now + question.time_limit * 1000;
+
+      state.currentQuestionIndex = index;
+      state.questionStartedAt = now;
+      state.questionEndsAt = endsAt;
+
+      socketService.emitToRoom(battleId, 'battle:question', {
+        index,
+        total_questions: questions.length,
+        question_id: question.id,
+        time_limit: question.time_limit,
+        ends_at: endsAt,
+      });
+
+      // Per-second timer ticks
+      const timerInterval = setInterval(() => {
+        const secondsRemaining = Math.ceil((endsAt - Date.now()) / 1000);
+        if (secondsRemaining > 0) {
+          socketService.emitToRoom(battleId, 'battle:timer_tick', { seconds_remaining: secondsRemaining });
+        }
+      }, 1000);
+
+      // Auto-advance when time expires
+      const timeoutHandle = setTimeout(async () => {
+        clearInterval(timerInterval);
+        state.questionTimerInterval = null;
+        state.questionTimeoutHandle = null;
+        logger.info(`Battle ${battleId} Q${index} expired → advancing`);
+        const done = await battleRepo.checkAllParticipantsDone(battleId);
+        if (done) {
+          await this.endBattle(battleId);
+        } else {
+          await this.broadcastQuestion(battleId, index + 1);
+        }
+      }, question.time_limit * 1000 + 500);
+
+      state.questionTimerInterval = timerInterval;
+      state.questionTimeoutHandle = timeoutHandle;
+
+      logger.info(`Battle ${battleId} Q${index + 1}/${questions.length}`);
+    } catch (err) {
+      logger.error(`broadcastQuestion ${battleId} index ${index}:`, err);
+    }
+  }
+
+  // ── Answer submitted ────────────────────────────────────────────────────
+
+  async handleAnswerSubmitted(
+    battleId: string,
+    userId: string,
+    result: {
+      is_correct: boolean;
+      points_earned: number;
+      correct_answer: number;
+      explanation?: string | null;
+      leaderboard: unknown[];
+      participant_done: boolean;
+    }
+  ) {
+    // Private result only to the submitting user
+    socketService.emitToUser(battleId, userId, 'battle:answer_result', {
+      is_correct: result.is_correct,
+      points_earned: result.points_earned,
+      correct_answer: result.correct_answer,
+      explanation: result.explanation ?? null,
+    });
+
+    // Updated leaderboard to everyone in the room
+    socketService.emitToRoom(battleId, 'battle:score_update', {
+      leaderboard: result.leaderboard,
+    });
+
+    // If everyone's done, end battle
+    if (await battleRepo.checkAllParticipantsDone(battleId)) {
+      const state = this.states.get(battleId);
+      if (state?.questionTimeoutHandle) {
+        clearTimeout(state.questionTimeoutHandle);
+        state.questionTimeoutHandle = null;
+      }
+      if (state?.questionTimerInterval) {
+        clearInterval(state.questionTimerInterval);
+        state.questionTimerInterval = null;
+      }
+      await this.endBattle(battleId);
+    }
+  }
+
+  // ── End battle ─────────────────────────────────────────────────────────
+
+  async endBattle(battleId: string) {
+    try {
+      const { battle, leaderboard } = await battleRepo.completeBattle(battleId);
+      socketService.emitToRoom(battleId, 'battle:completed', {
+        winner_id: battle.winner_id,
+        leaderboard,
+      });
+      this.cleanup(battleId);
+      logger.info(`Battle ${battleId} → COMPLETED. Winner: ${battle.winner_id}`);
+    } catch (err) {
+      logger.error(`endBattle ${battleId}:`, err);
+    }
+  }
+
+  // ── Participant events ─────────────────────────────────────────────────
+
+  async handleParticipantJoined(
+    battleId: string,
+    user: { id: string; username: string; avatar_url?: string | null }
+  ) {
+    const battle = await prisma.battle.findUnique({ where: { id: battleId } });
+    socketService.emitToRoom(battleId, 'battle:participant_joined', {
+      user,
+      total_count: battle?.current_participants ?? 0,
+    });
+  }
+
+  async handleParticipantReady(battleId: string, userId: string) {
+    const [readyCount, totalCount] = await Promise.all([
+      prisma.battleParticipant.count({ where: { battle_id: battleId, status: 'READY' } }),
+      prisma.battleParticipant.count({ where: { battle_id: battleId } }),
+    ]);
+    socketService.emitToRoom(battleId, 'battle:participant_ready', {
+      user_id: userId,
+      ready_count: readyCount,
+      total_count: totalCount,
+    });
+  }
+
+  async handleParticipantLeft(battleId: string, userId: string) {
+    const battle = await prisma.battle.findUnique({ where: { id: battleId } });
+    socketService.emitToRoom(battleId, 'battle:participant_left', {
+      user_id: userId,
+      total_count: battle?.current_participants ?? 0,
+    });
+  }
+
+  // ── Reconnect ──────────────────────────────────────────────────────────
+
+  async sendStateToSocket(socketId: string, battleId: string) {
+    try {
       const battle = await prisma.battle.findUnique({
         where: { id: battleId },
         include: {
-          questions: {
-            orderBy: { order: 'asc' },
-          },
-        },
-      });
-
-      if (!battle || battle.questions.length === 0) {
-        logger.error(
-          `Cannot move to next question: Battle ${battleId} or questions not found`
-        );
-        return;
-      }
-
-      // Clear any existing question timer
-      if (this.questionTimers.has(battleId)) {
-        clearTimeout(this.questionTimers.get(battleId));
-        this.questionTimers.delete(battleId);
-      }
-
-      // Increment question index
-      const nextQuestionIndex = battleState.currentQuestionIndex + 1;
-
-      // Check if we've reached the end of questions
-      if (nextQuestionIndex >= battle.questions.length) {
-        this.endBattle(battleId);
-        return;
-      }
-
-      // Update battle state
-      battleState.currentQuestionIndex = nextQuestionIndex;
-      const currentQuestion = battle.questions[nextQuestionIndex];
-
-      // Notify participants about the question change
-      socketService.changeQuestion(
-        battleId,
-        currentQuestion.id,
-        nextQuestionIndex
-      );
-
-      // Set up timer for this question
-      const now = Date.now();
-      const questionEndTime = now + currentQuestion.time_limit * 1000;
-
-      // Sync timer with all participants
-      socketService.syncTimer(battleId, {
-        battle_id: battleId,
-        question_id: currentQuestion.id,
-        start_time: now,
-        end_time: questionEndTime,
-        time_remaining: currentQuestion.time_limit,
-      });
-
-      // Schedule next question
-      const timer = setTimeout(() => {
-        this.moveToNextQuestion(battleId);
-      }, currentQuestion.time_limit * 1000);
-
-      this.questionTimers.set(battleId, timer);
-
-      logger.info(
-        `Battle ${battleId} moved to question ${nextQuestionIndex + 1}/${battle.questions.length}`
-      );
-    } catch (error) {
-      logger.error(
-        `Error moving to next question in battle ${battleId}:`,
-        error
-      );
-    }
-  }
-
-  /**
-   * End a battle
-   */
-  async endBattle(battleId: string) {
-    try {
-      // Update battle status in database
-      const battle = await prisma.battle.update({
-        where: { id: battleId },
-        data: { status: 'COMPLETED' },
-        include: {
           participants: {
-            orderBy: { score: 'desc' },
-            include: {
-              user: {
-                select: {
-                  id: true,
-                  username: true,
-                  avatar_url: true,
-                },
-              },
-            },
+            include: { user: { select: { id: true, username: true, avatar_url: true } } },
           },
         },
       });
+      if (!battle) return;
 
-      // Clear any existing timers
-      if (this.battleTimers.has(battleId)) {
-        clearTimeout(this.battleTimers.get(battleId));
-        this.battleTimers.delete(battleId);
-      }
+      const leaderboard = await battleRepo.getBattleLeaderboard(battleId);
+      const state = this.states.get(battleId);
 
-      if (this.questionTimers.has(battleId)) {
-        clearTimeout(this.questionTimers.get(battleId));
-        this.questionTimers.delete(battleId);
-      }
-
-      // Update battle state
-      const battleState = this.battleStates.get(battleId);
-      if (battleState) {
-        battleState.status = 'COMPLETED';
-      }
-
-      // Notify all participants
-      socketService.updateBattleState(battleId, {
-        battle_id: battleId,
-        status: 'COMPLETED',
-        current_participants: battle.current_participants,
-      });
-
-      // Send final results
-      socketService.completeBattle(battleId, {
+      socketService.emitToSocket(socketId, 'battle:state', {
+        status: battle.status,
+        current_question_index: state?.currentQuestionIndex ?? -1,
+        question_ends_at: state?.questionEndsAt ?? null,
+        leaderboard,
         participants: battle.participants.map((p) => ({
           user_id: p.user_id,
           username: p.user.username,
           avatar_url: p.user.avatar_url,
+          status: p.status,
           score: p.score,
           rank: p.rank,
         })),
       });
-
-      // Clean up battle state
-      this.battleStates.delete(battleId);
-
-      logger.info(`Battle ${battleId} completed`);
-    } catch (error) {
-      logger.error(`Error ending battle ${battleId}:`, error);
+    } catch (err) {
+      logger.error(`sendStateToSocket ${battleId}:`, err);
     }
   }
 
-  /**
-   * Handle a participant joining a battle
-   */
-  async handleParticipantJoin(battleId: string, userId: string) {
-    try {
-      const user = await prisma.user.findUnique({
-        where: { id: userId },
-        select: {
-          id: true,
-          username: true,
-          avatar_url: true,
-        },
+  // ── Utils ───────────────────────────────────────────────────────────────
+
+  private getOrCreateState(battleId: string): BattleState {
+    if (!this.states.has(battleId)) {
+      this.states.set(battleId, {
+        currentQuestionIndex: -1,
+        questionStartedAt: 0,
+        questionEndsAt: 0,
+        questionTimerInterval: null,
+        questionTimeoutHandle: null,
+        lobbyCountdownHandle: null,
+        startScheduleHandle: null,
       });
-
-      if (!user) {
-        logger.error(
-          `User ${userId} not found when joining battle ${battleId}`
-        );
-        return;
-      }
-
-      // Notify all participants about the new participant
-
-      socketService.updateBattleState(battleId, {
-        battle_id: battleId,
-        status: this.battleStates.get(battleId)?.status || 'UPCOMING',
-        current_participants: await this.getCurrentParticipantCount(battleId),
-      });
-
-      logger.info(`User ${userId} joined battle ${battleId}`);
-    } catch (error) {
-      logger.error(
-        `Error handling participant join for battle ${battleId}:`,
-        error
-      );
     }
+    return this.states.get(battleId)!;
   }
 
-  /**
-   * Handle a score update for a participant
-   */
-  async handleScoreUpdate(battleId: string, userId: string, score: number) {
-    try {
-      // Update participant score in database
-      const participant = await prisma.battleParticipant.update({
-        where: {
-          battle_id_user_id: {
-            battle_id: battleId,
-            user_id: userId,
-          },
-        },
-        data: {
-          score,
-        },
-        include: {
-          user: {
-            select: {
-              id: true,
-              username: true,
-              avatar_url: true,
-            },
-          },
-        },
-      });
-
-      // Update rankings for all participants
-      await this.updateRankings(battleId);
-
-      // Get updated participant with rank
-      const updatedParticipant = await prisma.battleParticipant.findUnique({
-        where: {
-          battle_id_user_id: {
-            battle_id: battleId,
-            user_id: userId,
-          },
-        },
-      });
-
-      if (!updatedParticipant) {
-        logger.error(
-          `Participant not found after score update: ${battleId}, ${userId}`
-        );
-        return;
-      }
-
-      // Notify all participants about the score update
-      const scoreUpdate: ScoreUpdate = {
-        battle_id: battleId,
-        user_id: userId,
-        username: participant.user.username,
-        score: participant.score,
-        rank: updatedParticipant.rank || 0,
-      };
-
-      socketService.updateScore(battleId, scoreUpdate);
-
-      logger.info(
-        `User ${userId} score updated in battle ${battleId}: ${score}`
-      );
-    } catch (error) {
-      logger.error(
-        `Error updating score for user ${userId} in battle ${battleId}:`,
-        error
-      );
-    }
+  notifyStatusChanged(battleId: string, status: string) {
+    socketService.emitToRoom(battleId, 'battle:status_changed', { status });
   }
 
-  /**
-   * Update rankings for all participants in a battle
-   */
-  private async updateRankings(battleId: string) {
-    try {
-      // Get all participants ordered by score
-      const participants = await prisma.battleParticipant.findMany({
-        where: { battle_id: battleId },
-        orderBy: { score: 'desc' },
-      });
-
-      // Update ranks in a transaction
-      const updates = participants.map((participant, index) => {
-        return prisma.battleParticipant.update({
-          where: { id: participant.id },
-          data: { rank: index + 1 },
-        });
-      });
-
-      await prisma.$transaction(updates);
-    } catch (error) {
-      logger.error(`Error updating rankings for battle ${battleId}:`, error);
-    }
-  }
-
-  /**
-   * Get the current number of participants in a battle
-   */
-  private async getCurrentParticipantCount(battleId: string): Promise<number> {
-    try {
-      const count = await prisma.battleParticipant.count({
-        where: { battle_id: battleId },
-      });
-      return count;
-    } catch (error) {
-      logger.error(
-        `Error getting participant count for battle ${battleId}:`,
-        error
-      );
-      return 0;
-    }
-  }
-
-  /**
-   * Clean up resources for a battle
-   */
-  cleanupBattle(battleId: string) {
-    // Clear any existing timers
-    if (this.battleTimers.has(battleId)) {
-      clearTimeout(this.battleTimers.get(battleId));
-      this.battleTimers.delete(battleId);
-    }
-
-    if (this.questionTimers.has(battleId)) {
-      clearTimeout(this.questionTimers.get(battleId));
-      this.questionTimers.delete(battleId);
-    }
-
-    // Remove battle state
-    this.battleStates.delete(battleId);
-
-    logger.info(`Battle ${battleId} resources cleaned up`);
+  cleanup(battleId: string) {
+    const state = this.states.get(battleId);
+    if (!state) return;
+    if (state.questionTimerInterval) clearInterval(state.questionTimerInterval);
+    if (state.questionTimeoutHandle) clearTimeout(state.questionTimeoutHandle);
+    if (state.lobbyCountdownHandle) clearInterval(state.lobbyCountdownHandle);
+    if (state.startScheduleHandle) clearTimeout(state.startScheduleHandle);
+    this.states.delete(battleId);
+    logger.info(`Battle ${battleId} state cleaned up`);
   }
 }
 

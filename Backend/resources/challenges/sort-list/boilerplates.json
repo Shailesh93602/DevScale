@@ -1,0 +1,5 @@
+{
+  "typescript": "function sortList(head: ListNode | null): ListNode | null {\n    // Your code here\n}",
+  "javascript": "/**\n * @param {any} params\n * @return {any}\n */\nvar sortList = function(root) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def sortList(self, root) -> bool:\n        # Your code here\n        pass"
+}

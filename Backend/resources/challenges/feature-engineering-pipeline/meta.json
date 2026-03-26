@@ -14,6 +14,7 @@
   "example_input": "{\"data\": [[1,100,\"cat\"],[2,200,\"dog\"],[3,300,\"cat\"]], \"columns\": [\"age\",\"salary\",\"pet\"], \"operations\": [\"normalize:age\",\"normalize:salary\",\"one_hot:pet\"]}",
   "example_output": "{\"features\": [[0,0,1,0],[0.5,0.5,0,1],[1,1,1,0]], \"column_names\": [\"age_norm\",\"salary_norm\",\"pet_cat\",\"pet_dog\"]}",
   "constraints": "1 <= rows <= 10000, 1 <= columns <= 50, supported operations: normalize, standardize, one_hot, bin, log_transform",
-  "function_signature": "function featureEngineeringPipeline(data: any[][], columns: string[], operations: string[]): { features: number[][]; column_names: string[] }",
-  "status": "ACTIVE"
+  "function_signature": "function featureEngineeringPipeline(data: any[][], columns: string[], operations: string[]): { features: number[][]; column_names: string[] } {}",
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

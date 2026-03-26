@@ -1,0 +1,7 @@
+[
+  "How can you avoid collisions without a central server? Think about giving each machine its own unique 'range' or 'identifier'.",
+  "To make IDs sortable by time, which piece of information should be in the most significant bits?",
+  "What happens if a node generates IDs so fast that it reaches its limit within a single millisecond?",
+  "Consider 'Clock Skew'. What should the system do if the system clock is adjusted backwards by NTP?"
+]
+

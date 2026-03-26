@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nclass BlogAPI { createPost(req, res): void; getPost(req, res): void; updatePost(req, res): void; deletePost(req, res): void; listPosts(req, res): void; addComment(req, res): void; }",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

@@ -15,5 +15,6 @@
   "example_output": "| player_id | first_login |\n| 1         | 2016-03-01  |\n| 2         | 2017-06-25  |\n| 3         | 2016-03-02  |",
   "constraints": "- (player_id, event_date) is the primary key\n- Each row records a player's activity on a given date",
   "function_signature": "-- Write your SQL query below",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

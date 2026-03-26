@@ -1,3 +1,27 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  {
+    "input": "10",
+    "output": "4",
+    "is_hidden": false
+  },
+  {
+    "input": "0",
+    "output": "0",
+    "is_hidden": false
+  },
+  {
+    "input": "1",
+    "output": "0",
+    "is_hidden": false
+  },
+  {
+    "input": "2",
+    "output": "0",
+    "is_hidden": true
+  },
+  {
+    "input": "499979",
+    "output": "41537",
+    "is_hidden": true
+  }
 ]

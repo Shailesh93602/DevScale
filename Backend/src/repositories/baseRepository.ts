@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { PaginatedResult, PaginationParams } from '@/types';
+import { PaginatedResult, PaginationParams } from '../types';
 import { PrismaClient } from '@prisma/client';
 import prisma from '../lib/prisma';
 
@@ -162,7 +162,15 @@ export default abstract class BaseRepository<D extends PrismaDelegate> {
           mode: 'insensitive',
         },
       }));
-      finalWhere = { ...finalWhere, OR: searchConditions };
+
+      if (finalWhere.AND) {
+        finalWhere.AND.push({ OR: searchConditions });
+      } else if (finalWhere.OR) {
+        const existingOR = finalWhere.OR;
+        finalWhere = { AND: [{ OR: existingOR }, { OR: searchConditions }] };
+      } else {
+        finalWhere.OR = searchConditions;
+      }
     }
 
     // Merge additional filters if provided.

@@ -1,3 +1,7 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  { "input": "{\"s1\":\"ab\",\"s2\":\"eidbaooo\"}", "output": "true", "explanation": "s2 contains one permutation of s1 (\"ba\").", "is_hidden": false },
+  { "input": "{\"s1\":\"ab\",\"s2\":\"eidboaoo\"}", "output": "false", "explanation": "No permutation of 'ab' exists in s2.", "is_hidden": false },
+  { "input": "{\"s1\":\"hello\",\"s2\":\"ooolleoooleh\"}", "output": "false", "explanation": "Substring 'oole' is not a permutation of 'hello'.", "is_hidden": true },
+  { "input": "{\"s1\":\"adc\",\"s2\":\"dcda\"}", "output": "true", "explanation": "Permutation 'cda' exists.", "is_hidden": true },
+  { "input": "{\"s1\":\"abc\",\"s2\":\"ccccbbbbaaaa\"}", "output": "false", "explanation": "No clustered permutation.", "is_hidden": true }
 ]

@@ -1,0 +1,20 @@
+{
+  "title": "Design a Geospatial Index (Nearby Drivers)",
+  "slug": "design-nearby-drivers",
+  "difficulty": "Hard",
+  "category": "system_design",
+  "points": 200,
+  "tags": ["Geospatial", "System Design", "Geohash", "Quadtree", "Scalability"],
+  "company_tags": ["Uber", "Lyft", "DoorDash", "Airbnb", "Google"],
+  "topic_tags": ["System Design", "Geospatial Data"],
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 262144,
+  "input_format": "Latitude, longitude, and radius parameters.",
+  "output_format": "List of nearby driver IDs.",
+  "example_input": "findNearbyDrivers(37.77, -122.41, 5.0)",
+  "example_output": "['driver_1', 'driver_42']",
+  "constraints": "O(log N) or better for updates and queries. Support millions of drivers.",
+  "function_signature": "class GeospatialService {}",
+  "status": "ACTIVE",
+  "is_production_ready": true
+}

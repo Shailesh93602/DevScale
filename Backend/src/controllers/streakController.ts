@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
+
 import { catchAsync } from '../utils/catchAsync';
-import { sendResponse } from '@/utils/apiResponse';
+import { sendResponse } from '../utils/apiResponse';
 import { createAppError } from '../utils/errorHandler';
 import StreakRepository from '../repositories/streakRepository';
 
@@ -54,6 +55,10 @@ export class StreakController {
 
   public getWeeklyActivity = catchAsync(async (req: Request, res: Response) => {
     const userId = req.user?.id;
+    if (!userId) {
+      throw createAppError('User not authenticated', 401);
+    }
+
     const weeklyActivity = await this.streakRepo.getWeeklyActivity(userId);
 
     sendResponse(res, 'WEEKLY_ACTIVITY_FETCHED', { data: weeklyActivity });

@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nclass AuthService { register(email: string, password: string): Promise<User>; login(email: string, password: string): Promise<TokenPair>; verifyToken(token: string): Promise<TokenPayload>; refreshToken(refreshToken: string): Promise<TokenPair>; }",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

@@ -1,0 +1,5 @@
+{
+  "typescript": "class URLShortener { shorten(url: string, customAlias?: string): Promise<ShortenResult>; resolve(shortCode: string): Promise<string>; getAnalytics(shortCode: string): Promise<Analytics>; } {\n    // Conceptual implementation\n}",
+  "javascript": "class URLShortener {\n    constructor() {\n        // Initialize\n    }\n}",
+  "python": "class URLShortener:\n    def __init__(self):\n        pass"
+}

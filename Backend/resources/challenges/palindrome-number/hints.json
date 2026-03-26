@@ -1,4 +1,5 @@
 [
-  "TODO: Add hint 1",
-  "TODO: Add hint 2"
+  "A negative number cannot be a palindrome because of the negative sign.",
+  "You could convert the number to a string, but can you solve it without string conversion?",
+  "Consider reversing only half of the number and comparing it to the other half."
 ]

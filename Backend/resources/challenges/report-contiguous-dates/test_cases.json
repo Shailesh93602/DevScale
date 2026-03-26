@@ -1,3 +1,14 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  {
+    "input": "Failed table: [2019-01-01, 2019-01-02], Succeeded table: [2019-01-03]",
+    "output": "[['failed', '2019-01-01', '2019-01-02'], ['succeeded', '2019-01-03', '2019-01-03']]",
+    "explanation": "Two continuous failed days followed by one succeeded day.",
+    "is_hidden": false
+  },
+  {
+    "input": "Failed: [2018-12-31, 2019-01-01], Succeeded: [2019-01-02]",
+    "output": "[['failed', '2019-01-01', '2019-01-01'], ['succeeded', '2019-01-02', '2019-01-02']]",
+    "explanation": "Only consider dates in 2019.",
+    "is_hidden": true
+  }
 ]

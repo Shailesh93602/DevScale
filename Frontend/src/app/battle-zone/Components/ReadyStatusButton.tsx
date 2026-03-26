@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
-import { useBattleWebSocket } from '@/hooks/useBattleWebSocket';
-import { toast } from 'react-toastify';
+import { useToast } from '@/hooks/use-toast';
+import useBattleApi from '@/hooks/useBattleApi';
 
 interface ReadyStatusButtonProps {
   battleId: string;
-  userId: string;
   isCreator?: boolean;
   disabled?: boolean;
   onStatusChange?: (isReady: boolean) => void;
@@ -15,86 +14,37 @@ interface ReadyStatusButtonProps {
 
 const ReadyStatusButton: React.FC<ReadyStatusButtonProps> = ({
   battleId,
-  userId,
   isCreator = false,
   disabled = false,
   onStatusChange,
 }) => {
+  const { toast } = useToast();
+  const { markReady } = useBattleApi();
   const [isReady, setIsReady] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { isConnected, sendToBattle } = useBattleWebSocket(
-    'battle:participant_ready',
-    battleId,
-    (data) => {
-      // Handle ready status updates from other participants
-      if (data.user_id === userId) {
-        setIsReady(!!data.is_ready);
-        setIsLoading(false);
 
-        if (onStatusChange) {
-          onStatusChange(!!data.is_ready);
-        }
-      }
-    },
-  );
-
-  // Toggle ready status
-  const toggleReadyStatus = () => {
-    if (disabled || isLoading) return;
+  const handleMarkReady = async () => {
+    if (disabled || isLoading || isReady) return;
 
     setIsLoading(true);
-
     try {
-      // Send ready status update to server
-      sendToBattle('battle:participant_ready', {
-        user_id: userId,
-        is_ready: !isReady,
-        status: !isReady ? 'joined' : 'left',
-        username: '',
-        avatar_url: '',
-        battle_id: battleId,
+      await markReady(battleId);
+      setIsReady(true);
+      if (onStatusChange) onStatusChange(true);
+    } catch {
+      toast({
+        title: 'Error',
+        description: 'Failed to update ready status. Please try again.',
+        variant: 'destructive',
       });
-
-      // Optimistically update local state
-      setIsReady(!isReady);
-
-      if (onStatusChange) {
-        onStatusChange(!isReady);
-      }
-    } catch (error) {
-      console.error('Failed to update ready status:', error);
-      toast.error('Failed to update ready status. Please try again.');
+    } finally {
       setIsLoading(false);
     }
   };
 
-  // Force ready status for creator
-  useEffect(() => {
-    if (isCreator && isConnected && !isReady) {
-      setIsReady(true);
-
-      if (onStatusChange) {
-        onStatusChange(true);
-      }
-
-      sendToBattle('battle:participant_ready', {
-        user_id: userId,
-        is_ready: true,
-        status: 'joined',
-        username: '',
-        avatar_url: '',
-        battle_id: battleId,
-      });
-    }
-  }, [isCreator, isConnected, isReady, userId, sendToBattle, onStatusChange]);
-
-  // Render different button states
   if (isCreator) {
     return (
-      <Badge
-        variant="outline"
-        className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-      >
+      <Badge variant="outline" className="bg-green-500/10 text-green-600 border-green-500/20">
         <CheckCircle className="mr-1 h-3 w-3" />
         Creator (Ready)
       </Badge>
@@ -106,12 +56,10 @@ const ReadyStatusButton: React.FC<ReadyStatusButtonProps> = ({
       variant={isReady ? 'default' : 'outline'}
       size="sm"
       className={`gap-2 ${
-        isReady
-          ? 'bg-green-600 text-white hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800'
-          : 'border-dashed'
+        isReady ? 'bg-green-600 hover:bg-green-700 text-white' : 'border-dashed'
       }`}
-      onClick={toggleReadyStatus}
-      disabled={disabled || isLoading || !isConnected}
+      onClick={handleMarkReady}
+      disabled={disabled || isLoading || isReady}
     >
       {isLoading ? (
         <>
@@ -126,7 +74,7 @@ const ReadyStatusButton: React.FC<ReadyStatusButtonProps> = ({
       ) : (
         <>
           <AlertCircle className="h-4 w-4" />
-          <span>Not Ready</span>
+          <span>Mark Ready</span>
         </>
       )}
     </Button>

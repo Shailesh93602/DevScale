@@ -1,0 +1,5 @@
+{
+  "typescript": "class SnowflakeIDGenerator {\n    // Conceptual implementation\n}",
+  "javascript": "class SnowflakeIDGenerator {\n    constructor() {\n        // Initialize\n    }\n}",
+  "python": "class SnowflakeIDGenerator:\n    def __init__(self):\n        pass"
+}

@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nfunction debounce(fn: (...args: any[]) => void, delay: number): (...args: any[]) => void",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

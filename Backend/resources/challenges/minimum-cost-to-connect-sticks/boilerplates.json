@@ -1,0 +1,8 @@
+{
+  "typescript": "function connectSticks(sticks: number[]): number {\n  // Your code here\n}",
+  "javascript": "/**\n * @param {number[]} sticks\n * @return {number}\n */\nvar connectSticks = function(sticks) {\n  // Your code here\n};",
+  "python": "import heapq\n\nclass Solution:\n    def connectSticks(self, sticks: List[int]) -> int:\n        # Your code here\n        pass",
+  "java": "import java.util.*;\n\nclass Solution {\n    public int connectSticks(int[] sticks) {\n        // Your code here\n    }\n}",
+  "cpp": "class Solution {\npublic:\n    int connectSticks(vector<int>& sticks) {\n        // Your code here\n    }\n};",
+  "go": "import \"container/heap\"\n\nfunc connectSticks(sticks []int) int {\n    // Your code here\n}"
+}

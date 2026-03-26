@@ -15,5 +15,6 @@
   "example_output": "T1: committed. T2: conflict detected, retry with updated balance.",
   "constraints": "Must implement ACID properties. Must support optimistic concurrency with version numbers. Must detect and handle write conflicts. Must support rollback on failure.",
   "function_signature": "class TransactionManager { begin(): Transaction; commit(tx: Transaction): Promise<CommitResult>; rollback(tx: Transaction): void; withTransaction<T>(fn: (tx: Transaction) => Promise<T>): Promise<T>; }",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

@@ -9,7 +9,7 @@ import {
   featureRequestSchema,
   helpArticleSchema,
 } from '../validations/supportValidations';
-import { catchAsync } from '@/utils';
+import { catchAsync } from '../utils';
 
 export default class SupportController {
   private readonly supportRepo: SupportRepository;

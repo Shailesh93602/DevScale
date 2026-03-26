@@ -1,0 +1,8 @@
+{
+  "typescript": "class LFUCache {\n    constructor(capacity: number) {\n        // Your code here\n    }\n\n    get(key: number): number {\n        // Your code here\n    }\n\n    put(key: number, value: number): void {\n        // Your code here\n    }\n}",
+  "javascript": "/**\n * @param {number} capacity\n */\nvar LFUCache = function(capacity) {\n    // Your code here\n};\n\n/** \n * @param {number} key\n * @return {number}\n */\nLFUCache.prototype.get = function(key) {\n    // Your code here\n};\n\n/** \n * @param {number} key \n * @param {number} value\n * @return {void}\n */\nLFUCache.prototype.put = function(key, value) {\n    // Your code here\n};",
+  "python": "class LFUCache:\n    def __init__(self, capacity: int):\n        # Your code here\n        pass\n\n    def get(self, key: int) -> int:\n        # Your code here\n        pass\n\n    def put(self, key: int, value: int) -> None:\n        # Your code here\n        pass",
+  "java": "class LFUCache {\n    public LFUCache(int capacity) {\n        // Your code here\n    }\n    \n    public int get(int key) {\n        // Your code here\n    }\n    \n    public void put(int key, int value) {\n        // Your code here\n    }\n}",
+  "cpp": "class LFUCache {\npublic:\n    LFUCache(int capacity) {\n        // Your code here\n    }\n    \n    int get(int key) {\n        // Your code here\n    }\n    \n    void put(int key, int value) {\n        // Your code here\n    }\n};",
+  "go": "type LFUCache struct {\n    // Your code here\n}\n\nfunc Constructor(capacity int) LFUCache {\n    // Your code here\n}\n\nfunc (this *LFUCache) Get(key int) int {\n    // Your code here\n}\n\nfunc (this *LFUCache) Put(key int, value int)  {\n    // Your code here\n}"
+}

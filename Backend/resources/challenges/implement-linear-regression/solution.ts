@@ -9,7 +9,7 @@ function linearRegression(
   const nFeatures = X_train[0].length;
 
   // Initialize parameters
-  const weights = new Array(nFeatures).fill(0);
+  let weights = new Array(nFeatures).fill(0);
   let bias = 0;
 
   // Gradient descent

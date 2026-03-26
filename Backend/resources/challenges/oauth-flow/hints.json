@@ -1,4 +1,6 @@
 [
-  "TODO: Add hint 1",
-  "TODO: Add hint 2"
+  "The Authorization Code flow is a '2-step' process. Step 1 gets a code, Step 2 exchanges that code for a token.",
+  "When exchanging the code, you MUST verify that the redirect_uri matches the one provided in the first step.",
+  "To prevent CSRF, the 'state' parameter must be returned exactly as received.",
+  "Consider how you will store and invalidate the authorization codes. Should they be single-use?"
 ]

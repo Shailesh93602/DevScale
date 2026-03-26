@@ -1,0 +1,10 @@
+{
+  "typescript": "function canCompleteCircuit(gas: number[], cost: number[]): number {\n    \n};",
+  "javascript": "/**\n * @param {number[]} gas\n * @param {number[]} cost\n * @return {number}\n */\nvar canCompleteCircuit = function(gas, cost) {\n    \n};",
+  "python": "class Solution:\n    def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:\n        ",
+  "java": "class Solution {\n    public int canCompleteCircuit(int[] gas, int[] cost) {\n        \n    }\n}",
+  "cpp": "class Solution {\npublic:\n    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {\n        \n    }\n};",
+  "go": "func canCompleteCircuit(gas []int, cost []int) int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn can_complete_circuit(gas: Vec<i32>, cost: Vec<i32>) -> i32 {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int CanCompleteCircuit(int[] gas, int[] cost) {\n        \n    }\n}"
+}

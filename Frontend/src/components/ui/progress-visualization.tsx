@@ -49,7 +49,7 @@ export const ProgressVisualization = ({
       </div>
 
       {/* Progress bar */}
-      <div className="relative mb-8 h-3 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
+      <div className="relative mb-8 h-3 w-full overflow-hidden rounded-full bg-muted">
         <motion.div
           className="absolute left-0 top-0 h-full rounded-full"
           style={{
@@ -71,7 +71,7 @@ export const ProgressVisualization = ({
               'relative flex h-8 w-8 items-center justify-center rounded-full border-2',
               index <= currentStep
                 ? 'border-primary bg-primary text-white'
-                : 'border-gray-300 bg-white text-gray-400 dark:border-gray-600 dark:bg-gray-800',
+                : 'border-muted bg-card text-muted-foreground',
             )}
             initial={{ scale: 0.8, opacity: 0.5 }}
             animate={{
@@ -114,12 +114,12 @@ export const ProgressVisualization = ({
           (skill, index) => (
             <motion.div
               key={skill}
-              className="rounded-lg border border-gray-200 bg-white p-3 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+              className="rounded-lg border border-border bg-card p-3 shadow-sm"
               initial={{ translateY: 20, opacity: 0 }}
               animate={{ translateY: 0, opacity: 1 }}
               transition={{ duration: 0.4, delay: 0.2 + index * 0.1 }}
             >
-              <div className="mb-2 h-2 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
+              <div className="mb-2 h-2 w-full overflow-hidden rounded-full bg-muted">
                 <motion.div
                   className="h-full rounded-full bg-primary"
                   initial={{ width: 0 }}
@@ -138,7 +138,7 @@ export const ProgressVisualization = ({
       {/* Achievement badge */}
       {currentStep >= steps - 2 && (
         <motion.div
-          className="absolute -right-4 -top-4 flex h-16 w-16 items-center justify-center rounded-full bg-yellow-500 text-white shadow-lg"
+          className="bg-yellow-500 absolute -right-4 -top-4 flex h-16 w-16 items-center justify-center rounded-full text-white shadow-lg"
           initial={{ scale: 0, rotate: -45 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ type: 'spring', stiffness: 200, damping: 15 }}

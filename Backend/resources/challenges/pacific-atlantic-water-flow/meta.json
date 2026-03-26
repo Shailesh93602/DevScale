@@ -16,5 +16,6 @@
   "example_output": "[[0,4],[1,3],[1,4],[2,2],[3,0],[3,1],[4,0]]",
   "constraints": "- `m == heights.length`\n- `n == heights[r].length`\n- `1 <= m, n <= 200`\n- `0 <= heights[r][c] <= 10^5`",
   "function_signature": "function pacificAtlantic(heights: number[][]): number[][] {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

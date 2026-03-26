@@ -15,5 +15,6 @@
   "example_output": "4",
   "constraints": "- `1 <= nums.length <= 10^4`\n- `-10^4 < nums[i], target < 10^4`\n- All integers in `nums` are unique.\n- `nums` is sorted in ascending order.",
   "function_signature": "function search(nums: number[], target: number): number {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

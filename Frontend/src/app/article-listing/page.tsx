@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAxiosGet, useAxiosPost } from '@/hooks/useAxios';
+import { Button } from '@/components/ui/button';
 
 interface IArticle {
   id: string;
@@ -29,9 +30,7 @@ const ArticleListPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
 
-  const [getAllArticles] = useAxiosGet<{
-    articles: typeof articles;
-  }>('/articles/all');
+  const [getAllArticles] = useAxiosGet<IArticle[]>('/articles/all');
   const [updateArticleStatus] = useAxiosPost<{
     id: string;
     status: string;
@@ -41,8 +40,8 @@ const ArticleListPage = () => {
     const fetchArticles = async () => {
       try {
         const { data } = await getAllArticles();
-        setArticles(data?.articles ?? []);
-        setFilteredArticles(data?.articles ?? []);
+        setArticles(data ?? []);
+        setFilteredArticles(data ?? []);
       } catch (error) {
         console.error('Error fetching articles:', error);
       }
@@ -93,20 +92,21 @@ const ArticleListPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6 dark:bg-gray-900">
-      <h1 className="mb-8 text-center text-4xl font-bold text-gray-900 dark:text-gray-100">
+    <div className="min-h-screen bg-background p-6">
+      <h1 className="mb-8 text-center text-4xl font-bold text-foreground">
         Articles List
       </h1>
       <div className="mb-6 flex items-center space-x-4">
         <input
           type="text"
           placeholder="Search articles..."
-          className="flex-1 rounded-md border border-gray-300 bg-white p-2 text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+          className="flex-1 rounded-md border border-input bg-background p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <select
-          className="rounded-md border border-gray-300 bg-white p-2 text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+          aria-label="Filter articles by status"
+          className="rounded-md border border-input bg-background p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
         >
@@ -116,10 +116,10 @@ const ArticleListPage = () => {
           <option value="rejected">Rejected</option>
         </select>
       </div>
-      <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800">
+      <div className="overflow-x-auto rounded-lg border border-border bg-card shadow-md">
         <table className="min-w-full">
-          <thead className="bg-gray-100 dark:bg-gray-700">
-            <tr className="text-left text-gray-900 dark:text-gray-100">
+          <thead className="bg-muted">
+            <tr className="text-left text-foreground">
               <th className="px-6 py-3">Title</th>
               <th className="px-6 py-3">Author</th>
               <th className="px-6 py-3">Status</th>
@@ -129,59 +129,57 @@ const ArticleListPage = () => {
           </thead>
           <tbody>
             {filteredArticles?.map((article) => (
-              <tr
-                key={article?.id}
-                className="border-b border-gray-200 dark:border-gray-600"
-              >
-                <td className="px-6 py-3 text-gray-900 dark:text-gray-100">
-                  {article?.title}
-                </td>
-                <td className="px-6 py-3 text-gray-700 dark:text-gray-300">
+              <tr key={article?.id} className="border-b border-border">
+                <td className="px-6 py-3 text-foreground">{article?.title}</td>
+                <td className="px-6 py-3 text-muted-foreground">
                   {article?.author?.username}
                 </td>
                 <td
                   className={`px-6 py-3 ${
-                    article?.status === 'approved' ? 'text-green-500' : ''
-                  } ${article?.status === 'pending' ? 'text-yellow-500' : ''} ${article?.status === 'rejected' ? 'text-red-500' : ''} }`}
+                    article?.status === 'approved' ? 'text-green' : ''
+                  } ${article?.status === 'pending' ? 'text-yellow' : ''} ${article?.status === 'rejected' ? 'text-red' : ''} }`}
                 >
                   {article?.status}
                 </td>
-                <td className="px-6 py-3 text-gray-600 dark:text-gray-400">
+                <td className="px-6 py-3 text-muted-foreground">
                   {new Date(article?.createdAt).toLocaleDateString()}
                 </td>
                 <td className="flex items-center space-x-4 px-6 py-3">
                   <Link
                     href={`/articles/${article?.id}`}
-                    className="text-blue-500 hover:underline dark:text-blue-300"
+                    className="text-blue hover:underline"
                   >
                     View
                   </Link>
                   {article?.status === 'pending' ? (
                     <>
-                      <button
-                        className="text-green-500 hover:underline dark:text-green-300"
+                      <Button
+                        variant="ghost"
+                        className="h-auto p-0 text-green hover:underline"
                         onClick={() =>
                           handleUpdateStatus(article?.id, 'approved')
                         }
                       >
                         Approve
-                      </button>
-                      <button
-                        className="text-red-500 dark:text-red-300 hover:underline"
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        className="h-auto p-0 text-red hover:underline"
                         onClick={() =>
                           handleUpdateStatus(article?.id, 'rejected')
                         }
                       >
                         Reject
-                      </button>
+                      </Button>
                     </>
                   ) : (
-                    <button
+                    <Button
                       onClick={() => handleEdit(article?.id)}
-                      className="mr-2 rounded-lg bg-blue-500 px-3 py-1 text-white"
+                      className="mr-2"
+                      size="sm"
                     >
                       Edit
-                    </button>
+                    </Button>
                   )}
                 </td>
               </tr>
@@ -190,7 +188,7 @@ const ArticleListPage = () => {
               <tr>
                 <td
                   colSpan={5}
-                  className="py-4 text-center text-gray-500 dark:text-gray-400"
+                  className="py-4 text-center text-muted-foreground"
                 >
                   No articles found.
                 </td>

@@ -1,4 +1,5 @@
 [
-  "TODO: Add hint 1",
-  "TODO: Add hint 2"
+  "Use `DATE` functions to filter for the 30-day window ending on 2019-07-27.",
+  "Consider how to count only 'unique' users per day. Does `COUNT(user_id)` work or do you need `DISTINCT`?",
+  "The window is inclusive of both the start and end dates."
 ]

@@ -12,20 +12,6 @@ interface CommentSectionProps {
   isOpen: boolean;
 }
 
-interface ApiResponse<T> {
-  data: T;
-  meta: {
-    total: number;
-    currentPage: number;
-    totalPages: number;
-    limit: number;
-    hasNextPage: boolean;
-  };
-  success: boolean;
-  message: string;
-  error: null | string;
-}
-
 const isValidComment = (comment: unknown): comment is Comment => {
   return (
     comment !== null &&
@@ -48,18 +34,13 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
   const [newComment, setNewComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [fetchComments, { data: fetchedComments, isLoading }] = useAxiosGet<
-    ApiResponse<Comment[]>
+  const [fetchComments, { data: commentsData, isLoading }] = useAxiosGet<
+    Comment[]
   >(`/roadmaps/${roadmapId}/comments`);
 
-  const [postComment] = useAxiosPost<{
-    data: {
-      data: Comment;
-    };
-    success: boolean;
-    message: string;
-    error: null | string;
-  }>(`/roadmaps/${roadmapId}/comments`);
+  const [postComment] = useAxiosPost<Comment>(
+    `/roadmaps/${roadmapId}/comments`,
+  );
 
   useEffect(() => {
     if (isOpen) {
@@ -68,10 +49,10 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
   }, [isOpen, fetchComments]);
 
   useEffect(() => {
-    if (fetchedComments?.success && fetchedComments?.data) {
-      setComments(fetchedComments.data);
+    if (commentsData) {
+      setComments(commentsData);
     }
-  }, [fetchedComments]);
+  }, [commentsData]);
 
   const handleCommentUpdate = (updatedComment: Comment) => {
     setComments((prevComments) =>
@@ -89,12 +70,12 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
     try {
       const response = await postComment({ content: newComment });
 
-      if (response?.success && response?.data?.data) {
-        const newCommentData = response.data.data;
+      if (response?.success && response?.data) {
+        const newCommentData = response.data;
         if (isValidComment(newCommentData)) {
           setNewComment('');
           setComments((prevComments) => [newCommentData, ...prevComments]);
-          toast.success('Comment added successfully');
+          toast.success('Great! Your comment is now live ✨');
         }
       }
     } catch (error) {
@@ -120,11 +101,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
           className="min-h-[100px]"
         />
         <div className="flex justify-end">
-          <Button
-            type="submit"
-            disabled={isSubmitting || !newComment.trim()}
-            className="hover:bg-primary/90 bg-primary"
-          >
+          <Button type="submit" disabled={isSubmitting || !newComment.trim()}>
             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Post Comment
           </Button>

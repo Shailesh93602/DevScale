@@ -1,0 +1,5 @@
+[
+  "To satisfy as many children as possible, which child should you start with? The one with the highest greed or the lowest?",
+  "Try sorting both the greed factors and the cookie sizes in ascending order.",
+  "Use two pointers to iterate through the arrays and match the smallest possible cookie to each child."
+]

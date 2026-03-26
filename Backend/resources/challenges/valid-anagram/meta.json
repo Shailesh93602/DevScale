@@ -36,5 +36,6 @@
   "example_output": "true",
   "constraints": "- `1 <= s.length, t.length <= 5 * 10^4`\n- `s` and `t` consist of lowercase English letters.",
   "function_signature": "function isAnagram(s: string, t: string): boolean {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

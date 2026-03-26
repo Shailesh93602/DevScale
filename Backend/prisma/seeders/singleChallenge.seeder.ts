@@ -1,4 +1,4 @@
-import { PrismaClient, Difficulty, ChallengeCategory, ChallengeStatus, Prisma } from '@prisma/client';
+import { PrismaClient, Difficulty, ChallengeCategory, ChallengeStatus } from '@prisma/client';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
@@ -25,8 +25,8 @@ interface ChallengeMeta {
 }
 
 interface TestCase {
-  input: unknown;
-  output: unknown;
+  input: any;
+  output: any;
   explanation?: string;
   is_hidden: boolean;
 }
@@ -56,23 +56,8 @@ async function seedSingleChallenge(targetSlug: string) {
       ? JSON.parse(fs.readFileSync(path.join(challengePath, 'boilerplates.json'), 'utf-8'))
       : null;
 
-    // Resolve Topic
-    const topicTags = [...(meta.topic_tags || []), ...meta.tags];
-    const topic = await prisma.topic.findFirst({
-      where: {
-        title: {
-          in: topicTags,
-        },
-      },
-    });
-
-    if (!topic) {
-      console.error(`❌ No topic found for challenge: ${meta.title}`);
-      process.exit(1);
-    }
-
     const challenge = await prisma.challenge.upsert({
-      where: { title: meta.title } as Prisma.ChallengeWhereUniqueInput,
+      where: { title: meta.title },
       update: {
         description,
         points: meta.points,
@@ -94,7 +79,6 @@ async function seedSingleChallenge(targetSlug: string) {
         boilerplates,
         status: meta.status.toUpperCase() as ChallengeStatus,
         updated_at: new Date(),
-        topic: { connect: { id: topic.id } },
       },
       create: {
         title: meta.title,
@@ -117,7 +101,6 @@ async function seedSingleChallenge(targetSlug: string) {
         solutions,
         boilerplates,
         status: meta.status.toUpperCase() as ChallengeStatus,
-        topic: { connect: { id: topic.id } },
       },
     });
 
@@ -147,10 +130,4 @@ async function seedSingleChallenge(targetSlug: string) {
 }
 
 const slug = process.argv[2] || 'longest-substring-without-repeating-characters';
-
-(async () => {
-  await seedSingleChallenge(slug);
-})().catch((err) => {
-  console.error('❌ Fatal error in seeder:', err);
-  process.exit(1);
-});
+seedSingleChallenge(slug);

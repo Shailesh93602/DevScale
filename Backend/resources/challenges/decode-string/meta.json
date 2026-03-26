@@ -1,0 +1,21 @@
+{
+  "title": "Decode String",
+  "slug": "decode-string",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["Stack", "Recursion", "String"],
+  "company_tags": ["Google", "Amazon", "Facebook", "Microsoft", "Bloomberg"],
+  "topic_tags": ["Stack"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "A single encoded string s.",
+  "output_format": "The decoded string.",
+  "example_input": "s = \"3[a]2[bc]\"",
+  "example_output": "\"aaabcbc\"",
+  "constraints": "s.length <= 30, Result length <= 10^5",
+  "function_signature": "function decodeString(s: string): string {}",
+  "status": "ACTIVE",
+  "is_production_ready": true
+}
+

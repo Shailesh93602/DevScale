@@ -1,3 +1,22 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  {
+    "input": "<script>alert('xss')</script>",
+    "output": "&lt;script&gt;alert(&#39;xss&#39;)&lt;&#x2F;script&gt;",
+    "is_hidden": false
+  },
+  {
+    "input": "Hello & Goodbye",
+    "output": "Hello &amp; Goodbye",
+    "is_hidden": false
+  },
+  {
+    "input": "img src=x onerror=alert(1)",
+    "output": "img src=x onerror=alert(1)",
+    "is_hidden": true
+  },
+  {
+    "input": "\"><img src=x onerror=alert(1)>",
+    "output": "&quot;&gt;&lt;img src=x onerror=alert(1)&gt;",
+    "is_hidden": true
+  }
 ]

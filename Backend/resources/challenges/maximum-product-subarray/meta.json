@@ -25,5 +25,6 @@
   "example_output": "6",
   "constraints": "- `1 <= nums.length <= 2 * 10^4`\n- `-10 <= nums[i] <= 10`\n- The product of any prefix or suffix of `nums` is guaranteed to fit in a 32-bit integer.",
   "function_signature": "function maxProduct(nums: number[]): number {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

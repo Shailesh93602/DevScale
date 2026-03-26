@@ -1,5 +1,5 @@
 import { BaseRouter } from './BaseRouter';
-import MainConceptController from '@/controllers/mainConceptController';
+import MainConceptController from '../controllers/mainConceptController';
 
 export class MainConceptRoutes extends BaseRouter {
   private readonly mainConceptController: MainConceptController;
@@ -13,6 +13,8 @@ export class MainConceptRoutes extends BaseRouter {
   public initializeRoutes(): void {
     // Public routes
     this.router.get('/', this.mainConceptController.getAllMainConcepts);
+    // /:id/subjects must be before /:id to avoid param collision
+    this.router.get('/:id/subjects', this.mainConceptController.getSubjectsInMainConcept);
     this.router.get('/:id', this.mainConceptController.getMainConceptById);
 
     // Protected routes

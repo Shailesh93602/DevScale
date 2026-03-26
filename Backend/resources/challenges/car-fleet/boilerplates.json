@@ -1,0 +1,5 @@
+{
+  "typescript": "function carFleet(target: number, position: number[], speed: number[]): number {\n    // Your code here\n}",
+  "javascript": "/**\n * @param {any} params\n * @return {any}\n */\nvar carFleet = function(root) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def carFleet(self, root) -> bool:\n        # Your code here\n        pass"
+}

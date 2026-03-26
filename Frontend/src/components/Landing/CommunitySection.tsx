@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Testimonial from '@/components/TestimonialCard';
+import { BRANDING } from '@/constants';
 
 const CommunitySection: React.FC = () => (
   <section className="relative z-10 py-20">
@@ -22,27 +23,16 @@ const CommunitySection: React.FC = () => (
         </p>
       </motion.div>
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        <Testimonial
-          name="Rahul Sharma"
-          role="Computer Science, IIT Delhi"
-          quote="EduScale helped me structure my learning journey and connect with like-minded peers. The roadmaps were exactly what I needed to prepare for placements."
-          image="/images/testimonial1.jpg"
-          delay={0.1}
-        />
-        <Testimonial
-          name="Priya Patel"
-          role="Electronics Engineering, BITS Pilani"
-          quote="The community support is incredible! I got answers to my questions within minutes, and the company-specific preparation guides were invaluable for my interviews."
-          image="/images/testimonial2.jpg"
-          delay={0.3}
-        />
-        <Testimonial
-          name="Arjun Mehta"
-          role="Mechanical Engineering, NIT Trichy"
-          quote="Battle Zone challenges pushed me to improve my problem-solving skills. I've earned several achievement badges that actually impressed recruiters during my interviews!"
-          image="/images/testimonial3.jpg"
-          delay={0.5}
-        />
+        {BRANDING.testimonials.map((testimonial, index) => (
+          <Testimonial
+            key={testimonial.name}
+            name={testimonial.name}
+            role={testimonial.role}
+            quote={testimonial.quote}
+            image={testimonial.image}
+            delay={0.1 * (index * 2 + 1)}
+          />
+        ))}
       </div>
       <motion.div
         initial={{ opacity: 0, y: 30 }}

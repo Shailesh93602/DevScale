@@ -1,275 +1,287 @@
 import { useCallback, useState } from 'react';
-import {
-  useAxiosGet,
-  useAxiosPost,
-  useAxiosPut,
-  useAxiosDelete,
-} from '@/hooks/useAxios';
-import {
-  Battle,
-  BattleFilters,
-  BattleQuestion,
-  BattleResponse,
-  BattlesResponse,
-  PaginatedResponse,
-} from '@/types/battle';
+import { useAxiosGet, useAxiosPost, useAxiosPatch } from '@/hooks/useAxios';
+import { Battle, BattleFilters, BattleQuestion, LeaderboardEntry, AnswerResult } from '@/types/battle';
+import { normalizeBattle } from '@/lib/battle-normalizer';
 
-// Define the BattleLeaderboardEntry type if it doesn't exist in the battle types
-interface BattleLeaderboardEntry {
-  user_id: string;
-  username: string;
-  score: number;
-  rank: number;
-  correct_answers: number;
-  total_answers: number;
-  time_taken: number;
+export interface MyResultQuestion {
+  order: number;
+  question_text: string;
+  options: string[];
+  correct_answer: number;
+  explanation: string | null;
+  points: number;
+  selected_option: number;
+  is_correct: boolean;
+  time_taken_ms: number;
+  points_earned: number;
+  community_accuracy_pct: number;
+  community_total_answers: number;
+}
+
+export interface MyBattleResults {
+  summary: {
+    score: number;
+    rank: number | null;
+    correct_count: number;
+    wrong_count: number;
+    avg_time_ms: number;
+    total_questions: number;
+    answered: number;
+  };
+  questions: MyResultQuestion[];
 }
 
 export const useBattleApi = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [getBattles] = useAxiosGet<BattlesResponse>('/battles');
-  const [getBattle] = useAxiosGet<BattleResponse>('/battles/{{id}}');
-  const [getBattleQuestions] = useAxiosGet<PaginatedResponse<BattleQuestion>>(
-    '/battles/{{id}}/questions',
+  const [getBattles] = useAxiosGet<Battle[]>('/battles');
+  const [getBattle] = useAxiosGet<Battle>('/battles/{{id}}');
+  const [getBattleQuestions] = useAxiosGet<BattleQuestion[]>('/battles/{{id}}/questions');
+  const [getBattleLeaderboard] = useAxiosGet<LeaderboardEntry[]>('/battles/{{id}}/leaderboard');
+  const [getBattleResults] = useAxiosGet('/battles/{{id}}/results');
+  const [getMyResultsReq] = useAxiosGet<MyBattleResults>('/battles/{{id}}/my-results');
+  const [getMyBattles] = useAxiosGet('/battles/my');
+
+  const [createBattleReq] = useAxiosPost<Battle>('/battles');
+  const [joinBattleReq] = useAxiosPost('/battles/{{id}}/join');
+  const [leaveBattleReq] = useAxiosPost('/battles/{{id}}/leave');
+  const [markReadyReq] = useAxiosPost('/battles/{{id}}/ready');
+  const [openLobbyReq] = useAxiosPost('/battles/{{id}}/lobby');
+  const [startBattleReq] = useAxiosPost('/battles/{{id}}/start');
+  const [cancelBattleReq] = useAxiosPatch('/battles/{{id}}/cancel');
+  const [submitAnswerReq] = useAxiosPost<AnswerResult & { leaderboard: LeaderboardEntry[]; participant_done: boolean }>('/battles/answer');
+  const [addQuestionsReq] = useAxiosPost<{ added: number; total_questions_added: number; total_questions_required: number; ready_to_start: boolean }>('/battles/{{id}}/questions');
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
+
+  const wrap = useCallback(
+    async <T>(fn: () => Promise<T>): Promise<T | null> => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const result = await fn();
+        return result;
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+        return null;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    []
   );
-  const [getBattleLeaderboard] = useAxiosGet<
-    PaginatedResponse<BattleLeaderboardEntry>
-  >('/battles/{{id}}/leaderboard');
-  const [createBattle] = useAxiosPost<BattleResponse>('/battles/create');
-  const [updateBattle] = useAxiosPut<BattleResponse>('/battles/{{id}}');
-  const [deleteBattle] = useAxiosDelete<{ success: boolean }>(
-    '/battles/{{id}}',
-  );
-  const [joinBattle] = useAxiosPost<BattleResponse>('/battles/{{id}}/join');
-  const [leaveBattle] = useAxiosPost<BattleResponse>('/battles/{{id}}/leave');
-  const [submitAnswer] = useAxiosPost<{ success: boolean; score: number }>(
-    '/battles/submit',
-  );
+
+  // ── Browse ─────────────────────────────────────────────────────────────────
 
   const fetchBattles = useCallback(
-    async (filters?: BattleFilters) => {
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        // Convert filters to query params
-        const queryParams = new URLSearchParams();
-        if (filters) {
-          Object.entries(filters).forEach(([key, value]) => {
-            if (value !== undefined && value !== null && value !== '') {
-              queryParams.append(key, String(value));
-            }
-          });
-        }
-
-        const response = await getBattles({ params: queryParams.toString() });
-        setIsLoading(false);
-        return response.data;
-      } catch (err) {
-        setIsLoading(false);
-        setError(err instanceof Error ? err.message : 'An error occurred');
-        return null;
-      }
-    },
-    [getBattles],
+    (filters?: BattleFilters) =>
+      wrap(async () => {
+        const params = Object.fromEntries(
+          Object.entries(filters ?? {}).filter(([, v]) => v !== undefined && v !== null && v !== '' && v !== 'all')
+        );
+        const res = await getBattles({ params });
+        const data = res.data as unknown as { data?: Battle[]; meta?: unknown } | Battle[];
+        const list = Array.isArray(data) ? data : (data as { data?: Battle[] }).data ?? [];
+        return { data: list.map(normalizeBattle), meta: (data as { meta?: unknown }).meta };
+      }),
+    [getBattles, wrap]
   );
 
-  const fetchBattle = useCallback(
-    async (id: string) => {
-      setIsLoading(true);
-      setError(null);
+  const fetchMyBattles = useCallback(
+    (page = 1, limit = 10) =>
+      wrap(async () => {
+        const res = await getMyBattles({ params: { page, limit } });
+        const data = res.data as unknown as { data?: Battle[]; meta?: unknown } | Battle[];
+        const list = Array.isArray(data) ? data : (data as { data?: Battle[] }).data ?? [];
+        return { data: list.map(normalizeBattle), meta: (data as { meta?: unknown }).meta };
+      }),
+    [getMyBattles, wrap]
+  );
 
-      try {
-        const response = await getBattle({}, { id });
-        setIsLoading(false);
-        return response.data;
-      } catch (err) {
-        setIsLoading(false);
-        setError(err instanceof Error ? err.message : 'An error occurred');
-        return null;
-      }
-    },
-    [getBattle],
+  // ── Detail ─────────────────────────────────────────────────────────────────
+
+  const fetchBattle = useCallback(
+    (id: string) =>
+      wrap(async () => {
+        const res = await getBattle({}, { id });
+        return res.data ? normalizeBattle(res.data as unknown as Record<string, unknown>) : null;
+      }),
+    [getBattle, wrap]
   );
 
   const fetchBattleQuestions = useCallback(
-    async (id: string) => {
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        const response = await getBattleQuestions({}, { id });
-        setIsLoading(false);
-        return response.data;
-      } catch (err) {
-        setIsLoading(false);
-        setError(err instanceof Error ? err.message : 'An error occurred');
-        return null;
-      }
-    },
-    [getBattleQuestions],
+    (id: string) =>
+      wrap(async () => {
+        const res = await getBattleQuestions({}, { id });
+        return Array.isArray(res.data) ? (res.data as BattleQuestion[]) : [];
+      }),
+    [getBattleQuestions, wrap]
   );
 
   const fetchBattleLeaderboard = useCallback(
-    async (id: string, page = 1, limit = 10) => {
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        const queryParams = new URLSearchParams();
-        queryParams.append('page', String(page));
-        queryParams.append('limit', String(limit));
-
-        const response = await getBattleLeaderboard(
-          { params: queryParams.toString() },
-          { id },
-        );
-        setIsLoading(false);
-        return response.data;
-      } catch (err) {
-        setIsLoading(false);
-        setError(err instanceof Error ? err.message : 'An error occurred');
-        return null;
-      }
-    },
-    [getBattleLeaderboard],
+    (id: string) =>
+      wrap(async () => {
+        const res = await getBattleLeaderboard({}, { id });
+        return Array.isArray(res.data) ? (res.data as LeaderboardEntry[]) : [];
+      }),
+    [getBattleLeaderboard, wrap]
   );
+
+  const fetchBattleResults = useCallback(
+    (id: string) =>
+      wrap(async () => {
+        const res = await getBattleResults({}, { id });
+        return res.data;
+      }),
+    [getBattleResults, wrap]
+  );
+
+  const fetchMyResults = useCallback(
+    (id: string) =>
+      wrap(async () => {
+        const res = await getMyResultsReq({}, { id });
+        return res.data ?? null;
+      }),
+    [getMyResultsReq, wrap]
+  );
+
+  // ── Mutations ──────────────────────────────────────────────────────────────
 
   const createNewBattle = useCallback(
-    async (battleData: Partial<Battle>) => {
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        const response = await createBattle(battleData);
-        if (!response?.data) {
-          throw new Error('Failed to create battle: No response data');
-        }
-        setIsLoading(false);
-        return response.data;
-      } catch (err) {
-        setIsLoading(false);
-        const errorMessage =
-          err instanceof Error
-            ? err.message
-            : 'Failed to create battle. Please try again.';
-        setError(errorMessage);
-        throw new Error(errorMessage);
-      }
-    },
-    [createBattle],
-  );
-
-  const updateExistingBattle = useCallback(
-    async (id: string, battleData: Partial<Battle>) => {
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        const response = await updateBattle(battleData, { params: { id } });
-        setIsLoading(false);
-        return response.data;
-      } catch (err) {
-        setIsLoading(false);
-        setError(err instanceof Error ? err.message : 'An error occurred');
-        return null;
-      }
-    },
-    [updateBattle],
-  );
-
-  const removeExistingBattle = useCallback(
-    async (id: string) => {
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        const response = await deleteBattle({}, { id });
-        setIsLoading(false);
-        return response.data;
-      } catch (err) {
-        setIsLoading(false);
-        setError(err instanceof Error ? err.message : 'An error occurred');
-        return null;
-      }
-    },
-    [deleteBattle],
+    (battleData: {
+      title: string;
+      description?: string;
+      topic_id: string;
+      difficulty: string;
+      type: string;
+      max_participants?: number;
+      total_questions?: number;
+      time_per_question?: number;
+      points_per_question?: number;
+      start_time?: string;
+    }) =>
+      wrap(async () => {
+        const res = await createBattleReq(battleData);
+        if (!res?.data) throw new Error('Failed to create battle');
+        return normalizeBattle(res.data as unknown as Record<string, unknown>);
+      }),
+    [createBattleReq, wrap]
   );
 
   const joinExistingBattle = useCallback(
-    async (id: string) => {
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        const response = await joinBattle({}, { params: { id } });
-        setIsLoading(false);
-        return response.data;
-      } catch (err) {
-        setIsLoading(false);
-        setError(err instanceof Error ? err.message : 'An error occurred');
-        return null;
+    async (id: string): Promise<{ ok: true; battle: Battle } | { ok: false; message: string }> => {
+      const res = await joinBattleReq({}, undefined, { id });
+      if (!res.success) {
+        return { ok: false, message: res.message || 'Failed to join battle' };
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const data = res?.data as any;
+      if (data && typeof data === 'object' && 'battle' in data) {
+        return { ok: true, battle: normalizeBattle(data.battle as Record<string, unknown>) };
+      }
+      return { ok: false, message: 'Unexpected response from server' };
     },
-    [joinBattle],
+    [joinBattleReq]
   );
 
   const leaveExistingBattle = useCallback(
-    async (id: string) => {
-      setIsLoading(true);
-      setError(null);
+    (id: string) =>
+      wrap(async () => {
+        await leaveBattleReq({}, undefined, { id });
+        return true;
+      }),
+    [leaveBattleReq, wrap]
+  );
 
-      try {
-        const response = await leaveBattle({}, { params: { id } });
-        setIsLoading(false);
-        return response.data;
-      } catch (err) {
-        setIsLoading(false);
-        setError(err instanceof Error ? err.message : 'An error occurred');
-        return null;
-      }
-    },
-    [leaveBattle],
+  const markReady = useCallback(
+    (id: string) =>
+      wrap(async () => {
+        const res = await markReadyReq({}, undefined, { id });
+        return res?.data;
+      }),
+    [markReadyReq, wrap]
+  );
+
+  const openLobby = useCallback(
+    (id: string) =>
+      wrap(async () => {
+        await openLobbyReq({}, undefined, { id });
+        return true;
+      }),
+    [openLobbyReq, wrap]
+  );
+
+  const startBattle = useCallback(
+    (id: string) =>
+      wrap(async () => {
+        await startBattleReq({}, undefined, { id });
+        return true;
+      }),
+    [startBattleReq, wrap]
+  );
+
+  const cancelBattle = useCallback(
+    (id: string) =>
+      wrap(async () => {
+        await cancelBattleReq({}, undefined, { id });
+        return true;
+      }),
+    [cancelBattleReq, wrap]
+  );
+
+  const addQuestionsTosBattle = useCallback(
+    (
+      id: string,
+      questions: Array<{
+        question: string;
+        options: string[];
+        correct_answer: number;
+        explanation?: string;
+        points?: number;
+        time_limit?: number;
+      }>
+    ) =>
+      wrap(async () => {
+        const res = await addQuestionsReq({ questions }, undefined, { id });
+        return res?.data ?? null;
+      }),
+    [addQuestionsReq, wrap]
   );
 
   const submitBattleAnswer = useCallback(
-    async (data: {
+    (data: {
       battle_id: string;
       question_id: string;
-      answer: string;
-      time_taken: number;
-    }) => {
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        const response = await submitAnswer(data);
-        setIsLoading(false);
-        return response.data;
-      } catch (err) {
-        setIsLoading(false);
-        setError(err instanceof Error ? err.message : 'An error occurred');
-        return null;
-      }
-    },
-    [submitAnswer],
+      selected_option: number;
+      time_taken_ms: number;
+    }) =>
+      wrap(async () => {
+        const res = await submitAnswerReq(data);
+        return res?.data ?? null;
+      }),
+    [submitAnswerReq, wrap]
   );
 
   return {
     isLoading,
     error,
     fetchBattles,
+    fetchMyBattles,
     fetchBattle,
     fetchBattleQuestions,
     fetchBattleLeaderboard,
+    fetchBattleResults,
+    fetchMyResults,
     createNewBattle,
-    updateExistingBattle,
-    removeExistingBattle,
     joinExistingBattle,
     leaveExistingBattle,
+    markReady,
+    openLobby,
+    startBattle,
+    cancelBattle,
     submitBattleAnswer,
+    addQuestionsTosBattle,
   };
 };
 

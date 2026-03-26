@@ -1,0 +1,5 @@
+{
+  "sql": "/* Write your T-SQL query statement below */\nSELECT\n\nFROM Tree;",
+  "mysql": "# Write your MySQL query statement below\nSELECT\n\nFROM Tree;",
+  "postgresql": "-- Write your PostgreSQL query statement below\nSELECT\n\nFROM Tree;"
+}

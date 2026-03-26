@@ -1,4 +1,6 @@
 [
-  "TODO: Add hint 1",
-  "TODO: Add hint 2"
+  "Compare the 'Pull Model' (calculating feed on read) vs 'Push Model' (calculating feed on write). Which is better for users with few followers?",
+  "How do you handle 'Celebrity Status' (users with millions of followers)? Fanning out to 100M users simultaneously will crash the system.",
+  "Consider a hybrid approach: push posts to most users, but let fans of celebrities pull those specific posts when they open their feed.",
+  "What's your storage strategy? Posts are immutable and read-heavy. NoSQL databases like Cassandra are popular for this."
 ]

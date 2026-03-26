@@ -4,16 +4,27 @@
   "difficulty": "Medium",
   "category": "algorithms",
   "points": 100,
-  "tags": ["greedy", "sorting", "intervals", "heap"],
+  "tags": ["greedy", "sorting", "heap-priority-queue"],
   "company_tags": ["Google", "Amazon", "Facebook", "Microsoft", "Bloomberg"],
-  "topic_tags": ["greedy", "sorting", "intervals", "heap"],
+  "topic_tags": ["arrays", "greedy", "sorting", "heap"],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
   "time_limit_ms": 2000,
   "memory_limit_kb": 262144,
-  "input_format": "An array of meeting time intervals `intervals` where `intervals[i] = [start_i, end_i]`.",
-  "output_format": "Return the minimum number of conference rooms required.",
+  "input_format": "An array of meeting time `intervals` where `intervals[i] = [start_i, end_i]`.",
+  "output_format": "The minimum number of conference rooms required.",
   "example_input": "intervals = [[0,30],[5,10],[15,20]]",
   "example_output": "2",
-  "constraints": "- `1 <= intervals.length <= 10^4`\n- `0 <= start_i < end_i <= 10^6`",
+  "constraints": "- `1 <= intervals.length <= 10^4`\n- `0 <= start_i < end_i <= 10^6` ",
   "function_signature": "function minMeetingRooms(intervals: number[][]): number {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

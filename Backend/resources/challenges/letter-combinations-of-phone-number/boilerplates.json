@@ -1,0 +1,10 @@
+{
+  "typescript": "function letterCombinations(digits: string): string[] {\n  // Your code here\n}",
+  "javascript": "/**\n * @param {string} digits\n * @return {string[]}\n */\nvar letterCombinations = function(digits) {\n  // Your code here\n};",
+  "python": "class Solution:\n    def letterCombinations(self, digits: str) -> List[str]:\n        # Your code here\n        pass",
+  "java": "class Solution {\n    public List<String> letterCombinations(String digits) {\n        // Your code here\n    }\n}",
+  "cpp": "class Solution {\npublic:\n    vector<string> letterCombinations(string digits) {\n        // Your code here\n    }\n};",
+  "go": "func letterCombinations(digits string) []string {\n    // Your code here\n}",
+  "rust": "impl Solution {\n    pub fn letter_combinations(digits: String) -> Vec<String> {\n        // Your code here\n    }\n}",
+  "csharp": "public class Solution {\n    public IList<string> LetterCombinations(string digits) {\n        // Your code here\n    }\n}"
+}

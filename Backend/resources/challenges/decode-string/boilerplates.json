@@ -1,0 +1,6 @@
+{
+  "typescript": "function decodeString(s: string): string {\n    // Your code here\n}",
+  "javascript": "/**\n * @param {string} s\n * @return {string}\n */\nvar decodeString = function(s) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def decodeString(self, s: str) -> str:\n        # Your code here\n        pass"
+}
+

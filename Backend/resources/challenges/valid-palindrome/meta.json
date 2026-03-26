@@ -35,5 +35,6 @@
   "example_output": "true",
   "constraints": "- `1 <= s.length <= 2 * 10^5`\n- `s` consists only of printable ASCII characters.",
   "function_signature": "function isPalindrome(s: string): boolean {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

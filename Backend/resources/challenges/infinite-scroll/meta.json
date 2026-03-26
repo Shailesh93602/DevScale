@@ -14,6 +14,7 @@
   "example_input": "createInfiniteScroll({ fetchPage, pageSize: 20, threshold: 0.8 })",
   "example_output": "Controller with loadMore, getItems, hasMore, isLoading methods",
   "constraints": "Page size >= 1. Threshold between 0 and 1. Data source may be finite.",
-  "function_signature": "function createInfiniteScroll(config: InfiniteScrollConfig): InfiniteScrollController",
-  "status": "ACTIVE"
+  "function_signature": "function createInfiniteScroll(config: InfiniteScrollConfig): InfiniteScrollController {}",
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

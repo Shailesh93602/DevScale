@@ -1,3 +1,28 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  {
+    "input": "[2,2,1]",
+    "output": "1",
+    "explanation": "2^2=0, 0^1=1",
+    "is_hidden": false
+  },
+  {
+    "input": "[4,1,2,1,2]",
+    "output": "4",
+    "is_hidden": false
+  },
+  {
+    "input": "[1]",
+    "output": "1",
+    "is_hidden": false
+  },
+  {
+    "input": "[7,3,5,3,5]",
+    "output": "7",
+    "is_hidden": true
+  },
+  {
+    "input": "[-1,-1,42]",
+    "output": "42",
+    "is_hidden": true
+  }
 ]
