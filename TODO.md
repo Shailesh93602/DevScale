@@ -120,7 +120,7 @@ Target: **10M+ active users**, enterprise-grade reliability, $50k+/mo SaaS quali
 
 ### 3.3 Input Validation & Sanitization
 - [ ] `[P0]` Enforce strict Zod/Joi schema validation at every controller entry point — zero raw `req.body` access
-- [ ] `[P0]` Sanitize all user-generated HTML/Markdown (articles, forum posts) with `dompurify` or `sanitize-html` before storing
+- [x] `[P0]` Sanitize all user-generated HTML/Markdown (articles, forum posts) with `sanitize-html` before storing — **Done 2026-03-27** — `sanitize.ts` util with `sanitizeText` (strip all tags) and `sanitizeRichText` (safe allowlist); wired into articleController and communityForumControllers
 - [ ] `[P1]` Validate and sanitize all query params and route params (parseInt, UUID format checks)
 - [ ] `[P1]` Add max-length limits to all text fields matching Prisma schema constraints
 - [ ] `[P1]` Validate file uploads: type whitelist (image/jpeg, image/png, image/webp), max size 5MB
