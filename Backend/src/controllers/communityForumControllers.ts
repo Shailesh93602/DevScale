@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
 import { sendResponse } from '../utils/apiResponse';
 import { ForumRepository } from '../repositories/forumRepository';
+import { sanitizeText, sanitizeRichText } from '../utils/sanitize';
 export default class CommunityForumController {
   private readonly forumRepo: ForumRepository;
 
@@ -30,7 +31,8 @@ export default class CommunityForumController {
   });
 
   public createForum = catchAsync(async (req: Request, res: Response) => {
-    const { title, description } = req.body;
+    const title = sanitizeText(req.body.title ?? '');
+    const description = sanitizeRichText(req.body.description ?? '');
 
     if (!title || !description) {
       return sendResponse(res, 'INVALID_PAYLOAD');
@@ -49,7 +51,8 @@ export default class CommunityForumController {
 
   public updateForum = catchAsync(async (req: Request, res: Response) => {
     const forumId = req.params.id;
-    const { title, description } = req.body;
+    const title = sanitizeText(req.body.title ?? '');
+    const description = sanitizeRichText(req.body.description ?? '');
 
     if (!title || !description) {
       return sendResponse(res, 'INVALID_PAYLOAD');
