@@ -1,3 +1,6 @@
+// Sentry must be initialised before any other imports
+import '../instrument';
+
 import { NODE_ENV, PORT } from './config';
 import * as Sentry from '@sentry/node';
 import compression from 'compression';
@@ -92,7 +95,7 @@ function initializeMiddleWares() {
             const buffer = await sharp(imageStream).avif().toBuffer();
             res.send(buffer);
           } catch (err) {
-            console.error('Error processing image with sharp:', err);
+            logger.error('Error processing image with sharp', { err });
             res.status(500).send('Error processing image');
           }
         } else {

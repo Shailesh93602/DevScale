@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
 import { sendResponse } from '../utils/apiResponse';
+import logger from '../utils/logger';
 import { executeCode } from '../utils/codeExecutor';
 import { wrapCode } from '../utils/codeWrapper';
 import { ChallengeRepository } from '../repositories/challengeRepository';
@@ -71,7 +72,7 @@ export default class CodeController {
     const challengeTitle = req.body.challengeTitle;
     let { input = '' } = req.body;
 
-    console.log('[DEBUG] Resolved challengeId:', challengeId, 'challengeTitle:', challengeTitle);
+    logger.debug('Resolved code execution target', { challengeId, challengeTitle });
 
     let challenge: any = null;
 
@@ -90,16 +91,16 @@ export default class CodeController {
         });
 
         if (challenge) {
-          console.log('[DEBUG] Found challenge for wrapping:', challenge.title);
+          logger.debug('Found challenge for wrapping', { title: challenge.title });
           // Set default input if none provided
           if (!input && challenge.test_cases?.length > 0) {
             input = challenge.test_cases[0].input;
           }
         } else {
-          console.log('[DEBUG] No challenge found for wrapping. Skipping wrapper.');
+          logger.debug('No challenge found for wrapping, skipping wrapper');
         }
       } catch (err) {
-        console.error('[DEBUG] Error during challenge lookup:', err);
+        logger.error('Error during challenge lookup for code wrapping', { err });
       }
     }
 

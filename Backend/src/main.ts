@@ -1,3 +1,6 @@
+// Sentry must be initialised before any other imports so it can instrument them
+import '../instrument';
+
 import 'module-alias/register';
 
 import express, { Application } from 'express';
@@ -15,6 +18,7 @@ import {
 } from './config';
 import { AppRoutes } from './routes/routes';
 import { errorHandler } from './middlewares/errorHandler';
+import { requestIdMiddleware } from './middlewares/requestIdMiddleware';
 import logger from './utils/logger';
 import { v2 as cloudinary } from 'cloudinary';
 import prisma from './lib/prisma';
@@ -47,7 +51,8 @@ export class App {
   }
 
   private initializeMiddlewares(): void {
-    this.app.use(compression()); // Add compression
+    this.app.use(requestIdMiddleware); // Must be first — stamps every request with a requestId
+    this.app.use(compression());
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
