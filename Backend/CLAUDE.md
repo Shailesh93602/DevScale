@@ -1,65 +1,96 @@
 # Backend — Change Log
 
-All backend changes tracked here with timestamps.
+All backend changes tracked chronologically with file references.
 
 ---
 
-## 2026-03-26
+## 2026-03-26 (commit `e2dd897`)
 
 ### [P0] Redis-backed rate limiter
 - **File:** `src/main.ts`
-- **What:** Wired `rate-limit-redis` store into the global `rateLimit()` call. Previously used in-memory store (resets on restart, doesn't work across multiple instances). `rate-limit-redis` was already in `package.json` — just needed to be connected.
-- **Why:** In-memory rate limiting fails the moment you run >1 process/pod.
+- **Change:** Wired `RedisStore` from `rate-limit-redis` into `express-rate-limit`. Previously in-memory (resets on restart, breaks across multiple pods).
 
-### [P0] Health check endpoint — deep check
+### [P0] Deep health check
 - **File:** `src/routes/healthCheckRoutes.ts`
-- **What:** Replaced the static `{ status: 'ok' }` response with live checks against PostgreSQL (`prisma.$queryRaw`), Redis (`ping`), and Bull queue instantiation. Returns HTTP 200 with all-green or HTTP 503 with the degraded component identified.
-- **Why:** AWS ECS and load balancers need a health check that actually reflects system state.
+- **Change:** Replaced static `{ status: 'ok' }` with live checks — `prisma.$queryRaw`, `redis.ping()`, Bull queue `.isReady()`. Returns HTTP 503 with named failing component on degraded state.
 
 ### [P0] Process-level error handlers
-- **File:** `src/main.ts`
-- **What:** Added `process.on('unhandledRejection')` and `process.on('uncaughtException')` handlers that log the error with Winston and exit with code 1, allowing the container orchestrator to restart cleanly.
-- **Why:** Without these, silent crashes leave the process running in a zombie state.
+- **Files:** `src/main.ts`, `src/app.logic.ts`
+- **Change:** `process.on('unhandledRejection')` and `process.on('uncaughtException')` — log via Winston then `process.exit(1)` so container orchestrator restarts cleanly.
 
-### [P0] Migrate authCache from in-memory Map to Redis
+### [P0] authCache → Redis
 - **File:** `src/middlewares/authMiddleware.ts`
-- **What:** Replaced the `Map<string, ...>()` auth cache and its `setInterval` cleanup with Redis `SET ... EX` calls using the existing `redisConnection`. The key is a SHA-256 hash of the token (never store raw JWTs as cache keys). TTL unchanged at 5 minutes.
-- **Why:** In-memory cache is per-process. With cluster mode or multiple pods, cache misses hit the DB on every process that hasn't seen the token yet, defeating the purpose.
+- **Change:** Replaced `Map<string, ...>` + `setInterval` cleanup with Redis `SETEX` (5-min TTL). Cache key = `SHA-256(token)` — no raw JWTs stored as keys. Both `authMiddleware` and `optionalAuthMiddleware` updated.
 
-### [P0] Socket.io Redis adapter (distributed WebSocket)
-- **File:** `src/services/socket.ts`, `package.json`
-- **What:** Installed `@socket.io/redis-adapter` and wired it into `SocketService.initialize()`. Also migrated `userSockets` and `battleRooms` Maps to Redis Hashes (HSET/HGET/HDEL) so state is shared across all server instances.
-- **Why:** Without the Redis adapter, Socket.io `io.to(room).emit()` only broadcasts to sockets connected to the *same process*. Multi-server deployments silently drop events to users on other servers.
+### [P0] Socket.io Redis adapter
+- **File:** `src/services/socket.ts`
+- **Change:** Installed `@socket.io/redis-adapter`. Wired dedicated pub/sub Redis connections. `userSockets` → `eduscale:sockets:{userId}` Redis Set. `battleRooms` → `eduscale:battle:users:{battleId}` Redis Set. In-memory Maps kept as fallback on Redis error.
+
+### [P0] Redis logger fix
+- **File:** `src/services/redis.ts`
+- **Change:** `console.error` → `logger.error` from Winston.
 
 ---
 
-## 2026-03-27
+## 2026-03-27 (commits `52876a1` → `aa2af6f`)
 
 ### [P0] Winston logger — full restoration
 - **File:** `src/utils/logger.ts`
-- **What:** Replaced the `console.*` stub with a real Winston logger. JSON format in production (machine-parseable), colorized format in dev. Uses `AsyncLocalStorage` (`node:async_hooks`) to carry `requestId` through the async request chain automatically.
+- **Change:** Replaced the `console.*` stub (the entire Winston implementation was commented out). Now: JSON format in production (CloudWatch/Datadog ready), colorized in dev. `AsyncLocalStorage` (`node:async_hooks`) carries `requestId` automatically through the async call chain — no function signature changes needed.
 
 ### [P0] requestId middleware
-- **File:** `src/middlewares/requestIdMiddleware.ts`
-- **What:** Reads `X-Request-ID` header or generates a UUID. Sets `req.requestId`, echoes header back on response, and runs the request chain inside `AsyncLocalStorage` context so every logger call in scope inherits the `requestId`.
+- **File:** `src/middlewares/requestIdMiddleware.ts` (new)
+- **Change:** Reads `X-Request-ID` header or generates `crypto.randomUUID()`. Attaches to `req.requestId`, echoes on `X-Request-ID` response header, runs the request chain inside `AsyncLocalStorage` context. Registered as first middleware in `main.ts`.
 
-### [P0] Sentry wiring
-- **File:** `src/instrument.ts` (new), `src/main.ts`, `src/app.logic.ts`
-- **What:** Created a TypeScript Sentry init file that only activates when `SENTRY_DSN` env var is set. Imported at the very top of both entry points before any other imports. Trace sample rate is 10% in prod / 100% in dev.
+### [P0] Sentry init
+- **File:** `src/instrument.ts` (new)
+- **Change:** TypeScript Sentry init — only activates when `SENTRY_DSN` env var is set. `tracesSampleRate`: 10% in prod, 100% in dev. Imported at the very top of `main.ts` and `app.logic.ts` before any other imports (required for correct instrumentation).
 
 ### [P0] Replace all console.* with logger
-- **Files:** `uploadMiddleware.ts`, `validateRequest.ts`, `bulkOperations.ts`, `codeController.ts`, `websocket.ts`, `app.logic.ts`
-- **What:** Replaced every `console.log/error/warn` in application code with structured `logger.*` calls. Left `console.log` in `codeWrapper.ts` template literal (intentional user-code output) and seed scripts (intentional CLI output).
+- **Files:** `src/middlewares/uploadMiddleware.ts`, `src/middlewares/validateRequest.ts`, `src/utils/bulkOperations.ts`, `src/controllers/codeController.ts`, `src/services/websocket.ts`, `src/app.logic.ts`
+- **Change:** Every `console.log/error/warn` in application code replaced with `logger.*` calls. Intentional `console.log` left in: `codeWrapper.ts` template literal (user code output), `scripts/` (CLI seed output).
 
 ### [P0] JWT token blocklist
 - **Files:** `src/controllers/authController.ts` (new), `src/routes/authRoutes.ts` (new), `src/middlewares/authMiddleware.ts`
-- **What:** `POST /api/v1/auth/logout` stores `SHA-256(token)` in Redis `SETEX` with TTL = token's remaining lifetime. `authMiddleware` now checks blocklist before processing any request (fails open on Redis downtime). `authLimiter` applied to logout endpoint.
+- **Change:** `POST /api/v1/auth/logout` — decodes JWT, calculates remaining TTL (`exp - now`), stores `SHA-256(token)` in Redis with that TTL. `POST /api/v1/auth/refresh-cache` — clears auth cache entry. `authMiddleware` now checks `eduscale:auth:blocklist:{hash}` before processing — fails open if Redis is down.
+
+### [P1] Auth rate limiter wired
+- **File:** `src/routes/authRoutes.ts`
+- **Change:** `authLimiter` (5 req/15min/IP, existed in `rateLimiter.ts` but was never used) applied to `POST /auth/logout` to prevent blocklist-flooding.
+
+### [P0] Hardcoded http:// URL removed
+- **File:** `src/config/swagger.ts`
+- **Change:** `http://localhost:3000` → reads `API_URL` env var, fallback to `http://localhost:5000` (correct dev port). Added prod/dev label based on `NODE_ENV`.
 
 ### [P0] HTML sanitization
-- **Files:** `src/utils/sanitize.ts` (new), `src/controllers/articleController.ts`, `src/controllers/communityForumControllers.ts`
-- **What:** `sanitize-html` based util with `sanitizeText` (strip all tags) and `sanitizeRichText` (safe allowlist — no scripts/iframes/event handlers, https-only schemes). Wired into article content updates and forum create/update.
+- **File:** `src/utils/sanitize.ts` (new)
+- **Change:** Two helpers using `sanitize-html`:
+  - `sanitizeText`: strips all tags — for plain-text fields (titles, usernames)
+  - `sanitizeRichText`: allowlist of safe tags (p, h1-h6, a, img, code, blockquote, lists) — https-only schemes, no inline events
+- **Wired into:** `articleController.updateArticleContent` (title → sanitizeText, content → sanitizeRichText), `communityForumControllers.createForum` and `updateForum`.
 
-### [P0] Redis connection — replace console.error with logger
-- **File:** `src/services/redis.ts`
-- **What:** Replaced `console.error('Redis Error:', err)` with `logger.error(...)` from the Winston logger.
-- **Why:** `console.error` bypasses structured logging; errors won't appear in CloudWatch / Datadog.
+### Type fix
+- **File:** `src/types/express/index.d.ts`
+- **Change:** Added `requestId?: string` to Express `Request` interface.
+
+---
+
+## Outstanding P0s (as of end of session 2)
+
+See `../CLAUDE.md` for full list. Quick reference:
+
+| Item | File to change |
+|------|---------------|
+| DB composite indexes | `prisma/schema.prisma` → migration |
+| N+1 audit | `src/repositories/*.ts` |
+| PM2 cluster mode | `ecosystem.config.js` (new) + `package.json` |
+| Cache-Aside for roadmaps/leaderboard | `src/services/cacheService.ts` + relevant controllers |
+| requestId in error response | `src/middlewares/errorHandler.ts` |
+| Sentry in frontend | `Frontend/sentry.client.config.ts` |
+| Google OAuth fix | Supabase dashboard + env vars |
+| RBAC audit | `src/routes/*.ts` |
+| Resource ownership guards | `src/controllers/*.ts` |
+| Helmet CSP tighten | `src/main.ts` |
+| Secrets scan | `git log -S` + `gitleaks` |
+| Branch protection | GitHub repo settings + CI workflow |
+| Staging env | AWS / Supabase provisioning |
