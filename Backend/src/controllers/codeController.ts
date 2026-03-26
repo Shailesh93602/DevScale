@@ -18,7 +18,9 @@ export default class CodeController {
     const userId = req.user?.id;
 
     if (!userId) {
-      return sendResponse(res, 'UNAUTHORIZED', { data: { message: 'Login required to save progress' } });
+      return sendResponse(res, 'UNAUTHORIZED', {
+        data: { message: 'Login required to save progress' },
+      });
     }
 
     const draft = await prisma.challengeDraft.upsert({
@@ -27,7 +29,7 @@ export default class CodeController {
           user_id: userId,
           challenge_id: challengeId,
           language: language,
-        }
+        },
       },
       update: { code },
       create: {
@@ -35,7 +37,7 @@ export default class CodeController {
         challenge_id: challengeId,
         language: language,
         code: code,
-      }
+      },
     });
 
     return sendResponse(res, 'DRAFT_SAVED', { data: draft });
@@ -56,8 +58,8 @@ export default class CodeController {
           user_id: userId,
           challenge_id: challengeId,
           language: language as string,
-        }
-      }
+        },
+      },
     });
 
     return sendResponse(res, 'DRAFT_FETCHED', { data: draft });
@@ -67,11 +69,17 @@ export default class CodeController {
     // Be robust with field names from frontend
     const code = req.body.code;
     const language = req.body.language;
-    const challengeId = req.body.challengeId || req.body.challenge_id || req.body.id;
+    const challengeId =
+      req.body.challengeId || req.body.challenge_id || req.body.id;
     const challengeTitle = req.body.challengeTitle;
     let { input = '' } = req.body;
 
-    console.log('[DEBUG] Resolved challengeId:', challengeId, 'challengeTitle:', challengeTitle);
+    console.log(
+      '[DEBUG] Resolved challengeId:',
+      challengeId,
+      'challengeTitle:',
+      challengeTitle
+    );
 
     let challenge: any = null;
 
@@ -83,10 +91,10 @@ export default class CodeController {
             OR: [
               { id: challengeId },
               { title: challengeId },
-              { title: challengeTitle || '' }
-            ]
+              { title: challengeTitle || '' },
+            ],
           },
-          include: { test_cases: true }
+          include: { test_cases: true },
         });
 
         if (challenge) {
@@ -96,7 +104,9 @@ export default class CodeController {
             input = challenge.test_cases[0].input;
           }
         } else {
-          console.log('[DEBUG] No challenge found for wrapping. Skipping wrapper.');
+          console.log(
+            '[DEBUG] No challenge found for wrapping. Skipping wrapper.'
+          );
         }
       } catch (err) {
         console.error('[DEBUG] Error during challenge lookup:', err);
@@ -109,7 +119,9 @@ export default class CodeController {
 
       if (challenge && challenge.test_cases?.length > 0) {
         // Run all public test cases
-        const publicCases = challenge.test_cases.filter((tc: any) => !tc.is_hidden);
+        const publicCases = challenge.test_cases.filter(
+          (tc: any) => !tc.is_hidden
+        );
         testCasesToRun.push(...publicCases);
       } else {
         // Basic execution with provided input or default
@@ -117,7 +129,9 @@ export default class CodeController {
       }
 
       const executionPromises = testCasesToRun.map(async (tc) => {
-        const wrapped = challenge ? wrapCode(code, language, challenge, tc.input) : code;
+        const wrapped = challenge
+          ? wrapCode(code, language, challenge, tc.input)
+          : code;
         try {
           const execResult = await executeCode({
             code: wrapped,
@@ -127,11 +141,12 @@ export default class CodeController {
 
           const actualOutput = execResult.output.trim();
           const expectedOutput = (tc.output || '').trim();
-          
+
           // Basic comparison - might need something more robust for floating points or whitespace
           let status = 'Accepted';
           if (tc.output) {
-             status = actualOutput === expectedOutput ? 'Accepted' : 'Wrong Answer';
+            status =
+              actualOutput === expectedOutput ? 'Accepted' : 'Wrong Answer';
           }
 
           return {
