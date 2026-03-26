@@ -89,7 +89,6 @@ test.describe('Comprehensive Roadmap Feature Validation (Smoke & Load)', () => {
           const firstRoadmap = page.locator('a[href*="/roadmap/"]').first();
           if (await firstRoadmap.isVisible()) {
             await firstRoadmap.hover();
-            // Optional: await firstRoadmap.click(); await expect(page).toHaveURL(/.*roadmap.*/);
           }
           break;
         }
