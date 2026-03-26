@@ -77,11 +77,15 @@ export const submitChallengeValidation = Joi.object({
 
 export const runCodeValidation = Joi.object({
   code: Joi.string().required(),
-  language: Joi.string().valid('javascript', 'python', 'java', 'cpp').required(),
+  language: Joi.string()
+    .valid('javascript', 'python', 'java', 'cpp')
+    .required(),
 });
 
 export const saveDraftValidation = Joi.object({
   challengeId: Joi.string().required(),
   code: Joi.string().required(),
-  language: Joi.string().valid('javascript', 'python', 'java', 'cpp').required(),
+  language: Joi.string()
+    .valid('javascript', 'python', 'java', 'cpp')
+    .required(),
 });
