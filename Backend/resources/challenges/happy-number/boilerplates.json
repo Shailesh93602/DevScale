@@ -1,0 +1,10 @@
+{
+  "typescript": "function isHappy(n: number): boolean {\n  // Your code here\n}",
+  "javascript": "/**\n * @param {number} n\n * @return {boolean}\n */\nvar isHappy = function(n) {\n  // Your code here\n};",
+  "python": "class Solution:\n    def isHappy(self, n: int) -> bool:\n        # Your code here\n        pass",
+  "java": "class Solution {\n    public boolean isHappy(int n) {\n        // Your code here\n        return false;\n    }\n}",
+  "cpp": "class Solution {\npublic:\n    bool isHappy(int n) {\n        // Your code here\n    }\n};",
+  "go": "func isHappy(n int) bool {\n    // Your code here\n}",
+  "rust": "impl Solution {\n    pub fn is_happy(n: i32) -> bool {\n        // Your code here\n    }\n}",
+  "csharp": "public class Solution {\n    public bool IsHappy(int n) {\n        // Your code here\n    }\n}"
+}

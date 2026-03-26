@@ -1,10 +1,7 @@
 import { BaseRouter } from './BaseRouter';
 import CodeController from '../controllers/codeController';
 import { validateRequest } from '../middlewares/validateRequest';
-import {
-  runCodeValidation,
-  saveDraftValidation,
-} from '../validations/challengeValidation';
+import { runCodeValidation, saveDraftValidation } from '../validations/challengeValidation';
 import { authMiddleware } from '../middlewares/authMiddleware';
 
 export class CodeRoutes extends BaseRouter {

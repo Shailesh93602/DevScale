@@ -1,0 +1,6 @@
+{
+  "typescript": "class NotificationService {\n    notify(userId: string, payload: any): string {\n        // Your code here\n    }\n}",
+  "javascript": "class NotificationService {\n    notify(userId, payload) {\n        // Your code here\n    }\n}",
+  "python": "class NotificationService:\n    def notify(self, user_id: str, payload: dict) -> str:\n        # Your code here\n        pass"
+}
+

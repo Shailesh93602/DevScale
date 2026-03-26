@@ -32,12 +32,16 @@ export const StreakCalendar: React.FC<StreakCalendarProps> = ({
     <div className="space-y-4">
       <div className="flex justify-between">
         <div>
-          <p className="text-sm text-gray-500">Current Streak</p>
-          <p className="text-2xl font-bold">{currentStreak} days</p>
+          <p className="text-sm text-muted-foreground">Current Streak</p>
+          <p className="text-2xl font-bold text-foreground">
+            {currentStreak} days
+          </p>
         </div>
         <div>
-          <p className="text-sm text-gray-500">Longest Streak</p>
-          <p className="text-2xl font-bold">{longestStreak} days</p>
+          <p className="text-sm text-muted-foreground">Longest Streak</p>
+          <p className="text-2xl font-bold text-foreground">
+            {longestStreak} days
+          </p>
         </div>
       </div>
 
@@ -63,7 +67,9 @@ export const StreakCalendar: React.FC<StreakCalendarProps> = ({
       <div className="mt-4">
         <div className="flex items-center space-x-2">
           <div className="h-4 w-4 rounded-sm bg-primary" />
-          <span className="text-sm text-gray-500">Active Learning Day</span>
+          <span className="text-sm text-muted-foreground">
+            Active Learning Day
+          </span>
         </div>
       </div>
     </div>

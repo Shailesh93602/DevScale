@@ -1,0 +1,6 @@
+{
+  "typescript": "function nextGreaterElement(nums1: number[], nums2: number[]): number[] {\n    // Your code here\n}",
+  "javascript": "/**\n * @param {number[]} nums1\n * @param {number[]} nums2\n * @return {number[]}\n */\nvar nextGreaterElement = function(nums1, nums2) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def nextGreaterElement(self, nums1: List[int], nums2: List[int]) -> List[int]:\n        # Your code here\n        pass"
+}
+

@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nfunction createTracer(serviceName: string): { startSpan: (name: string, parentContext?: SpanContext) => Span; middleware: () => Middleware; extractContext: (headers: Record<string, string>) => SpanContext }",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

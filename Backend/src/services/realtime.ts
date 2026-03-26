@@ -8,7 +8,7 @@ export interface RealtimeUpdate<T> {
 }
 
 export class RealtimeService {
-  private readonly subscribers: Map<
+  private subscribers: Map<
     string,
     Set<(data: RealtimeUpdate<unknown>) => void>
   > = new Map();
@@ -31,7 +31,7 @@ export class RealtimeService {
     }
     this.subscribers
       .get(entity)
-      ?.add(callback as (update: RealtimeUpdate<unknown>) => void);
+      ?.add(callback as (data: RealtimeUpdate<unknown>) => void);
   }
 
   unsubscribe<T>(
@@ -40,7 +40,7 @@ export class RealtimeService {
   ) {
     this.subscribers
       .get(entity)
-      ?.delete(callback as (update: RealtimeUpdate<unknown>) => void);
+      ?.delete(callback as (data: RealtimeUpdate<unknown>) => void);
   }
 
   cleanup() {

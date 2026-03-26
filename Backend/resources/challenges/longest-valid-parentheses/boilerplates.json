@@ -1,0 +1,10 @@
+{
+  "typescript": "function longestValidParentheses(s: string): number {\n  // Your code here\n}",
+  "javascript": "/**\n * @param {string} s\n * @return {number}\n */\nvar longestValidParentheses = function(s) {\n  // Your code here\n};",
+  "python": "class Solution:\n    def longestValidParentheses(self, s: str) -> int:\n        # Your code here\n        pass",
+  "java": "class Solution {\n    public int longestValidParentheses(String s) {\n        // Your code here\n    }\n}",
+  "cpp": "class Solution {\npublic:\n    int longestValidParentheses(string s) {\n        // Your code here\n    }\n};",
+  "go": "func longestValidParentheses(s string) int {\n    // Your code here\n}",
+  "rust": "impl Solution {\n    pub fn longest_valid_parentheses(s: String) -> i32 {\n        // Your code here\n    }\n}",
+  "csharp": "public class Solution {\n    public int LongestValidParentheses(string s) {\n        // Your code here\n    }\n}"
+}

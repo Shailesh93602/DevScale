@@ -1,0 +1,5 @@
+{
+  "typescript": "function reverseBetween(head: ListNode | null, left: number, right: number): ListNode | null {\n    // Your code here\n}",
+  "javascript": "/**\n * @param {any} params\n * @return {any}\n */\nvar reverseBetween = function(root) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def reverseBetween(self, root) -> bool:\n        # Your code here\n        pass"
+}

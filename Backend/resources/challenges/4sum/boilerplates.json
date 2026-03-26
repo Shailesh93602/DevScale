@@ -1,27 +1,10 @@
-[
-  {
-    "language": "typescript",
-    "slug": "typescript",
-    "code": "function fourSum(nums: number[], target: number): number[][] {\n  \n};"
-  },
-  {
-    "language": "javascript",
-    "slug": "javascript",
-    "code": "/**\n * @param {number[]} nums\n * @param {number} target\n * @return {number[][]}\n */\nvar fourSum = function(nums, target) {\n    \n};"
-  },
-  {
-    "language": "python",
-    "slug": "python",
-    "code": "class Solution:\n    def fourSum(self, nums: List[int], target: int) -> List[List[int]]:\n        "
-  },
-  {
-    "language": "java",
-    "slug": "java",
-    "code": "class Solution {\n    public List<List<Integer>> fourSum(int[] nums, int target) {\n        \n    }\n}"
-  },
-  {
-    "language": "cpp",
-    "slug": "cpp",
-    "code": "class Solution {\npublic:\n    vector<vector<int>> fourSum(vector<int>& nums, int target) {\n        \n    }\n};"
-  }
-]
+{
+  "typescript": "function fourSum(nums: number[], target: number): number[][] {\n    \n};",
+  "javascript": "/**\n * @param {number[]} nums\n * @param {number} target\n * @return {number[][]}\n */\nvar fourSum = function(nums, target) {\n    \n};",
+  "python": "class Solution:\n    def fourSum(self, nums: List[int], target: int) -> List[List[int]]:\n        ",
+  "java": "import java.util.*;\n\nclass Solution {\n    public List<List<Integer>> fourSum(int[] nums, int target) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<vector<int>> fourSum(vector<int>& nums, int target) {\n        \n    }\n};",
+  "go": "func fourSum(nums []int, target int) [][]int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn four_sum(nums: Vec<i32>, target: i32) -> Vec<Vec<i32>> {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public IList<IList<int>> FourSum(int[] nums, int target) {\n        \n    }\n}"
+}

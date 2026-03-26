@@ -1,3 +1,17 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  {
+    "input": "[\"TimeMap\", \"set\", \"get\", \"get\", \"set\", \"get\", \"get\"]\n[[], [\"foo\", \"bar\", 1], [\"foo\", 1], [\"foo\", 3], [\"foo\", \"bar2\", 4], [\"foo\", 4], [\"foo\", 5]]",
+    "output": "[null, null, \"bar\", \"bar\", null, \"bar2\", \"bar2\"]",
+    "is_hidden": false
+  },
+  {
+    "input": "[\"TimeMap\", \"set\", \"get\"]\n[[], [\"a\", \"b\", 10], [\"a\", 5]]",
+    "output": "[null, null, \"\"]",
+    "is_hidden": false
+  },
+  {
+    "input": "[\"TimeMap\", \"set\", \"set\", \"get\"]\n[[], [\"k\", \"v1\", 10], [\"k\", \"v2\", 20], [\"k\", 15]]",
+    "output": "[null, null, null, \"v1\"]",
+    "is_hidden": true
+  }
 ]

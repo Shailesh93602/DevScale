@@ -1,0 +1,10 @@
+{
+  "typescript": "function minEatingSpeed(piles: number[], h: number): number {\n    \n};",
+  "javascript": "/**\n * @param {number[]} piles\n * @param {number} h\n * @return {number}\n */\nvar minEatingSpeed = function(piles, h) {\n    \n};",
+  "python": "class Solution:\n    def minEatingSpeed(self, piles: List[int], h: int) -> int:\n        ",
+  "java": "class Solution {\n    public int minEatingSpeed(int[] piles, int h) {\n        \n    }\n}",
+  "cpp": "class Solution {\npublic:\n    int minEatingSpeed(vector<int>& piles, int h) {\n        \n    }\n};",
+  "go": "func minEatingSpeed(piles []int, h int) int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn min_eating_speed(piles: Vec<i32>, h: i32) -> i32 {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int MinEatingSpeed(int[] piles, int h) {\n        \n    }\n}"
+}

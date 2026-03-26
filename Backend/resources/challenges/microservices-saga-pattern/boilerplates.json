@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nclass SagaOrchestrator { addStep(step: SagaStep): void; execute(context: any): Promise<SagaResult>; getStatus(sagaId: string): SagaStatus; }",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

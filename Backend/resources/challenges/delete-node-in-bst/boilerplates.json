@@ -1,0 +1,5 @@
+{
+  "typescript": "function deleteNode(root: TreeNode | null, key: number): TreeNode | null {\n    // Your code here\n}",
+  "javascript": "/**\n * @param {any} params\n * @return {any}\n */\nvar deleteNode = function(root) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def deleteNode(self, root) -> bool:\n        # Your code here\n        pass"
+}

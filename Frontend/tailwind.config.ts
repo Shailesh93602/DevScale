@@ -13,6 +13,13 @@ export default {
     './src/**/*.{js,jsx,ts,tsx}',
   ],
   theme: {
+    screens: {
+      sm: '640px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1280px',
+      '2xl': '1400px',
+    },
     container: {
       center: true,
       padding: '2rem',
@@ -24,12 +31,40 @@ export default {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'fade-up': 'fadeUp 0.5s ease forwards',
         move: 'move 5s linear infinite',
         scroll:
           'scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite',
       },
-      typography:
-        '(theme) => ({\\r\\n        DEFAULT: {\\r\\n          css: {\\r\\n            h1: {\\r\\n              fontSize: theme("fontSize.4xl"),\\r\\n              fontWeight: theme("fontWeight.bold"),\\r\\n            },\\r\\n            h2: {\\r\\n              fontSize: theme("fontSize.3xl"),\\r\\n            },\\r\\n            "ul li": {\\r\\n              marginLeft: theme("spacing.4"),\\r\\n              listStylePosition: "outside",\\r\\n            },\\r\\n            ".ql-indent-1": {\\r\\n              // paddingLeft: theme("spacing.8"),\\r\\n              marginLeft: theme("spacing.12"),\\r\\n            },\\r\\n            ".ql-indent-2": {\\r\\n              // paddingLeft: theme("spacing.12"),\\r\\n              marginLeft: theme("spacing.16"),\\r\\n            },\\r\\n            ".ql-indent-3": {\\r\\n              // paddingLeft: theme("spacing.16"),\\r\\n              marginLeft: theme("spacing.20"),\\r\\n            },\\r\\n            ".ql-indent-4": {\\r\\n              // paddingLeft: theme("spacing.20"),\\r\\n              marginLeft: theme("spacing.24"),\\r\\n            },\\r\\n          },\\r\\n        },\\r\\n      })',
+      typography: (theme: any) => ({
+        DEFAULT: {
+          css: {
+            h1: {
+              fontSize: theme('fontSize.4xl'),
+              fontWeight: theme('fontWeight.bold'),
+            },
+            h2: {
+              fontSize: theme('fontSize.3xl'),
+            },
+            'ul li': {
+              marginLeft: theme('spacing.4'),
+              listStylePosition: 'outside',
+            },
+            '.ql-indent-1': {
+              marginLeft: theme('spacing.12'),
+            },
+            '.ql-indent-2': {
+              marginLeft: theme('spacing.16'),
+            },
+            '.ql-indent-3': {
+              marginLeft: theme('spacing.20'),
+            },
+            '.ql-indent-4': {
+              marginLeft: theme('spacing.24'),
+            },
+          },
+        },
+      }),
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
@@ -76,7 +111,18 @@ export default {
           '4': 'hsl(var(--chart-4))',
           '5': 'hsl(var(--chart-5))',
         },
-        red: 'hsl(var(--red))',
+        success: {
+          DEFAULT: 'hsl(var(--success))',
+          foreground: 'hsl(var(--success-foreground))',
+        },
+        warning: {
+          DEFAULT: 'hsl(var(--warning))',
+          foreground: 'hsl(var(--warning-foreground))',
+        },
+        info: {
+          DEFAULT: 'hsl(var(--info))',
+          foreground: 'hsl(var(--info-foreground))',
+        },
         dark: 'var(--dark)',
         light: 'var(--light)',
         lightSecondary: 'var(--light-secondary)',
@@ -85,8 +131,27 @@ export default {
         primary2: 'var(--primary2)',
         primaryLight: 'var(--primary-light)',
         bgColor: 'var(--bg-color)',
+        // Semantic colors
+        purple: 'hsl(var(--color-purple))',
+        orange: 'hsl(var(--color-orange))',
+        pink: 'hsl(var(--color-pink))',
+        teal: 'hsl(var(--color-teal))',
+        indigo: 'hsl(var(--color-indigo))',
+        blue: 'hsl(var(--color-blue))',
+        green: 'hsl(var(--color-green))',
+        red: 'hsl(var(--color-red))',
+        yellow: 'hsl(var(--color-yellow))',
+        cta: {
+          from: 'hsl(var(--cta-from))',
+          via: 'hsl(var(--cta-via))',
+          to: 'hsl(var(--cta-to))',
+        },
       },
       keyframes: {
+        fadeUp: {
+          '0%': { opacity: '0', transform: 'translateY(16px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
         'accordion-down': {
           from: {
             height: '0',
@@ -106,7 +171,6 @@ export default {
       },
     },
   },
-
   plugins: [typography, tailwindAnimate, addVariablesForColors],
 } satisfies Config;
 
@@ -119,7 +183,7 @@ function addVariablesForColors({
 }) {
   const allColors = flattenColorPalette(theme('colors'));
   const newVars = Object.fromEntries(
-    Object.entries(allColors).map(([key, val]) => [`--${key}`, val]),
+    Object.entries(allColors).map(([key, val]) => [`--tw-color-${key}`, val]),
   );
 
   addBase({

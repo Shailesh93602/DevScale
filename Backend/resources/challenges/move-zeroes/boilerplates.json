@@ -1,0 +1,10 @@
+{
+  "typescript": "/**\n Do not return anything, modify nums in-place instead.\n */\nfunction moveZeroes(nums: number[]): void {\n    \n};",
+  "javascript": "/**\n * @param {number[]} nums\n * @return {void} Do not return anything, modify nums in-place instead.\n */\nvar moveZeroes = function(nums) {\n    \n};",
+  "python": "class Solution:\n    def moveZeroes(self, nums: List[int]) -> None:\n        \"\"\"\n        Do not return anything, modify nums in-place instead.\n        \"\"\"\n        ",
+  "java": "class Solution {\n    public void moveZeroes(int[] nums) {\n        \n    }\n}",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    void moveZeroes(vector<int>& nums) {\n        \n    }\n};",
+  "go": "func moveZeroes(nums []int) {\n    \n}",
+  "rust": "impl Solution {\n    pub fn move_zeroes(nums: &mut Vec<i32>) {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public void MoveZeroes(int[] nums) {\n        \n    }\n}"
+}

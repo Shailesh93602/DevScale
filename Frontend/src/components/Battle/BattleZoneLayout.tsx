@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -10,10 +10,23 @@ import {
   Plus,
   Swords,
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { useAxiosGet } from '@/hooks/useAxios';
+import { useAuth } from '@/contexts/AuthContext';
+
+interface BattleStatsResponse {
+  win_rate?: number;
+  wins?: number;
+  total_battles?: number;
+}
+
+interface BattleGlobalStatsResponse {
+  activeBattles: number;
+  upcomingBattles: number;
+  totalParticipants: number;
+}
 
 interface BattleZoneLayoutProps {
   children: ReactNode;
@@ -21,36 +34,89 @@ interface BattleZoneLayoutProps {
 
 const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
   const pathname = usePathname();
+  const { isAuthenticated, status } = useAuth();
+  const [globalStats, setGlobalStats] = useState({
+    activeBattles: 0,
+    upcomingBattles: 0,
+    totalParticipants: 0,
+  });
+  const [userWinRate, setUserWinRate] = useState<string>('--');
+  const [getGlobalStats] = useAxiosGet<BattleGlobalStatsResponse>('/battles/global-stats');
+  const [getStatistics] = useAxiosGet<BattleStatsResponse>('/battles/statistics/me');
 
-  const quickStats = [
-    {
-      title: 'Active Battles',
-      value: '12',
-      icon: <Zap className="h-5 w-5 text-yellow-500" />,
-      color: 'text-yellow-500',
-    },
-    {
-      title: 'Upcoming Battles',
-      value: '8',
-      icon: <Clock className="h-5 w-5 text-blue-500" />,
-      color: 'text-blue-500',
-    },
-    {
-      title: 'Total Participants',
-      value: '45',
-      icon: <Users className="h-5 w-5 text-green-500" />,
-      color: 'text-green-500',
-    },
-    {
-      title: 'Win Rate',
-      value: '75%',
-      icon: <Target className="h-5 w-5 text-purple-500" />,
-      color: 'text-purple-500',
-    },
-  ];
+  useEffect(() => {
+    const loadQuickStats = async () => {
+      // Single SQL aggregate query — replaces the old ?limit=100 object fetch
+      const globalRes = await getGlobalStats();
+      if (globalRes.success && globalRes.data) {
+        setGlobalStats({
+          activeBattles: globalRes.data.activeBattles,
+          upcomingBattles: globalRes.data.upcomingBattles,
+          totalParticipants: globalRes.data.totalParticipants,
+        });
+      }
+
+      if (!isAuthenticated) {
+        setUserWinRate('--');
+        return;
+      }
+
+      const statsResponse = await getStatistics();
+      if (statsResponse.success && statsResponse.data) {
+        const d = statsResponse.data;
+        // Use pre-calculated win_rate from backend, fall back to manual calc
+        const winRate = d.win_rate ?? (
+          d.wins != null && d.total_battles != null
+            ? Math.round((d.wins / Math.max(d.total_battles, 1)) * 100)
+            : 0
+        );
+        setUserWinRate(`${winRate}%`);
+        return;
+      }
+
+      setUserWinRate('--');
+    };
+
+    if (status !== 'loading') {
+      loadQuickStats();
+    }
+  }, [getGlobalStats, getStatistics, isAuthenticated, status]);
+
+  const quickStats = useMemo(
+    () => [
+      {
+        title: 'Active Battles',
+        value: `${globalStats.activeBattles}`,
+        icon: <Zap className="h-5 w-5 text-yellow-500" />,
+        color: 'text-yellow-500',
+      },
+      {
+        title: 'Upcoming Battles',
+        value: `${globalStats.upcomingBattles}`,
+        icon: <Clock className="h-5 w-5 text-blue-500" />,
+        color: 'text-blue-500',
+      },
+      {
+        title: 'Total Participants',
+        value: `${globalStats.totalParticipants}`,
+        icon: <Users className="h-5 w-5 text-green-500" />,
+        color: 'text-green-500',
+      },
+      {
+        title: 'Win Rate',
+        value: userWinRate,
+        icon: <Target className="h-5 w-5 text-purple-500" />,
+        color: 'text-purple-500',
+      },
+    ],
+    [globalStats, userWinRate],
+  );
 
   // Get breadcrumb segments
-  const segments = pathname.split('/').filter(Boolean);
+  const segments = pathname
+    .split('/')
+    .filter(Boolean)
+    .filter((s) => s !== 'battle-zone');
   const isHomePage = pathname === '/battle-zone';
 
   return (
@@ -71,7 +137,7 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
                 <React.Fragment key={segment}>
                   <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   <Link
-                    href={`/${segments.slice(0, index + 1).join('/')}`}
+                    href={`/battle-zone/${segments.slice(0, index + 1).join('/')}`}
                     className={cn(
                       'text-sm font-medium',
                       index === segments.length - 1
@@ -79,7 +145,12 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
                         : 'text-muted-foreground hover:text-foreground',
                     )}
                   >
-                    {segment.charAt(0).toUpperCase() + segment.slice(1)}
+                    {/^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(segment)
+                      ? 'Battle'
+                      : segment
+                          .split('-')
+                          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                          .join(' ')}
                   </Link>
                 </React.Fragment>
               ))}
@@ -118,64 +189,40 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
-        {isHomePage ? (
-          <div className="space-y-8">
-            {/* Welcome Section for New Users */}
+        <div className="space-y-8">
+          {isHomePage && (
             <motion.div
               initial={{ opacity: 0, translateY: 20 }}
               animate={{ opacity: 1, translateY: 0 }}
-              className="rounded-lg border bg-card p-6 shadow-sm"
+              className="border-primary/20 rounded-2xl border bg-card p-10 shadow-lg"
+              style={{
+                background:
+                  'linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--primary)/0.08) 100%)',
+              }}
             >
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold">
-                    Welcome to Battle Zone!
+                  <h2 className="text-3xl font-extrabold tracking-tight">
+                    Battle Zone Arena
                   </h2>
-                  <p className="mt-2 text-muted-foreground">
-                    Create your first battle and start competing with other
-                    developers.
+                  <p className="mt-3 text-lg text-muted-foreground">
+                    Explore active battles, join live competitions, or launch a new challenge.
                   </p>
                 </div>
-                <Link href="/battle-zone/create">
-                  <Button size="lg" className="flex items-center gap-2">
+                <Link href="/battle-zone/create" className="shrink-0">
+                  <Button
+                    size="lg"
+                    className="shadow-primary/30 flex items-center gap-2 rounded-xl px-8 shadow-md"
+                  >
                     <Swords className="h-5 w-5" />
-                    Create Your First Battle
+                    Create Battle
                   </Button>
                 </Link>
               </div>
             </motion.div>
-
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {quickStats.map((stat) => (
-                <motion.div
-                  key={stat.title}
-                  initial={{ opacity: 0, translateY: 20 }}
-                  animate={{ opacity: 1, translateY: 0 }}
-                  transition={{ delay: 0.1 }}
-                >
-                  <Card className="h-full">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium">
-                        {stat.title}
-                      </CardTitle>
-                      <div
-                        className={cn('rounded-full bg-muted p-2', stat.color)}
-                      >
-                        {stat.icon}
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-2xl font-bold">{stat.value}</div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        ) : (
-          children
-        )}
+          )}
+          {children}
+        </div>
       </div>
     </div>
   );

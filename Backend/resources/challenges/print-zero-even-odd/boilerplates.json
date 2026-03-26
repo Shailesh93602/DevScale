@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nclass ZeroEvenOdd { zero(printZero: () => void): Promise<void>; even(printEven: (n: number) => void): Promise<void>; odd(printOdd: (n: number) => void): Promise<void> }",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

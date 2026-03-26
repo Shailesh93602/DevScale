@@ -15,5 +15,6 @@
   "example_output": "true",
   "constraints": "- `0 <= s1.length, s2.length <= 100`\n- `0 <= s3.length <= 200`\n- `s1`, `s2`, and `s3` consist of lowercase English letters.",
   "function_signature": "function isInterleave(s1: string, s2: string, s3: string): boolean {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

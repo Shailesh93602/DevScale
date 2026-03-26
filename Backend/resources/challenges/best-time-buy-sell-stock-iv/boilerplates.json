@@ -1,0 +1,5 @@
+{
+  "typescript": "function maxProfit(k: number, prices: number[]): number {\n    // Your code here\n}",
+  "javascript": "/**\n * @param {any} params\n * @return {any}\n */\nvar maxProfit = function(root) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def maxProfit(self, root) -> bool:\n        # Your code here\n        pass"
+}

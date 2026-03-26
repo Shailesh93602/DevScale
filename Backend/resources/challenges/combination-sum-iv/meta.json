@@ -15,5 +15,6 @@
   "example_output": "7",
   "constraints": "- `1 <= nums.length <= 200`\n- `1 <= nums[i] <= 1000`\n- All elements of `nums` are unique.\n- `1 <= target <= 1000`",
   "function_signature": "function combinationSum4(nums: number[], target: number): number {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

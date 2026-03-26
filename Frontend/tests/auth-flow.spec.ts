@@ -7,9 +7,9 @@ test.describe('Authentication and Dashboard Flow', () => {
     // 1. Go to login page
     await page.goto('/auth/login');
 
-    // 2. Fill in credentials
-    await page.fill('input[id="login-email"]', 'admin@eduscale.io');
-    await page.fill('input[name="password"]', 'Admin@123');
+    // 2. Fill in credentials (use testuser@yopmail.com — confirmed working with dashboard)
+    await page.fill('input[id="login-email"]', 'testuser@yopmail.com');
+    await page.fill('input[id="login-password"]', 'Test@123');
 
     // 3. Submit form
     await page.click('button[type="submit"]');
@@ -18,19 +18,17 @@ test.describe('Authentication and Dashboard Flow', () => {
     // Note: App.tsx and middleware handle redirection to /dashboard
     await page.waitForURL('**/dashboard');
 
-    // 5. Verify dashboard content
-    await expect(page.getByText(/Welcome back/i)).toBeVisible();
+    // 5. Verify dashboard content — use longer timeouts since real Supabase auth + API calls take time
+    await expect(page.getByText(/Welcome back/i)).toBeVisible({ timeout: 30000 });
 
-    // Check for dashboard stats
-    await expect(
-      page.getByRole('heading', { name: 'Enrolled Roadmaps', exact: true }),
-    ).toBeVisible();
-    await expect(page.getByText('Topics Completed').first()).toBeVisible();
-    await expect(page.getByText('Current Streak').first()).toBeVisible();
+    // Check for dashboard stats — StatCard renders titles as <p> tags, not headings
+    await expect(page.getByText('Enrolled Roadmaps').first()).toBeVisible({ timeout: 20000 });
+    await expect(page.getByText('Topics Completed').first()).toBeVisible({ timeout: 20000 });
+    await expect(page.getByText('Current Streak').first()).toBeVisible({ timeout: 20000 });
 
     // Check for specific sections
-    await expect(page.getByText('Your Learning Progress')).toBeVisible();
-    await expect(page.getByText('Recommended For You')).toBeVisible();
+    await expect(page.getByText('Your Learning Progress')).toBeVisible({ timeout: 20000 });
+    await expect(page.getByText('Recommended For You')).toBeVisible({ timeout: 20000 });
   });
 
   test('failed login shows error message', async ({ page }) => {
@@ -50,9 +48,11 @@ test.describe('Authentication and Dashboard Flow', () => {
     page,
   }) => {
     // Attempt to access a private route directly
-    await page.goto('/dashboard');
+    // goto follows the server redirect to /auth/login, use domcontentloaded to avoid hanging
+    await page.goto('/dashboard', { waitUntil: 'domcontentloaded', timeout: 30000 });
 
-    await page.waitForURL('**/auth/login');
+    // The middleware redirects to /auth/login?callbackUrl=... — check URL directly
+    await page.waitForURL(/\/auth\/login/, { timeout: 20000 });
     expect(page.url()).toContain('/auth/login');
   });
 });

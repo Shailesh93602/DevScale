@@ -24,12 +24,15 @@ export interface RoadmapSocialData {
 
 export interface BaseRoadmap extends RoadmapSocialData {
   id: string;
+  slug?: string | null;
   title: string;
   author: RoadmapAuthor;
   thumbnail?: string;
   difficulty?: 'beginner' | 'intermediate' | 'advanced';
   createdAt: string;
   updatedAt: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface EnrolledRoadmap extends BaseRoadmap {
@@ -76,8 +79,7 @@ export interface RoadmapFilters {
 }
 
 export const useRoadmaps = (filters?: RoadmapFilters) => {
-  const [execute, state] =
-    useAxiosGet<ApiResponse<RoadmapsResponse>>('/roadmaps');
+  const [execute, state] = useAxiosGet<BaseRoadmap[]>('/roadmaps');
 
   const fetchRoadmaps = async () => {
     try {
@@ -86,9 +88,7 @@ export const useRoadmaps = (filters?: RoadmapFilters) => {
 
       if (filters) {
         if (filters.categories && filters.categories.length > 0) {
-          filters.categories.forEach((category) => {
-            params.append('categories', category);
-          });
+          params.append('category', filters.categories.join(','));
         }
 
         if (filters.difficulty && filters.difficulty !== 'all') {
@@ -129,6 +129,7 @@ export const useRoadmaps = (filters?: RoadmapFilters) => {
 
   return {
     data: state.data,
+    meta: state.meta,
     isLoading: state.isLoading,
     error: state.error,
     refetch: fetchRoadmaps,
@@ -136,19 +137,14 @@ export const useRoadmaps = (filters?: RoadmapFilters) => {
 };
 
 export const useRoadmapById = (id: string) => {
-  const [execute, state] = useAxiosGet<ApiResponse<BaseRoadmap>>(
-    `/roadmaps/${id}`,
-  );
+  const [execute, state] = useAxiosGet<BaseRoadmap>(`/roadmaps/${id}`);
 
   const fetchRoadmap = async () => {
     try {
       const response = await execute();
       return response;
     } catch (error) {
-      const axiosError = error as AxiosError<ApiResponse<unknown>>;
-      toast.error(
-        axiosError.response?.data?.message || 'Failed to fetch roadmap',
-      );
+      toast.error('Failed to fetch roadmap');
       throw error;
     }
   };
@@ -162,19 +158,16 @@ export const useRoadmapById = (id: string) => {
 };
 
 export const useRoadmapCategories = () => {
-  const [execute, state] = useAxiosGet<ApiResponse<string[]>>(
-    '/roadmaps/categories',
-  );
+  const [execute, state] = useAxiosGet<
+    { id: string; name: string; icon?: string; description?: string }[]
+  >('/roadmaps/categories');
 
   const fetchCategories = async () => {
     try {
       const response = await execute();
       return response;
     } catch (error) {
-      const axiosError = error as AxiosError<ApiResponse<unknown>>;
-      toast.error(
-        axiosError.response?.data?.message || 'Failed to fetch categories',
-      );
+      toast.error('Failed to fetch categories');
       throw error;
     }
   };

@@ -1,8 +1,10 @@
 'use client';
 
-import React, { Suspense, lazy, useEffect, useState } from 'react';
+import React, { Suspense, lazy, useEffect, useMemo, useRef, useState } from 'react';
+import Link from 'next/link';
 import { useAxiosGet } from '@/hooks/useAxios';
 import { useBattleStore } from '@/store/battleStore';
+import { useAuth } from '@/contexts/AuthContext';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -15,19 +17,10 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { Battle, BattleFilters, BattleStatus } from '@/types/battle';
 import { Button } from '@/components/ui/button';
+import { normalizeBattle } from '@/lib/battle-normalizer';
 
 // Lazy load components
 const BattleCard = lazy(() => import('./BattleCard'));
-
-interface ApiResponse {
-  data: Battle[];
-  meta: {
-    total: number;
-    page: number;
-    limit: number;
-    totalPages: number;
-  };
-}
 
 interface BattleListProps {
   initialFilters?: BattleFilters;
@@ -39,23 +32,38 @@ export const BattleList: React.FC<BattleListProps> = ({
   onJoinBattle,
 }) => {
   const { toast } = useToast();
+  const { user } = useAuth();
   const { filters, setFilters } = useBattleStore();
   const [searchTerm, setSearchTerm] = useState(filters.search);
+  const appliedInitialFiltersRef = useRef<string | null>(null);
+  const initialFiltersKey = useMemo(
+    () => JSON.stringify(initialFilters ?? {}),
+    [initialFilters],
+  );
 
-  const [execute, state] = useAxiosGet<ApiResponse>('/api/battles');
+  const [execute, state] = useAxiosGet<Battle[]>('/battles');
 
   useEffect(() => {
-    if (initialFilters) {
+    if (
+      initialFilters &&
+      appliedInitialFiltersRef.current !== initialFiltersKey
+    ) {
+      appliedInitialFiltersRef.current = initialFiltersKey;
       setFilters(initialFilters);
     }
-  }, [initialFilters, setFilters]);
+  }, [initialFilters, initialFiltersKey, setFilters]);
 
   const fetchBattles = async () => {
     try {
-      await execute({
-        params: {
+      const sanitizedFilters = Object.fromEntries(
+        Object.entries({
           ...filters,
           search: searchTerm,
+        }).filter(([, value]) => value !== '' && value !== 'all'),
+      );
+      await execute({
+        params: {
+          ...sanitizedFilters,
         },
       });
     } catch {
@@ -69,7 +77,7 @@ export const BattleList: React.FC<BattleListProps> = ({
 
   useEffect(() => {
     fetchBattles();
-  }, [filters]);
+  }, [filters, searchTerm]);
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
@@ -84,8 +92,9 @@ export const BattleList: React.FC<BattleListProps> = ({
     setFilters({ ...filters, page: newPage });
   };
 
-  const renderPagination = (data: ApiResponse) => {
-    const { page, totalPages } = data.meta;
+  const renderPagination = () => {
+    if (!state.meta?.pagination) return null;
+    const { currentPage: page, lastPage: totalPages } = state.meta.pagination;
     if (totalPages <= 1) return null;
 
     return (
@@ -118,14 +127,16 @@ export const BattleList: React.FC<BattleListProps> = ({
           className="max-w-sm"
         />
         <Select value={filters.status} onValueChange={handleStatusChange}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[180px]" aria-label="Filter by battle status">
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Battles</SelectItem>
-            <SelectItem value="UPCOMING">Upcoming</SelectItem>
+            <SelectItem value="WAITING">Waiting</SelectItem>
+            <SelectItem value="LOBBY">In Lobby</SelectItem>
             <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
             <SelectItem value="COMPLETED">Completed</SelectItem>
+            <SelectItem value="CANCELLED">Cancelled</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -136,21 +147,63 @@ export const BattleList: React.FC<BattleListProps> = ({
             <Skeleton key={i} className="h-[200px]" />
           ))}
         </div>
-      ) : state.data ? (
+      ) : state.data && state.data.length > 0 ? (
         <>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {state.data.data.map((battle) => (
+            {state.data.map((battle) => (
               <Suspense
                 key={battle.id}
                 fallback={<Skeleton className="h-[200px]" />}
               >
-                <BattleCard battle={battle} onJoin={onJoinBattle} />
+                <BattleCard
+                  battle={normalizeBattle(battle)}
+                  onJoin={onJoinBattle}
+                  currentUserId={user?.id}
+                />
               </Suspense>
             ))}
           </div>
-          {renderPagination(state.data)}
+          {renderPagination()}
         </>
-      ) : null}
+      ) : (
+        <div className="border-primary/20 col-span-full rounded-xl border border-dashed bg-card py-16 text-center shadow-inner">
+          <div className="mx-auto flex max-w-[400px] flex-col items-center justify-center p-4">
+            <div className="bg-primary/10 mb-4 flex h-20 w-20 items-center justify-center rounded-full">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="40"
+                height="40"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-primary"
+              >
+                <polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5" />
+                <line x1="13" y1="19" x2="19" y2="13" />
+                <line x1="16" y1="16" x2="20" y2="20" />
+                <line x1="19" y1="21" x2="21" y2="19" />
+                <polyline points="14.5 6.5 18 3 21 3 21 6 17.5 9.5" />
+                <line x1="5" y1="14" x2="9" y2="18" />
+                <line x1="7" y1="17" x2="4" y2="20" />
+                <line x1="3" y1="19" x2="5" y2="21" />
+              </svg>
+            </div>
+            <h3 className="mb-2 text-xl font-bold tracking-tight">
+              No battles found
+            </h3>
+            <p className="mb-6 text-center text-sm text-muted-foreground">
+              We could not find any battles matching your criteria. Be the first
+              to start a new challenge!
+            </p>
+            <Link href="/battle-zone/create">
+              <Button>Create Your First Battle</Button>
+            </Link>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

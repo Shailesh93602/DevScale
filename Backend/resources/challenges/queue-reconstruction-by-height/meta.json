@@ -1,0 +1,20 @@
+{
+  "title": "Queue Reconstruction by Height",
+  "slug": "queue-reconstruction-by-height",
+  "difficulty": "Medium",
+  "category": "algorithms",
+  "points": 100,
+  "tags": ["Greedy", "Array", "Sorting"],
+  "company_tags": ["Google", "Amazon"],
+  "topic_tags": ["Greedy"],
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 262144,
+  "input_format": "2D integer array people.",
+  "output_format": "The reconstructed queue.",
+  "example_input": "people = [[7,0],[4,4],[7,1],[5,0],[6,1],[5,2]]",
+  "example_output": "[[5,0],[7,0],[5,2],[6,1],[4,4],[7,1]]",
+  "constraints": "people.length <= 2000",
+  "function_signature": "function reconstructQueue(people: number[][]): number[][] {}",
+  "status": "ACTIVE",
+  "is_production_ready": true
+}

@@ -16,5 +16,6 @@
   "example_output": "1",
   "constraints": "- The number of nodes in the tree is `n`.\n- `1 <= k <= n <= 10^4`\n- `0 <= Node.val <= 10^4`",
   "function_signature": "function kthSmallest(root: TreeNode | null, k: number): number {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

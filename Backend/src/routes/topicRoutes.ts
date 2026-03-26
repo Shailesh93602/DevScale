@@ -1,6 +1,6 @@
 import { BaseRouter } from './BaseRouter';
 import { authMiddleware } from '../middlewares/authMiddleware';
-import TopicController from '@/controllers/topicController';
+import TopicController from '../controllers/topicController';
 
 export class TopicRoutes extends BaseRouter {
   private readonly topicController: TopicController;

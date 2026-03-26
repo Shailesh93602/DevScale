@@ -1,6 +1,6 @@
 import { PrismaClient, Difficulty } from '@prisma/client';
 
-import prisma from '@/lib/prisma';
+import prisma from '../lib/prisma';
 
 export class BulkOperations {
   constructor(private readonly prismaClient: PrismaClient = prisma) {}

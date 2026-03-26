@@ -1,0 +1,8 @@
+{
+  "typescript": "class SegmentTree {\n    constructor(nums: number[]) {\n        // Your code here\n    }\n\n    update(l: number, r: number, val: number): void {\n        // Your code here\n    }\n\n    query(l: number, r: number): number {\n        // Your code here\n    }\n}",
+  "javascript": "/**\n * @param {number[]} nums\n */\nvar SegmentTree = function(nums) {\n    // Your code here\n};\n\n/** \n * @param {number} l \n * @param {number} r \n * @param {number} val\n * @return {void}\n */\nSegmentTree.prototype.update = function(l, r, val) {\n    // Your code here\n};\n\n/** \n * @param {number} l \n * @param {number} r\n * @return {number}\n */\nSegmentTree.prototype.query = function(l, r) {\n    // Your code here\n};",
+  "python": "class SegmentTree:\n    def __init__(self, nums: List[int]):\n        # Your code here\n        pass\n\n    def update(self, l: int, r: int, val: int) -> None:\n        # Your code here\n        pass\n\n    def query(self, l: int, r: int) -> int:\n        # Your code here\n        pass",
+  "java": "class SegmentTree {\n    public SegmentTree(int[] nums) {\n        // Your code here\n    }\n    \n    public void update(int l, int r, int val) {\n        // Your code here\n    }\n    \n    public int query(int l, int r) {\n        // Your code here\n        return 0;\n    }\n}",
+  "cpp": "class SegmentTree {\npublic:\n    SegmentTree(vector<int>& nums) {\n        // Your code here\n    }\n    \n    void update(int l, int r, int val) {\n        // Your code here\n    }\n    \n    int query(int l, int r) {\n        // Your code here\n    }\n};"
+}
+

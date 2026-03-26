@@ -141,7 +141,10 @@ const RoadmapGrid = ({ roadmaps, viewMode }: RoadmapGridProps) => {
               <div className="mt-2 flex items-center gap-2">
                 {roadmap.user && (
                   <span className="text-sm text-muted-foreground">
-                    By {roadmap?.user?.full_name}
+                    By{' '}
+                    {roadmap?.user?.first_name && roadmap?.user?.last_name
+                      ? `${roadmap.user.first_name} ${roadmap.user.last_name}`
+                      : roadmap?.user?.first_name || roadmap?.user?.username}
                   </span>
                 )}
                 {roadmap.difficulty && (
@@ -257,21 +260,31 @@ const RoadmapsPage = () => {
   return (
     <div className="min-h-screen bg-background px-6 py-8 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold">
-            {type === 'featured'
-              ? 'Featured Roadmaps'
-              : type === 'trending'
-                ? 'Trending Roadmaps'
-                : 'Explore Roadmaps'}
-          </h1>
-          <p className="mt-2 text-muted-foreground">
-            {type === 'featured'
-              ? 'Hand-picked roadmaps to accelerate your career growth'
-              : type === 'trending'
-                ? 'Most popular roadmaps among the community'
-                : 'Discover roadmaps created by industry experts'}
-          </p>
+        <div className="mb-8 flex items-start justify-between">
+          <div>
+            <h1 className="text-3xl font-bold">
+              {type === 'featured'
+                ? 'Featured Roadmaps'
+                : type === 'trending'
+                  ? 'Trending Roadmaps'
+                  : 'Explore Roadmaps'}
+            </h1>
+            <p className="mt-2 text-muted-foreground">
+              {type === 'featured'
+                ? 'Hand-picked roadmaps to accelerate your career growth'
+                : type === 'trending'
+                  ? 'Most popular roadmaps among the community'
+                  : 'Discover roadmaps created by industry experts'}
+            </p>
+          </div>
+          <Button
+            onClick={() =>
+              (window.location.href = '/career-roadmap?create=true')
+            }
+            className="flex-shrink-0"
+          >
+            Create Roadmap
+          </Button>
         </div>
 
         <div className="mb-6 flex items-center gap-4">

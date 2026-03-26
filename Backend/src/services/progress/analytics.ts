@@ -1,7 +1,7 @@
 import { Status, SubmissionStatus } from '@prisma/client';
 import logger from '../../utils/logger';
 
-import prisma from '@/lib/prisma';
+import prisma from '../../lib/prisma';
 
 interface ProgressStats {
   total_topics: number;
@@ -10,7 +10,7 @@ interface ProgressStats {
   recent_activity: ActivityLog[];
 }
 
-interface ActivityLog {
+export interface ActivityLog {
   type: 'topic_completed' | 'quiz_completed' | 'challenge_completed';
   entity_id: string;
   timestamp: Date;

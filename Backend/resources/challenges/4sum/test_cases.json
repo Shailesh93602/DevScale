@@ -1,27 +1,6 @@
 [
-  {
-    "input": { "nums": [1, 0, -1, 0, -2, 2], "target": 0 },
-    "output": [[-2, -1, 1, 2], [-2, 0, 0, 2], [-1, 0, 0, 1]],
-    "explanation": "Three unique quadruplets sum up to 0.",
-    "is_hidden": false
-  },
-  {
-    "input": { "nums": [2, 2, 2, 2, 2], "target": 8 },
-    "output": [[2, 2, 2, 2]],
-    "explanation": "Only one unique quadruplet sums up to 8.",
-    "is_hidden": false
-  },
-  {
-    "input": { "nums": [1, 1, 1, 1, 1], "target": 4 },
-    "output": [[1, 1, 1, 1]],
-    "is_hidden": true
-  },
-  {
-    "input": { "nums": [-3, -2, -1, 0, 0, 1, 2, 3], "target": 0 },
-    "output": [
-      [-3, -2, 2, 3], [-3, -1, 1, 3], [-3, 0, 0, 3], [-3, 0, 1, 2],
-      [-2, -1, 0, 3], [-2, -1, 1, 2], [-2, 0, 0, 2], [-1, 0, 0, 1]
-    ],
-    "is_hidden": true
-  }
+  { "input": "{\"nums\":[1,0,-1,0,-2,2],\"target\":0}", "output": "[[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]", "explanation": "Three unique quadruplets sum up to 0.", "is_hidden": false },
+  { "input": "{\"nums\":[2,2,2,2,2],\"target\":8}", "output": "[[2,2,2,2]]", "explanation": "Only one unique quadruplet sums up to 8.", "is_hidden": false },
+  { "input": "{\"nums\":[1,1,1,1,1],\"target\":4}", "output": "[[1,1,1,1]]", "explanation": "All ones", "is_hidden": true },
+  { "input": "{\"nums\":[-3,-2,-1,0,0,1,2,3],\"target\":0}", "output": "[[-3,-2,2,3],[-3,-1,1,3],[-3,0,0,3],[-3,0,1,2],[-2,-1,0,3],[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]", "explanation": "Many combinations", "is_hidden": true }
 ]

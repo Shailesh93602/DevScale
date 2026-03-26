@@ -1,5 +1,7 @@
 import React, { ReactNode, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { Button } from '../ui/button';
+import { X } from 'lucide-react';
 
 const Modal = ({
   isOpen,
@@ -16,8 +18,7 @@ const Modal = ({
 
   if (!isOpen) return null;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleClickOutside = (e: any) => {
+  const handleClickOutside = (e: React.MouseEvent<HTMLDivElement>) => {
     if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
       onClose?.();
     }
@@ -29,20 +30,19 @@ const Modal = ({
       onClick={handleClickOutside}
     >
       <div
-        className="relative h-full max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-lg bg-gray-900 shadow-lg"
+        className="relative h-full max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-lg bg-background shadow-lg"
         ref={modalRef}
       >
-        <div className="z-999 sticky top-0 flex items-center justify-between border-b border-gray-800 p-4">
-          <h2 className="text-lg font-semibold text-black dark:text-white">
-            {title}
-          </h2>
-          <button
+        <div className="z-999 sticky top-0 flex items-center justify-between border-b border-border p-4">
+          <h2 className="text-lg font-semibold text-foreground">{title}</h2>
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={onClose}
-            className="text-2xl font-bold text-gray-600 hover:text-gray-800"
             aria-label="Close"
           >
-            &times;
-          </button>
+            <X size={20} />
+          </Button>
         </div>
 
         <div className="p-4">{children}</div>

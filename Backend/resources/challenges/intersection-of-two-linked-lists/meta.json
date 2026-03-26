@@ -37,5 +37,6 @@
   "example_output": "Intersected at '8'",
   "constraints": "- The number of nodes of `listA` is in the `m`.\n- The number of nodes of `listB` is in the `n`.\n- `1 <= m, n <= 3 * 10^4`\n- `1 <= Node.val <= 10^5`\n- `0 <= skipA <= m`\n- `0 <= skipB <= n`",
   "function_signature": "function getIntersectionNode(headA: ListNode | null, headB: ListNode | null): ListNode | null {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

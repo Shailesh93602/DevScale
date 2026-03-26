@@ -10,7 +10,8 @@ const EditorComponent = ({
   value: string;
   onChange: (value: string) => void;
 }) => {
-  console.log(value, onChange);
+  void value;
+  void onChange;
   return (
     <div style={{ height: '100vh' }}>
       {/* <MonacoEditor

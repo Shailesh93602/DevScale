@@ -1,0 +1,6 @@
+[
+  "The $O(\\log n)$ requirement means you must use binary search.",
+  "You can use binary search twice: once to find the leftmost (first) index and once to find the rightmost (last) index.",
+  "When you find the target at `mid`, how should you adjust `left` or `right` to keep looking for a better (more extreme) boundary?"
+]
+

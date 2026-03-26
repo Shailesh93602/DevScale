@@ -34,5 +34,6 @@
   "example_output": "\"PAHNAPLSIIGYIR\"",
   "constraints": "- `1 <= s.length <= 1000`\n- `s` consists of English letters (lower-case and upper-case), `','` and `'.'$.\n- `1 <= numRows <= 1000`",
   "function_signature": "function convert(s: string, numRows: number): string {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

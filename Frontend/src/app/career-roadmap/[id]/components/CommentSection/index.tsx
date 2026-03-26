@@ -79,7 +79,7 @@ export const CommentSection = ({ roadmapId }: CommentSectionProps) => {
         } else {
           setComments((prev) => [...prev, ...validComments]);
         }
-        setHasMore(response.meta?.hasNextPage || false);
+        setHasMore(Boolean(response.meta?.hasNextPage));
       }
     } catch (error) {
       console.error('Error fetching comments:', error);
@@ -107,7 +107,7 @@ export const CommentSection = ({ roadmapId }: CommentSectionProps) => {
         if (isValidComment(newCommentData)) {
           setComments((prev) => [newCommentData, ...prev]);
           setNewComment('');
-          toast.success('Comment posted successfully');
+          toast.success('Great! Your comment is now live ✨');
         }
       }
     } catch (error) {

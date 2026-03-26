@@ -1,19 +1,23 @@
 import { Page, expect } from '@playwright/test';
 
-export async function loginAsStudent(page: Page) {
-  // 1. Go to login page
+async function loginWith(page: Page, email: string, password: string) {
   await page.goto('/auth/login');
-
-  // 2. Fill in credentials (assuming admin@eduscale.io is the test user)
-  await page.fill('input[id="login-email"]', 'admin@eduscale.io');
-  await page.fill('input[name="password"]', 'Admin@123');
-
-  // 3. Submit form
+  await page.fill('input[id="login-email"]', email);
+  await page.fill('input[id="login-password"]', password);
   await page.click('button[type="submit"]');
+  await page.waitForURL('**/dashboard', { timeout: 30000 });
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+  await page.waitForTimeout(500);
+  await expect(page).toHaveURL(/\/dashboard/);
+}
 
-  // 4. Wait for navigation to dashboard
-  await page.waitForURL('**/dashboard');
+/** Primary test user — creates/manages battles */
+export async function loginAsStudent(page: Page) {
+  await loginWith(page, 'testuser@yopmail.com', 'Test@123');
+}
 
-  // 5. Verify successful login
-  await expect(page.getByText(/Welcome back/i)).toBeVisible();
+/** Secondary test user — joins battles as an opponent */
+export async function loginAsPlayer2(page: Page) {
+  await loginWith(page, 'battleplayer2@yopmail.com', 'Test@1234');
 }

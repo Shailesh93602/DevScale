@@ -6,14 +6,25 @@
   "points": 50,
   "tags": ["stack", "string"],
   "company_tags": ["Amazon", "Google", "Bloomberg", "Facebook", "Microsoft", "Oracle"],
-  "topic_tags": ["stacks"],
+  "topic_tags": ["strings", "stack"],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
   "time_limit_ms": 1000,
   "memory_limit_kb": 131072,
-  "input_format": "A string `s` containing only characters `'('`, `')'`, `'{'`, `'}'`, `'['` and `']'`.",
-  "output_format": "Return `true` if the input string is valid, `false` otherwise.",
+  "input_format": "A string `s` containing just the characters `'('`, `')'`, `'{'`, `'}'`, `'['` and `']'`.",
+  "output_format": "Return `true` if the input string is valid, or `false` otherwise.",
   "example_input": "s = \"()[]{}\"",
   "example_output": "true",
   "constraints": "- `1 <= s.length <= 10^4`\n- `s` consists of parentheses only `'()[]{}'`.",
   "function_signature": "function isValid(s: string): boolean {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

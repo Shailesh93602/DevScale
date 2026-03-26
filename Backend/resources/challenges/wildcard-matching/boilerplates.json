@@ -1,0 +1,9 @@
+{
+  "typescript": "function isMatch(s: string, p: string): boolean {\n  // Your code here\n}",
+  "javascript": "/**\n * @param {string} s\n * @param {string} p\n * @return {boolean}\n */\nvar isMatch = function(s, p) {\n  // Your code here\n};",
+  "python": "class Solution:\n    def isMatch(self, s: str, p: str) -> bool:\n        # Your code here\n        pass",
+  "java": "class Solution {\n    public boolean isMatch(String s, String p) {\n        // Your code here\n    }\n}",
+  "cpp": "class Solution {\npublic:\n    bool isMatch(string s, string p) {\n        // Your code here\n    }\n};",
+  "go": "func isMatch(s string, p string) bool {\n    // Your code here\n}",
+  "rust": "impl Solution {\n    pub fn is_match(s: String, p: String) -> bool {\n        // Your code here\n    }\n}"
+}

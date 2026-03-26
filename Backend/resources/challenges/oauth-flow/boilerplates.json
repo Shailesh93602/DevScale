@@ -1,0 +1,5 @@
+{
+  "typescript": "class OAuthServer {\n    authorize(params: { clientId: string, redirectUri: string, state: string }): { code: string, state: string } {\n        // Your code here\n    }\n\n    token(params: { clientId: string, clientSecret: string, code: string, redirectUri: string }): any {\n        // Your code here\n    }\n}",
+  "javascript": "class OAuthServer {\n    authorize(params) {\n        // Your code here\n    }\n\n    token(params) {\n        // Your code here\n    }\n}",
+  "python": "class OAuthServer:\n    def authorize(self, params: dict) -> dict:\n        # Your code here\n        pass\n\n    def token(self, params: dict) -> dict:\n        # Your code here\n        pass"
+}

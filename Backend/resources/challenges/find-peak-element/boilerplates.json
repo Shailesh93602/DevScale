@@ -1,0 +1,10 @@
+{
+  "typescript": "function findPeakElement(nums: number[]): number {\n    \n};",
+  "javascript": "/**\n * @param {number[]} nums\n * @return {number}\n */\nvar findPeakElement = function(nums) {\n    \n};",
+  "python": "class Solution:\n    def findPeakElement(self, nums: List[int]) -> int:\n        ",
+  "java": "class Solution {\n    public int findPeakElement(int[] nums) {\n        \n    }\n}",
+  "cpp": "class Solution {\npublic:\n    int findPeakElement(vector<int>& nums) {\n        \n    }\n};",
+  "go": "func findPeakElement(nums []int) int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn find_peak_element(nums: Vec<i32>) -> i32 {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int FindPeakElement(int[] nums) {\n        \n    }\n}"
+}

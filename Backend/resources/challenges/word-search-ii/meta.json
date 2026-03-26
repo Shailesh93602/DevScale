@@ -16,5 +16,6 @@
   "example_output": "[\"eat\",\"oath\"]",
   "constraints": "- `m == board.length`\n- `n == board[i].length`\n- `1 <= m, n <= 12`\n- `board[i][j]` is a lowercase English letter.\n- `1 <= words.length <= 3 * 10^4`\n- `1 <= words[i].length <= 10`\n- `words[i]` consists of lowercase English letters.\n- All the strings of `words` are unique.",
   "function_signature": "function findWords(board: string[][], words: string[]): string[] {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

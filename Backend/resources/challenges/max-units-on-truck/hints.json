@@ -1,0 +1,5 @@
+[
+  "Which boxes should you put on the truck first? The ones with the most units or the ones with the fewest?",
+  "Sort the box types by the number of units per box in descending order.",
+  "Iterate through the sorted box types and add as many as possible until the truck reaches its capacity."
+]

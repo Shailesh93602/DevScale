@@ -1,0 +1,5 @@
+{
+  "typescript": "function search(nums: number[], target: number): number {\n    // Your code here\n}",
+  "javascript": "/**\n * @param {any} params\n * @return {any}\n */\nvar search = function(root) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def search(self, root) -> bool:\n        # Your code here\n        pass"
+}

@@ -16,5 +16,6 @@
   "example_output": "[null,null,null,null,false,true,true,true]",
   "constraints": "- `1 <= word.length <= 25`\n- `word` in `addWord` consists of lowercase English letters.\n- `word` in `search` consist of `.` or lowercase English letters.\n- There will be at most `2` dots in `word` for `search` queries.\n- At most `10^4` calls will be made to `addWord` and `search`.",
   "function_signature": "class WordDictionary { constructor() {} addWord(word: string): void {} search(word: string): boolean {} }",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

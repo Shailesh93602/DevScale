@@ -1,0 +1,7 @@
+[
+  "Use a stack to keep track of the strings and the repeat counts as you encounter nested brackets.",
+  "When you see a digit, keep building the full number, as it can be more than one digit long.",
+  "When you see an opening bracket '[', store your current state on the stack and start fresh for the nested content.",
+  "What happens when you see a closing bracket ']'? You need to take the internal string and repeat it based on the count you saved."
+]
+

@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nfunction deepClone<T>(obj: T): T",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

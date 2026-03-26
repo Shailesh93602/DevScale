@@ -37,5 +37,6 @@
   "example_output": "[[7,4,1],[8,5,2],[9,6,3]]",
   "constraints": "- `n == matrix.length == matrix[i].length`\n- `1 <= n <= 20`\n- `-1000 <= matrix[i][j] <= 1000`",
   "function_signature": "function rotate(matrix: number[][]): void {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

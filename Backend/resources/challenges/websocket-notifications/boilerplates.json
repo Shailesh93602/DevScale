@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nclass NotificationServer { onConnection(socket): void; send(userId: string, notification: Notification): void; broadcast(room: string, notification: Notification): void; getOnlineUsers(): string[]; }",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

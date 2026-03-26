@@ -2,7 +2,7 @@ import { PrismaClient, StudyGroup, GroupRole } from '@prisma/client';
 import { createAppError } from '../utils/errorHandler';
 import BaseRepository from './baseRepository';
 
-import prisma from '@/lib/prisma';
+import prisma from '../lib/prisma';
 
 export default class StudyGroupRepository extends BaseRepository<
   PrismaClient['studyGroup']

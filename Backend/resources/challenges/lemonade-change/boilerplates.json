@@ -1,0 +1,6 @@
+{
+  "typescript": "function lemonadeChange(bills: number[]): boolean {\n    // Your code here\n}",
+  "javascript": "/**\n * @param {number[]} bills\n * @return {boolean}\n */\nvar lemonadeChange = function(bills) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def lemonadeChange(self, bills: List[int]) -> bool:\n        # Your code here\n        pass"
+}
+

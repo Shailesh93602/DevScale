@@ -1,0 +1,9 @@
+{
+  "typescript": "/**\n * Do not return anything, modify board in-place instead.\n */\nfunction solveSudoku(board: string[][]): void {\n  // Your code here\n}",
+  "javascript": "/**\n * @param {character[][]} board\n * @return {void} Do not return anything, modify board in-place instead.\n */\nvar solveSudoku = function(board) {\n  // Your code here\n};",
+  "python": "class Solution:\n    def solveSudoku(self, board: List[List[str]]) -> None:\n        \"\"\"\n        Do not return anything, modify board in-place instead.\n        \"\"\"\n        # Your code here\n        pass",
+  "java": "class Solution {\n    public void solveSudoku(char[][] board) {\n        // Your code here\n    }\n}",
+  "cpp": "class Solution {\npublic:\n    void solveSudoku(vector<vector<char>>& board) {\n        // Your code here\n    }\n};",
+  "go": "func solveSudoku(board [][]byte)  {\n    // Your code here\n}",
+  "rust": "impl Solution {\n    pub fn solve_sudoku(board: &mut Vec<Vec<char>>) {\n        // Your code here\n    }\n}"
+}

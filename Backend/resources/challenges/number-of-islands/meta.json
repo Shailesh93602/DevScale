@@ -16,5 +16,6 @@
   "example_output": "1",
   "constraints": "- `m == grid.length`\n- `n == grid[i].length`\n- `1 <= m, n <= 300`\n- `grid[i][j]` is `'0'` or `'1'`.",
   "function_signature": "function numIslands(grid: string[][]): number {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

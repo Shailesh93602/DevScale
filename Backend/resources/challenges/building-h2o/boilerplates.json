@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nclass H2O { hydrogen(releaseHydrogen: () => void): Promise<void>; oxygen(releaseOxygen: () => void): Promise<void> }",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

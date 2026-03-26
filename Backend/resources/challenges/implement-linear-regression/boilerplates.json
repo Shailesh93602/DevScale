@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nfunction linearRegression(X_train: number[][], y_train: number[], X_test: number[][], learningRate?: number, epochs?: number): { predictions: number[]; weights: number[]; bias: number }",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

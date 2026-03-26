@@ -1,4 +1,6 @@
 [
-  "TODO: Add hint 1",
-  "TODO: Add hint 2"
+  "How will you handle millions of messages per second? Consider partitioning the data.",
+  "Think about durability. What happens if a broker crashes? You need some form of disk persistence and replication.",
+  "For consumer scalability, look into 'Consumer Groups'. How can multiple consumers divide the work of a single topic?",
+  "Consider 'Zero-copy' and 'Sequential I/O' as performance optimizations for high throughput."
 ]

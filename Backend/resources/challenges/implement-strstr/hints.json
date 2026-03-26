@@ -1,4 +1,5 @@
 [
-  "TODO: Add hint 1",
-  "TODO: Add hint 2"
+  "Use a nested loop to check for the needle at each possible starting position in the haystack.",
+  "Consider edge cases like when the needle is empty or when it's longer than the haystack.",
+  "For better performance, research string matching algorithms like KMP (Knuth-Morris-Pratt)."
 ]

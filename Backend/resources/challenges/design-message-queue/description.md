@@ -1,46 +1,40 @@
 # Design a Message Queue
 
-## Problem Description
-
-Design a distributed message queue system like Apache Kafka or RabbitMQ. The system should allow multiple producers to send messages to "topics" and multiple consumers to read from them asynchronously, ensuring durability and high throughput.
+Design a distributed, durable, and highly scalable message queue system similar to Apache Kafka or RabbitMQ. The system must support asynchronous communication between multiple producers and consumers through a Publish-Subscribe (Pub-Sub) or Point-to-Point model.
 
 ## Requirements
 
 ### Functional Requirements
-1. **Produce/Consume**: Support publishers sending messages and subscribers receiving them.
-2. **Persistence**: Messages must be stored on disk to survive server restarts.
-3. **Consumer Groups**: Multiple consumers should be able to share the load of processing messages from a single topic.
-4. **Exactly-once / At-least-once**: Configurable delivery guarantees.
-5. **Ordering**: Maintain order of messages within a "partition".
+1. **Produce Messages**: Producers can send messages to specific named "topics".
+2. **Consume Messages**: Consumers can subscribe to one or more topics.
+3. **Durability**: Messages must be persisted to disk to handle server crashes without data loss.
+4. **Consumer Groups**: Support multiple consumers in a group where each message is delivered to only one member of the group (load balancing).
+5. **Replayability**: Consumers should be able to "seek" back in time and re-read messages within a retention period.
 
 ### Non-Functional Requirements
-1. **High Throughput**: Handle millions of messages per second.
-2. **High Durability**: Replicate messages across several brokers.
-3. **Fault Tolerance**: Leader election and failover for partitions.
-4. **Retention**: Ability to replay messages by maintaining them for a specific period (e.g., 7 days).
+1. **Scalability**: The system should scale horizontally by partitioning topics across multiple servers (brokers).
+2. **High Throughput**: Capable of handling millions of messages per second.
+3. **Ordering**: Maintain strict ordering of messages within a single partition.
+4. **Fault Tolerance**: Replicate messages across multiple brokers to ensure availability.
 
-## API Design
+## System Components to Consider
 
-```typescript
-class MessageQueue {
-  /**
-   * Sends a message to a topic.
-   */
-  produce(topic: string, message: any): void;
-
-  /**
-   * Polls for new messages in a topic for a specific consumer group.
-   */
-  consume(topic: string, groupId: string): Message[];
-}
-```
+*   **Broker**: The server that stores messages.
+*   **Topic**: A category or feed name to which messages are published.
+*   **Partition**: A topic is split into partitions for parallelism.
+*   **Offset**: A unique identifier for each message within a partition.
+*   **ZooKeeper/KRaft**: Metadata and leader election management.
 
 ## Examples
 
-**Input**: Producer sends `order_created` event to `orders` topic.
-**Result**: Consumer Group A (Billing Service) and Consumer Group B (Inventory Service) both receive and process the message independently.
+**Example Scenario**:
+1. Producer P1 sends `{ "type": "order", "id": 123 }` to topic `orders`.
+2. The broker appends this message to a partition of the `orders` topic and assigns it an offset.
+3. Consumer Group G1 (a billing service) polls `orders` and receives the message.
+4. Consumer Group G2 (a notification service) also polls `orders` and receives the same message.
 
 ## Constraints
-- Storage scalability to handle many terabytes of message data.
-- Coordination service (like Zookeeper/Kraft) for cluster management.
-- Latency vs. Throughput trade-offs (batching).
+- Retention period: 7 days by default.
+- Support for "At-least-once" and "Exactly-once" delivery semantics.
+- Batching support for high-throughput writes.
+

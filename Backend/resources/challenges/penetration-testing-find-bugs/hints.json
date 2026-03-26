@@ -1,4 +1,7 @@
 [
-  "TODO: Add hint 1",
-  "TODO: Add hint 2"
+  "Look for places where user input from the request (query, body) is used directly without validation.",
+  "Check for concatenation in database queries. This is a tell-tale sign of a common injection vulnerability.",
+  "If the server sends data back to the browser without escaping, rethink how HTML is handled.",
+  "Look at the `fetch` function. If the URL is provided by the user, where else can the server make requests?",
+  "In the `/update-email` endpoint, are we sure the user is only updating their OWN email?"
 ]

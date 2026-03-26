@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nfunction diningPhilosophers(n: number, rounds: number): { actions: string[][]; deadlockFree: boolean }",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

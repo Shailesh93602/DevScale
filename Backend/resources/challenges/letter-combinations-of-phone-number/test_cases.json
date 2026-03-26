@@ -1,3 +1,27 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  {
+    "input": "23",
+    "output": "[\"ad\",\"ae\",\"af\",\"bd\",\"be\",\"bf\",\"cd\",\"ce\",\"cf\"]",
+    "is_hidden": false
+  },
+  {
+    "input": "",
+    "output": "[]",
+    "is_hidden": false
+  },
+  {
+    "input": "2",
+    "output": "[\"a\",\"b\",\"c\"]",
+    "is_hidden": false
+  },
+  {
+    "input": "7",
+    "output": "[\"p\",\"q\",\"r\",\"s\"]",
+    "is_hidden": true
+  },
+  {
+    "input": "22",
+    "output": "[\"aa\",\"ab\",\"ac\",\"ba\",\"bb\",\"bc\",\"ca\",\"cb\",\"cc\"]",
+    "is_hidden": true
+  }
 ]

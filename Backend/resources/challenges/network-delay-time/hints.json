@@ -1,4 +1,5 @@
 [
-  "TODO: Add hint 1",
-  "TODO: Add hint 2"
+  "This problem asks for the shortest path from node k to all other nodes. The final answer will be the maximum of these shortest paths.",
+  "Since travel times (edge weights) are non-negative, Dijkstra's algorithm is the most efficient choice.",
+  "Maintain a distances array initialized to Infinity, except for node k which is 0. Use a priority queue to always process the node with the current smallest distance."
 ]

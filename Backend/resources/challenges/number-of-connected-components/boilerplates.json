@@ -1,0 +1,9 @@
+{
+  "typescript": "function countComponents(n: number, edges: number[][]): number {\n  // Your code here\n}",
+  "javascript": "/**\n * @param {number} n\n * @param {number[][]} edges\n * @return {number}\n */\nvar countComponents = function(n, edges) {\n  // Your code here\n};",
+  "python": "class Solution:\n    def countComponents(self, n: int, edges: List[List[int]]) -> int:\n        # Your code here\n        pass",
+  "java": "class Solution {\n    public int countComponents(int n, int[][] edges) {\n        // Your code here\n    }\n}",
+  "cpp": "class Solution {\npublic:\n    int countComponents(int n, vector<vector<int>>& edges) {\n        // Your code here\n    }\n};",
+  "go": "func countComponents(n int, edges [][]int) int {\n    // Your code here\n}",
+  "rust": "impl Solution {\n    pub fn count_components(n: i32, edges: Vec<Vec<i32>>) -> i32 {\n        // Your code here\n    }\n}"
+}

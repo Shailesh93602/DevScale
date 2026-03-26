@@ -38,5 +38,6 @@
   "example_output": "1994",
   "constraints": "- `1 <= s.length <= 15`\n- `s` contains only the characters `('I', 'V', 'X', 'L', 'C', 'D', 'M')`.\n- It is **guaranteed** that `s` is a valid roman numeral in the range `[1, 3999]`.",
   "function_signature": "function romanToInt(s: string): number {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

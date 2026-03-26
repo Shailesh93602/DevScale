@@ -14,6 +14,7 @@
   "example_input": "reorder(['A', 'B', 'C'], { dragIndex: 0, dropIndex: 2 })",
   "example_output": "['B', 'C', 'A']",
   "constraints": "Array length >= 1. Indices are valid. Items can be any type.",
-  "function_signature": "function createDragDropList<T>(items: T[]): DragDropList<T>",
-  "status": "ACTIVE"
+  "function_signature": "function createDragDropList<T>(items: T[]): DragDropList<T> {}",
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

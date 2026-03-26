@@ -1,0 +1,5 @@
+{
+  "typescript": "function insertIntoBST(root: TreeNode | null, val: number): TreeNode | null {\n    // Your code here\n}",
+  "javascript": "/**\n * @param {any} params\n * @return {any}\n */\nvar insertIntoBST = function(root) {\n    // Your code here\n};",
+  "python": "class Solution:\n    def insertIntoBST(self, root) -> bool:\n        # Your code here\n        pass"
+}

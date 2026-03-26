@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nfunction sanitizeQuery(rawQuery: string, userInputs: Record<string, string>): { query: string; params: string[] }",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

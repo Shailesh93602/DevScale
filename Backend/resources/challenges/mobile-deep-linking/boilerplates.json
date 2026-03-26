@@ -1,0 +1,5 @@
+{
+  "typescript": "// Implement the solution\nfunction parseDeepLink(url: string, routes: Route[]): { screen: string; params: Record<string, string>; query: Record<string, string> } | null",
+  "javascript": "// Implement the solution",
+  "python": "# Implement the solution"
+}

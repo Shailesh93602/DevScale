@@ -15,5 +15,7 @@
   "example_output": "{ \"jobId\": \"job-1\", \"status\": \"completed\", \"result\": { \"sent\": true }, \"duration\": 150 }",
   "constraints": "Must support job priorities. Must handle retries with exponential backoff. Must support delayed/scheduled jobs. Must handle concurrent workers safely.",
   "function_signature": "class JobQueue { add(type: string, payload: any, options?: JobOptions): Promise<Job>; process(type: string, handler: JobHandler): void; getJob(id: string): Promise<Job>; getStats(): QueueStats; }",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }
+

@@ -1,0 +1,10 @@
+{
+  "typescript": "function solveNQueens(n: number): string[][] {\n  // Your code here\n}",
+  "javascript": "/**\n * @param {number} n\n * @return {string[][]}\n */\nvar solveNQueens = function(n) {\n  // Your code here\n};",
+  "python": "class Solution:\n    def solveNQueens(self, n: int) -> List[List[str]]:\n        # Your code here\n        pass",
+  "java": "class Solution {\n    public List<List<String>> solveNQueens(int n) {\n        // Your code here\n    }\n}",
+  "cpp": "class Solution {\npublic:\n    vector<vector<string>> solveNQueens(int n) {\n        // Your code here\n    }\n};",
+  "go": "func solveNQueens(n int) [][]string {\n    // Your code here\n}",
+  "rust": "impl Solution {\n    pub fn solve_n_queens(n: i32) -> Vec<Vec<String>> {\n        // Your code here\n    }\n}",
+  "csharp": "public class Solution {\n    public IList<IList<string>> SolveNQueens(int n) {\n        // Your code here\n    }\n}"
+}

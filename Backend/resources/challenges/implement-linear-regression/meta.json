@@ -14,6 +14,7 @@
   "example_input": "{\"X_train\": [[1], [2], [3], [4]], \"y_train\": [2, 4, 6, 8], \"X_test\": [[5], [6]]}",
   "example_output": "{\"predictions\": [10, 12], \"weights\": [2], \"bias\": 0}",
   "constraints": "1 <= n_samples <= 10000, 1 <= n_features <= 100, learning_rate > 0",
-  "function_signature": "function linearRegression(X_train: number[][], y_train: number[], X_test: number[][], learningRate?: number, epochs?: number): { predictions: number[]; weights: number[]; bias: number }",
-  "status": "ACTIVE"
+  "function_signature": "function linearRegression(X_train: number[][], y_train: number[], X_test: number[][], learningRate?: number, epochs?: number): { predictions: number[]; weights: number[]; bias: number } {}",
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

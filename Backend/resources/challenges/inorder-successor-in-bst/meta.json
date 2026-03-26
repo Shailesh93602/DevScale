@@ -15,5 +15,6 @@
   "example_output": "2",
   "constraints": "- The number of nodes in the tree is in the range `[1, 10^4]`.\n- `-10^5 <= Node.val <= 10^5`\n- All values in the BST are unique.",
   "function_signature": "function inorderSuccessor(root: TreeNode | null, p: TreeNode): TreeNode | null {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

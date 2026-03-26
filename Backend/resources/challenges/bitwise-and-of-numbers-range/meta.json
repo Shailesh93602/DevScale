@@ -6,14 +6,25 @@
   "points": 100,
   "tags": ["bit-manipulation"],
   "company_tags": ["google", "facebook"],
-  "topic_tags": ["Bit Manipulation"],
+  "topic_tags": ["bit manipulation"],
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "python",
+    "java",
+    "cpp",
+    "go",
+    "rust",
+    "csharp"
+  ],
   "time_limit_ms": 1000,
   "memory_limit_kb": 262144,
   "input_format": "Two integers `left` and `right`.",
   "output_format": "The bitwise AND of all numbers in the range `[left, right]`, inclusive.",
   "example_input": "left = 5, right = 7",
   "example_output": "4",
-  "constraints": "0 <= left <= right <= 2^31 - 1",
-  "function_signature": "function rangeBitwiseAnd(left: number, right: number): number",
-  "status": "ACTIVE"
+  "constraints": "- `0 <= left <= right <= 2^31 - 1` ",
+  "function_signature": "function rangeBitwiseAnd(left: number, right: number): number {}",
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

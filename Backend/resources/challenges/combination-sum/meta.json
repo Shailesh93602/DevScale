@@ -16,5 +16,6 @@
   "example_output": "[[2,2,3],[7]]",
   "constraints": "- `1 <= candidates.length <= 30`\n- `2 <= candidates[i] <= 40`\n- All elements of `candidates` are distinct.\n- `1 <= target <= 40`",
   "function_signature": "function combinationSum(candidates: number[], target: number): number[][] {}",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "is_production_ready": true
 }

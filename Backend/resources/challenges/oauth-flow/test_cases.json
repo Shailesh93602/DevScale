@@ -1,3 +1,19 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  {
+    "input": "client = {id: 'c1', secret: 's1', redirect: 'r1'}, authorize = {id: 'c1', redirect: 'r1', state: 'xyz'}",
+    "output": "{code: '...', state: 'xyz'}",
+    "explanation": "Successful authorization returns a code and the same state.",
+    "is_hidden": false
+  },
+  {
+    "input": "token_exchange = {id: 'c1', secret: 's1', code: '...', redirect: 'r1'}",
+    "output": "{access_token: '...', type: 'Bearer'}",
+    "explanation": "Correct credentials and code yield a token.",
+    "is_hidden": false
+  },
+  {
+    "input": "authorize = {id: 'c1', redirect: 'WRONG_REDIRECT'}",
+    "output": "Error: Invalid client or redirect URI",
+    "is_hidden": true
+  }
 ]

@@ -1,0 +1,10 @@
+{
+  "typescript": "function jump(nums: number[]): number {\n    \n};",
+  "javascript": "/**\n * @param {number[]} nums\n * @return {number}\n */\nvar jump = function(nums) {\n    \n};",
+  "python": "class Solution:\n    def jump(self, nums: List[int]) -> int:\n        ",
+  "java": "class Solution {\n    public int jump(int[] nums) {\n        \n    }\n}",
+  "cpp": "class Solution {\npublic:\n    int jump(vector<int>& nums) {\n        \n    }\n};",
+  "go": "func jump(nums []int) int {\n    \n}",
+  "rust": "impl Solution {\n    pub fn jump(nums: Vec<i32>) -> i32 {\n        \n    }\n}",
+  "csharp": "public class Solution {\n    public int Jump(int[] nums) {\n        \n    }\n}"
+}

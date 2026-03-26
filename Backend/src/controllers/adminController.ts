@@ -2,9 +2,9 @@ import { Request, Response } from 'express';
 import AdminDashboardRepository from '../repositories/adminDashboardRepository';
 import { catchAsync } from '../utils/catchAsync';
 import { createAppError } from '../utils/createAppError';
-import UserRepository from '@/repositories/userRepository';
-import SystemConfigRepository from '@/repositories/systemConfigRepository';
-import { sendResponse } from '@/utils/apiResponse';
+import UserRepository from '../repositories/userRepository';
+import SystemConfigRepository from '../repositories/systemConfigRepository';
+import { sendResponse } from '../utils/apiResponse';
 
 export default class AdminController {
   private readonly adminDashboardRepo: AdminDashboardRepository;

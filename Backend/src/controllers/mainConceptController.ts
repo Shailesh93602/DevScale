@@ -18,6 +18,24 @@ export default class MainConceptController {
     });
   });
 
+  getSubjectsInMainConcept = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const mc = await this.mainConceptRepo.getMainConceptWithSubjects(id);
+    if (!mc) {
+      return sendResponse(res, 'MAIN_CONCEPT_NOT_FOUND', {
+        error: 'Main concept not found',
+      });
+    }
+    // getMainConceptWithSubjects includes the join table with nested subject
+    const subjects = (mc as any).subjects?.map((link: any) => ({
+      id: link.subject?.id ?? link.subject_id,
+      title: link.subject?.title,
+      slug: link.subject?.slug,
+      order: link.order,
+    })) ?? [];
+    return sendResponse(res, 'SUBJECTS_FETCHED', { data: subjects });
+  });
+
   getMainConceptById = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
 

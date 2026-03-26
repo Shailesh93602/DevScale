@@ -1,3 +1,27 @@
 [
-  { "input": "TODO", "output": "TODO", "explanation": "TODO", "is_hidden": false }
+  {
+    "input": "A",
+    "output": "1",
+    "is_hidden": false
+  },
+  {
+    "input": "AB",
+    "output": "28",
+    "is_hidden": false
+  },
+  {
+    "input": "ZY",
+    "output": "701",
+    "is_hidden": false
+  },
+  {
+    "input": "FXSHRXW",
+    "output": "2147483647",
+    "is_hidden": true
+  },
+  {
+    "input": "AAA",
+    "output": "703",
+    "is_hidden": true
+  }
 ]

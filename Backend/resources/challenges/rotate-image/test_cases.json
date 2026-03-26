@@ -3,7 +3,6 @@
   { "input": "{\"matrix\":[[5,1,9,11],[2,4,8,10],[13,3,6,7],[15,14,12,16]]}", "output": "[[15,13,2,5],[14,3,4,1],[12,6,8,9],[16,7,10,11]]", "explanation": "4x4 clockwise", "is_hidden": false },
   { "input": "{\"matrix\":[[1]]}", "output": "[[1]]", "explanation": "1x1 — no change", "is_hidden": true },
   { "input": "{\"matrix\":[[1,2],[3,4]]}", "output": "[[3,1],[4,2]]", "explanation": "2x2 clockwise", "is_hidden": true },
-  { "input": "{\"matrix\":[[1,2,3],[4,5,6],[7,8,9],[10,11,12]]}", "output": "[[10,7,4,1],[11,8,5,2],[12,9,6,3]]", "explanation": "4x3 matrix — not square, not in scope but verify guard", "is_hidden": true },
   { "input": "{\"matrix\":[[0,0],[0,1]]}", "output": "[[0,0],[1,0]]", "explanation": "Matrix with zeros", "is_hidden": true },
   { "input": "{\"matrix\":[[-1,-2,-3],[-4,-5,-6],[-7,-8,-9]]}", "output": "[[-7,-4,-1],[-8,-5,-2],[-9,-6,-3]]", "explanation": "All negatives", "is_hidden": true }
 ]

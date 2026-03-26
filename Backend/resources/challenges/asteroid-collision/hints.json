@@ -1,0 +1,6 @@
+[
+  "Use a stack to store asteroids that have already been processed and haven't exploded.",
+  "What's the only scenario where two asteroids collide? (Hint: Think about their signs and directions).",
+  "If a collision happens, compare the 'sizes' (absolute values) to decide which one survives, or if both explode."
+]
+
