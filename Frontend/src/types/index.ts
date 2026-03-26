@@ -1,3 +1,11 @@
+export enum UserRole {
+  USER = 'USER',
+  ADMIN = 'ADMIN',
+  MODERATOR = 'MODERATOR',
+  INSTRUCTOR = 'INSTRUCTOR',
+  STUDENT = 'STUDENT',
+}
+
 export interface IUser {
   id: string;
   username: string;
@@ -15,6 +23,7 @@ export interface IUser {
   graduationYear: number;
   skills: string[];
   experienceLevel: string;
+  role: UserRole;
 }
 
 export interface Comment {

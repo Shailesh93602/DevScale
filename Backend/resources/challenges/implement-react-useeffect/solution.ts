@@ -13,8 +13,8 @@ interface EffectEntry {
 }
 
 function createHooksSystem() {
-  let states: any[] = [];
-  let effects: EffectEntry[] = [];
+  const states: any[] = [];
+  const effects: EffectEntry[] = [];
   let hookIndex = 0;
   let effectIndex = 0;
 
