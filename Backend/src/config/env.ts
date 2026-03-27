@@ -60,14 +60,14 @@ function validateEnv() {
   const result = envSchema.safeParse(process.env);
 
   if (!result.success) {
-    const issues = result.error.issues || result.error.errors || [];
-    const errors = issues
+    const issues = result.error.issues || [];
+    const errorsList = issues
       .map((e) => `  • ${e.path.join('.')}: ${e.message}`)
       .join('\n');
 
     // Write directly to stderr — logger may not be ready yet
     process.stderr.write(
-      `\n[FATAL] Missing or invalid environment variables:\n${errors}\n\n` +
+      `\n[FATAL] Missing or invalid environment variables:\n${errorsList}\n\n` +
       `Copy Backend/.env.example to Backend/.env and fill in the required values.\n\n`,
     );
     process.exit(1);

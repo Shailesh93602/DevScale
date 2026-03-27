@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { loginSchema } from '@/lib/validations';
+import { loginSchema, LoginFormData } from '@/lib/validations';
 import Link from 'next/link';
 import PasswordInput from '@/components/PasswordInput';
 import { login } from '@/app/auth/actions';
@@ -23,7 +23,7 @@ const LoginForm = () => {
     resolver: yupResolver(loginSchema),
   });
 
-  const onSubmit = async (data: { email: string; password: string }) => {
+  const onSubmit = async (data: LoginFormData) => {
     setServerError(null);
     setIsLoading(true);
     const formData = new FormData();
@@ -64,15 +64,9 @@ const LoginForm = () => {
           type="email"
           placeholder="you@example.com"
           className="w-full"
-          aria-invalid={!!errors.email}
-          aria-describedby={errors.email ? 'login-email-error' : undefined}
         />
         {errors.email && (
-          <p
-            id="login-email-error"
-            role="alert"
-            className="mt-1 text-sm text-destructive"
-          >
+          <p className="mt-1 text-sm text-destructive">
             {errors.email.message as string}
           </p>
         )}
@@ -93,10 +87,7 @@ const LoginForm = () => {
         />
       </div>
       {serverError && (
-        <p
-          role="alert"
-          className="rounded-md bg-destructive/10 p-3 text-sm text-destructive"
-        >
+        <p className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
           {serverError}
         </p>
       )}
