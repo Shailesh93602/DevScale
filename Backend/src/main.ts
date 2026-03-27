@@ -96,12 +96,40 @@ export class App {
         credentials: true,
       })
     );
+    const isProd = process.env.NODE_ENV === 'production';
+    const cloudinaryHost = 'https://res.cloudinary.com';
+    const supabaseHost = process.env.SUPABASE_URL || '';
+    const apiOrigin = process.env.API_URL || 'http://localhost:5000';
+    const clientOrigins = (process.env.CORS_ORIGIN || '')
+      .split(',')
+      .map((o) => o.trim())
+      .filter(Boolean);
+
     this.app.use(
       helmet({
-        contentSecurityPolicy:
-          process.env.NODE_ENV === 'production' ? undefined : false,
-        crossOriginEmbedderPolicy:
-          process.env.NODE_ENV === 'production' ? undefined : false,
+        // Disable COEP in dev (breaks hot-reload tools that load cross-origin resources)
+        crossOriginEmbedderPolicy: isProd,
+        contentSecurityPolicy: isProd
+          ? {
+              directives: {
+                defaultSrc: ["'self'"],
+                scriptSrc: ["'self'"],
+                styleSrc: ["'self'", "'unsafe-inline'"], // unsafe-inline needed for inline styles from Swagger UI
+                imgSrc: ["'self'", 'data:', cloudinaryHost],
+                connectSrc: [
+                  "'self'",
+                  apiOrigin,
+                  supabaseHost,
+                  ...clientOrigins,
+                ],
+                fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+                objectSrc: ["'none'"],
+                frameAncestors: ["'none'"],
+                upgradeInsecureRequests: [],
+              },
+            }
+          : false,
+        referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
       })
     );
 
