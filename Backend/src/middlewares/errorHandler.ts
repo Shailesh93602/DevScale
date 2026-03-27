@@ -1,5 +1,4 @@
 import { ErrorRequestHandler, Request, Response, NextFunction } from 'express';
-import { sendError } from '../utils/apiResponse';
 import logger from '../utils/logger';
 
 // Proper AppError interface and implementation
@@ -49,15 +48,14 @@ export const errorHandler: ErrorRequestHandler = (
   const isDev = process.env.NODE_ENV === 'development';
   const message = (statusCode === 500 && !isDev) ? 'Internal server error' : err.message;
 
-  // Create a proper Error object
-  const errorResponse = new Error(message);
-  errorResponse.name = err.name || 'AppError';
-  Object.assign(errorResponse, {
-    statusCode,
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+  res.status(statusCode).json({
+    status: statusCode,
+    message,
+    error: true,
+    toast: statusCode < 500,
+    requestId: req.requestId,
+    ...(isDev && { stack: err.stack }),
   });
-
-  sendError(res, errorResponse);
 };
 
 // Utility function to create errors
