@@ -9,6 +9,7 @@ import prisma from '../lib/prisma';
 import { invalidatePattern, getCached, setCached } from '../services/memoryCache';
 import { invalidateCachePattern } from '../services/cacheService';
 import { createAppError } from '../utils/errorHandler';
+import { assertOwnership } from '../utils/assertOwnership';
 
 export default class RoadmapController {
   private readonly roadmapRepo: RoadmapRepository;
@@ -221,6 +222,8 @@ export default class RoadmapController {
       });
     }
 
+    if (assertOwnership(req, res, (roadMap as { user_id?: string }).user_id)) return;
+
     const updatedRoadMap = await this.roadmapRepo.update({
       where: { id: roadMap.id },
       data: {
@@ -244,6 +247,8 @@ export default class RoadmapController {
         error: 'Roadmap not found',
       });
     }
+
+    if (assertOwnership(req, res, (roadMap as { user_id?: string }).user_id)) return;
 
     await this.roadmapRepo.delete({
       where: { id: roadMap.id },

@@ -3,6 +3,7 @@ import { catchAsync } from '../utils';
 import { sendResponse } from '../utils/apiResponse';
 import { ForumRepository } from '../repositories/forumRepository';
 import { sanitizeText, sanitizeRichText } from '../utils/sanitize';
+import { assertOwnership } from '../utils/assertOwnership';
 export default class CommunityForumController {
   private readonly forumRepo: ForumRepository;
 
@@ -65,6 +66,8 @@ export default class CommunityForumController {
     if (!forum) {
       return sendResponse(res, 'FORUM_NOT_FOUND');
     }
+
+    if (assertOwnership(req, res, (forum as { created_by?: string }).created_by)) return;
 
     const updatedForum = await this.forumRepo.update({
       where: { id: forumId },
