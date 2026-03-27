@@ -89,9 +89,11 @@ export interface ChatMessage {
 }
 
 // Redis key helpers — all socket state lives here so it's shared across all server instances
-const USER_SOCKETS_KEY = (userId: string) => `eduscale:sockets:${userId}`;
-const BATTLE_USERS_KEY = (battleId: string) => `eduscale:battle:users:${battleId}`;
-const SOCKET_TTL = 24 * 60 * 60; // 1 day — auto-expire orphaned keys
+const USER_SOCKETS_KEY  = (userId: string)   => `eduscale:sockets:${userId}`;
+const BATTLE_USERS_KEY  = (battleId: string) => `eduscale:battle:users:${battleId}`;
+const PRESENCE_KEY      = (userId: string)   => `eduscale:presence:${userId}`;
+const SOCKET_TTL        = 24 * 60 * 60; // 1 day — auto-expire orphaned keys
+const PRESENCE_TTL      = 35;            // 35 s — client pings every 25 s; gone after 35 s silence
 
 class SocketService {
   private io: SocketIOServer | null = null;
@@ -202,6 +204,16 @@ class SocketService {
       });
       this.pubClient?.expire(USER_SOCKETS_KEY(userId), SOCKET_TTL).catch(() => {});
 
+      // ─── Presence heartbeat ────────────────────────────────────────────
+      // Mark user online; TTL auto-expires if the client stops pinging.
+      this.pubClient?.setex(PRESENCE_KEY(userId), PRESENCE_TTL, '1').catch(() => {});
+
+      // Client should emit 'ping' every ~25 s; each ping renews the TTL.
+      socket.on('ping', () => {
+        this.pubClient?.setex(PRESENCE_KEY(userId), PRESENCE_TTL, '1').catch(() => {});
+        socket.emit('pong');
+      });
+
       logger.info(`User ${userId} connected with socket ${socket.id}`);
 
       // Handle battle join (also used for reconnect)
@@ -302,6 +314,8 @@ class SocketService {
 
       // Only remove from battle rooms when user has no remaining connections
       if (!remaining || remaining === 0) {
+        // Clear presence — user is fully offline
+        this.pubClient?.del(PRESENCE_KEY(userId)).catch(() => {});
         const battleIds = await this.pubClient?.keys(BATTLE_USERS_KEY('*')) ?? [];
         for (const key of battleIds) {
           const isMember = await this.pubClient?.sismember(key, userId);
