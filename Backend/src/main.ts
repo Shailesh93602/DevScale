@@ -38,6 +38,9 @@ export class App {
   constructor() {
     this.app = express();
     this.app.set('trust proxy', 1);
+    // Enable weak ETags on all GET/HEAD responses — lets clients skip re-parsing
+    // unchanged bodies (articles, subjects, roadmaps). Zero cost if not supported.
+    this.app.set('etag', 'weak');
     this.initializeCloudinary();
     this.initializeMiddlewares();
     this.initializeRoutes();
@@ -132,8 +135,20 @@ export class App {
             }
           : false,
         referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+        // Permissions-Policy: disable unused browser APIs that could be abused
+        // Helmet doesn't have a built-in helper yet, so set manually below
       })
     );
+
+    // Permissions-Policy header (Feature-Policy successor)
+    // Disables camera, microphone, geolocation — EduScale doesn't need them.
+    this.app.use((_req, res, next) => {
+      res.setHeader(
+        'Permissions-Policy',
+        'camera=(), microphone=(), geolocation=(), payment=()',
+      );
+      next();
+    });
 
     const limiter = rateLimit({
       windowMs: 15 * 60 * 1000,
