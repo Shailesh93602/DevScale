@@ -26,6 +26,7 @@ import { RBACRoutes } from './rbacRoutes';
 import { SupportRoutes } from './supportRoutes';
 import { CodeRoutes } from './codeRoutes';
 import { AuthRoutes } from './authRoutes';
+import { StatsRoutes } from './statsRoutes';
 
 export class AppRoutes {
   private readonly router: Router;
@@ -70,6 +71,7 @@ export class AppRoutes {
     this.router.use('/rbac', new RBACRoutes().getRouter());
     this.router.use('/support', new SupportRoutes().getRouter());
     this.router.use('/run-code', new CodeRoutes().getRouter());
+    this.router.use('/stats', new StatsRoutes().getRouter());
   }
 
   public getRouter(): Router {
