@@ -4,6 +4,7 @@
  * Returns aggregate platform counts cached in Redis for 5 minutes.
  * Single $queryRaw so it's one DB round-trip on cache miss.
  */
+import { Request, Response } from 'express';
 import { BaseRouter } from './BaseRouter';
 import prisma from '../lib/prisma';
 import { getCache, setCache } from '../services/cacheService';
@@ -14,10 +15,13 @@ const CACHE_TTL = 5 * 60; // 5 minutes
 
 export class StatsRoutes extends BaseRouter {
   protected initializeRoutes(): void {
-    this.router.get('/summary', async (_req, res) => {
+    this.router.get('/summary', async (req: Request, res: Response) => {
       try {
         const cached = await getCache<Record<string, number>>(CACHE_KEY);
-        if (cached) return res.json({ success: true, data: cached });
+        if (cached) {
+          res.json({ success: true, data: cached });
+          return;
+        }
 
         const [row] = await prisma.$queryRaw<[{
           total_users: bigint;
@@ -40,10 +44,10 @@ export class StatsRoutes extends BaseRouter {
         };
 
         await setCache(CACHE_KEY, data, { ttl: CACHE_TTL });
-        return res.json({ success: true, data });
+        res.json({ success: true, data });
       } catch (err) {
         logger.error('Failed to fetch stats summary', { err });
-        return res.status(500).json({ success: false, message: 'Failed to fetch stats' });
+        res.status(500).json({ success: false, message: 'Failed to fetch stats' });
       }
     });
   }
