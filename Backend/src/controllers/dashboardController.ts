@@ -42,9 +42,12 @@ export class DashboardController {
         throw createAppError('User not authenticated', 401);
       }
 
-      const progress = await this.dashboardRepo.getLearningProgress(userId);
+      const page  = Math.max(1, parseInt(req.query.page  as string) || 1);
+      const limit = Math.min(100, Math.max(1, parseInt(req.query.limit as string) || 50));
+      const progress = await this.dashboardRepo.getLearningProgress(userId, page, limit);
       return sendResponse(res, 'LEARNING_PROGRESS_FETCHED', {
-        data: progress,
+        data: progress.items,
+        meta: { total: progress.total, page: progress.page, limit: progress.limit, totalPages: progress.totalPages },
       });
     }
   );
