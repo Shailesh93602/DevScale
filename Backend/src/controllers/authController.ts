@@ -40,7 +40,7 @@ export const logout = async (req: Request, res: Response, next: NextFunction) =>
     // Also clear the per-token auth cache so the next request hits the DB
     await clearAuthCache(token);
 
-    logger.info('User logged out, token blocklisted', { userId: req.user?.id });
+    logger.info('auth:logout', { userId: req.user?.id, ip: req.ip, ua: req.headers['user-agent'] });
     res.json({ success: true, message: 'Logged out successfully' });
   } catch (err) {
     next(err);
