@@ -210,13 +210,32 @@ export class DashboardRepository extends BaseRepository<typeof prisma.user> {
     });
   }
 
-  async getLearningProgress(userId: string) {
-    return this.prismaClient.userProgress.findMany({
-      where: { user_id: userId },
-      include: {
-        topic: true,
-      },
-    });
+  async getLearningProgress(userId: string, page = 1, limit = 50) {
+    const skip = (Math.max(1, page) - 1) * limit;
+    const [items, total] = await this.prismaClient.$transaction([
+      this.prismaClient.userProgress.findMany({
+        where: { user_id: userId },
+        select: {
+          id: true,
+          topic_id: true,
+          is_completed: true,
+          time_spent: true,
+          updated_at: true,
+          topic: {
+            select: {
+              id: true,
+              title: true,
+              description: true,
+            },
+          },
+        },
+        orderBy: { updated_at: 'desc' },
+        skip,
+        take: limit,
+      }),
+      this.prismaClient.userProgress.count({ where: { user_id: userId } }),
+    ]);
+    return { items, total, page, limit, totalPages: Math.ceil(total / limit) };
   }
 
   async getAchievements(userId: string) {
