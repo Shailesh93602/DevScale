@@ -2,14 +2,14 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import crypto from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../config';
+import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from '../config';
 import { redis } from '../services/cacheService';
 import { clearAuthCache } from '../middlewares/authMiddleware';
 import { recordAuthFailure, clearAuthFailures } from '../middlewares/accountLockout';
 import { createAppError } from '../utils/errorHandler';
 import logger from '../utils/logger';
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
 const TOKEN_BLOCKLIST_PREFIX = 'eduscale:auth:blocklist:';
 const REFRESH_COOKIE = 'sb-refresh-token';

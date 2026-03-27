@@ -264,7 +264,7 @@ Two real Supabase accounts: `testuser@yopmail.com` (Player1) and `battleplayer2@
 ### What's Done
 - [x] **CORS fixed properly** — Smart origin validation in `Backend/src/main.ts`: dev allows localhost + private network IPs (192.168.*, 10.*, 172.16-31.*), production uses `CORS_ORIGIN` env var
 - [x] **Socket.io CORS matched** — `Backend/src/services/socket.ts` now uses same smart origin logic
-- [x] **SUPABASE_JWT_SECRET exported** — Added to `Backend/src/config/index.ts`
+- [x] **SUPABASE_JWT_SIGNING_KEY exported** — Added to `Backend/src/config/index.ts`
 - [x] **WebSocket env var added** — `NEXT_PUBLIC_WS_URL` added to `Frontend/.env`
 - [x] **Hardcoded localhost removed** — `useBattleWebSocket.ts` no longer falls back to `http://localhost:4000`
 - [x] **Console.logs cleaned** — Removed 10+ debug logs from `auth/actions.ts`, `dashboard/page.tsx`, `create-battle/page.tsx`
@@ -329,7 +329,7 @@ Two real Supabase accounts: `testuser@yopmail.com` (Player1) and `battleplayer2@
 ## Files Modified This Session (2026-03-19)
 
 - `Backend/src/main.ts` — Smart CORS origin handler
-- `Backend/src/config/index.ts` — Export SUPABASE_JWT_SECRET
+- `Backend/src/config/index.ts` — Export SUPABASE_JWT_SIGNING_KEY
 - `Backend/src/services/socket.ts` — Smart CORS for Socket.io
 - `Frontend/.env` — Added NEXT_PUBLIC_WS_URL
 - `Frontend/src/hooks/useBattleWebSocket.ts` — Removed hardcoded localhost

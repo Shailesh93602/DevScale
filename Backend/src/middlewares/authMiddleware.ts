@@ -1,15 +1,25 @@
 import { NextFunction, Request, Response } from 'express';
-import { createClient } from '@supabase/supabase-js';
+import { createClient, User as SupabaseUser } from '@supabase/supabase-js';
 import { createAppError } from '../utils/errorHandler';
 import logger from '../utils/logger';
 import prisma from '../lib/prisma';
 import jwt from 'jsonwebtoken';
 import crypto from 'node:crypto';
 import { redis } from '../services/cacheService';
+import * as jose from 'jose';
+
+/**
+ * Modern Supabase local verification using JWKS (Asymmetric keys).
+ * This allows verifying RS256 tokens locally using your project's public keys.
+ * URL: https://<project>.supabase.co/auth/v1/.well-known/jwks.json
+ */
+const JWKS = jose.createRemoteJWKSet(
+  new URL(`${process.env.SUPABASE_URL}/auth/v1/.well-known/jwks.json`)
+);
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
-  process.env.SUPABASE_ANON_KEY!
+  process.env.SUPABASE_PUBLISHABLE_KEY!
 );
 
 // ─── Token Blocklist ─────────────────────────────────────────────────────────
@@ -98,17 +108,15 @@ export const authMiddleware = async (
     }
 
     // ─── Local JWT Verification (Instant) ───
-    // Instead of HTTP round-trip to Supabase, try to verify JWT locally.
-    let user: any = null;
-    let decodedUser: any = null;
+    let user: Partial<SupabaseUser> | null = null;
     try {
-      decodedUser = jwt.verify(token, process.env.SUPABASE_JWT_SECRET as string);
+      //jose.jwtVerify automatically fetches and caches public keys from JWKS
+      const { payload: decodedUser } = await jose.jwtVerify(token, JWKS);
 
-      // Map JWT claims to match the Supabase user object shape expected below
       user = {
-        id: decodedUser.sub,
-        email: decodedUser.email,
-        user_metadata: decodedUser.user_metadata || {},
+        id: decodedUser.sub as string,
+        email: decodedUser.email as string,
+        user_metadata: (decodedUser.user_metadata as any) || {},
       };
     } catch (err: any) {
       logger.warn(`Local JWT verification failed: ${err.message}. Falling back to Supabase HTTP API.`);
@@ -124,9 +132,9 @@ export const authMiddleware = async (
 
     // ─── JIT User Sync & Alignment ───
     let userData = await prisma.user.findUnique({
-      where: { supabase_id: user.id },
+      where: { supabase_id: user.id! },
       include: { role: true },
-    }) as any;
+    }) as any; // Cast as any for legacy code compatibility, but typed in Request below
 
     if (!userData) {
       // Create user if missing
@@ -144,7 +152,7 @@ export const authMiddleware = async (
           is_active: true,
         },
         include: { role: true },
-      }) as any;
+      }) as any; // Cast as any for legacy code compatibility, but typed in Request below
       logger.info('New user synced from Supabase', { userId: userData.id });
     } else {
       // Optional: Check if we need to sync metadata changes (name/avatar)
@@ -198,14 +206,13 @@ export const optionalAuthMiddleware = async (
     return next();
   }
 
-  let user: any = null;
-  let decodedUser: any = null;
+  let user: Partial<SupabaseUser> | null = null;
   try {
-    decodedUser = jwt.verify(token, process.env.SUPABASE_JWT_SECRET as string);
+    const { payload: decodedUser } = await jose.jwtVerify(token, JWKS);
     user = {
-      id: decodedUser.sub,
-      email: decodedUser.email,
-      user_metadata: decodedUser.user_metadata || {},
+      id: decodedUser.sub as string,
+      email: decodedUser.email as string,
+      user_metadata: (decodedUser.user_metadata as any) || {},
     };
   } catch (err: any) {
     logger.warn(`optionalAuth: Local JWT verification failed: ${err.message}. Falling back.`);

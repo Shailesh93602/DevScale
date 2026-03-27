@@ -11,7 +11,7 @@ Tracking all changes made toward 10M+ user scalability and production readiness.
 - **DB:** PostgreSQL via Supabase + Prisma ORM (48+ models)
 - **Cache/Queue:** Redis via ioredis, Bull for background jobs
 - **WebSocket:** Socket.io with `@socket.io/redis-adapter` (multi-server safe as of 2026-03-26)
-- **Auth:** Supabase JWT — verified locally via `SUPABASE_JWT_SECRET`; blocklist in Redis
+- **Auth:** Supabase JWT — verified locally via `SUPABASE_JWT_SIGNING_KEY`; blocklist in Redis
 - **CI/CD:** GitHub Actions → AWS ECR → ECS
 
 ## Required Env Vars
@@ -19,8 +19,8 @@ Tracking all changes made toward 10M+ user scalability and production readiness.
 ```
 DATABASE_URL, DIRECT_URL         # PostgreSQL (Supabase)
 REDIS_URL                        # Redis instance
-SUPABASE_URL, SUPABASE_ANON_KEY  # Supabase project
-SUPABASE_JWT_SECRET              # Local JWT verification
+SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY  # Supabase project
+SUPABASE_JWT_SIGNING_KEY              # Local JWT verification
 SENTRY_DSN                       # Error tracking (backend)
 NEXT_PUBLIC_SENTRY_DSN           # Error tracking (frontend) — NOT YET SET
 CLOUDINARY_*                     # Media CDN
