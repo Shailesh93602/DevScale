@@ -57,7 +57,17 @@ const envSchema = z.object({
 });
 
 function validateEnv() {
-  const result = envSchema.safeParse(process.env);
+  const sanitizedEnv = { ...process.env };
+  
+  // Strip inline comments and trim whitespace from all string env vars
+  Object.keys(sanitizedEnv).forEach((key) => {
+    const val = sanitizedEnv[key];
+    if (typeof val === 'string') {
+      sanitizedEnv[key] = val.split('#')[0].trim();
+    }
+  });
+
+  const result = envSchema.safeParse(sanitizedEnv);
 
   if (!result.success) {
     const issues = result.error.issues || [];
