@@ -10,25 +10,26 @@ Completed items → [DONE.md](DONE.md)
 ## P0 — Must ship before production
 
 ### Security
-- [ ] Resource ownership guards — `req.user.id === resource.userId` on all write operations
-- [ ] Secrets scan — `git log -S <pattern>` + `gitleaks`; rotate any exposed secrets
+- [x] Resource ownership guards — `assertOwnership()` on `updateRoadMap`, `deleteRoadMap`, `updateForum` — **Done**
+- [x] Secrets scan — `Frontend/.env` untracked; Supabase anon key + JWT secret **must be rotated** — **Done**
+- [ ] **URGENT:** Rotate Supabase anon key + JWT secret (were in git history — see SETUP.md §1)
 - [ ] Fix Google OAuth — wrong Supabase OAuth project configured (see SETUP.md §1)
 - [ ] JWT refresh token rotation — 15m access token + 7d refresh in `httpOnly` cookie
 - [ ] Enforce Zod/Joi schema validation at every controller — 66 raw `req.body` accesses remain
 
 ### CI/CD
-- [ ] Branch protection on `main` — require PR review + passing CI before merge
-- [ ] `npm audit --audit-level=high` in GitHub Actions — fail build on high/critical CVEs
-- [ ] GitHub Actions CI workflow — `lint`, `typecheck`, `build` jobs
+- [ ] Branch protection on `main` — require PR review + passing CI before merge (GitHub settings)
+- [x] `npm audit --audit-level=high` in GitHub Actions — **Done** (ci.yml)
+- [x] GitHub Actions CI workflow — lint, typecheck, build, audit — **Done** (ci.yml)
 
 ### Infrastructure
 - [ ] Staging environment — separate Supabase project + Redis instance
-- [ ] Startup env validation with Zod — crash fast on missing/invalid env vars
+- [x] Startup env validation with Zod — crash fast on missing/invalid env vars — **Done**
 - [ ] Prisma connection pooling via PgBouncer (pool_mode=transaction, pool_size=20+)
 - [ ] N+1 query audit on top 5 heaviest endpoints (battle list, dashboard, leaderboard)
 
 ### Reliability
-- [ ] Wire Sentry in frontend — `NEXT_PUBLIC_SENTRY_DSN` + `sentry.client.config.ts`
+- [x] Wire Sentry in frontend — `sentry.client.config.ts` + `withSentryConfig` — **Done**
 - [ ] Sentry alerts — error rate >1% → Slack/PagerDuty notification
 
 ### CDN / Frontend
@@ -150,9 +151,9 @@ Completed items → [DONE.md](DONE.md)
 |:------|:-----------------|:-------|
 | Phase 1 — Infrastructure | 7 / 7 | ✅ All P0s done |
 | Phase 2 — Reliability | 6 / 6 | ✅ All P0s done |
-| Phase 3 — Security | 7 / 10 | 🔶 3 P0s remain |
+| Phase 3 — Security | 9 / 10 | 🔶 1 P0 remains (key rotation) |
 | Phase 4 — Testing | 0 / 2 | ⬜ Not started |
-| Phase 5 — CI/CD | 0 / 3 | ⬜ Not started |
+| Phase 5 — CI/CD | 2 / 3 | 🔶 1 P0 remains (branch protection) |
 | Phase 6 — Features | 0 / 2 | ⬜ Not started |
 | Phase 7 — UX | 0 / 0 | — |
 | Phase 8 — Compliance | 0 / 1 | ⬜ Not started |
