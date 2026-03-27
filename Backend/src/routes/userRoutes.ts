@@ -1,5 +1,5 @@
 import UserController from '../controllers/userControllers';
-import { userInsertionSchema } from '../validations/userValidations';
+import { userInsertionSchema, insertUserRoadmapSchema } from '../validations/userValidations';
 import { validateRequest } from '../middlewares/validateRequest';
 
 import { BaseRouter } from './BaseRouter';
@@ -35,6 +35,7 @@ export class UserRoutes extends BaseRouter {
     this.router.post(
       '/roadmap',
       authMiddleware,
+      validateRequest(insertUserRoadmapSchema),
       this.userController.insertUserRoadmap
     );
     this.router.delete(
