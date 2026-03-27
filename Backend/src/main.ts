@@ -1,5 +1,7 @@
 // Sentry must be initialised before any other imports so it can instrument them
 import '../instrument';
+// Validate env vars before anything else — crashes with a clear message on misconfiguration
+import './config/env';
 
 import 'module-alias/register';
 
