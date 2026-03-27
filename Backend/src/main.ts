@@ -26,7 +26,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import prisma from './lib/prisma';
 import socketService from './services/socket';
 import { redis } from './services/cacheService';
-import { RedisStore } from 'rate-limit-redis';
+import { RedisStore, RedisReply } from 'rate-limit-redis';
 
 declare const require: NodeRequire;
 
@@ -157,7 +157,7 @@ export class App {
       legacyHeaders: false,
       message: 'Too many requests from this IP, please try again later.',
       store: new RedisStore({
-        sendCommand: (...args: string[]) => redis.call(...args as [string, ...string[]]),
+        sendCommand: (...args: string[]) => redis.call(...args as [string, ...string[]]) as Promise<RedisReply>,
       }),
     });
     this.app.use(limiter);
