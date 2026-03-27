@@ -3,9 +3,10 @@
  * Called once at process start — crashes immediately if required vars are
  * missing or malformed, before any connections are attempted.
  *
- * Import this at the very top of main.ts and app.logic.ts (after instrument.ts).
+ * Import this at the very top of main.ts and app.logic.ts (after instrument.ts). 
  */
 
+import 'dotenv/config';
 import { z } from 'zod';
 
 const envSchema = z.object({
@@ -20,23 +21,23 @@ const envSchema = z.object({
 
   // ── Supabase ──────────────────────────────────────────────────────────────
   SUPABASE_URL: z.string().url('SUPABASE_URL must be a valid https:// URL'),
-  SUPABASE_ANON_KEY: z.string().min(10, 'SUPABASE_ANON_KEY is missing'),
-  SUPABASE_JWT_SECRET: z.string().min(10, 'SUPABASE_JWT_SECRET is missing'),
+  SUPABASE_PUBLISHABLE_KEY: z.string().min(10, 'SUPABASE_PUBLISHABLE_KEY is missing'),
+  SUPABASE_JWT_SIGNING_KEY: z.string().min(10, 'SUPABASE_JWT_SIGNING_KEY is missing'),
 
   // ── Redis ─────────────────────────────────────────────────────────────────
   REDIS_URL: z.string().min(1, 'REDIS_URL is required'),
 
   // ── Cloudinary ────────────────────────────────────────────────────────────
-  CLOUDINARY_CLOUD_NAME: z.string().min(1, 'CLOUDINARY_CLOUD_NAME is required'),
-  CLOUDINARY_API_KEY: z.string().min(1, 'CLOUDINARY_API_KEY is required'),
-  CLOUDINARY_API_SECRET: z.string().min(1, 'CLOUDINARY_API_SECRET is required'),
+  CLOUDINARY_CLOUD_NAME: z.string().optional().or(z.literal('')),
+  CLOUDINARY_API_KEY: z.string().optional().or(z.literal('')),
+  CLOUDINARY_API_SECRET: z.string().optional().or(z.literal('')),
 
   // ── CORS ──────────────────────────────────────────────────────────────────
   CORS_ORIGIN: z.string().min(1, 'CORS_ORIGIN is required'),
 
   // ── Optional (warn if missing in prod) ────────────────────────────────────
-  SENTRY_DSN: z.string().url().optional(),
-  API_URL: z.string().url().optional(),
+  SENTRY_DSN: z.string().url().optional().or(z.literal('')),
+  API_URL: z.string().url().optional().or(z.literal('')),
   SMTP_HOST: z.string().optional(),
   SMTP_PORT: z.coerce.number().int().positive().optional(),
   SMTP_USER: z.string().optional(),
@@ -59,7 +60,8 @@ function validateEnv() {
   const result = envSchema.safeParse(process.env);
 
   if (!result.success) {
-    const errors = result.error.errors
+    const issues = result.error.issues || result.error.errors || [];
+    const errors = issues
       .map((e) => `  • ${e.path.join('.')}: ${e.message}`)
       .join('\n');
 

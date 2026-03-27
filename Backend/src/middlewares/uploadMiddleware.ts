@@ -3,6 +3,10 @@ import cloudinary from '../config/cloudinaryConfig.js';
 import { Readable } from 'stream';
 import logger from '../utils/logger';
 
+/**
+ * Cloudinary upload middleware — streams req.file      * Must be preceded by: multer().single('field') → validateFileUpload()
+ * validateFileUpload() enforces MIME whitelist (jpeg/png/webp) and 5 MB size cap.
+ */
 const uploadMiddleware = async (
   req: Request,
   res: Response,
