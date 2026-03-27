@@ -1,4 +1,5 @@
 import axios from 'axios';
+import CircuitBreaker from 'opossum';
 import { COMPILER_CLIENT_SECRET } from '../config';
 import logger from './logger';
 import { createAppError } from './errorHandler';
@@ -17,9 +18,40 @@ interface ExecutionResult {
   memoryUsed: number;
 }
 
+// ─── Circuit Breaker ──────────────────────────────────────────────────────────
+// Opens after 3 failures in a 10-second window; half-opens after 30 seconds.
+// Prevents cascading timeouts when Judge0 / RapidAPI is degraded.
+const judge0Breaker = new CircuitBreaker(_executeCodeRaw, {
+  timeout: 15000,           // 15 s — Judge0 slow-path ceiling
+  errorThresholdPercentage: 50, // open when ≥50% of calls in window fail
+  resetTimeout: 30000,      // try again after 30 s
+  volumeThreshold: 3,       // need at least 3 calls before opening
+  name: 'judge0',
+});
+
+judge0Breaker.on('open',     () => logger.warn('Judge0 circuit breaker OPEN — requests failing fast'));
+judge0Breaker.on('halfOpen', () => logger.info('Judge0 circuit breaker HALF-OPEN — probing'));
+judge0Breaker.on('close',    () => logger.info('Judge0 circuit breaker CLOSED — service recovered'));
+
 export const executeCode = async (
   params: ExecuteCodeParams
 ): Promise<ExecutionResult> => {
+  try {
+    return await judge0Breaker.fire(params);
+  } catch (error: any) {
+    if (judge0Breaker.opened) {
+      throw createAppError(
+        'Code execution is temporarily unavailable — please try again in a moment.',
+        503,
+      );
+    }
+    throw error;
+  }
+};
+
+async function _executeCodeRaw(
+  params: ExecuteCodeParams
+): Promise<ExecutionResult> {
   try {
     // Using Judge0 API for code execution with base64 encoding for stability
     const response = await axios.post(
@@ -73,7 +105,7 @@ export const executeCode = async (
     const message = error.response?.data?.error || error.response?.data?.message || error.message || 'Failed to execute code';
     throw createAppError(`Code Execution Error: ${message}`, 500);
   }
-};
+}
 
 const pollSubmissionResult = async (token: string, maxAttempts = 10) => {
   for (let i = 0; i < maxAttempts; i++) {
