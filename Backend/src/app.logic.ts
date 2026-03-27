@@ -1,5 +1,6 @@
 // Sentry must be initialised before any other imports
 import '../instrument';
+import './config/env';
 
 import { NODE_ENV, PORT } from './config';
 import * as Sentry from '@sentry/node';
