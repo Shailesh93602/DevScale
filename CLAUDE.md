@@ -63,27 +63,37 @@ API_URL                          # Must be https:// in production
 
 ---
 
-## Remaining P0 Blockers (as of 2026-03-27)
+### 2026-03-27 — Session 3 (commits `a8cca110` → `3ea47e89`)
+
+| Item | Files | Status |
+|------|-------|--------|
+| DB composite indexes — Battle, Enrollment, ForumPost, ForumComment, LeaderboardEntry | `prisma/schema.prisma` | ✅ Done |
+| requestId in error handler response body | `src/middlewares/errorHandler.ts` | ✅ Done |
+| Helmet CSP tightened — explicit script-src, connect-src, img-src, frame-ancestors | `src/main.ts` | ✅ Done |
+| PM2 cluster mode — `ecosystem.config.js`, npm scripts, 512MB restart threshold | `ecosystem.config.js`, `package.json` | ✅ Done |
+| Cache-Aside for Leaderboard (Redis, TTL 60s) + `invalidateLeaderboard()` | `src/repositories/leaderboardRepository.ts` | ✅ Done |
+| Cache-Aside for Roadmaps — migrated from in-memory to Redis (TTL 24h public, 5m auth) | `src/repositories/roadmapRepository.ts` | ✅ Done |
+| RBAC audit — `authorizeRoles('ADMIN')` added to rbacRoutes, articleRoutes, communityForumRoutes | `src/routes/rbacRoutes.ts`, `articleRoutes.ts`, `communityForumRoutes.ts` | ✅ Done |
+
+---
+
+## Remaining P0 Blockers (as of end of Session 3)
 
 ### Phase 1 — Infrastructure
-- [ ] DB composite indexes (Prisma schema migration)
 - [ ] N+1 query audit on top 5 heaviest endpoints
-- [ ] PM2 cluster mode (currently single process)
-- [ ] Cache-Aside for Roadmaps + Leaderboards
+- [ ] PgBouncer connection pooling (pool_mode=transaction, pool_size=20+)
 
 ### Phase 2 — Reliability
-- [ ] Add `requestId` to error handler response body
-- [ ] Wire Sentry in frontend
+- [ ] Wire Sentry in frontend (`NEXT_PUBLIC_SENTRY_DSN` + `sentry.client.config.ts`)
 
 ### Phase 3 — Security
 - [ ] Fix Google OAuth (wrong Supabase project configured)
-- [ ] RBAC audit — all admin/sensitive routes
-- [ ] Resource ownership validation on write operations
-- [ ] Tighten Helmet CSP (currently disabled in dev, undefined in prod)
-- [ ] Secrets scan + rotation
+- [ ] Resource ownership validation on write operations (`req.user.id === resource.userId`)
+- [ ] Secrets scan + rotation (`git log -S` + `gitleaks`)
+- [ ] JWT refresh token rotation (short-lived access 15m + long-lived refresh 7d httpOnly)
 
 ### Phase 5 — CI/CD
-- [ ] Branch protection on `main`
+- [ ] Branch protection on `main` (require PR review + passing CI)
 - [ ] `npm audit --audit-level=high` in CI pipeline
 - [ ] Staging environment
 
@@ -98,3 +108,6 @@ API_URL                          # Must be https:// in production
 | `sanitize-html` over `dompurify` | Node-native, no jsdom dependency |
 | AsyncLocalStorage for requestId propagation | No function signature changes needed |
 | Socket.io in-memory Map fallback | Degrade gracefully if Redis pub/sub fails |
+| PM2 cluster `instances: 'max'` | One worker per vCPU, zero-downtime reload with `pm2 reload` |
+| Roadmap cache TTL 24h for guests, 5m for auth | Guest lists are stable; auth lists include personalized data |
+| `authorizeRoles` over `requirePermission` | RBAC permission system not fully implemented; role check is immediate protection |

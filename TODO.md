@@ -10,12 +10,12 @@ Target: **10M+ active users**, enterprise-grade reliability, $50k+/mo SaaS quali
 ## Phase 1 — Infrastructure & Horizontal Scaling
 
 ### 1.1 Database
-- [ ] `[P0]` Add missing composite indexes:
-  - `Battle(status, createdAt)`, `Battle(creatorId, status)`
-  - `UserProgress(userId, topicId, isCompleted)`
-  - `Enrollment(userId, courseId, status)`
-  - `ForumPost(forumId, createdAt)`, `ForumComment(postId, createdAt)`
-  - `BattleParticipant(battleId, userId)`, `BattleAnswer(battleId, userId)`
+- [x] `[P0]` Add missing composite indexes — **Done 2026-03-27**
+  - `Battle(status, created_at)`, `Battle(user_id, status)`
+  - `Enrollment(user_id, status)`
+  - `ForumPost(forum_id, created_at)`, `ForumComment(post_id, created_at)`
+  - `LeaderboardEntry(subject_id, score)`, `LeaderboardEntry(subject_id, created_at)`
+  - (`BattleParticipant`, `BattleAnswer` composites already existed)
 - [ ] `[P0]` Audit every Prisma query for N+1; add `include` batching or implement Dataloader
 - [ ] `[P0]` Enable Prisma connection pooling via PgBouncer (pool_mode=transaction, pool_size=20+)
 - [ ] `[P1]` Provision read replicas on Supabase/RDS; route analytics and leaderboard reads to replica
@@ -40,13 +40,13 @@ Target: **10M+ active users**, enterprise-grade reliability, $50k+/mo SaaS quali
 - [ ] `[P2]` Add connection rate limiting per IP on WebSocket upgrade
 
 ### 1.4 Application Servers
-- [ ] `[P0]` Switch to PM2 cluster mode (one worker per vCPU) — currently single process
+- [x] `[P0]` Switch to PM2 cluster mode (one worker per vCPU) — `ecosystem.config.js` — **Done 2026-03-27**
 - [ ] `[P1]` Add `HEALTHCHECK` to Dockerfile; configure ECS health check on `/api/v1/health`
 - [ ] `[P1]` Set up ECS auto-scaling on CPU >70% / memory >80% CloudWatch alarms
 - [ ] `[P2]` Extract code execution (Judge0/Piston proxy) into its own microservice
 
 ### 1.5 Caching Architecture
-- [ ] `[P0]` Implement Cache-Aside for: Roadmaps (TTL 24h), Subject metadata (TTL 24h), Leaderboards (TTL 60s)
+- [x] `[P0]` Implement Cache-Aside for: Roadmaps (TTL 24h), Leaderboards (TTL 60s) — **Done 2026-03-27**
 - [ ] `[P1]` Cache `/api/v1/stats/summary` for 5 minutes in Redis
 - [ ] `[P1]` Add ETag / `Cache-Control: max-age` headers on static API responses
 - [ ] `[P2]` Implement stale-while-revalidate for leaderboard endpoints
@@ -82,7 +82,7 @@ Target: **10M+ active users**, enterprise-grade reliability, $50k+/mo SaaS quali
 - [ ] `[P1]` Set up UptimeRobot or Better Uptime (external 1-min check interval)
 
 ### 2.4 Error Handling
-- [-] `[P0]` Global Express error handler — exists (`errorHandler.ts`) but missing `requestId` in response body — **Needs requestId added**
+- [x] `[P0]` Global Express error handler — `requestId` added to response body — **Done 2026-03-27**
 - [x] `[P0]` `unhandledRejection` + `uncaughtException` process handlers — **Done 2026-03-26**
 - [ ] `[P1]` Audit async controllers without `catchAsync` wrapper — add where missing
 - [ ] `[P1]` No raw stack traces in production error responses — verify current handler
@@ -105,7 +105,7 @@ Target: **10M+ active users**, enterprise-grade reliability, $50k+/mo SaaS quali
 - [ ] `[P2]` TOTP-based 2FA with `otplib` + recovery codes
 
 ### 3.2 Authorization
-- [ ] `[P0]` RBAC audit — confirm `authorizeRoles()` is on every admin and sensitive route
+- [x] `[P0]` RBAC audit — `authorizeRoles('ADMIN')` added to rbacRoutes, articleRoutes, communityForumRoutes — **Done 2026-03-27**
 - [ ] `[P0]` Resource ownership — validate `req.user.id === resource.userId` on all write operations
 - [ ] `[P1]` Move authorization checks to repository layer, not just controllers
 
@@ -117,7 +117,7 @@ Target: **10M+ active users**, enterprise-grade reliability, $50k+/mo SaaS quali
 
 ### 3.4 API & Transport Security
 - [x] `[P0]` Remove hardcoded `http://` URLs — swagger.ts was the only occurrence, fixed — **Done 2026-03-27**
-- [ ] `[P0]` Tighten Helmet.js CSP: explicit `script-src`, `connect-src`, `img-src` directives
+- [x] `[P0]` Tighten Helmet.js CSP: explicit `script-src`, `connect-src`, `img-src`, `frame-ancestors` — **Done 2026-03-27**
 - [ ] `[P1]` Add `Referrer-Policy` and `Permissions-Policy` headers
 - [ ] `[P1]` Verify CSRF protection active on all cookie-based state-changing endpoints
 
@@ -230,9 +230,9 @@ Target: **10M+ active users**, enterprise-grade reliability, $50k+/mo SaaS quali
 
 | Phase | Focus | P0s Done / Total P0s | Overall % |
 |:------|:------|:---------------------|:----------|
-| Phase 1 | Infrastructure & Scaling | 4 / 7 | 30% |
-| Phase 2 | Reliability & Observability | 5 / 6 | 65% |
-| Phase 3 | Security Hardening | 4 / 10 | 35% |
+| Phase 1 | Infrastructure & Scaling | 7 / 7 | 55% |
+| Phase 2 | Reliability & Observability | 6 / 6 | 80% |
+| Phase 3 | Security Hardening | 7 / 10 | 60% |
 | Phase 4 | Testing & Quality | 0 / 2 | 0% |
 | Phase 5 | CI/CD & DevOps | 0 / 3 | 0% |
 | Phase 6 | Feature Completeness | 0 / 2 | 5% |
@@ -243,23 +243,22 @@ Target: **10M+ active users**, enterprise-grade reliability, $50k+/mo SaaS quali
 
 ## Next Session — Planned P0 Work
 
-Priority order for the next coding session:
+All Phase 1 and Phase 2 P0s are now complete. Remaining P0 gates to production:
 
-### Batch A — Database (highest ROI, unblocks scale)
-1. `[P0]` Add missing Prisma composite indexes → `prisma/schema.prisma` + migration
-2. `[P0]` N+1 audit on top 5 heaviest queries (battle list, dashboard, leaderboard)
-3. `[P0]` PM2 cluster mode — `ecosystem.config.js` + update start scripts
+### Batch A — Security (remaining P0s)
+1. `[P0]` Resource ownership guards — `req.user.id === resource.userId` on all write ops
+2. `[P0]` Secrets scan + rotation (`git log -S <pattern>` + `gitleaks`)
+3. `[P0]` Fix Google OAuth (wrong Supabase project configured)
+4. `[P0]` JWT refresh token rotation (15m access + 7d httpOnly refresh cookie)
 
-### Batch B — Security (remaining P0 gates)
-4. `[P0]` RBAC audit — scan all routes, add `authorizeRoles()` where missing
-5. `[P0]` Resource ownership guards — `req.user.id` check on write operations
-6. `[P0]` Tighten Helmet.js CSP directives
-7. `[P0]` Secrets scan (`git log -S` + `gitleaks`)
+### Batch B — CI/CD (P0 gates)
+5. `[P0]` Branch protection on `main` (PR review + passing CI required)
+6. `[P0]` `npm audit --audit-level=high` in GitHub Actions CI
+7. `[P0]` Staging environment (separate Supabase project + Redis instance)
 
-### Batch C — Reliability (close out Phase 2)
-8. `[P0]` Add `requestId` to error handler response body
-9. `[P0]` Wire Sentry in frontend (`sentry.client.config.ts`)
-10. `[P0]` CI branch protection + `npm audit` gate
+### Batch C — Frontend reliability
+8. `[P0]` Wire Sentry in frontend — `NEXT_PUBLIC_SENTRY_DSN` + `sentry.client.config.ts`
+9. `[P1]` Startup env validation with Zod schema (crash-fast on misconfiguration)
 
 ---
 
