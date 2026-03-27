@@ -79,6 +79,8 @@ model Battle {
   @@index([winner_id])
   @@index([status])
   @@index([type])
+  @@index([status, created_at])
+  @@index([user_id, status])
 }
 
 model BattleParticipant {
@@ -239,6 +241,7 @@ model Enrollment {
   @@unique([user_id, course_id], name: "user_id_course_id")
   @@index([user_id])
   @@index([course_id])
+  @@index([user_id, status])
 }
 
 model Forum {
@@ -805,6 +808,7 @@ model ForumPost {
 
   @@index([user_id])
   @@index([forum_id])
+  @@index([forum_id, created_at])
 }
 
 model ForumComment {
@@ -824,6 +828,7 @@ model ForumComment {
   @@index([user_id])
   @@index([post_id])
   @@index([parent_id])
+  @@index([post_id, created_at])
 }
 
 model ChallengeSubmission {
@@ -1867,6 +1872,8 @@ model LeaderboardEntry {
   @@index([subject_id])
   @@index([score])
   @@index([time_taken])
+  @@index([subject_id, score])
+  @@index([subject_id, created_at])
 }
 
 model AuditLog {
