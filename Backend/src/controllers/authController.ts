@@ -1,12 +1,19 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import crypto from 'node:crypto';
+import { createClient } from '@supabase/supabase-js';
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../config';
 import { redis } from '../services/cacheService';
 import { clearAuthCache } from '../middlewares/authMiddleware';
+import { recordAuthFailure, clearAuthFailures } from '../middlewares/accountLockout';
 import { createAppError } from '../utils/errorHandler';
 import logger from '../utils/logger';
 
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 const TOKEN_BLOCKLIST_PREFIX = 'eduscale:auth:blocklist:';
+const REFRESH_COOKIE = 'sb-refresh-token';
+const REFRESH_COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000; // 7 days in ms
 
 const tokenBloclistKey = (token: string) =>
   TOKEN_BLOCKLIST_PREFIX + crypto.createHash('sha256').update(token).digest('hex');
@@ -35,6 +42,81 @@ export const logout = async (req: Request, res: Response, next: NextFunction) =>
 
     logger.info('User logged out, token blocklisted', { userId: req.user?.id });
     res.json({ success: true, message: 'Logged out successfully' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * POST /api/v1/auth/refresh
+ * Issues a fresh Supabase access token using the refresh token stored in
+ * an httpOnly cookie.  Rotates the refresh token cookie on every call so
+ * stolen cookies expire after a single use.
+ *
+ * Cookie set: sb-refresh-token (httpOnly, Secure in prod, SameSite=Strict, 7d)
+ * Response body: { access_token, expires_in }
+ */
+export const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const refresh = req.cookies?.[REFRESH_COOKIE];
+    if (!refresh) return next(createAppError('No refresh token cookie', 401));
+
+    const { data, error } = await supabase.auth.refreshSession({ refresh_token: refresh });
+
+    if (error || !data.session) {
+      // Clear the stale cookie so the client doesn't loop
+      res.clearCookie(REFRESH_COOKIE);
+      await recordAuthFailure(req);
+      logger.warn('Refresh token invalid or expired', { error: error?.message });
+      return next(createAppError('Refresh token invalid or expired — please log in again', 401));
+    }
+
+    const { access_token, refresh_token: newRefresh, expires_in } = data.session;
+
+    // Successful refresh — reset failure counter
+    await clearAuthFailures(req);
+
+    // Rotate: replace old cookie with new refresh token
+    res.cookie(REFRESH_COOKIE, newRefresh, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: REFRESH_COOKIE_MAX_AGE,
+      path: '/api/v1/auth',
+    });
+
+    logger.info('Token refreshed', { userId: data.user?.id });
+    res.json({ success: true, access_token, expires_in });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * POST /api/v1/auth/set-refresh-cookie
+ * Called immediately after Supabase login on the frontend.  Receives the
+ * Supabase refresh token in the request body and stores it in an httpOnly
+ * cookie so the browser JS can never access it directly.
+ *
+ * The frontend should call this once after `supabase.auth.signInWithPassword`
+ * succeeds, then discard the refresh token from JS memory.
+ */
+export const setRefreshCookie = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { refresh_token } = req.body as { refresh_token?: string };
+    if (!refresh_token || typeof refresh_token !== 'string') {
+      return next(createAppError('refresh_token is required', 400));
+    }
+
+    res.cookie(REFRESH_COOKIE, refresh_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: REFRESH_COOKIE_MAX_AGE,
+      path: '/api/v1/auth',
+    });
+
+    res.json({ success: true });
   } catch (err) {
     next(err);
   }
