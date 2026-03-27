@@ -74,3 +74,9 @@ export const userInsertionSchema = Joi.object({
       'array.base': 'Skills must be an array of strings',
     }),
 }).options({ abortEarly: false, allowUnknown: true });
+
+export const insertUserRoadmapSchema = Joi.object({
+  roadmap_id: Joi.string().min(2).max(120).required().messages({
+    'any.required': 'roadmap_id is required',
+  }),
+});
