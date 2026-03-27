@@ -10,26 +10,18 @@ Completed items → [DONE.md](DONE.md)
 ## P0 — Must ship before production
 
 ### Security
-- [x] Resource ownership guards — `assertOwnership()` on `updateRoadMap`, `deleteRoadMap`, `updateForum` — **Done**
-- [x] Secrets scan — `Frontend/.env` untracked; Supabase anon key + JWT secret **must be rotated** — **Done**
 - [ ] **URGENT:** Rotate Supabase anon key + JWT secret (were in git history — see SETUP.md §1)
 - [ ] Fix Google OAuth — wrong Supabase OAuth project configured (see SETUP.md §1)
-- [ ] JWT refresh token rotation — 15m access token + 7d refresh in `httpOnly` cookie
-- [ ] Enforce Zod/Joi schema validation at every controller — 66 raw `req.body` accesses remain
 
 ### CI/CD
 - [ ] Branch protection on `main` — require PR review + passing CI before merge (GitHub settings)
-- [x] `npm audit --audit-level=high` in GitHub Actions — **Done** (ci.yml)
-- [x] GitHub Actions CI workflow — lint, typecheck, build, audit — **Done** (ci.yml)
 
 ### Infrastructure
 - [ ] Staging environment — separate Supabase project + Redis instance
-- [x] Startup env validation with Zod — crash fast on missing/invalid env vars — **Done**
 - [ ] Prisma connection pooling via PgBouncer (pool_mode=transaction, pool_size=20+)
 - [ ] N+1 query audit on top 5 heaviest endpoints (battle list, dashboard, leaderboard)
 
 ### Reliability
-- [x] Wire Sentry in frontend — `sentry.client.config.ts` + `withSentryConfig` — **Done**
 - [ ] Sentry alerts — error rate >1% → Slack/PagerDuty notification
 
 ### CDN / Frontend
@@ -68,11 +60,9 @@ Completed items → [DONE.md](DONE.md)
 
 ### Error handling
 - [ ] Audit async controllers missing `catchAsync` wrapper
-- [ ] Circuit breaker (`opossum`) around Judge0 code execution
 - [ ] Circuit breaker around Cloudinary upload calls
 
 ### Security
-- [ ] Account lockout after 10 failed login attempts (30-min lock)
 - [ ] UUID / parseInt validation on all route params
 - [ ] File upload validation: type whitelist (jpeg/png/webp), 5MB max
 - [ ] `Referrer-Policy` and `Permissions-Policy` headers
@@ -81,8 +71,6 @@ Completed items → [DONE.md](DONE.md)
 - [ ] Move authorization checks to repository layer, not just controllers
 
 ### CI/CD
-- [ ] Prisma schema validation step in CI (`prisma validate`)
-- [ ] Parallel CI jobs: lint + typecheck + test + build
 - [ ] Separate Supabase + Redis per environment (dev / staging / prod)
 
 ### Frontend
@@ -90,8 +78,7 @@ Completed items → [DONE.md](DONE.md)
 - [ ] `<link rel="preconnect">` + font subsetting (eliminate render-blocking)
 
 ### Features
-- [ ] Implement `GET /api/v1/stats/summary` endpoint (used on landing page)
-- [ ] Wire leaderboard to real DB — confirm no mock data remains
+- [ ] Wire leaderboard to real DB — confirm no mock data remains (check current impl)
 - [ ] Verify Bull email queue processes in production; add dead-letter queue
 - [ ] Stripe subscription billing (Free / Pro / Team tiers)
 - [ ] Feature gating middleware based on subscription tier
