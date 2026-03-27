@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { createAppError } from '../middlewares/errorHandler';
-import { getCached, setCached, invalidatePattern } from '../services/memoryCache';
+import { invalidatePattern } from '../services/memoryCache';
+import { getCache, setCache } from '../services/cacheService';
 import BaseRepository from './baseRepository';
 import prisma from '../lib/prisma';
 import { isUuid } from '../utils/slugify';
@@ -123,7 +124,7 @@ export default class RoadmapRepository extends BaseRepository<
   async getRoadmap(idOrSlug: string, userId?: string) {
     const id = await this.resolveRoadmapId(idOrSlug);
     const cacheKey = `roadmap:detail:${id}:${userId || 'anon'}`;
-    const cached = getCached<any>(cacheKey);
+    const cached = await getCache<any>(cacheKey);
     if (cached) return cached;
 
     // 1. Fetch flat roadmap info + counts (+ likes/bookmarks if logged in)
@@ -256,7 +257,7 @@ export default class RoadmapRepository extends BaseRepository<
       isFeatured: roadmap.popularity > 100,
     };
 
-    setCached(cacheKey, result, 120); // Cache for 2 mins
+    await setCache(cacheKey, result, { ttl: 86400 }); // 24h — roadmap metadata rarely changes
     return result;
   }
 
@@ -521,7 +522,7 @@ export default class RoadmapRepository extends BaseRepository<
     // ─── Cache Key ───
     // Cache key encodes all query params + userId (guests share a cache)
     const cacheKey = `roadmaps:list:${userId || 'guest'}:${sort}:${page}:${limit}:${search}:${category || ''}:${difficulty || ''}:${JSON.stringify(where || {})}`;
-    const cached = getCached<{ data: any[]; meta: Record<string, unknown> }>(cacheKey);
+    const cached = await getCache<{ data: any[]; meta: Record<string, unknown> }>(cacheKey);
     if (cached) return cached;
 
     // Build where clause with additional filters
@@ -724,9 +725,8 @@ export default class RoadmapRepository extends BaseRepository<
       })),
     };
 
-    // Cache for 300s for guests, 120s for authenticated users
-    // (previously 60s/30s — too short, caused near-constant cache misses)
-    setCached(cacheKey, result, userId ? 120 : 300);
+    // Guest lists cache 24h (public, stable); auth lists cache 5 min (personalized)
+    await setCache(cacheKey, result, { ttl: userId ? 300 : 86400 });
 
     return result;
   }
