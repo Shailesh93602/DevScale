@@ -1,6 +1,6 @@
 import { BaseRouter } from './BaseRouter';
 import CommunityForumController from '../controllers/communityForumControllers';
-import { authMiddleware } from '../middlewares/authMiddleware';
+import { authMiddleware, authorizeRoles } from '../middlewares/authMiddleware';
 
 export class CommunityForumRoutes extends BaseRouter {
   private readonly communityForumController: CommunityForumController;
@@ -15,8 +15,10 @@ export class CommunityForumRoutes extends BaseRouter {
     this.router.get('/:id', this.communityForumController.getForum);
     this.router.post('/create', this.communityForumController.createForum);
     this.router.put('/update/:id', this.communityForumController.updateForum);
+    // Deleting a forum is destructive and permanent — admin only
     this.router.delete(
       '/delete/:id',
+      authorizeRoles('ADMIN'),
       this.communityForumController.deleteForum
     );
   }

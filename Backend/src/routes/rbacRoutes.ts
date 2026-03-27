@@ -1,7 +1,6 @@
 import { BaseRouter } from './BaseRouter';
 import RBACController from '../controllers/rbacController';
-import { authMiddleware } from '../middlewares/authMiddleware';
-// import { requirePermission } from '../middlewares/rbacMiddleware';
+import { authMiddleware, authorizeRoles } from '../middlewares/authMiddleware';
 
 export class RBACRoutes extends BaseRouter {
   private readonly rbacController: RBACController;
@@ -12,65 +11,66 @@ export class RBACRoutes extends BaseRouter {
   }
 
   protected initializeRoutes(): void {
-    // Role Management Routes
+    // Role Management Routes — ADMIN only
     this.router.post(
       '/roles',
       authMiddleware,
-      // requirePermission('roles', 'create'),
+      authorizeRoles('ADMIN'),
       this.rbacController.createRole
     );
 
     this.router.patch(
       '/roles/:roleId',
       authMiddleware,
-      // requirePermission('roles', 'update'),
+      authorizeRoles('ADMIN'),
       this.rbacController.updateRole
     );
 
     this.router.delete(
       '/roles/:roleId',
       authMiddleware,
-      // requirePermission('roles', 'delete'),
+      authorizeRoles('ADMIN'),
       this.rbacController.deleteRole
     );
 
     this.router.get(
       '/roles/:roleId/hierarchy',
       authMiddleware,
-      // requirePermission('roles', 'read'),
+      authorizeRoles('ADMIN'),
       this.rbacController.getRoleHierarchy
     );
 
-    // Permission Management Routes
+    // Permission Management Routes — ADMIN only
     this.router.post(
       '/permissions',
       authMiddleware,
-      // requirePermission('permissions', 'create'),
+      authorizeRoles('ADMIN'),
       this.rbacController.createPermission
     );
 
     this.router.patch(
       '/permissions/:permissionId',
       authMiddleware,
-      // requirePermission('permissions', 'update'),
+      authorizeRoles('ADMIN'),
       this.rbacController.updatePermission
     );
 
     this.router.delete(
       '/permissions/:permissionId',
       authMiddleware,
-      // requirePermission('permissions', 'delete'),
+      authorizeRoles('ADMIN'),
       this.rbacController.deletePermission
     );
 
-    // Access Control Routes
+    // Access Control Routes — ADMIN only (assigning roles is a privileged operation)
     this.router.post(
       '/users/role',
       authMiddleware,
-      // requirePermission('roles', 'assign'),
+      authorizeRoles('ADMIN'),
       this.rbacController.assignRoleToUser
     );
 
+    // Any authenticated user may check their own permissions
     this.router.get(
       '/check-permission',
       authMiddleware,
