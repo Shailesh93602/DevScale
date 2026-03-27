@@ -15,12 +15,12 @@ Everything here blocks or supports production launch. Work through P0 first.
 3. Go to **Project Settings → Auth → JWT Settings** → click **"Generate new secret"**
 4. Update your Backend `.env`:
    ```
-   SUPABASE_JWT_SECRET=<new value>
-   SUPABASE_ANON_KEY=<new value>
+   SUPABASE_JWT_SIGNING_KEY=<new value>
+   SUPABASE_PUBLISHABLE_KEY=<new value>
    ```
 5. Update your Frontend `.env.local`:
    ```
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=<new value>
+   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<new value>
    ```
 6. Redeploy both services.
 
