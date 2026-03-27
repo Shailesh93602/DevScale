@@ -85,6 +85,7 @@ export const authMiddleware = async (
 
     // ─── Blocklist Check ───
     if (await isTokenBlocklisted(token)) {
+      logger.info('auth:revoked_token', { ip: req.ip, ua: req.headers['user-agent'] });
       return next(createAppError('Token has been revoked', 401));
     }
 
@@ -115,7 +116,7 @@ export const authMiddleware = async (
       // ─── Fallback to Supabase API ───
       const { data, error } = await supabase.auth.getUser(token);
       if (error || !data?.user) {
-        logger.warn('Invalid authentication attempt (Supabase Fallback)', { error });
+        logger.info('auth:failed', { ip: req.ip, ua: req.headers['user-agent'], error: error?.message });
         return next(createAppError('Invalid authentication token', 401));
       }
       user = data.user;
@@ -170,6 +171,8 @@ export const authMiddleware = async (
 
     req.user = userData;
     req.supabaseUser = user;
+
+    logger.info('auth:success', { userId: userData.id, ip: req.ip, ua: req.headers['user-agent'] });
     next();
   } catch (err) {
     logger.error('Authentication process failed', { error: err });
