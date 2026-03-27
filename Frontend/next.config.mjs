@@ -1,3 +1,5 @@
+import { withSentryConfig } from '@sentry/nextjs';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
@@ -11,20 +13,30 @@ const nextConfig = {
       { protocol: 'https', hostname: 'www.java.com' },
       { protocol: 'https', hostname: 'flutter.dev' },
       { protocol: 'https', hostname: 'i.pravatar.cc' },
+      { protocol: 'https', hostname: 'res.cloudinary.com' },
     ],
   },
   eslint: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
   typescript: {
-    // !! WARN !!
-    // Dangerously allow production builds to successfully complete even if
-    // your project has type errors.
-    // !! WARN !!
     ignoreBuildErrors: true,
   },
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+  // Set in CI env vars — not committed
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+
+  // Suppress Sentry build logs in dev
+  silent: process.env.NODE_ENV !== 'production',
+
+  sourcemaps: {
+    deleteSourcemapsAfterUpload: true,
+  },
+
+  autoInstrumentServerFunctions: true,
+  autoInstrumentMiddleware: true,
+});
