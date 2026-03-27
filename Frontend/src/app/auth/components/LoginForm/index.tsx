@@ -7,11 +7,10 @@ import { loginSchema } from '@/lib/validations';
 import Link from 'next/link';
 import PasswordInput from '@/components/PasswordInput';
 import { login } from '@/app/auth/actions';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
 const LoginForm = () => {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [serverError, setServerError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -36,19 +35,15 @@ const LoginForm = () => {
     setIsLoading(false);
 
     if (response?.success) {
-      // router.refresh() re-syncs the Supabase session cookie from the server to the client.
-      // Without this, AuthContext may not have processed the SIGNED_IN event yet when the
-      // dashboard mounts, causing a blank screen until Supabase fires onAuthStateChange.
-      router.refresh();
-
-      // Use callbackUrl if set by middleware (e.g., user tried to visit a protected page)
-      // Otherwise go to /dashboard. Never redirect back to auth pages.
       const callbackUrl = searchParams.get('callbackUrl');
       const isValidCallback =
         callbackUrl &&
         callbackUrl.startsWith('/') &&
         !callbackUrl.startsWith('/auth');
-      router.push(isValidCallback ? callbackUrl : '/dashboard');
+
+      // Use a hard redirect to completely bypass Next.js client-side Suspense locking bugs 
+      // and ensure the new Server Cookie is firmly established before mounting the dashboard.
+      globalThis.window.location.assign(isValidCallback ? callbackUrl : '/dashboard');
     } else if (response?.error) {
       setServerError(response.error);
     }

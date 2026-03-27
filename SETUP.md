@@ -21,8 +21,8 @@ Supabase provides PostgreSQL, authentication (JWT), and storage.
 | Key | Location in Supabase Dashboard |
 |-----|-------------------------------|
 | `SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_URL` | **Project Settings → API → Project URL** |
-| `SUPABASE_ANON_KEY` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` | **Project Settings → API → Project API keys → anon public** |
-| `SUPABASE_JWT_SECRET` | **Project Settings → API → JWT Settings → JWT Secret** |
+| `SUPABASE_PUBLISHABLE_KEY` / `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | **Project Settings → API → Project API keys → anon public** |
+| `SUPABASE_JWT_SIGNING_KEY` | **Project Settings → API → JWT Settings → JWT Secret** |
 | `DATABASE_URL` | **Project Settings → Database → Connection string → URI** — append `?pgbouncer=true` and use port `6543` for pooled |
 | `DIRECT_URL` | Same page, use port `5432` (direct, no pgbouncer) |
 
@@ -41,7 +41,7 @@ Supabase provides PostgreSQL, authentication (JWT), and storage.
    - Paste the Client ID and Client Secret from above
    - Save
 
-> Make sure the Supabase project you configure this on is the **same project** whose `SUPABASE_URL` / `SUPABASE_ANON_KEY` are in your `.env`.
+> Make sure the Supabase project you configure this on is the **same project** whose `SUPABASE_URL` / `SUPABASE_PUBLISHABLE_KEY` are in your `.env`.
 
 ---
 
@@ -177,7 +177,7 @@ These three are sufficient for local development:
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=      # same as backend SUPABASE_URL
-NEXT_PUBLIC_SUPABASE_ANON_KEY= # same as backend SUPABASE_ANON_KEY
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY= # same as backend SUPABASE_PUBLISHABLE_KEY
 NEXT_PUBLIC_API_BASE_URL=http://localhost:5000/api/v1
 NEXT_PUBLIC_WS_URL=http://localhost:5000
 NEXT_PUBLIC_SENTRY_DSN=        # leave blank in dev
@@ -189,7 +189,7 @@ NEXT_PUBLIC_SENTRY_DSN=        # leave blank in dev
 
 - [ ] Supabase project created, DB password saved
 - [ ] `DATABASE_URL` (pooled, port 6543) and `DIRECT_URL` (direct, port 5432) copied
-- [ ] `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_JWT_SECRET` copied
+- [ ] `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_JWT_SIGNING_KEY` copied
 - [ ] Redis running locally (dev) or Upstash URL copied (prod)
 - [ ] Cloudinary account created, `CLOUD_NAME`, `API_KEY`, `API_SECRET` copied
 - [ ] Sentry backend DSN set (`SENTRY_DSN`)
