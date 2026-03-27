@@ -13,7 +13,7 @@ const envSchema = z.object({
   // ── App ──────────────────────────────────────────────────────────────────
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   PORT: z.coerce.number().int().positive().default(5000),
-  LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
+  LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).catch('info'),
 
   // ── Database ──────────────────────────────────────────────────────────────
   DATABASE_URL: z.string().url('DATABASE_URL must be a valid postgresql:// URL'),
