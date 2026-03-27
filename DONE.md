@@ -4,6 +4,36 @@ All shipped items, grouped by session. Newest first.
 
 ---
 
+## Session 6 — 2026-03-27
+
+### Tracking
+| Item | File(s) |
+|------|---------|
+| Created `MANUAL.md` — step-by-step instructions for every platform/infra task (Supabase key rotation, Google OAuth fix, branch protection, Redis config, Sentry alerts, ECS HEALTHCHECK, etc.) | `MANUAL.md` |
+| Cleaned `TODO.md` — manual tasks removed; only code tasks remain | `TODO.md` |
+
+### Phase 3 — Security
+| Item | File(s) |
+|------|---------|
+| `Permissions-Policy` header — `camera=(), microphone=(), geolocation=(), payment=()` set on every response | `Backend/src/main.ts` |
+| Auth event logging — `auth:success`, `auth:failed`, `auth:revoked_token`, `auth:logout` at INFO/WARN with `userId`, `ip`, `userAgent` | `Backend/src/middlewares/authMiddleware.ts`, `Backend/src/controllers/authController.ts` |
+| File upload validation middleware — MIME whitelist (jpeg/png/webp), 5 MB hard limit, 415/413 errors | `Backend/src/middlewares/fileValidation.ts` |
+| Global `:id` param validation via `BaseRouter.router.param()` — rejects malformed IDs before they hit DB on all routes | `Backend/src/routes/BaseRouter.ts` |
+
+### Phase 2 — Reliability
+| Item | File(s) |
+|------|---------|
+| ETag support — `app.set('etag', 'weak')` enables conditional GET (`304 Not Modified`) on all stable endpoints | `Backend/src/main.ts` |
+| Circuit breaker (`opossum`) around Cloudinary uploads — opens after 3 failures, 20 s timeout, 30 s reset; returns 503 when open | `Backend/src/services/content/mediaHandler.ts` |
+| Redis presence heartbeat — `SETEX eduscale:presence:{userId} 35` on connect + refresh on client `ping`; cleared on final disconnect | `Backend/src/services/socket.ts` |
+
+### Phase 1 — Infrastructure
+| Item | File(s) |
+|------|---------|
+| `getLearningProgress` unbounded query fix — paginated (`page` + `limit` query params, default 50/page), `select` instead of full `include: { topic: true }` | `Backend/src/repositories/dashboardRepository.ts`, `Backend/src/controllers/dashboardController.ts` |
+
+---
+
 ## Session 5 — 2026-03-27
 
 ### Phase 3 — Security
