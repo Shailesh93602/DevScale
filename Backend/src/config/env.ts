@@ -22,7 +22,7 @@ const envSchema = z.object({
   // ── Supabase ──────────────────────────────────────────────────────────────
   SUPABASE_URL: z.string().url('SUPABASE_URL must be a valid https:// URL'),
   SUPABASE_PUBLISHABLE_KEY: z.string().min(10, 'SUPABASE_PUBLISHABLE_KEY is missing'),
-  SUPABASE_JWT_SIGNING_KEY: z.string().min(10, 'SUPABASE_JWT_SIGNING_KEY is missing'),
+  SUPABASE_JWT_SIGNING_KEY: z.string().optional().or(z.literal('')),
 
   // ── Redis ─────────────────────────────────────────────────────────────────
   REDIS_URL: z.string().min(1, 'REDIS_URL is required'),
