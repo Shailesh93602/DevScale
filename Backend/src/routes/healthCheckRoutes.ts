@@ -7,6 +7,16 @@ import { REDIS_URL } from '../config';
 
 export class HealthCheckRoutes extends BaseRouter {
   protected initializeRoutes(): void {
+    /**
+     * GET /api/v1/ready
+     * Liveness probe — returns 200 as soon as the process is up.
+     * Does NOT check DB/Redis (that's /health). Used by ECS/K8s to know
+     * when the container is ready to receive traffic.
+     */
+    this.router.get('/ready', (_req, res) => {
+      res.status(200).json({ status: 'ready', timestamp: new Date().toISOString() });
+    });
+
     this.router.get('/', async (req, res) => {
       const checks: Record<string, 'ok' | 'error'> = {};
       let httpStatus = 200;

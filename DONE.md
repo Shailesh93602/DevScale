@@ -4,6 +4,28 @@ All shipped items, grouped by session. Newest first.
 
 ---
 
+## Session 5 — 2026-03-27
+
+### Phase 3 — Security
+| Item | File(s) |
+|------|---------|
+| JWT refresh token rotation — `POST /auth/refresh` exchanges httpOnly `sb-refresh-token` cookie via `supabase.auth.refreshSession()`; rotates cookie on every call; `POST /auth/set-refresh-cookie` stores initial refresh token after Supabase login | `src/controllers/authController.ts`, `src/routes/authRoutes.ts`, `src/validations/authValidations.ts` |
+| Account lockout — `checkAccountLockout` middleware blocks IP after 10 failed refresh attempts (30-min lock, Redis-backed); `recordAuthFailure` / `clearAuthFailures` helpers; fail-open on Redis downtime | `src/middlewares/accountLockout.ts`, `src/controllers/authController.ts`, `src/routes/authRoutes.ts` |
+| Joi validation on previously unvalidated routes — forum create/update, article status/moderation/content, user roadmap insert, auth set-refresh-cookie | `src/validations/forumValidations.ts`, `src/validations/articleValidations.ts`, `src/validations/authValidations.ts`, `src/routes/communityForumRoutes.ts`, `src/routes/articleRoutes.ts`, `src/routes/userRoutes.ts`, `src/routes/authRoutes.ts` |
+
+### Phase 2 — Reliability
+| Item | File(s) |
+|------|---------|
+| Circuit breaker (`opossum`) around Judge0 code execution — opens after 3 failures, 30s reset, 15s timeout; logs state transitions; returns 503 when open | `src/utils/codeExecutor.ts`, `package.json` |
+
+### Phase 1 — Infrastructure
+| Item | File(s) |
+|------|---------|
+| `/api/v1/health/ready` liveness probe — instant 200 with no DB/Redis checks; separate from `/health` deep check | `src/routes/healthCheckRoutes.ts` |
+| `GET /api/v1/stats/summary` — public landing-page counts (users, battles, roadmaps, topics); single `$queryRaw`, Redis 5-min cache | `src/routes/statsRoutes.ts`, `src/routes/routes.ts` |
+
+---
+
 ## Session 4 — 2026-03-27 (commits `e0ceb20f` → `ae5e8e1b`)
 
 ### Tracking
