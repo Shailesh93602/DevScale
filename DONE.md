@@ -4,6 +4,36 @@ All shipped items, grouped by session. Newest first.
 
 ---
 
+## Session 4 — 2026-03-27 (commits `e0ceb20f` → `ae5e8e1b`)
+
+### Tracking
+| Item | File(s) | Commit |
+|------|---------|--------|
+| Split TODO.md → TODO.md (pending) + DONE.md (completed, with commit refs) | `TODO.md`, `DONE.md` | `e0ceb20f` |
+
+### Phase 3 — Security
+| Item | File(s) | Commit |
+|------|---------|--------|
+| Resource ownership guards — `assertOwnership()` utility; wired into `updateRoadMap`, `deleteRoadMap`, `updateForum` | `src/utils/assertOwnership.ts`, `roadMapControllers.ts`, `communityForumControllers.ts` | `e0ceb20f` |
+| Secrets scan — `Frontend/.env` untracked; contained live Supabase URL + anon key + JWT secret | `Frontend/.env` (removed) | `ae5e8e1b` |
+
+### Phase 2 — Reliability
+| Item | File(s) | Commit |
+|------|---------|--------|
+| Sentry wired in frontend — `sentry.client.config.ts` (replay, PII masking, auth header strip), `sentry.server.config.ts`, `sentry.edge.config.ts`; `next.config.mjs` wrapped with `withSentryConfig` | `Frontend/sentry.*.config.ts`, `Frontend/next.config.mjs` | `15701730` |
+
+### Phase 1 — Infrastructure
+| Item | File(s) | Commit |
+|------|---------|--------|
+| Startup env validation with Zod — crashes on missing required vars before any DB/Redis connection | `Backend/src/config/env.ts`, `main.ts`, `app.logic.ts` | `afe0abdc` |
+
+### Phase 5 — CI/CD
+| Item | File(s) | Commit |
+|------|---------|--------|
+| GitHub Actions CI — 6 parallel jobs: backend-audit, backend-lint, backend-typecheck, backend-build, frontend-audit, frontend-build | `.github/workflows/ci.yml` | `cecfefb6` |
+
+---
+
 ## Session 3 — 2026-03-27 (commits `a8cca110` → `0b3bbd80`)
 
 ### Phase 1 — Infrastructure
