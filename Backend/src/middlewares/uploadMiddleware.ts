@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import cloudinary from '../config/cloudinaryConfig.js';
-import { Readable } from 'stream';
+import { Readable } from 'node:stream';
 import logger from '../utils/logger';
 
 /**
