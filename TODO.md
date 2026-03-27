@@ -1,265 +1,160 @@
-# EduScale — Production Scaling Roadmap
+# EduScale — Pending Work
 
 Target: **10M+ active users**, enterprise-grade reliability, $50k+/mo SaaS quality.
+Completed items → [DONE.md](DONE.md)
 
-**Priority legend:** `[P0]` = Blocking / Critical | `[P1]` = High | `[P2]` = Medium | `[P3]` = Nice to have
-**Status legend:** `[x]` = Done | `[-]` = Partial / needs more work | `[ ]` = Not started
-
----
-
-## Phase 1 — Infrastructure & Horizontal Scaling
-
-### 1.1 Database
-- [x] `[P0]` Add missing composite indexes — **Done 2026-03-27**
-  - `Battle(status, created_at)`, `Battle(user_id, status)`
-  - `Enrollment(user_id, status)`
-  - `ForumPost(forum_id, created_at)`, `ForumComment(post_id, created_at)`
-  - `LeaderboardEntry(subject_id, score)`, `LeaderboardEntry(subject_id, created_at)`
-  - (`BattleParticipant`, `BattleAnswer` composites already existed)
-- [ ] `[P0]` Audit every Prisma query for N+1; add `include` batching or implement Dataloader
-- [ ] `[P0]` Enable Prisma connection pooling via PgBouncer (pool_mode=transaction, pool_size=20+)
-- [ ] `[P1]` Provision read replicas on Supabase/RDS; route analytics and leaderboard reads to replica
-- [ ] `[P1]` Set `statement_timeout` and `idle_in_transaction_session_timeout` on PostgreSQL
-- [ ] `[P2]` Implement soft deletes (`deletedAt`) on User, Battle, Forum models
-- [ ] `[P2]` Partition `AnalyticsLog` table by month to prevent unbounded growth
-- [ ] `[P2]` Archive completed battles older than 90 days to a cold storage table
-
-### 1.2 Redis
-- [x] `[P0]` Migrate all in-memory caches (`authCache`) to Redis — **Done 2026-03-26**
-- [x] `[P0]` Replace memory-based `express-rate-limit` with `rate-limit-redis` store — **Done 2026-03-26**
-- [ ] `[P1]` Configure Redis with `maxmemory-policy allkeys-lru` and set memory limits
-- [ ] `[P1]` Add Redis Sentinel or Redis Cluster for HA (no single point of failure)
-- [ ] `[P1]` Implement RedLock for distributed locking on battle state mutations
-- [ ] `[P2]` Enforce key namespacing convention: `eduscale:{env}:{domain}:{key}` across all services
-
-### 1.3 WebSocket / Real-time
-- [x] `[P0]` Install and configure `@socket.io/redis-adapter` — **Done 2026-03-26**
-- [x] `[P0]` Migrate `userSockets` and `battleRooms` from in-memory Maps to Redis Sets — **Done 2026-03-26**
-- [ ] `[P1]` Implement Redis-backed heartbeat for user presence (SETEX 30s TTL, refreshed on ping)
-- [ ] `[P1]` Add Socket.io sticky sessions at AWS ALB (cookie-based)
-- [ ] `[P2]` Add connection rate limiting per IP on WebSocket upgrade
-
-### 1.4 Application Servers
-- [x] `[P0]` Switch to PM2 cluster mode (one worker per vCPU) — `ecosystem.config.js` — **Done 2026-03-27**
-- [ ] `[P1]` Add `HEALTHCHECK` to Dockerfile; configure ECS health check on `/api/v1/health`
-- [ ] `[P1]` Set up ECS auto-scaling on CPU >70% / memory >80% CloudWatch alarms
-- [ ] `[P2]` Extract code execution (Judge0/Piston proxy) into its own microservice
-
-### 1.5 Caching Architecture
-- [x] `[P0]` Implement Cache-Aside for: Roadmaps (TTL 24h), Leaderboards (TTL 60s) — **Done 2026-03-27**
-- [ ] `[P1]` Cache `/api/v1/stats/summary` for 5 minutes in Redis
-- [ ] `[P1]` Add ETag / `Cache-Control: max-age` headers on static API responses
-- [ ] `[P2]` Implement stale-while-revalidate for leaderboard endpoints
-
-### 1.6 CDN & Frontend
-- [ ] `[P0]` Verify all Cloudinary uploads use `f_auto,q_auto` transformation params
-- [ ] `[P1]` Enable Next.js ISR on article and roadmap pages
-- [ ] `[P1]` Add `<link rel="preconnect">` and font subsetting to eliminate render-blocking
-- [ ] `[P2]` Code-split Monaco Editor behind dynamic import; run `@next/bundle-analyzer`
+**Priority:** `[P0]` Blocking | `[P1]` High | `[P2]` Medium | `[P3]` Nice to have
 
 ---
 
-## Phase 2 — Reliability & Observability
+## P0 — Must ship before production
 
-### 2.1 Structured Logging
-- [x] `[P0]` Remove all `console.*` from `src/` — replaced with Winston logger — **Done 2026-03-27**
-- [x] `[P0]` JSON log format in production (machine-parseable for CloudWatch/Datadog) — **Done 2026-03-27**
-- [x] `[P1]` `requestId` UUID middleware — every log line in a request carries the ID — **Done 2026-03-27**
-- [ ] `[P1]` Log all auth events (login, logout, failed attempt) at INFO level with userId
-- [ ] `[P1]` Ship logs to CloudWatch Logs via ECS log driver (`awslogs`)
-- [ ] `[P2]` Log rotation and 30-day retention policy
+### Security
+- [ ] Resource ownership guards — `req.user.id === resource.userId` on all write operations
+- [ ] Secrets scan — `git log -S <pattern>` + `gitleaks`; rotate any exposed secrets
+- [ ] Fix Google OAuth — wrong Supabase OAuth project configured (see SETUP.md §1)
+- [ ] JWT refresh token rotation — 15m access token + 7d refresh in `httpOnly` cookie
+- [ ] Enforce Zod/Joi schema validation at every controller — 66 raw `req.body` accesses remain
 
-### 2.2 Metrics & Alerting
-- [x] `[P0]` Wire Sentry DSN in backend — `src/instrument.ts` imported before any other code — **Done 2026-03-27**
-- [ ] `[P0]` Wire Sentry DSN in frontend (`NEXT_PUBLIC_SENTRY_DSN` + `sentry.client.config.ts`)
-- [ ] `[P0]` Set up Sentry alerts: error rate >1% → PagerDuty/Slack notification
-- [ ] `[P1]` Prometheus metrics endpoint: request rate, p95 latency, DB query time, Redis hit/miss, WS connections, Bull queue depth
-- [ ] `[P1]` Grafana dashboard + SLO definitions (p95 < 500ms, uptime > 99.9%, error < 0.1%)
+### CI/CD
+- [ ] Branch protection on `main` — require PR review + passing CI before merge
+- [ ] `npm audit --audit-level=high` in GitHub Actions — fail build on high/critical CVEs
+- [ ] GitHub Actions CI workflow — `lint`, `typecheck`, `build` jobs
 
-### 2.3 Health Checks
-- [x] `[P0]` Deep health check on `/api/v1/health` (PostgreSQL + Redis + Bull) — **Done 2026-03-26**
-- [ ] `[P1]` Add `/api/v1/ready` liveness probe (ECS uses both `/health` and `/ready`)
-- [ ] `[P1]` Set up UptimeRobot or Better Uptime (external 1-min check interval)
+### Infrastructure
+- [ ] Staging environment — separate Supabase project + Redis instance
+- [ ] Startup env validation with Zod — crash fast on missing/invalid env vars
+- [ ] Prisma connection pooling via PgBouncer (pool_mode=transaction, pool_size=20+)
+- [ ] N+1 query audit on top 5 heaviest endpoints (battle list, dashboard, leaderboard)
 
-### 2.4 Error Handling
-- [x] `[P0]` Global Express error handler — `requestId` added to response body — **Done 2026-03-27**
-- [x] `[P0]` `unhandledRejection` + `uncaughtException` process handlers — **Done 2026-03-26**
-- [ ] `[P1]` Audit async controllers without `catchAsync` wrapper — add where missing
-- [ ] `[P1]` No raw stack traces in production error responses — verify current handler
+### Reliability
+- [ ] Wire Sentry in frontend — `NEXT_PUBLIC_SENTRY_DSN` + `sentry.client.config.ts`
+- [ ] Sentry alerts — error rate >1% → Slack/PagerDuty notification
 
-### 2.5 Circuit Breakers & Resilience
-- [ ] `[P1]` Circuit breaker (`opossum`) around Judge0/Piston code execution API
-- [ ] `[P1]` Circuit breaker around Cloudinary upload calls
-- [ ] `[P2]` Axios default timeout = 10s on all outbound HTTP calls
+### CDN / Frontend
+- [ ] Verify Cloudinary uploads use `f_auto,q_auto` transformation params
 
 ---
 
-## Phase 3 — Security Hardening
+## P1 — High priority (post-P0)
 
-### 3.1 Authentication
-- [ ] `[P0]` Fix Google OAuth — misconfigured Supabase OAuth provider (wrong project)
-- [ ] `[P0]` JWT refresh token rotation — short-lived access (15m) + long-lived refresh (7d in httpOnly cookie)
-- [x] `[P0]` JWT blocklist in Redis — `POST /api/v1/auth/logout` invalidates token for remaining TTL — **Done 2026-03-27**
-- [x] `[P1]` Auth endpoint rate limiting — `authLimiter` (5 req/15min/IP) on logout — **Done 2026-03-27**
-- [ ] `[P1]` Account lockout after 10 failed login attempts (30-min temporary lock)
-- [ ] `[P2]` TOTP-based 2FA with `otplib` + recovery codes
+### Database
+- [ ] Provision read replicas; route analytics + leaderboard reads to replica
+- [ ] Set `statement_timeout` and `idle_in_transaction_session_timeout` on PostgreSQL
 
-### 3.2 Authorization
-- [x] `[P0]` RBAC audit — `authorizeRoles('ADMIN')` added to rbacRoutes, articleRoutes, communityForumRoutes — **Done 2026-03-27**
-- [ ] `[P0]` Resource ownership — validate `req.user.id === resource.userId` on all write operations
-- [ ] `[P1]` Move authorization checks to repository layer, not just controllers
+### Redis
+- [ ] `maxmemory-policy allkeys-lru` + memory limit configured
+- [ ] Redis Sentinel / Redis Cluster for HA
+- [ ] RedLock for distributed locking on battle state mutations
 
-### 3.3 Input Validation & Sanitization
-- [ ] `[P0]` Enforce Zod/Joi schema validation at every controller entry point — 66 raw `req.body` accesses remain
-- [x] `[P0]` Sanitize user-generated HTML with `sanitize-html` — `sanitizeText` + `sanitizeRichText` utils wired into article and forum controllers — **Done 2026-03-27**
-- [ ] `[P1]` UUID / parseInt validation on all route params and query strings
-- [ ] `[P1]` File upload validation: type whitelist (jpeg/png/webp), 5MB max
+### WebSocket
+- [ ] Redis-backed heartbeat for user presence (SETEX 30s TTL, refresh on ping)
+- [ ] Socket.io sticky sessions at AWS ALB (cookie-based)
 
-### 3.4 API & Transport Security
-- [x] `[P0]` Remove hardcoded `http://` URLs — swagger.ts was the only occurrence, fixed — **Done 2026-03-27**
-- [x] `[P0]` Tighten Helmet.js CSP: explicit `script-src`, `connect-src`, `img-src`, `frame-ancestors` — **Done 2026-03-27**
-- [ ] `[P1]` Add `Referrer-Policy` and `Permissions-Policy` headers
-- [ ] `[P1]` Verify CSRF protection active on all cookie-based state-changing endpoints
+### Application
+- [ ] `HEALTHCHECK` in Dockerfile; ECS health check on `/api/v1/health`
+- [ ] ECS auto-scaling on CPU >70% / memory >80% CloudWatch alarms
+- [ ] `/api/v1/ready` liveness probe (separate from `/health`)
+- [ ] UptimeRobot or Better Uptime external monitoring (1-min interval)
 
-### 3.5 Secrets Management
-- [ ] `[P0]` Scan codebase + git history for hardcoded credentials (`git log -S <pattern>`)
-- [ ] `[P0]` Rotate any secrets potentially exposed in git history
-- [ ] `[P1]` Use AWS Secrets Manager or Doppler for ECS secret injection — no `.env` in containers
-- [ ] `[P1]` Verify `.env*` is in `.gitignore` and no env files are tracked
+### Caching
+- [ ] Cache `/api/v1/stats/summary` for 5 min in Redis
+- [ ] ETag / `Cache-Control: max-age` headers on stable API responses
 
----
+### Logging
+- [ ] Log all auth events (login, logout, failed attempt) at INFO with userId
+- [ ] Ship logs to CloudWatch via ECS `awslogs` log driver
 
-## Phase 4 — Testing & Quality
+### Error handling
+- [ ] Audit async controllers missing `catchAsync` wrapper
+- [ ] Circuit breaker (`opossum`) around Judge0 code execution
+- [ ] Circuit breaker around Cloudinary upload calls
 
-### 4.1 Backend Tests
-- [ ] `[P0]` Increase unit test coverage: controllers, services, repositories → target 80%
-- [ ] `[P0]` Integration tests: full auth flow (register → login → refresh → logout)
-- [ ] `[P1]` Integration tests: battle lifecycle (create → join → answer → complete → leaderboard)
-- [ ] `[P1]` Tests for all RBAC routes — verify 403 without correct role
-- [ ] `[P1]` Isolated test DB (`DATABASE_TEST_URL`) with separate Prisma instance
+### Security
+- [ ] Account lockout after 10 failed login attempts (30-min lock)
+- [ ] UUID / parseInt validation on all route params
+- [ ] File upload validation: type whitelist (jpeg/png/webp), 5MB max
+- [ ] `Referrer-Policy` and `Permissions-Policy` headers
+- [ ] CSRF protection verified on all cookie-based state-changing endpoints
+- [ ] AWS Secrets Manager or Doppler for ECS secret injection
+- [ ] Move authorization checks to repository layer, not just controllers
 
-### 4.2 Frontend Tests
-- [ ] `[P1]` Playwright E2E: Register → Login → Battle → Submit → Leaderboard critical path
-- [ ] `[P1]` Playwright accessibility audit on all primary pages (axe-core already installed)
+### CI/CD
+- [ ] Prisma schema validation step in CI (`prisma validate`)
+- [ ] Parallel CI jobs: lint + typecheck + test + build
+- [ ] Separate Supabase + Redis per environment (dev / staging / prod)
 
-### 4.3 Load Testing
-- [ ] `[P1]` k6 scripts: 10k concurrent users on dashboard, 1k concurrent battles, 500 code submissions
-- [ ] `[P1]` Run load tests against staging before every major release
+### Frontend
+- [ ] Next.js ISR on article and roadmap pages
+- [ ] `<link rel="preconnect">` + font subsetting (eliminate render-blocking)
 
-### 4.4 Code Quality
-- [ ] `[P1]` Eliminate all `: any` in backend codebase (48 instances)
-- [ ] `[P1]` Enable `strict: true` and `noImplicitAny: true` in both `tsconfig.json` files
-- [ ] `[P2]` Add `eslint-plugin-security` to ESLint config
-- [ ] `[P2]` Add `husky` pre-commit hooks: lint + type-check
+### Features
+- [ ] Implement `GET /api/v1/stats/summary` endpoint (used on landing page)
+- [ ] Wire leaderboard to real DB — confirm no mock data remains
+- [ ] Verify Bull email queue processes in production; add dead-letter queue
+- [ ] Stripe subscription billing (Free / Pro / Team tiers)
+- [ ] Feature gating middleware based on subscription tier
+- [ ] PostHog or Mixpanel product analytics
 
----
+### Testing
+- [ ] Unit test coverage to 80% — controllers, services, repositories
+- [ ] Integration tests: full auth flow (register → login → refresh → logout)
+- [ ] Integration tests: battle lifecycle (create → join → answer → complete → leaderboard)
+- [ ] Tests for all RBAC routes — verify 403 without correct role
+- [ ] Playwright E2E: Register → Login → Battle → Submit → Leaderboard
 
-## Phase 5 — CI/CD & DevOps
+### UX / Mobile
+- [ ] Fix hamburger menu Z-index overlap on mobile
+- [ ] Touch targets minimum 44×44px
+- [ ] Fix text overflow on 375px viewport
+- [ ] `aria-label` on all icon-only buttons and theme toggle
+- [ ] "Skip to Main Content" link as first focusable element
+- [ ] Skeleton loaders for async sections (roadmaps, battles, leaderboard)
 
-### 5.1 Pipeline
-- [ ] `[P0]` Branch protection on `main`: require PR review + passing CI before merge
-- [ ] `[P0]` `npm audit --audit-level=high` in CI — fail on high/critical CVEs
-- [ ] `[P1]` Parallel CI jobs: `lint`, `typecheck`, `test`, `build`
-- [ ] `[P1]` Prisma schema validation step in CI (`prisma validate`)
-- [ ] `[P2]` Blue/green deployment on ECS — zero-downtime releases
-- [ ] `[P2]` Auto-rollback on failed health check post-deploy
-
-### 5.2 Environments
-- [ ] `[P0]` Dedicated staging environment — all releases go through staging first
-- [ ] `[P1]` Separate Supabase projects and Redis instances per environment (dev/staging/prod)
-- [ ] `[P1]` Startup env validation (`zod` schema) — crash fast on misconfiguration
-
-### 5.3 Infrastructure as Code
-- [ ] `[P2]` Terraform for ECS, RDS, ElastiCache, ALB, ECR, CloudWatch
-- [ ] `[P3]` AWS WAF in front of ALB with OWASP managed rules
-
----
-
-## Phase 6 — Product & Feature Completeness
-
-### 6.1 Broken / Incomplete Features
-- [ ] `[P0]` Fix Google Social Login end-to-end (misconfigured Supabase OAuth provider)
-- [ ] `[P0]` Verify code execution pipeline (Judge0/Piston) in production with correct API keys
-- [ ] `[P1]` Implement `GET /api/v1/stats/summary` endpoint (used on landing page)
-- [ ] `[P1]` Wire leaderboard to real DB — replace any remaining static/mock data
-- [ ] `[P1]` Verify Bull email queue processes in production; add dead-letter queue
-
-### 6.2 Monetization
-- [ ] `[P1]` Stripe subscription billing (Free / Pro / Team tiers)
-- [ ] `[P1]` Feature gating middleware based on subscription tier
-- [ ] `[P2]` Stripe webhook handler for subscription lifecycle events
-- [ ] `[P2]` Admin billing dashboard: MRR, churn, trial conversions
-
-### 6.3 Analytics & Growth
-- [ ] `[P1]` PostHog or Mixpanel for product analytics (funnels, feature adoption)
-- [ ] `[P2]` Event tracking: signup, first battle, first challenge completed, subscription upgraded
+### Code Quality
+- [ ] Eliminate all `: any` in backend codebase (48 instances)
+- [ ] Enable `strict: true` + `noImplicitAny: true` in both tsconfigs
 
 ---
 
-## Phase 7 — UX / Accessibility
+## P2 — Medium priority
 
-### 7.1 Mobile
-- [ ] `[P1]` Fix hamburger menu Z-index overlap on mobile
-- [ ] `[P1]` Touch targets minimum 44×44px on all nav and interactive elements
-- [ ] `[P1]` Fix text overflow on 375px viewport (hero section, card grids)
-
-### 7.2 Accessibility (WCAG 2.1 AA)
-- [ ] `[P1]` `aria-label` on all icon-only buttons and theme toggle
-- [ ] `[P1]` "Skip to Main Content" link as first focusable element
-- [ ] `[P1]` Fix heading hierarchy (H1 → H2 → H3) across all pages
-
-### 7.3 Polish
-- [ ] `[P1]` Skeleton loaders for all async-data sections (roadmaps, battles, leaderboard)
-- [ ] `[P1]` Toast/feedback on guest redirect to protected routes
-- [ ] `[P2]` Empty state illustrations for no-battles, no-posts, no-progress
-
----
-
-## Phase 8 — Compliance & Legal
-
-- [ ] `[P0]` Publish Privacy Policy and Terms of Service (required before paying users)
-- [ ] `[P1]` GDPR data deletion endpoint — full account + data wipe on request
-- [ ] `[P1]` Cookie consent banner for EU users
-- [ ] `[P1]` Confirm personal data encrypted at rest (Supabase/RDS encryption enabled)
-- [ ] `[P2]` Data export endpoint — user downloads all their data as JSON/CSV
-- [ ] `[P2]` Verify `AdminAuditLog` is wired to all admin actions
+- [ ] Soft deletes (`deletedAt`) on User, Battle, Forum models
+- [ ] Partition `AnalyticsLog` table by month
+- [ ] Archive battles older than 90 days to cold storage
+- [ ] Stale-while-revalidate for leaderboard endpoints
+- [ ] Code-split Monaco Editor; run `@next/bundle-analyzer`
+- [ ] Blue/green deployment on ECS
+- [ ] Terraform for ECS, RDS, ElastiCache, ALB, ECR, CloudWatch
+- [ ] `eslint-plugin-security` + `husky` pre-commit hooks
+- [ ] Stripe webhook handler for subscription lifecycle events
+- [ ] TOTP-based 2FA with `otplib` + recovery codes
+- [ ] GDPR data deletion endpoint
+- [ ] Cookie consent banner for EU users
+- [ ] Data export endpoint (JSON/CSV)
+- [ ] Verify `AdminAuditLog` wired to all admin actions
 
 ---
 
-## Progress Tracker
+## P3 — Nice to have
 
-| Phase | Focus | P0s Done / Total P0s | Overall % |
-|:------|:------|:---------------------|:----------|
-| Phase 1 | Infrastructure & Scaling | 7 / 7 | 55% |
-| Phase 2 | Reliability & Observability | 6 / 6 | 80% |
-| Phase 3 | Security Hardening | 7 / 10 | 60% |
-| Phase 4 | Testing & Quality | 0 / 2 | 0% |
-| Phase 5 | CI/CD & DevOps | 0 / 3 | 0% |
-| Phase 6 | Feature Completeness | 0 / 2 | 5% |
-| Phase 7 | UX / Accessibility | 0 / 0 | 0% |
-| Phase 8 | Compliance & Legal | 0 / 1 | 0% |
+- [ ] AWS WAF in front of ALB with OWASP managed rules
+- [ ] Extract code execution into its own microservice
+- [ ] Log rotation and 30-day retention policy
 
 ---
 
-## Next Session — Planned P0 Work
+## Progress
 
-All Phase 1 and Phase 2 P0s are now complete. Remaining P0 gates to production:
+| Phase | P0s Done / Total | Status |
+|:------|:-----------------|:-------|
+| Phase 1 — Infrastructure | 7 / 7 | ✅ All P0s done |
+| Phase 2 — Reliability | 6 / 6 | ✅ All P0s done |
+| Phase 3 — Security | 7 / 10 | 🔶 3 P0s remain |
+| Phase 4 — Testing | 0 / 2 | ⬜ Not started |
+| Phase 5 — CI/CD | 0 / 3 | ⬜ Not started |
+| Phase 6 — Features | 0 / 2 | ⬜ Not started |
+| Phase 7 — UX | 0 / 0 | — |
+| Phase 8 — Compliance | 0 / 1 | ⬜ Not started |
 
-### Batch A — Security (remaining P0s)
-1. `[P0]` Resource ownership guards — `req.user.id === resource.userId` on all write ops
-2. `[P0]` Secrets scan + rotation (`git log -S <pattern>` + `gitleaks`)
-3. `[P0]` Fix Google OAuth (wrong Supabase project configured)
-4. `[P0]` JWT refresh token rotation (15m access + 7d httpOnly refresh cookie)
-
-### Batch B — CI/CD (P0 gates)
-5. `[P0]` Branch protection on `main` (PR review + passing CI required)
-6. `[P0]` `npm audit --audit-level=high` in GitHub Actions CI
-7. `[P0]` Staging environment (separate Supabase project + Redis instance)
-
-### Batch C — Frontend reliability
-8. `[P0]` Wire Sentry in frontend — `NEXT_PUBLIC_SENTRY_DSN` + `sentry.client.config.ts`
-9. `[P1]` Startup env validation with Zod schema (crash-fast on misconfiguration)
-
----
-
-> P0 items gate production readiness. No new features until all P0s across Phases 1–3 and 5 are green.
+> P0 items gate production launch. No new features until all P0s are green.
