@@ -42,7 +42,7 @@ export default function ContactContent() {
             <div className="rounded-xl border border-border bg-card p-5">
               <h2 className="text-lg font-semibold text-foreground">Email</h2>
               <p className="mt-2 text-muted-foreground">
-                contact@exaveltech.com
+                contact@eduscale.com
               </p>
             </div>
             <div className="rounded-xl border border-border bg-card p-5">
