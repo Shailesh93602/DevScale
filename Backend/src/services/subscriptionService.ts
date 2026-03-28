@@ -9,7 +9,7 @@ const subscriptionRepo = new SubscriptionRepository();
 const userRepo = new UserRepository();
 
 export async function createCheckoutSession(userId: string, priceId: string) {
-  const user = await userRepo.findUnique({ where: { id: userId } });
+  const user = await userRepo.findUnique({ where: { id: userId }, include: { subscription: true } }) as (Awaited<ReturnType<typeof userRepo.findUnique>> & { subscription?: { stripe_customer_id?: string | null } }) | null;
   if (!user) throw createAppError('User not found', 404);
 
   let stripeCustomerId = user.subscription?.stripe_customer_id;
@@ -36,7 +36,7 @@ export async function createCheckoutSession(userId: string, priceId: string) {
 }
 
 export async function createPortalSession(userId: string) {
-  const user = await userRepo.findUnique({ where: { id: userId }, include: { subscription: true } });
+  const user = await userRepo.findUnique({ where: { id: userId }, include: { subscription: true } }) as (Awaited<ReturnType<typeof userRepo.findUnique>> & { subscription?: { stripe_customer_id?: string | null } }) | null;
   if (!user || !user.subscription?.stripe_customer_id) {
     throw createAppError('Stripe customer not found', 404);
   }
@@ -71,7 +71,11 @@ async function _handleCheckoutSessionCompleted(session: any) {
   const stripeSubscriptionId = session.subscription as string;
   const stripeCustomerId = session.customer as string;
 
-  const subscription = await stripe.subscriptions.retrieve(stripeSubscriptionId);
+  const subscription = await stripe.subscriptions.retrieve(stripeSubscriptionId) as unknown as {
+    items: { data: Array<{ price: { id: string } }> };
+    status: string;
+    current_period_end: number;
+  };
   const priceId = subscription.items.data[0].price.id;
 
   await subscriptionRepo.upsertSubscription(userId, {
