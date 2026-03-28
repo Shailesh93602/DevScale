@@ -14,8 +14,9 @@ interface EmailData {
   }>;
 }
 
-// Create email queue
+// Create email queue and dead-letter queue
 const emailQueue = new Queue('email-queue', REDIS_URL);
+const emailDLQ = new Queue('email-dlq', REDIS_URL);
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -52,10 +53,31 @@ emailQueue.process(async (job) => {
     logger.info(`Email sent: ${info.messageId}`);
     await trackEmailDelivery(to, subject, 'delivered');
   } catch (error) {
-    logger.error('Error sending email:', error);
+    logger.error(`Error sending email (Job ${job.id}):`, error);
     await trackEmailDelivery(to, subject, 'failed');
     throw error;
   }
+});
+
+// Handle failed jobs and move to DLQ
+emailQueue.on('failed', async (job, error) => {
+  if (job.attemptsMade >= (job.opts.attempts || 1)) {
+    logger.error(`Job ${job.id} definitively failed. Moving to DLQ. Error: ${error.message}`);
+    await emailDLQ.add({
+      originalJobId: job.id,
+      data: job.data,
+      error: error.message,
+      failedAt: new Date(),
+    });
+  } else {
+    logger.warn(`Job ${job.id} failed (${job.attemptsMade} attempts). Retrying... Error: ${error.message}`);
+  }
+});
+
+// Process DLQ (just for logging/alerting — manual intervention required)
+emailDLQ.process(async (job) => {
+  logger.error('CRITICAL: Email in Dead-Letter Queue requires review:', job.data);
+  // Optional: Send alert to admin
 });
 
 // Track email delivery status
@@ -78,10 +100,7 @@ const trackEmailDelivery = async (
   }
 };
 
-// Handle failed jobs
-emailQueue.on('failed', (job, error) => {
-  logger.error(`Job ${job.id} failed:`, error);
-});
+
 
 export const sendVerificationEmail = async (
   to: string,
