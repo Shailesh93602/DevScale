@@ -4,12 +4,28 @@ import { PaginatedResult, PaginationParams } from '../types/index.js';
 import { PrismaClient } from '@prisma/client';
 import prisma from '../lib/prisma.js';
 
-type PrismaDelegate = Record<string, any>;
+// Define a shape for Prisma delegate methods we support.
+// We use type casting inside the BaseRepository to keep it generic,
+// but sub-classes provide strongly typed methods that call these.
+export type PrismaDelegate = {
+  findUnique?: (args: any) => Promise<any>;
+  findFirst?: (args: any) => Promise<any>;
+  findMany?: (args: any) => Promise<any[]>;
+  create?: (args: any) => Promise<any>;
+  createMany?: (args: any) => Promise<any>;
+  update?: (args: any) => Promise<any>;
+  updateMany?: (args: any) => Promise<any>;
+  delete?: (args: any) => Promise<any>;
+  deleteMany?: (args: any) => Promise<any>;
+  upsert?: (args: any) => Promise<any>;
+  count?: (args: any) => Promise<number>;
+  groupBy?: (args: any) => Promise<any[]>;
+};
 
 // src/repositories/baseRepository.ts
-export default abstract class BaseRepository<D extends PrismaDelegate> {
+export default abstract class BaseRepository<T, D extends PrismaDelegate = PrismaDelegate> {
   protected prismaClient: PrismaClient;
-  protected delegate: PrismaDelegate;
+  protected delegate: D;
 
   constructor(delegate: D) {
     this.prismaClient = prisma;
@@ -19,85 +35,85 @@ export default abstract class BaseRepository<D extends PrismaDelegate> {
   /**
    * Finds a unique record.
    */
-  async findUnique(args: any): Promise<any> {
-    return this.delegate.findUnique?.(args);
+  async findUnique(args: unknown): Promise<T | null> {
+    return this.delegate.findUnique?.(args as any);
   }
 
   /**
    * Finds the first record.
    */
-  async findFirst(args: any): Promise<any> {
-    return this.delegate.findFirst?.(args);
+  async findFirst(args: unknown): Promise<T | null> {
+    return this.delegate.findFirst?.(args as any);
   }
 
   /**
    * Finds multiple records.
    */
-  async findMany(args?: any): Promise<any[]> {
-    return this.delegate.findMany?.(args) || [];
+  async findMany(args?: unknown): Promise<T[]> {
+    return this.delegate.findMany?.(args as any) || [];
   }
 
   /**
    * Creates a new record.
    */
-  async create(args: any): Promise<any> {
-    return this.delegate.create?.(args);
+  async create(args: unknown): Promise<T> {
+    return this.delegate.create?.(args as any);
   }
 
   /**
    * Creates multiple records.
    */
-  async createMany(args: any): Promise<any> {
-    return this.delegate.createMany?.(args);
+  async createMany(args: unknown): Promise<{ count: number }> {
+    return this.delegate.createMany?.(args as any) || { count: 0 };
   }
 
   /**
    * Updates an existing record.
    */
-  async update(args: any): Promise<any> {
-    return this.delegate.update?.(args);
+  async update(args: unknown): Promise<T> {
+    return this.delegate.update?.(args as any);
   }
 
   /**
    * Updates multiple records.
    */
-  async updateMany(args: any): Promise<any> {
-    return this.delegate.updateMany?.(args);
+  async updateMany(args: unknown): Promise<{ count: number }> {
+    return this.delegate.updateMany?.(args as any) || { count: 0 };
   }
 
   /**
    * Deletes a record.
    */
-  async delete(args: any): Promise<any> {
-    return this.delegate.delete?.(args);
+  async delete(args: unknown): Promise<T> {
+    return this.delegate.delete?.(args as any);
   }
 
   /**
    * Deletes multiple records.
    */
-  async deleteMany(args: any): Promise<any> {
-    return this.delegate.deleteMany?.(args);
+  async deleteMany(args: unknown): Promise<{ count: number }> {
+    return this.delegate.deleteMany?.(args as any) || { count: 0 };
   }
 
   /**
    * Upserts a record.
    */
-  async upsert(args: any): Promise<any> {
-    return this.delegate.upsert?.(args);
+  async upsert(args: unknown): Promise<T> {
+    return this.delegate.upsert?.(args as any);
   }
 
   /**
    * Counts records matching the criteria.
    */
-  async count(args?: any): Promise<number> {
-    return this.delegate.count?.(args) || 0;
+  async count(args?: unknown): Promise<number> {
+    return this.delegate.count?.(args as any) || 0;
   }
 
   /**
    * Get records grouped by a specific field.
    */
-  async groupBy(args: any): Promise<any> {
-    return this.delegate.groupBy?.(args);
+  async groupBy(args: unknown): Promise<any[]> {
+    return this.delegate.groupBy?.(args as any) || [];
   }
 
   /**
@@ -111,13 +127,15 @@ export default abstract class BaseRepository<D extends PrismaDelegate> {
   async paginate(
     options: PaginationParams,
     searchFields?: string[],
-    selection?: { include?: Record<string, any>; select?: Record<string, any> },
-    whereClause: Record<string, any> = {}
-  ): Promise<PaginatedResult<any>> {
+    selection?: { include?: Record<string, unknown>; select?: Record<string, unknown> },
+    whereClause: Record<string, unknown> = {}
+  ): Promise<PaginatedResult<T>> {
     const page = options.page || 1;
     const limit = options.limit || 10;
     const skip = (page - 1) * limit;
-    let finalWhere = { ...whereClause };
+    
+    // Internal logic uses 'any' to interact with Prisma's complex 'where' types.
+    let finalWhere: any = { ...whereClause };
 
     // If search text is provided and search fields exist, add search conditions.
     if (options.search && searchFields && searchFields.length > 0) {
@@ -152,16 +170,16 @@ export default abstract class BaseRepository<D extends PrismaDelegate> {
     }
 
     const [total, data] = await Promise.all([
-      this.delegate.count?.({ where: finalWhere }) || Promise.resolve(0),
-      this.delegate.findMany?.({
+      (this.delegate.count?.({ where: finalWhere }) || Promise.resolve(0)),
+      (this.delegate.findMany?.({
         where: finalWhere,
         skip,
         take: limit,
         orderBy: options.sort
-          ? { [options.sort.field]: options.sort.direction }
+          ? { [options.sort.field]: (options.sort as any).direction }
           : undefined,
         ...selection,
-      }) || Promise.resolve([]),
+      }) || Promise.resolve([])) as Promise<T[]>,
     ]);
 
     const totalPages = Math.ceil(total / limit);

@@ -76,8 +76,7 @@ export interface PaginationParams {
   page: number;
   limit: number;
   search?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  filter?: Record<string, any>;
+  filter?: Record<string, unknown>;
   sort?: {
     field: string;
     direction: 'asc' | 'desc';

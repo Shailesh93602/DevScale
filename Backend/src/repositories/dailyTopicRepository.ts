@@ -1,8 +1,8 @@
 import { PrismaClient, Status, Topic } from '@prisma/client';
-import { createAppError } from '../utils/errorHandler';
-import BaseRepository from './baseRepository';
+import { createAppError } from '../utils/errorHandler.js';
+import BaseRepository from './baseRepository.js';
 
-import prisma from '../lib/prisma';
+import prisma from '../lib/prisma.js';
 
 interface DailyTopicStats {
   views: number;

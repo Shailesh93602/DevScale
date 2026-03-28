@@ -1,7 +1,7 @@
 import { ActivityType, Prisma } from '@prisma/client';
 import { DateTime } from 'luxon';
-import BaseRepository from './baseRepository';
-import prisma from '../lib/prisma';
+import BaseRepository from './baseRepository.js';
+import prisma from '../lib/prisma.js';
 import {
   StreakStats,
   DailyActivity,
