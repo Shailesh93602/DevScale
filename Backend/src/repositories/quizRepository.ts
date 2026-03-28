@@ -2,6 +2,7 @@ import {
   Prisma,
   PrismaClient,
   Quiz,
+  Question,
   QuizSubmission,
   QuizType,
 } from '@prisma/client';
@@ -70,22 +71,10 @@ export default class QuizRepository extends BaseRepository<
       const question = quiz.questions.find((q) => q.id === answer.question_id);
       if (!question) continue;
 
-      let isCorrect = false;
-      let score = 0;
-
-      if (question.type === 'coding') {
-        const testResults = await this.evaluateCode(
-          answer.answer,
-          Array.isArray(question.test_cases)
-            ? (question.test_cases as unknown as TestCase[])
-            : undefined
-        );
-        isCorrect = testResults.every((r) => r.passed);
-        score = isCorrect ? question.points : 0;
-      } else {
-        isCorrect = answer.answer === question.correct_answer;
-        score = isCorrect ? question.points : 0;
-      }
+      const { isCorrect, score } = await this.calculateAnswerScore(
+        answer.answer,
+        question
+      );
 
       totalScore += score;
       results.push({ question_id: question.id, is_correct: isCorrect, score });
@@ -150,6 +139,30 @@ export default class QuizRepository extends BaseRepository<
           : 0,
         averageScore,
       },
+    };
+  }
+
+  private async calculateAnswerScore(
+    userAnswer: string,
+    question: Question
+  ): Promise<{ isCorrect: boolean; score: number }> {
+    let isCorrect = false;
+
+    if (question.type === 'coding') {
+      const testResults = await this.evaluateCode(
+        userAnswer,
+        Array.isArray(question.test_cases)
+          ? (question.test_cases as unknown as TestCase[])
+          : undefined
+      );
+      isCorrect = testResults.every((r) => r.passed);
+    } else {
+      isCorrect = userAnswer === question.correct_answer;
+    }
+
+    return {
+      isCorrect,
+      score: isCorrect ? question.points : 0,
     };
   }
 
