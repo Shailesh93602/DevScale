@@ -1,7 +1,11 @@
-import Redis from 'ioredis';
+import { Redis } from 'ioredis';
 import Redlock from 'redlock';
-import logger from '../utils/logger';
-import { REDIS_URL } from '../config';
+import logger from '../utils/logger.js';
+import { REDIS_URL } from '../config/index.js';
+
+type RedlockClient = ConstructorParameters<typeof Redlock>[0] extends Iterable<infer T>
+  ? T
+  : never;
 
 type CacheOptions = {
   ttl?: number;
@@ -17,7 +21,7 @@ export const redis = new Redis(REDIS_URL, {
 });
 
 export const redlock = new Redlock(
-  [redis],
+  [redis as unknown as RedlockClient],
   {
     // The expected clock drift; for more check http://redis.io/topics/distlock
     driftFactor: 0.01, // time in ms
@@ -39,7 +43,7 @@ export const redlock = new Redlock(
   }
 );
 
-redlock.on('error', (error: Error) => {
+redlock.on('clientError', (error: Error) => {
   // Ignore 'resource_locked' errors as they are part of the normal flow
   if (error.name !== 'ResourceLockedError') {
     logger.error('Redlock Error:', error);
