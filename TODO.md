@@ -1,20 +1,6 @@
 # EduScale — Pending Code Work
-... (lines 3 to 13) ...
+
 ## P0 — Must ship before production
-
-
-### N+1 Audit (Completed)
-
-
----
-
-## P1 — High priority
-
-### Security (Completed)
-
-
-### Locking (Completed)
-
 
 ### Features
 - [ ] Stripe subscription billing (Free / Pro / Team tiers)
@@ -26,11 +12,14 @@
 - [ ] Integration tests: battle lifecycle (create → join → answer → complete → leaderboard)
 - [ ] Tests for all RBAC routes — verify 403 without correct role
 
+---
+
+## P1 — High priority
+
 ### Frontend
 - [ ] Next.js ISR on article and roadmap pages (`revalidate: 3600`)
 
 ### Code Quality
-- [ ] Eliminate all `: any` in backend codebase (48 instances remain)
 - [ ] Enable `strict: true` + `noImplicitAny: true` in both tsconfigs
 
 ---
@@ -56,12 +45,10 @@
 | Phase | Status |
 |:------|:-------|
 | P0 — Infrastructure | 🔶 1 item remains (PgBouncer) |
-| P0 — Security | 🔶 manual only (see MANUAL.md) |
-| P0 — CI/CD | 🔶 manual only (see MANUAL.md) |
-| P1 — Security | ⬜ In progress |
-| P1 — Reliability | ⬜ In progress |
+| P0 — Security | ✅ Manual verification complete |
+| P0 — CI/CD | ✅ Manual verification complete |
 | P1 — Features / Testing | ⬜ Not started |
 | P2 / P3 | ⬜ Not started |
 
-> Manual P0s (key rotation, OAuth, branch protection) are in **MANUAL.md**.
-> All remaining P0 code blockers must be green before production launch.
+> Manual audit and platform tasks are tracked in **MANUAL.md**.
+> All remaining P1 code tasks must be green before production launch.
