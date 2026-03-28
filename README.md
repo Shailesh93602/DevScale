@@ -239,4 +239,4 @@ EduScale's master roadmap focuses on bringing deep, AI-centric enterprise featur
 
 **EduScale** is proprietary software and architecture conceptually built for premier deployment.
 
-Built and maintained with ❤️ by the EduScale Development Team & [Exavel Technologies](https://exaveltech.com). All Rights Reserved.
+Built and maintained with ❤️ by [Shailesh Chaudhari](https://shaileshchaudhari.vercel.app). All Rights Reserved.
