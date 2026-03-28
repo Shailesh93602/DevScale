@@ -23,7 +23,10 @@ All shipped items, grouped by session. Newest first.
 | **Branch Protection** — enabled on `main` branch (PR requirement, status check enforcement) | `MANUAL.md` |
 | **Audit Log Verification** — verified `AdminAuditLog` wiring for all destructive admin actions; completed production `leaderboardRepository` data audit | `MANUAL.md`, `LeaderboardRepository.ts` |
 
-### Docs & Process
+| **Billing Foundation** — installed `stripe` SDK; refactored `Subscription` model for one-to-one user mapping; migrated DB with `stripe_customer_id` and `stripe_id` fields | `Backend/prisma/schema.prisma`, `Backend/package.json` |
+| **Subscription Architecture** — implemented `SubscriptionRepository` and `SubscriptionService` for automated checkout sessions, billing portals, and multi-tier (`free`, `pro`, `team`) management | `Backend/src/repositories/subscriptionRepository.ts`, `Backend/src/services/subscriptionService.ts` |
+| **Stripe Integration** — initialized `stripe.ts` library with environment validation; implemented public high-performance webhook route under `/api/v1/billing/stripe/webhook` with raw body parsing for signature security | `Backend/src/lib/stripe.ts`, `Backend/src/main.ts`, `Backend/src/routes/subscriptionRoutes.ts` |
+| **Feature Gating** — developed `subscriptionGating.ts` middleware for `requirePro` and `requireTeam` access control; updated `authMiddleware` to include the `subscription` relation globally | `Backend/src/middlewares/subscriptionGating.ts`, `Backend/src/middlewares/authMiddleware.ts` |
 | Item | File(s) |
 |------|---------|
 | Created `MANUAL.md` for platform tasks; removed redundant infra/Docker tasks from `TODO.md` | `MANUAL.md`, `TODO.md` |
