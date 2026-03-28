@@ -145,3 +145,53 @@ export async function getWithLock<T>(
     await redis.del(lockKey);
   }
 }
+
+/**
+ * Stale-while-revalidate (SWR) Pattern
+ * 1. If fresh data exists in cache (within TTL), return it.
+ * 2. If stale data exists (after TTL but before grace period), return it immediately
+ *    and trigger an asynchronous revalidation in the background.
+ * 3. If no data exists, wait for a fresh fetch and cache it.
+ */
+export async function getWithSWR<T>(
+  key: string,
+  callback: () => Promise<T>,
+  options: CacheOptions & { staleTtl?: number } = {}
+): Promise<T> {
+  const { ttl = 60, staleTtl = 3600 } = options;
+  const staleKey = `stale:${key}`;
+  
+  // Try to find fresh data
+  const cached = await getCache<T>(key);
+  if (cached) return cached;
+
+  // Try to find stale data (grace period up to staleTtl)
+  const stale = await getCache<T>(staleKey);
+  if (stale) {
+    // Return stale data immediately and revalidate in background
+    // Use a lock to prevent multiple simultaneous background revalidations
+    (async () => {
+      const lockKey = `revalidate:lock:${key}`;
+      const acquired = await redis.set(lockKey, '1', 'EX', 30, 'NX');
+      if (acquired) {
+        try {
+          const fresh = await callback();
+          await setCache(key, fresh, { ttl });
+          await setCache(staleKey, fresh, { ttl: staleTtl });
+        } catch (error) {
+          logger.error('SWR Background Revalidation Error:', error);
+        } finally {
+          await redis.del(lockKey);
+        }
+      }
+    })().catch(); // Don't await background revalidation
+
+    return stale;
+  }
+
+  // No data at all — block and fetch fresh
+  const fresh = await callback();
+  await setCache(key, fresh, { ttl });
+  await setCache(staleKey, fresh, { ttl: staleTtl });
+  return fresh;
+}

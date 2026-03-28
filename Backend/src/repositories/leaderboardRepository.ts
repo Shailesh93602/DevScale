@@ -1,9 +1,10 @@
 import { PrismaClient } from '@prisma/client';
 import BaseRepository from './baseRepository.js';
 import prisma from '../lib/prisma.js';
-import { getOrSetCache, deleteCache } from '../services/cacheService.js';
+import { getWithSWR, deleteCache } from '../services/cacheService.js';
 
-const LEADERBOARD_TTL = 60; // 60 seconds — leaderboard is high-read, tolerates 1-min staleness
+const LEADERBOARD_TTL = 60; // 60 seconds (fresh)
+const LEADERBOARD_STALE_TTL = 3600; // 1 hour (grace period)
 const cacheKey = (subjectId: string, timeRange: string, limit: number) =>
   `eduscale:leaderboard:${subjectId}:${timeRange}:${limit}`;
 
@@ -16,10 +17,10 @@ export default class LeaderboardRepository extends BaseRepository<
 
   async getLeaderboard(subject_id: string, time_range: string, limit: number) {
     const key = cacheKey(subject_id, time_range, limit);
-    return getOrSetCache(
+    return getWithSWR(
       key,
       () => this._queryLeaderboard(subject_id, time_range, limit),
-      { ttl: LEADERBOARD_TTL },
+      { ttl: LEADERBOARD_TTL, staleTtl: LEADERBOARD_STALE_TTL },
     );
   }
 

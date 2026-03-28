@@ -212,7 +212,7 @@ export default function CareerPathPage() {
       } else {
         toast.error('Failed to enroll. Please try again.');
       }
-    } catch (e) {
+    } catch {
       toast.error('Failed to enroll. Please try again.');
     } finally {
       setIsEnrolling(false);
@@ -242,10 +242,11 @@ export default function CareerPathPage() {
     dispatch(showLoader('fetching roadmap'));
     try {
       const detailsResponse = await getRoadmapDetails({}, { careerId });
-      const roadmapDataRaw = detailsResponse.data as any;
-      const roadmapData = roadmapDataRaw?.data
-        ? roadmapDataRaw.data
-        : roadmapDataRaw;
+      const roadmapDataRaw = detailsResponse.data;
+      const roadmapData =
+        roadmapDataRaw && 'data' in roadmapDataRaw
+          ? (roadmapDataRaw.data as RoadmapDetails & { main_concepts: IRoadmap[] })
+          : roadmapDataRaw;
 
       if (roadmapData) {
         setRoadmapDetails(roadmapData);
@@ -330,11 +331,11 @@ export default function CareerPathPage() {
       await navigator.share({
         title: roadmapDetails?.title,
         text: roadmapDetails?.description,
-        url: window.location.href,
+        url: globalThis.location.href,
       });
     } catch {
       // Fallback to copying to clipboard
-      navigator.clipboard.writeText(window.location.href);
+      navigator.clipboard.writeText(globalThis.location.href);
       toast.success('Link copied to clipboard!');
     }
   };
@@ -424,7 +425,7 @@ export default function CareerPathPage() {
                                         </Badge>
                                       )}
                                     </div>
-                                    <h1 className="text-4xl font-bold tracking-tight text-foreground">
+                                    <h1 className="text-3xl font-bold tracking-tight text-foreground break-words sm:text-4xl">
                                       {roadmapDetails.title}
                                     </h1>
                                     <p className="text-lg text-muted-foreground">

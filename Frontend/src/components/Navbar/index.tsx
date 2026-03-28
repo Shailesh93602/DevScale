@@ -179,7 +179,7 @@ const Navbar = () => {
           type="button"
           aria-label="Close mobile menu"
           onClick={closeAllMenus}
-          className="fixed inset-0 top-[60px] z-[70] bg-black/20 lg:hidden"
+          className="fixed inset-0 top-[60px] z-[999] bg-black/20 backdrop-blur-[2px] lg:hidden"
         />
       )}
 
@@ -518,12 +518,12 @@ const MobileMenuOverlay = ({
           type="button"
           aria-label="Close mobile menu"
           onClick={closeAllMenus}
-          className="fixed inset-0 top-[60px] z-[70] bg-black/20 lg:hidden"
+          className="fixed inset-0 top-[60px] z-[999] bg-black/20 backdrop-blur-[2px] lg:hidden"
         />
       )}
       <div
         className={cn(
-          'absolute inset-x-0 top-[60px] z-[80] border-t border-border/40 bg-background/95 backdrop-blur-xl transition-all duration-300 ease-in-out lg:hidden',
+          'absolute inset-x-0 top-[60px] z-[1000] border-t border-border/40 bg-background/95 backdrop-blur-xl transition-all duration-300 ease-in-out lg:hidden',
           isOpen ? 'pointer-events-auto block' : 'pointer-events-none hidden',
         )}
       >

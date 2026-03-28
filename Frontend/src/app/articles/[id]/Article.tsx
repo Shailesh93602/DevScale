@@ -18,9 +18,17 @@ const sanitizeContent = (content: string) => {
   return DOMPurify.sanitize(content);
 };
 
-export default function Article({ id }: { id: string }) {
-  const [article, setArticle] = useState<IArticle>();
-  const [moderationNotes, setModerationNotes] = useState('');
+export default function Article({
+  id,
+  initialData,
+}: {
+  id: string;
+  initialData?: IArticle;
+}) {
+  const [article, setArticle] = useState<IArticle | undefined>(initialData);
+  const [moderationNotes, setModerationNotes] = useState(
+    initialData?.moderationNotes || '',
+  );
   const [newNote, setNewNote] = useState('');
   const [updateArticle] = useAxiosPost<{ success?: boolean }>(
     '/articles/{{articleId}}/moderation',
@@ -37,7 +45,7 @@ export default function Article({ id }: { id: string }) {
       if (response.data?.success) {
         toast.success('Moderation note saved successfully!');
         setNewNote('');
-        window.location.href = '/article-listing';
+        globalThis.location.href = '/article-listing';
       } else {
         toast.error('Failed to save moderation note.');
       }
@@ -64,8 +72,13 @@ export default function Article({ id }: { id: string }) {
   };
 
   useEffect(() => {
-    fetchResource();
-  }, [id]);
+    if (!initialData) {
+      const load = async () => {
+        await fetchResource();
+      };
+      load();
+    }
+  }, [id, initialData]);
   return (
     <>
       <Navbar />

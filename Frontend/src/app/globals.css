@@ -21,7 +21,8 @@
   body {
     @apply bg-bgColor text-dark;
     font-family:
-      'Inter',
+      var(--font-outfit),
+      var(--font-inter),
       system-ui,
       -apple-system,
       sans-serif;
