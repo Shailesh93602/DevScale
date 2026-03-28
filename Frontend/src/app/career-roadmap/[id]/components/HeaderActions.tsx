@@ -69,6 +69,7 @@ export const RoadmapHeaderActions = ({
               fillColor="#ef4444"
               isLoading={socialActionLoading.like}
               onClick={() => handleSocialAction(handleLike, 'like')}
+              aria-label={currentState.isLiked ? 'Unlike roadmap' : 'Like roadmap'}
             />
 
             <SocialButton
@@ -82,6 +83,7 @@ export const RoadmapHeaderActions = ({
               fillColor="#f97316"
               isLoading={socialActionLoading.bookmark}
               onClick={() => handleSocialAction(handleBookmark, 'bookmark')}
+              aria-label={currentState.isBookmarked ? 'Remove bookmark' : 'Bookmark roadmap'}
             />
           </div>
 
@@ -89,6 +91,7 @@ export const RoadmapHeaderActions = ({
             variant="ghost"
             size="icon"
             onClick={handleShare}
+            aria-label="Share roadmap"
             className="hover:bg-primary/10 h-10 w-10 rounded-full bg-muted transition-all"
           >
             <Share2 className="h-5 w-5 text-muted-foreground transition-colors hover:text-primary" />
@@ -140,6 +143,7 @@ interface SocialButtonProps {
   fillColor: string;
   isLoading: boolean;
   onClick: () => void;
+  'aria-label'?: string;
 }
 
 const SocialButton = ({ 
@@ -152,12 +156,14 @@ const SocialButton = ({
   hoverBg, 
   fillColor, 
   isLoading, 
-  onClick 
+  onClick,
+  'aria-label': ariaLabel
 }: SocialButtonProps) => (
   <Button
     variant="ghost"
     onClick={onClick}
     disabled={isLoading}
+    aria-label={ariaLabel}
     className={cn(
       'group flex h-auto items-center gap-2 p-0 transition-all duration-200 hover:bg-transparent',
       'disabled:opacity-70',

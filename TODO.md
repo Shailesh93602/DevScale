@@ -41,11 +41,11 @@ Manual / platform tasks → [MANUAL.md](MANUAL.md)
 ### Frontend
 - [ ] Next.js ISR on article and roadmap pages (`revalidate: 3600`)
 - [x] `<link rel="preconnect">` to API + font origins; subset fonts
-- [ ] Skeleton loaders for async sections (roadmaps, battles, leaderboard)
-- [ ] Fix hamburger menu Z-index overlap on mobile
-- [ ] Fix text overflow on 375px viewport
-- [ ] `aria-label` on all icon-only buttons and theme toggle
-- [ ] "Skip to Main Content" link as first focusable element
+- [x] Fix mobile hamburger menu Z-index overlap on mobile
+- [x] Fix text overflow on 375px viewport (P1)
+- [x] `aria-label` on all icon-only buttons and theme toggle (P1)
+- [x] Skeleton loaders for async sections (roadmaps, battles, leaderboard) (P1)
+- [x] "Skip to Main Content" link as first focusable element (P1)
 
 ### Code Quality
 - [ ] Eliminate all `: any` in backend codebase (48 instances remain)
