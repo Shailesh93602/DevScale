@@ -234,7 +234,7 @@ export default class QuizRepository extends BaseRepository<
       where: {
         user_id_topic_id: {
           user_id,
-          topic_id: topic_id as any,
+          topic_id: topic_id as string,
         },
       },
       update: { is_completed: true, completed_at: new Date() },
