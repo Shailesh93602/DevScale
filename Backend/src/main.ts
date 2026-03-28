@@ -21,6 +21,7 @@ import {
 import { AppRoutes } from './routes/routes';
 import { errorHandler } from './middlewares/errorHandler';
 import { requestIdMiddleware } from './middlewares/requestIdMiddleware';
+import { setCsrfToken, verifyCsrfToken } from './middlewares/csrfMiddleware';
 import logger from './utils/logger';
 import { v2 as cloudinary } from 'cloudinary';
 import prisma from './lib/prisma';
@@ -63,6 +64,11 @@ export class App {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
+    // CSRF Double-Submit Token Pattern (stateless)
+    // - setCsrfToken ensures the XSRF-TOKEN cookie exists
+    // - verifyCsrfToken validates the X-XSRF-TOKEN header for POST/PUT/DELETE
+    this.app.use(setCsrfToken);
+    this.app.use(verifyCsrfToken);
     this.app.use(
       cors({
         origin: function (origin, callback) {

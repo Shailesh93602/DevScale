@@ -1,114 +1,36 @@
-# EduScale — Manual Action Checklist
+# EduScale — Manual Platform & Audit Tasks
 
-Tasks that **cannot be done in code** — they require dashboard logins, platform configs, or infrastructure provisioning.
-Everything here blocks or supports production launch. Work through P0 first.
-
----
-
-
-## P1 — Do Before Scaling Beyond ~10k Users
-
-### 🗄️ Supabase — Enable Read Replica
-> Routes analytics and leaderboard reads off the primary.
-
-1. Upgrade to **Supabase Pro** (required for read replicas)
-2. Go to **Project Settings → Infrastructure → Read Replicas → Add replica**
-3. After provisioning, copy the replica connection string
-4. Add to Backend `.env`:
-   ```
-   DATABASE_READ_URL=postgresql://...
-   ```
-5. Tell the dev: update Prisma client to use `DATABASE_READ_URL` for `SELECT`-only queries (analytics, leaderboard)
-
-
-### 🧠 Redis — Memory Policy
-> Without this, Redis silently drops keys when full instead of evicting LRU.
-
-**Upstash (recommended):**
-1. Go to **Upstash Console → your Redis database → Config**
-2. Set `maxmemory-policy` = `allkeys-lru`
-3. Set `maxmemory` to ~80% of your plan limit
-
-**Self-hosted Redis:**
-```bash
-redis-cli CONFIG SET maxmemory-policy allkeys-lru
-redis-cli CONFIG SET maxmemory 400mb
-redis-cli CONFIG REWRITE   # persist to redis.conf
-```
-
-### 📊 Sentry — Error Rate Alerts
-1. Go to **Sentry → your backend project → Alerts → Create Alert Rule**
-2. Set condition: `Number of errors > 10 in 1 minute` → notify Slack `#alerts`
-3. Set condition: `Error rate > 1% in 5 minutes` → notify PagerDuty (if on-call set up)
-4. Repeat for the frontend Sentry project
-
-### 🔍 UptimeRobot — External Monitoring
-1. Sign up at **uptimerobot.com** (free tier covers 50 monitors, 5-min intervals)
-2. Create monitor: `GET https://your-api.com/api/v1/health/ready` — alert on non-200
-3. Create monitor: `GET https://your-frontend.vercel.app` — alert on non-200
-4. Configure email + Slack notifications
-
-### 🐳 Docker / ECS — HEALTHCHECK in Dockerfile
-> When the backend Dockerfile is created, add:
-```dockerfile
-HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
-  CMD curl -f http://localhost:5000/api/v1/health/ready || exit 1
-```
-
-### 📈 ECS — Auto-Scaling
-1. Go to **AWS ECS → your service → Update → Auto Scaling**
-2. Add **Target Tracking Policy**:
-   - Metric: `ECSServiceAverageCPUUtilization` → target 70%
-   - Min capacity: 2, Max capacity: 10
-3. Add second policy: `ECSServiceAverageMemoryUtilization` → target 80%
-
-### 🔒 AWS — Secrets Manager
-> Move all secrets out of ECS environment variables into Secrets Manager.
-
-1. Go to **AWS Secrets Manager → Store a new secret → Other type**
-2. Create one secret per service (`eduscale/backend/prod`, `eduscale/frontend/prod`)
-3. In ECS Task Definition, replace plaintext env vars with `valueFrom` ARN references
-4. Grant the ECS Task Role `secretsmanager:GetSecretValue` permission
-
-### 📦 AWS ALB — Socket.io Sticky Sessions
-> Without this, WebSocket reconnections land on different ECS tasks and break.
-
-1. Go to **AWS EC2 → Load Balancers → your ALB → Target Groups**
-2. Select your backend target group → **Actions → Edit attributes**
-3. Enable **Stickiness** → type: `lb_cookie` → duration: `1 day`
+This file tracks tasks that require manual verification in the Supabase Dashboard, Vercel, or other platform tools, as well as one-off audits that don't result in code changes.
 
 ---
 
-## P2 — Pre-GA / Growth Stage
+## P0 — Infrastructure & Security
 
-### 📊 PostHog or Mixpanel — Product Analytics
-1. Sign up at **posthog.com** (generous free tier) or **mixpanel.com**
-2. Add the SDK to `Frontend/` → track page views, battle starts, roadmap enrolls
-3. Create a dashboard: DAU, battle completion rate, roadmap completion rate
+### Key Rotation & OAuth
+- [x] Rotate Supabase JWT Secret and update all services (Backend, Frontend, GitHub Actions).
+- [x] Verify Google OAuth redirect URLs are correctly whitelisted in Supabase Dashboard and Google Cloud Console.
+- [x] Verify `SameSite=Strict` flag on all production cookies via Browser DevTools.
 
-### 🏗️ Terraform — Infrastructure as Code
-> Once ECS/RDS/Redis are manually provisioned and stable, encode them in Terraform
-> so staging ↔ prod parity is guaranteed and reprovisioning takes minutes.
-
-1. Install Terraform
-2. Modules to write: `ecs_service`, `rds_postgres`, `elasticache_redis`, `alb`, `ecr`, `cloudwatch_alarms`
-3. Store state in S3 with DynamoDB locking
-
-### 🔵 ECS — Blue/Green Deployment
-1. Go to **AWS CodeDeploy → Create application → ECS platform**
-2. Create a deployment group pointing at your ECS service
-3. Requires a second ALB target group (green) and listener rule
-
-### 🌐 AWS WAF — OWASP Rules
-1. Go to **AWS WAF → Create Web ACL → attach to your ALB**
-2. Add managed rule group: `AWSManagedRulesCommonRuleSet`
-3. Add managed rule group: `AWSManagedRulesSQLiRuleSet`
-4. Set default action: Allow
+### CI/CD & Compliance
+- [x] Enable branch protection on `main` branch (GitHub Settings: require PR, require status checks, restrict deletions).
+- [x] Audit Sentry alerts: Ensure critical errors notify `ALERT_EMAIL`.
 
 ---
 
-## Notes
+## P1 — Audits & Verification
 
-- Items marked **P0** must be done before any real users hit the production URL.
-- Items under "ECS" assume AWS ECS + ALB deployment. Adjust if using Railway, Fly.io, etc.
-- The dev side of each item (e.g. `DATABASE_READ_URL` Prisma routing) is tracked in `TODO.md`.
+### Code Audits
+- [ ] **Leaderboard Audit**: Verify `leaderboardRepository` has no mock or hardcoded data remaining from initial development.
+- [ ] **Admin Audit**: Verify `AdminAuditLog` is correctly wired to all destructive admin actions (Delete User, Delete Roadmap, Moderation).
+- [ ] **Email Queue**: Verify Bull email queue processes in production; manually check Redis `bull:` keys for stalls.
+
+### UI/UX Audits
+- [ ] **Mobile Touch Audit**: Audit all interactive elements on a physical device; ensure minimum 44×44px touch targets.
+- [ ] **Accessibility Audit**: Run `Lighthouse` / `axe` on critical flows (Register, Join Battle, Submit Code).
+
+---
+
+## How to complete these tasks
+1. Perform the manual action or investigation.
+2. If code changes are required, create a new item in `TODO.md` for the fix.
+3. Once verified, check the item here and optionally add a note in `DONE.md`.

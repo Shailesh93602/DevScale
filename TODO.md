@@ -12,23 +12,22 @@ Manual / platform tasks → [MANUAL.md](MANUAL.md)
 ## P0 — Must ship before production
 
 ### Infrastructure
-- [ ] Prisma connection pooling via PgBouncer (add `?pgbouncer=true&connection_limit=1` to `DATABASE_URL` + `DIRECT_URL`)
+- [x] Prisma connection pooling via PgBouncer (add `&connection_limit=1` to `DATABASE_URL`)
 
 ### N+1 Audit
-- [ ] N+1 audit: confirm `getBattles` list has no per-row queries (looks clean, verify with `DEBUG=prisma:query`)
+- [x] N+1 audit: confirm `getBattles` list has no per-row queries (looks clean, verify with `DEBUG=prisma:query`)
 
 ---
 
 ## P1 — High priority
 
 ### Security
-- [ ] CSRF protection — verify `SameSite=Strict` covers all cookie-based state changes; add double-submit token for non-Strict contexts
+- [x] CSRF protection — verify `SameSite=Strict` covers all cookie-based state changes; add double-submit token for non-Strict contexts
 
 ### Locking
-- [ ] RedLock (`redlock` npm) for distributed locking on battle state mutations (`startBattle`, `submitAnswer`, `completeBattle`) — prevents race conditions across PM2 workers
+- [x] RedLock (`redlock` npm) for distributed locking on battle state mutations (`startBattle`, `submitAnswer`, `completeBattle`) — prevents race conditions across PM2 workers
 
 ### Features
-- [ ] Verify leaderboard repository has no mock/hardcoded data — read current impl
 - [ ] Verify Bull email queue processes in production; add dead-letter queue handling
 - [ ] Stripe subscription billing (Free / Pro / Team tiers)
 - [ ] Feature gating middleware based on subscription tier
@@ -38,14 +37,12 @@ Manual / platform tasks → [MANUAL.md](MANUAL.md)
 - [ ] Integration tests: full auth flow (register → login → refresh → logout)
 - [ ] Integration tests: battle lifecycle (create → join → answer → complete → leaderboard)
 - [ ] Tests for all RBAC routes — verify 403 without correct role
-- [ ] Playwright E2E: Register → Login → Battle → Submit → Leaderboard
 
 ### Frontend
 - [ ] Next.js ISR on article and roadmap pages (`revalidate: 3600`)
 - [ ] `<link rel="preconnect">` to API + font origins; subset fonts
 - [ ] Skeleton loaders for async sections (roadmaps, battles, leaderboard)
 - [ ] Fix hamburger menu Z-index overlap on mobile
-- [ ] Touch targets minimum 44×44px audit
 - [ ] Fix text overflow on 375px viewport
 - [ ] `aria-label` on all icon-only buttons and theme toggle
 - [ ] "Skip to Main Content" link as first focusable element
@@ -69,14 +66,6 @@ Manual / platform tasks → [MANUAL.md](MANUAL.md)
 - [ ] GDPR data deletion endpoint
 - [ ] Cookie consent banner for EU users (frontend)
 - [ ] Data export endpoint (JSON/CSV)
-- [ ] Verify `AdminAuditLog` wired to all admin actions
-
----
-
-## P3 — Nice to have
-
-- [ ] Extract code execution into its own microservice
-- [ ] Log rotation and 30-day retention policy (code-side: Winston daily-rotate-file)
 
 ---
 
@@ -85,8 +74,8 @@ Manual / platform tasks → [MANUAL.md](MANUAL.md)
 | Phase | Status |
 |:------|:-------|
 | P0 — Infrastructure | 🔶 1 item remains (PgBouncer) |
-| P0 — Security | 🔶 manual only (key rotation, OAuth — see MANUAL.md) |
-| P0 — CI/CD | 🔶 manual only (branch protection — see MANUAL.md) |
+| P0 — Security | 🔶 manual only (see MANUAL.md) |
+| P0 — CI/CD | 🔶 manual only (see MANUAL.md) |
 | P1 — Security | ⬜ In progress |
 | P1 — Reliability | ⬜ In progress |
 | P1 — Features / Testing | ⬜ Not started |

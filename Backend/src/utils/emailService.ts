@@ -89,8 +89,7 @@ export const sendVerificationEmail = async (
 ): Promise<void> => {
   const verificationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
 
-  const mailOptions = {
-    from: MAIL_ADDRESS,
+  const mailOptions: EmailData = {
     to,
     subject: 'Verify your email address',
     html: `
@@ -101,11 +100,5 @@ export const sendVerificationEmail = async (
     `,
   };
 
-  try {
-    await transporter.sendMail(mailOptions);
-    logger.info(`Verification email sent to ${to}`);
-  } catch (error) {
-    logger.error('Error sending verification email:', error);
-    throw error;
-  }
+  await sendEmail(mailOptions);
 };

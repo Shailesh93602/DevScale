@@ -81,15 +81,21 @@ const Navbar = () => {
   }, [closeAllMenus, isDesktop]);
 
   useEffect(() => {
-    closeAllMenus();
-  }, [pathname, closeAllMenus]);
+    requestAnimationFrame(() => {
+      setIsOpen(false);
+      setDropdownOpen(false);
+      setBattleZoneOpen(false);
+    });
+  }, [pathname]);
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll);
-    setMounted(true);
+    
+    requestAnimationFrame(() => setMounted(true));
+    
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -146,18 +152,18 @@ const Navbar = () => {
                   : 'bg-muted/40 text-muted-foreground shadow-inner ring-1 ring-border/40 backdrop-blur-md',
               )}
             >
-              {navList.map((item, index) =>
-                item.path === '/battle-zone' ? (
-                  <div key={index} className="relative">
-                    <button
-                      onClick={toggleBattleZone}
-                      className={cn(
-                        'flex h-9 items-center gap-1.5 rounded-full px-4 text-[14px] font-bold transition-all duration-200 focus:outline-none',
-                        battleZoneOpen
-                          ? 'bg-primary/10 text-primary shadow-sm'
-                          : 'hover:bg-primary/5 text-muted-foreground hover:text-primary',
-                      )}
-                    >
+                {navList.map((item) =>
+                  item.path === '/battle-zone' ? (
+                    <div key="battle-zone" className="relative">
+                      <button
+                        onClick={toggleBattleZone}
+                        className={cn(
+                          'flex h-9 items-center gap-1.5 rounded-full px-4 text-[14px] font-bold transition-all duration-200 focus:outline-none',
+                          battleZoneOpen
+                            ? 'bg-primary/10 text-primary shadow-sm'
+                            : 'hover:bg-primary/5 text-muted-foreground hover:text-primary',
+                        )}
+                      >
                       {item.label}
                       <FiChevronDown
                         className={cn(
@@ -196,17 +202,17 @@ const Navbar = () => {
                       )}
                     </AnimatePresence>
                   </div>
-                ) : (
-                  <NavItem
-                    key={index}
-                    href={item.path}
-                    handleClick={handleLinkClick}
-                    isPill={!showPublicNavbar}
-                  >
-                    {item.label}
-                  </NavItem>
-                ),
-              )}
+                  ) : (
+                    <NavItem
+                      key={item.path}
+                      href={item.path}
+                      handleClick={handleLinkClick}
+                      isPill={!showPublicNavbar}
+                    >
+                      {item.label}
+                    </NavItem>
+                  ),
+                )}
             </div>
           </div>
 
@@ -214,7 +220,7 @@ const Navbar = () => {
           <div className="hidden shrink-0 items-center justify-end gap-3 lg:flex lg:w-48">
             <button
               onClick={toggleTheme}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-border/40 bg-background/50 text-foreground/60 shadow-sm backdrop-blur-lg transition-colors duration-200 hover:bg-foreground/5 hover:text-foreground focus:outline-none"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-border/40 bg-background/50 text-foreground/60 shadow-sm backdrop-blur-lg transition-colors duration-200 hover:bg-foreground/5 hover:text-foreground focus:outline-none"
               aria-label="Toggle theme"
             >
               {mounted && resolvedTheme === 'dark' ? (
@@ -343,7 +349,8 @@ const Navbar = () => {
           >
             <button
               onClick={toggleTheme}
-              className="flex h-9 w-9 items-center justify-center rounded-full text-foreground/70 transition-colors hover:bg-foreground/5 focus:outline-none"
+              className="flex h-11 w-11 items-center justify-center rounded-full text-foreground/70 transition-colors hover:bg-foreground/5 focus:outline-none"
+              aria-label="Toggle theme"
             >
               {mounted && resolvedTheme === 'dark' ? (
                 <FiSun size={16} />
@@ -353,10 +360,11 @@ const Navbar = () => {
             </button>
             <button
               onClick={toggleMenu}
-              className="flex h-9 w-9 items-center justify-center rounded-full text-foreground/70 transition-colors hover:bg-foreground/5 focus:outline-none"
+              className="flex h-11 w-11 items-center justify-center rounded-full text-foreground/70 transition-colors hover:bg-foreground/5 focus:outline-none"
               aria-expanded={isOpen}
+              aria-label="Toggle menu"
             >
-              {isOpen ? <FiX size={18} /> : <FiMenu size={18} />}
+              {isOpen ? <FiX size={20} /> : <FiMenu size={20} />}
             </button>
           </div>
         </div>
@@ -380,40 +388,40 @@ const Navbar = () => {
       >
         <div className="max-h-[calc(100vh-60px)] overflow-y-auto overflow-x-hidden">
           <div className="space-y-1 px-4 pb-6 pt-4">
-            {navList.map((navItem, index) =>
-              navItem.path === '/battle-zone' ? (
-                <div key={index} className="space-y-1">
-                  <p className="px-4 pb-1 pt-2 text-xs font-semibold uppercase tracking-wider text-foreground/50">
-                    Battle Zone
-                  </p>
-                  <div className="ml-2 space-y-1 border-l border-border/40 pl-3">
-                    {battleZoneItems.map((battleItem) => (
-                      <Link
-                        key={battleItem.path}
-                        href={battleItem.path}
-                        prefetch={true}
-                        onClick={handleLinkClick}
-                        className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-[14px] font-medium text-foreground/75 no-underline transition-colors hover:bg-foreground/5 hover:text-foreground"
-                      >
-                        <span className="text-primary/70">
-                          {battleItem.icon}
-                        </span>
-                        {battleItem.label}
-                      </Link>
-                    ))}
+              {navList.map((navItem) =>
+                navItem.path === '/battle-zone' ? (
+                  <div key="mobile-battle-zone" className="space-y-1">
+                    <p className="px-4 pb-1 pt-2 text-xs font-semibold uppercase tracking-wider text-foreground/50">
+                      Battle Zone
+                    </p>
+                    <div className="ml-2 space-y-1 border-l border-border/40 pl-3">
+                      {battleZoneItems.map((battleItem) => (
+                        <Link
+                          key={battleItem.path}
+                          href={battleItem.path}
+                          prefetch={true}
+                          onClick={handleLinkClick}
+                          className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-[14px] font-medium text-foreground/75 no-underline transition-colors hover:bg-foreground/5 hover:text-foreground"
+                        >
+                          <span className="text-primary/70">
+                            {battleItem.icon}
+                          </span>
+                          {battleItem.label}
+                        </Link>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <NavItem
-                  key={index}
-                  href={navItem.path}
-                  handleClick={handleLinkClick}
-                  isMobile
-                >
-                  {navItem.label}
-                </NavItem>
-              ),
-            )}
+                ) : (
+                  <NavItem
+                    key={navItem.path}
+                    href={navItem.path}
+                    handleClick={handleLinkClick}
+                    isMobile
+                  >
+                    {navItem.label}
+                  </NavItem>
+                ),
+              )}
 
             <div className="my-4 border-t border-border/40" />
 
@@ -451,9 +459,9 @@ const Navbar = () => {
                       Admin Panel
                     </Link>
                   )}
-                  {profileItems.map((profileItem, index) => (
+                  {profileItems.map((profileItem) => (
                     <Link
-                      key={index}
+                      key={profileItem.path}
                       href={profileItem.path}
                       onClick={handleLinkClick}
                       className="flex items-center gap-3 rounded-xl px-3 py-3 text-[14px] font-medium text-foreground/80 no-underline transition-colors hover:bg-foreground/5 hover:text-foreground"
