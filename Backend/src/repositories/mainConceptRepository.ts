@@ -3,9 +3,7 @@ import BaseRepository from './baseRepository.js';
 
 import prisma from '../lib/prisma.js';
 
-export class MainConceptRepository extends BaseRepository<
-  PrismaClient['mainConcept']
-> {
+export class MainConceptRepository extends BaseRepository< MainConcept, typeof prisma.mainConcept > {
   constructor() {
     super(prisma.mainConcept);
   }

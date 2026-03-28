@@ -4,9 +4,7 @@ import BaseRepository from './baseRepository.js';
 
 import prisma from '../lib/prisma.js';
 
-export default class PlacementRepository extends BaseRepository<
-  PrismaClient['placementTest']
-> {
+export default class PlacementRepository extends BaseRepository< PlacementTest, typeof prisma.placementTest > {
   constructor() {
     super(prisma.placementTest);
   }
