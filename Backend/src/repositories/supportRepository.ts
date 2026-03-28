@@ -17,9 +17,7 @@ import BaseRepository from './baseRepository.js';
 
 import prisma from '../lib/prisma.js';
 
-export default class SupportRepository extends BaseRepository<
-  PrismaClient['supportTicket']
-> {
+export default class SupportRepository extends BaseRepository< SupportTicket, typeof prisma.supportTicket > {
   constructor() {
     super(prisma.supportTicket);
   }

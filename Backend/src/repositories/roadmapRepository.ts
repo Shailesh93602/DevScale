@@ -31,7 +31,7 @@ interface RoadmapListItem {
   popularity?: number;
 }
 
-export default class RoadmapRepository extends BaseRepository<typeof prisma.roadmap> {
+export default class RoadmapRepository extends BaseRepository< Roadmap, typeof prisma.roadmap > {
   constructor() {
     super(prisma.roadmap);
   }

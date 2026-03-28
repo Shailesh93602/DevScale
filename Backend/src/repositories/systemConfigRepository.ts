@@ -5,7 +5,7 @@ import BaseRepository from './baseRepository.js';
 
 import prisma from '../lib/prisma.js';
 
-export default class SystemConfigRepository extends BaseRepository<PrismaClient['systemConfig']> {
+export default class SystemConfigRepository extends BaseRepository< SystemConfig, typeof prisma.systemConfig > {
   constructor() {
     super(prisma.systemConfig);
   }

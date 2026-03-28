@@ -3,9 +3,7 @@ import { PrismaClient } from '@prisma/client';
 
 import prisma from '../lib/prisma.js';
 
-export default class UserPointsRepository extends BaseRepository<
-  PrismaClient['userPoints']
-> {
+export default class UserPointsRepository extends BaseRepository< UserPoints, typeof prisma.userPoints > {
   constructor() {
     // Pass the Prisma delegate for the user model (prisma.user)
     super(prisma.userPoints);

@@ -11,9 +11,7 @@ interface DailyTopicStats {
   engagementRate: number;
 }
 
-export default class DailyTopicRepository extends BaseRepository<
-  PrismaClient['dailyTopic']
-> {
+export default class DailyTopicRepository extends BaseRepository< DailyTopic, typeof prisma.dailyTopic > {
   constructor() {
     super(prisma.dailyTopic);
   }
