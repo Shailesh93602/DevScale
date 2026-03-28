@@ -1,34 +1,22 @@
 # EduScale — Pending Code Work
-
-Target: **10M+ active users**, enterprise-grade reliability, $50k+/mo SaaS quality.
-
-Completed items → [DONE.md](DONE.md)
-Manual / platform tasks → [MANUAL.md](MANUAL.md)
-
-**Priority:** `[P0]` Blocking | `[P1]` High | `[P2]` Medium | `[P3]` Nice to have
-
----
-
+... (lines 3 to 13) ...
 ## P0 — Must ship before production
 
-### Infrastructure
-- [x] Prisma connection pooling via PgBouncer (add `&connection_limit=1` to `DATABASE_URL`)
 
-### N+1 Audit
-- [x] N+1 audit: confirm `getBattles` list has no per-row queries (looks clean, verify with `DEBUG=prisma:query`)
+### N+1 Audit (Completed)
+
 
 ---
 
 ## P1 — High priority
 
-### Security
-- [x] CSRF protection — verify `SameSite=Strict` covers all cookie-based state changes; add double-submit token for non-Strict contexts
+### Security (Completed)
 
-### Locking
-- [x] RedLock (`redlock` npm) for distributed locking on battle state mutations (`startBattle`, `submitAnswer`, `completeBattle`) — prevents race conditions across PM2 workers
+
+### Locking (Completed)
+
 
 ### Features
-- [x] Verify Bull email queue processes in production; add dead-letter queue handling
 - [ ] Stripe subscription billing (Free / Pro / Team tiers)
 - [ ] Feature gating middleware based on subscription tier
 
@@ -40,12 +28,6 @@ Manual / platform tasks → [MANUAL.md](MANUAL.md)
 
 ### Frontend
 - [ ] Next.js ISR on article and roadmap pages (`revalidate: 3600`)
-- [x] `<link rel="preconnect">` to API + font origins; subset fonts
-- [x] Fix mobile hamburger menu Z-index overlap on mobile
-- [x] Fix text overflow on 375px viewport (P1)
-- [x] `aria-label` on all icon-only buttons and theme toggle (P1)
-- [x] Skeleton loaders for async sections (roadmaps, battles, leaderboard) (P1)
-- [x] "Skip to Main Content" link as first focusable element (P1)
 
 ### Code Quality
 - [ ] Eliminate all `: any` in backend codebase (48 instances remain)

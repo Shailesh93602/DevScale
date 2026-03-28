@@ -5,15 +5,15 @@ import {
   ContentModeration,
   Article,
 } from '@prisma/client';
-import { createAppError } from '../utils/errorHandler';
-import logger from '../utils/logger';
-import BaseRepository from './baseRepository';
+import { createAppError } from '../utils/errorHandler.js';
+import logger from '../utils/logger.js';
+import BaseRepository from './baseRepository.js';
 import { invalidateCachePattern } from '../services/cacheService';
-import { ArticleFilters } from '../types';
+import { ArticleFilters } from '../types/index.js';
 import { uploadToCloudinary } from '../utils/cloudinary';
 import { ContentFilter } from '../utils/contentFilter';
 
-import prisma from '../lib/prisma';
+import prisma from '../lib/prisma.js';
 
 export class ArticleRepository extends BaseRepository<PrismaClient['article']> {
   constructor() {

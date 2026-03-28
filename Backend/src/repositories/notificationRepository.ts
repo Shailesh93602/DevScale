@@ -1,7 +1,7 @@
 import { PrismaClient, Notification } from '@prisma/client';
-import BaseRepository from './baseRepository';
+import BaseRepository from './baseRepository.js';
 
-import prisma from '../lib/prisma';
+import prisma from '../lib/prisma.js';
 
 export default class NotificationRepository extends BaseRepository<
   PrismaClient['notification']

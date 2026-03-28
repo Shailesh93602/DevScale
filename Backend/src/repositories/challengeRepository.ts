@@ -5,14 +5,14 @@ import {
   Difficulty,
   ChallengeCategory,
 } from '@prisma/client';
-import { createAppError } from '../utils/errorHandler';
-import BaseRepository from './baseRepository';
-import logger from '../utils/logger';
+import { createAppError } from '../utils/errorHandler.js';
+import BaseRepository from './baseRepository.js';
+import logger from '../utils/logger.js';
 import { executeCode } from '../utils/codeExecutor';
-import { ChallengeData, ResourceStats, ChallengeSubmissionData } from '../types';
+import { ChallengeData, ResourceStats, ChallengeSubmissionData } from '../types/index.js';
 import { invalidateCachePattern } from '../services/cacheService';
 
-import prisma from '../lib/prisma';
+import prisma from '../lib/prisma.js';
 
 export class ChallengeRepository extends BaseRepository<
   PrismaClient['challenge']

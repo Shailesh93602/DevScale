@@ -1,4 +1,4 @@
-import { BattleStatus, BattleType, Difficulty, PrismaClient, Prisma } from '@prisma/client';
+import { Battle, BattleStatus, BattleType, Difficulty, Prisma } from '@prisma/client';
 import BaseRepository from './baseRepository.js';
 import { createAppError } from '../utils/errorHandler.js';
 import prisma from '../lib/prisma.js';
@@ -135,7 +135,7 @@ async function buildLeaderboard(battleId: string) {
 
 // ─── Repository ────────────────────────────────────────────────────────────
 
-export class BattleRepository extends BaseRepository<PrismaClient['battle']> {
+export class BattleRepository extends BaseRepository<Battle, typeof prisma.battle> {
   constructor() {
     super(prisma.battle);
   }

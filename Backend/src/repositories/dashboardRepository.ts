@@ -1,5 +1,5 @@
-import BaseRepository from './baseRepository';
-import prisma from '../lib/prisma';
+import BaseRepository from './baseRepository.js';
+import prisma from '../lib/prisma.js';
 import {
   DashboardStats,
 } from '../types/dashboard';

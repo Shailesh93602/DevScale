@@ -1,9 +1,9 @@
 import { PrismaClient, Resource } from '@prisma/client';
-import { createAppError } from '../utils/errorHandler';
+import { createAppError } from '../utils/errorHandler.js';
 import { getCache, setCache, deleteCache } from '../services/cacheService';
-import BaseRepository from './baseRepository';
+import BaseRepository from './baseRepository.js';
 
-import prisma from '../lib/prisma';
+import prisma from '../lib/prisma.js';
 
 export default class ResourceRepository extends BaseRepository<
   PrismaClient['resource']
