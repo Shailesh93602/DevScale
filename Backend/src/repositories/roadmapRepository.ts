@@ -1,9 +1,9 @@
 import { Prisma } from '@prisma/client';
-import { createAppError } from '../middlewares/errorHandler';
-import { getCache, setCache, invalidateCachePattern } from '../services/cacheService';
-import BaseRepository from './baseRepository';
-import prisma from '../lib/prisma';
-import { isUuid } from '../utils/slugify';
+import { createAppError } from '../middlewares/errorHandler.js';
+import { getCache, setCache, invalidateCachePattern } from '../services/cacheService.js';
+import BaseRepository from './baseRepository.js';
+import prisma from '../lib/prisma.js';
+import { isUuid } from '../utils/slugify.js';
 import {
   CommentData,
   ConceptData,
@@ -12,7 +12,7 @@ import {
   SubjectData,
   SubjectOrder,
   TopicData,
-} from '../types';
+} from '../types/index.js';
 
 import { Request } from 'express';
 
@@ -31,9 +31,7 @@ interface RoadmapListItem {
   popularity?: number;
 }
 
-export default class RoadmapRepository extends BaseRepository<
-  typeof prisma.roadmap
-> {
+export default class RoadmapRepository extends BaseRepository<typeof prisma.roadmap> {
   constructor() {
     super(prisma.roadmap);
   }

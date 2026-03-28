@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
-import BaseRepository from './baseRepository';
-import prisma from '../lib/prisma';
-import { getOrSetCache, deleteCache } from '../services/cacheService';
+import BaseRepository from './baseRepository.js';
+import prisma from '../lib/prisma.js';
+import { getOrSetCache, deleteCache } from '../services/cacheService.js';
 
 const LEADERBOARD_TTL = 60; // 60 seconds — leaderboard is high-read, tolerates 1-min staleness
 const cacheKey = (subjectId: string, timeRange: string, limit: number) =>

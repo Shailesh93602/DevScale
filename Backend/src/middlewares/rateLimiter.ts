@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction, RequestHandler } from 'express';
-import Redis from 'ioredis';
-import { REDIS_URL } from '../config';
-import logger from '../utils/logger';
+import { Redis } from 'ioredis';
+import { REDIS_URL } from '../config/index.js';
+import logger from '../utils/logger.js';
 
 let redisClient: Redis | null = null;
 try {
@@ -55,13 +55,15 @@ export const createRateLimiter = (
       .incr(key)
       .expire(key, windowInSeconds)
       .exec()
-      .then((result) => {
-        if (!result) {
+      .then((result: [Error | null, unknown][] | null) => {
+        if (!result?.[0]) {
           next();
           return;
         }
 
-        const [[incrErr, requestCount], [expireErr]] = result;
+        const [incrResult, expireResult] = result;
+        const [incrErr, requestCount] = incrResult;
+        const [expireErr] = expireResult;
 
         if (incrErr || expireErr) {
           logger.error('Redis operation error:', { incrErr, expireErr });
@@ -87,7 +89,7 @@ export const createRateLimiter = (
 
         next();
       })
-      .catch((err) => {
+      .catch((err: unknown) => {
         logger.error('Rate limiting error:', err);
         next();
       });

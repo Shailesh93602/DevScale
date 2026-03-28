@@ -26,12 +26,14 @@ import {
   profileItems,
   publicNavItems,
   battleZoneItems,
+  NavItem as INavItem,
 } from './constants';
 import { cn } from '@/lib/utils';
 import { BRANDING } from '@/constants';
 import { CustomLink } from '@/components/ui/custom-link';
 import { getInitials } from '@/lib/avatar';
 import { useAuth } from '@/contexts/AuthContext';
+import { IUser } from '@/types';
 import { requiresAuthRoute } from '@/lib/public-routes';
 
 const Navbar = () => {
@@ -126,247 +128,49 @@ const Navbar = () => {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-[60px] items-center justify-between">
           {/* Logo Section */}
-          <div className="flex shrink-0 items-center lg:w-48">
-            <Link
-              href={isAuthenticated ? '/dashboard' : '/'}
-              className="group flex items-center gap-2 no-underline"
-            >
-              <div className="shadow-primary/20 flex h-8 w-8 items-center justify-center rounded-lg bg-primary shadow-lg">
-                <span className="text-lg font-bold tracking-widest text-white">
-                  {BRANDING.name.charAt(0)}
-                </span>
-              </div>
-              <span className="hidden bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-xl font-bold tracking-tight text-transparent transition-all duration-300 group-hover:opacity-80 sm:inline">
-                {BRANDING.name}
-              </span>
-            </Link>
-          </div>
+          <LogoSection isAuthenticated={isAuthenticated} />
 
           {/* Desktop Navigation Links */}
-          <div className="hidden flex-1 items-center justify-center px-6 lg:flex">
-            <div
-              className={cn(
-                'flex items-center gap-1 rounded-full p-1 transition-all duration-300',
-                showPublicNavbar
-                  ? 'bg-transparent'
-                  : 'bg-muted/40 text-muted-foreground shadow-inner ring-1 ring-border/40 backdrop-blur-md',
-              )}
-            >
-                {navList.map((item) =>
-                  item.path === '/battle-zone' ? (
-                    <div key="battle-zone" className="relative">
-                      <button
-                        onClick={toggleBattleZone}
-                        className={cn(
-                          'flex h-9 items-center gap-1.5 rounded-full px-4 text-[14px] font-bold transition-all duration-200 focus:outline-none',
-                          battleZoneOpen
-                            ? 'bg-primary/10 text-primary shadow-sm'
-                            : 'hover:bg-primary/5 text-muted-foreground hover:text-primary',
-                        )}
-                      >
-                      {item.label}
-                      <FiChevronDown
-                        className={cn(
-                          'h-3.5 w-3.5 opacity-50 transition-transform duration-300',
-                          battleZoneOpen &&
-                            'rotate-180 text-primary opacity-100',
-                        )}
-                      />
-                    </button>
-                    <AnimatePresence>
-                      {battleZoneOpen && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                          transition={{ duration: 0.2, ease: 'easeOut' }}
-                          className="absolute left-1/2 top-full mt-3 w-[240px] -translate-x-1/2 overflow-hidden rounded-2xl border border-border/50 bg-popover/95 shadow-[0_20px_50px_rgba(0,0,0,0.2)] ring-1 ring-white/10 backdrop-blur-xl"
-                        >
-                          <div className="grid gap-0.5 p-1.5">
-                            {battleZoneItems.map((battleItem) => (
-                              <Link
-                                key={battleItem.path}
-                                href={battleItem.path}
-                                prefetch={true}
-                                onClick={handleLinkClick}
-                                className="hover:bg-primary/10 group flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium text-foreground/70 no-underline transition-all duration-200 hover:text-primary"
-                              >
-                                <div className="group-hover:bg-primary/20 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-foreground/5 transition-all group-hover:scale-110 group-hover:text-primary">
-                                  {battleItem.icon}
-                                </div>
-                                {battleItem.label}
-                              </Link>
-                            ))}
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                  ) : (
-                    <NavItem
-                      key={item.path}
-                      href={item.path}
-                      handleClick={handleLinkClick}
-                      isPill={!showPublicNavbar}
-                    >
-                      {item.label}
-                    </NavItem>
-                  ),
-                )}
-            </div>
-          </div>
+          <DesktopNav 
+            showPublicNavbar={showPublicNavbar} 
+            navList={navList} 
+            battleZoneOpen={battleZoneOpen} 
+            toggleBattleZone={toggleBattleZone} 
+            handleLinkClick={handleLinkClick} 
+          />
 
           {/* Right Controls - Desktop Only */}
           <div className="hidden shrink-0 items-center justify-end gap-3 lg:flex lg:w-48">
-            <button
-              onClick={toggleTheme}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-border/40 bg-background/50 text-foreground/60 shadow-sm backdrop-blur-lg transition-colors duration-200 hover:bg-foreground/5 hover:text-foreground focus:outline-none"
-              aria-label="Toggle theme"
-            >
-              {mounted && resolvedTheme === 'dark' ? (
-                <FiSun size={15} />
-              ) : (
-                <FiMoon size={15} />
-              )}
-            </button>
+            <ThemeToggle
+              mounted={mounted}
+              resolvedTheme={resolvedTheme}
+              toggleTheme={toggleTheme}
+              className="h-11 w-11 border border-border/40 bg-background/50 text-foreground/60 shadow-sm backdrop-blur-lg hover:bg-foreground/5 hover:text-foreground"
+            />
 
             {showPublicNavbar ? (
-              <div className="flex items-center gap-2">
-                <CustomLink
-                  href="/auth/login"
-                  variant="ghost"
-                  size="sm"
-                  className="text-[13px] font-medium text-foreground/70 hover:text-foreground"
-                >
-                  Log in
-                </CustomLink>
-                <CustomLink
-                  href="/auth/register"
-                  variant="default"
-                  className="h-9 rounded-full px-5 text-[13px] font-semibold shadow-sm transition-transform hover:scale-105"
-                >
-                  Get Started
-                </CustomLink>
-              </div>
+              <PublicControls />
             ) : (
-              <div className="relative">
-                <button
-                  onClick={toggleDropdown}
-                  className={cn(
-                    'group relative flex h-[42px] items-center gap-2.5 rounded-full border border-border/60 bg-card/50 px-1.5 shadow-sm transition-all duration-300 hover:bg-card focus:outline-none',
-                    dropdownOpen &&
-                      'ring-primary/20 border-primary/40 bg-zinc-800/80 ring-4',
-                  )}
-                  aria-label="User Profile Menu"
-                >
-                  <Avatar className="h-8 w-8 border border-border/20 shadow-lg">
-                    <AvatarImage
-                      src={user?.avatar_url}
-                      alt={user?.username || 'User avatar'}
-                      className="object-cover"
-                    />
-                    <AvatarFallback className="bg-primary text-[11px] font-black uppercase text-white">
-                      {userInitials}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="mr-1 hidden flex-col items-start gap-0 leading-none lg:flex">
-                    <span className="text-[13px] font-bold text-foreground transition-colors">
-                      {user?.first_name || user?.username}
-                    </span>
-                  </div>
-                  <FiChevronDown
-                    className={cn(
-                      'mr-1.5 h-3.5 w-3.5 text-muted-foreground/60 transition-transform duration-300 group-hover:text-foreground',
-                      dropdownOpen && 'rotate-180',
-                    )}
-                  />
-                </button>
-                <AnimatePresence>
-                  {dropdownOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                      transition={{ duration: 0.2, ease: 'easeOut' }}
-                      className="absolute right-0 z-50 mt-3 w-56 overflow-hidden rounded-2xl border border-border/50 bg-popover/95 shadow-[0_20px_50px_rgba(0,0,0,0.2)] ring-1 ring-white/10 backdrop-blur-xl"
-                    >
-                      <div className="border-b border-border/40 bg-foreground/5 p-1 px-2 py-2">
-                        <p className="px-2 text-[11px] font-bold uppercase tracking-widest text-muted-foreground/60">
-                          Account
-                        </p>
-                      </div>
-                      <div className="grid gap-0.5 p-1.5">
-                        {isAdmin && (
-                          <Link
-                            href="/admin"
-                            onClick={handleLinkClick}
-                            className="hover:bg-primary/10 flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-semibold text-primary no-underline transition-all duration-200"
-                          >
-                            <span className="bg-primary/10 flex h-7 w-7 items-center justify-center rounded-md text-primary">
-                              <FiShield size={14} />
-                            </span>
-                            Admin Panel
-                          </Link>
-                        )}
-                        {profileItems.map((profileItem) => (
-                          <Link
-                            key={profileItem.label}
-                            href={profileItem.path}
-                            onClick={handleLinkClick}
-                            className={cn(
-                              'flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium no-underline transition-all duration-200',
-                              profileItem.label === 'Logout'
-                                ? 'text-red-500 hover:bg-red-50'
-                                : 'text-foreground/70 hover:bg-foreground/5 hover:text-foreground',
-                            )}
-                          >
-                            <span
-                              className={cn(
-                                'flex h-7 w-7 items-center justify-center rounded-md bg-foreground/5 text-foreground/40 transition-colors group-hover:text-foreground',
-                                profileItem.label === 'Logout' &&
-                                  'bg-symbols/5 text-red-400',
-                              )}
-                            >
-                              {profileItem.icon}
-                            </span>
-                            {profileItem.label}
-                          </Link>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+              <UserMenu
+                user={user}
+                userInitials={userInitials}
+                isAdmin={isAdmin}
+                dropdownOpen={dropdownOpen}
+                toggleDropdown={toggleDropdown}
+                handleLinkClick={handleLinkClick}
+              />
             )}
           </div>
 
           {/* Mobile Right Section - Shown Only When Desktop Hidden */}
-          <div
-            className={cn(
-              'flex shrink-0 items-center justify-end gap-2 lg:hidden',
-              isDesktop && 'hidden',
-            )}
-          >
-            <button
-              onClick={toggleTheme}
-              className="flex h-11 w-11 items-center justify-center rounded-full text-foreground/70 transition-colors hover:bg-foreground/5 focus:outline-none"
-              aria-label="Toggle theme"
-            >
-              {mounted && resolvedTheme === 'dark' ? (
-                <FiSun size={16} />
-              ) : (
-                <FiMoon size={16} />
-              )}
-            </button>
-            <button
-              onClick={toggleMenu}
-              className="flex h-11 w-11 items-center justify-center rounded-full text-foreground/70 transition-colors hover:bg-foreground/5 focus:outline-none"
-              aria-expanded={isOpen}
-              aria-label="Toggle menu"
-            >
-              {isOpen ? <FiX size={20} /> : <FiMenu size={20} />}
-            </button>
-          </div>
+          <MobileRightControls 
+            mounted={mounted} 
+            resolvedTheme={resolvedTheme} 
+            toggleTheme={toggleTheme} 
+            toggleMenu={toggleMenu} 
+            isOpen={isOpen} 
+            isDesktop={isDesktop} 
+          />
         </div>
       </div>
 
@@ -379,52 +183,387 @@ const Navbar = () => {
         />
       )}
 
+      <MobileMenuOverlay 
+        isOpen={isOpen} 
+        isDesktop={isDesktop} 
+        navList={navList} 
+        showPublicNavbar={showPublicNavbar} 
+        isAdmin={isAdmin} 
+        handleLinkClick={handleLinkClick} 
+        closeAllMenus={closeAllMenus} 
+      />
+    </nav>
+  );
+};
+
+// --- Sub-components to reduce Cognitive Complexity ---
+
+const LogoSection = ({ isAuthenticated }: { isAuthenticated: boolean }) => (
+  <div className="flex shrink-0 items-center lg:w-48">
+    <Link
+      href={isAuthenticated ? '/dashboard' : '/'}
+      className="group flex items-center gap-2 no-underline"
+    >
+      <div className="shadow-primary/20 flex h-8 w-8 items-center justify-center rounded-lg bg-primary shadow-lg">
+        <span className="text-lg font-bold tracking-widest text-white">
+          {BRANDING.name.charAt(0)}
+        </span>
+      </div>
+      <span className="hidden bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-xl font-bold tracking-tight text-transparent transition-all duration-300 group-hover:opacity-80 sm:inline">
+        {BRANDING.name}
+      </span>
+    </Link>
+  </div>
+);
+
+const DesktopNav = ({ 
+  showPublicNavbar, 
+  navList, 
+  battleZoneOpen, 
+  toggleBattleZone, 
+  handleLinkClick 
+}: {
+  showPublicNavbar: boolean;
+  navList: INavItem[];
+  battleZoneOpen: boolean;
+  toggleBattleZone: () => void;
+  handleLinkClick: () => void;
+}) => (
+  <div className="hidden flex-1 items-center justify-center px-6 lg:flex">
+    <div
+      className={cn(
+        'flex items-center gap-1 rounded-full p-1 transition-all duration-300',
+        showPublicNavbar
+          ? 'bg-transparent'
+          : 'bg-muted/40 text-muted-foreground shadow-inner ring-1 ring-border/40 backdrop-blur-md',
+      )}
+    >
+      {navList.map((item) =>
+        item.path === '/battle-zone' ? (
+          <div key="battle-zone" className="relative">
+            <button
+              onClick={toggleBattleZone}
+              className={cn(
+                'flex h-9 items-center gap-1.5 rounded-full px-4 text-[14px] font-bold transition-all duration-200 focus:outline-none',
+                battleZoneOpen
+                  ? 'bg-primary/10 text-primary shadow-sm'
+                  : 'hover:bg-primary/5 text-muted-foreground hover:text-primary',
+              )}
+            >
+              {item.label}
+              <FiChevronDown
+                className={cn(
+                  'h-3.5 w-3.5 opacity-50 transition-transform duration-300',
+                  battleZoneOpen && 'rotate-180 text-primary opacity-100',
+                )}
+              />
+            </button>
+            <AnimatePresence>
+              {battleZoneOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  transition={{ duration: 0.2, ease: 'easeOut' }}
+                  className="absolute left-1/2 top-full mt-3 w-[240px] -translate-x-1/2 overflow-hidden rounded-2xl border border-border/50 bg-popover/95 shadow-[0_20px_50px_rgba(0,0,0,0.2)] ring-1 ring-white/10 backdrop-blur-xl"
+                >
+                  <div className="grid gap-0.5 p-1.5">
+                    {battleZoneItems.map((battleItem) => (
+                      <Link
+                        key={battleItem.path}
+                        href={battleItem.path}
+                        prefetch={true}
+                        onClick={handleLinkClick}
+                        className="hover:bg-primary/10 group flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium text-foreground/70 no-underline transition-all duration-200 hover:text-primary"
+                      >
+                        <div className="group-hover:bg-primary/20 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-foreground/5 transition-all group-hover:scale-110 group-hover:text-primary">
+                          {battleItem.icon}
+                        </div>
+                        {battleItem.label}
+                      </Link>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        ) : (
+          <NavItem
+            key={item.path}
+            href={item.path}
+            handleClick={handleLinkClick}
+            isPill={!showPublicNavbar}
+          >
+            {item.label}
+          </NavItem>
+        ),
+      )}
+    </div>
+  </div>
+);
+
+const ThemeToggle = ({
+  mounted,
+  resolvedTheme,
+  toggleTheme,
+  className,
+}: {
+  mounted: boolean;
+  resolvedTheme: string | undefined;
+  toggleTheme: () => void;
+  className?: string;
+}) => (
+  <button
+    onClick={toggleTheme}
+    className={cn(
+      'flex items-center justify-center rounded-full transition-colors duration-200 focus:outline-none',
+      className,
+    )}
+    aria-label="Toggle theme"
+  >
+    {mounted && resolvedTheme === 'dark' ? (
+      <FiSun size={15} />
+    ) : (
+      <FiMoon size={15} />
+    )}
+  </button>
+);
+
+const PublicControls = () => (
+  <div className="flex items-center gap-2">
+    <CustomLink
+      href="/auth/login"
+      variant="ghost"
+      size="sm"
+      className="text-[13px] font-medium text-foreground/70 hover:text-foreground"
+    >
+      Log in
+    </CustomLink>
+    <CustomLink
+      href="/auth/register"
+      variant="default"
+      className="h-9 rounded-full px-5 text-[13px] font-semibold shadow-sm transition-transform hover:scale-105"
+    >
+      Get Started
+    </CustomLink>
+  </div>
+);
+
+const UserMenu = ({
+  user,
+  userInitials,
+  isAdmin,
+  dropdownOpen,
+  toggleDropdown,
+  handleLinkClick,
+}: {
+  user: IUser | null;
+  userInitials: string;
+  isAdmin: boolean;
+  dropdownOpen: boolean;
+  toggleDropdown: () => void;
+  handleLinkClick: () => void;
+}) => (
+  <div className="relative">
+    <button
+      onClick={toggleDropdown}
+      className={cn(
+        'group relative flex h-[42px] items-center gap-2.5 rounded-full border border-border/60 bg-card/50 px-1.5 shadow-sm transition-all duration-300 hover:bg-card focus:outline-none',
+        dropdownOpen &&
+          'ring-primary/20 border-primary/40 bg-zinc-800/80 ring-4',
+      )}
+      aria-label="User Profile Menu"
+    >
+      <Avatar className="h-8 w-8 border border-border/20 shadow-lg">
+        <AvatarImage
+          src={user?.avatar_url}
+          alt={user?.username || 'User avatar'}
+          className="object-cover"
+        />
+        <AvatarFallback className="bg-primary text-[11px] font-black uppercase text-white">
+          {userInitials}
+        </AvatarFallback>
+      </Avatar>
+      <div className="mr-1 hidden flex-col items-start gap-0 leading-none lg:flex">
+        <span className="text-[13px] font-bold text-foreground transition-colors">
+          {user?.first_name || user?.username}
+        </span>
+      </div>
+      <FiChevronDown
+        className={cn(
+          'mr-1.5 h-3.5 w-3.5 text-muted-foreground/60 transition-transform duration-300 group-hover:text-foreground',
+          dropdownOpen && 'rotate-180',
+        )}
+      />
+    </button>
+    <AnimatePresence>
+      {dropdownOpen && (
+        <motion.div
+          initial={{ opacity: 0, y: 10, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 10, scale: 0.95 }}
+          transition={{ duration: 0.2, ease: 'easeOut' }}
+          className="absolute right-0 z-50 mt-3 w-56 overflow-hidden rounded-2xl border border-border/50 bg-popover/95 shadow-[0_20px_50px_rgba(0,0,0,0.2)] ring-1 ring-white/10 backdrop-blur-xl"
+        >
+          <div className="border-b border-border/40 bg-foreground/5 p-1 px-2 py-2">
+            <p className="px-2 text-[11px] font-bold uppercase tracking-widest text-muted-foreground/60">
+              Account
+            </p>
+          </div>
+          <div className="grid gap-0.5 p-1.5">
+            {isAdmin && (
+              <Link
+                href="/admin"
+                onClick={handleLinkClick}
+                className="hover:bg-primary/10 flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-semibold text-primary no-underline transition-all duration-200"
+              >
+                <span className="bg-primary/10 flex h-7 w-7 items-center justify-center rounded-md text-primary">
+                  <FiShield size={14} />
+                </span>{' '}
+                Admin Panel
+              </Link>
+            )}
+            {profileItems.map((profileItem) => (
+              <Link
+                key={profileItem.label}
+                href={profileItem.path}
+                onClick={handleLinkClick}
+                className={cn(
+                  'flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium no-underline transition-all duration-200',
+                  profileItem.label === 'Logout'
+                    ? 'text-red-500 hover:bg-red-50'
+                    : 'text-foreground/70 hover:bg-foreground/5 hover:text-foreground',
+                )}
+              >
+                <span
+                  className={cn(
+                    'flex h-7 w-7 items-center justify-center rounded-md bg-foreground/5 text-foreground/40 transition-colors group-hover:text-foreground',
+                    profileItem.label === 'Logout' &&
+                      'bg-symbols/5 text-red-400',
+                  )}
+                >
+                  {profileItem.icon}
+                </span>{' '}
+                {profileItem.label}
+              </Link>
+            ))}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  </div>
+);
+
+const MobileRightControls = ({
+  mounted,
+  resolvedTheme,
+  toggleTheme,
+  toggleMenu,
+  isOpen,
+  isDesktop,
+}: {
+  mounted: boolean;
+  resolvedTheme: string | undefined;
+  toggleTheme: () => void;
+  toggleMenu: () => void;
+  isOpen: boolean;
+  isDesktop: boolean;
+}) => (
+  <div
+    className={cn(
+      'flex shrink-0 items-center justify-end gap-2 lg:hidden',
+      isDesktop && 'hidden',
+    )}
+  >
+    <ThemeToggle
+      mounted={mounted}
+      resolvedTheme={resolvedTheme}
+      toggleTheme={toggleTheme}
+      className="h-11 w-11 text-foreground/70 hover:bg-foreground/5"
+    />
+    <button
+      onClick={toggleMenu}
+      className="flex h-11 w-11 items-center justify-center rounded-full text-foreground/70 transition-colors hover:bg-foreground/5 focus:outline-none"
+      aria-expanded={isOpen}
+      aria-label="Toggle menu"
+    >
+      {isOpen ? <FiX size={20} /> : <FiMenu size={20} />}
+    </button>
+  </div>
+);
+
+const MobileMenuOverlay = ({
+  isOpen,
+  isDesktop,
+  navList,
+  showPublicNavbar,
+  isAdmin,
+  handleLinkClick,
+  closeAllMenus,
+}: {
+  isOpen: boolean;
+  isDesktop: boolean;
+  navList: INavItem[];
+  showPublicNavbar: boolean;
+  isAdmin: boolean;
+  handleLinkClick: () => void;
+  closeAllMenus: () => void;
+}) => {
+  if (isDesktop) return null;
+
+  return (
+    <>
+      {isOpen && (
+        <button
+          type="button"
+          aria-label="Close mobile menu"
+          onClick={closeAllMenus}
+          className="fixed inset-0 top-[60px] z-[70] bg-black/20 lg:hidden"
+        />
+      )}
       <div
         className={cn(
           'absolute inset-x-0 top-[60px] z-[80] border-t border-border/40 bg-background/95 backdrop-blur-xl transition-all duration-300 ease-in-out lg:hidden',
-          isDesktop && 'hidden',
           isOpen ? 'pointer-events-auto block' : 'pointer-events-none hidden',
         )}
       >
         <div className="max-h-[calc(100vh-60px)] overflow-y-auto overflow-x-hidden">
           <div className="space-y-1 px-4 pb-6 pt-4">
-              {navList.map((navItem) =>
-                navItem.path === '/battle-zone' ? (
-                  <div key="mobile-battle-zone" className="space-y-1">
-                    <p className="px-4 pb-1 pt-2 text-xs font-semibold uppercase tracking-wider text-foreground/50">
-                      Battle Zone
-                    </p>
-                    <div className="ml-2 space-y-1 border-l border-border/40 pl-3">
-                      {battleZoneItems.map((battleItem) => (
-                        <Link
-                          key={battleItem.path}
-                          href={battleItem.path}
-                          prefetch={true}
-                          onClick={handleLinkClick}
-                          className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-[14px] font-medium text-foreground/75 no-underline transition-colors hover:bg-foreground/5 hover:text-foreground"
-                        >
-                          <span className="text-primary/70">
-                            {battleItem.icon}
-                          </span>
-                          {battleItem.label}
-                        </Link>
-                      ))}
-                    </div>
+            {navList.map((navItem) =>
+              navItem.path === '/battle-zone' ? (
+                <div key="mobile-battle-zone" className="space-y-1">
+                  <p className="px-4 pb-1 pt-2 text-xs font-semibold uppercase tracking-wider text-foreground/50">
+                    Battle Zone
+                  </p>
+                  <div className="ml-2 space-y-1 border-l border-border/40 pl-3">
+                    {battleZoneItems.map((battleItem) => (
+                      <Link
+                        key={battleItem.path}
+                        href={battleItem.path}
+                        prefetch={true}
+                        onClick={handleLinkClick}
+                        className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-[14px] font-medium text-foreground/75 no-underline transition-colors hover:bg-foreground/5 hover:text-foreground"
+                      >
+                        <span className="text-primary/70">
+                          {battleItem.icon}
+                        </span>
+                        {battleItem.label}
+                      </Link>
+                    ))}
                   </div>
-                ) : (
-                  <NavItem
-                    key={navItem.path}
-                    href={navItem.path}
-                    handleClick={handleLinkClick}
-                    isMobile
-                  >
-                    {navItem.label}
-                  </NavItem>
-                ),
-              )}
-
+                </div>
+              ) : (
+                <NavItem
+                  key={navItem.path}
+                  href={navItem.path}
+                  handleClick={handleLinkClick}
+                  isMobile
+                >
+                  {navItem.label}
+                </NavItem>
+              ),
+            )}
             <div className="my-4 border-t border-border/40" />
-
             <div className="px-2">
               {showPublicNavbar ? (
                 <div className="mt-4 grid gap-2">
@@ -478,7 +617,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-    </nav>
+    </>
   );
 };
 
