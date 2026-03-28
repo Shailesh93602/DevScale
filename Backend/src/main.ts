@@ -42,11 +42,7 @@ export class App {
     // unchanged bodies (articles, subjects, roadmaps). Zero cost if not supported.
     this.app.set('etag', 'weak');
     
-    // Add Sentry request handler — must be Before any other middleware
-    import('@sentry/node').then((Sentry) => {
-      Sentry.setupExpressErrorHandler(this.app);
-    });
-
+    this.app.set('etag', 'weak');
     this.initializeCloudinary();
     this.initializeMiddlewares();
     this.initializeRoutes();
@@ -180,9 +176,12 @@ export class App {
       res.status(404).json({ message: 'Route not found' });
     });
 
-    // The error handler must be BEFORE any other error middleware and AFTER all controllers
+    // Sentry setup as per user's instructions:
+    // The error handler must be registered before any other error middleware and after all controllers
     import('@sentry/node').then((Sentry) => {
-      this.app.use(Sentry.expressErrorHandler());
+      Sentry.setupExpressErrorHandler(this.app);
+      
+      // Fallthrough error handler
       this.app.use(errorHandler);
     });
   }
