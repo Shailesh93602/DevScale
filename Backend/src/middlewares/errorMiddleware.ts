@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
 import { AxiosError } from 'axios';
 import logger from '../utils/logger';
@@ -8,17 +7,17 @@ import { DatabaseError } from '../types/errors';
 interface AppError extends Error {
   status?: number;
   code?: string;
-  data?: any;
+  data?: unknown;
 }
 
 // Error response interface
 interface ErrorResponse {
   success: boolean;
   message: string;
-  error?: any;
+  error?: unknown;
   stack?: string;
   code?: string;
-  data?: any;
+  data?: unknown;
 }
 
 // Error codes mapping

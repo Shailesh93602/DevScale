@@ -38,7 +38,7 @@ export const executeCode = async (
 ): Promise<ExecutionResult> => {
   try {
     return await judge0Breaker.fire(params);
-  } catch (error: any) {
+  } catch (error) {
     if (judge0Breaker.opened) {
       throw createAppError(
         'Code execution is temporarily unavailable — please try again in a moment.',
@@ -95,14 +95,16 @@ async function _executeCodeRaw(
       executionTime: result.time,
       memoryUsed: result.memory,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     logger.error('Code execution error:', error);
     
-    if (error.response?.status === 401) {
+    if (axios.isAxiosError(error) && error.response?.status === 401) {
       throw createAppError('Code execution API key is missing or invalid. Please check your Backend .env file.', 401);
     }
     
-    const message = error.response?.data?.error || error.response?.data?.message || error.message || 'Failed to execute code';
+    const message = (axios.isAxiosError(error) 
+      ? error.response?.data?.error || error.response?.data?.message 
+      : (error as Error).message) || 'Failed to execute code';
     throw createAppError(`Code Execution Error: ${message}`, 500);
   }
 }

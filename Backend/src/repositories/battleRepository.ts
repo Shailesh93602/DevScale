@@ -33,6 +33,18 @@ const battleDetailInclude = {
   _count: { select: { questions: true, participants: true } },
 } as const;
 
+export type BattleSummary = Prisma.BattleGetPayload<{
+  include: {
+    topic: { select: { id: true; title: true } };
+    creator: { select: typeof creatorSelect };
+    _count: { select: { participants: true; questions: true } };
+  };
+}>;
+
+export type BattleDetail = Prisma.BattleGetPayload<{
+  include: typeof battleDetailInclude;
+}>;
+
 // ─── Query parameter types ─────────────────────────────────────────────────
 
 export interface BattleListParams {
@@ -173,14 +185,14 @@ export class BattleRepository extends BaseRepository<PrismaClient['battle']> {
     return stats;
   }
 
-  async getBattles(params: BattleListParams): Promise<{ data: unknown[]; meta: BattleListMeta }> {
+  async getBattles(params: BattleListParams): Promise<{ data: BattleSummary[]; meta: BattleListMeta }> {
     const page = Math.max(1, params.page || 1);
     const limit = Math.min(50, Math.max(1, params.limit || 12));
     const skip = (page - 1) * limit;
 
     // Cache key encodes all list params — stable across concurrent identical requests
     const cacheKey = `battles:list:p${page}:l${limit}:s${params.search || ''}:st${params.status || ''}:d${params.difficulty || ''}:t${params.type || ''}:tp${params.topic_id || ''}:u${params.user_id || ''}:sb${params.sort_by || ''}:so${params.sort_order || ''}`;
-    const cachedList = getCached<{ data: unknown[]; meta: BattleListMeta }>(cacheKey);
+    const cachedList = getCached<{ data: BattleSummary[]; meta: BattleListMeta }>(cacheKey);
     if (cachedList) return cachedList;
 
     const where: Prisma.BattleWhereInput = {};
@@ -232,7 +244,7 @@ export class BattleRepository extends BaseRepository<PrismaClient['battle']> {
 
   // ── Detail ──────────────────────────────────────────────────────────────
 
-  async getBattleDetails(idOrSlug: string) {
+  async getBattleDetails(idOrSlug: string): Promise<BattleDetail> {
     const battle = isUuid(idOrSlug)
       ? await prisma.battle.findUnique({ where: { id: idOrSlug }, include: battleDetailInclude })
       : await prisma.battle.findFirst({ where: { slug: idOrSlug }, include: battleDetailInclude });
@@ -257,7 +269,7 @@ export class BattleRepository extends BaseRepository<PrismaClient['battle']> {
     user_id: string;
     question_source_type?: string | null;
     question_source_id?: string | null;
-  }) {
+  }): Promise<BattleDetail & { slug: string }> {
     const battle = await prisma.battle.create({
       data: {
         title: data.title,
