@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import AdminController from '../controllers/adminController';
 import { authMiddleware, authorizeRoles } from '../middlewares/authMiddleware';
-// import { requirePermission } from '../middlewares/rbacMiddleware';
 
 import { BaseRouter } from './BaseRouter';
 
@@ -33,6 +32,10 @@ export class AdminRoutes extends BaseRouter {
     this.router.patch(
       '/users/:userId/role',
       this.adminController.updateUserRole
+    );
+    this.router.delete(
+      '/users/:userId',
+      this.adminController.deleteUser
     );
 
     // Content Moderation Routes
@@ -67,6 +70,11 @@ export class AdminRoutes extends BaseRouter {
     this.router.post(
       '/reports/custom',
       this.adminController.generateCustomReport
+    );
+
+    this.router.delete(
+      '/roadmaps/:roadmapId',
+      this.adminController.deleteRoadmap
     );
 
     // Audit System Routes

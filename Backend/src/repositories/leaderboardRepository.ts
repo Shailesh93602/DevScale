@@ -56,11 +56,10 @@ export default class LeaderboardRepository extends BaseRepository<
   }
 
   private getTimeFilter(timeRange: string) {
-    const now = new Date();
     const filters: Record<string, { gte: Date }> = {
-      daily: { gte: new Date(now.setDate(now.getDate() - 1)) },
-      weekly: { gte: new Date(now.setDate(now.getDate() - 7)) },
-      monthly: { gte: new Date(now.setMonth(now.getMonth() - 1)) },
+      daily: { gte: new Date(new Date().setDate(new Date().getDate() - 1)) },
+      weekly: { gte: new Date(new Date().setDate(new Date().getDate() - 7)) },
+      monthly: { gte: new Date(new Date().setMonth(new Date().getMonth() - 1)) },
       all: { gte: new Date(0) },
     };
     return filters[timeRange];
