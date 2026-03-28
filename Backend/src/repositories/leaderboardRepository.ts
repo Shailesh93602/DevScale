@@ -8,9 +8,7 @@ const LEADERBOARD_STALE_TTL = 3600; // 1 hour (grace period)
 const cacheKey = (subjectId: string, timeRange: string, limit: number) =>
   `eduscale:leaderboard:${subjectId}:${timeRange}:${limit}`;
 
-export default class LeaderboardRepository extends BaseRepository<
-  PrismaClient['leaderboardEntry']
-> {
+export default class LeaderboardRepository extends BaseRepository< LeaderboardEntry, typeof prisma.leaderboardEntry > {
   constructor() {
     super(prisma.leaderboardEntry);
   }

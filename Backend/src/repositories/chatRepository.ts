@@ -3,9 +3,7 @@ import BaseRepository from './baseRepository.js';
 
 import prisma from '../lib/prisma.js';
 
-export default class ChatRepository extends BaseRepository<
-  PrismaClient['chat']
-> {
+export default class ChatRepository extends BaseRepository< Chat, typeof prisma.chat > {
   constructor() {
     super(prisma.chat);
   }

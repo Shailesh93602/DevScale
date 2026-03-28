@@ -14,9 +14,7 @@ import { invalidateCachePattern } from '../services/cacheService';
 
 import prisma from '../lib/prisma.js';
 
-export class ChallengeRepository extends BaseRepository<
-  PrismaClient['challenge']
-> {
+export class ChallengeRepository extends BaseRepository< Challenge, typeof prisma.challenge > {
   constructor() {
     super(prisma.challenge);
   }

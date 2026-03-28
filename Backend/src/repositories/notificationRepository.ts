@@ -3,9 +3,7 @@ import BaseRepository from './baseRepository.js';
 
 import prisma from '../lib/prisma.js';
 
-export default class NotificationRepository extends BaseRepository<
-  PrismaClient['notification']
-> {
+export default class NotificationRepository extends BaseRepository< Notification, typeof prisma.notification > {
   constructor() {
     super(prisma.notification);
   }

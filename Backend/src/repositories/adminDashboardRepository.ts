@@ -26,9 +26,7 @@ import UserRepository from './userRepository';
 
 import prisma from '../lib/prisma.js';
 
-export default class AdminDashboardRepository extends BaseRepository<
-  PrismaClient['user']
-> {
+export default class AdminDashboardRepository extends BaseRepository< User, typeof prisma.user > {
   private readonly userRepo: UserRepository;
   constructor() {
     super(prisma.user);
