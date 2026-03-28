@@ -5,37 +5,6 @@ Everything here blocks or supports production launch. Work through P0 first.
 
 ---
 
-### 🔐 Supabase — Fix Google OAuth
-The OAuth redirect URL points to the wrong Supabase project.
-
-1. Go to **Supabase Dashboard → Authentication → Providers → Google**
-2. Copy the **Callback URL** shown there (looks like `https://<ref>.supabase.co/auth/v1/callback`)
-3. Go to **Google Cloud Console → APIs & Services → Credentials → your OAuth client**
-4. Under **Authorized redirect URIs**, add the URL from step 2
-5. Save. Test login with Google.
-
-### 🌐 Supabase — Multi-Domain Auth (Whitelist)
-> Allows Google/GitHub login on both Vercel and Other domains.
-
-1. Go to **Supabase Dashboard → Authentication → URL Configuration**
-2. Set **Site URL** to your primary production URL (e.g., `https://eduscale.vercel.com`)
-3. Under **Redirect URLs**, add the following (one per line):
-   - `http://localhost:3000/auth/callback`
-   - `https://eduscale.vercel.app/auth/callback`
-   - `https://*.vercel.app/auth/callback`
-4. Click **Save** at the bottom of the page.
-
-
-### 🛡️ GitHub — Branch Protection on `main`
-1. Go to **GitHub → repo → Settings → Branches → Add branch ruleset**
-2. Target: `main`
-3. Enable:
-   - ✅ Require a pull request before merging (1 reviewer)
-   - ✅ Require status checks to pass (select the CI jobs: `backend-lint`, `backend-typecheck`, `backend-build`, `frontend-build`)
-   - ✅ Require branches to be up to date before merging
-   - ✅ Block force pushes
-
----
 
 ## P1 — Do Before Scaling Beyond ~10k Users
 
@@ -51,15 +20,6 @@ The OAuth redirect URL points to the wrong Supabase project.
    ```
 5. Tell the dev: update Prisma client to use `DATABASE_READ_URL` for `SELECT`-only queries (analytics, leaderboard)
 
-### ⚙️ Supabase — PostgreSQL Timeouts
-> Prevents runaway queries from holding connections.
-
-1. Go to **Supabase Dashboard → Database → Extensions → pg_net** (already enabled)
-2. Go to **SQL Editor** and run:
-   ```sql
-   ALTER DATABASE postgres SET statement_timeout = '30s';
-   ALTER DATABASE postgres SET idle_in_transaction_session_timeout = '60s';
-   ```
 
 ### 🧠 Redis — Memory Policy
 > Without this, Redis silently drops keys when full instead of evicting LRU.
