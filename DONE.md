@@ -4,6 +4,28 @@ All shipped items, grouped by session. Newest first.
 
 ---
 
+## Session 7 — 2026-03-28 (Current)
+
+### Performance & Reliability
+| Item | File(s) |
+|------|---------|
+| **Connection Pooling** — added `&connection_limit=1` to DATABASE_URL and DIRECT_URL to optimize PgBouncer session usage in serverless environments | `Backend/.env.example` |
+| **N+1 Optimization** — refactored `completeBattle` to use bulk answer fetch + manual aggregation instead of queries inside a loop | `Backend/src/repositories/battleRepository.ts` |
+| **Distributed Locking** — `Redlock` implemented on `startBattle`, `submitAnswer`, and `completeBattle` to prevent race conditions across PM2 workers | `Backend/src/services/cacheService.ts`, `BattleRepository.ts` |
+
+### Security
+| Item | File(s) |
+|------|---------|
+| **CSRF Protection** — Double-submit token pattern implemented globally; stateless cookie-based verification for state-changing requests | `Backend/src/middlewares/csrfMiddleware.ts`, `main.ts` |
+| **Types & Lints** — eliminated `any` usage in Redis handlers; fixed unused variable lints in repository layers | `Backend/src/services/cacheService.ts`, `BattleRepository.ts` |
+
+### Docs & Process
+| Item | File(s) |
+|------|---------|
+| Created `MANUAL.md` for platform tasks; removed redundant infra/Docker tasks from `TODO.md` | `MANUAL.md`, `TODO.md` |
+
+---
+
 ## Session 6 — 2026-03-27
 
 ### Tracking

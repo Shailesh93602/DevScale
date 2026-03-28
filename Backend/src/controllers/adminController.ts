@@ -1,20 +1,26 @@
 import { Request, Response } from 'express';
 import AdminDashboardRepository from '../repositories/adminDashboardRepository';
+import RoadmapRepository from '../repositories/roadmapRepository';
 import { catchAsync } from '../utils/catchAsync';
 import { createAppError } from '../utils/createAppError';
 import UserRepository from '../repositories/userRepository';
 import SystemConfigRepository from '../repositories/systemConfigRepository';
+import AdminAuditLogRepository from '../repositories/adminAuditLogRepository';
 import { sendResponse } from '../utils/apiResponse';
 
 export default class AdminController {
   private readonly adminDashboardRepo: AdminDashboardRepository;
   private readonly userRepo: UserRepository;
+  private readonly roadmapRepo: RoadmapRepository;
   private readonly systemConfigRepo: SystemConfigRepository;
+  private readonly auditLogRepo: AdminAuditLogRepository;
 
   constructor() {
     this.adminDashboardRepo = new AdminDashboardRepository();
     this.userRepo = new UserRepository();
+    this.roadmapRepo = new RoadmapRepository();
     this.systemConfigRepo = new SystemConfigRepository();
+    this.auditLogRepo = new AdminAuditLogRepository();
   }
 
   // Dashboard and Metrics
@@ -33,7 +39,36 @@ export default class AdminController {
     const { userId } = req.params;
     const { roleId } = req.body;
     const user = await this.userRepo.updateUserRole(userId, roleId);
+
+    // Audit Log
+    await this.auditLogRepo.logAdminAction({
+      admin_id: req.user!.id,
+      action: 'UPDATE_USER_ROLE',
+      entity: 'USER',
+      entity_id: userId,
+      details: { roleId },
+      ip_address: req.ip,
+      user_agent: req.headers['user-agent'],
+    });
+
     sendResponse(res, 'USER_UPDATED', { data: user });
+  });
+
+  deleteUser = catchAsync(async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    await this.userRepo.deleteUser(userId);
+
+    // Audit Log
+    await this.auditLogRepo.logAdminAction({
+      admin_id: req.user!.id,
+      action: 'DELETE_USER',
+      entity: 'USER',
+      entity_id: userId,
+      ip_address: req.ip,
+      user_agent: req.headers['user-agent'],
+    });
+
+    sendResponse(res, 'USER_DELETED');
   });
 
   // Configuration Management
@@ -44,6 +79,18 @@ export default class AdminController {
       key,
       value,
     });
+
+    // Audit Log
+    await this.auditLogRepo.logAdminAction({
+      admin_id: req.user!.id,
+      action: 'UPDATE_CONFIG',
+      entity: 'SYSTEM_CONFIG',
+      entity_id: key,
+      details: { category, value },
+      ip_address: req.ip,
+      user_agent: req.headers['user-agent'],
+    });
+
     sendResponse(res, 'CONFIG_UPDATED', { data: config });
   });
 
@@ -81,6 +128,23 @@ export default class AdminController {
     sendResponse(res, 'AUDIT_LOGS_FETCHED', { data: logs });
   });
 
+  deleteRoadmap = catchAsync(async (req: Request, res: Response) => {
+    const { roadmapId } = req.params;
+    await this.roadmapRepo.delete({ where: { id: roadmapId } });
+
+    // Audit Log
+    await this.auditLogRepo.logAdminAction({
+      admin_id: req.user!.id,
+      action: 'DELETE_ROADMAP',
+      entity: 'ROADMAP',
+      entity_id: roadmapId,
+      ip_address: req.ip,
+      user_agent: req.headers['user-agent'],
+    });
+
+    sendResponse(res, 'ROADMAP_DELETED');
+  });
+
   // Content Moderation
   getContentModerationQueue = catchAsync(
     async (req: Request, res: Response) => {
@@ -104,6 +168,18 @@ export default class AdminController {
       reason,
       moderatorId
     );
+
+    // Audit Log
+    await this.auditLogRepo.logAdminAction({
+      admin_id: moderatorId,
+      action: `MODERATION_${action.toUpperCase()}`,
+      entity: 'CONTENT',
+      entity_id: contentId,
+      details: { reason },
+      ip_address: req.ip,
+      user_agent: req.headers['user-agent'],
+    });
+
     sendResponse(res, 'CONTENT_MODERATED', { data: content });
   });
 }

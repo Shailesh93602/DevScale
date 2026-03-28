@@ -5,6 +5,9 @@ import { useState, useCallback } from 'react';
 const httpClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   timeout: 20000,
+  withCredentials: true,
+  xsrfCookieName: 'XSRF-TOKEN',
+  xsrfHeaderName: 'X-XSRF-TOKEN',
   headers: {
     'Content-Type': 'application/json',
     'X-Requested-With': 'XMLHttpRequest',
@@ -40,12 +43,26 @@ async function getAccessToken(): Promise<string | null> {
   return _cachedToken;
 }
 
-// Add Supabase auth interceptor
+// Add Supabase auth and CSRF interceptors
 httpClient.interceptors.request.use(async (config) => {
+  // 1. Auth Token
   const token = await getAccessToken();
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+
+  // 2. CSRF Token (Double-Submit Token Pattern)
+  if (typeof document !== 'undefined') {
+    const csrfToken = document.cookie
+      .split('; ')
+      .find((row) => row.trim().startsWith('XSRF-TOKEN='))
+      ?.split('=')[1];
+
+    if (csrfToken) {
+      config.headers['X-XSRF-TOKEN'] = csrfToken;
+    }
+  }
+
   return config;
 });
 

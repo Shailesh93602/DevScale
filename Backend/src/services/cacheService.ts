@@ -1,4 +1,5 @@
 import Redis from 'ioredis';
+import Redlock from 'redlock';
 import logger from '../utils/logger';
 import { REDIS_URL } from '../config';
 
@@ -8,15 +9,46 @@ type CacheOptions = {
 };
 
 export const redis = new Redis(REDIS_URL, {
-  maxRetriesPerRequest: 3,
+  maxRetriesPerRequest: null, // Required for Redlock and Bull
   retryStrategy(times) {
     if (times > 3) return null;
     return Math.min(times * 50, 2000);
   },
 });
 
-redis.on('error', (err: any) => {
-  if (err.code !== 'ECONNREFUSED') {
+export const redlock = new Redlock(
+  [redis],
+  {
+    // The expected clock drift; for more check http://redis.io/topics/distlock
+    driftFactor: 0.01, // time in ms
+
+    // The max number of times Redlock will attempt to lock a resource
+    // before erroring.
+    retryCount: 10,
+
+    // the time in ms between attempts
+    retryDelay: 200, // time in ms
+
+    // the max time in ms randomly added to retries
+    // to improve performance under high contention
+    // see https://www.rahuljaitly.com/blog/distributed-locking-using-redis
+    retryJitter: 200, // time in ms
+
+    // The minimum remaining time on a lock before an extension is attempted
+    automaticExtensionThreshold: 500, // time in ms
+  }
+);
+
+redlock.on('error', (error: Error) => {
+  // Ignore 'resource_locked' errors as they are part of the normal flow
+  if (error.name !== 'ResourceLockedError') {
+    logger.error('Redlock Error:', error);
+  }
+});
+
+redis.on('error', (err: unknown) => {
+  const error = err as { code?: string };
+  if (error.code !== 'ECONNREFUSED') {
     logger.error('Redis Cache Error:', err);
   }
 });
@@ -46,7 +78,7 @@ export async function setCache<T>(
     } else {
       await redis.set(fullKey, serializedValue);
     }
-  } catch (error) {
+  } catch (error: unknown) {
     logger.error('Cache set error:', error);
   }
 }
