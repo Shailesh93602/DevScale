@@ -93,7 +93,7 @@ export default function About() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="mx-auto max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl"
           >
-            We're building the infrastructure for the next generation of
+            We&apos;re building the infrastructure for the next generation of
             engineers. Combining competitive coding, structured roadmaps, and a
             powerful community into one seamless platform.
           </motion.p>
@@ -145,7 +145,7 @@ export default function About() {
                 unprepared for the realities of modern software development.
               </p>
               <p>
-                We set out to build a platform that doesn't just act as a
+                We set out to build a platform that doesn&apos;t just act as a
                 tutorial, but as a{' '}
                 <strong className="text-foreground">proving ground</strong>.
                 Through interactive roadmaps, real-time Battle Zones, and
@@ -236,11 +236,11 @@ export default function About() {
             </h2>
             <p className="mb-8 text-lg text-muted-foreground">
               {BRANDING.name} is built and maintained by Shailesh Chaudhari, a
-              dedicated team pushing the boundaries of what specialized SaaS
+              dedicated individual pushing the boundaries of what specialized SaaS
               platforms can achieve in the EdTech space.
             </p>
             <a
-              href="https://exaveltech.com"
+              href="https://shaileshchaudhari.vercel.app"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background transition-transform hover:scale-105"

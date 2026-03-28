@@ -5,25 +5,6 @@ Everything here blocks or supports production launch. Work through P0 first.
 
 ---
 
-## P0 — Do Before First Production Deploy
-
-### 🔑 Supabase — Rotate Leaked Credentials
-`Frontend/.env` was in git history. Both keys are compromised.
-
-1. Go to **Supabase Dashboard → Project Settings → API**
-2. Click **"Rotate API key"** next to the anon/public key → copy new key
-3. Go to **Project Settings → Auth → JWT Settings** → click **"Generate new secret"**
-4. Update your Backend `.env`:
-   ```
-   SUPABASE_JWT_SIGNING_KEY=<new value>
-   SUPABASE_PUBLISHABLE_KEY=<new value>
-   ```
-5. Update your Frontend `.env.local`:
-   ```
-   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<new value>
-   ```
-6. Redeploy both services.
-
 ### 🔐 Supabase — Fix Google OAuth
 The OAuth redirect URL points to the wrong Supabase project.
 
@@ -32,6 +13,18 @@ The OAuth redirect URL points to the wrong Supabase project.
 3. Go to **Google Cloud Console → APIs & Services → Credentials → your OAuth client**
 4. Under **Authorized redirect URIs**, add the URL from step 2
 5. Save. Test login with Google.
+
+### 🌐 Supabase — Multi-Domain Auth (Whitelist)
+> Allows Google/GitHub login on both Vercel and Other domains.
+
+1. Go to **Supabase Dashboard → Authentication → URL Configuration**
+2. Set **Site URL** to your primary production URL (e.g., `https://eduscale.vercel.com`)
+3. Under **Redirect URLs**, add the following (one per line):
+   - `http://localhost:3000/auth/callback`
+   - `https://eduscale.vercel.app/auth/callback`
+   - `https://*.vercel.app/auth/callback`
+4. Click **Save** at the bottom of the page.
+
 
 ### 🛡️ GitHub — Branch Protection on `main`
 1. Go to **GitHub → repo → Settings → Branches → Add branch ruleset**

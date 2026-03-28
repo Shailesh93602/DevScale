@@ -45,4 +45,4 @@ We've integrated `express-rate-limit` connected natively to a robust Redis insta
 **EduScale Operates responsibly under Bug Bounty Principles.**
 Should you stumble upon an overarching security vulnerability within production structures (XSS, logic bypass, injection exploits) we ask you not to publicize it interactively unless communicated prior.
 
-Send detailed reproduction steps describing the payload framework via email: **security@exaveltech.com**. We aim to respond natively within 24 working hours.
+Send detailed reproduction steps describing the payload framework via email: **security@eduscale.com**. We aim to respond natively within 24 working hours.
