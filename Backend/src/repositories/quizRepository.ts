@@ -14,9 +14,7 @@ import { createAppError } from '../utils/errorHandler.js';
 
 import prisma from '../lib/prisma.js';
 
-export default class QuizRepository extends BaseRepository<
-  PrismaClient['quiz']
-> {
+export default class QuizRepository extends BaseRepository< Quiz, typeof prisma.quiz > {
   constructor() {
     super(prisma.quiz);
   }

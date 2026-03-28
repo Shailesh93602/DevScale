@@ -53,7 +53,7 @@ interface SummaryQueryResult {
   }> | null;
 }
 
-export class DashboardRepository extends BaseRepository<typeof prisma.user> {
+export class DashboardRepository extends BaseRepository< User, typeof prisma.user > {
   /**
    * Promise coalescing — if two requests arrive before the first completes,
    * they share the same in-flight promise instead of triggering duplicate DB calls.
