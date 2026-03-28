@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { catchAsync } from '../utils/index';
-import { sendResponse } from '../utils/apiResponse';
-import { MainConceptRepository } from '../repositories/mainConceptRepository';
+import { catchAsync } from '../utils/index.js';
+import { sendResponse } from '../utils/apiResponse.js';
+import { MainConceptRepository } from '../repositories/mainConceptRepository.js';
 
 export default class MainConceptController {
   private readonly mainConceptRepo: MainConceptRepository;

@@ -2,6 +2,7 @@
   "name": "eduscale-backend",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "dist/main.js",
   "engines": {
     "node": ">=18"
@@ -140,6 +141,7 @@
     "@types/nodemailer": "^6.4.17",
     "@types/opossum": "^8.1.9",
     "@types/pg": "^8.18.0",
+    "@types/redlock": "^4.0.8",
     "@types/sanitize-html": "^2.16.1",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.7",

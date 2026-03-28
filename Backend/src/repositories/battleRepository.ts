@@ -1,12 +1,28 @@
 import { BattleStatus, BattleType, Difficulty, PrismaClient, Prisma } from '@prisma/client';
-import BaseRepository from './baseRepository';
-import { createAppError } from '../utils/errorHandler';
-import prisma from '../lib/prisma';
-import logger from '../utils/logger';
-import { generateBattleSlug, isUuid } from '../utils/slugify';
-import { getCached, setCached, invalidatePattern } from '../services/memoryCache';
-import { redlock } from '../services/cacheService';
-import { Lock } from 'redlock';
+import BaseRepository from './baseRepository.js';
+import { createAppError } from '../utils/errorHandler.js';
+import prisma from '../lib/prisma.js';
+import logger from '../utils/logger.js';
+import { generateBattleSlug, isUuid } from '../utils/slugify.js';
+import { getCached, setCached, invalidatePattern } from '../services/memoryCache.js';
+import { redlock } from '../services/cacheService.js';
+
+type UserParticipation = Prisma.BattleParticipantGetPayload<{
+  include: {
+    battle: {
+      select: {
+        id: true;
+        title: true;
+        status: true;
+        winner_id: true;
+        difficulty: true;
+        topic: { select: { id: true; title: true } };
+        ended_at: true;
+        created_at: true;
+      };
+    };
+  };
+}>;
 
 // ─── Public selector shapes ────────────────────────────────────────────────
 
@@ -91,7 +107,7 @@ export function calculatePoints(
   let multiplier: number;
   if (fraction <= 0.25) multiplier = 1.5;
   else if (fraction <= 0.5) multiplier = 1.25;
-  else if (fraction <= 0.75) multiplier = 1.0;
+  else if (fraction <= 0.75) multiplier = 1;
   else multiplier = 0.75;
 
   return Math.floor(basePoints * multiplier);
@@ -140,7 +156,7 @@ export class BattleRepository extends BaseRepository<PrismaClient['battle']> {
 
   private async withBattleLock<T>(battleId: string, ttlMs: number, callback: () => Promise<T>): Promise<T> {
     const resource = `battle:lock:${battleId}`;
-    const lock: Lock = await redlock.acquire([resource], ttlMs);
+    const lock = await redlock.acquire([resource], ttlMs);
     try {
       return await callback();
     } finally {
@@ -588,7 +604,7 @@ export class BattleRepository extends BaseRepository<PrismaClient['battle']> {
         const question = await tx.battleQuestion.findUnique({
           where: { id: questionId },
         });
-        if (!question || question.battle_id !== battleId) {
+        if (question?.battle_id !== battleId) {
           throw createAppError('Invalid question', 400);
         }
 
@@ -977,24 +993,9 @@ export class BattleRepository extends BaseRepository<PrismaClient['battle']> {
   // ── User statistics ───────────────────────────────────────────────────────
 
   async getUserStats(userId: string, timeframe?: string) {
-    // Determine date filter
-    let since: Date | undefined;
-    const now = new Date();
-    if (timeframe === 'this-week') {
-      since = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
-    } else if (timeframe === 'this-month') {
-      since = new Date(now.getFullYear(), now.getMonth(), 1);
-    } else if (timeframe === 'this-year') {
-      since = new Date(now.getFullYear(), 0, 1);
-    }
-
-    const participationWhere = {
-      user_id: userId,
-      ...(since ? { joined_at: { gte: since } } : {}),
-    };
-
+    const since = this.getTimeframeSince(timeframe);
     const participations = await prisma.battleParticipant.findMany({
-      where: participationWhere,
+      where: { user_id: userId, ...(since ? { joined_at: { gte: since } } : {}) },
       include: {
         battle: {
           select: {
@@ -1013,29 +1014,72 @@ export class BattleRepository extends BaseRepository<PrismaClient['battle']> {
     });
 
     const completed = participations.filter((p) => p.battle.status === 'COMPLETED');
-    const wins = completed.filter((p) => p.battle.winner_id === userId).length;
-    const totalScore = completed.reduce((sum, p) => sum + p.score, 0);
-    const correctAnswers = completed.reduce((sum, p) => sum + p.correct_count, 0);
-    const totalAnswers = completed.reduce((sum, p) => sum + p.correct_count + p.wrong_count, 0);
-    const avgTimeMs = totalAnswers > 0
-      ? Math.round(completed.reduce((sum, p) => sum + p.avg_time_per_answer_ms * (p.correct_count + p.wrong_count), 0) / totalAnswers)
-      : 0;
+    const metrics = this.calculateParticipationMetrics(userId, completed);
 
-    // Recent 10 battles
-    const recentBattles = participations.slice(0, 10).map((p) => {
-      const resultShort = p.battle.winner_id === userId
-        ? 'won'
-        : p.battle.winner_id === null
-          ? 'draw'
-          : 'lost';
+    return {
+      stats: {
+        total_battles: participations.length,
+        completed_battles: completed.length,
+        wins: completed.filter((p) => p.battle.winner_id === userId).length,
+        total_score: metrics.totalScore,
+        correct_answers: metrics.correctAnswers,
+        total_answers: metrics.totalAnswers,
+        accuracy_rate: metrics.totalAnswers > 0 ? Math.round((metrics.correctAnswers / metrics.totalAnswers) * 100) : 0,
+        avg_time_ms: metrics.avgTimePerAnswer,
+      },
+      recent_battles: this.getRecentBattleSummaries(userId, participations.slice(0, 10)),
+      performance_by_difficulty: this.aggregateStatsByGroup(completed, (p) => p.battle.difficulty, userId),
+      performance_by_topic: this.aggregateStatsByGroup(completed, (p) => p.battle.topic?.id ?? 'unknown', userId, (p) => p.battle.topic?.title ?? 'Unknown')
+        .sort((a, b) => b.battles - a.battles)
+        .slice(0, 5),
+      performance_over_time: this.getPerformanceByWeek(userId, completed),
+    };
+  }
+
+  // ── Helper methods to reduce cognitive complexity ───────────────────────
+
+  private getTimeframeSince(timeframe?: string): Date | undefined {
+    const now = new Date();
+    if (timeframe === 'this-week') return new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
+    if (timeframe === 'this-month') return new Date(now.getFullYear(), now.getMonth(), 1);
+    if (timeframe === 'this-year') return new Date(now.getFullYear(), 0, 1);
+    return undefined;
+  }
+
+  private calculateParticipationMetrics(userId: string, completed: UserParticipation[]) {
+    const totalScore = completed.reduce((sum, p) => sum + (p.score || 0), 0);
+    const correctAnswers = completed.reduce((sum, p) => sum + (p.correct_count || 0), 0);
+    const totalAnswers = completed.reduce((sum, p) => sum + (p.correct_count || 0) + (p.wrong_count || 0), 0);
+    
+    const totalTimeTakenMs = completed.reduce((sum, p) => {
+      const qCount = (p.correct_count || 0) + (p.wrong_count || 0);
+      return sum + (p.avg_time_per_answer_ms || 0) * qCount;
+    }, 0);
+
+    return {
+      totalScore,
+      correctAnswers,
+      totalAnswers,
+      avgTimePerAnswer: totalAnswers > 0 ? Math.round(totalTimeTakenMs / totalAnswers) : 0,
+    };
+  }
+
+  private getRecentBattleSummaries(userId: string, participations: UserParticipation[]) {
+    return participations.map((p) => {
+      let resultLabel: string;
+      if (p.battle.status === 'COMPLETED') {
+        if (p.battle.winner_id === userId) resultLabel = 'won';
+        else if (p.battle.winner_id === null) resultLabel = 'draw';
+        else resultLabel = 'lost';
+      } else {
+        resultLabel = p.battle.status.toLowerCase();
+      }
 
       return {
         id: p.battle.id,
         title: p.battle.title,
         status: p.battle.status,
-        result: p.battle.status === 'COMPLETED'
-          ? resultShort
-          : p.battle.status.toLowerCase(),
+        result: resultLabel,
         score: p.score,
         rank: p.rank,
         difficulty: p.battle.difficulty,
@@ -1043,62 +1087,40 @@ export class BattleRepository extends BaseRepository<PrismaClient['battle']> {
         ended_at: p.battle.ended_at,
       };
     });
+  }
 
-    // Performance by difficulty
-    const difficultyMap = new Map<string, { wins: number; total: number; score: number }>();
+  private aggregateStatsByGroup(completed: UserParticipation[], keySelector: (p: UserParticipation) => string, userId: string, nameSelector?: (p: UserParticipation) => string) {
+    const map = new Map<string, { name: string; wins: number; total: number; score: number }>();
     for (const p of completed) {
-      const d = p.battle.difficulty;
-      const entry = difficultyMap.get(d) ?? { wins: 0, total: 0, score: 0 };
+      const key = keySelector(p);
+      const entry = map.get(key) ?? { name: nameSelector ? nameSelector(p) : key, wins: 0, total: 0, score: 0 };
       entry.total += 1;
       if (p.battle.winner_id === userId) entry.wins += 1;
-      entry.score += p.score;
-      difficultyMap.set(d, entry);
+      entry.score += (p.score || 0);
+      map.set(key, entry);
     }
-    const performanceByDifficulty = Array.from(difficultyMap.entries()).map(([difficulty, v]) => ({
-      difficulty,
+    return Array.from(map.entries()).map(([groupId, v]) => ({
+      groupId,
+      label: v.name,
       battles: v.total,
       wins: v.wins,
       win_rate: v.total > 0 ? Math.round((v.wins / v.total) * 100) : 0,
       avg_score: v.total > 0 ? Math.round(v.score / v.total) : 0,
     }));
+  }
 
-    // Performance by topic
-    const topicMap = new Map<string, { name: string; wins: number; total: number; score: number }>();
-    for (const p of completed) {
-      const topicId = p.battle.topic?.id ?? 'unknown';
-      const topicName = p.battle.topic?.title ?? 'Unknown';
-      const entry = topicMap.get(topicId) ?? { name: topicName, wins: 0, total: 0, score: 0 };
-      entry.total += 1;
-      if (p.battle.winner_id === userId) entry.wins += 1;
-      entry.score += p.score;
-      topicMap.set(topicId, entry);
-    }
-    const performanceByTopic = Array.from(topicMap.entries())
-      .map(([topic_id, v]) => ({
-        topic_id,
-        topic: v.name,
-        battles: v.total,
-        wins: v.wins,
-        win_rate: v.total > 0 ? Math.round((v.wins / v.total) * 100) : 0,
-        avg_score: v.total > 0 ? Math.round(v.score / v.total) : 0,
-      }))
-      .sort((a, b) => b.battles - a.battles);
-
-    // Top topics (by count)
-    const topTopics = performanceByTopic.slice(0, 5);
-
-    // Performance over time (last 8 weeks, grouped by week)
-    const eightWeeksAgo = new Date(now.getTime() - 56 * 24 * 60 * 60 * 1000);
-    const recentCompleted = completed.filter(
-      (p) => p.battle.ended_at && p.battle.ended_at >= eightWeeksAgo
-    );
+  private getPerformanceByWeek(userId: string, completed: UserParticipation[]) {
+    const eightWeeksAgo = new Date(Date.now() - 56 * 24 * 60 * 60 * 1000);
+    const recent = completed.filter(p => p.battle.ended_at && p.battle.ended_at >= eightWeeksAgo);
+    
     const weekMap = new Map<string, { wins: number; total: number; score: number }>();
-    for (const p of recentCompleted) {
-      if (!p.battle.ended_at) continue;
+    for (const p of recent) {
       const d = p.battle.ended_at;
+      if (!d) continue;
       const weekStart = new Date(d);
       weekStart.setDate(d.getDate() - d.getDay());
       const key = weekStart.toISOString().split('T')[0];
+
       const entry = weekMap.get(key) ?? { wins: 0, total: 0, score: 0 };
       entry.total += 1;
       if (p.battle.winner_id === userId) entry.wins += 1;
@@ -1114,25 +1136,7 @@ export class BattleRepository extends BaseRepository<PrismaClient['battle']> {
         avg_score: v.total > 0 ? Math.round(v.score / v.total) : 0,
       }));
 
-    return {
-      // Core summary
-      total_battles: participations.length,
-      completed_battles: completed.length,
-      wins,
-      win_rate: completed.length > 0 ? Math.round((wins / completed.length) * 100) : 0,
-      total_score: totalScore,
-      accuracy: totalAnswers > 0 ? Math.round((correctAnswers / totalAnswers) * 100) : 0,
-      // Detailed stats
-      questions_answered: totalAnswers,
-      correct_answers: correctAnswers,
-      avg_time_ms: avgTimeMs,
-      // Lists
-      recent_battles: recentBattles,
-      top_topics: topTopics,
-      performance_by_difficulty: performanceByDifficulty,
-      performance_by_topic: performanceByTopic,
-      performance_over_time: performanceOverTime,
-    };
+    return performanceOverTime;
   }
 
   // ── Status transition ─────────────────────────────────────────────────────

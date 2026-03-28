@@ -1,7 +1,7 @@
 // Sentry must be initialised before any other imports so it can instrument them
-import '../instrument';
+import '../instrument.js';
 // Validate env vars before anything else — crashes with a clear message on misconfiguration
-import './config/env';
+import './config/env.js';
 
 import 'module-alias/register';
 
@@ -17,16 +17,16 @@ import {
   CLOUDINARY_CLOUD_NAME,
   CORS_ORIGIN,
   PORT,
-} from './config';
-import { AppRoutes } from './routes/routes';
-import { errorHandler } from './middlewares/errorHandler';
-import { requestIdMiddleware } from './middlewares/requestIdMiddleware';
-import { setCsrfToken, verifyCsrfToken } from './middlewares/csrfMiddleware';
-import logger from './utils/logger';
+} from './config/index.js';
+import { AppRoutes } from './routes/routes.js';
+import { errorHandler } from './middlewares/errorHandler.js';
+import { requestIdMiddleware } from './middlewares/requestIdMiddleware.js';
+import { setCsrfToken, verifyCsrfToken } from './middlewares/csrfMiddleware.js';
+import logger from './utils/logger.js';
 import { v2 as cloudinary } from 'cloudinary';
-import prisma from './lib/prisma';
-import socketService from './services/socket';
-import { redis } from './services/cacheService';
+import prisma from './lib/prisma.js';
+import socketService from './services/socket.js';
+import { redis } from './services/cacheService.js';
 import { RedisStore, RedisReply } from 'rate-limit-redis';
 
 declare const require: NodeRequire;
