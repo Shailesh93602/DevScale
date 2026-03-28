@@ -1,9 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useSelector } from 'react-redux';
 import { FaTwitter, FaLinkedin, FaGithub, FaDiscord } from 'react-icons/fa';
-import { BRANDING } from '@/constants';
 import { cn } from '@/lib/utils';
 import {
   quickLinks,
@@ -51,7 +49,7 @@ export default function Footer() {
                 <a
                   key={link.name}
                   href={link.href}
-                  className="hover:border-primary/30 hover:bg-primary/8 flex h-8 w-8 items-center justify-center rounded-lg border border-border text-muted-foreground no-underline transition-all duration-150 hover:text-primary"
+                  className="hover:border-primary/30 hover:bg-primary/8 flex h-11 w-11 items-center justify-center rounded-lg border border-border text-muted-foreground no-underline transition-all duration-150 hover:text-primary"
                   aria-label={link.name}
                   target="_blank"
                   rel="noopener noreferrer"
