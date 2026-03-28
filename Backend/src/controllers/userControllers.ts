@@ -24,7 +24,7 @@ export default class UserController {
     const cacheKey = `user:profile:${userId}`;
 
     // 1. Check cache first
-    const cachedProfile = getCached<any>(cacheKey);
+    const cachedProfile = getCached<unknown>(cacheKey);
     if (cachedProfile) {
       return sendResponse(res, 'PROFILE_FETCHED', {
         data: cachedProfile,
