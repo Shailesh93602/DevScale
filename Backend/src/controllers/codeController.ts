@@ -6,6 +6,11 @@ import { executeCode } from '../utils/codeExecutor';
 import { wrapCode } from '../utils/codeWrapper';
 import { ChallengeRepository } from '../repositories/challengeRepository';
 import prisma from '../lib/prisma';
+import { Prisma } from '@prisma/client';
+
+type ChallengeWithTestCases = Prisma.ChallengeGetPayload<{
+  include: { test_cases: true };
+}>;
 
 export default class CodeController {
   private readonly challengeRepo: ChallengeRepository;
@@ -74,12 +79,12 @@ export default class CodeController {
 
     logger.debug('Resolved code execution target', { challengeId, challengeTitle });
 
-    let challenge: any = null;
+    let challenge: ChallengeWithTestCases | null = null;
 
     if (challengeId) {
       try {
         // Try finding by ID first, then by title if it's a string
-        challenge = await this.challengeRepo.findFirst({
+        challenge = (await this.challengeRepo.findFirst({
           where: {
             OR: [
               { id: challengeId },
@@ -88,7 +93,7 @@ export default class CodeController {
             ]
           },
           include: { test_cases: true }
-        });
+        })) as ChallengeWithTestCases | null;
 
         if (challenge) {
           logger.debug('Found challenge for wrapping', { title: challenge.title });
@@ -105,12 +110,11 @@ export default class CodeController {
     }
 
     const result = await (async () => {
-      const results: any[] = [];
-      const testCasesToRun = [];
+        const testCasesToRun = [];
 
-      if (challenge && challenge.test_cases?.length > 0) {
-        // Run all public test cases
-        const publicCases = challenge.test_cases.filter((tc: any) => !tc.is_hidden);
+        if (challenge && challenge.test_cases?.length > 0) {
+          // Run all public test cases
+          const publicCases = challenge.test_cases.filter((tc) => !tc.is_hidden);
         testCasesToRun.push(...publicCases);
       } else {
         // Basic execution with provided input or default
@@ -143,11 +147,12 @@ export default class CodeController {
             executionTime: execResult.executionTime,
             memoryUsed: execResult.memoryUsed,
           };
-        } catch (err: any) {
+        } catch (err) {
+          const errorMessage = err instanceof Error ? err.message : 'Execution Error';
           return {
             input: tc.input,
             expectedOutput: tc.output,
-            actualOutput: err.message || 'Execution Error',
+            actualOutput: errorMessage,
             status: 'Error',
             executionTime: 0,
             memoryUsed: 0,

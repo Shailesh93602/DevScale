@@ -4,8 +4,7 @@ type AsyncHandler = (
   req: Request,
   res: Response,
   next: NextFunction
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-) => Promise<any>;
+) => Promise<void>;
 
 export const catchAsync = (fn: AsyncHandler) => {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -13,7 +12,6 @@ export const catchAsync = (fn: AsyncHandler) => {
   };
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const parse = (obj: any) => {
+export const parse = (obj: unknown) => {
   return JSON.parse(JSON.stringify(obj));
 };

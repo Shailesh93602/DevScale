@@ -4,6 +4,11 @@ import { sendResponse } from '../utils/apiResponse';
 import SubjectRepository from '../repositories/subjectRepository';
 import prisma from '../lib/prisma';
 import { isUuid } from '../utils/slugify';
+import { Prisma } from '@prisma/client';
+
+type SubjectWithTopics = Prisma.SubjectGetPayload<{
+  include: { topics: { include: { topic: true } } };
+}>;
 
 export default class SubjectController {
   private readonly subjectRepository: SubjectRepository;
@@ -46,7 +51,7 @@ export default class SubjectController {
             },
           },
         },
-      })) as any;
+      })) as SubjectWithTopics | null;
 
       if (!subject) {
         return sendResponse(res, 'SUBJECT_NOT_FOUND');
@@ -60,15 +65,15 @@ export default class SubjectController {
         const userProgressList = await prisma.userProgress.findMany({
           where: {
             user_id: userId,
-            topic_id: { in: subject.topics.map((t: any) => t.topic_id) }
+            topic_id: { in: subject.topics.map((t) => t.topic_id) }
           }
         });
 
         const completedMap = new Set(
-          userProgressList.filter((p: any) => p.is_completed).map((p: any) => p.topic_id)
+          userProgressList.filter((p) => p.is_completed).map((p) => p.topic_id)
         );
 
-        topicsWithProgress = subject.topics.map((t: any) => ({
+        topicsWithProgress = subject.topics.map((t) => ({
           ...t,
           topic: {
             ...t.topic,
