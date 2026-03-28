@@ -11,7 +11,7 @@ export const RoadmapHero = ({ roadmapDetails }: RoadmapHeroProps) => {
   const tags = roadmapDetails?.tags ? roadmapDetails.tags.split(',') : [];
   
   return (
-    <div className="flex flex-col justify-center space-y-6 rounded-2xl bg-card/60 p-8 backdrop-blur-sm">
+    <div className="flex flex-col justify-center space-y-6 rounded-2xl bg-card/60 p-6 backdrop-blur-sm sm:p-8">
       <div className="space-y-4">
         <div className="flex items-center space-x-2">
           <Badge
