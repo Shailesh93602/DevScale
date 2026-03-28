@@ -54,6 +54,12 @@ const envSchema = z.object({
   MAIL_ADDRESS: z.string().optional(),
   MAIL_PASSWORD: z.string().optional(),
   ALERT_EMAIL: z.string().email().optional(),
+  
+  // ── Stripe (High Priority Features) ──────────────────────────────────────
+  STRIPE_SECRET_KEY: z.string().optional().or(z.literal('')),
+  STRIPE_WEBHOOK_SECRET: z.string().optional().or(z.literal('')),
+  STRIPE_PRO_PRICE_ID: z.string().optional().or(z.literal('')),
+  STRIPE_TEAM_PRICE_ID: z.string().optional().or(z.literal('')),
 });
 
 function validateEnv() {
@@ -91,6 +97,7 @@ function validateEnv() {
     if (!env.SENTRY_DSN) productionWarnings.push('SENTRY_DSN (error tracking disabled)');
     if (!env.SMTP_HOST) productionWarnings.push('SMTP_HOST (email delivery disabled)');
     if (!env.COMPILER_CLIENT_SECRET) productionWarnings.push('COMPILER_CLIENT_SECRET (code execution disabled)');
+    if (!env.STRIPE_SECRET_KEY) productionWarnings.push('STRIPE_SECRET_KEY (billing disabled)');
 
     if (productionWarnings.length > 0) {
       process.stderr.write(

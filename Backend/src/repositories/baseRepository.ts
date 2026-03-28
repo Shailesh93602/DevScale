@@ -36,84 +36,84 @@ export default abstract class BaseRepository<T, D extends PrismaDelegate = Prism
    * Finds a unique record.
    */
   async findUnique(args: unknown): Promise<T | null> {
-    return this.delegate.findUnique?.(args as any);
+    return (await this.delegate.findUnique?.(args as any) as unknown as T | null) ?? null;
   }
 
   /**
    * Finds the first record.
    */
   async findFirst(args: unknown): Promise<T | null> {
-    return this.delegate.findFirst?.(args as any);
+    return (await this.delegate.findFirst?.(args as any) as unknown as T | null) ?? null;
   }
 
   /**
    * Finds multiple records.
    */
   async findMany(args?: unknown): Promise<T[]> {
-    return this.delegate.findMany?.(args as any) || [];
+    return (await this.delegate.findMany?.(args as any) as unknown as T[]) ?? [];
   }
 
   /**
    * Creates a new record.
    */
   async create(args: unknown): Promise<T> {
-    return this.delegate.create?.(args as any);
+    return this.delegate.create?.(args as any) as unknown as T;
   }
 
   /**
    * Creates multiple records.
    */
   async createMany(args: unknown): Promise<{ count: number }> {
-    return this.delegate.createMany?.(args as any) || { count: 0 };
+    return (await this.delegate.createMany?.(args as any) as unknown as { count: number }) ?? { count: 0 };
   }
 
   /**
    * Updates an existing record.
    */
   async update(args: unknown): Promise<T> {
-    return this.delegate.update?.(args as any);
+    return this.delegate.update?.(args as any) as unknown as T;
   }
 
   /**
    * Updates multiple records.
    */
   async updateMany(args: unknown): Promise<{ count: number }> {
-    return this.delegate.updateMany?.(args as any) || { count: 0 };
+    return (await this.delegate.updateMany?.(args as any) as unknown as { count: number }) ?? { count: 0 };
   }
 
   /**
    * Deletes a record.
    */
   async delete(args: unknown): Promise<T> {
-    return this.delegate.delete?.(args as any);
+    return this.delegate.delete?.(args as any) as unknown as T;
   }
 
   /**
    * Deletes multiple records.
    */
   async deleteMany(args: unknown): Promise<{ count: number }> {
-    return this.delegate.deleteMany?.(args as any) || { count: 0 };
+    return (await this.delegate.deleteMany?.(args as any) as unknown as { count: number }) ?? { count: 0 };
   }
 
   /**
    * Upserts a record.
    */
   async upsert(args: unknown): Promise<T> {
-    return this.delegate.upsert?.(args as any);
+    return this.delegate.upsert?.(args as any) as unknown as T;
   }
 
   /**
    * Counts records matching the criteria.
    */
   async count(args?: unknown): Promise<number> {
-    return this.delegate.count?.(args as any) || 0;
+    return (await this.delegate.count?.(args as any) as unknown as number) ?? 0;
   }
 
   /**
    * Get records grouped by a specific field.
    */
-  async groupBy(args: unknown): Promise<any[]> {
-    return this.delegate.groupBy?.(args as any) || [];
+  async groupBy(args: unknown): Promise<unknown[]> {
+    return (await this.delegate.groupBy?.(args as any) as unknown as unknown[]) ?? [];
   }
 
   /**
@@ -134,8 +134,8 @@ export default abstract class BaseRepository<T, D extends PrismaDelegate = Prism
     const limit = options.limit || 10;
     const skip = (page - 1) * limit;
     
-    // Internal logic uses 'any' to interact with Prisma's complex 'where' types.
-    let finalWhere: any = { ...whereClause };
+    // Internal logic uses type assertions to interact with Prisma's complex 'where' types.
+    const where = { ...whereClause } as any;
 
     // If search text is provided and search fields exist, add search conditions.
     if (options.search && searchFields && searchFields.length > 0) {
@@ -146,33 +146,30 @@ export default abstract class BaseRepository<T, D extends PrismaDelegate = Prism
         },
       }));
 
-      if (finalWhere.AND) {
-        finalWhere.AND.push({ OR: searchConditions });
-      } else if (finalWhere.OR) {
-        const existingOR = finalWhere.OR;
-        finalWhere = { AND: [{ OR: existingOR }, { OR: searchConditions }] };
+      if (where.AND) {
+        where.AND.push({ OR: searchConditions });
+      } else if (where.OR) {
+        const existingOR = where.OR;
+        where.AND = [{ OR: existingOR }, { OR: searchConditions }];
       } else {
-        finalWhere.OR = searchConditions;
+        where.OR = searchConditions;
       }
     }
 
     // Merge additional filters if provided.
     if (options.filter) {
-      finalWhere = {
-        ...finalWhere,
-        AND: [
-          ...(finalWhere.AND || []),
-          ...Object.entries(options.filter).map(([key, value]) => ({
-            [key]: value,
-          })),
-        ],
-      };
+      where.AND = [
+        ...(where.AND || []),
+        ...Object.entries(options.filter).map(([key, value]) => ({
+          [key]: value,
+        })),
+      ];
     }
 
     const [total, data] = await Promise.all([
-      (this.delegate.count?.({ where: finalWhere }) || Promise.resolve(0)),
+      (this.delegate.count?.({ where }) || Promise.resolve(0)),
       (this.delegate.findMany?.({
-        where: finalWhere,
+        where,
         skip,
         take: limit,
         orderBy: options.sort

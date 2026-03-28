@@ -17,7 +17,11 @@ All shipped items, grouped by session. Newest first.
 | Item | File(s) |
 |------|---------|
 | **CSRF Protection** — Double-submit token pattern implemented globally; stateless cookie-based verification for state-changing requests | `Backend/src/middlewares/csrfMiddleware.ts`, `main.ts` |
-| **Types & Lints** — eliminated `any` usage in Redis handlers; fixed unused variable lints in repository layers | `Backend/src/services/cacheService.ts`, `BattleRepository.ts` |
+| **Types & Lints** — eliminated `any` usage in Redis handlers; fixed unused variable lints in repository layers; **reached zero explicit `: any` declarations** in the backend business logic and Konstrukt layer | `Backend/src/services/cacheService.ts`, `BattleRepository.ts`, `BaseRepository.ts` |
+| **Supabase Security** — rotated JWT secret; verified Google OAuth redirect whitelists in Supabase Dashboard and Google Cloud Console | `MANUAL.md` |
+| **Cookie Compliance** — verified `SameSite=Strict` flag on all production cookies via browser audit | `MANUAL.md` |
+| **Branch Protection** — enabled on `main` branch (PR requirement, status check enforcement) | `MANUAL.md` |
+| **Audit Log Verification** — verified `AdminAuditLog` wiring for all destructive admin actions; completed production `leaderboardRepository` data audit | `MANUAL.md`, `LeaderboardRepository.ts` |
 
 ### Docs & Process
 | Item | File(s) |
