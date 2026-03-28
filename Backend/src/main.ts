@@ -58,9 +58,18 @@ export class App {
   }
 
   private initializeMiddlewares(): void {
-    this.app.use(requestIdMiddleware); // Must be first — stamps every request with a requestId
+    this.app.use(requestIdMiddleware);
     this.app.use(compression());
-    this.app.use(express.json());
+    
+    // Global body parsers — skip JSON for stripe webhooks to allow raw parsing in SubscriptionRoutes
+    this.app.use((req, res, next) => {
+      if (req.originalUrl.includes('/billing/stripe/webhook')) {
+        next();
+      } else {
+        express.json()(req, res, next);
+      }
+    });
+
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
     // CSRF Double-Submit Token Pattern (stateless)

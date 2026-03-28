@@ -1,32 +1,33 @@
 import { Router } from 'express';
-import { UserRoutes } from './userRoutes';
-import { AdminRoutes } from './adminRoutes';
-import { AnalyticsRoutes } from './analyticsRoutes';
-import { RoadMapRoutes } from './roadMapRoutes';
-import { ArticleRoutes } from './articleRoutes';
-import { ResourceRoutes } from './resourceRoutes';
-import { ChallengeRoutes } from './challengeRoutes';
-import { TopicRoutes } from './topicRoutes';
-import { SubjectRoutes } from './subjectRoutes';
-import { MainConceptRoutes } from './mainConceptRoutes';
-import { HealthCheckRoutes } from './healthCheckRoutes';
-import { StreakRoutes } from './streakRoutes';
-import { DashboardRoutes } from './dashboardRoutes';
-import { BattleRoutes } from './battleRoutes';
-import { ChatRoutes } from './chatRoutes';
-import { CommunityForumRoutes } from './communityForumRoutes';
-import { CourseRoutes } from './courseRoutes';
-import { JobRoutes } from './jobRoutes';
-import { LeaderboardRoutes } from './leaderBoardRoutes';
-import { PlacementRoutes } from './placementRoutes';
-import { ProgressRoutes } from './progressRoutes';
-import { QuestionRoutes } from './questionRoutes';
-import { QuizRouter } from './quizRoutes';
-import { RBACRoutes } from './rbacRoutes';
-import { SupportRoutes } from './supportRoutes';
-import { CodeRoutes } from './codeRoutes';
-import { AuthRoutes } from './authRoutes';
-import { StatsRoutes } from './statsRoutes';
+import { UserRoutes } from './userRoutes.js';
+import { AdminRoutes } from './adminRoutes.js';
+import { AnalyticsRoutes } from './analyticsRoutes.js';
+import { RoadMapRoutes } from './roadMapRoutes.js';
+import { ArticleRoutes } from './articleRoutes.js';
+import { ResourceRoutes } from './resourceRoutes.js';
+import { ChallengeRoutes } from './challengeRoutes.js';
+import { TopicRoutes } from './topicRoutes.js';
+import { SubjectRoutes } from './subjectRoutes.js';
+import { MainConceptRoutes } from './mainConceptRoutes.js';
+import { HealthCheckRoutes } from './healthCheckRoutes.js';
+import { StreakRoutes } from './streakRoutes.js';
+import { DashboardRoutes } from './dashboardRoutes.js';
+import { BattleRoutes } from './battleRoutes.js';
+import { ChatRoutes } from './chatRoutes.js';
+import { CommunityForumRoutes } from './communityForumRoutes.js';
+import { CourseRoutes } from './courseRoutes.js';
+import { JobRoutes } from './jobRoutes.js';
+import { LeaderboardRoutes } from './leaderBoardRoutes.js';
+import { PlacementRoutes } from './placementRoutes.js';
+import { ProgressRoutes } from './progressRoutes.js';
+import { QuestionRoutes } from './questionRoutes.js';
+import { QuizRouter } from './quizRoutes.js';
+import { RBACRoutes } from './rbacRoutes.js';
+import { SupportRoutes } from './supportRoutes.js';
+import { CodeRoutes } from './codeRoutes.js';
+import { AuthRoutes } from './authRoutes.js';
+import { StatsRoutes } from './statsRoutes.js';
+import { SubscriptionRoutes } from './subscriptionRoutes.js';
 
 export class AppRoutes {
   private readonly router: Router;
@@ -75,6 +76,7 @@ export class AppRoutes {
     this.router.use('/support', new SupportRoutes().getRouter());
     this.router.use('/run-code', new CodeRoutes().getRouter());
     this.router.use('/stats', new StatsRoutes().getRouter());
+    this.router.use('/billing', new SubscriptionRoutes().getRouter());
   }
 
   public getRouter(): Router {

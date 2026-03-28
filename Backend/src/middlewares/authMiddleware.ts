@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { createClient, User as SupabaseUser } from '@supabase/supabase-js';
-import { createAppError } from '../utils/errorHandler';
-import logger from '../utils/logger';
-import prisma from '../lib/prisma';
+import { createAppError } from '../utils/errorHandler.js';
+import logger from '../utils/logger.js';
+import prisma from '../lib/prisma.js';
 import crypto from 'node:crypto';
-import { redis } from '../services/cacheService';
+import { redis } from '../services/cacheService.js';
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
@@ -119,7 +119,7 @@ export const authMiddleware = async (
 
     let userData = (await prisma.user.findUnique({
       where: { supabase_id: user.id },
-      include: { role: true },
+      include: { role: true, subscription: true },
     })) as unknown as Request['user'];
 
     if (!userData) {
@@ -139,7 +139,7 @@ export const authMiddleware = async (
           status: 'active',
           is_active: true,
         },
-        include: { role: true },
+        include: { role: true, subscription: true },
       }))) as unknown as Request['user'];
       logger.info('New user synced from Supabase', { userId: userData.id });
     } else {
@@ -157,7 +157,7 @@ export const authMiddleware = async (
             last_name: (metadata.last_name as string) || userData.last_name,
             avatar_url: (metadata.avatar_url as string) || userData.avatar_url,
           },
-          include: { role: true },
+          include: { role: true, subscription: true },
         })) as unknown as Request['user'];
       }
     }
@@ -207,7 +207,7 @@ export const optionalAuthMiddleware = async (
     try {
       const userData = (await prisma.user.findUnique({
         where: { supabase_id: user.id },
-        include: { role: true },
+        include: { role: true, subscription: true },
       })) as unknown as Request['user'];
       
       if (userData) {
