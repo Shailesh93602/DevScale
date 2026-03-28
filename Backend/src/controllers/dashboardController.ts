@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { catchAsync } from '../utils/catchAsync';
-import { DashboardRepository } from '../repositories/dashboardRepository';
-import { createAppError } from '../utils/createAppError';
-import { sendResponse } from '../utils/apiResponse';
+import { catchAsync } from '../utils/catchAsync.js';
+import { DashboardRepository } from '../repositories/dashboardRepository.js';
+import { createAppError } from '../utils/createAppError.js';
+import { sendResponse } from '../utils/apiResponse.js';
 
 export class DashboardController {
   private readonly dashboardRepo: DashboardRepository;
@@ -72,20 +72,7 @@ export class DashboardController {
 
     const summary = await this.dashboardRepo.getDashboardSummary(userId);
 
-    // ETag: hash of userId + a stable time bucket so cache busts every 5 min
-    const timeBucket = Math.floor(Date.now() / (5 * 60 * 1000));
-    const etag = `"${userId.slice(0, 8)}-${timeBucket}"`;
-
-    // Return 304 Not Modified if client already has fresh data
-    if (req.headers['if-none-match'] === etag) {
-      res.status(304).end();
-      return;
-    }
-
-    // private: user-specific, max-age=300 (5 min), stale-while-revalidate=60
-    res.setHeader('Cache-Control', 'private, max-age=300, stale-while-revalidate=60');
-    res.setHeader('ETag', etag);
-
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     return sendResponse(res, 'DASHBOARD_SUMMARY_FETCHED', { data: summary });
   });
 }

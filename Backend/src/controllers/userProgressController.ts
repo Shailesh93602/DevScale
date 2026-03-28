@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
-import { createAppError } from '../middlewares/errorHandler';
-import UserProgressRepository from '../repositories/userProgressRepository';
-import UserPointsRepository from '../repositories/userPointsRepository';
-import { catchAsync } from '../utils';
-import { sendResponse } from '../utils/apiResponse';
+import { createAppError } from '../middlewares/errorHandler.js';
+import UserProgressRepository from '../repositories/userProgressRepository.js';
+import UserPointsRepository from '../repositories/userPointsRepository.js';
+import { catchAsync } from '../utils/index.js';
+import { sendResponse } from '../utils/apiResponse.js';
+import { invalidatePattern } from '../services/memoryCache.js';
 
 export default class UserProgressController {
   private readonly userProgressRepo: UserProgressRepository;
@@ -45,6 +46,7 @@ export default class UserProgressController {
       await this.userPointsRepo.updateUserPoints(userId, score || 10);
     }
 
+    invalidatePattern(`dashboard:summary:${userId}`); // Ensure dashboard shows progress
     sendResponse(res, 'PROGRESS_UPDATED');
   });
 }
