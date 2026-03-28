@@ -58,7 +58,7 @@ export class DashboardRepository extends BaseRepository<typeof prisma.user> {
    * Promise coalescing — if two requests arrive before the first completes,
    * they share the same in-flight promise instead of triggering duplicate DB calls.
    */
-  private readonly _pending = new Map<string, Promise<any>>();
+  private readonly _pending = new Map<string, Promise<unknown>>();
 
   constructor() {
     super(prisma.user);
