@@ -20,7 +20,8 @@
     "paths": {
       "@/*": ["./src/*"],
       "@common/*": ["./src/common/*"],
-      "@constants/*": ["./src/common/constants/*"]
+      "@constants/*": ["./src/common/constants/*"],
+      "redlock": ["./node_modules/redlock/dist/index.d.ts"]
     }
   },
   "ts-node": {
