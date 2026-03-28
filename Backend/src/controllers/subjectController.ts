@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import { catchAsync } from '../utils/index';
-import { sendResponse } from '../utils/apiResponse';
-import SubjectRepository from '../repositories/subjectRepository';
-import prisma from '../lib/prisma';
-import { isUuid } from '../utils/slugify';
+import { catchAsync } from '../utils/index.js';
+import { sendResponse } from '../utils/apiResponse.js';
+import SubjectRepository from '../repositories/subjectRepository.js';
+import prisma from '../lib/prisma.js';
+import { isUuid } from '../utils/slugify.js';
 import { Prisma } from '@prisma/client';
 
 type SubjectWithTopics = Prisma.SubjectGetPayload<{
@@ -17,12 +17,13 @@ export default class SubjectController {
     this.subjectRepository = new SubjectRepository();
   }
   public getAllSubjects = catchAsync(async (req: Request, res: Response) => {
-    const { limit = 10, page = 1, search = '' } = req.query;
+    const { limit = 10, page = 1 } = req.query;
+    const search = typeof req.query.search === 'string' ? req.query.search : '';
     const subjects = await this.subjectRepository.paginate(
       {
         limit: Number(limit),
         page: Number(page),
-        search: String(search),
+        search,
       },
       ['title']
     );

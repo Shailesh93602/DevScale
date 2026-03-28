@@ -1,25 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { PaginatedResult, PaginationParams } from '../types';
+import { PaginatedResult, PaginationParams } from '../types/index.js';
 import { PrismaClient } from '@prisma/client';
-import prisma from '../lib/prisma';
+import prisma from '../lib/prisma.js';
 
 type PrismaDelegate = {
-  findUnique: (args: any) => Promise<any>;
-  findMany: (args?: any) => Promise<any[]>;
-  create: (args: any) => Promise<any>;
-  update: (args: any) => Promise<any>;
-  delete: (args: any) => Promise<any>;
-  upsert: (args: any) => Promise<any>;
-  count: (args?: any) => Promise<number>;
-  groupBy: (args?: any) => Promise<any>;
-  findFirst: (args?: any) => Promise<any>;
-  createMany: (args?: any) => Promise<any>;
-  updateMany: (args: any) => Promise<any>;
-  deleteMany: (args: any) => Promise<any>;
+  findUnique: (...args: any[]) => Promise<any>;
+  findMany: (...args: any[]) => Promise<any[]>;
+  create: (...args: any[]) => Promise<any>;
+  update: (...args: any[]) => Promise<any>;
+  delete: (...args: any[]) => Promise<any>;
+  upsert: (...args: any[]) => Promise<any>;
+  count: (...args: any[]) => Promise<number>;
+  groupBy: (...args: any[]) => Promise<any>;
+  findFirst: (...args: any[]) => Promise<any>;
+  createMany: (...args: any[]) => Promise<any>;
+  updateMany: (...args: any[]) => Promise<any>;
+  deleteMany: (...args: any[]) => Promise<any>;
 };
 
-// src/repositories/base.repository.ts
+// src/repositories/baseRepository.ts
 export default abstract class BaseRepository<D extends PrismaDelegate> {
   protected prismaClient: PrismaClient;
   protected delegate: D;
@@ -32,106 +32,84 @@ export default abstract class BaseRepository<D extends PrismaDelegate> {
   /**
    * Finds a unique record.
    */
-  async findUnique(
-    args: Parameters<D['findUnique']>[0]
-  ): Promise<ReturnType<D['findUnique']>> {
+  async findUnique(args: any): Promise<any> {
     return this.delegate.findUnique(args);
   }
 
   /**
    * Finds the first record.
    */
-  async findFirst(
-    args: Parameters<D['findFirst']>[0]
-  ): Promise<ReturnType<D['findFirst']>> {
+  async findFirst(args: any): Promise<any> {
     return this.delegate.findFirst(args);
   }
 
   /**
    * Finds multiple records.
    */
-  async findMany(
-    args?: Parameters<D['findMany']>[0]
-  ): Promise<ReturnType<D['findMany']>> {
-    return this.delegate.findMany(args) as ReturnType<D['findMany']>;
+  async findMany(args?: any): Promise<any[]> {
+    return this.delegate.findMany(args);
   }
 
   /**
    * Creates a new record.
    */
-  async create(
-    args: Parameters<D['create']>[0]
-  ): Promise<ReturnType<D['create']>> {
+  async create(args: any): Promise<any> {
     return this.delegate.create(args);
   }
 
   /**
    * Creates multiple records.
    */
-  async createMany(
-    args: Parameters<D['createMany']>[0]
-  ): Promise<ReturnType<D['createMany']>> {
+  async createMany(args: any): Promise<any> {
     return this.delegate.createMany(args);
   }
 
   /**
    * Updates an existing record.
    */
-  async update(
-    args: Parameters<D['update']>[0]
-  ): Promise<ReturnType<D['update']>> {
+  async update(args: any): Promise<any> {
     return this.delegate.update(args);
   }
 
   /**
    * Updates multiple records.
    */
-  async updateMany(
-    args: Parameters<D['updateMany']>[0]
-  ): Promise<ReturnType<D['updateMany']>> {
+  async updateMany(args: any): Promise<any> {
     return this.delegate.updateMany(args);
   }
 
   /**
    * Deletes a record.
    */
-  async delete(
-    args: Parameters<D['delete']>[0]
-  ): Promise<ReturnType<D['delete']>> {
+  async delete(args: any): Promise<any> {
     return this.delegate.delete(args);
   }
 
   /**
    * Deletes multiple records.
    */
-  async deleteMany(
-    args: Parameters<D['deleteMany']>[0]
-  ): Promise<ReturnType<D['deleteMany']>> {
+  async deleteMany(args: any): Promise<any> {
     return this.delegate.deleteMany(args);
   }
 
   /**
    * Upserts a record.
    */
-  async upsert(
-    args: Parameters<D['upsert']>[0]
-  ): Promise<ReturnType<D['upsert']>> {
+  async upsert(args: any): Promise<any> {
     return this.delegate.upsert(args);
   }
 
   /**
    * Counts records matching the criteria.
    */
-  async count(args?: Parameters<D['count']>[0]): Promise<number> {
+  async count(args?: any): Promise<number> {
     return this.delegate.count(args);
   }
 
   /**
    * Get records grouped by a specific field.
    */
-  async groupBy(
-    args: Parameters<D['groupBy']>[0]
-  ): Promise<ReturnType<D['groupBy']>> {
+  async groupBy(args: any): Promise<any> {
     return this.delegate.groupBy(args);
   }
 
@@ -148,7 +126,7 @@ export default abstract class BaseRepository<D extends PrismaDelegate> {
     searchFields?: string[],
     selection?: { include?: Record<string, any>; select?: Record<string, any> },
     whereClause: Record<string, any> = {}
-  ): Promise<PaginatedResult<D>> {
+  ): Promise<PaginatedResult<any>> {
     const page = options.page || 1;
     const limit = options.limit || 10;
     const skip = (page - 1) * limit;
