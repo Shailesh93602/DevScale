@@ -19,16 +19,28 @@ test.describe('Authentication and Dashboard Flow', () => {
     await page.waitForURL('**/dashboard');
 
     // 5. Verify dashboard content — use longer timeouts since real Supabase auth + API calls take time
-    await expect(page.getByText(/Welcome back/i)).toBeVisible({ timeout: 30000 });
+    await expect(page.getByText(/Welcome back/i)).toBeVisible({
+      timeout: 30000,
+    });
 
     // Check for dashboard stats — StatCard renders titles as <p> tags, not headings
-    await expect(page.getByText('Enrolled Roadmaps').first()).toBeVisible({ timeout: 20000 });
-    await expect(page.getByText('Topics Completed').first()).toBeVisible({ timeout: 20000 });
-    await expect(page.getByText('Current Streak').first()).toBeVisible({ timeout: 20000 });
+    await expect(page.getByText('Enrolled Roadmaps').first()).toBeVisible({
+      timeout: 20000,
+    });
+    await expect(page.getByText('Topics Completed').first()).toBeVisible({
+      timeout: 20000,
+    });
+    await expect(page.getByText('Current Streak').first()).toBeVisible({
+      timeout: 20000,
+    });
 
     // Check for specific sections
-    await expect(page.getByText('Your Learning Progress')).toBeVisible({ timeout: 20000 });
-    await expect(page.getByText('Recommended For You')).toBeVisible({ timeout: 20000 });
+    await expect(page.getByText('Your Learning Progress')).toBeVisible({
+      timeout: 20000,
+    });
+    await expect(page.getByText('Recommended For You')).toBeVisible({
+      timeout: 20000,
+    });
   });
 
   test('failed login shows error message', async ({ page }) => {
@@ -49,7 +61,10 @@ test.describe('Authentication and Dashboard Flow', () => {
   }) => {
     // Attempt to access a private route directly
     // goto follows the server redirect to /auth/login, use domcontentloaded to avoid hanging
-    await page.goto('/dashboard', { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await page.goto('/dashboard', {
+      waitUntil: 'domcontentloaded',
+      timeout: 30000,
+    });
 
     // The middleware redirects to /auth/login?callbackUrl=... — check URL directly
     await page.waitForURL(/\/auth\/login/, { timeout: 20000 });

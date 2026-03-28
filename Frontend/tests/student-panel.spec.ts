@@ -53,7 +53,13 @@ test.describe('Student Panel Features - Professional Grade', () => {
             recommendedRoadmaps: [],
             activities: [],
             achievements: [],
-            streak: { currentStreak: 5, longestStreak: 10, lastActivityDate: null, streakStartDate: null, timezone: 'UTC' },
+            streak: {
+              currentStreak: 5,
+              longestStreak: 10,
+              lastActivityDate: null,
+              streakStartDate: null,
+              timezone: 'UTC',
+            },
             weeklyActivity: [],
           },
         },
@@ -74,15 +80,17 @@ test.describe('Student Panel Features - Professional Grade', () => {
     // Re-navigate to ensure Next.js compilation is complete (first visit in dev triggers JIT compile)
     await page.goto('/dashboard');
     // Wait for the dashboard heading — only visible after API completes & compilation finishes
-    await expect(page.getByRole('heading', { name: 'Dashboard', exact: true })).toBeVisible({ timeout: 45000 });
+    await expect(
+      page.getByRole('heading', { name: 'Dashboard', exact: true }),
+    ).toBeVisible({ timeout: 45000 });
 
     // 2. Functional: Stats (StatCard uses <p>, not <h>, so use getByText)
-    await expect(
-      page.getByText('Enrolled Roadmaps').first(),
-    ).toBeVisible({ timeout: 15000 });
-    await expect(
-      page.getByText('Topics Completed').first(),
-    ).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText('Enrolled Roadmaps').first()).toBeVisible({
+      timeout: 15000,
+    });
+    await expect(page.getByText('Topics Completed').first()).toBeVisible({
+      timeout: 15000,
+    });
 
     // Wait for animations to complete (Framer Motion)
     await page.waitForTimeout(2000);
@@ -116,9 +124,13 @@ test.describe('Student Panel Features - Professional Grade', () => {
     // Re-navigate to ensure Next.js compilation is complete
     await page.goto('/dashboard');
     // Wait for dashboard heading to confirm full load
-    await expect(page.getByRole('heading', { name: 'Dashboard', exact: true })).toBeVisible({ timeout: 45000 });
+    await expect(
+      page.getByRole('heading', { name: 'Dashboard', exact: true }),
+    ).toBeVisible({ timeout: 45000 });
     // Check for the StreakCalendar section header (always visible after load)
-    await expect(page.getByText('Learning Streak').first()).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText('Learning Streak').first()).toBeVisible({
+      timeout: 15000,
+    });
   });
 
   // --- Profile ---
@@ -144,7 +156,9 @@ test.describe('Student Panel Features - Professional Grade', () => {
 
     await page.goto('/profile');
     // Wait for profile to fully load (Next.js JIT compile + API call)
-    await page.waitForLoadState('networkidle', { timeout: 30000 }).catch(() => {});
+    await page
+      .waitForLoadState('networkidle', { timeout: 30000 })
+      .catch(() => {});
     await page.waitForTimeout(2000);
 
     // Verify Name first to ensure load
@@ -205,14 +219,23 @@ test.describe('Student Panel Features - Professional Grade', () => {
             difficulty: 'Medium',
           },
         ],
-        meta: { total: 2, totalPages: 1, currentPage: 1, limit: 12, hasNextPage: false, hasPreviousPage: false },
+        meta: {
+          total: 2,
+          totalPages: 1,
+          currentPage: 1,
+          limit: 12,
+          hasNextPage: false,
+          hasPreviousPage: false,
+        },
       };
       await route.fulfill({ json });
     });
 
     await page.goto('/coding-challenges');
     // Wait for Next.js compilation + initial data load
-    await page.waitForLoadState('networkidle', { timeout: 30000 }).catch(() => {});
+    await page
+      .waitForLoadState('networkidle', { timeout: 30000 })
+      .catch(() => {});
 
     await expect(
       page.getByRole('heading', { name: 'Coding Challenges' }),

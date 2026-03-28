@@ -73,7 +73,11 @@ export default function BattleLobbyPage() {
           }
         }
       } catch {
-        toast({ title: 'Error', description: 'Failed to load battle. Redirecting...', variant: 'destructive' });
+        toast({
+          title: 'Error',
+          description: 'Failed to load battle. Redirecting...',
+          variant: 'destructive',
+        });
         router.push('/battle-zone');
       } finally {
         setIsLoading(false);
@@ -95,7 +99,11 @@ export default function BattleLobbyPage() {
       toast({ title: 'You have left the battle' });
       router.push('/battle-zone');
     } catch {
-      toast({ title: 'Error', description: 'Failed to leave battle', variant: 'destructive' });
+      toast({
+        title: 'Error',
+        description: 'Failed to leave battle',
+        variant: 'destructive',
+      });
     }
   }, [leaveExistingBattle, battleId, toast, router]);
 

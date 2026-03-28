@@ -161,7 +161,9 @@ export const RoadmapCard = ({
     if (onCommentClick) {
       onCommentClick();
     } else {
-      router.push(`/career-roadmap/${roadmap.slug ?? roadmap.id}?comments=open`);
+      router.push(
+        `/career-roadmap/${roadmap.slug ?? roadmap.id}?comments=open`,
+      );
     }
   };
 

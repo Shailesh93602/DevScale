@@ -7,25 +7,25 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from '@/components/ui/resizable';
-import { 
-  Play, 
-  ChevronRight, 
-  Settings, 
-  RotateCcw, 
-  Maximize2, 
+import {
+  Play,
+  ChevronRight,
+  Settings,
+  RotateCcw,
+  Maximize2,
   Terminal,
   Code2,
   FileText,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAxiosGet, useAxiosPost } from '@/hooks/useAxios';
@@ -53,7 +53,7 @@ function ChallengeSkeleton() {
       <div className="flex flex-grow gap-4">
         <div className="flex w-1/3 flex-col gap-4">
           <Skeleton className="h-10 w-full" />
-          <Skeleton className="flex-grow w-full" />
+          <Skeleton className="w-full flex-grow" />
         </div>
         <div className="flex flex-grow flex-col gap-4">
           <Skeleton className="h-2/3 w-full" />
@@ -122,7 +122,8 @@ interface ITestResult {
 export default function CodingChallenge({ id }: { id: string }) {
   const [challenge, setChallenge] = useState<IChallenge>();
   const [language, setLanguage] = useState('javascript');
-  const [userCode, setUserCode] = useState<Record<string, string>>(DEFAULT_BOILERPLATE);
+  const [userCode, setUserCode] =
+    useState<Record<string, string>>(DEFAULT_BOILERPLATE);
   const [output, setOutput] = useState('');
   const [testResults, setTestResults] = useState<ITestResult[]>([]);
   const [activeTestTab, setActiveTestTab] = useState<string>('0');
@@ -156,8 +157,8 @@ export default function CodingChallenge({ id }: { id: string }) {
         if (Array.isArray(results) && results.length > 0) {
           setTestResults(results);
           setActiveTestTab('0');
-          
-          const allPassed = results.every(r => r.status === 'Accepted');
+
+          const allPassed = results.every((r) => r.status === 'Accepted');
           if (allPassed) {
             toast.success('Accepted', { position: 'bottom-right' });
           } else {
@@ -179,7 +180,9 @@ export default function CodingChallenge({ id }: { id: string }) {
   };
 
   const [saveDraft] = useAxiosPost('/run-code/draft');
-  const [getCloudDraft] = useAxiosGet<{ data: { code: string } }>(`/run-code/draft/${id}`);
+  const [getCloudDraft] = useAxiosGet<{ data: { code: string } }>(
+    `/run-code/draft/${id}`,
+  );
 
   const fetchChallenge = async () => {
     try {
@@ -187,39 +190,42 @@ export default function CodingChallenge({ id }: { id: string }) {
       const data = response.data;
       if (data) {
         setChallenge(data);
-        
+
         // Priority 1: LocalStorage (unsaved changes)
         const savedProgress = localStorage.getItem(`challenge_progress_${id}`);
         if (savedProgress) {
           try {
             const parsed = JSON.parse(savedProgress);
-            setUserCode(prev => ({ ...prev, ...parsed }));
+            setUserCode((prev) => ({ ...prev, ...parsed }));
             console.log('[DEBUG] Restored code from LocalStorage');
           } catch (e) {
             console.error('Failed to parse saved progress', e);
           }
         } else {
-             // Priority 2: Cloud Draft
-             try {
-                const cloudResp = await getCloudDraft({ params: { language } });
-                if (cloudResp.data?.data?.code) {
-                    setUserCode(prev => ({ ...prev, [language]: cloudResp.data.data.code }));
-                    console.log('[DEBUG] Restored code from Cloud');
-                } else if (data.boilerplates) {
-                    // Priority 3: Standard boilerplates
-                    setUserCode((prev) => ({
-                    ...prev,
-                    ...data.boilerplates,
-                    }));
-                }
-             } catch (e) {
-                if (data.boilerplates) {
-                    setUserCode((prev) => ({
-                    ...prev,
-                    ...data.boilerplates,
-                    }));
-                }
-             }
+          // Priority 2: Cloud Draft
+          try {
+            const cloudResp = await getCloudDraft({ params: { language } });
+            if (cloudResp.data?.data?.code) {
+              setUserCode((prev) => ({
+                ...prev,
+                [language]: cloudResp.data.data.code,
+              }));
+              console.log('[DEBUG] Restored code from Cloud');
+            } else if (data.boilerplates) {
+              // Priority 3: Standard boilerplates
+              setUserCode((prev) => ({
+                ...prev,
+                ...data.boilerplates,
+              }));
+            }
+          } catch (e) {
+            if (data.boilerplates) {
+              setUserCode((prev) => ({
+                ...prev,
+                ...data.boilerplates,
+              }));
+            }
+          }
         }
       }
     } catch (error) {
@@ -230,7 +236,10 @@ export default function CodingChallenge({ id }: { id: string }) {
   // Auto-save to LocalStorage (Immediate)
   useEffect(() => {
     if (userCode && Object.keys(userCode).length > 0) {
-      localStorage.setItem(`challenge_progress_${id}`, JSON.stringify(userCode));
+      localStorage.setItem(
+        `challenge_progress_${id}`,
+        JSON.stringify(userCode),
+      );
     }
   }, [userCode, id]);
 
@@ -242,7 +251,7 @@ export default function CodingChallenge({ id }: { id: string }) {
           await saveDraft({
             challengeId: id,
             code: userCode[language],
-            language: language
+            language: language,
           });
           console.log('[DEBUG] Draft synced to cloud');
         } catch (e) {
@@ -261,11 +270,19 @@ export default function CodingChallenge({ id }: { id: string }) {
   // Load cloud draft on language switch if not in userCode
   useEffect(() => {
     const loadDraft = async () => {
-      if (id && language && (!userCode[language] || userCode[language].length < 10)) { // Simple heuristic for "empty"
+      if (
+        id &&
+        language &&
+        (!userCode[language] || userCode[language].length < 10)
+      ) {
+        // Simple heuristic for "empty"
         try {
           const cloudResp = await getCloudDraft({ params: { language } });
           if (cloudResp.data?.data?.code) {
-             setUserCode(prev => ({ ...prev, [language]: cloudResp.data.data.code }));
+            setUserCode((prev) => ({
+              ...prev,
+              [language]: cloudResp.data.data.code,
+            }));
           }
         } catch (e) {
           // Ignore
@@ -277,14 +294,15 @@ export default function CodingChallenge({ id }: { id: string }) {
 
   const handleEditorChange = (value: string | undefined) => {
     if (value !== undefined) {
-      setUserCode(prev => ({ ...prev, [language]: value }));
+      setUserCode((prev) => ({ ...prev, [language]: value }));
     }
   };
 
   const resetCode = () => {
-    setUserCode(prev => ({ 
-      ...prev, 
-      [language]: DEFAULT_BOILERPLATE[language as keyof typeof DEFAULT_BOILERPLATE] 
+    setUserCode((prev) => ({
+      ...prev,
+      [language]:
+        DEFAULT_BOILERPLATE[language as keyof typeof DEFAULT_BOILERPLATE],
     }));
   };
 
@@ -332,12 +350,12 @@ export default function CodingChallenge({ id }: { id: string }) {
             onClick={handleRunCode}
             disabled={isRunning}
           >
-            <Play className={cn("h-4 w-4", isRunning && "animate-pulse")} />
+            <Play className={cn('h-4 w-4', isRunning && 'animate-pulse')} />
             {isRunning ? 'Running...' : 'Run Code'}
           </Button>
           <Button
             variant="default"
-            className="h-9 gap-2 bg-primary px-6 font-semibold text-white hover:bg-primary/90"
+            className="hover:bg-primary/90 h-9 gap-2 bg-primary px-6 font-semibold text-white"
             disabled={isRunning}
           >
             <CheckCircle2 className="h-4 w-4" />
@@ -347,55 +365,79 @@ export default function CodingChallenge({ id }: { id: string }) {
       </div>
 
       {/* Main Content Area */}
-      <ResizablePanelGroup direction="horizontal" className="flex-grow overflow-hidden">
+      <ResizablePanelGroup
+        direction="horizontal"
+        className="flex-grow overflow-hidden"
+      >
         {/* Left Side: Problem Description */}
         <ResizablePanel defaultSize={40} minSize={25}>
           <div className="flex h-full flex-col bg-card">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="flex h-full flex-col">
+            <Tabs
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className="flex h-full flex-col"
+            >
               <TabsList className="h-10 w-full justify-start rounded-none border-b border-border bg-card p-0 px-2">
-                <TabsTrigger 
-                  value="description" 
+                <TabsTrigger
+                  value="description"
                   className="h-full rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
                 >
                   <FileText className="mr-2 h-4 w-4" />
                   Description
                 </TabsTrigger>
-                <TabsTrigger 
-                  value="editorial" 
+                <TabsTrigger
+                  value="editorial"
                   className="h-full rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
                 >
                   <Code2 className="mr-2 h-4 w-4" />
                   Editorial
                 </TabsTrigger>
-                <TabsTrigger 
-                  value="hints" 
+                <TabsTrigger
+                  value="hints"
                   className="h-full rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
                 >
                   <Settings className="mr-2 h-4 w-4" />
                   Hints
                 </TabsTrigger>
-                <TabsTrigger 
-                  value="solutions" 
+                <TabsTrigger
+                  value="solutions"
                   className="h-full rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
                 >
                   <Code2 className="mr-2 h-4 w-4" />
                   Submissions
                 </TabsTrigger>
               </TabsList>
-              
-              <TabsContent value="description" className="m-0 flex-grow overflow-hidden p-0">
+
+              <TabsContent
+                value="description"
+                className="m-0 flex-grow overflow-hidden p-0"
+              >
                 <ScrollArea className="h-full p-6">
                   <div className="space-y-6">
                     <div>
-                      <h1 className="mb-2 text-2xl font-bold tracking-tight">{challenge.title}</h1>
+                      <h1 className="mb-2 text-2xl font-bold tracking-tight">
+                        {challenge.title}
+                      </h1>
                       <div className="flex items-center gap-2">
-                         {challenge.difficulty?.toUpperCase() === 'EASY' && <span className="rounded-full bg-green-500/10 px-2.5 py-0.5 text-xs font-medium text-green-500">Easy</span>}
-                         {challenge.difficulty?.toUpperCase() === 'MEDIUM' && <span className="rounded-full bg-yellow-500/10 px-2.5 py-0.5 text-xs font-medium text-yellow-500">Medium</span>}
-                         {challenge.difficulty?.toUpperCase() === 'HARD' && <span className="rounded-full bg-red-500/10 px-2.5 py-0.5 text-xs font-medium text-red-500">Hard</span>}
+                        {challenge.difficulty?.toUpperCase() === 'EASY' && (
+                          <span className="bg-green-500/10 text-green-500 rounded-full px-2.5 py-0.5 text-xs font-medium">
+                            Easy
+                          </span>
+                        )}
+                        {challenge.difficulty?.toUpperCase() === 'MEDIUM' && (
+                          <span className="bg-yellow-500/10 text-yellow-500 rounded-full px-2.5 py-0.5 text-xs font-medium">
+                            Medium
+                          </span>
+                        )}
+                        {challenge.difficulty?.toUpperCase() === 'HARD' && (
+                          <span className="bg-red-500/10 text-red-500 rounded-full px-2.5 py-0.5 text-xs font-medium">
+                            Hard
+                          </span>
+                        )}
                       </div>
                     </div>
 
-                    <div className="prose prose-sm dark:prose-invert max-w-none">
+                    <div className="prose prose-sm max-w-none dark:prose-invert">
                       <div className="text-sm leading-relaxed text-muted-foreground">
                         <ReactMarkdown>
                           {challenge.description.replace(/^#\s+.+[\r\n]+/, '')}
@@ -405,33 +447,47 @@ export default function CodingChallenge({ id }: { id: string }) {
 
                     <div className="space-y-4">
                       <section>
-                        <h3 className="mb-2 text-sm font-semibold">Input Format</h3>
-                        <div className="rounded-md bg-accent/30 p-3 text-xs font-mono">
-                           <ReactMarkdown>{challenge.inputFormat}</ReactMarkdown>
+                        <h3 className="mb-2 text-sm font-semibold">
+                          Input Format
+                        </h3>
+                        <div className="rounded-md bg-accent/30 p-3 font-mono text-xs">
+                          <ReactMarkdown>{challenge.inputFormat}</ReactMarkdown>
                         </div>
                       </section>
                       <section>
-                        <h3 className="mb-2 text-sm font-semibold">Output Format</h3>
-                        <div className="rounded-md bg-accent/30 p-3 text-xs font-mono">
-                           <ReactMarkdown>{challenge.outputFormat}</ReactMarkdown>
+                        <h3 className="mb-2 text-sm font-semibold">
+                          Output Format
+                        </h3>
+                        <div className="rounded-md bg-accent/30 p-3 font-mono text-xs">
+                          <ReactMarkdown>
+                            {challenge.outputFormat}
+                          </ReactMarkdown>
                         </div>
                       </section>
                     </div>
 
                     <div className="space-y-6">
                       <section>
-                        <h3 className="mb-2 text-sm font-semibold flex items-center gap-2">
+                        <h3 className="mb-2 flex items-center gap-2 text-sm font-semibold">
                           <AlertCircle className="h-4 w-4 text-primary" />
                           Example 1
                         </h3>
                         <div className="space-y-3">
                           <div>
-                            <p className="mb-1 text-[10px] font-medium uppercase text-muted-foreground tracking-wider">Input</p>
-                            <pre className="rounded-md bg-accent/50 p-3 text-xs font-mono">{challenge.exampleInput}</pre>
+                            <p className="mb-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                              Input
+                            </p>
+                            <pre className="rounded-md bg-accent/50 p-3 font-mono text-xs">
+                              {challenge.exampleInput}
+                            </pre>
                           </div>
                           <div>
-                            <p className="mb-1 text-[10px] font-medium uppercase text-muted-foreground tracking-wider">Output</p>
-                            <pre className="rounded-md bg-accent/50 p-3 text-xs font-mono">{challenge.exampleOutput}</pre>
+                            <p className="mb-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                              Output
+                            </p>
+                            <pre className="rounded-md bg-accent/50 p-3 font-mono text-xs">
+                              {challenge.exampleOutput}
+                            </pre>
                           </div>
                         </div>
                       </section>
@@ -440,31 +496,44 @@ export default function CodingChallenge({ id }: { id: string }) {
                 </ScrollArea>
               </TabsContent>
 
-              <TabsContent value="editorial" className="m-0 flex-grow overflow-hidden p-0">
+              <TabsContent
+                value="editorial"
+                className="m-0 flex-grow overflow-hidden p-0"
+              >
                 <ScrollArea className="h-full p-6">
                   {challenge.editorial ? (
-                    <div className="prose prose-sm dark:prose-invert max-w-none">
+                    <div className="prose prose-sm max-w-none dark:prose-invert">
                       <div className="text-sm leading-relaxed text-muted-foreground">
                         <ReactMarkdown>{challenge.editorial}</ReactMarkdown>
                       </div>
                     </div>
                   ) : (
                     <div className="flex h-32 flex-col items-center justify-center text-muted-foreground">
-                       <FileText className="mb-2 h-8 w-8 opacity-20" />
-                       <p>Editorial is not available for this challenge yet.</p>
+                      <FileText className="mb-2 h-8 w-8 opacity-20" />
+                      <p>Editorial is not available for this challenge yet.</p>
                     </div>
                   )}
                 </ScrollArea>
               </TabsContent>
 
-              <TabsContent value="hints" className="m-0 flex-grow overflow-hidden p-0">
+              <TabsContent
+                value="hints"
+                className="m-0 flex-grow overflow-hidden p-0"
+              >
                 <ScrollArea className="h-full p-6">
                   <div className="space-y-4">
                     {challenge.hints && challenge.hints.length > 0 ? (
                       challenge.hints.map((hint, idx) => (
-                        <div key={`hint-${idx}`} className="rounded-lg border border-border bg-accent/20 p-4">
-                           <h4 className="mb-1 text-xs font-semibold uppercase text-primary">Hint {idx + 1}</h4>
-                           <p className="text-sm text-muted-foreground">{hint}</p>
+                        <div
+                          key={`hint-${idx}`}
+                          className="rounded-lg border border-border bg-accent/20 p-4"
+                        >
+                          <h4 className="mb-1 text-xs font-semibold uppercase text-primary">
+                            Hint {idx + 1}
+                          </h4>
+                          <p className="text-sm text-muted-foreground">
+                            {hint}
+                          </p>
                         </div>
                       ))
                     ) : (
@@ -477,17 +546,20 @@ export default function CodingChallenge({ id }: { id: string }) {
                 </ScrollArea>
               </TabsContent>
 
-              <TabsContent value="solutions" className="m-0 flex-grow overflow-hidden p-0">
-                 <div className="flex h-32 flex-col items-center justify-center text-muted-foreground">
-                    <Code2 className="mb-2 h-8 w-8 opacity-20" />
-                    <p>Your previous submissions will appear here.</p>
-                 </div>
+              <TabsContent
+                value="solutions"
+                className="m-0 flex-grow overflow-hidden p-0"
+              >
+                <div className="flex h-32 flex-col items-center justify-center text-muted-foreground">
+                  <Code2 className="mb-2 h-8 w-8 opacity-20" />
+                  <p>Your previous submissions will appear here.</p>
+                </div>
               </TabsContent>
             </Tabs>
           </div>
         </ResizablePanel>
 
-        <ResizableHandle className="w-1.5 bg-background transition-colors hover:bg-primary/20" />
+        <ResizableHandle className="hover:bg-primary/20 w-1.5 bg-background transition-colors" />
 
         {/* Right Side: Editor & Console */}
         <ResizablePanel defaultSize={60}>
@@ -517,8 +589,8 @@ export default function CodingChallenge({ id }: { id: string }) {
                       scrollBeyondLastLine: false,
                       automaticLayout: true,
                       padding: { top: 10 },
-                      fontFamily: "var(--font-mono)",
-                      cursorSmoothCaretAnimation: "on",
+                      fontFamily: 'var(--font-mono)',
+                      cursorSmoothCaretAnimation: 'on',
                       smoothScrolling: true,
                     }}
                   />
@@ -526,13 +598,17 @@ export default function CodingChallenge({ id }: { id: string }) {
               </div>
             </ResizablePanel>
 
-            <ResizableHandle className="h-1.5 bg-background transition-colors hover:bg-primary/20" />
+            <ResizableHandle className="hover:bg-primary/20 h-1.5 bg-background transition-colors" />
 
             {/* Console Output */}
-            <ResizablePanel defaultSize={30} minSize={10} className={cn(!consoleExpanded && "max-h-12")}>
+            <ResizablePanel
+              defaultSize={30}
+              minSize={10}
+              className={cn(!consoleExpanded && 'max-h-12')}
+            >
               <div className="flex h-full flex-col bg-card">
-                <button 
-                  className="flex h-12 w-full cursor-pointer items-center justify-between border-b border-border px-4 transition-colors hover:bg-accent/30 focus:outline-none focus:ring-1 focus:ring-primary/50"
+                <button
+                  className="focus:ring-primary/50 flex h-12 w-full cursor-pointer items-center justify-between border-b border-border px-4 transition-colors hover:bg-accent/30 focus:outline-none focus:ring-1"
                   onClick={() => setConsoleExpanded(!consoleExpanded)}
                 >
                   <div className="flex items-center gap-2 text-sm font-medium text-primary">
@@ -543,7 +619,12 @@ export default function CodingChallenge({ id }: { id: string }) {
                     <Button variant="ghost" size="icon" className="h-8 w-8">
                       <Maximize2 className="h-4 w-4" />
                     </Button>
-                    <ChevronRight className={cn("h-4 w-4 transition-transform", consoleExpanded ? "rotate-90" : "")} />
+                    <ChevronRight
+                      className={cn(
+                        'h-4 w-4 transition-transform',
+                        consoleExpanded ? 'rotate-90' : '',
+                      )}
+                    />
                   </div>
                 </button>
                 {consoleExpanded && (
@@ -564,7 +645,7 @@ export default function CodingChallenge({ id }: { id: string }) {
                                   'h-6 rounded-md px-3 text-[11px] data-[state=active]:bg-background data-[state=active]:shadow-sm',
                                   res.status === 'Accepted'
                                     ? 'text-green-500 data-[state=active]:text-green-600'
-                                    : 'text-red-500 data-[state=active]:text-red-600'
+                                    : 'text-red-500 data-[state=active]:text-red-600',
                                 )}
                               >
                                 Case {i + 1}
@@ -586,7 +667,7 @@ export default function CodingChallenge({ id }: { id: string }) {
                                       'text-lg font-bold',
                                       res.status === 'Accepted'
                                         ? 'text-green-500'
-                                        : 'text-red-500'
+                                        : 'text-red-500',
                                     )}
                                   >
                                     {res.status}
@@ -624,7 +705,7 @@ export default function CodingChallenge({ id }: { id: string }) {
                                           'overflow-x-auto rounded border p-2.5 text-xs',
                                           res.status === 'Accepted'
                                             ? 'border-green-500/20 bg-green-500/5 text-green-500'
-                                            : 'border-red-500/20 bg-red-500/5 text-red-500'
+                                            : 'border-red-500/20 bg-red-500/5 text-red-500',
                                         )}
                                       >
                                         {res.actualOutput}
@@ -645,8 +726,8 @@ export default function CodingChallenge({ id }: { id: string }) {
                               className={cn(
                                 'whitespace-pre-wrap break-all rounded-md p-3',
                                 output.startsWith('Error')
-                                  ? 'border border-red-500/20 bg-red-500/10 text-red-500'
-                                  : 'bg-accent/30 text-foreground'
+                                  ? 'border-red-500/20 bg-red-500/10 text-red-500 border'
+                                  : 'bg-accent/30 text-foreground',
                               )}
                             >
                               {output}
@@ -667,24 +748,21 @@ export default function CodingChallenge({ id }: { id: string }) {
           </ResizablePanelGroup>
         </ResizablePanel>
       </ResizablePanelGroup>
-      
+
       {/* Bottom Status Bar */}
       <div className="flex h-8 items-center justify-between border-t border-border bg-card px-4 text-[10px] text-muted-foreground">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1">
-            <div className="h-2 w-2 rounded-full bg-green-500" />
+            <div className="bg-green-500 h-2 w-2 rounded-full" />
             Connected
           </div>
           <div>Ln 1, Col 1</div>
         </div>
         <div className="flex items-center gap-4">
           <div>UTF-8</div>
-          <div className="flex items-center gap-1 uppercase">
-            {language}
-          </div>
+          <div className="flex items-center gap-1 uppercase">{language}</div>
         </div>
       </div>
     </div>
   );
 }
-

@@ -26,7 +26,10 @@ function readCache(): DashboardSummary | null {
   try {
     const raw = sessionStorage.getItem(CACHE_KEY);
     if (!raw) return null;
-    const { data, ts } = JSON.parse(raw) as { data: DashboardSummary; ts: number };
+    const { data, ts } = JSON.parse(raw) as {
+      data: DashboardSummary;
+      ts: number;
+    };
     if (Date.now() - ts > CACHE_MAX_AGE_MS) return null;
     return data;
   } catch {
@@ -142,7 +145,9 @@ const DashboardPage: React.FC = () => {
   // Seed from sessionStorage immediately — no skeleton on repeat visits
   const [isLoading, setIsLoading] = useState(() => readCache() === null);
   const [error, setError] = useState<string | null>(null);
-  const [summary, setSummary] = useState<DashboardSummary | null>(() => readCache());
+  const [summary, setSummary] = useState<DashboardSummary | null>(() =>
+    readCache(),
+  );
   // Track whether a background revalidation is in progress (for UX purposes)
   const revalidatingRef = useRef(false);
 
@@ -184,8 +189,10 @@ const DashboardPage: React.FC = () => {
     };
 
     fetchSummary();
-    return () => { cancelled = true; };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getDashboardSummary]);
 
   if (isLoading) return <DashboardSkeleton />;
@@ -203,7 +210,15 @@ const DashboardPage: React.FC = () => {
     );
   }
 
-  const { stats, enrolledRoadmaps, recommendedRoadmaps, activities, achievements, streak, weeklyActivity } = summary ?? {
+  const {
+    stats,
+    enrolledRoadmaps,
+    recommendedRoadmaps,
+    activities,
+    achievements,
+    streak,
+    weeklyActivity,
+  } = summary ?? {
     stats: null,
     enrolledRoadmaps: [],
     recommendedRoadmaps: [],
@@ -360,12 +375,10 @@ const DashboardPage: React.FC = () => {
             <StreakCalendar
               currentStreak={streak?.currentStreak || 0}
               longestStreak={streak?.longestStreak || 0}
-              thisWeek={
-                weeklyActivity.map((day) => ({
-                  date: day.date,
-                  minutesSpent: day.minutesSpent,
-                }))
-              }
+              thisWeek={weeklyActivity.map((day) => ({
+                date: day.date,
+                minutesSpent: day.minutesSpent,
+              }))}
             />
           </motion.div>
 

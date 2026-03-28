@@ -58,7 +58,10 @@ export default function JoinBattlePage() {
 
   const handleJoinBattle = async () => {
     if (!agreedToRules) {
-      toast({ title: 'Please agree to the battle rules before joining', variant: 'destructive' });
+      toast({
+        title: 'Please agree to the battle rules before joining',
+        variant: 'destructive',
+      });
       return;
     }
 
@@ -109,26 +112,38 @@ export default function JoinBattlePage() {
     (battle.status === 'WAITING' || battle.status === 'LOBBY') &&
     battle.current_participants < battle.max_participants;
 
-  const formatDate = (dateString: string) => format(new Date(dateString), 'MMM dd, yyyy');
-  const formatTime = (dateString: string) => format(new Date(dateString), 'h:mm a');
+  const formatDate = (dateString: string) =>
+    format(new Date(dateString), 'MMM dd, yyyy');
+  const formatTime = (dateString: string) =>
+    format(new Date(dateString), 'h:mm a');
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'WAITING': return 'bg-blue-500/10 text-blue-500';
-      case 'LOBBY': return 'bg-yellow-500/10 text-yellow-600';
-      case 'IN_PROGRESS': return 'bg-green-500/10 text-green-500';
-      case 'COMPLETED': return 'bg-muted text-muted-foreground';
-      case 'CANCELLED': return 'bg-destructive/10 text-destructive';
-      default: return 'bg-muted text-muted-foreground';
+      case 'WAITING':
+        return 'bg-blue-500/10 text-blue-500';
+      case 'LOBBY':
+        return 'bg-yellow-500/10 text-yellow-600';
+      case 'IN_PROGRESS':
+        return 'bg-green-500/10 text-green-500';
+      case 'COMPLETED':
+        return 'bg-muted text-muted-foreground';
+      case 'CANCELLED':
+        return 'bg-destructive/10 text-destructive';
+      default:
+        return 'bg-muted text-muted-foreground';
     }
   };
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty.toLowerCase()) {
-      case 'easy': return 'bg-green-500/10 text-green-600';
-      case 'medium': return 'bg-yellow-500/10 text-yellow-600';
-      case 'hard': return 'bg-red-500/10 text-red-600';
-      default: return 'bg-muted text-muted-foreground';
+      case 'easy':
+        return 'bg-green-500/10 text-green-600';
+      case 'medium':
+        return 'bg-yellow-500/10 text-yellow-600';
+      case 'hard':
+        return 'bg-red-500/10 text-red-600';
+      default:
+        return 'bg-muted text-muted-foreground';
     }
   };
 
@@ -180,7 +195,8 @@ export default function JoinBattlePage() {
                   <div className="flex items-center gap-2">
                     <Users className="h-4 w-4 text-muted-foreground" />
                     <span>
-                      {battle.current_participants}/{battle.max_participants} participants
+                      {battle.current_participants}/{battle.max_participants}{' '}
+                      participants
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -199,7 +215,9 @@ export default function JoinBattlePage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Target className="h-4 w-4 text-muted-foreground" />
-                    <span>{battle.points_per_question} points per question</span>
+                    <span>
+                      {battle.points_per_question} points per question
+                    </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Timer className="h-4 w-4 text-muted-foreground" />
@@ -219,7 +237,9 @@ export default function JoinBattlePage() {
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <div className="text-sm text-muted-foreground">Created by</div>
+                  <div className="text-sm text-muted-foreground">
+                    Created by
+                  </div>
                   <div className="font-medium">{battle.creator.username}</div>
                 </div>
               </div>
@@ -254,11 +274,15 @@ export default function JoinBattlePage() {
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-start gap-2">
                     <CheckCircle className="text-green-600 mt-0.5 h-4 w-4" />
-                    <span>You must answer questions within the time limit.</span>
+                    <span>
+                      You must answer questions within the time limit.
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle className="text-green-600 mt-0.5 h-4 w-4" />
-                    <span>Points are awarded based on correctness and speed.</span>
+                    <span>
+                      Points are awarded based on correctness and speed.
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle className="text-green-600 mt-0.5 h-4 w-4" />
@@ -292,11 +316,16 @@ export default function JoinBattlePage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <Info className="text-blue-600 mt-0.5 h-4 w-4" />
-                    <span>You can chat with other participants during the battle.</span>
+                    <span>
+                      You can chat with other participants during the battle.
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <Info className="text-blue-600 mt-0.5 h-4 w-4" />
-                    <span>Results will be available immediately after the battle ends.</span>
+                    <span>
+                      Results will be available immediately after the battle
+                      ends.
+                    </span>
                   </li>
                 </ul>
               </div>
@@ -305,7 +334,9 @@ export default function JoinBattlePage() {
                 <Checkbox
                   id="rules"
                   checked={agreedToRules}
-                  onCheckedChange={(checked) => setAgreedToRules(checked as boolean)}
+                  onCheckedChange={(checked) =>
+                    setAgreedToRules(checked as boolean)
+                  }
                 />
                 <div className="grid gap-1.5 leading-none">
                   <Label

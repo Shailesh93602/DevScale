@@ -4,9 +4,7 @@ import { useMediaQuery } from '@/hooks/use-media-query';
 import { toast } from 'react-toastify';
 import DOMPurify from 'dompurify';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  FaQuestionCircle,
-} from 'react-icons/fa';
+import { FaQuestionCircle } from 'react-icons/fa';
 import { CheckCircle, CheckCircle2, Menu, X, BookOpen } from 'lucide-react';
 import { useAxiosGet, useAxiosPost } from '@/hooks/useAxios';
 import { Button } from '@/components/ui/button';
@@ -293,10 +291,10 @@ export default function Resources({ id }: { id: string }) {
           {quiz?.questions?.map((question, index) => (
             <div
               key={question.id}
-              className="rounded-2xl border border-border/40 bg-card/40 p-8 shadow-sm transition-all duration-300 hover:border-primary/20 hover:shadow-md"
+              className="hover:border-primary/20 rounded-2xl border border-border/40 bg-card/40 p-8 shadow-sm transition-all duration-300 hover:shadow-md"
             >
               <div className="mb-6 flex items-start">
-                <span className="mr-4 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-sm font-bold text-primary">
+                <span className="bg-primary/10 mr-4 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg text-sm font-bold text-primary">
                   {index + 1}
                 </span>
                 <p className="text-xl font-semibold leading-tight text-foreground">
@@ -307,10 +305,10 @@ export default function Resources({ id }: { id: string }) {
                 {question?.options?.map((option) => (
                   <label
                     key={option.id}
-                    className={`group relative flex cursor-pointer items-center rounded-xl border p-4 transition-all duration-250 ${
+                    className={`duration-250 group relative flex cursor-pointer items-center rounded-xl border p-4 transition-all ${
                       userAnswers[question.id] === option.text
-                        ? 'border-primary bg-primary/5 ring-1 ring-primary'
-                        : 'border-border/50 bg-secondary/30 hover:border-primary/40 hover:bg-secondary/50'
+                        ? 'bg-primary/5 border-primary ring-1 ring-primary'
+                        : 'hover:border-primary/40 border-border/50 bg-secondary/30 hover:bg-secondary/50'
                     }`}
                   >
                     <div className="flex w-full items-center justify-between">
@@ -319,7 +317,7 @@ export default function Resources({ id }: { id: string }) {
                           className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all ${
                             userAnswers[question.id] === option.text
                               ? 'border-primary bg-primary'
-                              : 'border-muted-foreground/30 group-hover:border-primary/50'
+                              : 'group-hover:border-primary/50 border-muted-foreground/30'
                           }`}
                         >
                           {userAnswers[question.id] === option.text && (
@@ -350,7 +348,7 @@ export default function Resources({ id }: { id: string }) {
         <div className="mt-12 flex justify-end">
           <Button
             onClick={handleSubmitQuiz}
-            className="h-14 rounded-2xl bg-primary px-12 text-lg font-bold text-white shadow-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-primary/20 active:scale-[0.98]"
+            className="hover:shadow-primary/20 h-14 rounded-2xl bg-primary px-12 text-lg font-bold text-white shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
           >
             Submit Quiz
           </Button>
@@ -390,12 +388,12 @@ export default function Resources({ id }: { id: string }) {
   }
 
   return (
-    <div className="relative flex flex-col lg:flex-row min-h-[calc(100vh-60px)] bg-background">
+    <div className="relative flex min-h-[calc(100vh-60px)] flex-col bg-background lg:flex-row">
       {/* Mobile Sidebar Toggle - Explicitly hidden on desktop via both CSS and JS */}
       <Button
         className={cn(
-          "fixed left-4 top-[70px] z-50 h-10 w-10 rounded-full bg-primary/90 p-0 text-white shadow-xl backdrop-blur-sm transition-all duration-300 hover:bg-primary lg:hidden",
-          isDesktop && "hidden"
+          'bg-primary/90 fixed left-4 top-[70px] z-50 h-10 w-10 rounded-full p-0 text-white shadow-xl backdrop-blur-sm transition-all duration-300 hover:bg-primary lg:hidden',
+          isDesktop && 'hidden',
         )}
         onClick={() => setSidebarOpen(!sidebarOpen)}
       >
@@ -416,8 +414,8 @@ export default function Resources({ id }: { id: string }) {
         transition={{ duration: 0.3, ease: 'easeOut' }}
         className={cn(
           'fixed inset-y-0 left-0 z-40 h-full w-[280px] border-r border-border bg-card p-6 shadow-2xl transition-all duration-300',
-          'lg:sticky lg:top-[60px] lg:z-10 lg:h-[calc(100vh-60px)] lg:w-[280px] lg:translate-x-0 lg:bg-background lg:shadow-none lg:flex-none xl:w-[300px]',
-          !isDesktop && 'overflow-y-auto'
+          'lg:sticky lg:top-[60px] lg:z-10 lg:h-[calc(100vh-60px)] lg:w-[280px] lg:flex-none lg:translate-x-0 lg:bg-background lg:shadow-none xl:w-[300px]',
+          !isDesktop && 'overflow-y-auto',
         )}
       >
         <div className="mb-8 flex items-center justify-between">
@@ -428,7 +426,7 @@ export default function Resources({ id }: { id: string }) {
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden text-foreground/50 hover:text-foreground"
+              className="text-foreground/50 hover:text-foreground lg:hidden"
               onClick={() => setSidebarOpen(false)}
             >
               <X className="h-5 w-5" />
@@ -441,15 +439,17 @@ export default function Resources({ id }: { id: string }) {
               key={topic?.id}
               className={`group flex cursor-pointer items-center justify-between rounded-xl px-4 py-3 transition-all duration-200 ${
                 selectedTopic?.topic?.id === topic?.topic?.id
-                  ? 'bg-primary text-white shadow-lg shadow-primary/20'
-                  : 'hover:bg-primary/10 hover:text-primary text-muted-foreground'
+                  ? 'shadow-primary/20 bg-primary text-white shadow-lg'
+                  : 'hover:bg-primary/10 text-muted-foreground hover:text-primary'
               }`}
               onClick={() => {
                 setSelectedTopic(topic);
                 setSidebarOpen(false);
               }}
             >
-              <span className="text-sm font-semibold truncate pr-2">{topic?.topic?.title}</span>
+              <span className="truncate pr-2 text-sm font-semibold">
+                {topic?.topic?.title}
+              </span>
               {topic?.topic?.isCompleted && (
                 <CheckCircle
                   size={16}
@@ -465,7 +465,7 @@ export default function Resources({ id }: { id: string }) {
         </ul>
       </motion.div>
 
-      <main className="flex-1 min-w-0 p-4 md:p-8 lg:p-12 overflow-y-auto">
+      <main className="min-w-0 flex-1 overflow-y-auto p-4 md:p-8 lg:p-12">
         {selectedTopic && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -485,12 +485,12 @@ export default function Resources({ id }: { id: string }) {
                   <Button
                     onClick={handleEnroll}
                     disabled={isEnrolling}
-                    className="rounded-xl bg-primary px-6 font-bold text-white shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                    className="shadow-primary/20 rounded-xl bg-primary px-6 font-bold text-white shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
                   >
                     {isEnrolling ? 'Enrolling...' : 'Enroll in Roadmap'}
                   </Button>
                 ) : (
-                  <div className="inline-flex items-center gap-2 rounded-xl bg-success/10 border border-success/20 px-6 py-2 text-sm font-bold text-success animate-fade-up">
+                  <div className="inline-flex animate-fade-up items-center gap-2 rounded-xl border border-success/20 bg-success/10 px-6 py-2 text-sm font-bold text-success">
                     <CheckCircle2 size={16} />
                     <span>Enrolled</span>
                   </div>
@@ -532,8 +532,8 @@ export default function Resources({ id }: { id: string }) {
                 disabled={isUpdatingProgress}
                 className={`h-12 rounded-xl px-8 font-bold transition-all duration-300 ${
                   selectedTopic?.topic?.isCompleted
-                    ? 'border-primary/30 text-primary hover:bg-primary/5'
-                    : 'bg-primary text-white shadow-lg shadow-primary/25 hover:bg-primary/90'
+                    ? 'border-primary/30 hover:bg-primary/5 text-primary'
+                    : 'shadow-primary/25 hover:bg-primary/90 bg-primary text-white shadow-lg'
                 }`}
               >
                 {isUpdatingProgress ? (

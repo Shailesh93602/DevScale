@@ -88,14 +88,20 @@ test('regression: primary CTA buttons use white text', async ({ page }) => {
   // career-roadmap is auth-required — login first
   await loginAsStudent(page);
   await page.goto('/career-roadmap');
-  await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+  await page
+    .waitForLoadState('networkidle', { timeout: 15000 })
+    .catch(() => {});
 
-  const createRoadmapButton = page.getByRole('button', {
-    name: /Create Roadmap/i,
-  }).first();
-  const explorePathsButton = page.getByRole('button', {
-    name: /Explore Popular Paths/i,
-  }).first();
+  const createRoadmapButton = page
+    .getByRole('button', {
+      name: /Create Roadmap/i,
+    })
+    .first();
+  const explorePathsButton = page
+    .getByRole('button', {
+      name: /Explore Popular Paths/i,
+    })
+    .first();
 
   await expect(createRoadmapButton).toBeVisible({ timeout: 10000 });
   await expect(explorePathsButton).toBeVisible({ timeout: 10000 });

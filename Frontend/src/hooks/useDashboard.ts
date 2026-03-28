@@ -118,9 +118,8 @@ export const useDashboard = () => {
   const [getAchievements] = useAxiosGet<AchievementItemProps[]>(
     '/dashboard/achievements',
   );
-  const [getDashboardSummary] = useAxiosGet<DashboardSummary>(
-    '/dashboard/summary',
-  );
+  const [getDashboardSummary] =
+    useAxiosGet<DashboardSummary>('/dashboard/summary');
 
   return {
     getDashboardStats,
