@@ -11,6 +11,14 @@ import { invalidateCachePattern } from '../services/cacheService';
 import { createAppError } from '../utils/errorHandler';
 import { assertOwnership } from '../utils/assertOwnership';
 
+interface RoadmapDetail {
+  id: string;
+  title: string;
+  description: string;
+  user_id: string;
+  main_concepts: unknown[];
+}
+
 export default class RoadmapController {
   private readonly roadmapRepo: RoadmapRepository;
   private readonly userRoadmapRepo: UserRoadmapRepository;
@@ -92,7 +100,7 @@ export default class RoadmapController {
       }
 
       return sendResponse(res, 'MAIN_CONCEPTS_FETCHED', {
-        data: roadmap.main_concepts,
+        data: (roadmap as RoadmapDetail).main_concepts,
       });
     }
   );
@@ -214,7 +222,7 @@ export default class RoadmapController {
     const roadMapId = req.params.id;
     const { title, description } = req.body;
 
-    const roadMap = await this.roadmapRepo.getRoadmap(roadMapId);
+    const roadMap = await this.roadmapRepo.getRoadmap(roadMapId) as RoadmapDetail | null;
 
     if (!roadMap) {
       return sendResponse(res, 'ROADMAP_NOT_FOUND', {
@@ -222,7 +230,7 @@ export default class RoadmapController {
       });
     }
 
-    if (assertOwnership(req, res, (roadMap as { user_id?: string }).user_id)) return;
+    if (assertOwnership(req, res, roadMap.user_id)) return;
 
     const updatedRoadMap = await this.roadmapRepo.update({
       where: { id: roadMap.id },
@@ -240,7 +248,7 @@ export default class RoadmapController {
   public deleteRoadMap = catchAsync(async (req: Request, res: Response) => {
     const roadMapId = req.params.id;
 
-    const roadMap = await this.roadmapRepo.getRoadmap(roadMapId);
+    const roadMap = await this.roadmapRepo.getRoadmap(roadMapId) as RoadmapDetail | null;
 
     if (!roadMap) {
       return sendResponse(res, 'ROADMAP_NOT_FOUND', {
@@ -248,7 +256,7 @@ export default class RoadmapController {
       });
     }
 
-    if (assertOwnership(req, res, (roadMap as { user_id?: string }).user_id)) return;
+    if (assertOwnership(req, res, roadMap.user_id)) return;
 
     await this.roadmapRepo.delete({
       where: { id: roadMap.id },
