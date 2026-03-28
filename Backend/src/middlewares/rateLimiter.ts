@@ -10,7 +10,7 @@ try {
     maxRetriesPerRequest: 3,
   });
 
-  redisClient.on('error', (err: any) => {
+  redisClient.on('error', (err: Error & { code?: string }) => {
     if (err.code !== 'ECONNREFUSED') {
       logger.error('Redis connection error:', err);
     }
