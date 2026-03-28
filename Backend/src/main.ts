@@ -41,6 +41,12 @@ export class App {
     // Enable weak ETags on all GET/HEAD responses — lets clients skip re-parsing
     // unchanged bodies (articles, subjects, roadmaps). Zero cost if not supported.
     this.app.set('etag', 'weak');
+    
+    // Add Sentry request handler — must be Before any other middleware
+    import('@sentry/node').then((Sentry) => {
+      Sentry.setupExpressErrorHandler(this.app);
+    });
+
     this.initializeCloudinary();
     this.initializeMiddlewares();
     this.initializeRoutes();
@@ -174,8 +180,11 @@ export class App {
       res.status(404).json({ message: 'Route not found' });
     });
 
-    // Add existing error handler
-    this.app.use(errorHandler);
+    // The error handler must be BEFORE any other error middleware and AFTER all controllers
+    import('@sentry/node').then((Sentry) => {
+      this.app.use(Sentry.expressErrorHandler());
+      this.app.use(errorHandler);
+    });
   }
 
   private setupGracefulShutdown(server: MaybeServer): void {

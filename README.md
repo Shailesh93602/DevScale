@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/shaileshchaudhary/EduScale/main/public/logo.png" alt="EduScale Logo" width="200" height="auto" />
+  <img src="assets/logo.png" alt="EduScale Logo" width="200" height="auto" />
   <h1>🚀 EduScale Platform</h1>
   <p><strong>The All-in-One Engineering Learning Hub & Community</strong></p>
 
