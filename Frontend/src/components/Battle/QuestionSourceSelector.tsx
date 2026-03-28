@@ -17,7 +17,12 @@ import { cn } from '@/lib/utils';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
-export type QuestionSourceType = 'topic' | 'subject' | 'main_concept' | 'roadmap' | 'dsa';
+export type QuestionSourceType =
+  | 'topic'
+  | 'subject'
+  | 'main_concept'
+  | 'roadmap'
+  | 'dsa';
 
 export interface QuestionSource {
   type: QuestionSourceType;
@@ -36,11 +41,30 @@ interface QuestionSourceSelectorProps {
   maxCount?: number;
 }
 
-interface NamedOption { id: string; title?: string; name?: string }
-interface RoadmapOption { id: string; title: string; slug?: string | null }
-interface SubjectOption { id: string; title?: string; name?: string; order?: number }
-interface TopicLink { topic?: NamedOption }
-interface CategoryOption { category: string; count: number; difficulties: string[] }
+interface NamedOption {
+  id: string;
+  title?: string;
+  name?: string;
+}
+interface RoadmapOption {
+  id: string;
+  title: string;
+  slug?: string | null;
+}
+interface SubjectOption {
+  id: string;
+  title?: string;
+  name?: string;
+  order?: number;
+}
+interface TopicLink {
+  topic?: NamedOption;
+}
+interface CategoryOption {
+  category: string;
+  count: number;
+  difficulties: string[];
+}
 
 // ── Component ──────────────────────────────────────────────────────────────
 
@@ -76,36 +100,51 @@ export default function QuestionSourceSelector({
 
   // All hooks declared at top level
   const [getRoadmaps] = useAxiosGet<RoadmapOption[]>('/roadmaps');
-  const [getMainConceptsForRoadmap] = useAxiosGet<NamedOption[]>('/roadmaps/{{id}}/main_concepts');
-  const [getSubjectsForConcept] = useAxiosGet<SubjectOption[]>('/main-concepts/{{id}}/subjects');
-  const [getTopicsForSubject] = useAxiosGet<{ topics?: TopicLink[] }>('/subjects/{{id}}/topics');
-  const [getCategories] = useAxiosGet<CategoryOption[]>('/challenges/categories');
-  const [getPool] = useAxiosGet<{ questions: unknown[]; total_available: number }>('/battles/question-pool');
+  const [getMainConceptsForRoadmap] = useAxiosGet<NamedOption[]>(
+    '/roadmaps/{{id}}/main_concepts',
+  );
+  const [getSubjectsForConcept] = useAxiosGet<SubjectOption[]>(
+    '/main-concepts/{{id}}/subjects',
+  );
+  const [getTopicsForSubject] = useAxiosGet<{ topics?: TopicLink[] }>(
+    '/subjects/{{id}}/topics',
+  );
+  const [getCategories] = useAxiosGet<CategoryOption[]>(
+    '/challenges/categories',
+  );
+  const [getPool] = useAxiosGet<{
+    questions: unknown[];
+    total_available: number;
+  }>('/battles/question-pool');
 
   // Debounce timer for pool fetching
   const poolTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Load roadmaps on mount
   useEffect(() => {
-    getRoadmaps({ params: { limit: 100 } }).then((res) => {
-      const list: RoadmapOption[] = Array.isArray(res.data)
-        ? (res.data as unknown as RoadmapOption[])
-        : ((res.data as unknown as { data?: RoadmapOption[] })?.data ?? []);
-      setRoadmaps(list);
-    }).catch(() => {});
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    getRoadmaps({ params: { limit: 100 } })
+      .then((res) => {
+        const list: RoadmapOption[] = Array.isArray(res.data)
+          ? (res.data as unknown as RoadmapOption[])
+          : ((res.data as unknown as { data?: RoadmapOption[] })?.data ?? []);
+        setRoadmaps(list);
+      })
+      .catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Load categories when DSA mode activated
   useEffect(() => {
     if (mode !== 'dsa' || categories.length > 0) return;
-    getCategories().then((res) => {
-      const list: CategoryOption[] = Array.isArray(res.data)
-        ? (res.data as unknown as CategoryOption[])
-        : ((res.data as unknown as { data?: CategoryOption[] })?.data ?? []);
-      setCategories(list);
-    }).catch(() => {});
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    getCategories()
+      .then((res) => {
+        const list: CategoryOption[] = Array.isArray(res.data)
+          ? (res.data as unknown as CategoryOption[])
+          : ((res.data as unknown as { data?: CategoryOption[] })?.data ?? []);
+        setCategories(list);
+      })
+      .catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
 
   // Load main concepts when roadmap changes
@@ -118,13 +157,15 @@ export default function QuestionSourceSelector({
     setSelectedTopic('');
     if (!selectedRoadmap) return;
 
-    getMainConceptsForRoadmap({}, { id: selectedRoadmap }).then((res) => {
-      const list: NamedOption[] = Array.isArray(res.data)
-        ? (res.data as unknown as NamedOption[])
-        : ((res.data as unknown as { data?: NamedOption[] })?.data ?? []);
-      setMainConcepts(list);
-    }).catch(() => {});
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    getMainConceptsForRoadmap({}, { id: selectedRoadmap })
+      .then((res) => {
+        const list: NamedOption[] = Array.isArray(res.data)
+          ? (res.data as unknown as NamedOption[])
+          : ((res.data as unknown as { data?: NamedOption[] })?.data ?? []);
+        setMainConcepts(list);
+      })
+      .catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedRoadmap]);
 
   // Load subjects when main concept changes
@@ -135,13 +176,15 @@ export default function QuestionSourceSelector({
     setSelectedTopic('');
     if (!selectedMainConcept) return;
 
-    getSubjectsForConcept({}, { id: selectedMainConcept }).then((res) => {
-      const list: SubjectOption[] = Array.isArray(res.data)
-        ? (res.data as unknown as SubjectOption[])
-        : ((res.data as unknown as { data?: SubjectOption[] })?.data ?? []);
-      setSubjects(list);
-    }).catch(() => {});
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    getSubjectsForConcept({}, { id: selectedMainConcept })
+      .then((res) => {
+        const list: SubjectOption[] = Array.isArray(res.data)
+          ? (res.data as unknown as SubjectOption[])
+          : ((res.data as unknown as { data?: SubjectOption[] })?.data ?? []);
+        setSubjects(list);
+      })
+      .catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedMainConcept]);
 
   // Load topics when subject changes
@@ -150,37 +193,64 @@ export default function QuestionSourceSelector({
     setSelectedTopic('');
     if (!selectedSubject) return;
 
-    getTopicsForSubject({}, { id: selectedSubject }).then((res) => {
-      const raw = res.data?.topics ?? [];
-      const normalized = raw
-        .map((e) => e.topic)
-        .filter((t): t is NamedOption => Boolean(t?.id));
-      setTopics(normalized);
-    }).catch(() => {});
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    getTopicsForSubject({}, { id: selectedSubject })
+      .then((res) => {
+        const raw = res.data?.topics ?? [];
+        const normalized = raw
+          .map((e) => e.topic)
+          .filter((t): t is NamedOption => Boolean(t?.id));
+        setTopics(normalized);
+      })
+      .catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedSubject]);
 
   // Determine active source
-  const getActiveSource = (): { type: QuestionSourceType; id: string; label: string } | null => {
+  const getActiveSource = (): {
+    type: QuestionSourceType;
+    id: string;
+    label: string;
+  } | null => {
     if (mode === 'curriculum') {
       if (selectedTopic) {
         const t = topics.find((x) => x.id === selectedTopic);
-        return { type: 'topic', id: selectedTopic, label: t?.title ?? t?.name ?? selectedTopic };
+        return {
+          type: 'topic',
+          id: selectedTopic,
+          label: t?.title ?? t?.name ?? selectedTopic,
+        };
       }
       if (selectedSubject) {
         const s = subjects.find((x) => x.id === selectedSubject);
-        return { type: 'subject', id: selectedSubject, label: s?.title ?? s?.name ?? selectedSubject };
+        return {
+          type: 'subject',
+          id: selectedSubject,
+          label: s?.title ?? s?.name ?? selectedSubject,
+        };
       }
       if (selectedMainConcept) {
         const mc = mainConcepts.find((x) => x.id === selectedMainConcept);
-        return { type: 'main_concept', id: selectedMainConcept, label: mc?.title ?? mc?.name ?? selectedMainConcept };
+        return {
+          type: 'main_concept',
+          id: selectedMainConcept,
+          label: mc?.title ?? mc?.name ?? selectedMainConcept,
+        };
       }
       if (selectedRoadmap) {
         const r = roadmaps.find((x) => x.id === selectedRoadmap);
-        return { type: 'roadmap', id: selectedRoadmap, label: r?.title ?? selectedRoadmap };
+        return {
+          type: 'roadmap',
+          id: selectedRoadmap,
+          label: r?.title ?? selectedRoadmap,
+        };
       }
     } else if (mode === 'dsa' && selectedCategories.length > 0) {
-      const label = `DSA: ${selectedCategories.slice(0, 2).map((c) => c.replace(/_/g, ' ')).join(', ')}${selectedCategories.length > 2 ? ` +${selectedCategories.length - 2}` : ''}`;
+      const label = `DSA: ${selectedCategories
+        .slice(0, 2)
+        .map((c) => c.replace(/_/g, ' '))
+        .join(
+          ', ',
+        )}${selectedCategories.length > 2 ? ` +${selectedCategories.length - 2}` : ''}`;
       return { type: 'dsa', id: selectedCategories.join(','), label };
     }
     return null;
@@ -210,28 +280,41 @@ export default function QuestionSourceSelector({
         params.categories = selectedCategories.join(',');
       }
 
-      getPool({ params, timeout: 25000 }).then((res) => {
-        const total = res.data?.total_available ?? 0;
-        setTotalAvailable(total);
-        onChange({
-          type: src.type,
-          id: src.id,
-          label: src.label,
-          count,
-          difficulty: (dsaDifficulty || parentDifficulty) ?? undefined,
-          categories: mode === 'dsa' ? selectedCategories : undefined,
-        });
-      }).catch(() => {
-        setTotalAvailable(null);
-        onChange(null);
-      }).finally(() => setPoolLoading(false));
+      getPool({ params, timeout: 25000 })
+        .then((res) => {
+          const total = res.data?.total_available ?? 0;
+          setTotalAvailable(total);
+          onChange({
+            type: src.type,
+            id: src.id,
+            label: src.label,
+            count,
+            difficulty: (dsaDifficulty || parentDifficulty) ?? undefined,
+            categories: mode === 'dsa' ? selectedCategories : undefined,
+          });
+        })
+        .catch(() => {
+          setTotalAvailable(null);
+          onChange(null);
+        })
+        .finally(() => setPoolLoading(false));
     }, 500);
 
     return () => {
       if (poolTimer.current) clearTimeout(poolTimer.current);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedRoadmap, selectedMainConcept, selectedSubject, selectedTopic, selectedCategories, dsaDifficulty, parentDifficulty, count, mode]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    selectedRoadmap,
+    selectedMainConcept,
+    selectedSubject,
+    selectedTopic,
+    selectedCategories,
+    dsaDifficulty,
+    parentDifficulty,
+    count,
+    mode,
+  ]);
 
   const toggleCategory = (cat: string) => {
     setSelectedCategories((prev) =>
@@ -278,7 +361,8 @@ export default function QuestionSourceSelector({
       {mode === 'curriculum' ? (
         <div className="space-y-4">
           <p className="text-sm text-muted-foreground">
-            Pick any level — questions come from all quizzes within. Narrower selection = more focused battle.
+            Pick any level — questions come from all quizzes within. Narrower
+            selection = more focused battle.
           </p>
 
           {/* Roadmap */}
@@ -286,11 +370,17 @@ export default function QuestionSourceSelector({
             <label className="text-sm font-medium">Roadmap</label>
             <Select value={selectedRoadmap} onValueChange={setSelectedRoadmap}>
               <SelectTrigger>
-                <SelectValue placeholder={roadmaps.length === 0 ? 'Loading...' : 'Select a roadmap'} />
+                <SelectValue
+                  placeholder={
+                    roadmaps.length === 0 ? 'Loading...' : 'Select a roadmap'
+                  }
+                />
               </SelectTrigger>
               <SelectContent>
                 {roadmaps.map((r) => (
-                  <SelectItem key={r.id} value={r.id}>{r.title}</SelectItem>
+                  <SelectItem key={r.id} value={r.id}>
+                    {r.title}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -300,15 +390,29 @@ export default function QuestionSourceSelector({
           {selectedRoadmap && (
             <div className="space-y-1">
               <label className="text-sm font-medium">
-                Main Concept <span className="text-muted-foreground text-xs">(optional)</span>
+                Main Concept{' '}
+                <span className="text-xs text-muted-foreground">
+                  (optional)
+                </span>
               </label>
-              <Select value={selectedMainConcept} onValueChange={setSelectedMainConcept}>
+              <Select
+                value={selectedMainConcept}
+                onValueChange={setSelectedMainConcept}
+              >
                 <SelectTrigger>
-                  <SelectValue placeholder={mainConcepts.length === 0 ? 'Loading...' : 'Narrow to a concept'} />
+                  <SelectValue
+                    placeholder={
+                      mainConcepts.length === 0
+                        ? 'Loading...'
+                        : 'Narrow to a concept'
+                    }
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   {mainConcepts.map((mc) => (
-                    <SelectItem key={mc.id} value={mc.id}>{mc.title ?? mc.name}</SelectItem>
+                    <SelectItem key={mc.id} value={mc.id}>
+                      {mc.title ?? mc.name}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -319,15 +423,29 @@ export default function QuestionSourceSelector({
           {selectedMainConcept && (
             <div className="space-y-1">
               <label className="text-sm font-medium">
-                Subject <span className="text-muted-foreground text-xs">(optional)</span>
+                Subject{' '}
+                <span className="text-xs text-muted-foreground">
+                  (optional)
+                </span>
               </label>
-              <Select value={selectedSubject} onValueChange={setSelectedSubject}>
+              <Select
+                value={selectedSubject}
+                onValueChange={setSelectedSubject}
+              >
                 <SelectTrigger>
-                  <SelectValue placeholder={subjects.length === 0 ? 'Loading...' : 'Narrow to a subject'} />
+                  <SelectValue
+                    placeholder={
+                      subjects.length === 0
+                        ? 'Loading...'
+                        : 'Narrow to a subject'
+                    }
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   {subjects.map((s) => (
-                    <SelectItem key={s.id} value={s.id}>{s.title ?? s.name}</SelectItem>
+                    <SelectItem key={s.id} value={s.id}>
+                      {s.title ?? s.name}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -338,15 +456,24 @@ export default function QuestionSourceSelector({
           {selectedSubject && (
             <div className="space-y-1">
               <label className="text-sm font-medium">
-                Topic <span className="text-muted-foreground text-xs">(optional — most focused)</span>
+                Topic{' '}
+                <span className="text-xs text-muted-foreground">
+                  (optional — most focused)
+                </span>
               </label>
               <Select value={selectedTopic} onValueChange={setSelectedTopic}>
                 <SelectTrigger>
-                  <SelectValue placeholder={topics.length === 0 ? 'Loading...' : 'Narrow to a topic'} />
+                  <SelectValue
+                    placeholder={
+                      topics.length === 0 ? 'Loading...' : 'Narrow to a topic'
+                    }
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   {topics.map((t) => (
-                    <SelectItem key={t.id} value={t.id}>{t.title ?? t.name}</SelectItem>
+                    <SelectItem key={t.id} value={t.id}>
+                      {t.title ?? t.name}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -356,7 +483,8 @@ export default function QuestionSourceSelector({
       ) : (
         <div className="space-y-4">
           <p className="text-sm text-muted-foreground">
-            Select DSA categories. Questions come from challenges matching your selection.
+            Select DSA categories. Questions come from challenges matching your
+            selection.
           </p>
 
           {/* DSA Difficulty filter */}
@@ -366,7 +494,9 @@ export default function QuestionSourceSelector({
                 key={d}
                 variant={dsaDifficulty === d ? 'default' : 'outline'}
                 className="cursor-pointer capitalize"
-                onClick={() => setDsaDifficulty((prev) => (prev === d ? '' : d))}
+                onClick={() =>
+                  setDsaDifficulty((prev) => (prev === d ? '' : d))
+                }
               >
                 {d.charAt(0) + d.slice(1).toLowerCase()}
               </Badge>
@@ -383,14 +513,20 @@ export default function QuestionSourceSelector({
               {categories.map((cat) => (
                 <Badge
                   key={cat.category}
-                  variant={selectedCategories.includes(cat.category) ? 'default' : 'outline'}
+                  variant={
+                    selectedCategories.includes(cat.category)
+                      ? 'default'
+                      : 'outline'
+                  }
                   className={cn(
                     'cursor-pointer capitalize',
-                    selectedCategories.includes(cat.category) && 'bg-primary text-primary-foreground',
+                    selectedCategories.includes(cat.category) &&
+                      'bg-primary text-primary-foreground',
                   )}
                   onClick={() => toggleCategory(cat.category)}
                 >
-                  {cat.category.replace(/_/g, ' ')} <span className="ml-1 opacity-60">({cat.count})</span>
+                  {cat.category.replace(/_/g, ' ')}{' '}
+                  <span className="ml-1 opacity-60">({cat.count})</span>
                 </Badge>
               ))}
             </div>
@@ -410,9 +546,7 @@ export default function QuestionSourceSelector({
             <span
               className={cn(
                 'text-xs font-medium',
-                totalAvailable >= count
-                  ? 'text-green-600'
-                  : 'text-amber-600',
+                totalAvailable >= count ? 'text-green-600' : 'text-amber-600',
               )}
             >
               {totalAvailable >= count
@@ -430,16 +564,17 @@ export default function QuestionSourceSelector({
           className="w-full"
         />
         <div className="flex justify-between text-xs text-muted-foreground">
-          <span>5</span><span>{maxCount}</span>
+          <span>5</span>
+          <span>{maxCount}</span>
         </div>
       </div>
 
       {/* Active source badge */}
       {value && (
-        <div className="rounded-md border border-primary/30 bg-primary/5 px-3 py-2 text-sm">
+        <div className="border-primary/30 bg-primary/5 rounded-md border px-3 py-2 text-sm">
           <span className="font-medium text-primary">Source: </span>
           <span className="text-foreground">{value.label}</span>
-          <span className="ml-2 text-xs text-muted-foreground capitalize">
+          <span className="ml-2 text-xs capitalize text-muted-foreground">
             ({value.type.replace(/_/g, ' ')})
           </span>
         </div>

@@ -36,7 +36,10 @@ export default function RegisterPage() {
 
         <div className="text-center text-sm text-muted-foreground">
           Already have an account?{' '}
-          <Link href="/auth/login" className="text-primary underline underline-offset-4">
+          <Link
+            href="/auth/login"
+            className="text-primary underline underline-offset-4"
+          >
             Log in
           </Link>
         </div>

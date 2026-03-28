@@ -50,26 +50,68 @@ import {
 
 // Raw shape returned by the backend (snake_case)
 interface RawStatsResponse {
-  total_battles?: number; totalBattles?: number;
-  wins?: number; battlesWon?: number;
+  total_battles?: number;
+  totalBattles?: number;
+  wins?: number;
+  battlesWon?: number;
   completed_battles?: number;
-  win_rate?: number; winRate?: number;
-  total_score?: number; totalPoints?: number;
+  win_rate?: number;
+  winRate?: number;
+  total_score?: number;
+  totalPoints?: number;
   averageScore?: number;
-  questions_answered?: number; questionsAnswered?: number;
-  correct_answers?: number; correctAnswers?: number;
+  questions_answered?: number;
+  questionsAnswered?: number;
+  correct_answers?: number;
+  correctAnswers?: number;
   accuracy?: number;
-  avg_time_ms?: number; averageTime?: number;
-  top_topics?: RawTopic[]; topTopics?: RawTopic[];
-  recent_battles?: RawBattle[]; recentBattles?: RawBattle[];
-  performance_by_difficulty?: RawDifficulty[]; performanceByDifficulty?: RawDifficulty[];
-  performance_by_topic?: RawTopic[]; performanceByTopic?: RawTopic[];
-  performance_over_time?: RawWeek[]; performanceOverTime?: RawWeek[];
+  avg_time_ms?: number;
+  averageTime?: number;
+  top_topics?: RawTopic[];
+  topTopics?: RawTopic[];
+  recent_battles?: RawBattle[];
+  recentBattles?: RawBattle[];
+  performance_by_difficulty?: RawDifficulty[];
+  performanceByDifficulty?: RawDifficulty[];
+  performance_by_topic?: RawTopic[];
+  performanceByTopic?: RawTopic[];
+  performance_over_time?: RawWeek[];
+  performanceOverTime?: RawWeek[];
 }
-interface RawTopic { topic?: string; name?: string; avg_score?: number; score?: number; battles?: number; win_rate?: number; accuracy?: number; }
-interface RawBattle { id: string; title?: string; ended_at?: string; date?: string; result?: string; score?: number; rank?: number; totalParticipants?: number; }
-interface RawDifficulty { difficulty?: string; win_rate?: number; accuracy?: number; battles?: number; }
-interface RawWeek { week?: string; date?: string; avg_score?: number; score?: number; wins?: number; battles?: number; accuracy?: number; }
+interface RawTopic {
+  topic?: string;
+  name?: string;
+  avg_score?: number;
+  score?: number;
+  battles?: number;
+  win_rate?: number;
+  accuracy?: number;
+}
+interface RawBattle {
+  id: string;
+  title?: string;
+  ended_at?: string;
+  date?: string;
+  result?: string;
+  score?: number;
+  rank?: number;
+  totalParticipants?: number;
+}
+interface RawDifficulty {
+  difficulty?: string;
+  win_rate?: number;
+  accuracy?: number;
+  battles?: number;
+}
+interface RawWeek {
+  week?: string;
+  date?: string;
+  avg_score?: number;
+  score?: number;
+  wins?: number;
+  battles?: number;
+  accuracy?: number;
+}
 
 interface StatisticsData {
   totalBattles: number;
@@ -137,47 +179,72 @@ export default function StatisticsPage() {
             battlesLost: (d.completed_battles ?? 0) - (d.wins ?? 0),
             winRate: d.win_rate ?? d.winRate ?? 0,
             totalPoints: d.total_score ?? d.totalPoints ?? 0,
-            averageScore: (d.completed_battles ?? 0) > 0
-              ? Math.round((d.total_score ?? 0) / (d.completed_battles ?? 1))
-              : (d.averageScore ?? 0),
+            averageScore:
+              (d.completed_battles ?? 0) > 0
+                ? Math.round((d.total_score ?? 0) / (d.completed_battles ?? 1))
+                : (d.averageScore ?? 0),
             questionsAnswered: d.questions_answered ?? d.questionsAnswered ?? 0,
             correctAnswers: d.correct_answers ?? d.correctAnswers ?? 0,
             accuracy: d.accuracy ?? 0,
-            averageTime: d.avg_time_ms != null
-              ? Math.round(d.avg_time_ms / 1000)
-              : (d.averageTime ?? 0),
+            averageTime:
+              d.avg_time_ms != null
+                ? Math.round(d.avg_time_ms / 1000)
+                : (d.averageTime ?? 0),
             topTopics: (d.top_topics ?? d.topTopics ?? []).map((t: any) => ({
               topic: t.topic ?? t.name ?? '',
               score: t.avg_score ?? t.score ?? 0,
               battles: t.battles ?? 0,
             })),
-            recentBattles: (d.recent_battles ?? d.recentBattles ?? []).map((b: any) => ({
-              id: b.id,
-              title: b.title ?? 'Battle',
-              date: b.ended_at ? new Date(b.ended_at).toLocaleDateString() : (b.date ?? ''),
-              result: b.result === 'won' ? 'win' : b.result === 'lost' ? 'loss' : (b.result ?? 'ongoing'),
-              score: b.score ?? 0,
-              rank: b.rank ?? 0,
-              totalParticipants: b.totalParticipants ?? 0,
-            })),
-            performanceByDifficulty: (d.performance_by_difficulty ?? d.performanceByDifficulty ?? []).map((x: any) => ({
+            recentBattles: (d.recent_battles ?? d.recentBattles ?? []).map(
+              (b: any) => ({
+                id: b.id,
+                title: b.title ?? 'Battle',
+                date: b.ended_at
+                  ? new Date(b.ended_at).toLocaleDateString()
+                  : (b.date ?? ''),
+                result:
+                  b.result === 'won'
+                    ? 'win'
+                    : b.result === 'lost'
+                      ? 'loss'
+                      : (b.result ?? 'ongoing'),
+                score: b.score ?? 0,
+                rank: b.rank ?? 0,
+                totalParticipants: b.totalParticipants ?? 0,
+              }),
+            ),
+            performanceByDifficulty: (
+              d.performance_by_difficulty ??
+              d.performanceByDifficulty ??
+              []
+            ).map((x: any) => ({
               difficulty: x.difficulty
-                ? x.difficulty.charAt(0).toUpperCase() + x.difficulty.slice(1).toLowerCase()
+                ? x.difficulty.charAt(0).toUpperCase() +
+                  x.difficulty.slice(1).toLowerCase()
                 : '',
               accuracy: x.win_rate ?? x.accuracy ?? 0,
               battles: x.battles ?? 0,
             })),
-            performanceByTopic: (d.performance_by_topic ?? d.performanceByTopic ?? []).map((x: any) => ({
+            performanceByTopic: (
+              d.performance_by_topic ??
+              d.performanceByTopic ??
+              []
+            ).map((x: any) => ({
               topic: x.topic ?? '',
               accuracy: x.win_rate ?? x.accuracy ?? 0,
               battles: x.battles ?? 0,
             })),
-            performanceOverTime: (d.performance_over_time ?? d.performanceOverTime ?? []).map((x: any) => ({
+            performanceOverTime: (
+              d.performance_over_time ??
+              d.performanceOverTime ??
+              []
+            ).map((x: any) => ({
               date: x.week ?? x.date ?? '',
               score: x.avg_score ?? x.score ?? 0,
-              accuracy: x.wins != null && x.battles > 0
-                ? Math.round((x.wins / x.battles) * 100)
-                : (x.accuracy ?? 0),
+              accuracy:
+                x.wins != null && x.battles > 0
+                  ? Math.round((x.wins / x.battles) * 100)
+                  : (x.accuracy ?? 0),
             })),
           };
           setStatistics(normalized);
@@ -256,7 +323,12 @@ export default function StatisticsPage() {
               </SelectContent>
             </Select>
 
-            <Button variant="outline" size="icon" disabled title="Export coming soon">
+            <Button
+              variant="outline"
+              size="icon"
+              disabled
+              title="Export coming soon"
+            >
               <Download className="h-4 w-4" />
             </Button>
           </div>
@@ -424,7 +496,11 @@ export default function StatisticsPage() {
               </div>
             </CardContent>
             <CardFooter>
-              <Button variant="outline" className="w-full" onClick={() => router.push('/battle-zone/my')}>
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => router.push('/battle-zone/my')}
+              >
                 View All Battles
               </Button>
             </CardFooter>
@@ -465,7 +541,11 @@ export default function StatisticsPage() {
               </div>
             </CardContent>
             <CardFooter>
-              <Button variant="outline" className="w-full" onClick={() => router.push('/battle-zone')}>
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => router.push('/battle-zone')}
+              >
                 Browse All Battles
               </Button>
             </CardFooter>

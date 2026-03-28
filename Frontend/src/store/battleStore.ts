@@ -41,23 +41,20 @@ const initialFilters: BattleFilters = {
 };
 
 export const useBattleStore = create<BattleState>()(
-  devtools(
-    (set) => ({
-      battles: [],
-      currentBattle: null,
-      isLoading: false,
-      error: null,
-      filters: initialFilters,
-      setBattles: (battles: Battle[]) => set({ battles }),
-      setCurrentBattle: (battle: Battle | null) =>
-        set({ currentBattle: battle }),
-      setLoading: (isLoading: boolean) => set({ isLoading }),
-      setError: (error: string | null) => set({ error }),
-      setFilters: (newFilters) =>
-        set((state) => ({
-          filters: { ...state.filters, ...newFilters },
-        })),
-      resetFilters: () => set({ filters: initialFilters }),
-    }),
-  ),
+  devtools((set) => ({
+    battles: [],
+    currentBattle: null,
+    isLoading: false,
+    error: null,
+    filters: initialFilters,
+    setBattles: (battles: Battle[]) => set({ battles }),
+    setCurrentBattle: (battle: Battle | null) => set({ currentBattle: battle }),
+    setLoading: (isLoading: boolean) => set({ isLoading }),
+    setError: (error: string | null) => set({ error }),
+    setFilters: (newFilters) =>
+      set((state) => ({
+        filters: { ...state.filters, ...newFilters },
+      })),
+    resetFilters: () => set({ filters: initialFilters }),
+  })),
 );

@@ -35,12 +35,12 @@ test.describe('Navigation', () => {
 
     // Navigate to a protected page that should show the authenticated navbar
     await page.goto('/dashboard');
-    await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+    await page
+      .waitForLoadState('networkidle', { timeout: 15000 })
+      .catch(() => {});
 
     // Authenticated navbar should NOT show a "Get Started" button
-    await expect(
-      page.locator('nav a:has-text("Get Started")'),
-    ).toHaveCount(0);
+    await expect(page.locator('nav a:has-text("Get Started")')).toHaveCount(0);
 
     // Logo should now point to /dashboard when authenticated
     const logo = page.locator('nav a').filter({ hasText: 'EduScale' }).first();

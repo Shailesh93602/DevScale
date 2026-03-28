@@ -1,6 +1,12 @@
 import { useCallback, useState } from 'react';
 import { useAxiosGet, useAxiosPost, useAxiosPatch } from '@/hooks/useAxios';
-import { Battle, BattleFilters, BattleQuestion, LeaderboardEntry, AnswerResult } from '@/types/battle';
+import {
+  Battle,
+  BattleFilters,
+  BattleQuestion,
+  LeaderboardEntry,
+  AnswerResult,
+} from '@/types/battle';
 import { normalizeBattle } from '@/lib/battle-normalizer';
 
 export interface MyResultQuestion {
@@ -37,10 +43,16 @@ export const useBattleApi = () => {
 
   const [getBattles] = useAxiosGet<Battle[]>('/battles');
   const [getBattle] = useAxiosGet<Battle>('/battles/{{id}}');
-  const [getBattleQuestions] = useAxiosGet<BattleQuestion[]>('/battles/{{id}}/questions');
-  const [getBattleLeaderboard] = useAxiosGet<LeaderboardEntry[]>('/battles/{{id}}/leaderboard');
+  const [getBattleQuestions] = useAxiosGet<BattleQuestion[]>(
+    '/battles/{{id}}/questions',
+  );
+  const [getBattleLeaderboard] = useAxiosGet<LeaderboardEntry[]>(
+    '/battles/{{id}}/leaderboard',
+  );
   const [getBattleResults] = useAxiosGet('/battles/{{id}}/results');
-  const [getMyResultsReq] = useAxiosGet<MyBattleResults>('/battles/{{id}}/my-results');
+  const [getMyResultsReq] = useAxiosGet<MyBattleResults>(
+    '/battles/{{id}}/my-results',
+  );
   const [getMyBattles] = useAxiosGet('/battles/my');
 
   const [createBattleReq] = useAxiosPost<Battle>('/battles');
@@ -50,8 +62,18 @@ export const useBattleApi = () => {
   const [openLobbyReq] = useAxiosPost('/battles/{{id}}/lobby');
   const [startBattleReq] = useAxiosPost('/battles/{{id}}/start');
   const [cancelBattleReq] = useAxiosPatch('/battles/{{id}}/cancel');
-  const [submitAnswerReq] = useAxiosPost<AnswerResult & { leaderboard: LeaderboardEntry[]; participant_done: boolean }>('/battles/answer');
-  const [addQuestionsReq] = useAxiosPost<{ added: number; total_questions_added: number; total_questions_required: number; ready_to_start: boolean }>('/battles/{{id}}/questions');
+  const [submitAnswerReq] = useAxiosPost<
+    AnswerResult & {
+      leaderboard: LeaderboardEntry[];
+      participant_done: boolean;
+    }
+  >('/battles/answer');
+  const [addQuestionsReq] = useAxiosPost<{
+    added: number;
+    total_questions_added: number;
+    total_questions_required: number;
+    ready_to_start: boolean;
+  }>('/battles/{{id}}/questions');
 
   // ── Helpers ────────────────────────────────────────────────────────────────
 
@@ -69,7 +91,7 @@ export const useBattleApi = () => {
         setIsLoading(false);
       }
     },
-    []
+    [],
   );
 
   // ── Browse ─────────────────────────────────────────────────────────────────
@@ -78,25 +100,41 @@ export const useBattleApi = () => {
     (filters?: BattleFilters) =>
       wrap(async () => {
         const params = Object.fromEntries(
-          Object.entries(filters ?? {}).filter(([, v]) => v !== undefined && v !== null && v !== '' && v !== 'all')
+          Object.entries(filters ?? {}).filter(
+            ([, v]) => v !== undefined && v !== null && v !== '' && v !== 'all',
+          ),
         );
         const res = await getBattles({ params });
-        const data = res.data as unknown as { data?: Battle[]; meta?: unknown } | Battle[];
-        const list = Array.isArray(data) ? data : (data as { data?: Battle[] }).data ?? [];
-        return { data: list.map(normalizeBattle), meta: (data as { meta?: unknown }).meta };
+        const data = res.data as unknown as
+          | { data?: Battle[]; meta?: unknown }
+          | Battle[];
+        const list = Array.isArray(data)
+          ? data
+          : ((data as { data?: Battle[] }).data ?? []);
+        return {
+          data: list.map(normalizeBattle),
+          meta: (data as { meta?: unknown }).meta,
+        };
       }),
-    [getBattles, wrap]
+    [getBattles, wrap],
   );
 
   const fetchMyBattles = useCallback(
     (page = 1, limit = 10) =>
       wrap(async () => {
         const res = await getMyBattles({ params: { page, limit } });
-        const data = res.data as unknown as { data?: Battle[]; meta?: unknown } | Battle[];
-        const list = Array.isArray(data) ? data : (data as { data?: Battle[] }).data ?? [];
-        return { data: list.map(normalizeBattle), meta: (data as { meta?: unknown }).meta };
+        const data = res.data as unknown as
+          | { data?: Battle[]; meta?: unknown }
+          | Battle[];
+        const list = Array.isArray(data)
+          ? data
+          : ((data as { data?: Battle[] }).data ?? []);
+        return {
+          data: list.map(normalizeBattle),
+          meta: (data as { meta?: unknown }).meta,
+        };
       }),
-    [getMyBattles, wrap]
+    [getMyBattles, wrap],
   );
 
   // ── Detail ─────────────────────────────────────────────────────────────────
@@ -105,9 +143,11 @@ export const useBattleApi = () => {
     (id: string) =>
       wrap(async () => {
         const res = await getBattle({}, { id });
-        return res.data ? normalizeBattle(res.data as unknown as Record<string, unknown>) : null;
+        return res.data
+          ? normalizeBattle(res.data as unknown as Record<string, unknown>)
+          : null;
       }),
-    [getBattle, wrap]
+    [getBattle, wrap],
   );
 
   const fetchBattleQuestions = useCallback(
@@ -116,7 +156,7 @@ export const useBattleApi = () => {
         const res = await getBattleQuestions({}, { id });
         return Array.isArray(res.data) ? (res.data as BattleQuestion[]) : [];
       }),
-    [getBattleQuestions, wrap]
+    [getBattleQuestions, wrap],
   );
 
   const fetchBattleLeaderboard = useCallback(
@@ -125,7 +165,7 @@ export const useBattleApi = () => {
         const res = await getBattleLeaderboard({}, { id });
         return Array.isArray(res.data) ? (res.data as LeaderboardEntry[]) : [];
       }),
-    [getBattleLeaderboard, wrap]
+    [getBattleLeaderboard, wrap],
   );
 
   const fetchBattleResults = useCallback(
@@ -134,7 +174,7 @@ export const useBattleApi = () => {
         const res = await getBattleResults({}, { id });
         return res.data;
       }),
-    [getBattleResults, wrap]
+    [getBattleResults, wrap],
   );
 
   const fetchMyResults = useCallback(
@@ -143,7 +183,7 @@ export const useBattleApi = () => {
         const res = await getMyResultsReq({}, { id });
         return res.data ?? null;
       }),
-    [getMyResultsReq, wrap]
+    [getMyResultsReq, wrap],
   );
 
   // ── Mutations ──────────────────────────────────────────────────────────────
@@ -166,11 +206,15 @@ export const useBattleApi = () => {
         if (!res?.data) throw new Error('Failed to create battle');
         return normalizeBattle(res.data as unknown as Record<string, unknown>);
       }),
-    [createBattleReq, wrap]
+    [createBattleReq, wrap],
   );
 
   const joinExistingBattle = useCallback(
-    async (id: string): Promise<{ ok: true; battle: Battle } | { ok: false; message: string }> => {
+    async (
+      id: string,
+    ): Promise<
+      { ok: true; battle: Battle } | { ok: false; message: string }
+    > => {
       const res = await joinBattleReq({}, undefined, { id });
       if (!res.success) {
         return { ok: false, message: res.message || 'Failed to join battle' };
@@ -178,11 +222,14 @@ export const useBattleApi = () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const data = res?.data as any;
       if (data && typeof data === 'object' && 'battle' in data) {
-        return { ok: true, battle: normalizeBattle(data.battle as Record<string, unknown>) };
+        return {
+          ok: true,
+          battle: normalizeBattle(data.battle as Record<string, unknown>),
+        };
       }
       return { ok: false, message: 'Unexpected response from server' };
     },
-    [joinBattleReq]
+    [joinBattleReq],
   );
 
   const leaveExistingBattle = useCallback(
@@ -191,7 +238,7 @@ export const useBattleApi = () => {
         await leaveBattleReq({}, undefined, { id });
         return true;
       }),
-    [leaveBattleReq, wrap]
+    [leaveBattleReq, wrap],
   );
 
   const markReady = useCallback(
@@ -200,7 +247,7 @@ export const useBattleApi = () => {
         const res = await markReadyReq({}, undefined, { id });
         return res?.data;
       }),
-    [markReadyReq, wrap]
+    [markReadyReq, wrap],
   );
 
   const openLobby = useCallback(
@@ -209,7 +256,7 @@ export const useBattleApi = () => {
         await openLobbyReq({}, undefined, { id });
         return true;
       }),
-    [openLobbyReq, wrap]
+    [openLobbyReq, wrap],
   );
 
   const startBattle = useCallback(
@@ -218,7 +265,7 @@ export const useBattleApi = () => {
         await startBattleReq({}, undefined, { id });
         return true;
       }),
-    [startBattleReq, wrap]
+    [startBattleReq, wrap],
   );
 
   const cancelBattle = useCallback(
@@ -227,7 +274,7 @@ export const useBattleApi = () => {
         await cancelBattleReq({}, undefined, { id });
         return true;
       }),
-    [cancelBattleReq, wrap]
+    [cancelBattleReq, wrap],
   );
 
   const addQuestionsTosBattle = useCallback(
@@ -240,13 +287,13 @@ export const useBattleApi = () => {
         explanation?: string;
         points?: number;
         time_limit?: number;
-      }>
+      }>,
     ) =>
       wrap(async () => {
         const res = await addQuestionsReq({ questions }, undefined, { id });
         return res?.data ?? null;
       }),
-    [addQuestionsReq, wrap]
+    [addQuestionsReq, wrap],
   );
 
   const submitBattleAnswer = useCallback(
@@ -260,7 +307,7 @@ export const useBattleApi = () => {
         const res = await submitAnswerReq(data);
         return res?.data ?? null;
       }),
-    [submitAnswerReq, wrap]
+    [submitAnswerReq, wrap],
   );
 
   return {

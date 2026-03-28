@@ -70,7 +70,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const buildFallbackUser = useCallback((currentSession: Session): IUser => {
     const email = currentSession.user.email ?? '';
-    const fullName = (currentSession.user.user_metadata?.full_name as string | undefined) ?? '';
+    const fullName =
+      (currentSession.user.user_metadata?.full_name as string | undefined) ??
+      '';
     const [firstName = '', ...rest] = fullName.split(' ');
     const lastName = rest.join(' ');
 
@@ -96,33 +98,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const buildFallbackUserFromAuthUser = useCallback((authUser: SupabaseUser): IUser => {
-    const email = authUser.email ?? '';
-    const fullName = (authUser.user_metadata?.full_name as string | undefined) ?? '';
-    const [firstName = '', ...rest] = fullName.split(' ');
-    const lastName = rest.join(' ');
+  const buildFallbackUserFromAuthUser = useCallback(
+    (authUser: SupabaseUser): IUser => {
+      const email = authUser.email ?? '';
+      const fullName =
+        (authUser.user_metadata?.full_name as string | undefined) ?? '';
+      const [firstName = '', ...rest] = fullName.split(' ');
+      const lastName = rest.join(' ');
 
-    return {
-      id: authUser.id,
-      username: email.split('@')[0] || 'user',
-      first_name: firstName,
-      last_name: lastName,
-      email,
-      avatar_url: '',
-      bio: '',
-      address: '',
-      github_url: '',
-      linkedin_url: '',
-      twitter_url: '',
-      website_url: '',
-      specialization: '',
-      college: '',
-      graduation_year: new Date().getFullYear(),
-      skills: [],
-      experience_level: '',
-      role: null,
-    };
-  }, []);
+      return {
+        id: authUser.id,
+        username: email.split('@')[0] || 'user',
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        avatar_url: '',
+        bio: '',
+        address: '',
+        github_url: '',
+        linkedin_url: '',
+        twitter_url: '',
+        website_url: '',
+        specialization: '',
+        college: '',
+        graduation_year: new Date().getFullYear(),
+        skills: [],
+        experience_level: '',
+        role: null,
+      };
+    },
+    [],
+  );
 
   /**
    * Fetch the full user profile (with role) from our backend.
@@ -188,7 +194,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(buildFallbackUser(currentSession));
       setStatus('authenticated');
     }
-  }, [supabase, fetchUserProfile, buildFallbackUser, buildFallbackUserFromAuthUser]);
+  }, [
+    supabase,
+    fetchUserProfile,
+    buildFallbackUser,
+    buildFallbackUserFromAuthUser,
+  ]);
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
@@ -253,7 +264,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, [supabase, fetchUserProfile, buildFallbackUser, buildFallbackUserFromAuthUser]);
+  }, [
+    supabase,
+    fetchUserProfile,
+    buildFallbackUser,
+    buildFallbackUserFromAuthUser,
+  ]);
 
   // ─── RBAC Helpers ─────────────────────────────────────────────────────────
   const hasRole = useCallback(

@@ -85,7 +85,10 @@ export default function VerifyEmailPage() {
           </h1>
           <p className="text-muted-foreground">
             The verification link may have expired.{' '}
-            <a href="/auth/login" className="text-primary underline underline-offset-4">
+            <a
+              href="/auth/login"
+              className="text-primary underline underline-offset-4"
+            >
               Try logging in
             </a>{' '}
             or request a new verification email.

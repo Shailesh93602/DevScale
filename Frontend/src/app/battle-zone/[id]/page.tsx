@@ -3,9 +3,19 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import BattleZoneLayout from '@/components/Battle/BattleZoneLayout';
-import { Battle, BattleQuestion, LeaderboardEntry, AnswerResult } from '@/types/battle';
+import {
+  Battle,
+  BattleQuestion,
+  LeaderboardEntry,
+  AnswerResult,
+} from '@/types/battle';
 import useBattleApi, { MyBattleResults } from '@/hooks/useBattleApi';
-import { useBattleSocket, useBattleChat, useBattleTimer, useBattleLeaderboard } from '@/hooks/useBattleWebSocket';
+import {
+  useBattleSocket,
+  useBattleChat,
+  useBattleTimer,
+  useBattleLeaderboard,
+} from '@/hooks/useBattleWebSocket';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -13,9 +23,19 @@ import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
-  Users, Calendar, Award, AlertCircle, Timer,
-  Trophy, Swords, Clock, CheckCircle2,
-  Play, Crown, Loader2, ChevronRight,
+  Users,
+  Calendar,
+  Award,
+  AlertCircle,
+  Timer,
+  Trophy,
+  Swords,
+  Clock,
+  CheckCircle2,
+  Play,
+  Crown,
+  Loader2,
+  ChevronRight,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
@@ -63,9 +83,17 @@ export default function BattleDetailPage() {
   const { toast } = useToast();
 
   const {
-    fetchBattle, fetchBattleQuestions, fetchBattleLeaderboard,
-    joinExistingBattle, leaveExistingBattle, markReady, openLobby, startBattle,
-    cancelBattle, submitBattleAnswer, fetchMyResults,
+    fetchBattle,
+    fetchBattleQuestions,
+    fetchBattleLeaderboard,
+    joinExistingBattle,
+    leaveExistingBattle,
+    markReady,
+    openLobby,
+    startBattle,
+    cancelBattle,
+    submitBattleAnswer,
+    fetchMyResults,
   } = useBattleApi();
 
   // ── State ────────────────────────────────────────────────────────────────
@@ -79,12 +107,16 @@ export default function BattleDetailPage() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [answerResult, setAnswerResult] = useState<AnswerResult | null>(null);
-  const [answeredQuestions, setAnsweredQuestions] = useState<Set<string>>(new Set());
+  const [answeredQuestions, setAnsweredQuestions] = useState<Set<string>>(
+    new Set(),
+  );
   const questionStartRef = useRef<number>(Date.now());
 
   // Leaderboard
   const [apiLeaderboard, setApiLeaderboard] = useState<LeaderboardEntry[]>([]);
-  const [activeTab, setActiveTab] = useState<'battle' | 'leaderboard'>('battle');
+  const [activeTab, setActiveTab] = useState<'battle' | 'leaderboard'>(
+    'battle',
+  );
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   // Post-battle results breakdown (P5.14)
@@ -92,12 +124,21 @@ export default function BattleDetailPage() {
 
   // ── Derived ──────────────────────────────────────────────────────────────
 
-  const isParticipant = battle?.participants.some((p) => p.user_id === user?.id) ?? false;
+  const isParticipant =
+    battle?.participants.some((p) => p.user_id === user?.id) ?? false;
   const isCreator = battle?.user_id === user?.id;
-  const myParticipant = battle?.participants.find((p) => p.user_id === user?.id);
+  const myParticipant = battle?.participants.find(
+    (p) => p.user_id === user?.id,
+  );
   const isReady = myParticipant?.status === 'READY';
-  const allReady = (battle?.participants.length ?? 0) > 0 &&
-    battle?.participants.every((p) => p.status === 'READY' || p.status === 'PLAYING' || p.status === 'COMPLETED');
+  const allReady =
+    (battle?.participants.length ?? 0) > 0 &&
+    battle?.participants.every(
+      (p) =>
+        p.status === 'READY' ||
+        p.status === 'PLAYING' ||
+        p.status === 'COMPLETED',
+    );
   const currentQuestion = questions[currentQuestionIndex] ?? null;
 
   // ── WebSocket hooks ──────────────────────────────────────────────────────
@@ -105,12 +146,15 @@ export default function BattleDetailPage() {
   const { isConnected, on, disconnect } = useBattleSocket(battleId);
   const { messages } = useBattleChat(battleId);
   const { secondsRemaining: wsSecondsRemaining } = useBattleTimer(battleId);
-  const { leaderboard: wsLeaderboard, seedLeaderboard } = useBattleLeaderboard(battleId);
+  const { leaderboard: wsLeaderboard, seedLeaderboard } =
+    useBattleLeaderboard(battleId);
 
   // ── Socket cleanup on unmount ────────────────────────────────────────────
   useEffect(() => {
-    return () => { disconnect(); };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => {
+      disconnect();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [battleId]);
 
   // ── Timer with local fallback ─────────────────────────────────────────────
@@ -130,21 +174,31 @@ export default function BattleDetailPage() {
   useEffect(() => {
     if (!questionEndsAt) return;
     const tick = setInterval(() => {
-      setLocalSecondsRemaining(Math.max(0, Math.ceil((questionEndsAt - Date.now()) / 1000)));
+      setLocalSecondsRemaining(
+        Math.max(0, Math.ceil((questionEndsAt - Date.now()) / 1000)),
+      );
     }, 500);
     return () => clearInterval(tick);
   }, [questionEndsAt]);
 
   // Use WS value when available, fall back to local countdown
-  const secondsRemaining = (wsSecondsRemaining ?? 0) > 0 ? (wsSecondsRemaining ?? 0) : localSecondsRemaining;
+  const secondsRemaining =
+    (wsSecondsRemaining ?? 0) > 0
+      ? (wsSecondsRemaining ?? 0)
+      : localSecondsRemaining;
 
   // ── WebSocket event listeners ────────────────────────────────────────────
 
   useEffect(() => {
     const offStatus = on('battle:status_changed', ({ status }) => {
-      setBattle((prev) => prev ? { ...prev, status: status as Battle['status'] } : prev);
+      setBattle((prev) =>
+        prev ? { ...prev, status: status as Battle['status'] } : prev,
+      );
       if (status === 'LOBBY') {
-        toast({ title: 'Battle lobby is open!', description: 'Mark yourself ready when you are prepared.' });
+        toast({
+          title: 'Battle lobby is open!',
+          description: 'Mark yourself ready when you are prepared.',
+        });
       }
       if (status === 'CANCELLED') {
         toast({ title: 'Battle cancelled', variant: 'destructive' });
@@ -153,7 +207,7 @@ export default function BattleDetailPage() {
     });
 
     const offStarted = on('battle:started', () => {
-      setBattle((prev) => prev ? { ...prev, status: 'IN_PROGRESS' } : prev);
+      setBattle((prev) => (prev ? { ...prev, status: 'IN_PROGRESS' } : prev));
       toast({ title: 'Battle started! Good luck!' });
     });
 
@@ -173,35 +227,62 @@ export default function BattleDetailPage() {
       });
     });
 
-    const offCompleted = on('battle:completed', ({ winner_id, leaderboard }) => {
-      setBattle((prev) => prev ? { ...prev, status: 'COMPLETED', winner_id } : prev);
-      setApiLeaderboard(leaderboard);
-      toast({ title: 'Battle completed!', description: winner_id === user?.id ? '🏆 You won!' : 'Check the results.' });
-      // Fetch per-question results for this user
-      if (user?.id) {
-        fetchMyResults(battleId).then((res) => { if (res) setMyResults(res); });
-      }
-    });
+    const offCompleted = on(
+      'battle:completed',
+      ({ winner_id, leaderboard }) => {
+        setBattle((prev) =>
+          prev ? { ...prev, status: 'COMPLETED', winner_id } : prev,
+        );
+        setApiLeaderboard(leaderboard);
+        toast({
+          title: 'Battle completed!',
+          description:
+            winner_id === user?.id ? '🏆 You won!' : 'Check the results.',
+        });
+        // Fetch per-question results for this user
+        if (user?.id) {
+          fetchMyResults(battleId).then((res) => {
+            if (res) setMyResults(res);
+          });
+        }
+      },
+    );
 
-    const offJoined = on('battle:participant_joined', ({ user: joinedUser, total_count }) => {
-      setBattle((prev) => {
-        if (!prev) return prev;
-        const alreadyIn = prev.participants.some((p) => p.user_id === joinedUser.id);
-        if (alreadyIn) return { ...prev, current_participants: total_count };
-        return {
-          ...prev,
-          current_participants: total_count,
-          participants: [...prev.participants, {
-            id: joinedUser.id,
-            battle_id: battleId,
-            user_id: joinedUser.id,
-            user: { id: joinedUser.id, username: joinedUser.username, avatar_url: joinedUser.avatar_url },
-            status: 'JOINED' as const,
-            score: 0, rank: 0, correct_count: 0, wrong_count: 0, avg_time_per_answer_ms: 0,
-          }],
-        };
-      });
-    });
+    const offJoined = on(
+      'battle:participant_joined',
+      ({ user: joinedUser, total_count }) => {
+        setBattle((prev) => {
+          if (!prev) return prev;
+          const alreadyIn = prev.participants.some(
+            (p) => p.user_id === joinedUser.id,
+          );
+          if (alreadyIn) return { ...prev, current_participants: total_count };
+          return {
+            ...prev,
+            current_participants: total_count,
+            participants: [
+              ...prev.participants,
+              {
+                id: joinedUser.id,
+                battle_id: battleId,
+                user_id: joinedUser.id,
+                user: {
+                  id: joinedUser.id,
+                  username: joinedUser.username,
+                  avatar_url: joinedUser.avatar_url,
+                },
+                status: 'JOINED' as const,
+                score: 0,
+                rank: 0,
+                correct_count: 0,
+                wrong_count: 0,
+                avg_time_per_answer_ms: 0,
+              },
+            ],
+          };
+        });
+      },
+    );
 
     const offReady = on('battle:participant_ready', ({ user_id }) => {
       setBattle((prev) => {
@@ -209,32 +290,47 @@ export default function BattleDetailPage() {
         return {
           ...prev,
           participants: prev.participants.map((p) =>
-            p.user_id === user_id ? { ...p, status: 'READY' as const } : p
+            p.user_id === user_id ? { ...p, status: 'READY' as const } : p,
           ),
         };
       });
     });
 
-    const offLeft = on('battle:participant_left', ({ user_id, total_count }) => {
-      setBattle((prev) => {
-        if (!prev) return prev;
-        return {
-          ...prev,
-          current_participants: total_count,
-          participants: prev.participants.filter((p) => p.user_id !== user_id),
-        };
-      });
-    });
+    const offLeft = on(
+      'battle:participant_left',
+      ({ user_id, total_count }) => {
+        setBattle((prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            current_participants: total_count,
+            participants: prev.participants.filter(
+              (p) => p.user_id !== user_id,
+            ),
+          };
+        });
+      },
+    );
 
     const offState = on('battle:state', (state) => {
-      setBattle((prev) => prev ? { ...prev, status: state.status as Battle['status'] } : prev);
-      if (state.current_question_index >= 0) setCurrentQuestionIndex(state.current_question_index);
+      setBattle((prev) =>
+        prev ? { ...prev, status: state.status as Battle['status'] } : prev,
+      );
+      if (state.current_question_index >= 0)
+        setCurrentQuestionIndex(state.current_question_index);
       if (state.leaderboard.length > 0) setApiLeaderboard(state.leaderboard);
     });
 
     return () => {
-      offStatus(); offStarted(); offQuestion(); offAnswerResult();
-      offCompleted(); offJoined(); offReady(); offLeft(); offState();
+      offStatus();
+      offStarted();
+      offQuestion();
+      offAnswerResult();
+      offCompleted();
+      offJoined();
+      offReady();
+      offLeft();
+      offState();
     };
   }, [battleId, on, toast, router, user?.id, currentQuestion]);
 
@@ -261,17 +357,23 @@ export default function BattleDetailPage() {
       }
       // If loading a completed battle, fetch the per-user results breakdown
       if (b?.status === 'COMPLETED' && user?.id) {
-        fetchMyResults(battleId).then((res) => { if (res) setMyResults(res); });
+        fetchMyResults(battleId).then((res) => {
+          if (res) setMyResults(res);
+        });
       }
       setLoading(false);
     };
     load();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [battleId]);
 
   // Load questions when IN_PROGRESS and participant
   useEffect(() => {
-    if (battle?.status === 'IN_PROGRESS' && isParticipant && questions.length === 0) {
+    if (
+      battle?.status === 'IN_PROGRESS' &&
+      isParticipant &&
+      questions.length === 0
+    ) {
       fetchBattleQuestions(battleId).then((qs) => {
         if (qs) {
           setQuestions(qs);
@@ -282,7 +384,13 @@ export default function BattleDetailPage() {
         }
       });
     }
-  }, [battle?.status, isParticipant, battleId, questions.length, fetchBattleQuestions]);
+  }, [
+    battle?.status,
+    isParticipant,
+    battleId,
+    questions.length,
+    fetchBattleQuestions,
+  ]);
 
   // Auto-scroll chat
   useEffect(() => {
@@ -326,7 +434,7 @@ export default function BattleDetailPage() {
         return {
           ...prev,
           participants: prev.participants.map((p) =>
-            p.user_id === user?.id ? { ...p, status: 'READY' as const } : p
+            p.user_id === user?.id ? { ...p, status: 'READY' as const } : p,
           ),
         };
       });
@@ -340,7 +448,7 @@ export default function BattleDetailPage() {
     const ok = await openLobby(battleId);
     setActionLoading(false);
     if (!ok) toast({ title: 'Could not open lobby', variant: 'destructive' });
-    else setBattle((prev) => prev ? { ...prev, status: 'LOBBY' } : prev);
+    else setBattle((prev) => (prev ? { ...prev, status: 'LOBBY' } : prev));
   };
 
   const handleStartBattle = async () => {
@@ -384,7 +492,11 @@ export default function BattleDetailPage() {
 
   const formatDate = (d?: string | null) => {
     if (!d) return null;
-    try { return format(new Date(d), 'MMM d, yyyy h:mm a'); } catch { return null; }
+    try {
+      return format(new Date(d), 'MMM d, yyyy h:mm a');
+    } catch {
+      return null;
+    }
   };
 
   // ── Loading ──────────────────────────────────────────────────────────────
@@ -392,11 +504,13 @@ export default function BattleDetailPage() {
   if (loading) {
     return (
       <BattleZoneLayout>
-        <div className="space-y-6 animate-pulse">
+        <div className="animate-pulse space-y-6">
           <Skeleton className="h-10 w-2/3" />
           <Skeleton className="h-5 w-1/2" />
           <div className="grid gap-4 md:grid-cols-3">
-            {[0, 1, 2].map((i) => <Skeleton key={i} className="h-48" />)}
+            {[0, 1, 2].map((i) => (
+              <Skeleton key={i} className="h-48" />
+            ))}
           </div>
         </div>
       </BattleZoneLayout>
@@ -409,7 +523,9 @@ export default function BattleDetailPage() {
         <div className="flex flex-col items-center py-20 text-center">
           <AlertCircle className="mb-4 h-12 w-12 text-destructive" />
           <h2 className="mb-2 text-2xl font-bold">Battle not found</h2>
-          <Button onClick={() => router.push('/battle-zone')}>Browse Battles</Button>
+          <Button onClick={() => router.push('/battle-zone')}>
+            Browse Battles
+          </Button>
         </div>
       </BattleZoneLayout>
     );
@@ -421,128 +537,188 @@ export default function BattleDetailPage() {
     const questionCount = battle._count?.questions ?? 0;
     const questionsReady = questionCount >= battle.total_questions;
     return (
-    <div className="space-y-6">
-      {isCreator && !questionsReady && (
-        <div className="rounded-xl border border-yellow-500/40 bg-yellow-500/10 p-4 flex items-start gap-3">
-          <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-600" />
+      <div className="space-y-6">
+        {isCreator && !questionsReady && (
+          <div className="border-yellow-500/40 bg-yellow-500/10 flex items-start gap-3 rounded-xl border p-4">
+            <AlertCircle className="text-yellow-600 mt-0.5 h-5 w-5 shrink-0" />
+            <div>
+              <p className="text-yellow-700 font-semibold">
+                Questions needed before starting
+              </p>
+              <p className="text-yellow-600 mt-0.5 text-sm">
+                This battle has {questionCount} of {battle.total_questions}{' '}
+                questions added. Players joined to the lobby cannot start until
+                all questions are ready. Go back and add questions via the
+                battle creation flow, or use the API.
+              </p>
+            </div>
+          </div>
+        )}
+        <div className="space-y-4 rounded-xl border bg-card p-6 text-center">
+          <Clock className="mx-auto h-12 w-12 text-muted-foreground" />
           <div>
-            <p className="font-semibold text-yellow-700">Questions needed before starting</p>
-            <p className="text-sm text-yellow-600 mt-0.5">
-              This battle has {questionCount} of {battle.total_questions} questions added.
-              Players joined to the lobby cannot start until all questions are ready.
-              Go back and add questions via the battle creation flow, or use the API.
+            <h2 className="text-xl font-bold">Waiting for players</h2>
+            <p className="mt-1 text-muted-foreground">
+              {battle.current_participants} / {battle.max_participants} players
+              joined
             </p>
           </div>
+          {battle.start_time && (
+            <p className="text-sm text-muted-foreground">
+              Scheduled: {formatDate(battle.start_time)}
+            </p>
+          )}
+          <Progress
+            value={
+              (battle.current_participants / battle.max_participants) * 100
+            }
+            className="h-2"
+          />
         </div>
-      )}
-      <div className="rounded-xl border bg-card p-6 text-center space-y-4">
-        <Clock className="mx-auto h-12 w-12 text-muted-foreground" />
-        <div>
-          <h2 className="text-xl font-bold">Waiting for players</h2>
-          <p className="text-muted-foreground mt-1">
-            {battle.current_participants} / {battle.max_participants} players joined
-          </p>
+
+        {/* Participant list */}
+        <div className="space-y-3 rounded-xl border bg-card p-6">
+          <h3 className="font-semibold">
+            Participants ({battle.current_participants})
+          </h3>
+          {battle.participants.map((p) => (
+            <div key={p.user_id} className="flex items-center gap-3">
+              <Avatar className="h-8 w-8">
+                <AvatarImage src={p.user.avatar_url ?? ''} />
+                <AvatarFallback>
+                  {p.user.username[0]?.toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <span className="font-medium">{p.user.username}</span>
+              {p.user_id === battle.user_id && (
+                <Badge variant="secondary" className="text-xs">
+                  <Crown className="mr-1 h-3 w-3" />
+                  Creator
+                </Badge>
+              )}
+              {p.user_id === user?.id && (
+                <Badge variant="outline" className="ml-auto text-xs">
+                  You
+                </Badge>
+              )}
+            </div>
+          ))}
+          {battle.participants.length === 0 && (
+            <p className="text-sm text-muted-foreground">
+              No one has joined yet. Be the first!
+            </p>
+          )}
         </div>
-        {battle.start_time && (
-          <p className="text-sm text-muted-foreground">Scheduled: {formatDate(battle.start_time)}</p>
-        )}
-        <Progress value={(battle.current_participants / battle.max_participants) * 100} className="h-2" />
-      </div>
 
-      {/* Participant list */}
-      <div className="rounded-xl border bg-card p-6 space-y-3">
-        <h3 className="font-semibold">Participants ({battle.current_participants})</h3>
-        {battle.participants.map((p) => (
-          <div key={p.user_id} className="flex items-center gap-3">
-            <Avatar className="h-8 w-8">
-              <AvatarImage src={p.user.avatar_url ?? ''} />
-              <AvatarFallback>{p.user.username[0]?.toUpperCase()}</AvatarFallback>
-            </Avatar>
-            <span className="font-medium">{p.user.username}</span>
-            {p.user_id === battle.user_id && (
-              <Badge variant="secondary" className="text-xs"><Crown className="mr-1 h-3 w-3" />Creator</Badge>
-            )}
-            {p.user_id === user?.id && (
-              <Badge variant="outline" className="text-xs ml-auto">You</Badge>
-            )}
-          </div>
-        ))}
-        {battle.participants.length === 0 && (
-          <p className="text-sm text-muted-foreground">No one has joined yet. Be the first!</p>
-        )}
+        {/* Actions */}
+        <div className="flex gap-3">
+          {!isParticipant ? (
+            <Button
+              className="flex-1"
+              size="lg"
+              onClick={handleJoin}
+              disabled={actionLoading}
+            >
+              {actionLoading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Swords className="mr-2 h-4 w-4" />
+              )}
+              Join Battle
+            </Button>
+          ) : (
+            <Button
+              variant="outline"
+              onClick={handleLeave}
+              disabled={actionLoading}
+            >
+              Leave
+            </Button>
+          )}
+          {isCreator && isParticipant && battle.current_participants >= 2 && (
+            <Button
+              size="sm"
+              onClick={handleOpenLobby}
+              disabled={actionLoading}
+            >
+              {actionLoading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Play className="mr-2 h-4 w-4" />
+              )}
+              Open Lobby
+            </Button>
+          )}
+          {isCreator && isParticipant && (
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleCancelBattle}
+              disabled={actionLoading}
+            >
+              Cancel Battle
+            </Button>
+          )}
+        </div>
       </div>
-
-      {/* Actions */}
-      <div className="flex gap-3">
-        {!isParticipant ? (
-          <Button className="flex-1" size="lg" onClick={handleJoin} disabled={actionLoading}>
-            {actionLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Swords className="mr-2 h-4 w-4" />}
-            Join Battle
-          </Button>
-        ) : (
-          <Button variant="outline" onClick={handleLeave} disabled={actionLoading}>
-            Leave
-          </Button>
-        )}
-        {isCreator && isParticipant && battle.current_participants >= 2 && (
-          <Button size="sm" onClick={handleOpenLobby} disabled={actionLoading}>
-            {actionLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Play className="mr-2 h-4 w-4" />}
-            Open Lobby
-          </Button>
-        )}
-        {isCreator && isParticipant && (
-          <Button variant="destructive" size="sm" onClick={handleCancelBattle} disabled={actionLoading}>
-            Cancel Battle
-          </Button>
-        )}
-      </div>
-    </div>
-  );
+    );
   };
 
   // ── LOBBY phase ────────────────────────────────────────────────────────────
 
   const renderLobby = () => {
-    const readyCount = battle.participants.filter((p) => p.status === 'READY').length;
+    const readyCount = battle.participants.filter(
+      (p) => p.status === 'READY',
+    ).length;
     const questionCount = battle._count?.questions ?? 0;
     const questionsReady = questionCount >= battle.total_questions;
     return (
       <div className="space-y-6">
         {isCreator && !questionsReady && (
-          <div className="rounded-xl border border-yellow-500/40 bg-yellow-500/10 p-4 flex items-start gap-3">
-            <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-600" />
+          <div className="border-yellow-500/40 bg-yellow-500/10 flex items-start gap-3 rounded-xl border p-4">
+            <AlertCircle className="text-yellow-600 mt-0.5 h-5 w-5 shrink-0" />
             <div>
-              <p className="font-semibold text-yellow-700">Cannot start — questions missing</p>
-              <p className="text-sm text-yellow-600 mt-0.5">
-                {questionCount} of {battle.total_questions} questions added. The Start Battle button is disabled until all questions are ready.
+              <p className="text-yellow-700 font-semibold">
+                Cannot start — questions missing
+              </p>
+              <p className="text-yellow-600 mt-0.5 text-sm">
+                {questionCount} of {battle.total_questions} questions added. The
+                Start Battle button is disabled until all questions are ready.
               </p>
             </div>
           </div>
         )}
-        <div className="rounded-xl border bg-yellow-500/5 border-yellow-500/20 p-6 text-center space-y-3">
-          <Trophy className="mx-auto h-10 w-10 text-yellow-500" />
+        <div className="bg-yellow-500/5 border-yellow-500/20 space-y-3 rounded-xl border p-6 text-center">
+          <Trophy className="text-yellow-500 mx-auto h-10 w-10" />
           <h2 className="text-xl font-bold">Lobby — Get Ready!</h2>
           <p className="text-muted-foreground">
             {readyCount} / {battle.participants.length} players ready
           </p>
-          <Progress value={(readyCount / Math.max(battle.participants.length, 1)) * 100} className="h-2" />
+          <Progress
+            value={(readyCount / Math.max(battle.participants.length, 1)) * 100}
+            className="h-2"
+          />
         </div>
 
         {/* Participant ready status */}
-        <div className="rounded-xl border bg-card p-6 space-y-3">
+        <div className="space-y-3 rounded-xl border bg-card p-6">
           {battle.participants.map((p) => (
             <div key={p.user_id} className="flex items-center gap-3">
               <Avatar className="h-8 w-8">
                 <AvatarImage src={p.user.avatar_url ?? ''} />
-                <AvatarFallback>{p.user.username[0]?.toUpperCase()}</AvatarFallback>
+                <AvatarFallback>
+                  {p.user.username[0]?.toUpperCase()}
+                </AvatarFallback>
               </Avatar>
-              <span className="font-medium flex-1">{p.user.username}</span>
+              <span className="flex-1 font-medium">{p.user.username}</span>
               {p.user_id === battle.user_id && (
-                <Crown className="h-4 w-4 text-yellow-500" />
+                <Crown className="text-yellow-500 h-4 w-4" />
               )}
               <Badge
                 variant={p.status === 'READY' ? 'default' : 'outline'}
-                className={p.status === 'READY' ? 'bg-green-500 text-white' : ''}
+                className={
+                  p.status === 'READY' ? 'bg-green-500 text-white' : ''
+                }
               >
                 {p.status === 'READY' ? '✓ Ready' : 'Not ready'}
               </Badge>
@@ -553,8 +729,17 @@ export default function BattleDetailPage() {
         {/* Actions */}
         <div className="flex gap-3">
           {isParticipant && !isReady && (
-            <Button className="flex-1" size="lg" onClick={handleMarkReady} disabled={actionLoading}>
-              {actionLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle2 className="mr-2 h-4 w-4" />}
+            <Button
+              className="flex-1"
+              size="lg"
+              onClick={handleMarkReady}
+              disabled={actionLoading}
+            >
+              {actionLoading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <CheckCircle2 className="mr-2 h-4 w-4" />
+              )}
               Mark as Ready
             </Button>
           )}
@@ -565,20 +750,34 @@ export default function BattleDetailPage() {
               variant="default"
               onClick={handleStartBattle}
               disabled={actionLoading || !questionsReady}
-              title={questionsReady ? undefined : `Add ${battle.total_questions - questionCount} more question(s) before starting`}
+              title={
+                questionsReady
+                  ? undefined
+                  : `Add ${battle.total_questions - questionCount} more question(s) before starting`
+              }
             >
-              {actionLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Play className="mr-2 h-4 w-4" />}
-              {questionsReady ? 'Start Battle' : `Start Battle (${questionCount}/${battle.total_questions} questions)`}
+              {actionLoading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Play className="mr-2 h-4 w-4" />
+              )}
+              {questionsReady
+                ? 'Start Battle'
+                : `Start Battle (${questionCount}/${battle.total_questions} questions)`}
             </Button>
           )}
           {isReady && isCreator && !(allReady && readyCount >= 2) && (
-            <div className="flex-1 rounded-lg border bg-green-500/5 border-green-500/20 p-4 text-center">
-              <p className="text-green-600 font-medium">✓ You are ready. Waiting for others...</p>
+            <div className="bg-green-500/5 border-green-500/20 flex-1 rounded-lg border p-4 text-center">
+              <p className="text-green-600 font-medium">
+                ✓ You are ready. Waiting for others...
+              </p>
             </div>
           )}
           {isReady && !isCreator && (
-            <div className="flex-1 rounded-lg border bg-green-500/5 border-green-500/20 p-4 text-center">
-              <p className="text-green-600 font-medium">✓ You are ready. Waiting for others...</p>
+            <div className="bg-green-500/5 border-green-500/20 flex-1 rounded-lg border p-4 text-center">
+              <p className="text-green-600 font-medium">
+                ✓ You are ready. Waiting for others...
+              </p>
             </div>
           )}
         </div>
@@ -591,11 +790,12 @@ export default function BattleDetailPage() {
   const renderQuestion = () => {
     if (!currentQuestion) {
       return (
-        <div className="flex flex-col items-center py-12 text-center rounded-xl border bg-card">
+        <div className="flex flex-col items-center rounded-xl border bg-card py-12 text-center">
           <Swords className="mb-4 h-10 w-10 text-muted-foreground" />
           <h3 className="text-lg font-semibold">No questions yet</h3>
           <p className="mt-1 text-sm text-muted-foreground">
-            This battle has no questions loaded. The creator needs to add questions.
+            This battle has no questions loaded. The creator needs to add
+            questions.
           </p>
         </div>
       );
@@ -612,7 +812,13 @@ export default function BattleDetailPage() {
           </Badge>
           <div className="flex items-center gap-2 text-sm font-medium">
             <Timer className="h-4 w-4 text-muted-foreground" />
-            <span className={secondsRemaining !== null && secondsRemaining <= 10 ? 'text-destructive font-bold' : ''}>
+            <span
+              className={
+                secondsRemaining !== null && secondsRemaining <= 10
+                  ? 'font-bold text-destructive'
+                  : ''
+              }
+            >
               {secondsRemaining ?? currentQuestion.time_limit}s
             </span>
           </div>
@@ -629,34 +835,30 @@ export default function BattleDetailPage() {
 
         {/* Question */}
         <div className="rounded-xl border bg-card p-6">
-          <p className="text-lg font-semibold leading-relaxed">{currentQuestion.question}</p>
+          <p className="text-lg font-semibold leading-relaxed">
+            {currentQuestion.question}
+          </p>
         </div>
 
         {/* Options */}
         <div className="grid gap-3">
           {currentQuestion.options.map((option, idx) => {
             const isSelected = selectedOption === idx;
-            const isCorrect = answerResult && idx === answerResult.correct_answer;
-            const isWrong = answerResult && isSelected && !answerResult.is_correct;
+            const isCorrect =
+              answerResult && idx === answerResult.correct_answer;
+            const isWrong =
+              answerResult && isSelected && !answerResult.is_correct;
 
             return (
               <button
                 key={idx}
                 onClick={() => !isAnswered && setSelectedOption(idx)}
                 disabled={isAnswered}
-                className={`w-full rounded-xl border p-4 text-left transition-all flex items-center gap-3
-                  ${isCorrect ? 'border-green-500 bg-green-500/10 text-green-700' : ''}
-                  ${isWrong ? 'border-destructive bg-destructive/10 text-destructive' : ''}
-                  ${!isAnswered && isSelected ? 'border-primary bg-primary/10' : ''}
-                  ${!isAnswered && !isSelected ? 'hover:border-primary/50 hover:bg-muted/50' : ''}
-                  ${isAnswered && !isCorrect && !isWrong ? 'opacity-60' : ''}
-                `}
+                className={`flex w-full items-center gap-3 rounded-xl border p-4 text-left transition-all ${isCorrect ? 'border-green-500 bg-green-500/10 text-green-700' : ''} ${isWrong ? 'border-destructive bg-destructive/10 text-destructive' : ''} ${!isAnswered && isSelected ? 'bg-primary/10 border-primary' : ''} ${!isAnswered && !isSelected ? 'hover:border-primary/50 hover:bg-muted/50' : ''} ${isAnswered && !isCorrect && !isWrong ? 'opacity-60' : ''} `}
               >
-                <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-sm font-bold
-                  ${isSelected && !isAnswered ? 'border-primary bg-primary text-primary-foreground' : 'border-muted-foreground/30'}
-                  ${isCorrect ? 'border-green-500 bg-green-500 text-white' : ''}
-                  ${isWrong ? 'border-destructive bg-destructive text-white' : ''}
-                `}>
+                <span
+                  className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-sm font-bold ${isSelected && !isAnswered ? 'border-primary bg-primary text-primary-foreground' : 'border-muted-foreground/30'} ${isCorrect ? 'border-green-500 bg-green-500 text-white' : ''} ${isWrong ? 'border-destructive bg-destructive text-white' : ''} `}
+                >
                   {OPTION_LETTERS[idx]}
                 </span>
                 <span>{option}</span>
@@ -667,12 +869,20 @@ export default function BattleDetailPage() {
 
         {/* Answer feedback */}
         {answerResult && (
-          <div className={`rounded-xl border p-4 ${answerResult.is_correct ? 'border-green-500/30 bg-green-500/5' : 'border-destructive/30 bg-destructive/5'}`}>
-            <p className={`font-semibold ${answerResult.is_correct ? 'text-green-600' : 'text-destructive'}`}>
-              {answerResult.is_correct ? `✓ Correct! +${answerResult.points_earned} points` : '✗ Incorrect — 0 points'}
+          <div
+            className={`rounded-xl border p-4 ${answerResult.is_correct ? 'border-green-500/30 bg-green-500/5' : 'border-destructive/30 bg-destructive/5'}`}
+          >
+            <p
+              className={`font-semibold ${answerResult.is_correct ? 'text-green-600' : 'text-destructive'}`}
+            >
+              {answerResult.is_correct
+                ? `✓ Correct! +${answerResult.points_earned} points`
+                : '✗ Incorrect — 0 points'}
             </p>
             {answerResult.explanation && (
-              <p className="mt-1 text-sm text-muted-foreground">{answerResult.explanation}</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {answerResult.explanation}
+              </p>
             )}
           </div>
         )}
@@ -685,7 +895,9 @@ export default function BattleDetailPage() {
             onClick={handleSubmitAnswer}
             disabled={selectedOption === null || actionLoading}
           >
-            {actionLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+            {actionLoading ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : null}
             Submit Answer
           </Button>
         )}
@@ -705,15 +917,15 @@ export default function BattleDetailPage() {
 
   const renderCompleted = () => (
     <div className="space-y-6">
-      <div className="rounded-xl border bg-card p-8 text-center space-y-3">
+      <div className="space-y-3 rounded-xl border bg-card p-8 text-center">
         {leaderboard[0]?.user_id === user?.id ? (
           <>
-            <Crown className="mx-auto h-14 w-14 text-yellow-500" />
+            <Crown className="text-yellow-500 mx-auto h-14 w-14" />
             <h2 className="text-2xl font-bold">You Won! 🎉</h2>
           </>
         ) : (
           <>
-            <CheckCircle2 className="mx-auto h-14 w-12 text-green-500" />
+            <CheckCircle2 className="text-green-500 mx-auto h-14 w-12" />
             <h2 className="text-2xl font-bold">Battle Complete!</h2>
           </>
         )}
@@ -721,22 +933,30 @@ export default function BattleDetailPage() {
       </div>
 
       {/* Final leaderboard */}
-      <div className="rounded-xl border bg-card p-6 space-y-3">
+      <div className="space-y-3 rounded-xl border bg-card p-6">
         <h3 className="font-semibold">Final Standings</h3>
         {leaderboard.map((entry, i) => (
           <div
             key={entry.user_id}
-            className={`flex items-center gap-3 rounded-lg p-3 ${entry.user_id === user?.id ? 'bg-primary/5 border border-primary/20' : 'border'}`}
+            className={`flex items-center gap-3 rounded-lg p-3 ${entry.user_id === user?.id ? 'bg-primary/5 border-primary/20 border' : 'border'}`}
           >
-            <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold
-              ${i === 0 ? 'bg-yellow-500 text-white' : i === 1 ? 'bg-gray-400 text-white' : i === 2 ? 'bg-amber-700 text-white' : 'bg-muted text-muted-foreground'}`}>
+            <span
+              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${i === 0 ? 'bg-yellow-500 text-white' : i === 1 ? 'bg-gray-400 text-white' : i === 2 ? 'bg-amber-700 text-white' : 'bg-muted text-muted-foreground'}`}
+            >
               {i + 1}
             </span>
             <Avatar className="h-8 w-8">
               <AvatarImage src={entry.avatar_url ?? ''} />
-              <AvatarFallback>{entry.username[0]?.toUpperCase()}</AvatarFallback>
+              <AvatarFallback>
+                {entry.username[0]?.toUpperCase()}
+              </AvatarFallback>
             </Avatar>
-            <span className="flex-1 font-medium">{entry.username}{entry.user_id === user?.id && <span className="ml-2 text-xs text-primary">(You)</span>}</span>
+            <span className="flex-1 font-medium">
+              {entry.username}
+              {entry.user_id === user?.id && (
+                <span className="ml-2 text-xs text-primary">(You)</span>
+              )}
+            </span>
             <span className="font-bold">{entry.score} pts</span>
           </div>
         ))}
@@ -744,32 +964,37 @@ export default function BattleDetailPage() {
 
       {/* Per-question breakdown (P5.14) */}
       {myResults && myResults.questions.length > 0 && (
-        <div className="rounded-xl border bg-card p-6 space-y-4">
+        <div className="space-y-4 rounded-xl border bg-card p-6">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold">Your Question Breakdown</h3>
             <span className="text-sm text-muted-foreground">
-              {myResults.summary.correct_count}/{myResults.summary.total_questions} correct
-              &nbsp;·&nbsp;
-              avg {Math.round((myResults.summary.avg_time_ms ?? 0) / 1000)}s/question
+              {myResults.summary.correct_count}/
+              {myResults.summary.total_questions} correct &nbsp;·&nbsp; avg{' '}
+              {Math.round((myResults.summary.avg_time_ms ?? 0) / 1000)}
+              s/question
             </span>
           </div>
           <div className="space-y-3">
             {myResults.questions.map((q, i) => (
               <div
                 key={i}
-                className={`rounded-lg border p-4 space-y-3 ${q.is_correct ? 'border-green-500/30 bg-green-500/5' : 'border-destructive/30 bg-destructive/5'}`}
+                className={`space-y-3 rounded-lg border p-4 ${q.is_correct ? 'border-green-500/30 bg-green-500/5' : 'border-destructive/30 bg-destructive/5'}`}
               >
                 <div className="flex items-start gap-2">
-                  <span className={`mt-0.5 shrink-0 flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold ${q.is_correct ? 'bg-green-500 text-white' : 'bg-destructive text-destructive-foreground'}`}>
+                  <span
+                    className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-bold ${q.is_correct ? 'bg-green-500 text-white' : 'bg-destructive text-destructive-foreground'}`}
+                  >
                     {q.is_correct ? '✓' : '✗'}
                   </span>
-                  <p className="text-sm font-medium leading-snug">{q.question_text}</p>
+                  <p className="text-sm font-medium leading-snug">
+                    {q.question_text}
+                  </p>
                 </div>
                 <div className="grid grid-cols-2 gap-1.5 pl-7">
                   {q.options.map((opt, idx) => (
                     <div
                       key={idx}
-                      className={`rounded-md px-2.5 py-1.5 text-xs border ${
+                      className={`rounded-md border px-2.5 py-1.5 text-xs ${
                         idx === q.correct_answer
                           ? 'border-green-500/50 bg-green-500/10 text-green-700 font-medium'
                           : idx === q.selected_option && !q.is_correct
@@ -777,17 +1002,24 @@ export default function BattleDetailPage() {
                             : 'border-border bg-muted/30 text-muted-foreground'
                       }`}
                     >
-                      <span className="font-bold mr-1">{OPTION_LETTERS[idx]}.</span>{opt}
+                      <span className="mr-1 font-bold">
+                        {OPTION_LETTERS[idx]}.
+                      </span>
+                      {opt}
                     </div>
                   ))}
                 </div>
                 <div className="flex items-center gap-4 pl-7 text-xs text-muted-foreground">
                   <span>{Math.round(q.time_taken_ms / 1000)}s taken</span>
                   <span>{q.points_earned} pts earned</span>
-                  <span className="ml-auto">{q.community_accuracy_pct}% of players answered correctly</span>
+                  <span className="ml-auto">
+                    {q.community_accuracy_pct}% of players answered correctly
+                  </span>
                 </div>
                 {q.explanation && (
-                  <p className="pl-7 text-xs text-muted-foreground border-t pt-2">{q.explanation}</p>
+                  <p className="border-t pl-7 pt-2 text-xs text-muted-foreground">
+                    {q.explanation}
+                  </p>
                 )}
               </div>
             ))}
@@ -810,59 +1042,81 @@ export default function BattleDetailPage() {
           <Trophy className="mb-3 h-10 w-10 text-muted-foreground" />
           <p className="text-muted-foreground">No scores yet</p>
         </div>
-      ) : leaderboard.map((entry, i) => (
-        <div
-          key={entry.user_id}
-          className={`flex items-center gap-3 rounded-lg border p-4 ${entry.user_id === user?.id ? 'border-primary/40 bg-primary/5' : ''} ${i === 0 && entry.score > 0 ? 'border-yellow-500/30' : ''}`}
-        >
-          <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold
-            ${i === 0 && entry.score > 0 ? 'bg-yellow-500 text-white' : i === 1 && entry.score > 0 ? 'bg-gray-400 text-white' : i === 2 && entry.score > 0 ? 'bg-amber-700 text-white' : 'bg-muted text-muted-foreground'}`}>
-            {i + 1}
-          </span>
-          <Avatar className="h-8 w-8">
-            <AvatarImage src={entry.avatar_url ?? ''} />
-            <AvatarFallback>{entry.username[0]?.toUpperCase()}</AvatarFallback>
-          </Avatar>
-          <div className="flex-1">
-            <p className="font-medium">{entry.username}{entry.user_id === user?.id && <span className="ml-2 text-xs text-primary">(You)</span>}</p>
-            <p className="text-xs text-muted-foreground">{entry.correct_count} correct</p>
+      ) : (
+        leaderboard.map((entry, i) => (
+          <div
+            key={entry.user_id}
+            className={`flex items-center gap-3 rounded-lg border p-4 ${entry.user_id === user?.id ? 'border-primary/40 bg-primary/5' : ''} ${i === 0 && entry.score > 0 ? 'border-yellow-500/30' : ''}`}
+          >
+            <span
+              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${i === 0 && entry.score > 0 ? 'bg-yellow-500 text-white' : i === 1 && entry.score > 0 ? 'bg-gray-400 text-white' : i === 2 && entry.score > 0 ? 'bg-amber-700 text-white' : 'bg-muted text-muted-foreground'}`}
+            >
+              {i + 1}
+            </span>
+            <Avatar className="h-8 w-8">
+              <AvatarImage src={entry.avatar_url ?? ''} />
+              <AvatarFallback>
+                {entry.username[0]?.toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1">
+              <p className="font-medium">
+                {entry.username}
+                {entry.user_id === user?.id && (
+                  <span className="ml-2 text-xs text-primary">(You)</span>
+                )}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {entry.correct_count} correct
+              </p>
+            </div>
+            <span className="font-bold">{entry.score} pts</span>
           </div>
-          <span className="font-bold">{entry.score} pts</span>
-        </div>
-      ))}
+        ))
+      )}
     </div>
   );
 
   // ── Main render ───────────────────────────────────────────────────────────
 
-  const isBattlePhase = battle.status === 'IN_PROGRESS' || battle.status === 'COMPLETED';
+  const isBattlePhase =
+    battle.status === 'IN_PROGRESS' || battle.status === 'COMPLETED';
 
   return (
     <BattleZoneLayout>
       <div className="mx-auto max-w-5xl space-y-6">
-
         {/* Battle header */}
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2">
             <Badge className={STATUS_COLORS[battle.status] ?? ''}>
               {STATUS_LABELS[battle.status] ?? battle.status}
             </Badge>
-            <Badge variant="outline">{TYPE_LABELS[battle.type] ?? battle.type}</Badge>
-            <Badge variant="outline">{DIFFICULTY_LABELS[battle.difficulty] ?? battle.difficulty}</Badge>
+            <Badge variant="outline">
+              {TYPE_LABELS[battle.type] ?? battle.type}
+            </Badge>
+            <Badge variant="outline">
+              {DIFFICULTY_LABELS[battle.difficulty] ?? battle.difficulty}
+            </Badge>
             <div className="ml-auto flex items-center gap-1 text-sm text-muted-foreground">
-              <div className={`h-2 w-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-muted-foreground'}`} />
+              <div
+                className={`h-2 w-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-muted-foreground'}`}
+              />
               {isConnected ? 'Live' : 'Connecting…'}
             </div>
           </div>
 
           <h1 className="text-2xl font-bold md:text-3xl">{battle.title}</h1>
-          {battle.description && <p className="text-muted-foreground">{battle.description}</p>}
+          {battle.description && (
+            <p className="text-muted-foreground">{battle.description}</p>
+          )}
 
-          <div className="flex flex-wrap gap-4 text-sm text-muted-foreground pt-1">
+          <div className="flex flex-wrap gap-4 pt-1 text-sm text-muted-foreground">
             <span className="flex items-center gap-1.5">
               <Avatar className="h-5 w-5">
                 <AvatarImage src={battle.creator.avatar_url ?? ''} />
-                <AvatarFallback>{battle.creator.username[0]?.toUpperCase()}</AvatarFallback>
+                <AvatarFallback>
+                  {battle.creator.username[0]?.toUpperCase()}
+                </AvatarFallback>
               </Avatar>
               {battle.creator.username}
             </span>
@@ -892,12 +1146,17 @@ export default function BattleDetailPage() {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`flex-1 rounded-md px-3 py-1.5 text-sm font-medium transition-colors capitalize
-                  ${activeTab === tab ? 'bg-background shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+                className={`flex-1 rounded-md px-3 py-1.5 text-sm font-medium capitalize transition-colors ${activeTab === tab ? 'bg-background shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
               >
-                {tab === 'battle' ? (battle.status === 'COMPLETED' ? 'Results' : 'Battle') : 'Leaderboard'}
+                {tab === 'battle'
+                  ? battle.status === 'COMPLETED'
+                    ? 'Results'
+                    : 'Battle'
+                  : 'Leaderboard'}
                 {tab === 'leaderboard' && leaderboard.length > 0 && (
-                  <span className="ml-1.5 rounded-full bg-primary/10 px-1.5 py-0.5 text-xs text-primary">{leaderboard.length}</span>
+                  <span className="bg-primary/10 ml-1.5 rounded-full px-1.5 py-0.5 text-xs text-primary">
+                    {leaderboard.length}
+                  </span>
                 )}
               </button>
             ))}
@@ -911,20 +1170,28 @@ export default function BattleDetailPage() {
           <div className="flex flex-col items-center py-16 text-center">
             <AlertCircle className="mb-4 h-12 w-12 text-destructive" />
             <h2 className="text-xl font-bold">Battle Cancelled</h2>
-            <Button className="mt-4" onClick={() => router.push('/battle-zone')}>Browse Battles</Button>
+            <Button
+              className="mt-4"
+              onClick={() => router.push('/battle-zone')}
+            >
+              Browse Battles
+            </Button>
           </div>
         )}
         {battle.status === 'IN_PROGRESS' && (
           <>
-            {activeTab === 'battle' && (
-              isParticipant ? renderQuestion() : (
+            {activeTab === 'battle' &&
+              (isParticipant ? (
+                renderQuestion()
+              ) : (
                 <div className="flex flex-col items-center py-12 text-center">
                   <Swords className="mb-4 h-10 w-10 text-muted-foreground" />
                   <h2 className="text-xl font-bold">Battle in progress</h2>
-                  <p className="text-muted-foreground mt-1">You can watch the leaderboard.</p>
+                  <p className="mt-1 text-muted-foreground">
+                    You can watch the leaderboard.
+                  </p>
                 </div>
-              )
-            )}
+              ))}
             {activeTab === 'leaderboard' && renderLeaderboard()}
           </>
         )}

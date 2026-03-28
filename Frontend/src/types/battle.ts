@@ -1,9 +1,19 @@
 // ── Enums ────────────────────────────────────────────────────────────────────
 
-export type BattleStatus = 'WAITING' | 'LOBBY' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
+export type BattleStatus =
+  | 'WAITING'
+  | 'LOBBY'
+  | 'IN_PROGRESS'
+  | 'COMPLETED'
+  | 'CANCELLED';
 export type BattleType = 'QUICK' | 'SCHEDULED' | 'PRACTICE';
 export type Difficulty = 'EASY' | 'MEDIUM' | 'HARD';
-export type ParticipantStatus = 'JOINED' | 'READY' | 'PLAYING' | 'COMPLETED' | 'DISCONNECTED';
+export type ParticipantStatus =
+  | 'JOINED'
+  | 'READY'
+  | 'PLAYING'
+  | 'COMPLETED'
+  | 'DISCONNECTED';
 
 // ── Domain objects ───────────────────────────────────────────────────────────
 

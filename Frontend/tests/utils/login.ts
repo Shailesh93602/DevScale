@@ -7,7 +7,9 @@ async function loginWith(page: Page, email: string, password: string) {
   await page.click('button[type="submit"]');
   await page.waitForURL('**/dashboard', { timeout: 30000 });
   await page.waitForLoadState('domcontentloaded');
-  await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+  await page
+    .waitForLoadState('networkidle', { timeout: 15000 })
+    .catch(() => {});
   await page.waitForTimeout(500);
   await expect(page).toHaveURL(/\/dashboard/);
 }

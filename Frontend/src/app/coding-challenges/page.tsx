@@ -193,10 +193,10 @@ export default function CodingChallengesPage() {
                       <span
                         className={`rounded-full px-2 py-1 text-xs font-bold uppercase tracking-wider ${
                           challenge.difficulty.toUpperCase() === 'EASY'
-                            ? 'bg-emerald-500/10 text-emerald-700 border border-emerald-500/20'
+                            ? 'border border-emerald-500/20 bg-emerald-500/10 text-emerald-700'
                             : challenge.difficulty.toUpperCase() === 'MEDIUM'
-                              ? 'bg-amber-500/10 text-amber-700 border border-amber-500/20'
-                              : 'bg-red-500/10 text-red-700 border border-red-500/20'
+                              ? 'border border-amber-500/20 bg-amber-500/10 text-amber-700'
+                              : 'bg-red-500/10 text-red-700 border-red-500/20 border'
                         }`}
                       >
                         {challenge.difficulty}

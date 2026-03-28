@@ -27,9 +27,10 @@ export interface BattleCreationData {
 export const useBattleCreation = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [execute, state] = useAxiosPost<{ id: string; slug?: string }, BattleCreationData>(
-    '/battles',
-  );
+  const [execute, state] = useAxiosPost<
+    { id: string; slug?: string },
+    BattleCreationData
+  >('/battles');
 
   const createBattle = async (data: BattleCreationData) => {
     setIsSubmitting(true);

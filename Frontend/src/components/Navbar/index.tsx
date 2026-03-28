@@ -319,44 +319,46 @@ const Navbar = () => {
                                 'flex h-7 w-7 items-center justify-center rounded-md bg-foreground/5 text-foreground/40 transition-colors group-hover:text-foreground',
                                 profileItem.label === 'Logout' &&
                                   'bg-symbols/5 text-red-400',
-                                )}
+                              )}
                             >
-                                {profileItem.icon}
-                              </span>
-                              {profileItem.label}
-                            </Link>
-                          ))}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              )}
-            </div>
+                              {profileItem.icon}
+                            </span>
+                            {profileItem.label}
+                          </Link>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
+          </div>
 
-            {/* Mobile Right Section - Shown Only When Desktop Hidden */}
-            <div className={cn(
-              "flex shrink-0 items-center justify-end gap-2 lg:hidden",
-              isDesktop && "hidden"
-            )}>
-              <button
-                onClick={toggleTheme}
-                className="flex h-9 w-9 items-center justify-center rounded-full text-foreground/70 transition-colors hover:bg-foreground/5 focus:outline-none"
-              >
-                {mounted && resolvedTheme === 'dark' ? (
-                  <FiSun size={16} />
-                ) : (
-                  <FiMoon size={16} />
-                )}
-              </button>
-              <button
-                onClick={toggleMenu}
-                className="flex h-9 w-9 items-center justify-center rounded-full text-foreground/70 transition-colors hover:bg-foreground/5 focus:outline-none"
-                aria-expanded={isOpen}
-              >
-                {isOpen ? <FiX size={18} /> : <FiMenu size={18} />}
-              </button>
-            </div>
+          {/* Mobile Right Section - Shown Only When Desktop Hidden */}
+          <div
+            className={cn(
+              'flex shrink-0 items-center justify-end gap-2 lg:hidden',
+              isDesktop && 'hidden',
+            )}
+          >
+            <button
+              onClick={toggleTheme}
+              className="flex h-9 w-9 items-center justify-center rounded-full text-foreground/70 transition-colors hover:bg-foreground/5 focus:outline-none"
+            >
+              {mounted && resolvedTheme === 'dark' ? (
+                <FiSun size={16} />
+              ) : (
+                <FiMoon size={16} />
+              )}
+            </button>
+            <button
+              onClick={toggleMenu}
+              className="flex h-9 w-9 items-center justify-center rounded-full text-foreground/70 transition-colors hover:bg-foreground/5 focus:outline-none"
+              aria-expanded={isOpen}
+            >
+              {isOpen ? <FiX size={18} /> : <FiMenu size={18} />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -373,9 +375,7 @@ const Navbar = () => {
         className={cn(
           'absolute inset-x-0 top-[60px] z-[80] border-t border-border/40 bg-background/95 backdrop-blur-xl transition-all duration-300 ease-in-out lg:hidden',
           isDesktop && 'hidden',
-          isOpen
-            ? 'block pointer-events-auto'
-            : 'hidden pointer-events-none',
+          isOpen ? 'pointer-events-auto block' : 'pointer-events-none hidden',
         )}
       >
         <div className="max-h-[calc(100vh-60px)] overflow-y-auto overflow-x-hidden">

@@ -36,9 +36,12 @@ const BattlePreview: React.FC<BattlePreviewProps> = ({ formValues }) => {
 
   const getDifficultyValue = () => {
     switch (difficulty?.toLowerCase()) {
-      case 'easy': return 33;
-      case 'hard': return 100;
-      default: return 66;
+      case 'easy':
+        return 33;
+      case 'hard':
+        return 100;
+      default:
+        return 66;
     }
   };
 
@@ -114,7 +117,9 @@ const BattlePreview: React.FC<BattlePreviewProps> = ({ formValues }) => {
           {estimatedDuration !== null && (
             <div className="space-y-1">
               <h4 className="font-medium">Estimated Duration</h4>
-              <p className="text-sm text-muted-foreground">{estimatedDuration} minutes</p>
+              <p className="text-sm text-muted-foreground">
+                {estimatedDuration} minutes
+              </p>
             </div>
           )}
         </div>
@@ -122,7 +127,9 @@ const BattlePreview: React.FC<BattlePreviewProps> = ({ formValues }) => {
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <h4 className="font-medium">Difficulty Level</h4>
-            <span className="text-sm capitalize text-muted-foreground">{difficulty?.toLowerCase()}</span>
+            <span className="text-sm capitalize text-muted-foreground">
+              {difficulty?.toLowerCase()}
+            </span>
           </div>
           <Progress value={getDifficultyValue()} className="h-2" />
         </div>

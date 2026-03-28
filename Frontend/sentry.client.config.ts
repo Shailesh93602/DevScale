@@ -20,7 +20,7 @@ if (SENTRY_DSN) {
 
     integrations: [
       Sentry.replayIntegration({
-        maskAllText: true,   // mask PII in replays
+        maskAllText: true, // mask PII in replays
         blockAllMedia: true,
       }),
     ],
