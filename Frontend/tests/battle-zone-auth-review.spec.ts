@@ -33,35 +33,50 @@ const isIgnorableFailedRequest = (url: string, errorText: string) => {
 const waitForRouteReadyState = async (route: string, page: Page) => {
   if (route === '/battle-zone/statistics') {
     await Promise.race([
-      page.getByRole('heading', { name: 'Battle Statistics' }).waitFor({ timeout: 12000 }),
-      page.getByRole('heading', { name: 'Statistics unavailable' }).waitFor({ timeout: 12000 }),
+      page
+        .getByRole('heading', { name: 'Battle Statistics' })
+        .waitFor({ timeout: 12000 }),
+      page
+        .getByRole('heading', { name: 'Statistics unavailable' })
+        .waitFor({ timeout: 12000 }),
     ]);
     return;
   }
 
   if (route === '/battle-zone/my-battles') {
-    await page.getByRole('heading', { name: 'My Battles' }).waitFor({ timeout: 12000 });
+    await page
+      .getByRole('heading', { name: 'My Battles' })
+      .waitFor({ timeout: 12000 });
     return;
   }
 
   if (route === '/battle-zone/create') {
-    await page.getByRole('heading', { name: /Create/i }).first().waitFor({ timeout: 12000 });
+    await page
+      .getByRole('heading', { name: /Create/i })
+      .first()
+      .waitFor({ timeout: 12000 });
     return;
   }
 
   if (route === '/battle-zone') {
     await Promise.race([
-      page.getByRole('heading', { name: 'Battle Zone Arena' }).waitFor({ timeout: 12000 }),
+      page
+        .getByRole('heading', { name: 'Battle Zone Arena' })
+        .waitFor({ timeout: 12000 }),
       page.getByText('Welcome to Battle Zone!').waitFor({ timeout: 12000 }),
     ]);
     return;
   }
 
-  await page.waitForLoadState('networkidle', { timeout: 12000 }).catch(() => { });
+  await page
+    .waitForLoadState('networkidle', { timeout: 12000 })
+    .catch(() => {});
 };
 
 test.describe('Battle Zone authenticated review', () => {
-  test('login and capture visual/functional review artifacts', async ({ page }) => {
+  test('login and capture visual/functional review artifacts', async ({
+    page,
+  }) => {
     test.setTimeout(420000);
     mkdirSync(reviewDir, { recursive: true });
 
@@ -87,7 +102,9 @@ test.describe('Battle Zone authenticated review', () => {
 
     page.on('response', (res) => {
       if (res.status() >= 500) {
-        serverErrors.push(`${res.status()} ${res.request().method()} ${res.url()}`);
+        serverErrors.push(
+          `${res.status()} ${res.request().method()} ${res.url()}`,
+        );
       }
     });
 
@@ -110,7 +127,9 @@ test.describe('Battle Zone authenticated review', () => {
           routeIssues.push(`${route}: HTTP ${response?.status()}`);
         }
 
-        await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => { });
+        await page
+          .waitForLoadState('networkidle', { timeout: 15000 })
+          .catch(() => {});
         await expect(page.locator('body')).toBeVisible();
         await waitForRouteReadyState(route, page);
         await page.waitForTimeout(1000);

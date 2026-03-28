@@ -41,9 +41,7 @@ export default function ContactContent() {
           <div className="space-y-4 lg:col-span-1">
             <div className="rounded-xl border border-border bg-card p-5">
               <h2 className="text-lg font-semibold text-foreground">Email</h2>
-              <p className="mt-2 text-muted-foreground">
-                contact@eduscale.com
-              </p>
+              <p className="mt-2 text-muted-foreground">contact@eduscale.com</p>
             </div>
             <div className="rounded-xl border border-border bg-card p-5">
               <h2 className="text-lg font-semibold text-foreground">

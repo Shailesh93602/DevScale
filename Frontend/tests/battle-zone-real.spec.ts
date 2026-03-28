@@ -24,7 +24,9 @@ const BZ = '/battle-zone';
 
 async function goto(page: Page, path: string) {
   await page.goto(path, { waitUntil: 'domcontentloaded', timeout: 30000 });
-  await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+  await page
+    .waitForLoadState('networkidle', { timeout: 15000 })
+    .catch(() => {});
 }
 
 /** Click the first visible "Next" button that is the form navigation button (not Next.js dev-tools). */
@@ -47,13 +49,19 @@ async function selectWorkingRoadmap(page: Page) {
   await expect(roadmapCombo).not.toHaveText('Loading...', { timeout: 20000 });
 
   // Wait for pool check response so questionSource is set before we proceed
-  const poolResponsePromise = page.waitForResponse(
-    (r) => r.url().includes('/battles/question-pool') && r.request().method() === 'GET',
-    { timeout: 15000 },
-  ).catch(() => null);
+  const poolResponsePromise = page
+    .waitForResponse(
+      (r) =>
+        r.url().includes('/battles/question-pool') &&
+        r.request().method() === 'GET',
+      { timeout: 15000 },
+    )
+    .catch(() => null);
 
   await roadmapCombo.click();
-  await page.getByRole('option', { name: 'Full Stack Web Development' }).click();
+  await page
+    .getByRole('option', { name: 'Full Stack Web Development' })
+    .click();
 
   // Wait for the pool check API response (debounced 500ms + network)
   await poolResponsePromise;
@@ -66,20 +74,37 @@ async function selectWorkingRoadmap(page: Page) {
 
 /** Get all visible battle cards by title */
 async function getBattleTitles(page: Page): Promise<string[]> {
-  await page.waitForSelector('[data-testid="battle-card"], .battle-card, h3', { timeout: 5000 }).catch(() => {});
+  await page
+    .waitForSelector('[data-testid="battle-card"], .battle-card, h3', {
+      timeout: 5000,
+    })
+    .catch(() => {});
   // Battle titles are in CardTitle elements — h3 tags inside battle cards
-  const cardTitles = await page.locator('text=/\\[(?:PRACTICE|QUICK|SCHEDULED|TOPIC|SUBJECT|MAIN CONCEPT|ROADMAP)\\]/').allInnerTexts();
+  const cardTitles = await page
+    .locator(
+      'text=/\\[(?:PRACTICE|QUICK|SCHEDULED|TOPIC|SUBJECT|MAIN CONCEPT|ROADMAP)\\]/',
+    )
+    .allInnerTexts();
   return cardTitles;
 }
 
 /** Wait for the battle list to load — waits for skeletons to disappear OR battle cards/empty state to appear */
 async function waitForBattleList(page: Page) {
   // First wait for network to settle so API responses have been received
-  await page.waitForLoadState('networkidle', { timeout: 20000 }).catch(() => {});
+  await page
+    .waitForLoadState('networkidle', { timeout: 20000 })
+    .catch(() => {});
   // Then wait for either a battle card OR the empty-state "No battles found" text
   await Promise.race([
-    page.locator('text=/\\[(?:PRACTICE|QUICK|SCHEDULED|TOPIC|SUBJECT|MAIN CONCEPT|ROADMAP)\\]/').first().waitFor({ state: 'visible', timeout: 20000 }),
-    page.getByText('No battles found').waitFor({ state: 'visible', timeout: 20000 }),
+    page
+      .locator(
+        'text=/\\[(?:PRACTICE|QUICK|SCHEDULED|TOPIC|SUBJECT|MAIN CONCEPT|ROADMAP)\\]/',
+      )
+      .first()
+      .waitFor({ state: 'visible', timeout: 20000 }),
+    page
+      .getByText('No battles found')
+      .waitFor({ state: 'visible', timeout: 20000 }),
   ]).catch(() => {});
 }
 
@@ -96,24 +121,32 @@ test.describe('Flow 1 — Battle Zone list (authenticated)', () => {
     expect(page.url()).toContain('/auth/login');
   });
 
-  test('callbackUrl preserved so user returns to battle zone after login', async ({ page }) => {
+  test('callbackUrl preserved so user returns to battle zone after login', async ({
+    page,
+  }) => {
     await page.goto(BZ, { waitUntil: 'domcontentloaded' });
     await page.waitForURL(/\/auth\/login/, { timeout: 10000 });
     expect(page.url()).toContain('callbackUrl=%2Fbattle-zone');
   });
 
-  test('shows Battle Zone Arena and seeded battles after login', async ({ page }) => {
+  test('shows Battle Zone Arena and seeded battles after login', async ({
+    page,
+  }) => {
     await loginAsStudent(page);
     await goto(page, BZ);
     await waitForBattleList(page);
 
-    await expect(page.getByText('Battle Zone Arena')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText('Battle Zone Arena')).toBeVisible({
+      timeout: 10000,
+    });
 
     const titles = await getBattleTitles(page);
     expect(titles.length).toBeGreaterThanOrEqual(1);
   });
 
-  test('shows 5 seeded battles — all with Waiting status label', async ({ page }) => {
+  test('shows 5 seeded battles — all with Waiting status label', async ({
+    page,
+  }) => {
     await loginAsStudent(page);
     await goto(page, BZ);
     await waitForBattleList(page);
@@ -123,7 +156,9 @@ test.describe('Flow 1 — Battle Zone list (authenticated)', () => {
     expect(count).toBeGreaterThanOrEqual(5); // one per battle card + one in header area if any
   });
 
-  test('status badges are human-readable — no raw enum values', async ({ page }) => {
+  test('status badges are human-readable — no raw enum values', async ({
+    page,
+  }) => {
     await loginAsStudent(page);
     await goto(page, BZ);
     await waitForBattleList(page);
@@ -134,13 +169,20 @@ test.describe('Flow 1 — Battle Zone list (authenticated)', () => {
     expect(text).not.toContain('LOBBY');
     // WAITING and COMPLETED can appear if there's no battles with those statuses
     // but they must NOT appear as badge labels — the labels are "Waiting" / "Completed"
-    const badgeText = await page.locator('.badge, [class*="badge"]').allInnerTexts().catch(() => [] as string[]);
+    const badgeText = await page
+      .locator('.badge, [class*="badge"]')
+      .allInnerTexts()
+      .catch(() => [] as string[]);
     for (const t of badgeText) {
-      expect(t).not.toMatch(/^WAITING$|^LOBBY$|^IN_PROGRESS$|^COMPLETED$|^CANCELLED$/);
+      expect(t).not.toMatch(
+        /^WAITING$|^LOBBY$|^IN_PROGRESS$|^COMPLETED$|^CANCELLED$/,
+      );
     }
   });
 
-  test('difficulty labels are human-readable (Easy/Medium/Hard, not EASY/MEDIUM/HARD)', async ({ page }) => {
+  test('difficulty labels are human-readable (Easy/Medium/Hard, not EASY/MEDIUM/HARD)', async ({
+    page,
+  }) => {
     await loginAsStudent(page);
     await goto(page, BZ);
     await waitForBattleList(page);
@@ -153,26 +195,32 @@ test.describe('Flow 1 — Battle Zone list (authenticated)', () => {
     expect(text).not.toMatch(/\bHARD\b/);
   });
 
-  test('each battle card shows participant count in X/Y format', async ({ page }) => {
+  test('each battle card shows participant count in X/Y format', async ({
+    page,
+  }) => {
     await loginAsStudent(page);
     await goto(page, BZ);
     await waitForBattleList(page);
     // Battle cards show "0/4 participants" or "1/6 participants" format
-    await expect(page.getByText(/\d+\/\d+ participants/).first()).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText(/\d+\/\d+ participants/).first()).toBeVisible({
+      timeout: 10000,
+    });
   });
 
   test('each battle card shows creator username', async ({ page }) => {
     await loginAsStudent(page);
     await goto(page, BZ);
     await waitForBattleList(page);
-    await expect(page.getByText(/Created by/i).first()).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText(/Created by/i).first()).toBeVisible({
+      timeout: 10000,
+    });
   });
 
   test('Create Battle button is visible in the header', async ({ page }) => {
     await loginAsStudent(page);
     await goto(page, BZ);
     await expect(
-      page.getByRole('link', { name: /create battle/i }).first()
+      page.getByRole('link', { name: /create battle/i }).first(),
     ).toBeVisible({ timeout: 10000 });
   });
 
@@ -181,7 +229,7 @@ test.describe('Flow 1 — Battle Zone list (authenticated)', () => {
     await goto(page, BZ);
     await waitForBattleList(page);
     await expect(
-      page.getByRole('button', { name: 'Join Battle' }).first()
+      page.getByRole('button', { name: 'Join Battle' }).first(),
     ).toBeVisible({ timeout: 10000 });
   });
 
@@ -202,7 +250,9 @@ test.describe('Flow 1 — Battle Zone list (authenticated)', () => {
 test.describe('Flow 2 — Filters and search', () => {
   test.setTimeout(120000);
 
-  test('filter dropdown has all valid status options (not legacy UPCOMING)', async ({ page }) => {
+  test('filter dropdown has all valid status options (not legacy UPCOMING)', async ({
+    page,
+  }) => {
     await loginAsStudent(page);
     await goto(page, BZ);
     await waitForBattleList(page);
@@ -236,18 +286,24 @@ test.describe('Flow 2 — Filters and search', () => {
     expect(titles.length).toBeGreaterThanOrEqual(1);
   });
 
-  test('filtering by "In Progress" shows no battles (none are active)', async ({ page }) => {
+  test('filtering by "In Progress" shows no battles (none are active)', async ({
+    page,
+  }) => {
     await loginAsStudent(page);
     await goto(page, BZ);
     await waitForBattleList(page);
 
     const filterTrigger = page.getByRole('combobox').first();
     await filterTrigger.click();
-    await page.getByRole('option', { name: 'In Progress', exact: true }).click();
+    await page
+      .getByRole('option', { name: 'In Progress', exact: true })
+      .click();
     await waitForBattleList(page);
 
     // No seeded battles are IN_PROGRESS, so empty state should show
-    await expect(page.getByText(/no battles found/i)).toBeVisible({ timeout: 8000 });
+    await expect(page.getByText(/no battles found/i)).toBeVisible({
+      timeout: 8000,
+    });
   });
 
   test('searching by title narrows results', async ({ page }) => {
@@ -260,7 +316,9 @@ test.describe('Flow 2 — Filters and search', () => {
     await page.waitForTimeout(800); // debounce
 
     // Should show "[TOPIC] Data Structures Showdown"
-    await expect(page.getByText(/Data Structures Showdown/i)).toBeVisible({ timeout: 8000 });
+    await expect(page.getByText(/Data Structures Showdown/i)).toBeVisible({
+      timeout: 8000,
+    });
 
     // Should NOT show unrelated battles
     const text = await page.locator('body').innerText();
@@ -279,7 +337,9 @@ test.describe('Flow 2 — Filters and search', () => {
     const searchInput = page.getByPlaceholder('Search battles...');
     await searchInput.fill('zzz-no-match');
     await page.waitForTimeout(800);
-    await expect(page.getByText(/no battles found/i)).toBeVisible({ timeout: 8000 });
+    await expect(page.getByText(/no battles found/i)).toBeVisible({
+      timeout: 8000,
+    });
 
     await searchInput.clear();
     await page.waitForTimeout(800);
@@ -300,22 +360,36 @@ test.describe('Flow 3 — Battle detail WAITING phase + slug navigation', () => 
   /** Get a seeded WAITING battle that testuser has not joined (0 participants) */
   async function getSeededWaitingBattle(page: Page) {
     if (seededBattle) return seededBattle;
-    const resp = await page.request.get('http://localhost:4000/api/v1/battles?limit=20&status=WAITING');
+    const resp = await page.request.get(
+      'http://localhost:4000/api/v1/battles?limit=20&status=WAITING',
+    );
     const json = await resp.json();
     // Find a seeded battle where testuser is not a participant (current_participants === 0)
     const battle = json.data.find(
-      (b: { slug?: string; title: string; status: string; current_participants: number }) =>
+      (b: {
+        slug?: string;
+        title: string;
+        status: string;
+        current_participants: number;
+      }) =>
         b.status === 'WAITING' &&
         b.slug &&
         b.current_participants === 0 &&
-        /^\[(TOPIC|SUBJECT|MAIN CONCEPT|ROADMAP|PRACTICE|QUICK|SCHEDULED)\]/.test(b.title),
+        /^\[(TOPIC|SUBJECT|MAIN CONCEPT|ROADMAP|PRACTICE|QUICK|SCHEDULED)\]/.test(
+          b.title,
+        ),
     );
-    expect(battle, 'No seeded WAITING battle with 0 participants — run npm run seed:battles').toBeTruthy();
+    expect(
+      battle,
+      'No seeded WAITING battle with 0 participants — run npm run seed:battles',
+    ).toBeTruthy();
     seededBattle = { id: battle.id, slug: battle.slug };
     return seededBattle!;
   }
 
-  test('clicking "View Details" navigates to battle detail via slug', async ({ page }) => {
+  test('clicking "View Details" navigates to battle detail via slug', async ({
+    page,
+  }) => {
     await loginAsStudent(page);
     const b = await getSeededWaitingBattle(page);
 
@@ -333,10 +407,14 @@ test.describe('Flow 3 — Battle detail WAITING phase + slug navigation', () => 
     const b = await getSeededWaitingBattle(page);
 
     await goto(page, `/battle-zone/${b.id}`);
-    await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+    await page
+      .waitForLoadState('networkidle', { timeout: 15000 })
+      .catch(() => {});
     await page.waitForTimeout(2000);
 
-    await expect(page.getByText('Waiting for players')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText('Waiting for players')).toBeVisible({
+      timeout: 10000,
+    });
   });
 
   test('battle detail shows participant count X/Y format', async ({ page }) => {
@@ -344,21 +422,29 @@ test.describe('Flow 3 — Battle detail WAITING phase + slug navigation', () => 
     const b = await getSeededWaitingBattle(page);
 
     await goto(page, `/battle-zone/${b.id}`);
-    await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+    await page
+      .waitForLoadState('networkidle', { timeout: 15000 })
+      .catch(() => {});
     await page.waitForTimeout(2000);
 
     // "0 / 4 players joined" format
-    await expect(page.getByText(/\d+ \/ \d+ players joined/)).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText(/\d+ \/ \d+ players joined/)).toBeVisible({
+      timeout: 10000,
+    });
   });
 
-  test('battle detail shows Join Battle button for non-participant', async ({ page }) => {
+  test('battle detail shows Join Battle button for non-participant', async ({
+    page,
+  }) => {
     await loginAsStudent(page);
     const b = await getSeededWaitingBattle(page);
 
     await goto(page, `/battle-zone/${b.id}`);
     await page.waitForTimeout(2000);
 
-    await expect(page.getByRole('button', { name: 'Join Battle' })).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('button', { name: 'Join Battle' })).toBeVisible(
+      { timeout: 10000 },
+    );
   });
 
   test('battle detail shows no raw enum values', async ({ page }) => {
@@ -382,13 +468,17 @@ test.describe('Flow 3 — Battle detail WAITING phase + slug navigation', () => 
     await goto(page, `/battle-zone/${b.id}`);
     await page.waitForTimeout(2000);
 
-    await expect(page.getByRole('link', { name: /battle zone/i }).first()).toBeVisible({ timeout: 5000 });
+    await expect(
+      page.getByRole('link', { name: /battle zone/i }).first(),
+    ).toBeVisible({ timeout: 5000 });
   });
 
   test('direct navigation via slug redirects to UUID URL', async ({ page }) => {
     await loginAsStudent(page);
     // Get a battle slug from the API
-    const resp = await page.request.get('http://localhost:4000/api/v1/battles?limit=1');
+    const resp = await page.request.get(
+      'http://localhost:4000/api/v1/battles?limit=1',
+    );
     const json = await resp.json();
     const battle = json.data[0];
     expect(battle.slug).toBeTruthy();
@@ -410,7 +500,10 @@ test.describe('Flow 3 — Battle detail WAITING phase + slug navigation', () => 
     await goto(page, BZ);
     await waitForBattleList(page);
 
-    await page.getByRole('button', { name: 'View battle details' }).first().click();
+    await page
+      .getByRole('button', { name: 'View battle details' })
+      .first()
+      .click();
     await page.waitForURL(/\/battle-zone\/[a-z0-9-]+/, { timeout: 10000 });
     await page.waitForTimeout(2000);
 
@@ -434,7 +527,9 @@ test.describe('Flow 4 — Join and leave a battle', () => {
     await loginAsStudent(page);
 
     // Get a battle that testuser has not joined
-    const resp = await page.request.get('http://localhost:4000/api/v1/battles?limit=10');
+    const resp = await page.request.get(
+      'http://localhost:4000/api/v1/battles?limit=10',
+    );
     const json = await resp.json();
     // Only consider seeded battles (title starts with [TYPE] prefix) with 0 participants
     // This avoids picking testuser-created battles (e.g. "Cancel Test...") where creator can't join
@@ -442,9 +537,14 @@ test.describe('Flow 4 — Join and leave a battle', () => {
       (b: { current_participants: number; title: string; status: string }) =>
         b.current_participants === 0 &&
         b.status === 'WAITING' &&
-        /^\[(TOPIC|SUBJECT|MAIN CONCEPT|ROADMAP|PRACTICE|QUICK|SCHEDULED)\]/.test(b.title),
+        /^\[(TOPIC|SUBJECT|MAIN CONCEPT|ROADMAP|PRACTICE|QUICK|SCHEDULED)\]/.test(
+          b.title,
+        ),
     );
-    expect(battle, 'No seeded WAITING battle with 0 participants found — run npm run seed:battles').toBeTruthy();
+    expect(
+      battle,
+      'No seeded WAITING battle with 0 participants found — run npm run seed:battles',
+    ).toBeTruthy();
     battleId = battle.id;
 
     await goto(page, `/battle-zone/${battleId}`);
@@ -454,17 +554,27 @@ test.describe('Flow 4 — Join and leave a battle', () => {
     await expect(joinBtn).toBeVisible({ timeout: 10000 });
 
     // Intercept the join API response for debugging
-    const joinRespPromise = page.waitForResponse(
-      (r) => r.url().includes(`/battles/`) && r.url().includes('/join') && r.request().method() === 'POST',
-      { timeout: 15000 },
-    ).catch(() => null);
+    const joinRespPromise = page
+      .waitForResponse(
+        (r) =>
+          r.url().includes(`/battles/`) &&
+          r.url().includes('/join') &&
+          r.request().method() === 'POST',
+        { timeout: 15000 },
+      )
+      .catch(() => null);
 
     await joinBtn.click();
 
     const joinResp = await joinRespPromise;
     if (joinResp) {
       const body = await joinResp.json().catch(() => ({}));
-      console.log('[FLOW4 JOIN] status:', joinResp.status(), 'body:', JSON.stringify(body));
+      console.log(
+        '[FLOW4 JOIN] status:',
+        joinResp.status(),
+        'body:',
+        JSON.stringify(body),
+      );
     } else {
       console.log('[FLOW4 JOIN] no join response intercepted');
     }
@@ -472,7 +582,9 @@ test.describe('Flow 4 — Join and leave a battle', () => {
     await page.waitForTimeout(2000);
 
     // After joining, the "Leave" button should appear
-    await expect(page.getByRole('button', { name: 'Leave' })).toBeVisible({ timeout: 8000 });
+    await expect(page.getByRole('button', { name: 'Leave' })).toBeVisible({
+      timeout: 8000,
+    });
   });
 
   test('participant count increases after joining', async ({ page }) => {
@@ -481,10 +593,14 @@ test.describe('Flow 4 — Join and leave a battle', () => {
     await page.waitForTimeout(2000);
 
     // "1 / X players joined" means testuser is in the battle
-    await expect(page.getByText(/1 \/ \d+ players joined/)).toBeVisible({ timeout: 8000 });
+    await expect(page.getByText(/1 \/ \d+ players joined/)).toBeVisible({
+      timeout: 8000,
+    });
   });
 
-  test('testuser appears in participant list after joining', async ({ page }) => {
+  test('testuser appears in participant list after joining', async ({
+    page,
+  }) => {
     await loginAsStudent(page);
     await goto(page, `/battle-zone/${battleId}`);
     await page.waitForTimeout(2000);
@@ -524,7 +640,9 @@ test.describe('Flow 4 — Join and leave a battle', () => {
     await goto(page, `/battle-zone/${battleId}`);
     await page.waitForTimeout(2000);
     // Count should be 0 again
-    await expect(page.getByText(/0 \/ \d+ players joined/)).toBeVisible({ timeout: 8000 });
+    await expect(page.getByText(/0 \/ \d+ players joined/)).toBeVisible({
+      timeout: 8000,
+    });
   });
 });
 
@@ -540,13 +658,17 @@ test.describe('Flow 5 — Create battle wizard', () => {
   let createdBattleSlug = '';
   let createdBattleId = '';
 
-  test('step 1: title required, description required, Next disabled until filled', async ({ page }) => {
+  test('step 1: title required, description required, Next disabled until filled', async ({
+    page,
+  }) => {
     await loginAsStudent(page);
     await goto(page, `${BZ}/create`);
     await page.waitForTimeout(2000);
 
     // Step 1 is visible
-    await expect(page.getByText('Step 1 of 4 — Battle Info')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText('Step 1 of 4 — Battle Info')).toBeVisible({
+      timeout: 10000,
+    });
     await expect(page.getByPlaceholder('Enter a catchy title')).toBeVisible();
 
     // Next button should be disabled (title/description empty)
@@ -554,40 +676,54 @@ test.describe('Flow 5 — Create battle wizard', () => {
     await expect(nextBtn).toBeDisabled({ timeout: 5000 });
   });
 
-  test('step 1: fills title + description, Next becomes enabled', async ({ page }) => {
+  test('step 1: fills title + description, Next becomes enabled', async ({
+    page,
+  }) => {
     await loginAsStudent(page);
     await goto(page, `${BZ}/create`);
     await page.waitForTimeout(2000);
 
     await page.getByPlaceholder('Enter a catchy title').fill(BATTLE_TITLE);
-    await page.getByPlaceholder('Describe what this battle is about').fill('Real E2E test battle created by Playwright.');
+    await page
+      .getByPlaceholder('Describe what this battle is about')
+      .fill('Real E2E test battle created by Playwright.');
 
     const nextBtn = page.getByRole('button', { name: 'Next', exact: true });
     await expect(nextBtn).toBeEnabled({ timeout: 5000 });
   });
 
-  test('step 2: question source selector visible after advancing from step 1', async ({ page }) => {
+  test('step 2: question source selector visible after advancing from step 1', async ({
+    page,
+  }) => {
     await loginAsStudent(page);
     await goto(page, `${BZ}/create`);
     await page.waitForTimeout(2000);
 
     await page.getByPlaceholder('Enter a catchy title').fill(BATTLE_TITLE);
-    await page.getByPlaceholder('Describe what this battle is about').fill('Real E2E test battle.');
+    await page
+      .getByPlaceholder('Describe what this battle is about')
+      .fill('Real E2E test battle.');
     await clickNext(page);
     await page.waitForTimeout(1500);
 
-    await expect(page.getByText('Step 2 of 4 — Question Source')).toBeVisible({ timeout: 8000 });
+    await expect(page.getByText('Step 2 of 4 — Question Source')).toBeVisible({
+      timeout: 8000,
+    });
     await expect(page.getByText('Curriculum')).toBeVisible();
     await expect(page.getByText('DSA Challenges')).toBeVisible();
   });
 
-  test('step 2: Roadmap dropdown loads real roadmaps from backend', async ({ page }) => {
+  test('step 2: Roadmap dropdown loads real roadmaps from backend', async ({
+    page,
+  }) => {
     await loginAsStudent(page);
     await goto(page, `${BZ}/create`);
     await page.waitForTimeout(2000);
 
     await page.getByPlaceholder('Enter a catchy title').fill(BATTLE_TITLE);
-    await page.getByPlaceholder('Describe what this battle is about').fill('Real E2E test battle.');
+    await page
+      .getByPlaceholder('Describe what this battle is about')
+      .fill('Real E2E test battle.');
     await clickNext(page);
 
     // Wait for roadmaps to load (combobox changes from "Loading..." to actual options)
@@ -598,13 +734,17 @@ test.describe('Flow 5 — Create battle wizard', () => {
     expect(comboText).not.toContain('Loading...');
   });
 
-  test('step 2: selecting Roadmap level sets source and enables Next', async ({ page }) => {
+  test('step 2: selecting Roadmap level sets source and enables Next', async ({
+    page,
+  }) => {
     await loginAsStudent(page);
     await goto(page, `${BZ}/create`);
     await page.waitForTimeout(2000);
 
     await page.getByPlaceholder('Enter a catchy title').fill(BATTLE_TITLE);
-    await page.getByPlaceholder('Describe what this battle is about').fill('Real E2E test battle.');
+    await page
+      .getByPlaceholder('Describe what this battle is about')
+      .fill('Real E2E test battle.');
     await clickNext(page);
     await page.waitForTimeout(2000);
 
@@ -616,14 +756,18 @@ test.describe('Flow 5 — Create battle wizard', () => {
     expect(text).toMatch(/Questions: \d+/);
   });
 
-  test('step 3: settings page shows participant count, time, and points sliders', async ({ page }) => {
+  test('step 3: settings page shows participant count, time, and points sliders', async ({
+    page,
+  }) => {
     await loginAsStudent(page);
     await goto(page, `${BZ}/create`);
     await page.waitForTimeout(2000);
 
     // Step 1
     await page.getByPlaceholder('Enter a catchy title').fill(BATTLE_TITLE);
-    await page.getByPlaceholder('Describe what this battle is about').fill('Real E2E test battle.');
+    await page
+      .getByPlaceholder('Describe what this battle is about')
+      .fill('Real E2E test battle.');
     await clickNext(page);
     await page.waitForTimeout(2000);
 
@@ -632,21 +776,27 @@ test.describe('Flow 5 — Create battle wizard', () => {
     await clickNext(page);
     await page.waitForTimeout(1500);
 
-    await expect(page.getByText('Step 3 of 4 — Settings')).toBeVisible({ timeout: 8000 });
+    await expect(page.getByText('Step 3 of 4 — Settings')).toBeVisible({
+      timeout: 8000,
+    });
     // Check settings fields are visible
     const text = await page.locator('body').innerText();
     expect(text).toMatch(/type/i);
     expect(text).toMatch(/difficulty/i);
   });
 
-  test('step 4: preview shows battle summary before launch', async ({ page }) => {
+  test('step 4: preview shows battle summary before launch', async ({
+    page,
+  }) => {
     await loginAsStudent(page);
     await goto(page, `${BZ}/create`);
     await page.waitForTimeout(2000);
 
     // Step 1
     await page.getByPlaceholder('Enter a catchy title').fill(BATTLE_TITLE);
-    await page.getByPlaceholder('Describe what this battle is about').fill('Real E2E test battle.');
+    await page
+      .getByPlaceholder('Describe what this battle is about')
+      .fill('Real E2E test battle.');
     await clickNext(page);
     await page.waitForTimeout(2000);
 
@@ -660,19 +810,25 @@ test.describe('Flow 5 — Create battle wizard', () => {
     await page.waitForTimeout(1500);
 
     // Step 4 — Preview & Launch
-    await expect(page.getByText('Step 4 of 4 — Preview & Launch')).toBeVisible({ timeout: 8000 });
+    await expect(page.getByText('Step 4 of 4 — Preview & Launch')).toBeVisible({
+      timeout: 8000,
+    });
     await expect(page.getByText(BATTLE_TITLE)).toBeVisible();
     // "Create Battle & Load Questions" button should be visible
     await expect(
-      page.getByRole('button', { name: /create battle/i })
+      page.getByRole('button', { name: /create battle/i }),
     ).toBeVisible({ timeout: 8000 });
   });
 
-  test('step 4: launching battle redirects to battle detail page (slug or UUID URL)', async ({ page }) => {
+  test('step 4: launching battle redirects to battle detail page (slug or UUID URL)', async ({
+    page,
+  }) => {
     // Capture browser console and page errors for diagnosis
     const consoleLogs: string[] = [];
     const pageErrors: string[] = [];
-    page.on('console', (msg) => consoleLogs.push(`[${msg.type()}] ${msg.text()}`));
+    page.on('console', (msg) =>
+      consoleLogs.push(`[${msg.type()}] ${msg.text()}`),
+    );
     page.on('pageerror', (err) => pageErrors.push(err.message));
 
     // Capture ALL outgoing requests to diagnose missing POST
@@ -689,7 +845,9 @@ test.describe('Flow 5 — Create battle wizard', () => {
 
     // Step 1
     await page.getByPlaceholder('Enter a catchy title').fill(BATTLE_TITLE);
-    await page.getByPlaceholder('Describe what this battle is about').fill('Real E2E test battle.');
+    await page
+      .getByPlaceholder('Describe what this battle is about')
+      .fill('Real E2E test battle.');
     await clickNext(page);
     await page.waitForTimeout(500);
 
@@ -710,38 +868,63 @@ test.describe('Flow 5 — Create battle wizard', () => {
     // Step 4 — verify we are at step 4 and the source label is shown in summary
     await expect(page.getByText('Step 4 of 4')).toBeVisible({ timeout: 5000 });
     // Source label shows in the battle summary row (exact text match avoids strict mode violation)
-    await expect(page.getByText('Full Stack Web Development', { exact: true })).toBeVisible({ timeout: 5000 });
+    await expect(
+      page.getByText('Full Stack Web Development', { exact: true }),
+    ).toBeVisible({ timeout: 5000 });
 
     // Launch
-    const launchBtn = page.getByRole('button', { name: /create battle.*load questions/i });
+    const launchBtn = page.getByRole('button', {
+      name: /create battle.*load questions/i,
+    });
     await expect(launchBtn).toBeVisible({ timeout: 8000 });
     await expect(launchBtn).toBeEnabled({ timeout: 8000 });
     // Wait for QuestionPreviewList to finish loading before clicking (more reliable than networkidle)
-    await expect(page.getByText('Sampling questions...')).not.toBeVisible({ timeout: 15000 }).catch(() => {});
+    await expect(page.getByText('Sampling questions...'))
+      .not.toBeVisible({ timeout: 15000 })
+      .catch(() => {});
 
     // Capture the API response
-    const battleApiResponsePromise = page.waitForResponse(
-      (resp) => resp.url().includes('/api/v1/battles') && resp.request().method() === 'POST',
-      { timeout: 35000 },
-    ).catch(() => null);
+    const battleApiResponsePromise = page
+      .waitForResponse(
+        (resp) =>
+          resp.url().includes('/api/v1/battles') &&
+          resp.request().method() === 'POST',
+        { timeout: 35000 },
+      )
+      .catch(() => null);
 
     await launchBtn.click();
 
     const battleApiResp = await battleApiResponsePromise;
     if (battleApiResp) {
       const json = await battleApiResp.json().catch(() => ({}));
-      console.log('[BATTLE CREATE] status:', battleApiResp.status(), 'body:', JSON.stringify(json));
+      console.log(
+        '[BATTLE CREATE] status:',
+        battleApiResp.status(),
+        'body:',
+        JSON.stringify(json),
+      );
       // Capture UUID directly from API response (most reliable)
       if (json?.data?.id) createdBattleId = json.data.id;
     } else {
-      console.log('[BATTLE CREATE] No POST /battles response captured within 25s');
-      console.log('[BATTLE CREATE] All outgoing requests captured:', JSON.stringify(outgoingRequests.slice(-20)));
-      console.log('[BATTLE CREATE] Console logs:', JSON.stringify(consoleLogs.slice(-20)));
+      console.log(
+        '[BATTLE CREATE] No POST /battles response captured within 25s',
+      );
+      console.log(
+        '[BATTLE CREATE] All outgoing requests captured:',
+        JSON.stringify(outgoingRequests.slice(-20)),
+      );
+      console.log(
+        '[BATTLE CREATE] Console logs:',
+        JSON.stringify(consoleLogs.slice(-20)),
+      );
       console.log('[BATTLE CREATE] Page errors:', JSON.stringify(pageErrors));
     }
 
     // Should navigate to the new battle's detail page (not /create)
-    await page.waitForURL(/\/battle-zone\/(?!create)[a-z0-9-]+/, { timeout: 45000 });
+    await page.waitForURL(/\/battle-zone\/(?!create)[a-z0-9-]+/, {
+      timeout: 45000,
+    });
     const url = page.url();
     expect(url).toContain('/battle-zone/');
     expect(url).not.toContain('/battle-zone/create');
@@ -753,24 +936,41 @@ test.describe('Flow 5 — Create battle wizard', () => {
       await page.waitForTimeout(3000);
       createdBattleId = page.url().split('/battle-zone/')[1];
     }
-    console.log('Created battle ID:', createdBattleId, 'slug:', createdBattleSlug);
+    console.log(
+      'Created battle ID:',
+      createdBattleId,
+      'slug:',
+      createdBattleSlug,
+    );
   });
 
-  test('newly created battle shows WAITING status on detail page', async ({ page }) => {
-    if (!createdBattleId) { test.skip(); return; }
+  test('newly created battle shows WAITING status on detail page', async ({
+    page,
+  }) => {
+    if (!createdBattleId) {
+      test.skip();
+      return;
+    }
     await loginAsStudent(page);
     await goto(page, `/battle-zone/${createdBattleId}`);
     await page.waitForTimeout(2000);
-    await expect(page.getByText('Waiting for players')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText('Waiting for players')).toBeVisible({
+      timeout: 10000,
+    });
   });
 
-  test('newly created battle has questions loaded (from question pool)', async ({ page }) => {
-    if (!createdBattleId) { test.skip(); return; }
+  test('newly created battle has questions loaded (from question pool)', async ({
+    page,
+  }) => {
+    if (!createdBattleId) {
+      test.skip();
+      return;
+    }
     // Check via API that the battle has questions
     await loginAsStudent(page);
     const resp = await page.request.get(
       `http://localhost:4000/api/v1/battles/${createdBattleId}`,
-      { headers: { Authorization: 'Bearer ignore' } } // public endpoint
+      { headers: { Authorization: 'Bearer ignore' } }, // public endpoint
     );
     const json = await resp.json();
     const questionCount = json.data?._count?.questions ?? 0;
@@ -799,7 +999,9 @@ test.describe('Flow 6 — Multi-user gameplay (Player1 creates, Player2 joins)',
 
     const title = `Gameplay Test ${Date.now()}`;
     await page.getByPlaceholder('Enter a catchy title').fill(title);
-    await page.getByPlaceholder('Describe what this battle is about').fill('Multi-user gameplay test.');
+    await page
+      .getByPlaceholder('Describe what this battle is about')
+      .fill('Multi-user gameplay test.');
     await clickNext(page);
     await page.waitForTimeout(2000);
 
@@ -812,7 +1014,10 @@ test.describe('Flow 6 — Multi-user gameplay (Player1 creates, Player2 joins)',
     await expect(page.getByText('Step 3 of 4')).toBeVisible({ timeout: 5000 });
 
     // Step 3: settings — keep defaults, PRACTICE type so no time pressure
-    const practiceBtn = page.getByRole('button', { name: 'Practice', exact: true });
+    const practiceBtn = page.getByRole('button', {
+      name: 'Practice',
+      exact: true,
+    });
     if (await practiceBtn.isVisible().catch(() => false)) {
       await practiceBtn.click();
     }
@@ -821,17 +1026,25 @@ test.describe('Flow 6 — Multi-user gameplay (Player1 creates, Player2 joins)',
 
     // Verify step 4 loaded and source is shown in summary
     await expect(page.getByText('Step 4 of 4')).toBeVisible({ timeout: 5000 });
-    await expect(page.getByText('Full Stack Web Development', { exact: true })).toBeVisible({ timeout: 5000 });
+    await expect(
+      page.getByText('Full Stack Web Development', { exact: true }),
+    ).toBeVisible({ timeout: 5000 });
 
-    const launchBtn = page.getByRole('button', { name: /create battle.*load questions/i });
+    const launchBtn = page.getByRole('button', {
+      name: /create battle.*load questions/i,
+    });
     await expect(launchBtn).toBeVisible({ timeout: 8000 });
     await expect(launchBtn).toBeEnabled({ timeout: 8000 });
     // Wait for QuestionPreviewList to finish loading before clicking
-    await expect(page.getByText('Sampling questions...')).not.toBeVisible({ timeout: 15000 }).catch(() => {});
+    await expect(page.getByText('Sampling questions...'))
+      .not.toBeVisible({ timeout: 15000 })
+      .catch(() => {});
 
     // Step 4: launch — capture UUID from the creation API response
     const creationResponsePromise = page.waitForResponse(
-      (resp) => resp.url().includes('/api/v1/battles') && resp.request().method() === 'POST',
+      (resp) =>
+        resp.url().includes('/api/v1/battles') &&
+        resp.request().method() === 'POST',
       { timeout: 35000 },
     );
 
@@ -842,7 +1055,9 @@ test.describe('Flow 6 — Multi-user gameplay (Player1 creates, Player2 joins)',
     const creationJson = await creationResp.json().catch(() => ({}));
     const createdUuid: string = creationJson?.data?.id;
 
-    await page.waitForURL(/\/battle-zone\/(?!create)[a-z0-9-]+/, { timeout: 45000 });
+    await page.waitForURL(/\/battle-zone\/(?!create)[a-z0-9-]+/, {
+      timeout: 45000,
+    });
     await page.waitForTimeout(2000);
 
     // Return UUID from API response (not URL, which might still show slug)
@@ -854,7 +1069,9 @@ test.describe('Flow 6 — Multi-user gameplay (Player1 creates, Player2 joins)',
     battleId = await createTestBattle(page);
     console.log('Gameplay test battle ID:', battleId);
 
-    await expect(page.getByText('Waiting for players')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText('Waiting for players')).toBeVisible({
+      timeout: 10000,
+    });
     // Creator should see "Leave" or creator controls, not "Join Battle"
     const text = await page.locator('body').innerText();
     // Creator is auto-joined on creation if they joined themselves, or the join button shows
@@ -862,37 +1079,56 @@ test.describe('Flow 6 — Multi-user gameplay (Player1 creates, Player2 joins)',
   });
 
   test('Player1 joins their own battle', async ({ page }) => {
-    if (!battleId) { test.skip(); return; }
+    if (!battleId) {
+      test.skip();
+      return;
+    }
     await loginAsStudent(page);
     await goto(page, `/battle-zone/${battleId}`);
 
     // Wait for the battle page to fully load before interacting
-    await expect(page.getByText('Waiting for players')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText('Waiting for players')).toBeVisible({
+      timeout: 10000,
+    });
 
     const leaveBtn = page.getByRole('button', { name: 'Leave' });
     const joinBtn = page.getByRole('button', { name: 'Join Battle' });
 
     // If creator is already a participant (unlikely but handle gracefully), skip join
-    const alreadyJoined = await leaveBtn.isVisible({ timeout: 1000 }).catch(() => false);
+    const alreadyJoined = await leaveBtn
+      .isVisible({ timeout: 1000 })
+      .catch(() => false);
     if (!alreadyJoined) {
       // Wait for join button to be enabled (not loading)
       await expect(joinBtn).toBeVisible({ timeout: 5000 });
       await expect(joinBtn).toBeEnabled({ timeout: 3000 });
 
       // Capture join API response for diagnostics
-      const joinRespPromise = page.waitForResponse(
-        (r) => r.url().includes('/battles/') && r.url().includes('/join') && r.request().method() === 'POST',
-        { timeout: 15000 },
-      ).catch(() => null);
+      const joinRespPromise = page
+        .waitForResponse(
+          (r) =>
+            r.url().includes('/battles/') &&
+            r.url().includes('/join') &&
+            r.request().method() === 'POST',
+          { timeout: 15000 },
+        )
+        .catch(() => null);
 
       await joinBtn.click();
 
       const joinResp = await joinRespPromise;
       if (joinResp) {
         const body = await joinResp.json().catch(() => ({}));
-        console.log('[FLOW6 JOIN] status:', joinResp.status(), 'body:', JSON.stringify(body).substring(0, 400));
+        console.log(
+          '[FLOW6 JOIN] status:',
+          joinResp.status(),
+          'body:',
+          JSON.stringify(body).substring(0, 400),
+        );
       } else {
-        console.log('[FLOW6 JOIN] no join response captured — join button may not have triggered API call');
+        console.log(
+          '[FLOW6 JOIN] no join response captured — join button may not have triggered API call',
+        );
       }
     }
 
@@ -900,8 +1136,14 @@ test.describe('Flow 6 — Multi-user gameplay (Player1 creates, Player2 joins)',
     await expect(leaveBtn).toBeVisible({ timeout: 8000 });
   });
 
-  test('Player2 (different account) can see the battle in the list', async ({ page, browser }) => {
-    if (!battleId) { test.skip(); return; }
+  test('Player2 (different account) can see the battle in the list', async ({
+    page,
+    browser,
+  }) => {
+    if (!battleId) {
+      test.skip();
+      return;
+    }
     // Create a second browser context for Player2
     const ctx2 = await browser.newContext();
     player2Page = await ctx2.newPage();
@@ -915,51 +1157,82 @@ test.describe('Flow 6 — Multi-user gameplay (Player1 creates, Player2 joins)',
   });
 
   test('Player2 joins the created battle', async ({ page }) => {
-    if (!battleId || !player2Page) { test.skip(); return; }
+    if (!battleId || !player2Page) {
+      test.skip();
+      return;
+    }
     await goto(player2Page, `/battle-zone/${battleId}`);
 
     // Wait for page content to load before interacting
-    await expect(player2Page.getByText('Waiting for players')).toBeVisible({ timeout: 10000 });
+    await expect(player2Page.getByText('Waiting for players')).toBeVisible({
+      timeout: 10000,
+    });
 
     const joinBtn = player2Page.getByRole('button', { name: 'Join Battle' });
     await expect(joinBtn).toBeVisible({ timeout: 5000 });
     await expect(joinBtn).toBeEnabled({ timeout: 3000 });
 
-    const joinRespPromise = player2Page.waitForResponse(
-      (r) => r.url().includes('/battles/') && r.url().includes('/join') && r.request().method() === 'POST',
-      { timeout: 15000 },
-    ).catch(() => null);
+    const joinRespPromise = player2Page
+      .waitForResponse(
+        (r) =>
+          r.url().includes('/battles/') &&
+          r.url().includes('/join') &&
+          r.request().method() === 'POST',
+        { timeout: 15000 },
+      )
+      .catch(() => null);
     await joinBtn.click();
     const joinResp = await joinRespPromise;
     if (joinResp) {
       const body = await joinResp.json().catch(() => ({}));
-      console.log('[FLOW6 P2 JOIN] status:', joinResp.status(), 'body:', JSON.stringify(body).substring(0, 400));
+      console.log(
+        '[FLOW6 P2 JOIN] status:',
+        joinResp.status(),
+        'body:',
+        JSON.stringify(body).substring(0, 400),
+      );
     }
 
-    await expect(player2Page.getByRole('button', { name: 'Leave' })).toBeVisible({ timeout: 8000 });
+    await expect(
+      player2Page.getByRole('button', { name: 'Leave' }),
+    ).toBeVisible({ timeout: 8000 });
   });
 
   test('both players see each other in participant list', async ({ page }) => {
-    if (!battleId) { test.skip(); return; }
+    if (!battleId) {
+      test.skip();
+      return;
+    }
     await loginAsStudent(page);
     await goto(page, `/battle-zone/${battleId}`);
 
     // Wait for battle content to load
-    await expect(page.getByText('Waiting for players')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText('Waiting for players')).toBeVisible({
+      timeout: 10000,
+    });
 
     // Should see "2 / X players joined"
-    await expect(page.getByText(/2 \/ \d+ players joined/)).toBeVisible({ timeout: 8000 });
+    await expect(page.getByText(/2 \/ \d+ players joined/)).toBeVisible({
+      timeout: 8000,
+    });
 
     // Participant heading should show 2
-    await expect(page.getByText('Participants (2)')).toBeVisible({ timeout: 8000 });
+    await expect(page.getByText('Participants (2)')).toBeVisible({
+      timeout: 8000,
+    });
 
     // Player1 username must appear in the participant username spans
     // (scope to font-medium spans to avoid matching avatar fallback which prepends first letter)
-    await expect(page.locator('span.font-medium', { hasText: 'testuser' }).first()).toBeVisible({ timeout: 5000 });
+    await expect(
+      page.locator('span.font-medium', { hasText: 'testuser' }).first(),
+    ).toBeVisible({ timeout: 5000 });
   });
 
   test('Player1 opens lobby then marks ready', async ({ page }) => {
-    if (!battleId) { test.skip(); return; }
+    if (!battleId) {
+      test.skip();
+      return;
+    }
     await loginAsStudent(page);
     await goto(page, `/battle-zone/${battleId}`);
     await page.waitForTimeout(2000);
@@ -967,10 +1240,15 @@ test.describe('Flow 6 — Multi-user gameplay (Player1 creates, Player2 joins)',
     // If still WAITING, use "Open Lobby" button (creator can open lobby for QUICK/PRACTICE battles)
     const openLobbyBtn = page.getByRole('button', { name: 'Open Lobby' });
     if (await openLobbyBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
-      const lobbyRespPromise = page.waitForResponse(
-        (r) => r.url().includes('/battles/') && r.url().includes('/lobby') && r.request().method() === 'POST',
-        { timeout: 10000 },
-      ).catch(() => null);
+      const lobbyRespPromise = page
+        .waitForResponse(
+          (r) =>
+            r.url().includes('/battles/') &&
+            r.url().includes('/lobby') &&
+            r.request().method() === 'POST',
+          { timeout: 10000 },
+        )
+        .catch(() => null);
       await openLobbyBtn.click();
       await lobbyRespPromise;
       await page.waitForTimeout(1000);
@@ -981,43 +1259,68 @@ test.describe('Flow 6 — Multi-user gameplay (Player1 creates, Player2 joins)',
     if (await markReadyBtn.isVisible({ timeout: 8000 }).catch(() => false)) {
       await markReadyBtn.click();
       await page.waitForTimeout(2000);
-      await expect(page.getByText(/you are ready/i)).toBeVisible({ timeout: 8000 });
+      await expect(page.getByText(/you are ready/i)).toBeVisible({
+        timeout: 8000,
+      });
     } else {
       const text = await page.locator('body').innerText();
-      console.log('Mark Ready button not visible — state:', text.substring(0, 300));
+      console.log(
+        'Mark Ready button not visible — state:',
+        text.substring(0, 300),
+      );
     }
   });
 
   test('Player2 marks ready', async ({ page }) => {
-    if (!battleId || !player2Page) { test.skip(); return; }
+    if (!battleId || !player2Page) {
+      test.skip();
+      return;
+    }
 
     await goto(player2Page, `/battle-zone/${battleId}`);
     await player2Page.waitForTimeout(2000);
 
-    const markReadyBtn = player2Page.getByRole('button', { name: 'Mark as Ready' });
+    const markReadyBtn = player2Page.getByRole('button', {
+      name: 'Mark as Ready',
+    });
     if (await markReadyBtn.isVisible().catch(() => false)) {
       await markReadyBtn.click();
       await player2Page.waitForTimeout(2000);
     }
   });
 
-  test('Player1 (creator) can start the battle when all ready', async ({ page }) => {
-    if (!battleId) { test.skip(); return; }
+  test('Player1 (creator) can start the battle when all ready', async ({
+    page,
+  }) => {
+    if (!battleId) {
+      test.skip();
+      return;
+    }
     await loginAsStudent(page);
     await goto(page, `/battle-zone/${battleId}`);
     await page.waitForTimeout(2000);
 
     const startBtn = page.getByRole('button', { name: 'Start Battle' });
     if (await startBtn.isVisible({ timeout: 5000 }).catch(() => false)) {
-      const startRespPromise = page.waitForResponse(
-        (r) => r.url().includes('/battles/') && r.url().includes('/start') && r.request().method() === 'POST',
-        { timeout: 15000 },
-      ).catch(() => null);
+      const startRespPromise = page
+        .waitForResponse(
+          (r) =>
+            r.url().includes('/battles/') &&
+            r.url().includes('/start') &&
+            r.request().method() === 'POST',
+          { timeout: 15000 },
+        )
+        .catch(() => null);
       await startBtn.click();
       const startResp = await startRespPromise;
       if (startResp) {
         const body = await startResp.json().catch(() => ({}));
-        console.log('[FLOW6 START] status:', startResp.status(), 'body:', JSON.stringify(body).substring(0, 200));
+        console.log(
+          '[FLOW6 START] status:',
+          startResp.status(),
+          'body:',
+          JSON.stringify(body).substring(0, 200),
+        );
         expect(startResp.status()).toBe(200);
       }
       await page.waitForTimeout(2000);
@@ -1026,12 +1329,18 @@ test.describe('Flow 6 — Multi-user gameplay (Player1 creates, Player2 joins)',
       expect(text).not.toContain('Start Battle');
     } else {
       const text = await page.locator('body').innerText();
-      console.log('[FLOW6] Start Battle not visible — not all ready or not in LOBBY:', text.substring(0, 300));
+      console.log(
+        '[FLOW6] Start Battle not visible — not all ready or not in LOBBY:',
+        text.substring(0, 300),
+      );
     }
   });
 
   test('questions appear when battle is IN_PROGRESS', async ({ page }) => {
-    if (!battleId) { test.skip(); return; }
+    if (!battleId) {
+      test.skip();
+      return;
+    }
     await loginAsStudent(page);
     await goto(page, `/battle-zone/${battleId}`);
     await page.waitForTimeout(3000);
@@ -1046,7 +1355,10 @@ test.describe('Flow 6 — Multi-user gameplay (Player1 creates, Player2 joins)',
   });
 
   test('Player1 can see MCQ options and select an answer', async ({ page }) => {
-    if (!battleId) { test.skip(); return; }
+    if (!battleId) {
+      test.skip();
+      return;
+    }
     await loginAsStudent(page);
     await goto(page, `/battle-zone/${battleId}`);
     await page.waitForTimeout(3000);
@@ -1057,7 +1369,10 @@ test.describe('Flow 6 — Multi-user gameplay (Player1 creates, Player2 joins)',
 
     if (hasOptions) {
       // Select option A (first option)
-      const option = page.locator('button').filter({ hasText: /^A[A-Za-z\s]/ }).first();
+      const option = page
+        .locator('button')
+        .filter({ hasText: /^A[A-Za-z\s]/ })
+        .first();
       await option.click().catch(() => {});
       await page.waitForTimeout(500);
 
@@ -1068,19 +1383,25 @@ test.describe('Flow 6 — Multi-user gameplay (Player1 creates, Player2 joins)',
         await page.waitForTimeout(2000);
         // Should show answer feedback (correct/incorrect)
         const feedbackText = await page.locator('body').innerText();
-        const hasFeedback = feedbackText.includes('Correct') ||
+        const hasFeedback =
+          feedbackText.includes('Correct') ||
           feedbackText.includes('Incorrect') ||
           feedbackText.includes('points');
         expect(hasFeedback).toBe(true);
       }
     } else {
       // Battle may not be in IN_PROGRESS state in this test run
-      console.log('No MCQ options visible — battle may not be IN_PROGRESS or user is not a participant yet');
+      console.log(
+        'No MCQ options visible — battle may not be IN_PROGRESS or user is not a participant yet',
+      );
     }
   });
 
   test('leaderboard tab shows participants and scores', async ({ page }) => {
-    if (!battleId) { test.skip(); return; }
+    if (!battleId) {
+      test.skip();
+      return;
+    }
     await loginAsStudent(page);
     await goto(page, `/battle-zone/${battleId}`);
     await page.waitForTimeout(2000);
@@ -1111,7 +1432,9 @@ test.describe('Flow 6 — Multi-user gameplay (Player1 creates, Player2 joins)',
 test.describe('Flow 7 — My Battles page', () => {
   test.setTimeout(120000);
 
-  test('My Battles page loads without errors for authenticated user', async ({ page }) => {
+  test('My Battles page loads without errors for authenticated user', async ({
+    page,
+  }) => {
     const errors: string[] = [];
     page.on('pageerror', (e) => errors.push(e.message));
     await loginAsStudent(page);
@@ -1120,7 +1443,9 @@ test.describe('Flow 7 — My Battles page', () => {
     expect(errors).toHaveLength(0);
   });
 
-  test('My Battles page redirects to login for unauthenticated user', async ({ page }) => {
+  test('My Battles page redirects to login for unauthenticated user', async ({
+    page,
+  }) => {
     await page.goto(`${BZ}/my-battles`, { waitUntil: 'domcontentloaded' });
     await page.waitForURL(/\/auth\/login/, { timeout: 10000 });
     expect(page.url()).toContain('/auth/login');
@@ -1158,7 +1483,9 @@ test.describe('Flow 8 — Statistics page', () => {
     expect(text).not.toContain('undefined');
   });
 
-  test('shows the 4 stat cards (Win Rate, Accuracy, Average Score, Response Time)', async ({ page }) => {
+  test('shows the 4 stat cards (Win Rate, Accuracy, Average Score, Response Time)', async ({
+    page,
+  }) => {
     await loginAsStudent(page);
     await goto(page, `${BZ}/statistics`);
     await page.waitForTimeout(3000);
@@ -1171,15 +1498,21 @@ test.describe('Flow 8 — Statistics page', () => {
     expect(hasStats || hasError).toBeTruthy();
   });
 
-  test('timeframe selector (All Time / This Month) is functional', async ({ page }) => {
+  test('timeframe selector (All Time / This Month) is functional', async ({
+    page,
+  }) => {
     await loginAsStudent(page);
     await goto(page, `${BZ}/statistics`);
     await page.waitForTimeout(3000);
 
-    const selector = page.getByRole('combobox').filter({ hasText: /all time/i });
+    const selector = page
+      .getByRole('combobox')
+      .filter({ hasText: /all time/i });
     if (await selector.isVisible().catch(() => false)) {
       await selector.click();
-      await expect(page.getByRole('option', { name: /this month/i })).toBeVisible({ timeout: 5000 });
+      await expect(
+        page.getByRole('option', { name: /this month/i }),
+      ).toBeVisible({ timeout: 5000 });
       await page.getByRole('option', { name: /this month/i }).click();
       await page.waitForTimeout(1000);
       // Page should not crash
@@ -1197,7 +1530,9 @@ test.describe('Flow 8 — Statistics page', () => {
     expect(text).not.toMatch(/NaN%/);
   });
 
-  test('"Browse All Battles" button navigates back to battle zone list', async ({ page }) => {
+  test('"Browse All Battles" button navigates back to battle zone list', async ({
+    page,
+  }) => {
     await loginAsStudent(page);
     await goto(page, `${BZ}/statistics`);
     await page.waitForTimeout(3000);
@@ -1210,7 +1545,9 @@ test.describe('Flow 8 — Statistics page', () => {
     }
   });
 
-  test('export button is disabled with tooltip "Export coming soon"', async ({ page }) => {
+  test('export button is disabled with tooltip "Export coming soon"', async ({
+    page,
+  }) => {
     await loginAsStudent(page);
     await goto(page, `${BZ}/statistics`);
     await page.waitForTimeout(3000);
@@ -1229,18 +1566,22 @@ test.describe('Flow 8 — Statistics page', () => {
 test.describe('Flow 9 — Layout and navigation', () => {
   test.setTimeout(120000);
 
-  test('layout header shows Create Battle link on all sub-pages', async ({ page }) => {
+  test('layout header shows Create Battle link on all sub-pages', async ({
+    page,
+  }) => {
     await loginAsStudent(page);
     for (const path of [`${BZ}`, `${BZ}/statistics`]) {
       await goto(page, path);
       await page.waitForTimeout(1500);
       await expect(
-        page.getByRole('link', { name: /create battle/i }).first()
+        page.getByRole('link', { name: /create battle/i }).first(),
       ).toBeVisible({ timeout: 8000 });
     }
   });
 
-  test('global stats in layout show numeric values (active, upcoming, participants)', async ({ page }) => {
+  test('global stats in layout show numeric values (active, upcoming, participants)', async ({
+    page,
+  }) => {
     await loginAsStudent(page);
     await goto(page, `${BZ}/statistics`); // stats bar shown on sub-pages
     await page.waitForTimeout(2000);
@@ -1252,13 +1593,18 @@ test.describe('Flow 9 — Layout and navigation', () => {
     expect(text).toMatch(/\d+/);
   });
 
-  test('breadcrumb on statistics page shows "statistics" segment', async ({ page }) => {
+  test('breadcrumb on statistics page shows "statistics" segment', async ({
+    page,
+  }) => {
     await loginAsStudent(page);
     await goto(page, `${BZ}/statistics`);
     await page.waitForTimeout(1500);
     // Breadcrumb shows "Statistics" link pointing to /battle-zone/statistics
     await expect(
-      page.getByRole('link', { name: 'Statistics' }).filter({ hasText: 'Statistics' }).first()
+      page
+        .getByRole('link', { name: 'Statistics' })
+        .filter({ hasText: 'Statistics' })
+        .first(),
     ).toBeVisible({ timeout: 8000 });
   });
 
@@ -1266,7 +1612,10 @@ test.describe('Flow 9 — Layout and navigation', () => {
     await loginAsStudent(page);
     await goto(page, BZ);
     await waitForBattleList(page);
-    await page.getByRole('link', { name: /create battle/i }).first().click();
+    await page
+      .getByRole('link', { name: /create battle/i })
+      .first()
+      .click();
     await page.waitForURL(/\/battle-zone\/create/, { timeout: 10000 });
 
     const backBtn = page.getByRole('button', { name: 'Back', exact: true });
@@ -1293,8 +1642,12 @@ test.describe('Flow 10 — Cancel battle', () => {
     // Create a fresh battle to cancel
     await goto(page, `${BZ}/create`);
     await page.waitForTimeout(2000);
-    await page.getByPlaceholder('Enter a catchy title').fill(`Cancel Test ${Date.now()}`);
-    await page.getByPlaceholder('Describe what this battle is about').fill('This battle will be cancelled.');
+    await page
+      .getByPlaceholder('Enter a catchy title')
+      .fill(`Cancel Test ${Date.now()}`);
+    await page
+      .getByPlaceholder('Describe what this battle is about')
+      .fill('This battle will be cancelled.');
     await clickNext(page);
 
     // Select roadmap with quiz questions seeded
@@ -1309,43 +1662,64 @@ test.describe('Flow 10 — Cancel battle', () => {
 
     // Verify step 4 and source shown
     await expect(page.getByText('Step 4 of 4')).toBeVisible({ timeout: 5000 });
-    await expect(page.getByText('Full Stack Web Development', { exact: true })).toBeVisible({ timeout: 5000 });
+    await expect(
+      page.getByText('Full Stack Web Development', { exact: true }),
+    ).toBeVisible({ timeout: 5000 });
 
-    const launchBtn = page.getByRole('button', { name: /create battle.*load questions/i });
+    const launchBtn = page.getByRole('button', {
+      name: /create battle.*load questions/i,
+    });
     await expect(launchBtn).toBeVisible({ timeout: 8000 });
     await expect(launchBtn).toBeEnabled({ timeout: 8000 });
     // Wait for QuestionPreviewList to finish loading before clicking
-    await expect(page.getByText('Sampling questions...')).not.toBeVisible({ timeout: 15000 }).catch(() => {});
+    await expect(page.getByText('Sampling questions...'))
+      .not.toBeVisible({ timeout: 15000 })
+      .catch(() => {});
 
     // Capture UUID from creation API response (reliable, not dependent on URL redirect timing)
     const cancelCreationRespPromise = page.waitForResponse(
-      (resp) => resp.url().includes('/api/v1/battles') && resp.request().method() === 'POST',
+      (resp) =>
+        resp.url().includes('/api/v1/battles') &&
+        resp.request().method() === 'POST',
       { timeout: 35000 },
     );
     await launchBtn.click();
     const cancelCreationResp = await cancelCreationRespPromise;
-    const cancelCreationJson = await cancelCreationResp.json().catch(() => ({}));
+    const cancelCreationJson = await cancelCreationResp
+      .json()
+      .catch(() => ({}));
     const cancelCreatedUuid: string = cancelCreationJson?.data?.id;
 
-    await page.waitForURL(/\/battle-zone\/(?!create)[a-z0-9-]+/, { timeout: 45000 });
+    await page.waitForURL(/\/battle-zone\/(?!create)[a-z0-9-]+/, {
+      timeout: 45000,
+    });
     cancelBattleId = cancelCreatedUuid || page.url().split('/battle-zone/')[1];
     console.log('Cancel test battle ID:', cancelBattleId);
 
     // Wait for battle page to fully load (slug→UUID redirect completes, content renders)
-    await expect(page.getByText('Waiting for players')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText('Waiting for players')).toBeVisible({
+      timeout: 10000,
+    });
 
     // Join the battle first (creator must be a participant to see cancel button)
     const leaveBtn = page.getByRole('button', { name: 'Leave' });
     const joinBtn = page.getByRole('button', { name: 'Join Battle' });
-    const alreadyJoined = await leaveBtn.isVisible({ timeout: 1000 }).catch(() => false);
+    const alreadyJoined = await leaveBtn
+      .isVisible({ timeout: 1000 })
+      .catch(() => false);
     if (!alreadyJoined) {
       await expect(joinBtn).toBeVisible({ timeout: 5000 });
       await expect(joinBtn).toBeEnabled({ timeout: 3000 });
 
-      const joinRespPromise = page.waitForResponse(
-        (r) => r.url().includes('/battles/') && r.url().includes('/join') && r.request().method() === 'POST',
-        { timeout: 15000 },
-      ).catch(() => null);
+      const joinRespPromise = page
+        .waitForResponse(
+          (r) =>
+            r.url().includes('/battles/') &&
+            r.url().includes('/join') &&
+            r.request().method() === 'POST',
+          { timeout: 15000 },
+        )
+        .catch(() => null);
       await joinBtn.click();
       await joinRespPromise;
     }
@@ -1362,14 +1736,21 @@ test.describe('Flow 10 — Cancel battle', () => {
     expect(page.url()).toContain('/battle-zone');
   });
 
-  test('cancelled battle shows CANCELLED status or is removed from list', async ({ page }) => {
-    if (!cancelBattleId) { test.skip(); return; }
+  test('cancelled battle shows CANCELLED status or is removed from list', async ({
+    page,
+  }) => {
+    if (!cancelBattleId) {
+      test.skip();
+      return;
+    }
     await loginAsStudent(page);
     await goto(page, `/battle-zone/${cancelBattleId}`);
     await page.waitForTimeout(2000);
     const text = await page.locator('body').innerText();
     // Either shows cancelled state or "Battle not found"
-    const isCancelled = text.match(/cancelled|battle complete/i) || text.match(/battle not found/i);
+    const isCancelled =
+      text.match(/cancelled|battle complete/i) ||
+      text.match(/battle not found/i);
     expect(isCancelled).toBeTruthy();
   });
 });
@@ -1396,8 +1777,12 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
     await page.waitForTimeout(1000);
 
     // Step 1: basics
-    await page.getByPlaceholder('Enter a catchy title').fill(`[GAMEPLAY] Flow 11 ${Date.now()}`);
-    await page.getByPlaceholder('Describe what this battle is about').fill('Comprehensive gameplay test.');
+    await page
+      .getByPlaceholder('Enter a catchy title')
+      .fill(`[GAMEPLAY] Flow 11 ${Date.now()}`);
+    await page
+      .getByPlaceholder('Describe what this battle is about')
+      .fill('Comprehensive gameplay test.');
     await clickNext(page);
     await page.waitForTimeout(1000);
 
@@ -1414,13 +1799,17 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
     if (await quickBtn.isVisible().catch(() => false)) await quickBtn.click();
 
     // Set total_questions to minimum (5) — slider or input
-    const questionsInput = page.locator('input[type="range"], input[id*="question"]').first();
+    const questionsInput = page
+      .locator('input[type="range"], input[id*="question"]')
+      .first();
     if (await questionsInput.isVisible().catch(() => false)) {
       await questionsInput.fill('5');
     }
 
     // Set time_per_question to minimum (15s) — slider or input
-    const timeInput = page.locator('input[type="range"], input[id*="time"]').last();
+    const timeInput = page
+      .locator('input[type="range"], input[id*="time"]')
+      .last();
     if (await timeInput.isVisible().catch(() => false)) {
       await timeInput.fill('15');
     }
@@ -1430,13 +1819,19 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
 
     // Step 4: preview + launch
     await expect(page.getByText('Step 4 of 4')).toBeVisible({ timeout: 5000 });
-    const launchBtn = page.getByRole('button', { name: /create battle.*load questions/i });
+    const launchBtn = page.getByRole('button', {
+      name: /create battle.*load questions/i,
+    });
     await expect(launchBtn).toBeVisible({ timeout: 8000 });
     await expect(launchBtn).toBeEnabled({ timeout: 8000 });
-    await expect(page.getByText('Sampling questions...')).not.toBeVisible({ timeout: 15000 }).catch(() => {});
+    await expect(page.getByText('Sampling questions...'))
+      .not.toBeVisible({ timeout: 15000 })
+      .catch(() => {});
 
     const creationRespPromise = page.waitForResponse(
-      (resp) => resp.url().includes('/api/v1/battles') && resp.request().method() === 'POST',
+      (resp) =>
+        resp.url().includes('/api/v1/battles') &&
+        resp.request().method() === 'POST',
       { timeout: 35000 },
     );
     await launchBtn.click();
@@ -1444,7 +1839,9 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
     const creationJson = await creationResp.json().catch(() => ({}));
     const uuid: string = creationJson?.data?.id;
 
-    await page.waitForURL(/\/battle-zone\/(?!create)[a-z0-9-]+/, { timeout: 45000 });
+    await page.waitForURL(/\/battle-zone\/(?!create)[a-z0-9-]+/, {
+      timeout: 45000,
+    });
     await page.waitForTimeout(2000);
     return uuid || page.url().split('/battle-zone/')[1];
   }
@@ -1452,7 +1849,9 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
   /** Join a battle as the current page's user. Returns true if successful. */
   async function joinBattle(pg: Page, battleId: string): Promise<boolean> {
     await goto(pg, `/battle-zone/${battleId}`);
-    await expect(pg.getByText('Waiting for players')).toBeVisible({ timeout: 10000 });
+    await expect(pg.getByText('Waiting for players')).toBeVisible({
+      timeout: 10000,
+    });
 
     const leaveBtn = pg.getByRole('button', { name: 'Leave' });
 
@@ -1466,21 +1865,32 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
 
     if (authResolved === 'leave') return true; // already a participant
     if (authResolved === 'timeout') {
-      console.log('[joinBattle] Neither Leave nor Join visible after 8s — auth context may be slow');
+      console.log(
+        '[joinBattle] Neither Leave nor Join visible after 8s — auth context may be slow',
+      );
       return false;
     }
 
     await expect(joinBtn).toBeEnabled({ timeout: 3000 });
 
-    const joinRespPromise = pg.waitForResponse(
-      (r) => r.url().includes('/battles/') && r.url().includes('/join') && r.request().method() === 'POST',
-      { timeout: 15000 },
-    ).catch(() => null);
+    const joinRespPromise = pg
+      .waitForResponse(
+        (r) =>
+          r.url().includes('/battles/') &&
+          r.url().includes('/join') &&
+          r.request().method() === 'POST',
+        { timeout: 15000 },
+      )
+      .catch(() => null);
     await joinBtn.click();
     const joinResp = await joinRespPromise;
     if (joinResp) {
       const body = await joinResp.json().catch(() => ({}));
-      console.log('[joinBattle] status:', joinResp.status(), body?.message ?? '');
+      console.log(
+        '[joinBattle] status:',
+        joinResp.status(),
+        body?.message ?? '',
+      );
     }
 
     // Auth context + React re-render needs time to reflect the joined state
@@ -1492,7 +1902,10 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
 
   // ── Tests ──────────────────────────────────────────────────────────────────
 
-  test('creates gameplay battle and both players join', async ({ page, browser }) => {
+  test('creates gameplay battle and both players join', async ({
+    page,
+    browser,
+  }) => {
     await loginAsStudent(page);
     gameplayBattleId = await createGameplayBattle(page);
     console.log('[FLOW11] Battle ID:', gameplayBattleId);
@@ -1508,14 +1921,21 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
 
     // Both should see "2 / X players joined"
     await goto(page, `/battle-zone/${gameplayBattleId}`);
-    await expect(page.getByText(/2 \/ \d+ players joined/)).toBeVisible({ timeout: 8000 });
+    await expect(page.getByText(/2 \/ \d+ players joined/)).toBeVisible({
+      timeout: 8000,
+    });
   });
 
   test('creator opens lobby and both players mark ready', async ({ page }) => {
-    if (!gameplayBattleId) { test.skip(); return; }
+    if (!gameplayBattleId) {
+      test.skip();
+      return;
+    }
     await loginAsStudent(page);
     await goto(page, `/battle-zone/${gameplayBattleId}`);
-    await expect(page.getByText('Waiting for players')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText('Waiting for players')).toBeVisible({
+      timeout: 10000,
+    });
 
     // Wait for auth context to resolve user — evidenced by "Leave" button appearing
     // (Leave requires isParticipant = true, which requires user?.id to be set in AuthContext)
@@ -1523,54 +1943,84 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
     await expect(leaveBtn).toBeVisible({ timeout: 10000 });
 
     // Log the current participant count for diagnostics
-    const participantText = await page.getByText(/\d+ \/ \d+ players joined/).innerText().catch(() => 'unknown');
+    const participantText = await page
+      .getByText(/\d+ \/ \d+ players joined/)
+      .innerText()
+      .catch(() => 'unknown');
     console.log('[FLOW11] Participants before opening lobby:', participantText);
 
     // Creator opens lobby (new "Open Lobby" button — visible when creator + participant + ≥2 players)
     const openLobbyBtn = page.getByRole('button', { name: 'Open Lobby' });
     await expect(openLobbyBtn).toBeVisible({ timeout: 10000 });
 
-    const lobbyRespPromise = page.waitForResponse(
-      (r) => r.url().includes('/battles/') && r.url().includes('/lobby') && r.request().method() === 'POST',
-      { timeout: 10000 },
-    ).catch(() => null);
+    const lobbyRespPromise = page
+      .waitForResponse(
+        (r) =>
+          r.url().includes('/battles/') &&
+          r.url().includes('/lobby') &&
+          r.request().method() === 'POST',
+        { timeout: 10000 },
+      )
+      .catch(() => null);
     await openLobbyBtn.click();
     const lobbyResp = await lobbyRespPromise;
     if (lobbyResp) {
       const lobbyBody = await lobbyResp.json().catch(() => ({}));
-      console.log('[FLOW11] Open Lobby response:', lobbyResp.status(), JSON.stringify(lobbyBody).substring(0, 200));
+      console.log(
+        '[FLOW11] Open Lobby response:',
+        lobbyResp.status(),
+        JSON.stringify(lobbyBody).substring(0, 200),
+      );
       expect(lobbyResp.status()).toBe(200);
     } else {
       console.log('[FLOW11] WARNING: No lobby API response captured');
     }
 
     // Battle should transition to LOBBY state — "Lobby — Get Ready!" appears
-    await expect(page.getByText('Lobby — Get Ready!')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText('Lobby — Get Ready!')).toBeVisible({
+      timeout: 10000,
+    });
 
     // Player1 marks ready
     const markReadyP1 = page.getByRole('button', { name: 'Mark as Ready' });
     await expect(markReadyP1).toBeVisible({ timeout: 5000 });
-    const readyRespPromise = page.waitForResponse(
-      (r) => r.url().includes('/battles/') && r.url().includes('/ready') && r.request().method() === 'POST',
-      { timeout: 10000 },
-    ).catch(() => null);
+    const readyRespPromise = page
+      .waitForResponse(
+        (r) =>
+          r.url().includes('/battles/') &&
+          r.url().includes('/ready') &&
+          r.request().method() === 'POST',
+        { timeout: 10000 },
+      )
+      .catch(() => null);
     await markReadyP1.click();
     await readyRespPromise;
     // After marking ready: "Mark as Ready" button hides, and either "You are ready" or "Start Battle" appears
     await expect(markReadyP1).not.toBeVisible({ timeout: 8000 });
     // Creator sees "You are ready. Waiting for others..." until P2 also marks ready
-    await expect(page.getByText(/you are ready/i)).toBeVisible({ timeout: 8000 });
+    await expect(page.getByText(/you are ready/i)).toBeVisible({
+      timeout: 8000,
+    });
 
     // Player2 marks ready
     if (player2Page) {
       await goto(player2Page, `/battle-zone/${gameplayBattleId}`);
-      await expect(player2Page.getByText('Lobby — Get Ready!')).toBeVisible({ timeout: 10000 });
-      const markReadyP2 = player2Page.getByRole('button', { name: 'Mark as Ready' });
+      await expect(player2Page.getByText('Lobby — Get Ready!')).toBeVisible({
+        timeout: 10000,
+      });
+      const markReadyP2 = player2Page.getByRole('button', {
+        name: 'Mark as Ready',
+      });
       if (await markReadyP2.isVisible({ timeout: 3000 }).catch(() => false)) {
-        const p2RespPromise = player2Page.waitForResponse(
-          (r) => r.url().includes('/battles/') && r.url().includes('/ready') && r.request().method() === 'POST',
-          { timeout: 10000 },
-        ).catch(() => null);
+        const p2RespPromise = player2Page
+          .waitForResponse(
+            (r) =>
+              r.url().includes('/battles/') &&
+              r.url().includes('/ready') &&
+              r.request().method() === 'POST',
+            { timeout: 10000 },
+          )
+          .catch(() => null);
         await markReadyP2.click();
         await p2RespPromise;
       }
@@ -1578,19 +2028,29 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
   });
 
   test('creator starts battle and questions appear', async ({ page }) => {
-    if (!gameplayBattleId) { test.skip(); return; }
+    if (!gameplayBattleId) {
+      test.skip();
+      return;
+    }
     await loginAsStudent(page);
     await goto(page, `/battle-zone/${gameplayBattleId}`);
 
     // Wait for skeleton to clear — battle content renders after API response
-    await page.waitForFunction(
-      () => !document.querySelector('.animate-pulse'),
-      { timeout: 20000 },
-    ).catch(() => {});
+    await page
+      .waitForFunction(() => !document.querySelector('.animate-pulse'), {
+        timeout: 20000,
+      })
+      .catch(() => {});
 
     // Diagnose actual page state
-    const bodyText = await page.locator('body').innerText().catch(() => '');
-    console.log('[FLOW11 T3] Page state after load:', bodyText.substring(0, 400));
+    const bodyText = await page
+      .locator('body')
+      .innerText()
+      .catch(() => '');
+    console.log(
+      '[FLOW11 T3] Page state after load:',
+      bodyText.substring(0, 400),
+    );
 
     // Handle WAITING state: test 2 might have opened lobby but a fresh fetch could
     // theoretically show cached/stale state. Re-open lobby if needed.
@@ -1600,20 +2060,30 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
       await expect(leaveBtn).toBeVisible({ timeout: 12000 });
       const openLobbyBtn = page.getByRole('button', { name: 'Open Lobby' });
       if (await openLobbyBtn.isVisible({ timeout: 5000 }).catch(() => false)) {
-        const lobbyRespPromise = page.waitForResponse(
-          (r) => r.url().includes('/battles/') && r.url().includes('/lobby') && r.request().method() === 'POST',
-          { timeout: 10000 },
-        ).catch(() => null);
+        const lobbyRespPromise = page
+          .waitForResponse(
+            (r) =>
+              r.url().includes('/battles/') &&
+              r.url().includes('/lobby') &&
+              r.request().method() === 'POST',
+            { timeout: 10000 },
+          )
+          .catch(() => null);
         await openLobbyBtn.click();
         await lobbyRespPromise;
       }
     }
 
     // Should be in LOBBY (or already IN_PROGRESS if something auto-transitioned)
-    const bodyText2 = await page.locator('body').innerText().catch(() => '');
+    const bodyText2 = await page
+      .locator('body')
+      .innerText()
+      .catch(() => '');
     const isInProgress = /in progress|battle in progress/i.test(bodyText2);
     if (!isInProgress) {
-      await expect(page.getByText('Lobby — Get Ready!')).toBeVisible({ timeout: 15000 });
+      await expect(page.getByText('Lobby — Get Ready!')).toBeVisible({
+        timeout: 15000,
+      });
 
       // Wait for auth context to resolve — evidenced by "Start Battle" button appearing
       // (requires isCreator = true which needs user?.id from AuthContext)
@@ -1624,23 +2094,44 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
         // If socket isn't connected, the client will miss the battle:started event
         // and the UI won't transition to IN_PROGRESS.
         const socketLive = page.getByText('Live');
-        const socketConnected = await socketLive.isVisible({ timeout: 10000 }).catch(() => false);
-        console.log('[FLOW11 T3] Socket connected before Start Battle click:', socketConnected);
+        const socketConnected = await socketLive
+          .isVisible({ timeout: 10000 })
+          .catch(() => false);
+        console.log(
+          '[FLOW11 T3] Socket connected before Start Battle click:',
+          socketConnected,
+        );
 
-        const startRespPromise = page.waitForResponse(
-          (r) => r.url().includes('/battles/') && r.url().includes('/start') && r.request().method() === 'POST',
-          { timeout: 15000 },
-        ).catch(() => null);
+        const startRespPromise = page
+          .waitForResponse(
+            (r) =>
+              r.url().includes('/battles/') &&
+              r.url().includes('/start') &&
+              r.request().method() === 'POST',
+            { timeout: 15000 },
+          )
+          .catch(() => null);
         await startBtn.click();
         const startResp = await startRespPromise;
         if (startResp) {
           const body = await startResp.json().catch(() => ({}));
-          console.log('[FLOW11 START] status:', startResp.status(), 'body:', JSON.stringify(body).substring(0, 200));
+          console.log(
+            '[FLOW11 START] status:',
+            startResp.status(),
+            'body:',
+            JSON.stringify(body).substring(0, 200),
+          );
         }
       } else {
         // Log participant statuses to diagnose why Start Battle isn't showing
-        const lobbyText = await page.locator('body').innerText().catch(() => '');
-        console.log('[FLOW11 T3] Start Battle not visible after 15s. Lobby state:', lobbyText.substring(0, 600));
+        const lobbyText = await page
+          .locator('body')
+          .innerText()
+          .catch(() => '');
+        console.log(
+          '[FLOW11 T3] Start Battle not visible after 15s. Lobby state:',
+          lobbyText.substring(0, 600),
+        );
       }
     }
 
@@ -1648,26 +2139,33 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
     // If socket was disconnected when battle:started fired, we re-fetch to get updated status.
     // Poll the battle API to ensure we detect IN_PROGRESS even if socket event was missed.
     const inProgressLocator = page.getByText(/In Progress|Battle in progress/i);
-    const inProgressVisible = await inProgressLocator.isVisible({ timeout: 20000 }).catch(() => false);
+    const inProgressVisible = await inProgressLocator
+      .isVisible({ timeout: 20000 })
+      .catch(() => false);
     if (!inProgressVisible) {
-      console.log('[FLOW11 T3] IN_PROGRESS not detected via socket — re-fetching battle status');
+      console.log(
+        '[FLOW11 T3] IN_PROGRESS not detected via socket — re-fetching battle status',
+      );
       // Navigate away and back to force a fresh API fetch
       await goto(page, `/battle-zone/${gameplayBattleId}`);
-      await page.waitForFunction(
-        () => !document.querySelector('.animate-pulse'),
-        { timeout: 15000 },
-      ).catch(() => {});
+      await page
+        .waitForFunction(() => !document.querySelector('.animate-pulse'), {
+          timeout: 15000,
+        })
+        .catch(() => {});
     }
-    await expect(
-      page.getByText(/In Progress|Battle in progress/i),
-    ).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText(/In Progress|Battle in progress/i)).toBeVisible(
+      { timeout: 15000 },
+    );
     console.log('[FLOW11] Battle is IN_PROGRESS');
 
     // Wait for question to load (fetched via REST after status=IN_PROGRESS + isParticipant)
     await page.waitForTimeout(4000);
 
     const questionText = page.locator('p.text-lg.font-semibold');
-    const hasQuestion = await questionText.isVisible({ timeout: 10000 }).catch(() => false);
+    const hasQuestion = await questionText
+      .isVisible({ timeout: 10000 })
+      .catch(() => false);
     console.log('[FLOW11] Question visible:', hasQuestion);
     if (hasQuestion) {
       const qText = await questionText.innerText().catch(() => '');
@@ -1675,8 +2173,13 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
     }
   });
 
-  test('Player1 submits answers for all questions with correctness feedback', async ({ page }) => {
-    if (!gameplayBattleId) { test.skip(); return; }
+  test('Player1 submits answers for all questions with correctness feedback', async ({
+    page,
+  }) => {
+    if (!gameplayBattleId) {
+      test.skip();
+      return;
+    }
 
     // Log all POST requests to battles/ to diagnose submit issues
     const capturedRequests: string[] = [];
@@ -1686,7 +2189,10 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
       }
     });
     page.on('response', (resp) => {
-      if (resp.request().method() === 'POST' && resp.url().includes('/battles')) {
+      if (
+        resp.request().method() === 'POST' &&
+        resp.url().includes('/battles')
+      ) {
         capturedRequests.push(`→ ${resp.status()} ${resp.url()}`);
       }
     });
@@ -1695,17 +2201,27 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
     await goto(page, `/battle-zone/${gameplayBattleId}`);
 
     // Wait for skeleton to clear, then wait for IN_PROGRESS status badge
-    await page.waitForFunction(
-      () => !document.querySelector('.animate-pulse'),
-      { timeout: 20000 },
-    ).catch(() => {});
+    await page
+      .waitForFunction(() => !document.querySelector('.animate-pulse'), {
+        timeout: 20000,
+      })
+      .catch(() => {});
 
     // Check if battle is IN_PROGRESS
-    const isInProgressVisible = await page.getByText('In Progress').isVisible({ timeout: 10000 }).catch(() => false);
+    const isInProgressVisible = await page
+      .getByText('In Progress')
+      .isVisible({ timeout: 10000 })
+      .catch(() => false);
 
     if (!isInProgressVisible) {
-      const bodyCheck = await page.locator('body').innerText().catch(() => '');
-      console.log('[FLOW11 T4] Battle not IN_PROGRESS. Page text:', bodyCheck.substring(0, 300));
+      const bodyCheck = await page
+        .locator('body')
+        .innerText()
+        .catch(() => '');
+      console.log(
+        '[FLOW11 T4] Battle not IN_PROGRESS. Page text:',
+        bodyCheck.substring(0, 300),
+      );
       return;
     }
 
@@ -1713,16 +2229,24 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
     // Questions are fetched in useEffect when battle.status=IN_PROGRESS && isParticipant
     // The question text "p.text-lg.font-semibold" won't appear until auth + questions load
     const questionText = page.locator('p.text-lg.font-semibold');
-    const questionsLoaded = await questionText.isVisible({ timeout: 20000 }).catch(() => false);
+    const questionsLoaded = await questionText
+      .isVisible({ timeout: 20000 })
+      .catch(() => false);
     if (!questionsLoaded) {
-      console.log('[FLOW11 T4] Questions did not load — auth may be slow or battle completed');
+      console.log(
+        '[FLOW11 T4] Questions did not load — auth may be slow or battle completed',
+      );
       return;
     }
 
     let answeredCount = 0;
     let correctCount = 0;
     let incorrectCount = 0;
-    const answerResults: { question: string; correct: boolean; points: number }[] = [];
+    const answerResults: {
+      question: string;
+      correct: boolean;
+      points: number;
+    }[] = [];
 
     // Loop: submit answers for up to 5 questions
     for (let qIdx = 0; qIdx < 5; qIdx++) {
@@ -1732,15 +2256,25 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
       const questionText = page.locator('p.text-lg.font-semibold');
       const submitBtn = page.getByRole('button', { name: 'Submit Answer' });
 
-      const hasQuestion = await questionText.isVisible({ timeout: 25000 }).catch(() => false);
+      const hasQuestion = await questionText
+        .isVisible({ timeout: 25000 })
+        .catch(() => false);
       if (!hasQuestion) {
         // Check if battle completed
         const completedText = await page.locator('body').innerText();
-        if (completedText.match(/battle complete|you won|final standings|completed/i)) {
-          console.log(`[FLOW11] Battle completed after ${answeredCount} answers`);
+        if (
+          completedText.match(
+            /battle complete|you won|final standings|completed/i,
+          )
+        ) {
+          console.log(
+            `[FLOW11] Battle completed after ${answeredCount} answers`,
+          );
           break;
         }
-        console.log(`[FLOW11] No question visible at index ${qIdx} — may be between questions or completed`);
+        console.log(
+          `[FLOW11] No question visible at index ${qIdx} — may be between questions or completed`,
+        );
         break;
       }
 
@@ -1752,51 +2286,80 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
       // Each button contains a letter span (A/B/C/D) + text span.
       // Use .grid.gap-3 to scope to the answer grid, avoiding other rounded-border elements.
       const optionGrid = page.locator('.grid.gap-3');
-      const gridVisible = await optionGrid.first().isVisible({ timeout: 5000 }).catch(() => false);
+      const gridVisible = await optionGrid
+        .first()
+        .isVisible({ timeout: 5000 })
+        .catch(() => false);
       if (gridVisible) {
-        await optionGrid.first().locator('button').first().click().catch(() => {});
+        await optionGrid
+          .first()
+          .locator('button')
+          .first()
+          .click()
+          .catch(() => {});
       } else {
         // Fallback: find buttons containing a letter span (A/B/C/D)
-        const optionBtn = page.locator('button').filter({
-          has: page.locator('span', { hasText: /^[A-D]$/ }),
-        }).first();
+        const optionBtn = page
+          .locator('button')
+          .filter({
+            has: page.locator('span', { hasText: /^[A-D]$/ }),
+          })
+          .first();
         if (await optionBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
           await optionBtn.click().catch(() => {});
         }
       }
 
       // Wait for Submit button to become enabled (proves option was selected)
-      const submitEnabled = await submitBtn.isEnabled({ timeout: 5000 }).catch(() => false);
+      const submitEnabled = await submitBtn
+        .isEnabled({ timeout: 5000 })
+        .catch(() => false);
       console.log(`[FLOW11] Q${qIdx + 1} Submit enabled: ${submitEnabled}`);
 
       if (!submitEnabled) {
         // Log page state to diagnose why option click didn't register
-        const pageState = await page.locator('body').innerText().catch(() => '');
-        console.log(`[FLOW11] Q${qIdx + 1} Submit not enabled. Page state:`, pageState.substring(0, 300));
+        const pageState = await page
+          .locator('body')
+          .innerText()
+          .catch(() => '');
+        console.log(
+          `[FLOW11] Q${qIdx + 1} Submit not enabled. Page state:`,
+          pageState.substring(0, 300),
+        );
         break;
       }
 
       await page.waitForTimeout(300);
 
       // Submit answer
-      const answerRespPromise = page.waitForResponse(
-        (r) => r.url().includes('/battles/answer') && r.request().method() === 'POST',
-        { timeout: 15000 },
-      ).catch(() => null);
+      const answerRespPromise = page
+        .waitForResponse(
+          (r) =>
+            r.url().includes('/battles/answer') &&
+            r.request().method() === 'POST',
+          { timeout: 15000 },
+        )
+        .catch(() => null);
       await submitBtn.click();
-      console.log(`[FLOW11] Q${qIdx + 1} Submit clicked — waiting for API response`);
+      console.log(
+        `[FLOW11] Q${qIdx + 1} Submit clicked — waiting for API response`,
+      );
       const answerResp = await answerRespPromise;
       if (answerResp) {
         const answerJson = await answerResp.json().catch(() => ({}));
         const data = answerJson?.data ?? {};
-        console.log(`[FLOW11] Q${qIdx + 1} answer: status=${answerResp.status()}, is_correct=${data.is_correct}, points=${data.points_earned}, msg=${answerJson?.message ?? ''}`);
+        console.log(
+          `[FLOW11] Q${qIdx + 1} answer: status=${answerResp.status()}, is_correct=${data.is_correct}, points=${data.points_earned}, msg=${answerJson?.message ?? ''}`,
+        );
         answerResults.push({
           question: qText.substring(0, 60),
           correct: data.is_correct,
           points: data.points_earned ?? 0,
         });
       } else {
-        console.log(`[FLOW11] Q${qIdx + 1} No answer API response (timeout or no request made)`);
+        console.log(
+          `[FLOW11] Q${qIdx + 1} No answer API response (timeout or no request made)`,
+        );
         console.log('[FLOW11] Captured requests so far:', capturedRequests);
       }
       answeredCount++;
@@ -1804,20 +2367,29 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
       // Verify feedback appears in UI
       await page.waitForTimeout(1000);
       const feedbackText = await page.locator('body').innerText();
-      const hasCorrectFeedback = feedbackText.includes('Correct!') || feedbackText.includes('points');
+      const hasCorrectFeedback =
+        feedbackText.includes('Correct!') || feedbackText.includes('points');
       const hasIncorrectFeedback = feedbackText.includes('Incorrect');
       const hasFeedback = hasCorrectFeedback || hasIncorrectFeedback;
 
       if (hasFeedback) {
         if (feedbackText.includes('Correct!')) correctCount++;
         else if (feedbackText.includes('Incorrect')) incorrectCount++;
-        console.log(`[FLOW11] Q${qIdx + 1} UI feedback: ${feedbackText.includes('Correct!') ? 'Correct' : 'Incorrect'}`);
+        console.log(
+          `[FLOW11] Q${qIdx + 1} UI feedback: ${feedbackText.includes('Correct!') ? 'Correct' : 'Incorrect'}`,
+        );
       } else {
-        console.log(`[FLOW11] Q${qIdx + 1} No feedback in UI. Body excerpt:`, feedbackText.substring(0, 400));
+        console.log(
+          `[FLOW11] Q${qIdx + 1} No feedback in UI. Body excerpt:`,
+          feedbackText.substring(0, 400),
+        );
       }
 
       // HARD ASSERT: feedback must appear after submitting
-      expect(hasFeedback, `Expected feedback after submitting Q${qIdx + 1}`).toBe(true);
+      expect(
+        hasFeedback,
+        `Expected feedback after submitting Q${qIdx + 1}`,
+      ).toBe(true);
 
       // Wait for next question (auto-advance) or battle completion
       // The question changes when the socket sends battle:question with next index
@@ -1825,12 +2397,20 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
       await page.waitForTimeout(1000);
 
       // Check if "Next question will appear automatically" hint is shown
-      const nextHint = page.getByText('Next question will appear automatically');
-      const hasNextHint = await nextHint.isVisible({ timeout: 2000 }).catch(() => false);
+      const nextHint = page.getByText(
+        'Next question will appear automatically',
+      );
+      const hasNextHint = await nextHint
+        .isVisible({ timeout: 2000 })
+        .catch(() => false);
       if (hasNextHint) {
-        console.log(`[FLOW11] Q${qIdx + 1}: answered, waiting for auto-advance...`);
+        console.log(
+          `[FLOW11] Q${qIdx + 1}: answered, waiting for auto-advance...`,
+        );
         // Wait up to 18s for question to advance
-        await expect(questionText).not.toHaveText(qText, { timeout: 18000 }).catch(() => {});
+        await expect(questionText)
+          .not.toHaveText(qText, { timeout: 18000 })
+          .catch(() => {});
         await page.waitForTimeout(1000);
       } else {
         // Question may have changed already or battle completed
@@ -1843,15 +2423,25 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
       }
     }
 
-    console.log(`[FLOW11] Answers submitted: ${answeredCount}, Correct: ${correctCount}, Incorrect: ${incorrectCount}`);
-    console.log('[FLOW11] Answer results:', JSON.stringify(answerResults, null, 2));
+    console.log(
+      `[FLOW11] Answers submitted: ${answeredCount}, Correct: ${correctCount}, Incorrect: ${incorrectCount}`,
+    );
+    console.log(
+      '[FLOW11] Answer results:',
+      JSON.stringify(answerResults, null, 2),
+    );
 
     // At least 1 answer must have been submitted
     expect(answeredCount).toBeGreaterThan(0);
   });
 
-  test('battle completes and final leaderboard shows scores', async ({ page }) => {
-    if (!gameplayBattleId) { test.skip(); return; }
+  test('battle completes and final leaderboard shows scores', async ({
+    page,
+  }) => {
+    if (!gameplayBattleId) {
+      test.skip();
+      return;
+    }
     await loginAsStudent(page);
     await goto(page, `/battle-zone/${gameplayBattleId}`);
     await page.waitForTimeout(2000);
@@ -1864,10 +2454,11 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
 
     while (Date.now() - startWait < maxWaitMs) {
       // Wait for skeleton to clear before reading text (page must finish rendering)
-      await page.waitForFunction(
-        () => !document.querySelector('.animate-pulse'),
-        { timeout: 10000 },
-      ).catch(() => {});
+      await page
+        .waitForFunction(() => !document.querySelector('.animate-pulse'), {
+          timeout: 10000,
+        })
+        .catch(() => {});
       const text = await page.locator('body').innerText();
       if (text.match(/battle complete|you won|final standings/i)) {
         isCompleted = true;
@@ -1880,24 +2471,33 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
       await page.waitForTimeout(5000);
       await page.reload({ waitUntil: 'domcontentloaded' }).catch(() => {});
       // Wait for skeleton to clear after reload before next loop iteration
-      await page.waitForFunction(
-        () => !document.querySelector('.animate-pulse'),
-        { timeout: 15000 },
-      ).catch(() => {});
+      await page
+        .waitForFunction(() => !document.querySelector('.animate-pulse'), {
+          timeout: 15000,
+        })
+        .catch(() => {});
     }
 
     if (!isCompleted) {
       // Check API directly for battle status
       const battleApiText = await page.locator('body').innerText();
-      console.log('[FLOW11] Final page state (not completed):', battleApiText.substring(0, 500));
+      console.log(
+        '[FLOW11] Final page state (not completed):',
+        battleApiText.substring(0, 500),
+      );
     }
 
     console.log('[FLOW11] Battle completed:', isCompleted);
     expect(isCompleted, 'Battle should reach COMPLETED state').toBe(true);
   });
 
-  test('final leaderboard shows both players with correct scores and ranking', async ({ page }) => {
-    if (!gameplayBattleId) { test.skip(); return; }
+  test('final leaderboard shows both players with correct scores and ranking', async ({
+    page,
+  }) => {
+    if (!gameplayBattleId) {
+      test.skip();
+      return;
+    }
     await loginAsStudent(page);
     await goto(page, `/battle-zone/${gameplayBattleId}`);
     await page.waitForTimeout(2000);
@@ -1906,13 +2506,17 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
 
     // If not completed yet, skip with message
     if (!text.match(/battle complete|you won|final standings|completed/i)) {
-      console.log('[FLOW11] Battle not in COMPLETED state yet — skipping leaderboard test');
+      console.log(
+        '[FLOW11] Battle not in COMPLETED state yet — skipping leaderboard test',
+      );
       test.skip();
       return;
     }
 
     // "Final Standings" section should be visible
-    await expect(page.getByText('Final Standings')).toBeVisible({ timeout: 8000 });
+    await expect(page.getByText('Final Standings')).toBeVisible({
+      timeout: 8000,
+    });
 
     // Leaderboard should show at least 1 player with a score
     const scoreTexts = await page.locator('text=/\\d+ pts/').allInnerTexts();
@@ -1932,8 +2536,13 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
     }
   });
 
-  test('statistics page reflects completed battle in user history', async ({ page }) => {
-    if (!gameplayBattleId) { test.skip(); return; }
+  test('statistics page reflects completed battle in user history', async ({
+    page,
+  }) => {
+    if (!gameplayBattleId) {
+      test.skip();
+      return;
+    }
     await loginAsStudent(page);
     await goto(page, `${BZ}/statistics`);
     await page.waitForTimeout(2000);
@@ -1946,7 +2555,10 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
 
   test.afterAll(async () => {
     if (player2Page && !player2Page.isClosed()) {
-      await player2Page.context().close().catch(() => {});
+      await player2Page
+        .context()
+        .close()
+        .catch(() => {});
     }
   });
 });
@@ -1960,7 +2572,9 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
 test.describe('Flow 12 — Answer submission validation and edge cases', () => {
   test.setTimeout(120000);
 
-  test('submitting answer without selecting an option is disabled', async ({ page }) => {
+  test('submitting answer without selecting an option is disabled', async ({
+    page,
+  }) => {
     await loginAsStudent(page);
     // Use a known completed or in-progress battle if available
     await goto(page, BZ);
@@ -1968,7 +2582,9 @@ test.describe('Flow 12 — Answer submission validation and edge cases', () => {
 
     // Find any IN_PROGRESS battle and navigate to it (or skip if none)
     const inProgressLink = page.locator('text=In Progress').first();
-    const hasInProgress = await inProgressLink.isVisible({ timeout: 3000 }).catch(() => false);
+    const hasInProgress = await inProgressLink
+      .isVisible({ timeout: 3000 })
+      .catch(() => false);
     if (!hasInProgress) {
       console.log('[FLOW12] No IN_PROGRESS battle found — skipping');
       return;
@@ -1979,18 +2595,24 @@ test.describe('Flow 12 — Answer submission validation and edge cases', () => {
     if (await submitBtn.isVisible({ timeout: 5000 }).catch(() => false)) {
       // Submit button should be disabled when no option is selected
       await expect(submitBtn).toBeDisabled();
-      console.log('[FLOW12] Submit button correctly disabled without selection');
+      console.log(
+        '[FLOW12] Submit button correctly disabled without selection',
+      );
     }
   });
 
-  test('join battle button transitions to "Enter Battle" after joining', async ({ page }) => {
+  test('join battle button transitions to "Enter Battle" after joining', async ({
+    page,
+  }) => {
     await loginAsStudent(page);
     await goto(page, BZ);
     await waitForBattleList(page);
 
     // Find a WAITING battle
     const waitingBattles = page.locator('text=Waiting').first();
-    const hasWaiting = await waitingBattles.isVisible({ timeout: 5000 }).catch(() => false);
+    const hasWaiting = await waitingBattles
+      .isVisible({ timeout: 5000 })
+      .catch(() => false);
     if (!hasWaiting) {
       console.log('[FLOW12] No WAITING battle in list — skipping');
       return;
@@ -1998,7 +2620,9 @@ test.describe('Flow 12 — Answer submission validation and edge cases', () => {
 
     // The battle list should show "Enter Battle" (not "Join Battle") for battles user already joined
     // and "Join Battle" for battles user hasn't joined yet
-    const battleCards = page.locator('[class*="rounded"][class*="border"]').filter({ hasText: 'Waiting' });
+    const battleCards = page
+      .locator('[class*="rounded"][class*="border"]')
+      .filter({ hasText: 'Waiting' });
     const count = await battleCards.count().catch(() => 0);
     console.log('[FLOW12] WAITING battle cards found:', count);
     expect(count).toBeGreaterThan(0);

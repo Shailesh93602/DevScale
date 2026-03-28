@@ -231,13 +231,11 @@ export default function About() {
 
           <div className="relative z-10 flex flex-col items-center">
             <Rocket className="mb-6 h-12 w-12 text-primary" />
-            <h2 className="mb-4 text-3xl font-bold tracking-tight text-foreground">
-              
-            </h2>
+            <h2 className="mb-4 text-3xl font-bold tracking-tight text-foreground"></h2>
             <p className="mb-8 text-lg text-muted-foreground">
               {BRANDING.name} is built and maintained by Shailesh Chaudhari, a
-              dedicated individual pushing the boundaries of what specialized SaaS
-              platforms can achieve in the EdTech space.
+              dedicated individual pushing the boundaries of what specialized
+              SaaS platforms can achieve in the EdTech space.
             </p>
             <a
               href="https://shaileshchaudhari.vercel.app"

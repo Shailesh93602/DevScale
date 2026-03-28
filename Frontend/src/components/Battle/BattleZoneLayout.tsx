@@ -41,8 +41,12 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
     totalParticipants: 0,
   });
   const [userWinRate, setUserWinRate] = useState<string>('--');
-  const [getGlobalStats] = useAxiosGet<BattleGlobalStatsResponse>('/battles/global-stats');
-  const [getStatistics] = useAxiosGet<BattleStatsResponse>('/battles/statistics/me');
+  const [getGlobalStats] = useAxiosGet<BattleGlobalStatsResponse>(
+    '/battles/global-stats',
+  );
+  const [getStatistics] = useAxiosGet<BattleStatsResponse>(
+    '/battles/statistics/me',
+  );
 
   useEffect(() => {
     const loadQuickStats = async () => {
@@ -65,11 +69,11 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
       if (statsResponse.success && statsResponse.data) {
         const d = statsResponse.data;
         // Use pre-calculated win_rate from backend, fall back to manual calc
-        const winRate = d.win_rate ?? (
-          d.wins != null && d.total_battles != null
+        const winRate =
+          d.win_rate ??
+          (d.wins != null && d.total_battles != null
             ? Math.round((d.wins / Math.max(d.total_battles, 1)) * 100)
-            : 0
-        );
+            : 0);
         setUserWinRate(`${winRate}%`);
         return;
       }
@@ -87,25 +91,25 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
       {
         title: 'Active Battles',
         value: `${globalStats.activeBattles}`,
-        icon: <Zap className="h-5 w-5 text-yellow-500" />,
+        icon: <Zap className="text-yellow-500 h-5 w-5" />,
         color: 'text-yellow-500',
       },
       {
         title: 'Upcoming Battles',
         value: `${globalStats.upcomingBattles}`,
-        icon: <Clock className="h-5 w-5 text-blue-500" />,
+        icon: <Clock className="text-blue-500 h-5 w-5" />,
         color: 'text-blue-500',
       },
       {
         title: 'Total Participants',
         value: `${globalStats.totalParticipants}`,
-        icon: <Users className="h-5 w-5 text-green-500" />,
+        icon: <Users className="text-green-500 h-5 w-5" />,
         color: 'text-green-500',
       },
       {
         title: 'Win Rate',
         value: userWinRate,
-        icon: <Target className="h-5 w-5 text-purple-500" />,
+        icon: <Target className="text-purple-500 h-5 w-5" />,
         color: 'text-purple-500',
       },
     ],
@@ -206,7 +210,8 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
                     Battle Zone Arena
                   </h2>
                   <p className="mt-3 text-lg text-muted-foreground">
-                    Explore active battles, join live competitions, or launch a new challenge.
+                    Explore active battles, join live competitions, or launch a
+                    new challenge.
                   </p>
                 </div>
                 <Link href="/battle-zone/create" className="shrink-0">

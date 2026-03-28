@@ -34,9 +34,10 @@ export default function QuestionPreviewList({
   const [loading, setLoading] = useState(false);
   const [rollCount, setRollCount] = useState(0);
 
-  const [getPool] = useAxiosGet<{ questions: PreviewQuestion[]; total_available: number }>(
-    '/battles/question-pool',
-  );
+  const [getPool] = useAxiosGet<{
+    questions: PreviewQuestion[];
+    total_available: number;
+  }>('/battles/question-pool');
 
   const fetchPreview = useCallback(async () => {
     setLoading(true);
@@ -48,7 +49,8 @@ export default function QuestionPreviewList({
       };
       const effectiveDifficulty = source.difficulty ?? difficulty;
       if (effectiveDifficulty) params.difficulty = effectiveDifficulty;
-      if (source.categories?.length) params.categories = source.categories.join(',');
+      if (source.categories?.length)
+        params.categories = source.categories.join(',');
 
       const res = await getPool({ params, timeout: 25000 });
       if (res.success && res.data) {
@@ -60,8 +62,16 @@ export default function QuestionPreviewList({
     } finally {
       setLoading(false);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [source.type, source.id, source.count, source.difficulty, source.categories, difficulty, rollCount]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    source.type,
+    source.id,
+    source.count,
+    source.difficulty,
+    source.categories,
+    difficulty,
+    rollCount,
+  ]);
 
   useEffect(() => {
     fetchPreview();
@@ -89,7 +99,11 @@ export default function QuestionPreviewList({
           disabled={loading}
           className="flex items-center gap-2"
         >
-          {loading ? <Loader2 className="h-3 w-3 animate-spin" /> : <RefreshCw className="h-3 w-3" />}
+          {loading ? (
+            <Loader2 className="h-3 w-3 animate-spin" />
+          ) : (
+            <RefreshCw className="h-3 w-3" />
+          )}
           Re-roll
         </Button>
       </div>
@@ -116,7 +130,9 @@ export default function QuestionPreviewList({
                 <Badge variant="outline" className="mt-0.5 shrink-0 text-xs">
                   Q{idx + 1}
                 </Badge>
-                <p className="font-medium leading-snug text-foreground">{q.question}</p>
+                <p className="font-medium leading-snug text-foreground">
+                  {q.question}
+                </p>
               </div>
               <div className="mt-2 grid grid-cols-2 gap-1 pl-8">
                 {q.options.map((opt, optIdx) => (
@@ -138,10 +154,11 @@ export default function QuestionPreviewList({
 
       {/* Footer summary */}
       {questions.length > 0 && (
-        <div className="flex items-center gap-2 rounded-md bg-primary/5 px-3 py-2 text-sm text-primary">
+        <div className="bg-primary/5 flex items-center gap-2 rounded-md px-3 py-2 text-sm text-primary">
           <CheckCircle2 className="h-4 w-4 shrink-0" />
           <span>
-            {questions.length} questions ready · {source.label} · answers hidden from participants
+            {questions.length} questions ready · {source.label} · answers hidden
+            from participants
           </span>
         </div>
       )}

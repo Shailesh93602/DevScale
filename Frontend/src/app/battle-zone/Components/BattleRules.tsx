@@ -141,13 +141,12 @@ const BattleRules: React.FC<BattleRulesProps> = ({ battle }) => {
               <p className="text-sm text-muted-foreground">
                 This battle is of{' '}
                 <strong>{battle.difficulty.toLowerCase()}</strong> difficulty
-                and
-                It contains a total of
+                and It contains a total of
                 <strong> {battle.total_questions}</strong> questions on the
                 topic of
-                <strong> {battle.topic?.title ?? 'the selected topic'}</strong>. The battle will start at
-                the scheduled time and all participants must join before the
-                start time.
+                <strong> {battle.topic?.title ?? 'the selected topic'}</strong>.
+                The battle will start at the scheduled time and all participants
+                must join before the start time.
               </p>
             </div>
           </div>

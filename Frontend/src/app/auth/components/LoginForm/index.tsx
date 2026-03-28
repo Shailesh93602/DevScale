@@ -41,9 +41,11 @@ const LoginForm = () => {
         callbackUrl.startsWith('/') &&
         !callbackUrl.startsWith('/auth');
 
-      // Use a hard redirect to completely bypass Next.js client-side Suspense locking bugs 
+      // Use a hard redirect to completely bypass Next.js client-side Suspense locking bugs
       // and ensure the new Server Cookie is firmly established before mounting the dashboard.
-      globalThis.window.location.assign(isValidCallback ? callbackUrl : '/dashboard');
+      globalThis.window.location.assign(
+        isValidCallback ? callbackUrl : '/dashboard',
+      );
     } else if (response?.error) {
       setServerError(response.error);
     }

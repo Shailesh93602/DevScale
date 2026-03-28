@@ -28,7 +28,9 @@ export const useBattleState = (battleId: string) => {
   // Listen for status changes via socket
   useEffect(() => {
     return on('battle:status_changed', ({ status }) => {
-      setState((prev) => prev ? { ...prev, status: status as BattleStatus } : prev);
+      setState((prev) =>
+        prev ? { ...prev, status: status as BattleStatus } : prev,
+      );
     });
   }, [on]);
 
@@ -41,21 +43,35 @@ export const useBattleState = (battleId: string) => {
         return {
           ...prev,
           current_participants: total_count,
-          participants: exists ? prev.participants : [
-            ...prev.participants,
-            { user_id: user.id, username: user.username, status: 'JOINED' },
-          ],
+          participants: exists
+            ? prev.participants
+            : [
+                ...prev.participants,
+                { user_id: user.id, username: user.username, status: 'JOINED' },
+              ],
         };
       });
     });
-    const offLeave = on('battle:participant_left', ({ user_id, total_count }) => {
-      setState((prev) => prev ? {
-        ...prev,
-        current_participants: total_count,
-        participants: prev.participants.filter((p) => p.user_id !== user_id),
-      } : prev);
-    });
-    return () => { offJoin(); offLeave(); };
+    const offLeave = on(
+      'battle:participant_left',
+      ({ user_id, total_count }) => {
+        setState((prev) =>
+          prev
+            ? {
+                ...prev,
+                current_participants: total_count,
+                participants: prev.participants.filter(
+                  (p) => p.user_id !== user_id,
+                ),
+              }
+            : prev,
+        );
+      },
+    );
+    return () => {
+      offJoin();
+      offLeave();
+    };
   }, [on]);
 
   // Initial state fetch
@@ -63,25 +79,31 @@ export const useBattleState = (battleId: string) => {
     if (hasFetched.current) return;
     hasFetched.current = true;
 
-    fetchBattleRef.current(battleId).then((battle) => {
-      if (battle) {
-        setState({
-          status: battle.status,
-          current_participants: battle.current_participants,
-          participants: battle.participants.map((p) => ({
-            user_id: p.user_id,
-            username: p.user.username,
-            status: p.status,
-          })),
-        });
-      } else {
-        setError('Failed to fetch battle state');
-      }
-    }).catch((err) => {
-      setError(err instanceof Error ? err.message : 'Failed to fetch battle state');
-    }).finally(() => {
-      setIsLoading(false);
-    });
+    fetchBattleRef
+      .current(battleId)
+      .then((battle) => {
+        if (battle) {
+          setState({
+            status: battle.status,
+            current_participants: battle.current_participants,
+            participants: battle.participants.map((p) => ({
+              user_id: p.user_id,
+              username: p.user.username,
+              status: p.status,
+            })),
+          });
+        } else {
+          setError('Failed to fetch battle state');
+        }
+      })
+      .catch((err) => {
+        setError(
+          err instanceof Error ? err.message : 'Failed to fetch battle state',
+        );
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, [battleId]);
 
   const refresh = useCallback(async () => {

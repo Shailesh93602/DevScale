@@ -9,7 +9,9 @@ test.describe('Battle Zone My Battles', () => {
 
     await gotoWithRetry(page, '/battle-zone/my-battles');
 
-    await page.waitForLoadState('domcontentloaded', { timeout: 15000 }).catch(() => {});
+    await page
+      .waitForLoadState('domcontentloaded', { timeout: 15000 })
+      .catch(() => {});
     await expect(page.getByRole('heading', { name: 'My Battles' })).toBeVisible(
       { timeout: 20000 },
     );

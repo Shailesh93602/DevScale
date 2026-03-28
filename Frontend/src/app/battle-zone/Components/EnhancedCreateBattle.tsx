@@ -56,7 +56,12 @@ interface EnhancedCreateBattleFormProps {
   onCancel?: () => void;
 }
 
-const STEP_LABELS = ['Battle Info', 'Question Source', 'Settings', 'Preview & Launch'];
+const STEP_LABELS = [
+  'Battle Info',
+  'Question Source',
+  'Settings',
+  'Preview & Launch',
+];
 
 const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
   onSuccess,
@@ -65,7 +70,9 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
   const { toast } = useToast();
   const { createBattle, isSubmitting } = useBattleCreation();
   const [activeStep, setActiveStep] = useState(1);
-  const [questionSource, setQuestionSource] = useState<QuestionSource | null>(null);
+  const [questionSource, setQuestionSource] = useState<QuestionSource | null>(
+    null,
+  );
   const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
 
   const form = useForm<BattleFormValues>({
@@ -84,7 +91,11 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
     mode: 'onChange',
   });
 
-  const { watch, control, formState: { errors } } = form;
+  const {
+    watch,
+    control,
+    formState: { errors },
+  } = form;
   const formValues = watch();
 
   // Progress: title + description + questionSource + (date+time if SCHEDULED)
@@ -101,36 +112,53 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
     if (activeStep === 1) return !!formValues.title && !!formValues.description;
     if (activeStep === 2) return !!questionSource;
     if (activeStep === 3) {
-      if (formValues.type === 'SCHEDULED') return !!formValues.date && !!formValues.time;
+      if (formValues.type === 'SCHEDULED')
+        return !!formValues.date && !!formValues.time;
       return true;
     }
     return true;
   };
 
-  const nextStep = () => { if (activeStep < 4) setActiveStep(activeStep + 1); };
-  const prevStep = () => { if (activeStep > 1) setActiveStep(activeStep - 1); };
+  const nextStep = () => {
+    if (activeStep < 4) setActiveStep(activeStep + 1);
+  };
+  const prevStep = () => {
+    if (activeStep > 1) setActiveStep(activeStep - 1);
+  };
 
   // Final creation — called from Step 4
   const handleCreateBattle = async () => {
     if (!questionSource) {
-      toast({ title: 'Error', description: 'Please select a question source first.', variant: 'destructive' });
+      toast({
+        title: 'Error',
+        description: 'Please select a question source first.',
+        variant: 'destructive',
+      });
       return;
     }
 
     try {
       let startTime: string | undefined;
-      if (formValues.type === 'SCHEDULED' && formValues.date && formValues.time) {
+      if (
+        formValues.type === 'SCHEDULED' &&
+        formValues.date &&
+        formValues.time
+      ) {
         const [h, m] = formValues.time.split(':');
         const dt = new Date(formValues.date);
         dt.setHours(Number(h), Number(m), 0, 0);
-        if (Number.isNaN(dt.getTime())) throw new Error('Invalid date/time for scheduled battle.');
+        if (Number.isNaN(dt.getTime()))
+          throw new Error('Invalid date/time for scheduled battle.');
         startTime = dt.toISOString();
       }
 
       const response = await createBattle({
         title: formValues.title,
         description: formValues.description ?? '',
-        difficulty: formValues.difficulty.toUpperCase() as 'EASY' | 'MEDIUM' | 'HARD',
+        difficulty: formValues.difficulty.toUpperCase() as
+          | 'EASY'
+          | 'MEDIUM'
+          | 'HARD',
         type: formValues.type as 'QUICK' | 'SCHEDULED' | 'PRACTICE',
         max_participants: formValues.maxParticipants ?? 6,
         points_per_question: formValues.pointsPerQuestion ?? 100,
@@ -147,13 +175,17 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
       });
 
       if (response?.id) {
-        toast({ title: 'Battle created!', description: 'Questions loaded. Head to the lobby!' });
+        toast({
+          title: 'Battle created!',
+          description: 'Questions loaded. Head to the lobby!',
+        });
         onSuccess?.(response.slug ?? response.id);
       }
     } catch (error) {
       toast({
         title: 'Error',
-        description: error instanceof Error ? error.message : 'Failed to create battle.',
+        description:
+          error instanceof Error ? error.message : 'Failed to create battle.',
         variant: 'destructive',
       });
     }
@@ -170,20 +202,35 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
   };
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full space-y-6">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="w-full space-y-6"
+    >
       {/* Progress bar */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <motion.h2 initial={{ x: -20 }} animate={{ x: 0 }} className="text-lg font-semibold">
+          <motion.h2
+            initial={{ x: -20 }}
+            animate={{ x: 0 }}
+            className="text-lg font-semibold"
+          >
             Create Battle
           </motion.h2>
           <motion.div initial={{ x: 20 }} animate={{ x: 0 }}>
             <Badge
               variant={formProgress === 100 ? 'default' : 'outline'}
-              className={cn('transition-all duration-300', formProgress === 100 && 'animate-pulse')}
+              className={cn(
+                'transition-all duration-300',
+                formProgress === 100 && 'animate-pulse',
+              )}
             >
               {formProgress === 100 ? (
-                <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="flex items-center gap-1">
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="flex items-center gap-1"
+                >
                   <CheckCircle2 className="h-3 w-3" />
                   Ready to launch
                 </motion.span>
@@ -193,11 +240,18 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
             </Badge>
           </motion.div>
         </div>
-        <Progress value={formProgress} className="h-2 transition-all duration-300" />
+        <Progress
+          value={formProgress}
+          className="h-2 transition-all duration-300"
+        />
       </div>
 
       {/* Stepper */}
-      <div className="mb-6 flex items-center justify-between" role="navigation" aria-label="Form steps">
+      <div
+        className="mb-6 flex items-center justify-between"
+        role="navigation"
+        aria-label="Form steps"
+      >
         {[1, 2, 3, 4].map((step) => (
           <div key={step} className="flex items-center">
             <motion.div
@@ -205,11 +259,17 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
               initial="inactive"
               animate={activeStep === step ? 'active' : 'inactive'}
               className={cn(
-                'flex h-8 w-8 items-center justify-center rounded-full transition-colors duration-300 cursor-pointer',
-                activeStep >= step ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground',
+                'flex h-8 w-8 cursor-pointer items-center justify-center rounded-full transition-colors duration-300',
+                activeStep >= step
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-muted text-muted-foreground',
               )}
-              onClick={() => { if (step < activeStep) setActiveStep(step); }}
-              onKeyDown={(e) => { if (e.key === 'Enter' && step < activeStep) setActiveStep(step); }}
+              onClick={() => {
+                if (step < activeStep) setActiveStep(step);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && step < activeStep) setActiveStep(step);
+              }}
               role="button"
               tabIndex={0}
               aria-label={`Step ${step}: ${STEP_LABELS[step - 1]}`}
@@ -219,7 +279,10 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
             </motion.div>
             {step < 4 && (
               <div
-                className={cn('h-1 w-10 transition-all duration-300', activeStep > step ? 'bg-primary' : 'bg-muted')}
+                className={cn(
+                  'h-1 w-10 transition-all duration-300',
+                  activeStep > step ? 'bg-primary' : 'bg-muted',
+                )}
                 role="presentation"
               />
             )}
@@ -229,7 +292,10 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
 
       {/* Step label */}
       <p className="text-sm text-muted-foreground">
-        Step {activeStep} of 4 — <span className="font-medium text-foreground">{STEP_LABELS[activeStep - 1]}</span>
+        Step {activeStep} of 4 —{' '}
+        <span className="font-medium text-foreground">
+          {STEP_LABELS[activeStep - 1]}
+        </span>
       </p>
 
       <Tabs defaultValue="edit" className="w-full">
@@ -245,15 +311,22 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
         <TabsContent value="edit">
           <Form {...form}>
             <div className="space-y-8">
-
               {/* ── Step 1: Battle Info ─────────────────────────────────── */}
               {activeStep === 1 && (
-                <motion.div variants={cardVariants} initial="hidden" animate="visible">
-                  <Card className="border-2 border-primary/20 hover:border-primary/40 transition-all duration-300">
+                <motion.div
+                  variants={cardVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  <Card className="border-primary/20 hover:border-primary/40 border-2 transition-all duration-300">
                     <CardContent className="space-y-6 pt-6">
                       <div className="flex items-center gap-2">
-                        <h3 className="text-lg font-medium">Battle Information</h3>
-                        <Badge variant="outline" className="ml-auto">Required</Badge>
+                        <h3 className="text-lg font-medium">
+                          Battle Information
+                        </h3>
+                        <Badge variant="outline" className="ml-auto">
+                          Required
+                        </Badge>
                       </div>
 
                       <FormField
@@ -268,12 +341,17 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
                                   <TooltipTrigger asChild>
                                     <HelpCircle className="h-4 w-4 text-muted-foreground" />
                                   </TooltipTrigger>
-                                  <TooltipContent><p>Choose a catchy title for your battle</p></TooltipContent>
+                                  <TooltipContent>
+                                    <p>Choose a catchy title for your battle</p>
+                                  </TooltipContent>
                                 </Tooltip>
                               </TooltipProvider>
                             </FormLabel>
                             <FormControl>
-                              <Input placeholder="Enter a catchy title" {...field} />
+                              <Input
+                                placeholder="Enter a catchy title"
+                                {...field}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -285,9 +363,18 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
                         name="description"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Description <span className="text-muted-foreground text-xs">(optional)</span></FormLabel>
+                            <FormLabel>
+                              Description{' '}
+                              <span className="text-xs text-muted-foreground">
+                                (optional)
+                              </span>
+                            </FormLabel>
                             <FormControl>
-                              <Textarea placeholder="Describe what this battle is about" rows={3} {...field} />
+                              <Textarea
+                                placeholder="Describe what this battle is about"
+                                rows={3}
+                                {...field}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -300,8 +387,12 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
 
               {/* ── Step 2: Question Source ─────────────────────────────── */}
               {activeStep === 2 && (
-                <motion.div variants={cardVariants} initial="hidden" animate="visible">
-                  <Card className="border-2 border-primary/20 hover:border-primary/40 transition-all duration-300">
+                <motion.div
+                  variants={cardVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  <Card className="border-primary/20 hover:border-primary/40 border-2 transition-all duration-300">
                     <CardContent className="space-y-4 pt-6">
                       <div className="flex items-center gap-2">
                         <h3 className="text-lg font-medium">Question Source</h3>
@@ -311,11 +402,17 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
                               <HelpCircle className="h-4 w-4 text-muted-foreground" />
                             </TooltipTrigger>
                             <TooltipContent className="max-w-xs">
-                              <p>Questions are auto-selected from the quiz pool for the scope you choose. No manual entry needed.</p>
+                              <p>
+                                Questions are auto-selected from the quiz pool
+                                for the scope you choose. No manual entry
+                                needed.
+                              </p>
                             </TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
-                        <Badge variant="outline" className="ml-auto">Required</Badge>
+                        <Badge variant="outline" className="ml-auto">
+                          Required
+                        </Badge>
                       </div>
 
                       <QuestionSourceSelector
@@ -339,8 +436,12 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
 
               {/* ── Step 3: Battle Settings ─────────────────────────────── */}
               {activeStep === 3 && (
-                <motion.div variants={cardVariants} initial="hidden" animate="visible">
-                  <Card className="border-2 border-primary/20 hover:border-primary/40 transition-all duration-300">
+                <motion.div
+                  variants={cardVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  <Card className="border-primary/20 hover:border-primary/40 border-2 transition-all duration-300">
                     <CardContent className="space-y-6 pt-6">
                       <div className="flex items-center gap-2">
                         <h3 className="text-lg font-medium">Battle Settings</h3>
@@ -354,11 +455,15 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
                           <FormItem>
                             <FormLabel>Battle Type</FormLabel>
                             <div className="grid grid-cols-3 gap-2">
-                              {(['QUICK', 'SCHEDULED', 'PRACTICE'] as const).map((t) => (
+                              {(
+                                ['QUICK', 'SCHEDULED', 'PRACTICE'] as const
+                              ).map((t) => (
                                 <Button
                                   key={t}
                                   type="button"
-                                  variant={field.value === t ? 'default' : 'outline'}
+                                  variant={
+                                    field.value === t ? 'default' : 'outline'
+                                  }
                                   className="capitalize"
                                   onClick={() => field.onChange(t)}
                                 >
@@ -384,7 +489,12 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
                                   <TooltipTrigger asChild>
                                     <HelpCircle className="h-4 w-4 text-muted-foreground" />
                                   </TooltipTrigger>
-                                  <TooltipContent><p>Filters questions from the pool by difficulty</p></TooltipContent>
+                                  <TooltipContent>
+                                    <p>
+                                      Filters questions from the pool by
+                                      difficulty
+                                    </p>
+                                  </TooltipContent>
                                 </Tooltip>
                               </TooltipProvider>
                             </FormLabel>
@@ -393,10 +503,13 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
                                 <Button
                                   key={d}
                                   type="button"
-                                  variant={field.value === d ? 'default' : 'outline'}
+                                  variant={
+                                    field.value === d ? 'default' : 'outline'
+                                  }
                                   className={cn(
                                     'transition-all duration-200',
-                                    field.value === d && 'border-2 border-primary shadow-sm',
+                                    field.value === d &&
+                                      'border-2 border-primary shadow-sm',
                                   )}
                                   onClick={() => field.onChange(d)}
                                 >
@@ -423,9 +536,13 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
                                     <CalendarIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                                     <Input
                                       type="date"
-                                      min={new Date().toISOString().split('T')[0]}
+                                      min={
+                                        new Date().toISOString().split('T')[0]
+                                      }
                                       value={field.value ?? ''}
-                                      onChange={(e) => field.onChange(e.target.value)}
+                                      onChange={(e) =>
+                                        field.onChange(e.target.value)
+                                      }
                                       className="pl-10"
                                     />
                                   </div>
@@ -447,7 +564,9 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
                                       type="time"
                                       step={60}
                                       value={field.value ?? ''}
-                                      onChange={(e) => field.onChange(e.target.value)}
+                                      onChange={(e) =>
+                                        field.onChange(e.target.value)
+                                      }
                                       className="pl-10"
                                     />
                                   </div>
@@ -465,10 +584,13 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
                           type="button"
                           variant="ghost"
                           size="sm"
-                          onClick={() => setShowAdvancedOptions(!showAdvancedOptions)}
+                          onClick={() =>
+                            setShowAdvancedOptions(!showAdvancedOptions)
+                          }
                           className="text-xs"
                         >
-                          {showAdvancedOptions ? 'Hide' : 'Show'} Advanced Options
+                          {showAdvancedOptions ? 'Hide' : 'Show'} Advanced
+                          Options
                         </Button>
                       </div>
 
@@ -489,7 +611,9 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
                                     max={10}
                                     {...field}
                                     value={field.value ?? ''}
-                                    onChange={(e) => field.onChange(parseInt(e.target.value))}
+                                    onChange={(e) =>
+                                      field.onChange(parseInt(e.target.value))
+                                    }
                                   />
                                 </FormControl>
                                 <FormMessage />
@@ -502,7 +626,8 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel className="flex items-center gap-1">
-                                  <Timer className="h-4 w-4" /> Seconds Per Question
+                                  <Timer className="h-4 w-4" /> Seconds Per
+                                  Question
                                 </FormLabel>
                                 <FormControl>
                                   <Input
@@ -511,7 +636,9 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
                                     max={60}
                                     {...field}
                                     value={field.value ?? ''}
-                                    onChange={(e) => field.onChange(parseInt(e.target.value))}
+                                    onChange={(e) =>
+                                      field.onChange(parseInt(e.target.value))
+                                    }
                                   />
                                 </FormControl>
                                 <FormMessage />
@@ -524,7 +651,8 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel className="flex items-center gap-1">
-                                  <Trophy className="h-4 w-4" /> Points Per Question
+                                  <Trophy className="h-4 w-4" /> Points Per
+                                  Question
                                 </FormLabel>
                                 <FormControl>
                                   <Input
@@ -533,7 +661,9 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
                                     max={1000}
                                     {...field}
                                     value={field.value ?? ''}
-                                    onChange={(e) => field.onChange(parseInt(e.target.value))}
+                                    onChange={(e) =>
+                                      field.onChange(parseInt(e.target.value))
+                                    }
                                   />
                                 </FormControl>
                                 <FormMessage />
@@ -549,12 +679,21 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
 
               {/* ── Step 4: Preview & Launch ────────────────────────────── */}
               {activeStep === 4 && (
-                <motion.div variants={cardVariants} initial="hidden" animate="visible" className="space-y-4">
-                  <Card className="border-2 border-primary/20 hover:border-primary/40 transition-all duration-300">
+                <motion.div
+                  variants={cardVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="space-y-4"
+                >
+                  <Card className="border-primary/20 hover:border-primary/40 border-2 transition-all duration-300">
                     <CardContent className="space-y-4 pt-6">
                       <div className="flex items-center gap-2">
-                        <h3 className="text-lg font-medium">Question Preview</h3>
-                        <Badge variant="outline" className="ml-auto">Auto-selected</Badge>
+                        <h3 className="text-lg font-medium">
+                          Question Preview
+                        </h3>
+                        <Badge variant="outline" className="ml-auto">
+                          Auto-selected
+                        </Badge>
                       </div>
                       {questionSource ? (
                         <QuestionPreviewList
@@ -562,7 +701,9 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
                           difficulty={formValues.difficulty?.toUpperCase()}
                         />
                       ) : (
-                        <p className="text-sm text-muted-foreground">No source selected — go back to Step 2.</p>
+                        <p className="text-sm text-muted-foreground">
+                          No source selected — go back to Step 2.
+                        </p>
                       )}
                     </CardContent>
                   </Card>
@@ -573,27 +714,45 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
                       <div className="grid gap-1 text-sm">
                         <div className="flex justify-between">
                           <span className="text-muted-foreground">Title</span>
-                          <span className="font-medium">{formValues.title}</span>
+                          <span className="font-medium">
+                            {formValues.title}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-muted-foreground">Type</span>
-                          <span className="font-medium capitalize">{formValues.type?.toLowerCase()}</span>
+                          <span className="font-medium capitalize">
+                            {formValues.type?.toLowerCase()}
+                          </span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-muted-foreground">Difficulty</span>
-                          <span className="font-medium capitalize">{formValues.difficulty?.toLowerCase()}</span>
+                          <span className="text-muted-foreground">
+                            Difficulty
+                          </span>
+                          <span className="font-medium capitalize">
+                            {formValues.difficulty?.toLowerCase()}
+                          </span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-muted-foreground">Questions</span>
-                          <span className="font-medium">{questionSource?.count ?? '—'}</span>
+                          <span className="text-muted-foreground">
+                            Questions
+                          </span>
+                          <span className="font-medium">
+                            {questionSource?.count ?? '—'}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-muted-foreground">Source</span>
-                          <span className="font-medium">{questionSource?.label ?? '—'}</span>
+                          <span className="font-medium">
+                            {questionSource?.label ?? '—'}
+                          </span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-muted-foreground">Max Players</span>
-                          <span className="font-medium">{formValues.maxParticipants ?? 6}</span>
+                          <span className="text-muted-foreground">
+                            Max Players
+                          </span>
+                          <span className="font-medium">
+                            {formValues.maxParticipants ?? 6}
+                          </span>
                         </div>
                       </div>
                     </CardContent>
@@ -645,12 +804,16 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
               )}
 
               {activeStep === 4 && (
-                <Button type="button" variant="outline" onClick={prevStep} className="w-full">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={prevStep}
+                  className="w-full"
+                >
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   Back to Settings
                 </Button>
               )}
-
             </div>
           </Form>
         </TabsContent>
