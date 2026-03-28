@@ -10,8 +10,10 @@ export class MainConceptRepository extends BaseRepository<
     super(prisma.mainConcept);
   }
 
-  async getMainConceptWithSubjects(id: string): Promise<MainConcept | null> {
-    return this.findUnique({
+  async getMainConceptWithSubjects(id: string): Promise<Prisma.MainConceptGetPayload<{
+    include: { subjects: { include: { subject: true } } };
+  }> | null> {
+    const result = await this.findUnique({
       where: { id },
       include: {
         subjects: {
@@ -21,6 +23,9 @@ export class MainConceptRepository extends BaseRepository<
         },
       },
     });
+    return result as Prisma.MainConceptGetPayload<{
+      include: { subjects: { include: { subject: true } } };
+    }> | null;
   }
 
   async createWithSubjects(

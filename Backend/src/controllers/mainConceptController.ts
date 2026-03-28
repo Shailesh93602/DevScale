@@ -27,7 +27,7 @@ export default class MainConceptController {
       });
     }
     // getMainConceptWithSubjects includes the join table with nested subject
-    const subjects = (mc as any).subjects?.map((link: any) => ({
+    const subjects = mc.subjects?.map((link) => ({
       id: link.subject?.id ?? link.subject_id,
       title: link.subject?.title,
       slug: link.subject?.slug,
