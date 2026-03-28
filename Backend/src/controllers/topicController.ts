@@ -57,7 +57,19 @@ export default class TopicController {
           }
         }
       },
-    })) as any;
+    })) as Prisma.TopicGetPayload<{
+      include: {
+        quizzes: {
+          include: {
+            questions: {
+              include: {
+                options: true
+              }
+            }
+          }
+        }
+      }
+    }>;
 
     if (!topic || !topic.quizzes || topic.quizzes.length === 0) {
       return sendResponse(res, 'QUIZ_NOT_FOUND');

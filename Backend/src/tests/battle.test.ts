@@ -281,13 +281,13 @@ describe('Answer submission', () => {
   });
 
   it('returns sorted leaderboard after answer', async () => {
-    const result = await battleRepo.submitAnswer(
+    await battleRepo.submitAnswer(
       battleId, questionId, userId1,
       3, 5000
     ).catch(() => null); // Will reject (duplicate) — get leaderboard directly
 
     const leaderboard = await battleRepo.getBattleLeaderboard(battleId);
-    expect(leaderboard[0].score).toBeGreaterThanOrEqual(leaderboard[leaderboard.length - 1].score);
+    expect(leaderboard[0].score).toBeGreaterThanOrEqual(leaderboard?.at(-1)?.score);
     expect(leaderboard[0].rank).toBe(1);
   });
 });
