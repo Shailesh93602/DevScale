@@ -35,8 +35,8 @@ export default class BattleController {
     const { page, limit, search, status, difficulty, type, topic_id, user_id, sort_by, sort_order } = req.query;
 
     const result = await this.repo.getBattles({
-      page: page ? parseInt(page as string) : undefined,
-      limit: limit ? parseInt(limit as string) : undefined,
+      page: page ? Number.parseInt(page as string) : undefined,
+      limit: limit ? Number.parseInt(limit as string) : undefined,
       search: search as string | undefined,
       status: status as Parameters<typeof this.repo.getBattles>[0]['status'],
       difficulty: difficulty as Difficulty | undefined,
@@ -73,13 +73,17 @@ export default class BattleController {
       id: id as string,
       difficulty: difficulty as string | undefined,
       categories: parsedCategories,
-      count: count ? parseInt(count as string) : undefined,
+      count: count ? Number.parseInt(count as string) : undefined,
     });
 
     const responseType = result.total_available === 0 ? 'QUESTION_POOL_EMPTY' : 'QUESTION_POOL_FETCHED';
 
     // Strip correct_answer before sending as preview
-    const preview = result.questions.map(({ correct_answer: _ca, ...q }) => q);
+    const preview = result.questions.map((question) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { correct_answer, ...questionsWithoutAnswer } = question;
+      return questionsWithoutAnswer;
+    });
 
     sendResponse(res, responseType, {
       data: { questions: preview, total_available: result.total_available },
@@ -325,8 +329,8 @@ export default class BattleController {
     const { page, limit } = req.query;
     const result = await this.repo.getMyBattles(
       req.user.id,
-      page ? parseInt(page as string) : 1,
-      limit ? parseInt(limit as string) : 10
+      page ? Number.parseInt(page as string) : 1,
+      limit ? Number.parseInt(limit as string) : 10
     );
     sendResponse(res, 'BATTLES_FETCHED', { data: result.data, meta: result.meta });
   });

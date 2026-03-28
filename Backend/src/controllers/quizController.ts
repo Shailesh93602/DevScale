@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { catchAsync } from '../utils/index';
 import QuizRepository from '../repositories/quizRepository';
 import QuizQuestionsRepository from '../repositories/quizQuestionsRepository';
-import { Prisma } from '@prisma/client';
 import QuizAnswerRepository from '../repositories/quizAnswerRepository';
 import QuizSubmissionRepository from '../repositories/quizSubmissionRepository';
 import { sendResponse } from '../utils/apiResponse';

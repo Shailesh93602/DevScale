@@ -135,7 +135,7 @@ function initializeSwagger() {
   app.use(
     '/api-docs/',
     swaggerUi.serve,
-    swaggerUi.setup(swaggerSpec as any, {
+    swaggerUi.setup(swaggerSpec as Record<string, unknown>, {
       customSiteTitle: 'API Documentation',
     })
   );

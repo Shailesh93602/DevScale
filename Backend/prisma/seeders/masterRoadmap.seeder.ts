@@ -36,7 +36,7 @@ interface TopicMeta {
 interface QuizQuestion {
   question: string;
   points?: number;
-  options: (Record<string, any> | string)[];
+  options: (Record<string, unknown> | string)[];
   correctAnswer?: number;
 }
 
@@ -131,7 +131,7 @@ const seedDatabase = async () => {
       const difficultyValue = (() => {
         const diff = (rmMeta.difficulty || '').toUpperCase();
         if (diff === 'INTERMEDIATE') return Difficulty.MEDIUM;
-        if (Object.values(Difficulty).includes(diff as any)) return diff as Difficulty;
+        if (Object.values(Difficulty).includes(diff as Difficulty)) return diff as Difficulty;
         return Difficulty.EASY;
       })();
 

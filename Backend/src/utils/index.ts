@@ -4,7 +4,7 @@ type AsyncHandler = (
   req: Request,
   res: Response,
   next: NextFunction
-) => Promise<void>;
+) => Promise<unknown>;
 
 export const catchAsync = (fn: AsyncHandler) => {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -13,5 +13,5 @@ export const catchAsync = (fn: AsyncHandler) => {
 };
 
 export const parse = (obj: unknown) => {
-  return JSON.parse(JSON.stringify(obj));
+  return structuredClone(obj);
 };
