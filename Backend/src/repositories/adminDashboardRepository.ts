@@ -6,8 +6,8 @@ import {
   Content,
   PrismaClient,
 } from '@prisma/client';
-import { createAppError } from '../utils/errorHandler';
-import logger from '../utils/logger';
+import { createAppError } from '../utils/errorHandler.js';
+import logger from '../utils/logger.js';
 import { getCache, setCache } from '../services/cacheService';
 import {
   DashboardMetrics,
@@ -21,10 +21,10 @@ import {
   ResourceUsageMetric,
 } from '../types/adminDashboard';
 import { Parser } from 'json2csv';
-import BaseRepository from './baseRepository';
+import BaseRepository from './baseRepository.js';
 import UserRepository from './userRepository';
 
-import prisma from '../lib/prisma';
+import prisma from '../lib/prisma.js';
 
 export default class AdminDashboardRepository extends BaseRepository<
   PrismaClient['user']

@@ -23,6 +23,10 @@ All shipped items, grouped by session. Newest first.
 | Item | File(s) |
 |------|---------|
 | Created `MANUAL.md` for platform tasks; removed redundant infra/Docker tasks from `TODO.md` | `MANUAL.md`, `TODO.md` |
+| **BattleCard Purity** — resolved 'impure function during render' error by moving `Date.now()` into state + `useEffect` | `Frontend/src/components/Battle/BattleCard.tsx` |
+| **Frontend Accessibility** — added 'Skip to Main Content' link; `aria-label` on all icon-only buttons; subset fonts & preconnect added | `Frontend/src/components/Layout.tsx`, `index.html`, etc. |
+| **Frontend UI/UX** — fixed mobile hamburger Z-index and text overflow on 375px; implemented skeleton loaders for async sections | `Frontend/src/components/ui/*.tsx`, `globals.css` |
+| **Bull Queue Verification** — verified worker processing and implemented dead-letter queue handling for failed email jobs | `Backend/src/services/emailQueue.ts` |
 
 ---
 

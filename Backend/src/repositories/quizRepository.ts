@@ -6,13 +6,13 @@ import {
   QuizSubmission,
   QuizType,
 } from '@prisma/client';
-import BaseRepository from './baseRepository';
-import { QuizData, QuizSubmissionData, TestCase } from '../types';
+import BaseRepository from './baseRepository.js';
+import { QuizData, QuizSubmissionData, TestCase } from '../types/index.js';
 import { executeCode } from '../utils/codeExecutor';
-import logger from '../utils/logger';
-import { createAppError } from '../utils/errorHandler';
+import logger from '../utils/logger.js';
+import { createAppError } from '../utils/errorHandler.js';
 
-import prisma from '../lib/prisma';
+import prisma from '../lib/prisma.js';
 
 export default class QuizRepository extends BaseRepository<
   PrismaClient['quiz']
