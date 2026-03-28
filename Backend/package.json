@@ -65,7 +65,7 @@
   "dependencies": {
     "@prisma/adapter-pg": "^7.4.2",
     "@prisma/client": "^6.6.0",
-    "@sentry/node": "^9.9.0",
+    "@sentry/node": "^9.47.1",
     "@socket.io/redis-adapter": "^8.3.0",
     "@supabase/supabase-js": "^2.98.0",
     "@types/compression": "^1.7.5",

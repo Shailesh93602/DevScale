@@ -38,6 +38,9 @@ export class AppRoutes {
 
   private initializeRoutes(): void {
     // Health check route
+    this.router.get('/debug-sentry', () => {
+      throw new Error('My first Sentry error!');
+    });
     this.router.use('/health', new HealthCheckRoutes().getRouter());
 
     // Auth routes (logout, cache refresh)
