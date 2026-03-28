@@ -20,8 +20,8 @@ This file tracks tasks that require manual verification in the Supabase Dashboar
 ## P1 — Audits & Verification
 
 ### Code Audits
-- [ ] **Leaderboard Audit**: Verify `leaderboardRepository` has no mock or hardcoded data remaining from initial development.
-- [ ] **Admin Audit**: Verify `AdminAuditLog` is correctly wired to all destructive admin actions (Delete User, Delete Roadmap, Moderation).
+- [x] **Leaderboard Audit**: Verify `leaderboardRepository` has no mock or hardcoded data remaining from initial development.
+- [x] **Admin Audit**: Verify `AdminAuditLog` is correctly wired to all destructive admin actions (Delete User, Delete Roadmap, Moderation).
 - [ ] **Email Queue**: Verify Bull email queue processes in production; manually check Redis `bull:` keys for stalls.
 
 ### UI/UX Audits
