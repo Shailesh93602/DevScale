@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { showLoader, hideLoader } from '@/lib/features/loader/loaderSlice';
-import { RoadmapDetails, IRoadmap } from '../page';
+import { RoadmapDetails, IRoadmap } from '../RoadmapDetail';
 import { useAxiosGet, useAxiosPost } from '@/hooks/useAxios';
 import { useRoadmapSocial } from '@/hooks/useRoadmapSocial';
 
