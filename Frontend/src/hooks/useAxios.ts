@@ -52,7 +52,7 @@ httpClient.interceptors.request.use(async (config) => {
   }
 
   // 2. CSRF Token (Double-Submit Token Pattern)
-  if (typeof document !== 'undefined') {
+  if (globalThis.document !== undefined) {
     const csrfToken = document.cookie
       .split('; ')
       .find((row) => row.trim().startsWith('XSRF-TOKEN='))
@@ -76,7 +76,7 @@ httpClient.interceptors.response.use(
     if (
       error.response?.status === 401 &&
       !isRedirecting &&
-      typeof globalThis.window !== 'undefined'
+      globalThis.window !== undefined
     ) {
       // Clear cached token — it may be expired or revoked
       _cachedToken = null;
@@ -95,15 +95,15 @@ httpClient.interceptors.response.use(
         // Dynamically import router helpers to check if path requires auth
         const { requiresAuthRoute } = await import('@/lib/public-routes');
 
-        if (requiresAuthRoute(window.location.pathname)) {
-          window.location.href = '/auth/login';
+        if (requiresAuthRoute(globalThis.window?.location.pathname || '')) {
+          globalThis.window.location.href = '/auth/login';
         } else {
           // If we're on a public route, just reset the lock without redirecting
           isRedirecting = false;
         }
       }
     }
-    return Promise.reject(error);
+    throw error;
   },
 );
 

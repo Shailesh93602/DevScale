@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import logger from './logger';
+import logger from './logger.js';
 
 type ResponseType =
   | 'TOPICS_FETCHED'
@@ -20,6 +20,7 @@ type ResponseType =
   | 'PROGRESS_FETCHED'
   | 'USER_CREATED'
   | 'USER_UPDATED'
+  | 'USER_DELETED'
   | 'USERNAME_CHECKED'
   | 'INVALID_PAGE_NUMBER'
   | 'ROADMAPS_FETCHED'
@@ -283,6 +284,11 @@ const RESPONSE_MESSAGES: Record<ResponseType, ResponseConfig> = {
     status: 200,
     success: true,
     message: 'User updated successfully',
+  },
+  USER_DELETED: {
+    status: 200,
+    success: true,
+    message: 'User deleted successfully',
   },
   USERNAME_CHECKED: {
     status: 200,

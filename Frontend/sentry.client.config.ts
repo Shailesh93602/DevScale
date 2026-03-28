@@ -12,11 +12,11 @@ if (SENTRY_DSN) {
     environment: process.env.NODE_ENV ?? 'development',
 
     // Capture 10% of transactions in production, 100% in dev
-    tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
+    tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1,
 
     // Replay 1% of sessions, 100% of sessions with an error
     replaysSessionSampleRate: 0.01,
-    replaysOnErrorSampleRate: 1.0,
+    replaysOnErrorSampleRate: 1,
 
     integrations: [
       Sentry.replayIntegration({

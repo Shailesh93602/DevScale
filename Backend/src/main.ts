@@ -29,7 +29,7 @@ import socketService from './services/socket.js';
 import { redis } from './services/cacheService.js';
 import { RedisStore, RedisReply } from 'rate-limit-redis';
 
-declare const require: NodeRequire;
+import { fileURLToPath } from 'node:url';
 
 type MaybeServer = ReturnType<Application['listen']>;
 
@@ -42,8 +42,7 @@ export class App {
     // Enable weak ETags on all GET/HEAD responses — lets clients skip re-parsing
     // unchanged bodies (articles, subjects, roadmaps). Zero cost if not supported.
     this.app.set('etag', 'weak');
-    
-    this.app.set('etag', 'weak');
+
     this.initializeCloudinary();
     this.initializeMiddlewares();
     this.initializeRoutes();
@@ -95,10 +94,14 @@ export class App {
           // In development, allow localhost and private network IPs
           const isLocalhost =
             /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
-          const isPrivateNetwork =
-            /^https?:\/\/(192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})(:\d+)?$/.test(
-              origin
-            );
+          const privateNetworkRegexes = [
+            /^https?:\/\/192\.168\.\d{1,3}\.\d{1,3}(:\d+)?$/,
+            /^https?:\/\/10\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?$/,
+            /^https?:\/\/172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}(:\d+)?$/,
+          ];
+          const isPrivateNetwork = privateNetworkRegexes.some((re) =>
+            re.test(origin)
+          );
 
           if (isLocalhost || isPrivateNetwork) {
             return callback(null, true);
@@ -124,23 +127,23 @@ export class App {
         crossOriginEmbedderPolicy: isProd,
         contentSecurityPolicy: isProd
           ? {
-              directives: {
-                defaultSrc: ["'self'"],
-                scriptSrc: ["'self'"],
-                styleSrc: ["'self'", "'unsafe-inline'"], // unsafe-inline needed for inline styles from Swagger UI
-                imgSrc: ["'self'", 'data:', cloudinaryHost],
-                connectSrc: [
-                  "'self'",
-                  apiOrigin,
-                  supabaseHost,
-                  ...clientOrigins,
-                ],
-                fontSrc: ["'self'", 'https://fonts.gstatic.com'],
-                objectSrc: ["'none'"],
-                frameAncestors: ["'none'"],
-                upgradeInsecureRequests: [],
-              },
-            }
+            directives: {
+              defaultSrc: ["'self'"],
+              scriptSrc: ["'self'"],
+              styleSrc: ["'self'", "'unsafe-inline'"], // unsafe-inline needed for inline styles from Swagger UI
+              imgSrc: ["'self'", 'data:', cloudinaryHost],
+              connectSrc: [
+                "'self'",
+                apiOrigin,
+                supabaseHost,
+                ...clientOrigins,
+              ],
+              fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+              objectSrc: ["'none'"],
+              frameAncestors: ["'none'"],
+              upgradeInsecureRequests: [],
+            },
+          }
           : false,
         referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
         // Permissions-Policy: disable unused browser APIs that could be abused
@@ -186,7 +189,7 @@ export class App {
     // The error handler must be registered before any other error middleware and after all controllers
     import('@sentry/node').then((Sentry) => {
       Sentry.setupExpressErrorHandler(this.app);
-      
+
       // Fallthrough error handler
       this.app.use(errorHandler);
     });
@@ -242,7 +245,7 @@ export class App {
 // Instantiate and conditionally start server
 const appInstance = new App();
 
-if (require.main === module) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   appInstance.start();
 }
 

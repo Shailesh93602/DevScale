@@ -2,18 +2,18 @@ import React from 'react';
 import { FiUser, FiSettings, FiLogOut } from 'react-icons/fi';
 import { Swords, Trophy, Users, Calendar, BarChart, Home } from 'lucide-react';
 
-interface NavItem {
+export interface NavItem {
   path: string;
   label: string;
 }
 
-interface ProfileItem {
+export interface ProfileItem {
   path: string;
   label: string;
   icon: React.ReactNode;
 }
 
-interface BattleZoneItem {
+export interface BattleZoneItem {
   path: string;
   label: string;
   icon: React.ReactNode;

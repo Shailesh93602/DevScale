@@ -1,13 +1,11 @@
-import { PrismaClient, Prisma } from '@prisma/client';
-import { createAppError } from '../utils/errorHandler';
-import { getCache, setCache, deleteCache } from '../services/cacheService';
-import BaseRepository from './baseRepository';
+import { Prisma, PrismaClient } from '@prisma/client';
+import { createAppError } from '../utils/errorHandler.js';
+import { getCache, setCache, deleteCache } from '../services/cacheService.js';
+import BaseRepository from './baseRepository.js';
 
-import prisma from '../lib/prisma';
+import prisma from '../lib/prisma.js';
 
-export default class SystemConfigRepository extends BaseRepository<
-  PrismaClient['systemConfig']
-> {
+export default class SystemConfigRepository extends BaseRepository<PrismaClient['systemConfig']> {
   constructor() {
     super(prisma.systemConfig);
   }
@@ -32,10 +30,11 @@ export default class SystemConfigRepository extends BaseRepository<
     category: string;
     description?: string;
   }) {
-    const validatedValue: Prisma.InputJsonValue =
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const validatedValue: any =
       data.value === null
         ? Prisma.JsonNull
-        : JSON.parse(JSON.stringify(data.value));
+        : structuredClone(data.value);
     const createData = {
       ...data,
       value: validatedValue,
