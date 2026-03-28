@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
-import AdminDashboardRepository from '../repositories/adminDashboardRepository';
-import RoadmapRepository from '../repositories/roadmapRepository';
-import { catchAsync } from '../utils/catchAsync';
-import { createAppError } from '../utils/createAppError';
-import UserRepository from '../repositories/userRepository';
-import SystemConfigRepository from '../repositories/systemConfigRepository';
-import AdminAuditLogRepository from '../repositories/adminAuditLogRepository';
-import { sendResponse } from '../utils/apiResponse';
+import AdminDashboardRepository from '../repositories/adminDashboardRepository.js';
+import RoadmapRepository from '../repositories/roadmapRepository.js';
+import { catchAsync } from '../utils/catchAsync.js';
+import { createAppError } from '../utils/createAppError.js';
+import UserRepository from '../repositories/userRepository.js';
+import SystemConfigRepository from '../repositories/systemConfigRepository.js';
+import AdminAuditLogRepository from '../repositories/adminAuditLogRepository.js';
+import { sendResponse } from '../utils/apiResponse.js';
 
 export default class AdminController {
   private readonly adminDashboardRepo: AdminDashboardRepository;
@@ -42,7 +42,7 @@ export default class AdminController {
 
     // Audit Log
     await this.auditLogRepo.logAdminAction({
-      admin_id: req.user!.id,
+      admin_id: req.user.id,
       action: 'UPDATE_USER_ROLE',
       entity: 'USER',
       entity_id: userId,
@@ -60,7 +60,7 @@ export default class AdminController {
 
     // Audit Log
     await this.auditLogRepo.logAdminAction({
-      admin_id: req.user!.id,
+      admin_id: req.user.id,
       action: 'DELETE_USER',
       entity: 'USER',
       entity_id: userId,
@@ -82,7 +82,7 @@ export default class AdminController {
 
     // Audit Log
     await this.auditLogRepo.logAdminAction({
-      admin_id: req.user!.id,
+      admin_id: req.user.id,
       action: 'UPDATE_CONFIG',
       entity: 'SYSTEM_CONFIG',
       entity_id: key,
@@ -134,7 +134,7 @@ export default class AdminController {
 
     // Audit Log
     await this.auditLogRepo.logAdminAction({
-      admin_id: req.user!.id,
+      admin_id: req.user.id,
       action: 'DELETE_ROADMAP',
       entity: 'ROADMAP',
       entity_id: roadmapId,

@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import AdminController from '../controllers/adminController';
-import { authMiddleware, authorizeRoles } from '../middlewares/authMiddleware';
+import AdminController from '../controllers/adminController.js';
+import { authMiddleware, authorizeRoles } from '../middlewares/authMiddleware.js';
 
-import { BaseRouter } from './BaseRouter';
+import { BaseRouter } from './BaseRouter.js';
 
 export class AdminRoutes extends BaseRouter {
   private readonly adminController: AdminController;

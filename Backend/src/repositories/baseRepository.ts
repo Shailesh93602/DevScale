@@ -4,25 +4,12 @@ import { PaginatedResult, PaginationParams } from '../types/index.js';
 import { PrismaClient } from '@prisma/client';
 import prisma from '../lib/prisma.js';
 
-type PrismaDelegate = {
-  findUnique: (...args: any[]) => Promise<any>;
-  findMany: (...args: any[]) => Promise<any[]>;
-  create: (...args: any[]) => Promise<any>;
-  update: (...args: any[]) => Promise<any>;
-  delete: (...args: any[]) => Promise<any>;
-  upsert: (...args: any[]) => Promise<any>;
-  count: (...args: any[]) => Promise<number>;
-  groupBy: (...args: any[]) => Promise<any>;
-  findFirst: (...args: any[]) => Promise<any>;
-  createMany: (...args: any[]) => Promise<any>;
-  updateMany: (...args: any[]) => Promise<any>;
-  deleteMany: (...args: any[]) => Promise<any>;
-};
+type PrismaDelegate = Record<string, any>;
 
 // src/repositories/baseRepository.ts
 export default abstract class BaseRepository<D extends PrismaDelegate> {
   protected prismaClient: PrismaClient;
-  protected delegate: D;
+  protected delegate: PrismaDelegate;
 
   constructor(delegate: D) {
     this.prismaClient = prisma;
@@ -33,84 +20,84 @@ export default abstract class BaseRepository<D extends PrismaDelegate> {
    * Finds a unique record.
    */
   async findUnique(args: any): Promise<any> {
-    return this.delegate.findUnique(args);
+    return this.delegate.findUnique?.(args);
   }
 
   /**
    * Finds the first record.
    */
   async findFirst(args: any): Promise<any> {
-    return this.delegate.findFirst(args);
+    return this.delegate.findFirst?.(args);
   }
 
   /**
    * Finds multiple records.
    */
   async findMany(args?: any): Promise<any[]> {
-    return this.delegate.findMany(args);
+    return this.delegate.findMany?.(args) || [];
   }
 
   /**
    * Creates a new record.
    */
   async create(args: any): Promise<any> {
-    return this.delegate.create(args);
+    return this.delegate.create?.(args);
   }
 
   /**
    * Creates multiple records.
    */
   async createMany(args: any): Promise<any> {
-    return this.delegate.createMany(args);
+    return this.delegate.createMany?.(args);
   }
 
   /**
    * Updates an existing record.
    */
   async update(args: any): Promise<any> {
-    return this.delegate.update(args);
+    return this.delegate.update?.(args);
   }
 
   /**
    * Updates multiple records.
    */
   async updateMany(args: any): Promise<any> {
-    return this.delegate.updateMany(args);
+    return this.delegate.updateMany?.(args);
   }
 
   /**
    * Deletes a record.
    */
   async delete(args: any): Promise<any> {
-    return this.delegate.delete(args);
+    return this.delegate.delete?.(args);
   }
 
   /**
    * Deletes multiple records.
    */
   async deleteMany(args: any): Promise<any> {
-    return this.delegate.deleteMany(args);
+    return this.delegate.deleteMany?.(args);
   }
 
   /**
    * Upserts a record.
    */
   async upsert(args: any): Promise<any> {
-    return this.delegate.upsert(args);
+    return this.delegate.upsert?.(args);
   }
 
   /**
    * Counts records matching the criteria.
    */
   async count(args?: any): Promise<number> {
-    return this.delegate.count(args);
+    return this.delegate.count?.(args) || 0;
   }
 
   /**
    * Get records grouped by a specific field.
    */
   async groupBy(args: any): Promise<any> {
-    return this.delegate.groupBy(args);
+    return this.delegate.groupBy?.(args);
   }
 
   /**
@@ -165,8 +152,8 @@ export default abstract class BaseRepository<D extends PrismaDelegate> {
     }
 
     const [total, data] = await Promise.all([
-      this.delegate.count({ where: finalWhere }),
-      this.delegate.findMany({
+      this.delegate.count?.({ where: finalWhere }) || Promise.resolve(0),
+      this.delegate.findMany?.({
         where: finalWhere,
         skip,
         take: limit,
@@ -174,7 +161,7 @@ export default abstract class BaseRepository<D extends PrismaDelegate> {
           ? { [options.sort.field]: options.sort.direction }
           : undefined,
         ...selection,
-      }),
+      }) || Promise.resolve([]),
     ]);
 
     const totalPages = Math.ceil(total / limit);

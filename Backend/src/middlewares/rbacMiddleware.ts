@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import { createAppError } from '../utils/errorHandler';
-import logger from '../utils/logger';
-import { RBACRepository } from '../repositories/rbacRepository';
-import prisma from '../lib/prisma';
+import { createAppError } from '../utils/errorHandler.js';
+import logger from '../utils/logger.js';
+import { RBACRepository } from '../repositories/rbacRepository.js';
+import prisma from '../lib/prisma.js';
 
 const rbacRepo = new RBACRepository();
 
