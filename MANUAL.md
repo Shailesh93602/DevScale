@@ -6,27 +6,31 @@ This file tracks tasks that require manual verification in the Supabase Dashboar
 
 ## P0 — Infrastructure & Security
 
-### Key Rotation & OAuth
-- [x] Rotate Supabase JWT Secret and update all services (Backend, Frontend, GitHub Actions).
-- [x] Verify Google OAuth redirect URLs are correctly whitelisted in Supabase Dashboard and Google Cloud Console.
-- [x] Verify `SameSite=Strict` flag on all production cookies via Browser DevTools.
-
-### CI/CD & Compliance
-- [x] Enable branch protection on `main` branch (GitHub Settings: require PR, require status checks, restrict deletions).
-- [x] Audit Sentry alerts: Ensure critical errors notify `ALERT_EMAIL`.
+### Key Rotation & OAuth (Verified)
+- [x] Rotate Supabase JWT Secret and update all services. (DONE 2026-03-28)
+- [x] Verify Google OAuth redirect URLs in Supabase and Google Cloud. (DONE 2026-03-28)
+- [x] Verify `SameSite=Strict` on production cookies. (DONE 2026-03-28)
+- [x] Enable branch protection on `main`. (DONE 2026-03-28)
+- [x] Audit Sentry alerts. (DONE 2026-03-28)
 
 ---
 
 ## P1 — Audits & Verification
 
-### Code Audits
-- [x] **Leaderboard Audit**: Verify `leaderboardRepository` has no mock or hardcoded data remaining from initial development.
-- [x] **Admin Audit**: Verify `AdminAuditLog` is correctly wired to all destructive admin actions (Delete User, Delete Roadmap, Moderation).
+### Code Audits (Verified)
+- [x] **Leaderboard Audit**: No mock data remains. (DONE 2026-03-28)
+- [x] **Admin Audit**: AdminAuditLog correctly wired. (DONE 2026-03-28)
+
+### Pending Verification
 - [ ] **Email Queue**: Verify Bull email queue processes in production; manually check Redis `bull:` keys for stalls.
 
-### UI/UX Audits
-- [ ] **Mobile Touch Audit**: Audit all interactive elements on a physical device; ensure minimum 44×44px touch targets.
-- [ ] **Accessibility Audit**: Run `Lighthouse` / `axe` on critical flows (Register, Join Battle, Submit Code).
+---
+
+## UI/UX Audits
+
+### Mobile & Access (Pending)
+- [ ] **Mobile Touch Audit**: Audit interactive elements on a physical device (44×44px).
+- [ ] **Accessibility Audit**: Run `Lighthouse`/`axe` on critical flows (Register, Join Battle).
 
 ---
 

@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client';
+import { Prisma, SystemConfig } from '@prisma/client';
 import { createAppError } from '../utils/errorHandler.js';
 import { getCache, setCache, deleteCache } from '../services/cacheService.js';
 import BaseRepository from './baseRepository.js';
@@ -30,11 +30,9 @@ export default class SystemConfigRepository extends BaseRepository< SystemConfig
     category: string;
     description?: string;
   }) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const validatedValue: any =
-      data.value === null
-        ? Prisma.JsonNull
-        : structuredClone(data.value);
+    const validatedValue = (data.value === null
+      ? Prisma.JsonNull
+      : structuredClone(data.value)) as Prisma.InputJsonValue;
     const createData = {
       ...data,
       value: validatedValue,
