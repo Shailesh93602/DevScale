@@ -14,7 +14,7 @@ const options: swaggerJsdoc.Options = {
       },
       contact: {
         name: 'API Support',
-        email: 'contact@exaveltech.com',
+        email: 'contact@eduscale.com',
       },
     },
     servers: [

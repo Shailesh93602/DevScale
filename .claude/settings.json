@@ -1,8 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(grep -n \"7165f\\\\|subject\\\\|Subject\" /Users/shaileshchaudhary/Desktop/Coding/Development/Exavel/MrEngineer/Frontend/src/app/resources/[id]/Resources.tsx)",
-      "Bash(grep -rn \"7165f\\\\|Python for Data Engineering\" /Users/shaileshchaudhary/Desktop/Coding/Development/Exavel/MrEngineer/Frontend/src --include=*.tsx --include=*.ts)"
+      "Bash(grep -n \"7165f\\\\|subject\\\\|Subject\" /Users/shaileshchaudhary/Desktop/Coding/EduScale/Frontend/src/app/resources/[id]/Resources.tsx)",
+      "Bash(grep -rn \"7165f\\\\|Python for Data Engineering\" /Users/shaileshchaudhary/Desktop/Coding/EduScale/Frontend/src --include=*.tsx --include=*.ts)"
     ]
   }
 }

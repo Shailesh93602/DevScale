@@ -260,7 +260,7 @@ export const socialLinks = [
 export const contactInfo = [
   {
     id: 'email',
-    text: 'contact@exaveltech.com',
+    text: 'contact@eduscale.com',
   },
   {
     id: 'team',

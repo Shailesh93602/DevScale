@@ -5,7 +5,7 @@ import { loginAsStudent } from './utils/login';
 
 const reviewDir = process.env.BATTLE_REVIEW_DIR
   ? path.resolve(process.env.BATTLE_REVIEW_DIR)
-  : '/tmp/mrengineer-playwright/battle-zone-review';
+  : '/tmp/eduscale-playwright/battle-zone-review';
 
 const routesToReview = [
   '/battle-zone',
@@ -57,7 +57,7 @@ const waitForRouteReadyState = async (route: string, page: Page) => {
     return;
   }
 
-  await page.waitForLoadState('networkidle', { timeout: 12000 }).catch(() => {});
+  await page.waitForLoadState('networkidle', { timeout: 12000 }).catch(() => { });
 };
 
 test.describe('Battle Zone authenticated review', () => {
@@ -110,7 +110,7 @@ test.describe('Battle Zone authenticated review', () => {
           routeIssues.push(`${route}: HTTP ${response?.status()}`);
         }
 
-        await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+        await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => { });
         await expect(page.locator('body')).toBeVisible();
         await waitForRouteReadyState(route, page);
         await page.waitForTimeout(1000);
