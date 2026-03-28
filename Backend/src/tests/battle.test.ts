@@ -287,7 +287,7 @@ describe('Answer submission', () => {
     ).catch(() => null); // Will reject (duplicate) — get leaderboard directly
 
     const leaderboard = await battleRepo.getBattleLeaderboard(battleId);
-    expect(leaderboard[0].score).toBeGreaterThanOrEqual(leaderboard?.at(-1)?.score);
+    expect(leaderboard[0].score).toBeGreaterThanOrEqual(leaderboard?.at(-1)?.score ?? 0);
     expect(leaderboard[0].rank).toBe(1);
   });
 });
