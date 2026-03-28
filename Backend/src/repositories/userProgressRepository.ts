@@ -1,10 +1,10 @@
 import { ExperienceLevel, PrismaClient } from '@prisma/client';
-import BaseRepository from './baseRepository';
-import logger from '../utils/logger';
-import { createAppError } from '../utils/errorHandler';
+import BaseRepository from './baseRepository.js';
+import logger from '../utils/logger.js';
+import { createAppError } from '../utils/errorHandler.js';
 import { deleteCache, getCache, setCache } from '../services/cacheService';
 
-import prisma from '../lib/prisma';
+import prisma from '../lib/prisma.js';
 
 export default class UserProgressRepository extends BaseRepository<
   PrismaClient['userProgress']

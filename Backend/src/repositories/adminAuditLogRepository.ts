@@ -1,15 +1,16 @@
-import { SecurityAuditLog, Prisma } from '@prisma/client';
-import { createAppError } from '../utils/errorHandler';
-import logger from '../utils/logger';
-import BaseRepository from './baseRepository';
-import prisma from '../lib/prisma';
+import { AdminAuditLog, SecurityAuditLog, Prisma } from '@prisma/client';
+import { createAppError } from '../utils/errorHandler.js';
+import logger from '../utils/logger.js';
+import BaseRepository from './baseRepository.js';
+import prisma from '../lib/prisma.js';
 import {
   AuditLogParams,
   ChangeHistoryParams,
   SecurityLogParams,
-} from '../types';
+} from '../types/index.js';
 
 export default class AdminAuditLogRepository extends BaseRepository<
+  AdminAuditLog,
   typeof prisma.adminAuditLog
 > {
   constructor() {

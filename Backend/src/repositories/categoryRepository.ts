@@ -1,9 +1,9 @@
 import { PrismaClient } from '@prisma/client';
-import BaseRepository from './baseRepository';
-import { createAppError } from '../utils/errorHandler';
-import { CategoryData } from '../types';
+import BaseRepository from './baseRepository.js';
+import { createAppError } from '../utils/errorHandler.js';
+import { CategoryData } from '../types/index.js';
 
-import prisma from '../lib/prisma';
+import prisma from '../lib/prisma.js';
 
 export default class CategoryRepository extends BaseRepository<
   PrismaClient['category']

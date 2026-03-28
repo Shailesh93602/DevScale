@@ -1,10 +1,10 @@
 import { Prisma, User } from '@prisma/client';
-import BaseRepository from './baseRepository';
-import { createAppError } from '../utils/errorHandler';
-import logger from '../utils/logger';
-import prisma from '../lib/prisma';
+import BaseRepository from './baseRepository.js';
+import { createAppError } from '../utils/errorHandler.js';
+import logger from '../utils/logger.js';
+import prisma from '../lib/prisma.js';
 
-export default class UserRepository extends BaseRepository<typeof prisma.user> {
+export default class UserRepository extends BaseRepository<User, typeof prisma.user> {
   constructor() {
     super(prisma.user);
   }

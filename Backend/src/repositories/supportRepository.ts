@@ -5,17 +5,17 @@ import {
   Severity,
   Priority,
 } from '@prisma/client';
-import logger from '../utils/logger';
-import { createAppError } from '../utils/errorHandler';
+import logger from '../utils/logger.js';
+import { createAppError } from '../utils/errorHandler.js';
 import {
   BugReportData,
   FeatureRequestData,
   HelpArticleData,
   TicketData,
-} from '../types';
-import BaseRepository from './baseRepository';
+} from '../types/index.js';
+import BaseRepository from './baseRepository.js';
 
-import prisma from '../lib/prisma';
+import prisma from '../lib/prisma.js';
 
 export default class SupportRepository extends BaseRepository<
   PrismaClient['supportTicket']
