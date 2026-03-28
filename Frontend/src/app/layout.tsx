@@ -50,18 +50,16 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
-  other: {
-    'link': [
-      { rel: 'preconnect', href: 'http://localhost:4000' }, // API Origin
-      { rel: 'preconnect', href: 'https://fonts.gstatic.com' },
-      { rel: 'preconnect', href: 'https://imelyvyxycwkywurifum.supabase.co' }, // Supabase Origin
-    ],
-  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="http://localhost:4000" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://imelyvyxycwkywurifum.supabase.co" />
+      </head>
       <body
         className={`${outfit.variable} ${inter.variable} font-outfit selection:bg-primary/30 min-h-screen bg-background text-foreground antialiased selection:text-primary`}
         suppressHydrationWarning

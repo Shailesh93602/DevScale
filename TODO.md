@@ -28,7 +28,7 @@ Manual / platform tasks → [MANUAL.md](MANUAL.md)
 - [x] RedLock (`redlock` npm) for distributed locking on battle state mutations (`startBattle`, `submitAnswer`, `completeBattle`) — prevents race conditions across PM2 workers
 
 ### Features
-- [ ] Verify Bull email queue processes in production; add dead-letter queue handling
+- [x] Verify Bull email queue processes in production; add dead-letter queue handling
 - [ ] Stripe subscription billing (Free / Pro / Team tiers)
 - [ ] Feature gating middleware based on subscription tier
 
@@ -40,7 +40,7 @@ Manual / platform tasks → [MANUAL.md](MANUAL.md)
 
 ### Frontend
 - [ ] Next.js ISR on article and roadmap pages (`revalidate: 3600`)
-- [ ] `<link rel="preconnect">` to API + font origins; subset fonts
+- [x] `<link rel="preconnect">` to API + font origins; subset fonts
 - [ ] Skeleton loaders for async sections (roadmaps, battles, leaderboard)
 - [ ] Fix hamburger menu Z-index overlap on mobile
 - [ ] Fix text overflow on 375px viewport
