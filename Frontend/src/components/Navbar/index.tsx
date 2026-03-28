@@ -119,7 +119,7 @@ const Navbar = () => {
     <nav
       ref={navRef}
       className={cn(
-        'fixed inset-x-0 top-0 z-50 transition-all duration-300',
+        'fixed inset-x-0 top-0 z-[1000] transition-all duration-300',
         scrolled
           ? 'border-b border-white/5 bg-background/90 shadow-2xl backdrop-blur-2xl'
           : 'bg-transparent',

@@ -14,7 +14,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
 import {
   Search,
   Trophy,
@@ -113,17 +112,51 @@ export default function LeaderboardPage() {
   if (isLoading) {
     return (
       <BattleZoneLayout>
-        <div className="space-y-6">
-          <Skeleton className="h-12 w-3/4" />
-          <Skeleton className="h-6 w-1/2" />
-          <div className="grid gap-6 md:grid-cols-4">
-            {[1, 2, 3, 4].map((i) => (
-              <Skeleton key={i} className="h-[100px]" />
+        <div className="space-y-8 animate-pulse">
+          <div className="space-y-2">
+            <div className="h-10 w-48 rounded bg-muted" />
+            <div className="h-4 w-64 rounded bg-muted" />
+          </div>
+
+          {/* Stats Cards Skeleton */}
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {['stat-1', 'stat-2', 'stat-3', 'stat-4'].map((id) => (
+              <div key={id} className="rounded-xl border bg-card p-6">
+                <div className="flex justify-between">
+                  <div className="h-4 w-20 rounded bg-muted" />
+                  <div className="h-5 w-5 rounded bg-muted" />
+                </div>
+                <div className="mt-4 h-8 w-16 rounded bg-muted" />
+              </div>
             ))}
           </div>
+
+          {/* Filters Skeleton */}
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex gap-4">
+              <div className="h-10 w-40 rounded bg-muted" />
+              <div className="h-10 w-40 rounded bg-muted" />
+            </div>
+            <div className="h-10 w-64 rounded bg-muted" />
+          </div>
+
           <div className="space-y-4">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <Skeleton key={i} className="h-[80px]" />
+            <div className="h-10 w-full rounded bg-muted" />
+            {['row-1', 'row-2', 'row-3', 'row-4', 'row-5', 'row-6'].map((id) => (
+              <div key={id} className="flex items-center rounded-lg border p-4">
+                <div className="mr-6 h-8 w-8 rounded-full bg-muted" />
+                <div className="flex items-center gap-3 flex-1">
+                  <div className="h-10 w-10 rounded-full bg-muted" />
+                  <div className="space-y-2">
+                    <div className="h-4 w-32 rounded bg-muted" />
+                    <div className="h-3 w-20 rounded bg-muted" />
+                  </div>
+                </div>
+                <div className="hidden sm:block w-24 h-6 rounded bg-muted mx-2" />
+                <div className="hidden sm:block w-24 h-6 rounded bg-muted mx-2" />
+                <div className="hidden sm:block w-24 h-6 rounded bg-muted mx-2" />
+                <div className="w-32 h-6 rounded bg-muted ml-2" />
+              </div>
             ))}
           </div>
         </div>
@@ -143,8 +176,8 @@ export default function LeaderboardPage() {
 
         {/* Stats Cards */}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map((stat, index) => (
-            <Card key={index}>
+          {stats.map((stat) => (
+            <Card key={stat.label}>
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   {stat.label}
@@ -340,8 +373,8 @@ function LeaderboardTable({ entries }: { entries: LeaderboardEntry[] }) {
           </div>
 
           <div className="mt-2 flex w-full flex-wrap gap-2 sm:mt-0 sm:w-32 sm:justify-center">
-            {entry.badges.map((badge, index) => (
-              <Badge key={index} variant="outline" className="text-xs">
+            {entry.badges.map((badge) => (
+              <Badge key={badge} variant="outline" className="text-xs">
                 {badge}
               </Badge>
             ))}
