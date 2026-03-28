@@ -96,7 +96,10 @@ const BattleChat: React.FC<BattleChatProps> = ({
                     return (
                       <div
                         key={`${msg.user_id}-${msg.timestamp}-${index}`}
-                        className={cn('flex gap-3', isOwn && 'flex-row-reverse')}
+                        className={cn(
+                          'flex gap-3',
+                          isOwn && 'flex-row-reverse',
+                        )}
                       >
                         {/* Avatar */}
                         <Avatar className="h-8 w-8 shrink-0">
@@ -116,7 +119,12 @@ const BattleChat: React.FC<BattleChatProps> = ({
                             isOwn ? 'items-end' : 'items-start',
                           )}
                         >
-                          <div className={cn('flex items-center gap-2', isOwn && 'flex-row-reverse')}>
+                          <div
+                            className={cn(
+                              'flex items-center gap-2',
+                              isOwn && 'flex-row-reverse',
+                            )}
+                          >
                             <span className="text-xs font-medium">
                               {isOwn ? 'You' : msg.username}
                             </span>
@@ -131,8 +139,8 @@ const BattleChat: React.FC<BattleChatProps> = ({
                             className={cn(
                               'rounded-2xl px-4 py-2 text-sm leading-relaxed',
                               isOwn
-                                ? 'bg-primary text-primary-foreground rounded-tr-sm'
-                                : 'bg-muted rounded-tl-sm',
+                                ? 'rounded-tr-sm bg-primary text-primary-foreground'
+                                : 'rounded-tl-sm bg-muted',
                             )}
                           >
                             {msg.message}
@@ -157,9 +165,7 @@ const BattleChat: React.FC<BattleChatProps> = ({
           <Input
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder={
-              isConnected ? 'Type a message...' : 'Reconnecting...'
-            }
+            placeholder={isConnected ? 'Type a message...' : 'Reconnecting...'}
             disabled={!isConnected}
             className="flex-1"
             autoComplete="off"

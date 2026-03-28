@@ -132,10 +132,13 @@ const BattleCard: React.FC<BattleCardProps> = ({
   };
 
   const getSourceLabel = () => {
-    if (battle.topic?.title) return { label: battle.topic.title, icon: BookOpen };
+    if (battle.topic?.title)
+      return { label: battle.topic.title, icon: BookOpen };
     if (battle.question_source_type) {
       return {
-        label: SOURCE_TYPE_LABELS[battle.question_source_type] ?? battle.question_source_type,
+        label:
+          SOURCE_TYPE_LABELS[battle.question_source_type] ??
+          battle.question_source_type,
         icon: BookOpen,
       };
     }
@@ -146,7 +149,10 @@ const BattleCard: React.FC<BattleCardProps> = ({
     if (battle.status === 'IN_PROGRESS') {
       return { text: 'Battle is live now', color: 'text-emerald-600' };
     }
-    if ((battle.status === 'WAITING' || battle.status === 'LOBBY') && battle.start_time) {
+    if (
+      (battle.status === 'WAITING' || battle.status === 'LOBBY') &&
+      battle.start_time
+    ) {
       const start = new Date(battle.start_time);
       const diffMs = start.getTime() - Date.now();
       const isUrgent = diffMs > 0 && diffMs < 3600_000; // < 1 hour
@@ -166,11 +172,19 @@ const BattleCard: React.FC<BattleCardProps> = ({
 
     if (isUserJoined) {
       return (
-        <Button className="flex-1" onClick={handleJoin} disabled={commonDisabled}>
+        <Button
+          className="flex-1"
+          onClick={handleJoin}
+          disabled={commonDisabled}
+        >
           {battle.status === 'IN_PROGRESS' ? (
-            <><Play className="mr-2 h-4 w-4" /> Resume Battle</>
+            <>
+              <Play className="mr-2 h-4 w-4" /> Resume Battle
+            </>
           ) : (
-            <><Swords className="mr-2 h-4 w-4" /> Enter Battle</>
+            <>
+              <Swords className="mr-2 h-4 w-4" /> Enter Battle
+            </>
           )}
         </Button>
       );
@@ -185,11 +199,19 @@ const BattleCard: React.FC<BattleCardProps> = ({
         );
       }
       return (
-        <Button className="flex-1" onClick={handleJoin} disabled={commonDisabled}>
+        <Button
+          className="flex-1"
+          onClick={handleJoin}
+          disabled={commonDisabled}
+        >
           {isJoining ? (
-            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Joining...</>
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Joining...
+            </>
           ) : (
-            <><Swords className="mr-2 h-4 w-4" /> Join Battle</>
+            <>
+              <Swords className="mr-2 h-4 w-4" /> Join Battle
+            </>
           )}
         </Button>
       );
@@ -248,17 +270,20 @@ const BattleCard: React.FC<BattleCardProps> = ({
         )}
       >
         <div className="flex items-center gap-3 p-4">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1">
+          <div className="min-w-0 flex-1">
+            <div className="mb-1 flex items-center gap-2">
               <Badge className={cn('text-xs', STATUS_COLORS[battle.status])}>
                 {STATUS_LABELS[battle.status] ?? battle.status}
               </Badge>
-              <Badge variant="outline" className={cn('text-xs', getDifficultyColor(battle.difficulty))}>
+              <Badge
+                variant="outline"
+                className={cn('text-xs', getDifficultyColor(battle.difficulty))}
+              >
                 {DIFFICULTY_LABELS[battle.difficulty] ?? battle.difficulty}
               </Badge>
             </div>
-            <h3 className="font-semibold truncate">{battle.title}</h3>
-            <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
+            <h3 className="truncate font-semibold">{battle.title}</h3>
+            <div className="mt-1 flex items-center gap-3 text-xs text-muted-foreground">
               <span className="flex items-center gap-1">
                 <Users className="h-3 w-3" />
                 {battle.current_participants}/{battle.max_participants}
@@ -269,7 +294,12 @@ const BattleCard: React.FC<BattleCardProps> = ({
               </span>
             </div>
           </div>
-          <Button variant="ghost" size="sm" onClick={handleView} aria-label="View battle details">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleView}
+            aria-label="View battle details"
+          >
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
@@ -290,7 +320,7 @@ const BattleCard: React.FC<BattleCardProps> = ({
       <CardHeader className="pb-3 pt-4">
         {/* Badges row */}
         <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex flex-wrap items-center gap-2">
             <Badge
               className={cn(
                 'font-medium',
@@ -300,52 +330,66 @@ const BattleCard: React.FC<BattleCardProps> = ({
             >
               {STATUS_LABELS[battle.status] ?? battle.status}
             </Badge>
-            <Badge variant="outline" className="flex items-center gap-1 capitalize text-xs">
+            <Badge
+              variant="outline"
+              className="flex items-center gap-1 text-xs capitalize"
+            >
               {battle.type === 'QUICK' && <Timer className="h-3 w-3" />}
               {battle.type === 'SCHEDULED' && <Calendar className="h-3 w-3" />}
               {battle.type === 'PRACTICE' && <BarChart className="h-3 w-3" />}
               {battle.type.toLowerCase()}
             </Badge>
             {isUserJoined && (
-              <Badge className="bg-primary/10 text-primary border-primary/20 text-xs">
+              <Badge className="bg-primary/10 border-primary/20 text-xs text-primary">
                 Joined
               </Badge>
             )}
           </div>
-          <Badge className={cn('shrink-0 text-xs font-medium', getDifficultyColor(battle.difficulty))}>
+          <Badge
+            className={cn(
+              'shrink-0 text-xs font-medium',
+              getDifficultyColor(battle.difficulty),
+            )}
+          >
             {DIFFICULTY_LABELS[battle.difficulty] ?? battle.difficulty}
           </Badge>
         </div>
 
         {/* Title */}
-        <h3 className="mt-2 text-lg font-bold leading-tight line-clamp-2 group-hover:text-primary transition-colors">
+        <h3 className="mt-2 line-clamp-2 text-lg font-bold leading-tight transition-colors group-hover:text-primary">
           {battle.title}
         </h3>
 
         {/* Description */}
         {battle.description && (
-          <p className="text-sm text-muted-foreground line-clamp-2 mt-0.5">
+          <p className="mt-0.5 line-clamp-2 text-sm text-muted-foreground">
             {battle.description}
           </p>
         )}
       </CardHeader>
 
-      <CardContent className="pb-3 space-y-3">
+      <CardContent className="space-y-3 pb-3">
         {/* Key stats row */}
         <div className="flex items-center gap-4 text-sm">
           <div className="flex items-center gap-1.5 text-muted-foreground">
             <HelpCircle className="h-4 w-4 shrink-0" />
-            <span className="font-medium text-foreground">{battle.total_questions}</span>
+            <span className="font-medium text-foreground">
+              {battle.total_questions}
+            </span>
             <span>questions</span>
           </div>
           <div className="flex items-center gap-1.5 text-muted-foreground">
             <Timer className="h-4 w-4 shrink-0" />
-            <span className="font-medium text-foreground">{battle.time_per_question}s</span>
+            <span className="font-medium text-foreground">
+              {battle.time_per_question}s
+            </span>
             <span>each</span>
           </div>
           <div className="flex items-center gap-1.5 text-muted-foreground">
             <Trophy className="h-4 w-4 shrink-0" />
-            <span className="font-medium text-foreground">{battle.points_per_question}</span>
+            <span className="font-medium text-foreground">
+              {battle.points_per_question}
+            </span>
             <span>pts</span>
           </div>
         </div>
@@ -360,7 +404,12 @@ const BattleCard: React.FC<BattleCardProps> = ({
 
         {/* Time label */}
         {timeLabel && (
-          <div className={cn('flex items-center gap-1.5 text-sm font-medium', timeLabel.color)}>
+          <div
+            className={cn(
+              'flex items-center gap-1.5 text-sm font-medium',
+              timeLabel.color,
+            )}
+          >
             <Clock className="h-4 w-4 shrink-0" />
             <span>{timeLabel.text}</span>
           </div>
@@ -372,12 +421,14 @@ const BattleCard: React.FC<BattleCardProps> = ({
             <div className="flex items-center gap-1.5 text-muted-foreground">
               <Users className="h-4 w-4" />
               <span>
-                <span className="font-semibold text-foreground">{battle.current_participants}</span>
+                <span className="font-semibold text-foreground">
+                  {battle.current_participants}
+                </span>
                 <span> / {battle.max_participants} players</span>
               </span>
             </div>
             {isFull && (
-              <span className="text-xs text-amber-600 font-medium">Full</span>
+              <span className="text-xs font-medium text-amber-600">Full</span>
             )}
           </div>
           <Progress value={participantPercent} className="h-1.5" />
@@ -395,14 +446,22 @@ const BattleCard: React.FC<BattleCardProps> = ({
             </AvatarFallback>
           </Avatar>
           <span className="text-xs text-muted-foreground">
-            by <span className="font-medium text-foreground">{battle.creator.username}</span>
+            by{' '}
+            <span className="font-medium text-foreground">
+              {battle.creator.username}
+            </span>
           </span>
         </div>
       </CardContent>
 
-      <CardFooter className="pt-0 pb-4 flex gap-2">
+      <CardFooter className="flex gap-2 pb-4 pt-0">
         {renderPrimaryButton()}
-        <Button variant="ghost" size="sm" onClick={handleView} className="shrink-0">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleView}
+          className="shrink-0"
+        >
           Details
           <ChevronRight className="ml-1 h-3 w-3" />
         </Button>

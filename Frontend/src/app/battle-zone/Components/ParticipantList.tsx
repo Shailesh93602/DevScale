@@ -59,7 +59,9 @@ const ParticipantList: React.FC<ParticipantListProps> = ({
   // Sort participants
   const sortedParticipants = React.useMemo(() => {
     if (showRank) {
-      return [...mergedParticipants].sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
+      return [...mergedParticipants].sort(
+        (a, b) => (b.score ?? 0) - (a.score ?? 0),
+      );
     }
     return mergedParticipants;
   }, [mergedParticipants, showRank]);
@@ -78,7 +80,10 @@ const ParticipantList: React.FC<ParticipantListProps> = ({
 
   // Empty slots fill up remaining capacity
   const emptySlots = Math.max(0, maxParticipants - sortedParticipants.length);
-  const emptySlotArray = Array.from({ length: Math.min(emptySlots, 5) }, (_, i) => i);
+  const emptySlotArray = Array.from(
+    { length: Math.min(emptySlots, 5) },
+    (_, i) => i,
+  );
 
   if (isLoading) {
     return (
@@ -153,7 +158,9 @@ const ParticipantList: React.FC<ParticipantListProps> = ({
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="text-sm font-medium">{participant.username}</p>
+                      <p className="text-sm font-medium">
+                        {participant.username}
+                      </p>
                       {showRank && (
                         <p className="text-xs text-muted-foreground">
                           {participant.score ?? 0} pts
@@ -167,7 +174,10 @@ const ParticipantList: React.FC<ParticipantListProps> = ({
                       Rank #{index + 1}
                     </Badge>
                   ) : (
-                    <Badge variant="outline" className="bg-green-500/10 text-green-600 text-xs border-green-500/20">
+                    <Badge
+                      variant="outline"
+                      className="bg-green-500/10 text-green-600 border-green-500/20 text-xs"
+                    >
                       Joined
                     </Badge>
                   )}
@@ -194,7 +204,7 @@ const ParticipantList: React.FC<ParticipantListProps> = ({
                         <Skeleton className="h-8 w-8 rounded-full" />
                         <Skeleton className="h-4 w-20" />
                       </div>
-                      <Badge variant="outline" className="opacity-50 text-xs">
+                      <Badge variant="outline" className="text-xs opacity-50">
                         Open
                       </Badge>
                     </div>

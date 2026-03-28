@@ -663,7 +663,7 @@ export default function CareerPathPage() {
                                         </Button>
                                       )}
                                       {roadmapDetails?.isEnrolled && (
-                                        <div className="ml-2 inline-flex items-center gap-2 rounded-xl bg-success/10 border border-success/20 px-6 py-2.5 text-sm font-bold text-success animate-fade-up">
+                                        <div className="ml-2 inline-flex animate-fade-up items-center gap-2 rounded-xl border border-success/20 bg-success/10 px-6 py-2.5 text-sm font-bold text-success">
                                           <CheckCircle size={14} />
                                           Enrolled
                                         </div>

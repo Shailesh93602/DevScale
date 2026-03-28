@@ -1,6 +1,13 @@
 'use client';
 
-import React, { Suspense, lazy, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  Suspense,
+  lazy,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import Link from 'next/link';
 import { useAxiosGet } from '@/hooks/useAxios';
 import { useBattleStore } from '@/store/battleStore';
@@ -127,7 +134,10 @@ export const BattleList: React.FC<BattleListProps> = ({
           className="max-w-sm"
         />
         <Select value={filters.status} onValueChange={handleStatusChange}>
-          <SelectTrigger className="w-[180px]" aria-label="Filter by battle status">
+          <SelectTrigger
+            className="w-[180px]"
+            aria-label="Filter by battle status"
+          >
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>

@@ -1,4 +1,10 @@
-import { Battle, BattleParticipant, BattleStatus, BattleType, Difficulty } from '@/types/battle';
+import {
+  Battle,
+  BattleParticipant,
+  BattleStatus,
+  BattleType,
+  Difficulty,
+} from '@/types/battle';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Raw = Record<string, any>;
@@ -26,7 +32,7 @@ const toBattleType = (value: unknown): BattleType => {
     QUICK: 'QUICK',
     SCHEDULED: 'SCHEDULED',
     PRACTICE: 'PRACTICE',
-    INSTANT: 'QUICK',   // legacy alias
+    INSTANT: 'QUICK', // legacy alias
     TOURNAMENT: 'QUICK', // legacy alias
   };
   return map[t] ?? 'QUICK';
@@ -71,9 +77,14 @@ export const normalizeBattle = (battle: Raw): Battle => ({
   question_source_type: battle.question_source_type ?? null,
   question_source_id: battle.question_source_id ?? null,
   difficulty: toDifficulty(battle.difficulty),
-  max_participants: Number(battle.max_participants ?? battle.maxParticipants ?? 6),
+  max_participants: Number(
+    battle.max_participants ?? battle.maxParticipants ?? 6,
+  ),
   current_participants: Number(
-    battle.current_participants ?? battle.currentParticipants ?? battle._count?.participants ?? 0
+    battle.current_participants ??
+      battle.currentParticipants ??
+      battle._count?.participants ??
+      0,
   ),
   total_questions: Number(battle.total_questions ?? 0),
   time_per_question: Number(battle.time_per_question ?? 30),
@@ -92,7 +103,9 @@ export const normalizeBattle = (battle: Raw): Battle => ({
     : null,
   creator: {
     id: String(battle.creator?.id ?? battle.user?.id ?? ''),
-    username: String(battle.creator?.username ?? battle.user?.username ?? 'Unknown'),
+    username: String(
+      battle.creator?.username ?? battle.user?.username ?? 'Unknown',
+    ),
     avatar_url: battle.creator?.avatar_url ?? battle.user?.avatar_url ?? null,
     first_name: battle.creator?.first_name ?? battle.user?.first_name,
     last_name: battle.creator?.last_name ?? battle.user?.last_name,

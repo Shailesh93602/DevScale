@@ -25,7 +25,9 @@ async function getAccessToken(): Promise<string | null> {
   const now = Date.now();
   if (_cachedToken && now < _tokenExpiresAt) return _cachedToken;
 
-  const { data: { session } } = await supabaseClient.auth.getSession();
+  const {
+    data: { session },
+  } = await supabaseClient.auth.getSession();
   if (!session?.access_token) {
     _cachedToken = null;
     _tokenExpiresAt = 0;

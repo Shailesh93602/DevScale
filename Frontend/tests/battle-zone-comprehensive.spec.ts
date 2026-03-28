@@ -33,7 +33,9 @@ test.describe('Battle Zone — public list page', () => {
     page.on('pageerror', (err) => errors.push(err.message));
 
     await gotoWithRetry(page, BATTLE_ZONE);
-    await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+    await page
+      .waitForLoadState('networkidle', { timeout: 15000 })
+      .catch(() => {});
 
     expect(errors).toHaveLength(0);
   });
@@ -42,11 +44,13 @@ test.describe('Battle Zone — public list page', () => {
     test.setTimeout(120_000);
     await loginAsStudent(page);
     await gotoWithRetry(page, BATTLE_ZONE);
-    await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+    await page
+      .waitForLoadState('networkidle', { timeout: 15000 })
+      .catch(() => {});
 
-    await expect(
-      page.getByText(/battle zone/i).first()
-    ).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText(/battle zone/i).first()).toBeVisible({
+      timeout: 10000,
+    });
   });
 
   test('shows "Create Battle" button', async ({ page }) => {
@@ -54,28 +58,42 @@ test.describe('Battle Zone — public list page', () => {
     await loginAsStudent(page);
     await gotoWithRetry(page, BATTLE_ZONE);
     await expect(
-      page.getByRole('link', { name: /create battle/i }).first()
+      page.getByRole('link', { name: /create battle/i }).first(),
     ).toBeVisible({ timeout: 10000 });
   });
 
-  test('battle cards show human-readable status labels, not raw enums', async ({ page }) => {
+  test('battle cards show human-readable status labels, not raw enums', async ({
+    page,
+  }) => {
     await gotoWithRetry(page, BATTLE_ZONE);
-    await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+    await page
+      .waitForLoadState('networkidle', { timeout: 15000 })
+      .catch(() => {});
 
     // Wait briefly for battle cards to render
     await page.waitForTimeout(2000);
 
     const body = await page.locator('body').innerText();
     // If there are any battle cards, their status badges must be human-readable
-    const rawEnums = ['IN_PROGRESS', 'WAITING', 'COMPLETED', 'CANCELLED', 'LOBBY'];
+    const rawEnums = [
+      'IN_PROGRESS',
+      'WAITING',
+      'COMPLETED',
+      'CANCELLED',
+      'LOBBY',
+    ];
     for (const raw of rawEnums) {
       expect(body).not.toContain(raw);
     }
   });
 
-  test('difficulty labels are human-readable (not EASY/MEDIUM/HARD)', async ({ page }) => {
+  test('difficulty labels are human-readable (not EASY/MEDIUM/HARD)', async ({
+    page,
+  }) => {
     await gotoWithRetry(page, BATTLE_ZONE);
-    await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+    await page
+      .waitForLoadState('networkidle', { timeout: 15000 })
+      .catch(() => {});
     await page.waitForTimeout(2000);
 
     const body = await page.locator('body').innerText();
@@ -95,7 +113,9 @@ test.describe('Battle Zone — statistics page', () => {
     page.on('pageerror', (err) => errors.push(err.message));
 
     await gotoWithRetry(page, `${BATTLE_ZONE}/statistics`);
-    await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+    await page
+      .waitForLoadState('networkidle', { timeout: 15000 })
+      .catch(() => {});
 
     expect(errors).toHaveLength(0);
   });
@@ -107,7 +127,9 @@ test.describe('Battle Zone — statistics page', () => {
     page.on('pageerror', (err) => errors.push(err.message));
 
     await gotoWithRetry(page, `${BATTLE_ZONE}/statistics`);
-    await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+    await page
+      .waitForLoadState('networkidle', { timeout: 15000 })
+      .catch(() => {});
 
     expect(errors).toHaveLength(0);
   });
@@ -116,18 +138,24 @@ test.describe('Battle Zone — statistics page', () => {
     test.setTimeout(120_000);
     await loginAsStudent(page);
     await gotoWithRetry(page, `${BATTLE_ZONE}/statistics`);
-    await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+    await page
+      .waitForLoadState('networkidle', { timeout: 15000 })
+      .catch(() => {});
     await page.waitForTimeout(2000);
 
     const body = await page.locator('body').innerText();
     expect(body).not.toContain('NaN');
   });
 
-  test('win rate stat shows a percentage or "--" (never raw NaN)', async ({ page }) => {
+  test('win rate stat shows a percentage or "--" (never raw NaN)', async ({
+    page,
+  }) => {
     test.setTimeout(120_000);
     await loginAsStudent(page);
     await gotoWithRetry(page, `${BATTLE_ZONE}/statistics`);
-    await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+    await page
+      .waitForLoadState('networkidle', { timeout: 15000 })
+      .catch(() => {});
     await page.waitForTimeout(2000);
 
     const body = await page.locator('body').innerText();
@@ -141,10 +169,14 @@ test.describe('Battle Zone — statistics page', () => {
 test.describe('Battle Zone — layout header stats (authenticated)', () => {
   test.setTimeout(120_000);
 
-  test('win rate in header shows a % or "--" but never NaN%', async ({ page }) => {
+  test('win rate in header shows a % or "--" but never NaN%', async ({
+    page,
+  }) => {
     await loginAsStudent(page);
     await gotoWithRetry(page, `${BATTLE_ZONE}/create`);
-    await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+    await page
+      .waitForLoadState('networkidle', { timeout: 15000 })
+      .catch(() => {});
     await page.waitForTimeout(2000);
 
     const body = await page.locator('body').innerText();
@@ -160,22 +192,34 @@ test.describe('Battle Zone — create flow button labels', () => {
   test('step 1 shows "Next" button', async ({ page }) => {
     await loginAsStudent(page);
     await gotoWithRetry(page, `${BATTLE_ZONE}/create`);
-    await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+    await page
+      .waitForLoadState('networkidle', { timeout: 15000 })
+      .catch(() => {});
 
     // Shadcn <Form> is FormProvider (context only), not a <form> element — use page directly.
     // Use exact: true to avoid matching Next.js Dev Tools button (aria-label="Open Next.js Dev Tools")
-    await expect(page.getByRole('button', { name: 'Next', exact: true })).toBeVisible({ timeout: 10000 });
-    await expect(page.getByRole('button', { name: /^create battle$/i })).not.toBeVisible();
+    await expect(
+      page.getByRole('button', { name: 'Next', exact: true }),
+    ).toBeVisible({ timeout: 10000 });
+    await expect(
+      page.getByRole('button', { name: /^create battle$/i }),
+    ).not.toBeVisible();
   });
 
   test('step 2 shows "Next" button (not "Create Battle")', async ({ page }) => {
     await loginAsStudent(page);
     await gotoWithRetry(page, `${BATTLE_ZONE}/create`);
-    await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+    await page
+      .waitForLoadState('networkidle', { timeout: 15000 })
+      .catch(() => {});
 
     // Fill step 1 and advance
-    await page.getByPlaceholder('Enter a catchy title').fill(`Label Test ${Date.now()}`);
-    await page.getByPlaceholder('Describe what this battle is about').fill('Testing step labels.');
+    await page
+      .getByPlaceholder('Enter a catchy title')
+      .fill(`Label Test ${Date.now()}`);
+    await page
+      .getByPlaceholder('Describe what this battle is about')
+      .fill('Testing step labels.');
 
     // Use exact: true to avoid matching Next.js Dev Tools button
     const nextBtn = page.getByRole('button', { name: 'Next', exact: true });
@@ -184,20 +228,28 @@ test.describe('Battle Zone — create flow button labels', () => {
 
     // Step 2: Subject/Topic
     await expect(nextBtn).toBeVisible({ timeout: 10000 });
-    await expect(page.getByRole('button', { name: /^create battle$/i })).not.toBeVisible();
+    await expect(
+      page.getByRole('button', { name: /^create battle$/i }),
+    ).not.toBeVisible();
   });
 
   test('step 3 shows "Next" button (not "Create Battle")', async ({ page }) => {
     await loginAsStudent(page);
     await gotoWithRetry(page, `${BATTLE_ZONE}/create`);
-    await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+    await page
+      .waitForLoadState('networkidle', { timeout: 15000 })
+      .catch(() => {});
 
     // Use exact: true to avoid matching Next.js Dev Tools button
     const nextBtn = page.getByRole('button', { name: 'Next', exact: true });
 
     // Step 1 → 2
-    await page.getByPlaceholder('Enter a catchy title').fill(`Step3 Test ${Date.now()}`);
-    await page.getByPlaceholder('Describe what this battle is about').fill('Testing step 3 label.');
+    await page
+      .getByPlaceholder('Enter a catchy title')
+      .fill(`Step3 Test ${Date.now()}`);
+    await page
+      .getByPlaceholder('Describe what this battle is about')
+      .fill('Testing step 3 label.');
     await expect(nextBtn).toBeEnabled({ timeout: 10000 });
     await nextBtn.click();
 
@@ -214,7 +266,9 @@ test.describe('Battle Zone — create flow button labels', () => {
 
     // Step 3: Schedule & Settings — must show "Next", not "Create Battle"
     await expect(nextBtn).toBeVisible({ timeout: 10000 });
-    await expect(page.getByRole('button', { name: /^create battle$/i })).not.toBeVisible();
+    await expect(
+      page.getByRole('button', { name: /^create battle$/i }),
+    ).not.toBeVisible();
   });
 });
 
@@ -224,11 +278,15 @@ test.describe('Battle Zone — detail page labels', () => {
   test('detail page shows no raw enum status values', async ({ page }) => {
     // Navigate to list first, grab the first battle link if any
     await gotoWithRetry(page, BATTLE_ZONE);
-    await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+    await page
+      .waitForLoadState('networkidle', { timeout: 15000 })
+      .catch(() => {});
     await page.waitForTimeout(2000);
 
     // Find a "View Details" or battle card link
-    const detailLink = page.getByRole('button', { name: /view details/i }).first();
+    const detailLink = page
+      .getByRole('button', { name: /view details/i })
+      .first();
     const hasDetails = await detailLink.isVisible().catch(() => false);
 
     if (!hasDetails) {
@@ -237,7 +295,9 @@ test.describe('Battle Zone — detail page labels', () => {
     }
 
     await detailLink.click();
-    await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+    await page
+      .waitForLoadState('networkidle', { timeout: 15000 })
+      .catch(() => {});
     await page.waitForTimeout(2000);
 
     await expect(hasNoRawEnums(page)).resolves.toBe(true);

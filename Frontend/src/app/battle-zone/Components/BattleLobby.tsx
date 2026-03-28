@@ -91,7 +91,12 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
         (battle.status === 'WAITING' || battle.status === 'LOBBY') &&
         battle.current_participants >= 2,
     );
-  }, [isCreator, allParticipantsReady, battle.status, battle.current_participants]);
+  }, [
+    isCreator,
+    allParticipantsReady,
+    battle.status,
+    battle.current_participants,
+  ]);
 
   const onStartBattleRef = useRef(onStartBattle);
   onStartBattleRef.current = onStartBattle;
@@ -171,7 +176,10 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).then(
       () => {
-        toast({ title: 'Battle link copied to clipboard!', variant: 'default' });
+        toast({
+          title: 'Battle link copied to clipboard!',
+          variant: 'default',
+        });
       },
       () => {
         toast({ title: 'Failed to copy battle link', variant: 'destructive' });
@@ -198,14 +206,20 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
       >
         <div className="flex items-center gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">{battle.title}</h1>
+            <h1 className="text-2xl font-bold tracking-tight">
+              {battle.title}
+            </h1>
             <p className="mt-1 text-muted-foreground">
               Waiting for participants to join and get ready
             </p>
           </div>
           <Badge
             variant={
-              isConnected ? 'default' : hasConnectedOnce ? 'destructive' : 'secondary'
+              isConnected
+                ? 'default'
+                : hasConnectedOnce
+                  ? 'destructive'
+                  : 'secondary'
             }
             className="animate-pulse"
           >
@@ -385,7 +399,8 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
             <div className="flex items-center space-x-2">
               <Users className="h-4 w-4 text-muted-foreground" />
               <span>
-                {battle.current_participants}/{battle.max_participants} Participants
+                {battle.current_participants}/{battle.max_participants}{' '}
+                Participants
               </span>
             </div>
             <div className="flex items-center space-x-2">
@@ -409,13 +424,16 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
         <CardHeader>
           <CardTitle>Participants</CardTitle>
           <CardDescription>
-            {battle.current_participants} of {battle.max_participants} spots filled
+            {battle.current_participants} of {battle.max_participants} spots
+            filled
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <Progress
-              value={(battle.current_participants / battle.max_participants) * 100}
+              value={
+                (battle.current_participants / battle.max_participants) * 100
+              }
               className="h-2"
             />
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -425,7 +443,9 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
                   className="flex items-center space-x-4 rounded-lg border p-4"
                 >
                   <Avatar>
-                    <AvatarImage src={participant.user.avatar_url ?? undefined} />
+                    <AvatarImage
+                      src={participant.user.avatar_url ?? undefined}
+                    />
                     <AvatarFallback>
                       {participant.user.username.charAt(0).toUpperCase()}
                     </AvatarFallback>
@@ -458,7 +478,10 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
           {isLeaving ? 'Leaving Battle...' : 'Leave Battle'}
         </Button>
         {isCreator && (
-          <Button onClick={handleStartBattle} disabled={!canStartNow || isStarting}>
+          <Button
+            onClick={handleStartBattle}
+            disabled={!canStartNow || isStarting}
+          >
             {isStarting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
