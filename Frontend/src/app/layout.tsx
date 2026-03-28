@@ -1,4 +1,4 @@
-import { Inter } from 'next/font/google';
+import { Inter, Outfit } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import App from './App';
@@ -11,7 +11,8 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import Loader from '@/components/Loader';
 import type { Metadata } from 'next';
 
-const inter = Inter({ subsets: ['latin'], fallback: [] });
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit' });
 
 export const metadata: Metadata = {
   title: {
@@ -49,13 +50,20 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  other: {
+    'link': [
+      { rel: 'preconnect', href: 'http://localhost:4000' }, // API Origin
+      { rel: 'preconnect', href: 'https://fonts.gstatic.com' },
+      { rel: 'preconnect', href: 'https://imelyvyxycwkywurifum.supabase.co' }, // Supabase Origin
+    ],
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.className} selection:bg-primary/30 min-h-screen bg-background text-foreground antialiased selection:text-primary`}
+        className={`${outfit.variable} ${inter.variable} font-outfit selection:bg-primary/30 min-h-screen bg-background text-foreground antialiased selection:text-primary`}
         suppressHydrationWarning
       >
         <ThemeProvider

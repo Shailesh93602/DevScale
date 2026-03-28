@@ -1,15 +1,15 @@
 import { Request, Response } from 'express';
-import { catchAsync } from '../utils/index';
-import { sendResponse } from '../utils/apiResponse';
-import RoadmapRepository from '../repositories/roadmapRepository';
+import { catchAsync } from '../utils/index.js';
+import { sendResponse } from '../utils/apiResponse.js';
+import RoadmapRepository from '../repositories/roadmapRepository.js';
 import { Prisma, Difficulty, RoadmapCategory } from '@prisma/client';
-import UserRoadmapRepository from '../repositories/userRoadmapRepository';
-import RoadmapCategoryRepository from '../repositories/roadmapCategoryRepository';
-import prisma from '../lib/prisma';
-import { invalidatePattern, getCached, setCached } from '../services/memoryCache';
-import { invalidateCachePattern } from '../services/cacheService';
-import { createAppError } from '../utils/errorHandler';
-import { assertOwnership } from '../utils/assertOwnership';
+import UserRoadmapRepository from '../repositories/userRoadmapRepository.js';
+import RoadmapCategoryRepository from '../repositories/roadmapCategoryRepository.js';
+import prisma from '../lib/prisma.js';
+import { invalidatePattern, getCached, setCached } from '../services/memoryCache.js';
+import { invalidateCachePattern } from '../services/cacheService.js';
+import { createAppError } from '../utils/errorHandler.js';
+import { assertOwnership } from '../utils/assertOwnership.js';
 
 interface RoadmapDetail {
   id: string;
@@ -316,7 +316,8 @@ export default class RoadmapController {
     });
 
     invalidatePattern(`roadmap:detail:${roadmapId}`);
-    invalidatePattern(`roadmaps:list:${userId}`); // Invalidate user's list cache
+    invalidatePattern(`roadmaps:list:${userId}`); 
+    invalidatePattern(`dashboard:summary:${userId}`); // Ensure dashboard shows new enrollment
     await invalidateCachePattern(`roadmap:detail:${roadmapId}:${userId}`);
 
     return sendResponse(res, 'ROADMAP_ENROLLED', { data: null });
@@ -396,6 +397,7 @@ export default class RoadmapController {
         },
       });
       invalidatePattern(`roadmap:detail:${roadmapId}`);
+      invalidatePattern(`dashboard:summary:${userId}`); // Ensure dashboard reflects change
       return sendResponse(res, 'ROADMAP_UNBOOKMARKED', { data: null });
     }
 
@@ -407,6 +409,7 @@ export default class RoadmapController {
     });
 
     invalidatePattern(`roadmap:detail:${roadmapId}`);
+    invalidatePattern(`dashboard:summary:${userId}`); // Ensure dashboard reflects change
     return sendResponse(res, 'ROADMAP_BOOKMARKED', { data: null });
   });
 
