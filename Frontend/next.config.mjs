@@ -30,7 +30,7 @@ export default withSentryConfig(nextConfig, {
 
   org: 'exavel-technologies',
 
-  project: 'javascript-nextjs',
+  project: 'eduscale-personal-frontend',
 
   // Only print logs for uploading source maps in CI
   silent: !process.env.CI,
