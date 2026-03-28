@@ -26,7 +26,7 @@ export const getFunctionName = (signature: string): string => {
   return 'solution'; // fallback
 };
 
-export const wrapCode = (code: string, language: string, challenge: Challenge, input: string): string => {
+export const wrapCode = (code: string, language: string, challenge: Challenge): string => {
   const functionName = getFunctionName(challenge.function_signature);
 
   switch (language.toLowerCase()) {

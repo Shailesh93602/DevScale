@@ -122,7 +122,7 @@ export default class CodeController {
       }
 
       const executionPromises = testCasesToRun.map(async (tc) => {
-        const wrapped = challenge ? wrapCode(code, language, challenge, tc.input) : code;
+        const wrapped = challenge ? wrapCode(code, language, challenge) : code;
         try {
           const execResult = await executeCode({
             code: wrapped,

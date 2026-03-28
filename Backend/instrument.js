@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 const Sentry = require("@sentry/node");
 
 Sentry.init({

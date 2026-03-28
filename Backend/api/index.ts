@@ -1,5 +1,4 @@
-import path from 'path';
-// @ts-ignore
+import path from 'node:path';
 import moduleAlias from 'module-alias';
 
 // Register aliases programmatically for Vercel
@@ -19,7 +18,7 @@ moduleAlias.addAliases({
 });
 
 
-// @ts-ignore
+// @ts-expect-error: build folder not yet created during lint
 import app from '../dist/main.js';
 
 export default app;

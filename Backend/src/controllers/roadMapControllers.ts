@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { catchAsync } from '../utils/index';
 import { sendResponse } from '../utils/apiResponse';
 import RoadmapRepository from '../repositories/roadmapRepository';
-import { Prisma } from '@prisma/client';
+import { Prisma, Difficulty, RoadmapCategory } from '@prisma/client';
 import UserRoadmapRepository from '../repositories/userRoadmapRepository';
 import RoadmapCategoryRepository from '../repositories/roadmapCategoryRepository';
 import prisma from '../lib/prisma';
@@ -134,7 +134,7 @@ export default class RoadmapController {
     } = req.body;
 
     // Map frontend difficulty values to Prisma enum
-    const difficultyMap: Record<string, any> = {
+    const difficultyMap: Record<string, Difficulty> = {
       'BEGINNER': 'EASY',
       'INTERMEDIATE': 'MEDIUM',
       'ADVANCED': 'HARD',
@@ -317,7 +317,7 @@ export default class RoadmapController {
   public getRoadmapCategories = catchAsync(
     async (req: Request, res: Response) => {
       const CATEGORIES_CACHE_KEY = 'roadmaps:categories:all';
-      let categories = getCached<any[]>(CATEGORIES_CACHE_KEY);
+      let categories = getCached<RoadmapCategory[]>(CATEGORIES_CACHE_KEY);
       if (!categories) {
         categories = await this.roadmapCategoryRepo.findMany();
         setCached(CATEGORIES_CACHE_KEY, categories, 10 * 60); // 10 minutes
