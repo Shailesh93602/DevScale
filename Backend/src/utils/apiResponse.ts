@@ -1,6 +1,5 @@
 import { Response } from 'express';
 import logger from './logger';
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 type ResponseType =
   | 'TOPICS_FETCHED'
@@ -1122,9 +1121,9 @@ export const sendResponse = (
   res: Response,
   type: ResponseType,
   options?: {
-    data?: any;
-    error?: any;
-    meta?: any;
+    data?: unknown;
+    error?: unknown;
+    meta?: unknown;
   }
 ) => {
   const config = RESPONSE_MESSAGES[type];

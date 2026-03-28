@@ -1,7 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { createAppError } from '../middlewares/errorHandler';
-import { invalidatePattern } from '../services/memoryCache';
-import { getCache, setCache } from '../services/cacheService';
+import { getCache, setCache, invalidateCachePattern } from '../services/cacheService';
 import BaseRepository from './baseRepository';
 import prisma from '../lib/prisma';
 import { isUuid } from '../utils/slugify';
@@ -14,7 +13,7 @@ import {
   SubjectOrder,
   TopicData,
 } from '../types';
-import { invalidateCachePattern } from '../services/cacheService';
+
 import { Request } from 'express';
 
 export default class RoadmapRepository extends BaseRepository<
@@ -124,7 +123,7 @@ export default class RoadmapRepository extends BaseRepository<
   async getRoadmap(idOrSlug: string, userId?: string) {
     const id = await this.resolveRoadmapId(idOrSlug);
     const cacheKey = `roadmap:detail:${id}:${userId || 'anon'}`;
-    const cached = await getCache<any>(cacheKey);
+    const cached = await getCache<unknown>(cacheKey);
     if (cached) return cached;
 
     // 1. Fetch flat roadmap info + counts (+ likes/bookmarks if logged in)
@@ -149,7 +148,7 @@ export default class RoadmapRepository extends BaseRepository<
     // 2. Fetch the entire nested concept tree using a single raw SQL query with JSON aggregation.
     // This offloads the heavy JOINs and array grouping to Postgres (written in C) instead of
     // transferring thousands of flattened rows to Node.js for Prisma to group.
-    const conceptsPromise = this.prismaClient.$queryRaw<{ main_concepts: any }[]>`
+    const conceptsPromise = this.prismaClient.$queryRaw<{ main_concepts: unknown }[]>`
       SELECT 
         COALESCE(
           jsonb_agg(
@@ -509,20 +508,18 @@ export default class RoadmapRepository extends BaseRepository<
   }
 
   async getAllRoadmaps(req: Request, where?: Prisma.RoadmapWhereInput) {
-    const {
-      limit = 10,
-      page = 1,
-      search = '',
-      category,
-      difficulty,
-      sort = 'popular', // Default sort
-    } = req.query;
+    const limit = Number(req.query.limit) || 10;
+    const page = Number(req.query.page) || 1;
+    const search = String(req.query.search || '');
+    const category = req.query.category ? String(req.query.category) : '';
+    const difficulty = req.query.difficulty ? String(req.query.difficulty) : '';
+    const sort = String(req.query.sort || 'popular');
     const userId = req.user?.id;
 
     // ─── Cache Key ───
     // Cache key encodes all query params + userId (guests share a cache)
     const cacheKey = `roadmaps:list:${userId || 'guest'}:${sort}:${page}:${limit}:${search}:${category || ''}:${difficulty || ''}:${JSON.stringify(where || {})}`;
-    const cached = await getCache<{ data: any[]; meta: Record<string, unknown> }>(cacheKey);
+    const cached = await getCache<{ data: unknown[]; meta: Record<string, unknown> }>(cacheKey);
     if (cached) return cached;
 
     // Build where clause with additional filters
@@ -661,7 +658,11 @@ export default class RoadmapRepository extends BaseRepository<
     const userProgressMap: Record<string, number> = {};
     if (userId && roadmaps.data.length > 0) {
       // Get all topic IDs for these roadmaps
-      const roadmapTopicIds = (roadmaps.data as any[]).flatMap((roadmap) =>
+      const roadmapsData = roadmaps.data as unknown as Array<{
+        id: string;
+        topics?: Array<{ topic: { id: string; title: string } }>;
+      }>;
+      const roadmapTopicIds = roadmapsData.flatMap((roadmap) =>
         (roadmap.topics || []).map((t: { topic: { id: string } }) => t.topic.id)
       );
 
@@ -686,7 +687,10 @@ export default class RoadmapRepository extends BaseRepository<
         );
 
         // Calculate progress for each roadmap
-        (roadmaps.data as any[]).forEach((roadmap) => {
+        (roadmaps.data as unknown as Array<{
+          id: string;
+          topics?: Array<{ topic: { id: string } }>;
+        }>).forEach((roadmap) => {
           if (roadmap.id && roadmap.topics) {
             const roadmapTopics = roadmap.topics.map(
               (t: { topic: { id: string } }) => t.topic.id
