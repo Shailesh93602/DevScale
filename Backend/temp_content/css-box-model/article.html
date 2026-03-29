@@ -1,0 +1,30 @@
+<section aria-labelledby="box-model-title">
+  <h1 id="box-model-title">The CSS Box Model: The Foundation of Every Layout</h1>
+  
+  <p>Every HTML element is essentially a rectangular "box." The **CSS Box Model** is the set of rules the browser uses to determine the size and space around those boxes. Mastering the box model is the single most important step in learning to build complex web layouts.</p>
+
+  <h2>The Four Components of the Box</h2>
+  <ul>
+    <li><strong>Content (The Center):</strong> Where the actual text or image lives.</li>
+    <li><strong>Padding (Inside):</strong> The clear area directly around the content (inside the border).</li>
+    <li><strong>Border (The Edge):</strong> The line that goes around the padding and content.</li>
+    <li><strong>Margin (Outside):</strong> The clear area outside the border that separates the element from its neighbors.</li>
+  </ul>
+
+  <h2>Calculating the Total Width</h2>
+  <p>By default, the <code>width</code> property only refers to the **Content** area. If you add padding and a border, the actual space the box takes up will be larger than what you specified.</p>
+  <pre><code>Total Width = width + padding-left + padding-right + border-left + border-right</code></pre>
+
+  <h2>The <code>box-sizing</code> Property</h2>
+  <p>To make layout easier, most modern developers use <code>box-sizing: border-box;</code>. This tells the browser that your <code>width</code> and <code>height</code> should include the padding and border, so the box never grows larger than you intended.</p>
+  <pre><code>* {
+  box-sizing: border-box;
+}</code></pre>
+
+  <h2>Developer Tools Inspection</h2>
+  <p>You can see the box model of any element by opening the **Elements** panel in Chrome DevTools and scrolling down to the bottom of the **Styles** or **Computed** tab. It shows a visual diagram of the margin, border, padding, and content.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Use <code>box-sizing: border-box;</code> for all your elements. It's much more intuitive and will save you from "mystery" layout shifts that occur when you add a border to a previously styled element.</p>
+  </aside>
+</section>

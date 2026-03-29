@@ -1,0 +1,62 @@
+{
+  "title": "CSS Basics Quiz",
+  "description": "Test your knowledge of the essential rules for styling your web content using Cascading Style Sheets.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "What is the primary role of 'CSS' (Cascading Style Sheets) in a web application?",
+      "options": [
+        "To define the website's visual styling and layout (colors, fonts, etc.).",
+        "To provide a database that is only accessible during a specific time on the server.",
+        "To help users write HTML code using templates.",
+        "Both 'To define the website's visual styling' and 'To provide a database' are correct."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which of these is the MOST recommended way to apply styles to a professional website?",
+      "options": [
+        "Inlined directly on each element.",
+        "In a separate external .css file linked via the &lt;link&gt; tag.",
+        "In a separate font file.",
+        "Only through JavaScript."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "In a CSS rule (e.g., 'p { color: blue; }'), what is the 'p' part called?",
+      "options": [
+        "Selector",
+        "Declaration",
+        "Rule",
+        "Property"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "In a CSS rule (e.g., 'p { color: blue; }'), what is the 'color: blue;' part called?",
+      "options": [
+        "Selector",
+        "Declaration Block",
+        "Rule",
+        "Property"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "The 'Cascading' part of CSS means that the browser uses a specific set of rules (Importance, Specificity, Source Order) to decide which style ________?",
+      "options": [
+        "Wins / is applied to an element.",
+        "Is hidden from the user.",
+        "Is translated into a different language.",
+        "Is automatically minified."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

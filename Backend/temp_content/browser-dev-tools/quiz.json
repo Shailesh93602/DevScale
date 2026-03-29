@@ -1,0 +1,62 @@
+{
+  "title": "Browser Developer Tools Quiz",
+  "description": "Test your knowledge of the essential panels and features found in modern web browser dev tools.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "What happens when you change an HTML tag's content in the Elements panel of DevTools?",
+      "options": [
+        "The change is saved forever in the original source code.",
+        "The change is applied live to the page, but disappears when the page is refreshed.",
+        "The change only affects the browser's console.",
+        "Nothing happens until you click 'Save'."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which panel is primarily used to view JavaScript logs and execute scripts live against the page?",
+      "options": [
+        "Network",
+        "Performance",
+        "Console",
+        "Application"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which tool should you use to simulate an iPhone or Android device inside your desktop browser?",
+      "options": [
+        "Device Mode / Mobile Simulation",
+        "Inspector Mode",
+        "Source Editor",
+        "Network Throttling"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "In which panel can you see every single file (images, scripts, styles) that the browser is downloading?",
+      "options": [
+        "Elements",
+        "Network",
+        "Sources",
+        "Memory"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the fastest way to find a specific HTML element in the DevTools?",
+      "options": [
+        "Scroll through the entire Elements panel.",
+        "Right-click the element on the actual page and select 'Inspect'.",
+        "Check the Network panel.",
+        "Use the Console to write a script."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

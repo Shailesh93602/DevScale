@@ -1,0 +1,28 @@
+<section aria-labelledby="i18n-title">
+  <h1 id="i18n-title">Internationalization (i18n) and Localization (l10n)</h1>
+  
+  <p>To reach a global audience, your website must be designed to adapt to different languages, regions, and cultures. This involves two distinct processes: <strong>Internationalization</strong> (building the system to support multiple languages) and <strong>Localization</strong> (translating and adapting content for a specific region).</p>
+
+  <h2>The <code>lang</code> Attribute</h2>
+  <p>The most basic step in i18n is declaring the language of your document. This helps search engines, speech synthesizers, and translation tools understand your content.</p>
+  <pre><code>&lt;html lang="en"&gt;
+&lt;html lang="fr-CA"&gt; &lt;!-- French (Canada) --&gt;</code></pre>
+
+  <h2>Document Direction: LTR vs. RTL</h2>
+  <p>While most Western languages are written Left-to-Right (LTR), languages like Arabic and Hebrew are written Right-to-Left (RTL). You can control this using the <code>dir</code> attribute.</p>
+  <pre><code>&lt;body dir="rtl"&gt;</code></pre>
+
+  <h2>Character Encoding (UTF-8)</h2>
+  <p>Always use UTF-8 encoding to ensure that characters from all languages are displayed correctly. This should be the first meta tag in your <code>&lt;head&gt;</code>.</p>
+  <pre><code>&lt;meta charset="UTF-8"&gt;</code></pre>
+
+  <h2>Adapting Layouts for Text Length</h2>
+  <p>Locating content often changes the length of strings. For example, a word in English might be twice as long in German. To handle this, avoid fixed widths for containers and use flexible CSS layouts like Flexbox or Grid.</p>
+
+  <h2>Formatting Dates, Numbers, and Currency</h2>
+  <p>Localization also involves formatting data according to local customs (e.g., <code>MM/DD/YYYY</code> in the US vs. <code>DD/MM/YYYY</code> in Europe). While HTML provides the structure, the JavaScript <code>Intl</code> object is often used to handle the actual formatting logic.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Use the <code>&lt;time&gt;</code> element with the <code>datetime</code> attribute. This provides a machine-readable date that can be automatically localized by the user's browser or translation tools.</p>
+  </aside>
+</section>
