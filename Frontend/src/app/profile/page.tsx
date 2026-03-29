@@ -466,7 +466,7 @@ export default function ProfilePage() {
                     </h3>
                     <div className="border-primary/10 rounded-xl border bg-card/50 p-4 shadow-inner">
                       <p className="animate-pulse-slow text-base italic leading-relaxed text-muted-foreground">
-                        "{profile.note}"
+                        &ldquo;{profile.note}&rdquo;
                       </p>
                     </div>
                   </CardContent>

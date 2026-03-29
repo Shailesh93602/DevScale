@@ -1,3 +1,4 @@
+import type { User } from '@prisma/client';
 import BaseRepository from './baseRepository.js';
 import prisma from '../lib/prisma.js';
 import {

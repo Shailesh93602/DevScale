@@ -4,8 +4,8 @@ import {
   Status,
   AuditLog,
   Content,
-  PrismaClient,
 } from '@prisma/client';
+import type { User } from '@prisma/client';
 import { createAppError } from '../utils/errorHandler.js';
 import logger from '../utils/logger.js';
 import { getCache, setCache } from '../services/cacheService';

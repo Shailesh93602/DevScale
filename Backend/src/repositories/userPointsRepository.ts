@@ -1,5 +1,5 @@
 import BaseRepository from './baseRepository.js';
-import { PrismaClient } from '@prisma/client';
+import type { UserPoints } from '@prisma/client';
 
 import prisma from '../lib/prisma.js';
 

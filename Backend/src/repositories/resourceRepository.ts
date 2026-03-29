@@ -1,4 +1,4 @@
-import { PrismaClient, Resource } from '@prisma/client';
+import { Resource } from '@prisma/client';
 import { createAppError } from '../utils/errorHandler.js';
 import { getCache, setCache, deleteCache } from '../services/cacheService';
 import BaseRepository from './baseRepository.js';

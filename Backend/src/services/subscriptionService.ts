@@ -1,8 +1,8 @@
+import Stripe from 'stripe';
 import { stripe } from '../lib/stripe.js';
 import SubscriptionRepository from '../repositories/subscriptionRepository.js';
 import UserRepository from '../repositories/userRepository.js';
 import { env } from '../config/env.js';
-import logger from '../utils/logger.js';
 import { createAppError } from '../utils/errorHandler.js';
 
 const subscriptionRepo = new SubscriptionRepository();
@@ -49,34 +49,32 @@ export async function createPortalSession(userId: string) {
   return session.url;
 }
 
-export async function handleWebhook(event: any) {
+export async function handleWebhook(event: Stripe.Event) {
   const { type, data } = event;
   const object = data.object;
 
   switch (type) {
     case 'checkout.session.completed':
-      await _handleCheckoutSessionCompleted(object);
+      await _handleCheckoutSessionCompleted(object as Stripe.Checkout.Session);
       break;
     case 'customer.subscription.updated':
-      await _handleSubscriptionUpdated(object);
+      await _handleSubscriptionUpdated(object as Stripe.Subscription);
       break;
     case 'customer.subscription.deleted':
-      await _handleSubscriptionDeleted(object);
+      await _handleSubscriptionDeleted(object as Stripe.Subscription);
       break;
   }
 }
 
-async function _handleCheckoutSessionCompleted(session: any) {
-  const userId = session.metadata.userId;
+async function _handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
+  const userId = session.metadata?.userId;
+  if (!userId) return;
   const stripeSubscriptionId = session.subscription as string;
   const stripeCustomerId = session.customer as string;
 
-  const subscription = await stripe.subscriptions.retrieve(stripeSubscriptionId) as unknown as {
-    items: { data: Array<{ price: { id: string } }> };
-    status: string;
-    current_period_end: number;
-  };
+  const subscription = await stripe.subscriptions.retrieve(stripeSubscriptionId) as Stripe.Subscription & { current_period_end?: number };
   const priceId = subscription.items.data[0].price.id;
+  const periodEnd = subscription.current_period_end ?? subscription.trial_end ?? null;
 
   await subscriptionRepo.upsertSubscription(userId, {
     stripe_id: stripeSubscriptionId,
@@ -84,25 +82,26 @@ async function _handleCheckoutSessionCompleted(session: any) {
     stripe_price_id: priceId,
     status: subscription.status,
     tier: _getTierFromPrice(priceId),
-    end_date: new Date(subscription.current_period_end * 1000),
+    end_date: periodEnd ? new Date(periodEnd * 1000) : null,
     user: { connect: { id: userId } }
   });
 }
 
-async function _handleSubscriptionUpdated(subscription: any) {
+async function _handleSubscriptionUpdated(subscription: Stripe.Subscription & { current_period_end?: number }) {
   const stripeId = subscription.id;
   const priceId = subscription.items.data[0].price.id;
+  const periodEnd = subscription.current_period_end ?? subscription.trial_end ?? null;
 
   await subscriptionRepo.updateByStripeId(stripeId, {
     status: subscription.status,
     stripe_price_id: priceId,
     tier: _getTierFromPrice(priceId),
     cancel_at_period_end: subscription.cancel_at_period_end,
-    end_date: new Date(subscription.current_period_end * 1000),
+    end_date: periodEnd ? new Date(periodEnd * 1000) : null,
   });
 }
 
-async function _handleSubscriptionDeleted(subscription: any) {
+async function _handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   const stripeId = subscription.id;
   await subscriptionRepo.updateByStripeId(stripeId, {
     status: 'canceled',

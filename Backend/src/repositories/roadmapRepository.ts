@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client';
+import type { Roadmap } from '@prisma/client';
 import { createAppError } from '../middlewares/errorHandler.js';
 import { getCache, setCache, invalidateCachePattern } from '../services/cacheService.js';
 import BaseRepository from './baseRepository.js';

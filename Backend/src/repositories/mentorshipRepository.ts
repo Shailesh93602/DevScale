@@ -1,4 +1,4 @@
-import { PrismaClient, Mentorship, MentorshipStatus } from '@prisma/client';
+import { Mentorship, MentorshipStatus } from '@prisma/client';
 import { createAppError } from '../utils/errorHandler.js';
 import { getCache, setCache, deleteCache } from '../services/cacheService';
 import BaseRepository from './baseRepository.js';

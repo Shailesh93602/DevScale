@@ -1,4 +1,4 @@
-import { PrismaClient, Forum, ForumPost, ForumComment } from '@prisma/client';
+import { Forum, ForumPost, ForumComment } from '@prisma/client';
 import { createAppError } from '../utils/errorHandler.js';
 import BaseRepository from './baseRepository.js';
 

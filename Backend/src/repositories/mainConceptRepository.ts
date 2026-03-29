@@ -1,4 +1,4 @@
-import { Prisma, MainConcept, PrismaClient } from '@prisma/client';
+import { Prisma, MainConcept } from '@prisma/client';
 import BaseRepository from './baseRepository.js';
 
 import prisma from '../lib/prisma.js';

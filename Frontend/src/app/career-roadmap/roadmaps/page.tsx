@@ -228,13 +228,16 @@ const RoadmapsPage = () => {
   }, [page, searchQuery, difficultyFilter, sortBy, type, getRoadmaps]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPage(1);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setRoadmaps([]);
     fetchRoadmaps();
   }, [type, fetchRoadmaps]);
 
   useEffect(() => {
     if (isIntersecting && hasMore) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPage((prev) => prev + 1);
     }
   }, [isIntersecting, hasMore]);

@@ -25,8 +25,8 @@ interface ChallengeMeta {
 }
 
 interface TestCase {
-  input: any;
-  output: any;
+  input: unknown;
+  output: unknown;
   explanation?: string;
   is_hidden: boolean;
 }

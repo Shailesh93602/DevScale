@@ -1,4 +1,5 @@
-import { ExperienceLevel, PrismaClient } from '@prisma/client';
+import { ExperienceLevel } from '@prisma/client';
+import type { UserProgress } from '@prisma/client';
 import BaseRepository from './baseRepository.js';
 import logger from '../utils/logger.js';
 import { createAppError } from '../utils/errorHandler.js';

@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import type { Category } from '@prisma/client';
 import BaseRepository from './baseRepository.js';
 import { createAppError } from '../utils/errorHandler.js';
 import { CategoryData } from '../types/index.js';

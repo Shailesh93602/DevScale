@@ -57,12 +57,17 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
   const router = useRouter();
   const { toast } = useToast();
   const [allParticipantsReady, setAllParticipantsReady] = useState(false);
-  const [isCreator, setIsCreator] = useState(false);
-  const [canStartNow, setCanStartNow] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
   const [isLeaving, setIsLeaving] = useState(false);
   const [hasConnectedOnce, setHasConnectedOnce] = useState(false);
   const [wsStatus, setWsStatus] = useState<BattleStatus | null>(null);
+
+  const isCreator = battle.creator.id === currentUserId;
+  const canStartNow =
+    isCreator &&
+    allParticipantsReady &&
+    (battle.status === 'WAITING' || battle.status === 'LOBBY') &&
+    battle.current_participants >= 2;
 
   const { isConnected, on } = useBattleSocket(battle.id);
 
@@ -73,33 +78,15 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
     });
   }, [on]);
 
-  // Check if current user is the creator
-  useEffect(() => {
-    setIsCreator(battle.creator.id === currentUserId);
-  }, [battle.creator.id, currentUserId]);
-
   useEffect(() => {
     if (isConnected) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setHasConnectedOnce(true);
     }
   }, [isConnected]);
 
-  useEffect(() => {
-    setCanStartNow(
-      isCreator &&
-        allParticipantsReady &&
-        (battle.status === 'WAITING' || battle.status === 'LOBBY') &&
-        battle.current_participants >= 2,
-    );
-  }, [
-    isCreator,
-    allParticipantsReady,
-    battle.status,
-    battle.current_participants,
-  ]);
-
   const onStartBattleRef = useRef(onStartBattle);
-  onStartBattleRef.current = onStartBattle;
+  useEffect(() => { onStartBattleRef.current = onStartBattle; });
 
   useEffect(() => {
     if (wsStatus === 'IN_PROGRESS') {

@@ -203,7 +203,7 @@ describe('SubscriptionService', () => {
 
       mockUpsertSubscription.mockResolvedValue({} as never);
 
-      await handleWebhook(event);
+      await handleWebhook(event as unknown as import('stripe').default.Event);
 
       expect(mockSubscriptionsRetrieve).toHaveBeenCalledWith('sub_123');
       expect(mockUpsertSubscription).toHaveBeenCalledWith(
@@ -232,7 +232,7 @@ describe('SubscriptionService', () => {
 
       mockUpdateByStripeId.mockResolvedValue({} as never);
 
-      await handleWebhook(event);
+      await handleWebhook(event as unknown as import('stripe').default.Event);
 
       expect(mockUpdateByStripeId).toHaveBeenCalledWith(
         'sub_123',
@@ -253,7 +253,7 @@ describe('SubscriptionService', () => {
 
       mockUpdateByStripeId.mockResolvedValue({} as never);
 
-      await handleWebhook(event);
+      await handleWebhook(event as unknown as import('stripe').default.Event);
 
       expect(mockUpdateByStripeId).toHaveBeenCalledWith(
         'sub_123',
@@ -270,7 +270,7 @@ describe('SubscriptionService', () => {
         data: { object: {} },
       };
 
-      await handleWebhook(event);
+      await handleWebhook(event as unknown as import('stripe').default.Event);
 
       expect(mockUpsertSubscription).not.toHaveBeenCalled();
       expect(mockUpdateByStripeId).not.toHaveBeenCalled();

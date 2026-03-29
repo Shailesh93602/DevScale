@@ -1,6 +1,6 @@
 'use client';
 import { animate, AnimationSequence, motion } from 'framer-motion';
-import React, { ReactNode, useEffect, useRef } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { cn } from '@/utils/cn';
 import { GoCopilot } from 'react-icons/go';
 
@@ -98,23 +98,24 @@ const Skeleton = () => {
     </div>
   );
 };
+const generateSparkles = () =>
+  [...Array(12)].map(() => ({
+    moveX: Math.random() * 2 - 1,
+    moveY: Math.random() * 2 - 1,
+    opacity: Math.random(),
+    animTop: Math.random() * 100,
+    animLeft: Math.random() * 100,
+    duration: Math.random() * 2 + 4,
+    top: Math.random() * 100,
+    left: Math.random() * 100,
+  }));
+
 const Sparkles = () => {
-  const sparkleData = useRef(
-    [...Array(12)].map(() => ({
-      moveX: Math.random() * 2 - 1,
-      moveY: Math.random() * 2 - 1,
-      opacity: Math.random(),
-      animTop: Math.random() * 100,
-      animLeft: Math.random() * 100,
-      duration: Math.random() * 2 + 4,
-      top: Math.random() * 100,
-      left: Math.random() * 100,
-    })),
-  );
+  const [sparkleData] = useState(generateSparkles);
 
   return (
     <div className="absolute inset-0">
-      {sparkleData.current.map((s, i) => (
+      {sparkleData.map((s, i) => (
         <motion.span
           key={`star-${i}`}
           animate={{
