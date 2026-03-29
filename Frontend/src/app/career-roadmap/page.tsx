@@ -341,14 +341,14 @@ const RoadmapPage = () => {
   // Update roadmaps state when data changes
   useEffect(() => {
     if (roadmapsData) {
-      const actualRoadmaps: any[] = roadmapsData || [];
+      const actualRoadmaps: IRoadmap[] = (roadmapsData as IRoadmap[]) || [];
       if (page === 1) {
         setRoadmaps(actualRoadmaps);
       } else {
         setRoadmaps((prev) => [...prev, ...actualRoadmaps]);
       }
 
-      const meta = roadmapsMeta as any;
+      const meta = roadmapsMeta as { hasNextPage?: boolean } | null | undefined;
       if (meta && typeof meta.hasNextPage === 'boolean') {
         setHasMore(meta.hasNextPage);
       } else {

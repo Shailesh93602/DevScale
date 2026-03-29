@@ -10,6 +10,13 @@ import {
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 
+const generateParticles = () =>
+  Array.from({ length: 5 }, () => ({
+    offsetX: (Math.random() - 0.5) * 100,
+    offsetY: (Math.random() - 0.5) * 100,
+    duration: 1 + Math.random(),
+  }));
+
 interface AnimatedBattleCardProps {
   title: string;
   description: string;
@@ -33,6 +40,7 @@ export const AnimatedBattleCard = ({
   const [isHovered, setIsHovered] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const [particleData] = useState(generateParticles);
 
   // Motion values for the card
   const rotateX = useMotionValue(0);
@@ -221,7 +229,7 @@ export const AnimatedBattleCard = ({
         <AnimatePresence>
           {isHovered && (
             <>
-              {[...Array(5)].map((_, i) => (
+              {particleData.map((p, i) => (
                 <motion.div
                   key={i}
                   className="bg-primary/30 pointer-events-none absolute h-2 w-2 rounded-full"
@@ -232,13 +240,13 @@ export const AnimatedBattleCard = ({
                     scale: 0,
                   }}
                   animate={{
-                    translateX: mousePosition.x + (Math.random() - 0.5) * 100,
-                    translateY: mousePosition.y + (Math.random() - 0.5) * 100,
+                    translateX: mousePosition.x + p.offsetX,
+                    translateY: mousePosition.y + p.offsetY,
                     opacity: [0, 0.5, 0],
                     scale: [0, 1.5, 0],
                   }}
                   exit={{ opacity: 0, scale: 0 }}
-                  transition={{ duration: 1 + Math.random() }}
+                  transition={{ duration: p.duration }}
                 />
               ))}
             </>

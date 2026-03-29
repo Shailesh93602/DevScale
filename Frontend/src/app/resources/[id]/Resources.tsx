@@ -321,7 +321,7 @@ export default function Resources({ id }: { id: string }) {
                           }`}
                         >
                           {userAnswers[question.id] === option.text && (
-                            <div className="h-2 w-2 rounded-full bg-white" />
+                            <div className="h-2 w-2 rounded-full bg-background" />
                           )}
                         </div>
                         <span className="text-base font-medium">
@@ -571,6 +571,7 @@ export default function Resources({ id }: { id: string }) {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5 }}
+                  // eslint-disable-next-line no-restricted-syntax
                   className="prose prose-base max-w-none dark:prose-invert md:prose-lg prose-headings:text-foreground prose-h2:text-3xl prose-p:leading-relaxed prose-a:text-primary hover:prose-a:text-primary2 prose-code:rounded prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:text-muted-foreground prose-code:before:content-none prose-code:after:content-none prose-pre:rounded-xl prose-pre:border prose-pre:border-border/50 prose-pre:bg-muted prose-pre:text-muted-foreground prose-li:marker:text-primary prose-img:rounded-xl prose-img:shadow-lg prose-hr:border-border/40"
                   dangerouslySetInnerHTML={{
                     __html: sanitizeContent(currentArticle?.content || ''),

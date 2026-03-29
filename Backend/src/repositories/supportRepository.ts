@@ -1,10 +1,10 @@
 import {
-  PrismaClient,
   TicketStatus,
   TicketPriority,
   Severity,
   Priority,
 } from '@prisma/client';
+import type { SupportTicket } from '@prisma/client';
 import logger from '../utils/logger.js';
 import { createAppError } from '../utils/errorHandler.js';
 import {

@@ -34,7 +34,7 @@ const seedDatabase = async () => {
       include: { topic: true }
     });
 
-    const topicCache = new Map<string, any>();
+    const topicCache = new Map<string, (typeof existingSubjectTopics)[number]['topic']>();
     for (const st of existingSubjectTopics) {
       topicCache.set(`${st.subject_id}_${st.topic.title}`, st.topic);
     }

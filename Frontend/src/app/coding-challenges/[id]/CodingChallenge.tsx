@@ -437,6 +437,7 @@ export default function CodingChallenge({ id }: { id: string }) {
                       </div>
                     </div>
 
+                    {/* eslint-disable-next-line no-restricted-syntax */}
                     <div className="prose prose-sm max-w-none dark:prose-invert">
                       <div className="text-sm leading-relaxed text-muted-foreground">
                         <ReactMarkdown>
@@ -502,11 +503,14 @@ export default function CodingChallenge({ id }: { id: string }) {
               >
                 <ScrollArea className="h-full p-6">
                   {challenge.editorial ? (
-                    <div className="prose prose-sm max-w-none dark:prose-invert">
-                      <div className="text-sm leading-relaxed text-muted-foreground">
-                        <ReactMarkdown>{challenge.editorial}</ReactMarkdown>
+                    <>
+                      {/* eslint-disable-next-line no-restricted-syntax */}
+                      <div className="prose prose-sm max-w-none dark:prose-invert">
+                        <div className="text-sm leading-relaxed text-muted-foreground">
+                          <ReactMarkdown>{challenge.editorial}</ReactMarkdown>
+                        </div>
                       </div>
-                    </div>
+                    </>
                   ) : (
                     <div className="flex h-32 flex-col items-center justify-center text-muted-foreground">
                       <FileText className="mb-2 h-8 w-8 opacity-20" />

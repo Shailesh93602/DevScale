@@ -1,4 +1,4 @@
-import { PrismaClient, Topic } from '@prisma/client';
+import { Topic } from '@prisma/client';
 import BaseRepository from './baseRepository.js';
 
 import prisma from '../lib/prisma.js';

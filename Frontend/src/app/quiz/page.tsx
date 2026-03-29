@@ -43,8 +43,8 @@ const Quiz = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <div className="w-full max-w-xl rounded-lg bg-white p-8 shadow-lg">
+    <div className="flex min-h-screen items-center justify-center bg-muted">
+      <div className="w-full max-w-xl rounded-lg bg-background p-8 shadow-lg">
         {showScore ? (
           <motion.div
             className="score-section text-center text-2xl font-bold"

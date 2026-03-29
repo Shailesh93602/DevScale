@@ -1,4 +1,5 @@
-import { PrismaClient, Status, Topic } from '@prisma/client';
+import { Status, Topic } from '@prisma/client';
+import type { DailyTopic } from '@prisma/client';
 import { createAppError } from '../utils/errorHandler.js';
 import BaseRepository from './baseRepository.js';
 

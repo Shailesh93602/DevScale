@@ -92,8 +92,9 @@ export default function PricingPage() {
       if (data.url) {
         window.location.href = data.url;
       }
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Failed to start checkout');
+    } catch (error: unknown) {
+      const msg = (error as { response?: { data?: { message?: string } } })?.response?.data?.message;
+      toast.error(msg || 'Failed to start checkout');
     } finally {
       setLoading(null);
     }

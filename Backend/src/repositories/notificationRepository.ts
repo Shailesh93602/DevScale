@@ -1,4 +1,4 @@
-import { PrismaClient, Notification } from '@prisma/client';
+import { Notification } from '@prisma/client';
 import BaseRepository from './baseRepository.js';
 
 import prisma from '../lib/prisma.js';

@@ -1,4 +1,5 @@
 import { ActivityType, Prisma } from '@prisma/client';
+import type { UserStreak } from '@prisma/client';
 import { DateTime } from 'luxon';
 import BaseRepository from './baseRepository.js';
 import prisma from '../lib/prisma.js';

@@ -13,16 +13,21 @@ export function useProgressiveLoading<T>({
   increment = 5,
   interval = 300,
 }: UseProgressiveLoadingProps<T>) {
-  const [visibleItems, setVisibleItems] = useState<T[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [visibleItems, setVisibleItems] = useState<T[]>(() => data.slice(0, initialCount));
+  const [isLoading, setIsLoading] = useState(() => data.length > 0);
 
   useEffect(() => {
     if (!data.length) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setVisibleItems([]);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsLoading(false);
       return;
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setVisibleItems(data.slice(0, initialCount));
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsLoading(true);
 
     let currentCount = initialCount;

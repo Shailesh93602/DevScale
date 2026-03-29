@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import type { QuizAnswer } from '@prisma/client';
 import BaseRepository from './baseRepository.js';
 
 import prisma from '../lib/prisma.js';
