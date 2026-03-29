@@ -1,5 +1,5 @@
 'use client';
-import React, { ReactNode, useEffect, useRef, useState } from 'react';
+import React, { ReactNode, useRef } from 'react';
 import { useMotionValueEvent, useScroll, motion } from 'framer-motion';
 import { cn } from '@/utils/cn';
 import { HoverBorderGradient } from '../HoverBorderGradient';
@@ -47,13 +47,7 @@ export const StickyScroll = ({
     'linear-gradient(to bottom right, var(--orange-500), var(--yellow-500))',
   ];
 
-  const [backgroundGradient, setBackgroundGradient] = useState(
-    linearGradients[0],
-  );
-
-  useEffect(() => {
-    setBackgroundGradient(linearGradients[activeCard % linearGradients.length]);
-  }, [activeCard]);
+  const backgroundGradient = linearGradients[activeCard % linearGradients.length];
 
   return (
     <motion.div

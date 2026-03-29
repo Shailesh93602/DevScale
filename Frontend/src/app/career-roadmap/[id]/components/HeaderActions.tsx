@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { BookOpen, Users, Clock, Award, Heart, Bookmark, Share2, CheckCircle } from 'lucide-react';
-import { RoadmapDetails } from '../page';
+import { RoadmapDetails } from '../RoadmapDetail';
 import { cn } from '@/lib/utils';
 
 interface RoadmapHeaderActionsProps {

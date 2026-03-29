@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import type { PlacementTest } from '@prisma/client';
 import { createAppError } from '../utils/errorHandler.js';
 import BaseRepository from './baseRepository.js';
 

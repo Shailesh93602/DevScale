@@ -1,10 +1,9 @@
-import { Router } from 'express';
-import express from 'express';
+import express, { Router } from 'express';
 import { createCheckoutSession, createPortalSession, handleWebhook } from '../services/subscriptionService.js';
 import { stripe } from '../lib/stripe.js';
 import { env } from '../config/env.js';
 import logger from '../utils/logger.js';
-import { authenticate } from '../middlewares/authMiddleware.js';
+import { authMiddleware as authenticate } from '../middlewares/authMiddleware.js';
 import Stripe from 'stripe';
 
 export class SubscriptionRoutes {
@@ -47,7 +46,7 @@ export class SubscriptionRoutes {
     this.router.post('/checkout', authenticate, async (req, res) => {
       try {
         const { priceId } = req.body;
-        const url = await createCheckoutSession((req as any).user.id, priceId);
+        const url = await createCheckoutSession(req.user.id, priceId);
         res.json({ url });
       } catch (err) {
         const error = err as { status?: number; message: string };
@@ -57,7 +56,7 @@ export class SubscriptionRoutes {
 
     this.router.post('/portal', authenticate, async (req, res) => {
       try {
-        const url = await createPortalSession((req as any).user.id);
+        const url = await createPortalSession(req.user.id);
         res.json({ url });
       } catch (err) {
         const error = err as { status?: number; message: string };
