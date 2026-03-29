@@ -1,0 +1,60 @@
+{
+  "title": "HTML5 Web Components Quiz",
+  "description": "Test your knowledge of the three main technologies that make up modern Web Components.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which set of APIs allows you to define new, custom HTML tags (e.g., &lt;user-profile&gt;)?",
+      "options": [
+        "Special Tags",
+        "Custom Elements",
+        "Tag Manager",
+        "Element Creator"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the primary role of the 'Shadow DOM' in Web Components?",
+      "options": [
+        "To make the component load faster.",
+        "To provide a set of JavaScript APIs for attaching an encapsulated DOM tree to an element, preventing styles from leaking out.",
+        "To automatically generate CSS animations for the component.",
+        "To track a user's behavior within a specific component."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which JavaScript method is used to register a new custom element with the browser?",
+      "options": [
+        "customElements.define()",
+        "browser.registerTag()",
+        "document.setElement()",
+        "element.create()"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Web Components are native to the browser and do NOT require an external framework like React or Vue to function.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "When using the Shadow DOM, if you set the mode to 'open', what does it mean?",
+      "options": [
+        "The component is visible to the user.",
+        "The shadow root is accessible to JavaScript outside the component.",
+        "The component's code is available on the public web.",
+        "The component can be used in any browser."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "title": "HTML and SEO Best Practices Quiz",
+  "description": "Test your knowledge of the essential tags and techniques for building a search-engine-friendly web page.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which tag is considered the single most important on-page SEO element?",
+      "options": [
+        "&lt;meta name='description'&gt;",
+        "&lt;title&gt;",
+        "&lt;h1&gt;",
+        "&lt;meta name='keywords'&gt;"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the primary role of the page's meta description tag?",
+      "options": [
+        "To improve search engine rankings directly.",
+        "To act as an advertisement in search results and improve click-through rate (CTR).",
+        "To define the page's structure and fonts.",
+        "To tell the search engine which language the page is in."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "How many &lt;h1&gt; tags should a single web page ideally have?",
+      "options": [
+        "Unlimited",
+        "Zero",
+        "Exactly one",
+        "At least five"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which tag tells search engines which version of a page is the 'original' if several URLs lead to the same content?",
+      "options": [
+        "rel='original'",
+        "rel='canonical'",
+        "rel='index'",
+        "rel='first'"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What should you use to tell a search engine robot NOT to index a specific confidential page?",
+      "options": [
+        "&lt;meta name='robots' content='noindex'&gt;",
+        "&lt;meta name='secure' content='true'&gt;",
+        "&lt;meta name='hide' content='yes'&gt;",
+        "&lt;meta charset='UTF-8'&gt;"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

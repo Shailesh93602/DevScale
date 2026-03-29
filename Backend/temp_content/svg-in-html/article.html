@@ -1,0 +1,43 @@
+<section aria-labelledby="svg-title">
+  <h1 id="svg-title">Using SVG in HTML: High-Performance Vector Graphics</h1>
+  
+  <p>SVG (Scalable Vector Graphics) is a language for describing two-dimensional vector graphics. Unlike standard image formats like JPEG or PNG, SVGs are written in XML code. This means they are fully searchable, scalable to any size without losing quality, and can be styled or animated using CSS and JavaScript.</p>
+
+  <h2>Ways to Include SVG in HTML</h2>
+  <p>There are three main ways to add an SVG to your web page:</p>
+
+  <h3>1. Inline SVG</h3>
+  <p>You can paste the <code>&lt;svg&gt;</code> code directly into your HTML. This is the most powerful method because it allows you to style individual parts of the graphic with CSS and interact with them using scripts.</p>
+  <pre><code>&lt;svg width="100" height="100"&gt;
+  &lt;circle cx="50" cy="50" r="40" class="my-circle" /&gt;
+&lt;/svg&gt;</code></pre>
+
+  <h3>2. Using the <code>&lt;img&gt;</code> Tag</h3>
+  <p>You can reference an SVG file just like any other image. This is simple and good for performance (caching), but you lose the ability to style the internal parts of the SVG with your main CSS.</p>
+  <pre><code>&lt;img src="icon.svg" alt="Company Logo"&gt;</code></pre>
+
+  <h3>3. Using a CSS Background</h3>
+  <p>You can use an SVG as a <code>background-image</code> in your CSS. This is useful for decorative elements and patterns.</p>
+  <pre><code>.header {
+  background-image: url('pattern.svg');
+}</code></pre>
+
+  <h2>Styling SVG with CSS</h2>
+  <p>When using inline SVG, you can use specialized CSS properties:</p>
+  <ul>
+    <li><strong><code>fill</code>:</strong> Sets the interior color (like <code>background-color</code>).</li>
+    <li><strong><code>stroke</code>:</strong> Sets the border color.</li>
+    <li><strong><code>stroke-width</code>:</strong> Sets the thickness of the border.</li>
+  </ul>
+
+  <h2>Why Use SVG?</h2>
+  <ul>
+    <li><strong>Infinite Scalability:</strong> SVG looks crisp on everything from a watch to a 4K monitor.</li>
+    <li><strong>Accessibility:</strong> SVG elements can contain <code>&lt;title&gt;</code> and <code>&lt;desc&gt;</code> tags for screen readers.</li>
+    <li><strong>Small File Size:</strong> For simple icons and logos, SVG files are much smaller than their pixel-based counterparts.</li>
+  </ul>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Use an optimizer like <strong>SVGO</strong> (or the SVGO-web interface) before adding an SVG to your project. It removes unnecessary metadata and can often reduce file size by 50% or more.</p>
+  </aside>
+</section>

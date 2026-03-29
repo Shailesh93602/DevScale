@@ -1,0 +1,62 @@
+{
+  "title": "HTML Entities Quiz",
+  "description": "Test your knowledge of the essential codes for displaying special characters in HTML.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which entity should you use to display a less-than symbol (&lt;) that is not part of a tag?",
+      "options": [
+        "&amp;lt;",
+        "&amp;gt;",
+        "&amp;amp;",
+        "&amp;less;"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the result of using &amp;nbsp; in HTML?",
+      "options": [
+        "It adds a new line to the paragraph.",
+        "It adds a non-breaking space that prevents the browser from splitting two words into different lines.",
+        "It formats the following text as bold.",
+        "It inserts a horizontal line (rule) on the page."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these entities represents the copyright symbol (©)?",
+      "options": [
+        "&amp;copyright;",
+        "&amp;reg;",
+        "&amp;copy;",
+        "&amp;tm;"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Every HTML entity must begin and end with which two characters?",
+      "options": [
+        "&lt; and &gt;",
+        "&amp; and ;",
+        "\" and \"",
+        "# and #"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Why can't you simply type more than one space in a row in a standard HTML paragraph?",
+      "options": [
+        "HTML code has a 100-character limit per line.",
+        "Browsers normally collapse multiple spaces into a single space.",
+        "Only specialized fonts support multiple spaces.",
+        "Spaces are reserved for tag attributes."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

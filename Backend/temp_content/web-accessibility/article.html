@@ -1,0 +1,37 @@
+<section aria-labelledby="accessibility-title">
+  <h1 id="accessibility-title">Web Accessibility: Building for Everyone (WCAG)</h1>
+  
+  <p>Web accessibility means that websites, tools, and technologies are designed and developed so that people with disabilities can use them. The <strong>Web Content Accessibility Guidelines (WCAG)</strong> provide the international standard for making the web more inclusive.</p>
+
+  <h2>The Four Principles of WCAG (POUR)</h2>
+  <p>The guidelines are organized under four main principles:</p>
+  <ul>
+    <li><strong>Perceivable:</strong> Information and UI components must be presentable to users in ways they can perceive (e.g., text alternatives for images).</li>
+    <li><strong>Operable:</strong> UI components and navigation must be operable (e.g., everything should be reachable via keyboard).</li>
+    <li><strong>Understandable:</strong> Information and the operation of the UI must be understandable (e.g., predictable navigation).</li>
+    <li><strong>Robust:</strong> Content must be robust enough that it can be interpreted reliably by a wide variety of user agents, including screen readers.</li>
+  </ul>
+
+  <h2>The Levels of Conformance</h2>
+  <ul>
+    <li><strong>Level A:</strong> The minimum level of accessibility.</li>
+    <li><strong>Level AA:</strong> The intermediate and most commonly required level (targeted by most organizations).</li>
+    <li><strong>Level AAA:</strong> The highest and most specialized level of accessibility.</li>
+  </ul>
+
+  <h2>Key HTML Techniques for WCAG</h2>
+  <ul>
+    <li><strong>Alt Text:</strong> Always provide descriptive <code>alt</code> attributes for images.</li>
+    <li><strong>Form Labels:</strong> Every <code>&lt;input&gt;</code> must have a linked <code>&lt;label&gt;</code> tag.</li>
+    <li><strong>Contrast Ratio:</strong> Ensure text has enough contrast against its background (WCAG AA requires 4.5:1).</li>
+    <li><strong>Semantic Structure:</strong> Use <code>&lt;h1&gt;</code> through <code>&lt;h6&gt;</code> correctly to create a logical document outline.</li>
+  </ul>
+
+  <h2>ARIA Roles and Attributes</h2>
+  <p>When native HTML isn't enough, use **Accessible Rich Internet Applications (ARIA)** attributes to provide additional context to screen readers.</p>
+  <pre><code>&lt;button aria-label="Close" onclick="closeModal()"&gt;X&lt;/button&gt;</code></pre>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Use automated tools like <strong>Lighthouse</strong> or <strong>Axe</strong> to find common accessibility issues, but always remember that a manual audit with a screen reader is the only way to ensure a truly accessible experience.</p>
+  </aside>
+</section>

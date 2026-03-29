@@ -1,0 +1,33 @@
+<section aria-labelledby="comments-title">
+  <h1 id="comments-title">HTML Comments: Leaving Roadmap for Yourself and Others</h1>
+  
+  <p>Comments are lines of text in your code that are completely ignored by the browser. They are used to explain parts of your code, leave reminders, or temporarily "disable" a section of HTML during debugging.</p>
+
+  <h2>Syntax</h2>
+  <p>An HTML comment starts with <code>&lt;!--</code> and ends with <code>--&gt;</code>. Anything placed between these markers will not be displayed on the web page.</p>
+  <pre><code>&lt;!-- This is a single-line comment --&gt;
+
+&lt;!-- 
+  This is a
+  multi-line
+  comment
+--&gt;</code></pre>
+
+  <h2>Best Practices for Comments</h2>
+  <ul>
+    <li><strong>Organize your code:</strong> Use comments to mark the start and end of large sections (e.g., <code>&lt;!-- Start of Sidebar --&gt;</code>).</li>
+    <li><strong>Keep them concise:</strong> Comments should explain <em>why</em> something is done, not necessarily <em>what</em> (the code should ideally be readable enough to explain what).</li>
+    <li><strong>Remove debugging comments:</strong> Before launching your site, remove any comments that were only meant for your own debugging process.</li>
+  </ul>
+
+  <h2>Security Warning</h2>
+  <p>While comments are not rendered on the page, they are still sent to the user's browser. Anyone who "Views Page Source" can read your comments. <strong>Never</strong> include sensitive information like passwords, API keys, or private internal notes in your HTML comments.</p>
+
+  <h2>Commenting Out Code</h2>
+  <p>If you want to hide a piece of HTML without deleting it, you can wrap it in comment tags. This is very useful when testing different layouts.</p>
+  <pre><code>&lt;!-- &lt;button&gt;Click Me!&lt;/button&gt; --&gt;</code></pre>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Most code editors have a keyboard shortcut (like <code>Cmd + /</code> or <code>Ctrl + /</code>) that will automatically wrap the selected lines in HTML comment tags for you.</p>
+  </aside>
+</section>

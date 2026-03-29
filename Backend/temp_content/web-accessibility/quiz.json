@@ -1,0 +1,62 @@
+{
+  "title": "Web Accessibility (WCAG) Quiz",
+  "description": "Test your knowledge of the international accessibility standards and the POUR principles.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "What does 'WCAG' stand for?",
+      "options": [
+        "Web Coding Assessment Group",
+        "Web Content Accessibility Guidelines",
+        "Website Compliance and Accessibility Group",
+        "Worldwide Content Application Guidelines"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "The four main principles of WCAG are shortened to the acronym 'POUR'. Which of these is NOT part of POUR?",
+      "options": [
+        "Perceivable",
+        "Operable",
+        "Understandable",
+        "Predictable"
+      ],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "Which level of WCAG conformance is the most commonly required by organizations worldwide?",
+      "options": [
+        "Level A",
+        "Level AA",
+        "Level AAA",
+        "Level B"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the primary purpose of the 'aria-label' attribute?",
+      "options": [
+        "To apply CSS styles based on a specific label.",
+        "To provide a textual description for an element specifically for screen readers.",
+        "To act as a tooltip that appears when a user hovers over an element.",
+        "To store data that will be sent through a form."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the minimum recommended contrast ratio for normal text on a background according to WCAG AA?",
+      "options": [
+        "2:1",
+        "4.5:1",
+        "7:1",
+        "10:1"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

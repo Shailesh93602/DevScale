@@ -1,0 +1,62 @@
+{
+  "title": "HTML Comments Quiz",
+  "description": "Test your knowledge of the syntax and rules for using comments in HTML.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the correct syntax for an HTML comment?",
+      "options": [
+        "// this is a comment",
+        "/* this is a comment */",
+        "&lt;!-- this is a comment --&gt;",
+        "# this is a comment"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What happens when the browser encounters an HTML comment on a web page?",
+      "options": [
+        "It displays the comment in a special font.",
+        "It executes any script inside the comment.",
+        "It completely ignores the content inside the comment.",
+        "It highlights the comment for search engine robots."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Is it safe to store sensitive information (like passwords) in HTML comments since they aren't shown on the screen?",
+      "options": [
+        "Yes, they are completely private.",
+        "No, anyone can read them by viewing the page source.",
+        "Only if you use a secure font for them.",
+        "Only for desktop users."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is 'commenting out' code useful for?",
+      "options": [
+        "To make the code run much faster.",
+        "To temporarily hide a piece of HTML without deleting it for testing.",
+        "To add a specific design pattern from a library.",
+        "To automatically generate documentation."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is NOT a best practice for using comments in HTML?",
+      "options": [
+        "Using them to mark the start and end of large sections.",
+        "Leaving private internal notes that could be seen by the public.",
+        "Keeping them concise and relevant.",
+        "Using them to explain non-obvious code decisions."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
