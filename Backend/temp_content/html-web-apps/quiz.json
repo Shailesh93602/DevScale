@@ -1,0 +1,62 @@
+{
+  "title": "HTML for Web Applications Quiz",
+  "description": "Test your knowledge of the essential tags and features for creating interactive web applications.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which tag allows you to define HTML content that is NOT rendered immediately when the page loads?",
+      "options": [
+        "&lt;hidden&gt;",
+        "&lt;template&gt;",
+        "&lt;script&gt;",
+        "&lt;aside&gt;"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "The &lt;slot&gt; element is used for which primary purpose in Web Components?",
+      "options": [
+        "To define a secondary navigation menu.",
+        "To act as a placeholder for custom markup within a reusable component.",
+        "To separate the HTML from CSS styles.",
+        "To store data in the browser's LocalStorage."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is 'Shadow DOM'?",
+      "options": [
+        "A hidden copy of the page used for search engines.",
+        "A way to encapsulate HTML and CSS styles to prevent them from affecting the rest of the page.",
+        "The background layer of a web page.",
+        "A script used to track user behavior secretly."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which &lt;link&gt; attribute is used to connect a web application to its manifest JSON file for PWA support?",
+      "options": [
+        "rel='app'",
+        "rel='manifest'",
+        "rel='icon'",
+        "rel='config'"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is the most accurate description of the &lt;template&gt; tag's contents?",
+      "options": [
+        "They are invisible to the user but visible to search engines.",
+        "The browser ignores them until they are instantiated via JavaScript.",
+        "They are automatically added to the bottom of the &lt;body&gt; tag.",
+        "They are only used to store CSS styles."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
