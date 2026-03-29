@@ -1,0 +1,27 @@
+<section aria-labelledby="html-access-title">
+  <h1 id="html-access-title">HTML Accessibility (A11y): Designing for Everyone</h1>
+  
+  <p>Web accessibility (A11y) means that websites, tools, and technologies are designed and developed so that people with disabilities can use them. As a developer, building an accessible web is both a moral and often a legal requirement. HTML is the first and most important layer of accessibility.</p>
+
+  <h2>The Importance of Semantic HTML</h2>
+  <p>The foundation of an accessible page is using tags for their intended purpose. Screen readers (software that reads page content aloud) rely on semantic tags to provide a "map" of the page.</p>
+  <ul>
+    <li>Use <code>&lt;nav&gt;</code> for navigation links.</li>
+    <li>Use <code>&lt;h1&gt;</code> through <code>&lt;h6&gt;</code> in a logical, nested order.</li>
+    <li>Use <code>&lt;button&gt;</code> for actions and <code>&lt;a&gt;</code> for navigation between pages.</li>
+  </ul>
+
+  <h2>Alternative Text for Images (<code>alt</code>)</h2>
+  <p>The <code>alt</code> attribute is the single most important accessibility feature for images. If an image fails to load or if a user is using a screen reader, the alt text provides the necessary context.</p>
+  <pre><code>&lt;img src="chart.png" alt="Bar chart showing a 20% increase in web traffic over the last quarter"&gt;</code></pre>
+
+  <h2>Labels for Form Inputs</h2>
+  <p>Never use plain text as a label for an input. Always use the <code>&lt;label&gt;</code> element and link it using the <code>for</code> and <code>id</code> attributes. This allows users to click the text to focus on the input and ensures screen readers announce the correct label.</p>
+
+  <h2>ARIA Roles and Attributes</h2>
+  <p>When native HTML tags aren't enough (e.g., for complex widgets like tabs or modal windows), use <strong>ARIA (Accessible Rich Internet Applications)</strong> landmark roles and states like <code>aria-label</code>, <code>aria-hidden</code>, and <code>aria-expanded</code> to provide extra information to assistive technologies.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Use the <strong>Lighthouse</strong> tool in Chrome DevTools to run an accessibility audit on your pages. It will give you a score and specific tips for improvement.</p>
+  </aside>
+</section>

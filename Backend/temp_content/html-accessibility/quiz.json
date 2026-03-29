@@ -1,0 +1,62 @@
+{
+  "title": "HTML Accessibility Quiz",
+  "description": "Test your knowledge of the essential tags and attributes for creating accessible HTML web pages.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "What is the primary role of web accessibility (A11y)?",
+      "options": [
+        "To make websites load faster.",
+        "To enable people with disabilities to use web technologies.",
+        "To provide more colors and animations for advanced users.",
+        "To automate website development with AI."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is the most important attribute for making images accessible to screen reader users?",
+      "options": [
+        "src",
+        "alt",
+        "title",
+        "class"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "How should header tags (h1-h6) be used for better accessibility?",
+      "options": [
+        "Use them in any order for visual variety.",
+        "Use them to make text bigger or smaller.",
+        "Use them in a logical, nested sequence to define the document structure.",
+        "Only use h1 tags on every page."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the purpose of the 'for' attribute in the &lt;label&gt; tag?",
+      "options": [
+        "It defines the text shown on screen.",
+        "It links the label to its corresponding input's 'id'.",
+        "It specifies the form's action URL.",
+        "It determines the label's position."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "When should you use ARIA roles and landmarks in HTML?",
+      "options": [
+        "On every single HTML element for maximum accessibility.",
+        "Only if native HTML elements aren't enough for complex widgets.",
+        "To replace standard tags like &lt;header&gt; and &lt;nav&gt;.",
+        "They are not used in modern web development."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
