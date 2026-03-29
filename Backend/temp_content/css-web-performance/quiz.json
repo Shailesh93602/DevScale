@@ -1,0 +1,62 @@
+{
+  "title": "CSS for Web Performance Quiz",
+  "description": "Test your knowledge of the essential properties and tools for creating fast and responsive web experiences using CSS.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the most modern and recommended way to build a high-performance web application in CSS?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "Using simple and efficient class selectors (like .nav-link) to avoid complex CSS rules.",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a major 'Pro' of using CSS minification compared to writing raw CSS?",
+      "options": [
+        "It makes your CSS files smaller and more readable.",
+        "It helps browsers load the site significantly faster by removing extra spaces and comments.",
+        "It is always supported by every browser.",
+        "It replaces the need for any HTML5 tags."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is 'Critical CSS' inside a professional web application?",
+      "options": [
+        "To make the site load much faster.",
+        "To extract the essential CSS for 'Above the Fold' content and place it directly in the HTML <head> for the initial view.",
+        "To choose the colors for the animation.",
+        "To automatically generate CSS animations."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Why is it important to almost ALWAYS avoid animating 'layout' properties like 'margin' or 'top' in your professional CSS?",
+      "options": [
+        "They are difficult to maintain.",
+        "They trigger the browser's expensive layout re-calculation, which can be much slower than using GPU-accelerated ones like 'transform'.",
+        "They are not supported in modern browsers.",
+        "They take up no space in the browser."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a best practice for a professional-style stylesheet for performance?",
+      "options": [
+        "Commenting every single line of code.",
+        "Using a reset or normalize stylesheet.",
+        "Using 'content-visibility: auto;' to allow the browser to skip rendering elements not yet visible on the screen.",
+        "Using variables for colors and spacing."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

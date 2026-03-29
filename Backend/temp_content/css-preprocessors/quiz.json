@@ -1,0 +1,62 @@
+{
+  "title": "CSS Preprocessors Quiz",
+  "description": "Test your knowledge of the essential properties and tools for creating modular, programmatically-advanced CSS using preprocessors.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the MOST popular and well-supported CSS preprocessor available today?",
+      "options": [
+        "SASS",
+        "SCSS",
+        "Both 'SASS' and 'SCSS' are synonymous.",
+        "None of these."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a major 'Pro' of using a CSS preprocessor like SASS?",
+      "options": [
+        "It makes your CSS files smaller automatically.",
+        "It allows you to use advanced features like Variables, Nesting, and Reusable Mixins.",
+        "It is always supported by every browser.",
+        "It replaces the need for any HTML5 tags."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the 'Nesting' feature in SASS used for?",
+      "options": [
+        "To write CSS rules inside each other to match the underlying HTML structure.",
+        "To hide images from certain types of users.",
+        "To define the website's visual theme and fonts.",
+        "To automatically generate CSS animations."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What are 'Partials' (modular files) in a preprocessor primarily used for?",
+      "options": [
+        "To create separate images for each CSS file.",
+        "To split your large CSS into many small, manageable files that are combined later during build.",
+        "To stop the site from loading too quickly.",
+        "To hide code from search engines."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which tool uses JavaScript-based plugins to transform your CSS (e.g., automatically adding -webkit- vendor prefixes)?",
+      "options": [
+        "SASS",
+        "PostCSS",
+        "LESS",
+        "Stylus"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

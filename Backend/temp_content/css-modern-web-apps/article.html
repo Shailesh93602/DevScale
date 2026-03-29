@@ -1,0 +1,28 @@
+<section aria-labelledby="modern-web-apps-title">
+  <h1 id="modern-web-apps-title">CSS for Modern Web Applications: The SPAs and Components</h1>
+  
+  <p>Building a Single-Page Application (SPA) with a framework like React, Vue, or Angular requires a different approach to CSS. Instead of one giant 2,000-line <code>style.css</code> file, we use modular systems to keep our styles maintainable and high-performance.</p>
+
+  <h2>1. CSS Modules (The Scoped Style)</h2>
+  <p>CSS Modules allow you to write CSS that is "scoped" to only a single React or Vue component. The build tool automatically gives your classes unique names (like <code>.button_8f2e</code>) so they can never accidentally clash with other styles on the page.</p>
+
+  <h2>2. CSS-in-JS (The Stylable JavaScript)</h2>
+  <p>Libraries like **Styled Components** or **Emotion** allow you to write your CSS directly within your JavaScript files. This gives you the full power of JavaScript (variables, functions, logic) right inside your styles!</p>
+  <pre><code>const Button = styled.button`
+  background: ${props => props.primary ? "blue" : "gray"};
+  color: white;
+`;</code></pre>
+
+  <h2>3. Utility-First (Tailwind CSS)</h2>
+  <p>Tailwind is the most popular way to build modern web apps today. Instead of writing any CSS at all, you apply small "utility classes" directly to your HTML components to build completely unique designs without ever leaving your components file.</p>
+
+  <h2>4. Component Libraries (Radix, Headless UI)</h2>
+  <p>Modern apps often use "headless" libraries that provide the complex behavior (like a modal or a dropdown) without any visual styling, allowing the developer to apply their own CSS (using modules or Tailwind) on top.</p>
+
+  <h2>The Importance of "Performance" in SPAs</h2>
+  <p>Since SPAs only load one "page," your CSS shouldn't contain styles for elements that aren't currently on the screen. Modern build tools use **Code Splitting** to only load the CSS needed for the current route, making your app feel much faster.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> If you're building a React or Vue project, start with <strong>CSS Modules</strong> or <strong>Tailwind CSS</strong>. They solve most of the "spaghetti CSS" problems that occur as a project grows bigger and more complex.</p>
+  </aside>
+</section>

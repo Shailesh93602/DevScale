@@ -1,0 +1,29 @@
+<section aria-labelledby="js-cookies-title">
+  <h1 id="js-cookies-title">JavaScript Cookies: Storing Data in the Browser</h1>
+  
+  <p>In the early days of the web, **Cookies** were the only way to store small pieces of information in a user's browser. While we have newer and better tools today (like <code>localStorage</code>), cookies are still essential for handling sessions, logins, and tracking.</p>
+
+  <h2>1. What is a Cookie?</h2>
+  <p>A cookie is a small text file that a website can store on your computer. It can contain a unique "Session ID," your preferred language, or your "Add to Cart" items.</p>
+
+  <h2>2. Using <code>document.cookie</code></h2>
+  <p>The original way to handle cookies in JavaScript. It can be a bit confusing because all cookies for your website are stored in one long, semicolor-separated string.</p>
+  <pre><code>document.cookie = "username=EduScale; expires=Fri, 31 Dec 2026 12:00:00 UTC";</code></pre>
+
+  <h2>3. Secure Cookies</h2>
+  <ul>
+    <li><strong><code>HttpOnly</code>:</strong> Prevents JavaScript from reading the cookie (making it much harder for hackers to steal).</li>
+    <li><strong><code>Secure</code>:</strong> Ensures the cookie is only sent over an encrypted HTTPS connection.</li>
+    <li><strong><code>SameSite</code>:</strong> Prevents "Cross-Site Request Forgery" (CSRF) attacks by limiting which websites can access the cookie.</li>
+  </ul>
+
+  <h2>4. Cookies vs. LocalStorage</h2>
+  <p>For most modern web applications, **LocalStorage** is a better choice than cookies for storing non-sensitive data because it's easier to use and has a much larger storage limit (about 5MB vs. 4KB for a cookie).</p>
+
+  <h2>Reading Cookies (The Hard Way)</h2>
+  <p>Since <code>document.cookie</code> is a long string, you often have to write a custom function to "parse" it and find the specific cookie you need. This is why many developers use a library like <code>js-cookie</code>.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> If you're building a login system, always use **HttpOnly** and **Secure** cookies. This is the industry-standard way to protect your users' sensitive session information from malicious scripts.</p>
+  </aside>
+</section>

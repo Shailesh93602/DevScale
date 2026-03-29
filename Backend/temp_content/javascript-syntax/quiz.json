@@ -1,0 +1,62 @@
+{
+  "title": "JavaScript Syntax Quiz",
+  "description": "Test your knowledge of the essential rules for writing clean, error-free JavaScript code.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "JavaScript is 'Case-Sensitive,' which means that 'myVariable' and 'myvariable' are ________?",
+      "options": [
+        "The same thing.",
+        "Two completely different things.",
+        "Ignored by the browser.",
+        "Automatically corrected."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is the most modern and recommended way to build a professional-grade web application in JavaScript?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "Using camelCase for naming variables and functions.",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which symbol is used at the end of a JavaScript statement (e.g., 'let x = 5;') to tell the browser it's a single command?",
+      "options": [
+        "Colon (:)",
+        "Semicolon (;)",
+        "Dash (-)",
+        "Period (.)"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which JavaScript keyword is used specifically for defining a 'Constant' value (a value that will NEVER change)?",
+      "options": [
+        "let",
+        "const",
+        "var",
+        "fix"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What happens when you write a comment (//) in your JavaScript file?",
+      "options": [
+        "It triggers a Syntax Error.",
+        "The browser ignores the entire line, allowing you to explain your code.",
+        "It makes the site load much slower.",
+        "It automatically encrypts the file."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

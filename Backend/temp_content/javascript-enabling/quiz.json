@@ -1,0 +1,62 @@
+{
+  "title": "JavaScript Enabling Quiz",
+  "description": "Test your knowledge of the essential properties and tools for creating robust and cross-browser web experiences with enabled and disabled JS.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which HTML tag is used specifically to show a message to users who have JavaScript disabled in their browser?",
+      "options": [
+        "&lt;script&gt;",
+        "&lt;noscript&gt;",
+        "&lt;no-js&gt;",
+        "&lt;error&gt;"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is the most modern and recommended way to build a professional-grade web application in JavaScript?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "The 'no-js' pattern using CSS and a single line of JS.",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a possible reason a user might have JavaScript disabled in a professional environment?",
+      "options": [
+        "Slow internet connections.",
+        "Strict corporate security policies.",
+        "Using an older version of Microsoft Word.",
+        "Using a high-definition monitor."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What happens if a web application requires JavaScript and it is NOT enabled in the browser?",
+      "options": [
+        "The browser will automatically download JavaScript.",
+        "The application will likely NOT function correctly and show only the HTML content.",
+        "The site will load much faster.",
+        "The browser will automatically translate the JS into CSS."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Where are 'JavaScript Enabling' settings usually located in a modern browser (Chrome, Safari)?",
+      "options": [
+        "A separate calculator app.",
+        "The browser's 'Privacy and Security' or 'Content Settings' menu.",
+        "The browser's 'About' page.",
+        "Setting is not required for modern sites."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

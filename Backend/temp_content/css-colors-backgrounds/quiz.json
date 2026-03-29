@@ -1,0 +1,62 @@
+{
+  "title": "CSS Colors and Backgrounds Quiz",
+  "description": "Test your knowledge of the essential color models and background properties for styling your web pages.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the MOST common color model used in professional web design?",
+      "options": [
+        "Hexadecimal (Hex Codes)",
+        "RGB (Red, Green, Blue)",
+        "HSL (Hue, Saturation, Lightness)",
+        "Names (red, blue, etc.)"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "In the 'RGBA' color model, what does the 'A' represent?",
+      "options": [
+        "Accuracy",
+        "Alpha (Transparency)",
+        "Amount",
+        "Activity"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which 'background-size' value makes a background image fully cover its container without any white space (even if it crops the image)?",
+      "options": [
+        "contain",
+        "cover",
+        "fill",
+        "auto"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "The 'background-attachment: fixed' property makes it so that __________?",
+      "options": [
+        "The image moves with the page.",
+        "The background image stays fixed in place while the user scrolls.",
+        "The background image is automatically mirrored.",
+        "The background image is removed."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is NOT an image, but a way to create color transitions in CSS?",
+      "options": [
+        "background-blend",
+        "Gradients (Linear and Radial)",
+        "background-pattern",
+        "trans-color"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "title": "JavaScript Events Quiz",
+  "description": "Test your knowledge of the essential properties and tools for creating robust and cross-browser web experiences with events and listeners.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the most modern and recommended way to build a professional-grade web application in JavaScript for responding to user clicks?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "Using the .addEventListener() method to listen for 'click' events on an element.",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a major 'Pro' of using .addEventListener() compared to using 'onclick' directly in your HTML?",
+      "options": [
+        "It makes your HTML files smaller and more readable.",
+        "It allows you to add multiple listeners for the same event to one single element without overwriting them.",
+        "It is always supported by every browser.",
+        "It replaces the need for any HTML5 tags."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is 'e.preventDefault()' inside a professional web application?",
+      "options": [
+        "To make the site load much faster.",
+        "To stop the default browser behavior for an event (e.g., stopping a link from navigating so you can handle it with JS).",
+        "To choose the colors for the animation.",
+        "To automatically generate CSS animations."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Why is it important to almost ALWAYS avoid 'Universal Selectors' everywhere in your professional JavaScript events?",
+      "options": [
+        "They are difficult to maintain.",
+        "They can make the site load much slower and potentially confuse the event handlers.",
+        "They are not supported in modern browsers.",
+        "They take up no space in the browser."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a best practice for a professional-style stylesheet for JavaScript events?",
+      "options": [
+        "Commenting every single line of code.",
+        "Using a reset or normalize stylesheet.",
+        "Using 'Event Delegation' to handle many similar events from one single parent element to improve performance.",
+        "Using variables for colors and spacing."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "title": "CSS Transitions and Animations Quiz",
+  "description": "Test your knowledge of the essential properties for creating smooth motion and dynamic effects on your website using CSS.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the MOST appropriate for creating a simple smooth change from 'state A' (normal) to 'state B' (hover)?",
+      "options": [
+        "Transition",
+        "Animation (@keyframes)",
+        "Rotation only",
+        "Flexbox"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which CSS rule is used to define the 'multi-step' movements for an animation (e.g., from 0% to 50% to 100%)?",
+      "options": [
+        "transition-timing",
+        "@keyframes",
+        "@font-face",
+        "animation-steps"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "For the SMOOTHEST and fastest animations, which of these properties are MOST recommended to animate because they use the computer's GPU?",
+      "options": [
+        "margin and padding",
+        "width and height",
+        "transform and opacity",
+        "color and background-color"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is an 'Easing Function' (like ease-in-out) used for in a transition?",
+      "options": [
+        "To set the total duration of the transition.",
+        "To control how the animation accelerates and decelerates (its timing) over its duration.",
+        "To choose the colors for the animation.",
+        "To automatically stop the animation halfway."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a potential NEGATIVE effect of having TOO MANY animations and transitions on a page?",
+      "options": [
+        "The site will load too fast.",
+        "It can be distracting or even nauseating for some users with vestibular disorders.",
+        "Search engines will block the site.",
+        "The browser will automatically translate the CSS into JavaScript."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

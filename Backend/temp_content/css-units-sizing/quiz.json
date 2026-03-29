@@ -1,0 +1,62 @@
+{
+  "title": "CSS Units and Sizing Quiz",
+  "description": "Test your knowledge of the essential absolute and relative units for building responsive web designs.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the most common ABSOLUTE unit in CSS?",
+      "options": [
+        "px (Pixels)",
+        "em",
+        "rem",
+        "%"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which unit is RELATIVE to the font size of the ROOT (the &lt;html&gt; element)?",
+      "options": [
+        "px",
+        "em",
+        "rem",
+        "pt"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which unit is relative to 1% of the browser window's height?",
+      "options": [
+        "vh",
+        "vw",
+        "vmin",
+        "vmax"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "The 'calc()' function in CSS allows you to ________ right in your rules.",
+      "options": [
+        "Write JavaScript",
+        "Perform mathematical operations (like mixings different units)",
+        "Automatically translate text",
+        "Download images"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which property is used to prevent an element from getting too WIDE on large screens?",
+      "options": [
+        "min-width",
+        "max-width",
+        "width-limit",
+        "set-width"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

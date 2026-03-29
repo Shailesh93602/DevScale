@@ -1,0 +1,29 @@
+<section aria-labelledby="js-redirects-title">
+  <h1 id="js-redirects-title">JavaScript Page Redirects: Navigating Programmatically</h1>
+  
+  <p>Sometimes you need to send a user to a different page automatically—for example, after they successfully log in or when they try to access a page they don't have permission to see. This is called a **Redirect**.</p>
+
+  <h2>1. The <code>location</code> Object</h2>
+  <p>This is the most common way to handle redirects. The <code>window.location</code> object contains information about the current page and its URL.</p>
+  <ul>
+    <li><strong><code>location.href</code>:</strong> The most popular choice. It's like the user clicking a link. It adds the current page to the browser's "back" button history.</li>
+    <li><strong><code>location.replace()</code>:</strong> Similar to href, but it **removes** the current page from the history. This is often used for login pages so the user can't "Logout" and then click "Back" to see their private data.</li>
+    <li><strong><code>location.assign()</code>:</strong> The same as <code>href</code>, but it's a function.</li>
+  </ul>
+
+  <h2>2. Redirecting After a Delay</h2>
+  <p>You can use <code>setTimeout()</code> to show the user a message (e.g., "Redirecting in 3 seconds...") before sending them to the next page.</p>
+  <pre><code>setTimeout(() => {
+  window.location.href = "https://eduscale.com/dashboard";
+}, 3000);</code></pre>
+
+  <h2>3. Handling "Invalid" Pages</h2>
+  <p>If a user tries to access a page that doesn't exist, you might want to redirect them to your 404 page or your homepage automatically.</p>
+
+  <h2>Performance: Client vs. Server Redirects</h2>
+  <p>A JavaScript redirect happens in the browser, meaning the "invalid" page has to load first. For the best performance (and SEO), you should always try to handle redirects on the **Server** (using HTTP status codes like 301 or 302) if possible.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Use **window.location.replace()** for your login and signup flows. It provides a much cleaner user experience by preventing the "Back Button Trap" where a user gets stuck in a loop of redirecting pages.</p>
+  </aside>
+</section>

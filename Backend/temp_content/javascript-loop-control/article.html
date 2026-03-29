@@ -1,0 +1,33 @@
+<section aria-labelledby="js-loops-title">
+  <h1 id="js-loops-title">JavaScript Loop Control: Repeating Yourself Efficiently</h1>
+  
+  <p>In programming, you often need to perform the same action many times (e.g., printing every user in a list or calculating the total of every item in a cart). **Loops** allow you to write the code once and repeat it as many times as you need.</p>
+
+  <h2>1. The <code>for</code> Loop</h2>
+  <p>The most common loop. You tell it three things: where to start, what condition to check for, and how to change the counter each time.</p>
+  <pre><code>for (let i = 0; i < 5; i++) {
+  console.log("I am repeating!");
+}</code></pre>
+
+  <h2>2. The <code>while</code> Loop</h2>
+  <p>A loop that keeps running as long as a certain condition is true. It's often used when you don't know exactly how many times you'll need to repeat (e.g., "Wait until the data finishes downloading").</p>
+
+  <h2>3. The <code>forEach</code> Loop (Modern)</h2>
+  <p>Specifically designed for **Arrays**. It allows you to run a function for every single item in the list without worrying about indexes or counters.</p>
+  <pre><code>users.forEach(user => {
+  console.log("Hello, " + user.name);
+});</code></pre>
+
+  <h2>4. Controlling Loops (<code>break</code> and <code>continue</code>)</h2>
+  <ul>
+    <li><strong><code>break</code>:</strong> Immediately stops the loop entirely, even if the condition is still true.</li>
+    <li><strong><code>continue</code>:</strong> Skips the *current* repetition and moves straight to the next one.</li>
+  </ul>
+
+  <h2>The Infinite Loop Warning</h2>
+  <p>If your loop's condition is *always* true, your program will never stop repeating! This will cause your browser to "freeze" or crash. Always ensure your loop has a clear way to finish.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> For modern web development, you should almost always use <strong>.forEach()</strong>, <strong>.map()</strong>, or <strong>for...of</strong> loops instead of the traditional C-style <code>for</code> loop. They are much harder to break and easier for others to read.</p>
+  </aside>
+</section>

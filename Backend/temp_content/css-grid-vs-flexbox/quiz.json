@@ -1,0 +1,62 @@
+{
+  "title": "CSS Grid vs Flexbox Quiz",
+  "description": "Test your knowledge of the essential properties and tools for creating robust and cross-browser web experiences with Grid and Flexbox.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the most modern and recommended way to build a professional-grade web application in CSS?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "Using BOTH CSS Grid (for layout structure) and Flexbox (for alignment inside components) together.",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a major 'Pro' of using Flexbox compared to CSS Grid for a one-dimensional row of items (like a navbar)?",
+      "options": [
+        "It makes your CSS files smaller and more readable.",
+        "It excels at flexibly aligning items in a single axis (row OR column).",
+        "It is always supported by every browser.",
+        "It replaces the need for any HTML5 tags."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is the most modern and recommended way to build a TWO-DIMENSIONAL (rows AND columns) page layout?",
+      "options": [
+        "Grid",
+        "Flexbox",
+        "Table",
+        "Float"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is 'Content-First' development in the context of Flexbox?",
+      "options": [
+        "The elements on the page determine how the layout looks as they grow and shrink.",
+        "The layout is defined first as a grid of rows and columns.",
+        "There is no difference.",
+        "You write the text before you write any CSS."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a best practice for a professional-style stylesheet for combining both?",
+      "options": [
+        "Only using Flexbox for everything.",
+        "Only using Grid for everything.",
+        "Using Grid for the overall page structure (the 'big pieces') and Flexbox inside those parts to align text and buttons.",
+        "Using variables for colors and spacing."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "title": "CSS Filters and Visual Effects Quiz",
+  "description": "Test your knowledge of the essential properties for applying graphical filters and post-processing effects directly in your browser using CSS.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which CSS property is specifically used to apply effects like blurring, color shifting, or brightness adjustment to an element?",
+      "options": [
+        "image-style",
+        "filter",
+        "effect",
+        "post-process"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which filter value is used to create a Gaussian blur effect in CSS?",
+      "options": [
+        "opacity()",
+        "blur()",
+        "contrast()",
+        "hue-rotate()"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is the most modern and recommended way to build a 'frosted glass' (glassmorphism) effect in a professional-grade web application?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "backdrop-filter: blur();",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the primary danger of applying too many complex filters (like large blurs) to every element on a page?",
+      "options": [
+        "The site will load too fast.",
+        "Filters can be very expensive (slow) for the browser to render, especially on mobile devices.",
+        "Search engines will block the site.",
+        "The browser will automatically translate the CSS into JavaScript."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which filter value is specifically used to turn an image into a 'old-fashioned' black and white or sepia tone?",
+      "options": [
+        "brightness()",
+        "grayscale() / sepia()",
+        "invert()",
+        "drop-shadow()"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

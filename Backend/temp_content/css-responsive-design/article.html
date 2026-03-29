@@ -1,0 +1,33 @@
+<section aria-labelledby="responsive-title">
+  <h1 id="responsive-title">CSS Responsive Design: Designing for Every Screen</h1>
+  
+  <p>Responsive Design is the practice of building web pages that adapt their layout and appearance to whatever device is viewing them—whether it's a giant desktop monitor, a tablet, or a smartphone.</p>
+
+  <h2>The <code>viewport</code> Meta Tag</h2>
+  <p>The foundation of responsive design is the viewport meta tag, which tells the browser to scale the website to fit the width of the user's device. Without it, your site will look like a "shrunken" desktop site on a mobile phone.</p>
+  <pre><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</code></pre>
+
+  <h2>Media Queries (@media)</h2>
+  <p>Media Queries allow you to apply different CSS rules based on a specific condition, like the browser window's width. This is the primary tool for creating "Breakpoints."</p>
+  <pre><code>@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .main-content { width: 100%; }
+}</code></pre>
+
+  <h2>Fluid Layouts (Percentage and <code>fr</code>)</h2>
+  <p>Avoid using fixed widths (like <code>600px</code>) for your main content blocks. Use relative units (like <code>%</code> or <code>fr</code>) so your layout can grow and shrink with the browser window.</p>
+
+  <h2>Flexible Images</h2>
+  <p>To prevent images from "spilling out" of their containers on small screens, always give them a maximum width of 100%.</p>
+  <pre><code>img {
+  max-width: 100%;
+  height: auto;
+}</code></pre>
+
+  <h2>The "Mobile-First" Philosophy</h2>
+  <p>Modern developers start by building the layout for a smartphone first (the simplest layout), and then use media queries to add more columns and complexity for larger screens. This results in cleaner, faster-loading CSS.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Don't define breakpoints based on specific devices (like "iPhone X"). Instead, define them based on when your design "breaks" as you resize your browser window manually during development.</p>
+  </aside>
+</section>

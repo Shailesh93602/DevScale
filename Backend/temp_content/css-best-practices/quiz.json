@@ -1,0 +1,62 @@
+{
+  "title": "CSS Best Practices Quiz",
+  "description": "Test your knowledge of the essential rules for writing clean, maintainable, and high-performance CSS.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the most modern and recommended way to build a professional-grade web application?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "Using a consistent naming convention like BEM (Block Element Modifier)",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a major 'Pro' of using CSS shorthand properties compared to writing them separately?",
+      "options": [
+        "It makes your CSS files smaller and more readable.",
+        "It allows users to print only the core content.",
+        "It is always supported by every browser.",
+        "It replaces the need for any HTML5 tags."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the primary role of 'Minification' in a CSS production build?",
+      "options": [
+        "To make the site load much faster by removing all extra spaces and comments to reduce file size.",
+        "To choose the colors for the animation.",
+        "To automatically generate CSS animations.",
+        "To hide code from search engines."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Why is it important to almost ALWAYS avoid 'Inlined Styles' (style='...') on elements in a professional website?",
+      "options": [
+        "They are difficult to maintain and overwrite due to very high specificity.",
+        "They make the HTML file too small.",
+        "They are not supported by modern browsers.",
+        "They take up no space in the layout."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which of these is NOT a best practice for a professional-style stylesheet?",
+      "options": [
+        "Commenting your code.",
+        "Using a reset or normalize stylesheet.",
+        "Using 'important' on every single rule to ensure it always wins.",
+        "Using variables for colors and spacing."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

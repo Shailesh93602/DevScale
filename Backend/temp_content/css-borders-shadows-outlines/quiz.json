@@ -1,0 +1,62 @@
+{
+  "title": "CSS Borders, Shadows, and Outlines Quiz",
+  "description": "Test your knowledge of the essential properties for adding depth and definition to your web elements using CSS.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which CSS property is specifically used to round the corners of an element?",
+      "options": [
+        "border-radius",
+        "border-circle",
+        "corner-style",
+        "round-corners"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the primary difference between a border and an outline in CSS?",
+      "options": [
+        "There is no difference.",
+        "A border takes up space in the layout, while an outline does not.",
+        "An outline is only for images, and a border is only for text.",
+        "A border is always black, and an outline is always white."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which property is used to add a shadow behind an element to create a three-dimensional effect (common in cards)?",
+      "options": [
+        "text-shadow",
+        "box-shadow",
+        "element-shadow",
+        "shadow-radius"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which text-shadow value determines how 'spread out' or 'soft' the shadow appears?",
+      "options": [
+        "horizontal offset",
+        "vertical offset",
+        "blur radius",
+        "color opacity"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "The 'outline' property is primarily used for what important purpose?",
+      "options": [
+        "To make the site load much faster.",
+        "For accessibility (showing which element has focus).",
+        "To satisfy search engine crawler requirements.",
+        "To automatically translate the text."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
