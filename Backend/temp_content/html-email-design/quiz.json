@@ -1,0 +1,62 @@
+{
+  "title": "HTML Email Design Quiz",
+  "description": "Test your knowledge of the specialized techniques for coding robust, cross-client HTML emails.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Coding an HTML email is different from coding a modern web page because...?",
+      "options": [
+        "Email clients have widely varying support for modern CSS features.",
+        "HTML emails are only for text content.",
+        "You can only use one single HTML tag per email.",
+        "There is no difference between them."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which HTML element is the 'gold standard' for creating layout structures in emails to ensure consistency?",
+      "options": [
+        "&lt;div&gt;",
+        "&lt;section&gt;",
+        "&lt;table&gt;",
+        "&lt;article&gt;"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the best way to apply CSS styles for an HTML email?",
+      "options": [
+        "In an external .css file linked via &lt;link&gt;.",
+        "Using internal &lt;style&gt; tags only.",
+        "Using inline styles directly on each HTML element.",
+        "Using JavaScript only."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the 'Ghost Table' technique used for in email development?",
+      "options": [
+        "To hide images from certain users.",
+        "To provide a fallback layout specifically for older versions of Microsoft Outlook using conditional comments.",
+        "To create a background effect that looks like smoke.",
+        "To track how many users opened the email."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which ARIA role should be added to layout tables in an email to improve accessibility for screen reader users?",
+      "options": [
+        "role='grid'",
+        "role='presentation'",
+        "role='banner'",
+        "role='table'"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

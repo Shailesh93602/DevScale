@@ -1,59 +1,59 @@
 {
-  "title": "HTML for Web Applications Quiz",
-  "description": "Test your knowledge of the essential tags and features for creating interactive web applications.",
+  "title": "HTML in Web Applications Quiz",
+  "description": "Test your knowledge of the essential concepts of modern web applications compared to traditional static websites.",
   "passingScore": 60,
   "questions": [
     {
-      "question": "Which tag allows you to define HTML content that is NOT rendered immediately when the page loads?",
+      "question": "What is a 'Single-Page Application' (SPA)?",
       "options": [
-        "&lt;hidden&gt;",
-        "&lt;template&gt;",
-        "&lt;script&gt;",
-        "&lt;aside&gt;"
+        "A website with only one single page of content.",
+        "A web application that dynamically loads and updates content without refreshing the entire browser page.",
+        "A page that can only be used by one person at a time.",
+        "An application that does not use any JavaScript."
       ],
       "correctAnswer": 1,
       "points": 10
     },
     {
-      "question": "The &lt;slot&gt; element is used for which primary purpose in Web Components?",
+      "question": "Which of these is the primary benefit of 'Server-Side Rendering' (SSR) compared to Client-Side Rendering (CSR)?",
       "options": [
-        "To define a secondary navigation menu.",
-        "To act as a placeholder for custom markup within a reusable component.",
-        "To separate the HTML from CSS styles.",
-        "To store data in the browser's LocalStorage."
+        "It uses less data.",
+        "It provides a faster 'first paint' and is generally better for SEO (Search Engine Optimization).",
+        "It allows users to use the website without an internet connection.",
+        "It removes the need for any HTML5 tags."
       ],
       "correctAnswer": 1,
       "points": 10
     },
     {
-      "question": "What is 'Shadow DOM'?",
+      "question": "What is the 'Virtual DOM' primarily used for in modern frameworks like React?",
       "options": [
-        "A hidden copy of the page used for search engines.",
-        "A way to encapsulate HTML and CSS styles to prevent them from affecting the rest of the page.",
-        "The background layer of a web page.",
-        "A script used to track user behavior secretly."
+        "To provide a backup version of the site in case of a crash.",
+        "To efficiently track and batch updates before applying them to the real, slower browser DOM.",
+        "To allow users to view the site as if they were in a VR headset.",
+        "To store sensitive user data locally."
       ],
       "correctAnswer": 1,
       "points": 10
     },
     {
-      "question": "Which &lt;link&gt; attribute is used to connect a web application to its manifest JSON file for PWA support?",
+      "question": "Which 'PWA' (Progressive Web App) feature allows web apps to function without a stable internet connection?",
       "options": [
-        "rel='app'",
-        "rel='manifest'",
-        "rel='icon'",
-        "rel='config'"
+        "Service Workers",
+        "Web Manifests",
+        "Cloud Storage",
+        "External Scripts"
       ],
-      "correctAnswer": 1,
+      "correctAnswer": 0,
       "points": 10
     },
     {
-      "question": "Which of these is the most accurate description of the &lt;template&gt; tag's contents?",
+      "question": "Even in complex web applications, search engine crawlers and screen readers will ultimately see and interact with what?",
       "options": [
-        "They are invisible to the user but visible to search engines.",
-        "The browser ignores them until they are instantiated via JavaScript.",
-        "They are automatically added to the bottom of the &lt;body&gt; tag.",
-        "They are only used to store CSS styles."
+        "Just the JavaScript source code.",
+        "The final, rendered HTML structure in the browser's real DOM.",
+        "A special JSON version of the page.",
+        "They cannot interact with dynamic applications at all."
       ],
       "correctAnswer": 1,
       "points": 10

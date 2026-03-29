@@ -1,0 +1,30 @@
+<section aria-labelledby="rest-api-title">
+  <h1 id="rest-api-title">HTML and RESTful APIs: Connecting Your Front-End and Back-End</h1>
+  
+  <p>In a modern web application, the HTML is just the user interface. The actual data (like user profiles or product lists) is usually stored on a database and retrieved through a <strong>RESTful API</strong> (REpresentational State Transfer).</p>
+
+  <h2>How HTML and APIs Communicate</h2>
+  <p>The communication happens using standard HTTP methods. Your HTML sends a request, and the API sends back data—usually in **JSON** (JavaScript Object Notation) format.</p>
+
+  <h2>Common HTTP Methods</h2>
+  <ul>
+    <li><strong>GET:</strong> Used by your HTML to retrieve data (e.g., getting a list of products).</li>
+    <li><strong>POST:</strong> Used to send new data (e.g., submitting a registration form).</li>
+    <li><strong>PUT / PATCH:</strong> Used to update existing data (e.g., editing a profile).</li>
+    <li><strong>DELETE:</strong> Used to remove data from the database.</li>
+  </ul>
+
+  <h2>Traditional HTML Forms vs. API Calls</h2>
+  <p>Traditional HTML forms (using <code>&lt;form action="/submit" method="POST"&gt;</code>) refresh the page upon submission. In modern apps, we use JavaScript's <code>fetch()</code> API to send the data in the background, keeping the user on the same page.</p>
+
+  <h2>Data Attributes as API Hooks</h2>
+  <p>You can store API-related information (like an ID) directly in your HTML using <code>data-*</code> attributes. This makes it easy for your JavaScript to know which resource an element represents.</p>
+  <pre><code>&lt;button data-user-id="123" onclick="deleteUser(this)"&gt;Delete&lt;/button&gt;</code></pre>
+
+  <h2>Security: CORS and Auth Tokens</h2>
+  <p>To prevent malicious cross-site requests, browsers use **CORS** (Cross-Origin Resource Sharing). Your API must specifically allow your website's domain to access its data. Additionally, most APIs require an **Authentication Token** (like a JWT) to verify who the user is.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Use the browser's <strong>Network panel</strong> in DevTools to see exactly what data is being sent to and received from your API. It's the best way to debug a broken connection.</p>
+  </aside>
+</section>

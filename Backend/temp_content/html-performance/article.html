@@ -1,0 +1,25 @@
+<section aria-labelledby="performance-title">
+  <h1 id="performance-title">HTML Performance Optimization: Building Lightning-Fast Pages</h1>
+  
+  <p>The speed of your website is a critical ranking factor for search engines and a major driver of user retention. Performance optimization starts with your HTML structure and how the browser parses and renders your content.</p>
+
+  <h2>Critical Rendering Path</h2>
+  <p>The sequence of steps the browser takes to convert HTML, CSS, and JavaScript into a visible web page is called the **Critical Rendering Path**. Optimizing this path involves making the most important content appear first.</p>
+
+  <h2>Minifying Your HTML</h2>
+  <p>Minification is the process of removing unnecessary characters (like comments, extra spaces, and newlines) from your HTML files without changing their functionality. This reduces the file size and makes the page load faster.</p>
+
+  <h2>Lazy Loading Images and Iframes</h2>
+  <p>By default, the browser downloads all images on a page immediately. You can use the <code>loading="lazy"</code> attribute to tell the browser only to download an image or iframe when it's about to enter the user's viewport.</p>
+  <pre><code>&lt;img src="massive-hero-image.jpg" loading="lazy"&gt;</code></pre>
+
+  <h2>Avoid Large Inline Scripts and Styles</h2>
+  <p>While a few lines of inline CSS might be faster (to avoid a network request), large amounts of inline code in your HTML are not cached by the browser and will slow down every subsequent page load.</p>
+
+  <h2>The <code>async</code> and <code>defer</code> Script Attributes</h2>
+  <p>By using these attributes, you can prevent JavaScript from blocking the parsing of your HTML, allowing the visible content of your page to appear much sooner.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Use a tool like **Google PageSpeed Insights** or the **Lighthouse** panel in Chrome DevTools to find specific performance bottlenecks on your page. These tools will give you a list of "Quick Wins" to speed up your site.</p>
+  </aside>
+</section>

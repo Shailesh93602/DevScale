@@ -1,0 +1,62 @@
+{
+  "title": "Using Meta Tags Effectively Quiz",
+  "description": "Test your knowledge of the essential machine-readable metadata that browsers and search engines use to understand your pages.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "What is the primary role of the 'charset=\"UTF-8\"' meta tag in an HTML document?",
+      "options": [
+        "To make the page load faster.",
+        "To define the language used in the document's body.",
+        "To ensure all characters from every language are correctly displayed in the browser.",
+        "To encrypt the website's source code."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which meta tag is absolutely required to ensure a web page is correctly scaled and responsive on mobile devices?",
+      "options": [
+        "name='responsive'",
+        "name='viewport'",
+        "name='mobile'",
+        "name='scale'"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "The 'Open Graph' (og:) meta tags are primarily used to control what happens when a page is _______?",
+      "options": [
+        "Shared on social media platforms like Facebook or WhatsApp.",
+        "Indexed by Google's search engine.",
+        "Viewed on a very old browser.",
+        "Translated into a different language."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which 'robots' meta tag value tells search engines to NOT index a specific page (i.e., hide it from search results)?",
+      "options": [
+        "hide",
+        "noindex",
+        "private",
+        "secret"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "The 'theme-color' meta tag allows you to change the color of which browser element on mobile devices?",
+      "options": [
+        "The background of the website.",
+        "The browser's address/URL bar.",
+        "The page's primary buttons.",
+        "The user's scrollbar."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
