@@ -20,7 +20,8 @@ async function main() {
   await import('./seeders/subject.seeder.js');
   await import('./seeders/topic.seeder.js');
   await import('./seeders/masterChallenge.seeder.js');
-  // await import('./seeders/quiz.seeder.js');
+  await import('./seeders/quiz.seeder.js');
+  await import('./seeders/battle.seeder.js');
 
   // Note: roadmap and roadmapSubject seeders omitted since the schema was refactored.
   // We use roadmapMainConceptSubjectTopics instead.
