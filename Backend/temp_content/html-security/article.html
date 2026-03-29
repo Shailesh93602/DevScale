@@ -1,0 +1,27 @@
+<section aria-labelledby="html-security-title">
+  <h1 id="html-security-title">HTML for Security: Defensive Coding Practices</h1>
+  
+  <p>Security is not just a backend concern. Many common web vulnerabilities, such as Cross-Site Scripting (XSS) and Clickjacking, can be mitigated directly through careful HTML and the use of modern security headers. As a frontend developer, you are the first line of defense.</p>
+
+  <h2>Preventing XSS with Proper Sanitization</h2>
+  <p>Cross-Site Scripting (XSS) occurs when an attacker injects a malicious script into a page. While the primary fix is on the server, you should ensure that you never use <code>innerHTML</code> with unvetted user data. Instead, use <code>textContent</code> or <code>innerText</code>, which automatically escape HTML tags.</p>
+
+  <h2>The <code>sandbox</code> Attribute for Iframes</h2>
+  <p>If you must embed content from another site using an <code>&lt;iframe&gt;</code>, always use the <code>sandbox</code> attribute. This attribute places extraordinary restrictions on the content in the iframe, preventing it from running scripts, submitting forms, or accessing the parent page's cookies.</p>
+  <pre><code>&lt;iframe src="https://example.com" sandbox&gt;&lt;/iframe&gt;</code></pre>
+
+  <h2>Secure Links with <code>rel="noopener"</code></h2>
+  <p>When you open a link in a new tab using <code>target="_blank"</code>, the new page has a tiny bit of access to your page via the <code>window.opener</code> object. This can be exploited for phishing. Always add <code>rel="noopener noreferrer"</code> to your external links.</p>
+  <pre><code>&lt;a href="https://malicious-site.com" target="_blank" rel="noopener"&gt;Read More&lt;/a&gt;</code></pre>
+
+  <h2>Content Security Policy (CSP) Meta Tag</h2>
+  <p>While usually set on the server, you can define a basic Content Security Policy using a meta tag. This tells the browser which sources of scripts, styles, and images are trusted, effectively blocking most XSS attacks.</p>
+  <pre><code>&lt;meta http-equiv="Content-Security-Policy" content="default-src 'self';"&gt;</code></pre>
+
+  <h2>CSRF Protection in Forms</h2>
+  <p>To prevent Cross-Site Request Forgery (CSRF), every <code>&lt;form&gt;</code> that performs a sensitive action (like changing a password) should include a hidden "anti-CSRF" token provided by the server.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Use the <strong>"Security"</strong> tab in Chrome DevTools to verify that your site is served over HTTPS and to check for mixed content issues where secure pages attempt to load insecure resources.</p>
+  </aside>
+</section>

@@ -1,0 +1,62 @@
+{
+  "title": "HTML Best Practices Quiz",
+  "description": "Test your knowledge of the essential rules for writing clean and professional HTML code.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "According to industry standards, what is the best case for writing tag and attribute names?",
+      "options": [
+        "UPPERCASE",
+        "lowercase",
+        "CamelCase",
+        "Sentence case"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Is it required to quote attribute values in HTML5 if the value has no spaces?",
+      "options": [
+        "Yes, always.",
+        "No, it's never required.",
+        "Only for image sources.",
+        "It depends on the browser."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Why should you avoid using inline styles (style='...') in your HTML?",
+      "options": [
+        "They make the page load much slower.",
+        "They make it difficult to maintain and update the design across multiple pages.",
+        "They are not supported by modern browsers.",
+        "They cause security vulnerabilities."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the result of using an empty alt attribute (alt='') for an image?",
+      "options": [
+        "The image will not load at all.",
+        "Screen readers will skip the image as decorative.",
+        "The browser will show a placeholder.",
+        "The page will fail the accessibility audit."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is the most accurate description of 'separation of concerns' in web development?",
+      "options": [
+        "Using as many different frameworks as possible.",
+        "Keeping HTML for structure, CSS for style, and JavaScript for logic.",
+        "Developing the mobile version before the desktop version.",
+        "Using separate servers for images and text."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

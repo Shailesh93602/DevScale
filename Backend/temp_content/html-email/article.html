@@ -1,0 +1,34 @@
+<section aria-labelledby="html-email-title">
+  <h1 id="html-email-title">HTML for Email: Coding Like It's 1999</h1>
+  
+  <p>Coding HTML for emails is a completely different world compared to modern web development. Because email clients (like Outlook, Gmail, and Apple Mail) use widely different and often outdated rendering engines, you must use restrictive techniques to ensure your message looks good everywhere.</p>
+
+  <h2>The Return of the Table Layout</h2>
+  <p>While tables are discouraged for web layouts, they are <strong>mandatory</strong> for email layouts. Flexbox and CSS Grid are poorly supported in many email clients. Use nested tables to create columns and rows.</p>
+  <pre><code>&lt;table width="100%" border="0" cellspacing="0" cellpadding="0"&gt;
+  &lt;tr&gt;
+    &lt;td align="center"&gt;
+      &lt;!-- Content --&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;</code></pre>
+
+  <h2>Inlining Your CSS</h2>
+  <p>Most email clients strip out the <code>&lt;style&gt;</code> tag in the <code>&lt;head&gt;</code>. Therefore, you must use <strong>inline styles</strong> for almost all of your CSS.</p>
+  <pre><code>&lt;td style="color: #333333; font-family: Arial, sans-serif; font-size: 16px;"&gt;
+  Hello World!
+&lt;/td&gt;</code></pre>
+
+  <h2>Email-Safe Fonts</h2>
+  <p>Custom web fonts (like Google Fonts) are only supported in a few modern clients (like Apple Mail). Stick to standard "web-safe" fonts like Arial, Verdana, Georgia, or Times New Roman, and always provide a stack of fallbacks.</p>
+
+  <h2>Images in Email</h2>
+  <p>Background images are notoriously difficult to get right in Outlook. Use standard <code>&lt;img&gt;</code> tags instead. Also, remember that many users have images disabled by default, so your email must remain readable even without them (use <code>alt</code> text!).</p>
+
+  <h2>Testing is Mandatory</h2>
+  <p>Because there is no "Inspect Element" in a real email client, you must test your templates using services like **Litmus** or **Email on Acid**, which show you screenshots of your email in dozens of different clients.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Use a tool like <em>Premailer</em> or <em>Juice</em> to automatically inline your CSS before you send your final email template. This allows you to write clean CSS during development.</p>
+  </aside>
+</section>

@@ -1,0 +1,62 @@
+{
+  "title": "HTML Templates Quiz",
+  "description": "Test your knowledge of the essential tags and methods for creating and using reusable HTML components.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which tag is used to hold client-side content that you do NOT want to be rendered when the page loads?",
+      "options": [
+        "&lt;hidden&gt;",
+        "&lt;template&gt;",
+        "&lt;placeholder&gt;",
+        "&lt;aside&gt;"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the primary benefit of the &lt;template&gt; tag compared to a &lt;div style='display: none'&gt;?",
+      "options": [
+        "The template's content is processed and images are downloaded immediately.",
+        "The template's content is not part of the active document and scripts inside it are not executed until it is cloned.",
+        "The template tag is only used for search engines to read.",
+        "The template tag automatically styles itself."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "In JavaScript, which property of a template object contains the template's actual content that you want to clone?",
+      "options": [
+        "innerHTML",
+        "content",
+        "clone",
+        "value"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which method should you use on a template's content to create a deep copy for insertion into the page?",
+      "options": [
+        "cloneNode(true)",
+        "copyAll()",
+        "duplicateElement()",
+        "instantiate()"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which tag is used WITHIN a template to define a custom content entry point for web components?",
+      "options": [
+        "&lt;input&gt;",
+        "&lt;area&gt;",
+        "&lt;slot&gt;",
+        "&lt;entry&gt;"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "title": "HTML Metadata and SEO Quiz",
+  "description": "Test your knowledge of the essential tags and attributes for making your HTML content discoverable.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "What is 'metadata' in the context of an HTML document?",
+      "options": [
+        "Extra content shown at the bottom of the page.",
+        "Data about the data, used by browsers and search engines.",
+        "The actual text and images that users interact with.",
+        "A hidden script used to track user behavior."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Where is metadata primarily stored in an HTML document?",
+      "options": [
+        "Inside the &lt;body&gt; tag.",
+        "Inside the &lt;head&gt; tag.",
+        "In a separate .metadata file.",
+        "At the very end of the document."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which meta tag specifies a short summary of the page often shown in search engine results?",
+      "options": [
+        "&lt;meta name='summary'&gt;",
+        "&lt;meta name='description'&gt;",
+        "&lt;meta name='seo'&gt;",
+        "&lt;meta name='content'&gt;"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the primary role of the 'robots' meta tag?",
+      "options": [
+        "To automate form submission on the page.",
+        "To tell search engine crawlers whether to index the page.",
+        "To translate the page content into other languages.",
+        "To detect if the user is a human or a computer."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which attribute of a meta tag is used to specify Open Graph (OG) properties like 'og:title' or 'og:image'?",
+      "options": [
+        "name",
+        "property",
+        "type",
+        "og"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

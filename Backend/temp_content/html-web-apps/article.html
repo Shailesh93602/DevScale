@@ -1,0 +1,30 @@
+<section aria-labelledby="web-app-title">
+  <h1 id="web-app-title">HTML for Web Applications: The SPAs and Web Components</h1>
+  
+  <p>Modern web development has moved beyond simple static pages toward rich, interactive Web Applications. HTML provides special features to support these complex applications, allowing for reusable components and efficient page updates.</p>
+
+  <h2>The <code>&lt;template&gt;</code> Element</h2>
+  <p>The <code>&lt;template&gt;</code> tag is a mechanism for holding HTML that is not rendered immediately when the page loads, but can be instantiated later via JavaScript. This is the foundation of many Single Page Application (SPA) frameworks.</p>
+  <pre><code>&lt;template id="user-card"&gt;
+  &lt;div class="card"&gt;
+    &lt;h2&gt;&lt;/h2&gt;
+    &lt;p&gt;&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</code></pre>
+
+  <h2>The <code>&lt;slot&gt;</code> Element</h2>
+  <p>Used within web components, the <code>&lt;slot&gt;</code> tag serves as a placeholder that you can fill with your own custom markup. This allows for highly flexible and reusable UI components.</p>
+
+  <h2>Progressive Web Apps (PWAs)</h2>
+  <p>HTML contributes to PWAs through the <code>&lt;link rel="manifest"&gt;</code> tag, which points to a JSON file defining how the app should behave when "installed" on a user's home screen, including icons and splash screens.</p>
+
+  <h2>Shadow DOM Foundation</h2>
+  <p>Shadow DOM allows developers to encapsulate their HTML and CSS, preventing styles from "leaking" out and affecting the rest of the page. This is critical for building component libraries that work consistently across different projects.</p>
+
+  <h2>Microdata and Rich Snippets</h2>
+  <p>To make your web app data understandable to search engines (e.g., product prices, review ratings), you can use HTML attributes like <code>itemscope</code>, <code>itemtype</code>, and <code>itemprop</code>.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Use the <code>&lt;template&gt;</code> tag instead of hidden <code>&lt;div&gt;</code>s (<code>display: none</code>) for your UI components. It's more efficient as the browser doesn't process the template's content until it's actually used.</p>
+  </aside>
+</section>

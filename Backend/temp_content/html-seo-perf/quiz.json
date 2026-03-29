@@ -1,0 +1,62 @@
+{
+  "title": "HTML SEO and Performance Quiz",
+  "description": "Test your knowledge of the essential tags and attributes for building fast and searchable web pages.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "How does a deep, complex DOM (many nested elements) affect a web page's performance?",
+      "options": [
+        "It makes the page load faster by grouping data.",
+        "It can slow down rendering and increase memory usage.",
+        "It has no effect on performance.",
+        "It improves the ranking on search engines."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which &lt;link&gt; attribute is used to download critical resources (like fonts) early in the loading process?",
+      "options": [
+        "rel='importance'",
+        "rel='preload'",
+        "rel='fetch'",
+        "rel='async'"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the primary benefit of using 'loading=lazy' on an &lt;img&gt; tag?",
+      "options": [
+        "It makes the image appear in black and white until clicked.",
+        "It improves initial load time by deferring image download until they are near the viewport.",
+        "It ensures the image is downloaded in the highest possible quality.",
+        "It automatically resizes the image for mobile screens."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which &lt;link&gt; attribute helps save time by establishing a connection to an external domain before a request is made?",
+      "options": [
+        "rel='connect'",
+        "rel='preconnect'",
+        "rel='save'",
+        "rel='dns'"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Why should you use semantic tags like &lt;h1&gt; and &lt;nav&gt; for better SEO?",
+      "options": [
+        "They automatically apply high-quality CSS styles.",
+        "They help search engine crawlers understand the hierarchy and meaning of your content.",
+        "They are required by the W3C to launch a website.",
+        "They encrypt the page content for better security."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "title": "HTML for Email Quiz",
+  "description": "Test your knowledge of the essential rules for creating HTML email templates.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the preferred and most compatible way to create layouts for HTML emails?",
+      "options": [
+        "Flexbox",
+        "CSS Grid",
+        "HTML Tables (&lt;table&gt;)",
+        "Divs with float attributes"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Why is it mandatory to use inline styles (style='...') for almost all CSS in email templates?",
+      "options": [
+        "Inline styles load faster.",
+        "Many email clients strip out the &lt;style&gt; tag in the &lt;head&gt;.",
+        "They are required by the Gmail API.",
+        "They are better for search engine optimization within the email."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is considered a 'web-safe' font that is correctly supported in most email clients?",
+      "options": [
+        "Arial",
+        "Inter",
+        "Roboto",
+        "Open Sans"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Should you rely on background images to convey critical information in an email?",
+      "options": [
+        "Yes, they look great in all modern clients.",
+        "No, many clients like Outlook have poor support for background images.",
+        "Only if you use PNG format.",
+        "It depends on the user's screen resolution."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the result of many users having images disabled by default in their email clients?",
+      "options": [
+        "The email will not load at all.",
+        "The design will be broken, but text will remain readable if you use 'alt' attributes.",
+        "The browser will automatically enable them.",
+        "It triggers a popup to the user to enable them manually."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
