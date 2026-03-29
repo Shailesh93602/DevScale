@@ -1,0 +1,26 @@
+<section aria-labelledby="responsive-title">
+  <h1 id="responsive-title">Responsive Web Design: One Web for All Devices</h1>
+  
+  <p>Responsive Web Design (RWD) is the practice of building websites that provide an optimal viewing experience across a wide range of devices—from mobile phones to desktop monitors. It's not about creating different sites for different devices; it's about creating one site that <strong>responds</strong> to the user's environment.</p>
+
+  <h2>The Three Pillars of Responsive Design</h2>
+  <ul>
+    <li><strong>Fluid Grids:</strong> Using relative units like percentages (<code>%</code>) or viewport units (<code>vw</code>, <code>vh</code>) instead of fixed pixels (<code>px</code>) for layouts.</li>
+    <li><strong>Flexible Images:</strong> Ensuring images never exceed the width of their container using <code>max-width: 100%</code>.</li>
+    <li><strong>Media Queries:</strong> Applying different CSS rules based on the device's characteristics, such as screen width, resolution, or orientation.</li>
+  </ul>
+
+  <h2>The <code>viewport</code> Meta Tag</h2>
+  <p>To make a page responsive, you must tell the browser how to handle the page's dimensions and scaling. This is done with the viewport meta tag in the <code>&lt;head&gt;</code>.</p>
+  <pre><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</code></pre>
+
+  <h2>Mobile-First Approach</h2>
+  <p>A "Mobile-First" strategy means designing and coding for the smallest screen first, then gradually adding complexity as the screen gets larger. This ensures that the most essential content is prioritized and that the site remains fast and functional on lower-powered devices.</p>
+
+  <h2>Breakpoints</h2>
+  <p>Breakpoints are the specific screen widths where the layout of the page changes (defined via media queries). Instead of targeting specific devices (like "iPhone 13"), you should set breakpoints based on where your content starts to look "broken" or difficult to read.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Use modern CSS layout tools like <strong>Flexbox</strong> and <strong>CSS Grid</strong>. They are inherently more "responsive" than older float-based layouts and require far fewer media queries to achieve a professional result.</p>
+  </aside>
+</section>

@@ -1,0 +1,62 @@
+{
+  "title": "HTML and CSS Integration Quiz",
+  "description": "Test your knowledge of the three ways to style HTML elements using Cascading Style Sheets.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the MOST efficient and recommended way to apply styles to a professional website?",
+      "options": [
+        "Inline Styles",
+        "Internal Style Sheets",
+        "External Style Sheets",
+        "JavaScript Styling"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the name of the attribute used to apply an inline style directly to an HTML element?",
+      "options": [
+        "class",
+        "id",
+        "style",
+        "css"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which tag is used in the &lt;head&gt; of an HTML document to group internal CSS rules?",
+      "options": [
+        "&lt;link&gt;",
+        "&lt;css&gt;",
+        "&lt;style&gt;",
+        "&lt;script&gt;"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which tag is used to create a link between an HTML document and an external CSS file?",
+      "options": [
+        "&lt;a&gt;",
+        "&lt;link&gt;",
+        "&lt;source&gt;",
+        "&lt;import&gt;"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "If you apply the same style using all three methods, which method generally has the HIGHEST priority (overwrites the others)?",
+      "options": [
+        "External Style Sheet",
+        "Internal Style Sheet",
+        "Inline Style",
+        "The browser's default style"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

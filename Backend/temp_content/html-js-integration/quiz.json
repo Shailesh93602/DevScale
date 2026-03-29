@@ -1,0 +1,62 @@
+{
+  "title": "HTML and JavaScript Integration Quiz",
+  "description": "Test your knowledge of the essential methods for adding behavior and interactivity to your web pages using JavaScript.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which tag is used to integrate JavaScript into an HTML document?",
+      "options": [
+        "&lt;js&gt;",
+        "&lt;script&gt;",
+        "&lt;code&gt;",
+        "&lt;link&gt;"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the primary benefit of using the 'defer' attribute on an external &lt;script&gt; tag?",
+      "options": [
+        "It downloads the script faster.",
+        "It ensures the script is executed ONLY after the entire HTML document is parsed.",
+        "It hides the script from search engines.",
+        "It executes the script before any HTML is parsed."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which attribute on a &lt;script&gt; tag downloads the script in the background and executes it as soon as it's ready, potentially before the HTML is finished parsing?",
+      "options": [
+        "async",
+        "defer",
+        "load",
+        "fetch"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Traditionally, where is the most common place to put internal &lt;script&gt; tags to ensure the HTML loads first?",
+      "options": [
+        "In the &lt;head&gt;",
+        "In the middle of the &lt;body&gt;",
+        "At the bottom of the &lt;body&gt;",
+        "Outside the &lt;html&gt; tag"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is an example of an 'event handler' that can trigger JavaScript directly from an HTML attribute?",
+      "options": [
+        "style",
+        "onclick",
+        "class",
+        "id"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

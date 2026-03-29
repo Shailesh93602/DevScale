@@ -1,0 +1,32 @@
+<section aria-labelledby="form-val-title">
+  <h1 id="form-val-title">HTML5 Form Validation: Built-in Data Protection</h1>
+  
+  <p>HTML5 introduced a powerful set of attributes that allow browsers to validate user input natively. This improves the user experience by providing immediate feedback and reduces the amount of JavaScript you need to write for basic checks.</p>
+
+  <h2>The <code>novalidate</code> Attribute</h2>
+  <p>If you want to handle all validation manually with JavaScript, you can disable the browser's native validation by adding the <code>novalidate</code> attribute to your <code>&lt;form&gt;</code> tag.</p>
+
+  <h2>The Constraint Validation API</h2>
+  <p>JavaScript can interact with HTML5 validation through the Constraint Validation API. Every input element has a <code>validity</code> property that contains information about why an input might be failing (e.g., <code>valueMissing</code>, <code>typeMismatch</code>, or <code>patternMismatch</code>).</p>
+  <pre><code>if (!input.validity.valid) {
+  console.log("Input is invalid!");
+}</code></pre>
+
+  <h2>Customizing Validation Messages</h2>
+  <p>While browsers provide default messages, you can set your own using the <code>setCustomValidity()</code> method. If this method is called with a non-empty string, the element is considered invalid and that string is shown as the error message.</p>
+
+  <h2>CSS Pseudo-classes for Validation</h2>
+  <p>You can style elements differently based on their validation state using CSS:</p>
+  <ul>
+    <li><strong><code>:required</code></strong> and <strong><code>:optional</code></strong></li>
+    <li><strong><code>:valid</code></strong> and <strong><code>:invalid</code></strong></li>
+    <li><strong><code>:in-range</code></strong> and <strong><code>:out-of-range</code></strong></li>
+  </ul>
+  <pre><code>input:invalid {
+  border: 2px solid red;
+}</code></pre>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Combining HTML5 validation attributes with CSS pseudo-classes allows for a highly polished UI that guides the user toward successful form submission without any heavy scripts.</p>
+  </aside>
+</section>
