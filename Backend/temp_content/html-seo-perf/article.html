@@ -1,0 +1,27 @@
+<section aria-labelledby="html-seo-perf-title">
+  <h1 id="html-seo-perf-title">HTML for SEO and Performance: Building Fast and Findable Sites</h1>
+  
+  <p>Search Engine Optimization (SEO) and web performance are deeply interconnected. Google uses page speed as a ranking factor, and the way you structure your HTML directly impacts both. A well-optimized page loads faster and provides better clarity to search robots.</p>
+
+  <h2>Minimizing DOM Depth</h2>
+  <p>Every HTML element you add increases the complexity of the DOM tree. A deep, complex DOM (sometimes called "div-itis") can slow down rendering and increase memory usage. Keep your structure as flat as possible by using semantic tags instead of nested wrappers.</p>
+
+  <h2>Resource Prioritization</h2>
+  <p>You can tell the browser which resources are most important using these advanced <code>&lt;link&gt;</code> attributes:</p>
+  <ul>
+    <li><strong><code>rel="preload"</code>:</strong> Used to fetch high-priority resources (like your main font or a hero image) early in the loading process.</li>
+    <li><strong><code>rel="preconnect"</code>:</strong> Tells the browser to establish a connection to another domain (like Google Fonts) before the actual request is made, saving time on the DNS handshake.</li>
+  </ul>
+  <pre><code>&lt;link rel="preload" href="hero-image.webp" as="image"&gt;</code></pre>
+
+  <h2>Lazy Loading Images and Iframes</h2>
+  <p>By default, browsers download all images on a page immediately. Using the <code>loading="lazy"</code> attribute tells the browser to wait until the image is near the user's viewport before downloading it, significantly improving initial load times.</p>
+  <pre><code>&lt;img src="large-chart.png" loading="lazy" alt="Data chart"&gt;</code></pre>
+
+  <h2>Content Semantics for SEO</h2>
+  <p>Search engines give more weight to content inside semantic tags. Ensure your most important keywords are inside <code>&lt;h1&gt;</code>, <code>&lt;h2&gt;</code>, and <code>&lt;strong&gt;</code> tags. Also, use <code>&lt;nav&gt;</code> and <code>&lt;footer&gt;</code> to help robots distinguish navigation from main content.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Use the <strong>"Identify Large Layout Shifts"</strong> feature in Chrome DevTools to see how your HTML structure impacts user experience metrics like CLS (Cumulative Layout Shift).</p>
+  </aside>
+</section>

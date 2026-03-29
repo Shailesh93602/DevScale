@@ -1,0 +1,62 @@
+{
+  "title": "HTML Scripting Quiz",
+  "description": "Test your knowledge of the essential tags and attributes for adding JavaScript into your HTML documents.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which tag is used to embed or reference executable code, primarily JavaScript, in an HTML file?",
+      "options": [
+        "&lt;code&gt;",
+        "&lt;script&gt;",
+        "&lt;js&gt;",
+        "&lt;behavior&gt;"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What happens when the browser encounters a standard &lt;script&gt; tag in the HTML document?",
+      "options": [
+        "It downloads the script and continues parsing the HTML in parallel.",
+        "It ignores the script until the page is fully loaded.",
+        "It pauses the parsing of the HTML until the script is downloaded and executed.",
+        "It automatically redirects the user to the script's source URL."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which attribute should you use if you want a script to execute ONLY after the entire HTML document has been parsed?",
+      "options": [
+        "async",
+        "defer",
+        "load-last",
+        "wait"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "The &lt;noscript&gt; tag is used for what purpose?",
+      "options": [
+        "To provide alternate content for users with JavaScript disabled.",
+        "To prevent a script from being executed by specific browsers.",
+        "To define a primary heading for a script section.",
+        "To compress the size of a JavaScript file."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Where is the recommended position for script tags that don't use 'defer' or 'async' to ensure fast page loading?",
+      "options": [
+        "Inside the &lt;head&gt; tag.",
+        "At the very beginning of the &lt;body&gt; tag.",
+        "Just before the closing &lt;/body&gt; tag.",
+        "Inside an &lt;aside&gt; element."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

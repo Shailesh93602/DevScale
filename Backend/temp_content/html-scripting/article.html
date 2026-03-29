@@ -1,0 +1,32 @@
+<section aria-labelledby="html-scripting-title">
+  <h1 id="html-scripting-title">HTML Scripting: Adding Interactivity</h1>
+  
+  <p>While HTML provides the structure of a page, scripting (primarily via JavaScript) provides the behavior. The <code>&lt;script&gt;</code> element is used to either embed executable code directly or to reference an external script file.</p>
+
+  <h2>The <code>&lt;script&gt;</code> Tag</h2>
+  <p>You can include JavaScript directly inside your HTML file using the <code>&lt;script&gt;</code> tag:</p>
+  <pre><code>&lt;script&gt;
+  console.log("Hello from the console!");
+&lt;/script&gt;</code></pre>
+
+  <h2>External Scripts</h2>
+  <p>For better organization and cacheability, it's best practice to keep your JavaScript in separate <code>.js</code> files and link them using the <code>src</code> attribute.</p>
+  <pre><code>&lt;script src="script.js"&gt;&lt;/script&gt;</code></pre>
+
+  <h2>Async and Defer</h2>
+  <p>Browsers normally stop rendering the HTML page when they encounter a script tag, which can lead to slow load times. HTML5 introduced two attributes to change this behavior:</p>
+  <ul>
+    <li><strong><code>async</code>:</strong> The script is downloaded in the background and executed as soon as it's available, without blocking the HTML parser. (Best for independent scripts like analytics).</li>
+    <li><strong><code>defer</code>:</strong> The script is downloaded in the background but only executed after the entire HTML document has been parsed. (Best for scripts that rely on the DOM).</li>
+  </ul>
+
+  <h2>The <code>&lt;noscript&gt;</code> Element</h2>
+  <p>This tag defines an alternate content for users who have disabled scripting in their browser or have a browser that doesn't support it.</p>
+  <pre><code>&lt;noscript&gt;
+  &lt;p&gt;This site requires JavaScript to function correctly. Please enable it in your browser settings.&lt;/p&gt;
+&lt;/noscript&gt;</code></pre>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Unless you have a specific reason otherwise, always place your script tags just before the closing <code>&lt;/body&gt;</code> tag or use the <code>defer</code> attribute to ensure the page renders quickly.</p>
+  </aside>
+</section>

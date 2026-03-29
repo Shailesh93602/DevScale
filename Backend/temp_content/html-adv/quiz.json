@@ -1,0 +1,62 @@
+{
+  "title": "HTML Advanced Topics Quiz",
+  "description": "Test your knowledge of the essential tags and attributes for advanced graphics and interactive elements.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "What is 'Scalable Vector Graphics' (SVG)?",
+      "options": [
+        "A bitmap format for high-resolution photographs.",
+        "An image format based on XML vectors that can be scaled without losing quality.",
+        "A script used to automate image downloads.",
+        "A CSS property for applying shadows to images."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which tag provides a 'bitmap' area that is drawn upon using JavaScript for games and real-time graphics?",
+      "options": [
+        "&lt;svg&gt;",
+        "&lt;canvas&gt;",
+        "&lt;artboard&gt;",
+        "&lt;draw&gt;"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "The &lt;math&gt; tag (MathML) is used primarily for what purpose?",
+      "options": [
+        "To perform complex calculations in the browser.",
+        "To describe mathematical formulas semantically for display and accessibility.",
+        "To store numerical data in a database.",
+        "To automatically generate charts from data."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which two tags are used to create a native accordion (expandable/collapsible) section without any JavaScript?",
+      "options": [
+        "&lt;div&gt; and &lt;span&gt;",
+        "&lt;details&gt; and &lt;summary&gt;",
+        "&lt;expand&gt; and &lt;collapse&gt;",
+        "&lt;header&gt; and &lt;section&gt;"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "When should you prefer SVG over Canvas for web graphics?",
+      "options": [
+        "For complex, high-performance games with hundreds of moving objects.",
+        "For resolution-independent icons, logos, and simple illustrations.",
+        "Only when you don't use CSS.",
+        "Only for mobile devices."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

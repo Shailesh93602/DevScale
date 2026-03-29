@@ -1,0 +1,62 @@
+{
+  "title": "HTML Security Quiz",
+  "description": "Test your knowledge of the essential tags and attributes for building a more secure web application.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "What is 'Cross-Site Scripting' (XSS)?",
+      "options": [
+        "A script that automatically translates a page into other languages.",
+        "An attack where malicious code is injected into a web page and executed by users.",
+        "A method of cross-site request forgery through a link.",
+        "A way to share scripts across different domains."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which JavaScript property should you use to prevent XSS instead of using 'innerHTML'?",
+      "options": [
+        "textContent",
+        "outerHTML",
+        "value",
+        "style"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the primary benefit of adding the 'sandbox' attribute to an &lt;iframe&gt;?",
+      "options": [
+        "It makes the iframe load faster.",
+        "It places extraordinary restrictions on the content inside, preventing it from running scripts or accessing cookies.",
+        "It ensures the iframe is displayed in high resolution.",
+        "It automatically resizes the iframe for different screens."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "When opening a link in a new tab (target='_blank'), which attribute should you add for security?",
+      "options": [
+        "rel='noopener'",
+        "rel='async'",
+        "rel='external'",
+        "rel='secure'"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "The 'Content Security Policy' (CSP) is primarily used for which purpose?",
+      "options": [
+        "To define the page's color scheme and fonts.",
+        "To tell the browser which sources of scripts, styles, and images are trusted.",
+        "To set the page's meta description for search engines.",
+        "To encrypt the data sent through a form."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

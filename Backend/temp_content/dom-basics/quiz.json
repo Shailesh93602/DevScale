@@ -1,0 +1,62 @@
+{
+  "title": "Document Object Model (DOM) Quiz",
+  "description": "Test your knowledge of the programming interface for HTML documents.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "What does DOM stand for?",
+      "options": [
+        "Data Object Mode",
+        "Document Orientation Map",
+        "Document Object Model",
+        "Digital Output Medium"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which programming language is primarily used to interact with and change the DOM in a browser?",
+      "options": [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "Python"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "The DOM represents an HTML page as what kind of structure?",
+      "options": [
+        "A linear list of words.",
+        "A grid of table cells.",
+        "A tree structure of nodes.",
+        "A database of records."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which object in JavaScript is the entry point to accessing and manipulating the DOM?",
+      "options": [
+        "window",
+        "document",
+        "page",
+        "body"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the difference between an Element and a Node in the DOM?",
+      "options": [
+        "Elements are text; Nodes are tags.",
+        "An Element is a type of Node that specifically represents an HTML tag.",
+        "Nodes are only used for CSS styling.",
+        "There is no difference between them."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

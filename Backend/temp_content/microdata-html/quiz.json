@@ -1,0 +1,62 @@
+{
+  "title": "Microdata and HTML Quiz",
+  "description": "Test your knowledge of the essential attributes for creating structured data in your HTML.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "What is the primary purpose of 'Microdata' in HTML?",
+      "options": [
+        "To make a web page load faster.",
+        "To provide a detailed meaning and context for existing data to search engines.",
+        "To define the page's color scheme and layout.",
+        "To automate form submission on the page."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which attribute is used to define the scope of a specific item (e.g., a person or product) in Microdata?",
+      "options": [
+        "itemscope",
+        "itemtype",
+        "itemprop",
+        "itemname"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is Schema.org?",
+      "options": [
+        "A search engine specifically for HTML code.",
+        "A collaborative vocabulary used by search engines to understand Microdata.",
+        "A tool for automatically generating CSS styles.",
+        "A script used to track website traffic."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which Microdata attribute should you use to label a specific property like a person's name or a product price?",
+      "options": [
+        "itemscope",
+        "itemtype",
+        "itemprop",
+        "itemval"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is a 'Rich Snippet' in search result pages?",
+      "options": [
+        "An extra link that redirects to a different website.",
+        "An enhanced search result that shows extra data like prices, ratings, or images.",
+        "A snippet of code that users can copy to their own sites.",
+        "A popup that appears when a user clicks on a search result."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

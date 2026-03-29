@@ -1,0 +1,35 @@
+<section aria-labelledby="templates-title">
+  <h1 id="templates-title">HTML Templates: The Foundation of Reusable UI</h1>
+  
+  <p>In modern web development, we often need to generate the same structure multiple times (like list items, cards, or table rows). Instead of building these structures using messy string concatenation in JavaScript, we can use the <code>&lt;template&gt;</code> element.</p>
+
+  <h2>The <code>&lt;template&gt;</code> Tag</h2>
+  <p>The <code>&lt;template&gt;</code> tag is used to hold client-side content that you do not want to be rendered when the page loads. It is essentially a piece of HTML that is stored in the browser's memory, ready to be "cloned" and inserted into the page whenever needed.</p>
+
+  <h2>Cloning a Template with JavaScript</h2>
+  <p>To use a template, you find it in the DOM, clone its content, and append it to a parent element.</p>
+  <pre><code>&lt;template id="my-template"&gt;
+  &lt;p&gt;New Item!&lt;/p&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+  const temp = document.getElementById("my-template");
+  const clon = temp.content.cloneNode(true);
+  document.body.appendChild(clon);
+&lt;/script&gt;</code></pre>
+
+  <h2>Templates vs. Hidden Divs</h2>
+  <p>In the past, developers used <code>&lt;div style="display: none"&gt;</code> for templates. However, the <code>&lt;template&gt;</code> tag is superior because:</p>
+  <ul>
+    <li>The browser doesn't process the content (no image downloads, no script execution) until it's actually cloned.</li>
+    <li>The content is not considered part of the "live" document, so it doesn't interfere with CSS selectors.</li>
+    <li>It is semantically correct.</li>
+  </ul>
+
+  <h2>The <code>&lt;slot&gt;</code> Element</h2>
+  <p>When creating Web Components, you can use <code>&lt;slot&gt;</code> tags inside your template to define where "user content" should be injected. This allows for flexible components that can be customized by the user while keeping the overall structure consistent.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Use templates for any UI element that appears more than once and is generated dynamically. It keeps your JavaScript much cleaner and improves performance.</p>
+  </aside>
+</section>

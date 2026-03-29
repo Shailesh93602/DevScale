@@ -1,0 +1,62 @@
+{
+  "title": "HTML History & Evolution Quiz",
+  "description": "Test your knowledge of the essential milestones in the history of the World Wide Web.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which individual is credited with inventing the HTML language?",
+      "options": [
+        "Bill Gates",
+        "Steve Jobs",
+        "Tim Berners-Lee",
+        "Linus Torvalds"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "In what year was the first version of HTML released?",
+      "options": [
+        "1985",
+        "1991",
+        "1999",
+        "2004"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which HTML version was the first to introduce native and standard support for video and audio playback?",
+      "options": [
+        "HTML 2.0",
+        "HTML 4.01",
+        "XHTML 1.1",
+        "HTML5"
+      ],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "What does 'WHATWG' maintain in modern web development?",
+      "options": [
+        "HTML6",
+        "A 'Living Standard' of HTML that is constantly updated.",
+        "The CSS3 specification.",
+        "The JavaScript core engine."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "The 'Browser Wars' of the late 90s saw which companies compete for dominance in web technology?",
+      "options": [
+        "Apple and Google",
+        "Netscape and Microsoft",
+        "Facebook and Amazon",
+        "Netflix and Blockbuster"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

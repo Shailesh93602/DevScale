@@ -1,0 +1,36 @@
+<section aria-labelledby="html-css-title">
+  <h1 id="html-css-title">HTML & CSS Integration: Turning Structure Into Style</h1>
+  
+  <p>HTML provides the structure, but CSS provides the beauty. Understanding how these two technologies interact is fundamental to modern web development. There are three primary ways to include CSS in your HTML project, each with its own pros and cons.</p>
+
+  <h2>1. Inline CSS</h2>
+  <p>Inline CSS uses the <code>style</code> attribute directly on an HTML tag. This is useful for quick tests or specific overrides but is generally discouraged for large projects because it's hard to maintain.</p>
+  <pre><code>&lt;h1 style="color: blue; text-align: center;"&gt;Styled Heading&lt;/h1&gt;</code></pre>
+
+  <h2>2. Internal CSS</h2>
+  <p>Internal CSS is placed inside a <code>&lt;style&gt;</code> tag within the <code>&lt;head&gt;</code> of an HTML document. This is useful for single-page websites where you want to keep everything in one file.</p>
+  <pre><code>&lt;head&gt;
+  &lt;style&gt;
+    body { background-color: lightgrey; }
+    p { font-size: 16px; }
+  &lt;/style&gt;
+&lt;/head&gt;</code></pre>
+
+  <h2>3. External CSS (Industry Standard)</h2>
+  <p>The best way to include CSS is via an external <code>.css</code> file. This allows you to apply the same design to thousands of pages by editing just one file. You link the CSS file in the <code>&lt;head&gt;</code> using the <code>&lt;link&gt;</code> tag.</p>
+  <pre><code>&lt;head&gt;
+  &lt;link rel="stylesheet" href="styles.css"&gt;
+&lt;/head&gt;</code></pre>
+
+  <h2>The "Cascading" in CSS</h2>
+  <p>If you use all three methods, which style wins? CSS follows a "Hierarchy of Specificity":</p>
+  <ol>
+    <li><strong>Inline styles</strong> have the highest priority.</li>
+    <li><strong>Internal and External styles</strong> follow next (the one defined LATER in the code wins).</li>
+    <li><strong>Browser defaults</strong> have the lowest priority.</li>
+  </ol>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Always stick to External CSS for production apps. It makes your code cleaner, improves page load speed (via browser caching), and is much easier to manage at scale.</p>
+  </aside>
+</section>
