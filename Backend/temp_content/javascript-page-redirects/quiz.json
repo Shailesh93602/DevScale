@@ -1,0 +1,62 @@
+{
+  "title": "JavaScript Page Redirects Quiz",
+  "description": "Test your knowledge of the essential properties and tools for creating robust and cross-browser web experiences with redirects and navigation.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the most modern and recommended way to build a professional-grade web application in JavaScript for redirecting a user to a different page?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "Using the .location.href or .location.replace() properties to navigate programmatically.",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a major 'Pro' of using .location.replace() compared to .location.href?",
+      "options": [
+        "It makes your HTML files smaller and more readable.",
+        "It 'replaces' the current page in the browser's history, preventing a 'Back Button loop' for the user.",
+        "It is always supported by every browser.",
+        "It replaces the need for any HTML5 tags."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is 'window.location.href' inside a professional web application?",
+      "options": [
+        "To make the site load much faster.",
+        "To show the current page's URL and allow you to set a NEW one, which is like the user clicking a link.",
+        "To choose the colors for the animation.",
+        "To automatically generate CSS animations."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Why is it important to almost ALWAYS avoid 'Universal Selectors' everywhere in your professional JavaScript redirects?",
+      "options": [
+        "They are difficult to maintain.",
+        "They can make the site load much slower and potentially confuse the redirect logic.",
+        "They are not supported in modern browsers.",
+        "They take up no space in the browser."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a best practice for a professional-style stylesheet for JavaScript page redirects?",
+      "options": [
+        "Commenting every single line of code.",
+        "Using a reset or normalize stylesheet.",
+        "Using 'window.location.replace()' for login and signup flows to provide a cleaner 'back button' experience.",
+        "Using variables for colors and spacing."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

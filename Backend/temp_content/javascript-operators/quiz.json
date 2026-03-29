@@ -1,0 +1,62 @@
+{
+  "title": "JavaScript Operators Quiz",
+  "description": "Test your knowledge of the essential properties and tools for creating robust and cross-browser web experiences with operators and logic.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which operator should you use to check if two values are EXACTLY the same (matching both value and data type)?",
+      "options": [
+        "=",
+        "==",
+        "===",
+        "!="
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which 'Pillar of the Web' is responsible for providing behavior and interactivity to a page (e.g., using operators for math)?",
+      "options": [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "PHP"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What does the 'Modulus' (Remainder, %) operator return?",
+      "options": [
+        "The total sum of two numbers.",
+        "The amount left over after a division (e.g., 10 % 3 = 1).",
+        "The square root of a number.",
+        "Both 'total sum' and 'amount left over' are correct."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which Logical operator returns 'true' ONLY if BOTH comparisons are true?",
+      "options": [
+        "|| (OR)",
+        "&& (AND)",
+        "! (NOT)",
+        "?? (NULLISH)"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the result of 'score += 5' if the original score was 10?",
+      "options": [
+        "5",
+        "10",
+        "15",
+        "50"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

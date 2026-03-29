@@ -1,0 +1,33 @@
+<section aria-labelledby="js-numbers-title">
+  <h1 id="js-numbers-title">JavaScript Numbers: Handling Math and Logic</h1>
+  
+  <p>In JavaScript, all numbers (whether they are simple integers like <code>5</code> or complex decimals like <code>3.14</code>) belong to a single "Number" data type. Understanding how to manipulate these values is essential for building everything from simple counters to complex financial applications.</p>
+
+  <h2>1. Integers vs. Decimals (Floats)</h2>
+  <p>JavaScript doesn't make a distinction between "integers" and "floating-point numbers" in its basic type system. They are all treated as 64-bit double-precision values.</p>
+
+  <h2>2. Built-in Number Methods</h2>
+  <ul>
+    <li><strong><code>toString()</code>:</strong> Converts a number into a string (e.g., for displaying it).</li>
+    <li><strong><code>toFixed(n)</code>:</strong> Rounds a number to a specific number of decimal places. <strong>Essential for currency!</strong></li>
+    <li><strong><code>Number.isInteger()</code>:</strong> Checks if a value is a whole number.</li>
+  </ul>
+
+  <h2>3. The <code>NaN</code> (Not-a-Number) Special Value</h2>
+  <p>This is a common "bug" you'll find when you try to perform math on a non-numerical value (like trying to multiply "Hello" by 5). Always check if a value is a valid number before doing calculations!</p>
+
+  <h2>4. Converting Strings to Numbers</h2>
+  <p>If you get a value from a user input (which is always a string), you must convert it to a number before doing math.</p>
+  <ul>
+    <li><strong><code>Number()</code>:</strong> Converts the entire thing.</li>
+    <li><strong><code>parseInt()</code>:</strong> Converts the beginning of the string into a whole number (e.g., <code>"10px"</code> becomes <code>10</code>).</li>
+    <li><strong><code>parseFloat()</code>:</strong> Converts the beginning of the string into a decimal.</li>
+  </ul>
+
+  <h2>The BigInt (Modern)</h2>
+  <p>For very, very large numbers that are bigger than 9 quadrillion, standard JavaScript numbers can lose accuracy. The newer **BigInt** type was added specifically to handle these massive values with perfect precision.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> For financial calculation (like money), avoid using floating-point numbers directly. <strong>Convert all values to cents (integers)</strong> first, do your math, and then convert back to dollars for display. This prevents "mystery" cents appearing in your totals.</p>
+  </aside>
+</section>

@@ -1,0 +1,60 @@
+{
+  "title": "JavaScript Variables Quiz",
+  "description": "Test your knowledge of the essential properties and tools for creating robust and cross-browser web experiences with variables and data types.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which JavaScript keyword should you use specifically to define a 'Constant' value (a value that will NEVER change)?",
+      "options": [
+        "let",
+        "const",
+        "var",
+        "fix"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which 'Pillar of the Web' is responsible for providing behavior and interactivity to a page (e.g., using variables to store user scores)?",
+      "options": [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "PHP"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "JavaScript is 'Dynamically Typed,' which means you DO NOT have to tell the variable what kind of data it will hold ahead of time. True or False?",
+      "options": [
+        "True",
+        "False"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "One of the most powerful use cases for 'Variables' is ________ (naming them in camelCase like totalProjectCost).",
+      "options": [
+        "Theming",
+        "Consistency / Readability",
+        "Debugging",
+        "Scaling"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the primary danger of using the older 'var' keyword instead of 'let' or 'const' in your modern project?",
+      "options": [
+        "It is always slower.",
+        "It can cause 'scoping' issues and unexpected behavior in complex applications.",
+        "It is not supported in modern browsers.",
+        "It is only for CSS."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

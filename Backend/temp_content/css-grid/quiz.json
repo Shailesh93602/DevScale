@@ -1,0 +1,62 @@
+{
+  "title": "CSS Grid Quiz",
+  "description": "Test your knowledge of the essential properties for creating powerful, two-dimensional layouts using CSS Grid.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "CSS Grid is considered a __________ layout model.",
+      "options": [
+        "One-dimensional (Rows OR Columns)",
+        "Two-dimensional (Rows AND Columns)",
+        "Zero-dimensional",
+        "Static-only"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which CSS property on the grid container is used to define the quantity and size of columns?",
+      "options": [
+        "grid-row-count",
+        "grid-template-columns",
+        "flex-direction",
+        "column-width"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the 'fr' (Fractional) unit specifically used for in CSS Grid?",
+      "options": [
+        "To set the font size in grid cells.",
+        "To represent a fraction of the available space in the grid container.",
+        "To tell the grid to rotate by 45 degrees.",
+        "To hide images in the grid."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which property allows you to name areas of your grid visually to make the CSS easier to read?",
+      "options": [
+        "grid-name-cells",
+        "grid-template-areas",
+        "area-mapping",
+        "visual-grid"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "The 'gap' property on a grid container sets the spacing between which elements?",
+      "options": [
+        "Between the grid container and the browser edge.",
+        "Between all grid cells (both rows and columns).",
+        "Between the text inside a grid cell.",
+        "It doesn't set any spacing."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

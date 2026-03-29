@@ -1,0 +1,31 @@
+<section aria-labelledby="shorthand-title">
+  <h1 id="shorthand-title">CSS Shorthand Properties: Writing Less, Doing More</h1>
+  
+  <p>CSS shorthand properties allow you to set the values of multiple other CSS properties simultaneously. They keep your code clean, readable, and reduce the overall file size of your stylesheets.</p>
+
+  <h2>1. Margin and Padding</h2>
+  <p>Instead of writing four separate lines for <code>top</code>, <code>right</code>, <code>bottom</code>, and <code>left</code>, you can combine them all into one line.</p>
+  <pre><code>margin: 10px; /* All sides 10px */
+margin: 10px 20px; /* Top/Bottom 10px, Left/Right 20px */
+margin: 10px 20px 30px 40px; /* Top, Right, Bottom, Left (Clockwise) */</code></pre>
+
+  <h2>2. Font Shorthand</h2>
+  <p>The <code>font</code> property can bundle `size`, `weight`, `family`, and `line-height` into a single declaration.</p>
+  <pre><code>font: bold 16px/1.5 'Inter', sans-serif;</code></pre>
+
+  <h2>3. Background Shorthand</h2>
+  <p>This is arguably the most powerful shorthand, allowing you to set an image, color, repeat behavior, and position all at once.</p>
+  <pre><code>background: #eee url('image.jpg') no-repeat center / cover;</code></pre>
+
+  <h2>4. Border and Outline</h2>
+  <p>Quickly define the width, style, and color of your borders and outlines.</p>
+  <pre><code>border: 2px solid #333;</code></pre>
+
+  <h2>5. Transition and Animation</h2>
+  <p>Bundling `duration`, `timing-function`, and `delay` into one line makes complex animations much easier to manage.</p>
+  <pre><code>transition: transform 0.3s ease-in-out;</code></pre>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Be careful with shorthand! It can "reset" any properties you don't explicitly mention. For example, if you use <code>background: red;</code>, it will automatically remove any background images you previously set on that element.</p>
+  </aside>
+</section>

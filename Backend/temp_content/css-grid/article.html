@@ -1,0 +1,26 @@
+<section aria-labelledby="css-grid-title">
+  <h1 id="css-grid-title">CSS Grid: Master Two-Dimensional Layouts</h1>
+  
+  <p>CSS Grid is a powerful layout system designed for two-dimensional layouts—managing both rows and columns at the same time. It allows you to create complex, responsive website structures with very little code.</p>
+
+  <h2>Container Properties</h2>
+  <ul>
+    <li><strong><code>display: grid;</code>:</strong> Activates the grid on the container.</li>
+    <li><strong><code>grid-template-columns</code> / <code>grid-template-rows</code>:</strong> Defines the size and number of columns/rows (e.g., <code>repeat(3, 1fr)</code>).</li>
+    <li><strong><code>grid-template-areas</code>:</strong> A visual way to name areas of your grid (e.g., "header header", "sidebar main").</li>
+    <li><strong><code>gap</code>:</strong> Sets the spacing between all grid cells.</li>
+  </ul>
+
+  <h2>Grid Item Properties</h2>
+  <ul>
+    <li><strong><code>grid-column</code> / <code>grid-row</code>:</strong> Tells an item which lines it should start and end on (e.g., <code>grid-column: 1 / 3;</code>).</li>
+    <li><strong><code>grid-area</code>:</strong> Assigns an item to a named area defined in <code>grid-template-areas</code>.</li>
+  </ul>
+
+  <h2>The <code>fr</code> (Fractional) Unit</h2>
+  <p>The <code>fr</code> unit is unique to CSS Grid. It represents a fraction of the available space in the grid container, making it easy to create perfectly flexible columns without calculating percentages.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Use <code>grid-template-areas</code> for high-level page layouts (header, sidebar, main, footer). It makes your CSS much easier to read and understand at a glance compared to using line numbers.</p>
+  </aside>
+</section>

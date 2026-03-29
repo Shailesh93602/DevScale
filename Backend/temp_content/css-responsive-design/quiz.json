@@ -1,0 +1,62 @@
+{
+  "title": "CSS Responsive Design Quiz",
+  "description": "Test your knowledge of the essential properties and tools for creating web experiences that adapt to all device sizes.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the most modern and recommended way to build a responsive, single-page application (SPA)?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "Mobile-First philosophy with Media Queries",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which CSS rule is used to apply different rules based on a specific browser window width (Breakpoint)?",
+      "options": [
+        "@font-face",
+        "@media",
+        "@import",
+        "@keyframes"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which meta tag is absolutely required to ensure a web page is correctly scaled on mobile devices?",
+      "options": [
+        "name='responsive'",
+        "name='viewport'",
+        "name='mobile'",
+        "name='scale'"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What does the 'Mobile-First' philosophy advocate for in development?",
+      "options": [
+        "Start by building for the most powerful desktop browser first.",
+        "Start by building the simplest mobile layout first and adding complexity for larger screens.",
+        "Only build for mobile devices.",
+        "Only build for desktop devices."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which CSS property is the BEST for making images fluid (never wider than their parent container)?",
+      "options": [
+        "width: 100%;",
+        "max-width: 100%;",
+        "height: auto;",
+        "Both 'max-width: 100%' and 'height: auto' are best practices."
+      ],
+      "correctAnswer": 3,
+      "points": 10
+    }
+  ]
+}

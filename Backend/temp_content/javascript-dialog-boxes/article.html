@@ -1,0 +1,28 @@
+<section aria-labelledby="js-dialogs-title">
+  <h1 id="js-dialogs-title">JavaScript Dialog Boxes: Getting the User's Attention</h1>
+  
+  <p>JavaScript provides three built-in ways to show a message to the user and get simple feedback. While modern designs often use custom-built "Modals," these built-in methods are still popular for quick alerts or debugging.</p>
+
+  <h2>1. <code>alert()</code>: The Basic Message</h2>
+  <p>The simplest way to show a message. It contains text and an "OK" button. The user cannot do anything else until they click the button.</p>
+  <pre><code>alert("Successfully Logged In!");</code></pre>
+
+  <h2>2. <code>confirm()</code>: Yes or No?</h2>
+  <p>Shows a message along with "OK" (true) and "Cancel" (false) buttons. This is perfect for double-checking if a user *really* wants to delete something.</p>
+  <pre><code>if (confirm("Are you sure?")) {
+  deleteAccount();
+}</code></pre>
+
+  <h2>3. <code>prompt()</code>: Getting Text Input</h2>
+  <p>Allows the user to type in a short answer (e.g., "What is your name?"). The text they type is "returned" to your code so you can store it in a variable.</p>
+
+  <h2>Performance: Why Built-In Dialogs are Fast</h2>
+  <p>Since these are built into the browser, they don't require any HTML or CSS to load. They are incredibly fast and guaranteed to work in every browser, even if your CSS fails.</p>
+
+  <h2>Modern Alternatives (Custom Modals)</h2>
+  <p>Because built-in alerts can look "ugly" or "dated," most modern professional sites use **HTML5 Modals** (the <code>&lt;dialog&gt;</code> tag) or custom CSS-styled boxes that look much more integrated with the design.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Use **confirm()** for high-stakes actions like "Delete" or "Deactivate Account." For everything else, consider using a custom modern modal that matches the look and feel of your EduScale dashboard!</p>
+  </aside>
+</section>

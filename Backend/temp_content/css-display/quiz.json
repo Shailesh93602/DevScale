@@ -1,0 +1,60 @@
+{
+  "title": "CSS Display Quiz",
+  "description": "Test your knowledge of the fundamental behaviors and layout modes applied using the display property.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which display value makes an element take up the full width available and start on a new line?",
+      "options": [
+        "inline",
+        "block",
+        "none",
+        "flex"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which display value allows you to set a specific width and height while still keeping the element on the same line as others?",
+      "options": [
+        "inline",
+        "block",
+        "inline-block",
+        "grid"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the primary difference between 'display: none' and 'visibility: hidden'?",
+      "options": [
+        "There is no difference.",
+        "'display: none' removes the element from the layout entirely, while 'visibility: hidden' leaves the empty space where the element was.",
+        "'visibility: hidden' removes the element, 'display: none' only hides the colors.",
+        "'display: none' is only for text."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which display value turns an element into a container for the Flexbox layout model?",
+      "options": [
+        "box",
+        "layout-flex",
+        "flex",
+        "inline-flex-only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Can you set a specific 'width' and 'height' on an element with 'display: inline'?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

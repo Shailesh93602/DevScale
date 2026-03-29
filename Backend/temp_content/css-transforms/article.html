@@ -1,0 +1,26 @@
+<section aria-labelledby="transforms-title">
+  <h1 id="transforms-title">CSS Transforms: Reshaping and Moving Elements</h1>
+  
+  <p>The <code>transform</code> property allows you to visually modify an element's appearance by scaling, rotating, skewing, or moving it (translating) in two or three dimensions without affecting its position in the normal document flow.</p>
+
+  <h2>The Four Basic Transforms</h2>
+  <ul>
+    <li><strong><code>translate(x, y)</code>:</strong> Moves the element from its original position. (e.g., <code>translate(10px, 20px)</code>).</li>
+    <li><strong><code>scale(x, y)</code>:</strong> Changes the size of the element (e.g., <code>scale(1.5)</code>).</li>
+    <li><strong><code>rotate(angle)</code>:</strong> Rotates the element around its origin (e.g., <code>rotate(45deg)</code>).</li>
+    <li><strong><code>skew(x, y)</code>:</strong> Tilts or "skews" the element at an angle.</li>
+  </ul>
+
+  <h2>2D vs. 3D Transforms</h2>
+  <p>While most transforms are in 2D, CSS also supports **3D Transforms** (like <code>rotateX</code>, <code>rotateY</code>, and <code>translateZ</code>) to create complex depth and 3D effects right in your browser.</p>
+
+  <h2>The <code>transform-origin</code> Property</h2>
+  <p>By default, elements rotate or scale around their **Center**. Using <code>transform-origin</code>, you can change this point to a corner or any specific coordinate (e.g., `top left`).</p>
+
+  <h2>Performance: Why Use Translate?</h2>
+  <p>If you need to move an element slightly (for a hover effect or an animation), it's much better to use <code>transform: translate</code> than to change its <code>margin</code> or `top/left` properties. This is because transforms are handled by the computer's **GPU**, resulting in much smoother performance.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> You can combine multiple transforms in a single line! The order matters—the browser applies them from left to right (e.g., <code>transform: rotate(45deg) scale(1.5);</code>).</p>
+  </aside>
+</section>

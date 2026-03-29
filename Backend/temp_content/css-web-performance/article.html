@@ -1,0 +1,24 @@
+<section aria-labelledby="css-perf-title">
+  <h1 id="css-perf-title">CSS for Web Performance: Building Faster Sites</h1>
+  
+  <p>Performance isn't just about your images and JavaScript; your CSS can also significantly impact how fast your website feels to the user. Optimizing your CSS is key to achieving high scores on performance metrics like Google's Core Web Vitals.</p>
+
+  <h2>1. Minification</h2>
+  <p>Minification is the process of removing all extra spaces, line breaks, and comments from your CSS file. This reduces the total size of the file that the user's browser has to download.</p>
+
+  <h2>2. Avoid Complexity (The Render Tree)</h2>
+  <p>Every CSS rule you write has to be matched against every HTML element. Complex selectors (like <code>div > ul > li:nth-child(even) a</code>) are much "slower" for the browser to process than simple classes (like <code>.nav-link</code>).</p>
+
+  <h2>3. Critical CSS</h2>
+  <p>Instead of making the user wait for your entire 200KB stylesheet to load, you can extract the CSS needed to show the "Above the Fold" content (the part of the page seen first) and put it directly in a <code>&lt;style&gt;</code> tag in the HTML <code>&lt;head&gt;</code>.</p>
+
+  <h2>4. GPU-Accelerated Properties</h2>
+  <p>For animations, always use properties that are handled by the computer's Graphics Processing Unit (GPU), like <code>transform</code> and <code>opacity</code>. Avoid animating layout properties like <code>margin</code>, <code>top</code>, or <code>width</code>.</p>
+
+  <h2>5. Using Modern Layout Engines</h2>
+  <p>Flexbox and CSS Grid are highly optimized by modern browsers. They are generally faster and more reliable than older layout methods like floats or table layouts.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Use **Content Visibility**! The <code>content-visibility: auto;</code> property allows the browser to skip the rendering of elements that aren't currently on the screen, which can massively speed up the initial load of long pages.</p>
+  </aside>
+</section>

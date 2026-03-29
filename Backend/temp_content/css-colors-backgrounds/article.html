@@ -1,0 +1,32 @@
+<section aria-labelledby="colors-bg-title">
+  <h1 id="colors-bg-title">CSS Colors and Backgrounds: Adding Visual Depth</h1>
+  
+  <p>Colors and backgrounds are the core tools for defining your website's mood and brand. CSS provides dozens of ways to specify colors and manipulate background images with precision.</p>
+
+  <h2>Specifying Colors</h2>
+  <ul>
+    <li><strong>Names:</strong> Use standard color names (e.g., <code>red</code>, <code>cornflowerblue</code>).</li>
+    <li><strong>Hex Codes:</strong> Six-digit hexadecimal codes (e.g., <code>#ff0000</code>). These are the most common in professional design.</li>
+    <li><strong>RGB / RGBA:</strong> Red, Green, and Blue values. The `a` stands for **Alpha** (transparency). (e.g., <code>rgba(255, 0, 0, 0.5)</code>).</li>
+    <li><strong>HSL / HSLA:</strong> Hue, Saturation, and Lightness. This is the most intuitive system for developers because it makes it easy to create lighter or darker versions of a color.</li>
+  </ul>
+
+  <h2>The <code>background</code> Shorthand</h2>
+  <p>Instead of writing separate properties, you can combine everything into one powerful line.</p>
+  <pre><code>background: #333 url('bg.jpg') no-repeat center / cover;</code></pre>
+
+  <h2>Essential Background Properties</h2>
+  <ul>
+    <li><strong><code>background-image</code>:</strong> Loads an image as a background.</li>
+    <li><strong><code>background-size</code>:</strong> Controls how the image is scaled. (<code>cover</code> and <code>contain</code> are the most common).</li>
+    <li><strong><code>background-attachment</code>:</strong> Determines if the image stays fixed or scrolls with the page (<code>fixed</code> / <code>scroll</code>).</li>
+    <li><strong><code>background-position</code>:</strong> Sets the starting position of an image (e.g., <code>center center</code>).</li>
+  </ul>
+
+  <h2>CSS Gradients</h2>
+  <p>You can create beautiful color transitions (linear or radial) entirely in CSS without using any image files. These are faster to load and look perfectly sharp on all devices.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Use <strong>HSL</strong> for your color palette. It allows you to adjust the "lightness" of a color easily, which is perfect for creating hover effects (e.g., making a button slightly darker when the user's mouse is over it).</p>
+  </aside>
+</section>

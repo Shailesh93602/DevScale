@@ -1,0 +1,62 @@
+{
+  "title": "CSS Variables and Mixins Quiz",
+  "description": "Test your knowledge of the essential properties and tools for creating modular, programmatically-advanced CSS using preprocessors.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the most modern and recommended way to build a reusable design system in CSS?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "Combining CSS Variables and SASS Mixins",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a major 'Pro' of using a Mixin compared to a regular CSS class?",
+      "options": [
+        "It makes your CSS files smaller automatically.",
+        "It allows you to pass 'Arguments' (like a background color) to reuse the same logic with different values.",
+        "It is always supported by every browser.",
+        "It replaces the need for any HTML5 tags."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the primary role of 'CSS Variables' (Custom Properties) in a modern design system?",
+      "options": [
+        "To make the site load much faster.",
+        "To provide a single central source for atomic values (like colors or spacing) that can be easily updated and themed.",
+        "To choose the colors for the animation.",
+        "To automatically stop the animation halfway."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "In a SASS environment, which keyword is used to use a pre-defined mixin inside another CSS rule?",
+      "options": [
+        "@mixin",
+        "@include",
+        "@extend",
+        "@import"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the primary benefit of creating atomic design tokens as CSS Variables instead of hardcoding values?",
+      "options": [
+        "It makes your CSS files smaller automatically.",
+        "It allows for 'live' updates and easy theming at runtime (like Dark Mode).",
+        "It is always supported by every browser.",
+        "It replaces the need for any HTML5 tags."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

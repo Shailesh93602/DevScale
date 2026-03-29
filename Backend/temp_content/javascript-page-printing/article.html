@@ -1,0 +1,26 @@
+<section aria-labelledby="js-printing-title">
+  <h1 id="js-printing-title">JavaScript Page Printing: Moving from Digital to Physical</h1>
+  
+  <p>In addition to using **Print-specific CSS**, JavaScript provides a simple way to trigger the browser's built-in print dialog directly. This allows you to add a "Print this receipt" or "Download as PDF" (via the print menu) button for your users.</p>
+
+  <h2>1. <code>window.print()</code></h2>
+  <p>The core command! It's that simple. When this function is called, the browser opens its standard print preview window immediately.</p>
+  <pre><code>&lt;button onclick="window.print()"&gt;Print Page&lt;/button&gt;</code></pre>
+
+  <h2>2. Print Events</h2>
+  <p>JavaScript provides two specific events to help you handle printing:</p>
+  <ul>
+    <li><strong><code>beforeprint</code>:</strong> This event triggers JUST before the print dialog opens. Use it to show hidden content or hide sidebars if you're not using @media print CSS.</li>
+    <li><strong><code>afterprint</code>:</strong> This event triggers AFTER the user closes the print dialog. Use it to restore your UI to its normal state.</li>
+  </ul>
+
+  <h2>3. Performance and User Experience</h2>
+  <p>Never, EVER trigger a print dialog automatically when a page loads. This is extremely annoying and is a major violation of user experience (UX) best practices.</p>
+
+  <h2>Modern Alternatives (PDF Libraries)</h2>
+  <p>If you need a perfectly formatted document (like a formal invoice or a certificate), triggering the print menu may not be enough. In those cases, developers use JavaScript libraries like <strong>jsPDF</strong> or <strong>html2pdf</strong> to generate a custom PDF file directly in the browser.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Combine <strong>window.print()</strong> with <strong>@media print</strong> CSS. This allows you to create a "Print-Friendly" button that results in a perfectly formatted physical document for your users every time.</p>
+  </aside>
+</section>
