@@ -137,7 +137,7 @@ export default class UserRepository extends BaseRepository<User, typeof prisma.u
       orderBy: {
         experience_level: 'asc',
       },
-    });
+    }) as Array<{ experience_level: string | null; _count: number }>;
 
     // Create a map with all experience levels initialized to 0
     const roleCountMap: Record<

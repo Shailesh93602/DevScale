@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import type { LeaderboardEntry } from '@prisma/client';
 import BaseRepository from './baseRepository.js';
 import prisma from '../lib/prisma.js';
 import { getWithSWR, deleteCache } from '../services/cacheService.js';

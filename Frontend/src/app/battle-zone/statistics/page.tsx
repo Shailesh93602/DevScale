@@ -190,24 +190,27 @@ export default function StatisticsPage() {
               d.avg_time_ms != null
                 ? Math.round(d.avg_time_ms / 1000)
                 : (d.averageTime ?? 0),
-            topTopics: (d.top_topics ?? d.topTopics ?? []).map((t: any) => ({
-              topic: t.topic ?? t.name ?? '',
-              score: t.avg_score ?? t.score ?? 0,
-              battles: t.battles ?? 0,
-            })),
+            topTopics: (d.top_topics ?? d.topTopics ?? []).map(
+              (t: { topic?: string; name?: string; avg_score?: number; score?: number; battles?: number }) => ({
+                topic: t.topic ?? t.name ?? '',
+                score: t.avg_score ?? t.score ?? 0,
+                battles: t.battles ?? 0,
+              }),
+            ),
             recentBattles: (d.recent_battles ?? d.recentBattles ?? []).map(
-              (b: any) => ({
+              (b: { id: string; title?: string; ended_at?: string; date?: string; result?: string; score?: number; rank?: number; totalParticipants?: number }) => ({
                 id: b.id,
                 title: b.title ?? 'Battle',
                 date: b.ended_at
                   ? new Date(b.ended_at).toLocaleDateString()
                   : (b.date ?? ''),
-                result:
+                result: (
                   b.result === 'won'
                     ? 'win'
                     : b.result === 'lost'
                       ? 'loss'
-                      : (b.result ?? 'ongoing'),
+                      : 'ongoing'
+                ) as 'win' | 'loss' | 'ongoing',
                 score: b.score ?? 0,
                 rank: b.rank ?? 0,
                 totalParticipants: b.totalParticipants ?? 0,
@@ -217,7 +220,7 @@ export default function StatisticsPage() {
               d.performance_by_difficulty ??
               d.performanceByDifficulty ??
               []
-            ).map((x: any) => ({
+            ).map((x: { difficulty?: string; win_rate?: number; accuracy?: number; battles?: number }) => ({
               difficulty: x.difficulty
                 ? x.difficulty.charAt(0).toUpperCase() +
                   x.difficulty.slice(1).toLowerCase()
@@ -229,7 +232,7 @@ export default function StatisticsPage() {
               d.performance_by_topic ??
               d.performanceByTopic ??
               []
-            ).map((x: any) => ({
+            ).map((x: { topic?: string; win_rate?: number; accuracy?: number; battles?: number }) => ({
               topic: x.topic ?? '',
               accuracy: x.win_rate ?? x.accuracy ?? 0,
               battles: x.battles ?? 0,
@@ -238,12 +241,12 @@ export default function StatisticsPage() {
               d.performance_over_time ??
               d.performanceOverTime ??
               []
-            ).map((x: any) => ({
+            ).map((x: { week?: string; date?: string; avg_score?: number; score?: number; wins?: number; battles?: number; accuracy?: number }) => ({
               date: x.week ?? x.date ?? '',
               score: x.avg_score ?? x.score ?? 0,
               accuracy:
-                x.wins != null && x.battles > 0
-                  ? Math.round((x.wins / x.battles) * 100)
+                x.wins != null && (x.battles ?? 0) > 0
+                  ? Math.round((x.wins / (x.battles ?? 1)) * 100)
                   : (x.accuracy ?? 0),
             })),
           };

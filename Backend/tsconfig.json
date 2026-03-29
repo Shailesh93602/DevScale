@@ -2,14 +2,14 @@
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src",
-    "module": "Node16",
+    "module": "ESNext",
     "target": "ES2022",
     "lib": ["ES2022"],
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "moduleResolution": "node16",
+    "moduleResolution": "bundler",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "sourceMap": true,
@@ -30,7 +30,8 @@
     "transpileOnly": true,
     "require": ["tsconfig-paths/register"],
     "compilerOptions": {
-      "module": "Node16"
+      "module": "ESNext",
+      "moduleResolution": "bundler"
     },
     "files": true
   },

@@ -336,30 +336,30 @@ describe('Battle cancellation', () => {
 
 describe('User statistics', () => {
   it('returns zero stats for a user with no battles', async () => {
-    const stats = await battleRepo.getUserStats(userId2);
+    const result = await battleRepo.getUserStats(userId2);
     // May have some battles from previous tests but structure must be correct
-    expect(stats).toHaveProperty('total_battles');
-    expect(stats).toHaveProperty('wins');
-    expect(stats).toHaveProperty('win_rate');
-    expect(stats).toHaveProperty('accuracy');
-    expect(typeof stats.win_rate).toBe('number');
+    expect(result.stats).toHaveProperty('total_battles');
+    expect(result.stats).toHaveProperty('wins');
+    expect(result.stats).toHaveProperty('win_rate');
+    expect(result.stats).toHaveProperty('accuracy');
+    expect(typeof result.stats.win_rate).toBe('number');
   });
 
   it('returns same structure for all valid timeframes', async () => {
     for (const tf of ['this-week', 'this-month', 'this-year']) {
-      const stats = await battleRepo.getUserStats(userId1, tf);
-      expect(stats).toHaveProperty('total_battles');
-      expect(stats).toHaveProperty('wins');
-      expect(stats).toHaveProperty('win_rate');
-      expect(stats).toHaveProperty('accuracy');
-      expect(typeof stats.win_rate).toBe('number');
+      const result = await battleRepo.getUserStats(userId1, tf);
+      expect(result.stats).toHaveProperty('total_battles');
+      expect(result.stats).toHaveProperty('wins');
+      expect(result.stats).toHaveProperty('win_rate');
+      expect(result.stats).toHaveProperty('accuracy');
+      expect(typeof result.stats.win_rate).toBe('number');
     }
   });
 
   it('win_rate is always between 0 and 100', async () => {
-    const stats = await battleRepo.getUserStats(userId1);
-    expect(stats.win_rate).toBeGreaterThanOrEqual(0);
-    expect(stats.win_rate).toBeLessThanOrEqual(100);
+    const result = await battleRepo.getUserStats(userId1);
+    expect(result.stats.win_rate).toBeGreaterThanOrEqual(0);
+    expect(result.stats.win_rate).toBeLessThanOrEqual(100);
   });
 });
 

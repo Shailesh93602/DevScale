@@ -6,19 +6,17 @@ import { createAppError } from '../utils/errorHandler.js';
  * Assumes req.user is populated (run AFTER authenticate middleware).
  */
 export const requirePro = (req: Request, res: Response, next: NextFunction) => {
-  const user = (req as any).user;
-  
+  const { user } = req;
+
   if (!user) {
     return next(createAppError('Authentication required', 401));
   }
 
-  const tier = user.subscription?.tier || 'free';
-  const status = user.subscription?.status || 'inactive';
+  const tier = user.subscription?.tier ?? 'free';
+  const status = user.subscription?.status ?? 'inactive';
 
-  if (tier === 'pro' || tier === 'team') {
-    if (status === 'active' || status === 'trialing') {
-      return next();
-    }
+  if ((tier === 'pro' || tier === 'team') && (status === 'active' || status === 'trialing')) {
+    return next();
   }
 
   return next(createAppError('Pro subscription required for this feature', 403));
@@ -28,19 +26,17 @@ export const requirePro = (req: Request, res: Response, next: NextFunction) => {
  * Middleware to restrict access to Team features.
  */
 export const requireTeam = (req: Request, res: Response, next: NextFunction) => {
-  const user = (req as any).user;
-  
+  const { user } = req;
+
   if (!user) {
     return next(createAppError('Authentication required', 401));
   }
 
-  const tier = user.subscription?.tier || 'free';
-  const status = user.subscription?.status || 'inactive';
+  const tier = user.subscription?.tier ?? 'free';
+  const status = user.subscription?.status ?? 'inactive';
 
-  if (tier === 'team') {
-    if (status === 'active' || status === 'trialing') {
-      return next();
-    }
+  if (tier === 'team' && (status === 'active' || status === 'trialing')) {
+    return next();
   }
 
   return next(createAppError('Team subscription required for this feature', 403));

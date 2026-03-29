@@ -39,6 +39,7 @@ const LobbyParticipantList: React.FC<LobbyParticipantListProps> = ({
 
   // Listen for participant join events
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsLoading(true);
     send({
       type: 'battle:join',

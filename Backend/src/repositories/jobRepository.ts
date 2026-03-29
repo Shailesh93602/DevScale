@@ -1,4 +1,5 @@
-import { PrismaClient, JobType } from '@prisma/client';
+import { JobType } from '@prisma/client';
+import type { Job } from '@prisma/client';
 import BaseRepository from './baseRepository.js';
 
 import prisma from '../lib/prisma.js';

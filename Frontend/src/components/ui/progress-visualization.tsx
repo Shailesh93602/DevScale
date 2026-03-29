@@ -21,12 +21,11 @@ export const ProgressVisualization = ({
   colors = ['#8300b8', '#690091', '#8300b826', '#690091', '#8300b8'],
   animate = true,
 }: ProgressVisualizationProps) => {
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(() => (animate ? 0 : activeStep));
 
   // Animate through steps if animate is true
   useEffect(() => {
     if (!animate) {
-      setCurrentStep(activeStep);
       return;
     }
 
@@ -35,7 +34,14 @@ export const ProgressVisualization = ({
     }, 2000);
 
     return () => clearInterval(interval);
-  }, [animate, activeStep, steps]);
+  }, [animate, steps]);
+
+  useEffect(() => {
+    if (!animate) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setCurrentStep(activeStep);
+    }
+  }, [animate, activeStep]);
 
   return (
     <div className={cn('relative w-full rounded-lg p-6', className)}>

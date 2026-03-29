@@ -1016,14 +1016,17 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
     const completed = participations.filter((p) => p.battle.status === 'COMPLETED');
     const metrics = this.calculateParticipationMetrics(userId, completed);
 
+    const wins = completed.filter((p) => p.battle.winner_id === userId).length;
     return {
       stats: {
         total_battles: participations.length,
         completed_battles: completed.length,
-        wins: completed.filter((p) => p.battle.winner_id === userId).length,
+        wins,
+        win_rate: completed.length > 0 ? Math.round((wins / completed.length) * 100) : 0,
         total_score: metrics.totalScore,
         correct_answers: metrics.correctAnswers,
         total_answers: metrics.totalAnswers,
+        accuracy: metrics.totalAnswers > 0 ? Math.round((metrics.correctAnswers / metrics.totalAnswers) * 100) : 0,
         accuracy_rate: metrics.totalAnswers > 0 ? Math.round((metrics.correctAnswers / metrics.totalAnswers) * 100) : 0,
         avg_time_ms: metrics.avgTimePerAnswer,
       },
