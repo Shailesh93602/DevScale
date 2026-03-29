@@ -26,6 +26,9 @@ const seedQuizzes = async () => {
       if (!quiz) {
         quiz = await prisma.quiz.create({
           data: {
+            title: quizData.topicName,
+            description: `Quiz for ${quizData.topicName}`,
+            type: 'multiple_choice',
             topic_id: topic.id,
             passing_score: quizData.passingMarks,
           },
@@ -41,6 +44,7 @@ const seedQuizzes = async () => {
             data: {
               quiz_id: quiz.id,
               question: questionData.question,
+              type: 'multiple_choice',
             },
           });
         }
