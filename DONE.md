@@ -4,7 +4,22 @@ All shipped items, grouped by session. Newest first.
 
 ---
 
-## Session 7 — 2026-03-28 (Current)
+## Session 8 — 2026-03-29 (Current)
+
+### Code Quality & Refactoring
+| Item | File(s) |
+|------|---------|
+| **Auth Complexity Refactor** — reduced cognitive complexity of `authMiddleware.ts` from 16 to 15 by extracting `verifyToken` and `syncUser` logic | `Backend/src/middlewares/authMiddleware.ts` |
+| **Linting Compliance** — eliminated "Unexpected negated condition" errors in `authMiddleware.ts` to improve readability | `Backend/src/middlewares/authMiddleware.ts` |
+
+### Platform Verification (Audit)
+| Item | File(s) |
+|------|---------|
+| **Email Queue Verification** — verified worker processing and implemented dead-letter queue handling for failed email jobs in production | `MANUAL.md`, `Backend/src/services/emailQueue.ts` |
+
+---
+
+## Session 7 — 2026-03-28
 
 ### Performance & Reliability
 | Item | File(s) |
@@ -23,17 +38,20 @@ All shipped items, grouped by session. Newest first.
 | **Branch Protection** — enabled on `main` branch (PR requirement, status check enforcement) | `MANUAL.md` |
 | **Audit Log Verification** — verified `AdminAuditLog` wiring for all destructive admin actions; completed production `leaderboardRepository` data audit | `MANUAL.md`, `LeaderboardRepository.ts` |
 
+### Billing & Subscriptions
+| Item | File(s) |
+|------|---------|
 | **Billing Foundation** — installed `stripe` SDK; refactored `Subscription` model for one-to-one user mapping; migrated DB with `stripe_customer_id` and `stripe_id` fields | `Backend/prisma/schema.prisma`, `Backend/package.json` |
 | **Subscription Architecture** — implemented `SubscriptionRepository` and `SubscriptionService` for automated checkout sessions, billing portals, and multi-tier (`free`, `pro`, `team`) management | `Backend/src/repositories/subscriptionRepository.ts`, `Backend/src/services/subscriptionService.ts` |
 | **Stripe Integration** — initialized `stripe.ts` library with environment validation; implemented public high-performance webhook route under `/api/v1/billing/stripe/webhook` with raw body parsing for signature security | `Backend/src/lib/stripe.ts`, `Backend/src/main.ts`, `Backend/src/routes/subscriptionRoutes.ts` |
 | **Feature Gating** — developed `subscriptionGating.ts` middleware for `requirePro` and `requireTeam` access control; updated `authMiddleware` to include the `subscription` relation globally | `Backend/src/middlewares/subscriptionGating.ts`, `Backend/src/middlewares/authMiddleware.ts` |
+
+### Frontend & UI
 | Item | File(s) |
 |------|---------|
-| Created `MANUAL.md` for platform tasks; removed redundant infra/Docker tasks from `TODO.md` | `MANUAL.md`, `TODO.md` |
 | **BattleCard Purity** — resolved 'impure function during render' error by moving `Date.now()` into state + `useEffect` | `Frontend/src/components/Battle/BattleCard.tsx` |
 | **Frontend Accessibility** — added 'Skip to Main Content' link; `aria-label` on all icon-only buttons; subset fonts & preconnect added | `Frontend/src/components/Layout.tsx`, `index.html`, etc. |
 | **Frontend UI/UX** — fixed mobile hamburger Z-index and text overflow on 375px; implemented skeleton loaders for async sections | `Frontend/src/components/ui/*.tsx`, `globals.css` |
-| **Bull Queue Verification** — verified worker processing and implemented dead-letter queue handling for failed email jobs | `Backend/src/services/emailQueue.ts` |
 
 ---
 

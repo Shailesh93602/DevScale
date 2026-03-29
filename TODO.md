@@ -3,8 +3,7 @@
 ## P0 — Must ship before production
 
 ### Features
-- [ ] Stripe subscription billing (Free / Pro / Team tiers)
-- [ ] Feature gating middleware based on subscription tier
+- [ ] Feature-complete Stripe integration tests
 
 ### Testing
 - [ ] Unit test coverage to 80% — controllers, services, repositories
@@ -14,7 +13,11 @@
 
 ---
 
-## P1 — High priority
+## P1 — Audits & Verification
+
+### Audits
+- [ ] **Mobile Touch Audit**: Audit interactive elements on a physical device (44×44px).
+- [ ] **Accessibility Audit**: Run `Lighthouse`/`axe` on critical flows (Register, Join Battle).
 
 ### Frontend
 - [ ] Next.js ISR on article and roadmap pages (`revalidate: 3600`)
@@ -32,7 +35,6 @@
 - [ ] Stale-while-revalidate pattern for leaderboard endpoints
 - [ ] Code-split Monaco Editor; run `@next/bundle-analyzer`
 - [ ] `eslint-plugin-security` + `husky` pre-commit hooks
-- [ ] Stripe webhook handler for subscription lifecycle events
 - [ ] TOTP-based 2FA with `otplib` + recovery codes (backend + frontend)
 - [ ] GDPR data deletion endpoint
 - [ ] Cookie consent banner for EU users (frontend)
@@ -44,10 +46,10 @@
 
 | Phase | Status |
 |:------|:-------|
-| P0 — Infrastructure | 🔶 1 item remains (PgBouncer) |
-| P0 — Security | ✅ Manual verification complete |
-| P0 — CI/CD | ✅ Manual verification complete |
-| P1 — Features / Testing | ⬜ Not started |
+| P0 — Infrastructure | ✅ Complete |
+| P0 — Security | ✅ Complete |
+| P0 — CI/CD | ✅ Complete |
+| P1 — Features / Testing | 🔶 In Progress (Billing UI remains) |
 | P2 / P3 | ⬜ Not started |
 
 > Manual audit and platform tasks are tracked in **MANUAL.md**.
