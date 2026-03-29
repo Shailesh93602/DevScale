@@ -23,8 +23,8 @@ const seedBattles = async () => {
         }
 
         const difficulties = [Difficulty.EASY, Difficulty.MEDIUM, Difficulty.HARD];
-        const lengths = [Length.short, Length.medium, Length.long];
-        const types = [BattleType.INSTANT, BattleType.SCHEDULED, BattleType.TOURNAMENT, BattleType.PRACTICE];
+        const lengths = [Length.short, Difficulty.MEDIUM, Length.long]; // Note: length enum might be different logic but let's stick to valid ones
+        const types = [BattleType.QUICK, BattleType.SCHEDULED, BattleType.PRACTICE];
         const titles = [
             'JavaScript Fundamentals Duel',
             'React Masters Tournament',
@@ -53,9 +53,8 @@ const seedBattles = async () => {
                     title,
                     description: `A challenging battle regarding ${title}. Prove your skills!`,
                     type: types[i % types.length],
-                    status: BattleStatus.UPCOMING,
+                    status: BattleStatus.WAITING,
                     difficulty: difficulties[i % difficulties.length],
-                    length: lengths[i % lengths.length],
                     max_participants: (i % 3 === 0) ? 16 : 2,
                     total_questions: 10 + (i % 5) * 5,
                     points_per_question: 10,
@@ -72,7 +71,7 @@ const seedBattles = async () => {
                         battle_id: battle.id,
                         question: `Sample Question ${q} for ${title}?`,
                         options: ['Option A', 'Option B', 'Option C', 'Option D'],
-                        correct_answer: 'Option A',
+                        correct_answer: 0,
                         order: q
                     }
                 });

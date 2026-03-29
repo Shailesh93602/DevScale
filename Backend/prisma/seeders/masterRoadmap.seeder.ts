@@ -1,6 +1,11 @@
 import { PrismaClient, Difficulty, Status, QuizType } from '@prisma/client';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { dirname } from 'node:path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const prisma = new PrismaClient();
 const ADMIN_EMAIL = 'admin@eduscale.io';
@@ -268,7 +273,11 @@ async function processSubject(mainConceptId: string, roadmapId: string, sPath: s
   console.log(`    📚 Subject [${sIdx + 1}]: "${sTitle}"`);
   const topicDirs = getOrderedDirs(sPath);
   for (const [tIdx, tDir] of topicDirs.entries()) {
-    await processTopic(subject.id, roadmapId, path.join(sPath, tDir), tDir, tIdx, userId);
+    try {
+      await processTopic(subject.id, roadmapId, path.join(sPath, tDir), tDir, tIdx, userId);
+    } catch (err) {
+      console.error(`      ❌ Error in Topic ${tDir}:`, err);
+    }
   }
 }
 
@@ -293,7 +302,11 @@ async function processMainConcept(roadmapId: string, mcPath: string, mcDir: stri
   console.log(`  📌 MainConcept [${mcIdx + 1}]: "${mcName}"`);
   const subjectDirs = getOrderedDirs(mcPath);
   for (const [sIdx, sDir] of subjectDirs.entries()) {
-    await processSubject(mainConcept.id, roadmapId, path.join(mcPath, sDir), sDir, sIdx, userId);
+    try {
+      await processSubject(mainConcept.id, roadmapId, path.join(mcPath, sDir), sDir, sIdx, userId);
+    } catch (err) {
+      console.error(`    ❌ Error in Subject ${sDir}:`, err);
+    }
   }
 }
 
@@ -315,31 +328,39 @@ async function processRoadmap(rmPath: string, rmDir: string, rmIdx: number, cate
     return Difficulty.EASY;
   })();
 
-  const roadmap = await prisma.roadmap.upsert({
-    where: { title: rmMeta.title },
-    update: {
-      description: rmMeta.description,
-      tags: rmMeta.tags,
-      category_id: categoryId,
-      popularity: 300 + rmIdx * 10,
-      difficulty: difficultyValue,
-    },
-    create: {
-      title: rmMeta.title,
-      description: rmMeta.description,
-      user_id: userId,
-      tags: rmMeta.tags,
-      category_id: categoryId,
-      is_public: true,
-      popularity: 300 + rmIdx * 10,
-      difficulty: difficultyValue,
-    },
-  });
+  try {
+    const roadmap = await prisma.roadmap.upsert({
+      where: { title: rmMeta.title },
+      update: {
+        description: rmMeta.description,
+        tags: rmMeta.tags,
+        category_id: categoryId,
+        popularity: 300 + rmIdx * 10,
+        difficulty: difficultyValue,
+      },
+      create: {
+        title: rmMeta.title,
+        description: rmMeta.description,
+        user_id: userId,
+        tags: rmMeta.tags,
+        category_id: categoryId,
+        is_public: true,
+        popularity: 300 + rmIdx * 10,
+        difficulty: difficultyValue,
+      },
+    });
 
-  console.log(`🗺️  [${rmIdx + 1}] Roadmap: "${roadmap.title}" (${roadmap.id})`);
-  const mcDirs = getOrderedDirs(rmPath);
-  for (const [mcIdx, mcDir] of mcDirs.entries()) {
-    await processMainConcept(roadmap.id, path.join(rmPath, mcDir), mcDir, mcIdx, userId);
+    console.log(`🗺️  [${rmIdx + 1}] Roadmap: "${roadmap.title}" (${roadmap.id})`);
+    const mcDirs = getOrderedDirs(rmPath);
+    for (const [mcIdx, mcDir] of mcDirs.entries()) {
+      try {
+        await processMainConcept(roadmap.id, path.join(rmPath, mcDir), mcDir, mcIdx, userId);
+      } catch (err) {
+        console.error(`  ❌ Error in MainConcept ${mcDir}:`, err);
+      }
+    }
+  } catch (err) {
+    console.error(`❌ Fatal error in Roadmap ${rmDir}:`, err);
   }
 }
 
