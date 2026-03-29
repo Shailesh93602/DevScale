@@ -1,0 +1,62 @@
+{
+  "title": "HTML Lists Quiz",
+  "description": "Test your knowledge of the different types of lists in HTML.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which tag starts an unordered list (bulleted)?",
+      "options": [
+        "&lt;ol&gt;",
+        "&lt;ul&gt;",
+        "&lt;li&gt;",
+        "&lt;list&gt;"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which tag starts an ordered list (numbered)?",
+      "options": [
+        "&lt;ol&gt;",
+        "&lt;ul&gt;",
+        "&lt;li&gt;",
+        "&lt;num&gt;"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the result of using the &lt;li&gt; tag?",
+      "options": [
+        "It defines a single list item.",
+        "It starts a new list container.",
+        "It defines a list image.",
+        "It creates a link to a list."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which three tags are involved in creating a Description List?",
+      "options": [
+        "&lt;dl&gt;, &lt;dt&gt;, &lt;dd&gt;",
+        "&lt;dl&gt;, &lt;li&gt;, &lt;ul&gt;",
+        "&lt;list&gt;, &lt;item&gt;, &lt;desc&gt;",
+        "&lt;table&gt;, &lt;tr&gt;, &lt;td&gt;"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Can you put a list inside another list (nested)?",
+      "options": [
+        "Yes, it is possible by placing the inner list inside an &lt;li&gt; tag.",
+        "No, it is invalid in HTML.",
+        "Only if the inner list is of a different type.",
+        "It depends on the browser."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

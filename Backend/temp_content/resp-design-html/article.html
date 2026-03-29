@@ -1,0 +1,27 @@
+<section aria-labelledby="resp-design-title">
+  <h1 id="resp-design-title">Responsive Design with HTML: Adapting to Every Screen</h1>
+  
+  <p>Responsive Web Design (RWD) is the approach that suggests design and development should respond to the user's behavior and environment based on screen size, platform, and orientation. While CSS does the heavy lifting, HTML provides the critical foundation through meta tags and modern elements.</p>
+
+  <h2>The <code>viewport</code> Meta Tag</h2>
+  <p>Without this tag, mobile browsers will render your page as if it were on a broad desktop screen and then scale it down, making text unreadably small. The viewport tag tells the browser to match the page's width to the device's width.</p>
+  <pre><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</code></pre>
+
+  <h2>Responsive Images with <code>&lt;picture&gt;</code></h2>
+  <p>To serve different image files based on screen size (e.g., a small crop for mobile and a wide shot for desktop), the <code>&lt;picture&gt;</code> element is better than a plain <code>&lt;img&gt;</code>.</p>
+  <pre><code>&lt;picture&gt;
+  &lt;source media="(min-width: 800px)" srcset="large-bg.jpg"&gt;
+  &lt;source media="(min-width: 400px)" srcset="medium-bg.jpg"&gt;
+  &lt;img src="small-bg.jpg" alt="Description"&gt;
+&lt;/picture&gt;</code></pre>
+
+  <h2>Using the <code>srcset</code> Attribute</h2>
+  <p>The <code>srcset</code> and <code>sizes</code> attributes on an <code>&lt;img&gt;</code> tag allow the browser to choose the most appropriate image resolution based on the user's screen density (Retina vs. Standard).</p>
+
+  <h2>Flexible Layout Elements</h2>
+  <p>Avoid fixed-width containers in your HTML structure. Instead of <code>&lt;div style="width: 1000px"&gt;</code>, use semantic wrappers that allow CSS to apply percentage-based or fluid widths.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Always test your "Responsive" HTML by resizing your browser window or using the "Toggle Device Toolbar" in your browser's Developer Tools.</p>
+  </aside>
+</section>
