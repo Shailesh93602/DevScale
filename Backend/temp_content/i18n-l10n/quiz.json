@@ -1,0 +1,62 @@
+{
+  "title": "i18n and l10n Quiz",
+  "description": "Test your knowledge of the essential attributes and practices for building global web applications.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "What is the primary difference between Internationalization (i18n) and Localization (l10n)?",
+      "options": [
+        "i18n is for images, l10n is for text.",
+        "i18n is the structural preparation for multiple languages, while l10n is the actual adaptation for a specific region.",
+        "i18n is for mobile devices, l10n is for desktops.",
+        "There is no difference; they are interchangeable terms."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which attribute should be used on the &lt;html&gt; tag to declare the primary language of the document?",
+      "options": [
+        "locale",
+        "lang",
+        "region",
+        "utf8"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which attribute is used to change the document's text direction from Left-to-Right to Right-to-Left?",
+      "options": [
+        "orient",
+        "align",
+        "dir",
+        "side"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the recommended character encoding for a modern, multi-lingual website?",
+      "options": [
+        "ASCII",
+        "ISO-8859-1",
+        "UTF-8",
+        "Windows-1252"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Why is it important to use relative units and flexible layouts when designing for multiple languages?",
+      "options": [
+        "Fixed-width containers might break because text length varies significantly between languages.",
+        "Relative units make the page load faster.",
+        "Search engines penalize fixed-width sites in non-English regions.",
+        "Relative units automatically translate the text."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

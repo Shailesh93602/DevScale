@@ -1,0 +1,33 @@
+<section aria-labelledby="css-basics-title">
+  <h1 id="css-basics-title">CSS Basics: Styling Your Web Content</h1>
+  
+  <p>CSS (Cascading Style Sheets) is the language we use to style the visual presentation of an HTML document. While HTML gives us the "skeleton" of the page, CSS provides the "skin," "clothes," and "makeup." It controls colors, fonts, spacing, and the overall layout.</p>
+
+  <h2>Rule Structure</h2>
+  <p>A CSS "rule" is composed of a **Selector** and a **Declaration Block** (one or more declarations inside curly braces).</p>
+  <pre><code>p {
+  color: blue;
+  font-size: 16px;
+}</code></pre>
+  <ul>
+    <li><strong>Selector (<code>p</code>):</strong> Tells the browser which HTML elements to style.</li>
+    <li><strong>Declaration (<code>color: blue;</code>):</strong> A single property-value pair.</li>
+  </ul>
+
+  <h2>Applying CSS to Your HTML</h2>
+  <ul>
+    <li><strong>Inline:</strong> The <code>style</code> attribute directly on an element. (Least recommended).</li>
+    <li><strong>Internal:</strong> A <code>&lt;style&gt;</code> tag in the <code>&lt;head&gt;</code> of your document.</li>
+    <li><strong>External:</strong> A separate <code>.css</code> file linked via the <code>&lt;link&gt;</code> tag. (Most recommended).</li>
+  </ul>
+
+  <h2>The Concept of "Cascading"</h2>
+  <p>The "Cascading" part of CSS means that if multiple rules affect the same element, the browser uses a specific set of rules to decide which style "wins." This is based on **Importance**, **Specificity**, and **Source Order**.</p>
+
+  <h2>Comments in CSS</h2>
+  <p>You can add comments to your CSS using <code>/* comment */</code>. These are hidden from users but are a great way to organize your code for yourself and other developers.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Always use an external CSS file for a real project. This keeps your HTML clean, improves performance through browser caching, and makes it easy to update your entire site from one central location.</p>
+  </aside>
+</section>

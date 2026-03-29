@@ -1,0 +1,60 @@
+{
+  "title": "Server-Sent Events (SSE) Quiz",
+  "description": "Test your knowledge of the essential real-time communication method for server-to-client updates.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "What is the primary difference between SSE and WebSockets?",
+      "options": [
+        "WebSockets are only for text, and SSE is only for binary data.",
+        "SSE is uni-directional (server to client) while WebSockets are bi-directional (two-way).",
+        "SSE requires a custom protocol, and WebSockets use standard HTTP.",
+        "There is no difference between them."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which JavaScript object is used to create a connection to an SSE server endpoint?",
+      "options": [
+        "EventSource",
+        "WebSocket",
+        "FetchConnection",
+        "SocketIO"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which HTTP header is required for an SSE response from the server?",
+      "options": [
+        "Content-Type: application/json",
+        "Content-Type: text/event-stream",
+        "Content-Type: application/xml",
+        "Content-Type: text/plain"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "SSE includes automatic reconnection features. True or False?",
+      "options": [
+        "True",
+        "False"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the standard text format for an SSE data message?",
+      "options": [
+        "message: My data",
+        "data: [My data]",
+        "data: My data\\n\\n",
+        "content: My data"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}
