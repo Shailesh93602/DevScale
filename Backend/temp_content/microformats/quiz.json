@@ -1,0 +1,62 @@
+{
+  "title": "Microformats Quiz",
+  "description": "Test your knowledge of the essential class-based semantics for creating structured data in your HTML.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "What is 'Microformats' in the context of HTML?",
+      "options": [
+        "A way to resize images automatically.",
+        "A set of class-based semantic data used to add meaning to existing HTML elements.",
+        "A special CSS property for applying animations.",
+        "An automated script used specifically for form validation."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which Microformat is used specifically for representing people, companies, and organizations?",
+      "options": [
+        "hCard",
+        "hCalendar",
+        "hReview",
+        "hPerson"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What does the 'hCalendar' Microformat allow you to represent on a web page?",
+      "options": [
+        "The page creation date.",
+        "Events and schedules (based on iCalendar standards).",
+        "The user's local timezone.",
+        "The total time a user spends on the site."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "In Microformats2, what prefix is used to identify a specific property of an object (like a name or email)?",
+      "options": [
+        "h-*",
+        "p-*",
+        "u-*",
+        "prop-*"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is a key difference between Microformats and Microdata (Schema.org)?",
+      "options": [
+        "Microformats use external files, while Microdata is inside the HTML.",
+        "Microformats rely on the existing 'class' attribute, while Microdata uses new tags like 'itemscope'.",
+        "Microdata is only for images, and Microformats are only for text.",
+        "There is no difference between them; they are two names for the same thing."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

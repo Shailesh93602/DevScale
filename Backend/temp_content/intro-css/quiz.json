@@ -1,0 +1,62 @@
+{
+  "title": "Introduction to CSS Quiz",
+  "description": "Test your knowledge of the fundamental concepts and history of Cascading Style Sheets.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "What does CSS stand for?",
+      "options": [
+        "Creative Style Sheets",
+        "Cascading Style Sheets",
+        "Computer Style Sheets",
+        "Colorful Style Sheets"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is the primary purpose of CSS?",
+      "options": [
+        "To define the structure of the web page.",
+        "To define the visual presentation and layout of the web page.",
+        "To store data in a database.",
+        "To perform complex mathematical calculations."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What does the 'Cascading' in CSS refer to?",
+      "options": [
+        "The way images fall down the page.",
+        "The hierarchy of rules used to determine which styles are applied when multiple rules conflict.",
+        "The speed at which the page loads.",
+        "The method used to connect CSS to Java."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is NOT a benefit of using CSS?",
+      "options": [
+        "Improved website performance through caching.",
+        "Ensuring visual consistency across multiple pages.",
+        "Allowing for the separation of structure and design.",
+        "Automatically generating content for the website."
+      ],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "The CSSOM (CSS Object Model) is combined with what other tree to create the browser's 'Render Tree'?",
+      "options": [
+        "The JSON Tree",
+        "The DOM Tree",
+        "The HTTP Tree",
+        "The Font Tree"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

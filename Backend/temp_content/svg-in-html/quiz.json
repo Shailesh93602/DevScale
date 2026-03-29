@@ -1,0 +1,62 @@
+{
+  "title": "Using SVG in HTML Quiz",
+  "description": "Test your knowledge of the essential methods and properties for using vector graphics in your web pages.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "What is the primary benefit of 'SVG' as an image format?",
+      "options": [
+        "It supports millions of colors for photographs.",
+        "It is infinitely scalable without losing quality because it describes shapes using math and XML.",
+        "It has a fixed resolution that looks good on all devices.",
+        "It is always smaller in file size than a JPEG or PNG."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is the most 'powerful' way to add SVG that allows for CSS styling of individual shapes?",
+      "options": [
+        "Using the &lt;img&gt; tag.",
+        "Using the &lt;svg&gt; tag inline directly in your HTML document.",
+        "Using a CSS background-image.",
+        "Linking it with the &lt;link&gt; tag."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which CSS property is used specifically to set the interior color of an SVG shape?",
+      "options": [
+        "color",
+        "background-color",
+        "fill",
+        "interior"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which CSS property is used specifically to set the border color of an SVG path or shape?",
+      "options": [
+        "border",
+        "stroke",
+        "edge",
+        "outline"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "How can you improve the accessibility of an inline SVG for screen reader users?",
+      "options": [
+        "Use the 'alt' attribute.",
+        "Use the &lt;title&gt; and &lt;desc&gt; tags inside the &lt;svg&gt; element.",
+        "Use high-contrast colors.",
+        "SVG is naturally accessible and requires no extra tags."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
