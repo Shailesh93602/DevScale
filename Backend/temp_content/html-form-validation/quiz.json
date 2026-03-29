@@ -1,0 +1,62 @@
+{
+  "title": "HTML5 Form Validation Quiz",
+  "description": "Test your knowledge of the advanced attributes and methods for validating forms in HTML5.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which attribute can you add to a &lt;form&gt; tag to disable the browser's built-in validation?",
+      "options": [
+        "novalidate",
+        "disable-check",
+        "manual",
+        "skip-val"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "The JavaScript property available on every input that contains information about its validation state is named what?",
+      "options": [
+        "check",
+        "validity",
+        "status",
+        "result"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which method should you use on an input element to set a custom error message?",
+      "options": [
+        "setError()",
+        "setCustomValidity()",
+        "displayMessage()",
+        "updateValidation()"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which CSS pseudo-class should be used to style an element differently when it fails the browser's validation requirements?",
+      "options": [
+        ":error",
+        ":invalid",
+        ":fail",
+        ":wrong"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "If you call setCustomValidity('Error message'), will the input be considered valid or invalid?",
+      "options": [
+        "Valid, but with a warning message.",
+        "Invalid, as long as the string provided is not empty.",
+        "It depends on the the user's browser type.",
+        "It doesn't affect the input's actual validity state."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

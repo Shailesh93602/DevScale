@@ -1,0 +1,62 @@
+{
+  "title": "Forms and Input Types Quiz",
+  "description": "Test your knowledge of the essential input types and tags for creating user-friendly HTML forms.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which &lt;input&gt; type will automatically show a numeric keypad on a mobile device for entering phone numbers?",
+      "options": [
+        "type='number'",
+        "type='tel'",
+        "type='phone'",
+        "type='numeric'"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which &lt;input&gt; type will open the system's native calendar/date picker widget?",
+      "options": [
+        "type='calendar'",
+        "type='date'",
+        "type='time'",
+        "type='month'"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the purpose of the &lt;optgroup&gt; tag within a &lt;select&gt; element?",
+      "options": [
+        "To group related options together with a visible label.",
+        "To allow the user to select multiple options.",
+        "To encrypt the data sent by the form.",
+        "To link the dropdown to a separate CSS file."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which tag should you use for allowing the user to enter multiple lines of text, such as a message or a bio?",
+      "options": [
+        "&lt;input type='text'&gt;",
+        "&lt;input type='message'&gt;",
+        "&lt;textarea&gt;",
+        "&lt;textblock&gt;"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which &lt;input&gt; type creates a slider widget for selecting a numerical value within a range?",
+      "options": [
+        "type='slider'",
+        "type='range'",
+        "type='scroll'",
+        "type='number'"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

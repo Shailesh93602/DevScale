@@ -1,0 +1,32 @@
+<section aria-labelledby="microformats-title">
+  <h1 id="microformats-title">Microformats: Simpler Semantic Markup</h1>
+  
+  <p>While Microdata and RDFa are powerful, they can be complex to implement. **Microformats** are a simpler way to add structured data to your web pages using existing HTML classes. They allow software (like browser extensions or search engines) to "find" data like contact info, events, and reviews automatically.</p>
+
+  <h2>How Microformats Work</h2>
+  <p>Microformats leverage the <code>class</code> attribute to assign meaning to elements. Think of them as a "reused" naming convention that many different systems have agreed upon.</p>
+
+  <h2>Popular Microformats</h2>
+  <ul>
+    <li><strong>hCard:</strong> Used for representing people, companies, and organizations (based on the vCard standard).</li>
+    <li><strong>hCalendar:</strong> Used for events and schedules (based on the iCalendar standard).</li>
+    <li><strong>hReview:</strong> Used for publishing reviews of products, services, or businesses.</li>
+  </ul>
+
+  <h2>Example: Marking Up a Person (hCard)</h2>
+  <pre><code>&lt;div class="vcard"&gt;
+  &lt;a class="url fn" href="https://example.com"&gt;Jane Doe&lt;/a&gt;
+  &lt;div class="org"&gt;Example Corp&lt;/div&gt;
+  &lt;div class="tel"&gt;555-1234&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+  <h2>Microformats vs. Microdata</h2>
+  <p>Microformats were popular before HTML5 introduced formal Microdata. While still used today, modern developers often prefer Microdata (Schema.org) because it is more robust and explicitly supported by major search engines. However, Microformats remain the easiest way to add basic semantic meaning without extra tags.</p>
+
+  <h2>The "Microformats2" Update</h2>
+  <p>The latest version (Microformats2) simplifies the naming convention. Instead of relying on specific vCard strings, it uses a standardized prefix system: <code>h-*</code> for objects, <code>p-*</code> for properties, <code>u-*</code> for URLs, and <code>dt-*</code> for datetime.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Even if you don't use the full Microformat spec, following their naming conventions (like using <code>class="tel"</code> for phone numbers) is a good habit that makes your code more predictable for other developers.</p>
+  </aside>
+</section>

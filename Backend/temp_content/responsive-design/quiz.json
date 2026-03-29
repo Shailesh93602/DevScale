@@ -1,0 +1,62 @@
+{
+  "title": "Responsive Web Design Quiz",
+  "description": "Test your knowledge of the essential techniques and philosophies for building mobile-friendly websites.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "What is 'Responsive Web Design'?",
+      "options": [
+        "A way to create a completely different site for mobile users.",
+        "A web design approach where a single site responds to the user's screen size and device characteristics.",
+        "An automated tool that converts HTML into a mobile app.",
+        "A CSS library used specifically for animations."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which meta tag is required in the &lt;head&gt; to ensure browsers correctly scale a responsive web page?",
+      "options": [
+        "&lt;meta name='responsive' content='yes'&gt;",
+        "&lt;meta name='viewport' content='width=device-width, initial-scale=1.0'&gt;",
+        "&lt;meta name='scale' content='auto'&gt;",
+        "&lt;meta charset='UTF-8'&gt;"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "The 'Three Pillars' of Responsive Design include fluid grids, media queries, and which of the following?",
+      "options": [
+        "Static layouts",
+        "Flexible images",
+        "High-definition fonts",
+        "Fixed-width tables"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "In Responsive Design, what is a 'breakpoint'?",
+      "options": [
+        "A specific point in the HTML code where a script stops running.",
+        "A screen width where the layout of the page changes via a media query.",
+        "A section of a grid where content is forced to break to a new line.",
+        "A link that leads to a mobile-only version of the page."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the primary benefit of a 'Mobile-First' design strategy?",
+      "options": [
+        "It focuses only on users who use mobile phones.",
+        "It prioritizes essential content and ensures performance on lower-powered devices first.",
+        "It eliminates the need for desktop versions of the site.",
+        "It automatically optimizes images for high-resolution screens."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

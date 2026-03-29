@@ -1,0 +1,31 @@
+<section aria-labelledby="css-integration-title">
+  <h1 id="css-integration-title">HTML and CSS Integration: Three Ways to Style</h1>
+  
+  <p>To apply CSS rules to your HTML elements, you must first "integrate" the CSS into your document. There are three standard ways to do this, ranging from the least efficient (inline) to the most powerful (external).</p>
+
+  <h2>1. Inline Styles</h2>
+  <p>Inline styles are applied directly to a specific HTML element using the <code>style</code> attribute. This should generally be avoided because it mixes design with content and makes the code difficult to maintain.</p>
+  <pre><code>&lt;h2 style="color: red; font-size: 20px;"&gt;Styled Title&lt;/h2&gt;</code></pre>
+
+  <h2>2. Internal Style Sheets</h2>
+  <p>Internal styles are placed inside a <code>&lt;style&gt;</code> tag within the <code>&lt;head&gt;</code> of your HTML document. This is useful for single-page websites or for applying styles that only affect one specific page.</p>
+  <pre><code>&lt;head&gt;
+  &lt;style&gt;
+    body { background-color: #f0f0f0; }
+    h1 { color: blue; }
+  &lt;/style&gt;
+&lt;/head&gt;</code></pre>
+
+  <h2>3. External Style Sheets</h2>
+  <p>External styles are stored in a separate file (usually with a <code>.css</code> extension) and linked to the HTML document using the <code>&lt;link&gt;</code> tag. This is the <strong>best practice</strong> for professional websites because it allows you to change the look of an entire site by editing just one file.</p>
+  <pre><code>&lt;head&gt;
+  &lt;link rel="stylesheet" href="styles.css"&gt;
+&lt;/head&gt;</code></pre>
+
+  <h2>Performance and Maintenance</h2>
+  <p>Using external style sheets is the most performant method because browsers can cache the CSS file separately from the HTML. It also provides a cleaner "separation of concerns," making your project much easier to scale and debug.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> If you use all three methods, CSS follows a hierarchy. Inline styles have the highest priority, followed by internal styles, and finally external styles (unless a rule has the <code>!important</code> flag).</p>
+  </aside>
+</section>

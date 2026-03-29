@@ -1,0 +1,33 @@
+<section aria-labelledby="js-integration-title">
+  <h1 id="js-integration-title">HTML and JavaScript Integration: Bringing Your Pages to Life</h1>
+  
+  <p>While HTML provides structure and CSS provides style, JavaScript provides <strong>behavior</strong>. Integrating JavaScript into your HTML allows you to respond to user actions (like clicks), fetch data without reloading the page, and update the UI dynamically.</p>
+
+  <h2>The <code>&lt;script&gt;</code> Tag</h2>
+  <p>JavaScript is added to an HTML document using the <code>&lt;script&gt;</code> tag. There are two primary ways to do this:</p>
+
+  <h3>1. Internal Scripting</h3>
+  <p>You can write JavaScript code directly inside a <code>&lt;script&gt;</code> tag. This is usually placed at the end of the <code>&lt;body&gt;</code> to ensure the HTML is loaded before the script runs.</p>
+  <pre><code>&lt;script&gt;
+  alert("Hello from JavaScript!");
+&lt;/script&gt;</code></pre>
+
+  <h3>2. External Scripting</h3>
+  <p>Just like CSS, it is best practice to keep your JavaScript in a separate <code>.js</code> file. This improves code organization and allows the browser to cache the file.</p>
+  <pre><code>&lt;script src="app.js"&gt;&lt;/script&gt;</code></pre>
+
+  <h2>Control over Loading: <code>async</code> and <code>defer</code></h2>
+  <p>By default, the browser stops parsing HTML when it hits a <code>&lt;script&gt;</code> tag. You can change this behavior using these attributes:</p>
+  <ul>
+    <li><strong><code>async</code>:</strong> The script is downloaded in the background and executed as soon as it's ready, potentially before the HTML is finished parsing.</li>
+    <li><strong><code>defer</code>:</strong> The script is downloaded in the background but only executed <strong>after</strong> the entire HTML document has been parsed. This is generally the preferred method for external scripts.</li>
+  </ul>
+
+  <h2>Event Handlers in HTML</h2>
+  <p>You can trigger JavaScript directly from HTML attributes (like <code>onclick</code>), though modern best practice is to use <code>addEventListener</code> in your JavaScript file instead.</p>
+  <pre><code>&lt;button onclick="myFunction()"&gt;Click Me&lt;/button&gt;</code></pre>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Always place your scripts at the bottom of the body or use the <code>defer</code> attribute. This ensures that the user sees your content as quickly as possible, even if your JavaScript file is large.</p>
+  </aside>
+</section>

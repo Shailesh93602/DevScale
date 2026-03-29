@@ -1,0 +1,38 @@
+<section aria-labelledby="entities-title">
+  <h1 id="entities-title">HTML Entities: Handling Reserved and Special Characters</h1>
+  
+  <p>Some characters in HTML have special meanings. For example, the less-than symbol (<code>&lt;</code>) tells the browser that a new tag is beginning. If you want to display these characters as actual text on your page, you must use <strong>HTML Entities</strong>.</p>
+
+  <h2>Common Reserved Characters</h2>
+  <p>These characters must always be replaced by entities to avoid confusing the browser's HTML parser:</p>
+  <ul>
+    <li><strong><code>&amp;lt;</code></strong> represents <code>&lt;</code> (less than)</li>
+    <li><strong><code>&amp;gt;</code></strong> represents <code>&gt;</code> (greater than)</li>
+    <li><strong><code>&amp;amp;</code></strong> represents <code>&amp;</code> (ampersand)</li>
+    <li><strong><code>&amp;quot;</code></strong> represents <code>"</code> (double quote)</li>
+    <li><strong><code>&amp;apos;</code></strong> represents <code>'</code> (single quote)</li>
+  </ul>
+
+  <h2>The Non-Breaking Space (<code>&amp;nbsp;</code>)</h2>
+  <p>The <code>&amp;nbsp;</code> entity is used when you want a space between two words but do not want the browser to break the line between them. It is also used to add multiple spaces in a row, as browsers normally collapse multiple spaces into one.</p>
+
+  <h2>Symbols and Currency</h2>
+  <p>HTML entities are also used for symbols that aren't on a standard keyboard:</p>
+  <ul>
+    <li><strong><code>&amp;copy;</code></strong> represents © (copyright)</li>
+    <li><strong><code>&amp;reg;</code></strong> represents ® (registered trademark)</li>
+    <li><strong><code>&amp;euro;</code></strong> represents € (euro)</li>
+    <li><strong><code>&amp;trade;</code></strong> represents ™ (trademark)</li>
+  </ul>
+
+  <h2>Mathematical Symbols</h2>
+  <ul>
+    <li><strong><code>&amp;plusmn;</code></strong> represents ± (plus-minus)</li>
+    <li><strong><code>&amp;times;</code></strong> represents × (multiplication)</li>
+    <li><strong><code>&amp;divide;</code></strong> represents ÷ (division)</li>
+  </ul>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Entities always begin with an ampersand (<code>&amp;</code>) and end with a semicolon (<code>;</code>). While you can use numerical codes (e.g., <code>&amp;#169;</code>), entity names are much easier to remember and read.</p>
+  </aside>
+</section>
