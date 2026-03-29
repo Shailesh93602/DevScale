@@ -1,0 +1,62 @@
+{
+  "title": "CSS Positioning Quiz",
+  "description": "Test your knowledge of the essential properties for controlling the placement and layout of elements on your page.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the DEFAULT positioning value for every HTML element?",
+      "options": [
+        "static",
+        "relative",
+        "absolute",
+        "fixed"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which positioning value removes an element from the normal document flow and positions it relative to its closest positioned ancestor?",
+      "options": [
+        "static",
+        "relative",
+        "absolute",
+        "sticky"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which positioning value keeps an element in the same place on the screen even when the user scrolls the page?",
+      "options": [
+        "absolute",
+        "fixed",
+        "sticky",
+        "relative"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which positioning value behaves like 'relative' until the user reaches a specific threshold (e.g., top: 0), then 'sticks' to the screen?",
+      "options": [
+        "absolute",
+        "fixed",
+        "sticky",
+        "relative"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which property controls the 'stacking order' (which element is on top) when elements overlap?",
+      "options": [
+        "stack-index",
+        "z-index",
+        "layer-order",
+        "view-index"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

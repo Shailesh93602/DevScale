@@ -1,0 +1,62 @@
+{
+  "title": "CSS Selectors and Specificity Quiz",
+  "description": "Test your knowledge of the essential hierarchy and scoring systems for styling your web content using CSS.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these selectors has the MOST specificity (points)?",
+      "options": [
+        "Type (p, h1)",
+        "Class (.my-class)",
+        "ID (#my-id)",
+        "Universal (*)"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which CSS property on a parent element allows its font styles to be inherited by its children?",
+      "options": [
+        "font-family",
+        "color",
+        "Both 'font-family' and 'color' are inherited.",
+        "None of these are inherited."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "In a CSS rule (e.g., 'nav ul li a'), how many points does a Type selector (like 'li') contribute to the overall specificity?",
+      "options": [
+        "1",
+        "10",
+        "100",
+        "0"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What happens if two CSS rules have the EXACT same specificity and target the same element?",
+      "options": [
+        "The browser chooses the first one.",
+        "The browser ignores both.",
+        "The rule that appears LATER (lower down) in the CSS file 'wins'.",
+        "The browser randomly picks one."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the primary danger of using '!important' in your CSS rules?",
+      "options": [
+        "It makes the site load much slower.",
+        "It makes debugging very difficult because it overrides almost all other specificity rules.",
+        "It is not supported in modern browsers.",
+        "It hides all images."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

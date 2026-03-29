@@ -1,0 +1,26 @@
+<section aria-labelledby="css-display-title">
+  <h1 id="css-display-title">CSS Display: Defining Element Behavior</h1>
+  
+  <p>The <code>display</code> property is one of the most fundamental in CSS. It determines how an element is treated by the browser layout engine. Every element has a default display type (usually <code>block</code> or <code>inline</code>), but you can change this to achieve different layouts.</p>
+
+  <h2>Common Display Values</h2>
+  <ul>
+    <li><strong>block:</strong> The element starts on a new line and takes up the full width available. (e.g., <code>&lt;div&gt;</code>, <code>&lt;h1&gt;</code>).</li>
+    <li><strong>inline:</strong> The element does not start on a new line and only takes up as much width as necessary. You cannot set a width or height on inline elements. (e.g., <code>&lt;span&gt;</code>, <code>&lt;a&gt;</code>).</li>
+    <li><strong>inline-block:</strong> Behaves like an inline element (doesn't start a new line) but allows you to set a specific width and height.</li>
+    <li><strong>none:</strong> The element is completely removed from the page layout and is not visible. (Unlike <code>visibility: hidden</code>, which leaves an empty space).</li>
+  </ul>
+
+  <h2>Modern Layout Values</h2>
+  <ul>
+    <li><strong>flex:</strong> Turns the element into a "flex container," enabling the Flexbox layout model for its children.</li>
+    <li><strong>grid:</strong> Turns the element into a "grid container," enabling the CSS Grid layout model for its children.</li>
+  </ul>
+
+  <h2>Display: Contents</h2>
+  <p>A newer value, <code>contents</code>, makes the element itself "disappear" from the layout tree, while its children behave as if they were direct children of the parent element. This is useful for semantic wrappings that shouldn't affect layout.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> If you find yourself struggling to center an element or make things sit side-by-side using margins and floats, you should probably switch to <code>display: flex</code>. It's the modern way to handle almost all alignment issues.</p>
+  </aside>
+</section>

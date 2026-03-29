@@ -1,0 +1,37 @@
+<section aria-labelledby="js-functions-title">
+  <h1 id="js-functions-title">JavaScript Functions: Rebuilding and Reusing Code</h1>
+  
+  <p>Functions are the building blocks of JavaScript applications. Instead of writing the same code over and over, you write a **Function** once and "call" it as many times as you need, often with different inputs (parameters).</p>
+
+  <h2>1. Defining a Function</h2>
+  <p>To create a function, you use the <code>function</code> keyword, give it a name, and put your code inside curly braces <code>{}</code>.</p>
+  <pre><code>function sayHello() {
+  console.log("Hello, EduScale!");
+}
+sayHello(); // This "calls" the function.</code></pre>
+
+  <h2>2. Using Parameters and Arguments</h2>
+  <p>Parameters allow your function to accept "inputs" and work differently based on them. This makes your function much more flexible.</p>
+  <pre><code>function greetUser(name) {
+  console.log("Hello, " + name);
+}
+greetUser("Alice"); // Hello, Alice</code></pre>
+
+  <h2>3. The <code>return</code> Keyword</h2>
+  <p>If you want a function to "give back" a value (like the result of a calculation), you use the <code>return</code> keyword. Once a function returns, it stops running immediately.</p>
+  <pre><code>function add(a, b) {
+  return a + b;
+}
+let result = add(10, 20); // result is now 30</code></pre>
+
+  <h2>4. Arrow Functions (Modern)</h2>
+  <p>The most popular way to write functions in modern JavaScript! It provides a cleaner, shorter syntax (using <code>=></code>) and has slightly different rules for "scoping" (handling the <code>this</code> keyword).</p>
+  <pre><code>const multiply = (a, b) => a * b;</code></pre>
+
+  <h2>Anonymous and Callback Functions</h2>
+  <p>Functions that don't have a name are called **Anonymous**. You can actually pass one function *into* another function as a parameter (this is called a **Callback**), which is the key to handling events and asynchronous data.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Keep your functions small and focused on **just one task**. This makes your code much easier to test, debug, and reuse in different parts of your project.</p>
+  </aside>
+</section>

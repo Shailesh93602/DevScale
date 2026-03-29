@@ -1,0 +1,37 @@
+<section aria-labelledby="print-title">
+  <h1 id="print-title">CSS for Print: Designing for the Physical World</h1>
+  
+  <p>Sometimes users want to print a physical copy of your web page. Without specific "Print CSS," the result can be a mess of unnecessary sidebars, dark backgrounds, and broken layouts. Designing for print is an essential but often overlooked part of web development.</p>
+
+  <h2>The <code>@media print</code> Query</h2>
+  <p>To write styles that only apply when the user prints the page, you use a specific media query.</p>
+  <pre><code>@media print {
+  /* Print-specific styles here */
+}</code></pre>
+
+  <h2>Hiding Non-Essential Content</h2>
+  <p>When printing, you should hide elements that have no value on paper, like navigation bars, sidebars, ads, and interactive buttons.</p>
+  <pre><code>@media print {
+  .nav, .sidebar, .ads, .btn-submit { display: none; }
+}</code></pre>
+
+  <h2>Page Break Control</h2>
+  <p>You can control where the printer starts a new page using properties like <code>break-before</code>, <code>break-after</code>, and <code>break-inside: avoid;</code>. This prevents things like a heading appearing at the bottom of one page while its content starts on the next.</p>
+
+  <h2>Styling Links for Print</h2>
+  <p>On paper, links are useless because they aren't clickable. A common trick is to use CSS to display the actual URL next to the link text so users can still find the information later.</p>
+  <pre><code>@media print {
+  a::after { content: " (" attr(href) ")"; }
+}</code></pre>
+
+  <h2>Standardizing for Paper</h2>
+  <ul>
+    <li>Change your text color to black (to save ink) and your background to white.</li>
+    <li>Use standard page sizes (like <code>8.5in x 11in</code>) or let the browser handle it.</li>
+    <li>Keep margins generous so no text is cut off by the printer's edge.</li>
+  </ul>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> You can test your print styles without wasting paper! In Chrome DevTools, open the **Rendering** tab and find the "Emulate CSS media type" option, then select **print**.</p>
+  </aside>
+</section>

@@ -1,0 +1,60 @@
+{
+  "title": "JavaScript Overview Quiz",
+  "description": "Test your knowledge of the essential concepts of modern JavaScript compared to HTML and CSS.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the most modern and recommended way to build a professional-grade web application?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "Integrating HTML, CSS, and JavaScript together for interactivity.",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which 'Pillar of the Web' is responsible for providing behavior and interactivity to a page (e.g., button clicks)?",
+      "options": [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "PHP"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the primary role of 'Client-Side' JavaScript compared to Server-Side JavaScript (like Node.js)?",
+      "options": [
+        "It makes your site load much faster.",
+        "It runs directly in the user's browser to handle interactions and user behavior on the front-end.",
+        "It choose the colors for the animation.",
+        "It automatically generate CSS animations."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "One of the most powerful use cases for JavaScript is ________ (fetching new content from an API WITHOUT refreshing the page).",
+      "options": [
+        "Theming",
+        "AJAX / Fetching",
+        "Debugging",
+        "Scaling"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "JavaScript and Java are the EXACT same programming language with different names. True or False?",
+      "options": [
+        "True",
+        "False"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

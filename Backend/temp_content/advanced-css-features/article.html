@@ -1,0 +1,27 @@
+<section aria-labelledby="advanced-css-title">
+  <h1 id="advanced-css-title">Advanced CSS Features: The Future of Web Styling</h1>
+  
+  <p>CSS is evolving faster than ever. New features are being added that previously required JavaScript or complex hacks. Keeping up with these advanced tools will make you a much more efficient and powerful developer.</p>
+
+  <h2>1. Container Queries (@container)</h2>
+  <p>For years, we've used Media Queries (based on the viewport size). **Container Queries** allow an element to change its style based on the size of its *parent container* (e.g., a card component that looks different depending on whether it's in a sidebar or a main content area).</p>
+
+  <h2>2. The <code>:has()</code> Pseudo-class (The "Parent Selector")</h2>
+  <p>One of the most requested features in CSS history! It allows you to select a parent element based on its children. (e.g., "Give this card a red border IF it contains an error message").</p>
+  <pre><code>.card:has(.error) {
+  border-color: red;
+}</code></pre>
+
+  <h2>3. CSS Nesting (Native)</h2>
+  <p>Standard CSS now supports nesting (like SASS), so you can organize your rules without using a preprocessor. Most modern browsers have added support for this in the last year.</p>
+
+  <h2>4. Scroll Snap</h2>
+  <p>Allows you to create "app-like" scrolling experiences (e.g., an image slider or a full-screen vertical scroller) entirely in CSS, specifying exactly where the user should "snap" as they scroll.</p>
+
+  <h2>5. Aspect Ratio (<code>aspect-ratio</code>)</h2>
+  <p>Easily define the width-to-height ratio for an element (like <code>aspect-ratio: 16 / 9;</code>). This ensures a video or image placeholder stays the correct shape even before it finishes loading.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Before using brand-new features, always check **CanIUse.com**. It's the best resource to see exactly which browsers support the modern CSS tricks you want to use.</p>
+  </aside>
+</section>

@@ -1,0 +1,21 @@
+<section aria-labelledby="css-positioning-title">
+  <h1 id="css-positioning-title">CSS Positioning: Placing Elements Precisely</h1>
+  
+  <p>While the standard document flow places elements one after another, the <code>position</code> property allows you to break out of that flow to place elements exactly where you need them.</p>
+
+  <h2>The Five Positioning Values</h2>
+  <ul>
+    <li><strong>Static (Default):</strong> Elements are positioned according to the normal document flow. <code>top</code>, <code>left</code>, etc., have no effect.</li>
+    <li><strong>Relative:</strong> The element is positioned relative to its *original* position. It still takes up the original space in the document flow.</li>
+    <li><strong>Absolute:</strong> The element is removed from the document flow and positioned relative to its *closest positioned ancestor* (anything other than static).</li>
+    <li><strong>Fixed:</strong> The element is positioned relative to the browser window. It stays in the same place even when you scroll.</li>
+    <li><strong>Sticky:</strong> A hybrid of relative and fixed. The element behaves like <code>relative</code> until it reachers a specific threshold, then "sticks" to the page like <code>fixed</code>.</li>
+  </ul>
+
+  <h2>The Importance of Z-Index</h2>
+  <p>When you start positioning elements, they might overlap. The <code>z-index</code> property controls which element is "on top." A higher number means the element is closer to the viewer.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> If an <code>absolute</code> element isn't staying where you expect, check its parent. Remember: <code>absolute</code> positions itself relative to the parent *if* that parent has <code>position: relative;</code> (or absolute/fixed) applied to it.</p>
+  </aside>
+</section>

@@ -1,0 +1,62 @@
+{
+  "title": "CSS Transforms Quiz",
+  "description": "Test your knowledge of the essential properties for reshaping and moving elements on your web page using CSS.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the most modern and recommended way to build a professional, responsive component that rotates by 45 degrees?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "transform: rotate(45deg);",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which CSS property is specifically used to change the size of an element without affecting its position in the normal document flow?",
+      "options": [
+        "translate()",
+        "scale()",
+        "rotate()",
+        "skew()"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which unit is used to rotate an element around its origin (e.g., center)?",
+      "options": [
+        "px",
+        "em",
+        "deg (Degrees)",
+        "pt"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the primary role of 'transform: translate' compared to 'margin: 10px' for creating a hover move effect?",
+      "options": [
+        "It makes the site load much faster.",
+        "It is handled by the computer's GPU, resulting in much smoother performance.",
+        "It choose the colors for the animation.",
+        "It automatically stops the animation halfway."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the second property used alongside 'transform' to control WHERE an element rotates from?",
+      "options": [
+        "transform-origin",
+        "rotate-point",
+        "origin-center",
+        "set-point"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

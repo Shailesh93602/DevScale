@@ -1,0 +1,62 @@
+{
+  "title": "Advanced CSS Features Quiz",
+  "description": "Test your knowledge of the essential properties and tools for creating modern, advanced web layouts using CSS.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the most modern and recommended way to build a professional, responsive component that adapts based on its PARENT container's size?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "Container Queries (@container)",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which CSS rule is used to define the 'multi-step' movements for an animation (e.g., from 0% to 50% to 100%)?",
+      "options": [
+        "transition-timing",
+        "@keyframes",
+        "@font-face",
+        "animation-steps"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is the long-requested 'Parent Selector' that allows you to style an element based on its children?",
+      "options": [
+        ":parent",
+        ":has()",
+        ":where()",
+        ":not()"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the primary role of 'Scroll Snap' in CSS?",
+      "options": [
+        "To make the site load much faster.",
+        "To allow you to specify exactly where the user should 'snap' as they scroll (common in app-like sliders).",
+        "To choose the colors for the animation.",
+        "To automatically stop the animation halfway."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "The 'aspect-ratio' property in CSS allows you to ________ right in your rules.",
+      "options": [
+        "Write JavaScript",
+        "Easily define the width-to-height ratio for an element (e.g., 16/9).",
+        "Automatically translate text",
+        "Download images"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

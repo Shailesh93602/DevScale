@@ -1,0 +1,62 @@
+{
+  "title": "CSS Flexbox Quiz",
+  "description": "Test your knowledge of the essential properties for creating flexible, one-dimensional layouts using Flexbox.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Flexbox is considered a __________ layout model.",
+      "options": [
+        "One-dimensional (Rows OR Columns)",
+        "Two-dimensional (Rows AND Columns)",
+        "Zero-dimensional",
+        "Static-only"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which property is used on the FLEX CONTAINER to align items along the main axis (usually horizontally)?",
+      "options": [
+        "align-items",
+        "justify-content",
+        "flex-direction",
+        "float"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which property is used on the FLEX CONTAINER to align items along the cross axis (usually vertically)?",
+      "options": [
+        "align-items",
+        "justify-content",
+        "flex-wrap",
+        "display"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which flex-item property determines how much an element should grow relative to its siblings to fill up extra space?",
+      "options": [
+        "flex-basis",
+        "flex-shrink",
+        "flex-grow",
+        "order"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What does the 'gap' property on a flex container do?",
+      "options": [
+        "It sets the width of the container.",
+        "It automatically adds spacing between all child items in the container.",
+        "It hides all child items.",
+        "It changes the font size of the items."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

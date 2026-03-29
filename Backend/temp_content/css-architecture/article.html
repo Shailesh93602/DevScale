@@ -1,0 +1,29 @@
+<section aria-labelledby="architecture-title">
+  <h1 id="architecture-title">CSS Architecture: Structuring Large Projects</h1>
+  
+  <p>As your website grows from a single page to a massive application, your CSS can quickly become a "mess" that's impossible to manage. **CSS Architecture** is the practice of organizing your styles into a structured system that is easy to maintain, scale, and share with other developers.</p>
+
+  <h2>The Big Three Methodologies</h2>
+  <ul>
+    <li><strong>BEM (Block Element Modifier):</strong> The most popular naming convention. It makes your CSS classes explicit and independent of other styles (e.g., <code>.header__nav--active</code>).</li>
+    <li><strong>OOCSS (Object-Oriented CSS):</strong> Encourages separating "structure" (how big it is) from "skin" (what color it is) so you can reuse common styles everywhere.</li>
+    <li><strong>SMACSS (Scalable and Modular Architecture for CSS):</strong> Suggests splitting your CSS into five specific "categories": Base, Layout, Modules, State, and Theme.</li>
+  </ul>
+
+  <h2>The Folder Structure (SASS/PostCSS)</h2>
+  <p>A professional CSS architecture usually splits styles into dozens of tiny files (Partials) organized inside a folder structure.</p>
+  <ul>
+    <li><strong><code>abstracts/</code>:</strong> Variables, mixins, and functions (invisible files).</li>
+    <li><strong><code>base/</code>:</strong> Global styles (reset, typography).</li>
+    <li><strong><code>components/</code>:</strong> One file for each UI element (button, card, navbar).</li>
+    <li><strong><code>layout/</code>:</strong> Styles for the high-level page structure (header, footer, sidebar).</li>
+    <li><strong><code>pages/</code>:</strong> Styles that are specific to ONLY one page (Home, Contact, Profile).</li>
+  </ul>
+
+  <h2>Atomic Design</h2>
+  <p>A popular design philosophy that breaks a UI down into five levels: **Atoms** (buttons), **Molecules** (search bar), **Organisms** (navbar), **Templates**, and **Pages**. This matches perfectly with a modular CSS architecture.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> If you're building a design system, use **BEM** and a modular folder structure from Day 1. It may feel like "overkill" for a tiny project, but it is the ONLY way to prevent your CSS from becoming a "selector graveyard" as the project grows.</p>
+  </aside>
+</section>

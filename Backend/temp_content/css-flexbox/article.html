@@ -1,0 +1,29 @@
+<section aria-labelledby="css-flexbox-title">
+  <h1 id="css-flexbox-title">CSS Flexbox: Effortless One-Dimensional Layouts</h1>
+  
+  <p>Flexbox (Flexible Box Layout) is a layout model designed for laying out items in a single dimension—either as a row or a column. It makes it incredibly easy to align elements, distribute space, and handle different screen sizes without using floats or percentages.</p>
+
+  <h2>Container Properties</h2>
+  <ul>
+    <li><strong><code>display: flex;</code>:</strong> Activates flexbox on the container.</li>
+    <li><strong><code>flex-direction</code>:</strong> Controls the direction (row, row-reverse, column, column-reverse).</li>
+    <li><strong><code>justify-content</code>:</strong> Aligns items along the **Main Axis** (e.g., center, space-between, flex-start).</li>
+    <li><strong><code>align-items</code>:</strong> Aligns items along the **Cross Axis** (e.g., center, stretch, flex-end).</li>
+    <li><strong><code>flex-wrap</code>:</strong> Controls whether items wrap to a new line if there's not enough room.</li>
+  </ul>
+
+  <h2>Flex Item Properties</h2>
+  <ul>
+    <li><strong><code>flex-grow</code>:</strong> Tells an item how much it should grow relative to its neighbors if there's extra space.</li>
+    <li><strong><code>flex-shrink</code>:</strong> Tells an item how much it should shrink if there's not enough space.</li>
+    <li><strong><code>flex-basis</code>:</strong> Sets the initial size of an item before growing or shrinking.</li>
+    <li><strong><code>order</code>:</strong> Changes the visual order of an item without changing the HTML.</li>
+  </ul>
+
+  <h2>The <code>gap</code> Property</h2>
+  <p>Instead of adding margins to every child item, you can use the <code>gap</code> property on the flex container to set the spacing between all children automatically.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Flexbox is "one-dimensional". Use it when you need to align things in a line (like a navbar or a card's footer). For complex two-dimensional layouts (multiple rows and columns that align), <strong>CSS Grid</strong> is usually the better choice.</p>
+  </aside>
+</section>

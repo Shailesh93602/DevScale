@@ -1,0 +1,62 @@
+{
+  "title": "JavaScript Functions Quiz",
+  "description": "Test your knowledge of the essential properties and tools for creating robust and cross-browser web experiences with functions and parameters.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the most modern and recommended way to build a professional-grade web application in JavaScript for reusable code?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "Developing small, focused functions (like computeTotal()) that can be called many times.",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which keyword is used to 'give back' a value from a function (e.g., return the result of a calculation)?",
+      "options": [
+        "return",
+        "give",
+        "output",
+        "result"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which 'Pillar of the Web' is responsible for providing behavior and interactivity to a page (e.g., using functions to respond to events)?",
+      "options": [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "PHP"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is 'Arrow Function' (like () => {}) inside a modern JavaScript application?",
+      "options": [
+        "To make the site load much faster.",
+        "A cleaner, shorter syntax for defining functions that is highly popular in modern development.",
+        "To choose the colors for the animation.",
+        "To automatically generate CSS animations."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a best practice for a professional-style stylesheet for JavaScript functions?",
+      "options": [
+        "Commenting every single line of code.",
+        "Using as few parameters as possible.",
+        "Keeping functions small and focused on JUST one task (Single Responsibility).",
+        "Using variables for colors and spacing."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

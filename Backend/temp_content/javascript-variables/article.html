@@ -1,0 +1,33 @@
+<section aria-labelledby="js-variables-title">
+  <h1 id="js-variables-title">JavaScript Variables: Storing Your Data</h1>
+  
+  <p>In programming, a **Variable** is a container for a value. You can think of it like a labeled box where you can store information (like a user's name, the price of an item, or the result of a calculation) and retrieve it later.</p>
+
+  <h2>1. The Keywords: <code>let</code>, <code>const</code>, and <code>var</code></h2>
+  <ul>
+    <li><strong><code>let</code>:</strong> The modern way to declare a variable that might change later (e.g., a counter or a user's score).</li>
+    <li><strong><code>const</code>:</strong> The modern way to declare a "Constant"—a value that will NEVER change (e.g., your API key or the value of Pi). <strong>Always use this by default!</strong></li>
+    <li><strong><code>var</code>:</strong> The original way to declare variables. Today, it is mostly considered obsolete because it has confusing "scoping" rules. Avoid using it in modern projects.</li>
+  </ul>
+
+  <h2>2. Naming Your Variables</h2>
+  <ul>
+    <li>Must start with a letter, <code>$</code>, or <code>_</code>.</li>
+    <li>Cannot start with a number.</li>
+    <li>Cannot be a "Reserved Word" (like <code>let</code>, <code>function</code>, or <code>class</code>).</li>
+    <li>Use <strong>camelCase</strong> (e.g., <code>userAge</code>, <code>totalPriceWithTax</code>).</li>
+  </ul>
+
+  <h2>3. Data Types</h2>
+  <p>JavaScript is "dynamically typed," which means you don't have to tell the variable what kind of data it's holding. It will figure it out automatically!</p>
+  <pre><code>let score = 100; // Number
+let playerName = "EduScale"; // String
+let isActive = true; // Boolean</code></pre>
+
+  <h2>4. Variable Scope</h2>
+  <p>The "Scope" of a variable determines where in your code it can be accessed. Variables declared with <code>let</code> and <code>const</code> have **Block Scope**, meaning they only exist inside the curly braces <code>{}</code> where they were created.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Use <strong>const</strong> for every variable you create unless you specifically know you're going to change its value later. This makes your code safer and much easier for other developers to read and debug.</p>
+  </aside>
+</section>

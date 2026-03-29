@@ -1,0 +1,60 @@
+{
+  "title": "CSS Typography Quiz",
+  "description": "Test your knowledge of the essential properties for styling text and enhancing the readability of your content.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which CSS property is specifically used to select the font you want to use for your text?",
+      "options": [
+        "font-type",
+        "font-family",
+        "text-style",
+        "font-layout"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is the MOST recommended unit for setting font sizes on a professional website?",
+      "options": [
+        "px (Pixels)",
+        "em",
+        "rem",
+        "pt"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "The 'line-height' property in CSS sets the vertical space between lines of text. True or False?",
+      "options": [
+        "True",
+        "False"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which text-transform value is commonly used for 'Buy Now' or 'Submit' buttons to make the text appear in all uppercase letters?",
+      "options": [
+        "capitalize",
+        "lowercase",
+        "uppercase",
+        "bold-case"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Why is it important to always provide a 'generic' font name as a fallback in your font-family rule (e.g., sans-serif)?",
+      "options": [
+        "To make the site load much faster.",
+        "In case the user's browser does not support the specific font you've requested.",
+        "To satisfy search engine crawler requirements.",
+        "To automatically translate the text."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
