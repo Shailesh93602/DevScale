@@ -72,6 +72,80 @@ const splitFullName = (fullName?: string) => {
   return { firstName, lastName };
 };
 
+const verifyToken = async (token: string): Promise<SupabaseUser> => {
+  try {
+    const { jwtVerify, createRemoteJWKSet } = await import('jose');
+    const JWKS_INTERNAL = createRemoteJWKSet(
+      new URL(`${process.env.SUPABASE_URL}/auth/v1/.well-known/jwks.json`)
+    );
+    const { payload } = await jwtVerify(token, JWKS_INTERNAL);
+
+    return {
+      id: payload.sub,
+      email: payload.email as string,
+      user_metadata: (payload.user_metadata as Record<string, unknown>) || {},
+    } as unknown as SupabaseUser;
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+    logger.warn(
+      `Local JWT verification failed: ${errorMessage}. Falling back to Supabase HTTP API.`
+    );
+    const { data, error } = await supabase.auth.getUser(token);
+    if (error || !data?.user) {
+      throw createAppError('Invalid authentication token', 401);
+    }
+    return data.user;
+  }
+};
+
+const syncUser = async (user: SupabaseUser): Promise<Request['user']> => {
+  let userData = (await prisma.user.findUnique({
+    where: { supabase_id: user.id },
+    include: { role: true, subscription: true },
+  })) as unknown as Request['user'];
+
+  const metadata = user.user_metadata as Record<string, unknown>;
+
+  if (userData) {
+    const needsSync =
+      (metadata.first_name && userData.first_name !== metadata.first_name) ||
+      (metadata.last_name && userData.last_name !== metadata.last_name) ||
+      (metadata.avatar_url && userData.avatar_url !== metadata.avatar_url);
+
+    if (needsSync) {
+      userData = (await prisma.user.update({
+        where: { id: userData.id },
+        data: {
+          first_name: (metadata.first_name as string) || userData.first_name,
+          last_name: (metadata.last_name as string) || userData.last_name,
+          avatar_url: (metadata.avatar_url as string) || userData.avatar_url,
+        },
+        include: { role: true, subscription: true },
+      })) as unknown as Request['user'];
+    }
+  } else {
+    const studentRole = await prisma.role.findUnique({ where: { name: 'STUDENT' } });
+    const fullName = metadata.full_name as string;
+
+    userData = (await prisma.user.create({
+      data: {
+        supabase_id: user.id,
+        email: user.email ?? '',
+        username: (user.email?.split('@')[0] || 'user') + '_' + Math.floor(Math.random() * 1000),
+        first_name: (metadata.first_name as string) || splitFullName(fullName).firstName,
+        last_name: (metadata.last_name as string) || splitFullName(fullName).lastName,
+        avatar_url: (metadata.avatar_url as string) || '',
+        role_id: studentRole?.id,
+        status: 'active',
+        is_active: true,
+      },
+      include: { role: true, subscription: true },
+    })) as unknown as Request['user'];
+    logger.info('New user synced from Supabase', { userId: userData.id });
+  }
+  return userData;
+};
+
 // ─── Main Auth Middleware (Required) ──────────────────────────────────────────
 export const authMiddleware = async (
   req: Request,
@@ -96,71 +170,8 @@ export const authMiddleware = async (
       return next();
     }
 
-    let user: SupabaseUser | null = null;
-    try {
-      const { jwtVerify, createRemoteJWKSet } = await import('jose');
-      const JWKS_INTERNAL = createRemoteJWKSet(new URL(`${process.env.SUPABASE_URL}/auth/v1/.well-known/jwks.json`));
-      const { payload } = await jwtVerify(token, JWKS_INTERNAL);
-
-      user = {
-        id: payload.sub,
-        email: payload.email as string,
-        user_metadata: (payload.user_metadata as Record<string, unknown>) || {},
-      } as unknown as SupabaseUser;
-    } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-      logger.warn(`Local JWT verification failed: ${errorMessage}. Falling back to Supabase HTTP API.`);
-      const { data, error } = await supabase.auth.getUser(token);
-      if (error || !data?.user) {
-        return next(createAppError('Invalid authentication token', 401));
-      }
-      user = data.user;
-    }
-
-    let userData = (await prisma.user.findUnique({
-      where: { supabase_id: user.id },
-      include: { role: true, subscription: true },
-    })) as unknown as Request['user'];
-
-    if (!userData) {
-      const studentRole = await prisma.role.findUnique({ where: { name: 'STUDENT' } });
-      const metadata = user.user_metadata as Record<string, unknown>;
-      const fullName = metadata.full_name as string;
-      
-      userData = (await (prisma.user.create({
-        data: {
-          supabase_id: user.id,
-          email: user.email ?? '',
-          username: (user.email?.split('@')[0] || 'user') + '_' + Math.floor(Math.random() * 1000),
-          first_name: (metadata.first_name as string) || splitFullName(fullName).firstName,
-          last_name: (metadata.last_name as string) || splitFullName(fullName).lastName,
-          avatar_url: (metadata.avatar_url as string) || '',
-          role_id: studentRole?.id,
-          status: 'active',
-          is_active: true,
-        },
-        include: { role: true, subscription: true },
-      }))) as unknown as Request['user'];
-      logger.info('New user synced from Supabase', { userId: userData.id });
-    } else {
-      const metadata = user.user_metadata as Record<string, unknown>;
-      const needsSync =
-        (metadata.first_name && userData.first_name !== metadata.first_name) ||
-        (metadata.last_name && userData.last_name !== metadata.last_name) ||
-        (metadata.avatar_url && userData.avatar_url !== metadata.avatar_url);
-
-      if (needsSync) {
-        userData = (await prisma.user.update({
-          where: { id: userData.id },
-          data: {
-            first_name: (metadata.first_name as string) || userData.first_name,
-            last_name: (metadata.last_name as string) || userData.last_name,
-            avatar_url: (metadata.avatar_url as string) || userData.avatar_url,
-          },
-          include: { role: true, subscription: true },
-        })) as unknown as Request['user'];
-      }
-    }
+    const user = await verifyToken(token);
+    const userData = await syncUser(user);
 
     await setAuthCache(token, user, userData);
     req.user = userData;
@@ -168,6 +179,9 @@ export const authMiddleware = async (
 
     next();
   } catch (err) {
+    if (err && typeof err === 'object' && 'statusCode' in err && err.statusCode === 401) {
+      return next(err);
+    }
     logger.error('Authentication process failed', { error: err });
     next(createAppError('Authentication failed', 401));
   }
@@ -178,46 +192,27 @@ export const optionalAuthMiddleware = async (
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.headers.authorization?.split(' ')[1];
-  if (!token) return next();
-
-  const cached = await getAuthCache(token);
-  if (cached) {
-    req.user = cached.userData;
-    req.supabaseUser = cached.user;
-    return next();
-  }
-
-  let user: SupabaseUser | null = null;
   try {
-    const { jwtVerify, createRemoteJWKSet } = await import('jose');
-    const JWKS_INTERNAL = createRemoteJWKSet(new URL(`${process.env.SUPABASE_URL}/auth/v1/.well-known/jwks.json`));
-    const { payload } = await jwtVerify(token, JWKS_INTERNAL);
-    user = {
-      id: payload.sub,
-      email: payload.email as string,
-      user_metadata: (payload.user_metadata as Record<string, unknown>) || {},
-    } as unknown as SupabaseUser;
-  } catch {
-    const { data } = await supabase.auth.getUser(token);
-    if (data?.user) user = data.user;
-  }
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) return next();
 
-  if (user) {
-    try {
-      const userData = (await prisma.user.findUnique({
-        where: { supabase_id: user.id },
-        include: { role: true, subscription: true },
-      })) as unknown as Request['user'];
-      
-      if (userData) {
-        await setAuthCache(token, user, userData);
-        req.user = userData;
-        req.supabaseUser = user;
-      }
-    } catch {
-      // silent
+    const cached = await getAuthCache(token);
+    if (cached) {
+      req.user = cached.userData;
+      req.supabaseUser = cached.user;
+      return next();
     }
+
+    const user = await verifyToken(token);
+    const userData = await syncUser(user);
+
+    if (userData) {
+      await setAuthCache(token, user, userData);
+      req.user = userData;
+      req.supabaseUser = user;
+    }
+  } catch {
+    // Silent fail for optional auth
   }
   next();
 };
