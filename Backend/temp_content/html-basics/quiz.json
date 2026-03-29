@@ -1,0 +1,62 @@
+{
+  "title": "HTML Basics Quiz",
+  "description": "Test your knowledge of HTML fundamental concepts.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "What does HTML stand for?",
+      "options": [
+        "HyperText Markup Language",
+        "Home Tool Markup Language",
+        "Hyperlinks and Text Markup Language",
+        "High-Speed Text Markup Language"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which HTML tag is used to create a hyperlink?",
+      "options": [
+        "&lt;link&gt;",
+        "&lt;a&gt;",
+        "&lt;href&gt;",
+        "&lt;url&gt;"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is the correct tag for the largest heading in HTML?",
+      "options": [
+        "&lt;h1&gt;",
+        "&lt;h6&gt;",
+        "&lt;heading&gt;",
+        "&lt;head&gt;"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the correct structure of an HTML element?",
+      "options": [
+        "Opening Tag + Closing Tag + Content",
+        "Opening Tag + Content + Closing Tag",
+        "Content + Opening Tag + Closing Tag",
+        "Closing Tag + Content + Opening Tag"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Is the &lt;img&gt; tag self-closing?",
+      "options": [
+        "Yes, it does not require a closing tag.",
+        "No, it must always have an &lt;/img&gt; tag.",
+        "It depends on the browser.",
+        "Only if you add the &lt;src&gt; attribute."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

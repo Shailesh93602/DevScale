@@ -1,0 +1,45 @@
+<section aria-labelledby="html-tables-title">
+  <h1 id="html-tables-title">HTML Tables: Organizing Tabular Data</h1>
+  
+  <p>Tables are used to display data in a grid-like format of rows and columns. While they were historically used for page layouts, modern web design uses them strictly for <strong>tabular data</strong> (like schedules, price lists, or inventory data).</p>
+
+  <h2>The Core Structure</h2>
+  <p>A basic HTML table consists of the <code>&lt;table&gt;</code> element along with one or more <code>&lt;tr&gt;</code>, <code>&lt;th&gt;</code>, and <code>&lt;td&gt;</code> elements.</p>
+  <ul>
+    <li><strong><code>&lt;table&gt;</code>:</strong> The parent container.</li>
+    <li><strong><code>&lt;tr&gt;</code>:</strong> Table Row.</li>
+    <li><strong><code>&lt;th&gt;</code>:</strong> Table Header (text is usually bold and centered).</li>
+    <li><strong><code>&lt;td&gt;</code>:</strong> Table Data (a standard table cell).</li>
+  </ul>
+
+  <h2>Example of a Simple Table</h2>
+  <pre><code>&lt;table&gt;
+  &lt;tr&gt;
+    &lt;th&gt;Subject&lt;/th&gt;
+    &lt;th&gt;Score&lt;/th&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;HTML&lt;/td&gt;
+    &lt;td&gt;95&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;</code></pre>
+
+  <h2>Advanced Table Sections</h2>
+  <p>For larger tables, you should organize your rows into three distinct semantic sections:</p>
+  <ul>
+    <li><strong><code>&lt;thead&gt;</code>:</strong> Groups the header content.</li>
+    <li><strong><code>&lt;tbody&gt;</code>:</strong> Groups the main body content.</li>
+    <li><strong><code>&lt;tfoot&gt;</code>:</strong> Groups footer content (e.g., totals or summaries).</li>
+  </ul>
+
+  <h2>Spanning Columns and Rows</h2>
+  <p>If you need a cell to cover more than one column or row, use these attributes:</p>
+  <ul>
+    <li><strong><code>colspan</code>:</strong> Specifies the number of columns a cell should span.</li>
+    <li><strong><code>rowspan</code>:</strong> Specifies the number of rows a cell should span.</li>
+  </ul>
+
+  <aside>
+    <p><strong>💡 Accessibility Tip:</strong> Always use <code>&lt;th&gt;</code> for header cells. This allows screen readers to associate the data in the cells with their corresponding headers, making the table much easier to navigate for visually impaired users.</p>
+  </aside>
+</section>

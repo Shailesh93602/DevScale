@@ -1,0 +1,32 @@
+<section aria-labelledby="links-nav-title">
+  <h1 id="links-nav-title">Links and Navigation: Connecting the Web</h1>
+  
+  <p>The "Hypertext" in HTML refers to text that contains links to other text. Without links, the web would just be a collection of isolated documents. Links enable users to navigate between pages, jump to different sections on the same page, or even open a brand-new website.</p>
+
+  <h2>The <code>&lt;a&gt;</code> (Anchor) Tag</h2>
+  <p>To create a link, we use the <code>&lt;a&gt;</code> tag with the <code>href</code> (Hypertext Reference) attribute. This attribute tells the browser where the link should go.</p>
+  <pre><code>&lt;a href="https://www.google.com"&gt;Visit Google&lt;/a&gt;</code></pre>
+
+  <h2>Absolute vs. Relative URLs</h2>
+  <p>There are two primary ways to specify a link's destination:</p>
+  <ul>
+    <li><strong>Absolute URLs:</strong> The full web address (e.g., <code>https://example.com/page.html</code>). Use these for links to other websites.</li>
+    <li><strong>Relative URLs:</strong> A path relative to the current folder (e.g., <code>contact.html</code> or <code>/services/design.html</code>). Use these for internal navigation within your own site.</li>
+  </ul>
+
+  <h2>Navigating Within a Page (Anchors)</h2>
+  <p>You can create links that jump to a specific part of the current page using the <code>id</code> attribute of another element.</p>
+  <pre><code>&lt;!-- The link --&gt;
+&lt;a href="#section-2"&gt;Go to Section 2&lt;/a&gt;
+
+&lt;!-- The target --&gt;
+&lt;h2 id="section-2"&gt;Section 2 Content&lt;/h2&gt;</code></pre>
+
+  <h2>Opening in a New Tab</h2>
+  <p>If you want a link to open in a new tab without closing your own page, use the <code>target="_blank"</code> attribute. For security reasons, you should also include <code>rel="noopener noreferrer"</code>.</p>
+  <pre><code>&lt;a href="https://external.com" target="_blank" rel="noopener noreferrer"&gt;Read More&lt;/a&gt;</code></pre>
+
+  <aside>
+    <p><strong>💡 Accessibility Tip:</strong> Avoid using "click here" as link text. Instead, use descriptive text like "Download the PDF Guide" so that screen reader users know exactly what to expect when they click.</p>
+  </aside>
+</section>

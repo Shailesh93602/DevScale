@@ -1,0 +1,62 @@
+{
+  "title": "HTML5 Features Quiz",
+  "description": "Test your knowledge of the modern capabilities of HTML5.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which HTML5 element is used for drawing graphics and animations using JavaScript?",
+      "options": [
+        "&lt;draw&gt;",
+        "&lt;canvas&gt;",
+        "&lt;svg&gt;",
+        "&lt;graphic&gt;"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the primary advantage of HTML5 local storage over cookies?",
+      "options": [
+        "LocalStorage is only used for temporary data.",
+        "LocalStorage can store much larger amounts of data without affecting performance.",
+        "Cookies are encrypted, while LocalStorage is not.",
+        "There is no difference between them."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "The Geolocation API allows a web application to do what?",
+      "options": [
+        "See the user's browser history.",
+        "Determine the user's physical geographic location.",
+        "Record the user's screen.",
+        "Change the user's IP address."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a new HTML5 input type that provides a calendar widget in many browsers?",
+      "options": [
+        "type='datetime'",
+        "type='calendar'",
+        "type='date'",
+        "type='time'"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "HTML5 was the first version to natively support which of the following tags without a plugin?",
+      "options": [
+        "&lt;img&gt; and &lt;a&gt;",
+        "&lt;video&gt; and &lt;audio&gt;",
+        "&lt;p&gt; and &lt;li&gt;",
+        "&lt;script&gt; and &lt;link&gt;"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

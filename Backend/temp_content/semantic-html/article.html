@@ -1,0 +1,32 @@
+<section aria-labelledby="semantic-html-title">
+  <h1 id="semantic-html-title">Semantic HTML: Meaning Beyond the Surface</h1>
+  
+  <p>Semantic HTML is the practice of using HTML tags that reinforce the meaning of the content they contain, rather than just its appearance. A <code>&lt;div&gt;</code> tells the browser nothing about its content, but a <code>&lt;nav&gt;</code> clearly indicates it contains navigation links.</p>
+
+  <h2>Common Semantic Elements</h2>
+  <ul>
+    <li><strong><code>&lt;header&gt;</code>:</strong> Introductory content, usually containing a logo and navigation.</li>
+    <li><strong><code>&lt;nav&gt;</code>:</strong> A set of navigation links.</li>
+    <li><strong><code>&lt;main&gt;</code>:</strong> The dominant, central content of the document.</li>
+    <li><strong><code>&lt;article&gt;</code>:</strong> A self-contained composition (like a blog post, news story, or forum post).</li>
+    <li><strong><code>&lt;section&gt;</code>:</strong> A thematic grouping of content.</li>
+    <li><strong><code>&lt;aside&gt;</code>:</strong> Content tangentially related to the surrounding content (like sidebars).</li>
+    <li><strong><code>&lt;footer&gt;</code>:</strong> Information about the page, such as copyright and links to social media.</li>
+  </ul>
+
+  <h2>Why Use Semantic Tags?</h2>
+  <p>There are three main benefits to using semantic HTML:</p>
+  <ol>
+    <li><strong>Accessibility:</strong> Screen readers use these tags to help visually impaired users navigate the page more efficiently (e.g., "Skip to main content").</li>
+    <li><strong>SEO (Search Engine Optimization):</strong> Search engines give higher priority to content wrapped in semantic tags because they understand the structure of the page better.</li>
+    <li><strong>Maintainability:</strong> It's much easier for another developer to understand your code if you use descriptive tags like <code>&lt;article&gt;</code> instead of <code>&lt;div id="article-1"&gt;</code>.</li>
+  </ol>
+
+  <h2>The <code>&lt;time&gt;</code> Element</h2>
+  <p>One often-overlooked semantic tag is <code>&lt;time&gt;</code>. It helps browsers and search engines recognize specific dates and times.</p>
+  <pre><code>&lt;p&gt;The event starts at &lt;time datetime="2026-10-15T19:00"&gt;7:00 PM on October 15th&lt;/time&gt;.&lt;/p&gt;</code></pre>
+
+  <aside>
+    <p><strong>💡 Remember:</strong> Visual appearance (like making a header bold or big) should be handled by CSS. Semantic HTML is solely about the <strong>purpose</strong> of the data.</p>
+  </aside>
+</section>

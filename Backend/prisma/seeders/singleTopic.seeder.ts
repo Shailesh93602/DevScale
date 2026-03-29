@@ -53,18 +53,28 @@ async function seedSingleTopic() {
     const articlePath = path.join(contentPath, 'article.html');
     if (fs.existsSync(articlePath)) {
         const content = fs.readFileSync(articlePath, 'utf8');
-        await prisma.article.upsert({
-            where: { topic_id_title: { topic_id: topic.id, title: topicTitle } },
-            update: { content, status: Status.APPROVED },
-            create: {
-                title: topicTitle,
-                content,
-                author_id: authorId,
-                topic_id: topic.id,
-                status: Status.APPROVED
-            }
+        const existingArticle = await prisma.article.findFirst({
+            where: { topic_id: topic.id, title: topicTitle }
         });
-        console.log(`✅ Article seeded for "${topicTitle}"`);
+
+        if (existingArticle) {
+            await prisma.article.update({
+                where: { id: existingArticle.id },
+                data: { content, status: Status.APPROVED }
+            });
+            console.log(`✅ Article updated for "${topicTitle}"`);
+        } else {
+            await prisma.article.create({
+                data: {
+                    title: topicTitle,
+                    content,
+                    author_id: authorId,
+                    topic_id: topic.id,
+                    status: Status.APPROVED
+                }
+            });
+            console.log(`✅ Article created for "${topicTitle}"`);
+        }
     } else {
         console.warn(`ℹ️ No article.html found in ${contentPath}`);
     }

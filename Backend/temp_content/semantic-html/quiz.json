@@ -1,0 +1,62 @@
+{
+  "title": "Semantic HTML Quiz",
+  "description": "Test your knowledge of the essential tags for adding meaning to your HTML documents.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which tag should you use for the dominant, central content of a webpage?",
+      "options": [
+        "&lt;div&gt;",
+        "&lt;main&gt;",
+        "&lt;article&gt;",
+        "&lt;header&gt;"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which tag defines a set of navigation links?",
+      "options": [
+        "&lt;navigator&gt;",
+        "&lt;links&gt;",
+        "&lt;nav&gt;",
+        "&lt;ul&gt;"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the result of using semantic HTML tags?",
+      "options": [
+        "They automatically style the content with colors and fonts.",
+        "They make the webpage load faster.",
+        "They provide meaning to the content for accessibility and SEO.",
+        "They are required by all browsers to display content at all."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which tag is best for grouped content that is tangentially related to the main page content (like a sidebar)?",
+      "options": [
+        "&lt;aside&gt;",
+        "&lt;section&gt;",
+        "&lt;article&gt;",
+        "&lt;footer&gt;"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What does the 'datetime' attribute in the &lt;time&gt; tag do?",
+      "options": [
+        "It sets the visual format of the date shown on screen.",
+        "It provides a machine-readable version of the date for search engines.",
+        "It sets the timezone for the user's browser.",
+        "It triggers a calendar widget in all browsers."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

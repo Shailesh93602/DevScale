@@ -1,0 +1,62 @@
+{
+  "title": "Text Formatting Quiz",
+  "description": "Test your knowledge of HTML text formatting elements.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which tag is used for text that has strong importance and is usually bolded?",
+      "options": [
+        "&lt;b&gt;",
+        "&lt;important&gt;",
+        "&lt;strong&gt;",
+        "&lt;i&gt;"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which tag defines text that is emphasized (usually italicized)?",
+      "options": [
+        "&lt;italic&gt;",
+        "&lt;strong&gt;",
+        "&lt;em&gt;",
+        "&lt;b&gt;"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "If you want to highlight text with a background color, which tag should you use?",
+      "options": [
+        "&lt;highlight&gt;",
+        "&lt;mark&gt;",
+        "&lt;color&gt;",
+        "&lt;bg&gt;"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which tag is used to create subscript text (like in chemistry formulas)?",
+      "options": [
+        "&lt;sub&gt;",
+        "&lt;sup&gt;",
+        "&lt;below&gt;",
+        "&lt;down&gt;"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the result of using the &lt;del&gt; tag?",
+      "options": [
+        "It removes the text entirely from the page.",
+        "It adds a strikethrough to indicate deleted text.",
+        "It underlines the text to show it is important.",
+        "It hides the text from screen readers."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
