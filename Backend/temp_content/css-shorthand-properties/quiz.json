@@ -1,0 +1,62 @@
+{
+  "title": "CSS Shorthand Properties Quiz",
+  "description": "Test your knowledge of the essential shorthand properties for writing cleaner, more efficient, and smaller CSS files.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the most modern and recommended way to build a professional-grade web application?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "Using CSS shorthand properties for margin/padding",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a major 'Pro' of using CSS shorthand properties compared to writing them separately?",
+      "options": [
+        "It makes your CSS files smaller and more readable.",
+        "It allows users to print only the core content.",
+        "It is always supported by every browser.",
+        "It replaces the need for any HTML5 tags."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "In a CSS margin shorthand rule (e.g., 'margin: 10px 20px 30px 40px;'), what is the order for the values?",
+      "options": [
+        "Top, Bottom, Left, Right",
+        "Top, Right, Bottom, Left (Clockwise)",
+        "Left, Right, Top, Bottom",
+        "Top, Bottom, Middle, Center"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which shorthand property should you use to set the width, style, and color for an element edge all at once?",
+      "options": [
+        "border",
+        "font",
+        "outline",
+        "Both 'border' and 'outline' are correct."
+      ],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "What is the primary danger of using shorthand properties if you aren't careful?",
+      "options": [
+        "They make the site load much slower.",
+        "They can 'reset' any properties you didn't explicitly mention to their default values.",
+        "They are not supported in modern browsers.",
+        "They take up no space in the layout."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

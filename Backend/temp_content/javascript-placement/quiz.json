@@ -1,0 +1,62 @@
+{
+  "title": "JavaScript Placement Quiz",
+  "description": "Test your knowledge of the essential properties and tools for creating robust and cross-browser web experiences with placed and external JS.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the most modern and recommended way to build a professional-grade web application in JavaScript?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "Using External .js files linked via the <script src=''> tag at the END of the <body>.",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which 'Pillar of the Web' is responsible for providing behavior and interactivity to a page (e.g., placing JS in the <head> or <body>)?",
+      "options": [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "PHP"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "The 'defer' attribute on a <script> tag allows the browser to ________ while still downloading the script in the background.",
+      "options": [
+        "Continue parsing the HTML page without interruption (giving the user a faster view).",
+        "Stay exactly the same.",
+        "Stop loading the page.",
+        "Both 'Continue parsing' and 'Stay exactly the same' are correct."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "One of the most powerful use cases for 'Placement' is ________ (keeping your HTML clean and allowing for caching).",
+      "options": [
+        "Theming",
+        "Modularity / Caching",
+        "Debugging",
+        "Scaling"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the primary difference between 'async' and 'defer' in a script tag?",
+      "options": [
+        "No difference.",
+        "'async' executes as soon as it downloads, potentially interrupting the page load, while 'defer' waits until the entire HTML is finished parsing.",
+        "'defer' executes as soon as it downloads.",
+        "'async' is only for CSS."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+<section aria-labelledby="units-title">
+  <h1 id="units-title">CSS Units and Sizing: Designing for a Multi-Device World</h1>
+  
+  <p>In the early days of the web, almost everything was sized using <strong>Pixels (px)</strong>. Today, we use a wide variety of units to create responsive designs that look great on everything from a tiny smartphone to a massive 4K monitor.</p>
+
+  <h2>Absolute Units</h2>
+  <ul>
+    <li><strong>Pixels (px):</strong> These are fixed and don't change based on other settings. Best for small details that shouldn't scale (like a 1px border).</li>
+  </ul>
+
+  <h2>Relative Units (The Modern Standard)</h2>
+  <ul>
+    <li><strong>Percentages (%):</strong> Relative to the parent element's size. Excellent for fluid layouts.</li>
+    <li><strong>Em (em):</strong> Relative to the font-size of the element itself (or its parent). Very useful for padding and margins.</li>
+    <li><strong>Rem (rem):</strong> Relative to the **Root** (the <code>&lt;html&gt;</code> element's font-size). This is the best unit for typography because it stays consistent throughout the site.</li>
+  </ul>
+
+  <h2>Viewport Units</h2>
+  <ul>
+    <li><strong>vw (Viewport Width):</strong> Relative to 1% of the browser window's width.</li>
+    <li><strong>vh (Viewport Height):</strong> Relative to 1% of the browser window's height. (e.g., <code>100vh</code> makes an element the full height of the screen).</li>
+    <li><strong>vmin / vmax:</strong> Relative to the smaller or larger of the viewport's dimensions.</li>
+  </ul>
+
+  <h2>Calculated Sizes (<code>calc()</code>)</h2>
+  <p>The <code>calc()</code> function allows you to perform mathematical operations right in your CSS. This is incredibly useful for mixing different units together.</p>
+  <pre><code>width: calc(100% - 40px);</code></pre>
+
+  <h2>Min and Max Constraints</h2>
+  <p>Properties like <code>min-width</code>, <code>max-width</code>, <code>min-height</code>, and <code>max-height</code> give you more control over how an element scales, preventing it from getting too small or too large on extreme screen sizes.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Use <strong>rem</strong> for font sizes and <strong>em</strong> or <strong>%</strong> for layout spacing. This ensures that if a user changes their browser's default font size (for accessibility), your entire site scales accordingly while maintaining its visual harmony.</p>
+  </aside>
+</section>

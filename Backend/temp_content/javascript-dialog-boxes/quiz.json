@@ -1,0 +1,62 @@
+{
+  "title": "JavaScript Dialog Boxes Quiz",
+  "description": "Test your knowledge of the essential properties and tools for creating robust and cross-browser web experiences with dialogs and messages.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the most modern and recommended way to build a professional-grade web application in JavaScript for getting the user's attention?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "Using built-in dialogs (alert, confirm, prompt) to show simple interactive messages.",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a major 'Pro' of using confirm() compared to alert()?",
+      "options": [
+        "It makes your HTML files smaller and more readable.",
+        "It provides 'OK' and 'Cancel' buttons (returning true or false), allowing your code to branch logic based on the user's choice.",
+        "It is always supported by every browser.",
+        "It replaces the need for any HTML5 tags."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is 'alert()' inside a professional web application?",
+      "options": [
+        "To make the site load much faster.",
+        "To show a single message with an 'OK' button to the user.",
+        "To choose the colors for the animation.",
+        "To automatically generate CSS animations."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Why is it important to almost ALWAYS avoid 'Universal Selectors' everywhere in your professional JavaScript dialogs?",
+      "options": [
+        "They are difficult to maintain.",
+        "They can make the site load much slower and potentially confuse the dialog logic.",
+        "They are not supported in modern browsers.",
+        "They take up no space in the browser."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a best practice for a professional-style stylesheet for JavaScript dialog boxes?",
+      "options": [
+        "Commenting every single line of code.",
+        "Using a reset or normalize stylesheet.",
+        "Using 'confirm()' for high-stakes actions (like 'Delete Account') to provide a double-check for the user.",
+        "Using variables for colors and spacing."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

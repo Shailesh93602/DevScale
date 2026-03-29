@@ -1,0 +1,22 @@
+<section aria-labelledby="js-void-title">
+  <h1 id="js-void-title">JavaScript Void Keyword: Controlling Expression Results</h1>
+  
+  <p>The <code>void</code> operator is a specialized tool in JavaScript that evaluates an expression and then returns <code>undefined</code>. While not commonly used in modern application logic, it is very common in "Hacky" links and specific edge cases.</p>
+
+  <h2>1. What does <code>void</code> do?</h2>
+  <p>It "swallows" the result of an expression. For example, <code>void(5 + 5)</code> will return <code>undefined</code> instead of the expected 10.</p>
+
+  <h2>2. The <code>javascript:void(0)</code> Link</h2>
+  <p>Probably the most common use. It's used to create a link that looks and acts like a clickable element but DOES NOT navigate to a new page or refresh the current one.</p>
+  <pre><code>&lt;a href="javascript:void(0)" onclick="openModal()"&gt;Click Me&lt;/a&gt;</code></pre>
+
+  <h2>3. Performance and Function Results</h2>
+  <p>Some developers use <code>void</code> to ensure that a function returns <code>undefined</code> even if its last line happens to be a value. This is rare in professional modern code but good to recognize if you see it in legacy projects.</p>
+
+  <h2>Modern Best Practice</h2>
+  <p>Instead of <code>javascript:void(0)</code>, modern web development recommends using a <code>&lt;button&gt;</code> element styled to look like a link, or using <code>e.preventDefault()</code> in your event listener. This is much better for accessibility and search engine optimization (SEO).</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> If you're building for accessibility, avoid **void(0)** links. A screen reader user expects a link to go somewhere. If it doesn't navigate, it should almost always be a <code>&lt;button&gt;</code> instead!</p>
+  </aside>
+</section>

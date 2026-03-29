@@ -1,0 +1,62 @@
+{
+  "title": "JavaScript Boolean Quiz",
+  "description": "Test your knowledge of the essential properties and tools for creating robust and cross-browser web experiences with boolean logic.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the most modern and recommended way to build a professional-grade web application in JavaScript for handling 'is-logged-in' states?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "Using Boolean data types (true or false) to represent On-Off states.",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a major 'Pro' of using a Boolean shorthand (e.g., if (isActive) instead of if (isActive === true))?",
+      "options": [
+        "It makes your HTML files smaller and more readable.",
+        "It is much cleaner, more concise, and is preferred by professional developers.",
+        "It is always supported by every browser.",
+        "It replaces the need for any HTML5 tags."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is 'Truthy' inside a professional web application boolean calculation?",
+      "options": [
+        "To make the site load much faster.",
+        "A value that is treated as true in a boolean context (like a string with content or a non-zero number).",
+        "To choose the colors for the animation.",
+        "To automatically generate CSS animations."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is considered a 'Falsy' value in JavaScript (it is treated as false)?",
+      "options": [
+        "Zero (0)",
+        "An empty string ('')",
+        "The value 'undefined'",
+        "All of these are Falsy values."
+      ],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "Which Logical operator returns 'true' IF at least ONE comparison is true?",
+      "options": [
+        "&& (AND)",
+        "|| (OR)",
+        "! (NOT)",
+        "== (Comparison)"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

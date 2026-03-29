@@ -1,0 +1,31 @@
+<section aria-labelledby="borders-title">
+  <h1 id="borders-title">CSS Borders, Shadows, and Outlines: Beyond the Basics</h1>
+  
+  <p>Borders, shadows, and outlines are the secondary "layer" of styling that adds depth and definition to your elements. They are essential for creating professional-looking "UI" elements like cards, buttons, and input fields.</p>
+
+  <h2>Essential Border Properties</h2>
+  <ul>
+    <li><strong><code>border-width</code>:</strong> Sets the thickness of the border.</li>
+    <li><strong><code>border-style</code>:</strong> Sets the look of the border (e.g., <code>solid</code>, <code>dashed</code>, <code>dotted</code>).</li>
+    <li><strong><code>border-color</code>:</strong> Sets the color of the border.</li>
+    <li><strong><code>border-radius</code>:</strong> Rounds the corners of an element. This is the key tool for creating "pill-shaped" buttons or circular profile images.</li>
+  </ul>
+
+  <h2>The <code>border</code> Shorthand</h2>
+  <pre><code>border: 2px solid #ccc;</code></pre>
+
+  <h2>The Box Shadow (Depth)</h2>
+  <p>The <code>box-shadow</code> property allows you to create shadows behind an element, giving the page a "three-dimensional" feel. This is very common in "Card" based UI designs.</p>
+  <pre><code>box-shadow: horizontal offset | vertical offset | blur radius | color;
+box-shadow: 2px 4px 10px rgba(0,0,0,0.1);</code></pre>
+
+  <h2>The Text Shadow</h2>
+  <p>Similar to <code>box-shadow</code>, <code>text-shadow</code> adds a shadow behind the text characters themselves. This is perfect for improving readability on top of a background image.</p>
+
+  <h2>A Word on Outlines</h2>
+  <p>An <code>outline</code> is similar to a border, but it **does not** take up any space in the layout. Outlines are primarily used for accessibility to show which element currently has focus.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Use subtle, low-opacity shadows (e.g., <code>rgba(0,0,0,0.05)</code>) for a professional, "modern" look. High-contrast black shadows often look dated and "cheap" in a modern web design.</p>
+  </aside>
+</section>

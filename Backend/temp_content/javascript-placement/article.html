@@ -1,0 +1,25 @@
+<section aria-labelledby="js-placement-title">
+  <h1 id="js-placement-title">JavaScript Placement: Where to Put Your Code</h1>
+  
+  <p>Where you place your <code>&lt;script&gt;</code> tags in your HTML document can have a significant impact on your website's performance and functionality. There are three main ways to include JavaScript in your web pages.</p>
+
+  <h2>1. Internal JavaScript (in the <code>&lt;head&gt;</code>)</h2>
+  <p>Putting scripts in the <code>&lt;head&gt;</code> is usually not recommended unless they are absolutely required for the initial paint (like a theme-switching script). This is because the browser will stop parsing the HTML until the script finishes loading, which can cause a "blank screen" for the user.</p>
+
+  <h2>2. Internal JavaScript (before <code>&lt;/body&gt;</code>)</h2>
+  <p>This is the traditional "best practice." Because the browser has already parsed and displayed all your HTML before it reaches the script, your page will feel much faster to the user.</p>
+
+  <h2>3. External JavaScript (The modern standard)</h2>
+  <p>For any real project, you should put your JavaScript in separate <code>.js</code> files. This keeps your HTML clean and allows the browser to multi-task and cache the files for faster subsequent page loads.</p>
+  <pre><code>&lt;script src="script.js"&gt;&lt;/script&gt;</code></pre>
+
+  <h2>The <code>async</code> and <code>defer</code> Attributes</h2>
+  <ul>
+    <li><strong><code>async</code>:</strong> The script is downloaded in the background while the HTML is being parsed, and then executed immediately when it finishes. Best for independent scripts (like ads or analytics).</li>
+    <li><strong><code>defer</code>:</strong> The script is downloaded in the background and executed ONLY after the entire HTML has been parsed. This is almost always the best choice for your main application script.</li>
+  </ul>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Use **defer** for almost all your external scripts. It gives you the best of both worlds: your scripts start downloading early, but they won't block the visual rendering of your page for the user.</p>
+  </aside>
+</section>

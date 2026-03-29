@@ -1,0 +1,33 @@
+<section aria-labelledby="js-boolean-title">
+  <h1 id="js-boolean-title">JavaScript Boolean: The Logic of True and False</h1>
+  
+  <p>In programming, a **Boolean** is a simple data type that can have only two possible values: <code>true</code> or <code>false</code>. Booleans are the logical "switches" that control every decision your website makes.</p>
+
+  <h2>1. What is a Boolean?</h2>
+  <p>Used to represent "Yes-No" or "On-Off" states. For example: Is the user logged in? Is the dark mode active? Is the form data valid?</p>
+  <pre><code>let isLoggedIn = true;
+let isDarkTheme = false;</code></pre>
+
+  <h2>2. Comparisons (Creating Booleans)</h2>
+  <p>Most booleans are created by comparing two other values using operators like <code>&gt;</code>, <code>&lt;</code>, <code>===</code>, and <code>!==</code>.</p>
+  <pre><code>let checkAge = (userAge >= 18); // returns true or false</code></pre>
+
+  <h2>3. The <code>Boolean()</code> Function</h2>
+  <p>You can use the <code>Boolean()</code> function to check if any piece of data is "Truthy" or "Falsy."</p>
+  <ul>
+    <li><strong>Truthy Values:</strong> Almost anything with content (a number like 1, a string like "Hello", an object).</li>
+    <li><strong>Falsy Values:</strong> Zero (<code>0</code>), an empty string (<code>""</code>), <code>null</code>, <code>undefined</code>, and <code>NaN</code>.</li>
+  </ul>
+
+  <h2>4. Logical Operators (&amp;&amp;, ||, !)</h2>
+  <p>These operators allow you to combine multiple boolean values together to create complex logical rules.</p>
+  <ul>
+    <li><strong><code>!</code> (Logical NOT):</strong> Reverses a boolean value (e.g., <code>!true</code> becomes <code>false</code>).</li>
+    <li><strong><code>&amp;&amp;</code> (Logical AND):</strong> Returns true only if BOTH sides are true.</li>
+    <li><strong><code>||</code> (Logical OR):</strong> Returns true if AT LEAST one side is true.</li>
+  </ul>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Use **Boolean shorthand**! Instead of writing <code>if (isActive === true)</code>, you can simply write <code>if (isActive)</code>. This is cleaner and is considered a best practice in the industry.</p>
+  </aside>
+</section>

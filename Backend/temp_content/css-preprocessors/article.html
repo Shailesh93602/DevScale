@@ -1,0 +1,27 @@
+<section aria-labelledby="preprocessors-title">
+  <h1 id="preprocessors-title">CSS Preprocessors: Supercharge Your Styles (SASS, LESS)</h1>
+  
+  <p>Standard CSS is powerful, but it can be repetitive as your project grows. **CSS Preprocessors** are specialized languages that add advanced programming features (like variables, nested rules, and mixins) to CSS. They allow you to write cleaner, more modular code that is then "compiled" into standard CSS for the browser to read.</p>
+
+  <h2>The Big Three</h2>
+  <ul>
+    <li><strong>SASS (SCSS):</strong> The most popular and well-supported preprocessor today. It supports two different syntaxes (standard indented and SCSS, which looks like normal CSS).</li>
+    <li><strong>LESS:</strong> Similar to SASS but with a slightly different set of features and syntax rules.</li>
+    <li><strong>Stylus:</strong> Known for its extreme flexibility and "minimalist" syntax (no curly braces or semicolons required).</li>
+  </ul>
+
+  <h2>Powerful Features</h2>
+  <ul>
+    <li><strong>Variables (e.g., <code>$primary: #333;</code>):</strong> Store values once and reuse them everywhere. (Note: These are older than native CSS variables!).</li>
+    <li><strong>Nesting:</strong> Nest your CSS rules inside one another to match your HTML structure. (e.g., <code>nav { ul { li { ... } } }</code>).</li>
+    <li><strong>Mixins (Reusable Blocks):</strong> Define a group of CSS rules (like an animation or a button style) once and "include" them in multiple places throughout your site.</li>
+    <li><strong>Partials (Modular Files):</strong> Split your CSS into dozens of small files (like <code>_header.scss</code>, <code>_footer.scss</code>) and combine them into one final file during build time.</li>
+  </ul>
+
+  <h2>PostCSS: The "Next Evolution"</h2>
+  <p>Unlike preprocessors, <strong>PostCSS</strong> uses JavaScript-based plugins to transform your CSS. It can automatically add browser prefixes (e.g., <code>-webkit-</code>) or allow you to use future CSS features today.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> If you're building a large, complex website, using <strong>SASS (SCSS)</strong> or **PostCSS** is highly recommended. The ability to split your CSS into modular "Partials" makes your project much easier to maintain over time.</p>
+  </aside>
+</section>

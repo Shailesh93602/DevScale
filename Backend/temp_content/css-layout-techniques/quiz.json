@@ -1,0 +1,62 @@
+{
+  "title": "CSS Layout Techniques Quiz",
+  "description": "Test your knowledge of the essential historical and modern methods for building layouts using CSS.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the most modern and recommended way to build a two-dimensional layout?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "CSS Grid",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is the primary reason the 'Float' layout method reached 'obsolete' status?",
+      "options": [
+        "Floats were too slow.",
+        "Floats were difficult to manage because they required complex 'clearfixes' to prevent layout collapse.",
+        "They were only supported in Firefox.",
+        "They made the text too large."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which layout model is best for a one-dimensional row of items, like a navbar?",
+      "options": [
+        "Table Layouts",
+        "Flexbox",
+        "CSS Columns",
+        "Float Layouts"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the name of the layout technique where you use CSS to make text flow between several columns automatically, like a newspaper?",
+      "options": [
+        "Flexbox",
+        "Multi-Column Layout (CSS Columns)",
+        "Grid Template",
+        "Absolute Flows"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Modern layouts must be 'Responsive,' which means they should ________ to every device size.",
+      "options": [
+        "Ignore",
+        "Adapt / Change smoothly",
+        "Automatically translate",
+        "Stay exactly the same"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

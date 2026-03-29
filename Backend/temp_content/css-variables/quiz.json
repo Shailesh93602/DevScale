@@ -1,0 +1,62 @@
+{
+  "title": "CSS Variables (Custom Properties) Quiz",
+  "description": "Test your knowledge of the essential properties for storing and reusing values within your CSS to create maintainable and themeable styles.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the REQUIRED prefix for defining a CSS variable (Custom Property)?",
+      "options": [
+        "$",
+        "@",
+        "--",
+        "#"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which CSS function is used specifically to APPLY a variable's value to a property?",
+      "options": [
+        "calc()",
+        "var()",
+        "load()",
+        "set()"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Where is the MOST common place to declare global CSS variables to ensure they are available everywhere?",
+      "options": [
+        "&lt;html&gt; tag only.",
+        ":root",
+        "&lt;body&gt; tag only.",
+        "@media only."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "One of the most powerful use cases for CSS variables is ________ (easily switching between Light and Dark versions of a site).",
+      "options": [
+        "Theming",
+        "Rotation",
+        "Debugging",
+        "Scaling"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the second value used for inside a 'var(--primary, blue)' function?",
+      "options": [
+        "To set the duration of the transition.",
+        "To set a 'fallback' value (blue) in case the variable (--primary) is not defined.",
+        "To choose the font for the variable.",
+        "To automatically stop the animation halfway."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

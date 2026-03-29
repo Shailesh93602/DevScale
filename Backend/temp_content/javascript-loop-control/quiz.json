@@ -1,0 +1,62 @@
+{
+  "title": "JavaScript Loop Control Quiz",
+  "description": "Test your knowledge of the essential properties and tools for creating robust and cross-browser web experiences with loops and repetition.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the most modern and recommended way to build a professional-grade web application in JavaScript for repeating an action for every item in an Array?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "The .forEach() loop.",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which keyword is used to IMMEDIATELY stop a loop entirely, even if the condition is still true?",
+      "options": [
+        "break",
+        "continue",
+        "stop",
+        "pause"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which keyword is used to skip only the CURRENT repetition and move straight to the next one in the loop?",
+      "options": [
+        "break",
+        "continue",
+        "skip",
+        "jump"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What happens if a loop's condition is ALWAYS true and it never finishes (an 'Infinite Loop')?",
+      "options": [
+        "The site will load much faster.",
+        "The browser will likely 'freeze' or crash because it is stuck repeating the action forever.",
+        "It will choose the colors for the animation.",
+        "It will automatically generate CSS animations."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "The 'for' loop in JavaScript allows you to define three things. Which of these is NOT one of those three things?",
+      "options": [
+        "Where to start (Initial Expression).",
+        "What condition to check (Condition).",
+        "How to change the counter (Increment).",
+        "Which font to use for the loop."
+      ],
+      "correctAnswer": 3,
+      "points": 10
+    }
+  ]
+}

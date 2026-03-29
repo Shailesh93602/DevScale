@@ -1,0 +1,35 @@
+<section aria-labelledby="animations-title">
+  <h1 id="animations-title">CSS Transitions and Animations: Making Your Site Move</h1>
+  
+  <p>Motion is a powerful way to draw attention and provide feedback to your users. CSS provides two main ways to create motion: <strong>Transitions</strong> (simple changes from state A to state B) and <strong>Animations</strong> (complex, multi-step movements).</p>
+
+  <h2>1. CSS Transitions</h2>
+  <p>Transitions allow you to change property values smoothly over a given duration. They are usually triggered by a change in state, like a mouse hover.</p>
+  <pre><code>.button {
+  background-color: blue;
+  transition: background-color 0.3s ease-in-out;
+}
+.button:hover {
+  background-color: darkblue;
+}</code></pre>
+
+  <h2>2. CSS Animations (@keyframes)</h2>
+  <p>Animations allow you to create complex movement by defining "keyframes"—specific points in the animation where properties change.</p>
+  <pre><code>@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.hero-title {
+  animation: fade-in 2s ease;
+}</code></pre>
+
+  <h2>Easing Functions</h2>
+  <p>The "timing" of your animation (how it accelerates and decelerates) is controlled by **Easing Functions**. <code>ease-in</code> starts slow, <code>ease-out</code> ends slow, and <code>linear</code> stays the same speed.</p>
+
+  <h2>Performance: Use Transforms and Opacity</h2>
+  <p>For the smoothest animations, try to animate only <code>transform</code> (scale, rotate, translate) and <code>opacity</code>. These properties are handled by the computer's GPU, making them much faster than animating things like <code>margin</code> or <code>width</code>.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Less is more! While it's tempting to animate everything, too much motion can be distracting or even nauseating for some users. Use subtle animations to enhance the experience, not to dominate it.</p>
+  </aside>
+</section>

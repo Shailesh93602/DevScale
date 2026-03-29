@@ -1,0 +1,62 @@
+{
+  "title": "CSS for Modern Web Applications Quiz",
+  "description": "Test your knowledge of the essential properties and tools for creating robust and cross-browser web experiences with modern Web Apps.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the most modern and recommended way to build a professional-grade web application in CSS for SPAs (Single-Page Applications)?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "Using CSS Modules or Utility-First Frameworks (Tailwind CSS) for component-level styles.",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a major 'Pro' of using CSS Modules in a React or Vue project?",
+      "options": [
+        "It makes your CSS files smaller and more readable.",
+        "It 'scopes' your CSS to only one specific component, preventing classes from accidentally clashing with others.",
+        "It is always supported by every browser.",
+        "It replaces the need for any HTML5 tags."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is 'CSS-in-JS' inside a modern React application?",
+      "options": [
+        "To make the site load much faster.",
+        "Using JavaScript to write your CSS rules directly within your component files (e.g., Styled Components).",
+        "To choose the colors for the animation.",
+        "To automatically generate CSS animations."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Why is it important to almost ALWAYS avoid 'Universal Selectors' in modern Component-based CSS?",
+      "options": [
+        "They are difficult to maintain.",
+        "They can break the isolation and style encapsulation of your individual components.",
+        "They are not supported in modern browsers.",
+        "They take up no space in the browser."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a best practice for a professional-style stylesheet for modern web apps?",
+      "options": [
+        "Only using inline styles.",
+        "Using a global style file for everything.",
+        "Using 'Code Splitting' to only load the CSS needed for the current route on the page.",
+        "Using variables for colors and spacing."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+<section aria-labelledby="grid-vs-flex-title">
+  <h1 id="grid-vs-flex-title">CSS Grid vs. Flexbox: Choosing the Right Layout Tool</h1>
+  
+  <p>The biggest question for any modern web developer is: "Should I use Flexbox or CSS Grid for this layout?" While they can both handle many tasks, they were designed for two completely different purposes. Understanding the difference is the key to writing clean, professional CSS.</p>
+
+  <h2>1. The Primary Difference (Dimension)</h2>
+  <ul>
+    <li><strong>Flexbox:</strong> **One-Dimensional**. It's designed to align items in a single line—either a row OR a column. It's the best tool for simple alignments like navbars, buttons, or card footers.</li>
+    <li><strong>CSS Grid:</strong> **Two-Dimensional**. It's designed to align items in BOTH a row and a column at the same time. It's the best tool for the overall page structure (header, sidebar, main, footer).</li>
+  </ul>
+
+  <h2>2. Content-First vs. Layout-First</h2>
+  <ul>
+    <li><strong>Flexbox:</strong> "Content-First." The elements determine how the layout looks. If you add more text to a button, the button grows, and its neighbors move out of the way.</li>
+    <li><strong>CSS Grid:</strong> "Layout-First." You define the grid structure first (the rows and columns), and then you place the content inside those specific "boxes."</li>
+  </ul>
+
+  <h2>3. Alignment Power</h2>
+  <p>While both have great alignment properties like <code>justify-content</code> and <code>align-items</code>, **Flexbox** excels at moving items around flexibly along an axis, while **Grid** excels at creating rigid, perfectly-aligned patterns.</p>
+
+  <h2>4. Can I use both?</h2>
+  <p>Absolutely! Most professional sites use **Grid** for the high-level layout (the "big pieces") and then use **Flexbox** *inside* those grid cells to align the smaller components like text and buttons.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> If you find yourself using <code>margin-left: auto;</code> or <code>float: right;</code> to align something, you should switch to <strong>Flexbox</strong>. If you're building a complex multi-column dashboard, you should start with <strong>CSS Grid</strong>.</p>
+  </aside>
+</section>

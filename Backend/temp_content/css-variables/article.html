@@ -1,0 +1,33 @@
+<section aria-labelledby="variables-title">
+  <h1 id="variables-title">CSS Variables (Custom Properties): Streamline Your Styles</h1>
+  
+  <p>CSS Variables (also called **Custom Properties**) allow you to store specific values (like colors, spacing, or fonts) in one central place and reuse them throughout your entire stylesheet. This makes your code more readable and incredibly easy to maintain.</p>
+
+  <h2>Defining Variables</h2>
+  <p>Variables are defined using a double-dash prefix (<code>--</code>). They are usually declared inside the <code>:root</code> selector so they are available everywhere on your page.</p>
+  <pre><code>:root {
+  --primary-color: #3498db;
+  --main-padding: 1rem;
+}</code></pre>
+
+  <h2>Using Variables (The <code>var()</code> Function)</h2>
+  <p>To apply your variable to a CSS property, wrap it in the <code>var()</code> function.</p>
+  <pre><code>.button {
+  background-color: var(--primary-color);
+  padding: var(--main-padding);
+}</code></pre>
+
+  <h2>Dark Mode and Theme Switching</h2>
+  <p>One of the most powerful uses for CSS variables is "Theming." If you want to create a Dark Mode, you don't have to rewrite all your CSS. You just change the values of your variables inside a specific class or media query.</p>
+  <pre><code>[data-theme="dark"] {
+  --primary-color: #2c3e50;
+  --bg-color: #000;
+}</code></pre>
+
+  <h2>Dynamic Updates with JavaScript</h2>
+  <p>Unlike preprocessor variables (like SASS), CSS variables are "live." You can actually update them using JavaScript, which allows for advanced interactive effects that were previously impossible.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Use <strong>Fallbacks</strong>! If a variable might not be defined (e.g., if it's being loaded from an external file), you can provide a second "fallback" value inside the <code>var()</code> function: <code>var(--color, blue)</code>.</p>
+  </aside>
+</section>

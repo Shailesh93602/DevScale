@@ -1,0 +1,62 @@
+{
+  "title": "CSS Architecture Quiz",
+  "description": "Test your knowledge of the essential properties and tools for creating robust and cross-browser web experiences with architecture and code structure.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the most modern and recommended way to build a professional-grade web application in CSS?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "Using a consistent naming convention like BEM (Block Element Modifier) to create explicit, independent CSS rules.",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a major 'Pro' of using CSS architecture (like BEM, OOCSS, or SMACSS) compared to raw CSS?",
+      "options": [
+        "It makes your CSS files smaller and more readable.",
+        "It helps developers organize their code into a structured, maintainable, and highly reusable design system.",
+        "It is always supported by every browser.",
+        "It replaces the need for any HTML5 tags."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is 'Atomic Design' inside a professional web application?",
+      "options": [
+        "To make the site load much faster.",
+        "To break the UI down into five levels: Atoms (buttons), Molecules (search bar), Organisms (navbar), Templates, and Pages.",
+        "To choose the colors for the animation.",
+        "To automatically generate CSS animations."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Why is it important to almost ALWAYS avoid 'Universal Selectors' (*) everywhere in your professional CSS architecture?",
+      "options": [
+        "They are difficult to maintain.",
+        "They can make the site load much slower by being too broad and potentially conflicting with other styles.",
+        "They are not supported in modern browsers.",
+        "They take up no space in the browser."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a best practice for a professional-style stylesheet for architecture?",
+      "options": [
+        "Commenting every single line of code.",
+        "Using a reset or normalize stylesheet.",
+        "Splitting styles into a modular folder structure (base, components, layout, pages).",
+        "Using variables for colors and spacing."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

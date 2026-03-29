@@ -1,0 +1,28 @@
+<section aria-labelledby="css-layout-title">
+  <h1 id="css-layout-title">CSS Layout Techniques: Evolution and Best Practices</h1>
+  
+  <p>The way web developers build layouts has evolved significantly over the years. Understanding the history and modern tools of CSS layout is essential for any professional developer.</p>
+
+  <h2>Historical Methods (Avoid These Today)</h2>
+  <ul>
+    <li><strong>Table Layouts (1990s):</strong> Using HTML <code>&lt;table&gt;</code> tags for layout was hacky, slow, and non-accessible. Only use this today for HTML Emails.</li>
+    <li><strong>Float Layouts (2000s):</strong> Using <code>float: left</code> and <code>float: right</code> was slightly better but required complex "clearfixes" to prevent layout collapse. It is now mostly obsolete.</li>
+  </ul>
+
+  <h2>Modern Layout Methods (Use These Today)</h2>
+  <ul>
+    <li><strong>Flexbox:</strong> The modern "go-to" for one-dimensional layouts (navbars, card list items, etc.).</li>
+    <li><strong>CSS Grid:</strong> The best tool for two-dimensional page structures (headers, footers, sidebars).</li>
+    <li><strong>Multi-Column Layout (CSS Columns):</strong> Allows text to flow between multiple columns automatically, like a newspaper.</li>
+  </ul>
+
+  <h2>The Concept of "Flow"</h2>
+  <p>Most elements are naturally **Block** (stack vertically) or **Inline** (line up horizontally). Understanding this natural flow is the key to knowing when to use advanced techniques to break or adjust it.</p>
+
+  <h2>Responsive Design as a Layout Technique</h2>
+  <p>Layout is no longer "static." Using <strong>Media Queries</strong> and **Flexible Units** (like <code>%</code>, <code>fr</code>, <code>vmax</code>, <code>vmin</code>) ensures your layout adapts smoothly to every device size.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Before starting a new layout, ask yourself: Is this a row/column (use <strong>Flexbox</strong>) or a full page with multiple components (use <strong>Grid</strong>)? Choosing the right tool from the start will save you from complex CSS hacks later.</p>
+  </aside>
+</section>

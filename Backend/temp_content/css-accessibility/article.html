@@ -1,0 +1,34 @@
+<section aria-labelledby="accessibility-title">
+  <h1 id="accessibility-title">CSS for Accessibility: Styling with Inclusivity</h1>
+  
+  <p>CSS is not just for looks; it's a critical tool for making your website accessible to everyone, including users who have visual, hearing, or motor impairments.</p>
+
+  <h2>1. Color Contrast</h2>
+  <p>Always ensure that the contrast between your text and background is high enough to be readable. The **WCAG guidelines** recommend a minimum contrast ratio of **4.5:1** for normal text.</p>
+
+  <h2>2. Focus Indicators</h2>
+  <p>Keyboard users rely on "focus" styles to see where they are on the page. **Never remove the default focus outline** (<code>outline: none;</code>) unless you are replacing it with a clearly visible custom focus style.</p>
+
+  <h2>3. Visually Hidden Content</h2>
+  <p>Sometimes you need to add text for screen reader users that shouldn't be visible on the screen. Use a special <code>.sr-only</code> class instead of <code>display: none;</code> (which hides content from screen readers too).</p>
+  <pre><code>.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}</code></pre>
+
+  <h2>4. Respecting User Preferences</h2>
+  <p>Modern CSS allows you to detect the user's system-level accessibility settings, such as **reduced motion** (for vestibular disorders) and **forced-colors** (for high contrast mode in Windows).</p>
+  <pre><code>@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; }
+}</code></pre>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Use the **Accessibility** panel in your browser's DevTools to automatically check for color contrast violations and other common accessibility issues as you develop your styles.</p>
+  </aside>
+</section>

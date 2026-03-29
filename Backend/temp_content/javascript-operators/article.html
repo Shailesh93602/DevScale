@@ -1,0 +1,32 @@
+<section aria-labelledby="js-operators-title">
+  <h1 id="js-operators-title">JavaScript Operators: Calculating and Comparing Data</h1>
+  
+  <p>Operators are symbols you use in your code to perform actions on one or more pieces of data (called operands). Whether you're doing simple math or complex logic, operators are the tools that handle the work.</p>
+
+  <h2>1. Arithmetic Operators (+, -, *, /)</h2>
+  <p>These are the standard math symbols for adding, subtracting, multiplying, and dividing numbers. JavaScript also has the **Remainder (Modulus, <code>%</code>)** operator, which returns the amount left over after a division.</p>
+  <pre><code>let total = 50 + 20; // 70
+let remainder = 10 % 3; // 1 (10 / 3 = 3 with 1 left over)</code></pre>
+
+  <h2>2. Assignment Operators (=, +=, -=)</h2>
+  <p>Used to assign a value to a variable. The most common is <code>=</code>. Shorthand operators like <code>+=</code> are great for adding a value to a variable's current value.</p>
+  <pre><code>let score = 10;
+score += 5; // score is now 15</code></pre>
+
+  <h2>3. Comparison Operators (==, ===, &gt;, &lt;)</h2>
+  <p>Used to compare two values and return <code>true</code> or <code>false</code>. **Important:** Always use the <strong>Strict Equality (<code>===</code>)</strong> operator, which checks if both the value AND the data type are exactly the same.</p>
+  <pre><code>5 == "5"; // true (loose equality)
+5 === "5"; // false (strict equality - RECOMMENDED!)</code></pre>
+
+  <h2>4. Logical Operators (&amp;&amp;, ||, !)</h2>
+  <p>Used to combine multiple comparisons together (e.g., "IF the user is logged in AND they are an admin").</p>
+  <ul>
+    <li><strong><code>&amp;&amp;</code> (AND):</strong> Returns <code>true</code> only if both comparisons are true.</li>
+    <li><strong><code>||</code> (OR):</strong> Returns <code>true</code> if at least one comparison is true.</li>
+    <li><strong><code>!</code> (NOT):</strong> Reverses a boolean (e.g., <code>!true</code> is <code>false</code>).</li>
+  </ul>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Always use <strong>Strict Equality (===)</strong> instead of loose equality (==). It prevents strange errors that occur when JavaScript tries to "helpfully" convert data types for you during a comparison.</p>
+  </aside>
+</section>

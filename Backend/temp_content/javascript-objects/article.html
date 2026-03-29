@@ -1,0 +1,37 @@
+<section aria-labelledby="js-objects-title">
+  <h1 id="js-objects-title">JavaScript Objects: Organizing Complex Data</h1>
+  
+  <p>In JavaScript, an **Object** is a standalone entity with **Properties** (characteristics) and **Methods** (actions). While a simple variable stores one value, an object allows you to group together many related values in one place (e.g., a "User" object containing a name, email, and age).</p>
+
+  <h2>1. Defining an Object</h2>
+  <p>Objects are enclosed in curly braces <code>{}</code> and use **Key-Value pairs** to store data.</p>
+  <pre><code>const user = {
+  name: "EduScale",
+  age: 2,
+  isPremium: true
+};</code></pre>
+
+  <h2>2. Accessing Properties</h2>
+  <ul>
+    <li><strong>Dot Notation (<code>user.name</code>):</strong> The most common way to access values.</li>
+    <li><strong>Bracket Notation (<code>user["name"]</code>):</strong> Useful when the key is stored in another variable.</li>
+  </ul>
+
+  <h2>3. Methods: Adding Actions to Objects</h2>
+  <p>A "Method" is simply a function that belongs to an object. It's used to perform actions related specifically to that object.</p>
+  <pre><code>const car = {
+  brand: "Tesla",
+  start: function() { console.log("Engines ready!"); }
+};
+car.start();</code></pre>
+
+  <h2>4. The <code>this</code> Keyword</h2>
+  <p>Inside a method, the <code>this</code> keyword refers to the **current object** itself. It allows the method to access its own properties.</p>
+
+  <h2>Constructors and Classes (Modern)</h2>
+  <p>If you need to create many similar objects (like 100 different products), you use a **Class** as a "Blueprint" to define the structure once and generate objects (instances) from it.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Use **Objects** to group related data! Instead of having five separate variables for one user, put them in a single <code>user</code> object. This makes your code much cleaner and easier to pass around in functions.</p>
+  </aside>
+</section>

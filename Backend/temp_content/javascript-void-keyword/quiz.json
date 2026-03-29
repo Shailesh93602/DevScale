@@ -1,0 +1,62 @@
+{
+  "title": "JavaScript Void Keyword Quiz",
+  "description": "Test your knowledge of the essential properties and tools for creating robust and cross-browser web experiences with the void operator.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the most modern and recommended way to build a professional-grade web application in JavaScript for an interactive 'link' that doesn't navigate?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "Using a <button> element instead of an <a> tag and handling the click in JS.",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which value does the JavaScript 'void' operator ALWAYS return, regardless of the expression it evaluates?",
+      "options": [
+        "null",
+        "undefined",
+        "true",
+        "0"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is 'javascript:void(0)' inside a professional web application link (<a>)?",
+      "options": [
+        "To make the site load much faster.",
+        "To create a 'dummy' link that performs a JavaScript action on click WITHOUT navigating to a new URL or refreshing.",
+        "To choose the colors for the animation.",
+        "To automatically generate CSS animations."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Why is it important to almost ALWAYS avoid 'Universal Selectors' everywhere in your professional JavaScript void-related links?",
+      "options": [
+        "They are difficult to maintain.",
+        "They can make the site load much slower and potentially confuse the link behavior.",
+        "They are not supported in modern browsers.",
+        "They take up no space in the browser."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a best practice for a professional-style stylesheet for JavaScript void keywords?",
+      "options": [
+        "Commenting every single line of code.",
+        "Using a reset or normalize stylesheet.",
+        "Using <button> elements for interactive actions that don't navigate to improve accessibility (A11y).",
+        "Using variables for colors and spacing."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

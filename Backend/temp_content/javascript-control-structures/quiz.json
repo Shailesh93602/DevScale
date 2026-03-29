@@ -1,0 +1,62 @@
+{
+  "title": "JavaScript Control Structures Quiz",
+  "description": "Test your knowledge of the essential properties and tools for creating robust and cross-browser web experiences with control structures and logic.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the most modern and recommended way to build a professional-grade web application in JavaScript?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "Using conditional (if...else) statements to control the flow of your program.",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which keyword is used to start a 'Conditional' block that runs ONLY if a specific comparison is true?",
+      "options": [
+        "if",
+        "else",
+        "while",
+        "for"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which control structure is best for handling MANY different conditions based on a single value (like different roles for a user)?",
+      "options": [
+        "if...else",
+        "switch",
+        "loop",
+        "try...catch"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "One of the most powerful use cases for 'Control Structures' is ________ (naming them in camelCase like totalProjectCost).",
+      "options": [
+        "Theming",
+        "Logic / Decision-Making",
+        "Debugging",
+        "Scaling"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "In JavaScript, the number zero (0) and an empty string ('') are both considered ________?",
+      "options": [
+        "Truthy",
+        "Falsy",
+        "Valid",
+        "None of these."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

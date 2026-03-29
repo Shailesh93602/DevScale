@@ -1,0 +1,62 @@
+{
+  "title": "JavaScript Objects Quiz",
+  "description": "Test your knowledge of the essential properties and tools for creating robust and cross-browser web experiences with objects and properties.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the most modern and recommended way to build a professional-grade web application in JavaScript for grouping related data?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "Using Objects ({} with Key-Value pairs) to store related data points.",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a major 'Pro' of using Objects compared to individual separate variables?",
+      "options": [
+        "It makes your HTML files smaller and more readable.",
+        "It allows you to group related data (like name, email, and age) into a single, manageable container.",
+        "It is always supported by every browser.",
+        "It replaces the need for any HTML5 tags."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is a 'Method' inside a professional web application object?",
+      "options": [
+        "To make the site load much faster.",
+        "A function that belongs specifically to that object and performs an action using its own properties.",
+        "To choose the colors for the animation.",
+        "To automatically generate CSS animations."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "The 'this' keyword inside an object method refers to ________?",
+      "options": [
+        "The browser window.",
+        "The object itself.",
+        "A regular variable.",
+        "Both 'browser window' and 'object itself' are correct."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a best practice for a professional-style stylesheet for JavaScript objects?",
+      "options": [
+        "Commenting every single line of code.",
+        "Using a reset or normalize stylesheet.",
+        "Using 'Classes' as a blueprint to define common structures for many similar objects (like a 'User' class).",
+        "Using variables for colors and spacing."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

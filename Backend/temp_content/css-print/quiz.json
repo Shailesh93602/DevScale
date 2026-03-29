@@ -1,0 +1,62 @@
+{
+  "title": "CSS for Print Quiz",
+  "description": "Test your knowledge of the essential properties and tools for creating professional-looking print layouts for your website using CSS.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the most modern and recommended way to build a professional, responsive web page for the physical world?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "The @media print media query",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a major 'Pro' of using Print-specific CSS styles compared to a regular website?",
+      "options": [
+        "It makes your CSS files smaller automatically.",
+        "It allows users to print only the core content (like an article or receipt) while hiding non-essential sidebars and navbars.",
+        "It is always supported by every browser.",
+        "It replaces the need for any HTML5 tags."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the primary role of 'break-before' or 'break-after' properties in a print-specific CSS rule?",
+      "options": [
+        "To make the site load much faster.",
+        "To control exactly where the printer starts a new page of content.",
+        "To choose the colors for the animation.",
+        "To automatically stop the animation halfway."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "How can you show the actual URL (href) of a link when it is printed on physical paper?",
+      "options": [
+        "By writing it out by hand.",
+        "Using the CSS '::after' pseudo-element and the 'attr(href)' function.",
+        "By taking a screenshot of the link.",
+        "You cannot show a URL when printing."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a BEST practice for a print-style stylesheet to avoid wasting user ink/toner?",
+      "options": [
+        "Making the background black and text white.",
+        "Making the background white and the text black.",
+        "Using large, dark background images.",
+        "Using many different fonts."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

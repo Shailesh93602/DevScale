@@ -1,0 +1,62 @@
+{
+  "title": "CSS for Accessibility Quiz",
+  "description": "Test your knowledge of the essential properties and tools for creating an inclusive and accessible web experience.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "What is the primary role of 'Color Contrast' in web accessibility?",
+      "options": [
+        "To make the website load much faster.",
+        "To ensure that there is enough visual difference between text and its background to be easily readable.",
+        "To define the website's visual theme and fonts.",
+        "To hide images from certain types of users."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Keyboard users rely on the ________ to know which element they are currently interacting with.",
+      "options": [
+        "Click sound",
+        "Focus outline / Ring",
+        "Page title",
+        "Browser's address bar"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is the most modern and recommended way to hide text on the screen but still make it accessible to screen reader users?",
+      "options": [
+        "display: none;",
+        "visibility: hidden;",
+        "Using a special '.sr-only' utility class.",
+        "Using absolute positioning with 'top: -9999px'."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What does the '@media (prefers-reduced-motion)' query allow you to do for accessibility?",
+      "options": [
+        "To automatically rotate the page by 45 degrees.",
+        "To detect if a user has requested a simplified experience with less animation (for vestibular disorders).",
+        "To choose the colors for the animation.",
+        "To automatically stop the animation halfway."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Why is it important to never use 'outline: none;' without providing a visible replacement focus style?",
+      "options": [
+        "It makes the site load much slower.",
+        "It makes navigation impossible for users who only use a keyboard.",
+        "It is not supported in modern browsers.",
+        "It hides all images."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

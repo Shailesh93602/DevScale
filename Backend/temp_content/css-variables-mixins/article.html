@@ -1,0 +1,42 @@
+<section aria-labelledby="mixins-title">
+  <h1 id="mixins-title">CSS Variables and Mixins: Advanced Style Logic</h1>
+  
+  <p>In modern CSS (especially when using preprocessors like SASS), the combination of **Variables** and **Mixins** allows you to build a powerful and reusable "Design System." This makes your codebase much cleaner and easier to update over time.</p>
+
+  <h2>CSS Variables (The "Properties")</h2>
+  <p>Use variables to store your atomic design tokens—things like your primary color, main border radius, and standard spacing unit.</p>
+  <pre><code>:root {
+  --btn-radius: 8px;
+  --spacing-main: 1rem;
+}</code></pre>
+
+  <h2>SASS Mixins (The "Behaviors")</h2>
+  <p>A Mixin is a block of CSS that can be "included" anywhere. It's especially powerful because you can pass **Arguments** to it, similar to a JavaScript function.</p>
+  <pre><code>@mixin button-style($bg-color) {
+  background-color: $bg-color;
+  border-radius: var(--btn-radius);
+  padding: var(--spacing-main);
+  border: none;
+}
+.primary-btn { @include button-style(blue); }
+.danger-btn { @include button-style(red); }</code></pre>
+
+  <h2>Why Combine Them?</h2>
+  <p>By using native CSS variables <em>inside</em> your mixins, you get the best of both worlds:
+    <ul>
+      <li><strong>Mixins:</strong> Handle the logic of which properties are needed.</li>
+      <li><strong>Variables:</strong> Allow for "live" updates and easy theming at runtime.</li>
+    </ul>
+  </p>
+
+  <h2>Practical Use Cases</h2>
+  <ul>
+    <li><strong>Centered Flexbox:</strong> A mixin that applies all the alignment rules for a flex container.</li>
+    <li><strong>Media Query Snippets:</strong> Mixins that make writing desktop-specific CSS easier.</li>
+    <li><strong>Custom Scrollbars:</strong> A reusable block of rules to style scrollbars consistently.</li>
+  </ul>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> If you're building a design system, create a separate <code>_mixins.scss</code> or <code>_variables.scss</code> file. This keeps your main stylesheets focused and makes it easy to share your core styles across multiple projects.</p>
+  </aside>
+</section>

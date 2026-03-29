@@ -1,0 +1,62 @@
+{
+  "title": "JavaScript Numbers Quiz",
+  "description": "Test your knowledge of the essential properties and tools for creating robust and cross-browser web experiences with numerical values and logic.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the most modern and recommended way to build a professional-grade web application in JavaScript for handling very, very large numbers (greater than 9 quadrillion)?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "The BigInt data type.",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a major 'Pro' of using .toFixed(2) compared to a regular number variable?",
+      "options": [
+        "It makes your HTML files smaller and more readable.",
+        "It rounds a number into a string with a specific number of decimal places, which is essential for things like currency (e.g., $10.00).",
+        "It is always supported by every browser.",
+        "It replaces the need for any HTML5 tags."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is 'NaN' inside a professional web application number calculation?",
+      "options": [
+        "To make the site load much faster.",
+        "A special value that stands for 'Not-a-Number', which is returned when math is performed on a non-numeric value.",
+        "To choose the colors for the animation.",
+        "To automatically generate CSS animations."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Why is it important to almost ALWAYS avoid 'Universal Selectors' everywhere in your professional JavaScript number processing?",
+      "options": [
+        "They are difficult to maintain.",
+        "They can make the site load much slower and potentially confuse the number logic.",
+        "They are not supported in modern browsers.",
+        "They take up no space in the browser."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a best practice for a professional-style stylesheet for JavaScript numbers for financial applications?",
+      "options": [
+        "Commenting every single line of code.",
+        "Using a reset or normalize stylesheet.",
+        "Converting all values to cents (integers) to avoid floating-point math issues, and then converting back only for display.",
+        "Using variables for colors and spacing."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

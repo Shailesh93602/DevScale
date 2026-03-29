@@ -1,0 +1,31 @@
+<section aria-labelledby="js-control-title">
+  <h1 id="js-control-title">JavaScript Control Structures: Making Decisions</h1>
+  
+  <p>Control structures allow you to control the "flow" of your program. Instead of running every line in order, you can use **Conditionals** to skip certain parts and run them only when needed (e.g., IF the user's password is correct, let them in).</p>
+
+  <h2>1. The <code>if...else</code> Statement</h2>
+  <p>The most basic way to make a decision. The browser checks the condition in parentheses. If it's true, it runs the first block of code. If not, it skips it (or runs the <code>else</code> block if provided).</p>
+  <pre><code>if (age >= 18) {
+  console.log("You can vote!");
+} else {
+  console.log("You are too young.");
+}</code></pre>
+
+  <h2>2. The <code>switch</code> Statement</h2>
+  <p>A cleaner way to handle many different conditions for a single value. It's often used for things like handling different levels in a game or different roles for a user.</p>
+  <pre><code>switch (day) {
+  case 'Monday': console.log("Start work!"); break;
+  case 'Friday': console.log("Weekend!"); break;
+  default: console.log("Just a regular day.");
+}</code></pre>
+
+  <h2>3. Comparisons inside Conditions</h2>
+  <p>Conditions always result in a **Boolean (<code>true</code> or <code>false</code>)**. You can use <code>&gt;</code>, <code>&lt;</code>, <code>===</code>, and <code>!==</code> (not equal to) to create complex logic.</p>
+
+  <h2>4. Values that are "Truthy" or "Falsy"</h2>
+  <p>In JavaScript, every value is either **Truthy** or **Falsy**. A value like an empty string (<code>""</code>) or the number zero (<code>0</code>) is considered false, while a string with text or a non-zero number is considered true.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> If you find yourself writing a huge <code>if...else if...else</code> chain, consider switching to a <code>switch</code> statement or a "Lookup Table" (using an Object) to make your code much easier to read and maintain.</p>
+  </aside>
+</section>

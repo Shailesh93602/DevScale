@@ -1,0 +1,62 @@
+{
+  "title": "JavaScript Cookies Quiz",
+  "description": "Test your knowledge of the essential properties and tools for creating robust and cross-browser web experiences with cookies and storage.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the most modern and recommended way to build a professional-grade web application in JavaScript for storing small text files in a browser?",
+      "options": [
+        "Table Layouts",
+        "Float Layouts",
+        "Using HTTP Cookies (like document.cookie) to store session information.",
+        "Absolute Positioning only"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a major 'Pro' of using HttpOnly cookies compared to regular ones?",
+      "options": [
+        "It makes your HTML files smaller and more readable.",
+        "It prevents JavaScript from reading the cookie, making it much harder for malicious scripts to steal it.",
+        "It is always supported by every browser.",
+        "It replaces the need for any HTML5 tags."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is 'document.cookie' inside a professional web application?",
+      "options": [
+        "To make the site load much faster.",
+        "A long string containing all the cookies for a specific website, which you can parse and use in your JS.",
+        "To choose the colors for the animation.",
+        "To automatically generate CSS animations."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Why is it important to almost ALWAYS use 'Secure' cookies in modern production environments?",
+      "options": [
+        "They are difficult to maintain.",
+        "They ensure that the cookie is only sent over an encrypted HTTPS connection to prevent hackers from seeing it.",
+        "They are not supported in modern browsers.",
+        "They take up no space in the browser."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a best practice for a professional-style stylesheet for JavaScript cookies?",
+      "options": [
+        "Commenting every single line of code.",
+        "Using a reset or normalize stylesheet.",
+        "Using 'HttpOnly' and 'Secure' cookies for any sensitive user information (like session IDs).",
+        "Using variables for colors and spacing."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

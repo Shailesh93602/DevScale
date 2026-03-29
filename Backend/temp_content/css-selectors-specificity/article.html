@@ -1,0 +1,39 @@
+<section aria-labelledby="selectors-title">
+  <h1 id="selectors-title">CSS Selectors and Specificity: The Hierarchy of Design</h1>
+  
+  <p>CSS Selectors tell the browser which HTML elements to style. If multiple selectors target the same element, the browser uses **Specificity** to determine which styling rule "wins." Understanding this concept is the key to solving "stubborn" CSS issues.</p>
+
+  <h2>Basic Selectors</h2>
+  <ul>
+    <li><strong>Universal Selector (<code>*</code>):</strong> Matches everything on the page.</li>
+    <li><strong>Type Selector (<code>h1</code>, <code>p</code>):</strong> Matches all elements of a specific tag type.</li>
+    <li><strong>Class Selector (<code>.my-class</code>):</strong> Matches elements with a specific class.</li>
+    <li><strong>ID Selector (<code>#my-id</code>):</strong> Matches a single element with a specific ID.</li>
+  </ul>
+
+  <h2>Attribute and Psuedo Selectors</h2>
+  <ul>
+    <li><strong>Attribute (<code>[type="text"]</code>):</strong> Matches based on an HTML attribute value.</li>
+    <li><strong>Psuedo-class (<code>:hover</code>, <code>:nth-child</code>):</strong> Styles an element in a specific state.</li>
+    <li><strong>Psuedo-element (<code>::before</code>, <code>::after</code>):</strong> Styles a specific part of an element.</li>
+  </ul>
+
+  <h2>Specificity Calculation (the "Points" System)</h2>
+  <p>The browser gives each selector a "score" to decide who wins. The higher the score, the more specific (and powerful) the rule.</p>
+  <ol>
+    <li><strong>ID (1,0,0):</strong> Strongest. 100 points.</li>
+    <li><strong>Class, Attribute, Psuedo-class (0,1,0):</strong> Moderate. 10 points.</li>
+    <li><strong>Type (0,0,1):</strong> Weakest. 1 point.</li>
+  </ol>
+  <p><strong>Example:</strong> <code>#header .nav p</code> has a score of 111. <code>.header p</code> has a score of 11. The first rule wins.</p>
+
+  <h2>Inheritance</h2>
+  <p>Some properties, like <code>font-family</code> and <code>color</code>, are "inherited." They are passed down from a parent element to its children automatically.</p>
+
+  <h2>Important Rule (<code>!important</code>)</h2>
+  <p>Adding <code>!important</code> to a declaration will force it to "win" over almost any other specificity. **Warning:** Use this sparingly, as it makes debugging very difficult later!</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> If your CSS isn't working, don't just reach for <code>!important</code>. First, check the **Styles** panel in your browser's DevTools to see which rule is overwriting yours and increase your selector's specificity intelligently instead!</p>
+  </aside>
+</section>
