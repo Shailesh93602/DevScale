@@ -1,0 +1,32 @@
+<section aria-labelledby="form-val-title">
+  <h1 id="form-val-title">HTML for Forms with Validation: Ensuring Data Integrity</h1>
+  
+  <p>Form validation is the process of ensuring that the data entered into a form is in the correct format before it is sent to a server. While JavaScript is often used for complex validation, HTML5 provides built-in validation features that are faster and work even if JavaScript is disabled.</p>
+
+  <h2>The <code>required</code> Attribute</h2>
+  <p>The simplest form of validation is ensuring a field is not empty. Adding the <code>required</code> attribute prevents the form from being submitted until the user enters data.</p>
+  <pre><code>&lt;input type="text" name="username" required&gt;</code></pre>
+
+  <h2>Type-Based Validation</h2>
+  <p>HTML5 input types automatically validate certain formats. For example, <code>type="email"</code> ensures the input contains an "@" symbol and a domain, while <code>type="url"</code> checks for a valid web address.</p>
+
+  <h2>Constraint Attributes</h2>
+  <p>You can set more specific limits on your data using these attributes:</p>
+  <ul>
+    <li><strong><code>minlength</code> and <code>maxlength</code>:</strong> Limits the number of characters.</li>
+    <li><strong><code>min</code> and <code>max</code>:</strong> Sets a numerical range for <code>type="number"</code> or <code>type="range"</code>.</li>
+    <li><strong><code>step</code>:</strong> Defines the legal number intervals (e.g., increments of 0.01 for currency).</li>
+  </ul>
+
+  <h2>Pattern-Based Validation (RegEx)</h2>
+  <p>For complex formats like postal codes or phone numbers, use the <code>pattern</code> attribute with a Regular Expression.</p>
+  <pre><code>&lt;!-- Matches a 5-digit zip code --&gt;
+&lt;input type="text" pattern="[0-9]{5}" title="Please enter a 5-digit zip code"&gt;</code></pre>
+
+  <h2>Custom Validation Messages</h2>
+  <p>Browsers provide a default "bubble" message when validation fails. You can customize this message using the <code>title</code> attribute (as shown above) or via the JavaScript <code>setCustomValidity()</code> method.</p>
+
+  <aside>
+    <p><strong>⚠️ Important:</strong> Client-side validation is for user experience, NOT for security. You MUST always validate data on the server side as well, as client-side checks can be bypassed by advanced users.</p>
+  </aside>
+</section>

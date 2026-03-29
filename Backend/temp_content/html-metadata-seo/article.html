@@ -1,0 +1,32 @@
+<section aria-labelledby="html-seo-title">
+  <h1 id="html-seo-title">HTML Metadata and SEO: Making Your Content Discoverable</h1>
+  
+  <p>Metadata is "data about data." In HTML, metadata is stored in the <code>&lt;head&gt;</code> element and is used by browsers, social media platforms, and search engines like Google to understand, display, and rank your content.</p>
+
+  <h2>The <code>&lt;meta&gt;</code> Description Tag</h2>
+  <p>The <code>description</code> meta tag provides a short summary of the page. This text is often shown in search results below the page title. A good description can significantly improve your click-through rate.</p>
+  <pre><code>&lt;meta name="description" content="Learn the fundamentals of HTML Metadata and SEO in this comprehensive guide for beginners."&gt;</code></pre>
+
+  <h2>Keywords and Robots</h2>
+  <ul>
+    <li><strong>Keywords:</strong> Historically used to list main topics, though modern search engines mostly ignore this now in favor of actual page content.</li>
+    <li><strong>Robots:</strong> Tells search engine crawlers whether or not they should index your page (<code>index</code>/<code>noindex</code>) or follow the links on it (<code>follow</code>/<code>nofollow</code>).</li>
+  </ul>
+  <pre><code>&lt;meta name="robots" content="index, follow"&gt;</code></pre>
+
+  <h2>Open Graph (OG) Metadata</h2>
+  <p>Open Graph tags were pioneered by Facebook to control how a link looks when shared on social media. They allow you to specify a custom title, description, and preview image.</p>
+  <pre><code>&lt;meta property="og:title" content="EduScale: Learn Web Development"&gt;
+&lt;meta property="og:image" content="https://eduscale.com/preview.png"&gt;</code></pre>
+
+  <h2>Canonical Links</h2>
+  <p>If you have multiple URLs that lead to the same content, search engines might penalize you for "duplicate content." Use a canonical link to tell them which version is the "original" or "master" copy.</p>
+  <pre><code>&lt;link rel="canonical" href="https://example.com/main-page"&gt;</code></pre>
+
+  <h2>The <code>&lt;title&gt;</code> Tag</h2>
+  <p>While technically metadata, the <code>&lt;title&gt;</code> is the single most important on-page SEO element. Ensure it contains your primary keyword and is around 50-60 characters long.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Always use a single <code>&lt;h1&gt;</code> tag per page that matches your page title for the best SEO results.</p>
+  </aside>
+</section>

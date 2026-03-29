@@ -1,0 +1,62 @@
+{
+  "title": "HTML & CSS Integration Quiz",
+  "description": "Test your knowledge of the essential ways to connect CSS with your HTML documents.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which tag is used to reference an external CSS file in an HTML document?",
+      "options": [
+        "&lt;script&gt;",
+        "&lt;link&gt;",
+        "&lt;style&gt;",
+        "&lt;css&gt;"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is the industry-standard way to include CSS in a large web project?",
+      "options": [
+        "Inline styles (style='...')",
+        "Internal styles (&lt;style&gt; tag)",
+        "External styles (.css file)",
+        "Browser default styles"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "If a style is defined both in an external CSS file and in an inline style on a tag, which one takes higher priority?",
+      "options": [
+        "The external CSS file.",
+        "The inline style.",
+        "Neither; the browser ignores both.",
+        "It depends on the tag name."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Where should the &lt;link&gt; tag for an external CSS file normally be placed?",
+      "options": [
+        "At the bottom of the &lt;body&gt; tag.",
+        "Inside the &lt;head&gt; tag.",
+        "Inside the &lt;main&gt; tag.",
+        "After the closing &lt;/html&gt; tag."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a disadvantage of using inline CSS styles (style='...')?",
+      "options": [
+        "They are not supported by mobile browsers.",
+        "They make it difficult to maintain and update styles across multiple pages.",
+        "They are only visible to search engines.",
+        "They require a separate server to load."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+<section aria-labelledby="microdata-title">
+  <h1 id="microdata-title">Microdata and HTML: Communicating with the Semantic Web</h1>
+  
+  <p>While semantic tags like <code>&lt;article&gt;</code> and <code>&lt;nav&gt;</code> help search engines identify parts of a page, <strong>Microdata</strong> helps them understand the <em>meaning</em> of the data inside those tags. It allows you to label structured information like people, products, events, and reviews.</p>
+
+  <h2>What is Microdata?</h2>
+  <p>Microdata is a set of attributes introduced in HTML5 for nesting metadata within existing content on web pages. It is primarily used by search engines (via the <strong>Schema.org</strong> vocabulary) to create "Rich Snippets" in search results.</p>
+
+  <h2>Core Microdata Attributes</h2>
+  <ul>
+    <li><strong><code>itemscope</code>:</strong> Defines the scope of an item (e.g., this div contains information about a person).</li>
+    <li><strong><code>itemtype</code>:</strong> Specifies the type of item using a URL from Schema.org (e.g., <code>https://schema.org/Person</code>).</li>
+    <li><strong><code>itemprop</code>:</strong> Identifies a specific property of the item (e.g., the person's name, email, or job title).</li>
+  </ul>
+
+  <h2>Example: Marking Up a Person</h2>
+  <pre><code>&lt;div itemscope itemtype="https://schema.org/Person"&gt;
+  &lt;p&gt;My name is &lt;span itemprop="name"&gt;Jane Doe&lt;/span&gt;&lt;/p&gt;
+  &lt;p&gt;I am a &lt;span itemprop="jobTitle"&gt;Web Developer&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+
+  <h2>Rich Snippets and SEO</h2>
+  <p>By using microdata for product reviews, prices, and availability, search engines can display this information directly on the search results page. This "Rich Snippet" makes your link much more attractive to users and significantly increases your click-through rate.</p>
+
+  <h2>Verification</h2>
+  <p>You can test your microdata implementation using Google's <strong>Rich Results Test</strong> or the <strong>Schema Markup Validator</strong>.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Schema.org is a collaborative project between Google, Bing, and Yahoo. By using their vocabulary, you ensure your data is understood by all major search engines.</p>
+  </aside>
+</section>
