@@ -1,0 +1,62 @@
+{
+  "title": "Forms and Input Quiz",
+  "description": "Test your knowledge of the essential tags for creating interactive HTML forms.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which tag acts as a container for all elements in a form?",
+      "options": [
+        "&lt;input&gt;",
+        "&lt;form&gt;",
+        "&lt;data&gt;",
+        "&lt;section&gt;"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the purpose of the 'action' attribute in the &lt;form&gt; tag?",
+      "options": [
+        "It determines the visual appearance of the form.",
+        "It specifies the URL where the form data should be sent.",
+        "It defines the HTTP method to use (GET or POST).",
+        "It specifies a primary heading for the form."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which input type should you use to capture a password securely (masking characters)?",
+      "options": [
+        "type='text'",
+        "type='hidden'",
+        "type='password'",
+        "type='mask'"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "How do you correctly link a &lt;label&gt; to an &lt;input&gt; tag for better accessibility?",
+      "options": [
+        "By placing the input inside the label.",
+        "By using the same text for both.",
+        "By matching the label's 'for' attribute with the input's 'id' attribute.",
+        "By setting the 'name' attribute of both to the same value."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which element should you use for a multi-line text input (like a message)?",
+      "options": [
+        "&lt;input type='textarea'&gt;",
+        "&lt;textarea&gt;",
+        "&lt;input type='text' rows='5'&gt;",
+        "&lt;message&gt;"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

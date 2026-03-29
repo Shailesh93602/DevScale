@@ -1,0 +1,62 @@
+{
+  "title": "Responsive Design with HTML Quiz",
+  "description": "Test your knowledge of the essential tags for creating responsive HTML web pages.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which meta tag tells the browser to match the page width to the device's width for mobile responsiveness?",
+      "options": [
+        "&lt;meta charset='UTF-8'&gt;",
+        "&lt;meta name='viewport' content='width=device-width, initial-scale=1.0'&gt;",
+        "&lt;meta name='responsive' content='true'&gt;",
+        "&lt;meta name='mobile-optimized' content='yes'&gt;"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which HTML5 element is preferred for serving different image versions based on screen size (media queries)?",
+      "options": [
+        "&lt;img&gt;",
+        "&lt;source&gt;",
+        "&lt;picture&gt;",
+        "&lt;figure&gt;"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "The 'srcset' attribute on an &lt;img&gt; tag allows for what?",
+      "options": [
+        "Aligning the image on the left or right of the screen.",
+        "Providing multiple image file options based on screen density.",
+        "Connecting the image to an external CSS stylesheet.",
+        "Creating a transparent background for the image."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "According to responsive web design principles, should you use fixed-width containers in your HTML?",
+      "options": [
+        "Yes, 1024px is the industry standard.",
+        "No, it's better to use percentage-based or fluid widths.",
+        "Only for mobile devices.",
+        "Only if you have a lot of content."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the result of missing the 'viewport' meta tag on a mobile device?",
+      "options": [
+        "The browser will not load the page at all.",
+        "The page will appear as if it's on a desktop screen and text will be very small.",
+        "The colors of the page will be distorted.",
+        "The browser will automatically add the tag for the user."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

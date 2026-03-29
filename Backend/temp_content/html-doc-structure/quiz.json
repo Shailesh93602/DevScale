@@ -1,0 +1,62 @@
+{
+  "title": "HTML Document Structure Quiz",
+  "description": "Test your knowledge of the essential boilerplate of an HTML document.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "What is the purpose of <!DOCTYPE html>?",
+      "options": [
+        "It is a tag that defines the document title.",
+        "It is a declaration that tells the browser it's an HTML5 file.",
+        "It acts as a root element for the entire page.",
+        "It includes metadata for the page."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which tag contains metadata about the document, such as title and character encoding?",
+      "options": [
+        "&lt;html&gt;",
+        "&lt;body&gt;",
+        "&lt;head&gt;",
+        "&lt;meta&gt;"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Where should the main visible content of a web page be located?",
+      "options": [
+        "Inside the &lt;head&gt; tag.",
+        "Inside the &lt;html&gt; tag but outside the &lt;body&gt; tag.",
+        "Inside the &lt;body&gt; tag.",
+        "Inside the &lt;!DOCTYPE&gt; tag."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What does the 'lang' attribute in the &lt;html&gt; tag specify?",
+      "options": [
+        "The language of the page content.",
+        "The language of the browser itself.",
+        "The character encoding used for the document.",
+        "The programming language Used to Build the Page."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the role of the &lt;title&gt; tag in the &lt;head&gt;?",
+      "options": [
+        "It defines the main heading on the page.",
+        "It specifies the filename of the HTML document.",
+        "It defines the title shown in search engine results and browser tabs.",
+        "It creates a link to an external CSS file."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

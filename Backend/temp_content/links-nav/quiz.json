@@ -1,0 +1,62 @@
+{
+  "title": "Links and Navigation Quiz",
+  "description": "Test your knowledge of HTML links and navigation.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "What is the primary tag used to create a link in HTML?",
+      "options": [
+        "&lt;link&gt;",
+        "&lt;anchor&gt;",
+        "&lt;a&gt;",
+        "&lt;url&gt;"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which attribute is required for the &lt;a&gt; tag to specify where the link should go?",
+      "options": [
+        "src",
+        "link",
+        "href",
+        "to"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the difference between an absolute and a relative URL?",
+      "options": [
+        "Absolute URLs are shorter.",
+        "Absolute URLs only work on specific sites.",
+        "Absolute URLs use the full web address; relative URLs use the current folder as a reference.",
+        "There is no difference between them."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "If you want a link to open in a new tab, which attribute and value should you add?",
+      "options": [
+        "target='_new'",
+        "target='_window'",
+        "target='_blank'",
+        "target='_tab'"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "When linking to a specific section on the same page, what should you use in the href attribute?",
+      "options": [
+        "The file name (e.g., page2.html)",
+        "The id of the target element preceded by a hash symbol (#)",
+        "The class of the target element",
+        "The full web address"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
