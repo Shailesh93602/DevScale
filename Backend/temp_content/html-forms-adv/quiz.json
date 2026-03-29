@@ -1,0 +1,62 @@
+{
+  "title": "Advanced HTML Forms Quiz",
+  "description": "Test your knowledge of the essential tags for organizing and validating HTML forms.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which tag should you use to group related inputs visually and semantically within a form?",
+      "options": [
+        "&lt;group&gt;",
+        "&lt;fieldset&gt;",
+        "&lt;section&gt;",
+        "&lt;area&gt;"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the purpose of the &lt;legend&gt; tag within a &lt;fieldset&gt;?",
+      "options": [
+        "It sets a default value for the group's inputs.",
+        "It provides a visible title for the group of elements.",
+        "It defines the validation logic for the group.",
+        "It includes a primary link for form submission."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which HTML5 attribute ensures that a user cannot submit a form without filling in a specific field?",
+      "options": [
+        "validate",
+        "needed",
+        "required",
+        "must-fill"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "The &lt;datalist&gt; element is used for which purpose?",
+      "options": [
+        "To define a dropdown menu of options that cannot be changed.",
+        "To provide an autocomplete feature for an input tag.",
+        "To list the names of all files in a folder.",
+        "To store data in the browser's LocalStorage."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "If you are creating a form that allows for file uploads, which extra attribute must be added to the &lt;form&gt; tag?",
+      "options": [
+        "method='GET'",
+        "enctype='multipart/form-data'",
+        "type='upload'",
+        "files='true'"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

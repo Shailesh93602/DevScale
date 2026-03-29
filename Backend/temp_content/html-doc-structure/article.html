@@ -1,0 +1,40 @@
+<section aria-labelledby="html-doc-structure-title">
+  <h1 id="html-doc-structure-title">HTML Document Structure: The Standard Template</h1>
+  
+  <p>Every HTML document must follow a specific structure to be correctly interpreted by web browsers. This structure provides the necessary context for the page, including metadata, language settings, and the actual content.</p>
+
+  <h2>The Essential Boilerplate</h2>
+  <p>Here is the basic structure that starts every HTML file:</p>
+  <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Page Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;!-- Content goes here --&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+  <h2>Breaking Down the Parts</h2>
+  <ul>
+    <li><strong><code>&lt;!DOCTYPE html&gt;</code>:</strong> This isn't an HTML tag; it's a declaration that tells the browser the document is an HTML5 file.</li>
+    <li><strong><code>&lt;html&gt;</code>:</strong> The root element that wraps all other content. The <code>lang</code> attribute is vital for accessibility and SEO.</li>
+    <li><strong><code>&lt;head&gt;</code>:</strong> Contains metadata (information about the data). Content here is NOT visible on the page but is used by browsers and search engines.</li>
+    <li><strong><code>&lt;body&gt;</code>:</strong> Everything inside this tag is what users actually see and interact with on their screens.</li>
+  </ul>
+
+  <h2>Key Metadata in the Head</h2>
+  <p>Within the <code>&lt;head&gt;</code>, you'll commonly find:</p>
+  <ul>
+    <li><strong><code>&lt;meta charset="UTF-8"&gt;</code>:</strong> Sets the character encoding to support virtually all characters from all human languages.</li>
+    <li><strong><code>&lt;title&gt;</code>:</strong> Defines the title shown in the browser tab and search results.</li>
+    <li><strong><code>&lt;link&gt;</code>:</strong> Used to connect external resources like CSS stylesheets.</li>
+    <li><strong><code>&lt;script&gt;</code>:</strong> Used to include JavaScript files.</li>
+  </ul>
+
+  <aside>
+    <p><strong>⚠️ Warning:</strong> Never place your main content (like headings or paragraphs) inside the <code>&lt;head&gt;</code>. Doing so will confuse browsers and prevent your page from rendering correctly.</p>
+  </aside>
+</section>

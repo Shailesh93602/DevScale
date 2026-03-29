@@ -1,0 +1,62 @@
+{
+  "title": "Images and Multimedia Quiz",
+  "description": "Test your knowledge of the essential tags for embedding rich media in HTML.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these is the correct tag for embedding an image?",
+      "options": [
+        "&lt;image&gt;",
+        "&lt;img&gt;",
+        "&lt;pic&gt;",
+        "&lt;src&gt;"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the purpose of the 'alt' attribute in the &lt;img&gt; tag?",
+      "options": [
+        "It provides alternative colors for the image.",
+        "It provides a description for screen readers (accessibility).",
+        "It sets the alignment of the image on the page.",
+        "It is used to link the image to another page."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which tag is used to provide a caption for an image inside a &lt;figure&gt; element?",
+      "options": [
+        "&lt;caption&gt;",
+        "&lt;figcaption&gt;",
+        "&lt;text&gt;",
+        "&lt;desc&gt;"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "If you want a video or audio file to have play, pause, and volume buttons, which attribute should you add?",
+      "options": [
+        "buttons",
+        "player",
+        "controls",
+        "interactive"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the role of the &lt;source&gt; tag inside a &lt;video&gt; or &lt;audio&gt; element?",
+      "options": [
+        "It specifies the display size of the video.",
+        "It defines multiple video file options for better browser support.",
+        "It acts as a primary heading for the media element.",
+        "It includes metadata for search engines."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

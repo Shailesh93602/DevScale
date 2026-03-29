@@ -1,0 +1,62 @@
+{
+  "title": "HTML Tables Quiz",
+  "description": "Test your knowledge of the essential tags for creating and organizing HTML tables.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which tag acts as the main container for an HTML table?",
+      "options": [
+        "&lt;grid&gt;",
+        "&lt;table&gt;",
+        "&lt;tab&gt;",
+        "&lt;tr&gt;"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the result of using the &lt;tr&gt; tag in a table?",
+      "options": [
+        "It defines a single table cell (Table Registry).",
+        "It defines a new Table Row.",
+        "It specifies the table's resolution.",
+        "It acts as a primary header for a column."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which element should you use for header cells that are usually bold and centered?",
+      "options": [
+        "&lt;td&gt;",
+        "&lt;header&gt;",
+        "&lt;th&gt;",
+        "&lt;h1&gt;"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which attribute should you add to a cell to make it span across multiple columns?",
+      "options": [
+        "rowspan",
+        "colspan",
+        "width",
+        "span"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the purpose of the &lt;thead&gt;, &lt;tbody&gt;, and &lt;tfoot&gt; elements in HTML tables?",
+      "options": [
+        "They are required for all tables to render correctly.",
+        "They provide semantic structure for easier styling and accessibility.",
+        "They are used to create nested tables within a single cell.",
+        "They define the borders and margins of the table."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

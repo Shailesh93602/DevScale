@@ -1,0 +1,42 @@
+<section aria-labelledby="html-lists-title">
+  <h1 id="html-lists-title">HTML Lists: Grouping Related Items</h1>
+  
+  <p>Lists are used for grouping many related items together on a page. HTML supports three main types of lists: Unordered, Ordered, and Description lists, each serving a specific structural purpose.</p>
+
+  <h2>1. Unordered Lists (bulleted)</h2>
+  <p>An unordered list starts with the <code>&lt;ul&gt;</code> tag. Each list item starts with the <code>&lt;li&gt;</code> tag. The list items will be marked with bullets (small black circles) by default.</p>
+  <pre><code>&lt;ul&gt;
+  &lt;li&gt;Coffee&lt;/li&gt;
+  &lt;li&gt;Tea&lt;/li&gt;
+  &lt;li&gt;Milk&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+
+  <h2>2. Ordered Lists (numbered)</h2>
+  <p>An ordered list starts with the <code>&lt;ol&gt;</code> tag. Each list item starts with the <code>&lt;li&gt;</code> tag. The list items will be marked with numbers by default.</p>
+  <pre><code>&lt;ol&gt;
+  &lt;li&gt;Preheat oven&lt;/li&gt;
+  &lt;li&gt;Mix ingredients&lt;/li&gt;
+  &lt;li&gt;Bake for 30 minutes&lt;/li&gt;
+&lt;/ol&gt;</code></pre>
+
+  <h2>3. Description Lists</h2>
+  <p>A description list is a list of terms, with a description of each term. It is useful for glossaries or metadata. It uses three tags:</p>
+  <ul>
+    <li><strong><code>&lt;dl&gt;</code>:</strong> Defines the description list.</li>
+    <li><strong><code>&lt;dt&gt;</code>:</strong> Defines the term (name).</li>
+    <li><strong><code>&lt;dd&gt;</code>:</strong> Describes each term.</li>
+  </ul>
+  <pre><code>&lt;dl&gt;
+  &lt;dt&gt;HTML&lt;/dt&gt;
+  &lt;dd&gt;A markup language for the web.&lt;/dd&gt;
+  &lt;dt&gt;CSS&lt;/dt&gt;
+  &lt;dd&gt;A style sheet language for the web.&lt;/dd&gt;
+&lt;/dl&gt;</code></pre>
+
+  <h2>Nested Lists</h2>
+  <p>You can create nested lists by placing a new list (<code>&lt;ul&gt;</code> or <code>&lt;ol&gt;</code>) inside a list item (<code>&lt;li&gt;</code>) of another list.</p>
+
+  <aside>
+    <p><strong>💡 Semantic Tip:</strong> Use <code>&lt;ul&gt;</code> when the order of items doesn't matter (like a grocery list) and <code>&lt;ol&gt;</code> when the sequence is important (like a set of instructions).</p>
+  </aside>
+</section>
