@@ -1,0 +1,30 @@
+<section aria-labelledby="csp-title">
+  <h1 id="csp-title">Content Security Policy (CSP): Hardening Your Website Against Attacks</h1>
+  
+  <p>A Content Security Policy (CSP) is a powerful, extra layer of security that helps detect and mitigate certain types of attacks, such as <strong>Cross-Site Scripting (XSS)</strong> and data injection. It is essentially an "allowlist" that tells the browser which sources of content (scripts, styles, images) are trusted and should be executed.</p>
+
+  <h2>How CSP Is Delivered</h2>
+  <p>The policy can be sent as an HTTP response header or as a <code>&lt;meta&gt;</code> tag in the HTML <code>&lt;head&gt;</code>.</p>
+  <pre><code>&lt;meta http-equiv="Content-Security-Policy" content="default-src 'self';"&gt;</code></pre>
+
+  <h2>Directives: Controlling Your Content</h2>
+  <ul>
+    <li><strong><code>default-src</code>:</strong> The "fallback" if a more specific directive is not defined.</li>
+    <li><strong><code>script-src</code>:</strong> Specifies which domains the browser can download scripts from.</li>
+    <li><strong><code>style-src</code>:</strong> Specifies which domains the browser can download styles from.</li>
+    <li><strong><code>img-src</code>:</strong> Controls where images can be loaded from.</li>
+  </ul>
+
+  <h2>Blocking Inline Scripts</h2>
+  <p>By default, a strict CSP will **block all inline JavaScript** (like <code>&lt;script&gt;alert(1)&lt;/script&gt;</code> or <code>onclick="..."</code>). This is a major security benefit because it stops an attacker from injecting their own malicious scripts into your page.</p>
+
+  <h2>Nonces and Hashes</h2>
+  <p>If you <em>really</em> need an inline script to work with a CSP, you can use a "nonce" (a unique, random string) or a cryptographic "hash" of the script's contents. Only scripts matching the nonce or hash will be allowed to run.</p>
+
+  <h2>Reporting: CSP-Report-Only</h2>
+  <p>Before enforcing a strict policy, you can use the <code>Content-Security-Policy-Report-Only</code> header. This will not block anything, but it will send a report to a specified URL every time a potential violation occurs, allowing you to test your policy before it breaks your site.</p>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Use a tool like the **CSP Evaluator** (by Google) to check if your policy has any common holes or bypasses. A poorly-written CSP can give you a false sense of security while actually being easy to defeat.</p>
+  </aside>
+</section>

@@ -1,0 +1,62 @@
+{
+  "title": "CSS Box Model Quiz",
+  "description": "Test your knowledge of the essential rules for defining the size and spacing of every element on a web page using the CSS Box Model.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "What is the primary role of the 'CSS Box Model' in a web application?",
+      "options": [
+        "To define the website's visual styling and layout (colors, fonts, etc.).",
+        "To define the size and spacing for every element on a page (content, padding, border, and margin).",
+        "To provide a database that is only accessible during a specific time on the server.",
+        "Both 'To define the website's visual styling' and 'To provide a database' are correct."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is the MOST recommended box model property to make layout calculation easier?",
+      "options": [
+        "box-sizing: content-box;",
+        "box-sizing: border-box;",
+        "box-sizing: layout-box;",
+        "box-sizing: calc-box;"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "In the CSS Box Model, what is the 'Margin'?",
+      "options": [
+        "The clear area directly inside the border that separates the content from its edge.",
+        "The clear area outside the border that separates the element from its neighbors.",
+        "The border itself around the element.",
+        "The center area where the image or text lives."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "In the CSS Box Model, what is the 'Padding'?",
+      "options": [
+        "The clear area directly inside the border that separates the content from its edge.",
+        "The clear area outside the border that separates the element from its neighbors.",
+        "The border itself around the element.",
+        "The center area where the image or text lives."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "By default, the 'width' property refers specifically to which area of the CSS Box Model?",
+      "options": [
+        "Content + Padding",
+        "Content",
+        "Content + Padding + Border",
+        "Content + Margin"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

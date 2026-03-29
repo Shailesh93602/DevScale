@@ -1,0 +1,62 @@
+{
+  "title": "Prog Enhancement and Graceful Degradation Quiz",
+  "description": "Test your knowledge of the two main strategies for building robust, cross-browser web experiences.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which philosophy starts with a basic, functional experience and then adds layers of sophistication for modern browsers?",
+      "options": [
+        "Graceful Degradation",
+        "Progressive Enhancement",
+        "Top-Down Development",
+        "JavaScript Optimization"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which layers of a website are considered the foundation of Progressive Enhancement (must work everywhere)?",
+      "options": [
+        "Semantic HTML and Content",
+        "CSS Layouts and Grids",
+        "JavaScript Frameworks",
+        "External Font Face"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "In which philosophy do you first build for the most modern browsers and then ensure the experience still 'works' (but more simply) in older ones?",
+      "options": [
+        "Graceful Degradation",
+        "Progressive Enhancement",
+        "Bottom-Up Development",
+        "API Throttling"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the name of the practice where you check if a specific API (like 'serviceWorker') exists before using it?",
+      "options": [
+        "Browser Sniffing",
+        "Feature Detection",
+        "User Agent Tracking",
+        "Version Checking"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Why is 'Feature Detection' generally better than 'Browser Sniffing'?",
+      "options": [
+        "It is faster to execute.",
+        "It is more reliable because it checks the actual capability, not the version number of the browser (which can be faked).",
+        "It is easier to write in CSS.",
+        "It doesn't require any JavaScript."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

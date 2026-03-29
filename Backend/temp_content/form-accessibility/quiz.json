@@ -1,0 +1,62 @@
+{
+  "title": "Accessibility Features for Forms Quiz",
+  "description": "Test your knowledge of the essential techniques and attributes for making your web forms inclusive and accessible.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "What is the primary benefit of the &lt;label&gt; tag in an HTML form?",
+      "options": [
+        "To make the field load faster.",
+        "To provide a clickable label and a screen-readable description for each input.",
+        "To define the page's structure and layout.",
+        "To hide images from keyboard users."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is the correct way to group related inputs (like an address) to provide context for screen readers?",
+      "options": [
+        "&lt;div&gt; with a title",
+        "&lt;fieldset&gt; and &lt;legend&gt;",
+        "&lt;section&gt; and &lt;h2&gt;",
+        "&lt;span&gt; with a class"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What happens when a user focuses on an input that has an 'aria-describedby' attribute pointing to an error message?",
+      "options": [
+        "The screen reader will read the input's label AND the error message.",
+        "The input is automatically hidden.",
+        "The browser ignores the error message.",
+        "The page refresh happens automatically."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which attribute tells assistive technologies that a specific field MUST be filled out?",
+      "options": [
+        "required",
+        "aria-required='true'",
+        "validate='true'",
+        "Both 'required' and 'aria-required' are best practices."
+      ],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "Keyboard users rely on the ________ to know which form field they are currently interacting with.",
+      "options": [
+        "Click sound",
+        "Focus ring / Highlight",
+        "Page title",
+        "Browser's address bar"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

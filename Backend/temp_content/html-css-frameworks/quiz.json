@@ -1,0 +1,62 @@
+{
+  "title": "HTML and CSS Frameworks Quiz",
+  "description": "Test your knowledge of the different types of frameworks used to speed up web development and ensure visual consistency.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "Which of these frameworks is considered 'Utility-First'?",
+      "options": [
+        "Bootstrap",
+        "Foundation",
+        "Tailwind CSS",
+        "Bulma"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is a primary 'Pro' of using a CSS framework like Bootstrap?",
+      "options": [
+        "It makes your HTML file smaller.",
+        "It provides a collection of pre-designed, responsive components (like buttons and navbars) ready to use.",
+        "It automatically translates your content into multiple languages.",
+        "It completely replaces the need for JavaScript."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a possible 'Con' of using a heavy CSS framework for a small project?",
+      "options": [
+        "The project will load much faster.",
+        "Your site will always look unique compared to others.",
+        "Potentially large file sizes due to unused CSS rules.",
+        "It is always more difficult to learn than raw CSS."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "In the context of modern React development, what does 'CSS-in-JS' refer to?",
+      "options": [
+        "Writing CSS in a separate .css file.",
+        "Writing your CSS rules directly within your JavaScript component files.",
+        "Using JavaScript to download CSS files from a CDN.",
+        "A way to convert CSS into a JSON object."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Before choosing a heavy framework, what native CSS tools should you consider for your layout needs?",
+      "options": [
+        "Floats and Clearfixes",
+        "Table-based layouts",
+        "Flexbox and CSS Grid",
+        "Framesets"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

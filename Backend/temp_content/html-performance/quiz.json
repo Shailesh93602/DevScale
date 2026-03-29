@@ -1,0 +1,62 @@
+{
+  "title": "HTML Performance Optimization Quiz",
+  "description": "Test your knowledge of the essential techniques and philosophies for building high-performance web pages.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "What is the primary goal of optimizing the 'Critical Rendering Path'?",
+      "options": [
+        "To ensure all JavaScript files are loaded before any HTML is parsed.",
+        "To prioritize and display the most important visible content as quickly as possible.",
+        "To encrypt all communication between the server and the browser.",
+        "To hide images from certain types of users."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is the process of removing extra spaces, comments, and newlines from an HTML file to reduce its size?",
+      "options": [
+        "Formatting",
+        "Minification",
+        "Encoding",
+        "Parsing"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is 'Lazy Loading' (loading='lazy') primarily used for?",
+      "options": [
+        "To make the browser wait for a specific time before loading any images.",
+        "To only download an image or iframe when it is about to enter the user's viewport (making the page load faster).",
+        "To only load a page when the user scrolls to the bottom.",
+        "To hide images from search engines."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a 'Con' of putting massive amounts of styles and scripts directly inside your HTML file (inlining)?",
+      "options": [
+        "The browser cannot cache that CSS/JS for use on subsequent page visits, slowing down the overall site experience.",
+        "Search engines cannot see inline code.",
+        "Inlining makes the HTML file too small.",
+        "Inlining is not supported by any modern browser."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which tools should you use to identify specific performance issues and slow-loading elements on your page?",
+      "options": [
+        "A regular calculator.",
+        "Google PageSpeed Insights or the Lighthouse panel in Chrome DevTools.",
+        "The browser's private browsing mode.",
+        "A simple 'ping' command."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

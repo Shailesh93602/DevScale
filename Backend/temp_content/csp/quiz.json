@@ -1,0 +1,62 @@
+{
+  "title": "Content Security Policy (CSP) Quiz",
+  "description": "Test your knowledge of the essential security headers and directives for protecting your web applications.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "What is the primary role of a 'Content Security Policy' (CSP)?",
+      "options": [
+        "To make the website load much faster.",
+        "To detection and mitigate certain types of attacks, such as Cross-Site Scripting (XSS).",
+        "To define the website's visual theme and fonts.",
+        "To store sensitive user passwords on the server."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is the MOST common directive used to set a default policy for all content sources?",
+      "options": [
+        "script-src",
+        "default-src",
+        "style-src",
+        "img-src"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "How can you specify a list of trusted domain names for JavaScript files in a CSP?",
+      "options": [
+        "Use the 'trusted-script-src' directive.",
+        "Use the 'script-src' directive with a list of domains.",
+        "Use a 'meta rel' tag for each domain.",
+        "CSP does not allow specifying domain names."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "By default, a strict CSP will ________ all inline JavaScript scripts (like onclick attributes) for security.",
+      "options": [
+        "Block / Disable",
+        "Allow / Execute",
+        "Ignore but warn",
+        "Automatically encrypt"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is a 'Nonce' in the context of CSP?",
+      "options": [
+        "A special font used for encryption.",
+        "A random, unique string that must match for a specific script to be allowed to run.",
+        "A type of CSS animation.",
+        "A browser extension used for debugging."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

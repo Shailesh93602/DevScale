@@ -1,0 +1,29 @@
+<section aria-labelledby="prog-enh-title">
+  <h1 id="prog-enh-title">Progressive Enhancement and Graceful Degradation</h1>
+  
+  <p>These are two different philosophies for handling the varying capabilities of browsers and devices. Both aim to ensure that your website remains usable for as many people as possible, but they approach the problem from opposite directions.</p>
+
+  <h2>1. Progressive Enhancement (Bottom-Up)</h2>
+  <p>Progressive enhancement starts with a basic, functional experience that works in *all* browsers (even very old ones or text-only browsers). Then, you add layers of sophistication (CSS, JavaScript, advanced APIs) for browsers that support them.</p>
+  <ul>
+    <li><strong>Layer 1:</strong> Semantic HTML (Content & Structure - works everywhere).</li>
+    <li><strong>Layer 2:</strong> CSS (Presentation - enhances the look in modern browsers).</li>
+    <li><strong>Layer 3:</strong> JavaScript (Interaction - adds advanced features).</li>
+  </ul>
+
+  <h2>2. Graceful Degradation (Top-Down)</h2>
+  <p>Graceful degradation starts by building the experience for the most modern browsers using all the latest features. Then, you ensure that the site "degrades gracefully" (still works, but with a simplified experience) in older browsers.</p>
+
+  <h2>Which One Should You Use?</h2>
+  <p>Modern developers generally prefer <strong>Progressive Enhancement</strong>. It is more robust because it ensures that even if your JavaScript fails to load or the user is on a slow connection, the essential content of your site is still available.</p>
+
+  <h2>Feature Detection vs. Browser Sniffing</h2>
+  <p>To implement these strategies, you should use **Feature Detection** (checking if a specific API exists) rather than "Browser Sniffing" (checking the user agent string). The <code>@supports</code> rule in CSS and the <code>in</code> operator in JavaScript are essential tools for this.</p>
+  <pre><code>if ('serviceWorker' in navigator) {
+  // Browser supports Service Workers!
+}</code></pre>
+
+  <aside>
+    <p><strong>💡 Pro Tip:</strong> Treat JavaScript as an enhancement, not a requirement. If your site’s core functionality (like reading an article or submitting a simple form) requires JavaScript to work at all, you are likely not following Progressive Enhancement.</p>
+  </aside>
+</section>

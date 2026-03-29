@@ -1,0 +1,62 @@
+{
+  "title": "HTML and RESTful APIs Quiz",
+  "description": "Test your knowledge of the essential HTTP methods and patterns for connecting your HTML front-end to a back-end database.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "What is the primary purpose of a 'RESTful API' (REpresentational State Transfer) in a web application?",
+      "options": [
+        "To make the website load much faster.",
+        "To provide a standard way to retrieve and store data (like user profiles or product lists) on a database from your HTML front-end.",
+        "To define the website's visual styles and animations.",
+        "To help users write HTML code more quickly."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which HTTP method is specifically used to retrieve data from a server?",
+      "options": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which HTTP method is specifically used to send NEW data (like a new user registration) to a database?",
+      "options": [
+        "GET",
+        "POST",
+        "PATCH",
+        "UPDATE"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the most common data format sent between an HTML application and a RESTful API?",
+      "options": [
+        "XML",
+        "JSON (JavaScript Object Notation)",
+        "CSV",
+        "Excel"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What does 'CORS' (Cross-Origin Resource Sharing) primarily protect your web application from?",
+      "options": [
+        "Malicious requests that try to access your API data from a different, unauthorized domain.",
+        "Slow internet connections.",
+        "Incorrectly formatted HTML tags.",
+        "Users who use ad-blocking software."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "title": "Static Site Generators Quiz",
+  "description": "Test your knowledge of the essential concepts of pre-rendered web architectures and site generation tools.",
+  "passingScore": 60,
+  "questions": [
+    {
+      "question": "What is the primary role of a 'Static Site Generator' (SSG)?",
+      "options": [
+        "To make the website load much faster by pre-rendering the entire site as simple, static HTML files during a 'build' process.",
+        "To automatically generate CSS animations for your site.",
+        "To provide a database that is only accessible during a specific time on the server.",
+        "To help users write HTML code using templates."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a major 'Pro' of using an SSG architected site compared to a traditional dynamic application?",
+      "options": [
+        "It uses less data.",
+        "Extremely high-performance (speed) because pre-rendered HTML files can be served instantly from a CDN (Content Delivery Network).",
+        "It allows users to use the website without an internet connection.",
+        "It removes the need for any CSS rules."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a common 'SSG' tool mentioned in the article?",
+      "options": [
+        "A regular calculator.",
+        "Next.js / Gatsby / Hugo.",
+        "A browser extension.",
+        "A simple 'ping' command."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the primary drawback of using a statically pre-rendered site?",
+      "options": [
+        "The browser cannot cache that CSS/JS for use on subsequent page visits.",
+        "The content remains 'stale' (stays the same) after the build until you trigger a new rebuild of the site.",
+        "Statically pre-rendered sites are not supported by any modern browser.",
+        "They are much more expensive to host."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which process handles automatically triggering a new site build whenever your content changes?",
+      "options": [
+        "Manual Upload",
+        "Continuous Deployment",
+        "Static Refreshing",
+        "Browser Throttling"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
