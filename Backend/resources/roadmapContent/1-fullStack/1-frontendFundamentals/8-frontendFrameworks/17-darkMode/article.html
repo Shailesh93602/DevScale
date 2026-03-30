@@ -1,0 +1,19 @@
+<div class="article-content">
+  <h1>Dark Mode in Frameworks</h1>
+  <p>Dark mode has become a standard feature for modern web applications. Both Tailwind CSS and Bootstrap provide built-in, first-class support for implementing dark themes, allowing you to easily cater to user preferences and reduce eye strain.</p>
+
+  <h2>1. Tailwind CSS Dark Mode</h2>
+  <p>Tailwind uses the <code>dark:</code> variant to apply styles only when dark mode is active. You can trigger it using the user's system settings (the <code>media</code> strategy) or by adding a <code>.dark</code> class to your HTML (the <code>selector</code> strategy).</p>
+  <pre><code>&lt;div class="bg-white dark:bg-gray-800"&gt;
+  &lt;h1 class="text-black dark:text-white"&gt;Hello World&lt;/h1&gt;
+&lt;/div&gt;</code></pre>
+
+  <h2>2. Bootstrap Dark Mode (5.3+)</h2>
+  <p>In Bootstrap 5.3 and later, dark mode is implemented using the <code>data-bs-theme</code> attribute. By simply adding <code>data-bs-theme="dark"</code> to any element (even the <code>&lt;html&gt;</code> tag), all Bootstrap components will automatically switch their background and text styles.</p>
+
+  <h2>3. User Experience and Auto-switching</h2>
+  <p>The best dark mode implementations allow users to toggle between Light, Dark, and "System" (which follows their OS setting). By storing the user's preference in <code>localStorage</code>, you can ensure a consistent experience across sessions.</p>
+
+  <h2>Conclusion</h2>
+  <p>By mastering dark mode in modern frameworks, you're building a truly professional and user-centric application. Whether you choose Tailwind's utility-first variants or Bootstrap's attribute-based themes, providing a high-quality dark mode experience is a hallmark of modern frontend engineering.</p>
+</div>

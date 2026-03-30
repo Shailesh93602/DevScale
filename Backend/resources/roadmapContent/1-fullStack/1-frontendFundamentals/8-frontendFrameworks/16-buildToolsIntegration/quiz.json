@@ -1,0 +1,52 @@
+{
+  "title": "Build Tools Integration Quiz",
+  "description": "Evaluate your understanding of PostCSS, modern build tools like Vite and Webpack, and the overall asset optimization pipeline.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily role of PostCSS in a modern frontend application?",
+      "options": [
+        "Faster component rendering.",
+        "A JavaScript-driven CSS pre-processor that allows you to transform and optimize CSS using plugins (like Tailwind itself).",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which modern build tool is known for its incredible speed and native support for Vite, React, and Vue?",
+      "options": ["Webpack", "Gulp", "Vite", "Rollup"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Is Tailwind CSS a PostCSS plugin?",
+      "options": [
+        "Yes, it is a PostCSS plugin that scans your code and generates CSS during the build process.",
+        "No, it's its own separate compiler.",
+        "Only for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which ‘legacy’ build tool is still commonly used for highly customized and enterprise-grade asset bundling?",
+      "options": ["Babel", "Vite", "Webpack", "PostCSS"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Do build tools also handle the optimization and delivery of static assets like Fonts and Images?",
+      "options": [
+        "Yes, as they minify and group these assets with the final JS/CSS bundle (e.g., using Webpack's asset modules).",
+        "No, they only bundle JavaScript.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

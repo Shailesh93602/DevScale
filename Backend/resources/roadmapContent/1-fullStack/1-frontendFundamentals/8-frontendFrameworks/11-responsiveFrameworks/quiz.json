@@ -1,0 +1,57 @@
+{
+  "title": "Responsive Design with Frameworks Quiz",
+  "description": "Evaluate your understanding of the mobile-first approach, breakpoints (sm/md/lg), and Flexbox/Grid for cross-device consistency.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily design philosophy for modern frontend frameworks like Bootstrap and Tailwind CSS?",
+      "options": [
+        "Desktop-First",
+        "Mobile-First",
+        "Mobile-Only",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what is a 'breakpoint' in the context of responsive design?",
+      "options": [
+        "A point where the JavaScript code breaks.",
+        "A specific screen width (pixel value) where a website's layout or styles will change.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which prefix would you use in Tailwind to apply a style only on screens larger than 'medium'?",
+      "options": ["sm:", "md:", "lg:", "xl:"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does using a 12-column grid system (like in Bootstrap) allow for fluid and responsive layouts?",
+      "options": [
+        "Yes, as columns can span different widths on different screen sizes using responsive classes.",
+        "No, it's always fixed.",
+        "Only for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which CSS layout technologies are used under the hood by most modern frameworks to handle responsiveness?",
+      "options": [
+        "Tables and IFrames.",
+        "Flexbox and CSS Grid.",
+        "Only float and position.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

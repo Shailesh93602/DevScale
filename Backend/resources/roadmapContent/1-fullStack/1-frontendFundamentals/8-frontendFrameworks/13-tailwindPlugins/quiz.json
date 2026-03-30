@@ -1,0 +1,52 @@
+{
+  "title": "Tailwind CSS Plugins Quiz",
+  "description": "Evaluate your understanding of official Tailwind plugins (Typography/Forms), custom plugin creation (addUtilities/Components), and encapsulating repetitive CSS logic.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily reason to use Tailwind CSS plugins?",
+      "options": [
+        "Faster component rendering.",
+        "They provide robust, pre-built utilities for complex features (like long-form text styling or form resetting) and allow for sharing custom CSS components.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which official Tailwind plugin provides a set of 'prose' classes for styling long-form text content like blogs or articles?",
+      "options": ["@tailwindcss/forms", "@tailwindcss/typography", "@tailwindcss/cards", "@tailwindcss/text"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Can you use JavaScript to create your own custom Tailwind plugins in the 'tailwind.config.js' file?",
+      "options": [
+        "Yes, using the 'plugins' section to define new utilities, components, or entire design systems.",
+        "No, it only supports CSS.",
+        "Only for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which Tailwind plugin helps reset and style form input elements with utility classes?",
+      "options": ["@tailwindcss/inputs", "@tailwindcss/forms", "@tailwindcss/form-reset", "@tailwindcss/design"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does Tailwind's plugin system allow you to encapsulate a group of utility classes into a single, reusable class like .my-card?",
+      "options": [
+        "Yes, using the addComponents function in a custom plugin.",
+        "No, it only adds new utilities.",
+        "Only for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

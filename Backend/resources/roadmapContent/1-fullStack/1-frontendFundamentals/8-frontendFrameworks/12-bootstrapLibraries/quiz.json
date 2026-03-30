@@ -1,0 +1,52 @@
+{
+  "title": "Bootstrap Libraries Quiz",
+  "description": "Evaluate your understanding of React-Bootstrap/Reactstrap/BootstrapVue and 왜 eliminating the jQuery requirement is a major benefit.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily benefit of using React-Bootstrap or BootstrapVue instead of 'raw' Bootstrap?",
+      "options": [
+        "Faster component rendering.",
+        "They re-implement Bootstrap components as native framework components, eliminating the need for jQuery.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which popular React library provides Bootstrap components as a declarative set of React components?",
+      "options": ["React-Bootstrap", "React-Design", "Material-UI", "Tailwind-React"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Do BootstrapVue components use the standard Vue reactivity system internally?",
+      "options": [
+        "Yes, they are built specifically for the Vue.js ecosystem.",
+        "No, they are built on raw HTML.",
+        "Only for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Does using a declarative UI component like <Button variant='primary'> improve code maintainability compared to manual DOM classes?",
+      "options": [
+        "Yes, as it is more intuitive and follows modern frontend patterns.",
+        "No, it's always slower.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Raw Bootstrap typically relies on which JavaScript library by default (unless using a framework-specific version)?",
+      "options": ["jQuery", "React", "Vue", "Angular"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
