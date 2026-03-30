@@ -1,0 +1,60 @@
+{
+  "title": "JavaScript Operators Quiz",
+  "description": "Test your knowledge of JavaScript arithmetic, assignment, comparison, and logical operators.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the result of '5' == 5 in JavaScript?",
+      "options": ["true", "false", "undefined", "Error"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the result of '5' === 5 in JavaScript?",
+      "options": ["true", "false", "undefined", "Error"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which operator is used to check if two values are NOT strictly equal?",
+      "options": ["!=", "!==", "!", "not="],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the result of 10 % 3?",
+      "options": ["3", "1", "0", "0.33"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which operator is used for exponentiation (e.g., 2 to the power of 3)?",
+      "options": ["^", "*", "**", "^^"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What does the expression (5 > 2 && 10 < 5) return?",
+      "options": ["true", "false", "null", "undefined"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the purpose of the ternary operator (?:)?",
+      "options": [
+        "To check the type of a variable",
+        "To perform bitwise operations",
+        "As a shorthand for an if...else statement",
+        "To combine multiple strings"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the result of 10 + '5'?",
+      "options": ["15", "105", "Error", "NaN"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "title": "JavaScript Page Redirects Quiz",
+  "description": "Test your knowledge of window.location, assign(), and replace() in JavaScript.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which of the following is correct syntax for simple URL redirection?",
+      "options": [
+        "window.location.href = \"url\"",
+        "window.location.assign(\"url\")",
+        "Both A and B are valid.",
+        "Neither A nor B."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the key difference between location.assign() and location.replace()?",
+      "options": [
+        "location.replace() clears the current page from the browser's history.",
+        "location.assign() clears the current page from the browser's history.",
+        "There is no difference.",
+        "Only location.replace() works in all browsers."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the purpose of the location.reload() method?",
+      "options": [
+        "To redirect the user to a new URL.",
+        "To reload the current page.",
+        "To clear the browser's history.",
+        "To check the user's connection status."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which property can you use to get the full URL of the current page?",
+      "options": [
+        "window.location.href",
+        "window.location.origin",
+        "window.location.pathname",
+        "window.location.host"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "In an HTML meta redirect, what does the content=\"5;url=...\" attribute do?",
+      "options": [
+        "It redirects the user after 5 seconds.",
+        "It redirects the user only if the page takes 5 seconds to load.",
+        "It sets a timer to refresh the page every 5 seconds.",
+        "It sets the width of the redirect page to 5 pixels."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

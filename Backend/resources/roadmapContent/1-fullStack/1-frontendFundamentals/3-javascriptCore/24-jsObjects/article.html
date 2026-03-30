@@ -1,0 +1,42 @@
+<div class="article-content">
+  <h1>JavaScript Objects</h1>
+  <p>In JavaScript, an object is a standalone entity, with properties and type. Compare it with a cup, for example. A cup is an object, with properties. A cup has a color, a design, weight, a material it is made of, etc. Similarly, JavaScript objects can have properties, which define their characteristics.</p>
+
+  <h2>1. Creating an Object</h2>
+  <p>The most common way to create an object is using <strong>object literals</strong> (a comma-separated list of name-value pairs wrapped in curly braces):</p>
+  <pre><code>const car = {
+    make: "Tesla",
+    model: "Model 3",
+    year: 2022,
+    start: function() {
+        console.log("Starting engine...");
+    }
+  };</code></pre>
+
+  <h2>2. Accessing Object Properties</h2>
+  <p>You can access object properties in two ways:</p>
+  <ul>
+    <li><strong>Dot notation:</strong> <code>car.make</code></li>
+    <li><strong>Bracket notation:</strong> <code>car["make"]</code> (useful when the property name is stored in a variable)</li>
+  </ul>
+
+  <h2>3. Methods and 'this'</h2>
+  <p>A <strong>method</strong> is a function stored as an object property. The <code>this</code> keyword refers to the object it belongs to.</p>
+  <pre><code>const person = {
+    firstName: "John",
+    lastName: "Doe",
+    fullName: function() {
+        return this.firstName + " " + this.lastName;
+    }
+  };</code></pre>
+
+  <h2>4. Object Methods (Iterating)</h2>
+  <ul>
+    <li><code>Object.keys(obj)</code>: Returns an array of keys.</li>
+    <li><code>Object.values(obj)</code>: Returns an array of values.</li>
+    <li><code>Object.entries(obj)</code>: Returns an array of <code>[key, value]</code> pairs.</li>
+  </ul>
+
+  <h2>Conclusion</h2>
+  <p>Objects are the fundamental building blocks of JavaScript. Almost everything (except primitives) is an object or behaves like one. Mastering how to structure and manipulate data using objects is crucial for any advanced developer.</p>
+</div>

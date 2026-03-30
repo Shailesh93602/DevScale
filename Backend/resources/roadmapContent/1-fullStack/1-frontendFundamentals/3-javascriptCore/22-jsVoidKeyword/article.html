@@ -1,0 +1,27 @@
+<div class="article-content">
+  <h1>JavaScript Void Keyword</h1>
+  <p>The <code>void</code> is a unique operator in JavaScript that evaluates the given expression and then returns <code>undefined</code>. It is most commonly seen in HTML anchor tags to prevent the page from reloading or scrolling when a link is clicked.</p>
+
+  <h2>1. Common Usage: void(0)</h2>
+  <p>The most frequent use of the <code>void</code> keyword is <code>void(0)</code>. This is often used with <code>&lt;a&gt;</code> tags to create a "dead" link that can still trigger a JavaScript function without changing the page's current state.</p>
+  <pre><code>&lt;!-- Prevents page from jumping to the top --&gt;
+  &lt;a href="javascript:void(0);" onclick="alert('Clicked!')"&gt;
+    Click me
+  &lt;/a&gt;</code></pre>
+
+  <h2>2. Why use void?</h2>
+  <p>When an anchor tag executes a JavaScript expression, the browser might try to replace the document's content with the result of that expression. Using <code>void</code> ensures that the returned value is always <code>undefined</code>, which tells the browser to stay on the current page and do nothing to the document.</p>
+
+  <h2>3. Other Use Cases</h2>
+  <ul>
+    <li><strong>Immediately Invoked Function Expressions (IIFE):</strong> <code>void</code> can be used to treat a function as an expression rather than a declaration.</li>
+    <li><strong>Returning undefined:</strong> Ensuring a function returns <code>undefined</code> regardless of the result of internal operations.</li>
+  </ul>
+  <pre><code>// Using void in an IIFE
+  void function() {
+    console.log("This executes immediately!");
+  }();</code></pre>
+
+  <h2>Conclusion</h2>
+  <p>While modern web development often favors <code>event.preventDefault()</code> inside event listeners, the <code>void</code> keyword remains a common sight in legacy codebases and specific HTML patterns. Understanding its simple but essential role helps in maintaining and debugging complex web projects.</p>
+</div>
