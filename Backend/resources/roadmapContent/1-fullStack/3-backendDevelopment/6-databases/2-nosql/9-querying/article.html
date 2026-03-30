@@ -1,0 +1,52 @@
+<article>
+  <h1>Mastering NoSQL Queries</h1>
+  
+  <p>In a Relational database, you have a universal query language (SQL). In the **NoSQL** world, every database has its own specialized way of querying data. However, the core concepts of filtering, gathering, and optimizing remain remarkably consistent across the board.</p>
+
+  <section>
+    <h2>1. The MongoDB Query Language (MQL)</h2>
+    <p>MQL is the most common query syntax for document-based databases. It uses a JSON-like format to specify criteria, projects, and modifiers.</p>
+    <pre><code>// Simple Find in MongoDB
+db.users.find({ status: 'ACTIVE', age: { $gt: 18 } });
+
+// Selecting only specific fields (Projection)
+db.users.find({}, { name: 1, email: 1 });</code></pre>
+  </section>
+
+  <section>
+    <h2>2. Key-Value Retrieval (Redis Commands)</h2>
+    <p>In a key-value store, querying is incredibly simple but limited. You typically operate on individual keys or small groups of related keys.</p>
+    <pre><code>GET user:123:session
+INCR post:456:views
+SADD global:online_users 789</code></pre>
+  </section>
+
+  <section>
+    <h2>3. The Aggregation Framework</h2>
+    <p>For complex data transformations (like calculating totals or averages across many documents), document databases use an <strong>Aggregation Pipeline</strong>. This is the NoSQL alternative to SQL's <code>GROUP BY</code> and JOIN operations.</p>
+    <pre><code>db.orders.aggregate([
+  { $match: { status: 'COMPLETE' } },
+  { $group: { _id: '$customer_id', totalSpent: { $sum: '$total' } } }
+]);</code></pre>
+  </section>
+
+  <section>
+    <h2>4. Full-Text Search</h2>
+    <p>Many NoSQL databases (like MongoDB Atlas Search or Elasticsearch) have built-in support for "Full-Text Search," ensuring that searches for "Running" will also match "Run" or "Runners." This is much faster and more accurate than a standard SQL <code>LIKE</code> query.</p>
+  </section>
+
+  <section>
+    <h2>5. Query Optimization (The Profiler)</h2>
+    <p>Just like SQL's `EXPLAIN`, NoSQL databases provide tools to see how a query is performed. In MongoDB, <code>explain()</code> tells you which index was used and how many documents were scanned. A "Collection Scan" (scanning every document) is a major performance bottleneck that must be fixed with an index.</p>
+  </section>
+
+  <section>
+    <h2>Best Practices Summary</h2>
+    <ol>
+      <li><strong>Avoid Expensive Operators:</strong> Some NoSQL operators (like <code>$regex</code> in MongoDB or <code>KEYS *</code> in Redis) are incredibly slow and should never be used in production-critical paths.</li>
+      <li><strong>Use Targeted Queries:</strong> Never "fetch everything and filter in JavaScript." Always use the database's native filtering to reduce network traffic and memory usage.</li>
+      <li><strong>Limit your Result Sets:</strong> Always use <code>.limit()</code> to prevent a single query from accidentally returning millions of records and crashing your application.</li>
+    </ol>
+  </section>
+
+</article>
