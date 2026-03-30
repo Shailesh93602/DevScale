@@ -1,0 +1,8 @@
+{
+  "title": "Creating and Managing Indexes",
+  "description": "Learn how to practically create and manage indexes in SQL and NoSQL environments, including best practices and performance considerations.",
+  "module": "Full Stack Web Development",
+  "order": 4,
+  "difficulty": "Intermediate",
+  "tags": ["Database", "Index Management", "SQL", "NoSQL", "Performance Tuning"]
+}

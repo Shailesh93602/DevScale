@@ -1,0 +1,23 @@
+<section>
+    <h2>Common Pitfalls in Database Relationships and Their Solutions</h2>
+    <p>Designing database relationships is a complex task. Even with a good understanding of 1:1, 1:N, and M:N relationships, developers often encounter common pitfalls that can lead to performance bottlenecks or data inconsistency.</p>
+
+    <h3>1. The N+1 Query Problem</h3>
+    <p>This is perhaps the most common ORM-related pitfall. It occurs when your application makes one query to retrieve a list of records and then N additional queries for each record's related data. This results in significant overhead.</p>
+    <p><strong>Solution:</strong> Use <strong>Eager Loading</strong> (like <code>include</code> in Sequelize or <code>populate</code> in Mongoose) to retrieve everything in a single, optimized operation.</p>
+
+    <h3>2. Missing Foreign Key Constraints</h3>
+    <p>Failing to define explicit foreign key constraints at the database level can lead to "orphaned" records, where a child record exists without its corresponding parent.</p>
+    <p><strong>Solution:</strong> Always define foreign key constraints with appropriate <code>ON DELETE</code> rules (like <code>CASCADE</code> or <code>RESTRICT</code>).</p>
+
+    <h3>3. Over-Normalization</h3>
+    <p>While normalization is important for data integrity, splitting your data into too many tables can make queries excessively complex and slow down read performance due to too many JOINs.</p>
+    <p><strong>Solution:</strong> Find the right balance. Only normalize when it's necessary for data integrity. Use denormalization judiciously for high-traffic read-heavy areas.</p>
+
+    <h3>4. Circular References</h3>
+    <p>Circular references occur when Table A depends on Table B, which in turn depends back on Table A. This can make data insertion, deletion, and database seeding extremely difficult.</p>
+    <p><strong>Solution:</strong> Redesign your schema to break the cycle, often by introducing a third "link" table or by evaluating if one of the dependencies can be optional.</p>
+
+    <h3>Conclusion</h3>
+    <p>By being aware of these common pitfalls and implementing their established solutions, you can build data layers that are both robust and high-performing from day one.</p>
+</section>
