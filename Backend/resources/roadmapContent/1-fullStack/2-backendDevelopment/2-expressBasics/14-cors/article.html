@@ -1,0 +1,51 @@
+<article>
+  <h1>Understanding and Handling CORS</h1>
+  
+  <p>If you've ever built a full-stack application where the frontend and backend are hosted on different domains (or even different ports on localhost), you've likely encountered the dreaded CORS error. Cross-Origin Resource Sharing (CORS) is a vital security mechanism, but it can be a significant hurdle if not properly understood.</p>
+
+  <section>
+    <h2>What is CORS?</h2>
+    <p>CORS is a browser-based security feature that prevents a web page from making requests to a different domain than the one that served the web page. This is called the "Same-Origin Policy."</p>
+    <ul>
+      <li><strong>Same-Origin:</strong> Two URLs have the same origin if they have the same protocol (http/https), host (example.com), and port (80/443/3000).</li>
+      <li><strong>Why it exists:</strong> To prevent malicious scripts on one site from accessing sensitive data on another site (like your bank's API) without your permission.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>How CORS Works</h2>
+    <p>When your frontend makes a "cross-origin" request, the browser first sends a "preflight" request (using the HTTP OPTIONS method) to the server. The server then responds with specific headers indicating whether the cross-origin request is allowed.</p>
+    <ul>
+      <li><strong>Access-Control-Allow-Origin:</strong> Specifies which domains are allowed to access the resource (e.g., <code>https://myfrontend.com</code> or <code>*</code> for any domain).</li>
+      <li><strong>Access-Control-Allow-Methods:</strong> Specifies which HTTP methods are permitted (GET, POST, PUT, DELETE, etc.).</li>
+      <li><strong>Access-Control-Allow-Headers:</strong> Specifies which custom headers can be sent in the request.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Handling CORS in Express.js</h2>
+    <p>The easiest and most common way to handle CORS in an Express application is by using the <code>cors</code> middleware package.</p>
+    <pre><code>const cors = require('cors');
+const app = express();
+
+// Allow all origins (not recommended for production)
+app.use(cors());
+
+// Allow specific origin and configuration (recommended)
+const corsOptions = {
+  origin: 'https://myfrontend.com',
+  optionsSuccessStatus: 200
+}
+app.use(cors(corsOptions));</code></pre>
+  </section>
+
+  <section>
+    <h2>Common CORS Pitfalls</h2>
+    <ol>
+      <li><strong>Using the Wildcard (*) in Production:</strong> While <code>*</code> allows any domain to access your API, it's a security risk. Always specify exact domains for production.</li>
+      <li><strong>Forgetting Preflight Requests:</strong> Some requests (like those with custom headers or complex body types) trigger a preflight. Ensure your server correctly handles the OPTIONS method.</li>
+      <li><strong>Credentials and Wildcards:</strong> If you need to send cookies or authentication headers (<code>withCredentials: true</code>), you <strong>cannot</strong> use <code>*</code> for the allowed origin; you must specify an explicit domain.</li>
+    </ol>
+  </section>
+
+</article>

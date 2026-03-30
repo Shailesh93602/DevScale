@@ -1,0 +1,67 @@
+<article>
+  <h1>OAuth 2.0 Scopes and Permissions</h1>
+  
+  <p>When you use OAuth 2.0 to log in to an application using your Google or GitHub account, you've likely seen a screen asking for permission to "view your email address" or "access your public repositories." These specific permissions are handled through <strong>Scopes</strong>.</p>
+
+  <section>
+    <h2>What are Scopes?</h2>
+    <p>Scopes are a mechanism in OAuth 2.0 to limit an application's access to a user's account. An application can request one or more scopes, and the "access token" it receives will be limited to only those specific permissions.</p>
+    <ul>
+      <li><strong>Least Privilege:</strong> Scopes allow for the principle of least privilege. An app that only needs to see your username shouldn't be given permission to delete your files.</li>
+      <li><strong>User Consent:</strong> The authorization server shows the requested scopes to the user, who must explicitly agree to grant them.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Common Scope Examples</h2>
+    <p>Different identity providers use different naming conventions for their scopes, but common patterns include:</p>
+    <ul>
+      <li><code>openid</code>: (OIDC) Requests that the user's ID be returned in the ID token.</li>
+      <li><code>profile</code>: Requests access to the user's basic profile information (name, picture, etc.).</li>
+      <li><code>email</code>: Requests access to the user's primary email address.</li>
+      <li><code>repo</code>: (GitHub) Requests full access to private repositories.</li>
+      <li><code>https://www.googleapis.com/auth/drive.readonly</code>: (Google) Requests read-only access to a user's Google Drive files.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>The Scope Request Flow</h2>
+    <ol>
+      <li><strong>Authorization Request:</strong> The client application redirects the user to the authorization server, including a <code>scope</code> parameter in the URL (e.g., <code>scope=user:email repo:status</code>).</li>
+      <li><strong>Consent Screen:</strong> The authorization server authenticates the user and shows a screen listing the requested permissions.</li>
+      <li><strong>Token Issuance:</strong> If the user consents, the server issues an access token. This token internally "knows" which scopes were granted.</li>
+      <li><strong>Resource Access:</strong> When the client uses the token to call an API, the Resource Server (the API) checks the token's scopes to ensure the requested action is permitted.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Implementing Scopes in Your API</h2>
+    <p>If you're building an API that acts as an OAuth Resource Server, you must verify scopes on your protected endpoints. In Express.js, this is often done using middleware:</p>
+    <pre><code>const checkScopes = (requiredScopes) =&gt; {
+  return (req, res, next) =&gt; {
+    const tokenScopes = req.user.scopes; // Assume scopes were added to req.user by auth middleware
+    const hasAccess = requiredScopes.every(s =&gt; tokenScopes.includes(s));
+    
+    if (!hasAccess) {
+      return res.status(403).json({ error: "Insufficient scope" });
+    }
+    next();
+  };
+};
+
+app.get('/api/private-data', checkScopes(['read:data']), (req, res) =&gt; {
+  res.json({ data: "Sensitive info" });
+});</code></pre>
+  </section>
+
+  <section>
+    <h2>Best Practices</h2>
+    <ul>
+      <li><strong>Be Specific:</strong> Only request the minimum scopes your application actually needs.</li>
+      <li><strong>Explain Why:</strong> If you're requesting sensitive scopes, explain to the user within your app's UI why those permissions are necessary.</li>
+      <li><strong>Handle Revocation:</strong> Users can revoke scopes at any time through the identity provider's settings. Your application should gracefully handle "Insufficient Scope" errors.</li>
+      <li><strong>Security Audits:</strong> Regularly review the scopes your application requests to ensure they are still necessary and appropriate.</li>
+    </ul>
+  </section>
+
+</article>

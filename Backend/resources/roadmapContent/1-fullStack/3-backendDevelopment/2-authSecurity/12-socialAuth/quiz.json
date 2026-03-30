@@ -1,0 +1,37 @@
+{
+  "title": "Social Authentication Quiz",
+  "description": "Test your knowledge about the critical role of social authentication and OAuth 2.0 implementation.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the primary benefit of social authentication for a user?",
+      "options": ["It's more secure than traditional login.", "It allows them to log in using an existing account (Google, GitHub) without a new password.", "It automatically shares their data with all their friends.", "It's the only way to log in on a mobile device."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which protocol is social authentication typically built on top of?",
+      "options": ["HTTP 3.0", "OAuth 2.0 / OpenID Connect (OIDC)", "SQL", "Git"],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is the purpose of the 'callback URL' in an OAuth request?",
+      "options": ["To call the user back on the phone.", "To specify where the authorization server should redirect the user after they grant permission.", "To automatically generate a backup of the user's data.", "To hide the user's IP address."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which popular Node.js library uses a 'strategy' pattern to handle social authentication?",
+      "options": ["Express.js", "Bcrypt", "Passport.js", "Mongoose"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What is 'Single Sign-On' (SSO)?",
+      "options": ["When a user can only log in once per day.", "When a user can use one set of credentials to access multiple independent applications.", "When a user can only log in on a single device.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}
