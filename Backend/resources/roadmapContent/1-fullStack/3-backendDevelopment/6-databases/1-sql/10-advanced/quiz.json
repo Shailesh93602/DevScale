@@ -1,0 +1,37 @@
+{
+  "title": "Advanced SQL Queries Quiz",
+  "description": "Test your fundamental knowledge about advanced SQL queries and data analysis in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is an 'Aggregate Function' in SQL?",
+      "options": ["A way to encrypt files using a secret key.", "A calculation on a set of values (like COUNT, SUM, AVG) that returns a single summary value.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which SQL clause is used to filter the result set *after* grouping has already occurred (usually with aggregate functions)?",
+      "options": ["WHERE", "ORDER BY", "HAVING", "LIMIT"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What's the primary benefit of a 'Common Table Expression' (CTE) using the WITH clause?",
+      "options": ["It makes the database faster.", "It provides a cleaner, more readable way to define temporary result sets for complex queries.", "It's supported by all browsers.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is a 'Subquery' in the context of SQL?",
+      "options": ["A query that is only used for small databases.", "A query inside another query, usually in the WHERE or SELECT clause.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is 'UNION ALL' useful for?",
+      "options": ["Combining the results of two SELECT statements into a single set, keeping all duplicates.", "Combining the results of two SELECT statements into a single set, removing all duplicates.", "Deleting all tables simultaneously.", "None of the above."],
+      "correctAnswer": 0,
+      "points": 20
+    }
+  ]
+}

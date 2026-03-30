@@ -1,0 +1,61 @@
+<article>
+  <h1>Mastering Advanced SQL Queries</h1>
+  
+  <p>Standard CRUD operations cover 90% of your daily work, but truly complex data analysis and application logic require mastering advanced SQL techniques. These allow you to perform powerful operations directly within the database engine, often with incredible efficiency.</p>
+
+  <section>
+    <h2>1. Aggregate Functions and GROUP BY</h2>
+    <p>Aggregate functions perform a calculation on a set of values and return a single value. When combined with <code>GROUP BY</code>, they provide powerful reporting capabilities.</p>
+    <ul>
+      <li><strong>COUNT():</strong> Returns the number of rows.</li>
+      <li><strong>SUM():</strong> Returns the total sum of a numeric column.</li>
+      <li><strong>AVG():</strong> Returns the average value.</li>
+      <li><strong>HAVING:</strong> Like a <code>WHERE</code> clause but for groups (used *after* <code>GROUP BY</code>).</li>
+    </ul>
+    <pre><code>-- Find categories with more than 10 products
+SELECT category_id, COUNT(*) 
+FROM products 
+GROUP BY category_id 
+HAVING COUNT(*) > 10;</code></pre>
+  </section>
+
+  <section>
+    <h2>2. Subqueries and CTEs (Common Table Expressions)</h2>
+    <p>A <strong>Subquery</strong> is a query inside another query. A <strong>CTE</strong> (using the <code>WITH</code> clause) provides a cleaner, more readable way to define temporary result sets that can be used within a larger query.</p>
+    <pre><code>-- Example CTE
+WITH RecentSales AS (
+    SELECT * FROM orders WHERE created_at > NOW() - INTERVAL '30 days'
+)
+SELECT u.name, rs.total 
+FROM users u 
+JOIN RecentSales rs ON u.id = rs.user_id;</code></pre>
+  </section>
+
+  <section>
+    <h2>3. Window Functions</h2>
+    <p>Window functions perform a calculation across a set of table rows that are somehow related to the current row. This is incredibly powerful for tasks like calculating running totals or ranking items within categories.</p>
+    <pre><code>-- Rank products within their category by price
+SELECT name, category_id, price,
+RANK() OVER (PARTITION BY category_id ORDER BY price DESC) as price_rank
+FROM products;</code></pre>
+  </section>
+
+  <section>
+    <h2>4. UNION and INTERSECT</h2>
+    <ul>
+      <li><strong>UNION:</strong> Combines the results of two SELECT statements into a single result set (removing duplicates).</li>
+      <li><strong>UNION ALL:</strong> Like UNION but keeps all duplicates (faster).</li>
+      <li><strong>INTERSECT:</strong> Returns only the rows that appear in both SELECT statements.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Best Practices Summary</h2>
+    <ol>
+      <li><strong>Prefer CTEs over Complex Subqueries:</strong> CTEs make your code much easier to read, maintain, and debug.</li>
+      <li><strong>Understand NULLs:</strong> Always be aware of how <code>NULL</code> values interact with aggregate functions (they are usually ignored) and <code>WHERE</code> clauses.</li>
+      <li><strong>Avoid Correlated Subqueries:</strong> A correlated subquery (one that runs for every row of the outer query) is incredibly slow. Try to rewrite it as a <code>JOIN</code> whenever possible.</li>
+    </ol>
+  </section>
+
+</article>

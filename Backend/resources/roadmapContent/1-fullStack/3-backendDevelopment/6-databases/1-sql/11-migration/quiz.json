@@ -1,0 +1,37 @@
+{
+  "title": "Database Data Migration Quiz",
+  "description": "Test your fundamental knowledge about database migrations and their role in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is 'Database Migration' and why is it useful?",
+      "options": ["Moving data between different regions.", "A systematic and version-controlled process of managing schema changes across different environments, ensuring consistency and allowing for rollbacks.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's the 'UP' part of a migration script?",
+      "options": ["To move the database to the cloud.", "The commands to apply a new change (e.g., creating a new table).", "To encrypt files using a secret key.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's the 'DOWN' part of a migration script?",
+      "options": ["To move the database back to a previous version.", "The commands to undo a specific change (e.g., dropping a new table).", "To automatically generate a backup of the database.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Why is it important and generally better to use a migration tool like Prisma or Sequelize?",
+      "options": ["They make the database faster.", "They ensure every developer and every server (including production) is running the exact same database schema.", "To automatically generate a backup of the data.", "To hide the application's IP address."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's a critical best practice when working with migrations?",
+      "options": ["Never edit a migration file after it has already been run and committed.", "Create a new migration for every single SELECT query.", "Always use a different database for every migration.", "None of the above."],
+      "correctAnswer": 0,
+      "points": 20
+    }
+  ]
+}

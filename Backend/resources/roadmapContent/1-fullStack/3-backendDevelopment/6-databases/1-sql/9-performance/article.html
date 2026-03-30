@@ -1,0 +1,48 @@
+<article>
+  <h1>Advanced SQL: Performance Tuning</h1>
+  
+  <p>Standard SQL queries are already efficient, but for high-traffic applications, even micro-optimizations can have a massive impact. Performance tuning is the process of identifying, analyzing, and improving your database's speed and efficiency.</p>
+
+  <section>
+    <h2>1. Query Profiling (EXPLAIN)</h2>
+    <p>The <code>EXPLAIN</code> command is your single most important tool for debugging slow SQL. It tells you exactly how the database engine plans to execute a query, including whether it's using an index or performing a slow "Full Table Scan."</p>
+    <pre><code>EXPLAIN ANALYZE SELECT * FROM orders WHERE status = 'SHIPPED';</code></pre>
+  </section>
+
+  <section>
+    <h2>2. Strategic Indexing</h2>
+    <ul>
+      <li><strong>Index for Where:</strong> Always index columns that are frequently used in <code>WHERE</code> clauses.</li>
+      <li><strong>Index for Joins:</strong> Every column used as a Foreign Key in a <code>JOIN</code> operation should be indexed.</li>
+      <li><strong>Composite Indexes:</strong> If you frequently query by two columns (e.g., <code>first_name</code> AND <code>last_name</code>), create a single composite index on both columns rather than two separate indexes.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>3. Connection Pooling</h2>
+    <p>Creating a new connection to a SQL database for every single request is incredibly expensive. Instead, use a <strong>Connection Pool</strong> (usually built into libraries like <code>pg</code> or <code>mysql2</code>) to maintain a pool of warm, long-lived connections that are reused across multiple requests.</p>
+  </section>
+
+  <section>
+    <h2>4. Normalization vs. Denormalization</h2>
+    <ul>
+      <li><strong>Normalization:</strong> The process of organizing data into separate tables to minimize redundancy (e.g., splitting "Users" and "User Profiles"). This keeps data consistent but can slow down reads due to complex JOINs.</li>
+      <li><strong>Denormalization:</strong> Intentionally duplicating certain pieces of data to avoid expensive JOINs (e.g., keeping the user's name on every blog post). This improves read performance but makes data harder to maintain.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>5. Materialized Views</h2>
+    <p>For truly heavy reports (e.g., daily sales summaries) that don't need real-time accuracy, use <strong>Materialized Views</strong>. These store the result of a query physically on the disk, making the data incredibly fast to retrieve.</p>
+  </section>
+
+  <section>
+    <h2>Best Practices Summary</h2>
+    <ol>
+      <li><strong>Always monitor Slow Queries:</strong> Enable your database's "Slow Query Log" to identify which queries are actually causing your users to wait.</li>
+      <li><strong>Vacuum and Maintenance:</strong> SQL databases like PostgreSQL need periodic maintenance (like <code>VACUUM</code>) to reclaim space and update statistics for the query planner.</li>
+      <li><strong>Index with Caution:</strong> While indexes speed up reads, every index slows down write operations (INSERT, UPDATE, DELETE). Don't index everything; only index what's necessary.</li>
+    </ol>
+  </section>
+
+</article>
