@@ -1,0 +1,8 @@
+{
+  "title": "Normalization and Denormalization",
+  "description": "Learn the theory and practice of database normalization (1NF, 2NF, 3NF) vs. denormalization for real-world performance tuning.",
+  "module": "Full Stack Web Development",
+  "order": 1,
+  "difficulty": "Advanced",
+  "tags": ["Database", "Normalization", "Denormalization", "SQL", "NoSQL", "Data Integrity"]
+}

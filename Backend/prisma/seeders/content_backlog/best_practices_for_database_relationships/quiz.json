@@ -1,0 +1,37 @@
+{
+  "title": "Best Practices for Database Relationships Quiz",
+  "description": "Test your knowledge on ensuring consistent and performant database relationships.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these is a critical best practice for foreign keys?",
+      "options": ["Always index foreign key columns", "Never use foreign keys in NoSQL", "Randomize the values of all foreign keys", "Use multiple primary keys for each foreign key"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Regarding SQL databases, which approach is best to follow by default?",
+      "options": ["Denormalization", "Normalization", "No relationships", "Storing all data in a single large table"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which rule for a foreign key constraint automatically deletes all related child records?",
+      "options": ["RESTRICT", "CASCADE", "SET NULL", "NO ACTION"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "When should you use transactions for relationship-based operations?",
+      "options": ["Only for SELECT queries", "Whenever performing atomic operations across multiple related tables", "Never; they are too slow", "Only for single-record inserts"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What's an important consideration when using 'CASCADE' delete in a deep relationship chain?",
+      "options": ["It increases performance dramatically", "Inadvertent mass deletions throughout the system", "It allows primary keys to be duplicated", "It prevents primary keys from ever being changed"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

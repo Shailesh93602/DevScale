@@ -1,0 +1,23 @@
+<section>
+    <h2>Advanced Topics in Database Relationships</h2>
+    <p>Beyond standard 1:1, 1:N, and M:N relationships, complex data architectures require more sophisticated modeling techniques.</p>
+
+    <h3>1. Self-Referencing Relationships</h3>
+    <p>A self-referencing relationship (or recursive relationship) occurs when a record relates back to another record in the same table. A classic example is an <strong>Employee</strong> and their <strong>Manager</strong> (who is also an employee).</p>
+    <pre><code>
+Employee.belongsTo(Employee, { as: 'manager', foreignKey: 'managerId' });
+Employee.hasMany(Employee, { as: 'subordinates', foreignKey: 'managerId' });
+    </code></pre>
+
+    <h3>2. Polymorphic Relationships</h3>
+    <p>Polymorphism allows a model to belong to more than one other model on a single association. For example, a <strong>Comment</strong> could belong to both a <strong>Post</strong> and an <strong>Image</strong>.</p>
+
+    <h3>3. Junction Tables with Extra Attributes</h3>
+    <p>Sometimes your join table needs to store more than just IDs. For example, a <strong>Student</strong> may belong to a <strong>Course</strong> with an added <code>grade</code> or <code>enrollment_date</code> attribute.</p>
+
+    <h3>4. Circular Dependencies</h3>
+    <p>Designing relationships while avoiding circular dependencies (where two tables depend on each other) is critical for database initialization and maintenance.</p>
+
+    <h3>Conclusion</h3>
+    <p>Self-referencing, polymorphism, and advanced join tables are powerful tools for modeling complex business logic. Master these advanced patterns to building more expressive and robust data layers.</p>
+</section>

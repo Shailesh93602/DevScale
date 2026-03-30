@@ -1,0 +1,37 @@
+{
+  "title": "Normalization and Denormalization Quiz",
+  "description": "Test your knowledge on the fundamental trade-offs between normalization and denormalization.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary goal of database normalization?",
+      "options": ["To increase the amount of redundant data", "To minimize redundancy and improve data integrity", "To speed up read operations for reporting", "To delete old records automatically"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a key characteristic of Denormalization?",
+      "options": ["Deleting all relationships", "Intentionally adding redundant data to improve read performance", "Ensuring that every table has only one column", "Moving data to a different database server"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which database normal form involves eliminating transitive dependencies?",
+      "options": ["1NF", "2NF", "3NF", "4NF"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "In which type of database architecture is denormalization most common?",
+      "options": ["Relational databases (SQL)", "Document-oriented databases (NoSQL)", "Graph databases", "All are equal"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is one major drawback of denormalization?",
+      "options": ["Slower read operations", "Requirement to manually manage consistency across duplicated data", "Less total storage needed", "No primary keys are allowed"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
