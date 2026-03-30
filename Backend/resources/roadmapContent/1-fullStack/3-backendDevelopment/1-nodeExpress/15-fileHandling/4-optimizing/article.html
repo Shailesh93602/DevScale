@@ -1,0 +1,54 @@
+<article>
+  <h1>File Compression and Optimization</h1>
+  
+  <p>Loading large, uncompressed files is one of the quickest ways to frustrate your users. As a full-stack developer, optimizing files—especially images and heavy documents—is crucial for reducing bandwidth costs and ensuring a snappy user experience.</p>
+
+  <section>
+    <h2>Optimizing Image Uploads</h2>
+    <p>When a user uploads a high-resolution photo, you should ideally process it on your server before storing it. The <code>sharp</code> library is the industry standard for high-performance image processing in Node.js.</p>
+    <ul>
+      <li><strong>Resizing:</strong> Scale images down to the maximum size used in your UI (e.g., 800px wide).</li>
+      <li><strong>Format Conversion:</strong> Convert JPEG or PNG images to more efficient formats like <strong>WebP</strong>.</li>
+      <li><strong>Stripping Metadata:</strong> Remove EXIF data (GPS coordinates, camera info) to reduce file size and improve user privacy.</li>
+    </ul>
+    <pre><code>const sharp = require('sharp');
+
+// Process image from a buffer
+const optimizedBuffer = await sharp(req.file.buffer)
+  .resize(800, 600, { fit: 'inside' })
+  .webp({ quality: 80 })
+  .toBuffer();</code></pre>
+  </section>
+
+  <section>
+    <h2>Middleware-Based Gzip/Brotli Compression</h2>
+    <p>You can automatically compress every HTTP response (HTML, JSON, CSS, JS) using the <code>compression</code> middleware in Express. This typically reduces response sizes by 60% to 80%.</p>
+    <pre><code>const compression = require('compression');
+const express = require('express');
+const app = express();
+
+// Use Gzip compression for all responses
+app.use(compression());</code></pre>
+  </section>
+
+  <section>
+    <h2>Optimization for Mobile Devices</h2>
+    <p>Consider implementing "Responsive Images" by generating multiple versions of the same image at different sizes. The frontend can then choose the most appropriate size based on the user's device screen resolution (using the <code>srcset</code> attribute).</p>
+  </section>
+
+  <section>
+    <h2>Compressing Outgoing Assets</h2>
+    <p>For static assets (like large PDFs or CSV files), consider pre-compressing them into <code>.gz</code> or <code>.br</code> (Brotli) files during your build process. Modern web servers (and Express) can detect and serve these pre-compressed versions automatically.</p>
+  </section>
+
+  <section>
+    <h2>Best Practices Summary</h2>
+    <ol>
+      <li><strong>Optimize at Source:</strong> Always process and optimize user uploads before they hit your permanent storage.</li>
+      <li><strong>Prefer WebP/AVIF:</strong> Use modern formats that offer significantly better compression than JPEG/PNG.</li>
+      <li><strong>Automate:</strong> Use tools like <code>compression</code> middleware to ensure you're not wasting bandwidth on plain text responses.</li>
+      <li><strong>Check Quality:</strong> When compressing images, find a "sweet spot" (usually around 70-80% quality) where the file size is small but the visual degradation is unnoticeable to the average user.</li>
+    </ol>
+  </section>
+
+</article>

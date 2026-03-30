@@ -1,0 +1,37 @@
+{
+  "title": "File Upload Validation Quiz",
+  "description": "Test your knowledge about the critical role of file validation and error handling in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the primary security risk of accepting files without validation?",
+      "options": ["To make the database faster.", "To allow hackers to upload malicious scripts or perform Denial of Service attacks.", "To automatically generate a backup of the user's data.", "To improve the user experience."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which Multer configuration property is used to limit the maximum file size?",
+      "options": ["size", "limit", "limits.fileSize", "maxSize"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What is the purpose of the 'fileFilter' function in Multer?",
+      "options": ["To automatically resize images.", "To determine which files to accept or reject based on their mimetype or extension.", "To automatically generate a thumbail for each file.", "To encrypt the file before storing it."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "In Express.js, what happens if a file upload fails validation in Multer?",
+      "options": ["The application will continue as if nothing happened.", "The server will gracefully handle 'Insufficient Scope' errors.", "Multer will pass an error to your Express error handler (or next middleware).", "The application will immediately crash."],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What are 'Magic Bytes' in the context of advanced file validation?",
+      "options": ["A way to encrypt files using a secret key.", "The first few bytes of a file that uniquely identify its true format, regardless of its extension.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

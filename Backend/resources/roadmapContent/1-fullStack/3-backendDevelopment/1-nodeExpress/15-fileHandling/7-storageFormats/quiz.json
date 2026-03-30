@@ -1,0 +1,37 @@
+{
+  "title": "File Storage Formats Quiz",
+  "description": "Test your knowledge about the most common and useful file formats in modern web development.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which image format is generally best for high-detail photographs on the web?",
+      "options": ["PNG", "JPEG/JPG", "SVG", "GIF"],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's the primary benefit of using a vector format like SVG?",
+      "options": ["It can scale to any size without losing quality.", "It uses less memory than any other format.", "It's the only way to store data in a database.", "It's a requirement of all CSS frameworks."],
+      "correctAnswer": 0,
+      "points": 20
+    },
+    {
+      "question": "Which format is the most common for data exchange in modern full-stack applications?",
+      "options": ["XML", "JSON", "CSV", "PDF"],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is the key characteristic of the WebP format?",
+      "options": ["It's only for desktop computers.", "It provides superior lossy and lossless compression for smaller file sizes compared to JPEG or PNG.", "It's a type of database indexing.", "It automatically generates a thumbail for each image."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which format should you use for fixed-layout documents that must look identical across all devices?",
+      "options": ["JSON", "PDF", "CSV", "MP4"],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}
