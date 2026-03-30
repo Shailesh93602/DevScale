@@ -1,0 +1,42 @@
+<article>
+  <h1>Understanding Redis Basics</h1>
+  
+  <p>Redis (Remote Dictionary Server) is an open-source, in-memory data structure store. It can be used as a database, a cache, and a message broker. Because it stores data in RAM rather than on a hard disk, it is incredibly fast, capable of handling millions of operations per second.</p>
+
+  <section>
+    <h2>Core Data Structures</h2>
+    <p>Unlike a traditional database that uses tables and rows, Redis uses simple key-value pairs where the value can be one of several data structures:</p>
+    <ul>
+      <li><strong>Strings:</strong> The simplest type (like <code>SET name "Redis"</code>).</li>
+      <li><strong>Lists:</strong> Ordered collections of strings (perfect for timelines or queues).</li>
+      <li><strong>Sets:</strong> Unordered collections of unique strings (good for tracking user IDs).</li>
+      <li><strong>Hashes:</strong> Maps between string fields and string values (like an object in JavaScript).</li>
+      <li><strong>Sorted Sets:</strong> Similar to Sets but every member is associated with a score, allowing them to be ranked.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Key Features of Redis</h2>
+    <ul>
+      <li><strong>In-Memory:</strong> Data is served directly from RAM, achieving microsecond latency.</li>
+      <li><strong>Persistence:</strong> While primarily in-memory, Redis can periodically save data to disk to prevent loss on restart.</li>
+      <li><strong>Atomic Operations:</strong> Operations on the same key are guaranteed to be atomic, preventing race conditions.</li>
+      <li><strong>Pub/Sub:</strong> A built-in messaging system for real-time applications.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Redis in the Modern Stack</h2>
+    <p>In a typical full-stack architecture, Redis sits between your application server (Express) and your primary database (Postgres/Mongo). Its primary role is to cache the results of expensive queries so the primary database isn't overwhelmed.</p>
+  </section>
+
+  <section>
+    <h2>Best Practices Summary</h2>
+    <ol>
+      <li><strong>Use Descriptive Keys:</strong> Use a naming convention like <code>user:123:profile</code> to keep your data organized.</li>
+      <li><strong>Monitor Memory Usage:</strong> Because RAM is expensive and limited, monitor your Redis memory usage and configure an eviction policy (like <code>allkeys-lru</code>) to automatically delete old data when the cache is full.</li>
+      <li><strong>Don't Use it for Everything:</strong> While fast, Redis doesn't have the sophisticated query capabilities or strong relational guarantees of a database like PostgreSQL. Use it for performance, not primary data storage.</li>
+    </ol>
+  </section>
+
+</article>

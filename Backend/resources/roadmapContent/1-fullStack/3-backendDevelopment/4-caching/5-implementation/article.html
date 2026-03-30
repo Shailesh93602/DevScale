@@ -1,0 +1,88 @@
+<article>
+  <h1>Implementing Redis Caching in Express</h1>
+  
+  <p>Once your Redis server is running and your Node.js client is connected, you can start implementing caching in your Express routes. The most common pattern is <strong>Cache-Aside</strong>, which balances performance with data consistency.</p>
+
+  <section>
+    <h2>A Simple Caching Pattern</h2>
+    <p>In this pattern, you first check Redis for the data. If it's missing, you fetch it from your primary database (like MongoDB or Postgres), save it to Redis for future use, and then respond to the user.</p>
+    <pre><code>const redis = require('./redis-client');
+const User = require('./models/User');
+
+app.get('/users/:id', async (req, res) => {
+  const { id } = req.params;
+  const cacheKey = `user:${id}`;
+
+  try {
+    // 1. Try to fetch from Redis cache
+    const cachedUser = await redis.get(cacheKey);
+
+    if (cachedUser) {
+      console.log("Cache Hit!");
+      return res.json(JSON.parse(cachedUser));
+    }
+
+    // 2. Cache Miss - Fetch from primary Database
+    console.log("Cache Miss!");
+    const user = await User.findById(id);
+    
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    // 3. Save result to Redis for next time (set expiration)
+    // EX: 3600 means expire after 1 hour (3600 seconds)
+    await redis.set(cacheKey, JSON.stringify(user), 'EX', 3600);
+
+    // 4. Return to user
+    res.json(user);
+    
+  } catch (err) {
+    // If Redis fails, fall back to DB directly (the app still works!)
+    const user = await User.findById(id);
+    res.json(user);
+  }
+});</code></pre>
+  </section>
+
+  <section>
+    <h2>JSON Serialization</h2>
+    <p>Redis primarily stores strings. To store complex JavaScript objects or arrays, you must use <code>JSON.stringify()</code> when saving and <code>JSON.parse()</code> when retrieving. In a high-traffic app, these operations can become a bottleneck, so keep your cached objects as small and flat as possible.</p>
+  </section>
+
+  <section>
+    <h2>Creating a Reusable Caching Middleware</h2>
+    <p>To avoid duplicating this logic across every route, you can create a reusable middleware function:</p>
+    <pre><code>const cacheMiddleware = (ttl) => {
+  return async (req, res, next) => {
+    const key = `cache:${req.originalUrl || req.url}`;
+    const cachedData = await redis.get(key);
+    
+    if (cachedData) {
+      return res.json(JSON.parse(cachedData));
+    }
+
+    // Capture the original res.json to save the response to cache
+    res.sendResponse = res.json;
+    res.json = (body) => {
+      redis.set(key, JSON.stringify(body), 'EX', ttl);
+      res.sendResponse(body);
+    };
+    
+    next();
+  };
+};
+
+app.get('/api/stats', cacheMiddleware(600), (req, res) => {
+  // Expensive computation here...
+});</code></pre>
+  </section>
+
+  <section>
+    <h2>Best Practices Summary</h2>
+    <ol>
+      <li><strong>Consistent Keys:</strong> Use a standard format for your cache keys (e.g., <code>entity:id:field</code>) to make them easy to manage and debug.</li>
+      <li><strong>Always Set a TTL:</strong> Never store data in a cache indefinitely. Even a 30-second TTL can dramatically reduce database load during a traffic spike.</li>
+      <li><strong>Use Try/Catch:</strong> Your application should never crash if the Redis server is unavailable. Always wrap Redis calls in try/catch blocks and fall back to the primary database.</li>
+    </ol>
+  </section>
+
+</article>

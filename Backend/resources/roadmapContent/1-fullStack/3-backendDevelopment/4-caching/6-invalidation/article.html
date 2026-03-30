@@ -1,0 +1,55 @@
+<article>
+  <h1>Mastering Cache Invalidation</h1>
+  
+  <p>"There are only two hard things in Computer Science: cache invalidation and naming things." — Phil Karlton. This famous quote highlights the complexity of ensuring that your fast cache doesn't serve incorrect or "stale" data to your users.</p>
+
+  <section>
+    <h2>What is Cache Invalidation?</h2>
+    <p>Cache invalidation is the process of declaring a piece of cached data as "stale" and removing it from the cache so that the next request will fetch the fresh version from the primary database.</p>
+  </section>
+
+  <section>
+    <h2>1. Time-Based Invalidation (TTL)</h2>
+    <p>The simplest and most common strategy. Every data object in the cache is given an expiration time (Time To Live). Once that time passes, the data is automatically deleted by Redis.</p>
+    <ul>
+      <li><strong>Use Case:</strong> Data that changes at predictable intervals or where "near-real-time" accuracy is acceptable (e.g., weather data, top product lists).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>2. Event-Based Invalidation (Active)</h2>
+    <p>When your application updates the primary database, it *actively* deletes the corresponding key from the cache as part of the same transaction.</p>
+    <pre><code>app.put('/users/:id', async (req, res) => {
+  // 1. Update primary database
+  await User.findByIdAndUpdate(req.params.id, req.body);
+  
+  // 2. Proactively invalidate the cache record
+  await redis.del(`user:${req.params.id}`);
+  
+  res.json({ success: true });
+});</code></pre>
+    <ul>
+      <li><strong>Use Case:</strong> Critical data that must always be accurate (e.g., user profiles, account balances).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>3. Versioning (Cache Versioning)</h2>
+    <p>Instead of deleting keys, you add a version number to your cache keys (e.g., <code>v1:user:123</code>). When you make a major change to your data structure, you increment the version number globally. Old keys don't need to be deleted; they will simply expire naturally over time.</p>
+  </section>
+
+  <section>
+    <h2>The "Thundering Herd" Problem</h2>
+    <p>If a highly popular cache key expires, thousands of concurrent requests might all hit your primary database at once trying to "re-fill" the cache. This can crash your database. One solution is <strong>Cache Locking</strong> or using distributed locks to ensure only one server is re-filling the cache at a time.</p>
+  </section>
+
+  <section>
+    <h2>Best Practices Summary</h2>
+    <ol>
+      <li><strong>Prefer Delete over Update:</strong> It is usually safer and simpler to delete a cache key and let the next request re-fill it, rather than trying to perfectly update the cached data in-place.</li>
+      <li><strong>Set Realistic TTLs:</strong> If data changes every minute, a 5-minute TTL is too long. If it changes every month, a 1-day TTL is perfectly fine.</li>
+      <li><strong>Invalidate Broadly if Necessary:</strong> Sometimes updating one record affects many others (e.g., updating a category name affects all products in that category). In these cases, you might need to use wildcards or "tags" to invalidate large groups of keys.</li>
+    </ol>
+  </section>
+
+</article>

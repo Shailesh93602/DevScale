@@ -1,0 +1,37 @@
+{
+  "title": "Implementing Caching with Redis Quiz",
+  "description": "Test your practical knowledge about implementing caching in an Express.js application.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What's the recommended first step when a request comes in for potentially cached data?",
+      "options": ["Check the primary database first.", "Check the Redis cache using a unique key.", "Ask for user permission.", "Automatically delete the previous cache."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these Redis commands is typically used to store a value as a string?",
+      "options": ["GET", "PUT", "SET", "POST"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "Why is it important to wrap Redis calls in a try/catch block?",
+      "options": ["To make the code look more professional.", "To ensure that if the Redis server is unavailable, the application can gracefully fall back to the primary database without crashing.", "Because Express requires it.", "To double the performance of the request."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's the best way to store complex JavaScript objects/arrays in Redis?",
+      "options": ["As a RAW memory binary.", "By converting them to a JSON string using JSON.stringify() before saving, and parsing back with JSON.parse().", "It's not possible to store complex types.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's the primary benefit of creating a 'Caching Middleware' for your Express app?",
+      "options": ["It makes the application more secure.", "It allows you to reuse caching logic across hundreds of routes with a single line of code.", "To automatically generate a backup of the data.", "To hide the user's IP address."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

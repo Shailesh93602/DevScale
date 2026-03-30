@@ -1,0 +1,45 @@
+<article>
+  <h1>Performance Metrics and Monitoring</h1>
+  
+  <p>You cannot improve what you cannot measure. Monitoring and metrics provide the visibility required to understand your application's health, identify bottlenecks before they cause downtime, and make data-driven decisions about scaling and optimization.</p>
+
+  <section>
+    <h2>Key Performance Indicators (KPIs)</h2>
+    <ul>
+      <li><strong>Latency (Response Time):</strong> How long it takes for a request to be fulfilled. We usually look at percentiles (e.g., P95, P99) rather than averages.</li>
+      <li><strong>Throughput (RPS):</strong> The number of requests your server can handle per second.</li>
+      <li><strong>Error Rate:</strong> The percentage of requests that result in a failure (e.g., 500 status codes).</li>
+      <li><strong>CPU and Memory Usage:</strong> Resource consumption on the host machine.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Monitoring Tools for Node.js</h2>
+    <ul>
+      <li><strong>Prometheus:</strong> A standard for collecting and storing time-series metrics.</li>
+      <li><strong>Grafana:</strong> The leading tool for visualizing those metrics via beautiful dashboards.</li>
+      <li><strong>New Relic / Datadog:</strong> Full-stack Application Performance Monitoring (APM) services that provide deep visibility into your code's execution.</li>
+      <li><strong>PM2:</strong> A popular process manager for Node.js that includes basic built-in monitoring for CPU and memory.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Health Checks</h2>
+    <p>A "Health Check" endpoint (usually <code>/health</code>) is a simple route that returns a 200 OK status if the application and its critical dependencies (like the database and Redis) are functioning correctly. Monitoring systems use these to determine if they should send traffic to a specific server instance.</p>
+  </section>
+
+  <section>
+    <h2>Distributed Tracing</h2>
+    <p>In a microservices architecture, a single user request might travel through many different services. Distributed tracing (using tools like Jaeger or Zipkin) allows you to follow a single request's path across the entire system, identifying exactly which service is causing a delay.</p>
+  </section>
+
+  <section>
+    <h2>Summary of Best Practices</h2>
+    <ol>
+      <li><strong>Instrument Early:</strong> Don't wait for a production outage to add monitoring. Start tracking key metrics from day one.</li>
+      <li><strong>Focus on Percentiles:</strong> Averages hide outliers. If 99% of your users have a 50ms response time but 1% have a 10-second response time, your average might look fine while your P99 is terrible.</li>
+      <li><strong>Implement Alerts:</strong> Monitoring is useless if you don't look at it. Set up alerts (via Slack, email, or PagerDuty) to notify your team immediately when critical metrics (like error rate) exceed a certain threshold.</li>
+    </ol>
+  </section>
+
+</article>

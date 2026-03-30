@@ -1,0 +1,53 @@
+<article>
+  <h1>Caching Best Practices</h1>
+  
+  <p>Effective caching is about more than just setting keys and TTLs. It requires a strategic approach to ensure your application is fast, scalable, and—most importantly—consistent. Following these best practices will help you avoid the most common pitfalls of distributed caching.</p>
+
+  <section>
+    <h2>1. Cache-Aside Pattern (Lazy Loading)</h2>
+    <p>For most applications, the "Cache-Aside" pattern is the most robust and simplest to implement. The application checks the cache; on a miss, it fetches from the database, saves to the cache, and returns. This makes the system resilient to cache downtime.</p>
+  </section>
+
+  <section>
+    <h2>2. Every Cache Key Needs a TTL</h2>
+    <p>Never rely on manual deletion alone. Every piece of data should have a Time To Live (TTL) to ensure that, even if an active invalidation fails, the stale data will eventually be removed automatically. This is your primary safety net against permanent data inconsistency.</p>
+  </section>
+
+  <section>
+    <h2>3. Fail Softly (Resilience)</h2>
+    <p>Your application should never crash because your Redis server is down. Always wrap your Redis client calls in try/catch blocks and ensure your application gracefully falls back to the primary database when the cache is unavailable.</p>
+  </section>
+
+  <section>
+    <h2>4. Set Reasonable Key Sizes and Types</h2>
+    <p>While Redis is incredibly fast, very large keys (e.g., storing a 10MB JSON object as a single string) can block the Redis process and slow down your entire application. Keep your cached objects small and flat, and use the appropriate Redis data structures (like Hashes for objects) to optimize memory and performance.</p>
+  </section>
+
+  <section>
+    <h2>5. Implement Cache Invalidation Proactively</h2>
+    <p>When you update a record in your primary database, immediately delete the corresponding key from the cache. This minimizes the period of time where users might see stale data. "Proactive deletion" is almost always better than "proactive updating," as it is less complex and less error-prone.</p>
+  </section>
+
+  <section>
+    <h2>6. Don't Cache Sensitive Personal Data (Usually)</h2>
+    <p>Be extremely careful about caching data like passwords, session secrets, or very sensitive personal information in a shared cache like Redis. If the cache is compromised or misconfigured, this data could be exposed. If you must cache sensitive data, ensure it is encrypted and has a very short TTL.</p>
+  </section>
+
+  <section>
+    <h2>7. Monitor your Hit Ratio</h2>
+    <p>Keep an eye on your "Cache Hit Ratio" (the percentage of requests served from the cache). A high ratio (above 80-90%) is generally a sign of a well-optimized caching strategy. A low ratio (below 50%) might mean your TTLs are too short or you're caching data that is rarely accessed more than once.</p>
+  </section>
+
+  <section>
+    <h2>Best Practices Summary Checklist</h2>
+    <ol>
+      <li>Use Cache-Aside for most use cases.</li>
+      <li>Set a TTL for every key.</li>
+      <li>Handle Redis failures gracefully.</li>
+      <li>Proactively invalidate on database updates.</li>
+      <li>Monitor your hit ratio and memory usage.</li>
+      <li>Isolate your cache keys with consistent naming (e.g., <code>v1:user:uid:profile</code>).</li>
+    </ol>
+  </section>
+
+</article>

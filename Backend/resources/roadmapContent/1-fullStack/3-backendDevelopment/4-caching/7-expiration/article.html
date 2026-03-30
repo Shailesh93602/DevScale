@@ -1,0 +1,44 @@
+<article>
+  <h1>Understanding Cache Expiration and TTL</h1>
+  
+  <p>In caching, <strong>TTL (Time To Live)</strong> is the amount of time a piece of data remains valid in the cache before it's automatically deleted. Setting the correct TTL is a balancing act: a TTL that's too long leads to stale data, while a TTL that's too short increases database load.</p>
+
+  <section>
+    <h2>What is Time To Live (TTL)?</h2>
+    <p>TTL is typically measured in seconds. In Redis, you can set a TTL whenever you store a key using the <code>SET</code> command with the <code>EX</code> (seconds) or <code>PX</code> (milliseconds) option.</p>
+    <pre><code>// Cache a user's profile for 1 hour (3600 seconds)
+await redis.set('user:123', JSON.stringify(userData), 'EX', 3600);</code></pre>
+  </section>
+
+  <section>
+    <h2>Choosing the Right TTL</h2>
+    <ul>
+      <li><strong>Short TTLs (seconds/minutes):</strong> Ideal for data that changes frequently (e.g., real-time sports scores, currency exchange rates).</li>
+      <li><strong>Medium TTLs (hours/days):</strong> Perfect for data that changes daily or where near-real-time accuracy is acceptable (e.g., top news stories, user profile info).</li>
+      <li><strong>Long TTLs (weeks/months):</strong> Good for truly static content or data that practically never changes (e.g., country lists, historical data).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Absolute vs. Relative Expiration</h2>
+    <ul>
+      <li><strong>Relative Expiration:</strong> The TTL starts counting when the key is *last accessed* (sliding window). If a key is popular, it stays in the cache forever.</li>
+      <li><strong>Absolute Expiration:</strong> The TTL starts counting from the moment the key was *placed* in the cache, regardless of how often it's accessed. This ensures that even popular keys are eventually refreshed with fresh data.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>The "Infinite" Cache Fallacy</h2>
+    <p>While you *can* set keys and never expire them, you should almost never do this in a production application. If your database changes but your cache doesn't expire, you'll eventually run into bugs where users see completely incorrect or outdated information.</p>
+  </section>
+
+  <section>
+    <h2>Best Practices Summary</h2>
+    <ol>
+      <li><strong>Every Key Needs a TTL:</strong> Unless you have a very specific reason not to, always set an expiration time for every cache key you create.</li>
+      <li><strong>Implement TTL Randomization (Jitter):</strong> If you set 10,000 keys with the exact same 1-day TTL, they will all expire at the exact same second tomorrow, causing a massive spike in database load. Add a bit of random "jitter" to your TTLs (e.g., 24 hours ± 10 minutes) to spread out the expiration events.</li>
+      <li><strong>Use Absolute Expiration for Consistency:</strong> For data that absolute must be refreshed periodically, use absolute expiration to ensure the cache stays in sync with the primary database.</li>
+    </ol>
+  </section>
+
+</article>
