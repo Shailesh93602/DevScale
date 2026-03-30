@@ -1,0 +1,37 @@
+{
+  "title": "Handling Large Files Quiz",
+  "description": "Test your knowledge about the critical role of streams in handling large files in modern Node.js and Express.js applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which of the following Node.js features allows you to process a large file bit by bit (chunk by chunk)?",
+      "options": ["Buffers", "Events", "Streams", "Worker Threads"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What's the primary drawback of using 'fs.readFile()' for a 2GB video file?",
+      "options": ["It's more secure than cloud storage.", "It's free for every user.", "It will crash your server because it tries to load the entire 2GB file into memory.", "It's the only way to store files in a database."],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "Which stream method is the most efficient for connecting a Readable stream to a Writable stream?",
+      "options": ["connect()", "link()", "pipe()", "transfer()"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What is 'Backpressure' in the context of Node.js streams?",
+      "options": ["A way to encrypt files using a secret key.", "When an input stream sends data faster than an output stream can process it.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Where should you offload heavy processing task (like video transcoding) for a large file?",
+      "options": ["On the main event loop.", "Inside a middleware function.", "To a Worker Thread.", "Automatically on every request."],
+      "correctAnswer": 2,
+      "points": 20
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+<article>
+  <h1>Handling Large Files in Node.js</h1>
+  
+  <p>Loading a large file (e.g., a 1GB video) entirely into memory using <code>fs.readFile()</code> would likely crash your Node.js process. To handle large files efficiently, you must use <strong>Streams</strong>.</p>
+
+  <section>
+    <h2>The Power of Streams</h2>
+    <p>Streams allows you to process data piece by piece (chunk by chunk) as it's being read or written. This keeps your application's memory usage constant and very low, regardless of the size of the file being processed.</p>
+    <pre><code>const fs = require('fs');
+
+// Create a readable stream from a large file
+const src = fs.createReadStream('./large-video.mp4');
+
+// Pipe the stream directly to the response (writable stream)
+app.get('/video', (req, res) =&gt; {
+  res.setHeader('Content-Type', 'video/mp4');
+  src.pipe(res);
+});</code></pre>
+  </section>
+
+  <section>
+    <h2>Memory-Efficient File Uploads</h2>
+    <p>When users upload large files, you should avoid storing the entire file in a memory buffer. Instead, use Multer's <code>diskStorage</code> or, even better, stream the file directly to cloud storage like AWS S3 using <code>multer-s3</code> or <code>busboy</code>.</p>
+  </section>
+
+  <section>
+    <h2>Processing Data on the Fly</h2>
+    <p>Sometimes you need to process a large file as you're reading it (e.g., parsing a 2GB CSV file). You can use <strong>Transform streams</strong> for this:</p>
+    <pre><code>const { Transform } = require('stream');
+
+const upperCaseTransform = new Transform({
+  transform(chunk, encoding, callback) {
+    this.push(chunk.toString().toUpperCase());
+    callback();
+  }
+});
+
+fs.createReadStream('input.txt')
+  .pipe(upperCaseTransform)
+  .pipe(fs.createWriteStream('output.txt'));</code></pre>
+  </section>
+
+  <section>
+    <h2>Timeout and Error Handling</h2>
+    <p>Large file operations can take a long time. You must ensure your server doesn't time out the request and that you handle potential stream errors (e.g., the user disconnects mid-upload) to prevent memory leaks or hanging processes.</p>
+  </section>
+
+  <section>
+    <h2>Best Practices for Large Files</h2>
+    <ol>
+      <li><strong>Avoid <code>fs.readFile()</code>:</strong> Never load a large or unknown-size file completely into memory.</li>
+      <li><strong>Use <code>pipe()</code>:</strong> It's the most efficient way to connect input and output streams.</li>
+      <li><strong>Implement Backpressure:</strong> If you're building custom streams, ensure you handle "backpressure"—where the source is sending data faster than the destination can process it.</li>
+      <li><strong>Offload to Worker Threads:</strong> If you're doing heavy processing on the file data (like video transcoding), offload it to a Worker Thread to keep the main event loop responsive.</li>
+    </ol>
+  </section>
+
+</article>

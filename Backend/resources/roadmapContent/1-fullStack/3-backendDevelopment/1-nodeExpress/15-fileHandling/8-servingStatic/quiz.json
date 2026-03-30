@@ -1,0 +1,37 @@
+{
+  "title": "Serving Static Files Quiz",
+  "description": "Test your knowledge about the critical role of static files and how to serve them in modern Express.js applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the primary way to serve static files (like images or CSS) in an Express.js application?",
+      "options": ["By writing a separate route for each file.", "By using the built-in express.static middleware.", "By storing all files in the database.", "By only using a CDN."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is a 'Virtual Path Prefix' in the context of express.static?",
+      "options": ["A way to encrypt file names for security.", "A mount path for static files that doesn't exist on the file system (e.g., /static).", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which Node.js module is used to ensure that the file path to a static directory is always correct regardless of where the app is started from?",
+      "options": ["Fs", "Http", "Path", "Crypto"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What's the benefit of setting 'maxAge' in the express.static options?",
+      "options": ["To make the files expire automatically in the browser's cache.", "To automatically resize images for different devices.", "To tell the browser how long it should cache a file before asking the server for a new version.", "To hide the files from search engines."],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "Why should you isolate your static files into a dedicated directory like 'public'?",
+      "options": ["To keep your code organized and prevent exposing private files by accident.", "To make the application faster.", "To automatically generate a backup of the data.", "To improve the user experience."],
+      "correctAnswer": 0,
+      "points": 20
+    }
+  ]
+}

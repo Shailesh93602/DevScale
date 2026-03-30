@@ -1,0 +1,63 @@
+<article>
+  <h1>Deleting Files with Node.js</h1>
+  
+  <p>In any application that allows users to upload files, you must also provide a way to delete them. Whether it's removing an old profile picture or cleaning up temporary data, proper file deletion is essential for managing server storage and respecting user privacy.</p>
+
+  <section>
+    <h2>The fs.unlink() Method</h2>
+    <p>Node.js provides the <code>fs.unlink()</code> method specifically for deleting files. Like most <code>fs</code> methods, it has both an asynchronous and a synchronous version.</p>
+    <pre><code>const fs = require('fs');
+
+// Asynchronous deletion
+fs.unlink('./uploads/old-file.txt', (err) =&gt; {
+  if (err) {
+    console.error("Error deleting file:", err);
+    return;
+  }
+  console.log("File deleted successfully!");
+});
+
+// Promises-based deletion
+const fsPromises = require('fs').promises;
+await fsPromises.unlink('./uploads/old-file.txt');</code></pre>
+  </section>
+
+  <section>
+    <h2>Deleting Files from Cloud Storage (AWS S3)</h2>
+    <p>If you're using cloud storage, you must use the provider's SDK to delete files. For AWS S3, you use the <code>DeleteObjectCommand</code>.</p>
+    <pre><code>const { S3Client, DeleteObjectCommand } = require('@aws-sdk/client-s3');
+const s3 = new S3Client({ region: 'us-east-1' });
+
+const deleteParams = {
+  Bucket: 'my-app-uploads',
+  Key: 'user-123/avatar.png'
+};
+
+try {
+  await s3.send(new DeleteObjectCommand(deleteParams));
+  console.log("File deleted from S3.");
+} catch (err) {
+  console.error("Error deleting from S3:", err);
+}</code></pre>
+  </section>
+
+  <section>
+    <h2>Syncing File Deletion with the Database</h2>
+    <p>In a real application, you usually have a database record representing the file. Always ensure you delete <strong>both</strong> the file and the database record to maintain data integrity.</p>
+    <ol>
+      <li><strong>Delete the File:</strong> Initiate the deletion on the file system or cloud storage.</li>
+      <li><strong>Verify Deletion:</strong> Ensure the file was actually removed.</li>
+      <li><strong>Delete the DB Record:</strong> Once the file is gone, remove its path or URL from your database.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Security and Best Practices</h2>
+    <ul>
+      <li><strong>Permissions Check:</strong> Never allow a user to delete a file simply by providing a path as an input. Always verify that the authenticated user has permission to delete the specific file.</li>
+      <li><strong>Graceful Failure:</strong> If a file deletion fails because the file doesn't exist, don't necessarily crash your app. Often, it's better to log the warning and proceed (idempotency).</li>
+      <li><strong>Garbage Collection:</strong> Consider setting up a background task to find and delete "orphan" files—files that exist on disk or in the cloud but have no corresponding record in your database.</li>
+    </ul>
+  </section>
+
+</article>

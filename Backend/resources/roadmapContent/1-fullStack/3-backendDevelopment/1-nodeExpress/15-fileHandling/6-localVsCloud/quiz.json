@@ -1,0 +1,37 @@
+{
+  "title": "Storing Files: Local vs. Cloud Quiz",
+  "description": "Test your knowledge about the most common and secure ways to store files in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the primary drawback of storing files on your local server's disk?",
+      "options": ["It's more secure than cloud storage.", "It's free for every user.", "It doesn't scale; if you have two servers, they will not share the same disk.", "It's the only way to store files in a database."],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "Which of these is a popular cloud storage service used by developers?",
+      "options": ["Amazon S3", "Google Cloud Storage", "Cloudinary", "All of the above."],
+      "correctAnswer": 3,
+      "points": 20
+    },
+    {
+      "question": "Why is it generally a bad idea to store large files (BLOBs) directly in your database?",
+      "options": ["It makes the database too secure.", "It slows down backups and queries, and is more expensive than dedicated file storage.", "It's not supported by modern databases.", "It only works with older browsers."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's the recommended approach for storing user-uploaded content in a production app?",
+      "options": ["Always use local disk storage.", "Store files in a cloud storage provider (like S3) and store the file URL or path in your database.", "Store everything directly in the database.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is a Content Delivery Network (CDN) used for?",
+      "options": ["To store files securely on a single server.", "To cache and serve static assets (like images) from servers closer to your users globally, improving performance.", "To automatically generate a backup of the data.", "To hide the user's IP address."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

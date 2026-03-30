@@ -1,0 +1,44 @@
+<article>
+  <h1>Introduction to File Handling in Node.js</h1>
+  
+  <p>In web development, "file handling" refers to the ability of your server to read, write, manipulate, and serve files. Whether it's uploading a user's profile picture, generating a PDF invoice, or processing a CSV data dump, file handling is a core skill for any full-stack developer.</p>
+
+  <section>
+    <h2>The Node.js File System (fs) Module</h2>
+    <p>Node.js provides a built-in module called <code>fs</code> (File System) that allows you to interact with the file system on your server. It offers both synchronous and asynchronous methods for common tasks:</p>
+    <ul>
+      <li><strong>Reading Files:</strong> <code>fs.readFile()</code>, <code>fs.createReadStream()</code></li>
+      <li><strong>Writing Files:</strong> <code>fs.writeFile()</code>, <code>fs.createWriteStream()</code></li>
+      <li><strong>Deleting Files:</strong> <code>fs.unlink()</code></li>
+      <li><strong>Creating Directories:</strong> <code>fs.mkdir()</code></li>
+    </ul>
+    <p><strong>Crucial Tip:</strong> Always use the asynchronous versions (or the promises-based <code>fs/promises</code>) in an Express application to avoid blocking the event loop and hurting performance.</p>
+  </section>
+
+  <section>
+    <h2>Buffers and Streams</h2>
+    <p>When handling files, especially large ones, it's important to understand how Node.js manages data in memory:</p>
+    <ul>
+      <li><strong>Buffers:</strong> A buffer is a temporary storage area in memory that holds a chunk of binary data. Think of it like a small bucket for data.</li>
+      <li><strong>Streams:</strong> Streams allow you to read or write data chunk by chunk, rather than loading the entire file into memory at once. This is essential for handling large files (like videos) without crashing your server due to memory exhaustion.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Multipart Form Data</h2>
+    <p>When a user sends a file from a web form, the browser uses a specific encoding called <code>multipart/form-data</code>. Unlike standard JSON requests, this format can contain both text fields and binary file content. Because Express doesn't parse this format by default, we need specialized middleware (like Multer) to handle it.</p>
+  </section>
+
+  <section>
+    <h2>The File Handling Lifecycle</h2>
+    <ol>
+      <li><strong>Incoming Request:</strong> The server receives a multipart request containing a file.</li>
+      <li><strong>Parsing:</strong> Middleware extracts the file data and any associated text fields.</li>
+      <li><strong>Validation:</strong> The server checks the file type, size, and other properties.</li>
+      <li><strong>Processing:</strong> The file might be resized (images), parsed (CSV), or formatted.</li>
+      <li><strong>Storage:</strong> The file is saved to the server's disk or, more commonly, a cloud storage provider like AWS S3.</li>
+      <li><strong>Retrieval:</strong> The server provides a way for users to access the file later.</li>
+    </ol>
+  </section>
+
+</article>

@@ -1,0 +1,37 @@
+{
+  "title": "File Deletion Quiz",
+  "description": "Test your knowledge about the critical role of file deletion and storage cleanup in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which Node.js method is used to delete a file from the file system?",
+      "options": ["fs.delete()", "fs.unlink()", "fs.remove()", "fs.clear()"],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's the primary risk of not validating permissions before deleting a file in a web application?",
+      "options": ["It makes the database slower.", "An attacker can delete any file they want by knowing its path or ID.", "It automatically generates a backup of the user's data.", "To improve the user experience."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is the recommended approach for syncing file deletion with your database?",
+      "options": ["Only delete the file from the database.", "Only delete the file from the disk/cloud.", "Delete both the file and the corresponding database record.", "Never delete files once they are uploaded."],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "Which command is used to delete a file from an Amazon S3 bucket using the AWS SDK?",
+      "options": ["GetItemCommand", "PutObjectCommand", "DeleteObjectCommand", "RemoveFileCommand"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What is an 'Orphan File' in the context of storage management?",
+      "options": ["A file with no owner.", "A file that exists on the server's disk but has no corresponding record in the database.", "A file that is corrupted and cannot be opened.", "A file that was uploaded more than a year ago."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}
