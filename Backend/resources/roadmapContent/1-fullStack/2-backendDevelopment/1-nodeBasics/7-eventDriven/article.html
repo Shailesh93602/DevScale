@@ -1,0 +1,26 @@
+<div class="article-content">
+  <h1>Event-Driven Programming</h1>
+  <p>Node.js is an **Event-Driven** runtime. This means that instead of a linear, step-by-step process, your application is "listening" for events to happen (like a database query finishing or a user logging in) and then "reacting" to them by running a specific function.</p>
+
+  <h2>1. The EventEmitter Class</h2>
+  <p>The <code>EventEmitter</code> class is the heart of Node's event system. By creating an instance of this class, you can register listeners (<code>.on()</code>) and trigger events (<code>.emit()</code>) whenever you need to signal that something important has happened in your code.</p>
+  <pre><code>const EventEmitter = require('events');
+const myEmitter = new EventEmitter();
+
+// 1. Register a Listener
+myEmitter.on('login', (user) => {
+  console.log(`Hello, ${user}!`);
+});
+
+// 2. Trigger an Event
+myEmitter.emit('login', 'Alice');</code></pre>
+
+  <h2>2. Why Use Events? (Decoupling)</h2>
+  <p>Events allow you to **decouple** your code. Instead of one giant function that handles every single part of a process, you can have many small, independent listeners that each react to the same event in their own way, making your application much easier to maintain.</p>
+
+  <h2>3. Professional Usage</h2>
+  <p>Most core Node.js modules (like <code>http</code> or <code>fs.ReadStream</code>) are built directly on top of the <code>EventEmitter</code> class. By mastering this pattern, you gain a deep understanding of how Node.js works "under the hood."</p>
+
+  <h2>Conclusion</h2>
+  <p>By mastering event-driven programming, you're becoming a faster and more efficient Fullstack engineer. Whether you're managing complex database logic or scaling a massive production application, the event emitter provides the tools and security you need to build the highest-quality and most professional applications.</p>
+</div>

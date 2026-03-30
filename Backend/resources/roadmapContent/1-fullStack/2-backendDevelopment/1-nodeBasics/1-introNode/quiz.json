@@ -1,0 +1,52 @@
+{
+  "title": "Node.js Basics Quiz",
+  "description": "Evaluate your understanding of the V8 engine, non-blocking I/O, and its role as a server-side JavaScript runtime for fullstack engineering.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily role of Node.js in modern development?",
+      "options": [
+        "Faster component rendering.",
+        "A JavaScript runtime environment that allows you to execute JavaScript code on the server instead of in a browser.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which browser's JavaScript engine is Node.js built upon for high performance?",
+      "options": ["Chrome V8 Engine", "Safari JavaScriptCore", "Firefox SpiderMonkey", "IE Chakra"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Is Node.js 'non-blocking' and 'event-driven'?",
+      "options": [
+        "Yes, as it uses an asynchronous model that allows it to handle many simultaneous connections efficiently.",
+        "No, it only executes one thing at a time synchronously.",
+        "Only for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which command would you use to run a JavaScript file called 'index.js' in Node.js?",
+      "options": ["run index.js", "node index.js", "npm run index.js", "exec index.js"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does using Node.js allowing you to build truly Fullstack applications using only one programming language (JavaScript)?",
+      "options": [
+        "Yes, by using JavaScript for both the frontend (browser) and backend (server).",
+        "No, it's always slower.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
