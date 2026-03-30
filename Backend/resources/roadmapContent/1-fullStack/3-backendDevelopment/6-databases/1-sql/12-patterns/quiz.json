@@ -1,0 +1,37 @@
+{
+  "title": "Database Design Patterns Quiz",
+  "description": "Test your fundamental knowledge about database design patterns and data modeling in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What's the primary benefit of using 'UUIDs' (Universally Unique Identifiers) as primary keys?",
+      "options": ["They are smaller than standard integers.", "They can be generated on multiple servers without any risk of collision, which is essential for distributed systems.", "A type of database indexing.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is the 'Audit Log' pattern in database design?",
+      "options": ["A way to encrypt data before deleting it.", "Instead of overwriting data, you create a separate table to record every change to sensitive records (Who, What, When).", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which level of 'Normalization' ensures that every cell in a table contains only a single (atomic) value and there are no duplicate columns?",
+      "options": ["1NF (First Normal Form)", "2NF (Second Normal Form)", "3NF (Third Normal Form)", "None of the above."],
+      "correctAnswer": 0,
+      "points": 20
+    },
+    {
+      "question": "What is 'Polymorphic Association' useful for?",
+      "options": ["When an entity (like a 'Comment') can belong to multiple different types of parents (like a 'Post' or a 'Video').", "A way to encrypt files using a secret key.", "To avoid using any Foreign Keys.", "None of the above."],
+      "correctAnswer": 0,
+      "points": 20
+    },
+    {
+      "question": "Why is it generally better to define Constraints (like NOT NULL or UNIQUE) at the database level rather than just in your code?",
+      "options": ["They make the database slower.", "They enforce your design rules permanently, ensuring that no application (Express app, mobile app, internal tool) can accidentally violate them.", "To automatically generate a backup of the data.", "To improve the user experience."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

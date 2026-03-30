@@ -1,0 +1,60 @@
+<article>
+  <h1>Mastering Database Data Migrations</h1>
+  
+  <p>In a living application, the database schema is never static. You will constantly need to add columns, create new tables, or rename fields as your features evolve. <strong>Data Migration</strong> is the systematic and version-controlled process of managing these changes across different environments (development, staging, production).</p>
+
+  <section>
+    <h2>What are Migrations?</h2>
+    <p>Think of migrations as "Git for your database schema." Instead of manually running SQL commands on your production database, you write small, versioned scripts (usually in JavaScript, TypeScript, or SQL) that describe the change.</p>
+  </section>
+
+  <section>
+    <h2>Why Use Migrations?</h2>
+    <ul>
+      <li><strong>Consistency:</strong> Ensures every developer and every server (production) is running the exact same database schema.</li>
+      <li><strong>Rollbacks:</strong> If a schema change causes a bug, migrations allow you to quickly "undo" or roll back the change to a previous stable version.</li>
+      <li><strong>Collaboration:</strong> Schema changes are part of your code repository and can be reviewed during a Pull Request, just like any other code change.</li>
+      <li><strong>Automation:</strong> Migrations can be automatically run as part of your CI/CD pipeline, ensuring the database is always in sync with the code.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>The Anatomy of a Migration File</h2>
+    <p>A typical migration script consists of two parts:</p>
+    <ul>
+      <li><strong>UP:</strong> The commands to apply the new change (e.g., creating a new table).</li>
+      <li><strong>DOWN:</strong> The commands to undo that specific change (e.g., dropping that table).</li>
+    </ul>
+    <pre><code>// Example migration in a Node.js ORM
+exports.up = function(db) {
+  return db.createTable('products', {
+    id: { type: 'int', primaryKey: true },
+    name: { type: 'string', notNull: true }
+  });
+};
+
+exports.down = function(db) {
+  return db.dropTable('products');
+};</code></pre>
+  </section>
+
+  <section>
+    <h2>Common Migration Tools</h2>
+    <ul>
+      <li><strong>Prisma:</strong> Uses a declarative schema file and generates migration SQL automatically.</li>
+      <li><strong>Sequelize / Knex:</strong> Popular Node.js libraries that use JavaScript-based migration files.</li>
+      <li><strong>Flyway / Liquibase:</strong> Database-independent tools that use raw SQL files and are very popular in large-scale enterprise environments.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Best Practices Summary</h2>
+    <ol>
+      <li><strong>Never Edit a Migration After it's Run:</strong> Once a migration has been committed and run on any server, it is "immutable." If you made a mistake, create a *new* migration to fix it.</li>
+      <li><strong>Test Your Rollbacks:</strong> Don't just assume your `down` script works. Periodically test "migrating up" and then immediately "migrating down" to ensure the process is reversible.</li>
+      <li><strong>Backup Before Migrating:</strong> Always perform a database backup immediately before running complex migrations on your production server.</li>
+      <li><strong>Keep Data and Schema Separate:</strong> While some migrations involve moving data (e.g., splitting a <code>full_name</code> column into <code>first_name</code> and <code>last_name</code>), try to keep schema changes and data transformations in separate migration files if possible.</li>
+    </ol>
+  </section>
+
+</article>

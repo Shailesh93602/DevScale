@@ -1,0 +1,37 @@
+{
+  "title": "Database Backup and Recovery Quiz",
+  "description": "Test your fundamental knowledge about database backup and recovery in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the primary role of 'Database Backup and Recovery' in a web application?",
+      "options": ["To store more data on a single machine.", "To provide a safety net for accidental deletion, hardware failure, and malicious attacks like ransomware.", "To automatically generate a backup of the database.", "To make the application more secure."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's the '3-2-1 Rule' of backups in modern computing?",
+      "options": ["A way to encrypt files using a secret key.", "Keep 3 copies of your data, on 2 different media, with at least 1 off-site copy.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's the primary difference between a 'Full' backup and an 'Incremental' backup?",
+      "options": ["Full backup is faster.", "Full is a complete copy of all data; Incremental only contains data that has changed since the most recent backup.", "Full is the only way to restore correctly.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is 'Logical Backup' (Dump) and why is it useful?",
+      "options": ["A way to encrypt data before deleting it.", "Exporting the database structure and data into a SQL file (e.g., using pg_dump) which is portable and easy to read.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "How can you truly verify that your database backup strategy is effective?",
+      "options": ["By daily checking the size of your backup files.", "By performing periodic 'Recovery Drills' where you restore your production data into a separate staging environment to verify it works.", "By asking the database engine to check for corruption.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

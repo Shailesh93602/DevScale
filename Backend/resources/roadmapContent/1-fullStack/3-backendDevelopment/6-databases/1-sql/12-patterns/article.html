@@ -1,0 +1,49 @@
+<article>
+  <h1>Mastering Database Design Patterns</h1>
+  
+  <p>Good database design is about more than just tables and columns. It's about creating a scalable, maintainable, and efficient foundation for your entire application. By following established <strong>Database Design Patterns</strong>, you can avoid common pitfalls and ensure your data architecture remains robust as your project grows.</p>
+
+  <section>
+    <h2>1. The Primary Key Pattern</h2>
+    <p>Every table must have a stable, unique primary key. While sequential integers (Auto-increment) are simple, <strong>UUIDs</strong> (Universally Unique Identifiers) are preferred for modern distributed systems because they can be generated on the client or multiple servers without any risk of collision.</p>
+  </section>
+
+  <section>
+    <h2>2. Entity-Attribute-Value (EAV) Pattern</h2>
+    <p>When you have entities with a large and unpredictable number of attributes (e.g., product specifications for an e-commerce site where a "Laptop" has different fields than a "T-shirt"), the EAV pattern allows you to store these in a flexible table structure rather than creating hundreds of columns.</p>
+  </section>
+
+  <section>
+    <h2>3. The Audit Log Pattern</h2>
+    <p>Instead of overwriting data, create a separate `audit_logs` or `history` table to record every change to sensitive records. This is essential for security and debugging, allowing you to see exactly "Who changed What and When."</p>
+  </section>
+
+  <section>
+    <h2>4. Soft Deleting Pattern</h2>
+    <p>Rather than using <code>DELETE</code>, add a <code>deleted_at</code> or <code>is_active</code> column. This prevents accidental data loss and allows you to "undelete" records or maintain data for historical reporting while hiding it from the main application.</p>
+  </section>
+
+  <section>
+    <h2>5. The Polymorphic Association Pattern</h2>
+    <p>When an entity can belong to multiple different types of parents (e.g., a "Comment" that can belong to either a "Post" or a "Video"), you use a combination of a <code>parent_id</code> and a <code>parent_type</code> string column to create a flexible relationship.</p>
+  </section>
+
+  <section>
+    <h2>Database Normalization Forms</h2>
+    <ul>
+      <li><strong>1NF (First Normal Form):</strong> Eliminate duplicate columns and ensure every cell contains only a single (atomic) value.</li>
+      <li><strong>2NF (Second Normal Form):</strong> Meet 1NF requirements and ensure every non-key column is fully dependent on the primary key.</li>
+      <li><strong>3NF (Third Normal Form):</strong> Meet 2NF requirements and ensure columns are not dependent on other non-key columns (no transitive dependencies).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Best Practices Summary</h2>
+    <ol>
+      <li><strong>Prefer Normalization, then Denormalize:</strong> Start with a clean, normalized structure (3NF) to ensure data integrity. Only denormalize (duplicate data) when performance profiling proves it's necessary.</li>
+      <li><strong>Use Consistent Naming:</strong> Use <code>snake_case</code> for tables and columns (e.g., <code>user_profiles</code>) and be consistent with prefixes and suffixes.</li>
+      <li><strong>Define Constraints:</strong> Use <code>NOT NULL</code>, <code>UNIQUE</code>, and <code>FOREIGN KEY</code> constraints to enforce your design rules at the database level, not just in your application code.</li>
+    </ol>
+  </section>
+
+</article>
