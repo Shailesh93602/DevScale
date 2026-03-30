@@ -1,0 +1,47 @@
+{
+  "title": "Error Handling in Node.js Quiz",
+  "description": "Evaluate your understanding of synchronous vs asynchronous strategies, Express error middleware (4-argument handlers), and global crash prevention.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily role of 'Error Handling' in a Node.js application?",
+      "options": [
+        "Faster component rendering.",
+        "Catching and managing exceptions to prevent the server from crashing and to provide professional feedback to users.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "In Express.js, how many arguments should an 'Error Middleware' function have?",
+      "options": ["Two (req, res)", "Three (req, res, next)", "Four (err, req, res, next)", "None of the above."],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which modern JavaScript keyword is used inside an 'async' function to catch errors in a line-by-line way?",
+      "options": ["catch()", "then()", "try/catch", "finally"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which global Node.js event would you use to catch an error that wasn't caught elsewhere before it crashes the server?",
+      "options": ["uncaughtException", "errorCaught", "serverError", "crashEvent"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Does following a solid 'Error Handling' strategy help build truly Fullstack applications by ensuring high availability and professional user feedback?",
+      "options": [
+        "Yes, as it is a core feature of any modern production web application.",
+        "No, it's always slower.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
