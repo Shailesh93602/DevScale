@@ -1,0 +1,37 @@
+{
+  "title": "Setting Up Redis Quiz",
+  "description": "Test your knowledge about the critical role of Redis setup and configuration in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which of these technologies is recommended for starting a consistent Redis server during development?",
+      "options": ["Express.js", "Docker", "Mongoose", "React Router"],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's the standard port number for a Redis server to listen for connections?",
+      "options": ["3000", "5432", "6379", "8080"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "Which Node.js client library is popular for its support for Redis Clusters and Sentinels?",
+      "options": ["Bcrypt", "Helmet", "ioredis", "Express"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What's a critical security best practice for Redis in production?",
+      "options": ["Never making it accessible to the public internet; only allow internal connections from your backend.", "Providing everyone with the Redis password for transparency.", "Storing all passwords in plain text in the Redis database.", "None of the above."],
+      "correctAnswer": 0,
+      "points": 20
+    },
+    {
+      "question": "What is 'Upstash' in the context of Redis?",
+      "options": ["A way to encrypt files using a secret key.", "A cloud provider that offers serverless Redis instances.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

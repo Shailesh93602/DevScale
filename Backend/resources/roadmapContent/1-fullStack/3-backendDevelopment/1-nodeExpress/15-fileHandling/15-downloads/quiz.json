@@ -1,0 +1,37 @@
+{
+  "title": "File Downloads Quiz",
+  "description": "Test your knowledge about the critical role of file downloads and secure access in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which of these Express.js methods is specifically designed for serving a file for download with the correct headers?",
+      "options": ["res.send()", "res.json()", "res.download()", "res.redirect()"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What's the primary benefit of the 'res.download()' helper in Express?",
+      "options": ["It automatically encrypts the file before sending.", "It sets the correct 'Content-Disposition' header so the user's browser prompts them to save the file to disk.", "It automatically generates a thumbail for each image.", "It's the only way to store files in a database."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Why is it generally a good security practice NOT to use sequential IDs for your file URLs (e.g., /download/1, /download/2)?",
+      "options": ["It makes the database slower.", "It allows an attacker to guess the ID of other users' files and potentially download them (IDOR attack).", "It's not supported by modern browsers.", "It's a requirement of all CSS frameworks."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is the 'Content-Disposition' header useful for?",
+      "options": ["To encrypt files using a secret key.", "To instruct the browser whether to display the file inline in the browser tab or as an attachment to be downloaded.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "How can you offload the bandwidth cost and server load of serving large files if you're using cloud storage like S3?",
+      "options": ["By automatically resizing images for different devices.", "By redirecting the user's browser directly to a Pre-signed URL generated from S3.", "By only using a CDN for serving assets.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

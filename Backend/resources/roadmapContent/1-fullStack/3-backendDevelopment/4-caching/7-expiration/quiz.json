@@ -1,0 +1,37 @@
+{
+  "title": "Cache Expiration and TTL Quiz",
+  "description": "Test your knowledge about the critical role of cache expiration and data consistency in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is 'TTL' in the context of caching?",
+      "options": ["Total-Time-Limit", "Time-To-Live; the duration for which a piece of data remains valid in the cache before it is automatically deleted.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's the primary risk of setting a TTL that's too long?",
+      "options": ["It makes the database slower.", "The cache will serve stale, outdated data to users for an extended period.", "It automatically generates a backup of the data.", "It's the only way to store data in a database."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which Redis command option is used to set a TTL in seconds when saving a key?",
+      "options": ["EX", "PX", "LX", "TX"],
+      "correctAnswer": 0,
+      "points": 20
+    },
+    {
+      "question": "What is 'TTL Randomization' (Jitter) and why is it useful?",
+      "options": ["A way to encrypt files using a secret key.", "Adding a small random offset to your TTLs to prevent large numbers of cache keys from expiring at the exact same time and overwhelming your database.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "When should you use 'Absolute' expiration instead of 'Relative' (sliding window)?",
+      "options": ["When you want a key to stay in the cache indefinitely.", "When you absolutely must ensure that data is refreshed from the primary database after a specific period, regardless of how popular it is.", "Only when the server is about to restart.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

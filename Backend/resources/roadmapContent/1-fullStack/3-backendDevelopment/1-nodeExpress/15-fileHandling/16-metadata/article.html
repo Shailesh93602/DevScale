@@ -1,0 +1,58 @@
+<article>
+  <h1>Managing File Metadata</h1>
+  
+  <p>Providing a high-quality file handling experience isn't just about the raw file content. It's also about managing the associated <strong>metadata</strong>—the information *about* the file (its name, size, type, upload date, and owner).</p>
+
+  <section>
+    <h2>Key Metadata to Track</h2>
+    <ul>
+      <li><strong>Original File Name:</strong> The name the user originally gave the file.</li>
+      <li><strong>Stored File Name/Path:</strong> The unique and sanitized name or URI used by your server (to avoid collisions).</li>
+      <li><strong>MIME Type:</strong> The true format of the file (e.g., <code>image/jpeg</code>).</li>
+      <li><strong>File Size:</strong> Tracking the size in bytes to manage storage quotas and display info to the user.</li>
+      <li><strong>Upload Date/Time:</strong> Essential for sorting and versioning.</li>
+      <li><strong>Owner/User Association:</strong> To enforce access permissions.</li>
+      <li><strong>Metadata/Tags:</strong> Optional tags for categorizing or searching files (e.g., "profile-picture", "invoice").</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Storing Metadata in the Database</h2>
+    <p>Always store file metadata in your structured database (SQL or NoSQL). This allows you to perform fast queries, filter files, and manage associations with other entities (like Users or Projects) without having to scan the entire file system.</p>
+    <pre><code>// Example MongoDB/Mongoose Schema for Metadata
+const fileSchema = new mongoose.Schema({
+  originalName: String,
+  storageKey: String, // Path or S3 Key
+  mimetype: String,
+  size: Number,
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  uploadDate: { type: Date, default: Date.now }
+});</code></pre>
+  </section>
+
+  <section>
+    <h2>Managing Image Metadata (EXIF)</h2>
+    <p>Images (especially from mobile phones) often contain EXIF metadata, which can include sensitive information like the GPS coordinates of where the photo was taken. For user privacy and security, you should consider <strong>stripping EXIF data</strong> before storing the image.</p>
+    <p>Using the <code>sharp</code> library, you can easily strip metadata while resizing:</p>
+    <pre><code>await sharp(inputBuffer)
+  .rotate() // Respect orientation tag before stripping
+  .resize(800)
+  .withMetadata({ exif: false }) // Strip EXIF data
+  .toBuffer();</code></pre>
+  </section>
+
+  <section>
+    <h2>Generating Metadata on the Fly</h2>
+    <p>Sometimes you need to extract metadata from a file that's already stored (e.g., getting the dimensions of an image or the duration of a video). You can use libraries like <code>ffprobe</code> (for video/audio) or <code>sharp</code> (for images) to extract this information when needed.</p>
+  </section>
+
+  <section>
+    <h2>Best Practices Summary</h2>
+    <ol>
+      <li><strong>Stateless Storage:</strong> Store the raw file in cloud storage but keep all searchable and queryable metadata in your database.</li>
+      <li><strong>Validate and Sanitize:</strong> Always sanitize the <code>originalName</code> provided by the user before storing or displaying it to prevent XSS.</li>
+      <li><strong>Optimize Display:</strong> Use the stored <code>size</code> and <code>mimetype</code> metadata to provide a better user experience (e.g., showing a "loading" progress or a file icon based on its type).</li>
+    </ol>
+  </section>
+
+</article>
