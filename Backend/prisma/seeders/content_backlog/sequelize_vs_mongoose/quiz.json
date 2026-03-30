@@ -1,0 +1,31 @@
+{
+  "title": "Sequelize vs Mongoose Quiz",
+  "description": "Compare and contrast the leading Node.js ORM and ODM.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these is an ORM for relational databases like PostgreSQL?",
+      "options": ["Mongoose", "Sequelize", "MongoLib", "ExpressDB"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is Mongoose primarily used for?",
+      "options": ["PostgreSQL", "MySQL", "MongoDB", "SQLite"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which provides better native support for strict relationships and JOIN operations?",
+      "options": ["Sequelize", "Mongoose", "Both are equal", "Neither"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "When is Mongoose a better choice than Sequelize?",
+      "options": ["When data is relational and requires strict integrity", "When data is unstructured or has a rapidly changing schema", "When you only have access to a SQL server", "When you are not using Node.js"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
