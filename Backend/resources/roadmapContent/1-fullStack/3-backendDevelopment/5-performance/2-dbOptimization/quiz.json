@@ -1,0 +1,37 @@
+{
+  "title": "Database Query Optimization Quiz",
+  "description": "Test your knowledge about the critical role of database query optimization and performance tuning.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the primary benefit of adding an 'Index' to a database column?",
+      "options": ["It makes the database more secure.", "It allows the database to find specific rows much faster than scanning every single row.", "It automatically generates a backup of the data.", "It's the only way to store data in a database."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is the primary drawback of having too many indexes on a single table?",
+      "options": ["It makes the database slower to search.", "It delays every write operation because the database must update every index on every INSERT or UPDATE.", "It's not supported by modern databases.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is the 'N+1 Query Problem' in an ORM like Mongoose or Sequelize?",
+      "options": ["When an attacker accesses your database.", "When you fetch a list of entities and then perform an additional, separate query for each entity to fetch its related data.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which database command allows you to see how the database plans to execute a specific query (and whether it's using an index)?",
+      "options": ["EXPLAIN", "GET", "INFO", "SHOW"],
+      "correctAnswer": 0,
+      "points": 20
+    },
+    {
+      "question": "Why is it important to avoid 'SELECT *' in most API queries?",
+      "options": ["It's more secure than a standard query.", "Fetching unnecessary columns consumes extra CPU, memory, and bandwidth on both the database and application servers.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "title": "Performance Metrics and Monitoring Quiz",
+  "description": "Test your knowledge about the critical role of performance metrics and monitoring in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is 'Latency' in the context of web performance?",
+      "options": ["The number of bytes in a request.", "How long it takes for a single request to be fulfilled by the server.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Why are 'Percentiles' (P95, P99) generally better than 'Averages' for measuring performance?",
+      "options": ["Because they are easier to calculate.", "Because averages can hide outliers; a small number of very slow requests can make your P99 look terrible while your average remains fine.", "Because percentiles are supported by all browsers.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is a popular open-source tool for collecting and storing time-series metrics?",
+      "options": ["Express.js", "Prometheus", "Mongoose", "React Router"],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's the purpose of a '/health' endpoint?",
+      "options": ["To check if the user is feeling well.", "A simple route that returns a 200 OK status if the application and its critical dependencies are functioning correctly.", "To automatically generate a backup of the data.", "To improve the user experience."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is 'Distributed Tracing' Useful for?",
+      "options": ["To trace the user's location.", "To follow a single user request's path across multiple independent microservices to find performance bottlenecks.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

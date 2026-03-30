@@ -1,0 +1,39 @@
+<article>
+  <h1>Advanced Security in File Handling</h1>
+  
+  <p>Accepting and storing files from users is a major security risk. Beyond basic validation, several advanced security measures are required to ensure your application doesn't become a target for hackers.</p>
+
+  <section>
+    <h2>Path Traversal Attacks</h2>
+    <p>A path traversal attack (also known as a directory traversal attack) aims to access files and directories that are stored outside the intended folder. If you take a file name directly from a user, an attacker could provide something like <code>../../../etc/passwd</code> to access sensitive system files.</p>
+    <p><strong>Defense:</strong> Always use <code>path.basename()</code> to strip away the directory part of the file name and never trust the input directly in <code>fs</code> methods or <code>path.join()</code> without careful sanitization.</p>
+  </section>
+
+  <section>
+    <h2>Remote Code Execution (RCE)</h2>
+    <p>An attacker could upload a script (e.g., <code>malicious.js</code> or <code>malicious.php</code>) disguised as an image. If your server is misconfigured and allows the execution of files in the uploads directory, the attacker can take control of your server.</p>
+    <p><strong>Defense:</strong> Never serve files from the same directory where your application's executable files are located, and ensure your web server (like Nginx or Apache) is configured *not* to execute anything in your static assets folder.</p>
+  </section>
+
+  <section>
+    <h2>File Bomb (Zip Bomb) Attacks</h2>
+    <p>A "file bomb" is a small, compressed file that, when expanded by your server, consumes enormous amounts of memory or disk space, leading to a Denial of Service (DoS).</p>
+    <p><strong>Defense:</strong> Always limit the maximum allowed size for uploaded files and, if you're decompressing files, ensure your library allows you to set a maximum expansion limit.</p>
+  </section>
+
+  <section>
+    <h2>Virus and Malware Scanning</h2>
+    <p>For any production application that receives user-uploaded files, you should integrate a malware scanner. This can be done by running a background task with a utility like <strong>ClamAV</strong> or using a dedicated API-based cloud malware scanning service (like VirusTotal or specific cloud-native AWS/GCP tools).</p>
+  </section>
+
+  <section>
+    <h2>Best Practices Summary</h2>
+    <ol>
+      <li><strong>Isolate Static Content:</strong> Serve uploads from a completely different domain (e.g., <code>https://user-content.myapp.com</code>) to prevent cookie-stealing and CSRF across your main application's domain.</li>
+      <li><strong>Use Anti-Virus at the Gateway:</strong> If possible, scan files before they are written to permanent storage.</li>
+      <li><strong>Enforce Content-Security-Policy (CSP):</strong> Use CSP headers to instruct the browser how to handle different file types and prevent unauthorized scripts from executing.</li>
+      <li><strong>Regularly Audit Storage:</strong> Periodically check for old or unused files and ensure that permissions haven't accidentally drifted towards being overly permissive.</li>
+    </ol>
+  </section>
+
+</article>

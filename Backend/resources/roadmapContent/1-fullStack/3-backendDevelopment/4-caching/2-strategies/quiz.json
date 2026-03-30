@@ -1,0 +1,37 @@
+{
+  "title": "Caching Strategies Quiz",
+  "description": "Test your knowledge about the critical role of caching strategies and their implemention logic.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which of these is the most common server-side caching strategy in modern web development?",
+      "options": ["Read-Through", "Write-Through", "Cache-Aside (Lazy Loading)", "Write-Behind"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What's a primary benefit of the 'Cache-Aside' strategy?",
+      "options": ["It's more secure than other strategies.", "It's resilient to cache failures; the application can always fall back to the primary database.", "It automatically generates a thumbail for each image.", "It's the only way to store data in a database."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "In a 'Write-Through' caching strategy, what happens when a user updates their profile information?",
+      "options": ["Only the cache is updated.", "Only the database is updated.", "Both the cache and the primary database are updated simultaneously.", "Neither is updated immediately."],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What is the main risk of using a 'Write-Behind' (Write-Back) strategy?",
+      "options": ["It makes the application too slow.", "Risk of data loss if the cache server crashes before it asynchronous updates the database.", "It's too expensive to implement.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is 'TTL' in the context of caching?",
+      "options": ["Total-Time-Limit", "Time-To-Live; the duration for which a piece of data is considered fresh in the cache.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

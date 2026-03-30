@@ -1,0 +1,37 @@
+{
+  "title": "Introduction to Caching Quiz",
+  "description": "Test your fundamental knowledge about caching and its critical role in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the primary goal of caching in a web application?",
+      "options": ["To store more data on a single machine.", "To store copies of data in a temporary, fast storage location to speed up future requests.", "To automatically backup the database.", "To make the application more secure."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is a 'Cache Hit'?",
+      "options": ["When an attacker accesses your cache.", "When the requested data is found in the cache and returned immediately.", "When the requested data is NOT found in the cache.", "When the cache is full and must be cleared."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is generally NOT a good candidate for caching?",
+      "options": ["The result of a very expensive database query that changes once a week.", "The current time and date shown on every page.", "A third-party API response that only changes every hour.", "The user's individual shopping cart content (which changes frequently)."],
+      "correctAnswer": 3,
+      "points": 20
+    },
+    {
+      "question": "Where is data typically stored in a high-performance server-side cache like Redis?",
+      "options": ["On a traditional SSD hard drive.", "In the server's RAM (Random Access Memory).", "In a dedicated cloud storage bucket.", "Automatically on the user's computer."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is the primary challenge that caching introduced?",
+      "options": ["It makes the application slower.", "Managing data stale-ness (ensuring the cache matches the primary source).", "It's too expensive to implement.", "It only works with certain browsers."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

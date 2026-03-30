@@ -1,0 +1,37 @@
+{
+  "title": "File Streaming and Performance Quiz",
+  "description": "Test your knowledge about the critical role of streams in handling large files in modern Node.js and Express.js applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which of these allows you to process a large file bit by bit (chunk by chunk) instead of loading it entirely into memory?",
+      "options": ["Buffers", "Events", "Streams", "Worker Threads"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What's the primary benefit of using a Readable stream to serve a 2GB video file?",
+      "options": ["It's more secure than a standard download.", "It keeps your server's memory consumption very low and constant, regardless of the file size.", "It automatically generates thumbnails for the video.", "It's the only way to store files in a database."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which method is the most efficient and elegant way to connect a Readable stream to a Writable stream (like an HTTP response)?",
+      "options": ["connect()", "link()", "pipe()", "transfer()"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What is 'Backpressure' in the context of Node.js streams?",
+      "options": ["A way to encrypt files using a secret key.", "When an input stream sends data faster than an output stream can process it, slowing down the reader to prevent memory exhaustion.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Why is 'pipeline()' generally preferred over multiple '.pipe()' calls for connecting more than two streams?",
+      "options": ["Because 'pipeline()' is faster.", "Because 'pipeline()' is the only way to connect more than two streams.", "Because 'pipeline()' automatically handles the cleanup and closing of all streams if any part of the chain fails.", "None of the above."],
+      "correctAnswer": 2,
+      "points": 20
+    }
+  ]
+}

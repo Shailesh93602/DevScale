@@ -1,0 +1,37 @@
+{
+  "title": "File Access Permissions Quiz",
+  "description": "Test your knowledge about the critical role of file access permissions and secure access control in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which of these is the primary way to manage file access permissions for a single user in a web application?",
+      "options": ["Providing everyone with read permissions for all files.", "By storing a 'userId' on the file record in your database and checking it against the current authenticated user on every request.", "By automatically generating a separate folder for each user.", "It's not possible to have separate permissions for each user."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's the best way to prevent 'Insecure Direct Object Reference' (IDOR) attacks when serving files?",
+      "options": ["By automatically renaming all files to a random string.", "By using sequential IDs for every file URL (e.g., /files/1, /files/2).", "By using UUIDs or other long, random strings for file IDs in URLs and always verifying permissions in the backend.", "It's not a real security problem."],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "Which permission is needed for a user to actually open and see the content of a file on a UNIX file system?",
+      "options": ["Read (r)", "Write (w)", "Execute (x)", "All of the above."],
+      "correctAnswer": 0,
+      "points": 20
+    },
+    {
+      "question": "In Cloud Storage like Amazon S3, what is used to define exactly who can perform actions on specific objects/buckets?",
+      "options": ["HTTP headers", "IAM Policies and Bucket Policies", "CSS variables", "A type of database indexing."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is the 'Deny by Default' principle in the context of file permissions?",
+      "options": ["It means all files are accessible to everyone by default.", "It means access to a file is blocked unless a user is explicitly granted permission or the file is explicitly marked as public.", "It means users are only allowed to upload files, not download them.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

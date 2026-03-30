@@ -1,0 +1,54 @@
+<article>
+  <h1>Handling File Downloads Correctly</h1>
+  
+  <p>Serving a file for download isn't just about sending its content. To ensure a professional and safe experience, you must set the correct HTTP headers to instruct the browser how to handle the file (e.g., whether to open it in a new tab or save it to disk).</p>
+
+  <section>
+    <h2>Using res.download()</h2>
+    <p>Express provides a convenient <code>res.download()</code> helper that sets the correct <code>Content-Disposition</code> header (which defaults to "attachment") and sends the file in a single call.</p>
+    <pre><code>app.get('/download/invoice/:id', async (req, res) => {
+  const filePath = path.join(__dirname, 'invoices', `invoice-${req.params.id}.pdf`);
+  
+  // Set the filename that the user will see in their download folder
+  res.download(filePath, 'Your-Invoice.pdf', (err) => {
+    if (err) {
+      // Handle the error if the file cannot be found or sent
+      res.status(404).send("Could not find the invoice.");
+    }
+  });
+});</code></pre>
+  </section>
+
+  <section>
+    <h2>Setting the Content-Type Header</h2>
+    <p>Always set the correct <code>Content-Type</code> (MIME type) so the user's computer knows which application to use for opening the file. Express's <code>res.download()</code> and <code>res.sendFile()</code> do this automatically based on the file extension, but you can also set it manually.</p>
+  </section>
+
+  <section>
+    <h2>Secure Downloads: Avoiding IDOR</h2>
+    <p>Never allow a user to download a file simply by providing a path as an input (e.g., <code>/get-file?path=secret.env</code>). This is a massive security hole. Instead, use internal, non-guessable IDs (like UUIDs) and always verify the user's permission in the database before serving the file.</p>
+  </section>
+
+  <section>
+    <h2>Advanced Strategy: Serving from S3 via Redirect</h2>
+    <p>Instead of downloading the file to your server and then sending it to the user, you can redirect the user directly to a <strong>Pre-signed URL</strong> from your cloud storage provider. This offloads the bandwidth cost and server load to the cloud provider.</p>
+    <pre><code>app.get('/download/photo/:id', async (req, res) => {
+  // 1. Authenticate user and verify permission
+  // 2. Generate a temporary, private S3 URL for the specific photo
+  const s3Url = await generatePresignedUrl(`photos/${req.params.id}.jpg`);
+  
+  // 3. Redirect the user's browser directly to S3
+  res.redirect(s3Url);
+});</code></pre>
+  </section>
+
+  <section>
+    <h2>Best Practices Summary</h2>
+    <ol>
+      <li><strong>Use Descriptive Names:</strong> Use the second argument of <code>res.download()</code> to provide a user-friendly name, rather than your internal system name (e.g., use <code>Project-Brief.pdf</code> instead of <code>upload-234234.pdf</code>).</li>
+      <li><strong>Rate Limit Downloads:</strong> To prevent bots from scraping all your files, implement rate limiting specifically on your download endpoints.</li>
+      <li><strong>Check for Permissions Every Time:</strong> Never cache a download link's permission. A user who could access a file yesterday shouldn't necessarily be able to today if their permissions have changed.</li>
+    </ol>
+  </section>
+
+</article>

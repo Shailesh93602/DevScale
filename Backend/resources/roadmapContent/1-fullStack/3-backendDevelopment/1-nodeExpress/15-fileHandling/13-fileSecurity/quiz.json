@@ -1,0 +1,37 @@
+{
+  "title": "Advanced File Handling Security Quiz",
+  "description": "Test your knowledge about the critical role of advanced security measures in modern file handling.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is a 'Path Traversal' attack in the context of file handling?",
+      "options": ["A way to automatically resize images.", "When an attacker tries to access files and directories outside the intended folder by using sequences like '../'.", "A type of database indexing.", "A way to automatically generate a backup of the data."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's the best way to prevent 'Remote Code Execution' (RCE) from user-uploaded files?",
+      "options": ["By automatically renaming all files to a random string.", "By using local disk storage only.", "By ensuring your web server (like Nginx) is configured NOT to execute any files in your static assets folder.", "By only using a CDN for serving assets."],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What is a 'File Bomb' or 'Zip Bomb' attack?",
+      "options": ["A way to encrypt files using a secret key.", "A small, compressed file that consumes enormous amounts of memory or disk space when uncompressed, leading to DoS.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which Node.js method should you use to safely get just the file name part of a path string to prevent traversal attacks?",
+      "options": ["path.join()", "path.basename()", "path.dirname()", "fs.readFileSync()"],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which open-source tool is commonly used to scan user-uploaded files for viruses and malware?",
+      "options": ["Postman", "ClamAV", "Redis", "Sequelize"],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}
