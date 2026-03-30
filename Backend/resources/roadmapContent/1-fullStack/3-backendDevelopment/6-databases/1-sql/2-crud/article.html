@@ -1,0 +1,54 @@
+<article>
+  <h1>Mastering SQL CRUD Operations</h1>
+  
+  <p>CRUD (Create, Read, Update, Delete) are the four fundamental operations of persistent storage. In SQL, these map to the core statements: <code>INSERT</code>, <code>SELECT</code>, <code>UPDATE</code>, and <code>DELETE</code>. Understanding these in depth is essential for any backend developer.</p>
+
+  <section>
+    <h2>1. CREATE (INSERT)</h2>
+    <p>The <code>INSERT INTO</code> statement is used to add new rows of data to a table.</p>
+    <pre><code>-- Basic Insert
+INSERT INTO users (name, email, age) 
+VALUES ('Jane Smith', 'jane@example.com', 25);
+
+-- Inserting multiple rows at once (Bulk Insert)
+INSERT INTO users (name, email) 
+VALUES ('User A', 'userA@test.com'), ('User B', 'userB@test.com');</code></pre>
+  </section>
+
+  <section>
+    <h2>2. READ (SELECT)</h2>
+    <p>The <code>SELECT</code> statement is the most powerful and complex part of SQL. It allows you to retrieve exactly the data you need using various clauses.</p>
+    <ul>
+      <li><strong>WHERE:</strong> Filters the results (e.g., <code>WHERE age > 18</code>).</li>
+      <li><strong>ORDER BY:</strong> Sorts the results (e.g., <code>ORDER BY created_at DESC</code>).</li>
+      <li><strong>LIMIT:</strong> Limits the number of rows returned (useful for pagination).</li>
+      <li><strong>GROUP BY:</strong> Groups rows that have the same values into summary rows (used with aggregate functions like <code>COUNT</code>, <code>SUM</code>, <code>AVG</code>).</li>
+    </ul>
+    <pre><code>SELECT count(*), status FROM orders GROUP BY status;</code></pre>
+  </section>
+
+  <section>
+    <h2>3. UPDATE</h2>
+    <p>The <code>UPDATE</code> statement modifies existing records in a table. <strong>CRITICAL:</strong> Always use a <code>WHERE</code> clause with UPDATE, or you will update every single row in the table!</p>
+    <pre><code>UPDATE users 
+SET age = 26, is_verified = true 
+WHERE id = 456;</code></pre>
+  </section>
+
+  <section>
+    <h2>4. DELETE</h2>
+    <p>The <code>DELETE</code> statement removes rows from a table. Just like UPDATE, always use <code>WHERE</code> to avoid deleting your entire database.</p>
+    <pre><code>DELETE FROM users WHERE last_login < '2023-01-01';</code></pre>
+    <p><strong>Note:</strong> In many professional apps, we use a "Soft Delete" (setting a <code>deleted_at</code> timestamp) instead of actually removing the row from the database.</p>
+  </section>
+
+  <section>
+    <h2>Best Practices Summary</h2>
+    <ol>
+      <li><strong>Always use WHERE:</strong> When performing UPDATE or DELETE, double-check your WHERE clause to prevent accidental data loss.</li>
+      <li><strong>Use Transactions:</strong> For operations that involve multiple related changes (e.g., transferring money between two accounts), wrap them in a <code>BEGIN TRANSACTION</code> and <code>COMMIT</code> to ensure they either all succeed or all fail together.</li>
+      <li><strong>Sanitize Inputs:</strong> Never concatenate user input directly into your SQL queries. Use <strong>Parameterized Queries</strong> (prepared statements) to prevent SQL Injection attacks.</li>
+    </ol>
+  </section>
+
+</article>

@@ -1,0 +1,53 @@
+<article>
+  <h1>Understanding SQL Data Types</h1>
+  
+  <p>Every column in a SQL table must have a defined **Data Type**. Choosing the correct data type is critical for performance, storage efficiency, and ensuring data integrity. While exact names vary slightly between databases (PostgreSQL vs. MySQL), the general categories remain the same.</p>
+
+  <section>
+    <h2>1. Numeric Types</h2>
+    <ul>
+      <li><strong>INT / INTEGER:</strong> For whole numbers (e.g., age, count).</li>
+      <li><strong>DECIMAL / NUMERIC:</strong> For exact fractional numbers (essential for financial data and currency).</li>
+      <li><strong>FLOAT / REAL:</strong> For approximate fractional numbers (used in scientific calculations where small errors are acceptable).</li>
+      <li><strong>BOOLEAN:</strong> For true/false values (though some databases like MySQL use <code>TINYINT(1)</code>).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>2. Character (String) Types</h2>
+    <ul>
+      <li><strong>CHAR(n):</strong> Fixed-length string. If the string is shorter than <code>n</code>, it's padded with spaces.</li>
+      <li><strong>VARCHAR(n):</strong> Variable-length string with a maximum of <code>n</code>. This is the most common string type.</li>
+      <li><strong>TEXT:</strong> For long strings of unlimited (or very large) length (e.g., blog post content).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>3. Date and Time Types</h2>
+    <ul>
+      <li><strong>DATE:</strong> Stores only the date (YYYY-MM-DD).</li>
+      <li><strong>TIME:</strong> Stores only the time (HH:MM:SS).</li>
+      <li><strong>DATETIME / TIMESTAMP:</strong> Stores both date and time. Use <code>TIMESTAMPTZ</code> in PostgreSQL for time-zone awareness.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>4. Advanced Types (NoSQL in SQL)</h2>
+    <ul>
+      <li><strong>JSON / JSONB:</strong> Allows you to store unstructured or semi-structured JSON data directly in a SQL column. <code>JSONB</code> (Binary JSON) in PostgreSQL is highly optimized and searchable.</li>
+      <li><strong>UUID:</strong> A universally unique identifier. Preferred over sequential integers for primary keys in distributed systems.</li>
+      <li><strong>BLOB (Binary Large Object):</strong> For storing raw binary data like images or PDFs (though storing these as files in a CDN is generally preferred).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Best Practices Summary</h2>
+    <ol>
+      <li><strong>Be Specific:</strong> Don't use <code>TEXT</code> for everything. If a name will never exceed 100 characters, use <code>VARCHAR(100)</code>. This helps the database engine optimize memory.</li>
+      <li><strong>Use DECIMAL for Money:</strong> Never use FLOAT for currency, as floating-point math can lead to precision errors (e.g., 0.1 + 0.2 != 0.3).</li>
+      <li><strong>Default to TIMESTAMPTZ:</strong> In global applications, always store timestamps with time zone information to avoid confusion when users in different regions interact.</li>
+      <li><strong>Use JSONB Wisely:</strong> Only use JSONB for data that is truly dynamic. If your data has a fixed structure, traditional columns are faster and more efficient.</li>
+    </ol>
+  </section>
+
+</article>
