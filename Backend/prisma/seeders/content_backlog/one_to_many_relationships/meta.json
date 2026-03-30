@@ -1,0 +1,8 @@
+{
+  "title": "One-to-Many Relationships",
+  "description": "Learn how to implement one-to-many database relationships in SQL and NoSQL, including foreign keys and embedding techniques.",
+  "module": "Full Stack Web Development",
+  "order": 2,
+  "difficulty": "Beginner",
+  "tags": ["Database", "Relationships", "SQL", "Sequelize", "1:N"]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "One-to-One Relationships",
+  "description": "Learn when and how to implement one-to-one database relationships in SQL and NoSQL.",
+  "module": "Full Stack Web Development",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Database", "Relationships", "SQL", "Sequelize", "1:1"]
+}

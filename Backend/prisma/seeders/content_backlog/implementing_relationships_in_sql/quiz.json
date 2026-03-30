@@ -1,0 +1,37 @@
+{
+  "title": "Implementing Relationships in SQL Quiz",
+  "description": "Test your knowledge on implementing and enforcing relationships in SQL.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which SQL command is used to link a column to a primary key in another table?",
+      "options": ["LINK TO", "FOREIGN KEY REFERENCES", "JOIN WITH", "PRIMARY KEY"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the purpose of 'ON DELETE CASCADE' in a foreign key constraint?",
+      "options": ["To increase the speed of deletion", "To automatically delete child records when their parent is deleted", "To prevent the parent from being deleted", "To delete all records in the database"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which SQL operation is used to combine and retrieve records from multiple related tables?",
+      "options": ["UNION", "JOIN", "SELECT ALL", "COMBINE"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which constraint is used to implement a 1:1 relationship in SQL?",
+      "options": ["NOT NULL", "CHECK", "UNIQUE", "DEFAULT"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "SQL databases automatically enforce _______ to ensure that a foreign key always points to an existing primary key.",
+      "options": ["Primary Integrity", "Referential Integrity", "Data Duplication", "User Validation"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

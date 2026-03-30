@@ -1,0 +1,8 @@
+{
+  "title": "Implementing Relationships in SQL",
+  "description": "Master the implementation of 1:1, 1:N, and M:N relationships in SQL using foreign keys, constraints, and JOIN operations.",
+  "module": "Full Stack Web Development",
+  "order": 4,
+  "difficulty": "Intermediate",
+  "tags": ["SQL", "Database", "Relationships", "Foreign Keys", "Constraints"]
+}

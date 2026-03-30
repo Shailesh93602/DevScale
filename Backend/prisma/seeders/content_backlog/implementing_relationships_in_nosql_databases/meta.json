@@ -1,0 +1,8 @@
+{
+  "title": "Implementing Relationships in NoSQL Databases",
+  "description": "Learn the theory and practice of embedding vs referencing for relationships in NoSQL databases, using MongoDB and Mongoose as examples.",
+  "module": "Full Stack Web Development",
+  "order": 5,
+  "difficulty": "Intermediate",
+  "tags": ["NoSQL", "Database", "Relationships", "Embedding", "Referencing"]
+}
