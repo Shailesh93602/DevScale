@@ -1,0 +1,47 @@
+{
+  "title": "Vue.js Lifecycle Hooks Quiz",
+  "description": "Evaluate your understanding of different lifecycle stages, common hooks (created, mounted), and why they are used for initialization or cleanup.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primary role of a Lifecycle Hook in Vue.js?",
+      "options": [
+        "To speed up CSS rendering.",
+        "To run custom code at specific stages of a component's creation, mounting, updating, and unmounting.",
+        "To hide the JavaScript code from the console.",
+        "To replace the standard HTML input elements."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which hook is called after the instance has finished processing its options (data, methods, etc.) but before it is mounted to the DOM?",
+      "options": ["created", "mounted", "updated", "unmounted"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which hook is the best place to perform DOM-related operations (e.g. accessing a template ref)?",
+      "options": ["created", "mounted", "updated", "unmounted"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which hook should you use to clean up timers or global event listeners to prevent memory leaks?",
+      "options": ["created", "mounted", "updated", "unmounted"],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "Lifecycle hooks allow you to wire up your application's behavior with the framework's own internal steps in a predictable and structured way.",
+      "options": [
+        "True",
+        "False (it's totally unpredictable)",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

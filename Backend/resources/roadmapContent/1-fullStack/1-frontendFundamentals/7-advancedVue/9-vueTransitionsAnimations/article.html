@@ -1,0 +1,19 @@
+<div class="article-content">
+  <h1>Vue Transitions and Animations</h1>
+  <p>Vue.js provides a built-in <code>&lt;Transition&gt;</code> component that makes it easy to add enter and leave transitions for elements or components when they are shown or hidden with <code>v-if</code> or <code>v-show</code>.</p>
+
+  <h2>1. Transition CSS Classes</h2>
+  <p>When an element wrapped in <code>&lt;Transition name="fade"&gt;</code> enters or leaves the DOM, Vue automatically adds and removes specific CSS classes at different stages. By defining styles for these classes, you can create smooth and customizable animations.</p>
+  <ul>
+    <li><strong>v-enter-from:</strong> Initial state of the element before its added.</li>
+    <li><strong>v-enter-active:</strong> Applied during the enter transition.</li>
+    <li><strong>v-enter-to:</strong> Ending state of the element's enter transition.</li>
+    <li><strong>v-leave-active:</strong> Applied during the leave transition.</li>
+  </ul>
+
+  <h2>2. Animating Lists (TransitionGroup)</h2>
+  <p>To animate multiple items in a list (e.g. from <code>v-for</code>), you should use the <code>&lt;TransitionGroup&gt;</code> component. This works similarly to <code>&lt;Transition&gt;</code> but supports animating several elements at once.</p>
+
+  <h2>Conclusion</h2>
+  <p>Vue's transition system is a testament to the framework's focus on developer experience and visual excellence. By mastering the transition lifecycle, CSS classes, and list animations, you can build truly immersive and professional user interfaces that feel alive and responsive to every interaction.</p>
+</div>

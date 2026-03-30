@@ -1,0 +1,30 @@
+<div class="article-content">
+  <h1>Vue.js Custom Directives</h1>
+  <p>In addition to the core set of directives (like <code>v-model</code> and <code>v-show</code>), Vue also allows you to register your own custom directives. While components are for reusable chunks of UI, custom directives are primarily for **reusable low-level DOM access**.</p>
+
+  <h2>1. Defining a Custom Directive</h2>
+  <p>A custom directive object defines hook functions that are called at various points in the lifecycle of the element it’s attached to.</p>
+  <pre><code>const vFocus = {
+  mounted: (el) => el.focus()
+}
+
+createApp({
+  directives: {
+    focus: vFocus
+  }
+})</code></pre>
+
+  <h2>2. Hook Functions</h2>
+  <p>Custom directives have several lifecycle hooks, including:</p>
+  <ul>
+    <li><code>created</code>: Called before element attributes or event listeners are applied.</li>
+    <li><code>mounted</code>: Called when the element is inserted into the DOM.</li>
+    <li><code>updated</code>: Called after the containing component has updated.</li>
+  </ul>
+
+  <h2>3. Why Use Them?</h2>
+  <p>Custom directives are perfect for cases where you need to interact with a DOM element in a way that doesn't fit into standard data binding—for example, automatically focusing an input, adding a tooltip, or managing a 3rd-party library that needs a direct reference to an element.</p>
+
+  <h2>Conclusion</h2>
+  <p>By mastering custom directives, you can add specialized and reusable behaviors to your DOM elements with ease. Whether you're managing complex interactions or integrating external libraries, custom directives give you the low-level control you need while staying within Vue's declarative template system.</p>
+</div>

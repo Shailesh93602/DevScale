@@ -1,0 +1,25 @@
+<div class="article-content">
+  <h1>Vue.js Computed Properties</h1>
+  <p>Computed properties are a powerful feature in Vue that allow you to define properties that depend on other data. They are reactive and automatically update whenever their dependencies change, making them ideal for complex calculations or formatting.</p>
+
+  <h2>1. What are Computed Properties?</h2>
+  <p>A computed property is defined as a function in the <code>computed</code> option of your Vue instance. Vue will automatically track which data properties it depends on and only re-calculate the property when those dependencies change.</p>
+  <pre><code>computed: {
+  fullName() {
+    return this.firstName + ' ' + this.lastName
+  }
+}</code></pre>
+
+  <h2>2. Computed vs. Methods</h2>
+  <p>The key differences are:</p>
+  <ul>
+    <li><strong>Computed properties are cached:</strong> They only re-evaluate when their dependencies change.</li>
+    <li><strong>Methods are always re-evaluated:</strong> Each time they are called in the template (e.g. during a re-render), they will run again.</li>
+  </ul>
+
+  <h2>3. Why Use Computed?</h2>
+  <p>By using computed properties, you keep your templates clean and concise. Instead of having complex logic inside double curly braces, you can simply reference a property name that represents the final, formatted data.</p>
+
+  <h2>Conclusion</h2>
+  <p>Computed properties are essential for building high-performance and maintainable Vue applications. By leveraging their caching and reactivity, you can ensure that your interface always accurately and efficiently reflects the latest state of your data.</p>
+</div>

@@ -1,0 +1,57 @@
+{
+  "title": "Vue Filters Quiz",
+  "description": "Evaluate your understanding of Vue 2 filters and the Vue 3 transition to computed properties/methods.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primary role of a 'Filter' in older versions of Vue.js (Vue 2)?",
+      "options": [
+        "To speed up CSS rendering.",
+        "To apply common text formatting to an expression in a template.",
+        "To hide the JavaScript code from the console.",
+        "To replace the standard HTML input elements."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what was the character used to combine multiple filters in a template (the pipe syntax)?",
+      "options": ["@", "|", "#", "!"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Is the 'filters' feature still supported in Vue 3?",
+      "options": [
+        "Yes, it is still the recommended way to format text.",
+        "No, it was officially removed in Vue 3.",
+        "Only for mobile apps.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the recommended alternative for filters in Vue 3 and modern development?",
+      "options": [
+        "Use computed properties or standard JavaScript methods.",
+        "Use more <div> tags.",
+        "Only write formatting logic in HTML comments.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what is the benefit of using computed properties instead of filters for data formatting?",
+      "options": [
+        "Better performance and easier to update/maintain since the logic is in JavaScript.",
+        "They make the HTML file smaller.",
+        "They only work with local data.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

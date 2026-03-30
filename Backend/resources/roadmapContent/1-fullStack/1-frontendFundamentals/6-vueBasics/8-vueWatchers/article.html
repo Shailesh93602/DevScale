@@ -1,0 +1,27 @@
+<div class="article-content">
+  <h1>Vue.js Watchers</h1>
+  <p>While computed properties are ideal for synchronous calculations, you often need to perform **side effects** (like an API call, logging, or setting a timer) whenever a piece of data changes. This is what **Watchers** are for.</p>
+
+  <h2>1. What are Watchers?</h2>
+  <p>A watcher is a function defined in the <code>watch</code> option of your Vue instance. It is named after the data property it "watches" and will be executed every time that data property changes.</p>
+  <pre><code>watch: {
+  question(newQuestion, oldQuestion) {
+    if (newQuestion.includes('?')) {
+      this.getAnswer()
+    }
+  }
+}</code></pre>
+
+  <h2>2. When to Use Watchers?</h2>
+  <ul>
+    <li><strong>Asynchronous operations:</strong> Need to fetch data from a server when a user selects a filter.</li>
+    <li><strong>Expensive operations:</strong> Performing a calculation that only needs to happen when specific inputs change.</li>
+    <li><strong>Deep watching:</strong> Watching complex objects or arrays for internal changes (requires <code>{ deep: true }</code>).</li>
+  </ul>
+
+  <h2>3. Watchers vs. Computed</h2>
+  <p>In general, you should use **Computed properties** for synchronous logic that returns a simplified version of existing data. Use **Watchers** for side effects that don’t necessarily return a value but instead "do something" when data updates.</p>
+
+  <h2>Conclusion</h2>
+  <p>Watchers are an essential tool for creating truly interactive and asynchronous Vue applications. By mastering how and when to "watch" your data, you can build seamless user experiences that gracefully handle complex behaviors and real-time updates.</p>
+</div>

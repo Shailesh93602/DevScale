@@ -1,0 +1,52 @@
+{
+  "title": "Vue.js Components Quiz",
+  "description": "Evaluate your understanding of component definition, registration, and passing data via props.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primary role of a component in Vue.js?",
+      "options": [
+        "To fetch data from a database.",
+        "To divide the User Interface into independent, reusable pieces.",
+        "To provide a replacement for CSS styles.",
+        "To hide the JavaScript code from the console."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which option is used to define custom attributes on a component for passing data down from a parent?",
+      "options": ["state", "data", "props", "params"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Can a Vue component have its own internal 'data' function and 'methods'?",
+      "options": [
+        "Yes, it is its own isolated scope.",
+        "No, it must use the parent's data.",
+        "Only in older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "To use a component, which and/or what method should you use on the app instance to register it?",
+      "options": ["app.register()", "app.component()", "app.add()", "app.init()"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Vue components can be nested within each other to form a complex UI tree.",
+      "options": [
+        "True",
+        "False (only one level is allowed)",
+        "Only true for mobile apps.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

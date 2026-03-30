@@ -1,0 +1,47 @@
+{
+  "title": "Vuex for State Management Quiz",
+  "description": "Evaluate your understanding of Vuex architecture, State, Getters, Mutations, and Actions.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primary role of Vuex in a large Vue app?",
+      "options": [
+        "To speed up CSS rendering.",
+        "To provide a centralized state management pattern and library for Vue.js applications.",
+        "To hide the JavaScript code from the console.",
+        "To replace the standard HTML input elements."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the only way to synchronously change state in a Vuex store?",
+      "options": ["Actions", "Getters", "Mutations", "directly updating state"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which part of the Vuex store should you use for asynchronous operations (like API calls)?",
+      "options": ["State", "Getters", "Mutations", "Actions"],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "What are 'Getters' in a Vuex store?",
+      "options": [
+        "A way to change the state.",
+        "Computed properties for the store (like finding a user by ID).",
+        "A part of the initial state configuration.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which modern state management library is the recommended alternative to Vuex for Vue 3?",
+      "options": ["Redux", "MobX", "Pinia", "Zustand"],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

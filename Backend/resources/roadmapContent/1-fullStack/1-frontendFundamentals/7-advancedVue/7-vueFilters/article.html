@@ -1,0 +1,20 @@
+<div class="article-content">
+  <h1>Vue Filters (Introduction and Transition)</h1>
+  <p>In older versions of Vue.js (Vue 2), **filters** were a popular way to apply common text formatting within your templates. They used a pipe (<code>|</code>) syntax to transform the visual output of an expression without changing the underlying data.</p>
+
+  <h2>1. Common Uses in Vue 2</h2>
+  <ul>
+    <li><strong>Capitalize:</strong> {{ name | capitalize }}</li>
+    <li><strong>Currency:</strong> {{ price | toCurrency }}</li>
+    <li><strong>Formatting Dates:</strong> {{ eventDate | formatDate }}</li>
+  </ul>
+
+  <h2>2. The Vue 3 Transition</h2>
+  <p>In **Vue 3**, the filters feature was officially removed. The recommended approach is now to use **computed properties** or **methods** to handle data formatting. This leads to clearer, more reusable, and more performant code that is easier for TypeScript and other tools to understand.</p>
+
+  <h2>3. Why the Change?</h2>
+  <p>Moving formatting logic from templates into JavaScript (computed/methods) makes your code more "predictable" and "standardized." It also allows you to reuse the formatting logic in multiple places throughout your app without relying on a custom template-only syntax.</p>
+
+  <h2>Conclusion</h2>
+  <p>While you may still encounter filters in older Vue applications, the industry has moved towards using standard JavaScript functions and computed properties for any and all data transformations. By mastering these modern techniques, you’ll be building more professional and future-proof Vue applications.</p>
+</div>

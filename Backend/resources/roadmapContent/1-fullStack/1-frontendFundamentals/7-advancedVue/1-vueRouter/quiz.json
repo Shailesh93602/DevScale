@@ -1,0 +1,47 @@
+{
+  "title": "Vue Router Quiz",
+  "description": "Evaluate your understanding of core components (router-link, router-view), basic configuration, and dynamic route matching.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the official router for Vue.js?",
+      "options": ["Vue-Path", "Vue-Road", "Vue Router", "Vue-Navigator"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which component should you use for internal navigation in Vue to avoid a full page reload?",
+      "options": ["<a>tag", "<router-link>", "<Link>", "<Navigate>"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what is the component where the matched component for a given route will be rendered?",
+      "options": ["<router-view>", "<router-render>", "<view-root>", "<outlet>"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "How do you define a dynamic route for a user profile in Vue Router (e.g. /user/john)?",
+      "options": [
+        "{ path: '/user/id', component: User }",
+        "{ path: '/user/:id', component: User }",
+        "{ path: '/user/(id)', component: User }",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Vue Router is a built-in library in the Vue core and doesn't require an external package installation.",
+      "options": [
+        "True",
+        "False (it must be installed via 'vue-router')",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
