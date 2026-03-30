@@ -1,0 +1,52 @@
+{
+  "title": "React Router Quiz",
+  "description": "Evaluate your understanding of client-side routing, BrowserRouter, Link component, and dynamic route paths.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primary role of the React Router in a React app?",
+      "options": [
+        "To sync the UI with a server's URL.",
+        "To enable navigation and client-side routing within a single-page application.",
+        "To provide a replacement for CSS.",
+        "To speed up the app by caching components."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which component should you use for internal navigation in React Router that avoids a full page reload?",
+      "options": ["<a>tag", "<Link>", "<Navigate>", "<Anchor>"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which component wraps your entire application to enable all routing capabilities?",
+      "options": ["BrowserRouter", "Routes", "Route", "NavigationProvider"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "How do you define a dynamic route for a user profile in React Router (e.g., /user/john)?",
+      "options": [
+        "<Route path=\"/user/id\" element={<User />} />",
+        "<Route path=\"/user/:id\" element={<User />} />",
+        "<Route path=\"/user/(id)\" element={<User />} />",
+        "<Route path=\"/user/?id\" element={<User />} />"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "React Router is a built-in library in React and doesn't require an external package installation.",
+      "options": [
+        "True",
+        "False (it must be installed via 'react-router-dom')",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

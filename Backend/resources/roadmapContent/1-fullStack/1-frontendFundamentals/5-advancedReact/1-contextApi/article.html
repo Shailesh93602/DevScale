@@ -1,0 +1,31 @@
+<div class="article-content">
+  <h1>React Context API</h1>
+  <p>The Context API is a way for a React app to effectively produce global variables that can be passed around. This is the alternative to "prop drilling" or moving props from grandparent to child through many levels.</p>
+
+  <h2>1. When to Use Context?</h2>
+  <p>Context is designed to share data that can be considered “global” for a tree of React components, such as current authenticated user, theme, or preferred language.</p>
+
+  <h2>2. createContext and Provider</h2>
+  <p>To use context, first create it with <code>createContext()</code>. Then, wrap your component tree with the <code>Provider</code> and pass the data you want to share via the <code>value</code> prop.</p>
+  <pre><code>const ThemeContext = createContext("light");
+
+function App() {
+  return (
+    &lt;ThemeContext.Provider value="dark"&gt;
+      &lt;Toolbar /&gt;
+    &lt;/ThemeContext.Provider&gt;
+  );
+}</code></pre>
+
+  <h2>3. Consuming Context with useContext</h2>
+  <p>The <code>useContext()</code> hook is the simplest way to read the data from a context provider in any functional component down the tree.</p>
+  <pre><code>import { useContext } from "react";
+
+function Button() {
+  const theme = useContext(ThemeContext);
+  return &lt;button className={theme}&gt;I am styled by context!&lt;/button&gt;;
+}</code></pre>
+
+  <h2>Conclusion</h2>
+  <p>The Context API is a powerful tool for simplifying your component architecture and avoiding deep prop nesting. By mastering Context, you can handle global state with ease and clarity without the overhead of external libraries like Redux for simple data sharing.</p>
+</div>

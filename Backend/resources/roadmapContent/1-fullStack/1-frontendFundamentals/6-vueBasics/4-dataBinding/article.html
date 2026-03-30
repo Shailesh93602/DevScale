@@ -1,0 +1,22 @@
+<div class="article-content">
+  <h1>Data Binding in Vue.js</h1>
+  <p>Data binding in Vue.js is the mechanism that connects your application's state (JavaScript) to the view (HTML). Vue.js offers several ways to bind data, ranging from basic text interpolation to complex two-way synchronization.</p>
+
+  <h2>1. Text Interpolation (Mustaches)</h2>
+  <p>The most basic form of data binding is using the "Mustache" syntax (double curly braces). This replaces the tag's content with the value of the <code>message</code> property from the corresponding data object.</p>
+  <pre><code>&lt;span&gt;Message: {{ message }}&lt;/span&gt;</code></pre>
+
+  <h2>2. One-Way Attribute Binding (v-bind)</h2>
+  <p>To bind an HTML attribute (like <code>src</code>, <code>href</code>, or <code>class</code>) to a dynamic value, you must use the <code>v-bind</code> directive. It’s so common that Vue provides a shorthand: the colon (<code>:</code>).</p>
+  <pre><code>&lt;!-- Full syntax --&gt;
+&lt;a v-bind:href="url"&gt;...&lt;/a&gt;
+
+&lt;!-- Shorthand syntax --&gt;
+&lt;a :href="url"&gt;...&lt;/a&gt;</code></pre>
+
+  <h2>3. Two-Way Data Binding (v-model)</h2>
+  <p>While one-way binding flows from JS to HTML, <strong>two-way binding</strong> allows user input in HTML to automatically update the JS state. This is achieved using the <code>v-model</code> directive, most commonly on inputs, textareas, and select elements.</p>
+
+  <h2>Conclusion</h2>
+  <p>Data binding is what makes Vue feel reactive and intuitive. By mastering interpolation, attribute binding, and two-way synchronization, you can create user interfaces that are always perfectly in sync with your underlying logic and state.</p>
+</div>
