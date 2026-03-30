@@ -1,0 +1,52 @@
+{
+  "title": "Vue Developer Tools Quiz",
+  "description": "Evaluate your understanding of the Components tab, live state/prop editing, and the Timeline tab.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily purpose of Vue Developer Tools?",
+      "options": [
+        "To speed up CSS rendering.",
+        "To inspect the Vue component tree and the current state and props of any component in real-time.",
+        "To hide the JavaScript code from the console.",
+        "To replace the standard HTML input elements."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which tab in Vue DevTools shows the entire component tree structure of your application?",
+      "options": ["Components Tab", "Timeline Tab", "Network Tab", "Sources Tab"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Can you use Vue DevTools to edit a component's props and data in the browser from the UI?",
+      "options": [
+        "Yes, you can edit them directly in the Components tab to see immediate UI updates.",
+        "No, you can only view them.",
+        "Yes, but it only changes the color.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which tab in Vue DevTools allows you to record and compare component updates, performance, and events over time?",
+      "options": ["Components Tab", "Timeline Tab", "Memory Tab", "Elements Tab"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Vue DevTools is built directly into all browsers and doesn't require an extension installation.",
+      "options": [
+        "True",
+        "False (it must be installed as a browser extension)",
+        "Only true for Chrome.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

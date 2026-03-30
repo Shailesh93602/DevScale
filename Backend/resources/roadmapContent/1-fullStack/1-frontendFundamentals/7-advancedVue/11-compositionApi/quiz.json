@@ -1,0 +1,52 @@
+{
+  "title": "Vue Composition API Quiz",
+  "description": "Evaluate your understanding of setup, ref, reactive, and Composables.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primary role of the Composition API in Vue 3?",
+      "options": [
+        "To speed up CSS rendering.",
+        "To author components using imported functions for maximum flexibility and logic reusability.",
+        "To hide the JavaScript code from the console.",
+        "To replace the standard HTML input elements."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which hook in a component is the entry point for the Composition API in Vue 3?",
+      "options": ["created()", "mounted()", "setup()", "init()"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "When using 'ref()' to create reactive data, how do you access its actual value in JavaScript?",
+      "options": ["using .data", "using .count", "using .value", "using the search property."],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the key difference between 'ref()' and 'reactive()'?",
+      "options": [
+        "ref() is for primitive types and requires .value, while reactive() is for objects and does not.",
+        "They are exactly the same.",
+        "ref() is only for class components.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Are Lifecycle Hooks (like onMounted) still available when using the Composition API?",
+      "options": [
+        "Yes, as functions that can be imported and called inside setup().",
+        "No, they are only for the Options API.",
+        "Only for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

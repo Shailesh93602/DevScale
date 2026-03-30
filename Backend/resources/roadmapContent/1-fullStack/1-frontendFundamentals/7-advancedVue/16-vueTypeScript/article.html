@@ -1,0 +1,28 @@
+<div class="article-content">
+  <h1>Vue and TypeScript</h1>
+  <p>Using TypeScript with Vue is the industry standard for building scalable and error-proof applications. It adds static type checking on top of JavaScript, which means many common bugs are caught by your editor before you even run your code.</p>
+
+  <h2>1. Reactivity and Types</h2>
+  <p>In Vue 3, you can use TypeScript to ensure that your reactive variables always hold the correct data type. This is especially useful for complex objects and arrays.</p>
+  <pre><code>import { ref } from 'vue'
+
+const count = ref&lt;number&gt;(0)
+const name = ref&lt;string&gt;('Vue')</code></pre>
+
+  <h2>2. Typing Props and Emits</h2>
+  <p>When using the Composition API with <code>&lt;script setup&gt;</code>, you can use <code>defineProps</code> and <code>defineEmits</code> with TypeScript interfaces to define exactly which data your component expects and which events it can send.</p>
+  <pre><code>&lt;script setup lang="ts"&gt;
+interface Props {
+  title: string
+  count?: number
+}
+
+const props = defineProps&lt;Props&gt;()
+&lt;/script&gt;</code></pre>
+
+  <h2>3. Enhanced IDE Support</h2>
+  <p>By using TypeScript, you gain full autocomplete and IntelliSense support in your editor (e.g. VS Code with Volar). This significantly speeds up development and helps you discover component properties and methods much faster.</p>
+
+  <h2>Conclusion</h2>
+  <p>Vue with TypeScript is a formidable combination that improves developer productivity and code reliability. By mastering how to type your components, props, and reactive state, you can build professional Vue applications that are easier to maintain and reason about as they grow.</p>
+</div>

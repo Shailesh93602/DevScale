@@ -1,0 +1,52 @@
+{
+  "title": "SSR with Vue Quiz",
+  "description": "Evaluate your understanding of the Server-Side Rendering (SSR) benefits, hydration process, and universal frameworks like Nuxt.js.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the major difference between SSR and Client-Side Rendering (CSR)?",
+      "options": [
+        "SSR is only for older browsers.",
+        "SSR generates the initial HTML on the server, while CSR generates it in the browser with JavaScript.",
+        "They are the same.",
+        "SSR only works once per day."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what is one of the biggest benefits of using SSR in a Vue application?",
+      "options": [
+        "Better Search Engine Optimization (SEO).",
+        "It makes the JavaScript files smaller.",
+        "It only works for CSS.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "The process where Vue 'takes over' the server-rendered HTML and makes it interactive in the browser is called ________.",
+      "options": ["Parsing", "Compiling", "Hydration", "Transformation"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which popular universal framework is commonly used to build professional SSR applications with Vue.js?",
+      "options": ["Next.js", "Nuxt.js", "Express.js", "SvelteKit"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does SSR improve 'Time to Content' on slow networks or devices?",
+      "options": [
+        "Yes, as users see the content before JavaScript is fully loaded and executed.",
+        "No, it's always slower.",
+        "Only for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

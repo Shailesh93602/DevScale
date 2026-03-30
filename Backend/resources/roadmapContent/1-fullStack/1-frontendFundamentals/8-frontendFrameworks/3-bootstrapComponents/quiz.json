@@ -1,0 +1,47 @@
+{
+  "title": "Bootstrap Components Quiz",
+  "description": "Evaluate your understanding of common Bootstrap UI components (Buttons, Alerts, Cards, Modals, Navbars).",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily way to use a Bootstrap component in your HTML?",
+      "options": [
+        "By writing custom CSS.",
+        "By using the correct HTML structure and specific Bootstrap class names.",
+        "By writing custom JavaScript.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which class is the base for any Bootstrap button?",
+      "options": [".btn", ".button", ".link", ".ui-btn"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which component is a versatile container commonly used to house content like images, text, and buttons together?",
+      "options": [".alert", ".card", ".header", ".footer"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Do components like Modals and Dropdowns require any JavaScript to function correctly?",
+      "options": [
+        "Yes, they require the Bootstrap JavaScript bundle (bootstrap.bundle.min.js).",
+        "No, they are purely CSS.",
+        "Only for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what class would you use to create a success-style alert in Bootstrap?",
+      "options": [".alert-success", ".btn-success", ".text-success", ".bg-success"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

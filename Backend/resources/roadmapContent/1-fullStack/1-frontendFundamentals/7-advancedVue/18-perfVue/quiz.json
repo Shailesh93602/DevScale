@@ -1,0 +1,52 @@
+{
+  "title": "Vue Performance Optimization Quiz",
+  "description": "Evaluate your understanding of async components, shallow reactivity (shallowRef/Reactive), and efficient list rendering with keys.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which function allows you to load component code asynchronously (only when needed)?",
+      "options": ["defineComponent", "defineAsyncComponent", "loadSync", "initAsync"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "When should you use shallowRef or shallowReactive in a Vue component?",
+      "options": [
+        "When your data doesn't need deep reactivity (like a large read-only array).",
+        "When you only want to use CSS.",
+        "When you only want to use older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what is the primary benefit of using a unique :key with v-for?",
+      "options": [
+        "It makes the HTML color better.",
+        "It helps Vue's virtual DOM correctly track and update each item in the list instead of potentially rebuilding it.",
+        "It hides all non-number characters.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which directive tells Vue to skip re-rendering a piece of static content after the first render (optimizing performance)?",
+      "options": ["v-if", "v-once", "v-else", "v-bind"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does Vue with Performance Optimization allow you to build truly fast applications by caching all requests?",
+      "options": [
+        "Yes, as it provides a comprehensive set of built-in tools for both data and rendering optimization.",
+        "No, it's always slower.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
