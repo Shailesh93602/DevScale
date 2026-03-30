@@ -1,0 +1,37 @@
+{
+  "title": "SQL Views Quiz",
+  "description": "Test your fundamental knowledge about database views and their role in advanced SQL development.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is a 'View' in a SQL database?",
+      "options": ["A way to backup the database.", "A virtual table whose contents are defined by a query; it acts as a window into one or more underlying tables.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is a primary benefit of using a database view?",
+      "options": ["It makes the database slower.", "Simplifying complex queries for reporting and security, by hiding underlying tables and sensitive columns.", "Automatically generating a thumbnail for each image.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is a 'Materialized View' and how is it different from a regular view?",
+      "options": ["A way to encrypt files using a secret key.", "It actually stores the data physically for better performance, unlike a regular view which executes its query on the fly.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "How do you query a SQL view?",
+      "options": ["Using the CALL / EXECUTE command.", "Exactly like a regular table, using SELECT, FROM, WHERE, etc.", "Using the VIEW command.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Can you use JOINs inside a view's definition?",
+      "options": ["Yes, views are often used to hide complex JOINs between multiple tables.", "No, views can only query a single table.", "Only in certain databases.", "None of the above."],
+      "correctAnswer": 0,
+      "points": 20
+    }
+  ]
+}
