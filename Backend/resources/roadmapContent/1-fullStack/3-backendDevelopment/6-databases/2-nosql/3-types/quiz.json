@@ -1,0 +1,37 @@
+{
+  "title": "Types of NoSQL Databases Quiz",
+  "description": "Test your fundamental knowledge about different types of NoSQL databases and their role in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which type of NoSQL database is the most popular for general-purpose web development, storing data in JSON-like formats?",
+      "options": ["Key-Value Stores", "Document Databases", "Graph Databases", "Column-Family Stores"],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is the simplest and fastest type of NoSQL database, often used for caching and sessions?",
+      "options": ["Document Databases", "Graph Databases", "Key-Value Stores", "Column-Family Stores"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "Which type of NoSQL database is famously used for social networks and recommendation engines, specializing in representing complex connections?",
+      "options": ["Document Databases", "Graph Databases", "Key-Value Stores", "Column-Family Stores"],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is 'Polyglot Persistence' in modern backend architecture?",
+      "options": ["A way to encrypt files using a secret key.", "Using multiple different types of databases (e.g., SQL + NoSQL) within the same application to solve different problems.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which type of NoSQL database is famously used for time-series data and analytics on massive datasets (like Facebook's activity feed)?",
+      "options": ["Document Databases", "Graph Databases", "Key-Value Stores", "Column-Family Stores"],
+      "correctAnswer": 3,
+      "points": 20
+    }
+  ]
+}

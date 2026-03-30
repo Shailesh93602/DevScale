@@ -1,0 +1,37 @@
+{
+  "title": "SQL vs NoSQL Database Quiz",
+  "description": "Test your fundamental knowledge about the differences between relational and non-relational databases.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What's the primary difference in 'Schema' between SQL and NoSQL?",
+      "options": ["SQL is for data and NoSQL is for images.", "SQL requires a strict, pre-defined schema; NoSQL uses a dynamic, flexible schema.", "SQL is faster than NoSQL.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which type of 'Scaling' is natively supported and common by NoSQL databases?",
+      "options": ["Vertical Scaling", "Diagonal Scaling", "Horizontal Scaling (adding more cheap servers to a cluster)", "It doesn't support scaling."],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What is the 'CAP Theorem' in distributed systems?",
+      "options": ["A way to encrypt files using a secret key.", "You can only pick two out of Consistency, Availability, and Partition Tolerance.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "In which situation is a SQL database almost certainly the better choice?",
+      "options": ["When you are in an early prototyping stage and your data schema is changing every day.", "When you need to handle massive volumes of unstructured traffic.", "When you need strong transactional integrity (ACID) and your data is highly relational (e.g., financial apps).", "None of the above."],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What's the meaning of 'ACID' in SQL (Relational) transactions?",
+      "options": ["A type of data compression.", "Atomic, Consistent, Isolated, and Durable.", "Automatic, Conditional, Internal, and Defined.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}
