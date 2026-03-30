@@ -1,0 +1,37 @@
+{
+  "title": "NoSQL Data Modeling Best Practices Quiz",
+  "description": "Test your fundamental knowledge about best practices for data modeling in NoSQL databases.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What's the most important rule of NoSQL data modeling?",
+      "options": ["Model for Objects first and then queries.", "Model for the Queries your application will perform, not just the data themselves.", "NoSQL is for images only.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "When should you generally prefer 'Normalization' (Referencing) over 'Denormalization' (Embedding)?",
+      "options": ["When data is updated frequently or shared across many different documents.", "When you want to avoid using any IDs.", "When the data is very small.", "None of the above."],
+      "correctAnswer": 0,
+      "points": 20
+    },
+    {
+      "question": "Which of these is a typical benefit of using a 'Computed Field' in a NoSQL document?",
+      "options": ["It makes the database smaller.", "It saves read-time CPU by performing a common calculation once on the write and storing the result.", "It's supported by all browsers.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "In a document database, you should generally have ____ collections compared to a SQL database.",
+      "options": ["More", "Fewer", "Exactly the same number of", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's the primary reason to use UUIDs or Snowflake IDs rather than auto-incrementing integers as primary keys in NoSQL?",
+      "options": ["They are smaller than standard integers.", "They can be generated independently on multiple servers without a central 'counter', which is essential for distributed scaling.", "To automatically generate a backup of the database.", "To improve the user experience."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

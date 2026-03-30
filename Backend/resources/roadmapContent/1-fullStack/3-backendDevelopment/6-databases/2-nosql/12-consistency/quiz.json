@@ -1,0 +1,37 @@
+{
+  "title": "NoSQL Consistency Models Quiz",
+  "description": "Test your fundamental knowledge about consistency models in distributed NoSQL databases.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is 'Strong Consistency' in a distributed NoSQL database?",
+      "options": ["A way to backup the database.", "A guarantee that every read operation receives the most recent write, regardless of which node is accessed.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is 'Eventual Consistency' and why is it common in NoSQL?",
+      "options": ["It makes the database faster.", "Data is propagated through the cluster over time; for a short window, reads from different nodes might return stale data. This trades consistency for massive availability and performance.", "To automatically generate a backup of the database.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these consistency models ensures that a user will ALWAYs see the result of their own updates immediately, even if others don't see them yet?",
+      "options": ["Strong Consistency", "Causal Consistency", "Read-Your-Own-Writes Consistency", "None of the above."],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "In a distributed NoSQL cluster, which of the following 'Read Preferences' in MongoDB provides the strongest consistency?",
+      "options": ["primary", "secondary", "nearest", "primaryPreferred"],
+      "correctAnswer": 0,
+      "points": 20
+    },
+    {
+      "question": "What is the primary role of the 'CAP Theorem' in understanding NoSQL consistency models?",
+      "options": ["It's a way to encrypt files using a secret key.", "It states that a distributed system can only provide two out of Consistency, Availability, and Partition Tolerance.", "To automatically generate a backup of the data.", "To improve the user experience."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

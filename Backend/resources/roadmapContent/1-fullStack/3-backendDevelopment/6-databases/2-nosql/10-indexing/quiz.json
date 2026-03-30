@@ -1,0 +1,37 @@
+{
+  "title": "NoSQL Indexing Quiz",
+  "description": "Test your fundamental knowledge about indexing and performance optimization in NoSQL databases.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the primary role of an 'Index' in a NoSQL database?",
+      "options": ["To encrypt all documents.", "To allow the database to jump directly to relevant records instead of performing a slow collection scan.", "To automatically generate a backup of the database.", "To hide the application's IP address."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What happens if you perform a query on a field that is NOT indexed?",
+      "options": ["The database crashes.", "The database performs a 'Collection Scan' (reading every single document in the collection), which is incredibly slow for large datasets.", "To automatically generate a backup of the data.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which type of NoSQL index can automatically delete documents from a collection after a certain period of time?",
+      "options": ["Single Field", "Compound", "TTL (Time To Live)", "Sparse"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What's the meaning of a 'Compound Index' in NoSQL?",
+      "options": ["A way to encrypt files using a secret key.", "An index that combines multiple fields together (e.g., user_id and status) to provide better performance for complex queries.", "A type of database indexing only for numbers.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is a 'Sparse Index' and why is it useful for saving resources?",
+      "options": ["An index that only includes documents that actually contain the indexed field, saving storage and memory for sparse datasets.", "An index that is only used for small databases.", "To automatically generate a backup of the data.", "To improve the user experience."],
+      "correctAnswer": 0,
+      "points": 20
+    }
+  ]
+}
