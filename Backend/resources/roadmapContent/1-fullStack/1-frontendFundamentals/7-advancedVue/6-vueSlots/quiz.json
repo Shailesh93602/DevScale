@@ -1,0 +1,52 @@
+{
+  "title": "Vue.js Slots Quiz",
+  "description": "Evaluate your understanding of basic slots, named slots, and scoped slots.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primary purpose of a Slot in Vue.js?",
+      "options": [
+        "To speed up CSS rendering.",
+        "To pass HTML content or other components from a parent into a child component's template.",
+        "To hide the JavaScript code from the console.",
+        "To replace the standard HTML input elements."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what is the tag name for a slot inside a child component's template?",
+      "options": ["<content>", "<slot>", "<inject>", "<outlet>"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "How do you define multiple slots in a single component?",
+      "options": [
+        "By giving each slot its own unique name using the name attribute.",
+        "By repeating the <slot> tag many times.",
+        "Only one slot is allowed per component.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what is the shorthand syntax for the 'v-slot' directive in Vue 3?",
+      "options": ["@", "#", ":", "*"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Can a child component pass its internal data back to the parent component using a slot?",
+      "options": [
+        "Yes, using what is called a Scoped Slot.",
+        "No, slots only flow from parent to child.",
+        "Only for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

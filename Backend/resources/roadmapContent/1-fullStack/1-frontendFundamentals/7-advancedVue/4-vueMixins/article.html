@@ -1,0 +1,24 @@
+<div class="article-content">
+  <h1>Vue.js Mixins</h1>
+  <p>Mixins are a flexible way to distribute reusable functionalities for Vue components. A mixin object can contain any component options. When a component uses a mixin, all options in the mixin will be “mixed” into the component’s own options.</p>
+
+  <h2>1. Defining and Using Mixins</h2>
+  <p>A mixin is simply an object that looks like any other Vue component. To use it, you add it to the <code>mixins</code> array in your component's definition.</p>
+  <pre><code>const myMixin = {
+  data() { return { count: 0 } },
+  created() { console.log('Mixin created!') }
+}
+
+const component = {
+  mixins: [myMixin]
+}</code></pre>
+
+  <h2>2. Merge Strategies</h2>
+  <p>When options overlap (e.g., both the component and mixin define a <code>data</code> property or a <code>created</code> hook), Vue follows specific merging rules. For life-cycle hooks, both will be called, and the mixin’s hook is usually called first.</p>
+
+  <h2>3. Modern Tool: Composables</h2>
+  <p>While mixins are still prevalent in legacy Vue codebases, the **Composition API (Composables)** is now the recommended way to share logic in Vue 3, as it solves many problems with mixins, such as property collisions and lack of clarity on where a property comes from.</p>
+
+  <h2>Conclusion</h2>
+  <p>Mixins are a seasoned but powerful tool in the Vue developer's toolkit. By understanding how to group and reuse your component logic, you can build modular and maintainable applications, even when using the Options API in older or migrating projects.</p>
+</div>

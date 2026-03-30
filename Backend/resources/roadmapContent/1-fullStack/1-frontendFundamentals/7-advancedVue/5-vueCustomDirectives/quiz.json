@@ -1,0 +1,52 @@
+{
+  "title": "Vue.js Custom Directives Quiz",
+  "description": "Evaluate your understanding of low-level DOM access, directive lifecycle hooks, and simple v-focus use cases.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primary purpose of a Custom Directive in Vue.js?",
+      "options": [
+        "To speed up CSS rendering.",
+        "To provide reusable low-level DOM access and interactions directly on an element.",
+        "To hide the JavaScript code from the console.",
+        "To replace the standard HTML input elements."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which lifecycle hook should you use if you want to focus an element as soon as it the mounted into the DOM?",
+      "options": ["created", "mounted", "updated", "unmounted"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what is the prefix for using a custom directive named 'focus' in your template?",
+      "options": ["vue-focus", "v-focus", "app-focus", "js-focus"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does a custom directive always have access to the actual DOM element (el)?",
+      "options": [
+        "Yes, as the first argument in its lifecycle hooks.",
+        "No, it only has access to its value.",
+        "Only in older versions of Vue.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Can you register a custom directive locally within a single component instead of globally for the whole app?",
+      "options": [
+        "Yes, using the 'directives' option in your component.",
+        "No, all directives must be global.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
