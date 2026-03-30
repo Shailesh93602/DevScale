@@ -1,0 +1,8 @@
+{
+  "title": "Sequelize Associations",
+  "description": "Learn how to define relationships (one-to-one, one-to-many, many-to-many) in Sequelize.",
+  "module": "Full Stack Web Development",
+  "order": 2,
+  "difficulty": "Intermediate",
+  "tags": ["Sequelize", "ORM", "Relationships", "SQL"]
+}

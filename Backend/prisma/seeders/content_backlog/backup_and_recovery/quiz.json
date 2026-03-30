@@ -1,0 +1,37 @@
+{
+  "title": "Backup and Recovery Quiz",
+  "description": "Test your knowledge on database backup strategies and recovery operations.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which type of backup copies all changes made since the last *full* backup?",
+      "options": ["Full Backup", "Incremental Backup", "Differential Backup", "Point-in-Time Backup"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is PITR (Point-in-Time Recovery)?",
+      "options": ["Restoring a database as fast as possible", "Restoring a database starting from a full backup and applying transactions up to a specific second", "A backup that only includes personal information", "A recovery that happens in a different time zone"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What does RPO (Recovery Point Objective) measure?",
+      "options": ["The speed of the restoration process", "The amount of data loss in terms of time", "The time it takes to get the server back online", "The number of points a user has in a quiz"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which backup method is usually slower but more flexible across different database versions?",
+      "options": ["Physical Backup", "Logical Backup (SQL Dump)", "Hardware Snapshots", "Replication"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a critical best practice for backups?",
+      "options": ["Store backups on the same physical disk as the database", "Never test the restoration process to save time", "Store backups in an offsite location", "Only perform backups when the database is empty"],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

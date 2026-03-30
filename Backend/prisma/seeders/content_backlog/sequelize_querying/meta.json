@@ -1,0 +1,8 @@
+{
+  "title": "Sequelize Querying",
+  "description": "Master advanced querying techniques in Sequelize including filtering, sorting, and pagination.",
+  "module": "Full Stack Web Development",
+  "order": 3,
+  "difficulty": "Intermediate",
+  "tags": ["Sequelize", "ORM", "Querying", "Database"]
+}

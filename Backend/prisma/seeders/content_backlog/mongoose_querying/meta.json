@@ -1,0 +1,8 @@
+{
+  "title": "Mongoose Querying",
+  "description": "Learn to query MongoDB using Mongoose, featuring sorting, pagination, and population for real-world data models.",
+  "module": "Full Stack Web Development",
+  "order": 2,
+  "difficulty": "Intermediate",
+  "tags": ["Mongoose", "MongoDB", "Querying", "Pagination"]
+}

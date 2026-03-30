@@ -1,0 +1,62 @@
+{
+  "title": "Performance Optimization Quiz",
+  "description": "Test your knowledge on performance optimization strategies across the full stack.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary purpose of a Content Delivery Network (CDN)?",
+      "options": [
+        "To minimize CSS and JavaScript files",
+        "To distribute static assets to servers closer to the user",
+        "To perform server-side caching of database queries",
+        "To implement lazy loading of images"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which tool would you use to profile an application and identify bottlenecks?",
+      "options": [
+        "Postman",
+        "Lighthouse",
+        "TablePlus",
+        "Git"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What does 'LCP' stand for in performance measurement?",
+      "options": [
+        "Lightest Contentful Paint",
+        "Largest Contentful Paint",
+        "Longest Contentful Paint",
+        "Latent Contentful Paint"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "How can you optimize backend performance for time-consuming tasks like image processing?",
+      "options": [
+        "By using database indexing",
+        "By implementing server-side caching",
+        "By using asynchronous background workers",
+        "By minifying and bundling JavaScript"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of the following is a common frontend optimization strategy?",
+      "options": [
+        "Database Indexing",
+        "Asynchronous Processing",
+        "Minification and Bundling",
+        "Message Queues"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+<section>
+    <h2>Getting Started with Sequelize</h2>
+    <p>Sequelize is a powerful, promise-based Node.js ORM for Postgres, MySQL, MariaDB, SQLite, and Microsoft SQL Server. It features solid transaction support, relations, eager and lazy loading, read replication, and more.</p>
+
+    <h3>1. Installation</h3>
+    <p>To use Sequelize, you first need to install it and the driver for your database of choice.</p>
+    <pre><code>
+npm install sequelize
+# For PostgreSQL
+npm install pg pg-hstore
+# For MySQL
+npm install mysql2
+# For SQLite
+npm install sqlite3
+    </code></pre>
+
+    <h3>2. Connecting to a Database</h3>
+    <p>You can connect to a database by creating a new Sequelize instance and passing the connection URI or options.</p>
+    <pre><code>
+const { Sequelize } = require('sequelize');
+
+const sequelize = new Sequelize('database', 'username', 'password', {
+  host: 'localhost',
+  dialect: 'postgres' // or 'mysql', 'sqlite', etc.
+});
+    </code></pre>
+
+    <h3>3. Defining Models</h3>
+    <p>Models are the essence of Sequelize. A model is an abstraction that represents a table in your database. Models are defined using <code>sequelize.define</code> or by extending the <code>Model</code> class.</p>
+    <pre><code>
+const User = sequelize.define('User', {
+  firstName: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  lastName: {
+    type: Sequelize.STRING
+  }
+});
+    </code></pre>
+
+    <h3>4. Synchronization</h3>
+    <p>You can synchronize your models with the database using <code>sequelize.sync()</code>. Note that in production, you should use migrations instead of sync.</p>
+
+    <h3>Conclusion</h3>
+    <p>Sequelize Basics provide the foundation for interacting with relational databases in a Node.js environment. Once you've mastered connections and model definition, you can move on to more advanced features like associations and querying.</p>
+</section>

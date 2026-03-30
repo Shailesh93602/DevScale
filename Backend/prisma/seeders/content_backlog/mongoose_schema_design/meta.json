@@ -1,0 +1,8 @@
+{
+  "title": "Mongoose Schema Design",
+  "description": "Master advanced schema design in Mongoose including validation, subdocuments, and virtuals.",
+  "module": "Full Stack Web Development",
+  "order": 1,
+  "difficulty": "Intermediate",
+  "tags": ["Mongoose", "MongoDB", "NoSQL", "Schema Design"]
+}
