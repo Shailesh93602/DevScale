@@ -1,0 +1,42 @@
+{
+  "title": "Request and Response Quiz",
+  "description": "Evaluate your understanding of the breakdown of req properties (body/params/query) and core res methods (json/status/redirect).",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which property in the 'req' object is commonly used in Express to access dynamic URL parameters like ':id' (e.g., /users/123)?",
+      "options": ["req.query", "req.params", "req.body", "req.headers"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which method in the 'res' object is the industry standard for sending a JavaScript object back to a client as JSON?",
+      "options": ["res.send()", "res.json()", "res.render()", "res.out()"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which property in the 'req' object is used to access 'Query Parameters' (the part after the ? in a URL like /search?q=node)?",
+      "options": ["req.params", "req.query", "req.search", "req.data"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which method in the 'res' object would you use to change the current web page the user is viewing to a different URL?",
+      "options": ["res.redirect()", "res.send()", "res.move()", "res.switch()"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Does standard 'req.body' access require a middleware like 'express.json()' to be used in your application first?",
+      "options": [
+        "Yes, as Express doesn't parse JSON data automatically for performance reasons.",
+        "No, it's always available.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
