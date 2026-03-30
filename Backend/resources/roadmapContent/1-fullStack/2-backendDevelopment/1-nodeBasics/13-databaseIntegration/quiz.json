@@ -1,0 +1,52 @@
+{
+  "title": "Database Integration Quiz",
+  "description": "Evaluate your understanding of SQL vs NoSQL differences and the role of ORMs/ODMs like Prisma and Mongoose for clean JavaScript-based data interaction.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily purpose of a Database in a web application?",
+      "options": [
+        "Faster component rendering.",
+        "To store information permanently (like users, posts, or messages) that must persist across project restarts.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which type of database stores data in a flexible, JSON-like format and is often used for fast-scaling projects?",
+      "options": ["SQL (Relational)", "NoSQL (e.g., MongoDB)", "Files", "Arrays"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "A library that allows you to interact with your data using regular JavaScript objects instead of raw SQL code is called a(n) ________.",
+      "options": ["ORM (Object-Relational Mapper)", "ODM (Object-Document Mapper)", "Compiler", "Transpiler"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what was the primarily benefit of using a tool like Prisma (an ORM) in a professional project?",
+      "options": [
+        "Prisma is more minimal.",
+        "It provides strong type safety and makes data queries much easier to write and maintain.",
+        "To hide all non-number characters.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does following the 'Database Integration' pattern help build truly Fullstack applications by allowing you to persist user data across sessions?",
+      "options": [
+        "Yes, as it is a core feature of any modern web application.",
+        "No, it's always slower.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

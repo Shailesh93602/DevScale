@@ -1,0 +1,47 @@
+{
+  "title": "RESTful APIs Quiz",
+  "description": "Evaluate your understanding of its resource-based URL approach, statelessness, and the essential use of standard HTTP status codes (200/201/400/404).",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily design philosophy of 'REST' (Representational State Transfer)?",
+      "options": [
+        "Faster component rendering.",
+        "An architectural style where URLs represent 'Resources' (like users or products) that are manipulated using standard HTTP methods.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which HTTP method should be used in a professional REST API specifically to 'create' a new resource?",
+      "options": ["GET", "POST", "PUT", "DELETE"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which status code should be returned to the client when a new resource has been successfully 'created'?",
+      "options": ["200 OK", "201 Created", "204 No Content", "400 Bad Request"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what was the primarily principle of 'Statelessness' in REST?",
+      "options": [
+        "Each request must contain all the information necessary for the server to process it.",
+        "The server stores all status in memory.",
+        "To hide all non-number characters.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which status code is used in a professional REST API to signal that a requested URL or resource does not exist?",
+      "options": ["400 Bad Request", "401 Unauthorized", "404 Not Found", "500 Internal Server Error"],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}
