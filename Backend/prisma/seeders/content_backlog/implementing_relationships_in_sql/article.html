@@ -1,0 +1,44 @@
+<section>
+    <h2>Implementing Database Relationships in SQL</h2>
+    <p>SQL databases provide a powerful and standardized way to implement and enforce relationships using foreign keys and constraints.</p>
+
+    <h3>1. One-to-Many Implementation</h3>
+    <p>The core of SQL relationship implementation is the <strong>Foreign Key</strong>, which ensures that a value in one table corresponds to a primary key in another.</p>
+    <pre><code>
+-- Create the parent table
+CREATE TABLE authors (
+  id INT PRIMARY KEY,
+  name VARCHAR(100)
+);
+
+-- Create the child table with a foreign key
+CREATE TABLE books (
+  id INT PRIMARY KEY,
+  title VARCHAR(255),
+  author_id INT,
+  FOREIGN KEY (author_id) REFERENCES authors(id) ON DELETE CASCADE
+);
+    </code></pre>
+
+    <h3>2. Referential Integrity</h3>
+    <p>SQL databases automatically enforce referential integrity. In the example above, if an author is deleted, all their books will also be deleted due to the <code>ON DELETE CASCADE</code> constraint.</p>
+
+    <h3>3. JOIN Operations</h3>
+    <p>The true power of SQL is retrieving related data from multiple tables using <strong>JOINs</strong>.</p>
+    <pre><code>
+-- Find all books and their author names
+SELECT books.title, authors.name 
+FROM books 
+JOIN authors ON books.author_id = authors.id;
+    </code></pre>
+
+    <h3>4. Constraints</h3>
+    <ul>
+      <li><code>UNIQUE</code>: To enforce 1:1 relationships.</li>
+      <li><code>NOT NULL</code>: To ensure every record must have a relationship.</li>
+      <li><code>CHECK</code>: For custom relationship logic.</li>
+    </ul>
+
+    <h3>Conclusion</h3>
+    <p>SQL's structured approach to relationships ensures data consistency and provides a standard, high-performance way to query related information across various entities.</p>
+</section>

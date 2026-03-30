@@ -1,0 +1,31 @@
+{
+  "title": "Implementing Relationships in NoSQL Databases Quiz",
+  "description": "Test your knowledge on embedding vs. referencing for relationships in NoSQL databases.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary way to model a 1:1 relationship in a NoSQL document database?",
+      "options": ["Always using external tables", "Embedding the related data directly within the document", "Using only primary keys on both documents", "It is not possible"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these describes 'Referencing' in a NoSQL database?",
+      "options": ["Storing only the ID of a related document in another collection", "Making a list of all names in the database", "Creating a primary key for every record", "Saving a document as a JSON file"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "When is it better to use embedding instead of referencing?",
+      "options": ["When data is large and frequently modified", "When related data is small, fixed, and always queried with the parent", "When a single record belongs to many parents simultaneously", "When using a relational database only"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What process is used in ODMs like Mongoose to replace a reference ID with its actual document content?",
+      "options": ["Joining", "Aggregation", "Population", "Linking"],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

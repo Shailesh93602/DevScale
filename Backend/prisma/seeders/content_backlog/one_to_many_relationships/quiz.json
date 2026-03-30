@@ -1,0 +1,37 @@
+{
+  "title": "One-to-Many Relationships Quiz",
+  "description": "Test your knowledge on One-to-Many database relationships.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these is a perfect example of a One-to-Many (1:N) relationship?",
+      "options": ["A Book and its single publisher", "A Library and its single building", "A Mother and her children", "A Student and a Course"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "On which 'side' of the relationship should the foreign key be defined?",
+      "options": ["On the 'one' side (the parent)", "On the 'many' side (the children)", "On both sides", "On neither side"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "In a 1:N relationship between Library and Book, where would the 'library_id' most likely be stored?",
+      "options": ["In the Libraries table", "In the Books table", "In the Users table", "In the Author table"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "In Sequelize, which association method would you use on the parent model (the 'one' side)?",
+      "options": ["belongsTo()", "hasMany()", "hasOne()", "belongsToMany()"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is true about one-to-many relationships in NoSQL databases?",
+      "options": ["They are not possible", "They can be modeled by embedding child documents within a parent document", "They must use foreign keys like SQL", "They are only modeled with external APIs"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
