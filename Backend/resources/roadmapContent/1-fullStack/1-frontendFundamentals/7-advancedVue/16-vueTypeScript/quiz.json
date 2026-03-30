@@ -1,0 +1,57 @@
+{
+  "title": "Vue and TypeScript Quiz",
+  "description": "Evaluate your understanding of reactivity typing (ref<T>), typing props with defineProps, and enhanced IDE support.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primary benefit of using TypeScript with Vue?",
+      "options": [
+        "Faster component rendering.",
+        "Static type checking to catch errors early.",
+        "Replacing the need for state management.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what attribute should you use on the <script> tag to enable TypeScript in a Vue Single File Component (SFC)?",
+      "options": ["lang='js'", "lang='ts'", "type='module'", "type='text/typescript'"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "How do you give a 'ref()' a specific type in Vue with TypeScript?",
+      "options": [
+        "ref(type: 'string')",
+        "const count = ref<number>(0);",
+        "ref().as('number')",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "How do you define typed props when using <script setup> in Vue 3 and TypeScript?",
+      "options": [
+        "Using definedProps<PropType>() function.",
+        "Passing a JSON object to the component.",
+        "Using getPropsType() method.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Vue with TypeScript allows you to build truly type-safe applications by catching errors before they ever reach the user's browser.",
+      "options": [
+        "True",
+        "False (it only checks at runtime)",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

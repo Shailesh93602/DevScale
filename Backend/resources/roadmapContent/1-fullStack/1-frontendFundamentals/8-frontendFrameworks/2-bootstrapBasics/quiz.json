@@ -1,0 +1,47 @@
+{
+  "title": "Bootstrap Basics Quiz",
+  "description": "Evaluate your understanding of the Bootstrap CSS Framework role, the grid system, mobile-first design, and getting started with CDN/NPM.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is Bootstrap's primary role in a web application?",
+      "options": [
+        "To speed up CSS rendering.",
+        "A comprehensive collection of pre-designed CSS and optionally JS components (buttons, forms, layout) for building professional UIs fast.",
+        "To hide the JavaScript code from the console.",
+        "To replace the standard HTML input elements."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what is the key component of Bootstrap's layout system?",
+      "options": ["A 12-column flexible grid system.", "A single-column layout.", "A fixed-width layout.", "A table-based layout."],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "The design pattern where styles are written for small screens first and then adjusted as the screen grows is called ________.",
+      "options": ["Desktop-First", "Mobile-First", "Content-First", "Browser-First"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which popular company originally created and maintained Bootstrap?",
+      "options": ["Facebook (Meta)", "Google", "Twitter", "Microsoft"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Does Bootstrap provide a robust and consistent design system that speeds up web development?",
+      "options": [
+        "Yes, as it handles the common design and layout problems for you out of the box.",
+        "No, it's always slower.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

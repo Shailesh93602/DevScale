@@ -1,0 +1,47 @@
+{
+  "title": "Testing in Vue.js Quiz",
+  "description": "Evaluate your understanding of unit/integration/E2E testing, Vue Test Utils (VTU), and modern Vitest framework.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily purpose of a Unit Test in a Vue app?",
+      "options": [
+        "To speed up CSS rendering.",
+        "To test individual functions or components in isolated units to ensure each works as expected.",
+        "To hide the JavaScript code from the console.",
+        "To replace the standard HTML input elements."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what is the official component testing library for Vue.js?",
+      "options": ["Vue-Tester", "Vue Test Utils (VTU)", "Jest-Vue", "Mocha-Vue"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which method in Vue Test Utils is used to mount a component in isolation along with its child components?",
+      "options": ["render()", "mount()", "shallow()", "init()"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which modern, blazing-fast testing framework is commonly used with Vite in Vue 3 projects?",
+      "options": ["Jest", "Mocha", "Vitest", "Jasmine"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Does Vue Test Utils allow you to simulate user events like clicking a button?",
+      "options": [
+        "Yes, using the trigger() method.",
+        "No, it only renders HTML.",
+        "Only for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
