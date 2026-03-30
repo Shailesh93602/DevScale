@@ -1,52 +1,37 @@
 {
   "title": "Tailwind CSS Plugins Quiz",
-  "description": "Evaluate your understanding of official Tailwind plugins (Typography/Forms), custom plugin creation (addUtilities/Components), and encapsulating repetitive CSS logic.",
+  "description": "Test your knowledge about the world of Tailwind CSS plugins and how they are used.",
   "passingScore": 80,
   "questions": [
     {
-      "question": "Which and/or what is the primarily reason to use Tailwind CSS plugins?",
-      "options": [
-        "Faster component rendering.",
-        "They provide robust, pre-built utilities for complex features (like long-form text styling or form resetting) and allow for sharing custom CSS components.",
-        "To hide the JavaScript code from the console.",
-        "None of the above."
-      ],
+      "question": "Where do you add a Tailwind CSS plugin?",
+      "options": ["In your index.html file", "In your tailwind.config.js plugins array", "In your article.html script tag", "In your CSS stylesheet."],
       "correctAnswer": 1,
-      "points": 10
+      "points": 20
     },
     {
-      "question": "Which official Tailwind plugin provides a set of 'prose' classes for styling long-form text content like blogs or articles?",
-      "options": ["@tailwindcss/forms", "@tailwindcss/typography", "@tailwindcss/cards", "@tailwindcss/text"],
-      "correctAnswer": 1,
-      "points": 10
+      "question": "Which official Tailwind plugin is used to style raw HTML content like markdown?",
+      "options": ["@tailwindcss/forms", "@tailwindcss/aspect-ratio", "@tailwindcss/typography", "@tailwindcss/line-clamp"],
+      "correctAnswer": 2,
+      "points": 20
     },
     {
-      "question": "Can you use JavaScript to create your own custom Tailwind plugins in the 'tailwind.config.js' file?",
-      "options": [
-        "Yes, using the 'plugins' section to define new utilities, components, or entire design systems.",
-        "No, it only supports CSS.",
-        "Only for older versions.",
-        "None of the above."
-      ],
+      "question": "What's the main benefit of using @tailwindcss/forms?",
+      "options": ["It adds more animation to form elements.", "It provides a robust CSS reset for standard HTML form elements.", "It automatically validates form input.", "It's the only way to use input fields in Tailwind."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Can you only use official plugins provided by the Tailwind team?",
+      "options": ["Yes, for security reasons.", "No, you can also use community-built plugins or even create your own.", "Only if you're using Tailwind on a production site.", "Yes, otherwise it's not considered standard."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Is DaisyUI a Tailwind plugin?",
+      "options": ["Yes, it's a popular UI component library built as a Tailwind plugin.", "No, it's a separate CSS framework altogether.", "Only the version for React is a plugin.", "It used to be, but now it's a standalone tool."],
       "correctAnswer": 0,
-      "points": 10
-    },
-    {
-      "question": "Which Tailwind plugin helps reset and style form input elements with utility classes?",
-      "options": ["@tailwindcss/inputs", "@tailwindcss/forms", "@tailwindcss/form-reset", "@tailwindcss/design"],
-      "correctAnswer": 1,
-      "points": 10
-    },
-    {
-      "question": "Does Tailwind's plugin system allow you to encapsulate a group of utility classes into a single, reusable class like .my-card?",
-      "options": [
-        "Yes, using the addComponents function in a custom plugin.",
-        "No, it only adds new utilities.",
-        "Only for older versions.",
-        "None of the above."
-      ],
-      "correctAnswer": 0,
-      "points": 10
+      "points": 20
     }
   ]
 }

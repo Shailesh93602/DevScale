@@ -1,52 +1,37 @@
 {
-  "title": "Build Tools Integration Quiz",
-  "description": "Evaluate your understanding of PostCSS, modern build tools like Vite and Webpack, and the overall asset optimization pipeline.",
+  "title": "Framework Integration with Build Tools Quiz",
+  "description": "Test your knowledge about the critical role of build tools in modern frontend development.",
   "passingScore": 80,
   "questions": [
     {
-      "question": "Which and/or what is the primarily role of PostCSS in a modern frontend application?",
-      "options": [
-        "Faster component rendering.",
-        "A JavaScript-driven CSS pre-processor that allows you to transform and optimize CSS using plugins (like Tailwind itself).",
-        "To hide the JavaScript code from the console.",
-        "None of the above."
-      ],
+      "question": "What is the primary function of a build tool in frontend development?",
+      "options": ["To host the website on a public server.", "To transform source code into browser-ready, optimized assets.", "To generate graphics for the UI.", "To write the HTML and CSS for you."],
       "correctAnswer": 1,
-      "points": 10
+      "points": 20
     },
     {
-      "question": "Which modern build tool is known for its incredible speed and native support for Vite, React, and Vue?",
-      "options": ["Webpack", "Gulp", "Vite", "Rollup"],
-      "correctAnswer": 2,
-      "points": 10
+      "question": "Which tool has become a popular modern alternative to Webpack due to its speed?",
+      "options": ["Babel", "Vite", "Gulp", "Grunt"],
+      "correctAnswer": 1,
+      "points": 20
     },
     {
-      "question": "Is Tailwind CSS a PostCSS plugin?",
-      "options": [
-        "Yes, it is a PostCSS plugin that scans your code and generates CSS during the build process.",
-        "No, it's its own separate compiler.",
-        "Only for older versions.",
-        "None of the above."
-      ],
-      "correctAnswer": 0,
-      "points": 10
+      "question": "What is the purpose of Hot Module Replacement (HMR)?",
+      "options": ["To replace your entire application with a new version upon build.", "To update only changed modules in the browser without a full reload during development.", "To automatically minify all CSS files.", "To handle database migrations."],
+      "correctAnswer": 1,
+      "points": 20
     },
     {
-      "question": "Which ‘legacy’ build tool is still commonly used for highly customized and enterprise-grade asset bundling?",
-      "options": ["Babel", "Vite", "Webpack", "PostCSS"],
-      "correctAnswer": 2,
-      "points": 10
+      "question": "How do you typically integrate Tailwind CSS into a build tool like Vite or Webpack?",
+      "options": ["By adding it as a script tag in your HTML.", "Using PostCSS and a postcss.config.js file.", "By writing all your CSS as inline styles.", "It's built into all browsers by default."],
+      "correctAnswer": 1,
+      "points": 20
     },
     {
-      "question": "Do build tools also handle the optimization and delivery of static assets like Fonts and Images?",
-      "options": [
-        "Yes, as they minify and group these assets with the final JS/CSS bundle (e.g., using Webpack's asset modules).",
-        "No, they only bundle JavaScript.",
-        "Only true for older versions.",
-        "None of the above."
-      ],
-      "correctAnswer": 0,
-      "points": 10
+      "question": "What does 'Tree Shaking' refer to in the context of build tools?",
+      "options": ["Automatically adding new features to your project.", "Removing unused code from your final bundles.", "Optimizing the file structure of your project.", "Compressing images for faster load."],
+      "correctAnswer": 1,
+      "points": 20
     }
   ]
 }

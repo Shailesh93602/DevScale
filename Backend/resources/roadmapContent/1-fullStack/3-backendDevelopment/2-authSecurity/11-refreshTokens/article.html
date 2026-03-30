@@ -1,0 +1,49 @@
+<article>
+  <h1>Understanding Refresh Tokens</h1>
+  
+  <p>In token-based authentication (like JWT), security is often improved by using very short-lived access tokens. However, forcing a user to log in every 15 minutes would be a terrible user experience. This is where <strong>Refresh Tokens</strong> come into play.</p>
+
+  <section>
+    <h2>The Problem with Short-Lived Access Tokens</h2>
+    <p>An access token is used to authenticate every request to the API. If an access token is stolen, the attacker has full access to the user's account. By making tokens expire quickly (e.g., in 15 minutes), we limit the window of opportunity for an attacker. But this creates the problem of frequent user re-authentication.</p>
+  </section>
+
+  <section>
+    <h2>The Refresh Token Solution</h2>
+    <p>A refresh token is a special, long-lived token that is issued alongside the access token. Its only purpose is to request a new access token when the current one expires.</p>
+    <ul>
+      <li><strong>Access Token:</strong> Short-lived (15 mins), used for API requests, stored in memory or a short-lived cookie.</li>
+      <li><strong>Refresh Token:</strong> Long-lived (7 days, 30 days, or indefinite), used only to get new access tokens, stored in a secure <code>httpOnly</code> cookie.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>The Refresh Flow</h2>
+    <ol>
+      <li><strong>Initial Login:</strong> User logs in; server sends back an Access Token and a Refresh Token.</li>
+      <li><strong>Standard Request:</strong> Client sends the Access Token with every API request.</li>
+      <li><strong>Token Expiration:</strong> The Access Token expires. The next request returns a 401 Unauthorized error.</li>
+      <li><strong>Refresh Request:</strong> The client detects the 401 error and sends the Refresh Token to a specific <code>/refresh</code> endpoint on the server.</li>
+      <li><strong>New Token Issuance:</strong> The server verifies the Refresh Token. If valid, it sends back a new, fresh Access Token.</li>
+      <li><strong>Retry:</strong> The client retries the originally failed request with the new Access Token. All of this happens invisibly to the user.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Security Benefits of Refresh Tokens</h2>
+    <ul>
+      <li><strong>Revocation:</strong> Unlike stateless access tokens, refresh tokens are usually stored in a database on the server. This allows the server to "blacklist" or delete a refresh token, effectively logging the user out globally and immediately preventing them from getting new access tokens.</li>
+      <li><strong>Rotating Refresh Tokens:</strong> Each time a refresh token is used, the server can issue a <em>new</em> refresh token and invalidate the old one. This helps detect token theft; if an old refresh token is reused, it's a sign of a compromise, and the server can invalidate all tokens for that user.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Where to Store Tokens?</h2>
+    <p>For maximum security:</p>
+    <ol>
+      <li><strong>Access Tokens:</strong> Store in application memory (variable). This way, they are deleted if the page is refreshed or the tab is closed.</li>
+      <li><strong>Refresh Tokens:</strong> Store in a <code>httpOnly</code>, <code>secure</code>, <code>SameSite=Strict</code> cookie. This protects it from XSS and CSRF attacks.</li>
+    </ol>
+  </section>
+
+</article>

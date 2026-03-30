@@ -1,57 +1,37 @@
 {
   "title": "Frontend Frameworks Best Practices Quiz",
-  "description": "Evaluate your understanding of theme consistency, accessibility (WCAG/Aria), and component composition for maintainability.",
+  "description": "Test your knowledge about the essential best practices for modern frontend development.",
   "passingScore": 80,
   "questions": [
     {
-      "question": "Which and/or what is the primarily mistake developers make when working within a framework's design system?",
-      "options": [
-        "Faster component rendering.",
-        "Using ad-hoc custom styles (e.g., margin-top: 17px) instead of sticking strictly to the standardized theme spacings/colors.",
-        "To hide the JavaScript code from the console.",
-        "None of the above."
-      ],
+      "question": "What is the core idea behind Atomic Design?",
+      "options": ["Always using global state management.", "Breaking down complex UI into small, reusable building blocks (atoms).", "Writing all code in a single file.", "Using only CSS animations."],
       "correctAnswer": 1,
-      "points": 10
+      "points": 20
     },
     {
-      "question": "Which and/or what role do 'Aria Labels' (e.g., aria-label) play in a professional frontend application?",
-      "options": [
-        "They set the text color.",
-        "They provide necessary descriptive information for users who use screen readers.",
-        "They speed up CSS rendering.",
-        "None of the above."
-      ],
+      "question": "Why is immutability important in state management?",
+      "options": ["It makes the application slightly faster.", "It ensures predictable rendering and helps avoid subtle bugs.", "It's the only way to use state.", "It's a requirement for all CSS frameworks."],
       "correctAnswer": 1,
-      "points": 10
+      "points": 20
     },
     {
-      "question": "Is accessibility (Aria, Keyboard Nav, Color Contrast) an optional feature for professional web apps?",
-      "options": [
-        "No, it is a core web standard and essential for inclusive user experiences.",
-        "Yes, it is only for government websites.",
-        "Only for older versions.",
-        "None of the above."
-      ],
-      "correctAnswer": 0,
-      "points": 10
-    },
-    {
-      "question": "The pattern of encapsulating a long set of utility classes into a single reusable component (like <AppButton />) is called ________.",
-      "options": ["Component Kit", "Component Composition", "Library Pack", "UI Palette"],
+      "question": "What is the primary benefit of lazy loading?",
+      "options": ["It makes the application look better.", "It reduces the initial bundle size and speeds up the first load.", "It automatically generates responsive layouts.", "It's the only way to use images."],
       "correctAnswer": 1,
-      "points": 10
+      "points": 20
     },
     {
-      "question": "Does following a strict theme scale (spacing, colors, etc.) help maintain a consistent and professional brand identity?",
-      "options": [
-        "Yes, as it prevents 'design drift' where different parts of the app look slightly different.",
-        "No, it's always slower.",
-        "Only true for older versions.",
-        "None of the above."
-      ],
-      "correctAnswer": 0,
-      "points": 10
+      "question": "Which of these is NOT a good practice for accessibility?",
+      "options": ["Using semantic HTML tags.", "Ensuring all interactive elements are keyboard-accessible.", "Only testing on high-resolution monitors.", "Using ARIA attributes where needed."],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What is the goal of an integration test in frontend development?",
+      "options": ["To test a single function in isolation.", "To ensure that multiple components or units of code work together correctly.", "To verify the entire user flow from the server to the browser.", "To check the CSS for responsiveness."],
+      "correctAnswer": 1,
+      "points": 20
     }
   ]
 }

@@ -1,0 +1,37 @@
+{
+  "title": "Database Integration Quiz",
+  "description": "Test your knowledge about the world of database integration in full-stack engineering.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What does CRUD stand for in the context of database operations?",
+      "options": ["Create, Read, Update, Delete", "Calculate, Render, Update, Deploy", "Create, Remote, Update, Destroy", "Clear, Rename, Undo, Duplicate"],
+      "correctAnswer": 0,
+      "points": 20
+    },
+    {
+      "question": "Which type of database is PostgreSQL?",
+      "options": ["NoSQL Document Database", "In-Memory Key-Value Store", "Relational SQL Database", "Graph Database"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What's the primary benefit of using an ORM like Prisma or Sequelize?",
+      "options": ["It makes the database faster.", "It allows you to work with database records as JavaScript objects and provides type-safety.", "It's the only way to connect to a database.", "It automatically generates a frontend UI for the data."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "How should you store sensitive database credentials?",
+      "options": ["Directly in your source code files.", "In a publicly accessible JSON file.", "Using environment variables (e.g., in a .env file).", "Hardcoded in your connection string."],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What is connection pooling used for?",
+      "options": ["To collect many databases into a single pool.", "To reuse existing database connections and improve performance.", "To automatically backup the database.", "To synchronize data between different database types."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}
