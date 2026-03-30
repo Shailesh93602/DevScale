@@ -1,0 +1,47 @@
+<div class="article-content">
+  <h1>JavaScript Regular Expressions (RegExp)</h1>
+  <p>A <strong>Regular Expression</strong> is a sequence of characters that forms a search pattern. It's an incredibly powerful tool for pattern-matching and "search-and-replace" operations in text.</p>
+
+  <h2>1. Syntax: Literals vs Constructor</h2>
+  <pre><code>// Literal syntax (preferred)
+  let re = /pattern/flags;
+
+  // Constructor syntax
+  let re = new RegExp("pattern", "flags");</code></pre>
+
+  <h2>2. Common Methods</h2>
+  <ul>
+    <li><code>test(string)</code>: Returns <code>true</code> if the pattern is found in the string.</li>
+    <li><code>exec(string)</code>: Returns an array of matches or <code>null</code>.</li>
+    <li><code>match(regexp)</code>: String method that returns an array of matches.</li>
+    <li><code>replace(regexp, replacement)</code>: String method to search and replace.</li>
+  </ul>
+
+  <h2>3. Matching Basic Patterns</h2>
+  <ul>
+    <li><code>[abc]</code>: Find any character between the brackets.</li>
+    <li><code>[0-9]</code>: Find any digit between the brackets.</li>
+    <li><code>(x|y)</code>: Find any of the alternatives specified.</li>
+  </ul>
+
+  <h2>4. Meta-characters and Quantifiers</h2>
+  <ul>
+    <li><code>\d</code>: Matches any digit.</li>
+    <li><code>\s</code>: Matches any whitespace character.</li>
+    <li><code>\w</code>: Matches any word character.</li>
+    <li><code>+</code>: 1 or more occurrences.</li>
+    <li><code>*</code>: 0 or more occurrences (quantifier).</li>
+    <li><code>?</code>: 0 or 1 occurrence (quantifier).</li>
+    <li><code>^</code> and <code>$</code>: Anchors for the start and end of a string.</li>
+  </ul>
+
+  <h2>5. Regular Expression Flags</h2>
+  <ul>
+    <li><code>i</code>: Ignore case (case-insensitive).</li>
+    <li><code>g</code>: Global match (don't stop after the first match).</li>
+    <li><code>m</code>: Multi-line match.</li>
+  </ul>
+
+  <h2>Conclusion</h2>
+  <p>While regular expressions can seem cryptic at first, they are one of the most powerful tools in any developer's arsenal for tasks like form validation, data scraping, and text manipulation. Mastering even basic patterns will significantly improve your efficiency in handling strings.</p>
+</div>

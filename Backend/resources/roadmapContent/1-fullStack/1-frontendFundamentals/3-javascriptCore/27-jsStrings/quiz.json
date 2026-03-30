@@ -1,0 +1,47 @@
+{
+  "title": "JavaScript Strings Quiz",
+  "description": "Test your knowledge of creating, manipulating, and using strings in JavaScript.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which of the following is correct syntax for creating a template literal?",
+      "options": [
+        "'Hello ${name}'",
+        "\"Hello ${name}\"",
+        "`Hello ${name}`",
+        "Both A and B."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Are strings mutable in JavaScript (meaning you can change the character directly at an index like str[0] = 'a')?",
+      "options": [
+        "Yes, always.",
+        "No, they are immutable.",
+        "Yes, but only if defined with 'let'.",
+        "Yes, in all modern browsers."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which property can you use to get the number of characters in a string?",
+      "options": ["length", "size", "count", "chars"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What does the .split(',') method return when applied to a string with commas?",
+      "options": ["A comma string", "An array of strings", "A single string", "Error"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which method should you use to return a part of a string without modifying the original?",
+      "options": ["slice()", "substring()", "substr()", "All of the above."],
+      "correctAnswer": 3,
+      "points": 10
+    }
+  ]
+}

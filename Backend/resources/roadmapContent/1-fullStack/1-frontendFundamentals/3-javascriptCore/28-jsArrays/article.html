@@ -1,0 +1,36 @@
+<div class="article-content">
+  <h1>JavaScript Arrays</h1>
+  <p>Arrays are special objects that allow you to store multiple values in a single variable. They are the most common way to handle ordered collections of data in JavaScript.</p>
+
+  <h2>1. Creating an Array</h2>
+  <p>The easiest way to create an array is by using the <strong>array literal</strong> syntax:</p>
+  <pre><code>const fruits = ["Apple", "Banana", "Cherry"];</code></pre>
+
+  <h2>2. Accessing Elements</h2>
+  <p>Arrays are <strong>zero-indexed</strong>, meaning the first element is at index 0, the second at 1, etc.</p>
+  <pre><code>console.log(fruits[0]); // "Apple"
+  fruits[1] = "Blueberry"; // Modifying elements</code></pre>
+
+  <h2>3. Core Array Methods (Modification)</h2>
+  <ul>
+    <li><code>push(val)</code>: Adds a value to the <strong>end</strong> of the array.</li>
+    <li><code>pop()</code>: Removes the <strong>last</strong> element.</li>
+    <li><code>unshift(val)</code>: Adds a value to the <strong>beginning</strong>.</li>
+    <li><code>shift()</code>: Removes the <strong>first</strong> element.</li>
+    <li><code>splice(index, howMany, [items...])</code>: Adds or removes elements from any position.</li>
+  </ul>
+
+  <h2>4. Core Array Methods (Iteration)</h2>
+  <p>Modern JavaScript uses higher-order functions for cleaner code:</p>
+  <ul>
+    <li><code>map(callback)</code>: Creates a <strong>new array</strong> by applying a function to each element.</li>
+    <li><code>filter(callback)</code>: Creates a <strong>new array</strong> with all elements that pass a test.</li>
+    <li><code>forEach(callback)</code>: Executes a function for each element (returns undefined).</li>
+    <li><code>find(callback)</code>: Returns the <strong>first</strong> element that passes a test.</li>
+  </ul>
+  <pre><code>const numbers = [1, 2, 3];
+  const doubled = numbers.map(n => n * 2); // [2, 4, 6]</code></pre>
+
+  <h2>Conclusion</h2>
+  <p>Mastering arrays and their iteration methods is essential for almost every modern frontend role. Whether you're handling API data or managing UI state, you'll reach for arrays every single day.</p>
+</div>

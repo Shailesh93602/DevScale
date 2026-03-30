@@ -1,0 +1,39 @@
+<div class="article-content">
+  <h1>JavaScript Document Object Model (DOM)</h1>
+  <p>The <strong>Document Object Model (DOM)</strong> is a programming interface for web documents. It represents the page so that programs can change the document structure, style, and content. The DOM represents the document as nodes and objects; that way, programming languages can connect to the page.</p>
+
+  <h2>1. Finding HTML Elements</h2>
+  <p>To manipulate an element, you first need to find it using one of the following methods:</p>
+  <ul>
+    <li><code>document.getElementById(id)</code>: Finds element by ID.</li>
+    <li><code>document.getElementsByClassName(name)</code>: Finds elements by class name.</li>
+    <li><code>document.querySelector(selector)</code>: Finds the <strong>first</strong> element matching a CSS selector.</li>
+    <li><code>document.querySelectorAll(selector)</code>: Finds <strong>all</strong> elements matching a CSS selector (returns a NodeList).</li>
+  </ul>
+
+  <h2>2. Changing HTML Content and Styles</h2>
+  <pre><code>const element = document.getElementById("header");
+  element.innerHTML = "New Heading";      // Change text/HTML
+  element.style.color = "blue";           // Change CSS style
+  element.setAttribute("class", "main");  // Change attribute</code></pre>
+
+  <h2>3. Creating and Removing Elements</h2>
+  <p>You can dynamically add or remove elements from the page using these core methods:</p>
+  <pre><code>// Create a new div
+  const newDiv = document.createElement("div");
+  newDiv.innerHTML = "I am new!";
+
+  // Add to the body
+  document.body.appendChild(newDiv);
+
+  // Remove an element
+  const parent = document.getElementById("container");
+  const child = document.getElementById("item");
+  parent.removeChild(child);</code></pre>
+
+  <h2>4. Navigating the DOM Tree</h2>
+  <p>The DOM is a tree of nodes. You can navigate between them using properties like <code>parentNode</code>, <code>childNodes</code>, <code>firstChild</code>, <code>lastChild</code>, <code>nextSibling</code>, and <code>previousSibling</code>.</p>
+
+  <h2>Conclusion</h2>
+  <p>The DOM is the bridge between your JavaScript code and the user's browser view. By mastering how to select, modify, and animate DOM elements, you can build fully interactive and dynamic user experiences without reaching for complex frameworks until necessary.</p>
+</div>
