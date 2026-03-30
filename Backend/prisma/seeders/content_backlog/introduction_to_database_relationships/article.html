@@ -1,0 +1,23 @@
+<section>
+    <h2>Understanding Database Relationships</h2>
+    <p>Database relationships are the foundation for modeling complex real-world data structures. They allow us to connect disparate pieces of information in a meaningful way.</p>
+
+    <h3>1. The Three Primary Relationship Types</h3>
+    <ul>
+      <li><strong>One-to-One (1:1):</strong> Each record in Table A relates to exactly one record in Table B (e.g., a User and their Profile).</li>
+      <li><strong>One-to-Many (1:N):</strong> A record in Table A relates to multiple records in Table B (e.g., an Author and their Books).</li>
+      <li><strong>Many-to-Many (M:N):</strong> Multiple records in Table A relate to multiple records in Table B (e.g., Students and the Courses they are enrolled in).</li>
+    </ul>
+
+    <h3>2. Foreign Keys</h3>
+    <p>Foreign keys are the mechanism used to maintain these relationships in relational databases. A foreign key in Table B is a column that stores the primary key of a matching record in Table A.</p>
+
+    <h3>3. Joins in SQL</h3>
+    <p>Relationships allow us to combine data from multiple tables using <strong>JOIN</strong> operations. For example, to find all books by a specific author, we join the Authors and Books tables on the author's ID.</p>
+
+    <h3>4. Relationships in NoSQL</h3>
+    <p>While document-oriented databases like MongoDB are "schema-less," they still model relationships using <strong>embedding</strong> (storing related data together) or <strong>referencing</strong> (storing an ID like a foreign key).</p>
+
+    <h3>Conclusion</h3>
+    <p>Mastering relationships is the single most important skill for designing efficient and scalable database schemas. Whether you use SQL or NoSQL, understanding how entities connect will shape your application's data layer.</p>
+</section>

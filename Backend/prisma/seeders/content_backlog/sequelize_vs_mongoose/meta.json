@@ -1,0 +1,8 @@
+{
+  "title": "Sequelize vs Mongoose",
+  "description": "A comparative guide choosing between the leading Node.js ORM (Sequelize) and ODM (Mongoose).",
+  "module": "Full Stack Web Development",
+  "order": 1,
+  "difficulty": "Intermediate",
+  "tags": ["Sequelize", "Mongoose", "ORM", "ODM", "Database"]
+}
