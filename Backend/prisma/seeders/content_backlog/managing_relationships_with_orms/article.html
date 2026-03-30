@@ -1,0 +1,32 @@
+<section>
+    <h2>Managing Database Relationships with ORMs</h2>
+    <p>ORMs (Object-Relational Mappers) and ODMs (Object Document Mappers) provide a high-level API for defining and interacting with database relationships using objects.</p>
+
+    <h3>1. Relationship Mapping in Sequelize</h3>
+    <pre><code>
+// One-to-Many
+User.hasMany(Post);
+Post.belongsTo(User);
+
+// Many-to-Many
+User.belongsToMany(Project, { through: 'UserProjects' });
+    </code></pre>
+
+    <h3>2. Eager and Lazy Loading</h3>
+    <p><strong>Eager Loading</strong> retrieves associated data along with the main record (e.g., loading a user AND their profile). <strong>Lazy Loading</strong> waits to retrieve associated data until it's explicitly requested.</p>
+
+    <h3>3. Relationship Mapping in Mongoose</h3>
+    <p>Use the <code>ref</code> property in your schema to link documents from different collections.</p>
+    <pre><code>
+const postSchema = new Schema({
+  title: String,
+  author: { type: Schema.Types.ObjectId, ref: 'User' }
+});
+    </code></pre>
+
+    <h3>4. Referential Integrity in ORMs</h3>
+    <p>Many ORMs automatically handle things like deletion cascades and foreign key constraints, helping you maintain data integrity without manual SQL scripts.</p>
+
+    <h3>Conclusion</h3>
+    <p>ORMs bridge the gap between database tables/documents and our application code. By leveraging their tools for relationship management, you can build cleaner and more reliable data layers.</p>
+</section>

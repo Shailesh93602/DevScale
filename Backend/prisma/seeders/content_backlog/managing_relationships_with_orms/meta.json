@@ -1,0 +1,8 @@
+{
+  "title": "Managing Relationships with ORMs",
+  "description": "Learn to manage relationships (1:1, 1:N, M:N) in Sequelize and Mongoose including techniques like eager and lazy loading.",
+  "module": "Full Stack Web Development",
+  "order": 3,
+  "difficulty": "Intermediate",
+  "tags": ["Sequelize", "Mongoose", "Relationships", "ORM", "Eager Loading"]
+}

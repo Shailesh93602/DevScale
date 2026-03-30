@@ -1,0 +1,31 @@
+{
+  "title": "Database Schema Design Quiz",
+  "description": "Test your knowledge on the core concepts and best practices of database schema design.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary role of a database schema?",
+      "options": ["To store actual data", "To define the skeletal structure of the database", "To create new users", "To encrypt the server storage"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is the first step in the database schema design process?",
+      "options": ["Physical Design", "Logical Design", "Requirements Gathering", "Conceptual Design"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Regarding naming conventions, what is the best practice for table or collection names?",
+      "options": ["Plural nouns (e.g., users)", "Singular nouns (e.g., user)", "Verbs (e.g., create_user)", "Abbreviations (e.g., usr)"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "A column that uniquely identifies every record in a table is called what?",
+      "options": ["Foreign Key", "Primary Key", "Main Column", "ID Index"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

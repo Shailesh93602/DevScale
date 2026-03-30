@@ -1,0 +1,31 @@
+{
+  "title": "Advanced Relationship Topics Quiz",
+  "description": "Test your knowledge on complex database relationship patterns like self-referencing and polymorphism.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is a 'Self-Referencing' relationship?",
+      "options": ["A relationship where a table relates to itself", "A relationship that doesn't need primary keys", "A relationship between two servers", "A relationship within a single column"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a classic example of a self-referencing relationship?",
+      "options": ["A Student and a Course", "An Employee and their Manager", "A User and their Profile", "A Book and its Author"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which relationship type allows a single model to belong to more than one other model on a single association?",
+      "options": ["Bi-directional", "Polymorphic", "Recursive", "Simple"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Regarding junction (join) tables, when would you need to add extra attributes beyond just the primary keys?",
+      "options": ["Always", "When the relationship itself has properties, such as a 'grade' for a student's enrollment", "Never; join tables should only have IDs", "When using NoSQL only"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
