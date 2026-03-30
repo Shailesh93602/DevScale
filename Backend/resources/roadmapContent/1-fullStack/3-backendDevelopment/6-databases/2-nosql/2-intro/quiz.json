@@ -1,0 +1,37 @@
+{
+  "title": "Introduction to NoSQL Quiz",
+  "description": "Test your fundamental knowledge about NoSQL databases and their role in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What's the meaning of 'NoSQL' in the context of databases?",
+      "options": ["No SQL allowed.", "Not Only SQL; a diverse set of database technologies designed for flexibility, scale, and unstructured data.", "New or Online SQL.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's a primary difference between 'ACID' (SQL) and 'BASE' (NoSQL) consistency models?",
+      "options": ["ACID is for modern computers and BASE is for older ones.", "ACID guarantees strict, immediate consistency; BASE guarantees eventual consistency after a small delay.", "BASE is only for small databases.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is NOT typically a core characteristic of a NoSQL database?",
+      "options": ["Dynamic, flexible schema.", "Native horizontal scaling across many servers.", "Strict support for multi-table JOINs.", "Optimized for handling unstructured data."],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "Which type of NoSQL database is famously used for social networks and recommendation engines?",
+      "options": ["Document Databases", "Graph Databases", "Key-Value Stores", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's the meaning of 'Eventual Consistency' in NoSQL databases?",
+      "options": ["A way to encrypt files using a secret key.", "The system will become consistent over time, but after a write, a read from a different node might return stale data for a few milliseconds or seconds.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

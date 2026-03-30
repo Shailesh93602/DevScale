@@ -1,0 +1,37 @@
+{
+  "title": "Column-Family Stores Quiz",
+  "description": "Test your fundamental knowledge about column-family stores and their role in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is a 'Column-Family Store' (Wide-Column) and why is it useful?",
+      "options": ["A way to backup the database.", "A NoSQL database that stores data in columns rather than rows, providing incredible write performance and efficiency.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is the most popular open-source column-family store, famously used by Netflix and Apple?",
+      "options": ["MySQL", "MongoDB", "Apache Cassandra", "Redis"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What's the meaning of 'Append-only storage' in a columnar database?",
+      "options": ["It makes the database faster.", "Data is always written at the end of the file, never overwriting existing data, providing massive write throughput.", "A type of database indexing.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is a typical use case for a column-family store?",
+      "options": ["Simple prototypes where the schema changes daily.", "Storing and querying time-series data or massive IoT sensor logs.", "Complex financial transactions.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Why is it generally better to 'Denormalize' data in a column-family store?",
+      "options": ["It makes the database smaller.", "Columnar databases are not designed for JOINs; duplicating data to support different query types is much faster.", "To hide the application's IP address.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

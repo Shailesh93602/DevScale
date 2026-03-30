@@ -1,0 +1,76 @@
+<article>
+  <h1>SQL vs NoSQL: Choosing the Right Database</h1>
+  
+  <p>One of the most important decisions in backend architecture is choosing between a <strong>Relational (SQL)</strong> and a <strong>Non-Relational (NoSQL)</strong> database. Both have unique strengths and weaknesses; the "correct" choice depends entirely on your specific use case, data structure, and scaling requirements.</p>
+
+  <section>
+    <h2>1. The Core Philosophy</h2>
+    <ul>
+      <li><strong>SQL (Relational):</strong> Built on a pre-defined schema. Data is organized into tables with strict relationships. This "Schema-First" approach ensures data integrity and consistency.</li>
+      <li><strong>NoSQL (Non-Relational):</strong> Built for flexibility. Data can be stored as documents, key-value pairs, or graphs without a fixed schema. This "Data-First" approach allows for rapid iteration and handling unstructured data.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>2. Vertical vs. Horizontal Scaling</h2>
+    <ul>
+      <li><strong>SQL (Vertical Scaling):</strong> Traditionally scaled by increasing the power (CPU, RAM) of a single server. While horizontal scaling (sharding) is possible, it is incredibly complex to implement for SQL databases.</li>
+      <li><strong>NoSQL (Horizontal Scaling):</strong> Designed from the ground up to be distributed. You scale by simply adding more cheap servers to your cluster. This makes NoSQL the standard choice for massive datasets (like Facebook's activity feed).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>3. The CAP Theorem</h2>
+    <p>In distributed systems, you can only pick two out of the three:</p>
+    <ul>
+      <li><strong>C (Consistency):</strong> Every read receives the most recent write.</li>
+      <li><strong>A (Availability):</strong> Every request receives a response (even if it's stale data).</li>
+      <li><strong>P (Partition Tolerance):</strong> The system continues to work even if the network fails between nodes.</li>
+    </ul>
+    <p>SQL databases prioritize <strong>Consistency</strong>, while many NoSQL databases prioritize <strong>Availability</strong>.</p>
+  </section>
+
+  <section>
+    <h2>Summary Comparison Table</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>SQL (e.g., PostgreSQL)</th>
+          <th>NoSQL (e.g., MongoDB)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Schema</td>
+          <td>Pre-defined, Strict</td>
+          <td>Dynamic, Flexible</td>
+        </tr>
+        <tr>
+          <td>Data Structure</td>
+          <td>Table-based</td>
+          <td>Document, Key-Value, Graph</td>
+        </tr>
+        <tr>
+          <td>Transactions</td>
+          <td>ACID (Strong Integrity)</td>
+          <td>BASE (Eventual Consistency)</td>
+        </tr>
+        <tr>
+          <td>Scaling</td>
+          <td>Vertical (Usually)</td>
+          <td>Horizontal (Native)</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>When to Choose Each?</h2>
+    <ul>
+      <li><strong>Choose SQL if:</strong> You need strong transactional integrity (e.g., financial apps), your data structure is stable and highly relational, or you need complex, multi-table analysis.</li>
+      <li><strong>Choose NoSQL if:</strong> You are handling massive volumes of unstructured data, you need to scale horizontally across many servers, or you are in an early "prototyping" stage where your data schema is changing daily.</li>
+    </ul>
+  </section>
+
+</article>
