@@ -1,0 +1,8 @@
+{
+  "title": "Advanced Relationship Topics",
+  "description": "Learn complex database relationship techniques like self-referencing, polymorphism, and junction attributes.",
+  "module": "Full Stack Web Development",
+  "order": 4,
+  "difficulty": "Advanced",
+  "tags": ["Database", "Advanced Relationships", "Polymorphism", "Recursion", "SQL", "NoSQL"]
+}

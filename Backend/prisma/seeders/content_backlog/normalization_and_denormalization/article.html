@@ -1,0 +1,58 @@
+<section>
+    <h2>Database Normalization and Denormalization</h2>
+    <p>Database design often involves a fundamental trade-off between <strong>Normalization</strong> (minimizing redundancy) and <strong>Denormalization</strong> (maximizing read performance). Understanding when to use each is key to building efficient data systems.</p>
+
+    <h3>1. What is Normalization?</h3>
+    <p>Normalization is the process of organizing data in a database to reduce redundancy and improve data integrity. It involves dividing large tables into smaller ones and defining relationships between them.</p>
+    <ul>
+      <li><strong>1NF (First Normal Form):</strong> Eliminate duplicate columns and ensure every field contains only one value.</li>
+      <li><strong>2NF (Second Normal Form):</strong> Meet 1NF and ensure all non-key columns depend on the entire primary key.</li>
+      <li><strong>3NF (Third Normal Form):</strong> Meet 2NF and ensure non-key columns don't depend on other non-key columns.</li>
+    </ul>
+
+    <h3>2. What is Denormalization?</h3>
+    <p>Denormalization is the process of intentionally adding redundant data to a database to improve read performance. This is achieved by combining tables or adding duplicate columns to avoid complex JOIN operations.</p>
+    <p>This is common in NoSQL databases where "joining" data is difficult or expensive.</p>
+
+    <h3>3. Key Comparisons</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Normalization</th>
+          <th>Denormalization</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Redundancy</td>
+          <td>Minimized</td>
+          <td>Increased</td>
+        </tr>
+        <tr>
+          <td>Data Integrity</td>
+          <td>High</td>
+          <td>Requires manual management</td>
+        </tr>
+        <tr>
+          <td>Read Speed</td>
+          <td>Slower (requires JOINs)</td>
+          <td>Faster (fewer JOINs)</td>
+        </tr>
+        <tr>
+          <td>Write Speed</td>
+          <td>Faster (less data repeated)</td>
+          <td>Slower (must update duplicate data)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>4. When to Use Which?</h3>
+    <ul>
+      <li>Use <strong>Normalization</strong> for transaction-heavy systems (OLTP) where data integrity is paramount and data is frequently updated.</li>
+      <li>Use <strong>Denormalization</strong> for read-heavy systems (like reporting or high-traffic web apps) and in many NoSQL architectures.</li>
+    </ul>
+
+    <h3>Conclusion</h3>
+    <p>The goal is not to achieve "perfect" normalization, but to find the right balance that meets your application's performance and integrity requirements.</p>
+</section>

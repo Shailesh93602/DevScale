@@ -1,0 +1,37 @@
+{
+  "title": "Managing Relationships with ORMs Quiz",
+  "description": "Test your knowledge on how ORMs and ODMs manage database relationships.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary benefit of using an ORM/ODM to manage relationships?",
+      "options": ["To avoid using a database", "To provide a high-level, object-oriented API for complex database connections", "To slow down the server", "To delete records automatically with no configuration"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which loading strategy retrieves associated records along with the main object in a single operation?",
+      "options": ["Lazy Loading", "Eager Loading", "Static Loading", "Dynamic Loading"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "In a Mongoose schema, which property is used to link a field to a document from another collection?",
+      "options": ["link", "ref", "connect", "join"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What does a Sequelize 'belongsToMany' association automatically require?",
+      "options": ["A primary key on the parent table", "A join table (through property)", "No foreign keys", "Multiple databases"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which strategy allows associated data to be retrieved only when it's explicitly called for in the application logic?",
+      "options": ["Eager Loading", "Lazy Loading", "Direct Loading", "Immediate Loading"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
