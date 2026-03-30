@@ -1,0 +1,57 @@
+{
+  "title": "Vue.js Watchers Quiz",
+  "description": "Evaluate your understanding of observing data, side effects, and the Watcher vs. Computed distinction.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primary role of a Watcher in Vue.js?",
+      "options": [
+        "To speed up CSS rendering.",
+        "To perform side effects (like an API call) when a data property changes.",
+        "To hide the JavaScript code from the console.",
+        "To replace the standard HTML input elements."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which option is used to define Watchers in a Vue instance?",
+      "options": ["state", "data", "methods", "watch"],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "When should you prefer a Watcher over a Computed property?",
+      "options": [
+        "When the logic is synchronous and only returns a simplified value.",
+        "When you need to perform an asynchronous operation or any side effect.",
+        "When the data is static.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does a watcher receive both the new and old value of the property it is watching?",
+      "options": [
+        "Yes, they are passed as the first and second arguments.",
+        "No, only the new value is received.",
+        "Only in older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Can watchers be used to watch objects or arrays deep (e.g. { deep: true } property)?",
+      "options": [
+        "Yes, using the deep: true option.",
+        "No, they only watch basic strings and numbers.",
+        "Only in older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

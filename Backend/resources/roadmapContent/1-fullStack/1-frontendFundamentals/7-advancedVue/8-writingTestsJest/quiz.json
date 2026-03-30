@@ -1,0 +1,47 @@
+{
+  "title": "Writing Tests with Jest Quiz",
+  "description": "Evaluate your understanding of Jest features, snapshot testing, and basic test structure (describe, test, expect).",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primary role of Jest in modern web development?",
+      "options": [
+        "To speed up CSS rendering.",
+        "To provide a comprehensive JavaScript testing framework for testing code and UI.",
+        "To hide the JavaScript code from the console.",
+        "To replace the standard HTML input elements."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which function is used to group related tests together in a Jest test file?",
+      "options": ["group()", "describe()", "test()", "assert()"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which function is used to define an individual test case in a Jest test file?",
+      "options": ["test() (or it())", "describe()", "expect()", "assert()"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is 'Snapshot Testing' in the context of Jest?",
+      "options": [
+        "A way to take a real photo of the UI.",
+        "A feature that tracks changes in UI components or any data structure over time comparing to a stored version.",
+        "A way to save the database state.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what function is used to make assertions in a Jest test (e.g. expect(a).toBe(b))?",
+      "options": ["expect()", "describe()", "test()", "assert()"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

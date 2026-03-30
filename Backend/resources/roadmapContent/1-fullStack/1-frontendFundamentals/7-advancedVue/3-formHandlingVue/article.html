@@ -1,0 +1,21 @@
+<div class="article-content">
+  <h1>Form Handling in Vue.js</h1>
+  <p>In Vue.js, the <code>v-model</code> directive is used to create two-way data binding on form input, textarea, and select elements. This makes handling user input straightforward and reactive, keeping your model and view in perfect sync.</p>
+
+  <h2>1. Common Input Elements</h2>
+  <p>You can use <code>v-model</code> on various types of input elements, such as text inputs, checkboxes, radio buttons, and select dropdowns. For each element, <code>v-model</code> automatically selects the correct property and event to listen for.</p>
+
+  <h2>2. Form Modifiers</h2>
+  <p>Vue provides specialized modifiers for <code>v-model</code> to handle common data cleaning and performance patterns at the template level.</p>
+  <ul>
+    <li><strong>.lazy:</strong> Sync after "change" instead of "input" event.</li>
+    <li><strong>.number:</strong> Cast user input as a Number.</li>
+    <li><strong>.trim:</strong> Automatically trim leading and trailing whitespace.</li>
+  </ul>
+
+  <h2>3. Custom Inputs with v-model</h2>
+  <p>To use <code>v-model</code> with your custom components in Vue 3, you must use the <code>modelValue</code> prop and emit an <code>update:modelValue</code> event from your child component.</p>
+
+  <h2>Conclusion</h2>
+  <p>By mastering form handling in Vue, you can create user-friendly and robust data entry experiences. Whether you're building a simple contact form or a complex multi-page survey, the simple and reactive nature of <code>v-model</code> and its modifiers will help you maintain high code quality and user focus.</p>
+</div>

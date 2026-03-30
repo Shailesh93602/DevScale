@@ -1,0 +1,24 @@
+<div class="article-content">
+  <h1>Vue.js Methods</h1>
+  <p>Methods are the place to define the logic for your Vue components. They are standard JavaScript functions that can be used for event handling, data manipulation, or any reusable piece of code within your application.</p>
+
+  <h2>1. Defining Methods</h2>
+  <p>Methods are defined within the <code>methods</code> option of your Vue instance. Because they have access to the component instance via <code>this</code>, they can easily read and update any data or properties.</p>
+  <pre><code>methods: {
+  greet() {
+    alert('Hello, ' + this.name + '!')
+  },
+  incrementCount() {
+    this.count++
+  }
+}</code></pre>
+
+  <h2>2. Using Methods in Templates</h2>
+  <p>Methods are most commonly used in event handlers (e.g. <code>@click="greet"</code>), but they can also be called directly inside templates (e.g. <code>{{ formatName() }}</code>). **Note:** Calling methods in templates will re-run the method on every render, so use them sparingly for large or expensive calculations.</p>
+
+  <h2>3. Arrow Functions</h2>
+  <p>Avoid using arrow functions when defining your Vue methods, as arrow functions don’t have their own <code>this</code> context. To access the Vue instance data with <code>this.someProperty</code>, regular function syntax is required.</p>
+
+  <h2>Conclusion</h2>
+  <p>Methods are the workhorses of your Vue applications. By building out a clear and well-structured set of methods, you can group your logic into reusable and testable units that work seamlessly with Vue’s reactivity for a smooth and interactive user experience.</p>
+</div>

@@ -1,0 +1,52 @@
+{
+  "title": "Vue with APIs (HTTP Requests) Quiz",
+  "description": "Evaluate your understanding of Axios/Fetch, lifecycle hook integration, and managing loading/error states.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primary role of an HTTP request in a Vue app?",
+      "options": [
+        "To speed up CSS rendering.",
+        "To fetch data from or save data to an external API.",
+        "To hide the JavaScript code from the console.",
+        "To replace the standard HTML input elements."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which popular library is commonly used for making HTTP requests in Vue.js applications?",
+      "options": ["Redux", "Axios", "Vue Router", "Vuex"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which lifecycle hook is the best place to initially fetch data from an API when a component loads?",
+      "options": ["created() or mounted()", "beforeUpdate()", "unmounted()", "None of the above."],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Why is it important to manage 'loading' and 'error' states during API calls?",
+      "options": [
+        "To show spinners or messages to the user while the request is pending or if it fails.",
+        "To make the code look more complex.",
+        "To only speed up the network speed.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Does the Fetch API require any external library installation in modern browsers?",
+      "options": [
+        "No, it is built directly into all modern browsers.",
+        "Yes, you must install 'vue-fetch'.",
+        "Only in older versions of Vue.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
