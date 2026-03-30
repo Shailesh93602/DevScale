@@ -1,0 +1,47 @@
+{
+  "title": "WebSockets Quiz",
+  "description": "Evaluate your understanding of the full-duplex versus request-response (HTTP) model, the role of Socket.io for automatic reconnections/broadcasting, and the need for instant server pushes for modern apps.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily design philosophy of 'WebSockets' compared to standard HTTP?",
+      "options": [
+        "Faster component rendering.",
+        "A full-duplex, low-latency connection where both the client and server can send data anytime without re-establishing a new request.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Standard HTTP uses which model for data exchange between a browser and a server?",
+      "options": ["Request-Response", "Always-On", "Broadcast", "None of the above."],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which popular Node.js library provides a more robust and easier-to-use API for WebSockets, including automatic reconnections?",
+      "options": ["Express", "Socket.io", "HTTP", "Fetch"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which WebSocket event is commonly used to send a message to 'everyone' currently connected to the server?",
+      "options": ["io.emit()", "socket.on()", "socket.send()", "io.call()"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Does using WebSockets allowing you to build truly Fullstack applications by enabling real-time features like chat or live notifications?",
+      "options": [
+        "Yes, by providing a way for the server to 'push' data directly to the client as soon as it is available.",
+        "No, it's always slower.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

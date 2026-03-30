@@ -1,0 +1,20 @@
+<div class="article-content">
+  <h1>Templating Engines</h1>
+  <p>To serve dynamic HTML from your server, you need a **Templating Engine**. These tools allow you to embed JavaScript directly into your HTML, making it easy to show a user's name, display a list of products, or render content based on a database query.</p>
+
+  <h2>1. Popular Directives (EJS, Pug, Handlebars)</h2>
+  <ul>
+    <li><strong>EJS (Embedded JavaScript):</strong> The most popular and standard templating engine, as it uses standard HTML syntax with JavaScript tags (<code>&lt;%= user.name %&gt;</code>).</li>
+    <li><strong>Pug:</strong> Uses a specialized, indented syntax that eliminates the need for closing tags, resulting in very clean and short code.</li>
+    <li><strong>Handlebars:</strong> Provides a "minimalist" approach that focuses on keeping your logic out of your templates as much as possible.</li>
+  </ul>
+
+  <h2>2. Setting Up Express</h2>
+  <p>To use a templating engine, you simply tell Express which one you've installed. For example, to use **EJS**, you would add <code>app.set('view engine', 'ejs')</code> to your project configuration.</p>
+
+  <h2>3. Professional Rendering</h2>
+  <p>Instead of using <code>res.send()</code>, you used <code>res.render()</code> to combine your template with the specific data for that request. This is the industry standard for server-side website generation.</p>
+
+  <h2>Conclusion</h2>
+  <p>By mastering Express.js templating, you're becoming a faster and more efficient Fullstack engineer. Whether you're managing complex database logic or scaling a massive production application, templates provide the tools and security you need to build the highest-quality and most professional applications.</p>
+</div>

@@ -1,0 +1,52 @@
+{
+  "title": "Templating Engines Quiz",
+  "description": "Evaluate your understanding of EJS/Pug/Handlebars roles, setting up the 'view engine' in Express, and using res.render for professional dynamic HTML generation.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily role of a 'Templating Engine' in an Express.js application?",
+      "options": [
+        "Faster component rendering.",
+        "To combine HTML templates with dynamic data (like a user's name or product list) from the server to generate final HTML pages.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which popular templating engine uses standard HTML with embedded JavaScript tags (e.g., <%= user.name %>)?",
+      "options": ["Pug", "Handlebars", "EJS", "Blade"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which Express method is used to render a template and send the final HTML to the user?",
+      "options": ["res.send()", "res.render()", "res.json()", "res.out()"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what line of code is commonly used in Express to set the 'view engine' to EJS?",
+      "options": [
+        "app.use('ejs')",
+        "app.set('view engine', 'ejs')",
+        "app.get('ejs')",
+        "app.engine('ejs')"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does using a templating engine allowing the use of millions of pre-built packages and libraries to handle complex dynamic UI generation?",
+      "options": [
+        "Yes, as it is a core feature of most modern web frameworks to support dynamic views.",
+        "No, it's always slower.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
