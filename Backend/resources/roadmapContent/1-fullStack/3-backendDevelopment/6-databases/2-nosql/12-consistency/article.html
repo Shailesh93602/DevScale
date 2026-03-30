@@ -1,0 +1,48 @@
+<article>
+  <h1>Mastering NoSQL Consistency Models</h1>
+  
+  <p>In a distributed database where data is replicated across multiple servers, ensuring that every user sees the same data at the same time is incredibly difficult. <strong>Consistency Models</strong> define the rules for how data updates are propagated through a cluster and what guarantees the system provides to readers.</p>
+
+  <section>
+    <h2>1. Strong Consistency</h2>
+    <p>Strong consistency guarantees that every read operation receives the most recent write. If you update a document on Node A, any user reading from Node B will immediately see that update. This is the gold standard for financial applications but is very slow in a globally distributed system.</p>
+  </section>
+
+  <section>
+    <h2>2. Eventual Consistency (The NoSQL Standard)</h2>
+    <p>Eventual consistency guarantees that all nodes will eventually become consistent, but there is a short window of time (latency) where some nodes might return "stale" data. This trades consistency for massive availability and performance.</p>
+    <ul>
+      <li><strong>User Experience:</strong> A user might refresh their feed and temporarily not see a post they just created. After another refresh a second later, it appears.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>3. Causal Consistency</h2>
+    <p>Causal consistency ensures that operations are seen in their causal order. If User A posts a comment and User B replies to it, any user who sees the reply is guaranteed to also see the original comment.</p>
+  </section>
+
+  <section>
+    <h2>4. Read-Your-Own-Writes Consistency</h2>
+    <p>A specialized but critical consistency model that ensures a specific user will always see the results of their own updates immediately, even if other users don't see them for another few seconds. This is often achieved using "stickiness" or by always querying the primary node for that specific user.</p>
+  </section>
+
+  <section>
+    <h2>5. The CAP Theorem Revisited</h2>
+    <p>As a reminder, the CAP theorem states that a distributed system can only provide two out of three: <strong>Consistency (C)</strong>, <strong>Availability (A)</strong>, and <strong>Partition Tolerance (P)</strong>. Most NoSQL systems pick <strong>AP</strong> (Availability and Partition Tolerance), resulting in Eventual Consistency.</p>
+  </section>
+
+  <section>
+    <h2>Best Practices Summary</h2>
+    <ol>
+      <li><strong>Understand your Application's Criticality:</strong> If you are building a banking system, you MUST use Strong Consistency (CP). If you are building a social media feed, Eventual Consistency (AP) is almost always the right choice.</li>
+      <li><strong>Use 'Read Preferences' Strategically:</strong> In MongoDB, you can tell the database to: 
+        <ul>
+          <li><code>primary</code>: Always read from the primary node (Strong Consistency; Slower).</li>
+          <li><code>secondary</code>: Prefer reading from secondary nodes (Eventual Consistency; Faster).</li>
+        </ul>
+      </li>
+      <li><strong>Design for Divergence:</strong> If your system uses eventual consistency, ensure your application logic can handle conflicting updates (e.g., "Last Write Wins" or versioning).</li>
+    </ol>
+  </section>
+
+</article>

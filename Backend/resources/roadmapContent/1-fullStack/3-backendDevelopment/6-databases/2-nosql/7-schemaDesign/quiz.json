@@ -1,0 +1,37 @@
+{
+  "title": "NoSQL Schema Design Quiz",
+  "description": "Test your fundamental knowledge about schema design and data modeling in NoSQL databases.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What's the primary shift in approach when moving from SQL to NoSQL schema design?",
+      "options": ["SQL is for data and NoSQL is for images.", "SQL uses 'Data-First' design; NoSQL uses 'Query-First' design (designing the structure based on how your app will query the data).", "NoSQL is faster than SQL.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is the primary benefit of 'Embedding' related data inside a single NoSQL document?",
+      "options": ["It makes the database smaller.", "Single round-trip retrieval and incredible read-performance by avoiding multi-table joins.", "It's the only way to store data in a database.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "When should you generally prefer 'Referencing' over 'Embedding' in a NoSQL database?",
+      "options": ["When data is updated frequently or shared across many different documents.", "When you want to avoid using any IDs.", "When the data is very small.", "None of the above."],
+      "correctAnswer": 0,
+      "points": 20
+    },
+    {
+      "question": "In a distributed NoSQL database, 'Atomicity' is generally guaranteed at which level?",
+      "options": ["The Entire Collection Level", "The Individual Document Level", "The Entire Database Cluster Level", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's a common danger of embedding too much data inside a single document?",
+      "options": ["It makes the database too fast.", "Exceeding the document size limit (e.g., 16MB in MongoDB) and slowing down your application's memory and CPU.", "To hide the application's IP address.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

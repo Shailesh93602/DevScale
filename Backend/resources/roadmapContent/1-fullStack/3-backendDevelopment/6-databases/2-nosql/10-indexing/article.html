@@ -1,0 +1,48 @@
+<article>
+  <h1>Mastering NoSQL Indexing</h1>
+  
+  <p>Indexing is the single most important tool for ensuring your NoSQL database remains fast as your data grows. Without an index, the database must perform a "Collection Scan" (reading every single document in a collection) for every query. With an index, the database can jump directly to the relevant records.</p>
+
+  <section>
+    <h2>1. Single Field Index</h2>
+    <p>The simplest type of index. You index a single field (like <code>email</code> or <code>username</code>) to make searches for that exact field blazing fast.</p>
+    <pre><code>db.users.createIndex({ email: 1 });</code></pre>
+  </section>
+
+  <section>
+    <h2>2. Compound Index</h2>
+    <p>If you frequently query by multiple fields together (e.g., finding "completed orders for a specific user"), a <strong>Compound Index</strong> is much more efficient than two separate single-field indexes.</p>
+    <pre><code>db.orders.createIndex({ user_id: 1, status: 1 });</code></pre>
+  </section>
+
+  <section>
+    <h2>3. Multikey Index (Indexing Arrays)</h2>
+    <p>NoSQL databases like MongoDB allow you to index fields that contain arrays. This allows you to efficiently search for documents that contain a specific element in an array (e.g., finding all posts with the tag "Javascript").</p>
+    <pre><code>db.posts.createIndex({ tags: 1 });</code></pre>
+  </section>
+
+  <section>
+    <h2>4. TTL (Time To Live) Index</h2>
+    <p>A specialized index that automatically deletes documents from a collection after a certain period of time. This is perfect for logs, sessions, and temporary event data.</p>
+    <pre><code>db.sessions.createIndex({ "createdAt": 1 }, { expireAfterSeconds: 3600 });</code></pre>
+  </section>
+
+  <section>
+    <h2>5. Sparse and Partial Indexes</h2>
+    <ul>
+      <li><strong>Sparse Index:</strong> Only includes documents that actually contain the indexed field. This saves massive amounts of storage if the field only exists in 1% of your documents.</li>
+      <li><strong>Partial Index:</strong> Only indexes documents that meet a specific filter criteria (e.g., only index "active" users).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Best Practices Summary</h2>
+    <ol>
+      <li><strong>Index your Queries, Not your Data:</strong> Only create an index for fields your application actually uses for filtering or sorting. Every index consumes memory and slows down write operations.</li>
+      <li><strong>Rule of Thumb:</strong> If your query takes longer than 50ms locally, it almost certainly needs an index.</li>
+      <li><strong>Use Compound Indexes Strategically:</strong> The order of fields in a compound index matters! Put the most frequently filtered fields first.</li>
+      <li><strong>Monitor Index Usage:</strong> Use your database's profiling tools (like <code>$indexStats</code> in MongoDB) to find "unused" indexes and delete them to reclaim resources.</li>
+    </ol>
+  </section>
+
+</article>
