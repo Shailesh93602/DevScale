@@ -1,0 +1,62 @@
+{
+  "title": "CSS for Web Performance Quiz",
+  "description": "Test your knowledge on optimizing CSS for faster web applications.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary reason why CSS is considered a render-blocking resource?",
+      "options": [
+        "It must be fully loaded before the DOM starts parsing.",
+        "The browser must construct the CSSOM before it can create the Render Tree.",
+        "It prevents JavaScript from executing until it is loaded.",
+        "It always requires a network request to load."
+      ],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these CSS selector types is generally the most efficient for the browser to match?",
+      "options": [
+        "Deeply nested selectors (e.g., body div ul li a)",
+        "Overly broad selectors (e.g., div *)",
+        "Direct class selectors (e.g., .nav-link)",
+        "Attribute selectors (e.g., [data-item='active'])"
+      ],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What is 'Critical CSS'?",
+      "options": [
+        "The CSS required to styles the entire page before any user interaction.",
+        "A CSS file that is only loaded on mobile devices.",
+        "The minimum CSS needed to render the 'above-the-fold' content, often inlined.",
+        "The CSS used to handle animations and transitions."
+      ],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "Which property is handled by the browser's compositor and does not trigger a layout reflow?",
+      "options": [
+        "width",
+        "margin",
+        "transform",
+        "padding"
+      ],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What does the 'content-visibility: auto' property do?",
+      "options": [
+        "It makes all off-screen elements invisible to screen readers.",
+        "It skips rendering work for off-screen elements until they are needed.",
+        "It forces the browser to render all elements immediately.",
+        "It prevents CSS from affecting the 'display' property of elements."
+      ],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

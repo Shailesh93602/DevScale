@@ -1,0 +1,62 @@
+{
+  "title": "JavaScript Overview Quiz",
+  "description": "Test your knowledge on the history, purpose, and key features of JavaScript.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these is NOT one of the three core web technologies?",
+      "options": [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "Java"
+      ],
+      "correctAnswer": 3,
+      "points": 20
+    },
+    {
+      "question": "Who created JavaScript in 1995?",
+      "options": [
+        "Tim Berners-Lee",
+        "Brendan Eich",
+        "Linus Torvalds",
+        "Mark Zuckerberg"
+      ],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is the official standard for JavaScript?",
+      "options": [
+        "W3C Specification",
+        "ECMAScript (ES)",
+        "JSON Specification",
+        "HTTP/2 Specification"
+      ],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is the primary role of JavaScript in web development?",
+      "options": [
+        "Providing the structure of a page.",
+        "Defining the visual design and layout.",
+        "Implementing complex behavior and interactivity.",
+        "Managing only the database side of an application."
+      ],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "In the context of browsers, JavaScript is usually...",
+      "options": [
+        "Prior-compiled to machine code.",
+        "Interpreted directly by the browser.",
+        "Only used for database queries.",
+        "Written only in Python."
+      ],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "title": "CSS Best Practices Quiz",
+  "description": "Test your knowledge on writing maintainable, scalable, and bug-free CSS.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these is a recommended naming convention for CSS classes?",
+      "options": [
+        "Style-based (.red-text)",
+        "Meaningful/Semantic (.alert-error)",
+        "Single characters (.a, .b, .c)",
+        "Using only IDs (#main-alert)"
+      ],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Why should you generally avoid using IDs for styling in CSS?",
+      "options": [
+        "They have extremely low specificity.",
+        "They are only for JavaScript.",
+        "They have very high specificity and are hard to override.",
+        "They are not supported in older browsers."
+      ],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What does 'box-sizing: border-box' ensure?",
+      "options": [
+        "Borders are removed from all elements.",
+        "Padding and borders are included in the element's width and height.",
+        "The border is always 1px solid black.",
+        "Elements are always centered on the page."
+      ],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is the primary purpose of a 'CSS Reset'?",
+      "options": [
+        "To clear all user-defined styles.",
+        "To create a consistent baseline of default styles across all browsers.",
+        "To minify the CSS file automatically.",
+        "To add vendor prefixes to all properties."
+      ],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "When is it appropriate to use the '!important' rule?",
+      "options": [
+        "To override any style that isn't working.",
+        "In every single declaration to ensure it's applied correctly.",
+        "As a last resort for specific utility overrides or complex bug fixes.",
+        "To increase the performance of the rendering engine."
+      ],
+      "correctAnswer": 2,
+      "points": 20
+    }
+  ]
+}
