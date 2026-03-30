@@ -1,0 +1,37 @@
+<div class="article-content">
+  <h1>React Components</h1>
+  <p>Components are the building blocks of every React application. They are independent and reusable bits of code that serve the same purpose as JavaScript functions, but work in isolation and return HTML-like JSX structures.</p>
+
+  <h2>1. PascalCase Naming</h2>
+  <p>In React, component names <strong>must</strong> always start with a capital letter (PascalCase). This is how React distinguishes between regular HTML tags (like <code>&lt;div&gt;</code>) and custom components (like <code>&lt;Header /&gt;</code>).</p>
+
+  <h2>2. Functional Components</h2>
+  <p>Modern React applications are built using <strong>Functional Components</strong>. A functional component is literally just a JavaScript function that returns JSX.</p>
+  <pre><code>function Welcome() {
+  return &lt;h1&gt;Hello, Welcome to my app!&lt;/h1&gt;;
+}
+
+export default Welcome;</code></pre>
+
+  <h2>3. Component Composition</h2>
+  <p>The true power of React comes from building small, focused components and composing them together to create a large interface.</p>
+  <pre><code>function App() {
+  return (
+    &lt;div&gt;
+      &lt;Header /&gt;
+      &lt;MainContent /&gt;
+      &lt;Footer /&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+  <h2>4. Exporting and Importing</h2>
+  <p>Usually, each component is created in its own file. You can share them across your app using <code>export</code> and <code>import</code>.</p>
+  <ul>
+    <li><strong>Default export:</strong> <code>export default MyComponent;</code> (imported as <code>import MyComponent from "./MyComponent"</code>)</li>
+    <li><strong>Named export:</strong> <code>export const MyComponent = ...;</code> (imported as <code>import { MyComponent } from "./MyComponent"</code>)</li>
+  </ul>
+
+  <h2>Conclusion</h2>
+  <p>By thinking in components, you break down complex UIs into manageable, testable, and reusable pieces. This modular approach is at the heart of React's philosophy and is what enables teams to build massive applications with consistency and speed.</p>
+</div>

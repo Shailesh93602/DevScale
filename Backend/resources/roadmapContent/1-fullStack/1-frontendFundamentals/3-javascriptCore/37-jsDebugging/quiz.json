@@ -1,0 +1,47 @@
+{
+  "title": "JavaScript Debugging Quiz",
+  "description": "Evaluate your understanding of console methods, debugger statements, and browser developer tools in JavaScript.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which of the following console methods displays an array as a table in the browser's console?",
+      "options": ["console.log()", "console.table()", "console.view()", "console.grid()"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the primary role of the debugger statement in JavaScript?",
+      "options": [
+        "It clears the current console logs.",
+        "It pauses the execution of code and opens the available debugger tool.",
+        "It removes all breakpoints from a script.",
+        "It checks if a script contains errors without executing it."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "In Chrome Developer Tools, where can you set manual breakpoints and step through execution line by line?",
+      "options": ["Elements Tab", "Console Tab", "Sources Tab", "Network Tab"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which console method can you use to track how long a specific piece of code takes to execute?",
+      "options": [
+        "console.logTime()",
+        "console.track()",
+        "console.time() and console.timeEnd()",
+        "console.timer()"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which browser shortcut is often used to open the browser developer tools?",
+      "options": ["F5", "F12", "Ctrl+R", "Shift+S"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

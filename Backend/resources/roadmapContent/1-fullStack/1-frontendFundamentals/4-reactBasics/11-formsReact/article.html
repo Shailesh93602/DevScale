@@ -1,0 +1,39 @@
+<div class="article-content">
+  <h1>Forms in React</h1>
+  <p>In HTML, form elements like <code>&lt;input&gt;</code>, <code>&lt;textarea&gt;</code>, and <code>&lt;select&gt;</code> typically maintain their own state. In React, mutable state is usually kept in the component's <code>state</code>. We can combine these two by making the React state the "single source of truth." This is called a <strong>Controlled Component</strong>.</p>
+
+  <h2>1. Controlled Components</h2>
+  <p>To create a controlled component, you wire up an input's <code>value</code> to a piece of React state and its <code>onChange</code> handler to a function that updates that state.</p>
+  <pre><code>function NameForm() {
+  const [value, setValue] = useState("");
+
+  const handleChange = (event) => {
+    setValue(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    alert("A name was submitted: " + value);
+    event.preventDefault();
+  };
+
+  return (
+    &lt;form onSubmit={handleSubmit}&gt;
+      &lt;input type="text" value={value} onChange={handleChange} /&gt;
+      &lt;button type="submit"&gt;Submit&lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+
+  <h2>2. Handling Multiple Inputs</h2>
+  <p>If you have several inputs in a form, you can give each one a <code>name</code> attribute and use a single handler with computed property names to update the state.</p>
+  <pre><code>const handleInputChange = (e) => {
+  const { name, value } = e.target;
+  setValues({ ...values, [name]: value });
+};</code></pre>
+
+  <h2>3. Textarea and Select</h2>
+  <p>In React, <code>&lt;textarea&gt;</code> and <code>&lt;select&gt;</code> tags work very similarly to simple <code>&lt;input&gt;</code> tags. They both use a <code>value</code> attribute for their content and a single <code>onChange</code> handler for updates.</p>
+
+  <h2>Conclusion</h2>
+  <p>Controlled components give you complete power over user input and enable complex validation, real-time transformations, and interactive form behavior with ease. By mastering these patterns, you can build reliable and user-friendly data entry experiences in your React applications.</p>
+</div>

@@ -1,0 +1,29 @@
+<div class="article-content">
+  <h1>Lists and Keys in React</h1>
+  <p>In React, you can build collections of elements and include them in JSX by wrapping them in curly braces. Rendering lists of data is a fundamental part of building dynamic web applications.</p>
+
+  <h2>1. Rendering Multiple Components</h2>
+  <p>To render multiple components from an array of data, use the JavaScript <code>map()</code> function. For each item in the array, you return a React element.</p>
+  <pre><code>const fruits = ["Apple", "Banana", "Cherry"];
+const listItems = fruits.map((fruit) =>
+  &lt;li&gt;{fruit}&lt;/li&gt;
+);
+
+function FruitList() {
+  return &lt;ul&gt;{listItems}&lt;/ul&gt;;
+}</code></pre>
+
+  <h2>2. The 'key' Prop</h2>
+  <p>When rendering a list of elements, React requires a special <code>key</code> prop for each item. Keys help React identify which items have changed, been added, or been removed, which is crucial for high-performance DOM updates.</p>
+  <pre><code>const todoItems = todos.map((todo) =>
+  &lt;li key={todo.id}&gt;
+    {todo.text}
+  &lt;/li&gt;
+);</code></pre>
+
+  <h2>3. Why Keys Must Be Unique?</h2>
+  <p>Keys must be unique among siblings to ensure that React can correctly track individual elements. Using the array index as a <code>key</code> is generally <strong>discouraged</strong> if the order of items may change (e.g., sorting, adding/removing), as it can lead to UI bugs and performance issues.</p>
+
+  <h2>Conclusion</h2>
+  <p>Lists and keys go hand-in-hand in React. By using <code>map()</code> and providing unique keys, you can efficiently and accurately render large amounts of dynamic data in your user interface while maintaining React's optimal performance.</p>
+</div>

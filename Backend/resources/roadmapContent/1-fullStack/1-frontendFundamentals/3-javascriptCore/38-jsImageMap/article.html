@@ -1,0 +1,27 @@
+<div class="article-content">
+  <h1>JavaScript Image Maps</h1>
+  <p>An image map is a regular image with clickable areas (hotspots). Using JavaScript, you can make these hotspots truly interactive by listening to events on specific portions of the image.</p>
+
+  <h2>1. The Image Map HTML Structure</h2>
+  <p>An image map requires an <code>&lt;img&gt;</code> tag with the <code>usemap</code> attribute and a <code>&lt;map&gt;</code> tag containing <code>&lt;area&gt;</code> tags.</p>
+  <pre><code>&lt;img src="planets.jpg" usemap="#planetmap" width="145" height="126"&gt;
+
+&lt;map name="planetmap"&gt;
+  &lt;area id="sun" shape="rect" coords="0,0,82,126" alt="Sun" href="sun.htm"&gt;
+  &lt;area id="mercury" shape="circle" coords="90,58,3" alt="Mercury" href="mercur.htm"&gt;
+&lt;/map&gt;</code></pre>
+
+  <h2>2. Interactive Image Maps with JavaScript</h2>
+  <p>You can add event listeners to <code>&lt;area&gt;</code> tags just like any other HTML element. This allows you to trigger custom reactions based on where the user clicks inside an image.</p>
+  <pre><code>const sunArea = document.getElementById("sun");
+
+sunArea.addEventListener("mouseover", () => {
+  console.log("Mouse is over the Sun!");
+});</code></pre>
+
+  <h2>3. Dynamic Image Maps</h2>
+  <p>Using JavaScript, you can dynamically change the <code>coords</code> or <code>shape</code> of an image map's hotspots, which is useful for responsive images where the size might change based on the screen width.</p>
+
+  <h2>Conclusion</h2>
+  <p>While modern web design often uses SVG for interactive graphics, the classic image map remains a useful tool for highlighting regions of an image and providing localized interaction. When combined with JavaScript events, it transforms a static graphic into a rich navigational experience.</p>
+</div>

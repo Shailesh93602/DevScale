@@ -1,0 +1,57 @@
+{
+  "title": "React Lifecycle Methods Quiz",
+  "description": "Evaluate your understanding of mounting, updating, and unmounting phases in React components.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which phase of the React lifecycle is associated with a component being created and inserted into the DOM?",
+      "options": ["Mounting", "Updating", "Unmounting", "Initializing"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "In functional components, how do you handle side effects on mount and unmount?",
+      "options": [
+        "By setting window.onLoad and window.onUnload callbacks.",
+        "By using the useEffect() hook with a cleanup function and empty dependency array.",
+        "By calling getLifecycleMethods() inside the function body.",
+        "Only by using class-based syntax."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "When does the 'Updating' phase occur in the React lifecycle?",
+      "options": [
+        "In a single-page application upon initial load.",
+        "When a component's state or props change.",
+        "When a user navigates to a new page.",
+        "When the battery level is low."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "How do you perform 'cleanup' (e.g., canceling a timer) in a functional component using useEffect?",
+      "options": [
+        "By calling useCleanup() at the end.",
+        "By returning a function from within the useEffect() hook.",
+        "By setting cleanup=true in props.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does useEffect() with an EMPTY ([]) dependency array behave like componentDidMount in class components?",
+      "options": [
+        "Yes, it runs only once after the initial render.",
+        "No, it runs after every update.",
+        "Yes, but only in ES6 or later.",
+        "No, it is an object in older browsers."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

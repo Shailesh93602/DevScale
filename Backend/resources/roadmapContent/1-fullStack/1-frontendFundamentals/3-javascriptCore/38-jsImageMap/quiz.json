@@ -1,0 +1,57 @@
+{
+  "title": "JavaScript Image Maps Quiz",
+  "description": "Evaluate your understanding of map and area elements and interactive event handling in JavaScript.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which of the following describes the purpose of an image map?",
+      "options": [
+        "To group multiple images into one.",
+        "To create clickable areas (hotspots) on a single image.",
+        "To make an image load faster.",
+        "To provide a caption for an image."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what is the correct syntax for an image that uses an image map?",
+      "options": [
+        "<img src=\"planets.jpg\" map=\"#planetmap\">",
+        "<img src=\"planets.jpg\" usemap=\"#planetmap\">",
+        "<img src=\"planets.jpg\" hotmap=\"#planetmap\">",
+        "<img src=\"planets.jpg\" coordinates=\"#planetmap\">"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of the following is NOT a standard shape for an <area> tag in an image map?",
+      "options": ["rect", "circle", "poly", "star"],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "Can you use addEventListener() on an <area> tag within an image map?",
+      "options": [
+        "Yes, like any other HTML element.",
+        "No, area elements cannot trigger JavaScript events.",
+        "Only if you add the event listener to the <img> tag instead.",
+        "Only in modern SVG-based image maps."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "How can you specify that a hotpot in an image map should be a circle at coordinates 90, 58 with radius 3?",
+      "options": [
+        "<area shape=\"circle\" coords=\"90,58,3\">",
+        "<area shape=\"rect\" coords=\"90,58,3\">",
+        "<area shape=\"circle\" radius=\"3\" center=\"90,58\">",
+        "<area draw=\"circle\" point=\"90,58,3\">"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
