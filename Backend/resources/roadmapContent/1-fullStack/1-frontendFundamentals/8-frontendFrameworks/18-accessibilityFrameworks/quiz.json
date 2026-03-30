@@ -1,0 +1,57 @@
+{
+  "title": "Accessibility in Frontend Frameworks Quiz",
+  "description": "Evaluate your understanding of semantic HTML, Aria roles/labels, and keyboard navigation management (Focus Rings).",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what was the primarily reason to use a native <button> tag instead of a <div> for a clickable element?",
+      "options": [
+        "Faster component rendering.",
+        "To provide built-in semantic meaning, keyboard accessibility, and support for screen readers.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what attribute would you use on a button with only an icon (e.g., a 'close' X button) to provide text for screen readers?",
+      "options": ["aria-label", "label-text", "name", "content"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Is it important to manage 'focus rings' as part of an accessible web application design?",
+      "options": [
+        "Yes, as they allow keyboard users to see which element is currently selected.",
+        "No, they only look bad.",
+        "Only for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what is the key component of a logical 'Tab Order' in a professional application?",
+      "options": [
+        "A random order to keep users engaged.",
+        "A logical, predictable sequence as the user presses 'Tab' to move through interactive elements.",
+        "No tab order at all.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Modern frameworks like Tailwind provides specific utilities (e.g., focus:ring) specifically for managing accessibility states.",
+      "options": [
+        "True",
+        "False (they only style the UI)",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
