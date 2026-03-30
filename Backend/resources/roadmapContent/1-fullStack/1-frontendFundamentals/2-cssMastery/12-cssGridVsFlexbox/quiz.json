@@ -1,0 +1,60 @@
+{
+  "title": "CSS Grid vs Flexbox Quiz",
+  "description": "Test your knowledge on the differences and use cases for the two most popular CSS layout tools.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these is a one-dimensional layout system?",
+      "options": [
+        "CSS Grid",
+        "Flexbox",
+        "Both are one-dimensional",
+        "Neither is one-dimensional"
+      ],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "When should you use CSS Grid over Flexbox?",
+      "options": [
+        "When aligning items in a single row.",
+        "When the layout is dictates by the content within it.",
+        "When you need precise control over both rows and columns simultaneously.",
+        "When you only need to center a single item."
+      ],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What is the primary difference in approach between Grid and Flexbox?",
+      "options": [
+        "Grid is layout-first; Flexbox is content-first.",
+        "Grid is content-first; Flexbox is layout-first.",
+        "Grid only supports pixels; Flexbox only supports percentages.",
+        "Grid is for desktop; Flexbox is for mobile."
+      ],
+      "correctAnswer": 0,
+      "points": 20
+    },
+    {
+      "question": "True or False: Using both Grid and Flexbox on the same page is considered bad practice.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which property would you use to define the columns in a CSS Grid?",
+      "options": [
+        "flex-direction",
+        "grid-template-columns",
+        "column-count",
+        "grid-auto-flow"
+      ],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

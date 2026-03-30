@@ -1,0 +1,31 @@
+<div class="article-content">
+  <h1>CSS Filters and Visual Effects</h1>
+  <p>CSS filters are powerful tools that allow you to apply graphical effects like blurring, color shifting, and brightness adjustments to elements directly in the browser. They provide a way to enhance the visual appeal of your web pages without needing external image editing software.</p>
+
+  <h2>1. Common Filter Functions</h2>
+  <ul>
+    <li><strong>blur(px):</strong> Applies a Gaussian blur to the element.</li>
+    <li><strong>brightness(%):</strong> Adjusts the brightness (e.g., <code>brightness(50%)</code> makes it darker).</li>
+    <li><strong>contrast(%):</strong> Adjusts the contrast of the colors.</li>
+    <li><strong>grayscale(%):</strong> Converts the element to grayscale.</li>
+    <li><strong>hue-rotate(deg):</strong> Rotates the hue of the colors around the color wheel.</li>
+    <li><strong>invert(%):</strong> Inverts the colors of the element.</li>
+    <li><strong>opacity(%):</strong> Sets the transparency level (similar to the <code>opacity</code> property).</li>
+    <li><strong>saturate(%):</strong> Adjusts the intensity of the colors.</li>
+    <li><strong>sepia(%):</strong> Converts the element to a warm, brownish sepia tone.</li>
+    <li><strong>drop-shadow():</strong> Applies a drop shadow that follows the element's actual alpha channel (unlike <code>box-shadow</code>).</li>
+  </ul>
+
+  <h2>2. Using Multiple Filters</h2>
+  <p>You can combine multiple filters in a single declaration by separating them with spaces:</p>
+  <pre><code>.hero-image { filter: grayscale(50%) blur(5px); }</code></pre>
+
+  <h2>3. Performance and Hardware Acceleration</h2>
+  <p>Filters are computationally expensive. Browsers typically use the GPU to render them, but excessive use—especially on large images or during animations—can slow down your page. Always test performance on lower-end devices.</p>
+
+  <h2>4. Backdrop Filter</h2>
+  <p>The <code>backdrop-filter</code> property allows you to apply filters to the area <em>behind</em> an element. This is commonly used for "glassmorphism" effects, where a semi-transparent element blurs the background content.</p>
+
+  <h2>Conclusion</h2>
+  <p>CSS Filters are a versatile way to add professional visual effects to your site. By mastering these functions, you can create more immersive and dynamic user interfaces with minimal extra assets.</p>
+</div>

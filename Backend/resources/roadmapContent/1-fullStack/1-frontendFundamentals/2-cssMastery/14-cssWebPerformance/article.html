@@ -1,0 +1,33 @@
+<div class="article-content">
+  <h1>CSS for Web Performance</h1>
+  <p>In modern web development, performance is not just a luxury; it's a critical component of user experience and SEO. CSS plays a significant role in how quickly a page becomes interactive and visually stable. This article explores best practices for optimizing CSS to ensure your web applications remain fast and responsive.</p>
+
+  <h2>1. Understanding the Critical Rendering Path</h2>
+  <p>When a browser loads a page, it must parse the HTML into the DOM (Document Object Model) and the CSS into the CSSOM (CSS Object Model). These two models are combined to form the Render Tree. If the browser encounters a large CSS file, it blocks rendering until the CSSOM is fully built. This is why CSS is considered a <strong>render-blocking resource</strong>.</p>
+
+  <h2>2. Minification and Compression</h2>
+  <p>The simplest way to improve CSS performance is to reduce the file size. Minification removes whitespace, comments, and redundant formatting without changing the functionality. Additionally, serving CSS files compressed with <strong>Gzip</strong> or <strong>Brotli</strong> can further reduce the amount of data transferred over the network.</p>
+
+  <h2>3. Implementing Critical CSS</h2>
+  <p>Critical CSS is a technique where you extract and inline the minimum CSS required to render the "above-the-fold" content (the part of the page visible without scrolling). By inlining this CSS in the <code>&lt;head&gt;</code> of the HTML, the browser can start rendering the page immediately, while the rest of the CSS is loaded asynchronously.</p>
+
+  <h2>4. Efficient CSS Selectors</h2>
+  <p>Browsers match CSS selectors from right to left. Deeply nested selectors or overly broad ones can increase the time it takes for the browser to calculate styles. For example:</p>
+  <pre><code>/* Avoid: Slow and brittle */
+body main article .content ul li a { color: blue; }
+
+/* Prefer: Fast and specific */
+.nav-link { color: blue; }</code></pre>
+
+  <h2>5. Avoiding Layout Thrashing</h2>
+  <p>Layout thrashing occurs when JavaScript repeatedly reads and writes to the DOM in a way that forces the browser to recalculate the layout (reflow) multiple times. In CSS, avoid properties that trigger layout changes (like <code>width</code>, <code>height</code>, <code>margin</code>) during animations. Instead, use <code>transform</code> and <code>opacity</code>, which are handled by the compositor and do not trigger reflows.</p>
+
+  <h2>6. Lazy Loading Non-Critical CSS</h2>
+  <p>Not all CSS is needed on every page. Use media queries to load styles only when necessary (e.g., <code>&lt;link rel="stylesheet" href="print.css" media="print"&gt;</code>). For large applications, consider code-splitting your CSS based on routes or components.</p>
+
+  <h2>7. The <code>content-visibility</code> Property</h2>
+  <p>A modern CSS property, <code>content-visibility: auto</code>, allows the browser to skip the rendering work for elements that are off-screen until the user scrolls to them. This can significantly reduce the initial load time and memory usage for long, content-rich pages.</p>
+
+  <h2>Conclusion</h2>
+  <p>Optimizing CSS is about more than just small files; it's about managing how the browser processes and renders your styles. By implementing these strategies, you can ensure a smoother, faster experience for your users.</p>
+</div>

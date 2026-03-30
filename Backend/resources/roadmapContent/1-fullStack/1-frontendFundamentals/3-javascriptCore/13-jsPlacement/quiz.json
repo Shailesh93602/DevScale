@@ -1,0 +1,61 @@
+{
+  "title": "JavaScript Placement Quiz",
+  "description": "Test your knowledge on where and how to place JavaScript in HTML documents.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which HTML tag is used to include JavaScript in an HTML file?",
+      "options": [
+        "<script>",
+        "<javascript>",
+        "<js>",
+        "<link>"
+      ],
+      "correctAnswer": 0,
+      "points": 20
+    },
+    {
+      "question": "What happens if you place a script in the <head> of an HTML document without async or defer?",
+      "options": [
+        "The CSS becomes invalid.",
+        "The browser pauses HTML parsing to download and execute the script.",
+        "The script will never execute.",
+        "It speeds up initial rendering."
+      ],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is the recommended position for a <script> tag to avoid delaying the initial rendering of a page?",
+      "options": [
+        "At the very top of the <head>.",
+        "Inside the <footer>.",
+        "At the end of the <body>.",
+        "Before the <html> tag starts."
+      ],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What does the 'defer' attribute do for external script tags?",
+      "options": [
+        "It delays the download until a user clicks a button.",
+        "It downloads the script asynchronously but executes it only after the HTML is fully parsed.",
+        "It prevents the script from running entirely.",
+        "It only works for scripts that are smaller than 10KB."
+      ],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "True or False: Using 'async' guarantees that scripts will execute in the order they appear in the HTML.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "comment": "Scripts with the async attribute are executed as soon as they are downloaded, regardless of their order.",
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

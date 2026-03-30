@@ -1,0 +1,63 @@
+{
+  "title": "CSS Shorthand Properties Quiz",
+  "description": "Test your knowledge on modern CSS development strategies and features.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary benefit of using CSS shorthand properties?",
+      "options": [
+        "They make the CSS file larger for better reading.",
+        "They allow setting multiple related CSS properties in one line.",
+        "They only work in mobile browsers.",
+        "They are required for all animations."
+      ],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is the correct clockwise order for setting margin or padding shorthands?",
+      "options": [
+        "top, bottom, left, right",
+        "left, top, right, bottom",
+        "top, right, bottom, left",
+        "right, left, top, bottom"
+      ],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "If you write 'margin: 10px 20px 30px;', what is the margin-left value?",
+      "options": [
+        "10px",
+        "20px",
+        "30px",
+        "0px"
+      ],
+      "comment": "When three values are specified, the first is top, the second is left and right, and the third is bottom. So left/right is 20px.",
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is a valid shorthand for a border?",
+      "options": [
+        "border: none;",
+        "border: 1px solid red;",
+        "border: red solid 1px;",
+        "All of the above"
+      ],
+      "correctAnswer": 3,
+      "points": 20
+    },
+    {
+      "question": "What happens if a sub-property is omitted in a shorthand property declaration?",
+      "options": [
+        "It inherits the value from its parent element.",
+        "It is reset to its default CSS value.",
+        "The browser ignores the entire shorthand declaration.",
+        "It retains its previously defined value."
+      ],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

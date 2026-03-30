@@ -1,0 +1,60 @@
+{
+  "title": "JavaScript Syntax Quiz",
+  "description": "Test your knowledge on the basic rules and structure of JavaScript's syntax.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these is a valid way to start a JavaScript variable name?",
+      "options": [
+        "1variable",
+        "_variable",
+        "*variable",
+        "-variable"
+      ],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "True or False: JavaScript is case-insensitive.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is the correct syntax for a single-line comment in JavaScript?",
+      "options": [
+        "/* This is a comment */",
+        "// This is a comment",
+        "# This is a comment",
+        "-- This is a comment"
+      ],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What character is traditionally used to separate multiple JavaScript statements on a single line?",
+      "options": [
+        "A space",
+        "A comma ( , )",
+        "A semicolon ( ; )",
+        "A period ( . )"
+      ],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "Which of these is used to store data values in JavaScript?",
+      "options": [
+        "Literals",
+        "Variables",
+        "Comments",
+        "Keywords"
+      ],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "title": "JavaScript Enabling Quiz",
+  "description": "Test your knowledge on why and how to enable or disable JavaScript in web browsers.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these is NOT a reason some users might disable JavaScript in their browser?",
+      "options": [
+        "Privacy",
+        "Performance",
+        "To increase the complexity of the website.",
+        "Security"
+      ],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "Is JavaScript enabled by default in most modern web browsers?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "correctAnswer": 0,
+      "points": 20
+    },
+    {
+      "question": "What is the primary role of the <noscript> tag in HTML?",
+      "options": [
+        "To provide alternative content for users with JavaScript disabled.",
+        "To define the structure of a page.",
+        "To enable JavaScript processing.",
+        "To add visual effects to the page."
+      ],
+      "correctAnswer": 0,
+      "points": 20
+    },
+    {
+      "question": "In which browser can you enable/disable JavaScript in the 'About:config' settings?",
+      "options": [
+        "Chrome",
+        "Firefox",
+        "Safari",
+        "Edge"
+      ],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Does disabling JavaScript affect the visual design of a website?",
+      "options": [
+        "Yes, some features would stop working.",
+        "No, it only affects the database."
+      ],
+      "correctAnswer": 0,
+      "points": 20
+    }
+  ]
+}

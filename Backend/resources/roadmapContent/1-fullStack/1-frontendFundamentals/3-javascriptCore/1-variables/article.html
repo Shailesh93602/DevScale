@@ -1,66 +1,30 @@
-<h1>JavaScript Variables, Data Types & Operators</h1>
-<p>JavaScript is a <strong>dynamically typed</strong> language — variables can hold any type of value, and types are determined at runtime, not at declaration time.</p>
+<div class="article-content">
+  <h1>JavaScript Variables</h1>
+  <p>Variables are "containers" for storing data values. In JavaScript, you can declare a variable using three keywords: <code>var</code>, <code>let</code>, and <code>const</code>.</p>
 
-<h2>Declaring Variables</h2>
-<pre><code>// const — block-scoped, cannot be reassigned (preferred default)
-const PI = 3.14159;
-PI = 3; // ❌ TypeError: Assignment to constant variable
+  <h2>1. var, let, and const</h2>
+  <ul>
+    <li><strong>var:</strong> The oldest way to declare variables. It has function scope and is prone to issues due to hoisting.</li>
+    <li><strong>let:</strong> Introduced in ES6, it has block scope and is the preferred way to declare variables that might change.</li>
+    <li><strong>const:</strong> Also introduced in ES6, it stands for "constant." Once a value is assigned to a <code>const</code> variable, it cannot be reassigned.</li>
+  </ul>
 
-// let — block-scoped, can be reassigned
-let score = 0;
-score = 10; // ✅
+  <h2>2. Dynamic Typing</h2>
+  <p>JavaScript is a <strong>dynamically typed</strong> language. This means that a variable is not tied to a specific data type, and its type can change during execution:</p>
+  <pre><code>let x = 10;      // x is a Number
+x = "Hello";     // x is now a String</code></pre>
 
-// var — function-scoped, hoisted (avoid in modern JS)
-var legacyVar = "old style"; // has confusing hoisting quirks</code></pre>
+  <h2>3. Naming Conventions</h2>
+  <p>When naming variables, follow these rules:</p>
+  <ul>
+    <li>Names must start with a letter, an underscore (_), or a dollar sign ($).</li>
+    <li>Names are case-sensitive (<code>myVar</code> and <code>myvar</code> are different).</li>
+    <li>Reserved keywords (like <code>let</code>, <code>class</code>, or <code>return</code>) cannot be used as names.</li>
+  </ul>
 
-<h2>Primitive Data Types (7 total)</h2>
-<pre><code>let str    = "Hello World";       // String
-let num    = 42;                  // Number (includes floats)
-let big    = 9007199254740991n;   // BigInt
-let bool   = true;               // Boolean
-let nil    = null;               // Null — intentional empty value
-let undef  = undefined;          // Undefined — not yet assigned
-let sym    = Symbol("uniqueId"); // Symbol — always unique</code></pre>
+  <h2>4. Scope</h2>
+  <p>Scope determines the visibility of variables. Variables declared with <code>let</code> and <code>const</code> inside a block (like an <code>if</code> statement or a loop) are only accessible within that block.</p>
 
-<h2>Reference Types</h2>
-<pre><code>// Objects, Arrays, Functions are reference types
-const user = { name: "Alice", age: 30 };
-const nums = [1, 2, 3, 4, 5];
-const greet = () => "Hello!";</code></pre>
-
-<h2>Type Checking</h2>
-<pre><code>typeof "hello"      // "string"
-typeof 42           // "number"
-typeof true         // "boolean"
-typeof undefined    // "undefined"
-typeof null         // "object"  ← historic bug in JS!
-typeof []           // "object"
-typeof {}           // "object"
-typeof function(){} // "function"
-
-// Better checks:
-Array.isArray([])         // true
-value === null            // for null
-value instanceof Date     // for instances</code></pre>
-
-<h2>= vs == vs ===</h2>
-<pre><code>=   // Assignment
-==  // Loose equality (performs type coercion — avoid!)
-=== // Strict equality (checks both value AND type — use this!)
-
-0 == "0"    // true  (coercion!)
-0 === "0"   // false (different types)
-null == undefined   // true  (special case)
-null === undefined  // false</code></pre>
-
-<h2>Modern Operators</h2>
-<pre><code>// Optional chaining — safe nested access
-const city = user?.address?.city; // undefined instead of crash
-
-// Nullish coalescing — default only if null/undefined
-const name = user.name ?? "Guest"; // better than || for 0/""/false
-
-// Logical assignment
-user.role ??= "user";    // assign if null/undefined
-counter &&= counter + 1; // assign if truthy
-value ||= "default";     // assign if falsy</code></pre>
+  <h2>Conclusion</h2>
+  <p>Understanding how to use and scope variables is fundamental to writing clean and effective JavaScript code. Always prefer <code>const</code> by default, and use <code>let</code> only when you know the value will need to change.</p>
+</div>
