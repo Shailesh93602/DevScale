@@ -1,0 +1,51 @@
+<article>
+  <h1>Security Best Practices in Express.js</h1>
+  
+  <p>Express.js is a minimal and flexible framework, which means it doesn't come with built-in security features. Ensuring your application is secure from common web vulnerabilities is the responsibility of the developer. Implementing a defense-in-depth strategy is essential.</p>
+
+  <section>
+    <h2>Essential Security Middleware</h2>
+    <p>Using well-vetted middleware is the first line of defense in an Express application:</p>
+    <ul>
+      <li><strong>Helmet:</strong> A collection of smaller middleware functions that set various HTTP headers to help protect your app from common attacks like XSS, Clickjacking, and more.</li>
+      <li><strong>Express-Rate-Limit:</strong> Helps prevent Brute-Force and DoS attacks by limiting the number of requests a user can make within a certain timeframe.</li>
+      <li><strong>Cors:</strong> Allows you to control which domains are permitted to access your API, preventing unauthorized cross-origin requests.</li>
+    </ul>
+    <pre><code>const helmet = require('helmet');
+const app = express();
+app.use(helmet());</code></pre>
+  </section>
+
+  <section>
+    <h2>Protecting Against Common Attacks</h2>
+    
+    <h3>Cross-Site Scripting (XSS)</h3>
+    <p>Always sanitize user input before rendering it in the browser or storing it in the database. Use libraries like <code>dompurify</code> or <code>express-validator</code> to ensure inputs contain only expected data.</p>
+
+    <h3>SQL Injection</h3>
+    <p>Never concatenate strings to build database queries. Always use parameterized queries (prepared statements) provided by your database driver or ORM.</p>
+
+    <h3>Cross-Site Request Forgery (CSRF)</h3>
+    <p>For stateful applications (using cookies), use the <code>csurf</code> middleware to verify that requests are originating from your own frontend and not a malicious site.</p>
+  </section>
+
+  <section>
+    <h2>Handling Sensitive Information</h2>
+    <ul>
+      <li><strong>Environment Variables:</strong> Store secrets like API keys and database credentials in <code>.env</code> files and never commit them to version control.</li>
+      <li><strong>Bcrypt for Passwords:</strong> Never store passwords in plain text. Use a robust hashing algorithm like <code>bcrypt</code> with a high salt round value.</li>
+      <li><strong>Secure Cookies:</strong> When using cookies, ensure they are set with <code>httpOnly: true</code> (preventing JS access) and <code>secure: true</code> (ensuring they are only sent over HTTPS).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Production Checklist</h2>
+    <ol>
+      <li><strong>Keep Dependencies Updated:</strong> Regularly run <code>npm audit</code> to find and fix vulnerabilities in your project's dependencies.</li>
+      <li><strong>Use HTTPS:</strong> Always serve your application over HTTPS to encrypt data in transit.</li>
+      <li><strong>Don't Use 'expres' default headers:</strong> Use <code>app.disable('x-powered-by')</code> to hide that your app is running on Express, making it slightly harder for attackers to target specific vulnerabilities.</li>
+      <li><strong>Limit Request Body Size:</strong> Use <code>express.json({ limit: '10kb' })</code> to prevent attackers from sending massive payloads that could crash your server.</li>
+    </ol>
+  </section>
+
+</article>

@@ -1,0 +1,47 @@
+<article>
+  <h1>Understanding Token-Based Authentication</h1>
+  
+  <p>Token-based authentication is a stateless alternative to traditional session-based authentication. In this model, the server doesn't need to keep a record of which users are logged in. Instead, it issues a digital "token" to the user, who must present it with every subsequent request.</p>
+
+  <section>
+    <h2>The Stateless Advantage</h2>
+    <p>The primary benefit of token-based authentication is its statelessness. Because the server doesn't store session data, it's incredibly easy to scale your application across multiple servers or even different data centers. Any server that knows the secret key can verify a token's validity.</p>
+    <ul>
+      <li><strong>Scalability:</strong> No need for shared session storage (like Redis) between servers.</li>
+      <li><strong>Mobile Friendly:</strong> Perfect for mobile apps where maintaining a persistent cookie-based session can be challenging.</li>
+      <li><strong>Decoupling:</strong> The frontend and backend can be hosted on different domains and even use different technologies.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>How the Token Flow Works</h2>
+    <ol>
+      <li><strong>Login:</strong> User provides credentials (username/password).</li>
+      <li><strong>Token Generation:</strong> The server verifies the credentials and, if correct, creates a signed token containing the user's identity and permissions.</li>
+      <li><strong>Token Delivery:</strong> The server sends the token back to the client (usually as a JSON object).</li>
+      <li><strong>Client Storage:</strong> The client stores the token (e.g., in <code>localStorage</code> or a secure cookie).</li>
+      <li><strong>Request with Token:</strong> For every future request, the client sends the token in the <code>Authorization</code> header using the <code>Bearer</code> scheme.</li>
+      <li><strong>Verification:</strong> The server receives the request, extracts the token, verifies its signature, and if valid, processes the request.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>The Anatomy of a Token</h2>
+    <p>A typical authentication token consists of three parts:</p>
+    <ul>
+      <li><strong>Header:</strong> Specifies the type of token (e.g., JWT) and the signing algorithm (e.g., HS256).</li>
+      <li><strong>Payload:</strong> Contains the "claims" or pieces of information about the user (e.g., <code>userId</code>, <code>role</code>, <code>expiration</code>).</li>
+      <li><strong>Signature:</strong> A hash created by combining the header, the payload, and a secret key known only to the server. This ensures the token hasn't been tampered with.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Security Considerations</h2>
+    <ol>
+      <li><strong>Token Theft:</strong> If a token is stolen, the attacker can impersonate the user until the token expires. Always use HTTPS and consider using short expiration times.</li>
+      <li><strong>Refresh Tokens:</strong> To maintain security while providing a good user experience, use short-lived access tokens and long-lived "refresh tokens" to get new access tokens when they expire.</li>
+      <li><strong>XSS Protection:</strong> If storing tokens in <code>localStorage</code>, your app is vulnerable to Cross-Site Scripting. Using <code>httpOnly</code> cookies for token storage is a more secure alternative.</li>
+    </ol>
+  </section>
+
+</article>

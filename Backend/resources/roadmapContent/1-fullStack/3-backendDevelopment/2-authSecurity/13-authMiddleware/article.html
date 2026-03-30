@@ -1,0 +1,71 @@
+<article>
+  <h1>Implementing Authorization Middleware in Express</h1>
+  
+  <p>In a large application with many routes, writing a permission check for every single endpoint is tedious and error-prone. In Express.js, the most elegant and scalable solution is to use <strong>Middleware</strong> to handle authorization.</p>
+
+  <section>
+    <h2>What is Authorization Middleware?</h2>
+    <p>Middleware in Express is a function that has access to the request (<code>req</code>) and response (<code>res</code>) objects and the next middleware function (<code>next</code>). Authorization middleware specifically checks if a user is allowed to proceed to the route handler based on their authentication status and permissions.</p>
+  </section>
+
+  <section>
+    <h2>Example: Authentication Middleware</h2>
+    <p>Before you can authorize a user, you must authenticate them. This middleware verifies a JWT and attaches the user data to the request object.</p>
+    <pre><code>const jwt = require('jsonwebtoken');
+
+const authenticate = (req, res, next) =&gt; {
+  const token = req.headers.authorization?.split(' ')[1];
+  
+  if (!token) return res.status(401).json({ error: "No token provided" });
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded; // Attach user info (including role) to req
+    next();
+  } catch (err) {
+    res.status(403).json({ error: "Invalid token" });
+  }
+};</code></pre>
+  </section>
+
+  <section>
+    <h2>Example: RBAC Authorization Middleware</h2>
+    <p>This middleware checks if the authenticated user has one of the required roles to access a specific route.</p>
+    <pre><code>const authorize = (allowedRoles) =&gt; {
+  return (req, res, next) =&gt; {
+    if (!req.user || !allowedRoles.includes(req.user.role)) {
+      return res.status(403).json({ error: "Forbidden: Insufficient permissions" });
+    }
+    next();
+  };
+};
+
+// Usage in routes
+app.get('/admin/users', authenticate, authorize(['ADMIN']), (req, res) =&gt; {
+  // Only admins can see this
+});
+
+app.get('/posts', authenticate, authorize(['ADMIN', 'USER']), (req, res) =&gt; {
+  // Both admins and users can see this
+});</code></pre>
+  </section>
+
+  <section>
+    <h2>Benefits of This Approach</h2>
+    <ul>
+      <li><strong>DRY (Don't Repeat Yourself):</strong> Write the permission logic once and reuse it across hundreds of routes.</li>
+      <li><strong>Readability:</strong> Looking at a route definition immediately tells you who has permission to access it.</li>
+      <li><strong>Gating:</strong> You can easily gate entire sections of your API by applying middleware at the router level.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Best Practices</h2>
+    <ol>
+      <li><strong>Always Authenticate First:</strong> Ensure your <code>authenticate</code> middleware runs before any <code>authorize</code> middleware.</li>
+      <li><strong>Deny by Default:</strong> If a user doesn't have an explicitly allowed role, they should be forbidden by default.</li>
+      <li><strong>Fail Softly:</strong> Return clear HTTP status codes (401 for unauthenticated, 403 for unauthorized) so your frontend can handle them appropriately (e.g., redirecting to login or showing a "no access" message).</li>
+    </ol>
+  </section>
+
+</article>

@@ -1,0 +1,37 @@
+{
+  "title": "Express.js Performance Optimization Quiz",
+  "description": "Test your knowledge about the essential techniques for optimizing Express.js and Node.js applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which middleware is commonly used in Express to compress response bodies for faster transmission?",
+      "options": ["Bcrypt", "Cors", "Compression", "Helmet"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "Why should you avoid synchronous functions like 'fs.readFileSync()' in an Express app?",
+      "options": ["Because they are slower than standard functions.", "Because they block the single-threaded Node.js event loop, preventing other requests from being handled.", "Because they are not supported in production.", "Because they only work in local development."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's the primary benefit of implementing distributed caching with Redis?",
+      "options": ["To store more data on a single machine.", "To allow multiple server instances to share the same cache and improve performance across the system.", "To automatically backup the database.", "To make the application more secure."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "In a database query, what does 'Indexing' help with?",
+      "options": ["To compress the database files.", "To significantly speed up data retrieval operations like SELECT.", "To automatically format the output data.", "To hide sensitive data from the database admin."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is the purpose of application profiling?",
+      "options": ["To make the code look better.", "To identify the specific parts of your code that are causing performance bottlenecks.", "To automatically find and fix security vulnerabilities.", "To limit the number of users on the site."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

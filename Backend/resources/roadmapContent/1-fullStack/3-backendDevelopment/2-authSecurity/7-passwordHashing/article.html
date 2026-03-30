@@ -1,0 +1,57 @@
+<article>
+  <h1>Secure Password Hashing</h1>
+  
+  <p>One of the most critical responsibilities of any backend developer is the secure storage of user passwords. In modern web development, "hashing" is the industry standard for ensuring that even if your database is compromised, the actual passwords remain protected.</p>
+
+  <section>
+    <h2>What is Hashing?</h2>
+    <p>Hashing is a one-way mathematical function that takes an input (like a password) and produces a fixed-length string of characters (the hash). Crucially, hashing is <strong>one-way</strong>—it's computationally impossible to reverse the hash back to the original password.</p>
+    <ul>
+      <li><strong>Deterministic:</strong> The same password always produces the same hash.</li>
+      <li><strong>Fast:</strong> Generating a hash is quick for the server.</li>
+      <li><strong>Avalanche Effect:</strong> Even a tiny change in the password (e.g., changing a capital to a lowercase letter) produces a completely different hash.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>The Role of Salting</h2>
+    <p>If two users have the same password, they would produce the same hash. An attacker with a "Rainbow Table" (a precomputed list of common passwords and their hashes) could easily identify common passwords. To prevent this, we use a <strong>Salt</strong>.</p>
+    <ul>
+      <li><strong>The Salt:</strong> A unique, random string generated for every user. It is combined with the password before hashing.</li>
+      <li><strong>The Result:</strong> The same password for two different users will produce completely different hashes because their salts are different. The salt is stored in the database alongside the hash.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>The Role of Peppering</h2>
+    <p>While salts protect against rainbow table attacks, they are stored in the same database as the hashes. If the database is leaked, an attacker has everything they need to start a "Brute Force" attack. A <strong>Pepper</strong> is an additional secret key stored <strong>outside</strong> the database (e.g., in an environment variable).</p>
+    <p>By including a pepper in the hashing process, an attacker would need both the database <em>and</em> the server's environment variables to attempt a compromise.</p>
+  </section>
+
+  <section>
+    <h2>Recommended Algorithms</h2>
+    <p>Not all hashing algorithms are created equal. MD5 and SHA-1 are now considered insecure because they are too fast, making brute-force attacks easy. Modern developers should use algorithms designed to be "slow":</p>
+    <ul>
+      <li><strong>Bcrypt:</strong> The most popular and well-vetted algorithm for general web development. It includes built-in salting and adjustable security (cost factor).</li>
+      <li><strong>Argon2:</strong> Currently considered the most secure and winner of the Password Hashing Competition. It offers excellent protection against GPU-based brute-force attacks.</li>
+      <li><strong>Scrypt:</strong> Designed to be memory-intensive to prevent hardware-accelerated attacks.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Implementing Bcrypt in Node.js</h2>
+    <pre><code>const bcrypt = require('bcrypt');
+
+// 1. Generate a salt and hash the password
+const saltRounds = 10;
+const plainPassword = 'mySecurePassword123';
+const hash = await bcrypt.hash(plainPassword, saltRounds);
+
+// 2. Compare a password with a hash
+const match = await bcrypt.compare(plainPassword, hash);
+if (match) {
+    // Password is correct!
+}</code></pre>
+  </section>
+
+</article>

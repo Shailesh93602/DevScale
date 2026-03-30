@@ -1,0 +1,37 @@
+{
+  "title": "Security in Express.js Quiz",
+  "description": "Test your knowledge about the essential security practices for Node.js and Express.js applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which popular middleware sets various HTTP headers for enhanced security?",
+      "options": ["Cors", "Helmet", "Body-Parser", "Bcrypt"],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's the best way to store a user's password in a database?",
+      "options": ["In plain text for easy recovery.", "Encrypted with a reversible algorithm.", "Hashed with a strong algorithm like Bcrypt.", "As a JSON string."],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What does 'httpOnly: true' do for a cookie?",
+      "options": ["It only allows the cookie to be sent over HTTPS.", "It prevents local JavaScript from accessing the cookie, helping to prevent XSS attacks.", "It makes the cookie expire after a certain amount of time.", "It ensures the cookie can only be sent from the same origin."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is the purpose of rate limiting in an Express application?",
+      "options": ["To make the application faster.", "To prevent Brute-Force and Denial of Service (DoS) attacks.", "To automatically generate documentation for the API.", "To limit the number of users on the site."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "How can you hide that your application is running on Express to attackers?",
+      "options": ["By using a custom domain.", "By calling app.disable('x-powered-by').", "By writing all code in a single file.", "It's not possible to hide it."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

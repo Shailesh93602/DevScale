@@ -1,0 +1,37 @@
+{
+  "title": "OAuth Scopes and Permissions Quiz",
+  "description": "Test your knowledge about the critical role of OAuth 2.0 scopes and how permissions are managed in modern applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the primary function of an OAuth Scope?",
+      "options": ["To make the database faster.", "To define an application's role on the server.", "To limit an application's access to a user's account with their consent.", "To encrypt the final bundle size."],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What is the 'Principle of Least Privilege' in OAuth context?",
+      "options": ["Only give users one role.", "Request the absolute minimum number of scopes necessary for your application to function.", "Don't allow users to see any data.", "Make the application as low-cost as possible."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Who must provide explicit consent for the requested scopes?",
+      "options": ["The developer of the application.", "The owner of the API.", "The user being authenticated.", "The server administrator."],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What does a Resource Server (API) typically do with a token's scopes?",
+      "options": ["It ignores them and allows all access.", "It verifies them to ensures the requested action is permitted.", "It automatically generates a backup of the data.", "It shares the scopes with other applications."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What happens if a user revokes one of the scopes through their identity provider settings?",
+      "options": ["The application will continue to work normally.", "The server will gracefully handle 'Insufficient Scope' errors.", "The application will immediately crash.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

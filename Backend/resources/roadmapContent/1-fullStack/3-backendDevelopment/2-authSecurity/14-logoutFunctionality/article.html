@@ -1,0 +1,60 @@
+<article>
+  <h1>Implementing Secure Logout Functionality</h1>
+  
+  <p>Logout is more than just removing a token from the browser's local storage or deleting a cookie. A truly secure logout process ensures that the user's session is terminated on the server as well, preventing any future unauthorized access using old credentials.</p>
+
+  <section>
+    <h2>Conceptual Differences in Logout</h2>
+    <p>The logout implementation depends heavily on whether your application uses session-based or token-based authentication.</p>
+    
+    <h3>1. Session-Based Logout</h3>
+    <p>In a session-based system, the server maintains a record of the active session. Logging out involves:</p>
+    <ul>
+      <li><strong>Server-Side Destruction:</strong> Deleting the session record from the database (e.g., Redis or SQL).</li>
+      <li><strong>Client-Side Removal:</strong> Instructing the browser to delete the session cookie.</li>
+    </ul>
+
+    <h3>2. Token-Based Logout (JWT)</h3>
+    <p>Since JWTs are stateless, the server doesn't "know" who is logged in. Simply deleting the token from <code>localStorage</code> on the client isn't enough, as the token remains valid until it expires. Secure token logout requires:</p>
+    <ul>
+      <li><strong>Blacklisting:</strong> Storing the logged-out token's ID (jti) in a fast cache (like Redis) until its original expiration time. Every request must then check this blacklist.</li>
+      <li><strong>Short Expirations:</strong> Using short-lived access tokens so that even if they aren't blacklisted, they become useless quickly.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Implementing Logout in Express (Sessions)</h2>
+    <p>If you're using <code>express-session</code>, logout is straightforward:</p>
+    <pre><code>app.post('/logout', (req, res) =&gt; {
+  // 1. Destroy the session on the server
+  req.session.destroy((err) =&gt; {
+    if (err) {
+      return res.status(500).json({ error: "Failed to logout" });
+    }
+    
+    // 2. Clear the cookie from the browser
+    res.clearCookie('connect.sid');
+    res.json({ message: "Logged out successfully" });
+  });
+});</code></pre>
+  </section>
+
+  <section>
+    <h2>Implementing Logout with Refresh Tokens</h2>
+    <p>If your app uses a dual-token system (Access + Refresh), logout must involve the refresh token:</p>
+    <ol>
+      <li><strong>Delete Refresh Token:</strong> Remove the refresh token from the server-side database. This prevents the user from getting any new access tokens.</li>
+      <li><strong>Clear Cookies/Storage:</strong> Remove both the access token and the refresh token from the client.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Security Best Practices</h2>
+    <ul>
+      <li><strong>POST Method:</strong> Always use an HTTP <code>POST</code> request for logout, never <code>GET</code>. This prevents accidental logouts from web crawlers or images that might link to the logout URL (CSRF risk).</li>
+      <li><strong>Redirect After Logout:</strong> After a successful logout, redirect the user to a public page (like the home page or login screen) and ensure no sensitive data remains in the browser's state.</li>
+      <li><strong>Global Logout:</strong> For high-security applications, provide a "Log out from all devices" feature that invalidates all active refresh tokens for that user.</li>
+    </ul>
+  </section>
+
+</article>
