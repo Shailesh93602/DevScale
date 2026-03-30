@@ -1,0 +1,37 @@
+{
+  "title": "Performance Tuning for Node.js Quiz",
+  "description": "Test your knowledge about advanced performance tuning and multi-core processing in Node.js.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "By default, how many CPU cores does a standard Node.js application use?",
+      "options": ["One", "Two", "All available cores.", "It depends on the operating system."],
+      "correctAnswer": 0,
+      "points": 20
+    },
+    {
+      "question": "Which Node.js module allows you to spawn multiple copies of your application to utilize all available CPU cores?",
+      "options": ["HTTP", "Cluster", "OS", "Mongoose"],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is a 'Stop-the-world' event in Node.js memory management?",
+      "options": ["A way to encrypt files using a secret key.", "When the Garbage Collector pauses the entire application's execution to clean up unused memory.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these practices is recommended for getting the best performance from Google's V8 JavaScript engine?",
+      "options": ["Use 'delete' frequently to clear object properties.", "Initialize all object properties in the same order inside the constructor.", "Avoid using 'WeakMap' and 'WeakSet'.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which process manager is commonly used to automate Node.js 'Cluster Mode' and provide robust monitoring?",
+      "options": ["Postman", "PM2", "Mongoose", "React Router"],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

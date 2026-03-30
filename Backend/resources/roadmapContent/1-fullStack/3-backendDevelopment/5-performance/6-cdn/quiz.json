@@ -1,0 +1,37 @@
+{
+  "title": "Content Delivery Networks (CDNs) Quiz",
+  "description": "Test your knowledge about the critical role of CDNs and content delivery in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the primary goal of a 'Content Delivery Network' (CDN)?",
+      "options": ["To store all of the application's users.", "To reduce latency and improve performance by distributing content spatially relative to end users.", "To automatically generate a backup of the data.", "To hide the application's IP address."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is NOT typically served via a CDN?",
+      "options": ["CSS files", "JavaScript files", "Private session-based user data (profile information).", "Public images and fonts."],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What is 'Cache Busting' in the context of CDNs?",
+      "options": ["A way to encrypt files using a secret key.", "Adding a unique hash or version number to the filename (e.g., style.v2.css) so that the CDN is forced to fetch the fresh version when the filename changes.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is a popular CDN provider famous for its free tier and DDoS protection?",
+      "options": ["Postman", "Cloudflare", "Mongoose", "React Router"],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's the primary benefit of 'Edge Caching' in a CDN?",
+      "options": ["It makes the database faster.", "Content (like entire HTML pages) can be cached on a server very close to the user, drastically reducing response time.", "To automatically generate a backup of the data.", "To improve the user experience."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

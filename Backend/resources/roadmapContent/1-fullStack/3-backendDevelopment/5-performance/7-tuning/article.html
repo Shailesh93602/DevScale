@@ -1,0 +1,56 @@
+<article>
+  <h1>Advanced Performance Tuning for Node.js</h1>
+  
+  <p>Standard Node.js is already fast, but to handle enterprise-level traffic, you must go beyond the basics. Performance tuning involves fine-tuning your application's settings, optimizing your code for the V8 engine, and leveraging advanced architecture patterns.</p>
+
+  <section>
+    <h2>1. The Cluster Module (Multi-Core Processing)</h2>
+    <p>By default, Node.js runs in a single process on a single CPU core. Even if your server has 16 cores, a standard Node.js app only uses one. The <strong>Cluster Module</strong> allows you to spawn multiple copies ("workers") of your app, one for each CPU core, massively increasing your server's throughput.</p>
+    <pre><code>const cluster = require('cluster');
+const numCPUs = require('os').cpus().length;
+
+if (cluster.isPrimary) {
+  for (let i = 0; i &lt; numCPUs; i++) {
+    cluster.fork(); // Spawn a worker for each core
+  }
+} else {
+  // Your Express app here
+  app.listen(3000);
+}</code></pre>
+  </section>
+
+  <section>
+    <h2>2. V8 Engine Optimization</h2>
+    <p>Node.js runs on Google's V8 JavaScript engine. To get the best performance, you should write "V8-friendly" code:</p>
+    <ul>
+      <li><strong>Avoid Hidden Classes:</strong> Initialize all object properties in the constructor in the same order.</li>
+      <li><strong>Avoid 'delete':</strong> Use <code>obj.prop = undefined</code> or <code>null</code> instead of <code>delete obj.prop</code>, as it preserves the object's hidden class.</li>
+      <li><strong>Use Typed Arrays:</strong> For heavy numerical or binary data processing, use <code>Uint8Array</code>, <code>Float64Array</code>, etc., rather than standard JavaScript arrays.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>3. Managing the Garbage Collector (GC)</h2>
+    <p>While Node.js manages memory automatically, a "heavy" Garbage Collection cycle can pause your entire application (Stop-the-world). To minimize this:</p>
+    <ul>
+      <li><strong>Avoid Global Variables:</strong> They are never garbage collected as long as the process is running.</li>
+      <li><strong>Use 'WeakMap' and 'WeakSet':</strong> These allow objects to be garbage collected even if they are still stored in the map/set.</li>
+      <li><strong>Monitor Heap Usage:</strong> Use <code>process.memoryUsage()</code> to track if your app's memory consumption is growing indefinitely (a memory leak).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>4. Optimizing the Event Loop</h2>
+    <p>Keep the event loop fast! Never perform synchronous I/O (like <code>fs.readFileSync</code> or <code>JSON.parse</code> on a 1GB string) inside an Express route. If you have a truly CPU-intensive task (like encryption or image processing), offload it it to a <strong>Worker Thread</strong> rather than blocking the main event loop.</p>
+  </section>
+
+  <section>
+    <h2>Best Practices Summary</h2>
+    <ol>
+      <li><strong>Use a Process Manager (PM2):</strong> PM2's <code>cluster mode</code> makes multi-core processing automatic and provides robust monitoring and auto-restart capabilities.</li>
+      <li><strong>Keep Dependencies Lean:</strong> Every heavy library you add increases memory usage and potentially slows down your app. Audit your <code>node_modules</code> regularly.</li>
+      <li><strong>Benchmarking:</strong> Use tools like <code>autocannon</code> and <code>wrk</code> to benchmark your app's performance before and after every major optimization.</li>
+    </ol>
+  </section>
+
+</article>
