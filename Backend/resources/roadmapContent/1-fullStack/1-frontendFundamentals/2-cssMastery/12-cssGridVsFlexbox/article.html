@@ -1,0 +1,57 @@
+<div class="article-content">
+  <h1>CSS Grid vs Flexbox</h1>
+  <p>Flexbox and CSS Grid are two powerful layout tools in CSS, but they serve different purposes. Understanding when to use one over the other (or both together) is essential for efficient and flexible modern web design.</p>
+
+  <h2>1. Flexbox: The 1D Powerhouse</h2>
+  <p>Flexbox is primarily a <strong>one-dimensional</strong> layout system. It excels at aligning items along a single axis (either a row or a column). It is "content-first," meaning that the layout is largely dictated by the size of the content within the flex items.</p>
+  <ul>
+    <li><strong>Best for:</strong> Navigation bars, aligning items in a row, centered content, and simple components.</li>
+    <li><strong>Key properties:</strong> <code>flex-direction</code>, <code>justify-content</code>, <code>align-items</code>.</li>
+  </ul>
+
+  <h2>2. CSS Grid: The 2D Master</h2>
+  <p>CSS Grid is a <strong>two-dimensional</strong> layout system. It handles both rows and columns simultaneously. It is "layout-first," meaning you define the overall grid structure and then place items into that grid.</p>
+  <ul>
+    <li><strong>Best for:</strong> Complex page layouts, dashboard interfaces, and overlapping elements.</li>
+    <li><strong>Key properties:</strong> <code>grid-template-columns</code>, <code>grid-template-rows</code>, <code>grid-gap</code>, <code>grid-area</code>.</li>
+  </ul>
+
+  <h2>3. Key Differences</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>Flexbox</th>
+        <th>CSS Grid</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Dimensions</td>
+        <td>One-dimensional (Rows OR Columns)</td>
+        <td>Two-dimensional (Rows AND Columns)</td>
+      </tr>
+      <tr>
+        <td>Approach</td>
+        <td>Content-first (Items push the container)</td>
+        <td>Layout-first (Container dictates positions)</td>
+      </tr>
+      <tr>
+        <td>Alignment</td>
+        <td>Along the main or cross axis</td>
+        <td>Inside grid cells or across grid areas</td>
+      </tr>
+      <tr>
+        <td>Gaps</td>
+        <td>Historically used margins (now has <code>gap</code> support)</td>
+        <td>Inherent support through <code>grid-gap</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>4. Can They Be Used Together?</h2>
+  <p>Yes, and they often are! A common pattern is using <strong>CSS Grid</strong> for the high-level page layout (e.g., sidebar, main content, and footer) and then using <strong>Flexbox</strong> inside those grid cells for individual component alignment (e.g., aligning buttons within a card).</p>
+
+  <h2>Conclusion</h2>
+  <p>Don't think of it as "Grid vs Flexbox" in a competitive sense. Instead, view them as complementary tools in your layout toolkit. Use Flexbox when you have a set of items that just need to be aligned in a single direction, and use Grid when you need precise control over both dimensions of a complex layout.</p>
+</div>

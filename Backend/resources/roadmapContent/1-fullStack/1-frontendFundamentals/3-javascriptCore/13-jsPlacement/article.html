@@ -1,0 +1,31 @@
+<div class="article-content">
+  <h1>JavaScript Placement</h1>
+  <p>Where you place your JavaScript in an HTML document can have a significant impact on performance and user experience. JavaScript can be added to an HTML file in three primary ways: Inline, Internal, and External.</p>
+
+  <h2>1. Internal and External JS</h2>
+  <p>Internal JavaScript is placed within a <code>&lt;script&gt;</code> tag inside the HTML file. External JavaScript is linked from a separate <code>.js</code> file using the <code>src</code> attribute:</p>
+  <pre><code>&lt;!-- Internal JS --&gt;
+&lt;script&gt;
+  console.log("Hello from inside the HTML!");
+&lt;/script&gt;
+
+&lt;!-- External JS --&gt;
+&lt;script src="script.js"&gt;&lt;/script&gt;</code></pre>
+
+  <h2>2. Positioning the Script Tag</h2>
+  <p>The position of the <code>&lt;script&gt;</code> tag matters:</p>
+  <ul>
+    <li><strong>In the &lt;head&gt; section:</strong> This can delay the rendering of the page because the browser must download and execute the script before it continues parsing the HTML.</li>
+    <li><strong>At the end of the &lt;body&gt; section:</strong> Usually recommended, as it allows the browser to render the page content first before loading and executing the script.</li>
+  </ul>
+
+  <h2>3. The async and defer Attributes</h2>
+  <p>Modern HTML provides two attributes to optimize external script loading:</p>
+  <ul>
+    <li><strong>async:</strong> The script is downloaded asychronously while the HTML continues to be parsed, but it will pause parsing to execute as soon as it's ready.</li>
+    <li><strong>defer:</strong> The script is downloaded asynchronously while the HTML continues to be parsed, but it will only execute after the HTML has been fully parsed.</li>
+  </ul>
+
+  <h2>Conclusion</h2>
+  <p>For most modern web applications, placing scripts at the end of the <code>&lt;body&gt;</code> or using the <code>defer</code> attribute in the <code>&lt;head&gt;</code> is the best practice for optimal performance and user experience.</p>
+</div>
