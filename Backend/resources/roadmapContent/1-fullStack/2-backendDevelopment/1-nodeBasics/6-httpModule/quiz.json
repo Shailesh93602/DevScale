@@ -1,0 +1,47 @@
+{
+  "title": "HTTP Module Quiz",
+  "description": "Evaluate your understanding of createServer, req/res objects, and basic routing using the req.url property.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily role of the 'http' module in Node.js?",
+      "options": [
+        "Faster component rendering.",
+        "To listen for incoming network requests and send back professional, structured responses to your users.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what was the primarily benefit of using 'http.createServer'?",
+      "options": [
+        "It provides a callback that runs every time a user visits your site.",
+        "It only works for mobile apps.",
+        "To hide all non-number characters.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which object in the 'createServer' callback contains all the information from the user (URL, headers, query parameters, data)?",
+      "options": ["req (Request)", "res (Response)", "info", "data"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what object is used to send data back to the user (status codes, headers, and final content)?",
+      "options": ["res (Response)", "req (Request)", "out", "put"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what property would you use in the 'req' object to built a simple 'router' based on the path the user requested?",
+      "options": ["req.path", "req.url", "req.route", "req.link"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

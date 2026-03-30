@@ -1,0 +1,30 @@
+<div class="article-content">
+  <h1>HTTP Module</h1>
+  <p>To turn your Node.js application into a web server, you must use the **HTTP Module**. This allows you to listen for incoming network requests and send back professional, structured responses to your users.</p>
+
+  <h2>1. Creating a Server</h2>
+  <p>The <code>http.createServer</code> method is the foundation of almost every Node.js web server. It provides a callback that runs every time a user visits your site.</p>
+  <pre><code>const http = require('http');
+
+const server = http.createServer((req, res) => {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/html');
+  res.end('&lt;h1&gt;Hello from Node.js!&lt;/h1&gt;');
+});
+
+server.listen(3000, () => {
+  console.log('Server running on port 3000');
+});</code></pre>
+
+  <h2>2. Request and Response (req and res)</h2>
+  <ul>
+    <li><strong>req (Request):</strong> Contains all information from the user (URL, headers, query parameters, data).</li>
+    <li><strong>res (Response):</strong> Is used to send data back to the user (status codes, headers, and the final HTML/JSON content).</li>
+  </ul>
+
+  <h2>3. Routing Basics</h2>
+  <p>By using the <code>req.url</code> property, you can build a simple "router" to show different pages to your users based on the path they requested (e.g. <code>/about</code> or <code>/contact</code>).</p>
+
+  <h2>Conclusion</h2>
+  <p>By mastering the <code>http</code> module, you're becoming a faster and more efficient Fullstack engineer. Whether you're managing complex database logic or scaling a massive production application, the web server provides the tools and security you need to build the highest-quality and most professional applications.</p>
+</div>

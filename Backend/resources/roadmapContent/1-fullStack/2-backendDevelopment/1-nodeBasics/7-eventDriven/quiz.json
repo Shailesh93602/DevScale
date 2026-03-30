@@ -1,0 +1,47 @@
+{
+  "title": "Event-Driven Programming Quiz",
+  "description": "Evaluate your understanding of the EventEmitter class (.on/.emit) and the architectural benefit of decoupling code for maintainability in Node.js.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily design philosophy behind 'Event-Driven' programming in Node.js?",
+      "options": [
+        "Faster component rendering.",
+        "A system focused on listening for and reacting to specific 'events' (like a database finishing or a user logging in).",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what was the primarily heart of the Node module system for handling events?",
+      "options": ["EventEmitter", "EventLoop", "AsyncLoop", "None of the above."],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which method in the 'EventEmitter' class is used to 'signal' or trigger an event that should be handled by other parts of the app?",
+      "options": ["on()", "emit()", "call()", "start()"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what method is used in the 'EventEmitter' class to register a 'listener' that should run whenever a specific event occurs?",
+      "options": ["emit()", "on()", "wait()", "listen()"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does following the 'Event-Driven' model help 'decouple' your code and make it easier to maintain in a professional development environment?",
+      "options": [
+        "Yes, as it allows for many small, independent listeners to react to the same architectural events.",
+        "No, it's always slower.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

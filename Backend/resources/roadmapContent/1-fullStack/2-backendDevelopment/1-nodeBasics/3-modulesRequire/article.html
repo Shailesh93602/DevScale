@@ -1,0 +1,28 @@
+<div class="article-content">
+  <h1>Modules and Require</h1>
+  <p>To keep your code organized, maintainable, and scalable, Node.js uses a **Module System**. This allows you to split your application into smaller, independent files (modules) that can be easily reused and tested across your entire project.</p>
+
+  <h2>1. CommonJS (The Classic Way)</h2>
+  <p>For many years, Node.js primarily used the **CommonJS** module system. It uses <code>require()</code> to import code and <code>module.exports</code> to share it with other files.</p>
+  <pre><code>// math.js
+const add = (a, b) => a + b;
+module.exports = { add };
+
+// app.js
+const { add } = require('./math');
+console.log(add(5, 10)); // 15</code></pre>
+
+  <h2>2. ES Modules (The Modern Web Standard)</h2>
+  <p>Modern Node.js (and the browser) now supports **ES Modules (ESM)**. This uses the <code>import</code> and <code>export</code> keywords, which are more powerful and standard across the entire JavaScript ecosystem.</p>
+  <pre><code>// math.mjs
+export const add = (a, b) => a + b;
+
+// app.mjs
+import { add } from './math.mjs';</code></pre>
+
+  <h2>3. Built-in Modules</h2>
+  <p>Node.js comes with a rich set of built-in modules that you don't need to install through NPM. For example, the <code>path</code> module helps you work with file paths correctly across different operating systems (Windows vs Linux).</p>
+
+  <h2>Conclusion</h2>
+  <p>By mastering Node.js modules, you're becoming a faster and more efficient Fullstack engineer. Whether you're managing complex database logic or scaling a massive production application, modules provide the tools and security you need to build the highest-quality and most professional applications.</p>
+</div>

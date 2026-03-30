@@ -1,0 +1,52 @@
+{
+  "title": "Asynchronous Programming Quiz",
+  "description": "Evaluate your understanding of Callbacks, Promises, and the modern industry standard: Async/Await for performance and readability in Node.js.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily design philosophy behind 'Asynchronous Programming' in Node.js?",
+      "options": [
+        "Faster component rendering.",
+        "A system focused on 'Non-Blocking' I/O, allowing many tasks (like reading from a file) to run at once without stopping the application.",
+        "Only for older browsers.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what was the primarily problem with early 'Callbacks' in Node.js when many were nested together?",
+      "options": ["Callback Hell", "Promise Loop", "Async Freeze", "None of the above."],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which modern JavaScript keyword is used inside an 'async' function to wait for a Promise to finish?",
+      "options": ["wait", "await", "then", "pause"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Is it possible to use try/catch blocks with Async/Await to handle errors in asynchronous code?",
+      "options": [
+        "Yes, it is the standard and most readable way to handle errors in modern Node.js.",
+        "No, you can only use .catch() with Promises.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Does Node.js allow you to use millions of pre-built packages and libraries to handle complex asynchronous tasks?",
+      "options": [
+        "Yes, by providing a robust ecosystem for managing, sharing, and versioning your code.",
+        "No, it's always slower.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

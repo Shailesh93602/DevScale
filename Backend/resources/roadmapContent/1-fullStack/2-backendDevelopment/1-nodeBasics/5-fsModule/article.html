@@ -1,0 +1,26 @@
+<div class="article-content">
+  <h1>File System (fs) Module</h1>
+  <p>To interact with files and folders on the server, Node.js provides the **File System (fs)** module. This allows you to read, write, update, and delete files with ease, making it a critical tool for any backend application.</p>
+
+  <h2>1. Reading Files</h2>
+  <p>The <code>fs</code> module provides both synchronous (blocking) and asynchronous (non-blocking) ways to read files. In a production server, you should almost always use the asynchronous methods to ensure your application remains responsive.</p>
+  <pre><code>const fs = require('fs');
+
+// Read a file (Asynchronous)
+fs.readFile('hello.txt', 'utf8', (err, data) => {
+  if (err) console.error(err);
+  console.log(data);
+});</code></pre>
+
+  <h2>2. Writing and Appending Files</h2>
+  <ul>
+    <li><code>fs.writeFile:</code> Creates a new file or overwrites an existing one with new content.</li>
+    <li><code>fs.appendFile:</code> Adds new content to the end of an existing file (without deleting its current contents).</li>
+  </ul>
+
+  <h2>3. Using fs.promises (Modern Approach)</h2>
+  <p>Instead of callbacks, you can use the **Promises-based** version of the <code>fs</code> module (<code>fs.promises</code>). This allows you to use the much cleaner <code>async/await</code> syntax you learned in the previous topic!</p>
+
+  <h2>Conclusion</h2>
+  <p>By mastering the <code>fs</code> module, you're becoming a faster and more efficient Fullstack engineer. Whether you're managing complex database logic or scaling a massive production application, the file system provides the tools and security you need to build the highest-quality and most professional applications.</p>
+</div>

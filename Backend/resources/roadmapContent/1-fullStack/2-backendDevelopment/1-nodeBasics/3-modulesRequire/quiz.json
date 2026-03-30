@@ -1,0 +1,52 @@
+{
+  "title": "Modules and Require Quiz",
+  "description": "Evaluate your understanding of CommonJS (require/module.exports) vs ES Modules (import/export) and the role of built-in Node.js modules for organized systems.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily design philosophy behind the 'CommonJS' module system in Node.js?",
+      "options": [
+        "Faster component rendering.",
+        "A system focused on synchronous modules that use require() and module.exports to share code across files.",
+        "Only for older browsers.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which modern JavaScript keyword is used in ES Modules (ESM) to share code with other files?",
+      "options": ["import", "export", "require", "module.exports"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Is it possible to use ES Modules (import/export) in modern versions of Node.js?",
+      "options": [
+        "Yes, by using the .mjs file extension or adding 'type': 'module' to your package.json.",
+        "No, it's only for the browser.",
+        "Only for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what built-in Node.js module is commonly used to work with file and directory paths across different OS environments?",
+      "options": ["fs", "os", "path", "http"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Does Node.js allow you to use millions of pre-built packages and libraries through its built-in modules?",
+      "options": [
+        "No, pre-built packages are managed through NPM, not the built-in core modules.",
+        "Yes, by providing a robust ecosystem for managing, sharing, and versioning your code.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

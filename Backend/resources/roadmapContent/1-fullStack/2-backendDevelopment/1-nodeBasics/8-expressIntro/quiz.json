@@ -1,0 +1,52 @@
+{
+  "title": "Express.js Introduction Quiz",
+  "description": "Evaluate your understanding of its role as a flexible framework compared to the low-level HTTP module, the Importance of the Middleware system, and professional routing.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily role of Express.js in modern development?",
+      "options": [
+        "Faster component rendering.",
+        "A minimal and flexible web application framework for Node.js that provides a robust set of features for web and mobile applications.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what was the primarily heart of an Express.js application?",
+      "options": ["Middleware", "Database", "Browser", "None of the above."],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which method in Express.js would you use to handle a GET request to the '/users' URL?",
+      "options": ["app.post('/users', ...)", "app.get('/users', ...)", "app.fetch('/users', ...)", "app.go('/users', ...)"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what was the primarily benefit of using Express.js compared to the raw 'http' module?",
+      "options": [
+        "Express is more minimal.",
+        "Express provides a robust, pre-built set of features for routing, data parsing, and static file serving.",
+        "To hide all non-number characters.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does following the 'Middleware' model help process and modify a request before it reaches the final route handler in Express?",
+      "options": [
+        "Yes, by providing a way to run code or modify data (e.g., parsing JSON) early in the request cycle.",
+        "No, it's always slower.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
