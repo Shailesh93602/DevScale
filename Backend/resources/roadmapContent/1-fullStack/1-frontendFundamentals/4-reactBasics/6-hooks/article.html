@@ -1,0 +1,40 @@
+<div class="article-content">
+  <h1>React Hooks (useState and useEffect)</h1>
+  <p>Hooks were introduced in React 16.8 to allow functional components to use state and other React features without writing a class. The two most common hooks are <code>useState</code> and <code>useEffect</code>.</p>
+
+  <h2>1. The useState Hook</h2>
+  <p><code>useState</code> is used to add local state to a functional component. It returns an array with two items: the current state value and a function to update it.</p>
+  <pre><code>import { useState } from "react";
+
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    &lt;button onClick={() => setCount(count + 1)}&gt;
+      Clicked {count} times
+    &lt;/button&gt;
+  );
+}</code></pre>
+
+  <h2>2. The useEffect Hook</h2>
+  <p><code>useEffect</code> is used for <strong>side effects</strong> in your component like data fetching, subscriptions, or manually changing the DOM. It runs after every render by default, but you can control it with a dependency array.</p>
+  <pre><code>import { useEffect, useState } from "react";
+
+function Message() {
+  useEffect(() => {
+    console.log("Component mounted!");
+
+    // Optional cleanup function
+    return () => console.log("Component unmounted!");
+  }, []); // Empty array means run only once on mount
+}</code></pre>
+
+  <h2>3. Rules of Hooks</h2>
+  <ul>
+    <li><strong>Top Level Only:</strong> Never call hooks inside loops, conditions, or nested functions. Always call them at the top level of your component.</li>
+    <li><strong>React Functions Only:</strong> Only call hooks from React functional components or custom hooks.</li>
+  </ul>
+
+  <h2>Conclusion</h2>
+  <p>Hooks have paved the way for a more functional and cleaner React code base. By mastering <code>useState</code> and <code>useEffect</code>, you can handle almost any dynamic behavior needed in a modern web application while keeping your code concise and readable.</p>
+</div>

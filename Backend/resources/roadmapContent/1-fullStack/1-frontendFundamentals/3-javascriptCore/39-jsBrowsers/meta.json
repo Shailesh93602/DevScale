@@ -1,0 +1,4 @@
+{
+    "name": "JavaScript Browsers",
+    "description": "Learn how small pieces of data called BOM objects (Window, Location, History, Navigator) can be used to control the browser in JavaScript."
+}

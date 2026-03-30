@@ -1,0 +1,4 @@
+{
+    "name": "Lifecycle Methods",
+    "description": "Learn how small pieces of data called lifecycle methods can be used to manage information across your React components during their existence."
+}

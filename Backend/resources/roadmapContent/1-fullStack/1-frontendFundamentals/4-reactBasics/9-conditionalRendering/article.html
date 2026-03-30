@@ -1,0 +1,34 @@
+<div class="article-content">
+  <h1>Conditional Rendering in React</h1>
+  <p>In React, you can create components that encapsulate the behavior you need. Then, you can render only some of them, depending on the state of your application. Conditional rendering works the same way conditions work in JavaScript.</p>
+
+  <h2>1. Using Variable with if...else</h2>
+  <p>You can use basic JavaScript <code>if</code> or <code>else</code> statements outside your JSX and return different React elements based on the result.</p>
+  <pre><code>function Welcome({ isLoggedIn }) {
+  if (isLoggedIn) {
+    return &lt;h1&gt;Welcome back!&lt;/h1&gt;;
+  }
+  return &lt;h1&gt;Please sign up.&lt;/h1&gt;;
+}</code></pre>
+
+  <h2>2. Inline If with Logical && Operator</h2>
+  <p>The <code>&amp;&amp;</code> operator is the most common way to conditionally include an element in your UI. If the condition is true, the element will render; if false, React ignores it.</p>
+  <pre><code>&lt;div&gt;
+  &lt;h1&gt;Hello!&lt;/h1&gt;
+  {unreadMessages.length &gt; 0 &amp;&amp;
+    &lt;h2&gt;You have {unreadMessages.length} unread messages.&lt;/h2&gt;
+  }
+&lt;/div&gt;</code></pre>
+
+  <h2>3. Ternary Operator (condition ? ExprIfTrue : ExprIfFalse)</h2>
+  <p>The ternary operator is useful when you need to choose between two different elements.</p>
+  <pre><code>&lt;div&gt;
+  The user is &lt;b&gt;{isLoggedIn ? "currently" : "not"}&lt;/b&gt; logged in.
+&lt;/div&gt;</code></pre>
+
+  <h2>4. Returning Null</h2>
+  <p>If you don't want a component to render anything at all, you can return <code>null</code> from its render function.</p>
+
+  <h2>Conclusion</h2>
+  <p>Conditional rendering allows you to build dynamic and responsive user interfaces that change based on user input, data availability, or application state. Mastering these different techniques is essential for creating robust and readable React applications.</p>
+</div>

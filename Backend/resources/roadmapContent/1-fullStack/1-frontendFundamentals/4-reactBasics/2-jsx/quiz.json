@@ -1,0 +1,57 @@
+{
+  "title": "JSX (JavaScript XML) Quiz",
+  "description": "Evaluate your understanding of JSX syntax, rules, and its core purpose in React.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the best way to define a JSX element with a CSS class 'main'?",
+      "options": [
+        "<div class=\"main\">",
+        "<div className=\"main\">",
+        "<div camelCase=\"main\">",
+        "<div cssClass=\"main\">"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What happens when you use an expression in JSX (e.g., {5 + 5})?",
+      "options": [
+        "It will be displayed as a string in the UI.",
+        "The JavaScript expression will be evaluated, and the result displayed.",
+        "It takes 5+5 and sets it as the ID.",
+        "It will cause a syntax error."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of the following is a key rule when writing JSX?",
+      "options": [
+        "Each element must have a unique ID.",
+        "All tags must be in uppercase.",
+        "JSX must always be wrapped in a single parent element or a Fragment.",
+        "You must use single quotes only."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "In JSX, what should you use instead of the 'for' attribute in a label tag?",
+      "options": ["idFor", "labelFor", "htmlFor", "reactFor"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What does JSX compile into under the hood?",
+      "options": [
+        "Raw HTML strings.",
+        "JSON objects.",
+        "React.createElement() functions.",
+        "Plain CSS styles."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "title": "React Props Quiz",
+  "description": "Evaluate your understanding of passing, using, and managing props in React components.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the best way to pass a prop named 'color' with value 'blue' to a 'Box' component?",
+      "options": [
+        "<Box color:\"blue\">",
+        "<Box color=\"blue\">",
+        "<Box set-color=\"blue\">",
+        "<Box props={{ color: 'blue' }}>"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "In a functional component, how do you receive props as an object?",
+      "options": [
+        "From the first argument of the function.",
+        "By calling getProps().",
+        "From the window.props object.",
+        "From the 'this' keyword only."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which of the following is true about props?",
+      "options": [
+        "Props are mutable and can be changed by the child component.",
+        "Props are immutable (read-only) for the child component.",
+        "Props can only be strings.",
+        "Props are only used in class components."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which property in the props object contains the content between the component's opening and closing tags?",
+      "options": ["content", "innerHTML", "children", "innerJSX"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "How do you de-structure a prop named 'title' in a functional component definition?",
+      "options": [
+        "function Header({ title }) { ... }",
+        "function Header(title) { ... }",
+        "function Header([title]) { ... }",
+        "function Header(props.title) { ... }"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

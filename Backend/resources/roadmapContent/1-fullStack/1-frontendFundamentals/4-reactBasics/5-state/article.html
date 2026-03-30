@@ -1,0 +1,22 @@
+<div class="article-content">
+  <h1>React State</h1>
+  <p>If props are for passing data <strong>between</strong> components, state is for managing data <strong>within</strong> a single component. State is any data that changes over time and affects how the component renders.</p>
+
+  <h2>1. What is State?</h2>
+  <p>State is an object that holds some information that may change during the lifetime of the component. This could be whether a button is clicked, a search query in a text box, or even data fetched from an API.</p>
+
+  <h2>2. State vs Props</h2>
+  <ul>
+    <li><strong>Props:</strong> Passed to a component (like function arguments). They are immutable.</li>
+    <li><strong>State:</strong> Managed within a component (like variables declared inside a function). They are mutable but must be updated correctly.</li>
+  </ul>
+
+  <h2>3. Local and Private</h2>
+  <p>State is local to the component it is defined in. One component's state is not directly accessible by another. If a parent and child need to share state, the state should be "lifted up" to the parent and passed down via props.</p>
+
+  <h2>4. State and Re-rendering</h2>
+  <p>The magic of state is that when it changes, React automatically <strong>re-renders</strong> the component and its children to reflect the new data in the UI. This is why we say React is "reactive."</p>
+
+  <h2>Conclusion</h2>
+  <p>By understanding state, you move from building static templates to creating truly interactive applications. State allows your app to respond to user input, time, and network responses by update the interface in real-time, providing a seamless user experience.</p>
+</div>

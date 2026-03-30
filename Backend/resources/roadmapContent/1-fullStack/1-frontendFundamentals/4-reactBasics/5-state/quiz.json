@@ -1,0 +1,62 @@
+{
+  "title": "React State Quiz",
+  "description": "Evaluate your understanding of state, re-rendering, and the differences between state and props.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the best way to define React state?",
+      "options": [
+        "Data that is passed down to a component (like arguments).",
+        "Data that is managed within a component and can change over time.",
+        "A global variable accessible by every component.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of the following is true about state in React?",
+      "options": [
+        "State is public and can be modified by any component.",
+        "State is private to the component it is defined in.",
+        "State is only for class components.",
+        "State is immutable and cannot be changed."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What happens in a React component when its state changes?",
+      "options": [
+        "Nothing happens until the user reloads the page.",
+        "The component is automatically re-rendered to reflect the new state in the UI.",
+        "The component is deleted and recreated.",
+        "React logs a warning to the console."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which is a key difference between state and props?",
+      "options": [
+        "Props are mutable, while state is immutable.",
+        "State is managed within a component, while props are passed to a component.",
+        "State is passed from a child to a parent.",
+        "There is no difference."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Can a parent component access a child component's local state directly?",
+      "options": [
+        "Yes, using the 'state' prop.",
+        "No, state is private to the component it belongs to.",
+        "Yes, but only if they are in the same file.",
+        "Only if the child is a class component."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

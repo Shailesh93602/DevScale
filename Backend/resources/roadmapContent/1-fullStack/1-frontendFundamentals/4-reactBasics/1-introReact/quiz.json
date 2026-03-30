@@ -1,0 +1,52 @@
+{
+  "title": "Introduction to React Quiz",
+  "description": "Evaluate your understanding of what React is, its core features, and its library-based architecture.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which of the following is true about React?",
+      "options": [
+        "It is a full-featured framework like Angular.",
+        "It is a JavaScript library for building user interfaces.",
+        "It's only for mobile apps.",
+        "It doesn't use JavaScript."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which organization maintains React?",
+      "options": ["Google", "Meta (Facebook)", "Microsoft", "Amazon"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the primary benefit of the Virtual DOM in React?",
+      "options": [
+        "It makes the page look better.",
+        "It speeds up execution by minimizing real DOM updates.",
+        "It allows using HTML inside JavaScript.",
+        "It converts React into mobile native code."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What does a 'Component-Based' architecture mean in React?",
+      "options": [
+        "Everything must be in a single file.",
+        "You build encapsulated components that manage their own state and compose them.",
+        "You must use a special server to run the app.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "React is considered a ________ UI library.",
+      "options": ["Imperative", "Declarative", "Objective", "Procedural"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

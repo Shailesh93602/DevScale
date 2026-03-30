@@ -1,0 +1,36 @@
+<div class="article-content">
+  <h1>React Props (Properties)</h1>
+  <p>Props are the way we pass data from one React component to another (unidirectionally, from parent to child). Just as functions take arguments, React components take props.</p>
+
+  <h2>1. Passing and Using Props</h2>
+  <p>To pass a prop to a component, use an attribute-like syntax in your JSX. To access it, look at the first argument of your functional component.</p>
+  <pre><code>// Parent Component
+&lt;Welcome name="Alice" /&gt;
+
+// Child Component
+function Welcome(props) {
+  return &lt;h1&gt;Hello, {props.name}!&lt;/h1&gt;;
+}</code></pre>
+
+  <h2>2. De-structuring Props</h2>
+  <p>It's more common and cleaner to use ES6 de-structuring to extract props directly from the function argument.</p>
+  <pre><code>function Welcome({ name, age }) {
+  return &lt;h1&gt;{name} is {age} years old.&lt;/h1&gt;;
+}</code></pre>
+
+  <h2>3. Props are Read-Only</h2>
+  <p>One of the most important rules in React is that <strong>props are immutable</strong>. A component must never modify its own props. If you need to change data within a component, that's where <strong>State</strong> comes in.</p>
+
+  <h2>4. The 'children' Prop</h2>
+  <p>Every component automatically receives a special <code>children</code> prop, which contains any JSX content placed between its opening and closing tags.</p>
+  <pre><code>&lt;Card&gt;
+  &lt;p&gt;Inside the card content.&lt;/p&gt;
+&lt;/Card&gt;
+
+function Card({ children }) {
+  return &lt;div className="card-box"&gt;{children}&lt;/div&gt;;
+}</code></pre>
+
+  <h2>Conclusion</h2>
+  <p>Props are the lifeblood of data flow in React. By using props, you can create truly dynamic and reusable components that look and behave differently based on the data they receive. Understanding that data moves <strong>down</strong> from parent to child is key to mastering React architecture.</p>
+</div>

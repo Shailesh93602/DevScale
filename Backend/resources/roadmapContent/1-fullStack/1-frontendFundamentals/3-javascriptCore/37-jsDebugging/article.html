@@ -1,0 +1,32 @@
+<div class="article-content">
+  <h1>JavaScript Debugging</h1>
+  <p>Debugging is the process of finding and fixing errors within your code. JavaScript provides some built-in tools and techniques to help you identify where things are going wrong and why.</p>
+
+  <h2>1. Console Methods</h2>
+  <p>The <code>console</code> object is the most common tool for quick debugging. Beyond <code>console.log()</code>, there are several useful methods:</p>
+  <ul>
+    <li><code>console.error()</code>: Outputs an error message to the console.</li>
+    <li><code>console.warn()</code>: Outputs a warning message to the console.</li>
+    <li><code>console.table()</code>: Displays data (like arrays or objects) as a table.</li>
+    <li><code>console.time() / console.timeEnd()</code>: Tracks how long a specific piece of code takes to execute.</li>
+  </ul>
+
+  <h2>2. The `debugger` Keyword</h2>
+  <p>The <code>debugger</code> statement stops the execution of JavaScript and calls (if available) the debugging function. This is exactly the same as setting a breakpoint in the developer tools.</p>
+  <pre><code>function calculateTotal(price, tax) {
+  let total = price + tax;
+  debugger; // Execution stops here
+  return total;
+}</code></pre>
+
+  <h2>3. Browser Developer Tools</h2>
+  <p>Modern browsers like Chrome and Firefox have incredibly powerful developer tools (accessible via F12 or Right Click > Inspect):</p>
+  <ul>
+    <li><strong>Sources Tab:</strong> View your code, set breakpoints, and step through execution line by line.</li>
+    <li><strong>Console Tab:</strong> Execute code in real-time and view all logs/errors.</li>
+    <li><strong>Network Tab:</strong> Monitor API calls and asset loading.</li>
+  </ul>
+
+  <h2>Conclusion</h2>
+  <p>Debugging is a core skill for any developer. By mastering the <code>debugger</code> keyword and learning to navigate the browser's developer tools, you can solve complex bugs faster and more efficiently than by using <code>console.log()</code> alone.</p>
+</div>
