@@ -1,0 +1,28 @@
+<section>
+    <h2>Understanding Query Execution Plans</h2>
+    <p>The query execution plan is the internal roadmap that a database uses to retrieve the requested information. Understanding how to read it is the single most important skill for a developer engaged in database performance optimization.</p>
+
+    <h3>1. What is an Execution Plan?</h3>
+    <p>A database does not simply execute your SQL as the text implies. It has a <strong>query optimizer</strong> that chooses the most efficient "plan" for any query. This involves selecting which indexes to use, which join algorithm to apply, and how much memory to allocate.</p>
+
+    <h3>2. The EXPLAIN Command</h3>
+    <p>In most SQL databases (like PostgreSQL and MySQL), you prefix your query with <code>EXPLAIN</code> or <code>EXPLAIN ANALYZE</code> to see the execution plan.</p>
+    <pre><code>
+-- See the plan for a specific query
+EXPLAIN SELECT * FROM users WHERE email = 'john@example.com';
+    </code></pre>
+
+    <h3>3. Key Terms to Look For</h3>
+    <ul>
+      <li><strong>Seq Scan (Sequential Scan):</strong> This is usually slow for large tables (Full Table Scan). It means the database is reading every single row.</li>
+      <li><strong>Index Scan:</strong> This is generally fast and indicates that the database is using an index to find the record.</li>
+      <li><strong>Cost:</strong> An internal unit the database uses to estimate the "cost" of different steps in the plan.</li>
+      <li><strong>Gather:</strong> Indicates that multiple workers are being used for parallel query execution.</li>
+    </ul>
+
+    <h3>4. Improving Your Plan</h3>
+    <p>By identifying a <strong>Seq Scan</strong> on a column that should be fast, you can often solve the performance issue simply by adding an index.</p>
+
+    <h3>Conclusion</h3>
+    <p>Execution plans provide a clear and actionable view of how your database is performing. Once you master the <code>EXPLAIN</code> command, you can resolve your most complex performance bottlenecks with ease.</p>
+</section>

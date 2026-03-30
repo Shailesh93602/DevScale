@@ -1,0 +1,8 @@
+{
+  "title": "Introduction to Database Optimization",
+  "description": "Learn the theory and principles of database optimization and how to measure performance using execution plans.",
+  "module": "Full Stack Web Development",
+  "order": 2,
+  "difficulty": "Intermediate",
+  "tags": ["Database", "Optimization", "SQL", "NoSQL", "Performance Tuning"]
+}

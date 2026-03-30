@@ -1,0 +1,31 @@
+{
+  "title": "Common Pitfalls and Solutions Quiz",
+  "description": "Test your knowledge on common database relationship pitfalls and their established solutions.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the N+1 query problem primarily related to?",
+      "options": ["Slow database hardware", "A lack of primary keys", "A common ORM pitfall where many separate queries are made for related data", "SQL Injection"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is the most effective solution to fix the N+1 query problem?",
+      "options": ["Using raw SQL only", "Implementing Eager Loading (like include or populate)", "Deleting all relationships", "Increasing the database server's RAM"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is a major symptom of 'Over-Normalization' in a database schema?",
+      "options": ["Excessively complex and slow queries due to too many JOINs", "Data duplication across many tables", "Too few tables", "Loss of all primary keys"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which issue occurs when Table A depends on Table B, and Table B also depends on Table A?",
+      "options": ["Cascading Deletes", "Circular References", "Referential Integrity", "Polymorphic Relationships"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
