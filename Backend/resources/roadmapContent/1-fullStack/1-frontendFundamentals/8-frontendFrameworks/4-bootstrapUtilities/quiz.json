@@ -1,0 +1,52 @@
+{
+  "title": "Bootstrap Utilities Quiz",
+  "description": "Evaluate your understanding of single-purpose helper classes for spacing, colors, sizing, and responsive design tweaks.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what are 'utility classes' in Bootstrap?",
+      "options": [
+        "Only for JavaScript.",
+        "Small, single-purpose helper classes used to fine-tune layout and design in HTML.",
+        "To hide the JavaScript code from the console.",
+        "To replace the standard HTML input elements."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which class would you use to remove all padding from an element?",
+      "options": [".m-0", ".p-0", ".padding-none", ".no-space"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the primary benefit of Bootstrap's utility-first approach?",
+      "options": [
+        "It makes CSS files larger.",
+        "It allows for quick and consistent design adjustments without writing custom CSS.",
+        "It only works for mobile apps.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what is the correct naming convention for a margin-top of size 3 in Bootstrap?",
+      "options": [".top-m-3", ".mt-3", ".margin-top-3", ".m-t-3"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Do Bootstrap utilities support responsive design using breakpoints like md or sm?",
+      "options": [
+        "Yes, as they provide breakout classes (e.g., text-md-start or p-sm-5) for different screens.",
+        "No, they only work for fixed widths.",
+        "Only for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

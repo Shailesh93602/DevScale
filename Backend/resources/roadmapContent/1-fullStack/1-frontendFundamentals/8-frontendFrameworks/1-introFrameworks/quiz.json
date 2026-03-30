@@ -1,0 +1,62 @@
+{
+  "title": "Intro to Frontend Frameworks Quiz",
+  "description": "Evaluate your understanding of the Frontend Framework role in structuring complex UIs, consistency/speed benefits, and the difference between libraries and frameworks.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what was the primary reason frontend frameworks emerged?",
+      "options": [
+        "To make websites look older.",
+        "To provide structure, tools, and best practices for building complex web applications with less code.",
+        "To hide the JavaScript code from the console.",
+        "To replace the standard HTML input elements."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what is one of the biggest benefits of using frameworks like React, Vue, or Angular?",
+      "options": [
+        "Consistent code structure across large teams.",
+        "They make the browser execute CSS faster.",
+        "They only work for mobile apps.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the key difference between a library (like React) and a more opinionated framework (like Angular)?",
+      "options": [
+        "Frameworks are for mobile and libraries are for web.",
+        "A Framework provides a more comprehensive, 'opinionated' solution for the whole app structure, while a Library is usually more focused on a single task (like the UI layer).",
+        "They are the same.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Are 'Vanilla JS' and 'Framework JS' two different programming languages?",
+      "options": [
+        "No, frameworks are built on top of the same JavaScript browser engines.",
+        "Yes, they use different compile steps and different logic.",
+        "Only for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Does using a frontend framework allow you to focus more on your application's unique features instead of common infrastructure tasks?",
+      "options": [
+        "Yes, as they provide robust, pre-built solutions for common problems (routing, state, etc).",
+        "No, it's always slower.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

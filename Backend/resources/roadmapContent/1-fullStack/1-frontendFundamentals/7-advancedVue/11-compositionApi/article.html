@@ -1,0 +1,32 @@
+<div class="article-content">
+  <h1>Vue Composition API</h1>
+  <p>The Composition API is a set of APIs that allows you to author Vue components using imported functions instead of declaring options. It is the built-in way in Vue 3 to share logic between components with maximum flexibility and TypeScript support.</p>
+
+  <h2>1. Why the Composition API?</h2>
+  <p>In large components using the Options API (data, methods, computed), related logic is often scattered across different options. The Composition API lets you group related code together, making it much easier to read, test, and reuse.</p>
+
+  <h2>2. Core Concepts: setup(), ref(), and reactive()</h2>
+  <ul>
+    <li><strong>setup():</strong> The entry point for using the Composition API in a component. It runs before the component is created.</li>
+    <li><strong>ref():</strong> Used to create a reactive reference for any data type (strings, numbers, etc.). Access it via <code>.value</code>.</li>
+    <li><strong>reactive():</strong> Used to create a reactive object. You don't need <code>.value</code> to access its properties.</li>
+  </ul>
+  <pre><code>import { ref, onMounted } from 'vue'
+
+export default {
+  setup() {
+    const count = ref(0)
+    const increment = () => count.value++
+
+    onMounted(() => console.log('Mounted!'))
+
+    return { count, increment }
+  }
+}</code></pre>
+
+  <h2>3. Composables</h2>
+  <p>The true power of the Composition API lies in **Composables**—functions that leverage Vue's reactive APIs to encapsulate and reuse stateful logic (e.g., <code>useMouse()</code>, <code>useFetch()</code>).</p>
+
+  <h2>Conclusion</h2>
+  <p>The Composition API is the future of Vue.js development. By mastering <code>setup</code>, <code>ref</code>, and <code>reactive</code>, you can build truly modular, scalable, and type-safe applications that are much easier to maintain than traditional options-based components.</p>
+</div>
