@@ -1,0 +1,37 @@
+{
+  "title": "Key-Value Stores Quiz",
+  "description": "Test your fundamental knowledge about key-value stores and their role in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is a 'Key-Value Store' and why is it useful?",
+      "options": ["A way to backup the database.", "The simplest and fastest type of NoSQL database, storing data as a unique key associated with a specific value.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is the most popular in-memory key-value store, famously used for caching and sessions?",
+      "options": ["MySQL", "MongoDB", "Redis", "PostgreSQL"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What's the meaning of 'In-Memory' in a key-value store like Redis?",
+      "options": ["The data is stored on a flash drive.", "The data is stored and retrieved entirely from the server's RAM (Memory), providing sub-millisecond response times.", "A type of database indexing.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is a typical use case for a key-value store?",
+      "options": ["Storing complex multi-table relationships.", "Caching the results of expensive database queries.", "Generating complex financial reports.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is the primary role of a 'TTL' (Time To Live) in a key-value store?",
+      "options": ["To make the database faster.", "To automatically delete keys after a certain period of time, preventing memory from filling up with stale data.", "To automatically generate a backup of the database.", "To improve the user experience."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

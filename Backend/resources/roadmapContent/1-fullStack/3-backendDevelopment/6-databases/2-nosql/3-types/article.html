@@ -1,0 +1,54 @@
+<article>
+  <h1>The Four Main Types of NoSQL Databases</h1>
+  
+  <p>NoSQL is not a single technology; it's a umbrella term for several different data models. Choosing the right one depends on your data's structure and how your application needs to access it. There are four primary types of NoSQL databases used in modern web development.</p>
+
+  <section>
+    <h2>1. Document Databases</h2>
+    <p>Data is stored in "documents," usually in a JSON-like format (like BSON in MongoDB). This is the most popular type of NoSQL for general-purpose web development.</p>
+    <ul>
+      <li><strong>Structure:</strong> Flexible; each document can have a different set of fields.</li>
+      <li><strong>Best For:</strong> Prototyping, content management systems, user profiles, and e-commerce catalogs.</li>
+      <li><strong>Examples:</strong> <strong>MongoDB</strong>, CouchDB, Amazon DocumentDB.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>2. Key-Value Stores</h2>
+    <p>Data is stored as a collection of unique keys, each associated with a single value. This is the simplest and fastest type of NoSQL database.</p>
+    <ul>
+      <li><strong>Structure:</strong> Very simple (key: value).</li>
+      <li><strong>Best For:</strong> Hyper-fast caching, session management, and shopping carts.</li>
+      <li><strong>Examples:</strong> <strong>Redis</strong>, Memcached, DynamoDB (in simple mode).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>3. Column-Family Stores (Wide-Column)</h2>
+    <p>Data is stored in columns instead of rows. This allows for incredibly fast access to specific data sets across massive amounts of records.</p>
+    <ul>
+      <li><strong>Structure:</strong> Organized by column families (groups of related columns).</li>
+      <li><strong>Best For:</strong> Time-series data, analytics, IoT sensor logs, and recommendation engines.</li>
+      <li><strong>Examples:</strong> <strong>Apache Cassandra</strong>, ScyllaDB, Google Bigtable.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>4. Graph Databases</h2>
+    <p>Data is stored as "Nodes" (entities) and "Edges" (relationships). This is the only type of database specialized in representing complex, deeply nested connections.</p>
+    <ul>
+      <li><strong>Structure:</strong> A mathematical graph of nodes and relationships.</li>
+      <li><strong>Best For:</strong> Social networks, fraud detection, recommendation engines, and knowledge graphs.</li>
+      <li><strong>Examples:</strong> <strong>Neo4j</strong>, Amazon Neptune, ArangoDB.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Best Practices Summary</h2>
+    <ol>
+      <li><strong>Don't force a Document into a Graph:</strong> Choose the database type that most naturally fits your data structure. If your problem is "finding friends of friends," a graph database is 100x more efficient than any other type.</li>
+      <li><strong>Mix and Match (Polyglot Persistence):</strong> Modern professional apps often use multiple databases (e.g., PostgreSQL for users, MongoDB for product logs, and Redis for caching). Don't try to make one database do everything.</li>
+    </ol>
+  </section>
+
+</article>

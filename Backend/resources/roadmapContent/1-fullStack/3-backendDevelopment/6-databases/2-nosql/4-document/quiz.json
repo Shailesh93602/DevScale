@@ -1,0 +1,37 @@
+{
+  "title": "Document Databases Quiz",
+  "description": "Test your fundamental knowledge about document databases and their role in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is a 'Document Database' and why is it useful?",
+      "options": ["A way to backup the database.", "A NoSQL database that stores data as self-contained documents (usually JSON or BSON format), allowing for flexibility and intuitive data modeling.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's the meaning of 'Embedding' in document databases?",
+      "options": ["To encrypt files using a secret key.", "Storing related data directly inside the primary document (e.g., storing a list of tags inside a blog post document).", "To hide the application's IP address.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's the meaning of 'Referencing' in document databases?",
+      "options": ["Creating a link that points to a specific document.", "Storing a unique ID (like a Foreign Key) to another document, rather than copying its content.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is the most popular document database used in modern web development?",
+      "options": ["MySQL", "Redis", "MongoDB", "PostgreSQL"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "In which situation is 'Embedding' almost certainly the better choice?",
+      "options": ["When data is written frequently by many different users.", "When data is almost always read together (e.g., a 'Product' and its 'Metadata').", "When the data is very large.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}
