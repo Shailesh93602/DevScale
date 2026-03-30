@@ -1,0 +1,37 @@
+{
+  "title": "Indexing Basics Quiz",
+  "description": "Test your basic knowledge of database indexing.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary role of a database index?",
+      "options": ["To encrypt the database", "To speed up data retrieval by avoiding full table scans", "To delete old records", "To create new users automatically"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "An index can be compared to what part of a textbook?",
+      "options": ["The Title", "The Table of Contents", "The Index at the back", "The Chapters"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a common data structure used for database indexes?",
+      "options": ["Array", "Linked List", "B-Tree", "Queue"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What type of index is created automatically on the primary key column?",
+      "options": ["Unique Index", "Composite Index", "Primary Key Index", "Non-Unique Index"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is a major trade-off of having too many indexes?",
+      "options": ["Slower write operations", "Faster read operations", "Lower storage costs", "No primary keys Allowed"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

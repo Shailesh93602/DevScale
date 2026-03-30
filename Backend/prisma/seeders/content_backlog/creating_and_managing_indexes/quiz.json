@@ -1,0 +1,31 @@
+{
+  "title": "Creating and Managing Indexes Quiz",
+  "description": "Test your knowledge on create, management, and optimization of database indexes.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "On which type of column should you typically NOT create an index?",
+      "options": ["Foreign keys", "Columns with very low cardinality (e.g., gender)", "Email addresses", "Usernames"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is the correct SQL syntax for creating a simple index on a user's email?",
+      "options": ["CREATE INDEX ON users(email)", "ADD INDEX TO users(email)", "CREATE INDEX idx_user_email ON users(email)", "SELECT INDEX on user.email"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is a 'Composite Index'?",
+      "options": ["An index that only contains letters", "An index that spans multiple columns", "An index for a single table", "A primary key index"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which index type is best for ensuring that a column contains unique values and for speeding up data retrieval?",
+      "options": ["Simple Index", "Unique Index", "Clustered Index", "Non-Unique Index"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

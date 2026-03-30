@@ -1,0 +1,8 @@
+{
+  "title": "Indexing Basics",
+  "description": "Learn the fundamentals of database indexing including how they work, different types of indexes, and their performance trade-offs.",
+  "module": "Full Stack Web Development",
+  "order": 3,
+  "difficulty": "Beginner",
+  "tags": ["Database", "Indexing", "SQL", "NoSQL", "B-Tree"]
+}

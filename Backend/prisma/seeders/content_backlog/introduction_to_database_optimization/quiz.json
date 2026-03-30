@@ -1,0 +1,37 @@
+{
+  "title": "Introduction to Database Optimization Quiz",
+  "description": "Test your knowledge on the core concepts of database optimization.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary goal of database optimization?",
+      "options": ["To delete old records", "To improve the performance and efficiency of queries and data storage", "To encrypt the database server", "To allow more users to login"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a common trade-off when optimizing a database with indexes?",
+      "options": ["Faster read operations but slower write operations", "Slower read operations but faster write operations", "No change in performance", "All database operations become slower"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which tool would you use to understand exactly how a database executes a query and to identify bottlenecks?",
+      "options": ["Slow Query Log", "Execution Plan (EXPLAIN)", "Lighthouse", "Browser DevTools"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which area of optimization deals with improving the physical configuration and resources of the database server?",
+      "options": ["Query Optimization", "Index Optimization", "Hardware/Configuration Tuning", "Schema Optimization"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "When is the best time to start optimizing your database?",
+      "options": ["Before you even start a project", "Only after you have identified a specific performance bottleneck using slow query logs and execution plans", "Whenever you feel like it", "Only at the end of the project lifecycle"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

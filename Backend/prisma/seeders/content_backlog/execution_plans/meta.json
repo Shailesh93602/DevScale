@@ -1,0 +1,8 @@
+{
+  "title": "Execution Plans",
+  "description": "Learn to read and optimize database query execution plans using EXPLAIN and EXPLAIN ANALYZE for both SQL and NoSQL databases.",
+  "module": "Full Stack Web Development",
+  "order": 5,
+  "difficulty": "Advanced",
+  "tags": ["Database", "Execution Plan", "SQL", "EXPLAIN", "Performance Tuning"]
+}
