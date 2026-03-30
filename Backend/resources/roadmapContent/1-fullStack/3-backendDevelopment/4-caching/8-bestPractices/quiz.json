@@ -1,0 +1,37 @@
+{
+  "title": "Caching Best Practices Quiz",
+  "description": "Test your knowledge about the critical role of caching best practices and their implementation logic.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which of these is the most common and robust caching pattern for modern web applications?",
+      "options": ["Read-Through", "Write-Through", "Cache-Aside (Lazy Loading)", "Write-Behind"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What's the primary benefit of the 'Cache-Aside' strategy?",
+      "options": ["It's more secure than other strategies.", "It's resilient to cache failures; the application can always fall back to the primary database.", "It automatically generates a thumbail for each image.", "It's the only way to store data in a database."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Why is it important to set a TTL for EVERY cache key you create?",
+      "options": ["To make the database faster.", "To ensure that stale data will eventually be deleted by Redis, even if your application's proactive invalidation fails.", "To automatically generate a backup of the data.", "To make the application more secure."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What should the application do if the Redis server is temporarily unavailable?",
+      "options": ["Crash the original request with an error.", "Wait until Redis is back online.", "Gracefully fall back to the primary database and fulfill the request.", "None of the above."],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What is the 'Cache Hit Ratio' and what does a high ratio (e.g., 90%) indicate?",
+      "options": ["It measures how fast the database is.", "The percentage of requests served directly from the cache; a high ratio means your caching strategy is highly effective and significantly reduces database load.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

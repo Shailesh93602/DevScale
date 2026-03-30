@@ -1,0 +1,37 @@
+{
+  "title": "Redis Basics Quiz",
+  "description": "Test your fundamental knowledge about Redis and its critical role in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the primary characteristic of Redis that makes it so fast compared to traditional databases?",
+      "options": ["It stores all data in a traditional SQL format.", "It stores all data in the server's RAM (Random Access Memory).", "It's free for every user.", "It only works with certain browsers."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is NOT a supported data structure in Redis?",
+      "options": ["Strings", "Hashes", "Sorted Sets", "Recursive Trees"],
+      "correctAnswer": 3,
+      "points": 20
+    },
+    {
+      "question": "What's the primary role of Redis in a typical full-stack architecture?",
+      "options": ["To store all of the application's users.", "To cache the results of expensive queries and reduce load on the primary database.", "To automatically generate a backup of the data.", "To hide the application's IP address."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What does it mean that Redis is 'Atomic'?",
+      "options": ["Operations on the same key are guaranteed to be atomic, preventing race conditions.", "It uses nuclear power for data processing.", "It can only store very small pieces of data.", "It's only for military applications."],
+      "correctAnswer": 0,
+      "points": 20
+    },
+    {
+      "question": "What is an 'Eviction Policy' in Redis?",
+      "options": ["A way to block specific user IP addresses.", "The strategy Redis uses to automatically delete old or least-recently-used data when its memory is full.", "Deleting a user from the entire application.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

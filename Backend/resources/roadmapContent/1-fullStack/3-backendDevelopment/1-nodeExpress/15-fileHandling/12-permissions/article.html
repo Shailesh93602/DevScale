@@ -1,0 +1,58 @@
+<article>
+  <h1>Managing File Access Permissions</h1>
+  
+  <p>In a multi-user application, not all files should be accessible to everyone. Proper file access permissions ensure that a user can only view, download, or delete the files they own or have been explicitly granted access to.</p>
+
+  <section>
+    <h2>Permissions for Local Files (UNIX Permissions)</h2>
+    <p>On a traditional file system, permissions are managed through owners, groups, and access modes (read, write, execute). In Node.js, you can use <code>fs.mode</code> to check and <code>fs.chmod()</code> to change these permissions.</p>
+    <ul>
+      <li><strong>Read (r):</strong> 4</li>
+      <li><strong>Write (w):</strong> 2</li>
+      <li><strong>Execute (x):</strong> 1</li>
+    </ul>
+    <p>Using <code>fs.chmodSync('./secret.txt', 0o600)</code> would make the file readable and writable only by the owner.</p>
+  </section>
+
+  <section>
+    <h2>Permissions in Cloud Storage (S3 Policies)</h2>
+    <p>In cloud storage like Amazon S3, permissions are much more granular and are managed through <strong>IAM Policies</strong> and <strong>Bucket Policies</strong>. You can define exactly who (which IAM user or role) can perform what action (e.g., <code>s3:GetObject</code>) on specific objects.</p>
+  </section>
+
+  <section>
+    <h2>Implementing User-Level Permissions in Your App</h2>
+    <p>For most web applications, you'll need to implement your own permission logic in the backend. This is best done by storing a "user_id" on the file record in your database.</p>
+    <pre><code>app.get('/files/:id', authenticate, async (req, res) => {
+  const file = await FileModel.findById(req.params.id);
+  
+  // 1. Check if the file exists
+  if (!file) return res.status(404).json({ error: "File not found" });
+
+  // 2. Check if the authenticated user is the owner (ACL)
+  if (file.userId !== req.user.id && req.user.role !== 'ADMIN') {
+    return res.status(403).json({ error: "Access denied" });
+  }
+
+  // 3. Serve the file
+  res.sendFile(file.path);
+});</code></pre>
+  </section>
+
+  <section>
+    <h2>Public vs. Private Access</h2>
+    <ul>
+      <li><strong>Public Files:</strong> CSS, JS, and generic images that can be cached on a CDN and served directly to any visitor.</li>
+      <li><strong>Private Files:</strong> Personal documents, private photos, or internal logs that must only be served through an authenticated API endpoint or using <strong>Pre-signed URLs</strong>.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Best Practices Summary</h2>
+    <ol>
+      <li><strong>Deny by Default:</strong> Unless a file is explicitly marked as public, access should be blocked for unauthenticated or unauthorized users.</li>
+      <li><strong>Avoid ID Guessing:</strong> Don't use sequential IDs for files in your URLs (e.g., <code>/files/1</code>, <code>/files/2</code>). Use UUIDs or other long, random strings to prevent "Insecure Direct Object Reference" (IDOR) attacks.</li>
+      <li><strong>Keep Metadata Private:</strong> Even the metadata of a file (the name, the size, the fact that it exists) can be sensitive and should be protected with permissions.</li>
+    </ol>
+  </section>
+
+</article>

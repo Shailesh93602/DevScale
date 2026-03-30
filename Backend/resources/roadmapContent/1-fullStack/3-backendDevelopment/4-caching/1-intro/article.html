@@ -1,0 +1,40 @@
+<article>
+  <h1>Introduction to Caching</h1>
+  
+  <p>Caching is the process of storing copies of data in a temporary storage location (a "cache") so that future requests for that data can be served much faster. It is one of the most powerful tools available to a web developer for improving application performance and scalability.</p>
+
+  <section>
+    <h2>How Caching Works</h2>
+    <p>When a user requests data, the system first checks the cache. If the data is found (a "cache hit"), it's returned immediately. If not (a "cache miss"), the system fetches the data from the primary source (like a database or an external API), saves a copy in the cache, and then returns it to the user.</p>
+  </section>
+
+  <section>
+    <h2>The Performance Impact</h2>
+    <p>Caching can dramatically reduce the latency of your application. Accessing data from a cache (usually in-memory) is often thousands of times faster than fetching it from a traditional disk-based database or a remote network service.</p>
+  </section>
+
+  <section>
+    <h2>What Should You Cache?</h2>
+    <ul>
+      <li><strong>Frequent Queries:</strong> Database results that are requested often but change rarely (e.g., a list of product categories).</li>
+      <li><strong>Expensive Calculations:</strong> The result of a complex mathematical formula or a heavy report generation.</li>
+      <li><strong>External API Responses:</strong> Data fetched from third-party services like weather APIs or currency converters.</li>
+      <li><strong>Static Assets:</strong> Images, CSS, and JavaScript files (usually cached in the browser or on a CDN).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>The Challenges of Caching</h2>
+    <p>While powerful, coaching introduces a major challenge: <strong>Data Stale-ness</strong>. If the data in your primary source changes but the cache isn't updated, users will see old (stale) data. Managing this is known as "Cache Invalidation."</p>
+  </section>
+
+  <section>
+    <h2>Types of Caching</h2>
+    <ul>
+      <li><strong>Browser Caching:</strong> Storing data on the user's computer.</li>
+      <li><strong>CDN Caching:</strong> Storing data on servers distributed globally, closer to the users.</li>
+      <li><strong>Server-Side Caching:</strong> Storing data in the memory of your application server (e.g., using Redis).</li>
+    </ul>
+  </section>
+
+</article>

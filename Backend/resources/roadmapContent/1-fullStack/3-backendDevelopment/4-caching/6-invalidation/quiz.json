@@ -1,0 +1,37 @@
+{
+  "title": "Cache Invalidation Quiz",
+  "description": "Test your knowledge about the critical role of cache invalidation and data consistency in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the primary goal of cache invalidation?",
+      "options": ["To make the database faster.", "To ensure the cache doesn't serve stale or incorrect data to users after the primary database has changed.", "To automatically backup the database.", "To make the application more secure."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is the simplest and most common strategy for invalidating data in a cache?",
+      "options": ["Event-Based Invalidation", "Time-Based Invalidation (TTL)", "Manual Deletion by Admin", "Cloud Provider Backup"],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "When should you use 'Active' (Event-Based) cache invalidation?",
+      "options": ["Whenever you make any change, regardless of its importance.", "For critical data that must always be accurate (e.g., a user's account balance).", "Only when the server is about to restart.", "It's never recommended."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is the 'Thundering Herd' problem in the context of caching?",
+      "options": ["A way to encrypt files using a secret key.", "When a popular cache key expires and thousands of concurrent requests all hit the primary database at once, potentially crashing it.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which famous quote is associated with cache invalidation in computer science?",
+      "options": ["'Be the change you want to see in the world.'", "'There are only two hard things in Computer Science: cache invalidation and naming things.'", "'The only thing we have to fear is fear itself.'", "'One small step for man, one giant leap for mankind.'"],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

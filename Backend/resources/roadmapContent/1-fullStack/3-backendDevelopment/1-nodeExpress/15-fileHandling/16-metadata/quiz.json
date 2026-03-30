@@ -1,0 +1,37 @@
+{
+  "title": "Metadata Management Quiz",
+  "description": "Test your knowledge about the critical role of metadata management in modern file handling.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is 'File Metadata' in the context of web development?",
+      "options": ["The raw binary content of a file.", "Information about the file (name, size, type, owner, etc.).", "A type of database indexing.", "A way to automatically generate a backup of the data."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Why is it generally a good practice to store file metadata in your database (SQL/NoSQL) instead of just on the file system?",
+      "options": ["It makes the database slower.", "It allows you to perform fast queries, filters, and manage user associations efficiently.", "It automatically generates a thumbail for each file.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is 'EXIF data' and why might you want to strip it from user-uploaded images?",
+      "options": ["It's a way to encrypt files using a secret key.", "It's metadata from the camera (including GPS coordinates), which could expose a user's location and compromise their privacy.", "It's the only format compatible with mobile devices.", "A type of database indexing."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which metadata field is essential for enforcing file access permissions between multiple users?",
+      "options": ["originalName", "size", "userId / ownerId", "mimetype"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "How can you extract information like image dimensions or video duration from a file already stored on your server?",
+      "options": ["By manually opening and reading the file header in your code.", "By using a specialized library like 'sharp' (for images) or 'ffprobe' (for video).", "By asking the user to provide it again.", "It's not possible to extract metadata from stored files."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

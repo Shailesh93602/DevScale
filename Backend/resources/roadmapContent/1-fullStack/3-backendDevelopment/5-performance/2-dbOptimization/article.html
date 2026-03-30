@@ -1,0 +1,51 @@
+<article>
+  <h1>Mastering Database Query Optimization</h1>
+  
+  <p>For most full-stack applications, the database is the primary performance bottleneck. Slow queries directly lead to slow response times and a poor user experience. Optimizing your queries is one of the most impactful ways to scale your application and improve its overall efficiency.</p>
+
+  <section>
+    <h2>1. The Power of Indexing</h2>
+    <p>An index is a data structure that allows the database to find specific rows much faster than scanning every single row in a table. Think of it like the index at the back of a textbook.</p>
+    <ul>
+      <li><strong>When to Index:</strong> Only index columns that are frequently used in <code>WHERE</code> clauses, <code>JOIN</code> conditions, or <code>ORDER BY</code> clauses.</li>
+      <li><strong>The Cost:</strong> Every index slows down write operations (like <code>INSERT</code> or <code>UPDATE</code>) because the database must update the index as well as the data.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>2. Avoid SELECT * </h2>
+    <p>Always request only the columns you actually need. Fetching extra data (especially large text or binary blobs) consumes more CPU, memory, and network bandwidth on both the database and application servers.</p>
+    <pre><code>// Bad: Fetches everything
+const user = await User.findOne({ email });
+
+// Good: Fetches only the needed fields
+const user = await User.findOne({ email }).select('name email role');</code></pre>
+  </section>
+
+  <section>
+    <h2>3. The N+1 Query Problem</h2>
+    <p>A classic performance pitfall. It happens when you fetch a list of entities and then perform an additional query for *each* entity to fetch its related data. For 100 entities, you end up doing 101 queries (1 + 100).</p>
+    <p><strong>Solution:</strong> Use "Eager Loading" (like <code>populate()</code> in Mongoose or <code>JOIN</code> in SQL) to fetch all related data in a single query.</p>
+  </section>
+
+  <section>
+    <h2>4. Using EXPLAIN</h2>
+    <p>Most modern databases (like PostgreSQL, MySQL, and MongoDB) provide an <code>EXPLAIN</code> command that shows exactly how the database plans to execute a query. It tells you if it's using an index or performing a slow "full table scan." This is the single most important tool for debugging slow queries.</p>
+  </section>
+
+  <section>
+    <h2>5. Pagination</h2>
+    <p>Never return thousands of rows in a single API response. Implement pagination (using <code>LIMIT</code> and <code>OFFSET</code> or cursor-based pagination) to fetch data in small, manageable chunks as the user scrolls or clicks through pages.</p>
+  </section>
+
+  <section>
+    <h2>Best Practices Summary</h2>
+    <ol>
+      <li><strong>Index Strategically:</strong> Don't index everything; only index columns used frequently for searching or sorting.</li>
+      <li><strong>Profile and Monitor:</strong> Use your database's "Slow Query Log" to identify which queries are taking the longest and focus your optimization efforts there.</li>
+      <li><strong>Prefer Bulk Operations:</strong> When updating or inserting many records, use bulk methods (like <code>insertMany()</code> or <code>updateMany()</code>) rather than looping and performing individual queries.</li>
+      <li><strong>Denormalize with Caution:</strong> In some cases, duplicating data across different collections/tables can avoid expensive joins and improve read performance, but it makes data consistency much harder to maintain.</li>
+    </ol>
+  </section>
+
+</article>
