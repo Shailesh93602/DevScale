@@ -1,0 +1,37 @@
+{
+  "title": "Graph Databases Quiz",
+  "description": "Test your knowledge on graph databases and their core concepts.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What are the two primary components of a graph database?",
+      "options": ["Collections and Documents", "Tables and Rows", "Nodes and Edges", "Keys and Values"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a popular, native graph database?",
+      "options": ["MongoDB", "PostgreSQL", "Neo4j", "Redis"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is 'Traversal' in the context of graph databases?",
+      "options": ["Saving a node to the disk", "Following relationships from one node to others", "Deleting a node from the database", "Updating a node's property"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "For which of these applications is a graph database most appropriate?",
+      "options": ["A simple blog", "A bank's transaction logging", "A social network's friend recommendations", "Streaming a single large file"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the main advantage of graph databases over relational databases for complex relationships?",
+      "options": ["Lower cost of storage", "Support for ACID properties", "Ability to traverse large volumes of relationships without JOIN operations", "They are easier to install"],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

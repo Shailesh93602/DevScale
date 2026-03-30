@@ -1,0 +1,62 @@
+{
+  "title": "Integrating NoSQL with Applications Quiz",
+  "description": "Test your knowledge on integrating NoSQL databases into multi-tier applications.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which type of NoSQL database is best suited for complex relationships like social networks?",
+      "options": [
+        "Document Store",
+        "Key-Value Store",
+        "Graph Database",
+        "Column-Family Store"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is 'eventual consistency' in the context of NoSQL databases?",
+      "options": [
+        "All nodes see the same data at all times",
+        "Data will eventually be consistent across all nodes after some time",
+        "Data is never consistent",
+        "Data is only consistent during a write operation"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "In NoSQL data modeling, what is the process of putting related data in a single document called?",
+      "options": [
+        "Normalization",
+        "Embedding",
+        "Joining",
+        "Indexing"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which theorem explains the trade-offs between consistency, availability, and partition tolerance in distributed systems?",
+      "options": [
+        "Pythagorean theorem",
+        "CAP theorem",
+        "Central Limit theorem",
+        "Big O theorem"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which package would you likely use for MongoDB integration in a Node.js application?",
+      "options": [
+        "pg",
+        "mongoose",
+        "mysql2",
+        "sqlite3"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

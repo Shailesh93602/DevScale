@@ -1,0 +1,51 @@
+{
+  "title": "Choosing an ORM Quiz",
+  "description": "Test your knowledge on factors to consider when choosing an Object-Relational Mapper.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these is a key factor to consider when selecting an ORM?",
+      "options": [
+        "Language support",
+        "Database support",
+        "TypeScript support (if applicable)",
+        "All of the above"
+      ],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "Which ORM is known for its excellent TypeScript support and automatic migrations?",
+      "options": [
+        "Sequelize",
+        "Prisma",
+        "Mongoose",
+        "Django ORM"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "If your project is using MongoDB, which of these is the most common ODM to use?",
+      "options": [
+        "Sequelize",
+        "TypeORM",
+        "Prisma",
+        "Mongoose"
+      ],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "What is the main benefit of having a large community and ecosystem behind an ORM?",
+      "options": [
+        "Fewer bug fixes",
+        "Better performance",
+        "More resources and documentation",
+        "Complexity"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}
