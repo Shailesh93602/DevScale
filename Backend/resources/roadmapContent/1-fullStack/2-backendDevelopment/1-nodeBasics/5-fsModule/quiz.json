@@ -1,0 +1,52 @@
+{
+  "title": "File System (fs) Module Quiz",
+  "description": "Evaluate your understanding of async vs sync reading/writing and the modern fs.promises approach for clean async/await implementations in Node.js.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily design philosophy of the 'fs' module in Node.js?",
+      "options": [
+        "Faster component rendering.",
+        "A system focused on interacting with files and folders on the server's disk.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what was the primarily benefit of using 'fs.readFile' (async) instead of 'fs.readFileSync' (sync)?",
+      "options": [
+        "readFileSync is always faster.",
+        "fs.readFile is non-blocking, so it doesn't stop the rest of your server while it waits for the disk to read the file.",
+        "To hide all non-number characters.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which method in the 'fs' module would you use to add new content to the end of an existing file without deleting its original content?",
+      "options": ["writeFile", "appendFile", "saveFile", "pushFile"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does Node.js allow you to use Async/Await to read files in modern versions?",
+      "options": [
+        "Yes, by using the 'fs.promises' sub-module.",
+        "No, only with callbacks.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what method is used in the 'fs' module to delete a file from the disk?",
+      "options": ["fs.delete", "fs.remove", "fs.unlink", "fs.clear"],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

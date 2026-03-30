@@ -1,0 +1,52 @@
+{
+  "title": "NPM Basics Quiz",
+  "description": "Evaluate your understanding of package.json/package-lock.json, common commands (init/install), and the vast package ecosystem for dependency management.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily purpose of a 'package.json' file?",
+      "options": [
+        "Faster component rendering.",
+        "To serve as a 'manifest' for your project, listing all dependencies, project metadata, and common terminal scripts.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what was the primarily role of 'package-lock.json' in a project?",
+      "options": [
+        "To automatically update all packages to their newest major version.",
+        "To 'pin' the exact version of every single package and sub-package your project uses, ensuring stable builds for your team.",
+        "To hide all non-number characters.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which command would you use to create a new 'package.json' file from the terminal?",
+      "options": ["npm init", "npm start", "npm install", "npm create"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what command would you use to install a package specifically as a 'DevDependency'?",
+      "options": ["npm install", "npm install -D", "npm run build", "npm install --prod"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does NPM (Node Package Manager) allowing you to build truly Fullstack applications by using millions of pre-built packages and libraries?",
+      "options": [
+        "Yes, by providing a robust ecosystem for managing, sharing, and versioning your code.",
+        "No, it's always slower.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
