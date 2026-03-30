@@ -1,0 +1,37 @@
+{
+  "title": "Database Management Tools Quiz",
+  "description": "Test your fundamental knowledge about different database management tools and their role in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the primary role of a 'Database GUI Client' (like TablePlus or DBeaver)?",
+      "options": ["To store all of the application's users.", "To provide a visual interface for browsing tables, executing queries, and managing indexes across one or more databases.", "To automatically generate a backup of the data.", "To hide the application's IP address."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is a popular, modern database client that supports multiple database types (SQL and NoSQL)?",
+      "options": ["Postman", "TablePlus", "Mongoose", "React Router"],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is an 'ER Diagram' (Entity-Relationship) and why is it useful?",
+      "options": ["A way to encrypt files using a secret key.", "A visual representation of the tables in your database and how they relate across Foreign Keys, essential for understanding complex schemas.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which tool provides a built-in GUI for browsing and editing data within its own schema file?",
+      "options": ["Express.js", "Prisma Studio", "Sequelize CLI", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's a common benefit of using an advanced CLI tool like 'pgcli' over the standard 'psql' terminal?",
+      "options": ["It makes the database faster.", "It adds 'auto-completion' and 'syntax highlighting' for your SQL commands, making the terminal much more productive.", "To automatically generate a backup of the data.", "To improve the user experience."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}
