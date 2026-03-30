@@ -1,0 +1,47 @@
+{
+  "title": "Express Middleware Quiz",
+  "description": "Evaluate your understanding of application-level vs route-level usage, built-in utilities (express.json/static), and third-party tools like Morgan or Helmet.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily role of 'Middleware' in an Express.js application?",
+      "options": [
+        "Faster component rendering.",
+        "A function that has access to the request (req) and response (res) objects, allowing you to run code or modify data before it reaches the final route handler.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what was the primarily method used to register 'Application-Level' middleware that runs for every request?",
+      "options": ["app.get()", "app.use()", "app.post()", "app.route()"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which built-in Express middleware is commonly used to parse incoming JSON data in the request body?",
+      "options": ["express.static()", "express.json()", "express.router()", "express.body()"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what function must be called inside a middleware to pass control to the 'next' middleware in the stack?",
+      "options": ["next()", "continue()", "pass()", "skip()"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Does standard middleware like 'express.static()' allowing you to easily serve images, CSS, and other static files without writing custom route handlers?",
+      "options": [
+        "Yes, as it is a built-in Express utility specifically for serving a directory of files.",
+        "No, it only works for HTML.",
+        "Only for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

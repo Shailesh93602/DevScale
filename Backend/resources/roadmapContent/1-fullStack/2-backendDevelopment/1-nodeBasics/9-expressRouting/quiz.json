@@ -1,0 +1,47 @@
+{
+  "title": "Express Routing Quiz",
+  "description": "Evaluate your understanding of HTTP methods (GET/POST), dynamic route parameters (:id), and query parameters for feature-rich web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily role of 'Routing' in an Express.js application?",
+      "options": [
+        "Faster component rendering.",
+        "Defining which code should run when a user visits a specific URL or performs a specific action (like a POST request).",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what was the primarily method used to create a dynamic route variable like a user ID?",
+      "options": ["Using a colon (:) in the route definition (e.g., /users/:id).", "Using a hash (#).", "Using a question mark (?).", "None of the above."],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which property in the 'req' object would you use in Express to access a dynamic route parameter like ':id'?",
+      "options": ["req.query", "req.params", "req.body", "req.headers"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what property in the 'req' object would you use to access 'Query Parameters' (like /search?q=node)?",
+      "options": ["req.params", "req.query", "req.search", "req.data"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does Express allowing the use of multiple handlers for a single route using the 'next()' function?",
+      "options": [
+        "Yes, as it is a core feature of the Express middleware system.",
+        "No, only one handler per route is allowed.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
