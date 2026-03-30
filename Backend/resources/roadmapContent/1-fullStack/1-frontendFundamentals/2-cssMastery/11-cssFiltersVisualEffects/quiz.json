@@ -1,0 +1,62 @@
+{
+  "title": "CSS Filters and Visual Effects Quiz",
+  "description": "Test your knowledge on applying graphical effects using CSS filter functions.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which CSS filter function is used to create a Gaussian blur effect?",
+      "options": [
+        "opacity()",
+        "grayscale()",
+        "blur()",
+        "contrast()"
+      ],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What is the primary difference between box-shadow and the drop-shadow() filter function?",
+      "options": [
+        "box-shadow is only for text.",
+        "drop-shadow() is older than box-shadow.",
+        "drop-shadow() follows the actual alpha channel of the element's content.",
+        "There is no difference between them."
+      ],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "Which filter function would make an image completely black and white?",
+      "options": [
+        "sepia(100%)",
+        "invert(100%)",
+        "grayscale(100%)",
+        "brightness(0%)"
+      ],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "How do you apply multiple filters to a single element?",
+      "options": [
+        "Use multiple filter properties.",
+        "Separate each function with a comma in one filter property.",
+        "Separate each function with a space in one filter property.",
+        "It's not possible to apply more than one filter."
+      ],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What is the primary use of the backdrop-filter property?",
+      "options": [
+        "To filter the content inside the element itself.",
+        "To filter the area behind an element, like for glassmorphism effects.",
+        "To move the element to the back of the stack.",
+        "To filter the text content only."
+      ],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}
