@@ -1,0 +1,38 @@
+<div class="article-content">
+  <h1>JavaScript Dialog Boxes</h1>
+  <p>JavaScript provides three built-in dialog boxes: <code>alert()</code>, <code>confirm()</code>, and <code>prompt()</code>. These can be used to provide information to the user, get their confirmation, or collect simple input.</p>
+
+  <h2>1. alert() Box</h2>
+  <p>The <code>alert()</code> box is used to display a message with an "OK" button. It's often used when you want the information to reach the user, though it is <strong>blocking</strong> (the script stops executing until the user closes the box).</p>
+  <pre><code>// Simple alert
+  alert("Hello World!");</code></pre>
+
+  <h2>2. confirm() Box</h2>
+  <p>The <code>confirm()</code> box displays a message with "OK" and "Cancel" buttons. It returns <code>true</code> if the user clicks "OK", and <code>false</code> if the user clicks "Cancel" or closes the box.</p>
+  <pre><code>// Confirm box
+  if (confirm("Are you sure you want to delete this?")) {
+    console.log("Item deleted");
+  } else {
+    console.log("Delete canceled");
+  }</code></pre>
+
+  <h2>3. prompt() Box</h2>
+  <p>The <code>prompt()</code> box is used to collect simple text input from the user. It returns the entered string if the user clicks "OK", and <code>null</code> if the user clicks "Cancel" or closes the box.</p>
+  <pre><code>// Prompt box
+  let person = prompt("What is your name?", "Harry Potter");
+  if (person != null) {
+      console.log("Hello " + person + "!");
+  }</code></pre>
+
+  <h2>4. Considerations and Alternatives</h2>
+  <p>While these built-in boxes are simple to use, they have some major drawbacks:</p>
+  <ul>
+    <li><strong>Blocking:</strong> The entire browser window is blocked while the dialog is open.</li>
+    <li><strong>Non-customizable:</strong> The appearance of these boxes is determined by the browser and cannot be styled with CSS.</li>
+    <li><strong>User Annoyance:</strong> Modern users often find these boxes intrusive and annoying.</li>
+  </ul>
+  <p>Because of these reasons, most modern web applications use <strong>Custom Modals</strong> (e.g., built with React, Vue, or the <code>&lt;dialog&gt;</code> element) which are non-blocking and highly customizable.</p>
+
+  <h2>Conclusion</h2>
+  <p>While basic dialog boxes are great for quick debugging or simple prototypes, custom modals are almost always the better choice for production-ready applications. Nevertheless, understanding these built-in tools is a key part of your JavaScript toolkit.</p>
+</div>

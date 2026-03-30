@@ -1,0 +1,52 @@
+{
+  "title": "JavaScript Events Quiz",
+  "description": "Test your knowledge of event handlers and common JavaScript events.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which of the following is correct syntax for adding a click event to a button?",
+      "options": [
+        "button.click(function) {}",
+        "button.addEventListener(\"click\", function)",
+        "button.onclick = function",
+        "Both B and C are valid ways."
+      ],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "Which of the following events triggers when the browser has finished loading a page?",
+      "options": ["onchange", "onkeydown", "onload", "onmouseover"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What does 'event.preventDefault()' do?",
+      "options": [
+        "It cancels the event if it is cancelable.",
+        "It stops an event from bubbling up to parent elements.",
+        "It terminates the script.",
+        "It refreshes the page."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "By default, what is the event model used in modern browsers?",
+      "options": ["Capturing", "Bubbling", "Looping", "None"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "How can you get the specific element that triggered an event?",
+      "options": [
+        "Using event.target",
+        "Using document.id",
+        "Using event.origin",
+        "Using window.trigger"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

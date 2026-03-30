@@ -1,0 +1,62 @@
+{
+  "title": "JavaScript Cookies Quiz",
+  "description": "Test your knowledge of creating, reading, and managing cookies in JavaScript.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which of the following is correct syntax for creating a cookie in JavaScript?",
+      "options": [
+        "document.cookie = \"name=John Doe\"",
+        "window.cookie.add(\"name=John Doe\")",
+        "setCookie(\"name\", \"John Doe\")",
+        "Both A and C are valid."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the key difference between a session cookie and a persistent cookie?",
+      "options": [
+        "A session cookie is only sent to the server.",
+        "A persistent cookie must be assigned an expiration date or maximum age.",
+        "A session cookie is stored in LocalStorage.",
+        "There is no difference."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What does the 'Secure' flag do for a cookie?",
+      "options": [
+        "It encrypts the cookie data.",
+        "It only allows the cookie to be sent over HTTPS.",
+        "It makes the cookie inaccessible to JavaScript.",
+        "It expires the cookie immediately."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which property can you use to read all current cookies for a page?",
+      "options": [
+        "window.cookie",
+        "document.cookie",
+        "session.cookies",
+        "localStorage.cookies"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "How can you specify that a cookie should only be used by the domain it was set on?",
+      "options": [
+        "Set the sameSite flag to 'Strict'.",
+        "Set the secure flag to 'True'.",
+        "Set the httpOnly flag to 'True'.",
+        "Using the domain=my.com property."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

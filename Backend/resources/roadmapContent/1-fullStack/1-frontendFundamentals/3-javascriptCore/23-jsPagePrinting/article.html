@@ -1,0 +1,31 @@
+<div class="article-content">
+  <h1>JavaScript Page Printing</h1>
+  <p>JavaScript provides a simple way to open the browser's print dialog, allowing users to print the current web page directly from the application.</p>
+
+  <h2>1. window.print()</h2>
+  <p>The <code>window.print()</code> method will open the browser's standard Print dialog. This is essentially the same as selecting File > Print from the browser menu or using keyboard shortcuts like Ctrl+P or Cmd+P.</p>
+  <pre><code>// Open the print dialog
+  window.print();</code></pre>
+
+  <h2>2. Print Styles with @media print</h2>
+  <p>While JavaScript triggers the dialog, you should use CSS to control how the page looks when printed. The <code>@media print</code> rule allows you to define styles that only apply to the printed version of the page.</p>
+  <pre><code>/* Example CSS for printing */
+  @media print {
+    /* Hide the navigation menu when printing */
+    .nav { display: none; }
+    /* Hide some buttons */
+    .print-button { display: none; }
+    /* Set specific font and color for print */
+    body { font-size: 12pt; color: black; }
+  }</code></pre>
+
+  <h2>3. Best Practices</h2>
+  <ul>
+    <li><strong>Hide Navigation:</strong> Printed pages usually don't need menus, sidebars, or footer links.</li>
+    <li><strong>Remove Interactive Elements:</strong> Hide buttons and forms as they aren't useful on paper.</li>
+    <li><strong>Adjust Colors:</strong> Dark backgrounds and light text can use a lot of ink. Switch to high-contrast black and white for print.</li>
+  </ul>
+
+  <h2>Conclusion</h2>
+  <p>While digital consumption is the norm, the ability to print quality copies of your content remains a key accessibility and usability requirement for many professional and educational web applications. By combining <code>window.print()</code> with well-designed print CSS, you can ensure a professional result every time.</p>
+</div>
