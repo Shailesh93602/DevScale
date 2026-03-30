@@ -1,0 +1,52 @@
+{
+  "title": "Express Middleware (Module 2) Quiz",
+  "description": "Evaluate your understanding of the orddered execution of functions and the app.use() vs route-specific middleware patterns.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily role of 'Middleware' in an Express.js application?",
+      "options": [
+        "Faster component rendering.",
+        "A function that has access to the request (req) and response (res) objects, allowing you to run code or modify data before it reaches the final route handler.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which method is used to register common, application-level middleware (like express.json) that runs for every request?",
+      "options": ["app.use()", "app.get()", "app.post()", "app.route()"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which function in a middleware MUST be called to pass control to the 'next' middleware in the stack?",
+      "options": ["continue()", "next()", "pass()", "skip()"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Is it possible to assign a specific middleware to run only for a single route (e.g., auth check for /admin)?",
+      "options": [
+        "Yes, as Express supports route-level middleware definitions.",
+        "No, middleware must always be global.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Does standard middleware like 'express.static()' allow you to serve folders of images/CSS files without writing separate route handlers?",
+      "options": [
+        "Yes, as it is a built-in utility specifically for serving static assets.",
+        "No, it's always slower.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

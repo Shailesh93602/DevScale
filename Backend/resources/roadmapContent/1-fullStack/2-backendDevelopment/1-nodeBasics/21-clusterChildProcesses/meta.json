@@ -1,0 +1,4 @@
+{
+    "name": "Cluster and Child Processes",
+    "description": "Learn how small pieces of data called Cluster and Child Processes can be used to build your applications with Node.js."
+}

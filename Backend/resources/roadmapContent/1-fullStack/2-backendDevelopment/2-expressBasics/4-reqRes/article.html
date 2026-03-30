@@ -1,0 +1,25 @@
+<div class="article-content">
+  <h1>Request and Response (req and res)</h1>
+  <p>To build any web application, you must master the two most important objects in the Express framework: the **Request (req)** object and the **Response (res)** object. These allow your server to receive data from a user and send back professional, structured data.</p>
+
+  <h2>1. The Request Object (req)</h2>
+  <p>The <code>req</code> object contains everything the user is sending to your server:</p>
+  <ul>
+    <li><strong>req.body:</strong> Contains data sent from a form or an AJAX request (usually JSON).</li>
+    <li><strong>req.params:</strong> Contains dynamic values from the URL (like <code>:id</code>).</li>
+    <li><strong>req.query:</strong> Contains values from a query string (like <code>?search=node</code>).</li>
+    <li><strong>req.headers:</strong> Contains extra information about the request (like authentication tokens).</li>
+  </ul>
+
+  <h2>2. The Response Object (res)</h2>
+  <p>The <code>res</code> object is used to send data back to the user's browser:</p>
+  <ul>
+    <li><strong>res.status(code):</strong> Sets the HTTP status code (e.g. 200 for OK, 404 for Not Found).</li>
+    <li><strong>res.json(data):</strong> Sends a JSON response—the industry standard for modern APIs.</li>
+    <li><strong>res.redirect(url):</strong> Sends the user to a completely different web page.</li>
+    <li><strong>res.send(content):</strong> Sends a simple string or HTML content.</li>
+  </ul>
+
+  <h2>Conclusion</h2>
+  <p>By mastering the <code>req</code> and <code>res</code> objects, you're becoming a faster and more efficient Fullstack engineer. Whether you're managing complex database logic or scaling a massive production application, these objects provide the tools and security you need to build the highest-quality and most professional applications.</p>
+</div>

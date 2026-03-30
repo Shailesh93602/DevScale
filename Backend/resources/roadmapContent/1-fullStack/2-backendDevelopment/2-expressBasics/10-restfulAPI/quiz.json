@@ -1,0 +1,52 @@
+{
+  "title": "RESTful API Design Quiz",
+  "description": "Evaluate your understanding of its resource-centered URL naming, standard HTTP methods usage, and the core principle of stateless client-server communication.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily design philosophy of 'REST' (Representational State Transfer)?",
+      "options": [
+        "Faster component rendering.",
+        "An architectural style where URLs represent 'Resources' (like users or products) that are manipulated using standard HTTP methods.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which HTTP method should be used in a professional REST API specifically to 'create' a new resource?",
+      "options": ["GET", "POST", "PUT", "DELETE"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "In a professional project, REST URLs should represent 'nouns' (resources) rather than 'verbs' (actions).",
+      "options": ["True", "False", "Only for mobile", "None of the above."],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what was the primarily principle of 'Statelessness' in REST?",
+      "options": [
+        "Each request must contain all the information necessary for the server to process it.",
+        "The server stores all status in memory.",
+        "To hide all non-number characters.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Does following RESTful API Design help build truly Fullstack applications by providing a predictable and standardized way for clients to talk to your server?",
+      "options": [
+        "Yes, as it is a core feature of any high-quality production web development process.",
+        "No, it's always slower.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
