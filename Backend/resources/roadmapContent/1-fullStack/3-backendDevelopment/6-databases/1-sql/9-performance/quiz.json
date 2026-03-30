@@ -1,0 +1,37 @@
+{
+  "title": "SQL Performance Tuning Quiz",
+  "description": "Test your fundamental knowledge about SQL performance tuning and optimization in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the primary role of the 'EXPLAIN' command in SQL performance tuning?",
+      "options": ["To encrypt the database.", "To show exactly how the database plans to execute a specific query, identifying whether it's using an index or performing a slow full table scan.", "To automatically generate a backup of the database.", "To hide the application's IP address."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is a typical benefit of a 'Composite Index' in SQL?",
+      "options": ["It can only store small pieces of data.", "It improves performance for queries that frequently search by multiple columns simultaneously.", "It's supported by all browsers.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is 'Connection Pooling' and why is it useful?",
+      "options": ["A way to encrypt files using a secret key.", "Maintaining a pool of pre-established, long-lived database connections to be reused across multiple requests, reducing the overhead of creating new ones.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "When should you generally prefer 'Denormalization' over 'Normalization' in a relational database?",
+      "options": ["For every situation, as it's always faster.", "When read performance is more critical than data consistency and you want to avoid expensive JOINs.", "Only for small databases.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What happens if you have too many indexes on a single table?",
+      "options": ["It makes the database faster.", "It slows down write operations (INSERT, UPDATE, DELETE) because the database must update every index with every change.", "To automatically generate a backup of the database.", "To improve the user experience."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}
