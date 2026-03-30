@@ -1,0 +1,8 @@
+{
+  "title": "Introduction to Database Relationships",
+  "description": "Learn the theory and practice of database relationships (1:1, 1:N, M:N) and how they are used in both SQL and NoSQL.",
+  "module": "Full Stack Web Development",
+  "order": 5,
+  "difficulty": "Beginner",
+  "tags": ["Database", "Relationships", "SQL", "NoSQL", "Foreign Keys"]
+}

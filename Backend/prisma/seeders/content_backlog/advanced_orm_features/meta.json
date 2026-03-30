@@ -1,0 +1,8 @@
+{
+  "title": "Advanced ORM Features",
+  "description": "Learn about advanced ORM/ODM techniques like raw queries, scopes, static/instance methods, and lifecycle hooks.",
+  "module": "Full Stack Web Development",
+  "order": 2,
+  "difficulty": "Advanced",
+  "tags": ["Sequelize", "Mongoose", "ORM", "Advanced Features", "Scopes"]
+}

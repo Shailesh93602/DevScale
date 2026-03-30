@@ -1,0 +1,39 @@
+<section>
+    <h2>Advanced ORM and ODM Features</h2>
+    <p>Beyond simple CRUD and associations, modern ORMs like Sequelize and ODMs like Mongoose offer advanced techniques for performance, security, and scalability.</p>
+
+    <h3>1. Raw Queries</h3>
+    <p>Sometimes the ORM's abstraction gets in the way of highly optimized SQL. Both Sequelize and Mongoose allow you to run raw queries if necessary.</p>
+    <pre><code>
+// Sequelize Raw Query
+const [results, metadata] = await sequelize.query("SELECT * FROM users WHERE active = true");
+    </code></pre>
+
+    <h3>2. Scopes in Sequelize</h3>
+    <p>Scopes are predefined sets of criteria that can be easily applied to models for cleaner and more reusable code.</p>
+    <pre><code>
+const User = sequelize.define('User', { ... }, {
+  scopes: {
+    active: { where: { status: 'active' } },
+    over18: { where: { age: { [Op.gte]: 18 } } }
+  }
+});
+
+// Use it like this:
+const activeUsers = await User.scope('active').findAll();
+    </code></pre>
+
+    <h3>3. Static and Instance Methods in Mongoose</h3>
+    <p>Mongoose allows you to define custom logic directly on your schema.</p>
+    <pre><code>
+userSchema.statics.findByEmail = function(email) {
+  return this.find({ email: email });
+};
+    </code></pre>
+
+    <h3>4. Hooks and Middlewares</h3>
+    <p>Lifecycle hooks (Sequelize) and middleware (Mongoose) allow you to inject logic at specific points in the data lifecycle, such as password hashing before Save or logging after Delete.</p>
+
+    <h3>Conclusion</h3>
+    <p>Mastering these advanced features allows you to push the boundaries of what your ORM can do, resulting in cleaner, more maintainable, and higher-performing applications.</p>
+</section>
