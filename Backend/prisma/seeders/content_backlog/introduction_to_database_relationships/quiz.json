@@ -1,0 +1,37 @@
+{
+  "title": "Introduction to Database Relationships Quiz",
+  "description": "Test your knowledge on the core types of database relationships.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which relationship type would you use for a User and their single Profile?",
+      "options": ["One-to-One (1:1)", "One-to-Many (1:N)", "Many-to-Many (M:N)", "No relationship"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which relationship type would you use for an Author and all the books they have written?",
+      "options": ["One-to-One (1:1)", "One-to-Many (1:N)", "Many-to-Many (M:N)", "Foreign relationship"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which relationship type describes Students and the multiple Courses they can be enrolled in?",
+      "options": ["One-to-One (1:1)", "One-to-Many (1:N)", "Many-to-Many (M:N)", "Simple relationship"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the primary mechanism for maintaining relationships in relational databases?",
+      "options": ["Primary Keys", "Foreign Keys", "Tables and Rows", "SQL Commands"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "How can you model relationships in NoSQL databases like MongoDB?",
+      "options": ["Embedding or Referencing", "Joining multiple tables", "Using foreign keys only", "Only with external APIs"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

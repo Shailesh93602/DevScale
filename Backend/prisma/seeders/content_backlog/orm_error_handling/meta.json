@@ -1,0 +1,8 @@
+{
+  "title": "ORM Error Handling",
+  "description": "Master robust error handling for database operations in Sequelize and Mongoose to build secure and user-friendly apps.",
+  "module": "Full Stack Web Development",
+  "order": 4,
+  "difficulty": "Advanced",
+  "tags": ["Sequelize", "Mongoose", "ORM", "Error Handling", "Validation"]
+}

@@ -1,0 +1,37 @@
+{
+  "title": "ORM Error Handling Quiz",
+  "description": "Test your knowledge on handling database and ORM errors in your application.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary way to catch asynchronous errors from your ORM?",
+      "options": ["Using 'finally' block", "Using 'try/catch' in an async function", "Using 'if/else' statements", "Errors are automatically handled"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What HTTP status code is most appropriate for a validation error from your ORM?",
+      "options": ["200 (OK)", "400 (Bad Request)", "500 (Internal Server Error)", "404 (Not Found)"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a valid way to check for a validation error in Sequelize?",
+      "options": ["if (error.name === 'SequelizeValidationError')", "if (error.type === 'validation')", "if (error.message.includes('fail'))", "You can't check for this"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "An error like 'SequelizeConnectionRefusedError' indicates what?",
+      "options": ["User information was wrong", "Database server is unreachable", "Validation failed", "Query was too complex"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "When is it appropriate to return a 503 (Service Unavailable) status code?",
+      "options": ["When user data is wrong", "When the database connection has failed", "When a specific record is not found", "After every successful save"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

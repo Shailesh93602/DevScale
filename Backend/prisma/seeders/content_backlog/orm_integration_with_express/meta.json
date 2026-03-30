@@ -1,0 +1,8 @@
+{
+  "title": "ORM Integration with Express",
+  "description": "Learn how to effectively integrate Sequelize and Mongoose with the Express.js framework for scalable web apps.",
+  "module": "Full Stack Web Development",
+  "order": 3,
+  "difficulty": "Intermediate",
+  "tags": ["Express.js", "Sequelize", "Mongoose", "Architecture", "Models"]
+}
