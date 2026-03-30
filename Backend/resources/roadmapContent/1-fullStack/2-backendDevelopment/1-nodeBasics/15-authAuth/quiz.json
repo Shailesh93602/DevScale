@@ -1,0 +1,52 @@
+{
+  "title": "Authentication and Authorization Quiz",
+  "description": "Evaluate your understanding of identity vs permissions, the role of RBAC, and the comparison between Session-based and JWT token-based security.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily role of 'Authentication' in a web application?",
+      "options": [
+        "Faster component rendering.",
+        "Verifying a user's 'identity' (usually via email/password or social login) to prove who they are.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what was the primarily role of 'Authorization'?",
+      "options": [
+        "To decide what a user is allowed to do or access inside a system (e.g., admin vs. member).",
+        "Only for older browsers.",
+        "To hide all non-number characters.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which stateless tool is the industry standard for modern, mobile-friendly APIs for managing user identity after login?",
+      "options": ["Session ID", "JSON Web Token (JWT)", "Cookie", "Array"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which security pattern uses groups like 'Admin', 'Editor', and 'Member' to manage user permissions?",
+      "options": ["RBAC (Role-Based Access Control)", "ACL (Access Control List)", "MAC (Mandatory Access Control)", "None of the above."],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Does following a solid 'Authentication' strategy help prevent unauthorized access to sensitive user and application data?",
+      "options": [
+        "Yes, as it is the first line of defense for any professional web application.",
+        "No, it's always slower.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

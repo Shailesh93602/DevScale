@@ -1,0 +1,47 @@
+{
+  "title": "Testing in Node.js Quiz",
+  "description": "Evaluate your understanding of the 3 levels of testing (Unit/Integration/E2E), using Jest and Supertest as industry standard tools, and TDD.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily role of 'Testing' in a professional Node.js application?",
+      "options": [
+        "Faster component rendering.",
+        "Verifying that every feature of your application works exactly as expected to prevent bugs before reaching users.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which type of test focuses on verifying that a single, small function (like a math calculation) works correctly in isolation?",
+      "options": ["Unit Test", "Integration Test", "End-to-End Test", "Manual Test"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which popular all-in-one testing framework is the modern industry standard for Node.js and React?",
+      "options": ["Jest", "Supertest", "Babel", "Prettier"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which specialized tool would you use to simulate HTTP requests (like app.get('/users')) to test your Express API?",
+      "options": ["Chai", "Supertest", "Mocha", "Mongoose"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does following 'Test-Driven Development' (TDD) help build truly Fullstack applications by forcing developers to think about feature requirements before writing code?",
+      "options": [
+        "Yes, as it is a core feature of any high-quality production web application development process.",
+        "No, it's always slower.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
