@@ -1,0 +1,57 @@
+{
+  "title": "Dark Mode in Frameworks Quiz",
+  "description": "Evaluate your understanding of Tailwind's dark: variant, Bootstrap's data-bs-theme attribute, and best practices for user-centric theme switching.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which prefix would you use in Tailwind to apply a style specifically for dark mode?",
+      "options": ["night:", "dark:", "theme-dark:", "black:"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "In Bootstrap 5.3+, which attribute is commonly used on the <html> tag to enable dark mode for the entire page?",
+      "options": [
+        "class='dark'",
+        "data-bs-theme='dark'",
+        "mode='dark'",
+        "theme='night'"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what is the key difference between the 'media' and 'selector' strategies for dark mode in Tailwind?",
+      "options": [
+        "Selectory strategy follows CSS transitions.",
+        "Media strategy follows the user's OS settings, while Selector strategy allows manual toggling (by adding a .dark class).",
+        "They are exactly the same.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does providing a dark mode option improve the user experience and reduce eye strain in low-light environments?",
+      "options": [
+        "Yes, as it is a core modern UX standard.",
+        "No, it's always slower.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what is the best practice for professional dark mode implementations to ensure consistency across user sessions?",
+      "options": [
+        "Storing the user preference in a separate database.",
+        "Storing the user preference in 'localStorage' within the browser.",
+        "Using only standard HTML meta tags.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "title": "Migration and Versioning Quiz",
+  "description": "Evaluate your understanding of major upgrades (Bootstrap 4->5, Tailwind 2->3), official migration guides/codemods, and version pinning for stable builds.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily reason for a major framework version upgrade?",
+      "options": [
+        "To break current builds.",
+        "To introduce new features, performance improvements, and security patches while potentially including breaking changes.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "A scripted tool that automatically updates your codebase to a newer version of a framework is called a ________.",
+      "options": ["Compiler", "Codemod", "Transpiler", "Decompiler"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Should you always upgrade every dependency to its newest major version as soon as possible in production?",
+      "options": [
+        "No, as it may include breaking changes and should be carefully tested in a separate branch first.",
+        "Yes, as it is always faster.",
+        "Only for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "The practice of using a fixed, specific version number in 'package.json' (e.g., '3.2.4') is called ________.",
+      "options": ["Version Locking", "Version Pinning", "Major Versioning", "Fixed Versioning"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does following official Migration Guides help reduce the risk of broken features during a major upgrade?",
+      "options": [
+        "Yes, as these guides list all breaking changes and how to fix them.",
+        "No, it's always slower.",
+        "Only for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

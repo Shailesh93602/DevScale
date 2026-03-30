@@ -1,0 +1,52 @@
+{
+  "title": "Grid and Flexbox Quiz",
+  "description": "Evaluate your understanding of one-dimensional (Flexbox) vs two-dimensional (Grid) layout roles and how to choose the right one for simple menus or complex dashboards.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily design philosophy of Flexbox?",
+      "options": [
+        "Faster component rendering.",
+        "One-dimensional layout (laying out items in a single row or column).",
+        "Two-dimensional layout (rows and columns simultaneously).",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what was the primarily design philosophy of CSS Grid?",
+      "options": [
+        "Two-dimensional layout (managing both rows and columns simultaneously).",
+        "Only for images.",
+        "Only for older browsers.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which would you choose for a simple horizontal menu of five navigation links?",
+      "options": ["CSS Grid", "Flexbox", "Tables", "IFrames"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which would you choose for a complex, responsive 12-column dashboard layout with nested sidebars?",
+      "options": ["Flexbox", "CSS Grid", "Float and Position", "None of the above."],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does using 'gap' instead of 'margin' in Flexbox and Grid improve spacing consistency in modern development?",
+      "options": [
+        "Yes, as it only adds space between children without adding extra padding on the outside.",
+        "No, it's always slower.",
+        "Only for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
