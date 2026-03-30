@@ -1,0 +1,38 @@
+<section>
+    <h2>Advanced Mongoose Querying</h2>
+    <p>Mongoose provides a rich API for querying MongoDB, from simple find operations to complex aggregations.</p>
+
+    <h3>1. Basic and Advanced Queries</h3>
+    <pre><code>
+// Find by ID
+const user = await User.findById('60c...');
+
+// Find with complex criteria using operators
+const users = await User.find({
+  age: { $gte: 18, $lte: 65 },
+  status: 'active'
+});
+    </code></pre>
+
+    <h3>2. Sorting and Pagination</h3>
+    <p>Sorting and pagination are straightforward in Mongoose with <code>sort</code>, <code>limit</code>, and <code>skip</code>.</p>
+    <pre><code>
+const users = await User.find()
+  .sort({ createdAt: -1 })
+  .skip(10)
+  .limit(20);
+    </code></pre>
+
+    <h3>3. Population</h3>
+    <p>Population is the process of automatically replacing the specified paths in the document with document(s) from other collection(s).</p>
+    <pre><code>
+const post = await Post.findOne().populate('author');
+console.log(post.author.name);
+    </code></pre>
+
+    <h3>4. The Query Builder</h3>
+    <p>Mongoose methods often return a <code>Query</code> object, which allows you to chain methods like <code>select</code>, <code>where</code>, and <code>sort</code> before execution.</p>
+
+    <h3>Conclusion</h3>
+    <p>Flexible querying and population are what make Mongoose so powerful for building real-world applications. Master these techniques to build advanced data-driven features efficiently.</p>
+</section>

@@ -1,0 +1,62 @@
+{
+  "title": "NoSQL vs SQL Quiz",
+  "description": "Compare and contrast SQL and NoSQL database management systems.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these is a key characteristic of SQL databases?",
+      "options": [
+        "Dynamic Schemas",
+        "Horizontal Scaling",
+        "Predefined schemas and tables",
+        "Eventually Consistent"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which scaling approach is commonly used for NoSQL databases?",
+      "options": [
+        "Vertical Scaling",
+        "Horizontal Scaling (Scale-out)",
+        "Diagonal Scaling",
+        "Manual Scaling"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What does the 'A' in ACID compliance stand for?",
+      "options": [
+        "Availability",
+        "Atomicity",
+        "Aggregation",
+        "Access"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "In which scenario would you typically choose NoSQL over SQL?",
+      "options": [
+        "Banking applications requiring strict consistency",
+        "Complex data relationships requiring joins",
+        "Massive datasets with flexible schema requirements",
+        "When data integrity is the highest priority"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is an example of an SQL database?",
+      "options": [
+        "PostgreSQL",
+        "MongoDB",
+        "Redis",
+        "Cassandra"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

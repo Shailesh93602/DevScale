@@ -1,0 +1,37 @@
+{
+  "title": "Mongoose Middleware Quiz",
+  "description": "Test your knowledge on Mongoose pre and post hooks and middleware.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is another name for Mongoose middleware?",
+      "options": ["Schema Filters", "Pre and Post Hooks", "Query Pipes", "Document Triggers"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the primary purpose of pre('save') middleware?",
+      "options": ["To log a query to the console", "To perform actions like password hashing before data is saved", "To connect to the database", "To create a new schema"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What function must be called to pass control from a middleware to the next step?",
+      "options": ["finish()", "next()", "continue()", "callback()"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a valid type of Mongoose middleware?",
+      "options": ["Pre and Post", "Start and End", "Initialize and Finalize", "Route and Controller"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the difference between document and query middleware?",
+      "options": ["Document middleware is for relational database; Query is for NoSQL", "Document middleware is for a single document; Query middleware is for finding/updating multiple docs", "Query middleware is for saving data", "There is no difference"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

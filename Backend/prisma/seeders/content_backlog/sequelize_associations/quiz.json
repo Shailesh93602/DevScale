@@ -1,0 +1,37 @@
+{
+  "title": "Sequelize Associations Quiz",
+  "description": "Test your knowledge on model relationships and associations in Sequelize.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which association type would you use for a One-to-Many relationship where the foreign key is defined on the target model?",
+      "options": ["HasOne", "HasMany", "BelongsTo", "BelongsToMany"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which association type requires a join table to define a Many-to-Many relationship?",
+      "options": ["HasOne", "HasMany", "BelongsTo", "BelongsToMany"],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "In a One-to-One relationship between User and Profile (where Profile has a user_id), which of these should be on the Profile model?",
+      "options": ["Profile.hasOne(User)", "Profile.belongsTo(User)", "Profile.hasMany(User)", "Profile.belongsToMany(User)"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What property do you use in a findAll query to eagerly load associated models?",
+      "options": ["join", "include", "with", "models"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "How many main types of associations does Sequelize provide?",
+      "options": ["2", "3", "4", "5"],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

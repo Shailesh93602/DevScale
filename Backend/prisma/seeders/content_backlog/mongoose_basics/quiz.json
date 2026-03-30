@@ -1,0 +1,37 @@
+{
+  "title": "Mongoose Basics Quiz",
+  "description": "Test your basic knowledge of Mongoose ODM for MongoDB.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What kind of database interface is Mongoose?",
+      "options": ["A direct MongoDB driver", "An Object Data Mapper (ODM)", "A relational database router", "A GraphQL client"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "In Mongoose, what is used to define the structure of a document within a collection?",
+      "options": ["Schema", "Model", "Collection", "Object"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which method is used to persist a new document instance to the database?",
+      "options": ["save()", "create()", "insert()", "push()"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a valid Mongoose query to find documents worth more than 10 points?",
+      "options": ["find({ points: 10 })", "find({ points: { $gt: 10 } })", "get({ points: 10 })", "query({ points: { $gt: 10 } })"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Mongoose can be used for which of these databases?",
+      "options": ["PostgreSQL", "MySQL", "MongoDB", "SQLite"],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

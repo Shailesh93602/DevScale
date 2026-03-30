@@ -1,0 +1,37 @@
+{
+  "title": "Mongoose Schema Design Quiz",
+  "description": "Test your knowledge on advanced schema design features in Mongoose.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which schema field property ensures that a value is automatically trimmed of leading/trailing whitespace?",
+      "options": ["lowercase", "trim", "required", "unique"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the primary benefit of subdocuments in Mongoose schemas?",
+      "options": ["To increase performance through separate tables", "To provide a way to embed one schema inside another for hierarchical data", "To perform complex SQL joins", "To avoid database backups"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What kind of properties are 'Virtuals' in Mongoose?",
+      "options": ["Properties that are always stored in the database", "Properties that are not saved to the database but computed from others", "Properties that only exist on the client side", "Properties that can't be updated"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which schema option automatically adds 'createdAt' and 'updatedAt' fields?",
+      "options": ["log: true", "history: true", "timestamps: true", "audit: true"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "How do you specify a set of allowed values for a String field in a Mongoose schema?",
+      "options": ["allowed: []", "values: []", "enum: []", "list: []"],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

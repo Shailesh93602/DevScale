@@ -1,0 +1,30 @@
+<section>
+    <h2>Introduction to Mongoose Middleware</h2>
+    <p>Middleware (also called pre and post hooks) are functions which are passed control during execution of asynchronous functions at the schema level.</p>
+
+    <h3>1. Types of Middleware</h3>
+    <ul>
+      <li><strong>Pre Middlewares:</strong> Executed before a specific operation (e.g., hash a password before saving).</li>
+      <li><strong>Post Middlewares:</strong> Executed after a specific operation (e.g., send an email after a user is created).</li>
+    </ul>
+
+    <h3>2. Pre-save Pre-middleware</h3>
+    <p>This is commonly used for hashing passwords before they are persisted to the database.</p>
+    <pre><code>
+userSchema.pre('save', async function(next) {
+  if (this.isModified('password')) {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
+  next();
+});
+    </code></pre>
+
+    <h3>3. Document Middleware vs Query Middleware</h3>
+    <p>Document middleware is executed on a document instance (like <code>save()</code> or <code>remove()</code>), while Query middleware is executed on a query (like <code>find()</code> or <code>update()</code>).</p>
+
+    <h3>4. The next() Function</h3>
+    <p>Middleware functions must call <code>next()</code> to pass control to the next middleware in the stack or the operation itself. If it doesn't call <code>next()</code>, the operation will hang.</p>
+
+    <h3>Conclusion</h3>
+    <p>Mongoose middleware is a powerful way to handle cross-cutting concerns like logging, validation, and data transformation at the model level, keeping your application logic clean and consistent.</p>
+</section>

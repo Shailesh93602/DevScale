@@ -1,0 +1,41 @@
+<section>
+    <h2>Managing Database Transactions in Sequelize</h2>
+    <p>Transactions are essential for maintaining data integrity when performing multiple related database operations. A transaction ensures that either all operations succeed or none do.</p>
+
+    <h3>1. Why Transactions Matter</h3>
+    <p>Imagine a banking application transferring money from one account to another. You must decrement the first account and increment the second. If the second operation fails, you must undo the first to prevent money from simply "disappearing." This "all or nothing" principle is known as Atomicity, the 'A' in ACID.</p>
+
+    <h3>2. Unmanaged Transactions</h3>
+    <p>With unmanaged transactions, you manually commit and rollback based on the outcome of your operations.</p>
+    <pre><code>
+const t = await sequelize.transaction();
+
+try {
+  await User.create({ name: 'John Doe' }, { transaction: t });
+  await Profile.create({ userId: user.id }, { transaction: t });
+  await t.commit();
+} catch (error) {
+  await t.rollback();
+}
+    </code></pre>
+
+    <h3>3. Managed Transactions (Recommended)</h3>
+    <p>Managed transactions automatically commit if the callback function returns a fulfillment and rollback if the callback throws an error.</p>
+    <pre><code>
+try {
+  await sequelize.transaction(async (t) => {
+    const user = await User.create({ name: 'Jane Doe' }, { transaction: t });
+    await Profile.create({ userId: user.id }, { transaction: t });
+  });
+  // If we get here, it's committed!
+} catch (error) {
+  // If we get here, it's rolled back!
+}
+    </code></pre>
+
+    <h3>4. Transaction Isolation Levels</h3>
+    <p>Advanced transaction management allows you to specify isolation levels to control how transactions interact with each other in a concurrent environment.</p>
+
+    <h3>Conclusion</h3>
+    <p>Transactions provide a guarantee of consistency for your application. Using managed transactions in Sequelize is the simplest and most reliable way to handle complex multi-step database operations.</p>
+</section>

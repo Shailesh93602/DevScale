@@ -1,0 +1,33 @@
+<section>
+    <h2>Introduction to Object-Relational Mapping (ORM)</h2>
+    <p>Object-Relational Mapping (ORM) is a programming technique that allows you to interact with a relational database using the object-oriented paradigm of your preferred programming language.</p>
+
+    <h3>1. What is an ORM?</h3>
+    <p>An ORM acts as an abstraction layer between your application's objects and the database's tables. It maps each class to a table and each instance of a class to a row in that table. This eliminates the need to write complex SQL queries manually for basic CRUD (Create, Read, Update, Delete) operations.</p>
+
+    <h3>2. Why Use an ORM?</h3>
+    <ul>
+      <li><strong>Improved Productivity:</strong> Write less code and focus on business logic instead of database-specific SQL.</li>
+      <li><strong>Database Independence:</strong> Many ORMs allow you to switch underlying databases (e.g., from MySQL to PostgreSQL) with minimal code changes.</li>
+      <li><strong>Maintainability:</strong> Code is often cleaner and easier to understand, as it uses the same object structures as the rest of your application.</li>
+      <li><strong>Security:</strong> Most ORMs automatically handle SQL injection prevention by using parameterized queries.</li>
+    </ul>
+
+    <h3>3. How an ORM Works</h3>
+    <ol>
+      <li><strong>Class-Table Mapping:</strong> You define your data models as classes.</li>
+      <li><strong>Data Interaction:</strong> You interact with these classes. For example, calling <code>user.save()</code> might trigger an <code>INSERT INTO users...</code> SQL statement.</li>
+      <li><strong>Query Generation:</strong> The ORM translates your high-level method calls into optimized SQL queries.</li>
+    </ol>
+
+    <h3>4. Popular ORMs</h3>
+    <ul>
+      <li><strong>JavaScript/TypeScript:</strong> Sequelize, Prisma, TypeORM, Mongoose (for MongoDB, technically an ODM).</li>
+      <li><strong>Python:</strong> SQLAlchemy, Django ORM.</li>
+      <li><strong>Java:</strong> Hibernate.</li>
+      <li><strong>Ruby:</strong> ActiveRecord (part of Ruby on Rails).</li>
+    </ul>
+
+    <h3>Conclusion</h3>
+    <p>While ORMs provide many benefits, it's important to understand the underlying SQL for performance tuning and complex queries. However, for most day-to-day development, an ORM is a powerful tool for building scalable and maintainable applications.</p>
+</section>
