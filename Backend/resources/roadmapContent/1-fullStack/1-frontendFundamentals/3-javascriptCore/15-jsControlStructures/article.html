@@ -1,0 +1,46 @@
+<div class="article-content">
+  <h1>JavaScript Control Structures</h1>
+  <p>Control structures allow you to control the flow of execution in your code based on conditions. The most common control structures in JavaScript are <code>if...else</code> and <code>switch</code> statements.</p>
+
+  <h2>1. If...Else Statements</h2>
+  <p>The <code>if</code> statement executes a block of code if a specified condition is true. The <code>else</code> statement executes if the condition is false.</p>
+  <pre><code>let hour = 14;
+
+if (hour < 12) {
+  console.log("Good morning");
+} else if (hour < 18) {
+  console.log("Good afternoon");
+} else {
+  console.log("Good evening");
+}</code></pre>
+
+  <h2>2. Switch Statement</h2>
+  <p>The <code>switch</code> statement is used to perform different actions based on different conditions. It is a more efficient alternative to multiple <code>if...else if</code> statements when comparing the same expression against many values.</p>
+  <pre><code>let day;
+switch (new Date().getDay()) {
+  case 0:
+    day = "Sunday";
+    break;
+  case 1:
+    day = "Monday";
+    break;
+  case 6:
+    day = "Saturday";
+    break;
+  default:
+    day = "Weekday";
+}</code></pre>
+
+  <h3>The Importance of `break`</h3>
+  <p>Without the <code>break</code> keyword, the script will continue to execute the next <code>case</code> even if the evaluation does not match the case. This is called "falling through."</p>
+
+  <h2>3. Truthy and Falsy Values</h2>
+  <p>In JavaScript, every value has an inherent boolean value when used in a conditional context:</p>
+  <ul>
+    <li><strong>Falsy values:</strong> <code>false</code>, <code>0</code>, <code>""</code> (empty string), <code>null</code>, <code>undefined</code>, and <code>NaN</code>.</li>
+    <li><strong>Truthy values:</strong> Everything else, including <code>"0"</code>, <code>"false"</code>, empty arrays <code>[]</code>, and empty objects <code>{}</code>.</li>
+  </ul>
+
+  <h2>Conclusion</h2>
+  <p>Control structures are the logical heart of your programs. By combining these with comparison and logical operators, you can build complex decision-making processes in your web applications.</p>
+</div>

@@ -1,0 +1,41 @@
+<div class="article-content">
+  <h1>JavaScript Functions</h1>
+  <p>Functions are one of the fundamental building blocks in JavaScript. A function is a reusable block of code designed to perform a particular task.</p>
+
+  <h2>1. Function Declaration</h2>
+  <p>A function declaration consists of the <code>function</code> keyword, followed by a name, a list of parameters in parentheses, and the code to be executed in curly brackets.</p>
+  <pre><code>function greet(name) {
+  return "Hello, " + name + "!";
+}
+
+console.log(greet("Alice")); // Outputs: Hello, Alice!</code></pre>
+
+  <h2>2. Function Expression</h2>
+  <p>A function can also be defined using an expression and stored in a variable. These are often used when you need to pass functions as arguments to other functions.</p>
+  <pre><code>const square = function(number) {
+  return number * number;
+};
+
+console.log(square(4)); // Outputs: 16</code></pre>
+
+  <h2>3. Arrow Functions</h2>
+  <p>Introduced in ES6, arrow functions provide a more concise syntax for writing function expressions. They are especially useful for short, one-line functions.</p>
+  <pre><code>const add = (a, b) => a + b;
+
+console.log(add(5, 3)); // Outputs: 8</code></pre>
+
+  <h2>4. Parameters and Arguments</h2>
+  <p><strong>Parameters</strong> are the names listed in the function definition. <strong>Arguments</strong> are the real values passed to (and received by) the function when it is invoked.</p>
+  <ul>
+    <li><strong>Default Parameters:</strong> You can assign default values to parameters in case no argument is provided.</li>
+  </ul>
+  <pre><code>function multiply(a, b = 1) {
+  return a * b;
+}</code></pre>
+
+  <h2>5. Scope and Closures</h2>
+  <p>Variables defined inside a function are not accessible from outside the function (Local Scope). JavaScript also supports <strong>Closures</strong>, where an inner function has access to the outer function's variables even after the outer function has finished executing.</p>
+
+  <h2>Conclusion</h2>
+  <p>Functions allow you to write modular, maintainable, and DRY (Don't Repeat Yourself) code. Understanding the different ways to define and use functions is key to becoming a proficient JavaScript developer.</p>
+</div>

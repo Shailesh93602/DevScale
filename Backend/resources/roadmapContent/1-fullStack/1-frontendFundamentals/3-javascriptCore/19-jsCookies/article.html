@@ -1,0 +1,29 @@
+<div class="article-content">
+  <h1>JavaScript Cookies</h1>
+  <p>Cookies are small pieces of data stored on your computer by the web browser while you are browsing a website. They are primarily used to remember information about the user, such as preferences or login status.</p>
+
+  <h2>1. Creating and Modifying Cookies</h2>
+  <p>JavaScript can create, read, and delete cookies with the <code>document.cookie</code> property. To create a cookie, simply assign a string to it:</p>
+  <pre><code>document.cookie = "username=John Doe";</code></pre>
+
+  <h2>2. Cookie Expiration</h2>
+  <p>By default, a cookie is deleted when the browser is closed. To make it persistent, you can specify an expiration date (in UTC time) or a maximum age in seconds:</p>
+  <pre><code>// Cookie expires in 1 hour
+  document.cookie = "username=John Doe; max-age=3600; path=/";</code></pre>
+
+  <h2>3. Reading Cookies</h2>
+  <p>When you read <code>document.cookie</code>, it returns all cookies for current page in a single string: <code>cookie1=value; cookie2=value; ...</code>. You typically need to parse this string to get a specific value.</p>
+  <pre><code>let allCookies = document.cookie;
+  console.log(allCookies); // username=John Doe; theme=dark</code></pre>
+
+  <h2>4. Secure and SameSite Flags</h2>
+  <p>Modern web development requires secure handling of cookies:</p>
+  <ul>
+    <li><strong>Secure:</strong> Cookie is only sent over HTTPS.</li>
+    <li><strong>HttpOnly:</strong> Cookie cannot be accessed through JavaScript (prevents XSS attacks). This must be set by the server.</li>
+    <li><strong>SameSite:</strong> Controls whether the cookie is sent with cross-site requests (values: <code>Strict</code>, <code>Lax</code>, <code>None</code>).</li>
+  </ul>
+
+  <h2>Conclusion</h2>
+  <p>While modern applications often use <strong>LocalStorage</strong> or <strong>SessionStorage</strong> for client-side data, cookies remain essential for session management and server-side tracking. Understanding their lifecycle and security is vital for any web developer.</p>
+</div>

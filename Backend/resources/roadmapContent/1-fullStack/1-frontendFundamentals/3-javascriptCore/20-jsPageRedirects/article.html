@@ -1,0 +1,30 @@
+<div class="article-content">
+  <h1>JavaScript Page Redirects</h1>
+  <p>JavaScript can be used to redirect a user to a different URL or to reload the current page. This is commonly used after a certain condition is met, such as after a successful login or a timer.</p>
+
+  <h2>1. window.location.href</h2>
+  <p>Assigning a new string to <code>window.location.href</code> will cause the browser to navigate to the new URL. This is the simplest way to perform a redirect.</p>
+  <pre><code>// Simple redirect
+  window.location.href = "https://eduscale.io";</code></pre>
+
+  <h2>2. assign() vs replace()</h2>
+  <p>There are two methods for modifying the current location:</p>
+  <ul>
+    <li><strong>window.location.assign():</strong> Loads a new document. The user can still click the browser's "Back" button to return to the current page.</li>
+    <li><strong>window.location.replace():</strong> Replaces the current document with a new one. The current page is <strong>removed from the session history</strong>, meaning the user cannot go back to it. This is useful for sensitive pages like payment success screens.</li>
+  </ul>
+  <pre><code>// Redirect with replace (history is cleared)
+  window.location.replace("https://eduscale.io/success");</code></pre>
+
+  <h2>3. location.reload()</h2>
+  <p>The <code>location.reload()</code> method forces the browser to reload the current page. You can pass <code>true</code> as an argument to force a server reload, ignoring the cache (though this is deprecated in many modern browsers).</p>
+  <pre><code>// Reload the current page
+  location.reload();</code></pre>
+
+  <h2>4. Meta Refresh (Alternative)</h2>
+  <p>While JavaScript is powerful, you can also perform redirects using HTML <code>&lt;meta&gt;</code> tags. This is often used as a fallback if JavaScript is disabled.</p>
+  <pre><code>&lt;meta http-equiv="refresh" content="5;url=https://eduscale.io"&gt;</code></pre>
+
+  <h2>Conclusion</h2>
+  <p>Page redirects are a powerful tool for controlling user flow. By choosing between <code>href</code>, <code>assign</code>, and <code>replace</code>, you can create a smooth and seamless navigation experience for your users.</p>
+</div>

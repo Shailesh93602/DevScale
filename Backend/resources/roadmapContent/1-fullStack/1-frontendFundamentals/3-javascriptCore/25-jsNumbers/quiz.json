@@ -1,0 +1,47 @@
+{
+  "title": "JavaScript Numbers Quiz",
+  "description": "Evaluate your understanding of integers, floats, NaN, and built-in Number methods in JavaScript.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the return type of a number literal with decimals (e.g., 5.5) in JavaScript?",
+      "options": ["int", "Number (double precision float)", "float", "double"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What does NaN stand for?",
+      "options": [
+        "Neglect all Numbers",
+        "Not-a-Number",
+        "No actual Number",
+        "None available Now"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of the following results in Infinity?",
+      "options": ["10 / 0", "10 / \"apple\"", "0 / 0", "10 ** 2"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which method should you use to return a string written with 2 decimals?",
+      "options": ["toPrecision(2)", "toFixed(2)", "toString(2)", "toParse(2)"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "How do you represent a BigInt in JavaScript?",
+      "options": [
+        "Using new BigInt(5)",
+        "Appending an 'n' to the end of a whole number (e.g., 5n)",
+        "Using a capital 'B' (e.g., B5)",
+        "Using the BigInt keyword only."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "title": "JavaScript Loop Control Quiz",
+  "description": "Evaluate your understanding of for, while, and do-while loops in JavaScript.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which of the following is true about a for loop?",
+      "options": [
+        "It always runs exactly once.",
+        "It's typically used when the number of iterations is known before entering the loop.",
+        "It cannot be exited prematurely.",
+        "It's primarily used for objects only."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the key difference between while and do-while loops?",
+      "options": [
+        "They have no difference.",
+        "A do-while loop's code block always runs at least once before checking the condition.",
+        "A while loop's code block always runs at least once.",
+        "A do-while loop is only used for numerical conditions."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the purpose of the 'break' statement within a loop?",
+      "options": [
+        "To skip the current iteration and move to the next one.",
+        "To restart the current iteration.",
+        "To terminate the entire loop prematurely.",
+        "To pause the script for 1 second."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of the following is the correct syntax for a for...of loop over an array named 'items'?",
+      "options": [
+        "for (item items) {}",
+        "for (let item in items) {}",
+        "for (item of items) {}",
+        "for (let item of items) {}"
+      ],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "What is the purpose of the 'continue' statement in a loop?",
+      "options": [
+        "To exit the entire script.",
+        "To skip the rest of the current iteration and proceed to the next iteration of the loop.",
+        "To restart the script.",
+        "To wait for a network request to complete."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

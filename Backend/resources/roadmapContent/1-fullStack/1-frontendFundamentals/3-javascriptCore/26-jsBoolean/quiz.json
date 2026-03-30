@@ -1,0 +1,42 @@
+{
+  "title": "JavaScript Boolean Quiz",
+  "description": "Evaluate your understanding of booleans, truthy, and falsy values in JavaScript.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which of the following values is TRUTHY in JavaScript?",
+      "options": ["0", "'' (empty string)", "[] (empty array)", "NaN"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the result of Boolean(10 > 9)?",
+      "options": ["true", "false", "undefined", "NaN"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which property can you use to get the type of a boolean literal (e.g., true)?",
+      "options": ["typeof", "instanceof", "isTrue()", "isBoolean()"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What happens when you declare a boolean as an object (new Boolean())?",
+      "options": [
+        "It behaves exactly like a primitive boolean.",
+        "It is treated as an object and behaves inconsistently in strict comparisons (===).",
+        "It makes the boolean more efficient.",
+        "It allows you to add custom properties and methods, which is recommended."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "In a logical XOR operation (if available in JavaScript), how can you simulate it?",
+      "options": ["(a || b) && !(a && b)", "a || b", "a && b", "a + b"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

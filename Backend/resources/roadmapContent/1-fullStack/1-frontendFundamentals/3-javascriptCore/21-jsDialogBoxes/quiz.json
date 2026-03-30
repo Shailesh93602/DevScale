@@ -1,0 +1,52 @@
+{
+  "title": "JavaScript Dialog Boxes Quiz",
+  "description": "Evaluate your understanding of alert(), confirm(), and prompt() in JavaScript.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the best way to display an alert with \"Hello!\" in a browser?",
+      "options": [
+        "alert = \"Hello!\"",
+        "alert(\"Hello!\")",
+        "window.display(\"Hello!\")",
+        "message.add(\"Hello!\")"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What does a confirm() box return when the user clicks \"Cancel\"?",
+      "options": ["true", "false", "null", "undefined"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the return type of a prompt() box if the user clicks \"OK\"?",
+      "options": ["String", "Number", "Boolean", "Object"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What happens to the JavaScript execution while an alert box is open?",
+      "options": [
+        "The script continues to run in the background.",
+        "The browser execution is blocked until the alert is closed.",
+        "The browser reloads.",
+        "The script moves to the next turn immediately."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which property can you use to customize the appearance of built-in alert boxes?",
+      "options": [
+        "CSS styles",
+        "JavaScript objects",
+        "None (they are browser-controlled).",
+        "window.style.alert"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

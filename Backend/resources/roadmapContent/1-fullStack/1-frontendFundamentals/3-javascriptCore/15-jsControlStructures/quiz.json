@@ -1,0 +1,52 @@
+{
+  "title": "JavaScript Control Structures Quiz",
+  "description": "Evaluate your understanding of if...else and switch statements in JavaScript.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which of the following is NOT a falsy value in JavaScript?",
+      "options": ["0", "''", "null", "[]"],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "What is the purpose of the 'break' statement in a switch case?",
+      "options": [
+        "To terminate the entire script",
+        "To prevent execution from falling through to the next case",
+        "To restart the switch evaluation",
+        "To return a value from the switch"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What does 'else if' represent?",
+      "options": [
+        "The first condition to be checked",
+        "The default condition if all else fails",
+        "An intermediate condition checked if the previous 'if' was false",
+        "A constant boolean value"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "In a switch statement, what is the 'default' case used for?",
+      "options": [
+        "The first case always executed",
+        "The code that runs if no case matches the expression",
+        "To define global variables",
+        "To handle errors only"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what is the inherent boolean value of the string 'false' in JavaScript?",
+      "options": ["truthy", "falsy", "undefined", "null"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+<div class="article-content">
+  <h1>JavaScript Boolean</h1>
+  <p>A Boolean represents one of two values: <code>true</code> or <code>false</code>. Booleans are frequently used in conditional testing, to determine which block of code should be executed.</p>
+
+  <h2>1. The Boolean() Function</h2>
+  <p>The <code>Boolean()</code> function can be used to find out if an expression (or a variable) is true. It returns <code>true</code> for all truthy values and <code>false</code> for all falsy values.</p>
+  <pre><code>Boolean(10 > 9); // Returns true</code></pre>
+
+  <h2>2. Truthy and Falsy Values</h2>
+  <p>Everything with a <strong>real value</strong> is true. Everything with <strong>no value</strong> is false.</p>
+  <ul>
+    <li><strong>Falsy values:</strong> <code>false</code>, <code>0</code>, <code>""</code> (empty string), <code>null</code>, <code>undefined</code>, and <code>NaN</code>.</li>
+    <li><strong>Truthy values:</strong> <code>"0"</code>, <code>"false"</code>, <code>[]</code> (empty array), and <code>{}</code> (empty object).</li>
+  </ul>
+  <pre><code>// Example of truthy check
+  if ([]) {
+    console.log("Empty array is TRUTHY!");
+  }</code></pre>
+
+  <h2>3. Booleans Can Be Objects (Wait, Don't Use This!)</h2>
+  <p>Normally, booleans are primitive values. But they can also be defined as objects with the <code>new Boolean()</code> constructor. However, this is <strong>strongly discouraged</strong> because it behaves inconsistently with operators and comparison.</p>
+  <pre><code>let x = false;          // boolean primitive
+  let y = new Boolean(false); // boolean object
+
+  console.log(typeof x); // "boolean"
+  console.log(typeof y); // "object"
+  console.log(x == y);   // true
+  console.log(x === y);  // false (beware!)</code></pre>
+
+  <h2>Conclusion</h2>
+  <p>Boolean values are the simplest but most important data type in programming logic. Understanding what values in JavaScript evaluate to <code>true</code> and <code>false</code> is essential for writing error-free conditional logic.</p>
+</div>

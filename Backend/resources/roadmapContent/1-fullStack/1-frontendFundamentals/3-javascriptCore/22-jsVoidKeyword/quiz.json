@@ -1,0 +1,57 @@
+{
+  "title": "JavaScript Void Keyword Quiz",
+  "description": "Evaluate your understanding of the void operator and its common usage in JavaScript.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the primary role of the void operator in JavaScript?",
+      "options": [
+        "It clears the current document.",
+        "It evaluates an expression and returns undefined.",
+        "It terminates the script execution.",
+        "It checks if a variable is void."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What does void(0) evaluate to?",
+      "options": ["0", "null", "undefined", "true"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Why is the void operator often used in HTML anchor tags (<a>)?",
+      "options": [
+        "To make the link open in a new tab.",
+        "To prevent the page from jumping or reloading when a link is clicked.",
+        "To add a specific color to the link.",
+        "To encrypt the destination URL."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "In an IIFE (Immediately Invoked Function Expression), what can void be used for?",
+      "options": [
+        "To declare a global function.",
+        "To treat a function as an expression instead of a declaration.",
+        "To pause the execution of the function.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of the following is equivalent to using void in an anchor tag?",
+      "options": [
+        "return false; within an onclick handler",
+        "event.preventDefault(); within an event listener",
+        "Both A and B.",
+        "None of the above."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}
