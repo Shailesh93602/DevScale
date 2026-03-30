@@ -1,0 +1,52 @@
+{
+  "title": "CSS Frameworks Comparison Quiz",
+  "description": "Evaluate your understanding of Component-Based UI kits (Bootstrap/Bulma) vs Utility-First CSS frameworks (Tailwind).",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily role of Bootstrap in a web application?",
+      "options": [
+        "Faster component rendering.",
+        "A component-based UI kit for quickly building professional interfaces with standard designs.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what is the key design philosophy behind Tailwind CSS?",
+      "options": ["Component-Based", "Utility-First", "Table-Based", "None of the above."],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does Tailwind CSS typically resulted in larger final CSS bundle sizes than Bootstrap?",
+      "options": [
+        "No, as its JIT compiler only generates the exact CSS you use on each page.",
+        "Yes, as it has more utilities.",
+        "Only for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what framework would you choose if you need a completely unique, custom design with high performance?",
+      "options": ["Bootstrap", "Tailwind CSS", "Foundation", "Bulma"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Can you use both Bootstrap and Tailwind CSS in the same project together?",
+      "options": [
+        "Yes, but it is not recommended as it adds a lot of redundancy and potential conflicts.",
+        "No, only one framework can be used at a time.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
