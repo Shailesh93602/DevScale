@@ -1,0 +1,52 @@
+{
+  "title": "Deploying Node.js Applications Quiz",
+  "description": "Evaluate your understanding of PaaS platforms (Render/Heroku), the Importance of PM2 Process Management, securing secrets with .env variables, and automated CI/CD.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily goal of 'Deploying' a Node.js application?",
+      "options": [
+        "Faster component rendering.",
+        "Putting your application on a live server that is accessible via the internet 24/7.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which type of hosting service (like Render or Railway) handles most of the server configuration automatically?",
+      "options": ["PaaS (Platform as a Service)", "IaaS (Infrastructure as a Service)", "SaaS (Software as a Service)", "None of the above."],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which professional tool would you use to ensure your Node.js application restarts automatically if it crashes?",
+      "options": ["PM2", "GitHub", "NPM", "Prettier"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Where should you store sensitive information like database passwords and API keys?",
+      "options": [
+        "Hardcoded in app.js.",
+        "In a public GitHub repository.",
+        "In Environment Variables (often stored in a .env file).",
+        "None of the above."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Does following a 'CI/CD' (Continuous Integration / Continuous Deployment) workflow help automate the testing and deployment of your application?",
+      "options": [
+        "Yes, by using automated scripts every time you push code to GitHub.",
+        "No, it's always slower.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
