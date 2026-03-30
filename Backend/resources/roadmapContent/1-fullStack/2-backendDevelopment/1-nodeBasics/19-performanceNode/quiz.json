@@ -1,0 +1,52 @@
+{
+  "title": "Performance Optimization Quiz",
+  "description": "Evaluate your understanding of Redis caching, Gzip compression, and using Clinic.js to visualize CPU/memory bottlenecks.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily goal of 'Performance Optimization' in a Node.js application?",
+      "options": [
+        "Faster component rendering.",
+        "Reducing the time it takes for your server to process requests and send back data to your users, especially at high scale.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which tool would you use to store the result of a slow database query in RAM for near-instant access next time?",
+      "options": ["Redis", "PostgreSQL", "Mongoose", "Express"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Response compression (like Gzip or Brotli) can often shrink the size of your server's HTML/JSON data by up to ________%.",
+      "options": ["10%", "50%", "80%", "0%"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what was the primarily benefit of using a 'profiler' tool like Clinic.js?",
+      "options": [
+        "To automatically write your code for you.",
+        "To visualize bottlenecks in your server's CPU and memory usage to identify slow code or memory leaks.",
+        "To hide all non-number characters.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does following the 'Asynchronous' (non-blocking) pattern help Node.js achieve high performance compared to traditional synchronous servers?",
+      "options": [
+        "Yes, as it allows the server to keep processing other tasks while waiting for I/O (like a database query) to finish.",
+        "No, it's always slower.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

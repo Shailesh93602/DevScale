@@ -1,0 +1,52 @@
+{
+  "title": "Security in Node.js Quiz",
+  "description": "Evaluate your understanding of Helmet security headers, rate limiting (brute force prevention), bcrypt password hashing, and preventing data injection.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily role of 'Security' in a Node.js application?",
+      "options": [
+        "Faster component rendering.",
+        "Protecting user data and server integrity by preventing common attacks like injection, brute force, and data leaks.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which popular Express middleware set several security-related HTTP headers to make your application harder to exploit?",
+      "options": ["Helmet", "Cors", "Morgan", "BodyParser"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which technique restricts the number of requests a single IP address can make to protect the server from hammering?",
+      "options": ["Rate Limiting", "Caching", "Compression", "Streaming"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which security best practice should you ALWAYS follow when storing user passwords as data in your database?",
+      "options": [
+        "Store them in plain text for easy access.",
+        "Securely hash and salt them using a library like bcrypt.",
+        "Only store them locally.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does using a modern ORM like Prisma or Sequelize help preventing SQL and NoSQL Injection attacks?",
+      "options": [
+        "Yes, as they automatically use parameterized queries to handle untrusted user data safely.",
+        "No, it's always slower.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
