@@ -1,0 +1,37 @@
+{
+  "title": "Load Balancing Quiz",
+  "description": "Test your knowledge about the critical role of load balancing and high availability in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the primary role of a 'Load Balancer' in a web application?",
+      "options": ["To store all of the application's users.", "To distribute incoming network traffic across multiple servers to ensure high availability and responsiveness.", "To automatically generate a backup of the data.", "To hide the application's IP address."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is a popular open-source software load balancer?",
+      "options": ["Express.js", "Nginx", "Mongoose", "React Router"],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is the 'Round Robin' algorithm in the context of load balancing?",
+      "options": ["A way to encrypt files using a secret key.", "Requests are distributed sequentially and evenly among all healthy servers.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is 'Sticky Sessions' and why might you need it?",
+      "options": ["A way to ensure a user's browser session doesn't expire.", "A load balancing feature that ensures a single user's requests are always sent to the same server, which is useful for session-based authentication.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is 'SSL Offloading'?",
+      "options": ["To make the database faster.", "When the load balancer handles the expensive task of decrypting HTTPS traffic before passing the request to the application servers.", "To automatically generate a backup of the data.", "To improve the user experience."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}
