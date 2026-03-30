@@ -1,0 +1,8 @@
+{
+  "title": "Graph Databases",
+  "description": "Learn the theory and use cases of graph databases, including concepts like nodes, edges, and traversals.",
+  "module": "Full Stack Web Development",
+  "order": 3,
+  "difficulty": "Intermediate",
+  "tags": ["Graph Database", "NoSQL", "Neo4j", "Relationships"]
+}

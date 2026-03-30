@@ -1,0 +1,45 @@
+<section>
+    <h2>Understanding Sequelize Associations</h2>
+    <p>In relational databases, tables are linked together by relationships. In Sequelize, these relationships are known as associations. There are four main types of associations in Sequelize:</p>
+
+    <h3>1. The Four Types of Associations</h3>
+    <ul>
+      <li><strong>HasOne:</strong> One-to-One relationship where the foreign key is defined on the target model.</li>
+      <li><strong>BelongsTo:</strong> One-to-One or Many-to-One relationship where the foreign key is defined on the source model.</li>
+      <li><strong>HasMany:</strong> One-to-Many relationship where the foreign key is defined on the target model.</li>
+      <li><strong>BelongsToMany:</strong> Many-to-Many relationship where a join table is used to link models.</li>
+    </ul>
+
+    <h3>2. One-to-One Relationship</h3>
+    <pre><code>
+// Profile belongs to User, and User has one Profile
+User.hasOne(Profile);
+Profile.belongsTo(User);
+    </code></pre>
+
+    <h3>3. One-to-Many Relationship</h3>
+    <pre><code>
+// User has many Posts
+User.hasMany(Post);
+Post.belongsTo(User);
+    </code></pre>
+
+    <h3>4. Many-to-Many Relationship</h3>
+    <pre><code>
+// User can have many Projects, and Projects can have many Users
+const UserProjects = sequelize.define('UserProjects', {}); // Join Table
+User.belongsToMany(Project, { through: UserProjects });
+Project.belongsToMany(User, { through: UserProjects });
+    </code></pre>
+
+    <h3>5. Eager Loading with Associations</h3>
+    <p>Eager loading allows you to include associated models in your queries using the <code>include</code> property.</p>
+    <pre><code>
+const users = await User.findAll({
+  include: Profile
+});
+    </code></pre>
+
+    <h3>Conclusion</h3>
+    <p>Associations allow you to model complex real-world data structures and perform powerful queries that span across multiple tables. Mastering Sequelize associations is critical for any developer working on data-heavy applications.</p>
+</section>

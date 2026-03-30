@@ -1,0 +1,8 @@
+{
+  "title": "Backup and Recovery",
+  "description": "Learn the theory and practice of database backup and recovery including PITR, RTO, and RPO.",
+  "module": "Full Stack Web Development",
+  "order": 4,
+  "difficulty": "Intermediate",
+  "tags": ["Database", "Backup", "Recovery", "Data Durability"]
+}

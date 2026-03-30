@@ -1,0 +1,62 @@
+{
+  "title": "Introduction to ORMs Quiz",
+  "description": "Test your knowledge on Object-Relational Mapping (ORM) and its benefits.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary purpose of an ORM?",
+      "options": [
+        "To manage server-side routing",
+        "To map database tables to object-oriented classes",
+        "To perform client-side state management",
+        "To distribute static assets to a CDN"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a benefit of using an ORM?",
+      "options": [
+        "Elimination of the need for any database architecture",
+        "Increased performance for all complex queries",
+        "Improved developer productivity and maintainability",
+        "Requirement to write manual SQL for all CRUD operations"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a popular ORM for JavaScript/TypeScript?",
+      "options": [
+        "Django ORM",
+        "SQLAlchemy",
+        "Sequelize",
+        "Hibernate"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the main advantage of database independence provided by many ORMs?",
+      "options": [
+        "Not needing to know which database your app uses",
+        "Easier switching of underlying databases with minimal code changes",
+        "Automatic conversion of SQL to NoSQL databases",
+        "Ability to run multiple databases simultaneously"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Most ORMs help improve security by automatically handling what common vulnerability?",
+      "options": [
+        "Cross-Site Scripting (XSS)",
+        "SQL Injection",
+        "Cross-Site Request Forgery (CSRF)",
+        "Server-Side Request Forgery (SSRF)"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "title": "Sequelize Basics Quiz",
+  "description": "Test your basic knowledge of Sequelize ORM for Node.js.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What kind of database interface is Sequelize?",
+      "options": [
+        "A direct database driver",
+        "An Object-Relational Mapper (ORM)",
+        "A NoSQL database",
+        "A front-end router"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is NOT a supported database for Sequelize?",
+      "options": [
+        "PostgreSQL",
+        "MySQL",
+        "SQLite",
+        "MongoDB"
+      ],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "How do you define a model in Sequelize?",
+      "options": [
+        "Using sequelize.define() or extending the Model class",
+        "By creating a JSON file in the config folder",
+        "By manually writing a CREATE TABLE statement",
+        "By using a generator script in the database console"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "In a development environment, how can you synchronize your models with the database?",
+      "options": [
+        "sequelize.sync()",
+        "sequelize.rebuild()",
+        "sequelize.connect()",
+        "sequelize.push()"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the recommended approach for managing database schema changes in production instead of synchronization?",
+      "options": [
+        "Manual SQL scripts",
+        "Migrations",
+        "Automatic backups",
+        "Reinstalling the database"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

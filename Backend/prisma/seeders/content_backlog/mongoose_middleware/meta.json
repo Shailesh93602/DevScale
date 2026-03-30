@@ -1,0 +1,8 @@
+{
+  "title": "Mongoose Middleware",
+  "description": "Learn to use Mongoose middleware (pre/post hooks) to handle data transformation, validation, and logging.",
+  "module": "Full Stack Web Development",
+  "order": 5,
+  "difficulty": "Intermediate",
+  "tags": ["Mongoose", "Middleware", "Hooks", "NoSQL"]
+}

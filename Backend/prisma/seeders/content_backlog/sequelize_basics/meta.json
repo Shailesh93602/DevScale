@@ -1,0 +1,8 @@
+{
+  "title": "Sequelize Basics",
+  "description": "Learn the fundamentals of Sequelize, a leading Node.js ORM for relational databases.",
+  "module": "Full Stack Web Development",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Sequelize", "ORM", "Node.js", "Relational Database"]
+}

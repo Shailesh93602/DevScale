@@ -1,0 +1,56 @@
+<section>
+    <h2>Advanced Mongoose Schema Design</h2>
+    <p>Mongoose schemas are the blueprint for your data. Effective schema design goes beyond simple type definitions to include validation, default values, and sophisticated structures.</p>
+
+    <h3>1. Schema Types and Validation</h3>
+    <p>Mongoose provides a wide range of built-in types and allows you to add custom validation logic to ensure data integrity.</p>
+    <pre><code>
+const userSchema = new Schema({
+  username: {
+    type: String,
+    required: [true, 'Username is required'],
+    unique: true,
+    trim: true,
+    minlength: 3
+  },
+  email: {
+    type: String,
+    required: true,
+    match: [/^\S+@\S+\.\S+$/, 'Please use a valid email address']
+  },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user'
+  }
+});
+    </code></pre>
+
+    <h3>2. Subdocuments and Nested Data</h3>
+    <p>You can embed schemas within other schemas to create hierarchical data structures, which is a powerful feature of document-based databases like MongoDB.</p>
+    <pre><code>
+const addressSchema = new Schema({
+  street: String,
+  city: String
+});
+
+const userSchema = new Schema({
+  name: String,
+  address: addressSchema // Subdocument
+});
+    </code></pre>
+
+    <h3>3. Virtuals</h3>
+    <p>Virtuals are properties that are not persisted to the database but can be computed on the fly from other fields.</p>
+    <pre><code>
+userSchema.virtual('fullName').get(function() {
+  return `${this.firstName} ${this.lastName}`;
+});
+    </code></pre>
+
+    <h3>4. Schema Options</h3>
+    <p>Parameters like <code>timestamps: true</code> automatically add <code>createdAt</code> and <code>updatedAt</code> fields to your models.</p>
+
+    <h3>Conclusion</h3>
+    <p>Thoughtful schema design is the foundation of a robust and scalable application. By leveraging validation, subdocuments, and virtuals, you can create expressive and efficient data models in Mongoose.</p>
+</section>

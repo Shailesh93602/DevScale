@@ -1,0 +1,51 @@
+<section>
+    <h2>Advanced Querying with Sequelize</h2>
+    <p>Sequelize provides a powerful API for querying your database, including advanced operations like filtering, sorting, and pagination.</p>
+
+    <h3>1. Simple Queries</h3>
+    <pre><code>
+// Find all users
+const users = await User.findAll();
+
+// Find one user by primary key
+const user = await User.findByPk(1);
+
+// Find one user matching criteria
+const user = await User.findOne({ where: { email: 'john@example.com' } });
+    </code></pre>
+
+    <h3>2. Filtering with Operators</h3>
+    <p>Sequelize uses the <code>Op</code> object for advanced filtering, which prevents SQL injection and provides a more readable syntax.</p>
+    <pre><code>
+const { Op } = require('sequelize');
+
+const users = await User.findAll({
+  where: {
+    age: {
+      [Op.gt]: 18 // age > 18
+    }
+  }
+});
+    </code></pre>
+
+    <h3>3. Sorting and Pagination</h3>
+    <p>Sorting is handled with the <code>order</code> attribute, and pagination uses <code>limit</code> and <code>offset</code>.</p>
+    <pre><code>
+const users = await User.findAll({
+  order: [['createdAt', 'DESC']],
+  limit: 10,
+  offset: 20
+});
+    </code></pre>
+
+    <h3>4. Selecting Specific Attributes</h3>
+    <p>You can choose which columns to retrieve by specifying the <code>attributes</code> property.</p>
+    <pre><code>
+const users = await User.findAll({
+  attributes: ['firstName', 'email']
+});
+    </code></pre>
+
+    <h3>Conclusion</h3>
+    <p>By leveraging Sequelize's querying API, you can write expressive and performant database interactions without writing a single line of raw SQL. Master filtering, sorting, and pagination to take full control of your application's data layer.</p>
+</section>

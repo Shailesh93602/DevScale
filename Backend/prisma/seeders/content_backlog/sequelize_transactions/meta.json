@@ -1,0 +1,8 @@
+{
+  "title": "Sequelize Transactions",
+  "description": "Learn why and how to use transactions in Sequelize to maintain data Atomicity and Consistency (ACID).",
+  "module": "Full Stack Web Development",
+  "order": 4,
+  "difficulty": "Advanced",
+  "tags": ["Sequelize", "ORM", "Transactions", "ACID"]
+}

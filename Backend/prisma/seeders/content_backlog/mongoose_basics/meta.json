@@ -1,0 +1,8 @@
+{
+  "title": "Mongoose Basics",
+  "description": "Learn the fundamentals of Mongoose, the industry-standard ODM for MongoDB and Node.js.",
+  "module": "Full Stack Web Development",
+  "order": 5,
+  "difficulty": "Beginner",
+  "tags": ["Mongoose", "ODM", "MongoDB", "NoSQL"]
+}
