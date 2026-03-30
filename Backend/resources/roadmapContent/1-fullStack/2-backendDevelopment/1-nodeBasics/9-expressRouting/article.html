@@ -1,0 +1,27 @@
+<div class="article-content">
+  <h1>Routing in Express.js</h1>
+  <p>To build a real-world web application, you need more than just a single page. **Routing** is the process of defining which code should run when a user visits a specific URL (like <code>/users</code>) or performs a specific action (like a <code>POST</code> request to <code>/login</code>).</p>
+
+  <h2>1. HTTP Methods (GET, POST, etc.)</h2>
+  <p>Express makes it incredibly easy to handle different types of network requests. You can define specific handlers for reading data (<code>GET</code>), creating data (<code>POST</code>), updating data (<code>PUT</code>), and deleting data (<code>DELETE</code>).</p>
+  <pre><code>app.get('/users', (req, res) => {
+  res.send('Get all users');
+});
+
+app.post('/users', (req, res) => {
+  res.send('Create a new user');
+});</code></pre>
+
+  <h2>2. Route Parameters (:id)</h2>
+  <p>Professional applications often have dynamic URLs. For example, if you visit <code>/users/123</code>, Express can capture that <code>123</code> as a variable (route parameter) using a colon (<code>:</code>) in your route definition.</p>
+  <pre><code>app.get('/users/:id', (req, res) => {
+  const userId = req.params.id;
+  res.send(`User details for ${userId}`);
+});</code></pre>
+
+  <h2>3. Query Parameters</h2>
+  <p>For searching and filtering, you can also access **Query Parameters** (the part after the <code>?</code> in a URL, like <code>/search?q=node</code>) through the <code>req.query</code> object.</p>
+
+  <h2>Conclusion</h2>
+  <p>By mastering Express.js routing, you're becoming a faster and more efficient Fullstack engineer. Whether you're managing complex database logic or scaling a massive production application, routing provides the tools and security you need to build the highest-quality and most professional applications.</p>
+</div>
