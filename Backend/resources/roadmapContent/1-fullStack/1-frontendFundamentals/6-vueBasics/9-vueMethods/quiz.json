@@ -1,0 +1,52 @@
+{
+  "title": "Vue.js Methods Quiz",
+  "description": "Evaluate your understanding of defining functions, access to 'this', and avoiding arrow functions.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primary role of a Method in Vue.js?",
+      "options": [
+        "To speed up CSS rendering.",
+        "To define the logic for event handling, data manipulation, or reusable functions.",
+        "To hide the JavaScript code from the console.",
+        "To replace the standard HTML input elements."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which option is used to define Methods in a Vue instance?",
+      "options": ["state", "data", "methods", "watch"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "How do you access a data property from within a Vue method?",
+      "options": ["using this.propertyName", "using data.propertyName", "using vue.propertyName", "using the search property."],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Why is it generally discouraged to use Arrow Functions when defining Vue methods?",
+      "options": [
+        "They are slower.",
+        "They don't have their own 'this' context, which is required to access the Vue instance data.",
+        "They are only for functional components.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Can you use methods inside templates (e.g. {{ formatName() }})?",
+      "options": [
+        "Yes, but they will be called on every render.",
+        "No, only data properties are allowed.",
+        "Only in older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

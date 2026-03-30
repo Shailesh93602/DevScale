@@ -1,0 +1,23 @@
+<div class="article-content">
+  <h1>Slots in Vue.js</h1>
+  <p>Slots are a powerful way to compose components in Vue.js. They allow you to pass HTML content or other components from a parent into a designated "slot" within a child component, making your components highly flexible and reusable.</p>
+
+  <h2>1. Basic Slot</h2>
+  <p>To create a slot, you simply use the <code>&lt;slot&gt;&lt;/slot&gt;</code> tag inside your child component's template. Any content placed between the component tags in the parent will be rendered there.</p>
+  <pre><code>&lt;!-- Child Component --&gt;
+&lt;button class="btn"&gt;
+  &lt;slot&gt;&lt;/slot&gt;
+&lt;/button&gt;
+
+&lt;!-- Parent usage --&gt;
+&lt;my-button&gt;Click Me!&lt;/my-button&gt;</code></pre>
+
+  <h2>2. Named Slots</h2>
+  <p>Sometimes you need multiple slots in a single component. In this case, you can give your slots names using the <code>name</code> attribute. In the parent, you use the <code>v-slot</code> directive (shorthanded as <code>#</code>) to target a specific slot.</p>
+
+  <h2>3. Scoped Slots</h2>
+  <p>Scoped slots allow the child component to pass data back to the parent component's slot content. This is incredibly useful for building complex components like lists or tables where the parent needs to decide how each item is rendered based on child data.</p>
+
+  <h2>Conclusion</h2>
+  <p>Slots are the ultimate tool for component composition in Vue. By mastering basic, named, and scoped slots, you can build a library of truly generic and reusable UI components that can adapt to any layout or data requirements without becoming bloated or repetitive.</p>
+</div>

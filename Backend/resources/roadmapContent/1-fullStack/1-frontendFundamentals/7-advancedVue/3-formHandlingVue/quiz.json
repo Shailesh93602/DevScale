@@ -1,0 +1,42 @@
+{
+  "title": "Form Handling in Vue.js Quiz",
+  "description": "Evaluate your understanding of v-model, its modifiers (.lazy, .number, .trim), and custom input components in Vue 3.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily directive used for two-way data binding on form elements in Vue.js?",
+      "options": ["v-bind", "v-input", "v-model", "v-state"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which modifier would you use to sync an input's value only after the 'change' event instead of the 'input' event?",
+      "options": [".once", ".lazy", ".sync", ".trim"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the result when using the .number modifier with v-model (v-model.number)?",
+      "options": [
+        "It limits the input to numeric characters only.",
+        "It automatically casts the user's input string to a number.",
+        "It hides all non-number characters.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which event modifier is commonly used to trim whitespace from user input?",
+      "options": [".trim", ".clean", ".ignore", ".lazy"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "In Vue 3, which and/or what is the default prop name for a custom component to support v-model?",
+      "options": ["value", "dataValue", "modelValue", "inputValue"],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

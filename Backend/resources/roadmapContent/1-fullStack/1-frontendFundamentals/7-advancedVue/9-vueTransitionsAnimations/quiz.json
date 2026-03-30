@@ -1,0 +1,42 @@
+{
+  "title": "Vue Transitions and Animations Quiz",
+  "description": "Evaluate your understanding of the <Transition> component, its CSS-based class system, and list animations.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the built-in component in Vue for adding transitions to an element?",
+      "options": ["<Animate>", "<Transition>", "<Tween>", "<Fade>"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does the <Transition> component add elements physically to the DOM?",
+      "options": [
+        "No, it only manages adding/removing CSS classes at different stages.",
+        "Yes, it creates a new <div> as a wrapper.",
+        "Only for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which CSS class represents the initial state of an element's enter transition?",
+      "options": ["v-enter-from", "v-enter-active", "v-enter-to", "v-leave-from"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which component should you use to animate multiple items in a list (e.g. from v-for)?",
+      "options": ["<Transition>", "<TransitionGroup>", "<AnimateList>", "<ListFade>"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Transitions are triggered automatically when an element's visibility is changed using ________ or ________.",
+      "options": ["v-if, v-show", "v-bind, v-model", "v-for, v-list", "None of the above."],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

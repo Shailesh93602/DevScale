@@ -1,0 +1,30 @@
+<div class="article-content">
+  <h1>Vue Router</h1>
+  <p>Vue Router is the official router for Vue.js. It is deeply integrated with Vue.js core to make building Single Page Applications (SPAs) with Vue a breeze. It allows you to map your application's URLs to components, enabling smooth and flickering-free navigation.</p>
+
+  <h2>1. Core Components</h2>
+  <ul>
+    <li><strong>&lt;router-link&gt;:</strong> Use this instead of standard anchor tags (<code>&lt;a&gt;</code>) for internal navigation. It automatically handles URL updates without page reloads.</li>
+    <li><strong>&lt;router-view&gt;:</strong> This is a functional component that renders the component for the current route as defined in your configuration.</li>
+  </ul>
+
+  <h2>2. Basic Configuration</h2>
+  <p>To set up routing, you define an array of route objects, each mapping a URL <code>path</code> to a component. You then create a <code>router</code> instance and pass it to your main Vue application.</p>
+  <pre><code>const routes = [
+  { path: '/', component: Home },
+  { path: '/about', component: About }
+]
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes
+})
+
+app.use(router)</code></pre>
+
+  <h2>3. Dynamic Route Matching</h2>
+  <p>You can use parameters in your route paths to create dynamic user-specific pages. For example, <code>/user/:id</code> will match any URL like <code>/user/123</code> or <code>/user/john</code>.</p>
+
+  <h2>Conclusion</h2>
+  <p>Vue Router is an essential piece of any professional Vue.js application. By mastering how to manage navigation, map URLs to components, and use dynamic routes, you can provide your users with the fast and seamless multi-page experience that characterizes modern single-page web applications.</p>
+</div>

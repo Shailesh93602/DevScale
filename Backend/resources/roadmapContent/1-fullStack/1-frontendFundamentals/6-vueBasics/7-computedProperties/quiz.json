@@ -1,0 +1,57 @@
+{
+  "title": "Vue Computed Properties Quiz",
+  "description": "Evaluate your understanding of dependency tracking, caching, and Computed vs. Methods.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primary benefit of a Computed Property in Vue.js?",
+      "options": [
+        "To speed up CSS rendering.",
+        "They are cached and only re-evaluate when their dependencies change.",
+        "To hide the JavaScript code from the console.",
+        "To replace the standard HTML input elements."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which option is used to define Computed Properties in a Vue instance?",
+      "options": ["state", "data", "methods", "computed"],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "What happens when a dependency of a Computed Property changes?",
+      "options": [
+        "Vue automatically re-evaluates the Computed Property.",
+        "The app crashes instantly.",
+        "Nothing happens.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the key difference between a Computed Property and a Method?",
+      "options": [
+        "Computed Properties are cached, while Methods are not (they always run again).",
+        "Methods are only for class components.",
+        "They are exactly the same.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Computed Properties should generally be used for data formatting and calculations, not for side effects like API calls.",
+      "options": [
+        "True",
+        "False (they are perfect for API calls)",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

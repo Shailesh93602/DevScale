@@ -1,0 +1,52 @@
+{
+  "title": "Vue Mixins Quiz",
+  "description": "Evaluate your understanding of logic reusability, option merging rules, and the modern transition to Composables.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primary role of a Mixin in Vue.js?",
+      "options": [
+        "To speed up CSS rendering.",
+        "To provide a flexible way to distribute reusable functionalities for Vue components.",
+        "To hide the JavaScript code from the console.",
+        "To replace the standard HTML input elements."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which option is used to include Mixins in a Vue component definition?",
+      "options": ["state", "data", "mixins", "watch"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which hook is generally called first when both a Mixin and a component define it?",
+      "options": [
+        "The component's hook.",
+        "The mixin's hook.",
+        "They are called at the same time.",
+        "Only one will be called based on its ID."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does a Mixin define its own data, methods, and lifecycle hooks just like a standard component?",
+      "options": [
+        "Yes, it is just an object containing Vue component options.",
+        "No, it only contains methods.",
+        "Only in older versions of Vue.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Modern Vue 3 development generally prefers using ________ instead of Mixins for logic reusability.",
+      "options": ["Redux", "Composables (Composition API)", "Vuex", "Directives"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

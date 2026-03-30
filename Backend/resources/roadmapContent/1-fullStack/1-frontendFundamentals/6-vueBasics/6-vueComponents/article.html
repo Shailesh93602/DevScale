@@ -1,0 +1,31 @@
+<div class="article-content">
+  <h1>Vue.js Components</h1>
+  <p>Components are reusable Vue instances with a name. They allow us to divide our user interface into independent and reusable pieces, making our application easier to manage, test, and scale.</p>
+
+  <h2>1. Defining a Component</h2>
+  <p>In Vue, a component can be defined as an object containing its own data, template, methods, and props. You then register it so it can be used within other components or in your main application instance.</p>
+  <pre><code>app.component('button-counter', {
+  data() {
+    return {
+      count: 0
+    }
+  },
+  template: `
+    &lt;button @click="count++"&gt;
+      You clicked me {{ count }} times.
+    &lt;/button&gt;`
+})</code></pre>
+
+  <h2>2. Using Components</h2>
+  <p>Once registered, you can use the component as a custom element inside your root instance or parent component templates.</p>
+  <pre><code>&lt;div id="app"&gt;
+  &lt;button-counter&gt;&lt;/button-counter&gt;
+  &lt;button-counter&gt;&lt;/button-counter&gt;
+&lt;/div&gt;</code></pre>
+
+  <h2>3. Passing Data with Props</h2>
+  <p>To pass data from a parent to a child component, you use <strong>props</strong>. Props are custom attributes you can register on a component, allowing you to create truly dynamic and configurable UI building blocks.</p>
+
+  <h2>Conclusion</h2>
+  <p>Components are the heart of Vue.js. By building your application as a tree of independent, modular, and reactive components, you can ensure that your codebase remains organized, flexible, and scalable as your product grows and evolves.</p>
+</div>
