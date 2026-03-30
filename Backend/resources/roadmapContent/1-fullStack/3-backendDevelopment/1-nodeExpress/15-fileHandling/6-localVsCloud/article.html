@@ -1,0 +1,45 @@
+<article>
+  <h1>Storing Files: Local Disk vs. Cloud Storage</h1>
+  
+  <p>Once you've validated a user's file, you need to decide where to store it. There are two primary approaches in modern web development: storing them locally on your server's hard drive or using a dedicated Cloud Storage service.</p>
+
+  <section>
+    <h2>Storing Files on the Local Server</h2>
+    <p>This is the simplest approach and is often the default used by libraries like Multer (<code>diskStorage</code>).</p>
+    <ul>
+      <li><strong>Pros:</strong> Very easy to set up, fast read/write for small development apps, and no external dependencies.</li>
+      <li><strong>Cons:</strong> Doesn't scale (if you have two servers, they won't share the same disk), files are lost if the server is deleted/restarted, and it can quickly fill up your server's disk space (Denial of Service).</li>
+    </ul>
+    <p><strong>Use Case:</strong> Local development, small internal tools, or temporary file processing.</p>
+  </section>
+
+  <section>
+    <h2>Storing Files in Cloud Storage</h2>
+    <p>Professional applications almost always use services like Amazon S3, Google Cloud Storage, or Cloudinary.</p>
+    <ul>
+      <li><strong>Pros:</strong> Virtually infinite scalability, highly durable (files are replicated across multiple locations), and accessible from any server in your cluster.</li>
+      <li><strong>Cons:</strong> More complex setup, requires an internet connection for every operation, and comes with ongoing costs.</li>
+    </ul>
+    <p><strong>Use Case:</strong> Production applications, user-uploaded content, and shared assets.</p>
+  </section>
+
+  <section>
+    <h2>How to Store Files in a Database?</h2>
+    <p>A common question is: "Should I store files (binary data) directly in my database?". The answer is almost always <strong>NO</strong>.</p>
+    <ul>
+      <li><strong>Performance:</strong> Databases are optimized for structured data, not large binary blobs. Storing files in a DB will slow down your backups and queries.</li>
+      <li><strong>Cost:</strong> Database storage is significantly more expensive than simple file storage (like S3).</li>
+    </ul>
+    <p><strong>Correct Approach:</strong> Store the *file itself* in S3 or local disk, and store the *URL or file path* as a string in your database record.</p>
+  </section>
+
+  <section>
+    <h2>Summary of Best Practices</h2>
+    <ol>
+      <li><strong>Use Cloud Storage for Production:</strong> Ensure your application is stateless and scalable by keeping files off the local disk.</li>
+      <li><strong>Store Metadata in DB:</strong> Keep the file's original name, size, type, and current storage path (S3 URL) in your database for easy retrieval.</li>
+      <li><strong>Use CDNs:</strong> If you're serving static assets (like images) globally, use a Content Delivery Network (CDN) like CloudFront to cache them closer to your users.</li>
+    </ol>
+  </section>
+
+</article>

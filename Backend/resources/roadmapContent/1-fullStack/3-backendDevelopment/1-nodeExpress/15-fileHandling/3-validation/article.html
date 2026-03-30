@@ -1,0 +1,77 @@
+<article>
+  <h1>File Upload Validation and Error Handling</h1>
+  
+  <p>Accepting files from users is one of the most common ways an application can be attacked. Without proper validation, a user could upload a giant file that crashes your server (DOS), a disguised script that executes on your server (Remote Code Execution), or a malicious file that attacks other users when they download it.</p>
+
+  <section>
+    <h2>Key Validation Strategies</h2>
+    <ul>
+      <li><strong>File Size Validation:</strong> Limit the maximum size of any single file.</li>
+      <li><strong>File Type (MIME Type) Validation:</strong> Ensure the file is actually what it claims to be (e.g., an image, not a script).</li>
+      <li><strong>Number of Files:</strong> Limit how many files a user can upload in a single request.</li>
+      <li><strong>File Name Sanitization:</strong> Rename files to avoid path traversal attacks or collisions.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Implementing Validation with Multer</h2>
+    <p>Multer makes it easy to implement these checks directly in your middleware configuration:</p>
+    <pre><code>const multer = require('multer');
+
+const upload = multer({
+  storage: multer.memoryStorage(), // or diskStorage
+  
+  // 1. Limit file size (e.g., 5MB)
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+    files: 1 // Only allow one file at a time
+  },
+
+  // 2. Filter file types
+  fileFilter: (req, file, cb) =&gt; {
+    const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+    
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true); // Accept file
+    } else {
+      cb(new Error("Invalid file type. Only JPEG, PNG, and PDF are allowed."), false); // Reject file
+    }
+  }
+});</code></pre>
+  </section>
+
+  <section>
+    <h2>Handling Validation Errors</h2>
+    <p>When a file fails validation, Multer will pass an error to your Express error handler. You should handle these gracefully and return clear messages to the user:</p>
+    <pre><code>app.post('/upload', (req, res) =&gt; {
+  upload.single('myFile')(req, res, (err) =&gt; {
+    if (err instanceof multer.MulterError) {
+      // A Multer-specific error occurred (like file too large)
+      return res.status(400).json({ error: `Upload error: ${err.message}` });
+    } else if (err) {
+      // An unknown or custom error occurred (like our file type error)
+      return res.status(400).json({ error: err.message });
+    }
+
+    // Success!
+    res.json({ message: "File uploaded and validated successfully." });
+  });
+});</code></pre>
+  </section>
+
+  <section>
+    <h2>Advanced Validation: Magic Bytes</h2>
+    <p>The <code>mimetype</code> provided by the browser (in the <code>Content-Type</code> header) can be easily faked. For high-security applications, you should use a library like <code>file-type</code> to inspect the "magic bytes" (the first few bytes of the file) to verify the true file format regardless of its extension or claimed type.</p>
+  </section>
+
+  <section>
+    <h2>Summary of Best Practices</h2>
+    <ol>
+      <li><strong>Never Trust User Input:</strong> This applies to file names, extensions, and mimetypes.</li>
+      <li><strong>Fail Fast:</strong> Reject large or invalid files as early as possible in the request lifecycle.</li>
+      <li><strong>Sanitize Names:</strong> Never store a file using the original name provided by the user.</li>
+      <li><strong>Use Anti-Virus:</strong> For production apps receiving many files, consider running a background anti-virus scan (like ClamAV) on every upload.</li>
+    </ol>
+  </section>
+
+</article>

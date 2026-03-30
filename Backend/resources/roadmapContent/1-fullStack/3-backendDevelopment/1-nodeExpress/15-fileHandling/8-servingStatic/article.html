@@ -1,0 +1,56 @@
+<article>
+  <h1>Serving Static Files in Express</h1>
+  
+  <p>Static files are files that the server sends to the client exactly as they are stored on disk, without any dynamic processing. Common examples include images, CSS stylesheets, client-side JavaScript files, and HTML templates.</p>
+
+  <section>
+    <h2>Using the express.static Middleware</h2>
+    <p>Express provides a built-in middleware called <code>express.static</code> to serve files from a specific directory. When a request comes in, Express checks this directory for a matching file. If it finds one, it sends the file; if not, it passes the request to the next middleware.</p>
+    <pre><code>const express = require('express');
+const path = require('path');
+const app = express();
+
+// Serve files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Now you can access files like:
+// http://localhost:3000/images/logo.png
+// http://localhost:3000/css/styles.css</code></pre>
+  </section>
+
+  <section>
+    <h2>Virtual Path Prefixes</h2>
+    <p>Sometimes you want to serve static files under a specific URL prefix that doesn't exist on your file system. You can do this by providing a mount path to <code>app.use</code>:</p>
+    <pre><code>// Serve files from 'public' under the '/static' URL path
+app.use('/static', express.static(path.join(__dirname, 'public')));
+
+// Access via: http://localhost:3000/static/images/logo.png</code></pre>
+  </section>
+
+  <section>
+    <h2>Caching for Performance</h2>
+    <p>Since static files don't change often, you should tell the browser to cache them. This significantly reduces server load and improves page transitions for your users. You can configure cache headers directly in <code>express.static</code>:</p>
+    <pre><code>const options = {
+  dotfiles: 'ignore', // Ignore files starting with a dot (like .env)
+  etag: true,
+  maxAge: '1d', // Cache for 1 day
+  redirect: false,
+  setHeaders: function (res, path, stat) {
+    res.set('x-timestamp', Date.now())
+  }
+}
+
+app.use(express.static('public', options));</code></pre>
+  </section>
+
+  <section>
+    <h2>Best Practices</h2>
+    <ul>
+      <li><strong>Directory Isolation:</strong> Always keep your static files in a dedicated directory (like <code>public</code> or <code>assets</code>) that is separate from your application logic and source code.</li>
+      <li><strong>Absolute Paths:</strong> Always use <code>path.join(__dirname, 'public')</code> to ensure your application can correctly find the directory regardless of where the Node.js process is started from.</li>
+      <li><strong>Security:</strong> Be extremely careful not to serve directories that contain sensitive information like configuration files, environment variables, or private data.</li>
+      <li><strong>Use a CDN in Production:</strong> For high-traffic applications, consider using a dedicated Content Delivery Network (CDN) to serve your static assets instead of your primary Node.js server.</li>
+    </ul>
+  </section>
+
+</article>
