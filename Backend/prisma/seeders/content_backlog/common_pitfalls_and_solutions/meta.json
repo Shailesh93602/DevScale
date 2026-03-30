@@ -1,0 +1,8 @@
+{
+  "title": "Common Pitfalls and Solutions",
+  "description": "Learn to identify and resolve common database relationship pitfalls like the N+1 query problem, over-normalization, and circular references.",
+  "module": "Full Stack Web Development",
+  "order": 1,
+  "difficulty": "Intermediate",
+  "tags": ["Database", "Relationships", "Pitfalls", "N+1 Query", "Normalization"]
+}

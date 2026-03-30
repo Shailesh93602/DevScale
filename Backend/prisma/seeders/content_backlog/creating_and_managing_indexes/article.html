@@ -1,0 +1,35 @@
+<section>
+    <h2>Creating and Managing Database Indexes</h2>
+    <p>Creating and maintaining indexes is a practical, ongoing task for any database administrator or developer. This process involves identifying the right columns for indexing and handling the operational aspects of index management.</p>
+
+    <h3>1. When to Create an Index?</h3>
+    <p>Indexes should be created on columns that are frequently used in <strong>WHERE</strong> clauses, <strong>JOIN</strong> operations, and <strong>ORDER BY</strong> clauses. Common examples include emails, usernames, and foreign keys.</p>
+
+    <h3>2. Creating Indexes in SQL</h3>
+    <pre><code>
+-- Create a simple index
+CREATE INDEX idx_user_email ON users(email);
+
+-- Create a unique index
+CREATE UNIQUE INDEX idx_user_username ON users(username);
+
+-- Create a composite index
+CREATE INDEX idx_name ON users(last_name, first_name);
+    </code></pre>
+
+    <h3>3. Creating Indexes with ORMs</h3>
+    <ul>
+      <li><strong>Sequelize:</strong> Add the <code>indexes</code> property in your model definition.</li>
+      <li><strong>Mongoose:</strong> Use <code>schema.index({ name: 1 })</code> or add <code>index: true</code> in the field definition.</li>
+    </ul>
+
+    <h3>4. Managing and Monitoring</h3>
+    <ul>
+      <li><strong>DROP INDEX:</strong> Remove unused indexes to free up storage and improve write performance.</li>
+      <li><strong>Monitor Usage:</strong> Use database-specific tools (like <code>pg_stat_user_indexes</code> in PostgreSQL) to identify which indexes are being used and which are not.</li>
+      <li><strong>Rebuild Indexes:</strong> Over time, indexes can become fragmented. Periodically re-building or re-organizing can improve performance.</li>
+    </ul>
+
+    <h3>Conclusion</h3>
+    <p>Effective index management involves a delicate balance. Monitor your index usage regularly to ensure that you have exactly the right indexes needed for your queries, and no more.</p>
+</section>

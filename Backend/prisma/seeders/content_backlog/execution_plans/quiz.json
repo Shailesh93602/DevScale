@@ -1,0 +1,31 @@
+{
+  "title": "Execution Plans Quiz",
+  "description": "Test your knowledge on reading and optimizing database query execution plans.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which command is used to see the internal roadmap a database uses to execute a query?",
+      "options": ["SHOW PLAN", "EXPLAIN (or EXPLAIN ANALYZE)", "GET QUERY INFO", "DESCRIBE TABLE"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is a 'Seq Scan' (Sequential Scan) in an execution plan?",
+      "options": ["A very fast index lookup", "A full table scan (reading every single row)", "A parallel query operation", "A deletion of old records"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these indicates that the database is correctly using an index?",
+      "options": ["Seq Scan", "Index Scan (or Index Seek)", "Full Table Scan", "Internal Loop"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is 'Cost' in the context of an execution plan?",
+      "options": ["The actual dollar amount spent on the database", "An internal unit the database uses to estimate the resource usage of a query step", "The time it takes to write a query", "The number of users allowed to access the database"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

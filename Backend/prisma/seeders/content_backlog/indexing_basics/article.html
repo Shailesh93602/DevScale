@@ -1,0 +1,28 @@
+<section>
+    <h2>Understanding Database Indexing</h2>
+    <p>Database indexing is a critical optimization technique that allows queries to find data in a large table without scanning every single record.</p>
+
+    <h3>1. What is an Index?</h3>
+    <p>Think of an index like the index at the back of a textbook. Instead of reading every page to find a specific mention of "Node.js," you look at the index and jump directly to the relevant pages. Similarly, a database index is a separate data structure (often a B-Tree) that stores pointers to rows in the main table.</p>
+
+    <h3>2. How an Index Works</h3>
+    <ol>
+      <li><strong>Creation:</strong> You create an index on a specific column (e.g., <code>email</code>).</li>
+      <li><strong>Mapping:</strong> The database creates an sorted list of emails and pointers to the matching row IDs.</li>
+      <li><strong>Querying:</strong> When you search by email, the database uses the index to jump directly to the record's location.</li>
+    </ol>
+
+    <h3>3. Types of Indexes</h3>
+    <ul>
+      <li><strong>Primary Key Index:</strong> Created automatically on the primary key column (highly optimized).</li>
+      <li><strong>Unique Index:</strong> Ensures all values in the column are unique and speeds up retrieval.</li>
+      <li><strong>Non-Unique Index:</strong> Speeds up retrieval for non-unique columns like <code>last_name</code>.</li>
+      <li><strong>Composite Index:</strong> An index that spans across multiple columns (e.g., <code>first_name</code> and <code>last_name</code>).</li>
+    </ul>
+
+    <h3>4. The Cost of Indexing</h3>
+    <p>While indexes speed up <strong>SELECT</strong> operations, they slow down <strong>INSERT</strong>, <strong>UPDATE</strong>, and <strong>DELETE</strong> operations because the database must update the index structures along with the data.</p>
+
+    <h3>Conclusion</h3>
+    <p>Indexing is the most effective way to improve the performance of your database. By understanding how to use indexes correctly, you can ensure your application remains responsive even with millions of records.</p>
+</section>
