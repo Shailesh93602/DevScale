@@ -1,0 +1,8 @@
+{
+  "title": "Many-to-Many Relationships",
+  "description": "Learn how to implement many-to-many database relationships in SQL using join tables and in NoSQL using document referencing.",
+  "module": "Full Stack Web Development",
+  "order": 3,
+  "difficulty": "Intermediate",
+  "tags": ["Database", "Relationships", "SQL", "Join Table", "M:N"]
+}

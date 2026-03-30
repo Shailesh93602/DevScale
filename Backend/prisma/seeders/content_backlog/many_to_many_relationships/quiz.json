@@ -1,0 +1,37 @@
+{
+  "title": "Many-to-Many Relationships Quiz",
+  "description": "Test your knowledge on Many-to-Many database relationships.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these is a perfect example of a Many-to-Many (M:N) relationship?",
+      "options": ["A Store and its many Customers", "An Artist and their Album", "Students and the Courses they take", "A Country and its Capital city"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the name of the third table used to model a many-to-many relationship in a SQL database?",
+      "options": ["Foreign Table", "Primary Table", "Join Table (or Associative Table)", "Main Table"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "In Sequelize, which association method is used to set up a Many-to-Many relationship?",
+      "options": ["hasMany()", "belongsToMany()", "hasOne()", "joinsMany()"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the most common way to model M:N relationships in NoSQL databases like MongoDB?",
+      "options": ["Always using join tables", "Not possible in NoSQL", "Storing an array of IDs in both related documents", "Only through external databases"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these describes a student with multiple courses and a course with multiple students?",
+      "options": ["One-to-One", "One-to-Many", "Many-to-Many", "Single-Entity relationship"],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

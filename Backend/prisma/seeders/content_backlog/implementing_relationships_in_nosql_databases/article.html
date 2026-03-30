@@ -1,0 +1,40 @@
+<section>
+    <h2>Implementing Database Relationships in NoSQL</h2>
+    <p>While often described as "schema-less," NoSQL databases still have relationships. The primary ways to model these are <strong>Embedding</strong> and <strong>Referencing</strong>.</p>
+
+    <h3>1. Embedding (Denormalization)</h3>
+    <p>Storing related data within a single document. This is ideal for 1:1 and small 1:N relationships where the related data is always queried together.</p>
+    <pre><code>
+{
+  "_id": "60c...1",
+  "name": "Jane User",
+  "address": {
+    "street": "123 Main St",
+    "city": "Nowhere"
+  }
+}
+    </code></pre>
+
+    <h3>2. Referencing (Normalization)</h3>
+    <p>Storing the ID of a document from another collection. This is similar to a foreign key in SQL and is better for large 1:N and all M:N relationships.</p>
+    <pre><code>
+// Book Document
+{
+  "_id": "1",
+  "title": "Mastering NoSQL",
+  "author_id": "8" // Reference to a document in another collection
+}
+    </code></pre>
+
+    <h3>3. Mongoose Population</h3>
+    <p>For referencing, ODMs like Mongoose allow you to "populate" the ID with the actual document during a query.</p>
+
+    <h3>4. Which one to choose?</h3>
+    <ul>
+      <li>Use <strong>Embedding</strong> if the related data is small, doesn't change often, and is always queried with the parent.</li>
+      <li>Use <strong>Referencing</strong> if the related data can grow large, is updated frequently, or needs the same record to be linked across multiple parents.</li>
+    </ul>
+
+    <h3>Conclusion</h3>
+    <p>Understanding the trade-offs between embedding and referencing is the key to designing high-performance NoSQL database schemas.</p>
+</section>

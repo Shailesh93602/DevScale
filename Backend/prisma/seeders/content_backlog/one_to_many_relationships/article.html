@@ -1,0 +1,30 @@
+<section>
+    <h2>Understanding One-to-Many Relationships</h2>
+    <p>The One-to-Many (1:N) relationship is the most common relationship in database system design. It occurs when a single record in one table is associated with many records in another table.</p>
+
+    <h3>1. Real-World Example</h3>
+    <p>A classic example is an <strong>Author</strong> and their <strong>Books</strong>. An author can write many books, but each book typically has one primary author.</p>
+
+    <h3>2. Modeling in SQL</h3>
+    <p>Use a foreign key on the 'Many' side of the relationship to store the primary key of the matching record from the 'One' side.</p>
+    <pre><code>
+CREATE TABLE books (
+  id INT PRIMARY KEY,
+  title VARCHAR(255),
+  author_id INT, -- Foreign Key
+  FOREIGN KEY (author_id) REFERENCES authors(id)
+);
+    </code></pre>
+
+    <h3>3. Implementation in ORMs</h3>
+    <ul>
+      <li><strong>Sequelize:</strong> Uses <code>hasMany</code> on the parent model and <code>belongsTo</code> on the child model.</li>
+      <li><strong>Mongoose:</strong> Can be achieved through <strong>embedding</strong> (storing an array of subdocuments) or <strong>referencing</strong> (storing IDs of children in an array or parent's ID in each child).</li>
+    </ul>
+
+    <h3>4. When to Use</h3>
+    <p>Use it whenever an entity owns or belongs to multiple other entities, such as Users and their Posts, Categories and their Products, or Folders and their Files.</p>
+
+    <h3>Conclusion</h3>
+    <p>Mastering One-to-Many relationships allows you to build sophisticated data systems that accurately reflect real-world hierarchies.</p>
+</section>

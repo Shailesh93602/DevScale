@@ -1,0 +1,31 @@
+{
+  "title": "One-to-One Relationships Quiz",
+  "description": "Test your understanding of One-to-One database relationships.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these is a perfect example of a One-to-One (1:1) relationship?",
+      "options": ["A Store and its many Customers", "A Person and their single Social Security Number", "A Teacher and their many Students", "A Library and its thousands of Books"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "How is a One-to-One relationship typically enforced in a SQL database table?",
+      "options": ["Using a foreign key with a UNIQUE constraint", "Using a primary key on every column", "Using only one table", "By not using any relationships"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "In Sequelize, which association methods are used to set up a One-to-One relationship?",
+      "options": ["hasMany and belongsTo", "hasOne and belongsTo", "belongsToMany", "oneToOne"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is one common reason to use a One-to-One relationship instead of a single table?",
+      "options": ["To slow down the database for security", "To separate sensitive or optional metadata from the main record", "To avoid using primary keys", "Because JOINs are always faster than single table scans"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
