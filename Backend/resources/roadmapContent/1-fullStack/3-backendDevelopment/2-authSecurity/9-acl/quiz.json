@@ -1,0 +1,37 @@
+{
+  "title": "Access Control Lists (ACL) Quiz",
+  "description": "Test your knowledge about the world of fine-grained access control in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the primary difference between RBAC and ACL?",
+      "options": ["RBAC is for groups of users, while ACL is for individual users on specific resources.", "ACL is always more secure than RBAC.", "RBAC is only for desktop computers.", "There is no difference between the two."],
+      "correctAnswer": 0,
+      "points": 20
+    },
+    {
+      "question": "Which of these is a typical component of an Access Control Entry (ACE)?",
+      "options": ["The user's favorite color.", "The subject (who is requesting access).", "The current time.", "The type of browser being used."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What does the 'Object' represent in an ACL?",
+      "options": ["The user requesting access.", "The piece of documentation for the app.", "The specific resource or file being accessed (e.g., a file or database record).", "The type of authentication being used."],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "Why is it important to index your ACL database table?",
+      "options": ["To make the code look better.", "To ensure that checking permissions doesn't become a performance bottleneck.", "To make the database more secure.", "To prevent duplicate entries."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What should be the default behavior of an ACL if no matching entry is found?",
+      "options": ["Allow access.", "Deny access.", "Ask the user for permission.", "Randomly decide based on the current time."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

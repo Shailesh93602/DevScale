@@ -1,0 +1,37 @@
+{
+  "title": "Introduction to AuthN and AuthZ Quiz",
+  "description": "Test your fundamental knowledge about Authentication and Authorization in modern web apps.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the primary goal of Authentication (AuthN)?",
+      "options": ["To define what a user is allowed to do.", "To verify the identity of a user.", "To encrypt database connections.", "To store user preferences."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which process determines what an authenticated user is permitted to access?",
+      "options": ["Authentication", "Authorization", "Hashing", "Verification"],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is Role-Based Access Control (RBAC)?",
+      "options": ["A method for hashing passwords.", "Assigning permissions to roles like 'Admin' or 'User' and then giving users those roles.", "A way to automatically generate login forms.", "A type of session management."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Why is it important to use a strong hashing algorithm like bcrypt for passwords?",
+      "options": ["To make the login process faster.", "To prevent passwords from being recovered if the database is leaked.", "To automatically validate user email addresses.", "To improve the user experience."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which authentication method uses a digital 'token' that is stored on the client side?",
+      "options": ["Session-Based Authentication", "JWT (JSON Web Token) Authentication", "Basic Auth", "No Authentication"],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

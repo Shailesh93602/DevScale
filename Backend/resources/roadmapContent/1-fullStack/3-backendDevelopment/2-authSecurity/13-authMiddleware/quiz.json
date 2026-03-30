@@ -1,0 +1,37 @@
+{
+  "title": "Authorization Middleware Quiz",
+  "description": "Test your knowledge about the critical role of middleware in securing modern Express.js applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the primary role of Authorization Middleware in Express.js?",
+      "options": ["To encrypt all incoming data.", "To verify that a user has the correct permission before processing a request.", "To make the application faster.", "To automatically generate documentation for each route."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Why is it important to run Authentication middleware before Authorization middleware?",
+      "options": ["Because authentication is faster than authorization.", "Because you must first know *who* the user is before you can determine *what* they are allowed to do.", "It's not necessary; you can run them in any order.", "Because Express requires it."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What does a typically-structured RBAC authorization middleware do?",
+      "options": ["It hashes the user's password.", "It checks if the user has one of the allowed roles for a specific route.", "It automatically redirects the user to the login page.", "It clears the user's session."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which HTTP status code is typically returned if a user is authenticated but doesn't have the required permissions?",
+      "options": ["200 OK", "401 Unauthorized", "403 Forbidden", "500 Internal Server Error"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What does 'DRY' stand for in the context of writing middleware?",
+      "options": ["Don't Repeat Yourself", "Do-Right-Yesterday", "Data-Ready-Yet", "Design-Resource-Yield"],
+      "correctAnswer": 0,
+      "points": 20
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+<article>
+  <h1>Mastering Authentication and Authorization</h1>
+  
+  <p>In any production-grade full-stack application, ensuring that only users with the correct identity can access your platform and that their actions are restricted based on their permissions is fundamental. This is handled by Authentication and Authorization.</p>
+
+  <section>
+    <h2>Core Definitions</h2>
+    <ul>
+      <li><strong>Authentication (AuthN):</strong> The process of verifying "Who are you?". This usually involves credentials like a password, biometrics, or an identity provider like Google or GitHub.</li>
+      <li><strong>Authorization (AuthZ):</strong> The process of determining "What are you allowed to do?". Once a user's identity is verified, the system needs to know if they have permission to perform specific actions (e.g., delete a record).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Common Authentication Strategies</h2>
+    <p>There are several common ways to handle identity in web applications:</p>
+    <ul>
+      <li><strong>Session-Based:</strong> The server creates a "session" for the user after they log in and stores a unique ID in a cookie on the browser. The server remembers the user as long as the session is active.</li>
+      <li><strong>Token-Based (JWT):</strong> The server gives the user a digital "token" (JSON Web Token) after they log in. The browser sends this token back for every request. The token itself contains the user's information and is digitally signed for security.</li>
+      <li><strong>Social Login (OAuth 2.0):</strong> Users can log in using their existing accounts from other platforms (like Google or Facebook) without creating a new password on your site.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Authorization Patterns</h2>
+    <p>Once a user is authenticated, their permissions are usually managed through one of these patterns:</p>
+    <ul>
+      <li><strong>Role-Based Access Control (RBAC):</strong> Users are assigned one or more roles (e.g., "Admin", "Manager", "User"). Each role has a set of permissions.</li>
+      <li><strong>Attribute-Based Access Control (ABAC):</strong> A more granular approach where access is granted based on attributes of the user, the resource, and the environment (e.g., "Allow access if the user is in the Finance department and the resource is marked 'Internal'").</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Security Best Practices</h2>
+    <ol>
+      <li><strong>Never Store Passwords in Plaintext:</strong> Always use a strong hashing algorithm like <code>bcrypt</code> with a high salt value.</li>
+      <li><strong>Use HTTPS:</strong> All authentication data, especially tokens and passwords, must be encrypted in transit.</li>
+      <li><strong>Implement Rate Limiting:</strong> Protect your login endpoints from brute-force attacks by limiting the number of failed attempts.</li>
+      <li><strong>Multi-Factor Authentication (MFA):</strong> Whenever possible, encourage or require users to add a second layer of security (like an SMS code or an authenticator app).</li>
+    </ol>
+  </section>
+
+</article>

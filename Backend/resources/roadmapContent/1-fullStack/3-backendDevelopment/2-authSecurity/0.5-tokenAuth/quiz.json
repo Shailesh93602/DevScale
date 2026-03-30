@@ -1,0 +1,37 @@
+{
+  "title": "Token-Based Authentication Quiz",
+  "description": "Test your knowledge about the world of token-based authentication and stateless security.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the primary benefit of token-based authentication compared to session-based?",
+      "options": ["It's more secure by default.", "It is stateless and can be easily scaled across multiple servers.", "It's the only way to log in with multiple user accounts.", "It automatically generates a frontend UI for login."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What happens after a user provides correct credentials in a token-based system?",
+      "options": ["The server creates a record in its session database.", "The server generates a signed digital token and sends it back to the client.", "The server tells every other server about the successful login.", "Nothing, it's automatic."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which HTTP header is typically used to send the token back to the server in subsequent requests?",
+      "options": ["Cookie", "Authorization", "X-User-ID", "Auth-Token"],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What ensures that a token hasn't been tampered with or modified by the client?",
+      "options": ["The token is encrypted with a secret key.", "The server keeps a copy of every token it issues.", "The token includes a digital signature that can be verified by the server.", "The token is only valid on a specific device."],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "Which part of a token contains the actual data about the user (like userId or role)?",
+      "options": ["Header", "Payload", "Signature", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

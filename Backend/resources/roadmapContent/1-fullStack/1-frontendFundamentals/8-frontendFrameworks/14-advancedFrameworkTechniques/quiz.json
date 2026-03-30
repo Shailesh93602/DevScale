@@ -1,52 +1,37 @@
 {
-  "title": "Advanced Framework Techniques Quiz",
-  "description": "Evaluate your understanding of PurgeCSS/JIT, custom design system scaling, and the balance between utility-first and semantic CSS.",
+  "title": "Advanced CSS Framework Techniques Quiz",
+  "description": "Test your expertise on professional CSS framework optimization and maintainability.",
   "passingScore": 80,
   "questions": [
     {
-      "question": "Which and/or what is the primarily purpose of a tool like PurgeCSS in a production build?",
-      "options": [
-        "Faster component rendering.",
-        "To scan your codebase for class names and remove every single line of unused CSS, significantly reducing file sizes.",
-        "To hide the JavaScript code from the console.",
-        "None of the above."
-      ],
+      "question": "What is the primary way to customize Tailwind's default design system?",
+      "options": ["Directly editing the node_modules files.", "Using the theme section in the tailwind.config.js file.", "Adding custom CSS variables to your index.html.", "It's not possible to customize it."],
       "correctAnswer": 1,
-      "points": 10
+      "points": 20
     },
     {
-      "question": "Which version of Tailwind introduced a built-in 'Just-In-Time' (JIT) compiler to generate styles on-demand?",
-      "options": ["Tailwind CSS 1", "Tailwind CSS 2", "Tailwind CSS 3", "Bootstrap 5"],
-      "correctAnswer": 2,
-      "points": 10
-    },
-    {
-      "question": "The architectural approach of using a fixed, standardized set of colors, fonts, and spacing in a configuration file is called ________.",
-      "options": ["Component Kit", "Design System", "Theme Pack", "UI Palette"],
+      "question": "What's the goal of using PurgeCSS with frameworks like Bootstrap?",
+      "options": ["To add more animation to the site.", "To remove any unused CSS classes and reduce the final bundle size.", "To automatically generate responsive layouts.", "To make the CSS easier to read."],
       "correctAnswer": 1,
-      "points": 10
+      "points": 20
     },
     {
-      "question": "Which and/or what is one of the biggest benefits of using many small, single-purpose classes (utilities) in large applications?",
-      "options": [
-        "It makes the HTML color better.",
-        "It prevents 'CSS bloat' because you stop adding new custom CSS for every single tweak or component.",
-        "It hides all non-number characters.",
-        "None of the above."
-      ],
-      "correctAnswer": 1,
-      "points": 10
-    },
-    {
-      "question": "Advanced developers never combine utility-first (Tailwind) and component-based (Bootstrap) approaches in the same project.",
-      "options": [
-        "False (they sometimes use a hybrid approach depending on the project's complexity).",
-        "True (it's strictly one or the other).",
-        "Only for older versions.",
-        "None of the above."
-      ],
+      "question": "What does JIT stand for in Tailwind CSS context?",
+      "options": ["Just-In-Time", "JavaScript-Integrated-Testing", "Joint-Interoperability-Task", "Java-Interactive-Toolkit"],
       "correctAnswer": 0,
-      "points": 10
+      "points": 20
+    },
+    {
+      "question": "How do container queries differ from standard media queries?",
+      "options": ["They are only for images.", "They respond to the size of a parent element rather than the whole screen (viewport).", "They are faster to render.", "They only work in mobile browsers."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's a common way to maintain Tailwind CSS styles in a large application?",
+      "options": ["Always using raw HTML classes everywhere.", "Extracting common patterns into reusable frontend components (e.g., in React).", "Only using one CSS file for the entire project.", "Avoiding Tailwind altogether."],
+      "correctAnswer": 1,
+      "points": 20
     }
   ]
 }

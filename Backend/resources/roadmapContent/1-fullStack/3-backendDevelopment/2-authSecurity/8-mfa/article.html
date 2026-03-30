@@ -1,0 +1,47 @@
+<article>
+  <h1>Implementing Multi-Factor Authentication (MFA)</h1>
+  
+  <p>In an era of frequent data breaches and sophisticated phishing attacks, relying on a single password for security is increasingly risky. Multi-Factor Authentication (MFA) adds a critical second layer of protection, ensuring that even if a password is stolen, the user's account remains secure.</p>
+
+  <section>
+    <h2>What is Multi-Factor Authentication?</h2>
+    <p>MFA requires a user to provide two or more different types of evidence (factors) to prove their identity. These factors typically fall into three categories:</p>
+    <ul>
+      <li><strong>Something You Know:</strong> A password, PIN, or the answer to a security question.</li>
+      <li><strong>Something You Have:</strong> A physical device (smartphone, security key) or a session on a recognized browser.</li>
+      <li><strong>Something You Are:</strong> Biometrics like a fingerprint, facial recognition, or iris scan.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Common MFA Methods for Web Apps</h2>
+    <p>For most modern web applications, the "Something You Have" factor is implemented through one of these methods:</p>
+    <ul>
+      <li><strong>SMS/Email Codes:</strong> The server sends a one-time code (OTP) to the user's registered phone number or email address. While common, it's considered less secure than other methods due to the risk of SIM swapping.</li>
+      <li><strong>Time-based One-Time Password (TOTP):</strong> Uses an app like Google Authenticator or Authy. The server and the app share a secret key, and the app generates a new code every 30 seconds. This is significantly more secure as it's not tied to a phone network.</li>
+      <li><strong>Hardware Security Keys (WebAuthn):</strong> Physical USB or NFC devices (like YubiKeys) that use public-key cryptography to authenticate the user. This is the gold standard for high-security environments.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>The MFA Implementation Flow</h2>
+    <ol>
+      <li><strong>Initial Login:</strong> User provides their username and password.</li>
+      <li><strong>Verification Check:</strong> The server verifies the password and checks if the user has MFA enabled.</li>
+      <li><strong>Challenge:</strong> If MFA is enabled, the server doesn't log the user in yet. Instead, it presents a "challenge" (e.g., "Enter the code from your authenticator app").</li>
+      <li><strong>Factor Verification:</strong> The user provides the second factor. The server verifies it.</li>
+      <li><strong>Session Creation:</strong> Only after both factors are verified does the server create a full authenticated session.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Implementation Best Practices</h2>
+    <ul>
+      <li><strong>Backup Codes:</strong> Always provide users with a set of one-time-use backup codes in case they lose access to their primary MFA device.</li>
+      <li><strong>"Trust This Device":</strong> Allow users to bypass MFA for a certain period (e.g., 30 days) on devices they frequently use, balancing security with convenience.</li>
+      <li><strong>Graceful Enrollment:</strong> Encourage but don't necessarily force MFA immediately. Provide a clear path for users to enable it in their account settings.</li>
+      <li><strong>Recovery Process:</strong> Have a secure, manual process for verified users to recover their accounts if they lose all MFA factors.</li>
+    </ul>
+  </section>
+
+</article>

@@ -1,0 +1,44 @@
+<article>
+  <h1>Authentication and Authorization: The Fundamentals</h1>
+  
+  <p>In the world of web development, "Authentication" and "Authorization" are two terms often used interchangeably, but they represent two distinct and equally critical security processes. Understanding the difference is the first step toward building secure applications.</p>
+
+  <section>
+    <h2>Authentication (Who are you?)</h2>
+    <p>Authentication is the process of verifying that a user is who they claim to be. It's the digital equivalent of showing your ID card at a secure building.</p>
+    <ul>
+      <li><strong>Common Methods:</strong> Username/password, Multi-Factor Authentication (MFA), Biometrics (fingerprint, FaceID), and Social Login (GitHub, Google).</li>
+      <li><strong>In Web Apps:</strong> Usually involves a login form where the user provides credentials that are then compared against a securely stored record in the database.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Authorization (What can you do?)</h2>
+    <p>Authorization is the process of determining what an authenticated user is allowed to do. Once a user has proven their identity, they still need permission to access specific resources.</p>
+    <ul>
+      <li><strong>Common Patterns:</strong> Role-Based Access Control (RBAC) where users are assigned roles like 'Admin', 'Editor', or 'User', each with different permissions.</li>
+      <li><strong>Access Control Lists (ACL):</strong> A more granular approach where permissions are assigned directly to individual users for specific resources.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>The Standard Flow</h2>
+    <p>A typical secure flow in a full-stack application looks like this:</p>
+    <ol>
+      <li><strong>Login:</strong> User provides credentials (Authentication).</li>
+      <li><strong>Identity Verification:</strong> The server verifies the credentials and, if valid, issues a "proof of identity" (like a JWT or a Session ID).</li>
+      <li><strong>Request with Proof:</strong> For subsequent requests, the user's browser sends this proof along with the request.</li>
+      <li><strong>Verification and Permission Check:</strong> The server receives the request, verifies the identity proof (Authentication), and then checks if that specific user has the required permissions for the requested action (Authorization).</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Why the Distinction Matters</h2>
+    <p>Conflating these two concepts can lead to serious security gaps. For example, a system might correctly authenticate an employee but fail to authorize their access based on their department, potentially allowing a junior developer to delete production databases.</p>
+    <ul>
+      <li><strong>Authentication Failure:</strong> An attacker gains access to a user's account because of a weak password.</li>
+      <li><strong>Authorization Failure:</strong> A logged-in user can access another user's private data by simply changing an ID in the URL (Insecure Direct Object Reference).</li>
+    </ul>
+  </section>
+
+</article>

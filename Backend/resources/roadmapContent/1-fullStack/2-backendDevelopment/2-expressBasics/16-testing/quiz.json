@@ -1,0 +1,37 @@
+{
+  "title": "Testing Express.js Applications Quiz",
+  "description": "Test your knowledge about the world of testing for Node.js and Express.js applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which tool is commonly used to test Node.js HTTP servers without actually starting them?",
+      "options": ["Jest", "Supertest", "Chai", "Mocha"],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's the primary benefit of writing unit tests for your Express app?",
+      "options": ["To test how the backend interacts with the database.", "To verify that small, individual units of logic work as expected in isolation.", "To check the CSS for accessibility.", "To make the application faster."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "In the context of testing, what is 'Mocking' used for?",
+      "options": ["To make the code look better.", "To replace real dependencies (like databases or APIs) with simulated versions for testing.", "To automatically find and fix security vulnerabilities.", "To limit the number of users on the site."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What does TDD stand for, and why is it a good practice?",
+      "options": ["Total Data Development: focuses on database management.", "Test-Driven Development: writing tests before your code to clarify requirements and make it more testable.", "Time-Duration Design: focuses on performance optimization.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Why is it important to test edge cases, like invalid user input or database failures?",
+      "options": ["Because users will never send invalid data in production.", "To ensure your application handles unexpected situations gracefully without crashing.", "Because it's a requirement for all CSS frameworks.", "To make the application more secure."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

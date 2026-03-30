@@ -1,0 +1,37 @@
+{
+  "title": "Secure Password Hashing Quiz",
+  "description": "Test your knowledge about the critical role of hashing and salting in password security.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the primary characteristic of a cryptographic hash function?",
+      "options": ["It can be easily reversed to recover the original input.", "It's a one-way mathematical function that produces a fixed-length string of characters.", "It's only for temporary data storage.", "It automatically generates a random password for each user."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is a 'Salt' in the context of password hashing?",
+      "options": ["A way to encrypt the entire database.", "A unique, random string added to a password before hashing to prevent rainbow table attacks.", "An additional password required for multi-factor authentication.", "A type of database indexing."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Why are MD5 and SHA-1 no longer recommended for password hashing?",
+      "options": ["They are too slow for modern servers.", "They are now considered insecure because they are too fast, making brute-force attacks easy.", "They only work with older browsers.", "They use too much memory."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is the benefit of using a 'slow' algorithm like Bcrypt?",
+      "options": ["It reduces the time it takes for a user to log in.", "It increases the time it takes for an attacker to attempt a brute-force attack on a leaked database.", "It automatically generates a frontend UI for login forms.", "It's a requirement of all CSS frameworks."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "How is a 'Pepper' different from a 'Salt'?",
+      "options": ["A Salt is random for each user, while a Pepper is the same for the entire application and stored outside the database.", "A Pepper is random for each user, while a Salt is the same for the entire application.", "Only the Salt is used with a hashing algorithm.", "None of the above."],
+      "correctAnswer": 0,
+      "points": 20
+    }
+  ]
+}

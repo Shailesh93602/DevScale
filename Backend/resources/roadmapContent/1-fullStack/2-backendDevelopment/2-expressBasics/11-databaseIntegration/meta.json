@@ -1,0 +1,4 @@
+{
+    "name": "Database Integration",
+    "description": "Learn how to connect your Express applications to databases using both SQL and NoSQL solutions like MongoDB and PostgreSQL."
+}

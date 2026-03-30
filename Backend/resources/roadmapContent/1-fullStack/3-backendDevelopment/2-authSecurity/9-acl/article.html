@@ -1,0 +1,52 @@
+<article>
+  <h1>Access Control Lists (ACL)</h1>
+  
+  <p>While Role-Based Access Control (RBAC) is excellent for managing broad permissions across groups of users, some scenarios require a more granular approach. Access Control Lists (ACLs) allow you to define permissions for specific users on specific resources.</p>
+
+  <section>
+    <h2>What is an Access Control List?</h2>
+    <p>An ACL is a table or list that tells a computer system which access rights each user has to a particular object, such as a file, a database record, or an API endpoint. Think of it like a guest list for a private event: even if someone has a "General Admission" role (RBAC), the ACL determines if they are allowed into a specific VIP room.</p>
+  </section>
+
+  <section>
+    <h2>RBAC vs. ACL</h2>
+    <p>Understanding when to use each is key to building a flexible security system:</p>
+    <ul>
+      <li><strong>RBAC:</strong> "All users with the 'Editor' role can edit any article."</li>
+      <li><strong>ACL:</strong> "Only user 'JohnDoe' can edit the article with ID 123, even though other users might have the 'Editor' role."</li>
+    </ul>
+    <p>In many complex applications, both systems are used together. RBAC handles general categorization, while ACL handles the specific ownership and fine-grained permissions.</p>
+  </section>
+
+  <section>
+    <h2>The Components of an ACL</h2>
+    <p>A typical ACL entry (often called an Access Control Entry or ACE) includes three main pieces of information:</p>
+    <ol>
+      <li><strong>The Subject:</strong> Who is requesting access? (A specific user ID or a group ID).</li>
+      <li><strong>The Object:</strong> What are they trying to access? (A specific file, record, or resource ID).</li>
+      <li><strong>The Operation:</strong> What do they want to do? (Read, Write, Delete, Execute).</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Implementing ACL in a Database</h2>
+    <p>For a web application, an ACL is often represented as a database table:</p>
+    <pre><code>| resource_id | user_id | permission |
+|-------------|---------|------------|
+| doc_101     | user_1  | READ       |
+| doc_101     | user_2  | WRITE      |
+| doc_202     | user_1  | DELETE     |</code></pre>
+    <p>When a request comes in, the server queries this table to see if the authenticated <code>user_id</code> has the required <code>permission</code> for the requested <code>resource_id</code>.</p>
+  </section>
+
+  <section>
+    <h2>Best Practices for ACLs</h2>
+    <ul>
+      <li><strong>Deny by Default:</strong> If there is no specific entry in the ACL for a user and resource, access should be denied.</li>
+      <li><strong>Inheritance:</strong> In some systems, it's useful to allow permissions to be inherited (e.g., if you have access to a folder, you automatically have access to all files inside it).</li>
+      <li><strong>Audit Logs:</strong> Always keep a record of whenever an ACL is modified, as these changes can have significant security implications.</li>
+      <li><strong>Performance:</strong> Because ACL checks happen on almost every resource access, ensure your ACL table is properly indexed to prevent becoming a bottleneck.</li>
+    </ul>
+  </section>
+
+</article>

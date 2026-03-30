@@ -1,0 +1,37 @@
+{
+  "title": "Refresh Tokens Quiz",
+  "description": "Test your knowledge about the critical role of refresh tokens in modern token-based security.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the primary purpose of a Refresh Token?",
+      "options": ["To encrypt user passwords.", "To provide a second layer of authentication (MFA).", "To request a new, fresh Access Token when the current one expires, without the user having to re-authenticate.", "To increase the security of every single API request."],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "How long should an Access Token typically last in a secure system?",
+      "options": ["Indefinite, until the user manualy logs out.", "Very long (e.g., 30 days).", "Short-lived (e.g., 15 minutes).", "Exactly 24 hours."],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "Where is the most secure place to store a Refresh Token on the client?",
+      "options": ["In the browser's localStorage.", "In an httpOnly, secure, SameSite=Strict cookie.", "In the browser's history.", "Inside a hidden input field in the HTML."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is 'Refresh Token Rotation'?",
+      "options": ["When a user updates their password every month.", "When the server issues a new refresh token every time a user requests a new access token and invalidates the old one.", "When the server automatically logs out a user after a certain time.", "When the server rotates its encryption keys."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Why is it easier to revoke a Refresh Token than a purely stateless Access Token?",
+      "options": ["Because refresh tokens are usually stored in a database on the server.", "Because they are longer-lived.", "Because they only work on a specific device.", "It's not, they are both impossible to revoke."],
+      "correctAnswer": 0,
+      "points": 20
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+<article>
+  <h1>Testing Express.js Applications</h1>
+  
+  <p>Building a robust Express.js application requires more than just writing functional code; it requires a comprehensive testing strategy. Regular testing ensures that your API behaves as expected, prevents regressions when you add new features, and serves as documentation for your endpoints.</p>
+
+  <section>
+    <h2>Types of Tests for Express</h2>
+    <p>A good testing strategy involves several layers:</p>
+    <ul>
+      <li><strong>Unit Tests:</strong> Test individual helper functions, middleware, or utility logic in isolation.</li>
+      <li><strong>Integration Tests:</strong> Test how different parts of your application work together, such as an endpoint interacting with a service and a database.</li>
+      <li><strong>API/Route Tests:</strong> Specifically verify that your HTTP endpoints return the correct status codes and data for various inputs.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Essential Testing Tools</h2>
+    <p>The Node.js ecosystem has several powerful tools for testing Express apps:</p>
+    <ul>
+      <li><strong>Mocha/Jest:</strong> Test runners that provide the framework for writing and executing your tests. Jest is particularly popular for its all-in-one approach (includes assertion library and mocking).</li>
+      <li><strong>Chai:</strong> A flexible assertion library often used with Mocha (e.g., <code>expect(res.status).to.equal(200)</code>).</li>
+      <li><strong>Supertest:</strong> A library specifically designed for testing Node.js HTTP servers. It allows you to simulate requests to your Express app without actually starting the server on a network port.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Writing a Simple Route Test with Supertest</h2>
+    <p>Here's how you might test a simple GET endpoint using Jest and Supertest:</p>
+    <pre><code>const request = require('supertest');
+const app = require('../app'); // Your Express app
+
+describe('GET /api/users', () => {
+  it('should return 200 OK and a list of users', async () => {
+    const res = await request(app).get('/api/users');
+    expect(res.statusCode).toBe(200);
+    expect(Array.isArray(res.body)).toBeTruthy();
+  });
+});</code></pre>
+  </section>
+
+  <section>
+    <h2>Mocking and Stubbing</h2>
+    <p>In integration tests, you often want to avoid making real calls to external services like databases or third-party APIs. This is where mocking comes in:</p>
+    <ul>
+      <li><strong>Mocking Database Calls:</strong> Use libraries like <code>jest-mock-extended</code> or <code>sinon</code> to simulate database responses.</li>
+      <li><strong>Stubbing External APIs:</strong> Tools like <code>Nock</code> can intercept outgoing HTTP requests from your server and return predefined responses, allowing for reliable and fast tests.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Best Practices</h2>
+    <ol>
+      <li><strong>Test-Driven Development (TDD):</strong> Try writing your tests before you write the actual code. This helps clarify requirements and leads to more testable code.</li>
+      <li><strong>Keep Tests Independent:</strong> One test should never depend on the outcome of another. Always reset your state (or database) between tests.</li>
+      <li><strong>Test Edge Cases:</strong> Don't just test the "happy path." What happens if the user sends invalid data? What if the database is down?</li>
+      <li><strong>Continuous Integration (CI):</strong> Set up your tests to run automatically every time you push code to your repository.</li>
+    </ol>
+  </section>
+
+</article>

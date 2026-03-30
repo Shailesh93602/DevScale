@@ -1,0 +1,37 @@
+{
+  "title": "CORS Handling Quiz",
+  "description": "Test your knowledge about the critical role of CORS in modern full-stack web development.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What does CORS stand for?",
+      "options": ["Cross-Origin Research System", "Cross-Origin Resource Sharing", "Case-Oriented Reporting Service", "Component-Object-Request-Standard"],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is the primary purpose of CORS?",
+      "options": ["To make the website faster.", "To prevent cross-site request forgery attacks.", "To identify the same origin for a web page and the requested API.", "To allow restricted resources on a web page to be requested from another domain."],
+      "correctAnswer": 3,
+      "points": 20
+    },
+    {
+      "question": "What happens when a cross-origin request is made by a browser?",
+      "options": ["The request is immediately sent without any checks.", "The server refuses the request by default.", "The browser sends a 'preflight' request using the OPTIONS method.", "The browser automatically handles it without the server knowing."],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "Which of these is the most secure way to handle CORS in a production environment?",
+      "options": ["Using the wildcard (*) for all origins.", "Specifying an explicit domain in the Access-Control-Allow-Origin header.", "Disabling CORS completely.", "Only using HTTP instead of HTTPS."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Can you use a wildcard (*) if you need to send credentials (like cookies) with a cross-origin request?",
+      "options": ["Yes, it doesn't matter.", "No, you must specify an explicit allowed origin when credentials are included.", "Only if you're using localhost.", "Yes, as long as you're using CORS middleware."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "title": "Multi-Factor Authentication (MFA) Quiz",
+  "description": "Test your knowledge about the critical role of MFA in securing modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What are the three common categories of authentication factors?",
+      "options": ["Something you know, something you have, and something you are.", "Something you say, something you do, and something you see.", "Username, password, and email address.", "IP address, browser type, and location."],
+      "correctAnswer": 0,
+      "points": 20
+    },
+    {
+      "question": "What is the primary benefit of MFA in a web application?",
+      "options": ["To make the login process faster.", "To add a second layer of security even if the user's password is stolen.", "To automatically generate a backup of the user's data.", "To improve the user experience."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What does TOTP stand for in the context of authentication apps?",
+      "options": ["Total-Object-Transfer-Protocol", "Time-based One-Time Password", "Transfer-Order-Technical-Parameter", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Why is TOTP considered more secure than SMS-based MFA?",
+      "options": ["It's only available for premium users.", "It's not tied to a phone carrier or network, making it resistant to SIM swapping and interception.", "It automatically generates a stronger password.", "It's the only way to log in on a mobile device."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is the purpose of 'Backup Codes' provided to the user after MFA enrollment?",
+      "options": ["To give to other people so they can access the account.", "To use as a second factor if the user loses access to their primary MFA device.", "To store in the browser's local storage.", "To reset the entire application's security."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}
