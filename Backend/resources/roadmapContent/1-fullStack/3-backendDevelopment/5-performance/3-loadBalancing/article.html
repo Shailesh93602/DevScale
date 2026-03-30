@@ -1,0 +1,56 @@
+<article>
+  <h1>Mastering Load Balancing</h1>
+  
+  <p>As your application grows in popularity, a single server will eventually become a bottleneck, both in terms of CPU/Memory and network bandwidth. <strong>Load Balancing</strong> is the technique of distributing incoming network traffic across multiple servers (a "server farm" or "cluster") to ensure high availability and responsiveness.</p>
+
+  <section>
+    <h2>What is a Load Balancer?</h2>
+    <p>A Load Balancer sits in front of your servers and acts as a "traffic cop," directing client requests to the best available server. This ensures that no single server is overwhelmed with too much traffic.</p>
+  </section>
+
+  <section>
+    <h2>Key Benefits of Load Balancing</h2>
+    <ul>
+      <li><strong>Scalability:</strong> You can easily add more servers to your cluster as your traffic increases.</li>
+      <li><strong>High Availability:</strong> If one server crashes, the Load Balancer automatically redirects traffic to the remaining healthy servers.</li>
+      <li><strong>Flexibility:</strong> You can perform maintenance on a server by temporarily taking it out of the cluster without any downtime for your users.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Common Load Balancing Algorithms</h2>
+    <ul>
+      <li><strong>Round Robin:</strong> Requests are distributed sequentially and evenly among all servers.</li>
+      <li><strong>Least Connections:</strong> New requests are sent to the server with the fewest active connections.</li>
+      <li><strong>IP Hash:</strong> The client's IP address determines which server they are sent to (ensuring "sticky sessions" where a user stays on the same server).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Types of Load Balancers</h2>
+    <ul>
+      <li><strong>Hardware Load Balancers:</strong> Specialized physical devices (like F5) that are incredibly fast but expensive.</li>
+      <li><strong>Software Load Balancers:</strong> Open-source tools like <strong>Nginx</strong> or <strong>HAProxy</strong> that run on standard Linux servers and are the most common choice for modern web apps.</li>
+      <li><strong>Cloud Load Balancers:</strong> Fully managed services like Amazon ELB (Elastic Load Balancing) or Google Cloud Load Balancing.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Node.js and Sticky Sessions</h2>
+    <p>If your application uses session-based authentication (where user state is stored in server memory), load balancing becomes tricky. If User A logs in on Server 1, but their next request is sent to Server 2, they will appear logged out. To fix this, you must either:</p>
+    <ol>
+      <li><strong>Enable Sticky Sessions:</strong> The Load Balancer ensures the same user always hits the same server.</li>
+      <li><strong>Use a Shared Session Store:</strong> Use an external database like **Redis** to store sessions so all servers can access the same data. This is the more modern and scalable solution.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Best Practices Summary</h2>
+    <ol>
+      <li><strong>Implement Health Checks:</strong> Configure your Load Balancer to periodically check if your servers are responding (using a <code>/health</code> endpoint) and automatically remove unhealthy ones.</li>
+      <li><strong>SSL Offloading:</strong> Let the Load Balancer handle the expensive task of decrypting HTTPS traffic before passing the request to your application servers.</li>
+      <li><strong>Layer 7 Load Balancing:</strong> For maximum flexibility, use an "Application-Layer" (Layer 7) Load Balancer that can make routing decisions based on URL paths or headers.</li>
+    </ol>
+  </section>
+
+</article>

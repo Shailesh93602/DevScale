@@ -1,0 +1,58 @@
+<article>
+  <h1>Introduction to SQL and Relational Databases</h1>
+  
+  <p>SQL (Structured Query Language) is the standard language for interacting with <strong>Relational Database Management Systems (RDBMS)</strong>. While NoSQL databases like MongoDB are popular, SQL databases remain the industry standard for applications that require complex relationships, strong data consistency, and transactional integrity.</p>
+
+  <section>
+    <h2>What is a Relational Database?</h2>
+    <p>A relational database organizes data into <strong>Tables</strong> (also known as relations). Each table represents a specific entity (like "Users" or "Products") and consists of:</p>
+    <ul>
+      <li><strong>Rows (Records):</strong> A single instance of an entity (e.g., one specific user).</li>
+      <li><strong>Columns (Attributes):</strong> A specific piece of information about the entity (e.g., the user's name or email).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Why Use SQL?</h2>
+    <ul>
+      <li><strong>Data Integrity:</strong> SQL databases use strict schemas and constraints (like "NOT NULL" or "UNIQUE") to ensure data is consistent and accurate.</li>
+      <li><strong>ACID Transactions:</strong> Guarantees that database operations are Atomic, Consistent, Isolated, and Durable. This is critical for financial systems or any app where data loss is unacceptable.</li>
+      <li><strong>Complex Queries:</strong> SQL's <code>JOIN</code> operation allows you to easily combine data from multiple tables in a single query.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Common SQL Databases</h2>
+    <ul>
+      <li><strong>PostgreSQL:</strong> The most powerful and feature-rich open-source SQL database. Highly recommended for modern web apps.</li>
+      <li><strong>MySQL / MariaDB:</strong> Extremely popular and widely used, especially in the PHP ecosystem (Wordpress).</li>
+      <li><strong>SQLite:</strong> A lightweight, serverless database that stores everything in a single file—perfect for mobile apps and small prototypes.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Basic SQL Syntax Overview</h2>
+    <p>Most SQL queries follow a very English-like syntax:</p>
+    <pre><code>-- Selecting data
+SELECT name, email FROM users WHERE age > 18;
+
+-- Inserting data
+INSERT INTO users (name, email) VALUES ('John Doe', 'john@example.com');
+
+-- Updating data
+UPDATE users SET age = 21 WHERE id = 123;
+
+-- Deleting data
+DELETE FROM users WHERE id = 123;</code></pre>
+  </section>
+
+  <section>
+    <h2>Best Practices Summary</h2>
+    <ol>
+      <li><strong>Use a Consistent Naming Convention:</strong> Use <code>snake_case</code> for table and column names (e.g., <code>user_profiles</code> rather than <code>UserProfiles</code>).</li>
+      <li><strong>Always Define Primary Keys:</strong> Every table should have a unique <code>id</code> column to identify each row.</li>
+      <li><strong>Don't Be Afraid of Relationships:</strong> Relational databases are built for relationships! Use <strong>Foreign Keys</strong> to link data across different tables instead of duplicating information.</li>
+    </ol>
+  </section>
+
+</article>

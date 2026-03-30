@@ -1,0 +1,37 @@
+{
+  "title": "Introduction to SQL Quiz",
+  "description": "Test your fundamental knowledge about SQL and relational databases in modern web development.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What does 'SQL' stand for in the context of databases?",
+      "options": ["Simple Query Language", "Structured Query Language", "Shared Queue Logic", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is the primary way to organize data in a relational database?",
+      "options": ["Collections and Documents", "Tables with Rows and Columns", "Graphs and Nodes", "Single large text files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's the primary benefit of 'ACID Transactions' in a SQL database?",
+      "options": ["It makes the database faster.", "It guarantees that database operations are Atomic, Consistent, Isolated, and Durable, preventing data loss or corruption.", "It's a way to encrypt data.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which SQL command is used to retrieve data from a table?",
+      "options": ["GET", "SELECT", "FETCH", "RETRIVE"],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is a popular, feature-rich open-source SQL database recommended for modern web apps?",
+      "options": ["MongoDB", "PostgreSQL", "Redis", "ElasticSearch"],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "title": "Asynchronous Processing and Queues Quiz",
+  "description": "Test your knowledge about the critical role of asynchronous processing and message queues in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is 'Asynchronous Processing' in a web application?",
+      "options": ["To store all of the application's users.", "The technique of offloading long-running, non-critical tasks to a background process so the user receives a response immediately.", "To automatically generate a backup of the data.", "To hide the application's IP address."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is a typical use case for asynchronous processing?",
+      "options": ["Changing a user's password.", "Sending a welcome email after registration.", "Fetching a user's single profile record from the database.", "Displaying the current time on the screen."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is the most popular library for implementing background job queues in Node.js using Redis?",
+      "options": ["Express.js", "BullMQ", "Mongoose", "React Router"],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is 'Idempotency' in the context of background jobs?",
+      "options": ["A way to encrypt files using a secret key.", "Ensuring that even if a job is accidentally run twice, it doesn't cause any negative or duplicate side effects.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Why is it generally better to use a dedicated message queue rather than just running an asynchronous function in Node.js?",
+      "options": ["It makes the application faster.", "It provides persistence; if your server restarts, you won't lose the pending jobs.", "To automatically generate a backup of the data.", "To improve the user experience."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

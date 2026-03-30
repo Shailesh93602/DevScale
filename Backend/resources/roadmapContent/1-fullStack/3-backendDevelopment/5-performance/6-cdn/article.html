@@ -1,0 +1,54 @@
+<article>
+  <h1>Mastering Content Delivery Networks (CDNs)</h1>
+  
+  <p>A <strong>Content Delivery Network (CDN)</strong> is a globally distributed network of proxy servers and their data centers. The goal is to provide high availability and performance by distributing content spatially relative to end users.</p>
+
+  <section>
+    <h2>How a CDN Works</h2>
+    <p>When a user requests a file (like an image or a CSS file), the request is automatically routed to the "edge server" that is geographically closest to them. This drastically reduces the physical distance the data must travel, leading to much faster load times (lower latency).</p>
+  </section>
+
+  <section>
+    <h2>Key Benefits of Using a CDN</h2>
+    <ul>
+      <li><strong>Reduced Latency:</strong> Content is served from data centers closer to the user.</li>
+      <li><strong>Lower Server Load:</strong> Your application server doesn't have to spend its CPU and bandwidth serving static files.</li>
+      <li><strong>Scalability:</strong> CDNs are designed to handle massive spikes in traffic (like a "Slashdotting" or "Reddit Hug of Death").</li>
+      <li><strong>Improved Reliability:</strong> If one CDN node goes down, the system automatically routes traffic to the next best node.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>What Should You Serve via CDN?</h2>
+    <ul>
+      <li><strong>Static Assets:</strong> CSS, JavaScript, Fonts, and Images.</li>
+      <li><strong>User-Uploaded Content:</strong> Profile pictures, shared documents, and public videos.</li>
+      <li><strong>Entire HTML Pages:</strong> Using "Static Site Generation" (SSG) or "Edge Caching," you can even cache the entire HTML of your pages on the CDN.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Popular CDN Providers</h2>
+    <ul>
+      <li><strong>Cloudflare:</strong> Famous for its free tier and robust security features (DDoS protection).</li>
+      <li><strong>Amazon CloudFront:</strong> Highly integrated with AWS S3 and other Amazon services.</li>
+      <li><strong>Fastly / Akamai:</strong> High-performance options used by the world's largest websites.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>The "Cache Busting" Technique</h2>
+    <p>Because CDN caches are very aggressive, if you update a CSS file, your users might still see the old version for days. To fix this, developers use <strong>Cache Busting</strong> — adding a unique hash or version number to the filename (e.g., <code>style.v2.css</code> or <code>main.a1b2c3d4.js</code>). When the filename changes, the CDN is forced to fetch the fresh version.</p>
+  </section>
+
+  <section>
+    <h2>Best Practices Summary</h2>
+    <ol>
+      <li><strong>Never Serve Static Files from your Express App:</strong> Use a CDN or a specialized web server like Nginx to serve your assets.</li>
+      <li><strong>Use a Custom Domain:</strong> Configure your CDN to use your own domain (e.g., <code>https://cdn.myapp.com</code>) to improve branding and security.</li>
+      <li><strong>Enable Gzip/Brotli Compression:</strong> Ensure your CDN is configured to compress your files automatically, reducing the number of bytes transferred.</li>
+      <li><strong>Implement an Invalidation Strategy:</strong> While cache busting is preferred, ensure you know how to manually "purge" or invalidate files on your CDN if a serious mistake is made.</li>
+    </ol>
+  </section>
+
+</article>

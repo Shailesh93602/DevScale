@@ -1,0 +1,37 @@
+{
+  "title": "Application Profiling Quiz",
+  "description": "Test your knowledge about the critical role of application profiling and performance tuning in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the primary role of 'Application Profiling' in a web application?",
+      "options": ["To store all of the application's users.", "To analyze exactly how your application uses resources (like CPU, memory, and the event loop) to identify performance bottlenecks.", "To automatically generate a backup of the data.", "To hide the application's IP address."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these flags should you use when starting Node.js locally to use Chrome DevTools for profiling?",
+      "options": ["--prod", "--inspect", "--watch", "--debug"],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is a 'Heap Snapshot' in the context of memory profiling?",
+      "options": ["A way to encrypt files using a secret key.", "A record of all the objects in your application's memory at a single point in time, useful for identifying memory leaks.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is a popular open-source suite for profiling and monitoring Node.js applications?",
+      "options": ["Express.js", "Clinic.js", "Mongoose", "React Router"],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What happens when a single-threaded Node.js application executes a long-running synchronous function?",
+      "options": ["It makes the application faster.", "It blocks the event loop, preventing your server from handling any other incoming requests until the function is finished.", "To automatically generate a backup of the data.", "To improve the user experience."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}
