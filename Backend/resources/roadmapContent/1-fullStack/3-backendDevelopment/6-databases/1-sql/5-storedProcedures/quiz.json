@@ -1,0 +1,37 @@
+{
+  "title": "SQL Stored Procedures Quiz",
+  "description": "Test your fundamental knowledge about stored procedures and their role in advanced SQL development.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is a 'Stored Procedure' in a SQL database?",
+      "options": ["A way to backup the database.", "A prepared SQL code that you can save and reuse over and over again, similar to a function.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is the primary benefit of using a Stored Procedure from an application server (like Node.js)?",
+      "options": ["Reduced network traffic since only the procedure name and parameters are sent.", "It makes the database slower.", "It automatically generates a backup of the data.", "It's a requirement of all CSS frameworks."],
+      "correctAnswer": 0,
+      "points": 20
+    },
+    {
+      "question": "Which SQL command is used to execute a stored procedure?",
+      "options": ["GET", "SELECT", "CALL / EXECUTE", "RUN"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What's a common security benefit of using Stored Procedures?",
+      "options": ["Encryption of the entire database.", "Preventing SQL Injection and allowing users to perform operations without having direct access to underlying tables.", "A type of database indexing.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "When should you generally NOT use stored procedures?",
+      "options": ["For every simple SELECT query.", "For performance-critical code.", "For complex business logic that you want to keep in your application's Git repository for easier versioning and testing.", "None of the above."],
+      "correctAnswer": 2,
+      "points": 20
+    }
+  ]
+}

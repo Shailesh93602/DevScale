@@ -1,0 +1,37 @@
+{
+  "title": "SQL Triggers Quiz",
+  "description": "Test your fundamental knowledge about database triggers and their role in advanced SQL development.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is a 'Trigger' in a SQL database?",
+      "options": ["A way to backup the database.", "A special type of stored procedure that is automatically executed ('fired') in response to a specific event on a particular table.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is a typical use case for a database trigger?",
+      "options": ["To find all users and their posts.", "To automatically log every change to a sensitive table (like 'Bank Accounts') into a separate audit log table.", "To automatically generate a backup of the data.", "To improve the user experience."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "When can a database trigger be configured to fire?",
+      "options": ["Before or After an INSERT, UPDATE, or DELETE operation.", "Only after a SELECT operation.", "When the database is first installed.", "None of the above."],
+      "correctAnswer": 0,
+      "points": 20
+    },
+    {
+      "question": "What's the main danger of overusing database triggers in a large application?",
+      "options": ["They make the database too fast.", "They create 'hidden magic' that makes debugging very difficult and can slow down the database's write performance.", "They automatically delete the entire database.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's a 'BEFORE' trigger particularly useful for?",
+      "options": ["To log something after it has been deleted.", "To validate or modify data *before* it's actually written to a table (e.g., ensuring a price is never negative).", "To send an email to the user.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

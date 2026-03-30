@@ -1,0 +1,48 @@
+<article>
+  <h1>Advanced SQL: Stored Procedures</h1>
+  
+  <p>A <strong>Stored Procedure</strong> is a prepared SQL code that you can save so that the code can be reused over and over again. Instead of sending long and complex queries from your application server, you just call the procedure by its name.</p>
+
+  <section>
+    <h2>What is a Stored Procedure?</h2>
+    <p>Think of a stored procedure like a "function" for your database. It can accept parameters, perform complex internal logic (using <code>IF...ELSE</code> or loops), and return multiple data sets or individual values.</p>
+  </section>
+
+  <section>
+    <h2>Benefits of Stored Procedures</h2>
+    <ul>
+      <li><strong>Reduced Network Traffic:</strong> Only the procedure call is sent over the network, rather than a massive query.</li>
+      <li><strong>Improved Performance:</strong> Many databases "pre-compile" and optimize the execution plan for stored procedures.</li>
+      <li><strong>Security:</strong> You can grant users permission to execute a procedure without giving them direct access to the underlying tables. This helps prevent SQL Injection.</li>
+      <li><strong>Consistency:</strong> Centralizing business logic in the database ensures that every application (e.g., website, mobile app, internal tool) uses the exact same logic.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Creating a Simple Stored Procedure</h2>
+    <pre><code>-- Creating a procedure to fetch user activity
+CREATE PROCEDURE GetUserActivity(IN userId INT)
+BEGIN
+    SELECT * FROM logins WHERE user_id = userId;
+    SELECT * FROM posts WHERE author_id = userId;
+END;
+
+-- Calling the procedure from SQL
+CALL GetUserActivity(123);</code></pre>
+  </section>
+
+  <section>
+    <h2>When to Use Stored Procedures?</h2>
+    <p>Stored procedures are excellent for complex, multi-step operations that must be performed as a single transaction. However, modern developers often prefer to keep their "business logic" in their application code (Node.js) rather than the database for easier version control and testing.</p>
+  </section>
+
+  <section>
+    <h2>Best Practices Summary</h2>
+    <ol>
+      <li><strong>Avoid Overusing:</strong> Don't put *all* your logic in the database. Use procedures sparingly for performance-critical or security-sensitive operations.</li>
+      <li><strong>Keep it Generic:</strong> Use parameters effectively to make your procedures reusable.</li>
+      <li><strong>Document Carefully:</strong> Since stored procedures aren't stored in your application's Git repository, ensure you have a clear way to track and document their changes.</li>
+    </ol>
+  </section>
+
+</article>

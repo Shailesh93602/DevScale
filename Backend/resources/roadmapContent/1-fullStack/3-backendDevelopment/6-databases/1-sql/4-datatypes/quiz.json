@@ -1,0 +1,37 @@
+{
+  "title": "SQL Data Types Quiz",
+  "description": "Test your fundamental knowledge about different data types in a relational database.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which SQL data type is essential for storing exact currency values without precision errors?",
+      "options": ["FLOAT", "INTEGER", "DECIMAL / NUMERIC", "VARCHAR"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What's the primary difference between 'CHAR(n)' and 'VARCHAR(n)'?",
+      "options": ["CHAR is for numbers and VARCHAR is for letters.", "CHAR is fixed-length (padded with spaces); VARCHAR is variable-length up to 'n'.", "CHAR is faster to search than VARCHAR.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which data type should you use to store a user's long biography or blog post content?",
+      "options": ["CHAR(255)", "INTEGER", "TEXT", "DATE"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What is 'TIMESTAMPTZ' in PostgreSQL?",
+      "options": ["A way to encrypt timestamps.", "A timestamp that is time-zone aware, ensuring correct time across different regions.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "When should you use the 'JSONB' data type in a SQL database like PostgreSQL?",
+      "options": ["To store all of the application's data.", "To store semi-structured or truly dynamic data that doesn't fit a fixed schema.", "It's the only way to store data in a database.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

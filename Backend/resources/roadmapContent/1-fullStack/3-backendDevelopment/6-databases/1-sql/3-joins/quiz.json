@@ -1,0 +1,37 @@
+{
+  "title": "SQL Joins and Relationships Quiz",
+  "description": "Test your fundamental knowledge about relationships and joins in a relational database.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the primary role of a 'Join' in SQL?",
+      "options": ["To delete multiple rows at once.", "To combine rows from two or more tables based on a related column between them.", "To automatically generate a backup of the data.", "To hide the application's IP address."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these joins returns rows ONLY where there is a match in BOTH tables?",
+      "options": ["LEFT JOIN", "RIGHT JOIN", "INNER JOIN", "FULL JOIN"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What is a 'LEFT JOIN' useful for?",
+      "options": ["To find all users and their posts, including users who have NOT posted anything.", "To only find users who have exactly 10 posts.", "A way to encrypt data before deleting it.", "None of the above."],
+      "correctAnswer": 0,
+      "points": 20
+    },
+    {
+      "question": "In which type of relationship do you typically need a 'Junction Table' (Join Table)?",
+      "options": ["One-to-One", "One-to-Many", "Many-to-Many", "None of the above."],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What is a 'Foreign Key' in a SQL table?",
+      "options": ["A key that is used to encrypt the entire database.", "A column that creates a link between data in two different tables.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}
