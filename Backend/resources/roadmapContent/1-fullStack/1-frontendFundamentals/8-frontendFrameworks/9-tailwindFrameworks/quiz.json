@@ -1,0 +1,52 @@
+{
+  "title": "Tailwind with Frameworks Quiz",
+  "description": "Evaluate your understanding of Tailwind integration with React/Vue/Next.js, PostCSS, and component-based composition.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily reason Tailwind CSS is a perfect match for modern component-based frameworks (like React or Vue)?",
+      "options": [
+        "Faster component rendering.",
+        "It allow styling each component in isolation directly in the template using utility classes.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what tool is commonly used to process Tailwind CSS as a plugin during the build process?",
+      "options": ["Webpack", "PostCSS", "Gulp", "Rollup"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does Next.js have first-class built-in support for Tailwind CSS?",
+      "options": [
+        "Yes, it can be enabled during project initialization (create-next-app).",
+        "No, you must install it manually.",
+        "Only in older versions of Next.js.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what companion plugin is commonly used with Tailwind to add vendor prefixes (like -webkit-) to the generated CSS?",
+      "options": ["Autoprefixer", "Sass", "Babel", "Prettier"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Can you use Tailwind with Vite (the modern build tool used by React and Vue)?",
+      "options": [
+        "Yes, as Tailwind is a PostCSS plugin that Vite supports natively.",
+        "No, only with Webpack.",
+        "Only for mobile apps.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "title": "Tailwind CSS Utilities Quiz",
+  "description": "Evaluate your understanding of single-purpose helper classes for layout, spacing, colors, and responsive design tweaks.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what are 'utility classes' in Tailwind?",
+      "options": [
+        "Only for JavaScript.",
+        "Small, single-purpose helper classes used to build custom UIs directly in HTML.",
+        "To hide the JavaScript code from the console.",
+        "To replace the standard HTML input elements."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which prefix would you use to apply a style only when the user hovers over an element in Tailwind?",
+      "options": ["focus:", "active:", "hover:", "state:"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the primary benefit of Tailwind's utility-first approach?",
+      "options": [
+        "It makes CSS files larger.",
+        "It allows for quick and consistent design adjustments without writing custom CSS.",
+        "It only works for mobile apps.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what is the correct naming convention for a margin-top of size 4 in Tailwind?",
+      "options": [".top-m-4", ".mt-4", ".margin-top-4", ".m-t-4"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Do Tailwind utilities support responsive design using breakpoints like md or sm?",
+      "options": [
+        "Yes, as they provide prefix classes (e.g., md:grid-cols-2 or sm:p-5) for different screens.",
+        "No, they only work for fixed widths.",
+        "Only for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
