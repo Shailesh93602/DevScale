@@ -1,0 +1,52 @@
+{
+  "title": "JavaScript Regular Expressions Quiz",
+  "description": "Evaluate your understanding of RegExp syntax, methods, and basic pattern matching in JavaScript.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the best way to define a regular expression literal in JavaScript?",
+      "options": [
+        "let re = \"/pattern/flags\"",
+        "let re = /pattern/flags",
+        "let re = new RegExp(/pattern/)",
+        "Both B and C."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which method returns a boolean representing if a string contains a match for a pattern?",
+      "options": ["exec()", "search()", "test()", "match()"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What does the 'i' flag do at the end of a regular expression?",
+      "options": [
+        "It ignore case (case-insensitive search).",
+        "It replaces the first match only.",
+        "It searches globally across lines.",
+        "It ignores whitespace."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which meta-character matches any digit (0-9)?",
+      "options": ["\\w", "\\d", "\\s", "\\t"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What does the '+' quantifier represent in a regular expression match?",
+      "options": [
+        "Zero or more occurrences.",
+        "One or more occurrences.",
+        "Exactly one occurrence.",
+        "Optional occurrence (0 or 1)."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

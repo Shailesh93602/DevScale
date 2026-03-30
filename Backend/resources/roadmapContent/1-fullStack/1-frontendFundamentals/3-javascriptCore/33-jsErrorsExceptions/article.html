@@ -1,0 +1,37 @@
+<div class="article-content">
+  <h1>JavaScript Errors and Exceptions</h1>
+  <p>In web development, errors are inevitable. JavaScript provides robust mechanisms to handle these errors gracefully using <code>try...catch</code> blocks and the <code>throw</code> keyword.</p>
+
+  <h2>1. Try...Catch...Finally</h2>
+  <p>The <code>try</code> block allows you to test a block of code for errors. The <code>catch</code> block allows you to handle the error. The <code>finally</code> block executes regardless of the result.</p>
+  <pre><code>try {
+    // Code to test
+    let result = riskyOperation();
+  } catch (error) {
+    // Handle error
+    console.error("Oops!", error.message);
+  } finally {
+    // Code always executed
+    cleanup();
+  }</code></pre>
+
+  <h2>2. The Throw Keyword</h2>
+  <p>You can create custom errors using the <code>throw</code> statement. You can throw anything (strings, numbers, booleans, or objects), but it's best to throw an <code>Error</code> object.</p>
+  <pre><code>function checkAge(age) {
+  if (age < 18) {
+    throw new Error("Must be 18+");
+  }
+}</code></pre>
+
+  <h2>3. Standard Error Types</h2>
+  <ul>
+    <li><strong>ReferenceError:</strong> An illegal reference has occurred.</li>
+    <li><strong>TypeError:</strong> A type error has occurred (e.g., calling a non-function).</li>
+    <li><strong>SyntaxError:</strong> A syntax error has occurred.</li>
+    <li><strong>RangeError:</strong> A number "out of range" has occurred.</li>
+    <li><strong>URIError:</strong> An error in encodeURI() has occurred.</li>
+  </ul>
+
+  <h2>Conclusion</h2>
+  <p>Proper error handling ensures that a single mistake doesn't crash your entire application. By catching exceptions and providing meaningful feedback, you can improve both a developer's experience (debugging) and a user's experience (graceful failure).</p>
+</div>

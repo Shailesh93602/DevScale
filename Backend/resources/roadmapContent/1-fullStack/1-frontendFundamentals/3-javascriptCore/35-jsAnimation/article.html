@@ -1,0 +1,34 @@
+<div class="article-content">
+  <h1>JavaScript Animation</h1>
+  <p>JavaScript can be used to create smooth, interactive animations by dynamically changing the style of HTML elements over time. While CSS is often better for simple transitions, JavaScript provides much more control for complex, logic-driven animations.</p>
+
+  <h2>1. setInterval vs setTimeout</h2>
+  <p>In the past, animations were often created by repeatedly calling a function with <code>setInterval()</code> or <code>setTimeout()</code>. However, these methods are not synced with the browser's refresh rate, which can lead to "choppy" results.</p>
+  <pre><code>// Moving an element by 1px every 10ms
+  let pos = 0;
+  setInterval(() => {
+    pos++;
+    element.style.left = pos + "px";
+  }, 10);</code></pre>
+
+  <h2>2. requestAnimationFrame (The Modern Standard)</h2>
+  <p>The <code>requestAnimationFrame()</code> method tells the browser that you wish to perform an animation and requests that the browser call a specified function to update an animation before the next repaint. This produces smoother animations that are synced with the user's screen refresh rate (typically 60fps).</p>
+  <pre><code>function animate() {
+  pos++;
+  element.style.left = pos + "px";
+  if (pos < 300) {
+    requestAnimationFrame(animate);
+  }
+}
+
+requestAnimationFrame(animate);</code></pre>
+
+  <h2>3. JavaScript vs CSS Animation</h2>
+  <ul>
+    <li><strong>CSS:</strong> Best for simple, declarative animations like hover effects or simple loaders. It is hardware accelerated.</li>
+    <li><strong>JavaScript:</strong> Best for complex animations that depend on user input (e.g., mouse position), variable data, or multiple stages that must be controlled programmatically.</li>
+  </ul>
+
+  <h2>Conclusion</h2>
+  <p>Animation is about more than just "making things move." It's a way to provide visual feedback and improve the overall feel of your website. By using <code>requestAnimationFrame()</code>, you can create smooth and efficient animations that delight your users while keeping your performance high.</p>
+</div>

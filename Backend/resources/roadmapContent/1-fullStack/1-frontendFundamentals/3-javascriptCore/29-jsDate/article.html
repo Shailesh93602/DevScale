@@ -1,0 +1,37 @@
+<div class="article-content">
+  <h1>JavaScript Date</h1>
+  <p>The <code>Date</code> object is used to work with dates and times in JavaScript. It allows you to create, store, and manipulate timestamps effortlessly.</p>
+
+  <h2>1. Creating a Date Object</h2>
+  <p>There are four ways to create a new Date object:</p>
+  <ul>
+    <li><code>new Date()</code>: Current date and time.</li>
+    <li><code>new Date(year, month, day, ...)</code>: Specified date.</li>
+    <li><code>new Date(milliseconds)</code>: Milliseconds since Jan 1, 1970.</li>
+    <li><code>new Date("date string")</code>: Parsed string.</li>
+  </ul>
+  <pre><code>let d = new Date();
+  console.log(d.toString()); // Mon Mar 30 2026...</code></pre>
+
+  <h2>2. Date Methods (Getting)</h2>
+  <ul>
+    <li><code>getFullYear()</code>: Returns 4-digit year.</li>
+    <li><code>getMonth()</code>: Returns month (0-11, where 0 is January).</li>
+    <li><code>getDate()</code>: Returns day as a number (1-31).</li>
+    <li><code>getDay()</code>: Returns weekday as a number (0-6).</li>
+    <li><code>getTime()</code>: Returns milliseconds since Jan 1, 1970.</li>
+  </ul>
+
+  <h2>3. Date Methods (Setting)</h2>
+  <p>Setting methods allow you to modify a Date object:</p>
+  <pre><code>let d = new Date();
+  d.setFullYear(2022); // Change year to 2022</code></pre>
+
+  <h2>4. Formatting Dates</h2>
+  <p>Modern JavaScript provides the <strong>Intl.DateTimeFormat</strong> API for high-level formatting, while basic methods like <code>toISOString()</code> are essential for data storage.</p>
+  <pre><code>let d = new Date();
+  console.log(d.toISOString()); // "2026-03-30T09:45:11.412Z"</code></pre>
+
+  <h2>Conclusion</h2>
+  <p>Always remember that months in the JavaScript Date object are <strong>zero-indexed</strong> (0 = January). This is one of the most common pitfalls for beginners and even experienced developers working with dates.</p>
+</div>
