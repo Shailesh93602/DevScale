@@ -1,0 +1,54 @@
+<article>
+  <h1>Advanced SQL: Database Triggers</h1>
+  
+  <p>A <strong>Trigger</strong> is a special type of stored procedure that is automatically executed ("fired") in response to a specific event on a particular table. This allows the database to enforce complex business rules and data consistency automatically, without requiring explicit application-level code.</p>
+
+  <section>
+    <h2>How Triggers Work</h2>
+    <p>Triggers are attached to a table and can be configured to fire before or after an <code>INSERT</code>, <code>UPDATE</code>, or <code>DELETE</code> operation.</p>
+    <ul>
+      <li><strong>BEFORE Trigger:</strong> Good for validating or modifying data *before* it's actually written to the table (e.g., ensuring a price is never negative).</li>
+      <li><strong>AFTER Trigger:</strong> Good for performing related actions *after* the primary change has succeeded (e.g., logging activity or updating an audit trail).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Common Use Cases for Triggers</h2>
+    <ul>
+      <li><strong>Auditing:</strong> Automatically record every change to a sensitive table (like "Bank Accounts") into a separate audit log table.</li>
+      <li><strong>Automatic Updates:</strong> When a new product is added, automatically update the "Last Updated" timestamp on the parent Category table.</li>
+      <li><strong>Data Validation:</strong> Enforce complex rules that are difficult to express with simple constraints (e.g., a user can only have one active subscription at a time).</li>
+      <li><strong>Synchronization:</strong> When a user updates their profile, automatically update a copy of their name in a cached "Search Results" table.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Creating a Simple Trigger</h2>
+    <pre><code>-- Creating an audit trigger to track user email changes
+CREATE TRIGGER LogEmailChange
+AFTER UPDATE ON users
+FOR EACH ROW
+BEGIN
+    -- Only log if the email was actually changed
+    IF OLD.email != NEW.email THEN
+        INSERT INTO audit_logs (user_id, old_email, new_email, changed_at)
+        VALUES (OLD.id, OLD.email, NEW.email, NOW());
+    END IF;
+END;</code></pre>
+  </section>
+
+  <section>
+    <h2>The Dangers of Triggers</h2>
+    <p>Triggers are powerful but can lead to "hidden magic" in your database that makes debugging very difficult. Overusing triggers can also slow down your database performance significantly, as every single write operation now triggers additional hidden operations.</p>
+  </section>
+
+  <section>
+    <h2>Best Practices Summary</h2>
+    <ol>
+      <li><strong>Use Sparingly:</strong> Prefer simple Check Constraints or application-level logic for most validations. Save triggers for truly essential data consistency and auditing needs.</li>
+      <li><strong>Avoid Long-Running Code:</strong> Triggers should be incredibly fast. Never perform complex calculations or external API calls inside a trigger.</li>
+      <li><strong>Don't Create Cycles:</strong> Be careful not to create "trigger chains" where a trigger on Table A updates Table B, which in turn triggers an update back on Table A (infinite loop!).</li>
+    </ol>
+  </section>
+
+</article>

@@ -1,0 +1,37 @@
+{
+  "title": "SQL CRUD Operations Quiz",
+  "description": "Test your fundamental knowledge about the four core operations of persistent storage in SQL.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What does the 'CRUD' acronym stand for?",
+      "options": ["Create, Read, Update, Delete", "Copy, Replace, Undo, Duplicate", "Count, Retrieve, Union, Distinct", "None of the above."],
+      "correctAnswer": 0,
+      "points": 20
+    },
+    {
+      "question": "Which SQL statement is used to add new rows of data to a table?",
+      "options": ["ADD", "CREATE", "INSERT INTO", "PUT"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What's the primary risk of not using a 'WHERE' clause with an UPDATE or DELETE statement?",
+      "options": ["It makes the database slower.", "You could accidentally update or delete every single row in the table, potentially losing all data.", "It's a requirement of all CSS frameworks.", "It automatically generates a backup of the data."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which SQL clause is used to group rows that have the same values into summary rows (usually used with aggregate functions)?",
+      "options": ["ORDER BY", "GROUP BY", "WHERE", "LIMIT"],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is a 'Soft Delete' in the context of database management?",
+      "options": ["Deleting the table instead of a single row.", "A way to encrypt data before deleting it.", "Instead of actually removing a row, you set a 'deleted_at' timestamp or an 'is_deleted' flag to hide it.", "None of the above."],
+      "correctAnswer": 2,
+      "points": 20
+    }
+  ]
+}
