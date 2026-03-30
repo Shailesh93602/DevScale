@@ -1,0 +1,23 @@
+<div class="article-content">
+  <h1>React Memoization (Performance Tuning)</h1>
+  <p>Memoization is a general optimization technique used primarily to speed up computer programs by storing the results of expensive function calls and returning the cached result when the same inputs occur again. In React, this is used to prevent **unnecessary re-renders**.</p>
+
+  <h2>1. React.memo()</h2>
+  <p><code>React.memo</code> is a higher-order component. If your component renders the same result given the same props, you can wrap it in <code>React.memo</code> for a performance boost in some cases.</p>
+  <pre><code>const MyComponent = React.memo(function MyComponent(props) {
+  /* render using props */
+});</code></pre>
+
+  <h2>2. useMemo()</h2>
+  <p>The <code>useMemo</code> hook returns a memoized **value**. It will only recompute the memoized value when one of its dependencies has changed.</p>
+  <pre><code>const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b]);</code></pre>
+
+  <h2>3. useCallback()</h2>
+  <p>The <code>useCallback</code> hook returns a memoized **callback function**. This is useful when passing callbacks to optimized child components that rely on reference equality to prevent unnecessary renders.</p>
+  <pre><code>const memoizedCallback = useCallback(() => {
+  doSomething(a, b);
+}, [a, b]);</code></pre>
+
+  <h2>Conclusion</h2>
+  <p>Memoization is a powerful tool for optimizing your React application's performance. By strategically using <code>React.memo</code>, <code>useMemo</code>, and <code>useCallback</code>, you can minimize work during renders and ensure a smooth, high-frame-rate user experience even for complex and data-heavy interfaces.</p>
+</div>

@@ -1,0 +1,52 @@
+{
+  "title": "React Testing Quiz",
+  "description": "Evaluate your understanding of unit/integration/E2E tests, Jest, and the React Testing Library.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the difference between Unit and Integration Tests in React?",
+      "options": [
+        "Unit tests are for strings, while integration tests are for numbers.",
+        "Unit tests isolate individual components/functions, while integration tests check multiple parts working together.",
+        "There is no difference.",
+        "Only Unit tests can be used with React."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which standard JavaScript test runner is commonly used with React?",
+      "options": ["Mocha", "Cypress", "Jest", "Karma"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the core philosophy of React Testing Library (RTL)?",
+      "options": [
+        "Test individual component state and internal methods.",
+        "Test components from the user’s perspective (what they see and interact with).",
+        "Test for CSS styling only.",
+        "Test for performance only."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which function from '@testing-library/react' is used to mount a component for testing?",
+      "options": ["mount()", "render()", "load()", "initialize()"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Can you use fireEvent.click() from RTL to simulate a user clicking a button in a test?",
+      "options": [
+        "Yes, it fires the corresponding DOM event.",
+        "No, you must manually change the state instead.",
+        "Only in class components.",
+        "Only if you return them with an ID."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

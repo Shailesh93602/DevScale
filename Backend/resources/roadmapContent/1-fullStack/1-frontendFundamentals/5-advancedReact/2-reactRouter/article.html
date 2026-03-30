@@ -1,0 +1,24 @@
+<div class="article-content">
+  <h1>React Router</h1>
+  <p>React Router is a powerful library for client-side routing in React applications. It allows you to build single-page applications (SPAs) with navigation and URL synchronization without the page flickering or reloading from the server.</p>
+
+  <h2>1. Common Components</h2>
+  <ul>
+    <li><strong>BrowserRouter:</strong> Wraps your entire app to enable routing capabilities.</li>
+    <li><strong>Routes:</strong> Acts as a container for all your defined routes.</li>
+    <li><strong>Route:</strong> Defines a specific path and the component that should render when the URL matches that path.</li>
+  </ul>
+
+  <h2>2. Navigation with the Link Component</h2>
+  <p>In React Router, you should avoid using the standard <code>&lt;a&gt;</code> (anchor tag) for internal navigation, as it causes a full page reload. Instead, use the <code>Link</code> component to enable smooth, client-side transitions.</p>
+  <pre><code>import { Link } from "react-router-dom";
+
+&lt;Link to="/about"&gt;About Us&lt;/Link&gt;</code></pre>
+
+  <h2>3. Dynamic Routes</h2>
+  <p>React Router allows you to define dynamic paths using parameters. This is useful for things like user profiles or product pages where the URL contains an ID.</p>
+  <pre><code>&lt;Route path="/product/:id" element={&lt;Product /&gt;} /&gt;</code></pre>
+
+  <h2>Conclusion</h2>
+  <p>React Router is the industry-standard library for building navigable React applications. By mastering how to define routes and handle user navigation, you can create the seamless and responsive multi-page user experiences that characterize modern single-page web applications.</p>
+</div>

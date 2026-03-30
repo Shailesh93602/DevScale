@@ -1,0 +1,57 @@
+{
+  "title": "React Native Quiz",
+  "description": "Evaluate your understanding of React Native components (View, Text), the StyleSheet API, and Expo/CLI.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primary role of React Native in building apps?",
+      "options": [
+        "To build only web apps.",
+        "To build truly native mobile applications for iOS and Android using JavaScript and React.",
+        "To replace the standard HTML input elements.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which native component in React Native is equivalent to a <div> in the web?",
+      "options": ["<View>", "<Text>", "<Image>", "<Container>"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Does React Native use standard CSS files for styling?",
+      "options": [
+        "Yes, you can import .css files directly.",
+        "No, it uses a StyleSheet API that accepts a JavaScript object (in camelCase).",
+        "Only in older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is 'Expo' in the context of React Native development?",
+      "options": [
+        "A set of tools and services that makes it easier to start building apps.",
+        "A specific component for displaying images.",
+        "An alternative to the React framework.",
+        "A tool for improving SEO."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "React Native allows you to use your React skills to build apps that render as real native UI components on mobile devices.",
+      "options": [
+        "True",
+        "False (it only renders a web view within the app)",
+        "Only true for Android.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

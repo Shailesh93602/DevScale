@@ -1,0 +1,24 @@
+<div class="article-content">
+  <h1>React Portals</h1>
+  <p>Portals provide a way to render children into a DOM node that exists outside the DOM hierarchy of the parent component. This is incredibly useful for UI elements that need to break out of their container's styling or layout, such as modals and tooltips.</p>
+
+  <h2>1. createPortal() Syntax</h2>
+  <p>The <code>createPortal()</code> function takes two arguments: the JSX you want to render and the DOM element (usually an ID or document.body) where it should be placed.</p>
+  <pre><code>import { createPortal } from "react-dom";
+
+function Modal({ children }) {
+  return createPortal(
+    &lt;div className="modal"&gt;{children}&lt;/div&gt;,
+    document.getElementById("modal-root")
+  );
+}</code></pre>
+
+  <h2>2. Why Use Portals?</h2>
+  <p>Standard React components are mounted as children of their parent's DOM node. This can cause problems with CSS properties like <code>overflow: hidden</code> or <code>z-index</code>. Portals allow these elements to live elsewhere in the document structure (like directly under <code>document.body</code>) while still behaving like React components.</p>
+
+  <h2>3. Event Bubbling</h2>
+  <p>Even though a portal can be anywhere in the actual DOM tree, it behaves like a normal React child in every other way. This includes **event bubbling**: an event fired inside a portal will still bubble up to its ancestors in the React tree, regardless of where the portal's DOM element is located.</p>
+
+  <h2>Conclusion</h2>
+  <p>Portals are a specialized but essential tool for building advanced user interfaces. By mastering how to breakout of the standard DOM hierarchy, you can ensure that complex UI components like modals and popovers are always rendered correctly and reliably while maintaining the benefits of React's component-based architecture.</p>
+</div>

@@ -1,0 +1,52 @@
+{
+  "title": "React Performance Optimization Quiz",
+  "description": "Evaluate your understanding of profiling, code splitting with React.lazy and Suspense, and render prevention in React.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the first step when you suspect a performance bottleneck in your React component tree?",
+      "options": [
+        "Record an interaction using the Profiler tab in the React DevTools.",
+        "Rewrite every component using class-based syntax.",
+        "Add more CSS styles.",
+        "Reload the page repeatedly."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the primary benefit of 'Code Splitting' in a large React application?",
+      "options": [
+        "It makes the code easier to read.",
+        "It splits the code into smaller chunks that can be downloaded only when needed, reducing the initial bundle size.",
+        "It allows using HTML inside JavaScript.",
+        "It automatically fixes bugs in the code."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which React feature should you use to load a component lazily and display a fallback while it downloads?",
+      "options": ["React.memo()", "useMemo() and useEffect()", "React.lazy() and <Suspense>", "window.onLoad()"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What happens if you use React.memo() incorrectly for very small and simple components?",
+      "options": [
+        "The app will crash.",
+        "The overhead of props comparison may actually be slower than simply re-rendering a small component.",
+        "It will cause a memory leak.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "React Profiler only works in which browser development tool?",
+      "options": ["Sources Tab", "Network Tab", "Console Tab", "React DevTools Profiler Tab"],
+      "correctAnswer": 3,
+      "points": 10
+    }
+  ]
+}

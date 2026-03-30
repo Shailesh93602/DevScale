@@ -1,0 +1,34 @@
+<div class="article-content">
+  <h1>Event Handling in Vue.js</h1>
+  <p>In Vue, we use the <code>v-on</code> directive (shorthanded as <code>@</code>) to listen to DOM events and run JavaScript when they’re triggered. This provides a clean and declarative way to handle user interaction.</p>
+
+  <h2>1. Common Syntax</h2>
+  <p>To listen for an event, such as a click, use <code>v-on:click</code> or <code>@click</code> with a method name or inlined JavaScript code.</p>
+  <pre><code>&lt;!-- Full syntax --&gt;
+&lt;button v-on:click="count++"&gt;Add 1&lt;/button&gt;
+
+&lt;!-- Shorthand syntax --&gt;
+&lt;button @click="sayHello"&gt;Say Hello&lt;/button&gt;</code></pre>
+
+  <h2>2. Method Handlers</h2>
+  <p>If you have complex logic, you should use a method defined in your Vue component options. Vue will automatically pass the native DOM event object to the method unless you pass your own arguments.</p>
+  <pre><code>methods: {
+  sayHello(event) {
+    alert('Hello from Vue!')
+    if (event) {
+      alert(event.target.tagName)
+    }
+  }
+}</code></pre>
+
+  <h2>3. Event Modifiers</h2>
+  <p>Vue allows you to handle common event patterns inside your template using dot-separated modifiers. This keeps your methods focused purely on application logic instead of DOM details like <code>event.preventDefault()</code>.</p>
+  <ul>
+    <li><code>.stop</code>: Equivalent to <code>event.stopPropagation()</code>.</li>
+    <li><code>.prevent</code>: Equivalent to <code>event.preventDefault()</code>.</li>
+    <li><code>.once</code>: The event will only be triggered at most once.</li>
+  </ul>
+
+  <h2>Conclusion</h2>
+  <p>Event handling in Vue is both powerful and developer-friendly. By mastering <code>v-on</code>, method handlers, and event modifiers, you can build interactive applications that respond gracefully to user input without cluttering your code with repetitive DOM housekeeping.</p>
+</div>
