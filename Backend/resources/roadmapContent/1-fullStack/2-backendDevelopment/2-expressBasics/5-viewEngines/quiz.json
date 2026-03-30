@@ -1,0 +1,52 @@
+{
+  "title": "View Engines (Module 2) Quiz",
+  "description": "Evaluate your understanding of the use of Partials and Layouts for code reuse, passing data to views via res.render, and the SEO benefits of SSR.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily role of a 'View Engine' in a professional Express application?",
+      "options": [
+        "Faster component rendering.",
+        "To combine HTML templates with dynamic data (like a user's name or product list) from the server to generate final HTML pages.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "The reusable pieces of HTML (like navigation bars or footers) that can be included on multiple pages are called ________.",
+      "options": ["Partials", "Layouts", "Views", "Engines"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which method in the 'res' object is used in Express to render a template and send the final HTML back to the client?",
+      "options": ["res.send()", "res.render()", "res.json()", "res.out()"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Is Server-Side Rendering (SSR) better for SEO than client-side-only rendering?",
+      "options": [
+        "Yes, as search engine crawlers can easily read the fully-rendered HTML sent by the server.",
+        "No, it's always slower.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "In the 'res.render()' method, where do you place the data that the template should use?",
+      "options": [
+        "As a JavaScript object in the second argument of the method.",
+        "In the request headers.",
+        "As a string in the first argument.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

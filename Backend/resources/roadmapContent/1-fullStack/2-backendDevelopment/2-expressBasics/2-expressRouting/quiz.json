@@ -1,0 +1,52 @@
+{
+  "title": "Express Routing (Module 2) Quiz",
+  "description": "Evaluate your understanding of the Express Router for modular route grouping and management in large-scale applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily role of 'Routing' in an Express.js application?",
+      "options": [
+        "Faster component rendering.",
+        "Defining which code should run when a user visits a specific URL or performs a specific action (like a POST request).",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which Express feature allows you to create 'modular' route handlers in separate files for better organization?",
+      "options": ["express.Router", "express.Static", "express.Parser", "express.Init"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what was the primarily benefit of using separate route files (e.g., productRoutes.js)?",
+      "options": [
+        "Better code organization and easier maintenance as the project grows.",
+        "Only for older browsers.",
+        "To hide all non-number characters.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which HTTP method should be used in a professional REST API specifically to 'delete' a resource?",
+      "options": ["GET", "POST", "PUT", "DELETE"],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "Does Express allowing the use of multiple handlers for a single route using the 'next()' function?",
+      "options": [
+        "Yes, as it is a core feature of the Express middleware system.",
+        "No, only one handler per route is allowed.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

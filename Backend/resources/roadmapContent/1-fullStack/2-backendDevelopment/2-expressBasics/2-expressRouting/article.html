@@ -1,0 +1,18 @@
+<div class="article-content">
+  <h1>Routing in Express.js</h1>
+  <p>To build a real-world web application, you need more than just a single page. **Routing** is the process of defining which code should run when a user visits a specific URL (like <code>/users</code>) or performs a specific action (like a <code>POST</code> request to <code>/login</code>).</p>
+
+  <h2>1. HTTP Methods (GET, POST, etc.)</h2>
+  <p>Express makes it incredibly easy to handle different types of network requests. You can define specific handlers for reading data (<code>GET</code>), creating data (<code>POST</code>), updating data (<code>PUT</code>), and deleting data (<code>DELETE</code>).</p>
+
+  <h2>2. The Express Router</h2>
+  <p>For large applications, you shouldn't put all your routes in a single file. The <code>express.Router</code> allows you to create **modular** route handlers in separate files (e.g. <code>userRoutes.js</code>, <code>productRoutes.js</code>) and then "group" them together in your main application.</p>
+  <pre><code>const express = require('express');
+const router = express.Router();
+
+router.get('/profile', ... );
+module.exports = router;</code></pre>
+
+  <h2>Conclusion</h2>
+  <p>By mastering Express.js routing, you're becoming a faster and more efficient Fullstack engineer. Whether you're managing complex database logic or scaling a massive production application, routing provides the tools and security you need to build the highest-quality and most professional applications.</p>
+</div>
