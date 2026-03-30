@@ -1,0 +1,30 @@
+<section>
+    <h2>Understanding One-to-One Relationships</h2>
+    <p>A One-to-One (1:1) relationship occurs when a single record in one table is associated with exactly one record in another table, and vice-versa.</p>
+
+    <h3>1. Real-World Example</h3>
+    <p>Consider a <strong>User</strong> and their <strong>UserProfile</strong>. Each user has exactly one profile, and each profile belongs to exactly one user.</p>
+
+    <h3>2. Modeling in SQL</h3>
+    <p>In a relational database, this is usually implemented by adding a foreign key to one of the tables and ensuring it is unique. For example, the <code>user_profiles</code> table could have a <code>user_id</code> column that is both a foreign key and has a unique constraint.</p>
+    <pre><code>
+CREATE TABLE user_profiles (
+  id INT PRIMARY KEY,
+  user_id INT UNIQUE, -- Ensures 1:1 relationship
+  bio TEXT,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+    </code></pre>
+
+    <h3>3. Implementation in ORMs</h3>
+    <ul>
+      <li><strong>Sequelize:</strong> Uses <code>hasOne</code> and <code>belongsTo</code> associations.</li>
+      <li><strong>Mongoose:</strong> Can be achieved by embedding the profile document directly into the user document or by using a reference with a unique constraint.</li>
+    </ul>
+
+    <h3>4. When to Use</h3>
+    <p>We use 1:1 relationships to split large tables into smaller ones, keep sensitive metadata separate, or for optional data that isn't required for every record.</p>
+
+    <h3>Conclusion</h3>
+    <p>One-to-One relationships are the simplest form of database connection, providing a clean way to organize related data across multiple entities.</p>
+</section>
