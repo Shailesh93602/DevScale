@@ -1,0 +1,51 @@
+{
+  "title": "Cluster and Child Processes Quiz",
+  "description": "Evaluate your understanding of overcoming Node's single-threaded nature, using the Cluster module for CPU-core balancing, and spawning child processes.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily design philosophy of Node.js that makes the Cluster module necessary for high scale?",
+      "options": [
+        "Faster component rendering.",
+        "A system focused on being 'Single-Threaded' by default, meaning it only uses one CPU core at a time.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which Node.js module allows you to create multiple 'worker' processes of your app that all share the same server port?",
+      "options": ["Cluster", "HTTP", "Child Process", "Worker"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which Child Process method is commonly used to 'spawn' a completely new Node.js instance from your main application?",
+      "options": ["exec()", "spawn()", "fork()", "push()"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what was the primarily benefit of using 'Worker Threads' inside a Node.js project?",
+      "options": [
+        "To hide all non-number characters.",
+        "Executing heavy calculations (like image processing) in parallel without blocking the main event loop.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does following the 'Cluster' model help build truly Fullstack applications by allowing you to utilize every CPU core on a production server?",
+      "options": [
+        "Yes, as it is a core feature of any high-throughput, professional production environment.",
+        "No, it's always slower.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
