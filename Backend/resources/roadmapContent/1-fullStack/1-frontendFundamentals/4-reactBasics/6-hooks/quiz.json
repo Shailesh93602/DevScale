@@ -1,0 +1,57 @@
+{
+  "title": "React Hooks Quiz",
+  "description": "Evaluate your understanding of useState, useEffect, and core rules for functional components in React.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primary purpose of the useState hook?",
+      "options": [
+        "To define global variables.",
+        "To set or return a piece of local state in a functional component.",
+        "To manage component lifecycle methods.",
+        "To perform side effects like fetching data."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which hook should you use for side effects like data fetching or manual DOM updates?",
+      "options": ["useState()", "useEffect()", "useContext()", "useReducer()"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What happens when you pass an empty dependency array ([]) to useEffect()?",
+      "options": [
+        "It runs after every re-render.",
+        "It runs only once on mount.",
+        "It never runs.",
+        "It causes an error."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of the following is a key rule of hooks in React?",
+      "options": [
+        "Hooks can be called inside loops.",
+        "Hooks must be called at the top level of a React functional component.",
+        "Hooks are only for class components.",
+        "Hooks can only be used with single quotes."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does useState() always return an array with TWO items?",
+      "options": [
+        "Yes, the current state value and the state-setter function.",
+        "No, it can return up to five items.",
+        "Yes, but only in ES6 or later.",
+        "No, it's an object in older browsers."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

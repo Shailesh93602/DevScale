@@ -1,0 +1,62 @@
+{
+  "title": "React Lifting State Up Quiz",
+  "description": "Evaluate your understanding of sharing state between components and the single source of truth principle in React.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the best strategy when two sibling components need to access and modify the same state in React?",
+      "options": [
+        "Duplicate the state in both components.",
+        "Lift the shared state up to their closest common ancestor.",
+        "Use a global variable.",
+        "Directly access each other's state."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the primary benefit of lifting state up?",
+      "options": [
+        "It makes the app run faster.",
+        "It ensures that multiple components always reflect the same shared data and stay in sync.",
+        "It hides data from other components.",
+        "It reduces the number of components."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "According to the article, what should you pass down from the parent to child components along with the shared state?",
+      "options": [
+        "Only the current state value.",
+        "Any necessary state updater functions as callbacks.",
+        "A copy of the whole parent component.",
+        "A reference to the window object."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "In React, should we avoid having multiple 'sources of truth' for the same data?",
+      "options": [
+        "Yes, always.",
+        "No, it's better to have multiple copies for safety.",
+        "Yes, but only in large apps.",
+        "Only if you're using class components."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Is lifting state up the only way to share data in React (alternatives exist like Context API etc.)?",
+      "options": [
+        "Yes, always.",
+        "No, but it's a very common and recommended pattern for simple data sharing.",
+        "Yes, but only in functional components.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

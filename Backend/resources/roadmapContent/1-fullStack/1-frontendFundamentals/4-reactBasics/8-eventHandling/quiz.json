@@ -1,0 +1,57 @@
+{
+  "title": "React Event Handling Quiz",
+  "description": "Evaluate your understanding of React's camelCase event syntax, passing arguments, and preventing default behavior.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the correct syntax for a click event in React?",
+      "options": [
+        "onclick=\"activate()\"",
+        "onClick={activate}",
+        "onClick=\"activate()\"",
+        "onClick=(activate)"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "How do you pass an argument '5' to the function 'deleteUser' as an onClick handler?",
+      "options": [
+        "onClick={deleteUser(5)}",
+        "onClick={() => deleteUser(5)}",
+        "onClick={deleteUser, 5}",
+        "onClick={(5) => deleteUser()}"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Can you return 'false' from a React handler to prevent the default browser behavior (e.g., in a form submit)?",
+      "options": [
+        "Yes, like in regular HTML.",
+        "No, you must explicitly call event.preventDefault().",
+        "Yes, but only in class components.",
+        "Only in older versions of React."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the reason React uses 'Synthetic Events' under the hood?",
+      "options": [
+        "To make events faster.",
+        "To provide a consistent API across different browsers.",
+        "To allow events to be global.",
+        "To replace the standard DOM events."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which event property can you use to get the value of an input field within an 'onChange' handler?",
+      "options": ["e.target.value", "e.value", "e.current.value", "e.source.value"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

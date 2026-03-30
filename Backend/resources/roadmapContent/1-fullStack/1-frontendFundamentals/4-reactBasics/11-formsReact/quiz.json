@@ -1,0 +1,52 @@
+{
+  "title": "React Forms Quiz",
+  "description": "Evaluate your understanding of controlled components, input handling, and form submission in React.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primary purpose of a 'Controlled Component' in React?",
+      "options": [
+        "To allow HTML to manage its own state.",
+        "To make React state the 'single source of truth' for form input values.",
+        "To hide inputs from the user.",
+        "To prevent any user from submitting forms."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which attribute should you use to link an input's displayed value to a piece of React state?",
+      "options": ["displayedValue", "content", "value", "stateValue"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which event handler is most commonly used to update the state as a user types into an input field?",
+      "options": ["onInput", "onKeyUp", "onChange", "onClick"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "How do you handle multiple inputs using a single onChange handler?",
+      "options": [
+        "By using different functions for each input.",
+        "By using the 'name' attribute on each input and computed property names in the state object.",
+        "By using a global 'value' variable for all inputs.",
+        "It's not possible."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Can you use controlled component patterns with <textarea> and <select> elements in React?",
+      "options": [
+        "Yes, they behave similarly to <input> in React.",
+        "No, they are for different purposes.",
+        "Only in older versions of React.",
+        "Only by using ref instead of value."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

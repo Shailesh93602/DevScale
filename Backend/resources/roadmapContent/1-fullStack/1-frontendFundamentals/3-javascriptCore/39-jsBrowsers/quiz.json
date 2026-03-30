@@ -1,0 +1,47 @@
+{
+  "title": "JavaScript Browser Object Model (BOM) Quiz",
+  "description": "Evaluate your understanding of window, location, history, and navigator objects in JavaScript.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the global object for all browser-based JavaScript?",
+      "options": ["window", "document", "screen", "navigator"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which object contains all current page URL-related properties like href and hostname?",
+      "options": ["window.history", "window.location", "window.screen", "window.navigator"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the result of calling history.back()?",
+      "options": [
+        "It takes the user to the previous page in their browse history.",
+        "It reloads the current page.",
+        "It opens a new window.",
+        "It jumps to the top of the current page."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which property in the navigator object can you use to check if the browser is online?",
+      "options": ["onLine", "isOnline", "status", "connected"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which of the following properties returns the width of the visitor's browser window (in pixels)?",
+      "options": [
+        "window.width",
+        "window.innerWidth",
+        "screen.width",
+        "document.width"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

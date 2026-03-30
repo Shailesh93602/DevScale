@@ -1,0 +1,4 @@
+{
+    "name": "Conditional Rendering",
+    "description": "Learn how small pieces of data called conditions can be used to control the state of your React components during their existence."
+}

@@ -1,0 +1,29 @@
+<div class="article-content">
+  <h1>Lifting State Up</h1>
+  <p>Often, several components need to reflect the same changing data. We recommend <strong>lifting the shared state up</strong> to their closest common ancestor. This technique allows multiple components to share the same information and stay in sync.</p>
+
+  <h2>1. Why Lift State Up?</h2>
+  <p>In React, state is local to each component. If two components (like a parent and child, or two siblings) need to access and modify the same data, the state should be moved to a component that is a parent to both of them. This follows React's "single source of truth" principle.</p>
+
+  <h2>2. How to Implement</h2>
+  <ol>
+    <li>Identify which components need the shared data.</li>
+    <li>Find the closest common ancestor of all those components.</li>
+    <li>Move the state from the child to that common ancestor.</li>
+    <li>Pass the state down to the components as <strong>props</strong>.</li>
+    <li>Pass any necessary state updater functions as <strong>callbacks</strong> to the children.</li>
+  </ol>
+
+  <h2>3. Example</h2>
+  <pre><code>function TemperatureInput({ temperature, onTemperatureChange }) {
+  return (
+    &lt;input
+      value={temperature}
+      onChange={(e) => onTemperatureChange(e.target.value)}
+    /&gt;
+  );
+}</code></pre>
+
+  <h2>Conclusion</h2>
+  <p>Lifting state up is a powerful pattern that ensures your data remains consistent across your application. While it may require adding more code than simply passing global variables, it maintains the predictable data flow that makes React both powerful and easy to debug.</p>
+</div>

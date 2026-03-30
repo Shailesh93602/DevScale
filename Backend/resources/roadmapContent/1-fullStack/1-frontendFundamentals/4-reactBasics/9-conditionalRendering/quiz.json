@@ -1,0 +1,57 @@
+{
+  "title": "React Conditional Rendering Quiz",
+  "description": "Evaluate your understanding of if...else, ternary operators, and logical && syntax in React.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the most common way to conditionally include an element in your React UI with a single true condition?",
+      "options": [
+        "Inline if with logical && (condition && <E />)",
+        "if-else block only.",
+        "A while loop.",
+        "window.render(condition)"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the return type if you don't want a component to render anything at all?",
+      "options": ["undefined", "null", "false", "0"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of the following is correct syntax for a ternary operator in JSX?",
+      "options": [
+        "{isLoggedIn ? <Welcome /> : <Login />}",
+        "{isLoggedIn if then <Welcome /> else <Login />}",
+        "{isLoggedIn ?? <Welcome /> : <Login />}",
+        "{isLoggedIn && <Welcome /> || <Login />}"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Can you use a basic 'if' statement inside a JSX expression returning another JSX element?",
+      "options": [
+        "Yes, always.",
+        "No, you must use it before the return statement or use a ternary/logical operator.",
+        "Yes, but only in older versions of React.",
+        "Only if you wrap the if in curly braces {}"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What happens if a logical && condition evaluates to false (e.g., false && <E />)?",
+      "options": [
+        "React will render the literal string 'false'.",
+        "React will ignore it and render nothing for that part.",
+        "React will throw an error.",
+        "React will render an empty div."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
