@@ -1,0 +1,8 @@
+{
+  "title": "Database Schema Design",
+  "description": "Learn the theory and practice of database schema design including naming conventions, keys, and logical-to-physical mapping.",
+  "module": "Full Stack Web Development",
+  "order": 2,
+  "difficulty": "Intermediate",
+  "tags": ["Database", "Schema Design", "SQL", "NoSQL", "Architecture"]
+}

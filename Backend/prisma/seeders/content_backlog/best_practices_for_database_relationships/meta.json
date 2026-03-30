@@ -1,0 +1,8 @@
+{
+  "title": "Best Practices for Database Relationships",
+  "description": "Learn the industry-standard best practices for ensuring consistent and performant database relationships in both SQL and NoSQL environments.",
+  "module": "Full Stack Web Development",
+  "order": 5,
+  "difficulty": "Intermediate",
+  "tags": ["Database", "Relationships", "Best Practices", "Indexing", "Normalization"]
+}
