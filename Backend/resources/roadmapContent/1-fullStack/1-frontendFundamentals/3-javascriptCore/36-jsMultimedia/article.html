@@ -1,0 +1,33 @@
+<div class="article-content">
+  <h1>JavaScript Multimedia</h1>
+  <p>JavaScript can be used to control the playback of multimedia files like audio and video within the browser. The <strong>HTMLMediaElement</strong> interface provides the methods, properties, and events for this purpose.</p>
+
+  <h2>1. Common Media Properties</h2>
+  <p>To access and monitor media playback, you can use several key properties:</p>
+  <ul>
+    <li><code>currentTime</code>: Sets or returns the current playback position in seconds.</li>
+    <li><code>duration</code>: Returns the total duration of the media file.</li>
+    <li><code>paused</code>: Returns true if the media is paused.</li>
+    <li><code>volume</code>: Sets or returns the volume (0.0 to 1.0).</li>
+    <li><code>muted</code>: Sets or returns whether the media is muted.</li>
+  </ul>
+
+  <h2>2. Media Methods</h2>
+  <pre><code>const video = document.getElementById("myVideo");
+
+video.play();   // Start playback
+video.pause();  // Pause playback
+video.load();   // Reload the media</code></pre>
+
+  <h2>3. Media Events</h2>
+  <p>You can listen for changes in the media's state using standard event listeners:</p>
+  <ul>
+    <li><code>play / pause</code>: Triggered when playback starts or stops.</li>
+    <li><code>ended</code>: Triggered when the media reaches the end.</li>
+    <li><code>timeupdate</code>: Triggered periodically as the playback position changes (useful for progress bars).</li>
+    <li><code>volumechange</code>: Triggered when the volume or muted state is changed.</li>
+  </ul>
+
+  <h2>Conclusion</h2>
+  <p>By using JavaScript to control multimedia, you can build custom video players, interactive audio experiences, and accessibility features like transcript synchronization. Mastery of the <code>HTMLMediaElement</code> API is essential for any modern frontend engineer working with rich media content.</p>
+</div>

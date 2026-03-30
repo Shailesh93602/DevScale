@@ -1,0 +1,52 @@
+{
+  "title": "JavaScript Date Quiz",
+  "description": "Evaluate your understanding of creating and manipulating dates in JavaScript.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which of the following is correct syntax for creating a Date object for the current date and time?",
+      "options": [
+        "const d = Date()",
+        "const d = new Date()",
+        "const d = Date.now()",
+        "Both B and C."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which month does 0 represent in a JavaScript Date literal (new Date(2022, 0))?",
+      "options": ["January", "February", "December", "None"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What does the getFullYear() method return?",
+      "options": [
+        "A 2-digit year (e.g., 22)",
+        "A 4-digit year (e.g., 2022)",
+        "The number of years since 1970.",
+        "The age of the user based on their birth date."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which method should you use to return a Date as an ISO 8601 string (useful for database storage)?",
+      "options": [
+        "toISOString()",
+        "toString()",
+        "toDateString()",
+        "toUTCString()"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is 'January 1, 1970, 00:00:00 UTC' often called in software development?",
+      "options": ["The Genesis", "Computer Birth", "The Epoch", "The Zero Point"],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

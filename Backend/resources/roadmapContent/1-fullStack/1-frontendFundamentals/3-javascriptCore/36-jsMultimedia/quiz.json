@@ -1,0 +1,42 @@
+{
+  "title": "JavaScript Multimedia Quiz",
+  "description": "Evaluate your understanding of HTMLMediaElement properties, methods, and events in JavaScript.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which of the following describes the purpose of the currentTime property?",
+      "options": [
+        "It returns the current date and time.",
+        "It sets or returns the current playback position in seconds.",
+        "It returns the total duration of the media file.",
+        "It displays the current time on the page."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which method should you use to start playback of an audio or video element?",
+      "options": ["start()", "run()", "play()", "execute()"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the return type of the duration property?",
+      "options": ["String", "Number (seconds)", "Boolean", "Object"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which event triggers periodically as the playback position of a media file changes?",
+      "options": ["ended", "playing", "timeupdate", "progress"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Can you use JavaScript to set the volume of an HTML5 video element (volume range: 0.0 to 1.0)?",
+      "options": ["Yes, by using video.volume = 0.5", "No, JavaScript cannot access volume.", "Only in older browsers.", "Yes, but you must use jQuery."],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

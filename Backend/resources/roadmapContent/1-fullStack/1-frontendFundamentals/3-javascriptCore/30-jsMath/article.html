@@ -1,0 +1,38 @@
+<div class="article-content">
+  <h1>JavaScript Math</h1>
+  <p>The <code>Math</code> object in JavaScript is a built-in object that allows you to perform mathematical tasks on numbers. Unlike other objects, <code>Math</code> is not a constructor; all its properties and methods are <strong>static</strong>.</p>
+
+  <h2>1. Rounding and Precision</h2>
+  <ul>
+    <li><code>Math.round(x)</code>: Rounds to the <strong>nearest</strong> integer.</li>
+    <li><code>Math.ceil(x)</code>: Rounds <strong>up</strong> to the nearest integer.</li>
+    <li><code>Math.floor(x)</code>: Rounds <strong>down</strong> to the nearest integer.</li>
+    <li><code>Math.trunc(x)</code>: Returns the integer part of a number (ES6).</li>
+  </ul>
+
+  <h2>2. Pow and Sqrt</h2>
+  <ul>
+    <li><code>Math.pow(x, y)</code>: Returns x to the power of y. (Equivalent to <code>x ** y</code>).</li>
+    <li><code>Math.sqrt(x)</code>: Returns the square root of x.</li>
+    <li><code>Math.abs(x)</code>: Returns the absolute (positive) value of x.</li>
+  </ul>
+
+  <h2>3. Min and Max</h2>
+  <pre><code>Math.min(0, 150, 30, 20, -8, -200);  // Returns -200
+  Math.max(0, 150, 30, 20, -8, -200);  // Returns 150</code></pre>
+
+  <h2>4. Random Numbers</h2>
+  <p><code>Math.random()</code> returns a floating-point, pseudo-random number in the range <code>[0, 1)</code> (inclusive of 0, but not 1).</p>
+  <pre><code>// Example: Random number between 0 and 100
+  Math.floor(Math.random() * 101);</code></pre>
+
+  <h2>5. Math Constants</h2>
+  <ul>
+    <li><code>Math.PI</code>: 3.14159...</li>
+    <li><code>Math.E</code>: Euler's number.</li>
+    <li><code>Math.SQRT2</code>: Square root of 2.</li>
+  </ul>
+
+  <h2>Conclusion</h2>
+  <p>The <code>Math</code> object is indispensable for any application involving calculations, whether it's for game development, data visualization, or even simple UI logic. Understanding how to use its built-in constants and static methods will save you from writing custom math utilities.</p>
+</div>

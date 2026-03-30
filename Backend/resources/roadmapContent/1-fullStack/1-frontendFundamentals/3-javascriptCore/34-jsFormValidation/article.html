@@ -1,0 +1,35 @@
+<div class="article-content">
+  <h1>JavaScript Form Validation</h1>
+  <p>Form validation is the process of ensuring that user input is consistent with the expectations of the application. While HTML5 provides basic built-in validation, JavaScript offers much more control and a better user experience.</p>
+
+  <h2>1. Why Use JavaScript for Validation?</h2>
+  <p>JavaScript provides real-time feedback, custom error messages, and complex logic that cannot be achieved with simple HTML attributes alone. It's often used before a form is submitted to the server to prevent unnecessary network requests.</p>
+
+  <h2>2. Basic Validation Pattern</h2>
+  <pre><code>function validateForm() {
+    let name = document.forms["myForm"]["fname"].value;
+    if (name === "") {
+        alert("Name must be filled out");
+        return false; // Stop form submission
+    }
+}</code></pre>
+
+  <h2>3. The Constraint Validation API</h2>
+  <p>Most modern browsers include a built-in Constraint Validation API as part of the <strong>HTMLInputElement</strong> interface. Key properties and methods include:</p>
+  <ul>
+    <li><code>checkValidity()</code>: Returns true if an input element contains valid data.</li>
+    <li><code>setCustomValidity(message)</code>: Sets a custom message to display if validation fails.</li>
+    <li><code>validationMessage</code>: Contains the message the browser will display to the user.</li>
+    <li><code>validity</code>: Returns a <code>ValidityState</code> object with specific details on what failed (e.g., <code>valueMissing</code>, <code>typeMismatch</code>, <code>tooShort</code>).</li>
+  </ul>
+
+  <h2>4. Data Validation and Regex</h2>
+  <p>Regular expressions are frequently used in JavaScript form validation for things like email addresses, phone numbers, and strong passwords.</p>
+  <pre><code>function isValidEmail(email) {
+  let re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(email);
+}</code></pre>
+
+  <h2>Conclusion</h2>
+  <p>Always remember: <strong>client-side validation is NOT a security measure</strong>. It is exclusively a usability feature. Because JavaScript can be bypassed, you must always perform robust validation on the server side as well.</p>
+</div>

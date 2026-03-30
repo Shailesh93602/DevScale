@@ -1,0 +1,57 @@
+{
+  "title": "JavaScript Arrays Quiz",
+  "description": "Evaluate your understanding of creating, manipulating, and iterating over JavaScript arrays.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which of the following is correct syntax for creating a JavaScript array as a literal?",
+      "options": [
+        "const items = [1, 2, 3]",
+        "const items = new Array(1, 2, 3)",
+        "Both A and B.",
+        "Neither A nor B."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the key difference between push() and unshift()?",
+      "options": [
+        "push() adds an element to the end, while unshift() adds it to the beginning.",
+        "unshift() removes an element from the array.",
+        "push() adds an element at its specified index.",
+        "There is no difference."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which method returns a NEW array with elements that pass a test?",
+      "options": ["map()", "forEach()", "filter()", "find()"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "How do you access the last element in an array named 'items'?",
+      "options": [
+        "items[items.length - 1]",
+        "items.last()",
+        "items[items.size]",
+        "items.pop()"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What does map() return?",
+      "options": [
+        "undefined",
+        "A new array with different values based on a function.",
+        "The first element that passes a test.",
+        "A true or false boolean."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
