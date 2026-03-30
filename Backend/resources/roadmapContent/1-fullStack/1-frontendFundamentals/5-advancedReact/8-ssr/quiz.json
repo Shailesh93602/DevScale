@@ -1,0 +1,52 @@
+{
+  "title": "Server-Side Rendering (SSR) Quiz",
+  "description": "Evaluate your understanding of SSR benefits like SEO/FCP, Hydration, and Next.js.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primary benefit of SSR for search engine optimization (SEO)?",
+      "options": [
+        "It makes the app faster to build.",
+        "It provides pre-rendered HTML content that can be easily crawled and indexed by search engines.",
+        "It hides all JavaScript code from the user.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the name of the process where React takes over the static HTML sent by the server and makes it interactive?",
+      "options": ["Hydration", "Serialization", "Compilation", "Reactivation"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which of the following describes the difference between SSR and CSR (Client-Side Rendering)?",
+      "options": [
+        "SSR renders the page in the browser, while CSR renders it on the server.",
+        "SSR renders the page on the server, while CSR renders it in the browser using JavaScript.",
+        "There is no difference in rendering location.",
+        "Only CSR can be used with React."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which modern React framework is most commonly used for handling SSR and dynamic data fetching?",
+      "options": ["Vue.js", "Angular", "Next.js", "Express.js"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Does SSR improve the First Contentful Paint (FCP) for users on slow networks?",
+      "options": [
+        "Yes, as they see the initial HTML content sooner.",
+        "No, it actually slows down the first paint.",
+        "Only if you use class-based syntax.",
+        "Only if you return them with an ID."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

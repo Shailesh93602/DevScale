@@ -1,0 +1,62 @@
+{
+  "title": "React Error Boundaries Quiz",
+  "description": "Evaluate your understanding of catching errors, lifecycle methods, and fallback UI in React.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primary role of an Error Boundary in React?",
+      "options": [
+        "To speed up the app by caching components.",
+        "To catch JavaScript errors anywhere in their child component tree and display a fallback UI.",
+        "To replace the standard try-catch blocks in JS.",
+        "To prevent any error from ever occurring."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Can a functional component be an Error Boundary in the latest stable version of React?",
+      "options": [
+        "Yes, using the useError() hook.",
+        "No, only class components can be error boundaries currently.",
+        "Yes, but only in older versions of React.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which lifecycle method should you use inside an error boundary component to render a fallback UI?",
+      "options": [
+        "static getDerivedStateFromError()",
+        "componentDidCatch()",
+        "componentDidMount()",
+        "renderError()"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Will an Error Boundary catch errors inside event handlers?",
+      "options": [
+        "Yes, it catches all errors.",
+        "No, it does not catch errors inside event handlers (regular try-catch should be used there).",
+        "Only if you return them.",
+        "Only in older versions of React."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What happens if an Error Boundary itself throws an error?",
+      "options": [
+        "It will be automatically caught by itself.",
+        "It will bubble up to the next closest error boundary above it in the tree.",
+        "React logs a warning and continues.",
+        "The app crashes instantly."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "title": "React Context API Quiz",
+  "description": "Evaluate your understanding of prop drilling, context providers, and the useContext hook.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primary problem that the Context API solves in React?",
+      "options": [
+        "Faster component rendering.",
+        "Prop drilling (passing props through many levels).",
+        "Managing API call requests.",
+        "Replacing the need for state."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which built-in React function should you use to create a new Context object?",
+      "options": ["createContext()", "newContext()", "useContext()", "makeContext()"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the role of the Provider in the Context API?",
+      "options": [
+        "To fetch data from an API and provide it.",
+        "To wrap the component tree and pass down a 'value' prop to all its descendants.",
+        "To define the state of the parent component.",
+        "To return the final JSX of the application."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which hook can be used inside a functional component to read the current value of a Context Provider?",
+      "options": ["useState()", "useEffect()", "useContext()", "useMemo()"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Does every consumer component need to be directly inside a Provider element for the Context to work?",
+      "options": [
+        "Yes, always.",
+        "No, they only need to be descendants of a component wrapped in a Provider.",
+        "Yes, but only in older versions of React.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "title": "Vue Directives Quiz",
+  "description": "Evaluate your understanding of common Vue.js directives like v-bind, v-model, v-if, v-for, and v-show.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the prefix for all Vue.js directives?",
+      "options": ["vue-", "v-", "app-", "js-"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which directive is used to create a two-way data binding on form elements?",
+      "options": ["v-bind", "v-input", "v-model", "v-state"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the difference between v-if and v-show?",
+      "options": [
+        "v-if physically adds or removes elements from the DOM, while v-show toggles their 'display' CSS property.",
+        "v-if is only for class components, while v-show is only for functional components.",
+        "They are the same.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which directive should you use to render a list of elements from an array?",
+      "options": ["v-map", "v-list", "v-for", "v-repeat"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Does v-bind have a shorthand syntax in Vue templates?",
+      "options": [
+        "Yes, the colon (:) shorthand (e.g. :href).",
+        "No, you must always use v-bind.",
+        "Only for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "title": "Data Binding in Vue.js Quiz",
+  "description": "Evaluate your understanding of text interpolation, one-way attribute binding (v-bind), and two-way data binding (v-model).",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what syntax is used for text interpolation in Vue templates?",
+      "options": ["{ }", "{{ }}", "( )", "[ ]"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which directive and/or what shorthand is used to bind an HTML attribute (like src) to a dynamic value?",
+      "options": ["v-attr", "v-bind (shorthand :)", "v-prop (shorthand @)", "v-model"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the primary role of two-way data binding (v-model)?",
+      "options": [
+        "To only show data in the HTML.",
+        "To allow user input in HTML to automatically update the JS state and vice versa.",
+        "To prevent any data from ever reaching the server.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Can you use JavaScript expressions inside double curly braces (e.g. {{ number + 1 }})?",
+      "options": [
+        "Yes, as long as it's a single expression.",
+        "No, only property names are allowed.",
+        "Only in older versions of Vue.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Is the 'Mustache' syntax ({{ }}) reactive in Vue.js?",
+      "options": [
+        "Yes, it automatically updates whenever the underlying property changes.",
+        "No, it only renders once on page load.",
+        "Only for string-based data.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "title": "React with TypeScript Quiz",
+  "description": "Evaluate your understanding of component typing, hook typing with generics, and event handler typing.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primary benefit of using TypeScript with React?",
+      "options": [
+        "Faster component rendering.",
+        "Static type checking to catch errors early.",
+        "Replacing the need for state management.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of the following is the standard way to type props in a functional component definition?",
+      "options": [
+        "Using interface or type before the component.",
+        "Passing a JSON object to the component.",
+        "Using getPropsType() method.",
+        "React handles it automatically without types."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "How do you give a useState hook a specific type in TypeScript?",
+      "options": [
+        "useState(type: 'string')",
+        "const [state, setState] = useState<string>('');",
+        "useState().as('string')",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which event type would you use for a standard input's 'onChange' handler in React with TypeScript?",
+      "options": [
+        "React.KeyboardEvent",
+        "React.ChangeEvent<HTMLInputElement>",
+        "React.MouseEvent",
+        "React.DragEvent"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "React with TypeScript allows you to build truly type-safe applications by catching errors before they ever reach the user's browser.",
+      "options": [
+        "True",
+        "False (it only checks at runtime)",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

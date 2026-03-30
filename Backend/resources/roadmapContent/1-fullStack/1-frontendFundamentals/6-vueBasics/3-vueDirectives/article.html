@@ -1,0 +1,24 @@
+<div class="article-content">
+  <h1>Vue.js Directives</h1>
+  <p>Directives are special attributes with the <code>v-</code> prefix. They provide a declarative way to tell Vue to perform specific actions on a DOM element when data changes.</p>
+
+  <h2>1. Common Built-in Directives</h2>
+  <ul>
+    <li><strong>v-bind (<code>:</code>)</strong>: Dynamically binds one or more attributes, or a component prop to an expression.</li>
+    <li><strong>v-model</strong>: Creates a two-way data binding on form elements.</li>
+    <li><strong>v-if / v-else</strong>: Conditionally renders an element based on the truthiness of an expression.</li>
+    <li><strong>v-for</strong>: Renders a list of items based on an array.</li>
+  </ul>
+
+  <h2>2. Conditional Rendering (v-if vs. v-show)</h2>
+  <p>While <code>v-if</code> physically adds or removes elements from the DOM, <code>v-show</code> only toggles their <code>display</code> CSS property. <code>v-if</code> is more expensive to toggle but is better if the condition is unlikely to change often.</p>
+
+  <h2>3. Working with Lists (v-for)</h2>
+  <p>Using <code>v-for</code>, you can render elements dynamically for each item in an array of data. Just like in React, remember to provide a <code>:key</code> attribute for performance and stability.</p>
+  <pre><code>&lt;li v-for="item in items" :key="item.id"&gt;
+  {{ item.text }}
+&lt;/li&gt;</code></pre>
+
+  <h2>Conclusion</h2>
+  <p>Directives are one of Vue’s most powerful and visible features. By using them, you can build dynamic and interactive web applications with significantly less code than traditional JavaScript, while maintaining a clear and declarative template structure.</p>
+</div>

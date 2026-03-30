@@ -1,0 +1,4 @@
+{
+    "name": "Server-Side Rendering (SSR)",
+    "description": "Learn how small pieces of data called SSR fragments can be used to pre-render your React components on the server during their existence."
+}

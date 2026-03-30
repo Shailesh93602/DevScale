@@ -1,0 +1,4 @@
+{
+    "name": "React Memoization",
+    "description": "Learn how small pieces of data called memoized values can be used to optimize your React components during their existence."
+}

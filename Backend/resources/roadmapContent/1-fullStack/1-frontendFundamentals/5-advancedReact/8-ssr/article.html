@@ -1,0 +1,20 @@
+<div class="article-content">
+  <h1>Server-Side Rendering (SSR)</h1>
+  <p>Server-Side Rendering is the process of generating the full HTML for a page on the server before sending it to the client. This is the opposite of Client-Side Rendering, where the browser downloads a blank HTML page and builds the UI using JavaScript.</p>
+
+  <h2>1. Benefits of SSR</h2>
+  <ul>
+    <li><strong>SEO-Friendly:</strong> Search engines can easily crawl and index the pre-rendered HTML content of your pages.</li>
+    <li><strong>Faster First Contentful Paint (FCP):</strong> Users see the initial page content much sooner than on a client-side rendered app.</li>
+    <li><strong>Better Performance on Low-End Devices:</strong> The server does the heavy lifting of rendering, reducing the processing load on the browser.</li>
+  </ul>
+
+  <h2>2. How it works: Hydration</h2>
+  <p>In SSR, the server sends a static HTML page. React then "takes over" that HTML in a process called <strong>Hydration</strong>. This attaches event listeners and becomes a fully interactive single-page application after the initial load.</p>
+
+  <h2>3. Modern Frameworks: Next.js</h2>
+  <p>While you can set up SSR manually using Node.js and React's <code>renderToString()</code> function, most developers use modern frameworks like **Next.js** to handle the complexity of SSR and data fetching automatically.</p>
+
+  <h2>Conclusion</h2>
+  <p>Server-Side Rendering is a key architectural choice for building high-performance and SEO-compliant web applications. By mastering how to pre-render your React components on the server, you can provide your users with a faster and more accessible web experience from the very first visit.</p>
+</div>

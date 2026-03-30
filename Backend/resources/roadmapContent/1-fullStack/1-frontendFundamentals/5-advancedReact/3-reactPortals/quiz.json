@@ -1,0 +1,52 @@
+{
+  "title": "React Portals Quiz",
+  "description": "Evaluate your understanding of createPortal, use cases like modals, and event bubbling in portals.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primary purpose of a React Portal?",
+      "options": [
+        "To render components in a different thread.",
+        "To render children into a DOM node that exists outside the parent component's DOM hierarchy.",
+        "To speed up the app by caching components.",
+        "To create a global state."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which function should you use to create a portal in React?",
+      "options": ["createPortal()", "newPortal()", "usePortal()", "makePortal()"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the result when an event is fired inside a portal (even if the portal's DOM element is outside the parent)?",
+      "options": [
+        "The event does not bubble up.",
+        "The event bubbles up the portal's actual DOM tree.",
+        "The event bubbles up the React component tree to its parent/ancestors.",
+        "The event is automatically cancelled."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "For which of the following use cases is a React Portal commonly used?",
+      "options": ["Modals", "Tooltips", "Global alerts", "All of the above"],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "Does createPortal() need a DOM element as its second argument?",
+      "options": [
+        "Yes, such as document.body or an element selected by ID.",
+        "No, it can determine where to render automatically.",
+        "Yes, but only in functional components.",
+        "Only if you use class-based syntax."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
