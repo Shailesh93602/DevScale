@@ -1,0 +1,37 @@
+{
+  "title": "Introduction to File Handling Quiz",
+  "description": "Test your fundamental knowledge about file handling in Node.js and Express.js.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which Node.js module is used most frequently for file system operations?",
+      "options": ["Path", "Fs (File System)", "Http", "Event"],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Why should you avoid synchronous functions like 'fs.readFileSync()' in an Express app?",
+      "options": ["Because they are slower than standard functions.", "Because they block the single-threaded Node.js event loop, preventing other requests from being handled.", "Because they are not supported in production.", "Because they only work in local development."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's the main benefit of using 'Streams' instead of 'Buffers' for large files?",
+      "options": ["To store more data on a single machine.", "To read or write data chunk by chunk, preventing memory exhaustion.", "To automatically backup the database.", "To make the application more secure."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which HTML form data encoding is required to upload files to a server?",
+      "options": ["application/json", "text/plain", "multipart/form-data", "application/x-www-form-urlencoded"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What's a common initial step for any file handling process when a server receives an incoming request?",
+      "options": ["Resize the image automatically.", "Parse the binary file data using specialized middleware.", "Ask for user permission.", "Delete the file immediately."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

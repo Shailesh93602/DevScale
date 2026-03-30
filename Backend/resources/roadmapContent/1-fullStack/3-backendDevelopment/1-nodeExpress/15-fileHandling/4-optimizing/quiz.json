@@ -1,0 +1,37 @@
+{
+  "title": "File Compression and Optimization Quiz",
+  "description": "Test your knowledge about the critical role of file optimization in modern web development.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which of these libraries is the industry standard for high-performance image processing (resizing, converting, etc.) in Node.js?",
+      "options": ["Express", "Mongoose", "Sharp", "Multer"],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What is the primary benefit of converting images to the WebP format?",
+      "options": ["It's more secure than JPEG.", "It's the only format compatible with mobile devices.", "It provides superior compression, which leads to much smaller file sizes than JPEG or PNG at similar quality levels.", "None of the above."],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "Which Express.js middleware can you use to automatically compress almost all HTTP responses (JSON, HTML, etc.)?",
+      "options": ["Bcrypt", "Compression", "Helmet", "Cors"],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is 'Stripping Metadata' and why is it useful?",
+      "options": ["Deleting the original image file.", "Removing non-image data like GPS coordinates and camera information from an image file.", "A way to encrypt files using a secret key.", "To automatically generate a backup of the data."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What does Gzip or Brotli compression typically achieve for text-based responses (HTML, JSON, etc.)?",
+      "options": ["Around 5-10% size reduction.", "60% to 80% size reduction.", "No reduction, it's strictly for audio and video files.", "It actually makes files larger."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

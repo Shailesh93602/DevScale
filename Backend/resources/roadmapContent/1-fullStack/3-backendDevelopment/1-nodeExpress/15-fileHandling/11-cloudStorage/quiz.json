@@ -1,0 +1,37 @@
+{
+  "title": "Cloud File Storage Quiz",
+  "description": "Test your knowledge about the critical role of cloud storage in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the primary characteristic of Object Storage (like Amazon S3)?",
+      "options": ["It organizes files in a traditional folder hierarchy.", "It treats every file as a discrete 'object' with a unique key and metadata, stored in flat 'buckets'.", "It can only store small text files.", "It's a type of database indexing."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Why is it generally a good practice to use cloud storage instead of local disk storage in production?",
+      "options": ["It's more secure than traditional local disks.", "It's free for every user.", "It allows your application to remain stateless and scale horizontally across multiple servers.", "It's a requirement of all CSS frameworks."],
+      "correctAnswer": 2,
+      "points": 20
+    },
+    {
+      "question": "What's the purpose of a 'Pre-signed URL' in Cloud Storage?",
+      "options": ["To make your entire bucket public for easy access.", "To provide temporary, time-limited access to a private file without making it public.", "To automatically generate a backup of the data.", "To hide the storage provider's ID."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is the most popular Cloud Storage service used by web developers?",
+      "options": ["Express S3", "Amazon S3", "Mongoose Cloud", "React Storage"],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is 'S3 Versioning' used for?",
+      "options": ["To automatically resize images for different devices.", "To keep multiple versions of the same file, allowing you to recover accidentally deleted or overwritten ones.", "To make the application faster.", "To hide the files from search engines."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}
