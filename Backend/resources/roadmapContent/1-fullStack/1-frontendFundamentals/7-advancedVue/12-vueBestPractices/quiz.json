@@ -1,0 +1,52 @@
+{
+  "title": "Vue.js Best Practices Quiz",
+  "description": "Evaluate your understanding of modularity, Composition API vs Options API, and performance (v-if/v-for).",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the Single Responsibility Principle for Vue components?",
+      "options": [
+        "A component should only handle one thing and handle it well.",
+        "A component must have at least 500 lines of code.",
+        "A component can only be used once in an app.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which API is generally preferred for building more professional and complex Vue 3 applications?",
+      "options": ["Options API", "Composition API", "Vuex API", "Native API"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of the following is true about using v-if and v-for on the same element?",
+      "options": [
+        "It's a great practice for performance.",
+        "It's generally discouraged because v-for has a higher priority and will evaluate the condition for every item.",
+        "It's only for mobile apps.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the recommended alternative for using v-if on a list?",
+      "options": [
+        "Filter the list in a computed property before rendering it with v-for.",
+        "Use more <div> tags.",
+        "Only write formatting logic in HTML comments.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the recommended naming convention for Vue components?",
+      "options": ["kebab-case (e.g. todo-item.vue)", "PascalCase (e.g. TodoItem.vue)", "camelCase (e.g. todoItem.vue)", "UPPERCASE (e.g. TODOITEM.VUE)"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

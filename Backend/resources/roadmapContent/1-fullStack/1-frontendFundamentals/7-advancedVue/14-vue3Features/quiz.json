@@ -1,0 +1,52 @@
+{
+  "title": "Vue 3 New Features Quiz",
+  "description": "Evaluate your understanding of Proxy-based reactivity, Teleport, and Fragments (multiple root elements).",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the major reactivity improvement in Vue 3?",
+      "options": [
+        "A simpler HTML-based reactivity system.",
+        "A new Proxy-based reactivity system for better performance and memory usage.",
+        "A system only for class components.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which component allows you to render part of a component's template at a completely different location in the DOM?",
+      "options": ["<Teleport>", "<Portal>", "<Fragment>", "<Move>"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Can Vue 3 components now have multiple root elements in their template (Fragments)?",
+      "options": [
+        "Yes, this is now fully supported in Vue 3.",
+        "No, they still require exactly one root element.",
+        "Only for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which experimental component was introduced in Vue 3 to handle nested async dependencies in your component tree?",
+      "options": ["<Async>", "<Suspense>", "<Loading>", "<Wait>"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Vue 3 is a built-in library in the Vue core and doesn't require an external package installation.",
+      "options": [
+        "True",
+        "False (it must be installed via 'vue' package)",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
