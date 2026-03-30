@@ -1,0 +1,4 @@
+{
+    "name": "Lifting State Up",
+    "description": "Learn how small pieces of data called state can be used to synchronize information between your React components."
+}

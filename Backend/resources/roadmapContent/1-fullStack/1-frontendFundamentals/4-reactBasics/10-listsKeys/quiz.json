@@ -1,0 +1,57 @@
+{
+  "title": "React Lists and Keys Quiz",
+  "description": "Evaluate your understanding of array mapping and the importance of unique keys in React.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the best JavaScript function to use for rendering an array of elements in React?",
+      "options": ["forEach()", "filter()", "map()", "reduce()"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the primary purpose of the 'key' prop in a React list elements?",
+      "options": [
+        "To provide a label for users.",
+        "To help React identify which items have changed, been added, or been removed.",
+        "To specify the CSS class of each list item.",
+        "To count the number of items in the list."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Do keys need to be globally unique across the whole application?",
+      "options": [
+        "Yes, always.",
+        "No, they only need to be unique among siblings.",
+        "Yes, but only if you use state management.",
+        "No, they can repeat anywhere."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "When is it generally discouraged to use the array index as a key in React list elements?",
+      "options": [
+        "When the list order may change (sorting, adding/removing).",
+        "When the list contains more than 10 items.",
+        "When you're using class components.",
+        "Never, using the index is always recommended."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Is the key prop passed as a regular prop into the child component (e.g., props.key)?",
+      "options": [
+        "Yes, like any other prop.",
+        "No, it's a special prop used only by React and not accessible within the component.",
+        "Only if you de-structure it.",
+        "Only in older versions of React."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+<div class="article-content">
+  <h1>JavaScript Browser Object Model (BOM)</h1>
+  <p>The <strong>Browser Object Model (BOM)</strong> allows JavaScript to "talk to" the browser. There are no official standards for the BOM, but modern browsers have implemented almost the same methods and properties for interactivity.</p>
+
+  <h2>1. The Window Object</h2>
+  <p>The <code>window</code> object is the global object for all browser-based JavaScript. All global variables and functions are members of the window object. Some key properties include:</p>
+  <ul>
+    <li><code>window.innerHeight</code>: The inner height of the browser window (in pixels).</li>
+    <li><code>window.innerWidth</code>: The inner width of the browser window (in pixels).</li>
+    <li><code>window.open() / window.close()</code>: Opens a new browser window or tab.</li>
+  </ul>
+
+  <h2>2. The Location Object</h2>
+  <p>The <code>window.location</code> object is used to get the current page address (URL) and to redirect the browser to a new page.</p>
+  <pre><code>console.log(location.href);     // Full URL
+console.log(location.hostname); // Domain name
+console.log(location.pathname); // Path of the current page</code></pre>
+
+  <h2>3. The History Object</h2>
+  <p>The <code>window.history</code> object contains the browsers history. It allows you to move back and forth between previously visited pages.</p>
+  <pre><code>history.back();    // Same as clicking back
+history.forward(); // Same as clicking forward
+history.go(-2);    // Go back two pages</code></pre>
+
+  <h2>4. The Navigator Object</h2>
+  <p>The <code>window.navigator</code> object contains information about the visitor's browser, including the name, version, and language.</p>
+  <ul>
+    <li><code>navigator.userAgent</code>: Returns the user-agent header sent by the browser.</li>
+    <li><code>navigator.onLine</code>: Returns true if the browser is online.</li>
+    <li><code>navigator.language</code>: Returns the browser's language setting.</li>
+  </ul>
+
+  <h2>Conclusion</h2>
+  <p>The BOM is what makes JavaScript unique as a web-centric language. By understanding how to interact with the window, location, history, and navigator objects, you can build powerful and aware web applications that respond to the environment they run in.</p>
+</div>

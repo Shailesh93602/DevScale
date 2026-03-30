@@ -1,0 +1,22 @@
+<div class="article-content">
+  <h1>React Lifecycle Methods</h1>
+  <p>In React, every component goes through a lifecycle of events. You can think of it as three main phases: <strong>Mounting</strong> (being created), <strong>Updating</strong> (changing state), and <strong>Unmounting</strong> (being removed).</p>
+
+  <h2>1. Mounting Phase</h2>
+  <p>This is when the component is being initialized and inserted into the DOM. In older class-based components, <code>componentDidMount()</code> was used here. In functional components, this is handled by a <code>useEffect()</code> with an empty dependency array <code>[]</code>.</p>
+
+  <h2>2. Updating Phase</h2>
+  <p>This phase occurs when a component's state or props change. In class components, <code>componentDidUpdate()</code> was the standard. In functional components, <code>useEffect()</code> with specific dependencies in the array handles this.</p>
+
+  <h2>3. Unmounting Phase</h2>
+  <p>This is when the component is being removed from the DOM. In class components, <code>componentWillUnmount()</code> was used for cleanup (like canceling API calls or timers). In functional components, you <strong>return a function</strong> from within <code>useEffect()</code>.</p>
+  <pre><code>useEffect(() => {
+  // Mount/Update logic
+  return () => {
+    // Cleanup/Unmount logic
+  };
+}, [dependencies]);</code></pre>
+
+  <h2>Conclusion</h2>
+  <p>While class-based lifecycle methods are still supported, the modern <code>useEffect</code> hook provides a more unified and simplified way to handle all three phases. Understanding how hooks map to these lifecycle events is essential for writing robust and bug-free React applications.</p>
+</div>

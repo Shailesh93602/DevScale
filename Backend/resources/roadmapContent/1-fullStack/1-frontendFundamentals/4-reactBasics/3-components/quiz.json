@@ -1,0 +1,52 @@
+{
+  "title": "React Components Quiz",
+  "description": "Evaluate your understanding of React component structure, naming conventions, and composition.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which of the following is correct syntax for a React functional component?",
+      "options": [
+        "function mycomponent() { return <h1>Hello</h1>; }",
+        "function MyComponent() { return ( <h1>Hello</h1> ); }",
+        "const MyComponent = () => { return <h1>Hello</h1>; }",
+        "Both B and C."
+      ],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "What is the naming convention for React components?",
+      "options": ["camelCase", "PascalCase (starts with capital)", "snake_case", "kebab-case"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What should every React component return to render in the UI?",
+      "options": ["Raw HTML string", "JSON object", "JSX element", "CSS style object"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "In React, can you use a component inside another component?",
+      "options": [
+        "Yes, always (this is called composition).",
+        "No, components must be independent.",
+        "Yes, but only if they are in the same file.",
+        "Only if they are class components."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "If you use 'export default MyComponent', how should you import it in another file?",
+      "options": [
+        "import { MyComponent } from './MyComponent';",
+        "import MyComponent from './MyComponent';",
+        "const MyComponent = require('./MyComponent');",
+        "import * as MyComponent from './MyComponent';"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

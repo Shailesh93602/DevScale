@@ -1,0 +1,28 @@
+<div class="article-content">
+  <h1>JSX (JavaScript XML)</h1>
+  <p>JSX is a syntax extension for JavaScript used with React. It looks a lot like HTML but is actually JavaScript. JSX allows you to write your UI structure using a familiar, tag-based syntax alongside your logic code.</p>
+
+  <h2>1. Why Use JSX?</h2>
+  <p>You don't <strong>have</strong> to use JSX with React, but most developers do because it's much easier to read and write than the underlying <code>React.createElement()</code> code it compiles into.</p>
+  <pre><code>// With JSX:
+const element = &lt;h1&gt;Hello, World!&lt;/h1&gt;;
+
+// Without JSX:
+const element = React.createElement("h1", null, "Hello, World!");</code></pre>
+
+  <h2>2. Rules of JSX</h2>
+  <ul>
+    <li><strong>className, not class:</strong> Since <code>class</code> is a reserved keyword in JavaScript, use <code>className</code> for CSS classes.</li>
+    <li><strong>htmlFor, not for:</strong> Similarly, use <code>htmlFor</code> for <code>&lt;label&gt;</code> tags.</li>
+    <li><strong>Single Parent:</strong> JSX must always be wrapped in a single parent element (use <code>&lt;div&gt;</code> or a <strong>Fragment</strong> <code>&lt;&gt;...&lt;/&gt;</code>).</li>
+    <li><strong>camelCase:</strong> HTML attributes become camelCase (e.g., <code>onclick</code> becomes <code>onClick</code>).</li>
+  </ul>
+
+  <h2>3. Embedding Expressions</h2>
+  <p>You can embed any JavaScript expression inside JSX by wrapping it in curly braces <code>{}</code>.</p>
+  <pre><code>const name = "Josh";
+const element = &lt;h1&gt;Hello, {name}!&lt;/h1&gt;;</code></pre>
+
+  <h2>Conclusion</h2>
+  <p>JSX is what makes React both powerful and enjoyable to work with. By allowing you to describe your UI and logic in the same place, it simplifies development and improves code clarity. Once you master the basic rules, you'll never want to go back to manual DOM updates again.</p>
+</div>
