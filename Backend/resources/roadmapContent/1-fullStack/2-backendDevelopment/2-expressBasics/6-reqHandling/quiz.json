@@ -1,0 +1,52 @@
+{
+  "title": "Request Handling Quiz",
+  "description": "Evaluate your understanding of data extraction from the req object (body/params/query) and the Importance of input validation with professional tools.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily role of 'Request Handling' in an Express.js application?",
+      "options": [
+        "Faster component rendering.",
+        "Extracting and validating information (like a user's ID or form data) from an incoming network request.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what property in the 'req' object is commonly used to access dynamic URL parameters like ':id' (e.g., /users/123)?",
+      "options": ["req.query", "req.params", "req.body", "req.headers"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what was the primarily benefit of using a library like 'express-validator' inside an Express project?",
+      "options": [
+        "To check that incoming user data (like an email or a password) matches the expected format before processing it.",
+        "Only for older browsers.",
+        "To hide all non-number characters.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what property in the 'req' object is used in a professional project to access 'Query Parameters' (the part after the ? in a URL)?",
+      "options": ["req.params", "req.query", "req.search", "req.data"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does following a solid 'Request Handling' strategy help prevent malicious or incorrect data from reaching your database?",
+      "options": [
+        "Yes, as it is a core feature of any high-quality production web development process.",
+        "No, it's always slower.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "title": "Error Handling Quiz",
+  "description": "Evaluate your understanding of the 4-argument global error middleware and the role of wrapping asynchronous handlers to catch uncaught awaited errors.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily role of 'Error Handling' in an Express.js application?",
+      "options": [
+        "Faster component rendering.",
+        "Catching and managing exceptions to prevent the server from crashing and to provide professional feedback to users.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "In Express.js, how many arguments should an 'Error Middleware' function always contain?",
+      "options": ["Two (req, res)", "Three (req, res, next)", "Four (err, req, res, next)", "None of the above."],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what was the primarily benefit of using a specialized utility function like 'asyncHandler'?",
+      "options": [
+        "To automatically catch errors in an asynchronous route and pass them to the global error middleware.",
+        "Only for older browsers.",
+        "To hide all non-number characters.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which argument in the Error Middleware contains the specific error message or object passed from the previous code?",
+      "options": ["err", "req", "res", "next"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Does following a solid 'Error Handling' strategy help build truly Fullstack applications by ensuring high availability and professional user feedback during crashes?",
+      "options": [
+        "Yes, as it is a core feature of any modern server-side framework.",
+        "No, it's always slower.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
