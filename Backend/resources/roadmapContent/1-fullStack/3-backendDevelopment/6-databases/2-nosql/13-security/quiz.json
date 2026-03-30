@@ -1,0 +1,37 @@
+{
+  "title": "NoSQL Database Security Quiz",
+  "description": "Test your fundamental knowledge about securing NoSQL databases in modern web applications.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What's the meaning of 'Role-Based Access Control' (RBAC) in NoSQL security?",
+      "options": ["Assigning permissions based on a user's job role (e.g., readOnly, clusterAdmin) to ensure the principle of least privilege.", "A way to encrypt files using a secret key.", "A type of database indexing.", "None of the above."],
+      "correctAnswer": 0,
+      "points": 20
+    },
+    {
+      "question": "Which of these is a typical best practice for 'Network Isolation' of a NoSQL database?",
+      "options": ["Expose the database directly to the public internet for easy access.", "Only allow incoming traffic from your specific application servers within a Virtual Private Cloud (VPC).", "Disable all firewalls for better performance.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is 'NoSQL Injection' and how can it be prevented?",
+      "options": ["A way to backup the database.", "Using malicious operators (like $ne) to bypass query logic; it can be prevented by sanitizing user-supplied objects and using strict schemas like Mongoose.", "A type of database indexing.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is 'Encryption in Transit' and why is it useful?",
+      "options": ["Using TLS/SSL to encrypt the connection between your application and the database, preventing attackers from 'sniffing' sensitive data on the network.", "To automatically compress files.", "A way to hide the application's IP address.", "None of the above."],
+      "correctAnswer": 0,
+      "points": 20
+    },
+    {
+      "question": "Which of these is the most important rule for production security in any database?",
+      "options": ["Never rely on a manual process for backups.", "Never use default credentials or leave the database without authentication enabled.", "To hide the application's IP address.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

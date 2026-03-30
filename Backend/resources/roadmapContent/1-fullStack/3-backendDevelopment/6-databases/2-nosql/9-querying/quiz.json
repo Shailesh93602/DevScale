@@ -1,0 +1,37 @@
+{
+  "title": "Querying NoSQL Databases Quiz",
+  "description": "Test your fundamental knowledge about querying and data retrieval in NoSQL databases.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which of these is the most common query syntax for document-based databases like MongoDB?",
+      "options": ["SQL", "MQL (MongoDB Query Language)", "GraphQL", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's the meaning of 'Aggregation Pipeline' in NoSQL?",
+      "options": ["A way to backup the database.", "A series of data transformation stages (match, group, sort) used to perform complex analysis and gathering in a single database call.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which MongoDB command allows you to see how the database plans to execute a specific query and whether it's using an index?",
+      "options": ["EXPLAIN", "GET", "INFO", ".explain()", "SHOW"],
+      "correctAnswer": 3,
+      "points": 20
+    },
+    {
+      "question": "Which of these is a typical benefit of 'Native Full-Text Search' in a NoSQL database?",
+      "options": ["It makes the database smaller.", "It can match 'Running' to 'Runners' or other related words, providing much better search results than a simple string match.", "It's supported by all browsers.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is the primary danger of using 'KEYS *' in a production Redis database?",
+      "options": ["It makes the database faster.", "It's a blocking operation that scans every single key in the database, potentially slowing down or crashing the entire system.", "To automatically generate a backup of the database.", "To improve the user experience."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "title": "NoSQL Replication and Sharding Quiz",
+  "description": "Test your fundamental knowledge about replication and sharding in NoSQL databases.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is 'Replication' in the context of NoSQL databases?",
+      "options": ["Deleting data twice to be sure.", "Creating multiple copies of your data across different nodes (servers) to ensure high availability.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What's the primary benefit of 'Sharding' (Horizontal Scaling) in NoSQL?",
+      "options": ["It makes the database smaller.", "It splits your entire database into smaller pieces (shards) and distributes them across many servers, allowing the system to handle data and traffic too large for any single server.", "To automatically generate a backup of the data.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "What is a 'Shard Key' in a distributed NoSQL database?",
+      "options": ["A key used to encrypt the entire cluster.", "A specific field (like user_id or region) that determines which server a specific document belongs on.", "A type of database indexing.", "A way to automatically compress files."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "In a MongoDB 'Replica Set', what happens if the Primary node (the only one that handles writes) fails?",
+      "options": ["The entire database stops working.", "The system automatically holds an 'election' among the secondary nodes to decide who becomes the new Primary.", "To automatically generate a backup of the database.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    },
+    {
+      "question": "Which of these is the most important best practice when choosing a 'Shard Key' in a high-scale application?",
+      "options": ["Choose a random value for every document.", "Ensure that writes and reads are evenly distributed across all shards, avoiding 'hot shards' where one server handles too much traffic.", "To hide the application's IP address.", "None of the above."],
+      "correctAnswer": 1,
+      "points": 20
+    }
+  ]
+}
