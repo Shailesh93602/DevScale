@@ -1,0 +1,57 @@
+{
+  "title": "React Fragments Quiz",
+  "description": "Evaluate your understanding of DOM cleanliness, the long vs short syntax, and why avoiding extra divs matters.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primary purpose of a React Fragment?",
+      "options": [
+        "To group multiple React elements without adding extra nodes to the DOM tree.",
+        "To speed up the app by caching components.",
+        "To provide a replacement for CSS styles.",
+        "To create a global state."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which of the following is the 'short' syntax for declaring a React Fragment?",
+      "options": ["<Fragment></Fragment>", "<React.Fragment></React.Fragment>", "<></>", "<div fragment='true'></div>"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Why would you use a Fragment instead of a <div> for grouping elements?",
+      "options": [
+        "To avoid cluttering the DOM with extra structural nodes.",
+        "To ensure that CSS grid or flexbox layouts behave correctly with expected children.",
+        "To improve performance by minimizing DOM node count.",
+        "All of the above."
+      ],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "Can you use a 'key' prop with the short Fragment syntax (<>...</>)?",
+      "options": [
+        "Yes, always.",
+        "No, you must use the full <React.Fragment key={id}> syntax if you need a key.",
+        "Only in older versions of React.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does using a Fragment impact the component tree structure for React's own internal diffing engine?",
+      "options": [
+        "Yes, it creates a new parent-child depth level.",
+        "No, React treats children of a Fragment as direct siblings in its internal logic.",
+        "Only if you use the short syntax.",
+        "Only if you return them with an ID."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

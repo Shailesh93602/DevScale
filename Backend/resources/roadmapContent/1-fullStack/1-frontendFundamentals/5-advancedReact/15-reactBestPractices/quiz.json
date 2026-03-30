@@ -1,0 +1,62 @@
+{
+  "title": "React Best Practices Quiz",
+  "description": "Evaluate your understanding of modularity, functional components, accessibility, and file structure.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the Single Responsibility Principle for React components?",
+      "options": [
+        "A component should only handle one thing and handle it well.",
+        "A component must have at least 500 lines of code.",
+        "A component can only be used once in an app.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which of the following is true about modern React component preference?",
+      "options": [
+        "Class components are the industry standard for new apps.",
+        "Functional components with hooks are preferred over class components.",
+        "Both are exactly the same in performance and readability.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the recommended approach if a component becomes very large (e.g., hundreds of lines)?",
+      "options": [
+        "Ignore it and keep adding more code.",
+        "Break it down into smaller, simpler, and more testable sub-components.",
+        "Rewrite only the styling parts.",
+        "Add more comments to explain it."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of the following is a key part of Accessibility (A11y)?",
+      "options": [
+        "Using semantic HTML.",
+        "Providing alt text for images.",
+        "Using aria-labels for interactive elements.",
+        "All of the above."
+      ],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "Is a consistent project file structure (e.g. putting components and pages in specific folders) useful for large teams?",
+      "options": [
+        "Yes, it makes the codebase more navigable and maintainable.",
+        "No, it slows down the development process.",
+        "Yes, but only for mobile apps.",
+        "Only if you return them with an ID."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

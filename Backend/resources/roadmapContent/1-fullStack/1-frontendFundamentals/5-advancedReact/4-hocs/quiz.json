@@ -1,0 +1,57 @@
+{
+  "title": "React Higher-Order Components (HOCs) Quiz",
+  "description": "Evaluate your understanding of HOC pattern, reusability, and naming conventions.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primary role of a Higher-Order Component (HOC) in React?",
+      "options": [
+        "To speed up the app by caching components.",
+        "To reuse component logic across multiple components.",
+        "To replace the standard React hooks.",
+        "To provide a replacement for CSS styles."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "An HOC is a ________ that takes a ________ and returns a ________.",
+      "options": [
+        "Component, functional component, JSX element.",
+        "Function, component, new component.",
+        "Hook, state, updated state.",
+        "Class, method, instance."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of the following is an industry-standard naming convention for HOCs?",
+      "options": ["withName", "makeName", "getProps", "wrapName"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Can an HOC add additional props to the component it wraps?",
+      "options": [
+        "Yes, this is one of their main use cases.",
+        "No, they can only modify state.",
+        "Yes, but only in older versions of React.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Will an HOC change the original component it wraps?",
+      "options": [
+        "Yes, it modifies the original component.",
+        "No, it returns a new component that wraps the original one.",
+        "Yes, but only in class-based syntax.",
+        "Only if you return it with an ID."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

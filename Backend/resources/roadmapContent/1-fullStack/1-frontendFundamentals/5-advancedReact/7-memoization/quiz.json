@@ -1,0 +1,52 @@
+{
+  "title": "React Memoization Quiz",
+  "description": "Evaluate your understanding of caching results, React.memo, useMemo, and useCallback hooks.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primary goal of memoization in React?",
+      "options": [
+        "To fetch data from a server faster.",
+        "To avoid unnecessary re-renders of components and recalculations of expensive functions.",
+        "To provide a replacement for CSS styles.",
+        "To create a global state."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which hook should you use to memoize a computed value between renders?",
+      "options": ["useState()", "useEffect()", "useMemo()", "useCallback()"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which hook returns a memoized version of a callback function?",
+      "options": ["useState()", "useEffect()", "useMemo()", "useCallback()"],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "What is React.memo() used for?",
+      "options": [
+        "A hook to manage state.",
+        "A higher-order component to prevent a component from re-rendering if its props don't change.",
+        "To create a global context.",
+        "To handle errors."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Should you always use memoization for every single component and function for the best performance?",
+      "options": [
+        "Yes, always.",
+        "No, it has overhead and should be used only for expensive calculations or components that re-render frequently.",
+        "Yes, but only in ES6 or later.",
+        "Only if you return them with an ID."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "title": "React and State Management Libraries Quiz",
+  "description": "Evaluate your understanding of Redux, MobX, Recoil/Zustand, and Server State management.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primary role of a state management library in a large React app?",
+      "options": [
+        "To speed up CSS rendering.",
+        "To provide a central and predictable source of truth for the entire application state.",
+        "To hide the JavaScript code from the console.",
+        "To replace the standard HTML input elements."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of the following is true about Redux?",
+      "options": [
+        "It uses many stores across different components.",
+        "It provides a centralized store for the entire application state and follows strict rules for state changes.",
+        "It is no longer used in modern apps.",
+        "It doesn't require any boilerplate code."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which library uses 'Atoms' and 'Selectors' for granular state management?",
+      "options": ["Redux", "MobX", "Recoil", "Zustand"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which type of library is specialized in fetching, caching, and synchronizing server data with React components?",
+      "options": ["Redux-Thunk", "React Query or SWR", "MobX-State-Tree", "React-Router"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Zustand is considered a high-boilerplate and heavy state management solution.",
+      "options": [
+        "True",
+        "False (it's known for being small, fast, and minimal)",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+<div class="article-content">
+  <h1>Higher-Order Components (HOCs)</h1>
+  <p>A Higher-Order Component is an advanced technique in React for reusing component logic. They are not part of the React API, per se; they are a pattern that emerges from React’s compositional nature.</p>
+
+  <h2>1. What is a HOC?</h2>
+  <ol>
+    <li>It's a <strong>function</strong>.</li>
+    <li>It takes a <strong>component</strong> as an argument.</li>
+    <li>It returns a <strong>new component</strong> with additional props or behavior.</li>
+  </ol>
+  <pre><code>const EnhancedComponent = withExtraLogic(BaseComponent);</code></pre>
+
+  <h2>2. When to Use HOCs?</h2>
+  <p>HOCs are excellent for cross-cutting concerns like logging, authentication checks, or data fetching where multiple components need the same underlying logic. By extracting this logic, you keep your individual components focused on their primary UI task.</p>
+
+  <h2>3. HOC Convention</h2>
+  <p>It's conventional to name an HOC starting with <code>with</code> (e.g., <code>withAuth</code>, <code>withRouter</code>, <code>withLogger</code>). This makes it clear to other developers that the component is being enhanced.</p>
+
+  <h2>Conclusion</h2>
+  <p>While React Hooks have replaced many use cases for HOCs, they remain a powerful and common pattern in existing codebases and libraries. By understanding how to compose components using higher-order functions, you can build truly scalable and modular React applications.</p>
+</div>

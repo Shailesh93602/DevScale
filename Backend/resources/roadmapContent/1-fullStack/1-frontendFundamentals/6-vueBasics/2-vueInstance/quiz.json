@@ -1,0 +1,47 @@
+{
+  "title": "Vue Instance Quiz",
+  "description": "Evaluate your understanding of createApp(), mounting, and reactivity through data properties.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the correct function to create a new Vue application in Vue 3?",
+      "options": ["new Vue()", "createApp()", "mountApp()", "app.init()"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which method must you call to tell Vue where in the DOM to render your current app instance?",
+      "options": ["render()", "attach()", "mount()", "load()"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "In the Vue instance options, which and/or what property should be a function that returns an object containing the initial state?",
+      "options": ["state", "data", "methods", "props"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Where should the createApp() function be called when starting your frontend application?",
+      "options": [
+        "Inside the global window object.",
+        "In your main JavaScript entry file.",
+        "Directly inside an HTML <script> tag only.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "The Vue Instance tracks and manages the state of your application through its own isolated scope.",
+      "options": [
+        "True",
+        "False (it uses the global shared scope)",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

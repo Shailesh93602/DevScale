@@ -1,0 +1,47 @@
+{
+  "title": "Vue.js Event Handling Quiz",
+  "description": "Evaluate your understanding of v-on (@ shorthand), method handlers, and event modifiers.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the prefix/shorthand for listening to events in Vue.js?",
+      "options": ["v-listen (@)", "v-click (%)", "v-on (@)", "v-event (#)"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which syntax in Vue templates would you use for a button click event?",
+      "options": ["@click=\"handler\"", "v-click=\"handler\"", "onClick=\"handler\"", "v-bind:click=\"handler\""],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the purpose of event modifiers like .stop and .prevent in Vue?",
+      "options": [
+        "To perform common DOM operations (like stopPropagation and preventDefault) within the template.",
+        "To only stop the app from running.",
+        "To add CSS styles to the element.",
+        "They are just for performance only."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which modifier would you use to ensure an event handler is only triggered once?",
+      "options": [".unique", ".once", ".first", ".only"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Can you pass multiple arguments to an event handler method in Vue (e.g. @click='warn(message, $event)')?",
+      "options": [
+        "Yes, by passing them as a list.",
+        "No, only one argument is allowed.",
+        "Only in older versions of Vue.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

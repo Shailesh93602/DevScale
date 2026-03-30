@@ -1,0 +1,20 @@
+<div class="article-content">
+  <h1>Error Boundaries in React</h1>
+  <p>In the past, JavaScript errors inside components used to corrupt React’s internal state and cause it to emit cryptic errors on next renders. Error Boundaries are React components that catch JavaScript errors anywhere in their child component tree, log those errors, and display a fallback UI instead of the component tree that crashed.</p>
+
+  <h2>1. Catching Errors</h2>
+  <p>Error boundaries catch errors during rendering, in lifecycle methods, and in constructors of the whole tree below them. **Note:** Currently, only Class Components can be Error Boundaries, although functional components can still be caught by one.</p>
+
+  <h2>2. How to Implementation</h2>
+  <p>A class component becomes an error boundary if it defines either (or both) of the lifecycle methods: <code>static getDerivedStateFromError()</code> or <code>componentDidCatch()</code>.</p>
+  <ul>
+    <li><code>getDerivedStateFromError()</code>: Render a fallback UI after an error has been thrown.</li>
+    <li><code>componentDidCatch()</code>: Log error information to a service.</li>
+  </ul>
+
+  <h2>3. Where to Place Them?</h2>
+  <p>You can wrap top-level route components to display a “Something went wrong” message to the user, or you can wrap individual widgets to prevent them from crashing the rest of the application.</p>
+
+  <h2>Conclusion</h2>
+  <p>Error Boundaries are an essential part of building robust and production-ready React applications. By implementing them, you ensure that a single component failure doesn’t bring down your entire user interface, leading to a much smoother and more resilient user experience.</p>
+</div>

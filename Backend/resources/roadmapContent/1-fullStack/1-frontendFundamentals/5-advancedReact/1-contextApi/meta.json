@@ -1,0 +1,4 @@
+{
+    "name": "Context API",
+    "description": "Learn how small pieces of data called context can be used to manage global state in your React components."
+}

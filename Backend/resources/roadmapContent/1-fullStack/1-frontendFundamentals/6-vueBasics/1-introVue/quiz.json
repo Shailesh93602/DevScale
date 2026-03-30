@@ -1,0 +1,47 @@
+{
+  "title": "Introduction to Vue.js Quiz",
+  "description": "Evaluate your understanding of Vue's origins, philosophy, and key features like reactivity.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the best description of Vue.js?",
+      "options": [
+        "A desktop application framework.",
+        "A progressive JavaScript framework for building user interfaces.",
+        "A server-side only language.",
+        "A database management system."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Who is the creator of Vue.js?",
+      "options": ["Brendan Eich", "Evan You", "Jordan Walke", "Misko Hevery"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the core philosophy of Vue.js regarding its integration with other projects?",
+      "options": [
+        "It must be used to replace all libraries in an app.",
+        "It is designed from the ground up to be incrementally adoptable (from small to large projects).",
+        "It only works with SQL databases.",
+        "It can only be used as a standalone framework."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what feature of Vue.js allows it to automatically track JavaScript state changes and update the DOM?",
+      "options": ["Reactivity", "Manual Refresh", "Static Rendering", "Event Bubbling"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which part of the frontend stack is the core library of Vue.js primarily focused on?",
+      "options": ["The View layer", "The Database layer", "The Server layer", "The Networking layer"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

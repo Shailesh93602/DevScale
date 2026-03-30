@@ -1,0 +1,29 @@
+<div class="article-content">
+  <h1>The Vue Instance (Application)</h1>
+  <p>Every Vue application starts by creating a new **application instance** with the <code>createApp</code> function. This instance is where you define your app's data, methods, and configurations before attaching it to the DOM.</p>
+
+  <h2>1. Creating the App Instance</h2>
+  <p>To create a Vue app, you pass your single root component (the object representing your app) to <code>createApp()</code>. This creates an instance that has its own isolated scope.</p>
+  <pre><code>import { createApp } from 'vue'
+
+const app = createApp({
+  /* root component options */
+})</code></pre>
+
+  <h2>2. Mounting the Instance</h2>
+  <p>After creating the instance, you must "mount" it to a real DOM element using the <code>mount()</code> method. This tells Vue where on your webpage it should render the application.</p>
+  <pre><code>app.mount('#app')</code></pre>
+
+  <h2>3. The Data Object</h2>
+  <p>At its heart, the Vue instance tracks state using a <code>data</code> function. Any values returned from this function are automatically made reactive by the framework.</p>
+  <pre><code>createApp({
+  data() {
+    return {
+      message: 'Hello Vue!'
+    }
+  }
+}).mount('#app')</code></pre>
+
+  <h2>Conclusion</h2>
+  <p>The Vue instance is the starting point of every interactive piece of your application. By mastering how to create, configure, and mount your application instances, you lay the groundwork for building complex and reactive user interfaces that always stay in sync with your data.</p>
+</div>
