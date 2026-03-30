@@ -1,0 +1,21 @@
+<div class="article-content">
+  <h1>Bootstrap Customization</h1>
+  <p>While Bootstrap's default styles are great for prototyping, most professional projects require a unique look and feel. Bootstrap is designed to be highly customizable, allowing you to override its default variables and styles to match your brand's identity.</p>
+
+  <h2>1. Customizing via SASS</h2>
+  <p>The most powerful and recommended way to customize Bootstrap is by using **SASS**. By importing Bootstrap’s source files into your own SASS project, you can override its configuration variables before they are compiled into CSS.</p>
+  <pre><code>// Your custom SASS file
+$primary: #e74c3c;
+$enable-shadows: true;
+
+@import "bootstrap/scss/bootstrap";</code></pre>
+
+  <h2>2. Using CSS Variables</h2>
+  <p>Bootstrap 5 also provides a comprehensive set of **CSS Variables** (also known as CSS custom properties). These allow you to update things like primary colors, font families, and border radii in real-time within your browser without needing a SASS compiler.</p>
+
+  <h2>3. Utility API</h2>
+  <p>Bootstrap includes a powerful "Utility API" built on SASS maps that allows you to easily generate, modify, or remove utility classes. This is perfect for adding custom spacing values or removing utilities you don't need to keep your final CSS file small.</p>
+
+  <h2>Conclusion</h2>
+  <p>By mastering Bootstrap customization, you're not just using a framework—you're building your own custom design system on top of a battle-tested foundation. Whether you're making small color tweaks or rebuilding the entire layout engine, Bootstrap's flexible architecture has you covered.</p>
+</div>
