@@ -1,0 +1,52 @@
+{
+  "title": "Static Files Quiz",
+  "description": "Evaluate your understanding of the use of express.static() middleware to automatically serve image, CSS, and JS assets from a public directory.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily role of 'Static Files' in a web application?",
+      "options": [
+        "Faster component rendering.",
+        "Assets like images, CSS styles, and client-side JavaScript that are sent directly to the user's browser without being changed by the server.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which built-in Express middleware is used to serve a directory of static files to the browser?",
+      "options": ["express.json()", "express.static()", "express.router()", "express.body()"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "If you have an image at 'public/img/logo.png' and use 'app.use(express.static('public'))', what URL will accessing that image in the browser?",
+      "options": ["/public/img/logo.png", "/img/logo.png", "/logo.png", "/assets/logo.png"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what was the primarily benefit of using 'express.static'?",
+      "options": [
+        "It handles requests for images and styles efficiently without needing to write custom code for each file.",
+        "Only for older browsers.",
+        "To hide all non-number characters.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Does following a solid 'Static Files' strategy help build truly Fullstack applications by providing a place for all your styles and images to live?",
+      "options": [
+        "Yes, as it is a core feature of any modern server-side framework.",
+        "No, it's always slower.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
