@@ -1,0 +1,28 @@
+<div class="article-content">
+  <h1>Customizing Tailwind CSS</h1>
+  <p>Tailwind CSS is designed to be highly customizable. By using the <code>tailwind.config.js</code> file, you can fully define your application's design system—from colors and typography to spacing and breakpoints—ensuring that your project perfectly matches its brand identity.</p>
+
+  <h2>1. The Theme Section</h2>
+  <p>The <code>theme</code> section is where you define your design system. You can "override" the default values (like replacing all blues with your brand's blue) or "extend" them to add new values without losing the defaults.</p>
+  <pre><code>module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        'brand-blue': '#1e40af'
+      },
+      spacing: {
+        '128': '32rem'
+      }
+    }
+  }
+}</code></pre>
+
+  <h2>2. Using Custom Fonts</h2>
+  <p>Adding custom fonts is as simple as defining them in your theme and adding the corresponding CSS import in your main style file. You can then use them with classes like <code>font-brand</code>.</p>
+
+  <h2>3. Plugins</h2>
+  <p>Tailwind has a powerful plugin system that allows you to add specialized utilities or components. Official plugins like <strong>@tailwindcss/typography</strong> and <strong>@tailwindcss/forms</strong> provide robust defaults for common complex elements like long-form text or input fields.</p>
+
+  <h2>Conclusion</h2>
+  <p>Tailwind customization is about more than just colors. By building a custom configuration that is tailored to your project, you're creating a scalable and consistent design system that empowers your whole team to build beautiful and cohesive user interfaces with speed and precision.</p>
+</div>

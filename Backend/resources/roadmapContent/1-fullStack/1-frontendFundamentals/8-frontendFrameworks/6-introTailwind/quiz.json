@@ -1,0 +1,57 @@
+{
+  "title": "Intro to Tailwind CSS Quiz",
+  "description": "Evaluate your understanding of the Tailwind CSS Framework role, utility-first design, JIT compiler, and customization.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is Tailwind's primary role in a web application?",
+      "options": [
+        "To speed up CSS rendering.",
+        "A utility-first CSS framework that provides low-level helper classes for building custom UIs directly in HTML.",
+        "To hide the JavaScript code from the console.",
+        "To replace the standard HTML input elements."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does Tailwind CSS provide highly opinionated component classes like .btn or .card?",
+      "options": [
+        "Yes, just like Bootstrap.",
+        "No, it provides low-level utilities (like bg-blue-500, p-4) that you combine to build your own components.",
+        "Only for mobile apps.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the key benefit of Tailwind's 'Just-In-Time' (JIT) compiler?",
+      "options": [
+        "It makes the page load faster.",
+        "It only generates the exact CSS you use on each page, keeping the final bundle size small.",
+        "It hides all non-number characters.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which configuration file is used to customize Tailwind's default theme (colors, fonts, etc.)?",
+      "options": ["tailwind.config.js", "bootstrap.config.js", "styles.css", "index.html"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Does Tailwind CSS allow you to build truly unique and custom interfaces with minimal context-switching?",
+      "options": [
+        "Yes, as it provides a comprehensive set of built-in utility classes for almost any style.",
+        "No, it's always slower.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

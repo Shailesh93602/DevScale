@@ -1,0 +1,57 @@
+{
+  "title": "Customizing Tailwind CSS Quiz",
+  "description": "Evaluate your understanding of customizing Tailwind via tailwind.config.js (theme, extend, variants).",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily recommended way to customize Tailwind's default theme (colors, fonts, etc.)?",
+      "options": [
+        "By writing all your own CSS from scratch.",
+        "By using the tailwind.config.js file to define your design system.",
+        "By editing the tailwind.css file directly.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the difference between 'theme' and 'theme.extend' in the tailwind.config.js file?",
+      "options": [
+        "'theme' overrides the default values, while 'theme.extend' adds to them without losing the defaults.",
+        "'theme' is for colors, while 'extend' is for fonts.",
+        "They are exactly the same.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which section of the tailwind.config.js should you use to add a custom color without deleting all default colors?",
+      "options": ["theme.colors", "theme.extend.colors", "variants.colors", "plugins.colors"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Can you use official plugins like '@tailwindcss/typography' with Tailwind CSS?",
+      "options": [
+        "Yes, as they provide robust, pre-built utilities for complex features (like long-form text styling).",
+        "No, Tailwind doesn't support plugins.",
+        "Only in older versions of Tailwind.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Does Tailwind customization allow you to create a completely unique design system on top of its framework foundation?",
+      "options": [
+        "Yes, as the configuration file is fully programmable and infinitely flexible.",
+        "No, you can only change the colors.",
+        "Only true for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "title": "Bootstrap Customization Quiz",
+  "description": "Evaluate your understanding of SASS variable overrides, CSS variables, and the Utility API for custom class generation.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the primarily recommended way to customize Bootstrap's default styles?",
+      "options": [
+        "By writing all your own CSS from scratch.",
+        "By using SASS (SCSS) and overriding Bootstrap's internal variables before compilation.",
+        "By editing the bootstrap.min.css file directly.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which version of Bootstrap introduced a comprehensive set of native CSS Variables (also known as CSS custom properties)?",
+      "options": ["Bootstrap 2", "Bootstrap 3", "Bootstrap 4", "Bootstrap 5"],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "Where should you override a Bootstrap SASS variable to ensure it takes character?",
+      "options": [
+        "After the @import 'bootstrap' line.",
+        "Before the @import 'bootstrap' line.",
+        "In a separate HTML file.",
+        "None of the above."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which and/or what is Bootstrap's 'Utility API' used for?",
+      "options": [
+        "To easily generate, modify, or remove utility classes in SASS.",
+        "To speed up browser network requests.",
+        "To hide the JavaScript code from the console.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Does Bootstrap customization allow you to create a completely unique design system on top of its framework foundation?",
+      "options": [
+        "Yes, by overriding colors, fonts, spacing, components, and even utility classes.",
+        "No, you can only change the colors.",
+        "Only for older versions.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
