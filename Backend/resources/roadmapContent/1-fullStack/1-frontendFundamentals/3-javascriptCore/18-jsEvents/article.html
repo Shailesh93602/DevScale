@@ -1,0 +1,40 @@
+<div class="article-content">
+  <h1>JavaScript Events</h1>
+  <p>Events are "things" that happen to HTML elements. When JavaScript is used in HTML pages, JavaScript can "react" on these events.</p>
+
+  <h2>1. Common Events</h2>
+  <p>Some examples of common HTML events are when a user clicks a button, a key is pressed, or when a web page has finished loading.</p>
+  <ul>
+    <li><code>onclick</code>: The user clicks an HTML element.</li>
+    <li><code>onchange</code>: An HTML element has been changed.</li>
+    <li><code>onmouseover</code>: The user moves the mouse over an HTML element.</li>
+    <li><code>onkeydown</code>: The user pushes a keyboard key.</li>
+    <li><code>onload</code>: The browser has finished loading the page.</li>
+  </ul>
+
+  <h2>2. Using Event Handlers</h2>
+  <p>The modern way to handle events is using <code>addEventListener()</code>. This allows you adding many handlers to a single element without overwriting previous ones.</p>
+  <pre><code>const button = document.getElementById("myBtn");
+
+button.addEventListener("click", () => {
+  alert("Button was clicked!");
+});</code></pre>
+
+  <h2>3. The Event Object</h2>
+  <p>When an event occurs, an <strong>Event Object</strong> is created, containing information about the event. This object is passed as an argument to the event handler function.</p>
+  <pre><code>document.addEventListener("click", (event) => {
+  console.log("Clicked at coordinates: ", event.clientX, event.clientY);
+});</code></pre>
+
+  <h3>Key Event Object Methods</h3>
+  <ul>
+    <li><code>event.preventDefault()</code>: Cancels the event if it is cancelable (e.g., stopping a form from submitting).</li>
+    <li><code>event.stopPropagation()</code>: Prevents the event from bubbling up to parent elements.</li>
+  </ul>
+
+  <h2>4. Event Bubbling & Capturing</h2>
+  <p>By default, events "bubble up" from the target element up through its parents. <strong>Bubbling</strong> means the innermost element's event is handled first, then the outer elements. <strong>Capturing</strong> is the opposite.</p>
+
+  <h2>Conclusion</h2>
+  <p>Understanding events is the key to creating interactive and dynamic web applications. By mastering the event loop and event handlers, you can respond to any user action or system state change.</p>
+</div>

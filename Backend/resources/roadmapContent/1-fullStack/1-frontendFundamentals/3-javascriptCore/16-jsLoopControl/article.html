@@ -1,0 +1,47 @@
+<div class="article-content">
+  <h1>JavaScript Loop Control</h1>
+  <p>Loops are used to execute a block of code multiple times. In JavaScript, there are several types of loops to handle different iteration needs.</p>
+
+  <h2>1. The For Loop</h2>
+  <p>The <code>for</code> loop is ideal when you know exactly how many times you want to run a block of code.</p>
+  <pre><code>for (let i = 0; i < 5; i++) {
+  console.log("Iteration number: " + i);
+}</code></pre>
+
+  <h2>2. The While Loop</h2>
+  <p>The <code>while</code> loop executes a block of code as long as a specified condition remains true.</p>
+  <pre><code>let count = 0;
+while (count < 3) {
+  console.log("Count is: " + count);
+  count++;
+}</code></pre>
+
+  <h2>3. The Do...While Loop</h2>
+  <p>The <code>do...while</code> loop is similar to the <code>while</code> loop, but it guarantees the code block will execute <strong>at least once</strong> before the condition is checked.</p>
+  <pre><code>let i = 0;
+do {
+  console.log(i);
+  i++;
+} while (i < 0); // Executes once even though condition is false</code></pre>
+
+  <h2>4. Loop Control: Break and Continue</h2>
+  <ul>
+    <li><strong>break:</strong> Used to exit a loop prematurely when a certain condition is met.</li>
+    <li><strong>continue:</strong> Used to skip the rest of the current iteration and move to the next cycle of the loop.</li>
+  </ul>
+  <pre><code>for (let i = 0; i < 10; i++) {
+  if (i === 3) continue; // Skip 3
+  if (i === 6) break;    // Exit loop at 6
+  console.log(i); // Outputs 0, 1, 2, 4, 5
+}</code></pre>
+
+  <h2>5. For...in and For...of</h2>
+  <p>Modern JavaScript provides specific loops for iterating over object properties (<code>for...in</code>) and iterable values like arrays (<code>for...of</code>).</p>
+  <pre><code>const colors = ["red", "green", "blue"];
+for (const color of colors) {
+  console.log(color);
+}</code></pre>
+
+  <h2>Conclusion</h2>
+  <p>Loops are fundamental for processing collections of data and automating repetitive tasks. Choose the loop that best fits your logic and always ensure your loops have a valid exit condition to avoid infinite loops!</p>
+</div>

@@ -1,0 +1,57 @@
+{
+  "title": "JavaScript Functions Quiz",
+  "description": "Test your knowledge of function declarations, arrow functions, and parameter handling in JavaScript.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "What is the key difference between a function declaration and a function expression?",
+      "options": [
+        "There is no difference.",
+        "A function declaration is always hoisted, while a function expression is not.",
+        "A function expression is hoisted, but a function declaration is not.",
+        "Functions declarations must always return a value."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of the following is correct syntax for an arrow function that returns a value with no curly braces (implicit return)?",
+      "options": [
+        "const add = (a, b) => { a + b }",
+        "const add = (a, b) => a + b",
+        "const add = (a, b) return a + b",
+        "const add = function(a, b) => a + b"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What are 'parameters' in the context of a function?",
+      "options": [
+        "The real values passed when a function is called.",
+        "The names listed in the function definition.",
+        "The variable types used within the function.",
+        "The output returned by the function."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is a 'default parameter' in JavaScript?",
+      "options": [
+        "A parameter that must be provided every time.",
+        "A parameter that takes a predefined value if no argument is passed during function invocation.",
+        "The first parameter of any function.",
+        "A constant value that cannot be changed."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Can variables defined inside a function be accessed globally (outside the function) by default?",
+      "options": ["Yes, always.", "No, they have local scope.", "Yes, if they are defined with 'let'.", "Yes, if they are defined with 'var'."],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

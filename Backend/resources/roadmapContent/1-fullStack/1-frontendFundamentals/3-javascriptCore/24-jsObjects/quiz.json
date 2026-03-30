@@ -1,0 +1,62 @@
+{
+  "title": "JavaScript Objects Quiz",
+  "description": "Evaluate your understanding of creating and manipulating JavaScript objects.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which of the following is correct syntax for creating a JavaScript object as a literal?",
+      "options": [
+        "const person = { name: \"John\", age: 30 }",
+        "const person = new Json({ name: \"John\", age: 30 })",
+        "const person = [ name: \"John\", age: 30 ]",
+        "const person = { \"John\", 30 }"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which of the following is used to access an object property?",
+      "options": [
+        "Dot notation (obj.name)",
+        "Bracket notation (obj[\"name\"])",
+        "Both A and B.",
+        "None of the above."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "In a method, what does 'this' refer to?",
+      "options": [
+        "The global object.",
+        "The function itself.",
+        "The parent object of the method.",
+        "The window object always."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What does Object.keys(obj) return?",
+      "options": [
+        "The properties of the object as an array of strings.",
+        "The values of the object's properties as an array.",
+        "A string of all property names.",
+        "An integer count of the property numbers."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "How can you add a new property 'color' with value 'red' to an existing object 'car'?",
+      "options": [
+        "car.color = \"red\"",
+        "car[\"color\"] = \"red\"",
+        "Both A and B.",
+        "Using new.property(\"car\", \"color\", \"red\")"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

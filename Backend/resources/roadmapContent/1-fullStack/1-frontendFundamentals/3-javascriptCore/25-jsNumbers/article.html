@@ -1,0 +1,33 @@
+<div class="article-content">
+  <h1>JavaScript Numbers</h1>
+  <p>JavaScript has only one type of number. Numbers can be written with, or without, decimals.</p>
+
+  <h2>1. Integer and Float</h2>
+  <p>Unlike many other languages, JavaScript doesn't have multiple number types like <code>int</code>, <code>float</code>, or <code>long</code>. All numbers are stored as double precision floating point numbers.</p>
+  <pre><code>let x = 10;      // integer
+  let y = 3.14;    // floating point</code></pre>
+
+  <h2>2. Special Values: NaN and Infinity</h2>
+  <ul>
+    <li><strong>NaN (Not-a-Number):</strong> A value returned when a mathematical operation fails or an illegal conversion is attempted.</li>
+    <li><strong>Infinity / -Infinity:</strong> Values returned if you calculate a number outside the largest possible number.</li>
+  </ul>
+  <pre><code>let x = 10 / "apple"; // x is NaN
+  let y = 1 / 0;        // y is Infinity</code></pre>
+
+  <h2>3. Number Methods</h2>
+  <ul>
+    <li><code>toString()</code>: Returns a number as a string.</li>
+    <li><code>toFixed(n)</code>: Returns a string, with the number written with a specified number of decimals.</li>
+    <li><code>parseInt()</code>: Parses a string and returns a whole number.</li>
+    <li><code>parseFloat()</code>: Parses a string and returns a floating point number.</li>
+    <li><code>isInteger()</code>: Checks if a value is an integer.</li>
+  </ul>
+
+  <h2>4. BigInt</h2>
+  <p>Introduced in ES2020, <code>BigInt</code> is a way to represent integers larger than the 64-bit float can handle accurately. Add an <code>n</code> to the end of an integer to make it a BigInt.</p>
+  <pre><code>let big = 9007199254740991n; // a very large integer</code></pre>
+
+  <h2>Conclusion</h2>
+  <p>Understanding the single-number-type architecture of JavaScript and its limitations is key to avoiding precision bugs (especially with currency). Always use parsing methods when receiving data from users or APIs to ensure you're working with the right type.</p>
+</div>

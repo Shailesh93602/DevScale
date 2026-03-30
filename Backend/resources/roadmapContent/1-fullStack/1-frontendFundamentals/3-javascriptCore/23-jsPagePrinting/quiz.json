@@ -1,0 +1,62 @@
+{
+  "title": "JavaScript Page Printing Quiz",
+  "description": "Evaluate your understanding of window.print() and print CSS rules in JavaScript.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the best way to open the print dialog using JavaScript?",
+      "options": [
+        "window.display(\"print\")",
+        "document.print()",
+        "print.open()",
+        "window.print()"
+      ],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "What is the purpose of the @media print CSS rule?",
+      "options": [
+        "To define styles that only apply when a page is printed.",
+        "To prevent a page from being printed.",
+        "To check if the user has a printer connected.",
+        "To set the page size to A4 by default."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "When designing for print, what should you generally hide?",
+      "options": [
+        "Interactive elements (buttons, forms)",
+        "Navigation menus",
+        "Sidebars and advertisements",
+        "All of the above."
+      ],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "Does window.print() allow you to select which printer to use directly from JavaScript?",
+      "options": [
+        "Yes, always.",
+        "No, it only opens the browser's standard Print dialog.",
+        "Yes, but only in Chrome.",
+        "Yes, but only if the user has a specific plugin."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "How can you specify high contrast (black text on white) for printed pages in CSS?",
+      "options": [
+        "Using @media print { body { color: black; background: white; } }",
+        "Using window.style.printColor",
+        "Using the browser's default print software setting only.",
+        "Using document.body.style.color = \"black\""
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
