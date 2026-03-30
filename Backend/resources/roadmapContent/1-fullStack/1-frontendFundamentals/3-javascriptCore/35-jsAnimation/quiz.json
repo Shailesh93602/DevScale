@@ -1,0 +1,57 @@
+{
+  "title": "JavaScript Animation Quiz",
+  "description": "Evaluate your understanding of requestAnimationFrame, setInterval, and CSS-based animation in JavaScript.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the modern standard way to create smooth, high-performance animations in JavaScript?",
+      "options": [
+        "setInterval() with a 10ms delay",
+        "setTimeout() with a recursive loop",
+        "requestAnimationFrame()",
+        "while(true) loop"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is a major advantage of using requestAnimationFrame over setInterval?",
+      "options": [
+        "It's synchronized with the browser's refresh rate (typically 60fps).",
+        "It is always hardware-accelerated.",
+        "It can only be used with CSS classes.",
+        "None of the above."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "According to the article, when should you prefer CSS animations over JavaScript ones?",
+      "options": [
+        "For complex, logic-driven animations.",
+        "For simple animations like hover effects and loaders.",
+        "For animations that respond to real-time mouse movement.",
+        "Never (JS is always superior)."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "If you want to move an element from point A to point B once, what is the best way to do it?",
+      "options": [
+        "Use a recursive requestAnimationFrame loop.",
+        "Use a for loop that changes the style directly.",
+        "Use a 0ms setInterval.",
+        "Both A and B."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Can you use JavaScript to control CSS properties like 'left', 'opacity', or 'transform' for animation?",
+      "options": ["Yes, by using element.style", "No, JavaScript cannot access CSS.", "Only in older browsers.", "Yes, but you must use jQuery."],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

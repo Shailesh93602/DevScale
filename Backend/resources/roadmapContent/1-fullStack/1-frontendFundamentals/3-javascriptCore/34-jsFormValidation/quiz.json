@@ -1,0 +1,57 @@
+{
+  "title": "JavaScript Form Validation Quiz",
+  "description": "Evaluate your understanding of form validation logic, built-in APIs, and core purposes in JavaScript.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which of the following describes the primary purpose of client-side JavaScript form validation?",
+      "options": [
+        "To provide a secure way to prevent malicious input.",
+        "To enhance user experience by providing quick feedback and preventing unnecessary server requests.",
+        "To replace server-side validation completely.",
+        "To speed up database lookups."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which method in the Constraint Validation API returns true if an input contains valid data?",
+      "options": ["isValid()", "testValidity()", "checkValidity()", "isCorrect()"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What does setCustomValidity(message) do?",
+      "options": [
+        "It sets a custom CSS class for an input.",
+        "It sets a custom validation message to display to the user.",
+        "It sets a default value for an input.",
+        "It toggles the 'required' attribute on an input."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "In a form submission handler, how should you stop the form from being submitted to the server if validation fails?",
+      "options": [
+        "return false; from the validation function",
+        "event.preventDefault(); within the submit handler",
+        "Both A and B.",
+        "None of the above."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Can client-side validation be bypassed by malicious users (meaning it is not a security measure)?",
+      "options": [
+        "Yes, easily.",
+        "No, it's a core security feature of browsers.",
+        "It depends on which browser is used.",
+        "Only if the user disables JavaScript."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

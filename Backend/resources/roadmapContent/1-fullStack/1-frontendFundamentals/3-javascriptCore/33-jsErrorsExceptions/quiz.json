@@ -1,0 +1,52 @@
+{
+  "title": "JavaScript Errors and Exceptions Quiz",
+  "description": "Evaluate your understanding of try...catch, throw, and common error types in JavaScript.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which of the following is correct syntax for a simple try...catch block?",
+      "options": [
+        "try { ... } catch { ... }",
+        "try { ... } catch(err) { ... }",
+        "try(err) { ... } catch { ... }",
+        "Both A and B."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Does the 'finally' block execute even if an error occurs and is caught?",
+      "options": [
+        "Yes, always.",
+        "No, only if no error occurs.",
+        "No, only if an error is NOT caught.",
+        "It depends on the browser."
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the result of calling a variable that does not exist in the current scope?",
+      "options": ["SyntaxError", "ReferenceError", "TypeError", "RangeError"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "How do you throw a custom error object in JavaScript?",
+      "options": [
+        "throw new Error(\"Oops!\")",
+        "raise Error(\"Oops!\")",
+        "reject Error(\"Oops!\")",
+        "return Error(\"Oops!\")"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What happens when you call a string as if it were a function (e.g., \"str\"())?",
+      "options": ["SyntaxError", "ReferenceError", "TypeError", "RangeError"],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

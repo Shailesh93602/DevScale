@@ -1,0 +1,47 @@
+{
+  "title": "JavaScript Math Quiz",
+  "description": "Evaluate your understanding of rounding, min/max, and random number generation in JavaScript.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which of the following Math methods rounds a number to its NEAREST integer?",
+      "options": ["Math.ceil()", "Math.floor()", "Math.round()", "Math.trunc()"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What does Math.random() return?",
+      "options": [
+        "A random integer between 1 and 100.",
+        "A floating-point pseudo-random number in the range [0, 1).",
+        "A random boolean value.",
+        "A random color code."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "How do you calculate the square root of 64 using the Math object?",
+      "options": ["Math.sqrt(64)", "Math.pow(64, 0.5)", "Both A and B.", "Neither A nor B."],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is the return value of Math.max(-5, -1, -10)?",
+      "options": ["-1", "-5", "-10", "NaN"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Is Math a constructor (can you call 'new Math()')?",
+      "options": [
+        "Yes, like every other object in JavaScript.",
+        "No, it is a built-in static object only.",
+        "Yes, but only in ES6 or later.",
+        "No, it's an interface and cannot be instantiated."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

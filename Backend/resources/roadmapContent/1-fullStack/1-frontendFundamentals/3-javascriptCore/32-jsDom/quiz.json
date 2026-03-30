@@ -1,0 +1,52 @@
+{
+  "title": "JavaScript DOM Quiz",
+  "description": "Test your knowledge of selection, modification, and node manipulation in the DOM tree.",
+  "passingScore": 80,
+  "questions": [
+    {
+      "question": "Which and/or what is the best way to get a reference to an HTML element with ID 'my-btn'?",
+      "options": [
+        "document.getElementById(\"my-btn\")",
+        "document.querySelector(\"#my-btn\")",
+        "Both A and B.",
+        "None of the above."
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of the following creates a new element in the document?",
+      "options": [
+        "document.createElement(\"div\")",
+        "document.createNode(\"div\")",
+        "document.add(\"div\")",
+        "window.newElement(\"div\")"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the return type of document.querySelectorAll(\".item\")?",
+      "options": ["Single element", "Array of strings", "NodeList", "HTMLCollection"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which property can you use to change the inner HTML content of an element?",
+      "options": ["innerHTML", "setHTML()", "innerText()", "contentValue"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Does appendChild() add a new element to the BEGINNING or END of its parent's children?",
+      "options": [
+        "To the beginning.",
+        "To the end.",
+        "It depends on the element type.",
+        "Neither, it replaces the content."
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

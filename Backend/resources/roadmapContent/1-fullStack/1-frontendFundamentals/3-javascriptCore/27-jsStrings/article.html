@@ -1,0 +1,35 @@
+<div class="article-content">
+  <h1>JavaScript Strings</h1>
+  <p>A JavaScript string is zero or more characters written inside quotes. Strings are used for storing and manipulating text.</p>
+
+  <h2>1. String Literals and Quotes</h2>
+  <p>Strings can be defined using single quotes (<code>'</code>), double quotes (<code>"</code>), or backticks (<code>`</code>).</p>
+  <pre><code>let s1 = 'Single quote';
+  let s2 = "Double quote";
+  let s3 = `Template literal (ES6)`;</code></pre>
+
+  <h2>2. Template Literals (ES6)</h2>
+  <p>Template literals allow us to embed expressions inside strings using <code>${expression}</code> syntax. This is much cleaner than traditional concatenation.</p>
+  <pre><code>let name = "Alice";
+  console.log(`Hello, my name is ${name}!`);</code></pre>
+
+  <h2>3. String Properties and Methods</h2>
+  <ul>
+    <li><code>length</code>: Returns the number of characters in the string.</li>
+    <li><code>slice(start, end)</code>: Extracts a part of a string and returns it as a new string.</li>
+    <li><code>substring(start, end)</code>: Similar to slice, but doesn't handle negative indexes.</li>
+    <li><code>replace(target, replacement)</code>: Replaces a specific value with another value.</li>
+    <li><code>toUpperCase() / toLowerCase()</code>: Changes the case of the string.</li>
+    <li><code>trim()</code>: Removes whitespace from both sides of the string.</li>
+    <li><code>split(separator)</code>: Converts a string into an array based on the separator.</li>
+  </ul>
+
+  <h2>4. Character Access</h2>
+  <p>You can access individuals characters in a string using bracket notation or the <code>charAt()</code> method:</p>
+  <pre><code>let s = "Hello";
+  console.log(s[0]);       // "H"
+  console.log(s.charAt(1)); // "e"</code></pre>
+
+  <h2>Conclusion</h2>
+  <p>Strings are immutable in JavaScript, meaning that string methods always return a <strong>new string</strong> and do not change the original one. Mastering string manipulation is a daily requirement for any frontend developer.</p>
+</div>
