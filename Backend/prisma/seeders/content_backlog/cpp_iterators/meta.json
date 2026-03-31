@@ -1,0 +1,8 @@
+{
+  "title": "C++ Iterators",
+  "description": "Learn to navigate and manipulate data structures like a pro by mastering the power of C++ iterators.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 11,
+  "difficulty": "Intermediate",
+  "tags": ["C++", "STL", "Iterators", "Containers", "Algorithms"]
+}

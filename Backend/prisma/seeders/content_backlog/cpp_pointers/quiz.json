@@ -1,0 +1,18 @@
+{
+  "title": "C++ Pointers Quiz",
+  "description": "Test your knowledge on pointer syntax and the modern nullptr constant.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the recommended modern C++ constant for representing a pointer that points to 'nothing'?",
+      "options": [
+        "NULL",
+        "0",
+        "nullptr",
+        "VOID"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

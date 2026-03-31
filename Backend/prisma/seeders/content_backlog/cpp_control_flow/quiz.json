@@ -1,0 +1,18 @@
+{
+  "title": "C++ Control Structures Quiz",
+  "description": "Test your knowledge on traditional and range-based loops in C++.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which special type of 'for' loop was introduced to simplify iteration through arrays and collections?",
+      "options": [
+        "Index Loop",
+        "Infinite Loop",
+        "Range-Based for loop",
+        "Double for loop"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

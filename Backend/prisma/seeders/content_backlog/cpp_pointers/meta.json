@@ -1,0 +1,8 @@
+{
+  "title": "C++ Pointers",
+  "description": "Unlock the true potential of C++ by mastering memory addresses, dereferencing, and the modern nullptr standard.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 7,
+  "difficulty": "Advanced",
+  "tags": ["C++", "Pointers", "Memory", "Modern C++"]
+}

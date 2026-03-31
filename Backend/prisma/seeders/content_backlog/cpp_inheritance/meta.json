@@ -1,0 +1,8 @@
+{
+  "title": "C++ Inheritance",
+  "description": "Learn to build powerful class hierarchies and reuse code effectively by mastering C++ inheritance patterns.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 8,
+  "difficulty": "Intermediate",
+  "tags": ["C++", "OOP", "Inheritance", "Architecture"]
+}
