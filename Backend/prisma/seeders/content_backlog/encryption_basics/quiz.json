@@ -1,0 +1,13 @@
+{
+  "title": "Encryption Basics Quiz",
+  "description": "Test your knowledge on basic data encryption concepts.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the web security, what is the primary role of 'Encryption'?",
+      "options": ["To collect and analyze data", "Correctly converting your project's sensitive information—such as user passwords—into an unreadable and secure format", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
