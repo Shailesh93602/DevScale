@@ -1,0 +1,8 @@
+{
+  "title": "Advanced State Management: State Machines & Custom Hook patterns",
+  "description": "Master the art of predictable UI state by learning to implement finite state machines and highly reusable logic patterns in modern web apps.",
+  "module": "Senior Frontend Architecture (Expert Tier Vol 2)",
+  "order": 2,
+  "difficulty": "Advanced",
+  "tags": ["Frontend", "State Management", "XState", "Hooks", "Design Patterns"]
+}

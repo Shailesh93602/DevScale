@@ -1,0 +1,18 @@
+{
+  "title": "FinOps Quiz",
+  "description": "Test your knowledge on cloud cost optimization and the FinOps cycle.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which phase of the FinOps lifecycle focuses on gaining detailed visibility into cloud spend and allocating costs to specific teams or services?",
+      "options": [
+        "Optimize",
+        "Operate",
+        "Inform",
+        "Budget"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

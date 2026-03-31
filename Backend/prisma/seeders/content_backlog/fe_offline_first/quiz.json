@@ -1,0 +1,18 @@
+{
+  "title": "Offline-First Quiz",
+  "description": "Test your knowledge on Service Workers and IndexedDB sync.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which browser component acts as a background proxy, allowing web applications to cache assets and serve them offline?",
+      "options": [
+        "LocalStorage",
+        "WebAssembly",
+        "Service Worker",
+        "React Context"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+<section>
+    <h2>Deep-Dive into SLIs, SLOs, and SLAs</h2>
+    <p>In Site Reliability Engineering (SRE), reliability is a mathematical goal, not a feeling. We use three core components to define and measure how happy our users actually are.</p>
+
+    <h3>1. Service Level Indicators (SLI)</h3>
+    <p>An SLI is a quantitative measure of some aspect of the level of service that is provided. Think of it as a metric: <strong>Latency</strong>, <strong>Availability</strong>, <strong>Throughput</strong>, or <strong>Error Rate</strong>. A common SLI might be: "What percentage of requests took less than 500ms over the last minute?"</p>
+
+    <h3>2. Service Level Objectives (SLO)</h3>
+    <p>An SLO is a target value for a service level that's measured by an SLI. It defines the goal: "99.9% of all requests must have a latency under 500ms over a 28-day window." This value is the **Internal Goal** for the engineering team.</p>
+
+    <h3>3. Service Level Agreements (SLA)</h3>
+    <p>An SLA is a **Legal Contract** between you and your users. It defines what happens if you fail to meet your SLOs (usually financial refunds or credits). Because of the financial risk, an SLA's target is always lower than your internal SLO (e.g., SLA of 99.5% if your SLO is 99.9%).</p>
+
+    <h3>Conclusion</h3>
+    <p>By mastering SLIs, SLOs, and SLAs, you transform your team's culture. You move away from "blaming" and toward "error budgets"—allowing you to move fast when things are reliable, and slow down to fix things when the budget is spent.</p>
+</section>
