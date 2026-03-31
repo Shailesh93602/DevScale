@@ -1,0 +1,18 @@
+{
+  "title": "First project in React Quiz",
+  "description": "Test your knowledge on state management and hooks in your first React app.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which React hook is used to add local state to a functional component?",
+      "options": [
+        "useEffect",
+        "useState",
+        "useContext",
+        "useReducer"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "Getting Started with Backend",
+  "description": "Learn about the essential backend tasks including tracking changes, coordinating multiple developers, and collaboration strategies.",
+  "module": "Backend Developer Masterclass",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Backend", "Server", "Database", "API"]
+}

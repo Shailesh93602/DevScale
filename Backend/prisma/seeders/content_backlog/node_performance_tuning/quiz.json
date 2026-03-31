@@ -1,0 +1,18 @@
+{
+  "title": "Node Performance Tuning Quiz",
+  "description": "Test your knowledge on optimizing and scaling Node.js applications.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which tool is commonly used to manage multiple Node.js instances and improve application availability?",
+      "options": [
+        "PM2",
+        "NPM",
+        "NodeMon",
+        "Debugger"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

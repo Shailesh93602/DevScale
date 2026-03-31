@@ -1,0 +1,8 @@
+{
+  "title": "Design Patterns in Node",
+  "description": "Learn essential design patterns like Middleware and Observer specifically for Node.js.",
+  "module": "Node Developer Masterclass",
+  "order": 3,
+  "difficulty": "Intermediate",
+  "tags": ["Node.js", "Design Patterns", "Backend", "EventEmitter"]
+}

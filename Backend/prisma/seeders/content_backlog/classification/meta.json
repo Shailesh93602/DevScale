@@ -1,0 +1,8 @@
+{
+  "title": "Classification",
+  "description": "Learn about the essential data science tasks including tracking changes, coordinating multiple developers, and collaboration strategies.",
+  "module": "Data Science",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Data Science", "Machine Learning", "Classification", "Supervised Learning"]
+}

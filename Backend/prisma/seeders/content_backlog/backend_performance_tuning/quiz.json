@@ -1,0 +1,29 @@
+{
+  "title": "Backend Performance Tuning Quiz",
+  "description": "Test your knowledge on optimizing backend performance and resource usage.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of the following is a primary strategy for reducing database load in a backend application?",
+      "options": [
+        "Implementing multi-level caching",
+        "Increasing the number of database connections to infinity",
+        "Storing all data in the file system",
+        "Removing all database indexes"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the meaning of 'Latency' in the context of backend performance?",
+      "options": [
+        "The number of requests handled per second",
+        "The time taken to process a single request and return a response",
+        "The total size of the application source code",
+        "The number of concurrent users supported"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

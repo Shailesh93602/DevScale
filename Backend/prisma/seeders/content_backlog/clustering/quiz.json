@@ -1,0 +1,13 @@
+{
+  "title": "Clustering Quiz",
+  "description": "Test your knowledge on clustering algorithms and unsupervised learning.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the Data Science, what consists of a primary role of 'Clustering'?项目",
+      "options": ["To collect and analyze data", "An unsupervised learning approach for correctly and securely grouping its data points into clusters", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

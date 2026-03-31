@@ -1,0 +1,18 @@
+{
+  "title": "Design Patterns in React Quiz",
+  "description": "Test your knowledge on common React architectural patterns.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the modern React recommended way to share logic between multiple components?",
+      "options": [
+        "Mixins",
+        "Higher-Order Components",
+        "Custom Hooks",
+        "Global variables"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}
