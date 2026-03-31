@@ -1,0 +1,8 @@
+{
+  "title": "Scope",
+  "description": "Master the rules of variable visibility and lifetime to write safer and more organized C programs.",
+  "module": "C Programming Masterclass",
+  "order": 43,
+  "difficulty": "Intermediate",
+  "tags": ["C", "Scope", "Variables", "Execution Context"]
+}

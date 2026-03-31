@@ -1,0 +1,19 @@
+<section>
+    <h2>Understanding Function Declarations in C</h2>
+    <p>In C, the compiler reads code from top to bottom. If you use a function before it has been 'introduced', the compiler will throw an error. This is where declarations and prototypes come in.</p>
+
+    <h3>1. Declaration vs. Definition</h3>
+    <ul>
+        <li><strong>Declaration (Prototype):</strong> Tells the compiler the function's name, return type, and parameters. It's like an 'introduction' without the full story.</li>
+        <li><strong>Definition:</strong> Contains the actual block of code to be executed (the function body).</li>
+    </ul>
+
+    <h3>2. Why use Prototypes?</h3>
+    <p>By placing prototypes at the top of your file, you can call functions in any order, even if the actual definition is at the bottom of the file. This leads to a cleaner organization: prototypes at the top, <code>main()</code> in the middle, and helper functions below.</p>
+
+    <h3>3. Header Files (.h)</h3>
+    <p>For larger projects, prototypes are often moved into separate <strong>Header Files</strong>, which can then be included (<code>#include</code>) in multiple <code>.c</code> files, allowing functions to be shared across the entire project.</p>
+
+    <h3>Conclusion</h3>
+    <p>Using function declarations correctly is essential for building multi-file C projects and for ensuring the compiler always knows exactly how to handle your function calls.</p>
+</section>

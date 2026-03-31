@@ -1,0 +1,17 @@
+<section>
+    <h2>Understanding Array Size in C</h2>
+    <p>Managing the size of arrays is critical in C because arrays are fixed-size in memory and the language does not perform automatic 'bounds checking'.</p>
+
+    <h3>1. Fixed-Size Declaration</h3>
+    <p>When you declare an array, you must specify its size: <code>int scores[10];</code>. This size is fixed at compile-time and cannot be changed during the program's execution.</p>
+
+    <h3>2. Calculating Size with sizeof</h3>
+    <p>You can calculate the number of elements in an array by dividing the total memory size of the array by the size of one element:</p>
+    <pre><code>int size = sizeof(myArray) / sizeof(myArray[0]);</code></pre>
+
+    <h3>3. The Dangers of Going "Out of Bounds"</h3>
+    <p>If you try to access an index larger than the array's size (e.g., <code>myArray[20]</code> for an array of size 10), C will not warn you. Instead, it will access whatever data is in that memory location, potentially causing crashes or data corruption.</p>
+
+    <h3>Conclusion</h3>
+    <p>Being rigorous about array size and boundaries is a hallmark of an expert C developer, ensuring your programs are both efficient and bug-free.</p>
+</section>

@@ -1,0 +1,8 @@
+{
+  "title": "Array Size",
+  "description": "Learn how to manage the fixed memory limits of arrays effectively and safely in your C code.",
+  "module": "C Programming Masterclass",
+  "order": 38,
+  "difficulty": "Intermediate",
+  "tags": ["C", "Arrays", "Memory", "Sizeof", "Optimization"]
+}

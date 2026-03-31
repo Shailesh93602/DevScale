@@ -1,0 +1,8 @@
+{
+  "title": "Pointers and Arrays",
+  "description": "Learn the deep connection between pointers and arrays, and how to use pointer arithmetic to navigate data sets efficiently.",
+  "module": "C Programming Masterclass",
+  "order": 40,
+  "difficulty": "Advanced",
+  "tags": ["C", "Pointers", "Arrays", "Memory", "Pointer Arithmetic"]
+}

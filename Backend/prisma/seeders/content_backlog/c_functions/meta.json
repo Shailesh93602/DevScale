@@ -1,0 +1,8 @@
+{
+  "title": "Functions",
+  "description": "Learn to write clean, reusable, and modular code by mastering the declaration and use of functions in C.",
+  "module": "C Programming Masterclass",
+  "order": 41,
+  "difficulty": "Intermediate",
+  "tags": ["C", "Functions", "Modular Programming", "Reusability"]
+}
