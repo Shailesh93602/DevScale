@@ -1,0 +1,16 @@
+<section>
+    <h2>Understanding Pointers and Arrays in C</h2>
+    <p>In C, there is a very deep relationship between pointers and arrays. In many cases, they are almost interchangeable.</p>
+
+    <h3>1. Array Names are Pointers</h3>
+    <p>An array name acts as a constant pointer to the first element of the array. For example, if you have <code>int myArray[5];</code>, the name <code>myArray</code> is effectively equivalent to <code>&myArray[0]</code>.</p>
+
+    <h3>2. Pointer Arithmetic</h3>
+    <p>Because arrays are stored sequentially in memory, you can navigate them using pointers. If <code>p</code> points to the first element, <code>p + 1</code> points to the second element, and so on.</p>
+
+    <h3>3. Array Access Shorthand</h3>
+    <p>When you write <code>myArray[i]</code>, the C compiler actually translates it to <code>*(myArray + i)</code>. This explains why array indexing is zero-based!</p>
+
+    <h3>Conclusion</h3>
+    <p>Understanding the interplay between pointers and arrays is essential for writing high-performance C code that can manipulate large amounts of data efficiently.</p>
+</section>

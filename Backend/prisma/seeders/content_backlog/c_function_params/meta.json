@@ -1,0 +1,8 @@
+{
+  "title": "Functions Parameters",
+  "description": "Learn how to send and receive data between your functions using parameters, arguments, and return values.",
+  "module": "C Programming Masterclass",
+  "order": 42,
+  "difficulty": "Intermediate",
+  "tags": ["C", "Functions", "Parameters", "Control Flow"]
+}

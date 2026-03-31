@@ -1,0 +1,8 @@
+{
+  "title": "Function Declaration",
+  "description": "Learn to organize your C projects professionally by mastering function prototypes and header files.",
+  "module": "C Programming Masterclass",
+  "order": 44,
+  "difficulty": "Intermediate",
+  "tags": ["C", "Functions", "Declaration", "Prototypes", "Architecture"]
+}

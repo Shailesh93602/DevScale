@@ -1,0 +1,8 @@
+{
+  "title": "While Loop",
+  "description": "Master the syntax for creating flexible loops that repeat based on dynamic conditions using the 'while' statement in C.",
+  "module": "C Programming Masterclass",
+  "order": 36,
+  "difficulty": "Beginner",
+  "tags": ["C", "Loops", "Control Flow", "Iteration"]
+}

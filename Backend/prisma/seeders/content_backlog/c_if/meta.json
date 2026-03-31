@@ -1,0 +1,8 @@
+{
+  "title": "If",
+  "description": "Learn the fundamental control structure for adding conditional logic to your C programs using the 'if' statement.",
+  "module": "C Programming Masterclass",
+  "order": 34,
+  "difficulty": "Beginner",
+  "tags": ["C", "Logic", "If", "Control Flow"]
+}

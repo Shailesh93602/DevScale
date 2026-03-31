@@ -1,0 +1,18 @@
+{
+  "title": "C Scope Quiz",
+  "description": "Test your knowledge on local vs. global variable accessibility.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which term refers to a variable that is declared outside all functions and can be accessed from anywhere in the program file?",
+      "options": [
+        "Local Variable",
+        "Static Variable",
+        "Global Variable",
+        "Internal Variable"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

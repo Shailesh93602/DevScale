@@ -1,0 +1,8 @@
+{
+  "title": "Operators",
+  "description": "Master the versatile range of arithmetic, relational, and logical operators used to manipulate data in the C programming language.",
+  "module": "C Programming Masterclass",
+  "order": 33,
+  "difficulty": "Beginner",
+  "tags": ["C", "Operators", "Arithmetic", "Logic", "Syntax"]
+}

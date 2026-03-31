@@ -1,0 +1,18 @@
+{
+  "title": "Do/While Loop Quiz",
+  "description": "Test your knowledge on the unique execution flow of do/while loops.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the minimum number of times a 'do/while' loop is guaranteed to execute its body?",
+      "options": [
+        "0",
+        "Many times",
+        "1",
+        "Depend on the compiler"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

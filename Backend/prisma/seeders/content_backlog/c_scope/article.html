@@ -1,0 +1,16 @@
+<section>
+    <h2>Understanding Scope in C</h2>
+    <p>Scope defines the region of a program where a particular variable is 'visible' and can be accessed or modified.</p>
+
+    <h3>1. Local Scope</h3>
+    <p>Variables declared inside a function (or any block <code>{}</code>) have local scope. They are created when the block is entered and destroyed when it's exited. Other functions cannot access them.</p>
+
+    <h3>2. Global Scope</h3>
+    <p>Variables declared outside all functions (typically at the top of a file) have global scope. They can be accessed and modified by any function within the same file (and sometimes other files) throughout the entire program's execution.</p>
+
+    <h3>3. Static Variables</h3>
+    <p>By using the <code>static</code> keyword, a local variable can 'remember' its value between function calls, even though it's still only accessible within that specific function.</p>
+
+    <h3>Conclusion</h3>
+    <p>Managing scope is essential for preventing variable name collisions and ensuring your data is only accessible where it's truly needed, a key principle of the 'encapsulation' we saw in OOP.</p>
+</section>

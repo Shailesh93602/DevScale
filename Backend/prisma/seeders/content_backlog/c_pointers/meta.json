@@ -1,0 +1,8 @@
+{
+  "title": "Pointers",
+  "description": "Unlock the true potential of C by mastering pointers: variables that store memory addresses.",
+  "module": "C Programming Masterclass",
+  "order": 39,
+  "difficulty": "Advanced",
+  "tags": ["C", "Pointers", "Memory", "Dereferencing", "Advanced"]
+}

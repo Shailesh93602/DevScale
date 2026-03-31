@@ -1,0 +1,19 @@
+<section>
+    <h2>Understanding the Do/While Loop in C</h2>
+    <p>A <code>do/while</code> loop is a variant of the while loop with one crucial difference: it executes its block of code ONCE before it even checks its condition.</p>
+
+    <h3>1. "Execute Before Check"</h3>
+    <p>Because the condition is checked at the *bottom* (post-test), a <code>do/while</code> loop is guaranteed to run at least once, regardless of whether the condition is true or false.</p>
+
+    <h3>2. Syntax and Semicolons</h3>
+    <p>Unlike other control structures, notice the required semicolon after the while condition in a <code>do/while</code> loop.</p>
+    <pre><code>do {
+    // block of code to be executed
+} while (condition); // Note the semicolon!</code></pre>
+
+    <h3>3. Use Cases</h3>
+    <p>Digital menus are a classic use case: you want to show the menu to the user first, then check their choice to see if they want to exit or continue.</p>
+
+    <h3>Conclusion</h3>
+    <p>The <code>do/while</code> loop is the tool of choice whenever you have an action that must occur at least once—like prompting a user for input—before deciding whether to repeat it.</p>
+</section>

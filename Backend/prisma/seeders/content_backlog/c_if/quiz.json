@@ -1,0 +1,18 @@
+{
+  "title": "If Statement Quiz",
+  "description": "Test your knowledge on the basic if statement and how C evaluates truth conditions.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "In C, which value represents 'False' when evaluated inside an 'if' statement?",
+      "options": [
+        "1",
+        "Any non-zero value",
+        "0",
+        "-1"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}
