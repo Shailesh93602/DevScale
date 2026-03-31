@@ -1,0 +1,18 @@
+{
+  "title": "Python Operators Quiz",
+  "description": "Test your knowledge on arithmetic, comparison, and membership operators.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which Python operator is used to check if a value exists inside a list or string?",
+      "options": [
+        "exists",
+        "has",
+        "in",
+        "within"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

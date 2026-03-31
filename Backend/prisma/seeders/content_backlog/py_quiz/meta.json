@@ -1,0 +1,8 @@
+{
+  "title": "Quiz",
+  "description": "Learn the importance of continuous assessment and how the EduScale quiz system guides your mastery of Python.",
+  "module": "Python Programming Masterclass",
+  "order": 100,
+  "difficulty": "Beginner",
+  "tags": ["Python", "Assessment", "Mastery", "Quiz"]
+}

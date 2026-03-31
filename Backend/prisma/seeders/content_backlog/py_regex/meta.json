@@ -1,0 +1,8 @@
+{
+  "title": "Python Regular Expressions",
+  "description": "Learn to parse and manipulate text with extreme precision using Python's implementation of Regular Expressions.",
+  "module": "Python Programming Masterclass",
+  "order": 1,
+  "difficulty": "Intermediate",
+  "tags": ["Python", "RegEx", "Text Processing", "Automation"]
+}

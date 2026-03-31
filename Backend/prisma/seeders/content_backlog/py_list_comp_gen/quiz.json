@@ -1,0 +1,18 @@
+{
+  "title": "List Comprehensions and Generators Quiz",
+  "description": "Test your knowledge on 'yield' and memory-efficient iteration.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which Python keyword is used inside a function to turn it into a Generator?",
+      "options": [
+        "return",
+        "yield",
+        "generate",
+        "next"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "Python Tuples",
+  "description": "Master the art of data integrity by learning to use Python's immutable and efficient tuple collection type.",
+  "module": "Python Programming Masterclass",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Python", "Tuples", "Immutability", "Data Structures"]
+}

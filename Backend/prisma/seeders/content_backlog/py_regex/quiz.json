@@ -1,0 +1,18 @@
+{
+  "title": "Python Regular Expressions Quiz",
+  "description": "Test your knowledge on RegEx patterns and the 're' module.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which RegEx character is used to match 'any single digit' (0-9) in Python?",
+      "options": [
+        "\\w",
+        "\\s",
+        "\\d",
+        "\\t"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

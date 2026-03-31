@@ -1,0 +1,8 @@
+{
+  "title": "Python Date and Time",
+  "description": "Learn to manage timestamps, perform date arithmetic, and format dates for users using Python's standard datetime library.",
+  "module": "Python Programming Masterclass",
+  "order": 1,
+  "difficulty": "Intermediate",
+  "tags": ["Python", "Datetime", "Time", "Formatting"]
+}

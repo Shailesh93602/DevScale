@@ -1,0 +1,8 @@
+{
+  "title": "Python Multi-threading and Concurrency",
+  "description": "Unlock high-performance execution by mastering the differences between threading, multiprocessing, and modern asychronous programming in Python.",
+  "module": "Python Programming Masterclass",
+  "order": 1,
+  "difficulty": "Advanced",
+  "tags": ["Python", "Concurrency", "Threading", "GIL", "Asyncio"]
+}

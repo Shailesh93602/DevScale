@@ -1,0 +1,8 @@
+{
+  "title": "Python Operators",
+  "description": "Learn to perform complex calculations and logical checks using Python's intuitive arithmetic, membership, and comparison operators.",
+  "module": "Python Programming Masterclass",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Python", "Operators", "Logic", "Arithmetic"]
+}
