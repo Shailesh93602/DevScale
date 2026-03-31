@@ -1,0 +1,8 @@
+{
+  "title": "Graphs",
+  "description": "Learn about vertices, edges, graph representations, and fundamental search algorithms like BFS and DFS.",
+  "module": "Data Structures",
+  "order": 5,
+  "difficulty": "Advanced",
+  "tags": ["DSA", "Graphs", "BFS", "DFS", "Algorithms"]
+}

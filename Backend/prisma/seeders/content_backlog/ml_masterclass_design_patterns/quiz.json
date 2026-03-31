@@ -1,0 +1,18 @@
+{
+  "title": "Design Patterns in MachineLearning Quiz",
+  "description": "Test your knowledge on common design and architectural patterns in Machine Learning.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which ML design pattern involve using a pre-trained model for a new, related task?",
+      "options": [
+        "Feature Crossing",
+        "Transfer Learning",
+        "Data Augmentation",
+        "Ensemble Learning"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
