@@ -1,0 +1,8 @@
+{
+  "title": "Hashing Deep-Dive: Bloom Filters & Skip Lists",
+  "description": "Learn to manage massive datasets with extreme memory efficiency using probabilistic Bloom Filters and high-speed Skip Lists.",
+  "module": "Advanced DSA & System Design Patterns",
+  "order": 2,
+  "difficulty": "Advanced",
+  "tags": ["DSA", "Hashing", "Bloom Filter", "Skip List", "Memory"]
+}

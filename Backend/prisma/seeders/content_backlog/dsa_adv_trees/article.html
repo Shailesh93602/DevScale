@@ -1,0 +1,16 @@
+<section>
+    <h2>Deep Dive into B-Trees, Red-Black Trees, and Splay Trees</h2>
+    <p>Standard Binary Search Trees (BST) can become unbalanced and slow. Advanced tree structures use self-balancing logic to ensure O(log N) performance for every single operation.</p>
+
+    <h3>1. Red-Black Trees</h3>
+    <p>A Red-Black tree is a self-balancing BST where each node is either Red or Black. By following a strict set of coloring rules during every insertion, the tree ensures that no path is ever more than twice as long as any other, providing guaranteed performance for high-speed systems like memory allocators and the Linux scheduler.</p>
+
+    <h3>2. B-Trees</h3>
+    <p>B-Trees are designed for **Disk-Based Storage**. Unlike standard trees that have 2 children, B-Trees have dozens or hundreds. This reduces the "Height" of the tree, meaning you only need 3 or 4 disk reads to find a value among millions, making them the heart of every modern database (like PostgreS and MySQL).</p>
+
+    <h3>3. Splay Trees</h3>
+    <p>A Splay tree is a self-adjusting tree that moves the **most recently accessed** items to the root. This is perfect for "Caching" scenarios where 10% of the data gets 90% of the traffic, making access to those hot items incredibly fast.</p>
+
+    <h3>Conclusion</h3>
+    <p>By mastering these advanced trees, you gain the skills to build industrial-grade storage engines, real-time Operating Systems, and high-performance caches from scratch.</p>
+</section>

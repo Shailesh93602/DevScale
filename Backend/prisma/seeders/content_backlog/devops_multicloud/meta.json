@@ -1,0 +1,8 @@
+{
+  "title": "Multi-Cloud Strategy (Hybrid deployments & Disaster Recovery)",
+  "description": "Ensure maximum uptime and vendor independence by mastering advanced Hybrid and Multi-Cloud architecture patterns.",
+  "module": "Advanced Cloud & DevOps Frontiers",
+  "order": 4,
+  "difficulty": "Advanced",
+  "tags": ["Cloud", "AWS", "GCP", "Multi-cloud", "Resilience"]
+}

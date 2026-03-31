@@ -1,0 +1,18 @@
+{
+  "title": "WebAssembly Quiz",
+  "description": "Test your knowledge on WASM performance and languages.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary advantage of using WebAssembly (WASM) in a web application?",
+      "options": [
+        "It makes CSS animations smoother",
+        "It allows for near-native performance by running low-level binary code in the browser",
+        "It replaces the need for a backend server",
+        "It automatically optimizes your SQL queries"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

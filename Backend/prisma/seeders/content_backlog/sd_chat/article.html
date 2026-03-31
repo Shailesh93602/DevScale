@@ -1,0 +1,16 @@
+<section>
+    <h2>System Design: Building a Global Chat (WhatsApp Logic)</h2>
+    <p>Designing a real-time chat for 2 billion users requires solving the "Consistency vs. Availability" trade-off while ensuring message delivery with zero latency.</p>
+
+    <h3>1. Real-Time Connection: WebSockets</h3>
+    <p>Standard HTTP doesn't work for chat because the server can't "push" a message to a client. We use **WebSockets** for a permanent, bi-directional connection. When User A sends a message, it goes to the "Chat Service," which instantly pushes it to User B's open socket.</p>
+
+    <h3>2. Handling Offline Users</h3>
+    <p>If User B is offline, the message is stored in a **Message Store** (usually a NoSQL database like Cassandra for its high write speed). When User B comes online, the system performs a "Sync" to pull all pending messages.</p>
+
+    <h3>3. Scalability: The Gateway and Service Discovery</h3>
+    <p>With billions of users, you cannot have one server. You use an **API Gateway** and **Push Clusters**. These servers track which user is connected to which server node (using a Cache like Redis) so the message can be routed across the global network in milliseconds.</p>
+
+    <h3>Conclusion</h3>
+    <p>Designing a global chat system teaches you the fundamentals of high-concurrency engineering, real-time protocols, and the critical importance of a distributed "Presence" system.</p>
+</section>

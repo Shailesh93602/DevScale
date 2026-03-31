@@ -1,0 +1,8 @@
+{
+  "title": "Retrieval-Augmented Generation (RAG) Architecture: Vector Databases & Semantic Search optimization",
+  "description": "Learn to build production-grade AI applications with factual grounding using RAG patterns and high-performance vector databases.",
+  "module": "Applied AI/ML Engineering (MLOps)",
+  "order": 2,
+  "difficulty": "Advanced",
+  "tags": ["AI", "RAG", "Vector DB", "Search", "Semantic"]
+}

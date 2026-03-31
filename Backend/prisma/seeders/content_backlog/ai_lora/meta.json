@@ -1,0 +1,8 @@
+{
+  "title": "LLM Fine-tuning: LoRA & Quantization techniques (QLoRA)",
+  "description": "Master the art of efficient AI adaptation by learning to fine-tune massive Large Language Models using low-rank adapters and quantization.",
+  "module": "Applied AI/ML Engineering (MLOps)",
+  "order": 1,
+  "difficulty": "Advanced",
+  "tags": ["AI", "LLM", "Fine-tuning", "LoRA", "Quantization"]
+}

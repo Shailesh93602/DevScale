@@ -1,0 +1,8 @@
+{
+  "title": "Advanced Trees: B-Trees, Red-Black Trees, and Splay Trees",
+  "description": "Master the world of self-balancing and disk-optimized data structures by learning the internals of B-Trees, Red-Black, and Splay trees.",
+  "module": "Advanced DSA & System Design Patterns",
+  "order": 1,
+  "difficulty": "Advanced",
+  "tags": ["DSA", "Trees", "B-Tree", "Red-Black", "Splay"]
+}

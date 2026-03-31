@@ -1,0 +1,18 @@
+{
+  "title": "Technical Writing Quiz",
+  "description": "Test your knowledge on RFCs and JSDoc.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary purpose of an 'RFC' (Request for Comments) in professional software engineering?",
+      "options": [
+        "To write the final user manual",
+        "To present a proposed architecture for review and feedback before code implementation begins",
+        "To serve as a legal contract with a client",
+        "To report a bug in the system"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+<section>
+    <h2>Advanced Serverless Design Patterns</h2>
+    <p>Serverless is more than just "Functions as a Service" (FaaS). It's a way of building entire event-driven architectures that scale from zero to millions automatically.</p>
+
+    <h3>1. The Strangler Fig Pattern</h3>
+    <p>Used to migrate a large, old "Monolith" to the cloud. You write new features in Serverless functions and "Strangle" the old app piece by piece until only the new cloud-native functions remain.</p>
+
+    <h3>2. Asynchronous Fan-Out</h3>
+    <p>When a single event (like "User Signed Up") needs to trigger 5 different actions (Send email, create record, generate welcome gift, log analytics). Using a Fan-Out pattern with SQS/SNS ensures each action happens independently and reliably.</p>
+
+    <h3>Conclusion</h3>
+    <p>By mastering these patterns, you stop fighting with server management and start designing high-level systems that are cost-effective, scalable, and incredibly fast to deploy to production.</p>
+</section>

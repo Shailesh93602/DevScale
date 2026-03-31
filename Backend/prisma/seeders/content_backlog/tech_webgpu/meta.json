@@ -1,0 +1,8 @@
+{
+  "title": "WebGPU: High-performance compute shaders for the Web",
+  "description": "Learn to unlock the massive parallel computing power of modern graphics cards directly in the browser using the WebGPU API.",
+  "module": "Frontier Technologies (Emerging)",
+  "order": 2,
+  "difficulty": "Advanced",
+  "tags": ["WebGPU", "Graphics", "Parallel Computing", "Frontier", "3D"]
+}
