@@ -1,0 +1,8 @@
+{
+  "title": "Authorization Strategies",
+  "description": "Learn about the essential authorization strategies including tracking changes, coordinating multiple developers, and collaboration strategies.",
+  "module": "Full Stack Web Development",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Security", "Authorization", "RBAC", "ABAC", "Permissions"]
+}
