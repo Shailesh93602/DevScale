@@ -1,0 +1,16 @@
+<section>
+    <h2>Understanding Method Overriding</h2>
+    <p>Method overriding occurs when a subclass provides a specific implementation for a method that is already defined in its superclass or interface.</p>
+
+    <h3>1. Dynamic Polymorphism</h3>
+    <p>Overriding is the key to <strong>Runtime Polymorphism</strong>. The version of the method that gets executed is determined at runtime based on the actual type of the object, not the type of the reference variable.</p>
+
+    <h3>2. The @Override Annotation</h3>
+    <p>In many languages, using an <code>@Override</code> annotation (or similar) is a best practice. It informs the compiler of your intent, helping to catch errors if the parent method signature changes.</p>
+
+    <h3>3. Rules for Overriding</h3>
+    <p>For a method to be successfully overridden, it must have the same name, parameters, and return type (or a covariant return type) as the method in the parent class. Access levels cannot be more restrictive than the original.</p>
+
+    <h3>Conclusion</h3>
+    <p>Method overriding allows for flexible and extensible designs, enabling subclasses to specialize behavior while maintaining a consistent interface with their parent classes.</p>
+</section>

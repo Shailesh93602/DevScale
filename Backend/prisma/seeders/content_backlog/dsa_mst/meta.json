@@ -1,0 +1,8 @@
+{
+  "title": "Minimum Spanning Tree",
+  "description": "Learn how to find the most efficient way to connect all vertices in a graph without cycles.",
+  "module": "Data Structures",
+  "order": 20,
+  "difficulty": "Advanced",
+  "tags": ["DSA", "MST", "Kruskal", "Prim", "Algorithms"]
+}

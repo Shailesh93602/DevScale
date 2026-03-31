@@ -1,0 +1,8 @@
+{
+  "title": "Interfaces",
+  "description": "Learn about the role of interfaces in defining behavioral contracts and achieving loose coupling in OOP.",
+  "module": "Object Oriented Programming",
+  "order": 1,
+  "difficulty": "Intermediate",
+  "tags": ["OOP", "Interfaces", "Abstraction", "Design Patterns"]
+}

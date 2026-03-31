@@ -1,0 +1,18 @@
+{
+  "title": "Interfaces Quiz",
+  "description": "Test your knowledge on OOP interfaces and their role in defining contracts.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Can an interface be instantiated directly in most object-oriented languages?",
+      "options": [
+        "Yes, always",
+        "No",
+        "Only if it's empty",
+        "Yes, using the 'new' keyword"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

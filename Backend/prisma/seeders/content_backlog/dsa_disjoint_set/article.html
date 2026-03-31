@@ -1,0 +1,19 @@
+<section>
+    <h2>Understanding Disjoint 	Set (Union-Find)</h2>
+    <p>A Disjoint Set data structure, also called a Union-Find data structure, keeps track of a set of elements partitioned into a number of disjoint (non-overlapping) subsets.</p>
+
+    <h3>1. Core Operations</h3>
+    <ul>
+        <li><strong>Find:</strong> Determine which subset a particular element is in. This can be used for determining if two elements are in the same subset (e.g., to detect cycles in a graph).</li>
+        <li><strong>Union:</strong> Join two subsets into a single subset.</li>
+    </ul>
+
+    <h3>2. Optimizations</h3>
+    <p>To keep the operations efficient (near constant time), two main optimizations are used: <strong>Path Compression</strong> (making nodes point directly to the root during Find) and <strong>Union by Rank/Size</strong> (attaching the smaller tree to the larger one).</p>
+
+    <h3>3. Applications</h3>
+    <p>Disjoint Sets are most famously used in <strong>Kruskal's Algorithm</strong> for MST. They are also useful for keeping track of connected components in a social network or an image.</p>
+
+    <h3>Conclusion</h3>
+    <p>The Disjoint Set is a remarkably efficient and simple data structure for managing partitions of a set, forming a core component of many advanced graph algorithms.</p>
+</section>
