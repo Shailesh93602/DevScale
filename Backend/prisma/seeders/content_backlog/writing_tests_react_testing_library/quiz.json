@@ -1,0 +1,19 @@
+{
+  "title": "Writing Tests with React Testing Library Quiz",
+  "description": "Test your knowledge on writing RTL test cases.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the installation of React Testing Library via npm, which of these is the correct command?",
+      "options": ["npm install --save-dev @testing-library/react", "npm save @testing-library/react", "npm get @testing-library/react", "npm start @testing-library/react"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a key step in a React-Testing-Library-based workflow for testing a component?",
+      "options": ["Rendering the component using 'render' and then using 'screen' to find what's rendered", "Deleting all your local code", "Recording a commit directly through SQL", "Its only possible for SQL repositories"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

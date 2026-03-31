@@ -1,0 +1,19 @@
+{
+  "title": "Introduction to Frontend Testing Quiz",
+  "description": "Test your knowledge on the basics of frontend software testing.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary role of frontend testing in web application development?",
+      "options": ["To collect and analyze data from the database", "To test the client-side of a web app, including its user interface and performance", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Regarding the frontend testing, why is it beneficial to catch bugs that occur in the browser?",
+      "options": ["It ensures a smooth and bug-free user experience", "It makes your code build faster", "It deletes old commits by mistake", "Its only possible for SQL repositories"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

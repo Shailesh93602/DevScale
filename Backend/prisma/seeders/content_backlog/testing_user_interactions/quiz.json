@@ -1,0 +1,19 @@
+{
+  "title": "Testing User Interactions Quiz",
+  "description": "Test your knowledge on user interaction verification.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding frontend testing, what is the primary role of user interaction testing?",
+      "options": ["To collect and analyze data", "To verify that a React component correctly responds to user input like clicks or typing", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which React Testing Library utility is commonly used to simulate user events like clicks within a unit test?",
+      "options": ["fireEvent", "sendEvent", "triggerEvent", "doEvent"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
