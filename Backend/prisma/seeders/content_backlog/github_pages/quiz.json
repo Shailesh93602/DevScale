@@ -1,0 +1,19 @@
+{
+  "title": "GitHub Pages Quiz",
+  "description": "Test your knowledge on GitHub Pages hosting.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding GitHub, what is 'GitHub Pages' used for?",
+      "options": ["To collect and analyze data from the database", "To host a static website directly from a GitHub repository", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a key step in a GitHub-Pages-based workflow?",
+      "options": ["Enabling GitHub Pages in your repository's settings and choosing which branch to publish from", "Deleting all your local code", "Recording a commit directly to the SQL server", "Its only possible for SQL repositories"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
