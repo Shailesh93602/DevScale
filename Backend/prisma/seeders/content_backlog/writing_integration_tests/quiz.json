@@ -1,0 +1,19 @@
+{
+  "title": "Writing Integration Tests Quiz",
+  "description": "Test your knowledge on writing integration test cases.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the testing of software, what is an 'Integration Test' used for?",
+      "options": ["To collect and analyze data from the database", "To verify that different components of your software work together correctly, such as between your API and database", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a key step in a integration-testing-based workflow for a web application project?",
+      "options": ["Testing the interactions between your API and database directly within a test run", "Deleting all your local code", "Recording a commit directly to the SQL server", "Its only possible for SQL repositories"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

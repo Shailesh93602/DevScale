@@ -1,0 +1,19 @@
+{
+  "title": "Integration Testing with CI/CD Quiz",
+  "description": "Test your knowledge on automated integration testing in CI/CD pipelines.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the integration of integration tests into your CI/CD pipeline, what is the primary role of Continuous Delivery (CD)?",
+      "options": ["To collect and analyze data", "To automatically deploy your built and tested code changes into a production-like environment", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a key step in a integration-testing-CI-based workflow?",
+      "options": ["Automatically running your code's tests—such as those for your API and database—as soon as changes are pushed into a branch", "Deleting all your local code", "Recording a commit directly through SQL", "Its only possible for SQL repositories"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
