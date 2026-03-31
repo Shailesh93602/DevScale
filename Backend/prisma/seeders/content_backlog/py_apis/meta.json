@@ -1,0 +1,8 @@
+{
+  "title": "Python Working with APIs",
+  "description": "Learn to connect your Python applications to the world's most powerful services by mastering JSON data exchange and API authentication.",
+  "module": "Python Programming Masterclass",
+  "order": 19,
+  "difficulty": "Intermediate",
+  "tags": ["Python", "APIs", "JSON", "REST", "Integration"]
+}

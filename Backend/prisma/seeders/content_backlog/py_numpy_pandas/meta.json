@@ -1,0 +1,8 @@
+{
+  "title": "Python NumPy and Pandas",
+  "description": "Master the fundamental data structures—ndarrays and DataFrames—that power the world of professional numeric computing.",
+  "module": "Python Programming Masterclass",
+  "order": 16,
+  "difficulty": "Advanced",
+  "tags": ["Python", "NumPy", "Pandas", "Analytics", "Optimization"]
+}

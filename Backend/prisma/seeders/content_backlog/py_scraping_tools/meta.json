@@ -1,0 +1,8 @@
+{
+  "title": "Python BeautifulSoup and Scrapy",
+  "description": "Learn to navigate complex HTML and build professional-grade web crawlers using Python's leading scraping tools.",
+  "module": "Python Programming Masterclass",
+  "order": 18,
+  "difficulty": "Advanced",
+  "tags": ["Python", "BeautifulSoup", "Scrapy", "HTML", "Automation"]
+}

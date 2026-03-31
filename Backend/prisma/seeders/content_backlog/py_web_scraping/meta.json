@@ -1,0 +1,8 @@
+{
+  "title": "Python Web Scraping",
+  "description": "Learn to turn the internet into your own personal database by mastering the fundamentals of automated web data extraction.",
+  "module": "Python Programming Masterclass",
+  "order": 17,
+  "difficulty": "Intermediate",
+  "tags": ["Python", "Web Scraping", "Requests", "Data Collection"]
+}
