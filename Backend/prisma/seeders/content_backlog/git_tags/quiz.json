@@ -1,0 +1,31 @@
+{
+  "title": "Git Tags Quiz",
+  "description": "Test your knowledge on Git releasing and tagging concepts.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these is the primary reason to use a Git tag?",
+      "options": ["To collect and analyze data", "To point to a specific, important point in your code's history like a software release", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Regarding Git tags, which one includes a descriptive message and is stored as a full object in the Git repository?",
+      "options": ["Lightweight Tag", "Annotated Tag", "Primary Tag", "Unique Tag"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which Git command is used to push a specific tag to a remote repository?",
+      "options": ["git push remote tag-name", "git push tag tag-name", "git send tag-name", "git update tag-name"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "A situation where two or more transactions are waiting for each other to release a lock, resulting in a hang, is called a _______.",
+      "options": ["Deadlock", "Live Lock", "Fast Lock", "User Lock"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
