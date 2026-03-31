@@ -1,0 +1,18 @@
+{
+  "title": "ZKP Quiz",
+  "description": "Test your knowledge on proving without revealing.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary goal of a 'Zero Knowledge Proof' (ZKP)?",
+      "options": [
+        "To encrypt data as fast as possible",
+        "To prove you know information without actually revealing the information itself",
+        "To delete data after it has been read",
+        "To allow multiple people to use the same password"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

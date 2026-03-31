@@ -1,0 +1,8 @@
+{
+  "title": "CPU Cache Locality & Branch Prediction Optimization",
+  "description": "Unlock the true speed of modern hardware by learning to write code that minimizes cache misses and branch misprediction penalties.",
+  "module": "Advanced Performance Engineering",
+  "order": 4,
+  "difficulty": "Advanced",
+  "tags": ["CPU", "Cache", "Branch Prediction", "Optimization", "Low-level"]
+}

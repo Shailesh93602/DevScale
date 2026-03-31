@@ -1,0 +1,17 @@
+<section>
+    <h2>Mastering RabbitMQ: Exchanges and DLQs</h2>
+    <p>RabbitMQ is a highly flexible message broker that excels at complex routing logic. To use it professionally, you must understand how messages move through Exchanges and how to handle failures with DLQs.</p>
+
+    <h3>1. Exchange Types</h3>
+    <ul>
+        <li><strong>Direct:</strong> Delivers messages to queues based on a specific routing key.</li>
+        <li><strong>Fanout:</strong> Broadcasts a message to EVERY queue it knows about. Perfect for global notifications.</li>
+        <li><strong>Topic:</strong> Delivers messages based on wildcard patterns. Very flexible for complex message categories.</li>
+    </ul>
+
+    <h3>2. Dead Letter Queues (DLQs)</h3>
+    <p>What happens when a message cannot be processed? Instead of losing it, RabbitMQ can send it to a <strong>Dead Letter Queue</strong>. This allow you to inspect the failed message, fix the underlying bug, and "re-run" the message later, ensuring zero data loss.</p>
+
+    <h3>Conclusion</h3>
+    <p>By mastering RabbitMQ's routing and failure-handling patterns, you can build extremely resilient asynchronous systems that never lose a single piece of communication, even during a crash.</p>
+</section>

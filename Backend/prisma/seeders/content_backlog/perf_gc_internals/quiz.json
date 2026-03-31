@@ -1,0 +1,18 @@
+{
+  "title": "GC Internals Quiz",
+  "description": "Test your knowledge on Reference Counting and Mark-and-Sweep.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "In the V8 engine (Node.js), what is the term used for the moment when the program stops executing to allow the Garbage Collector to clean memory?",
+      "options": [
+        "A Sweep Gap",
+        "A GC Pause",
+        "A Memory Break",
+        "A Root Scan"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

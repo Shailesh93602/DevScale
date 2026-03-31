@@ -1,0 +1,18 @@
+{
+  "title": "RabbitMQ Patterns Quiz",
+  "description": "Test your knowledge on exchange types and Dead Letter Queues.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which RabbitMQ component is used to store messages that failed to be processed, allowing for later inspection and recovery?",
+      "options": [
+        "Fanout Exchange",
+        "Direct Queue",
+        "Dead Letter Queue (DLQ)",
+        "Topic Routing"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

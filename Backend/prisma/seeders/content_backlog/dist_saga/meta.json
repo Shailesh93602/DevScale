@@ -1,0 +1,8 @@
+{
+  "title": "Saga Pattern (Choreography vs. Orchestration)",
+  "description": "Master data consistency in a microservices world by learning to coordinate complex distributed transactions with compensating logic.",
+  "module": "Distributed Systems Architecture",
+  "order": 3,
+  "difficulty": "Advanced",
+  "tags": ["Microservices", "Saga", "Transactions", "Consistency", "Orchestration"]
+}

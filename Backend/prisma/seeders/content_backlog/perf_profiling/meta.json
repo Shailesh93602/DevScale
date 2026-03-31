@@ -1,0 +1,8 @@
+{
+  "title": "Performance Profiling Tools (Perf, Gprof, Valgrind internals)",
+  "description": "Learn to scientifically measure and optimize your software's performance by mastering the industry's most powerful profiling tools.",
+  "module": "Advanced Performance Engineering",
+  "order": 1,
+  "difficulty": "Advanced",
+  "tags": ["Performance", "Profiling", "Memory", "Linux", "Optimization"]
+}

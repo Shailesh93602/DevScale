@@ -1,0 +1,20 @@
+<section>
+    <h2>Optimization of the Critical Rendering Path (CRP)</h2>
+    <p>The CRP is the sequence of steps the browser takes to turn HTML, CSS, and JS into actual pixels on the screen. Optimizing this path is the key to achieving a sub-1-second load time.</p>
+
+    <h3>1. The Object Models: DOM and CSSOM</h3>
+    <p>Before rendering, the browser must build the **Document Object Model (DOM)** from HTML and the **CSS Object Model (CSSOM)** from CSS. Both are "Render Blocking"—painting cannot happen until they are both complete. This is why small, optimized CSS is vital.</p>
+
+    <h3>2. The Render Tree</h3>
+    <p>The browser combines the DOM and CSSOM into a **Render Tree**. This tree contains only the elements that are actually visible. Once the tree is ready, the browser performs **Layout** (calculating geometry) and **Paint** (filling in pixels).</p>
+
+    <h3>3. Solving the Bottlenecks</h3>
+    <ul>
+        <li><strong>Inline Critical CSS:</strong> Put your "above the fold" styles directly in the HTML to show the page instantly.</li>
+        <li><strong>Async/Defer JS:</strong> Prevent Javascript from blocking the parsing of your HTML.</li>
+        <li><strong>Optimize Images:</strong> Reduce the heavy lifting the browser has to do during the "Paint" stage.</li>
+    </ul>
+
+    <h3>Conclusion</h3>
+    <p>By mastering the CRP, you ensure your users see your content as fast as physically possible. This directly translates to higher user retention, better SEO rankings, and a premium feel for your web application.</p>
+</section>

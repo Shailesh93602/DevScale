@@ -1,0 +1,18 @@
+{
+  "title": "Service Discovery & API Gateway Quiz",
+  "description": "Test your knowledge on service registries and central entry points.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which component acts as a dynamic 'Directory' where microservices register their current network locations?",
+      "options": [
+        "API Gateway",
+        "Service Registry",
+        "Load Balancer",
+        "Database"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
