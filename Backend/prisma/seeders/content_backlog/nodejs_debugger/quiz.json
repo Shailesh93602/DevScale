@@ -1,0 +1,19 @@
+{
+  "title": "Node.js Debugger Quiz",
+  "description": "Test your knowledge on Node.js-based debugging utilities.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding server-side development, what is the 'Node.js Debugger' used for?",
+      "options": ["To collect and analyze data", "To pause, inspect, and step through the execution of your Node.js application's code", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a common command for starting a project's Node.js application in debugging mode?",
+      "options": ["node inspect index.js", "node debug index.js", "node run index.js", "node start index.js"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "title": "Error Handling Strategies Quiz",
+  "description": "Test your knowledge on software error handling patterns.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the development of software, what is an 'Error Handling Strategy' used for?",
+      "options": ["To collect and analyze data", "To identify and fix errors or 'bugs' as they occur in your application's code", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a key step in a error-handling-strategy workflow?",
+      "options": ["Using 'try/catch' blocks to correctly handle exceptions at each line of code", "Deleting all your local code", "Recording a commit directly to the SQL database", "Its only possible for SQL repositories"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

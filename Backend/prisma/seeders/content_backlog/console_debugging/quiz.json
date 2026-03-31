@@ -1,0 +1,19 @@
+{
+  "title": "Using Console for Debugging Quiz",
+  "description": "Test your knowledge on using the browser console for debugging.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding web development, what is the 'Browser Console' commonly used for?",
+      "options": ["To collect and analyze data", "To view status and error messages as your project runs in the browser", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a common console command for writing a simple status update Message to the browser console?",
+      "options": ["console.log()", "console.error()", "console.warn()", "console.print()"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
