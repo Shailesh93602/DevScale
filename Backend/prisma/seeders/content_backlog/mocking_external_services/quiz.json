@@ -1,0 +1,19 @@
+{
+  "title": "Mocking External Services Quiz",
+  "description": "Test your knowledge on mocking third-party APIs and services.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding testing, what is 'Mocking' as external service?",
+      "options": ["To collect and analyze data", "To replace a third-party service, like an API, with a controlled mock version during a test run", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a key benefit of mocking an external service within your project's unit tests?",
+      "options": ["It increases test stability and performance by removing dependency on unstable or slow external systems", "It makes your local machine faster", "It deletes old commits by mistake", "Its only possible for SQL repositories"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
