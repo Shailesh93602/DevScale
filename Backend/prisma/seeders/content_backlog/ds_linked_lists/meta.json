@@ -1,0 +1,8 @@
+{
+  "title": "Linked Lists",
+  "description": "Master the fundamentals of dynamic data structures by learning to build and traverse Singly and Doubly Linked Lists.",
+  "module": "Data Structures and Algorithms",
+  "order": 1,
+  "difficulty": "Intermediate",
+  "tags": ["DSA", "Linked List", "Memory", "Pointers"]
+}

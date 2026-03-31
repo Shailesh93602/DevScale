@@ -1,0 +1,8 @@
+{
+  "title": "Queues",
+  "description": "Learn to manage asynchronous tasks and resource scheduling by mastering the FIFO (First In, First Out) logic of Queues.",
+  "module": "Data Structures and Algorithms",
+  "order": 3,
+  "difficulty": "Intermediate",
+  "tags": ["DSA", "Queue", "FIFO", "Scheduling"]
+}
