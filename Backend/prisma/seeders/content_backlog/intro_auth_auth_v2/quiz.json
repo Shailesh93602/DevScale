@@ -1,0 +1,13 @@
+{
+  "title": "Auth and Auth Intro Quiz",
+  "description": "Test your knowledge on the basics of identification and permissions.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the web security, what is the difference between 'Authentication' and 'Authorization'?",
+      "options": ["To collect and analyze data", "Authentication verifies WHO a user is, while Authorization verifies WHAT they are allowed to do", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
