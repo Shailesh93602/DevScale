@@ -1,0 +1,8 @@
+{
+  "title": "Implementing OAuth",
+  "description": "Learn about the essential authentication and authorization tasks including tracking changes, coordinating multiple developers, and collaboration strategies.",
+  "module": "Full Stack Web Development",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Security", "Authentication", "OAuth", "API Access"]
+}
