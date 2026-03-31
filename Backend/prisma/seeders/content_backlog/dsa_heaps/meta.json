@@ -1,0 +1,8 @@
+{
+  "title": "Heaps",
+  "description": "Master the principles of Max-Heaps, Min-Heaps, and their use in priority queues.",
+  "module": "Data Structures",
+  "order": 4,
+  "difficulty": "Intermediate",
+  "tags": ["DSA", "Heaps", "Priority Queue", "Algorithms"]
+}

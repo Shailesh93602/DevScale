@@ -1,0 +1,8 @@
+{
+  "title": "Segment Trees",
+  "description": "Learn to perform efficient range queries and dynamic point/range updates in O(log n) time.",
+  "module": "Data Structures",
+  "order": 18,
+  "difficulty": "Advanced",
+  "tags": ["DSA", "Segment Trees", "Range Queries", "Lazy Propagation", "Algorithms"]
+}

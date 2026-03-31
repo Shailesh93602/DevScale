@@ -1,0 +1,8 @@
+{
+  "title": "String Algorithms",
+  "description": "Learn about pattern matching, string hashing, and advanced techniques like KMP and Rabin-Karp.",
+  "module": "Data Structures",
+  "order": 14,
+  "difficulty": "Advanced",
+  "tags": ["DSA", "String Algorithms", "KMP", "Rabin-Karp", "Algorithms"]
+}

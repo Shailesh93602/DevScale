@@ -1,0 +1,8 @@
+{
+  "title": "Hash Tables",
+  "description": "Learn about hashing, collision resolution strategies, and the efficiency of key-value pair mapping.",
+  "module": "Data Structures",
+  "order": 6,
+  "difficulty": "Intermediate",
+  "tags": ["DSA", "Hash Tables", "Hashing", "Algorithms"]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "Greedy Algorithms",
+  "description": "Explore the greedy paradigm, its properties, and classic optimization algorithms like Dijkstra's and Huffman Coding.",
+  "module": "Data Structures",
+  "order": 10,
+  "difficulty": "Intermediate",
+  "tags": ["DSA", "Greedy Algorithms", "Optimization", "Algorithms"]
+}

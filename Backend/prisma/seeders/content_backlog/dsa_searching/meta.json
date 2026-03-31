@@ -1,0 +1,8 @@
+{
+  "title": "Searching Algorithms",
+  "description": "Explore the fundamentals of data retrieval through linear and binary search algorithms.",
+  "module": "Data Structures",
+  "order": 8,
+  "difficulty": "Intermediate",
+  "tags": ["DSA", "Searching", "Binary Search", "Algorithms"]
+}

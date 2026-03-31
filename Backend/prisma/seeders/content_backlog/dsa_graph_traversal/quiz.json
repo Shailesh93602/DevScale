@@ -1,0 +1,18 @@
+{
+  "title": "Graph Traversal Quiz",
+  "description": "Test your knowledge on BFS and DFS graph traversal techniques.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which data structure is typically used to implement Breadth-First Search (BFS)?",
+      "options": [
+        "Stack",
+        "Queue",
+        "Priority Queue",
+        "Hash Table"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

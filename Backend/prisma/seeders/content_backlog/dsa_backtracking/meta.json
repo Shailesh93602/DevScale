@@ -1,0 +1,8 @@
+{
+  "title": "Backtracking",
+  "description": "Learn the systematic approach of backtracking to solve constraint satisfaction problems like N-Queens and Sudoku.",
+  "module": "Data Structures",
+  "order": 11,
+  "difficulty": "Advanced",
+  "tags": ["DSA", "Backtracking", "Recursion", "Algorithms"]
+}

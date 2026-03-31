@@ -1,0 +1,16 @@
+<section>
+    <h2>Understanding Segment Trees</h2>
+    <p>A Segment Tree is a tree data structure used for storing information about intervals, or segments. It allows querying which of the stored segments contain a given point or performing range queries efficiently.</p>
+
+    <h3>1. Range Queries</h3>
+    <p>The most common use for Segment Trees is performing range queries (like Range Sum, Range Minimum, or Range Maximum) on an array in O(log n) time, even if the array elements are being updated.</p>
+
+    <h3>2. Efficient Updates</h3>
+    <p>Unlike simple prefix sums which take O(n) to update, Segment Trees support <strong>Point Updates</strong> in O(log n). For range updates, <strong>Lazy Propagation</strong> can be used to keep the time complexity at O(log n).</p>
+
+    <h3>3. Structure</h3>
+    <p>A Segment Tree for an array of size N is a full binary tree with N leaves (representing array elements) and 2N-1 total nodes. It is typically implemented using an array for memory efficiency.</p>
+
+    <h3>Conclusion</h3>
+    <p>Segment Trees are a go-to choice for competitive programming and systems requiring dynamic range queries, providing a perfect balance between query and update performance.</p>
+</section>

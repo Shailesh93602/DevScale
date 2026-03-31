@@ -1,0 +1,16 @@
+<section>
+    <h2>Understanding Shortest Path Algorithms</h2>
+    <p>Shortest path algorithms find a path between two vertices in a graph such that the sum of the weights of its constituent edges is minimized. This is a fundamental problem in transportation and networking.</p>
+
+    <h3>1. Dijkstra's Algorithm</h3>
+    <p>Dijkstra's finds the shortest paths from a source to all other vertices in a graph with non-negative edge weights. It uses a <strong>Priority Queue</strong> and has a time complexity of O((V+E) log V).</p>
+
+    <h3>2. Bellman-Ford Algorithm</h3>
+    <p>Unlike Dijkstra's, Bellman-Ford can handle graphs with <strong>Negative Edge Weights</strong>. It also detects negative cycles, although it is generally slower with O(V*E) complexity.</p>
+
+    <h3>3. Floyd-Warshall Algorithm</h3>
+    <p>For finding the shortest paths between <strong>all pairs</strong> of vertices, Floyd-Warshall uses a dynamic programming approach in O(V³) time, making it suitable for dense graphs of moderate size.</p>
+
+    <h3>Conclusion</h3>
+    <p>Shortest path algorithms are ubiquitous in modern life, powering everything from GPS navigation to network packet routing. Understanding their limitations and strengths is key to building efficient systems.</p>
+</section>

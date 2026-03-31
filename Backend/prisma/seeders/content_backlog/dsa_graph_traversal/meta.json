@@ -1,0 +1,8 @@
+{
+  "title": "Graph Traversal",
+  "description": "Master BFS and DFS, the fundamental building blocks for exploring and analyzing networked data.",
+  "module": "Data Structures",
+  "order": 13,
+  "difficulty": "Intermediate",
+  "tags": ["DSA", "Graph Traversal", "BFS", "DFS", "Algorithms"]
+}
