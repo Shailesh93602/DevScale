@@ -1,0 +1,16 @@
+<section>
+    <h2>The Saga Pattern: Distributed Transactions</h2>
+    <p>In a microservices architecture, a single business transaction (like "Order Food") might involve 5 different services. If the "Payment Service" fails, how do you undo the "Order Service"? The Saga pattern is the solution.</p>
+
+    <h3>1. What is a Saga?</h3>
+    <p>A Saga is a sequence of local transactions. Each service performs its own work and publishes an event or message to trigger the next service. If one step fails, the Saga runs **Compensating Transactions** to undo the previous steps (e.g., "Refund Money", "Cancel Order").</p>
+
+    <h3>2. Choreography vs. Orchestration</h3>
+    <ul>
+        <li><strong>Choreography:</strong> Every service knows which event to listen to and what to do next. It's decentralized and simple but can become hard to track as the system grows.</li>
+        <li><strong>Orchestration:</strong> A central "Orchestrator" service tells every other service exactly when to act and what to do. It's more complex to build but very easy to monitor and manage.</li>
+    </ul>
+
+    <h3>Conclusion</h3>
+    <p>Mastering the Saga pattern allows you to maintain data consistency across dozens of independent microservices without the performance-killing overhead of traditional "Two-Phase Commit" protocols.</p>
+</section>

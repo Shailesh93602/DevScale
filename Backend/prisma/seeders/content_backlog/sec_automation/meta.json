@@ -1,0 +1,8 @@
+{
+  "title": "Security Audit Automation (SAST & DAST integration)",
+  "description": "Build resilient CI/CD pipelines by mastering the automated detection of vulnerabilities using SAST and DAST technologies.",
+  "module": "Advanced Cybersecurity Operations",
+  "order": 3,
+  "difficulty": "Advanced",
+  "tags": ["Security", "CI/CD", "Automation", "SAST", "DAST"]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "Event Sourcing & CQRS Design Patterns",
+  "description": "Learn to separate read and write responsibilities while maintaining a perfect audit trail using immutable event streams.",
+  "module": "Distributed Systems Architecture",
+  "order": 2,
+  "difficulty": "Advanced",
+  "tags": ["Architecture", "Event Sourcing", "CQRS", "Big Data", "Audit"]
+}

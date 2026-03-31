@@ -1,0 +1,16 @@
+<section>
+    <h2>Event Sourcing and CQRS Patterns</h2>
+    <p>Standard databases store the *current state* of an object. Event Sourcing and CQRS take a different approach, storing every change that ever happened, providing total auditability and massive scalability.</p>
+
+    <h3>1. Event Sourcing</h3>
+    <p>Instead of storing a "Account Balance: $100", you store an append-only log of events: <code>{Deposit: $50}</code>, <code>{Deposit: $70}</code>, <code>{Withdraw: $20}</code>. To get the current state, you simply "replay" the events. This gives you a perfect audit trail and allows you to "travel back in time" to any state.</p>
+
+    <h3>2. CQRS (Command Query Responsibility Segregation)</h3>
+    <p>CQRS splits your application into two separate models: The **Command** side (Writing data) and the **Query** side (Reading data). By separating them, you can optimize them independently—for example, using a high-speed write database for commands and a read-optimized ElasticSearch index for complex queries.</p>
+
+    <h3>3. Why Use Them?</h3>
+    <p>These patterns are essential for high-compliance systems (banking, healthcare) and extremely high-traffic systems where the read and write loads are drastically different.</p>
+
+    <h3>Conclusion</h3>
+    <p>By mastering Event Sourcing and CQRS, you gain the ability to build massive, audit-proof systems that can handle hundreds of thousands of transactions per second on the world stage.</p>
+</section>

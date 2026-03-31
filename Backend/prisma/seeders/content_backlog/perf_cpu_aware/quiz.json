@@ -1,0 +1,18 @@
+{
+  "title": "Cache & Branching Quiz",
+  "description": "Test your knowledge on Cache Misses and Branch Prediction.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Why is accessing data sequentially in a standard Array usually much FASTER than accessing data in a Linked List?",
+      "options": [
+        "Arrays have less overhead",
+        "It exploits CPU Cache Locality",
+        "Linked lists are encrypted",
+        "Arrays use less electricity"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
