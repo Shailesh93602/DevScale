@@ -1,0 +1,18 @@
+{
+  "title": "Stacks Quiz",
+  "description": "Test your knowledge on LIFO and push/pop logic.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which principle does a 'Stack' data structure follow for adding and removing items?",
+      "options": [
+        "First In, First Out (FIFO)",
+        "Last In, First Out (LIFO)",
+        "Random Access",
+        "Priority Based"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

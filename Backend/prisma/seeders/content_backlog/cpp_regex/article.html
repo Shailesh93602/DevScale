@@ -1,0 +1,20 @@
+<section>
+    <h2>Modern C++ Regular Expressions (regex)</h2>
+    <p>The <code>&lt;regex&gt;</code> library allows you to perform powerful pattern matching and text manipulation within your speed-critical C++ applications.</p>
+
+    <h3>1. std::regex Class</h3>
+    <p>You define a pattern using the <code>std::regex</code> class. For example, <code>std::regex pattern("[0-9]+")</code> matches any sequence of digits.</p>
+
+    <h3>2. Search, Match, and Replace</h3>
+    <ul>
+        <li><strong>regex_match:</strong> Checks if the ENTIRE string matches the pattern.</li>
+        <li><strong>regex_search:</strong> Checks if ANY part of the string matches.</li>
+        <li><strong>regex_replace:</strong> Finds matches and replaces them with a new string.</li>
+    </ul>
+
+    <h3>3. Efficiency and Compiling</h3>
+    <p>Regular expressions in C++ are compiled at runtime. For maximum performance, you should define your regex objects once and reuse them, rather than re-creating them inside a loop.</p>
+
+    <h3>Conclusion</h3>
+    <p>By mastering the regex library, you gain the ability to validate user input (like emails), parse complex log files, and transform text data with incredible precision and speed.</p>
+</section>

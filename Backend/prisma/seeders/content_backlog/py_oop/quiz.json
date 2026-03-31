@@ -1,0 +1,18 @@
+{
+  "title": "Python OOP Quiz",
+  "description": "Test your knowledge on self, __init__, and class structures.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "In a Python class method, what is the mandatory first argument that represents the instance of the object itself?",
+      "options": [
+        "this",
+        "self",
+        "object",
+        "root"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

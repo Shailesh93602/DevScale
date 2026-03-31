@@ -1,0 +1,18 @@
+{
+  "title": "Recursion Quiz",
+  "description": "Test your knowledge on base cases and recursive steps.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the name of the mandatory condition that STOPS a recursive function from calling itself infinitely?",
+      "options": [
+        "Stop case",
+        "Base case",
+        "Final case",
+        "Exit point"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
