@@ -1,0 +1,31 @@
+{
+  "title": "Collaboration and Pull Requests Quiz",
+  "description": "Test your knowledge on Git collaboration and PR concepts.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is 'Forking' in the context of Git and platforms like GitHub?",
+      "options": ["To collect and analyze data", "To create a copy of a project to make changes to without affecting the original", "To delete old commits", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Regarding Git collaboration, what is a 'Pull Request' used for?",
+      "options": ["To submit your changes for review and inclusion in an original project from a forked or branched version", "To set up a local Git server", "To record a commit", "To view your commit list"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which of these is the primary role of a project maintainer when it comes to pull requests?",
+      "options": ["To review and potentially merge new code contributions", "To delete old users", "To encrypt the project's data", "To start the development from scratch"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "A situation where two or more transactions are waiting for each other to release a lock, resulting in a hang, is called a _______.",
+      "options": ["Deadlock", "Live Lock", "Fast Lock", "User Lock"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
