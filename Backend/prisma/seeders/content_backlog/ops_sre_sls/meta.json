@@ -1,0 +1,8 @@
+{
+  "title": "Site Reliability Engineering (SRE): SLI, SLO, and SLA Principles",
+  "description": "Learn the scientific foundations of reliability engineering by mastering the metrics and targets that drive world-scale services.",
+  "module": "Global Infrastructure & SRE (Expert Tier Vol 2)",
+  "order": 1,
+  "difficulty": "Advanced",
+  "tags": ["SRE", "Ops", "SLA", "Metrics", "Reliability"]
+}

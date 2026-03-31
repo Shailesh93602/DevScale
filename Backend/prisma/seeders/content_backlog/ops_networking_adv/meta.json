@@ -1,0 +1,8 @@
+{
+  "title": "Advanced Cloud Networking: VPC Peering, Direct Connect, and Transit Gateway",
+  "description": "Master the complex connections of world-scale cloud systems by learning to architect secure, high-speed networking with peering and transit gateways.",
+  "module": "Global Infrastructure & SRE (Expert Tier Vol 2)",
+  "order": 4,
+  "difficulty": "Advanced",
+  "tags": ["Networking", "VPC", "Cloud", "SRE", "Architecture"]
+}

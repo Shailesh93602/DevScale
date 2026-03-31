@@ -1,0 +1,18 @@
+{
+  "title": "Sharding Quiz",
+  "description": "Test your knowledge on horizontal scaling and shard keys.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary difference between Partitioning and Sharding in a database context?",
+      "options": [
+        "Partitioning is for SQL, Sharding is for NoSQL",
+        "Partitioning happens on a single server; Sharding involves splitting data across multiple physical servers",
+        "Sharding is only for images, Partitioning is for text",
+        "There is no difference"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
