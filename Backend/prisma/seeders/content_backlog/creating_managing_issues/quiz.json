@@ -1,0 +1,19 @@
+{
+  "title": "Creating and Managing Issues Quiz",
+  "description": "Test your knowledge on GitHub issue tracking.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding GitHub, what is an 'Issue' used for?",
+      "options": ["To collect and analyze data", "To track and prioritize specific tasks, bug fixes, or feature requests for a project", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a key benefit of using GitHub issues for your project development?",
+      "options": ["It provides a central location for tracking and prioritizing work tasks among team members", "It makes your local machine faster", "It deletes old commits by mistake", "Its only possible for SQL repositories"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

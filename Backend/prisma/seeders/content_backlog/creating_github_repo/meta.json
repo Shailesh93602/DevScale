@@ -1,0 +1,8 @@
+{
+  "title": "Creating a GitHub Repository",
+  "description": "Learn about the essential GitHub tasks including tracking changes, coordinating multiple developers, and collaboration strategies.",
+  "module": "Full Stack Web Development",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Git", "Version Control", "GitHub", "Software Engineering"]
+}
