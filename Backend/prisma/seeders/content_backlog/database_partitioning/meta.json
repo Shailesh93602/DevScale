@@ -1,0 +1,8 @@
+{
+  "title": "Database Partitioning",
+  "description": "Learn about database partitioning, horizontal vs vertical partitioning, and various common partitioning methods.",
+  "module": "Full Stack Web Development",
+  "order": 2,
+  "difficulty": "Intermediate",
+  "tags": ["Database", "Partitioning", "SQL", "Big Data", "Scalability"]
+}

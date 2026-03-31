@@ -1,0 +1,31 @@
+{
+  "title": "Understanding Git Workflow Quiz",
+  "description": "Test your knowledge on Git version control patterns.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these is the first step in the basic Git workflow?",
+      "options": ["Modifying files in your working directory", "Staging your changes", "Recording a commit", "Pushing to a remote repository"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Regarding the Git workflow, what is the 'Staging Area' used for?",
+      "options": ["To collect and analyze data", "To temporarily store modified files before they are committed", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which Git command is used to move changes from the staging area to your repository's version history?",
+      "options": ["git move", "git record", "git commit", "git save"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "A series of snapshots of your code's history is called a _______.",
+      "options": ["Git Repository", "Git Folder", "Git Link", "Git Log"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

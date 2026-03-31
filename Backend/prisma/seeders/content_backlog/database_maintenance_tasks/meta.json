@@ -1,0 +1,8 @@
+{
+  "title": "Database Maintenance Tasks",
+  "description": "Learn about the essential database maintenance tasks including index reconstruction, backups, cleanup, and security updates.",
+  "module": "Full Stack Web Development",
+  "order": 3,
+  "difficulty": "Intermediate",
+  "tags": ["Database", "Maintenance", "Security", "Performance Tuning"]
+}

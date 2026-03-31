@@ -1,0 +1,8 @@
+{
+  "title": "Scaling Databases",
+  "description": "Learn about the essential database scaling tasks including vertical and horizontal scaling, read replicas, and shards.",
+  "module": "Full Stack Web Development",
+  "order": 1,
+  "difficulty": "Intermediate",
+  "tags": ["Database", "Scaling", "Big Data", "Scalability"]
+}
