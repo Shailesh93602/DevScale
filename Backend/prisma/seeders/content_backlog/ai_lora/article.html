@@ -1,0 +1,13 @@
+<section>
+    <h2>Understanding LLM Fine-Tuning: LoRA and QLoRA</h2>
+    <p>Training a Large Language Model (LLM) from scratch costs millions. Fine-tuning allows you to take a pre-trained model and adapt it to your specific data for a fraction of the cost.</p>
+
+    <h3>1. LoRA (Low-Rank Adaptation)</h3>
+    <p>Instead of updating every single parameter in a massive model, LoRA adds a tiny set of "Adapter" weights. You only train these small adapters while keeping the rest of the model frozen. This reduces the memory required for training by 90% while maintaining the model's original intelligence.</p>
+
+    <h3>2. QLoRA (Quantized LoRA)</h3>
+    <p>QLoRA takes it even further by "Quantizing" (compressing) the main model weights into a lower-precision format (like 4-bit) before adding the LoRA adapters. This allow you to fine-tune a massive model like Llama-3 on a single consumer-grade GPU.</p>
+
+    <h3>Conclusion</h3>
+    <p>By mastering LoRA and QLoRA, you unlock the ability to build custom, private AI models that understand your company's data and "tone of voice" without needing a multi-million dollar supercomputer.</p>
+</section>

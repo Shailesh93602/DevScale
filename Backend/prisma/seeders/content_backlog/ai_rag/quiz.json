@@ -1,0 +1,18 @@
+{
+  "title": "RAG & Vector DB Quiz",
+  "description": "Test your knowledge on retrieval and semantic search.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "In a RAG architecture, what is the primary role of a 'Vector Database'?",
+      "options": [
+        "To store the LLM's source code",
+        "To perform fast semantic search to find relevant context for the AI's prompt",
+        "To translate text into different languages",
+        "To act as a standard SQL database for user accounts"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

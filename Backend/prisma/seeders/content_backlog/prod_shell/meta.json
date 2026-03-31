@@ -1,0 +1,8 @@
+{
+  "title": "Advanced Shell Scripting (Zsh/Bash internals)",
+  "description": "Unlock the automation power of the Unix command line by mastering advanced shell logic and pipeline engineering.",
+  "module": "Professional Developer Productivity",
+  "order": 3,
+  "difficulty": "Intermediate",
+  "tags": ["Automation", "Shell", "Bash", "Zsh", "Productivity"]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "Kubernetes: Custom Resource Definitions (CRDs) & Operators",
+  "description": "Learn to extend Kubernetes by building custom resources and operators that automate complex application management.",
+  "module": "Advanced Cloud & DevOps Frontiers",
+  "order": 1,
+  "difficulty": "Advanced",
+  "tags": ["Kubernetes", "DevOps", "Automation", "Cloud", "SRE"]
+}

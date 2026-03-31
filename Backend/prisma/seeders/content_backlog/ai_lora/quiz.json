@@ -1,0 +1,18 @@
+{
+  "title": "LLM Fine-Tuning Quiz",
+  "description": "Test your knowledge on LoRA and QLoRA techniques.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary benefit of using 'LoRA' (Low-Rank Adaptation) for fine-tuning a Large Language Model?",
+      "options": [
+        "It makes the model run faster on your phone",
+        "It allows you to train the model by only updating a small set of 'Adapter' weights, drastically reducing memory usage",
+        "It automatically translates the model into different languages",
+        "It adds more data to the model's training set"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "title": "Edge CV Quiz",
+  "description": "Test your knowledge on YOLO and model optimization.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary goal of 'Quantization' when preparing a Computer Vision model for an Edge device like a smartphone?",
+      "options": [
+        "To add more layers to the model",
+        "To reduce the model's memory footprint and increase its execution speed by using lower-precision math",
+        "To make the model more accurate by adding more training data",
+        "To allow the model to access the internet"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

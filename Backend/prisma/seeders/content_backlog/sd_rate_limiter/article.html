@@ -1,0 +1,16 @@
+<section>
+    <h2>Deep Dive into Designing a Distributed Rate Limiter</h2>
+    <p>Rate limiting is the first line of defense for any API. It prevents a single user (or bot) from overwhelming your services by enforcing a maximum number of requests per minute.</p>
+
+    <h3>1. Algorithms: Token Bucket and Leaky Bucket</h3>
+    <p>The **Token Bucket** algorithm allows for "bursts" of traffic but limits the overall rate. The **Leaky Bucket** forces a constant, steady flow. Most global systems (like Stripe or GitHub) use Token Bucket for its flexibility.</p>
+
+    <h3>2. Distribution: The Shared Cache</h3>
+    <p>If you have 1,000 servers, they all need to know how many requests a user has made. We use a **Centralized Cache** (like Redis) with the **Incr** operator. This allows any server in the world to check and update a user's count in under 1 millisecond.</p>
+
+    <h3>3. Efficiency: Precision vs. Performance</h3>
+    <p>Writing to Redis for every single API call is expensive. High-scale systems often use **Local Batching**—each server tracks requests locally and only updates the central Redis every few seconds, trading absolute precision for massive speed.</p>
+
+    <h3>Conclusion</h3>
+    <p>Mastering the design of a distributed rate limiter is a fundamental architect skill. It teaches you to balance network latency, data consistency, and system protection at massive scale.</p>
+</section>

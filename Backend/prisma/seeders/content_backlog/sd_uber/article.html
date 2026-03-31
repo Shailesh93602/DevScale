@@ -1,0 +1,16 @@
+<section>
+    <h2>Geospatial Design: Building a Global Uber Service</h2>
+    <p>Designing a system like Uber or DoorDash requires solving a unique problem: Finding the "Nearest Driver" among millions of moving objects in real-time.</p>
+
+    <h3>1. The Problem with Lat/Long</h3>
+    <p>Standard SQL queries for "Nearest Location" (using math like the Haversine formula) are extremely slow when you have 1,000,000 drivers. You cannot scan every driver for every request.</p>
+
+    <h3>2. The Solution: Geo-Hashing and Quad-Trees</h3>
+    <ul>
+        <li><strong>Geo-Hashing:</strong> Dividing the world into small grid squares and giving each square a short ID (e.g., "gbsuv"). Drivers are indexed by their Square ID. To find a driver, you only look in the current square and its neighbors.</li>
+        <li><strong>Quad-Trees:</strong> A hierarchical tree where each node has 4 children. If a square has too many drivers, it splits into 4 smaller squares. This allows the system to be "dense" in New York but "sparse" in the desert.</li>
+    </ul>
+
+    <h3>Conclusion</h3>
+    <p>Mastering geospatial design allows you to build the world's most sophisticated real-world services. It teaches you to combine high-speed data structures with geographical logic for massive-scale efficiency.</p>
+</section>
