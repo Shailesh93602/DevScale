@@ -1,0 +1,16 @@
+<section>
+    <h2>React Performance Tuning</h2>
+    <p>React is fast by default, but complex applications can suffer from unnecessary re-renders. Performance tuning in React focuses on memoization and efficient state management.</p>
+
+    <h3>1. Preventing Unnecessary Re-renders</h3>
+    <p>Use <code>React.memo</code> to prevent a component from re-rendering if its props haven't changed. For complex calculations, use the <code>useMemo</code> hook, and use <code>useCallback</code> to memoize function references.</p>
+
+    <h3>2. Windowing and Virtualization</h3>
+    <p>When rendering long lists, use libraries like <code>react-window</code> or <code>react-virtualized</code>. These tools only render the items currently visible on the screen, drastically improving performance.</p>
+
+    <h3>3. Code Splitting</h3>
+    <p>Leverage <code>React.lazy</code> and <code>Suspense</code> to split your code into smaller bundles. This ensures that users only download the code they need for the current page, reducing initial load time.</p>
+
+    <h3>Conclusion</h3>
+    <p>Performance optimization should be data-driven. Use the React DevTools Profiler to identify exactly where your application is slow before applying these techniques.</p>
+</section>

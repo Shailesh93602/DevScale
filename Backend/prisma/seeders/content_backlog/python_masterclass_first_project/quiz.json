@@ -1,0 +1,18 @@
+{
+  "title": "First project in Python Quiz",
+  "description": "Test your knowledge on package management and project structure in Python.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which tool is commonly used in Python to manage and install third-party packages?",
+      "options": [
+        "pip",
+        "npm",
+        "gem",
+        "composer"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

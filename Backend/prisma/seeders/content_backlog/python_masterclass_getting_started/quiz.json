@@ -1,0 +1,18 @@
+{
+  "title": "Getting Started with Python Quiz",
+  "description": "Test your knowledge on the basics of the Python programming language.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of the following is the standard style guide for Python code?",
+      "options": [
+        "PEP 8",
+        "Python Style Guide",
+        "The Zen of Python",
+        "Clean Python"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
