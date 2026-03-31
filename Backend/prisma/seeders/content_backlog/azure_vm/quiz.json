@@ -1,0 +1,19 @@
+{
+  "title": "Azure Virtual Machines Quiz",
+  "description": "Test your knowledge on Azure virtual machine computing.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the DevOps, what is the primary role of 'Azure Virtual Machines'?",
+      "options": ["To collect and analyze data", "Providing flexible and scalable virtual machines—or 'VMs'—in the cloud for your application project", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which Azure feature or service is used to automatically adjust your project's number of virtual machines as intended?",
+      "options": ["Azure Virtual Machine Scale Sets", "Azure Blob Storage", "Azure SQL Database", "Azure IAM"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

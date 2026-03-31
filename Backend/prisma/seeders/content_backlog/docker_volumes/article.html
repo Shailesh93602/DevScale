@@ -1,0 +1,19 @@
+<section>
+    <h2>Understanding Docker Volumes</h2>
+    <p>Using Docker volumes correctly to manage your multi-container application's persistent data is critical for maintaining high-quality software. By following these steps, you can set it up in minutes.</p>
+
+    <h3>1. What are Docker Volumes?</h3>
+    <p>Docker volumes are a custom status in your project's containers that allows for correctly handling exactly how your application's persistent data—such as its database—is stored and managed outside of its container.</p>
+
+    <h3>2. Why use Docker Volumes?</h3>
+    <p>Ideally, you should use Docker volumes to ensure that your application's most valuable asset—its data—remains safe and performant even if its容器 is stopped or deleted.</p>
+
+    <h3>3. Creating a Volume</h3>
+    <pre><code>
+docker volume create my-data
+docker run -v my-data:/data my-app
+    </code></pre>
+
+    <h3>Conclusion</h3>
+    <p>By making Docker volumes a priority, you can ensure that your application's most valuable asset—its data—remains safe and performant for your users.</p>
+</section>
