@@ -1,0 +1,31 @@
+{
+  "title": "Best Practices for Git Quiz",
+  "description": "Test your knowledge on Git version control patterns.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is an 'Atomic Commit' in the context of Git?",
+      "options": ["A commit that is as large as possible", "A commit that logically groups a single, related set of changes", "A commit that includes a lot of data", "An installation commit"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Regarding Git best practices, which of these is best for commit messages?",
+      "options": ["Write them as long as possible", "Include only a timestamp", "Write clear and concise messages that describe what and why", "Never write a message"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a key benefit of feature branching?",
+      "options": ["It keeps your main branch stable and makes development cleaner", "It slows down development for better code quality", "It deletes all your local work by mistake", "It replaces your remote repository"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "A situation where two or more transactions are waiting for each other to release a lock, resulting in a hang, is called a _______.",
+      "options": ["Deadlock", "Live Lock", "Fast Lock", "User Lock"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
