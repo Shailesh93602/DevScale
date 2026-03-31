@@ -1,0 +1,18 @@
+{
+  "title": "Array Size Quiz",
+  "description": "Test your knowledge on array memory management and the sizeof calculation.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of the following is the correct formula for calculating the NUMBER of elements in a C array?",
+      "options": [
+        "sizeof(array) + sizeof(element)",
+        "sizeof(array) - sizeof(element)",
+        "sizeof(array) / sizeof(array[0])",
+        "array.length"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

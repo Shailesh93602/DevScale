@@ -1,0 +1,8 @@
+{
+  "title": "Do/While Loop",
+  "description": "Learn to use the post-test do/while loop for actions that must execute at least once in your C program.",
+  "module": "C Programming Masterclass",
+  "order": 37,
+  "difficulty": "Beginner",
+  "tags": ["C", "Loops", "Iteration", "Control Flow"]
+}

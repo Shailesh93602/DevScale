@@ -1,0 +1,8 @@
+{
+  "title": "Switch",
+  "description": "Learn how to simplify complex multi-way branching logic using the clean and efficient switch statement in C.",
+  "module": "C Programming Masterclass",
+  "order": 35,
+  "difficulty": "Beginner",
+  "tags": ["C", "Control Flow", "Switch", "Logic"]
+}

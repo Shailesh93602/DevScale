@@ -1,0 +1,18 @@
+{
+  "title": "While Loop Quiz",
+  "description": "Test your knowledge on the evaluation flow and safety of while loops.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What happens if a 'while' loop's condition is false the very first time it is checked?",
+      "options": [
+        "The loop body runs once",
+        "The loop body never runs",
+        "The program crashes",
+        "An error is thrown"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

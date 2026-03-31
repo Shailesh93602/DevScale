@@ -1,0 +1,18 @@
+<section>
+    <h2>Understanding the While Loop in C</h2>
+    <p>A <code>while</code> loop allows you to repeat a block of code as long as a specified condition remains true.</p>
+
+    <h3>1. "Check Before Execute"</h3>
+    <p>Crucially, the <code>while</code> loop evaluates its condition *before* executing the block of code inside. If the condition is false initially, the loop body may never run even once.</p>
+
+    <h3>2. Preventing Infinite Loops</h3>
+    <p>To avoid an infinite loop (which will crash or freeze your application), you must ensure that there is something inside the loop body that eventually makes the condition false (like incrementing a counter).</p>
+
+    <h3>3. Syntax</h3>
+    <pre><code>while (condition) {
+    // block of code to be executed
+}</code></pre>
+
+    <h3>Conclusion</h3>
+    <p>The <code>while</code> loop is perfect for situations where you don't know exactly how many times you need to iterate, but you know the condition under which the iteration should stop.</p>
+</section>

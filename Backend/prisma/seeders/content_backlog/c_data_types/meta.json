@@ -1,0 +1,8 @@
+{
+  "title": "C Data Types",
+  "description": "Learn to choose and use the core C data types effectively to manage memory and ensure your data is represented accurately.",
+  "module": "C Programming Masterclass",
+  "order": 32,
+  "difficulty": "Beginner",
+  "tags": ["C", "Data Types", "Memory", "Basics"]
+}
