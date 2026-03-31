@@ -1,0 +1,8 @@
+{
+  "title": "Python Logging",
+  "description": "Move beyond print() by learning to use Python's built-in logging module to track application events and debug production systems.",
+  "module": "Python Programming Masterclass",
+  "order": 13,
+  "difficulty": "Intermediate",
+  "tags": ["Python", "Logging", "Debugging", "Monitoring", "Production"]
+}
