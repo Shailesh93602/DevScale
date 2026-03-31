@@ -1,0 +1,8 @@
+{
+  "title": "Python File Handling",
+  "description": "Learn to persist your data to disk by mastering Python's intuitive file reading and writing mechanisms.",
+  "module": "Python Programming Masterclass",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Python", "Files", "FileSystem", "Persistence"]
+}

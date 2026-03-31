@@ -1,0 +1,8 @@
+{
+  "title": "C++ Move Semantics",
+  "description": "Unlock C++ performance limits by learning to transfer resources efficiently instead of copying them using rvalue references.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 23,
+  "difficulty": "Advanced",
+  "tags": ["C++", "Optimization", "Move Semantics", "Performance"]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "C++ Dynamic Memory",
+  "description": "Unlock total control over system resources by mastering heap allocation and deallocation in professional C++.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 7,
+  "difficulty": "Advanced",
+  "tags": ["C++", "Memory", "Heap", "Advanced"]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "Python Packages",
+  "description": "Master the art of large-scale software organization by learning to bundle modules into deep package hierarchies.",
+  "module": "Python Programming Masterclass",
+  "order": 1,
+  "difficulty": "Intermediate",
+  "tags": ["Python", "Packages", "Architecture", "Engineering"]
+}

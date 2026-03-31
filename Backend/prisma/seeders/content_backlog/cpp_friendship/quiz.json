@@ -1,0 +1,16 @@
+{
+  "title": "Friend Functions and Classes Quiz",
+  "description": "Test your knowledge on encapsulation overrides and one-way friendship.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "If Class A is declared as a 'friend' of Class B, can Class B automatically access the private members of Class A?",
+      "options": [
+        "No",
+        "Yes"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

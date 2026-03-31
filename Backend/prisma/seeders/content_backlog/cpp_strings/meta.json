@@ -1,0 +1,8 @@
+{
+  "title": "C++ Strings",
+  "description": "Master modern text processing in C++ using the efficient and feature-rich std::string class.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 5,
+  "difficulty": "Beginner",
+  "tags": ["C++", "Strings", "Standard Library", "Text Processing"]
+}

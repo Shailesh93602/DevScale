@@ -1,0 +1,16 @@
+<section>
+    <h2>Deep Dive into Python Modules</h2>
+    <p>In Python, every file ending in <code>.py</code> is a module. Modules allow you to organize your code into separate, logical files that can be reused across different projects.</p>
+
+    <h3>1. The 'import' Keyword</h3>
+    <p>To use code from another file, you use <code>import module_name</code>. You can then access its functions using the dot notation: <code>module_name.my_function()</code>.</p>
+
+    <h3>2. Partial Imports</h3>
+    <p>To keep your namespace clean, you can import only specific parts of a module: <code>from math import sqrt</code>. Now you can call <code>sqrt()</code> directly without the <code>math.</code> prefix.</p>
+
+    <h3>3. The __name__ variable</h3>
+    <p>When a module is imported, Python sets a special variable <code>__name__</code>. If the file is being run directly, it equals <code>"__main__"</code>. This allows you to include "Test Code" in a module that only runs when you execute that specific file.</p>
+
+    <h3>Conclusion</h3>
+    <p>Modules are the building blocks of scalable Python projects. By mastering how to structure and import them, you move from writing "scripts" to building modular, professional libraries.</p>
+</section>

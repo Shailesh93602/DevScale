@@ -1,0 +1,18 @@
+{
+  "title": "Python Exception Handling Quiz",
+  "description": "Test your knowledge on try, except, and finally blocks.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which Python block is GUARANTEED to execute whether an exception occurred or not?",
+      "options": [
+        "try",
+        "except",
+        "else",
+        "finally"
+      ],
+      "correctAnswer": 3,
+      "points": 10
+    }
+  ]
+}

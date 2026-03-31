@@ -1,0 +1,19 @@
+<section>
+    <h2>Deep Dive into Dynamic Memory (The Heap)</h2>
+    <p>While standard variables live on the "Stack", C++ allows you to request memory from the "Heap" at runtime. This is called Dynamic Memory Allocation.</p>
+
+    <h3>1. The new and delete Keywords</h3>
+    <ul>
+        <li><code>new</code> : Requests a block of memory from the system and returns its address.</li>
+        <li><code>delete</code> : Returns that memory back to the system.</li>
+    </ul>
+
+    <h3>2. Why use Dynamic Memory?</h3>
+    <p>You use the heap when you don't know exactly how much memory you'll need until the program is already running—like loading a file of unknown size or building a complex tree structure.</p>
+
+    <h3>3. The Danger of Memory Leaks</h3>
+    <p>If you use <code>new</code> but forget to use <code>delete</code>, that memory remains "occupied" even after your program is finished. Professional C++ developers use <strong>Smart Pointers</strong> to automate this cleanup.</p>
+
+    <h3>Conclusion</h3>
+    <p>Dynamic memory is what gives C++ its legendary flexibility and power. Understanding the "Heap" is the final step in moving from a beginner to a true systems engineer.</p>
+</section>
