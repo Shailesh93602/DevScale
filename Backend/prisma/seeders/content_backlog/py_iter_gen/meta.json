@@ -1,0 +1,8 @@
+{
+  "title": "Python Iterators and Generators",
+  "description": "Learn the mechanics of Python's iteration system and how to build custom, memory-efficient data streams using the Iterator Protocol.",
+  "module": "Python Programming Masterclass",
+  "order": 1,
+  "difficulty": "Advanced",
+  "tags": ["Python", "Iterators", "Generators", "Performance"]
+}

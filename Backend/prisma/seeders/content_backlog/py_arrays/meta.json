@@ -1,0 +1,8 @@
+{
+  "title": "Python Arrays",
+  "description": "Learn to optimize your memory usage for specialized numeric tasks by using the Python array module for homogeneous data collections.",
+  "module": "Python Programming Masterclass",
+  "order": 1,
+  "difficulty": "Intermediate",
+  "tags": ["Python", "Arrays", "Optimization", "Memory"]
+}

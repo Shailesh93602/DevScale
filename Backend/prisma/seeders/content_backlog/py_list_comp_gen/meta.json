@@ -1,0 +1,8 @@
+{
+  "title": "Python List Comprehensions and Generators",
+  "description": "Master the modern Pythonic way of sequence creation and learn to handle massive datasets using memory-efficient Generators.",
+  "module": "Python Programming Masterclass",
+  "order": 1,
+  "difficulty": "Intermediate",
+  "tags": ["Python", "Comprehensions", "Generators", "Yield", "Memory"]
+}

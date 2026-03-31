@@ -1,0 +1,8 @@
+{
+  "title": "Python Decorators",
+  "description": "Master one of Python's most powerful functional programming features by learning to wrap and extend function behavior with Decorators.",
+  "module": "Python Programming Masterclass",
+  "order": 1,
+  "difficulty": "Advanced",
+  "tags": ["Python", "Decorators", "Functional Programming", "Advanced"]
+}

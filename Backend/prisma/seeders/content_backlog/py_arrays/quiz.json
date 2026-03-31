@@ -1,0 +1,18 @@
+{
+  "title": "Python Arrays Quiz",
+  "description": "Test your knowledge on the array module and type codes.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these is the main advantage of using the 'array' module over standard Python Lists?",
+      "options": [
+        "It can store mixed data types",
+        "It is more memory-efficient for homogeneous data",
+        "It is easier to use",
+        "It supports more methods"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

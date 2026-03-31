@@ -1,0 +1,19 @@
+<section>
+    <h2>Multi-threading and Concurrency in Python</h2>
+    <p>In modern computing, doing one thing at a time isn't always enough. Python provides several ways to perform tasks in parallel to improve performance and responsiveness.</p>
+
+    <h3>1. The GIL (Global Interpreter Lock)</h3>
+    <p>Critically, Python has a 'GIL' that prevents multiple <strong>Threads</strong> from executing Python bytecode at the exact same time. This means multi-threading is great for I/O tasks (like waiting for a web page) but not for heavy CPU calculations.</p>
+
+    <h3>2. Threads vs. Processes</h3>
+    <ul>
+        <li><strong>Threading:</strong> Lightweight, shares the same memory. Best for waiting on external events (Web, Disk).</li>
+        <li><strong>Multiprocessing:</strong> Heavier, each has its own memory. Best for CPU-heavy tasks because it bypasses the GIL.</li>
+    </ul>
+
+    <h3>3. Asyncio (The Modern Way)</h3>
+    <p>For modern web servers, <code>asyncio</code> allows thousands of simultaneous connections within a single thread by using "cooperative multitasking". This is how high-performance frameworks like FastAPI operate.</p>
+
+    <h3>Conclusion</h3>
+    <p>Concurrency is an advanced topic that, when mastered, allows you to build lightning-fast, scalable applications that can handle complex workloads without blocking the main program flow.</p>
+</section>

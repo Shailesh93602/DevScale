@@ -1,0 +1,18 @@
+{
+  "title": "Python Sets Quiz",
+  "description": "Test your knowledge on set uniqueness and mathematical operations.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "If you add the number 1 to a set that already contains {1, 2, 3}, what will the final set contain?",
+      "options": [
+        "{1, 1, 2, 3}",
+        "{1, 2, 3}",
+        "{2, 3}",
+        "Error"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

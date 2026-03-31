@@ -1,0 +1,16 @@
+<section>
+    <h2>Understanding Python Arrays (The array Module)</h2>
+    <p>While Python Lists are the default choice for collections, the <code>array</code> module provides a more memory-efficient way to store large amounts of homogeneous (same-type) data.</p>
+
+    <h3>1. Why use Arrays instead of Lists?</h3>
+    <p>A Python List can store any data type together, but this flexibility requires extra memory. A Python **Array** is restricted to a single type (e.g., only 'i' for integers or 'd' for doubles), allowing Python to store the values more compactly in memory.</p>
+
+    <h3>2. Creating an Array</h3>
+    <p>To use arrays, you must import the module: <code>import array</code>. You define the type of data using a **type code**: <code>my_arr = array.array('i', [1, 2, 3])</code>.</p>
+
+    <h3>3. Methods and Access</h3>
+    <p>Arrays support many of the same methods as lists, such as <code>append()</code>, <code>pop()</code>, and slicing. However, if you try to add a floating-point number to an integer array, Python will raise a <strong>TypeError</strong>.</p>
+
+    <h3>Conclusion</h3>
+    <p>Use the <code>array</code> module when you are dealing with millions of numbers and need to optimize your application's memory footprint while maintaining the simplicity of Python's syntax.</p>
+</section>

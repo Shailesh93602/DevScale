@@ -1,0 +1,18 @@
+{
+  "title": "Python Tuples Quiz",
+  "description": "Test your knowledge on tuple immutability and unpacking.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Can you add a new item to an existing Python Tuple after it has been created?",
+      "options": [
+        "Yes",
+        "No",
+        "Only if you use the append() method",
+        "Only in Python 3.10+"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

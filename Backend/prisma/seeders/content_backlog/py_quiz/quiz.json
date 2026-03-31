@@ -1,0 +1,18 @@
+{
+  "title": "Python Assessment Quiz",
+  "description": "Test your mastery of the Python Quiz system and its importance in the learning journey.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the typical passing score required to master a topic on the EduScale platform?",
+      "options": [
+        "50%",
+        "60%",
+        "70%",
+        "100%"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

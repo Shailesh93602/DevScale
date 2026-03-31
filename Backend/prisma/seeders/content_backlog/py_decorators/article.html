@@ -1,0 +1,20 @@
+<section>
+    <h2>Understanding Python Decorators</h2>
+    <p>A decorator is a design pattern in Python that allows a user to add new functionality to an existing object (typically a function) without modifying its structure.</p>
+
+    <h3>1. Functions as First-Class Citizens</h3>
+    <p>In Python, functions are objects. You can pass them as arguments to other functions and return them from functions. This is the foundation that makes decorators possible.</p>
+
+    <h3>2. The @ Syntax</h3>
+    <p>The <code>@decorator_name</code> syntax is a convenient shorthand for "wrapping" a function. For example, a <code>@timer</code> decorator could automatically measure and print how long any function takes to execute.</p>
+
+    <h3>3. Real-World Use Cases</h3>
+    <ul>
+        <li><strong>Logging:</strong> Automatically log when a function is called.</li>
+        <li><strong>Authentication:</strong> Check if a user is logged in before executing a view function.</li>
+        <li><strong>Caching:</strong> Store the result of expensive calculations to avoid repeating them.</li>
+    </ul>
+
+    <h3>Conclusion</h3>
+    <p>Decorators allow you to write clean, "DRY" (Don't Repeat Yourself) code by separating cross-cutting concerns (like logging or security) from your core business logic.</p>
+</section>
