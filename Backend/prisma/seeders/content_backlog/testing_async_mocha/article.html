@@ -1,0 +1,33 @@
+<section>
+    <h2>Testing Asynchronous Code with Mocha</h2>
+    <p>Using the powerful and descriptive asynchronous testing capabilities provided by Mocha, you can create a suite of unit tests for your project. By following these steps, you can set it up in minutes.</p>
+
+    <h3>1. Testing via Callback</h3>
+    <pre><code>
+it('should complete asynchronously', function(done) {
+  setTimeout(() => {
+    done();
+  }, 100);
+});
+    </code></pre>
+
+    <h3>2. Testing via Promise</h3>
+    <pre><code>
+it('should return a promise', function() {
+  return someAsyncFunction().then(res => {
+    expect(res).to.equal(expected);
+  });
+});
+    </code></pre>
+
+    <h3>3. Testing via async/await</h3>
+    <pre><code>
+it('should work with async/await', async function() {
+  const res = await someAsyncFunction();
+  expect(res).to.equal(expected);
+});
+    </code></pre>
+
+    <h3>Conclusion</h3>
+    <p>By making unit testing a priority, you can ensure that your application's most valuable asset—its code—remains safe and performant for your users.</p>
+</section>
