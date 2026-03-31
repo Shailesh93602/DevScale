@@ -1,0 +1,18 @@
+{
+  "title": "Pulumi Quiz",
+  "description": "Test your knowledge on general-purpose IaC.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary difference between Pulumi and traditional IaC tools like Terraform?",
+      "options": [
+        "Pulumi does not use a state file",
+        "Pulumi allows you to use general-purpose programming languages like TypeScript and Python",
+        "Pulumi only works with AWS",
+        "Pulumi requires a manual install of every server"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

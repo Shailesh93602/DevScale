@@ -1,0 +1,8 @@
+{
+  "title": "System Design: Building a Global Real-Time Chat (WhatsApp Logic)",
+  "description": "Learn to architect world-scale real-time communication systems using WebSockets, distributed caches, and NoSQL storage.",
+  "module": "Advanced DSA & System Design Patterns",
+  "order": 3,
+  "difficulty": "Advanced",
+  "tags": ["System Design", "Chat", "WebSockets", "Redis", "Scaling"]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "Computer Vision: Edge Device optimization for YOLO/TensorFlow",
+  "description": "Learn to bring AI to the real world by mastering the optimization and deployment of high-speed vision models on mobile and IoT hardware.",
+  "module": "Applied AI/ML Engineering (MLOps)",
+  "order": 4,
+  "difficulty": "Advanced",
+  "tags": ["AI", "Edge", "Computer Vision", "YOLO", "Optimization"]
+}

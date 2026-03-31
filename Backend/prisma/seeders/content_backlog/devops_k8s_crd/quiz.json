@@ -1,0 +1,18 @@
+{
+  "title": "K8s CRD & Operators Quiz",
+  "description": "Test your knowledge on extending Kubernetes functionality.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary purpose of the 'Operator' pattern in Kubernetes?",
+      "options": [
+        "To replace the kubectl command",
+        "To automate complex, application-specific management tasks using custom controllers",
+        "To increase the speed of the network",
+        "To delete unused containers"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

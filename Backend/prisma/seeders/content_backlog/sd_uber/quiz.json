@@ -1,0 +1,18 @@
+{
+  "title": "Geospatial Design Quiz",
+  "description": "Test your knowledge on Geo-hashing and Quad-Trees.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which data structure is specifically designed to handle geospatial searches by recursively dividing a 2D space into four quadrants?",
+      "options": [
+        "Binary Tree",
+        "B-Tree",
+        "Quad-Tree",
+        "Adjacency Matrix"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

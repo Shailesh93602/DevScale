@@ -1,0 +1,8 @@
+{
+  "title": "MLOps: Data Drift Detection & Model Monitoring in Production",
+  "description": "Learn to manage the full lifecycle of a machine learning model by mastering drift detection, automated re-training, and production monitoring.",
+  "module": "Applied AI/ML Engineering (MLOps)",
+  "order": 3,
+  "difficulty": "Advanced",
+  "tags": ["MLOps", "AI", "Production", "Monitoring", "Drift"]
+}

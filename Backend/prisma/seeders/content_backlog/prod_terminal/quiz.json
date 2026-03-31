@@ -1,0 +1,18 @@
+{
+  "title": "Neovim & Tmux Quiz",
+  "description": "Test your knowledge on Vim motions and terminal multiplexing.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "In the Neovim editor, what is the 'Vim Motion' command used to DELETE an entire word?",
+      "options": [
+        "dd",
+        "dw",
+        "de",
+        "xw"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

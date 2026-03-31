@@ -1,0 +1,18 @@
+{
+  "title": "Dotfile Management Quiz",
+  "description": "Test your knowledge on configuration-as-code principles.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary benefit of managing your 'Dotfiles' in a Git repository?",
+      "options": [
+        "It makes the files run faster",
+        "It allows you to sync and version-control your development environment across different machines",
+        "It encrypts your configuration so only you can see it",
+        "It automatically installs new software for you"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

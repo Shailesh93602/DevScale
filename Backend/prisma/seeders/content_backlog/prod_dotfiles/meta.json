@@ -1,0 +1,8 @@
+{
+  "title": "Dotfile Management & Infrastructure-as-Code for Workstations",
+  "description": "Learn to treat your development environment as code, ensuring a consistent and version-controlled setup across every machine you use.",
+  "module": "Professional Developer Productivity",
+  "order": 2,
+  "difficulty": "Intermediate",
+  "tags": ["Productivity", "Dotfiles", "Git", "Workflow", "Unix"]
+}

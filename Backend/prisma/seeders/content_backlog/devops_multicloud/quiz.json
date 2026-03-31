@@ -1,0 +1,18 @@
+{
+  "title": "Multi-Cloud Quiz",
+  "description": "Test your knowledge on Hybrid and DR strategies.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "In the 'Pilot Light' disaster recovery strategy, how is the secondary region typically maintained?",
+      "options": [
+        "It is exactly the same size as the primary region",
+        "It is completely turned off until a crash occurs",
+        "A small, minimal version of core services is always running",
+        "It only contains backups of files, no code"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

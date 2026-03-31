@@ -1,0 +1,18 @@
+{
+  "title": "Bloom Filters & Skip Lists Quiz",
+  "description": "Test your knowledge on probabilistic sets and express-lane lists.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary advantage of a 'Bloom Filter' for checking if a value exists in a massive dataset?",
+      "options": [
+        "It is always 100% accurate for all queries",
+        "It uses incredibly small amounts of memory to prove if an item 'definitely DOES NOT' exist",
+        "It stores the actual data in a compressed format",
+        "It is faster than an array for small datasets"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

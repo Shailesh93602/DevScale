@@ -1,0 +1,8 @@
+{
+  "title": "Infrastructure as Code: Pulumi (TypeScript-native IaC)",
+  "description": "Master the next generation of Infrastructure as Code by learning to build cloud resources using professional programming languages.",
+  "module": "Advanced Cloud & DevOps Frontiers",
+  "order": 2,
+  "difficulty": "Advanced",
+  "tags": ["DevOps", "IaC", "Pulumi", "Cloud", "TypeScript"]
+}

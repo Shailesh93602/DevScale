@@ -1,0 +1,8 @@
+{
+  "title": "Service Mesh Architecture (Istio/Linkerd comparison)",
+  "description": "Learn to manage complex microservice networking with ease by mastering Service Mesh features like mTLS and Canary deployments.",
+  "module": "Advanced Cloud & DevOps Frontiers",
+  "order": 3,
+  "difficulty": "Advanced",
+  "tags": ["Kubernetes", "Service Mesh", "Istio", "Linkerd", "Networking"]
+}

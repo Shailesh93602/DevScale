@@ -1,0 +1,18 @@
+{
+  "title": "MLOps Quiz",
+  "description": "Test your knowledge on data drift and production monitoring.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is 'Data Drift' in the context of Machine Learning Operations?",
+      "options": [
+        "When the database server moves to a new region",
+        "When the incoming real-world data distribution changes and no longer matches the model's training data",
+        "When a model's file size increases over time",
+        "When a user deletes their data"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

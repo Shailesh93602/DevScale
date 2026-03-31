@@ -1,0 +1,13 @@
+<section>
+    <h2>Advanced Hashing: Bloom Filters and Skip Lists</h2>
+    <p>Standard Hash Tables are great, but some problems require more specialized tools. Bloom Filters and Skip Lists provide unique trade-offs for membership testing and ordered data.</p>
+
+    <h3>1. Bloom Filters</h3>
+    <p>A Bloom Filter is a probabilistic data structure that tells you if an item is **definitely NOT** in a set or **might be** in a set. It uses almost zero memory. If it says "No," it's 100% correct. If it says "Maybe," you do a real search. This is how databases like Cassandra avoid searching for data that doesn't exist.</p>
+
+    <h3>2. Skip Lists</h3>
+    <p>A Skip List is a linked list with "Express Lanes." It uses random probability to build multiple levels of pointers, allowing you to skip over large sections of data. It provides the same O(log N) performance as a balanced tree but is much easier to implement and highly efficient for concurrent access.</p>
+
+    <h3>Conclusion</h3>
+    <p>By mastering these "probabilistic" and "layered" structures, you gain the ability to manage massive datasets with memory efficiency that standard data structures simply cannot match.</p>
+</section>

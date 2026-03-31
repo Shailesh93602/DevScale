@@ -1,0 +1,8 @@
+{
+  "title": "WebAssembly (WASM): Rust & C++ in the Browser",
+  "description": "Learn to build high-performance web applications that run at near-native speeds by mastering the WebAssembly binary format.",
+  "module": "Frontier Technologies (Emerging)",
+  "order": 1,
+  "difficulty": "Advanced",
+  "tags": ["WASM", "Rust", "C++", "Performance", "Frontier"]
+}

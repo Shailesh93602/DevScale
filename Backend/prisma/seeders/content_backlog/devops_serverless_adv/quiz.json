@@ -1,0 +1,18 @@
+{
+  "title": "Serverless Patterns Quiz",
+  "description": "Test your knowledge on Strangler Fig and Fan-Out logic.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which design pattern is used to slowly migrate a legacy Monolith application to a cloud-native architecture by replacing components one by one?",
+      "options": [
+        "The Observer Pattern",
+        "The Strangler Fig Pattern",
+        "The Singleton Pattern",
+        "The Factory Pattern"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
