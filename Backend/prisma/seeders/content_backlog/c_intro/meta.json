@@ -1,0 +1,8 @@
+{
+  "title": "Introduction",
+  "description": "Start your journey into the world of systems programming with the foundational C language.",
+  "module": "C Programming Masterclass",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["C", "Programming", "Foundations", "Systems"]
+}

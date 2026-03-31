@@ -1,0 +1,8 @@
+{
+  "title": "Introduction to Databases",
+  "description": "Learn the basics of data storage and why databases are superior to traditional file systems for managing information.",
+  "module": "Database Systems",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Databases", "DBMS", "Data Storage", "Fundamentals"]
+}

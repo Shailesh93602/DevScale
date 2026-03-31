@@ -1,0 +1,8 @@
+{
+  "title": "NoSQL Databases",
+  "description": "Explore the flexible and scalable world of NoSQL, from document stores to high-performance graph databases.",
+  "module": "Database Systems",
+  "order": 5,
+  "difficulty": "Intermediate",
+  "tags": ["Databases", "NoSQL", "Scalability", "MongoDB"]
+}

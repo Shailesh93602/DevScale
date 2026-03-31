@@ -1,0 +1,18 @@
+{
+  "title": "Normalization Quiz",
+  "description": "Test your knowledge on 1NF, 2NF, and 3NF database normalization principles.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which Normal Form requires that all non-key columns must be fully dependent on the primary key, with no partial dependencies?",
+      "options": [
+        "1NF",
+        "2NF",
+        "3NF",
+        "BCNF"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

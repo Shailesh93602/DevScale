@@ -1,0 +1,8 @@
+{
+  "title": "SQL Joins",
+  "description": "Master the art of combining data from multiple tables using Inner, Outer, and Self Joins.",
+  "module": "Database Systems",
+  "order": 9,
+  "difficulty": "Intermediate",
+  "tags": ["Databases", "SQL", "Joins", "Data Analysis"]
+}

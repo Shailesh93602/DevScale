@@ -1,0 +1,18 @@
+{
+  "title": "Data Visualization Quiz",
+  "description": "Test your knowledge on common chart types and the importance of visual data storytelling.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which type of chart is most suitable for showing trends in data over a period of time?",
+      "options": [
+        "Bar Chart",
+        "Pie Chart",
+        "Line Chart",
+        "Heat Map"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

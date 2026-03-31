@@ -1,0 +1,18 @@
+{
+  "title": "Characters and Encoding Quiz",
+  "description": "Test your knowledge on character sets, collations, and UTF-8 encoding.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of the following defines the rules for comparing and sorting text data in a database?",
+      "options": [
+        "Character Set",
+        "Encoding",
+        "Collation",
+        "Normalization"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

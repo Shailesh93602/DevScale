@@ -1,0 +1,8 @@
+{
+  "title": "Relational Databases",
+  "description": "Learn the core concepts of relational tables, primary keys, and how data points relate across a system.",
+  "module": "Database Systems",
+  "order": 3,
+  "difficulty": "Intermediate",
+  "tags": ["Databases", "Relational", "SQL", "Data Modeling"]
+}

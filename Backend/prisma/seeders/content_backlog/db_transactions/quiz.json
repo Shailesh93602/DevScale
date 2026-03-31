@@ -1,0 +1,18 @@
+{
+  "title": "Database Transactions Quiz",
+  "description": "Test your knowledge on atomic units of work and transaction outcomes.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What happens if an error occurs in the middle of a database transaction?",
+      "options": [
+        "The completed steps remain committed",
+        "The entire transaction is Rolled Back",
+        "The system waits for manual correction",
+        "The data is deleted"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

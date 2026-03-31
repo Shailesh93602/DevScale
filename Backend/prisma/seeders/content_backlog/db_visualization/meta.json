@@ -1,0 +1,8 @@
+{
+  "title": "Data Visualization",
+  "description": "Learn to tell stories with data by mastering the various ways to represent complex information visually.",
+  "module": "Database Systems",
+  "order": 19,
+  "difficulty": "Intermediate",
+  "tags": ["Databases", "Data Visualization", "BI", "Analytics", "Charts"]
+}

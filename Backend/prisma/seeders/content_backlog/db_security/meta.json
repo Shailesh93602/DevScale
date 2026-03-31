@@ -1,0 +1,8 @@
+{
+  "title": "Database Security (Full Stack Web Development)",
+  "description": "Learn the essential strategies for protecting your data from unauthorized access and cyber threats.",
+  "module": "Database Systems",
+  "order": 13,
+  "difficulty": "Advanced",
+  "tags": ["Databases", "Security", "Encryption", "Access Control"]
+}

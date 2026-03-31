@@ -1,0 +1,18 @@
+{
+  "title": "ACID Properties Quiz",
+  "description": "Test your knowledge on Atomicity, Consistency, Isolation, and Durability.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which ACID property ensures that once a transaction is committed, its changes remain permanent even during a system crash?",
+      "options": [
+        "Atomicity",
+        "Consistency",
+        "Isolation",
+        "Durability"
+      ],
+      "correctAnswer": 3,
+      "points": 10
+    }
+  ]
+}

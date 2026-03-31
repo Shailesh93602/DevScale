@@ -1,0 +1,8 @@
+{
+  "title": "Data Mining",
+  "description": "Explore the techniques used to uncover hidden patterns and predict future trends within massive datasets.",
+  "module": "Database Systems",
+  "order": 15,
+  "difficulty": "Advanced",
+  "tags": ["Databases", "Data Mining", "Machine Learning", "Predictive Analytics"]
+}

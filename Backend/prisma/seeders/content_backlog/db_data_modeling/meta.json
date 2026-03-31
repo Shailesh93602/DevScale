@@ -1,0 +1,8 @@
+{
+  "title": "Data Modeling",
+  "description": "Learn the process of designing visual representations of your data structures and their complex relationships.",
+  "module": "Database Systems",
+  "order": 6,
+  "difficulty": "Intermediate",
+  "tags": ["Databases", "Data Modeling", "Conceptual", "Logical", "Physical"]
+}
