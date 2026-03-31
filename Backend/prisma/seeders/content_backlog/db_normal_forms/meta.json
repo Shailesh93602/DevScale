@@ -1,0 +1,8 @@
+{
+  "title": "Database Normal Forms",
+  "description": "Master the rigorous steps of normalization, from 1NF to the advanced Boyce-Codd Normal Form (BCNF).",
+  "module": "Database Systems",
+  "order": 32,
+  "difficulty": "Advanced",
+  "tags": ["Databases", "Normalization", "1NF", "2NF", "3NF", "BCNF"]
+}

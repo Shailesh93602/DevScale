@@ -1,0 +1,8 @@
+{
+  "title": "Strings",
+  "description": "Master the art of text processing in C by understanding how strings are represented as null-terminated character arrays.",
+  "module": "C Programming Masterclass",
+  "order": 25,
+  "difficulty": "Beginner",
+  "tags": ["C", "Strings", "Arrays", "Null Terminator", "Text Processing"]
+}

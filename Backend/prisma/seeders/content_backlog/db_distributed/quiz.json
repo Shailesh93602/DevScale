@@ -1,0 +1,18 @@
+{
+  "title": "Distributed Databases Quiz",
+  "description": "Test your knowledge on homogeneous/heterogeneous systems and data fragmentation.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which term refers to breaking a database into smaller pieces and storing them in different locations based on usage?",
+      "options": [
+        "Replication",
+        "Normalization",
+        "Fragmentation",
+        "Indexing"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

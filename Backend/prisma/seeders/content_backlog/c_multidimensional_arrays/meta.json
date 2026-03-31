@@ -1,0 +1,8 @@
+{
+  "title": "Multidimensional Arrays",
+  "description": "Learn to manage complex structures like tables and matrices using multidimensional arrays in C.",
+  "module": "C Programming Masterclass",
+  "order": 24,
+  "difficulty": "Intermediate",
+  "tags": ["C", "Arrays", "Matrices", "Data Structures"]
+}

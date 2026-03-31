@@ -1,0 +1,8 @@
+{
+  "title": "Format Specifiers",
+  "description": "Learn to use C's powerful format specifiers to precisely read and write different types of data in your programs.",
+  "module": "C Programming Masterclass",
+  "order": 30,
+  "difficulty": "Beginner",
+  "tags": ["C", "Output", "Formatting", "Printf", "Scanf"]
+}
