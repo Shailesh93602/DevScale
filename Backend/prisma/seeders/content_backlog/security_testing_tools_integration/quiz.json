@@ -1,0 +1,13 @@
+{
+  "title": "Security Tools Integration Quiz",
+  "description": "Test your knowledge on integrating security tools into your workflow.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the web security, what consists of a primary role of 'Security Testing Tools Integration'?项目",
+      "options": ["To collect and analyze data", "Correctly and securely managing how your project's security testing tools are integrated into exactly how your project is handled correctly", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
