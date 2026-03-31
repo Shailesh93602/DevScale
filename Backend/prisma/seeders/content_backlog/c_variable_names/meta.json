@@ -1,0 +1,8 @@
+{
+  "title": "Variable Names",
+  "description": "Learn the rules and conventions for naming your variables in C to ensure your code is readable and error-free.",
+  "module": "C Programming Masterclass",
+  "order": 3,
+  "difficulty": "Beginner",
+  "tags": ["C", "Variables", "Naming Rules", "Syntax"]
+}
