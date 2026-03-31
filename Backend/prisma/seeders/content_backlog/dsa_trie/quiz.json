@@ -1,0 +1,18 @@
+{
+  "title": "Trie Quiz",
+  "description": "Test your knowledge on Trie nodes and prefix-matching performance.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is another common name for a Trie data structure?",
+      "options": [
+        "Binary Search Tree",
+        "Prefix Tree",
+        "Suffix Tree",
+        "Priority Queue"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

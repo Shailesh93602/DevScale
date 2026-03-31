@@ -1,0 +1,18 @@
+{
+  "title": "Suffix Trees Quiz",
+  "description": "Test your knowledge on suffix tree properties and construction algorithms.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which algorithm is capable of building a Suffix Tree in linear O(N) time?",
+      "options": [
+        "Dijkstra's Algorithm",
+        "Ukkonen's Algorithm",
+        "Kruskal's Algorithm",
+        "Merge Sort"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

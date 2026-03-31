@@ -1,0 +1,8 @@
+{
+  "title": "Sorting Algorithms",
+  "description": "Master essential sorting techniques from simple O(n²) algorithms to efficient O(n log n) solutions.",
+  "module": "Data Structures",
+  "order": 7,
+  "difficulty": "Intermediate",
+  "tags": ["DSA", "Sorting", "Algorithm Complexity", "Big O"]
+}
