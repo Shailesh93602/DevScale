@@ -1,0 +1,33 @@
+<section>
+    <h2>Testing Asynchronous Code with Jest</h2>
+    <p>Using the powerful and descriptive asynchronous testing capabilities provided by Jest, you can create a suite of unit tests for your project. By following these steps, you can set it up in minutes.</p>
+
+    <h3>1. Testing via Callback</h3>
+    <pre><code>
+test('should complete asynchronously', done => {
+  setTimeout(() => {
+    done();
+  }, 100);
+});
+    </code></pre>
+
+    <h3>2. Testing via Promise</h3>
+    <pre><code>
+test('should return a promise', () => {
+  return someAsyncFunction().then(res => {
+    expect(res).toBe(expected);
+  });
+});
+    </code></pre>
+
+    <h3>3. Testing via async/await</h3>
+    <pre><code>
+test('should work with async/await', async () => {
+  const res = await someAsyncFunction();
+  expect(res).toBe(expected);
+});
+    </code></pre>
+
+    <h3>Conclusion</h3>
+    <p>By making unit testing a priority, you can ensure that your application's most valuable asset—its code—remains safe and performant for your users.</p>
+</section>
