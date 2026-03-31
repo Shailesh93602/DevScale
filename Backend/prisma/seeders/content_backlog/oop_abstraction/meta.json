@@ -1,0 +1,8 @@
+{
+  "title": "Abstraction",
+  "description": "Learn the art of managing complexity by focusing on the essential features of your software components.",
+  "module": "Object Oriented Programming",
+  "order": 13,
+  "difficulty": "Intermediate",
+  "tags": ["OOP", "Abstraction", "Design Principles", "Fundamentals"]
+}

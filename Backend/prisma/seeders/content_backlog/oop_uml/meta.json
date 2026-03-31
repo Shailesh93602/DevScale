@@ -1,0 +1,8 @@
+{
+  "title": "UML (Unified Modeling Language)",
+  "description": "Learn the standard visual language for modeling software architecture and object interactions.",
+  "module": "Object Oriented Programming",
+  "order": 19,
+  "difficulty": "Intermediate",
+  "tags": ["OOP", "UML", "Modeling", "Software Design", "Diagrams"]
+}
