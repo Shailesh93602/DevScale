@@ -1,0 +1,8 @@
+{
+  "title": "Binary Trees",
+  "description": "Dive deep into binary trees, their types, and the powerful Binary Search Tree (BST) property.",
+  "module": "Data Structures",
+  "order": 2,
+  "difficulty": "Intermediate",
+  "tags": ["DSA", "Binary Trees", "BST", "Algorithms"]
+}

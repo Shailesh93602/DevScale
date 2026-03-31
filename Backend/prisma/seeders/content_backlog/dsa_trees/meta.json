@@ -1,0 +1,8 @@
+{
+  "title": "Trees",
+  "description": "Learn about the core concepts, types, and traversals of hierarchical tree data structures.",
+  "module": "Data Structures",
+  "order": 1,
+  "difficulty": "Intermediate",
+  "tags": ["DSA", "Trees", "Algorithms", "Binary Search Tree"]
+}

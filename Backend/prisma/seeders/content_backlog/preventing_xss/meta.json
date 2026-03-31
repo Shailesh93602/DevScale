@@ -1,8 +1,8 @@
 {
   "title": "Preventing XSS",
-  "description": "Learn about the essential web security prevention tasks including tracking changes, coordinating multiple developers, and collaboration strategies.",
+  "description": "Master Cross-Site Scripting (XSS) prevention techniques through input sanitization and output encoding.",
   "module": "Full Stack Web Development",
   "order": 1,
-  "difficulty": "Beginner",
-  "tags": ["Security", "Web Security", "XSS", "Prevention", "Sanitization"]
+  "difficulty": "Intermediate",
+  "tags": ["Security", "Web Security", "XSS", "Prevention"]
 }
