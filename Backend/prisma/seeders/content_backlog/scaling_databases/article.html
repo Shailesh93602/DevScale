@@ -1,0 +1,22 @@
+<section>
+    <h2>Understanding Database Scaling</h2>
+    <p>Scaling a database is the process of increasing its capacity and performance to handle a growing volume of user requests. There are two primary approaches to scaling: Vertical Scaling and Horizontal Scaling.</p>
+
+    <h3>1. Vertical Scaling (Scaling Up)</h3>
+    <p>Vertical scaling involves increasing the resources of a single database server—adding more CPU, RAM, or faster storage. While simple and easy to implement, it has a definite physical limit and can become extremely expensive.</p>
+
+    <h3>2. Horizontal Scaling (Scaling Out)</h3>
+    <p>Horizontal scaling involves adding more servers to your database architecture, dividing the load across multiple physical machines. This is more complex but provides much higher potential for scalability and data availability.</p>
+
+    <h3>3. Common Horizontal Scaling Techniques</h3>
+    <ul>
+      <li><strong>Read Replicas:</strong> Creating one or more exact copies of your primary database that are dedicated to handling read-only queries, reducing the load on the primary server.</li>
+      <li><strong>Database Sharding:</strong> Dividing a single database table horizontally into smaller, more manageable pieces (shards) and spreading them across multiple servers.</li>
+    </ul>
+
+    <h3>4. Choosing a Scaling Strategy</h3>
+    <p>While vertical scaling is a good starting point for most applications, high-scale applications with extremely large volumes of data and user traffic almost always require a horizontal scaling architecture.</p>
+
+    <h3>Conclusion</h3>
+    <p>By understanding the concepts and trade-offs of database scaling, you can build applications that are as scalable as they are performant, providing a seamless experience for your users as your application grows.</p>
+</section>

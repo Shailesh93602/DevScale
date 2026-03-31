@@ -1,0 +1,31 @@
+{
+  "title": "Database Maintenance Tasks Quiz",
+  "description": "Test your knowledge on essential database maintenance tasks.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these is the most important database maintenance task?",
+      "options": ["Regularly creating and testing backups", "Updating the database server every hour", "Deleting all data every month", "Never touching the database"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Over time, database indexes can become _______, leading to slower query performance.",
+      "options": ["Full", "Fragmented", "Empty", "Invisible"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is the primary role of database monitoring and profiling?",
+      "options": ["To find and optimize slow-running queries", "To delete old users", "To encrypt the database", "To create new tables"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Regarding database security, what is an important maintenance task?",
+      "options": ["Applying the latest security patches to the database server", "Periodically reviewing and updating access permissions", "Ensuring that the database isn't accessible from the internet", "All of the above"],
+      "correctAnswer": 3,
+      "points": 10
+    }
+  ]
+}

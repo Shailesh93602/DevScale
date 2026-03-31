@@ -1,0 +1,31 @@
+{
+  "title": "Basic Git Commands Quiz",
+  "description": "Test your knowledge on basic Git version control commands.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which command is used to initialize a new Git repository?",
+      "options": ["git init", "git start", "git create", "git install"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which of these is the correct way to stage all changed files for a commit?",
+      "options": ["git add .", "git commit -a", "git push", "git push origin main"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Regarding Git basic commands, which command is used to record staged changes with a descriptive message?",
+      "options": ["git record", "git commit -m 'Your message'", "git save", "git version"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is the correct command for viewing your repository's commit history?",
+      "options": ["git history", "git log", "git view", "git commit --history"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

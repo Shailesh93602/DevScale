@@ -1,0 +1,8 @@
+{
+  "title": "Understanding Git Workflow",
+  "description": "Learn about the essential Git version control tasks including tracking changes, coordinating multiple developers, and collaboration strategies.",
+  "module": "Full Stack Web Development",
+  "order": 4,
+  "difficulty": "Beginner",
+  "tags": ["Git", "Version Control", "Collaboration", "Software Engineering"]
+}
