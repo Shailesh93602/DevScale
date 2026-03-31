@@ -1,0 +1,16 @@
+<section>
+    <h2>Mastering C++ Iterators</h2>
+    <p>An iterator is an object that 'points' to an element inside a collection (like a vector or a list). They provide a uniform way to navigate and manipulate data across different types of containers.</p>
+
+    <h3>1. The Bridge between Data and Algorithms</h3>
+    <p>In the C++ Standard Library (STL), iterators act as the bridge. Most algorithms (like <code>sort</code> or <code>find</code>) don't work on the containers themselves, but on a range of iterators (typically <code>begin()</code> and <code>end()</code>).</p>
+
+    <h3>2. Like Pointers, but Smarter</h3>
+    <p>While an iterator behaves like a pointer (you move it using <code>++</code> and dereference it with <code>*</code>), it is a high-level object that understands the boundary and structure of the specific container it's navigating.</p>
+
+    <h3>3. Range-Based Loops</h3>
+    <p>Behind the scenes, modern C++ range-based for loops (<code>for (auto x : collection)</code>) actually use iterators to do the heavy lifting, making your code cleaner while retaining full performance.</p>
+
+    <h3>Conclusion</h3>
+    <p>Iterators are the "invisible glue" of modern C++. Mastering them is essential for effectively using the STL and writing generic algorithms that work across any data structure.</p>
+</section>

@@ -1,0 +1,18 @@
+{
+  "title": "C++ Inheritance Quiz",
+  "description": "Test your knowledge on base/derived classes and 'Is-A' relationships.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which C++ feature allows a single class to inherit behaviors from multiple base classes at the same time?",
+      "options": [
+        "Single Inheritance",
+        "Multilevel Inheritance",
+        "Multiple Inheritance",
+        "Hierarchical Inheritance"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}
