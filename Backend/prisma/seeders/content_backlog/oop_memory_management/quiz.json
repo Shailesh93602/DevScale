@@ -1,0 +1,18 @@
+{
+  "title": "Memory Management Quiz",
+  "description": "Test your knowledge on stack, heap, and garbage collection mechanisms.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "In which part of memory are objects usually stored in most object-oriented languages?",
+      "options": [
+        "Stack",
+        "Heap",
+        "Registers",
+        "Cache"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

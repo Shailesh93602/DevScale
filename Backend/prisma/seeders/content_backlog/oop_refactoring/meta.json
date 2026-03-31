@@ -1,0 +1,8 @@
+{
+  "title": "Refactoring",
+  "description": "Learn the art of improving code design and maintainability without altering its external functionality.",
+  "module": "Object Oriented Programming",
+  "order": 23,
+  "difficulty": "Intermediate",
+  "tags": ["OOP", "Refactoring", "Code Quality", "Maintenance"]
+}
