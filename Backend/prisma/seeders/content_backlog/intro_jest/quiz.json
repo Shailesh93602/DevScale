@@ -1,0 +1,25 @@
+{
+  "title": "Introduction to Jest Quiz",
+  "description": "Test your knowledge on the Jest testing framework.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding Jest's design, what is a key focus area?",
+      "options": ["To collect and analyze data", "To simplify the JavaScript testing process with zero-configuration", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a key feature of Jest for keeping track of large objects with ease?",
+      "options": ["Snapshots", "Indexes", "Clusters", "Groups"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "How does Jest handle test execution to improve performance?",
+      "options": ["It scales the CPU", "It runs tests in parallel and prioritizes previously failed tests", "It deletes old commits by mistake", "Its only possible for SQL repositories"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

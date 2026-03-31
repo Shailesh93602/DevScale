@@ -1,0 +1,19 @@
+{
+  "title": "Setting Up Mocha Quiz",
+  "description": "Test your knowledge on Mocha installation and project setup.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the installation of Mocha via npm, which of these is the correct command?",
+      "options": ["npm install --save-dev mocha", "npm save mocha", "npm get mocha", "npm start mocha"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which of these is the recommended location for writing your Mocha tests within a project structure?",
+      "options": ["The 'src' folder", "A dedicated 'test' folder", "In your SQL database", "In the main project root only"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

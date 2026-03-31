@@ -1,0 +1,25 @@
+{
+  "title": "Repository Management Quiz",
+  "description": "Test your knowledge on GitHub repository maintenance.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding GitHub, what does 'Archiving' a repository do?",
+      "options": ["It deletes the repository permanently", "It makes the repository's code and issues read-only while preserving history", "It moves the repository to an external server", "It renames the repository automatically"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is a major potential consequence of deleting a GitHub repository?",
+      "options": ["It permanently removes the code, version history, and issues from GitHub's servers", "It makes the code faster to build", "It deletes only the master branch", "It hides the code from search"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "When you rename a GitHub repository, what happens to existing project links?",
+      "options": ["They are broken immediately", "They are automatically redirected to the new repository name", "They point only to the oldest commit", "They must be updated manually in every browser"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

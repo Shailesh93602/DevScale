@@ -1,0 +1,31 @@
+{
+  "title": "Mocking and Spying in Jest Quiz",
+  "description": "Test your knowledge on Jest mocks and spies.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding Jest testing, what is 'Mocking' used for?",
+      "options": ["To collect and analyze data", "To replace a real component with a fake one to isolate a unit test", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which Jest function is used to create a new mock function?",
+      "options": ["jest.mock()", "jest.fn()", "jest.spy()", "jest.create()"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is a key difference between mocking and spying in Jest?",
+      "options": ["Mocking replaces a real component; Spying records its behavior without changing it", "Mocking is for objects; Spying is for functions", "There is no difference", "Its only possible for SQL repositories"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which function in Jest is used to 'spy' on an existing method of an object?",
+      "options": ["jest.spy()", "jest.spyOn()", "jest.watch()", "jest.observe()"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

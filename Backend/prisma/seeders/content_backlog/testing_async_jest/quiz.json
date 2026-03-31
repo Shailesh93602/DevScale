@@ -1,0 +1,19 @@
+{
+  "title": "Testing Asynchronous Code with Jest Quiz",
+  "description": "Test your knowledge on Jest's async testing patterns.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the testing of asynchronous code with Jest via a callback, what is the name of the function that you must call when the test is complete?",
+      "options": ["done()", "finish()", "complete()", "end()"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which Jest matcher is used for checking if a Promise resolves as expected?",
+      "options": ["resolves", "rejects", "Both resolves and rejects", "Neither resolves nor rejects"],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}
