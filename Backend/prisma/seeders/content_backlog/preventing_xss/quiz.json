@@ -1,0 +1,13 @@
+{
+  "title": "Preventing XSS Quiz",
+  "description": "Test your knowledge on methods used to prevent XSS attacks.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the web security, what are the primary steps within an XSS-based prevention workflow?项目",
+      "options": ["Benefit from its input sanitization and output encoding to correctly handle exactly how its user-provided data is displayed correctly", "Deleting all your local code", "Recording a commit directly through SQL", "Its only possible for SQL repositories"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
