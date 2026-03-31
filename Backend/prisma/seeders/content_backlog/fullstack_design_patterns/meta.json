@@ -1,0 +1,8 @@
+{
+  "title": "Design Patterns in FullStack",
+  "description": "Learn common design patterns like MVC and Component-Based Architecture in a fullstack context.",
+  "module": "FullStack Developer Masterclass",
+  "order": 3,
+  "difficulty": "Intermediate",
+  "tags": ["FullStack", "Design Patterns", "Software Architecture", "MVC"]
+}

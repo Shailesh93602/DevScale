@@ -1,0 +1,18 @@
+{
+  "title": "First Project in Node Quiz",
+  "description": "Test your knowledge on starting and structuring your first Node.js project.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which file is used in Node.js projects to track dependencies and scripts?",
+      "options": [
+        "node_modules",
+        "package.json",
+        "config.xml",
+        "dependencies.txt"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

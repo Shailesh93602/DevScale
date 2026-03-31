@@ -1,0 +1,18 @@
+{
+  "title": "First Project in FullStack Quiz",
+  "description": "Test your knowledge on building and architecting your first fullstack project.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the acronym for the most common set of basic database operations used in a first project?",
+      "options": [
+        "CRUD (Create, Read, Update, Delete)",
+        "SLAM (Sync, Load, Access, Manage)",
+        "REST (Representational State Transfer)",
+        "MVC (Model, View, Controller)"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

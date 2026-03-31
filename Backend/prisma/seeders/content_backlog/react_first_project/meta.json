@@ -1,0 +1,8 @@
+{
+  "title": "First project in React",
+  "description": "Build your first interactive application using React hooks and state.",
+  "module": "React Developer Masterclass",
+  "order": 2,
+  "difficulty": "Beginner",
+  "tags": ["React", "Hooks", "State Management", "First Project"]
+}

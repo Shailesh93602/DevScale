@@ -1,0 +1,18 @@
+{
+  "title": "Node Design Patterns Quiz",
+  "description": "Test your knowledge on design patterns specific to Node.js.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the core built-in Node.js class used to implement the Observer pattern?",
+      "options": [
+        "EventEmitter",
+        "DataStream",
+        "EventHandler",
+        "LogicEmit"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
