@@ -1,0 +1,16 @@
+{
+  "title": "Constants Quiz",
+  "description": "Test your knowledge on the const keyword and the importance of immutability.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "True or False: A variable declared with the 'const' keyword can be modified later in the program.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

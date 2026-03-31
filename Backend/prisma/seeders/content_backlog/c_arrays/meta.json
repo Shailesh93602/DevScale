@@ -1,0 +1,8 @@
+{
+  "title": "Arrays",
+  "description": "Learn to store and manage collections of data using fixed-size arrays in the C language.",
+  "module": "C Programming Masterclass",
+  "order": 14,
+  "difficulty": "Beginner",
+  "tags": ["C", "Arrays", "Data Structures", "Foundations"]
+}

@@ -1,0 +1,18 @@
+{
+  "title": "Short Hand If Quiz",
+  "description": "Test your knowledge on the ternary operator syntax and usage.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the correct syntax for the ternary operator in C?",
+      "options": [
+        "condition ? true : false",
+        "if condition ? true : false",
+        "condition : true ? false",
+        "condition ?? true : false"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

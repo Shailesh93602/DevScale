@@ -1,0 +1,8 @@
+{
+  "title": "Decimal Precision",
+  "description": "Learn the differences between float and double, and how to control the accuracy of your numeric output in C.",
+  "module": "C Programming Masterclass",
+  "order": 4,
+  "difficulty": "Intermediate",
+  "tags": ["C", "Precision", "Float", "Double", "Formatting"]
+}
