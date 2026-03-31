@@ -1,0 +1,19 @@
+{
+  "title": "Forking Repositories Quiz",
+  "description": "Test your knowledge on GitHub forking mechanics.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary role of 'Forking' in the context of Git and platforms like GitHub?",
+      "options": ["To collect and analyze data", "To create one's own copy of a project to make changes to without affecting the original version", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Regarding forking, what is the key benefit of having your own individual copy of a project?",
+      "options": ["It provides cloud-based hosting for you to make and test changes", "It makes your local machine faster", "It deletes old commits by mistake", "Its only for SQL repositories"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

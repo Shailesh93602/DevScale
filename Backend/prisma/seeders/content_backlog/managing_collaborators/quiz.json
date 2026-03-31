@@ -1,0 +1,25 @@
+{
+  "title": "Managing Collaborators Quiz",
+  "description": "Test your knowledge on GitHub collaborator management and permissions.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding GitHub, what is a 'Collaborator'?",
+      "options": ["Someone who downloads your code to their local machine", "Someone who has been invited to have specific permissions and roles on your GitHub repository", "A SQL administrator", "A bot that records commits"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these permissions and roles is available for your GitHub repository collaborators?",
+      "options": ["Read", "Write", "Maintain/Admin", "All of the above"],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "How do you invite a specific collaborator to your project on GitHub?",
+      "options": ["By adding their GitHub username or email to your project's settings", "By sending them a copy of your local Git repository", "By deleting old commits from the project", "Its only possible for SQL repositories"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
