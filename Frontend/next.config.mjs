@@ -28,7 +28,7 @@ export default withSentryConfig(nextConfig, {
   // For all available options, see:
   // https://www.npmjs.com/package/@sentry/webpack-plugin#options
 
-  org: 'exavel-technologies',
+  org: 'shailesh-chaudhari',
 
   project: 'eduscale-personal-frontend',
 
