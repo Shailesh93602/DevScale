@@ -2,20 +2,22 @@ import swaggerJsdoc from 'swagger-jsdoc';
 import pkg from '../../package.json' assert { type: 'json' };
 const { version } = pkg;
 
+import { BACKEND_BRANDING } from './branding';
+
 const options: swaggerJsdoc.Options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'EduScale API Documentation',
+      title: `${BACKEND_BRANDING.name} API Documentation`,
       version,
-      description: 'API documentation for EduScale platform',
+      description: `API documentation for ${BACKEND_BRANDING.name} platform`,
       license: {
         name: 'MIT',
         url: 'https://opensource.org/licenses/MIT',
       },
       contact: {
         name: 'API Support',
-        email: 'contact@eduscale.com',
+        email: BACKEND_BRANDING.contactEmail,
       },
     },
     servers: [
