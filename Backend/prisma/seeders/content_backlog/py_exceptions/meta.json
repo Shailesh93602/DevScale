@@ -1,0 +1,8 @@
+{
+  "title": "Python Exception Handling (Advanced)",
+  "description": "Learn to build resilient applications by mastering Python's powerful try...except...finally error handling framework.",
+  "module": "Python Programming Masterclass",
+  "order": 11,
+  "difficulty": "Advanced",
+  "tags": ["Python", "Exceptions", "Error Handling", "Robustness"]
+}

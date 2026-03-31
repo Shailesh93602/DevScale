@@ -1,0 +1,8 @@
+{
+  "title": "Python Data Science Libraries",
+  "description": "Explore the massive library ecosystem that has made Python the world-leading language for data analysis and visualization.",
+  "module": "Python Programming Masterclass",
+  "order": 15,
+  "difficulty": "Intermediate",
+  "tags": ["Python", "Data Science", "Libraries", "NumPy", "Pandas", "Matplotlib"]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "C++ Syntax",
+  "description": "Learn the essential rules and modern syntax patterns required to write and compile your first C++ programs.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 2,
+  "difficulty": "Beginner",
+  "tags": ["C++", "Syntax", "Namespaces", "Foundations"]
+}
