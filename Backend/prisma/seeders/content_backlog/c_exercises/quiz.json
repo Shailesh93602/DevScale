@@ -1,0 +1,18 @@
+{
+  "title": "C Exercises Quiz",
+  "description": "Test your knowledge on common programming patterns and problem-solving in C.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which combination of C features is most suitable for saving a list of student records to a permanent file?",
+      "options": [
+        "Enums and Math.h",
+        "Structures and File Handling",
+        "If-else and Casting",
+        "Switch and Constants"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

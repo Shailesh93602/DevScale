@@ -1,0 +1,22 @@
+<section>
+    <h2>Understanding Structures (struct) in C</h2>
+    <p>A structure is a user-defined data type that allows you to group together variables of different data types under a single name.</p>
+
+    <h3>1. Creating Complex Entities</h3>
+    <p>While an array only stores items of the same type, a <code>struct</code> can group together strings, integers, and floats. This is the foundation of data modeling in C, creating complex entities like a <code>User</code>, <code>Car</code>, or <code>Point</code>.</p>
+
+    <h3>2. Syntax and Access</h3>
+    <p>Use the <code>struct</code> keyword to define the structure, and the <strong>Dot Operator (.)</strong> to access its members.</p>
+    <pre><code>struct User {
+    int id;
+    char name[50];
+};
+struct User u1;
+u1.id = 1;</code></pre>
+
+    <h3>3. Importance for Organization</h3>
+    <p>Structures allow you to transform scattered variables into a logical unit, making your code easier to read and pass through functions as a single entity.</p>
+
+    <h3>Conclusion</h3>
+    <p>Structures are the closest thing to "Classes" in the procedural world of C, providing the essential grouping required for any non-trivial software project.</p>
+</section>

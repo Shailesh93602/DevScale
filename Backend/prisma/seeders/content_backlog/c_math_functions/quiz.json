@@ -1,0 +1,18 @@
+{
+  "title": "Math Functions Quiz",
+  "description": "Test your knowledge on the functions found in the C math.h library.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which function is used to calculate the square root of a number in C?",
+      "options": [
+        "root()",
+        "sq()",
+        "sqrt()",
+        "pow()"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

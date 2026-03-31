@@ -1,0 +1,18 @@
+{
+  "title": "C Memory Quiz",
+  "description": "Test your knowledge on Stack, Heap, and dynamic memory allocation.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which function is used to manually release heap memory in C to prevent memory leaks?",
+      "options": [
+        "malloc()",
+        "delete()",
+        "free()",
+        "clear()"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

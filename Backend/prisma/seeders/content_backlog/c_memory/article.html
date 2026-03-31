@@ -1,0 +1,19 @@
+<section>
+    <h2>Deep Dive into Memory in C</h2>
+    <p>In low-level languages like C, understanding where and how your data is stored in memory is the difference between a great application and a crashing one.</p>
+
+    <h3>1. Stack vs. Heap</h3>
+    <ul>
+        <li><strong>The Stack:</strong> Used for static/local variables. It's fast and managed automatically by the compiler.</li>
+        <li><strong>The Heap:</strong> Used for dynamic memory allocation. It's larger but must be managed manually by you using <code>malloc()</code> and <code>free()</code>.</li>
+    </ul>
+
+    <h3>2. Dynamic Memory Allocation</h3>
+    <p>Sometimes you don't know how much memory you'll need until the program is running. Functions like <code>malloc()</code> and <code>calloc()</code> allow you to request chunks of memory from the Heap as needed.</p>
+
+    <h3>3. Memory Leaks</h3>
+    <p>Because Heap memory is manual, for every <code>malloc()</code>, you MUST have a corresponding <code>free()</code> call. Failing to do this results in a <strong>Memory Leak</strong>, where your program slowly consumes more and more RAM until the computer runs out.</p>
+
+    <h3>Conclusion</h3>
+    <p>Memory management is the ultimate skill in C. Mastering the balance between the efficient stack and the flexible heap allows you to build high-performance systems and complex data structures.</p>
+</section>

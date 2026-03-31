@@ -1,0 +1,8 @@
+{
+  "title": "References",
+  "description": "Learn to manage variable access efficiently using addresses and the pass-by-reference pattern in C.",
+  "module": "C Programming Masterclass",
+  "order": 53,
+  "difficulty": "Intermediate",
+  "tags": ["C", "Memory", "Addresses", "Optimization"]
+}
