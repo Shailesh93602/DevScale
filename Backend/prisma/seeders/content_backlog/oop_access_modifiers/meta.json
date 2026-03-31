@@ -1,0 +1,8 @@
+{
+  "title": "Access Modifiers",
+  "description": "Master the keywords that control the visibility and protect the internal state of your objects.",
+  "module": "Object Oriented Programming",
+  "order": 10,
+  "difficulty": "Intermediate",
+  "tags": ["OOP", "Encapsulation", "Visibility", "Fundamentals"]
+}

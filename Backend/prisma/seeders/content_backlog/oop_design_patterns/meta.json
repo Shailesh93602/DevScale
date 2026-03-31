@@ -1,0 +1,8 @@
+{
+  "title": "Design Patterns",
+  "description": "Explore the three main categories of design patterns and how they solve recurring software architecture challenges.",
+  "module": "Object Oriented Programming",
+  "order": 17,
+  "difficulty": "Advanced",
+  "tags": ["OOP", "Design Patterns", "Creational", "Structural", "Behavioral"]
+}

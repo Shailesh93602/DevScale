@@ -1,0 +1,8 @@
+{
+  "title": "Delegation",
+  "description": "Learn the powerful pattern of forwarding tasks to helper objects for dynamic and flexible behavior.",
+  "module": "Object Oriented Programming",
+  "order": 16,
+  "difficulty": "Intermediate",
+  "tags": ["OOP", "Delegation", "Design Patterns", "Composition"]
+}

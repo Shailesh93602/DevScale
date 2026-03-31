@@ -1,0 +1,21 @@
+<section>
+    <h2>Understanding Access Modifiers</h2>
+    <p>Access modifiers are keywords in OOP that set the accessibility (visibility) of classes, methods, and other members. They are the primary tools for achieving encapsulation.</p>
+
+    <h3>1. The Four Common Levels</h3>
+    <ul>
+        <li><strong>Public:</strong> Accessible from any other class in the application.</li>
+        <li><strong>Private:</strong> Accessible only within the same class. This is the most restrictive level.</li>
+        <li><strong>Protected:</strong> Accessible within the same package and by subclasses even if they are in different packages.</li>
+        <li><strong>Default (Package-private):</strong> Accessible only within the same package.</li>
+    </ul>
+
+    <h3>2. Why use Access Modifiers?</h3>
+    <p>They allow you to hide the internal implementation details of a class and expose only what is necessary. This prevents outside code from accidentally corrupting an object's internal state.</p>
+
+    <h3>3. Best Practices</h3>
+    <p>The general rule is to be as restrictive as possible. Use <code>private</code> for all instance variables and provide <code>public</code> getter and setter methods only when necessary.</p>
+
+    <h3>Conclusion</h3>
+    <p>Properly using access modifiers is essential for building robust and secure software components, ensuring that each part of your system interacts with others through well-defined interfaces.</p>
+</section>

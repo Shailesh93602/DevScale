@@ -1,0 +1,8 @@
+{
+  "title": "Composition",
+  "description": "Learn the powerful 'has-a' design principle for building flexible systems by combining specialized objects.",
+  "module": "Object Oriented Programming",
+  "order": 11,
+  "difficulty": "Intermediate",
+  "tags": ["OOP", "Composition", "Design Principles", "Architecture"]
+}
