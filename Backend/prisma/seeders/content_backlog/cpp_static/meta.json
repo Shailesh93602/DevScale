@@ -1,0 +1,8 @@
+{
+  "title": "C++ Static Members",
+  "description": "Learn to manage shared state across all objects of a class by mastering C++ static variables and functions.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 9,
+  "difficulty": "Intermediate",
+  "tags": ["C++", "OOP", "Static", "Memory"]
+}

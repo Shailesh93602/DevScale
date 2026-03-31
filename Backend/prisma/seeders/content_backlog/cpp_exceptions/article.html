@@ -1,0 +1,20 @@
+<section>
+    <h2>Deep Dive into C++ Exception Handling</h2>
+    <p>Exception handling provides a way to transfer control from the point where an error occurs to a formal "Handler" that knows how to resolve the issue.</p>
+
+    <h3>1. try, throw, and catch</h3>
+    <ul>
+        <li><strong>try:</strong> The block of code that might fail.</li>
+        <li><strong>throw:</strong> Signals that an error has occurred: <code>throw runtime_error("File missing");</code>.</li>
+        <li><strong>catch:</strong> Receives the error and processes it.</li>
+    </ul>
+
+    <h3>2. The Standard Exceptions</h3>
+    <p>C++ provides a hierarchy of ready-made exception classes like <code>std::exception</code>, <code>std::out_of_range</code>, and <code>std::invalid_argument</code>. Using these makes your code compatible with the entire C++ ecosystem.</p>
+
+    <h3>3. Exception Safety</h3>
+    <p>The biggest challenge in C++ exception handling is ensuring that memory is still freed if an exception occurs. This is why **Smart Pointers** and **RAII** are so important—they clean up automatically even during a crash.</p>
+
+    <h3>Conclusion</h3>
+    <p>Mastering exceptions allows you to build mission-critical systems that can recover from errors or shut down safely without corrupting the user's data.</p>
+</section>

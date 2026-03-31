@@ -1,0 +1,18 @@
+{
+  "title": "C++ Smart Pointers Quiz",
+  "description": "Test your knowledge on unique_ptr, shared_ptr, and RAII.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which smart pointer should you use by default when you want a single, exclusive owner of a memory resource?",
+      "options": [
+        "std::shared_ptr",
+        "std::unique_ptr",
+        "std::auto_ptr",
+        "std::weak_ptr"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

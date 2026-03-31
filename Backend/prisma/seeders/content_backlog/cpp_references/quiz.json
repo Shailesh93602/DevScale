@@ -1,0 +1,16 @@
+{
+  "title": "C++ References Quiz",
+  "description": "Test your knowledge on reference initialization and 'pass-by-reference'.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Unlike a pointer, a C++ Reference MUST be initialized at the time it is created. True or False?",
+      "options": [
+        "True",
+        "False"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+<section>
+    <h2>Deep Dive into C++ Lambda Expressions</h2>
+    <p>Lambda expressions (often called lambdas) are a powerful feature introduced in C++11 that allow you to define anonymous functions directly within your code.</p>
+
+    <h3>1. Anatomy of a Lambda</h3>
+    <p>A lambda consists of three main parts: <code>[capture](parameters) { body }</code>.</p>
+    <ul>
+        <li><strong>Capture Clause:</strong> Allows the lambda to access variables from the outside scope.</li>
+        <li><strong>Parameters:</strong> Just like a regular function.</li>
+        <li><strong>Body:</strong> The logic to be executed.</li>
+    </ul>
+
+    <h3>2. Capture by Value vs. Reference</h3>
+    <p>Using <code>[=]</code> captures everything by value (a copy), while <code>[&amp;]</code> captures by reference. This gives you precise control over memory and side effects within your anonymous functions.</p>
+
+    <h3>3. Why Use Lambdas?</h3>
+    <p>Lambdas are essential when using STL algorithms like <code>std::sort</code> or <code>std::for_each</code>. Instead of writing a separate function elsewhere, you can write the sorting logic exactly where it's used, keeping your code clean and local.</p>
+
+    <h3>Conclusion</h3>
+    <p>Mastering lambda expressions is a hallmark of modern C++ development, enabling you to write more expressive, functional-style code within the power of a systems language.</p>
+</section>

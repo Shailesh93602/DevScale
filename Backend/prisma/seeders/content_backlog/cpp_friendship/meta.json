@@ -1,0 +1,8 @@
+{
+  "title": "C++ Friend Functions and Classes",
+  "description": "Learn to handle complex object relationships by mastering the strategic use of friend functions and classes in C++.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 8,
+  "difficulty": "Intermediate",
+  "tags": ["C++", "OOP", "Encapsulation", "Friendship"]
+}

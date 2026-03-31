@@ -1,0 +1,18 @@
+{
+  "title": "C++ Best Practices Quiz",
+  "description": "Test your knowledge on modern C++ safety and optimization standards.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these is a core recommendation of modern C++ Best Practices?",
+      "options": [
+        "Use raw pointers for performance",
+        "Use 'NULL' for null pointers",
+        "Prefer std::vector over raw arrays",
+        "Avoid using 'const' to save typing"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

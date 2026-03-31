@@ -1,0 +1,18 @@
+{
+  "title": "Best Practices and Optimization Quiz",
+  "description": "Test your knowledge on PEP 8, Big O, and Pythonic speed patterns.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the name of the official style guide for Python code?",
+      "options": [
+        "Pythonic Way",
+        "Clean Code",
+        "PEP 8",
+        "Zen of Python"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

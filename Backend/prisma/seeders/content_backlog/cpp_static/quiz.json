@@ -1,0 +1,18 @@
+{
+  "title": "C++ Static Members Quiz",
+  "description": "Test your knowledge on shared class variables and static functions.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "If you have 5 objects of Class 'User', and the class has a static variable 'total', how many copies of 'total' exist in memory?",
+      "options": [
+        "1",
+        "5",
+        "0",
+        "10"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

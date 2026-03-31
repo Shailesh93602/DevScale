@@ -1,0 +1,8 @@
+{
+  "title": "Python Dictionaries",
+  "description": "Learn to manage complex data relationships and achieve high-performance lookups using Python's versatile dictionary type.",
+  "module": "Python Programming Masterclass",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Python", "Dictionaries", "Mapping", "Complexity"]
+}

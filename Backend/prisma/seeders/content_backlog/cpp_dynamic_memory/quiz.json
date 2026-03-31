@@ -1,0 +1,18 @@
+{
+  "title": "C++ Dynamic Memory Quiz",
+  "description": "Test your knowledge on the Heap, new, and delete.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which C++ keyword is used to request a new block of memory from the 'Heap' during program execution?",
+      "options": [
+        "malloc",
+        "new",
+        "create",
+        "allocate"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

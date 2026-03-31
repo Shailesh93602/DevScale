@@ -1,0 +1,18 @@
+{
+  "title": "Advanced File I/O Quiz",
+  "description": "Test your knowledge on seek(), tell(), and binary file modes.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which Python file method is used to find the current position of the reading/writing cursor?",
+      "options": [
+        "seek()",
+        "find()",
+        "tell()",
+        "where()"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

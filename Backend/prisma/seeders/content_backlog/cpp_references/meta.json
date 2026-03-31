@@ -1,0 +1,8 @@
+{
+  "title": "C++ References",
+  "description": "Learn to write more efficient C++ applications by mastering the safety and performance benefits of references.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 6,
+  "difficulty": "Intermediate",
+  "tags": ["C++", "References", "Memory", "Optimization"]
+}

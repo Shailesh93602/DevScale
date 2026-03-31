@@ -1,0 +1,18 @@
+{
+  "title": "Python Packages Quiz",
+  "description": "Test your knowledge on directory structures and __init__.py.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which special file was historically required in a directory for Python to treat it as a 'Package'?",
+      "options": [
+        "main.py",
+        "__init__.py",
+        "package.py",
+        "config.py"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
