@@ -1,0 +1,8 @@
+{
+  "title": "Compliance Standards",
+  "description": "Learn about the essential industry-standard compliance tasks including tracking changes, coordinating multiple developers, and collaboration strategies.",
+  "module": "Full Stack Web Development",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Security", "Legal", "Compliance", "PCI DSS", "SOC 2"]
+}

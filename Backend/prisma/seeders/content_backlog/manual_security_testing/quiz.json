@@ -1,0 +1,13 @@
+{
+  "title": "Manual Security Testing Quiz",
+  "description": "Test your knowledge on manual security testing methods.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the web security, what consists of a primary step within a manual security testing workflow?项目",
+      "options": ["Benefit from its code reviews and business logic checks—such as with user sessions—to correctly handle exactly how its security vulnerabilities are identified", "Deleting all your local code", "Recording a commit directly through SQL", "Its only possible for SQL repositories"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
