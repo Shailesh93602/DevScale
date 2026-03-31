@@ -1,0 +1,18 @@
+{
+  "title": "DBMS Quiz",
+  "description": "Test your knowledge on the core features and responsibilities of a Database Management System.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which DBMS feature ensures that data remains accurate and consistent throughout its lifecycle?",
+      "options": [
+        "Data Replication",
+        "Data Integrity",
+        "Data Visualization",
+        "Data Mining"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

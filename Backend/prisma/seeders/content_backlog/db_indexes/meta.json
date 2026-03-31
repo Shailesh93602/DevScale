@@ -1,0 +1,8 @@
+{
+  "title": "Indexes (Full Stack Web Development)",
+  "description": "Master the primary tool for database performance tuning: how to create and manage clustered and non-clustered indexes.",
+  "module": "Database Systems",
+  "order": 10,
+  "difficulty": "Advanced",
+  "tags": ["Databases", "Performance", "Indexing", "Optimization"]
+}

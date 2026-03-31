@@ -1,0 +1,8 @@
+{
+  "title": "Object-Oriented Databases",
+  "description": "Explore the alternative to relational tables: storing objects directly in the database to match your application code.",
+  "module": "Database Systems",
+  "order": 18,
+  "difficulty": "Advanced",
+  "tags": ["Databases", "OODBMS", "Object-Oriented", "Data Modeling"]
+}

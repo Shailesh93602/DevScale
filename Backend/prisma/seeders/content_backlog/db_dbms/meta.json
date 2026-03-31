@@ -1,0 +1,8 @@
+{
+  "title": "Database Management Systems (DBMS)",
+  "description": "Explore the software layer that manages your data, ensuring security, integrity, and efficient access.",
+  "module": "Database Systems",
+  "order": 2,
+  "difficulty": "Intermediate",
+  "tags": ["Databases", "DBMS", "Software", "Tech Stack"]
+}

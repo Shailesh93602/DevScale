@@ -1,0 +1,8 @@
+{
+  "title": "Normalization",
+  "description": "Learn how to eliminate data redundancy and protect data integrity through 1NF, 2NF, and 3NF principles.",
+  "module": "Database Systems",
+  "order": 8,
+  "difficulty": "Advanced",
+  "tags": ["Databases", "Normalization", "Data Integrity", "Schema Design"]
+}

@@ -1,0 +1,18 @@
+{
+  "title": "Database Security Quiz",
+  "description": "Test your knowledge on encryption, access control, and auditing techniques.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the security principle of limiting user permissions to the bare minimum needed for their job called?",
+      "options": [
+        "Encryption",
+        "Auditing",
+        "Least Privilege",
+        "Authentication"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

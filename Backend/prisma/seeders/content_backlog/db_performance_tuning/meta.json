@@ -1,0 +1,8 @@
+{
+  "title": "Database Performance Tuning",
+  "description": "Master the art of speeding up your queries and optimizing your database's resource usage for maximum performance.",
+  "module": "Database Systems",
+  "order": 20,
+  "difficulty": "Advanced",
+  "tags": ["Databases", "Performance Tuning", "Optimization", "SQL"]
+}

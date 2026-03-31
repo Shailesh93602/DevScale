@@ -1,0 +1,17 @@
+<section>
+    <h2>Understanding Database Normalization</h2>
+    <p>Database normalization is the process of organizing the columns and tables of a relational database to minimize data redundancy and improve data integrity.</p>
+
+    <h3>1. The Goals of Normalization</h3>
+    <p>The primary goals are to eliminate redundant data (storing the same data in more than one table) and to ensure data dependencies make sense (only storing related data in a table).</p>
+
+    <h3>2. Normal Forms (NF)</h3>
+    <ul>
+        <li><strong>1NF (First Normal Form):</strong> Eliminate duplicate columns and ensure each cell contains a single (atomic) value.</li>
+        <li><strong>2NF (Second Normal Form):</strong> Meet all 1NF requirements and ensure that all non-key columns are fully dependent on the primary key.</li>
+        <li><strong>3NF (Third Normal Form):</strong> Meet all 2NF requirements and eliminate transitive dependencies (columns shouldn't depend on other non-key columns).</li>
+    </ul>
+
+    <h3>Conclusion</h3>
+    <p>While over-normalization can sometimes lead to performance issues (due to more joins), following these principles is vital for building clean, maintainable, and reliable relational databases.</p>
+</section>

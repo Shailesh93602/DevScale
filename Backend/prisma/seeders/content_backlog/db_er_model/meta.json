@@ -1,0 +1,8 @@
+{
+  "title": "Entity-Relationship Model (ER Model)",
+  "description": "Master the visual language of database design: entities, attributes, and the relationships that connect them.",
+  "module": "Database Systems",
+  "order": 7,
+  "difficulty": "Intermediate",
+  "tags": ["Databases", "ER Model", "ERD", "Schema Design"]
+}
