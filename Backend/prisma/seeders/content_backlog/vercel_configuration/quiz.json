@@ -1,0 +1,13 @@
+{
+  "title": "Vercel Configuration Quiz",
+  "description": "Test your knowledge on configuring Vercel via vercel.json.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which configuration file is used within a Vercel project to correctly manage and routing exactly how its application is built and deployed as intended?",
+      "options": ["vercel.json", "vercel.config", "next.config.js", "env.json"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
