@@ -1,0 +1,18 @@
+{
+  "title": "Custom Allocators Quiz",
+  "description": "Test your knowledge on Pool and Stack allocators.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary performance benefit of using a 'Pool Allocator' instead of standard 'new' or 'malloc'?",
+      "options": [
+        "It uses less total RAM",
+        "It avoids expensive calls to the Operating System for every object",
+        "It automatically encrypts your data",
+        "It makes the code easier to write"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

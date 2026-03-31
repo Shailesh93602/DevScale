@@ -1,0 +1,13 @@
+<section>
+    <h2>Hardware-Aware Programming: Caches and Branching</h2>
+    <p>Modern CPUs are thousands of times faster than RAM. To write the world's fastest code, you must design your algorithms to work with the **CPU's internal architecture**.</p>
+
+    <h3>1. CPU Cache Locality</h3>
+    <p>The CPU pulls data from RAM into tiered "Caches" (L1, L2, L3). If you access memory in a straight line (like an Array), the CPU can predict your next move and pre-load the data. This is "Cache Friendly." If you jump around randomly (like a Linked List), you cause **Cache Misses**, slowing your code by 100x or more.</p>
+
+    <h3>2. Branch Prediction</h3>
+    <p>When the CPU sees an <code>if</code> statement, it "guesses" which way it will go so it can start working early. If it guesses wrong, it has to throw away all its work and start over. This is a **Branch Misprediction Penalty**. You can optimize this by sorting your data before processing it through an <code>if</code> statement.</p>
+
+    <h3>Conclusion</h3>
+    <p>Hardware-aware programming turns you from a "Coder" into a "Systems Engineer." By understanding how the CPU actually executes your instructions, you can build software that feels instantaneous even under massive load.</p>
+</section>

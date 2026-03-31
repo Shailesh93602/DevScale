@@ -1,0 +1,18 @@
+{
+  "title": "CAP and PACELC Quiz",
+  "description": "Test your knowledge on distributed trade-offs and the PACELC extension.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "In the CAP theorem, since Network Partitions (P) are an un-avoidable reality in distributed systems, what is the primary choice an architect must make?",
+      "options": [
+        "Speed vs. Memory",
+        "Consistency vs. Availability",
+        "Security vs. Performance",
+        "SQL vs. NoSQL"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

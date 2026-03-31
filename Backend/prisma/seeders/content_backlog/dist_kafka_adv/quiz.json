@@ -1,0 +1,18 @@
+{
+  "title": "Kafka Streams & Connectors Quiz",
+  "description": "Test your knowledge on real-time processing and external system bridges.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which Kafka component is specifically designed to 'bridge' data between Kafka and external systems like SQL databases or AWS S3?",
+      "options": [
+        "Kafka Streams",
+        "Kafka Producers",
+        "Kafka Connect",
+        "Kafka Brokers"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

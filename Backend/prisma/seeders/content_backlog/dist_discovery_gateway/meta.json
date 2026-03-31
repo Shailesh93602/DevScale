@@ -1,0 +1,8 @@
+{
+  "title": "Service Discovery & API Gateway Logic",
+  "description": "Master the dynamic management of microservice identities and secure your entry points with API Gateway patterns.",
+  "module": "Distributed Systems Architecture",
+  "order": 4,
+  "difficulty": "Advanced",
+  "tags": ["Microservices", "API Gateway", "Service Discovery", "Consul", "Architect"]
+}

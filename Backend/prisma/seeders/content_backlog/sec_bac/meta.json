@@ -1,0 +1,8 @@
+{
+  "title": "OWASP Top 10: Deep-Dive into Broken Access Control (BAC)",
+  "description": "Learn to secure your application's most critical boundary by mastering the prevention of IDOR and privilege escalation attacks.",
+  "module": "Advanced Cybersecurity Operations",
+  "order": 2,
+  "difficulty": "Advanced",
+  "tags": ["Security", "OWASP", "BAC", "IDOR", "Authorization"]
+}

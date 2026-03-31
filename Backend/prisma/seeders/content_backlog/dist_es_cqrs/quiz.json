@@ -1,0 +1,18 @@
+{
+  "title": "Event Sourcing & CQRS Quiz",
+  "description": "Test your knowledge on append-only logs and model segregation.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary characteristic of 'Event Sourcing' compared to traditional CRUD databases?",
+      "options": [
+        "It deletes old data to save space",
+        "It stores every state change as an immutable sequence of events",
+        "It is only for small applications",
+        "It requires a SQL database"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

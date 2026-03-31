@@ -1,0 +1,18 @@
+<section>
+    <h2>Service Discovery and API Gateways</h2>
+    <p>In a microservices environment, services are constantly moving, scaling, and restarting. Static IP addresses don't work. We need dynamic systems to find and communicate with these services safely.</p>
+
+    <h3>1. Service Discovery</h3>
+    <p>Think of Service Discovery as a "Phone Book" for your microservices. When a service starts, it registers itself with a <strong>Service Registry</strong> (like Consul or Eureka). When Service A needs to call Service B, it asks the registry for Service B's current location (IP and Port).</p>
+
+    <h3>2. The API Gateway</h3>
+    <p>An API Gateway is a single entry point for all client requests. Instead of the client calling 50 separate microservices, it calls the Gateway. The Gateway then handles:</p>
+    <ul>
+        <li><strong>Routing:</strong> Sending the request to the correct service.</li>
+        <li><strong>Authentication:</strong> Checking if the user is logged in before letting the request through.</li>
+        <li><strong>Rate Limiting:</strong> Preventing a single user from overwhelming the system.</li>
+    </ul>
+
+    <h3>Conclusion</h3>
+    <p>Service Discovery and API Gateways are the "Glue" and "Shield" of your microservices architecture. They allow your system to be dynamic, secure, and incredibly easy to manage as it grows to thousands of nodes.</p>
+</section>

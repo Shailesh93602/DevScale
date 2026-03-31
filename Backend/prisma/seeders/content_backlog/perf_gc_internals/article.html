@@ -1,0 +1,16 @@
+<section>
+    <h2>How Garbage Collection Really Works</h2>
+    <p>Languages like Python and Javascript "clean up" memory automatically using a Garbage Collector (GC). To write truly high-performance code, you must understand the "Pause" and the internal logic of the GC.</p>
+
+    <h3>1. Reference Counting (Python)</h3>
+    <p>Python tracks how many other objects point to a variable. When the count hits zero, the memory is freed instantly. However, it can't handle **Circular References** on its own, which is why it has a secondary collector.</p>
+
+    <h3>2. Mark-and-Sweep (Node.js/V8)</h3>
+    <p>The V8 engine (Node.js) uses a generational approach. It starts from "Root" objects and "Marks" everything it can reach. Anything not marked is considered "Garbage" and is "Swept" (deleted) in one big pass. This can cause **GC Pauses** where your program stops for a few milliseconds.</p>
+
+    <h3>3. Generational GC</h3>
+    <p>Modern GCs assume that "Most objects die young." They store new objects in a "Young Generation" area and scan it very frequently. Only survivors move to the "Old Generation," which is scanned less often, drastically improving performance.</p>
+
+    <h3>Conclusion</h3>
+    <p>Understanding your language's GC allows you to write "GC-friendly" code—minimizing temporary objects and ensuring the GC spend as little time as possible pausing your application.</p>
+</section>

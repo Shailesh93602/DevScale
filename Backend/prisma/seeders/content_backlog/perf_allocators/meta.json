@@ -1,0 +1,8 @@
+{
+  "title": "Memory Management: Custom Allocators in C++",
+  "description": "Gain absolute control over your application's memory performance by learning to build and implement custom allocation strategies in C++.",
+  "module": "Advanced Performance Engineering",
+  "order": 2,
+  "difficulty": "Advanced",
+  "tags": ["C++", "Memory", "High Performance", "Allocators", "Optimization"]
+}

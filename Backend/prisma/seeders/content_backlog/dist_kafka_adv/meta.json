@@ -1,0 +1,8 @@
+{
+  "title": "Hands-on Kafka: Streams & Connectors internals",
+  "description": "Unlock the full potential of real-time data processing by mastering Kafka's powerful streaming and connection ecosystem.",
+  "module": "Distributed Systems Architecture",
+  "order": 5,
+  "difficulty": "Advanced",
+  "tags": ["Kafka", "Streams", "Connect", "Data Engineering", "Real-time"]
+}

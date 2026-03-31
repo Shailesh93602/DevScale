@@ -1,0 +1,8 @@
+{
+  "title": "Hands-on RabbitMQ: Exchange types & Dead Letter Queues",
+  "description": "Learn to manage complex message routing and build bulletproof failure recovery systems using RabbitMQ's advanced features.",
+  "module": "Distributed Systems Architecture",
+  "order": 6,
+  "difficulty": "Advanced",
+  "tags": ["RabbitMQ", "Message Broker", "DLQ", "Architecture", "Resilience"]
+}

@@ -1,0 +1,18 @@
+{
+  "title": "CRP Optimization Quiz",
+  "description": "Test your knowledge on DOM, CSSOM, and render blocking.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which two models MUST be completely built by the browser before it can begin the painting process?",
+      "options": [
+        "DOM and HTMLOM",
+        "DOM and CSSOM",
+        "CSSOM and JSOM",
+        "HTMLOM and JSOM"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

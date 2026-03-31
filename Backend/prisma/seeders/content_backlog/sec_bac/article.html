@@ -1,0 +1,19 @@
+<section>
+    <h2>OWASP Top 10: Broken Access Control (BAC)</h2>
+    <p>Ranked #1 on the OWASP Top 10, Broken Access Control is the most common and dangerous vulnerability in modern web applications. It occurs when a user can access data or functions they shouldn't.</p>
+
+    <h3>1. Insecure Direct Object References (IDOR)</h3>
+    <p>This happens when an app uses a simple ID in a URL (e.g., <code>/api/user/123/profile</code>). An attacker can simply change <code>123</code> to <code>124</code> to see another user's private data. **Always verify ownership** on the backend before returning data.</p>
+
+    <h3>2. Vertical and Horizontal Privilege Escalation</h3>
+    <ul>
+        <li><strong>Horizontal:</strong> User A accessing User B's data (same role).</li>
+        <li><strong>Vertical:</strong> A standard User accessing Admin functions (different roles).</li>
+    </ul>
+
+    <h3>3. Principle of Least Privilege</h3>
+    <p>The core solution to BAC. Every user and service should only have the absolute minimum permissions required to do their job. Deny everything by default, and only allow what is necessary.</p>
+
+    <h3>Conclusion</h3>
+    <p>Mastering Access Control is the single most important step in securing an application. By implementing strong, centralized authorization logic, you prevent the vast majority of data breaches before they even start.</p>
+</section>

@@ -1,0 +1,8 @@
+{
+  "title": "Garbage Collection Internals (Python/Node.js deep-dive)",
+  "description": "Understand the hidden costs of automatic memory management and learn to write code that works with the Garbage Collector, not against it.",
+  "module": "Advanced Performance Engineering",
+  "order": 3,
+  "difficulty": "Advanced",
+  "tags": ["GC", "Memory", "Python", "NodeJS", "Internals"]
+}
