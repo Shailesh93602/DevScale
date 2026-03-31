@@ -1,0 +1,8 @@
+{
+  "title": "Memory",
+  "description": "Unlock the power of dynamic memory management by mastering the Stack, the Heap, and the malloc library.",
+  "module": "C Programming Masterclass",
+  "order": 52,
+  "difficulty": "Advanced",
+  "tags": ["C", "Memory", "Malloc", "Heap", "Optimization"]
+}

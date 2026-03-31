@@ -1,0 +1,8 @@
+{
+  "title": "Enums",
+  "description": "Learn to write self-documenting code by using enums to represent a fixed set of named values.",
+  "module": "C Programming Masterclass",
+  "order": 51,
+  "difficulty": "Intermediate",
+  "tags": ["C", "Data Types", "Enum", "Best Practices"]
+}

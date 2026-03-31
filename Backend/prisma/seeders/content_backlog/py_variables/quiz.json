@@ -1,0 +1,16 @@
+{
+  "title": "Python Variables and Data Types Quiz",
+  "description": "Test your knowledge on Python's dynamic typing and essential data structures.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "True or False: In Python, you must declare the variable type (like 'int' or 'str') before assigning a value to it.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

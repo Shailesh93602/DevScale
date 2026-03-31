@@ -1,0 +1,8 @@
+{
+  "title": "Structures",
+  "description": "Learn to model complex real-world data by grouping different data types together using C structures.",
+  "module": "C Programming Masterclass",
+  "order": 50,
+  "difficulty": "Intermediate",
+  "tags": ["C", "Data Types", "Struct", "Data Modeling"]
+}
