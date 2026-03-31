@@ -1,0 +1,13 @@
+{
+  "title": "User Management Quiz",
+  "description": "Test your knowledge on managing users and their roles.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the web security, what is the primary role of 'User Management'?项目",
+      "options": ["To collect and analyze data", "Correctly and securely managing how your project's users are created, updated, and deleted—including its Account Settings—as intended", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
