@@ -1,0 +1,25 @@
+{
+  "title": "Best Practices for Frontend Testing Quiz",
+  "description": "Test your knowledge on frontend testing best practices.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding frontend testing, why should you avoid testing 'implementation details'?",
+      "options": ["To collect more data", "To make tests more resilient to code refactoring and changes in internal logic", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a key rule of writing descriptive test case names?",
+      "options": ["They should describe specifically what function or component is being tested and what the expected result is", "They should be as short as possible", "They should only contain timestamps", "Names do not matter"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Regarding the frontend testing, what is the key benefit of isolating your tests from external systems?",
+      "options": ["It increases your confidence in the correctness of your application's user interface by removing dependency on unstable data", "It makes your local machine faster", "It deletes old commits by mistake", "Its only possible for SQL repositories"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
