@@ -1,0 +1,8 @@
+{
+  "title": "Setting Up Jenkins",
+  "description": "Learn about the essential DevOps tasks including tracking changes, coordinating multiple developers, and collaboration strategies.",
+  "module": "Full Stack Web Development",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["DevOps", "CI/CD", "Jenkins", "Software Engineering"]
+}

@@ -1,0 +1,19 @@
+{
+  "title": "Building CI Pipelines Quiz",
+  "description": "Test your knowledge on CI pipeline structure and stages.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the DevOps, what is the primary role of a 'CI Pipeline'?",
+      "options": ["To collect and analyze data", "To automatically build, test, and prepare your project's code for deployment once a change is introduced", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a typical stage within a project's Continuous Integration (CI) pipeline?",
+      "options": ["Build", "Test", "Deploy or Package", "All of the above"],
+      "correctAnswer": 3,
+      "points": 10
+    }
+  ]
+}
