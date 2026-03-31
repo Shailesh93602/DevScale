@@ -1,0 +1,8 @@
+{
+  "title": "Nested Loops",
+  "description": "Learn how to use loops within loops to handle complex logic and multi-dimensional data structures in C.",
+  "module": "C Programming Masterclass",
+  "order": 16,
+  "difficulty": "Intermediate",
+  "tags": ["C", "Loops", "Iteration", "Complexity"]
+}

@@ -1,0 +1,20 @@
+<section>
+    <h2>Understanding Data Integrity</h2>
+    <p>Data integrity refers to the accuracy, completeness, and consistency of data as it's maintained over its entire lifecycle in a database.</p>
+
+    <h3>1. Types of Data Integrity</h3>
+    <ul>
+        <li><strong>Entity Integrity:</strong> Ensuring each row has a unique primary key and is not null.</li>
+        <li><strong>Referential Integrity:</strong> Ensuring relationships between tables remain consistent (foreign keys must point to valid primary keys).</li>
+        <li><strong>Domain Integrity:</strong> Ensuring all data in a column follows defined rules (e.g., correct data type, range, or format).</li>
+    </ul>
+
+    <h3>2. Integrity Constraints</h3>
+    <p>DBMSs use constraints like <code>PRIMARY KEY</code>, <code>FOREIGN KEY</code>, <code>UNIQUE</code>, <code>NOT NULL</code>, and <code>CHECK</code> to automatically enforce these integrity rules, preventing 'dirty data' from entering the system.</p>
+
+    <h3>3. Why is it important?</h3>
+    <p>Without data integrity, your database can become a chaotic collection of contradictory or missing information, leading to incorrect reports, application crashes, and security vulnerabilities.</p>
+
+    <h3>Conclusion</h3>
+    <p>Implementing strong data integrity rules at the database level is much more reliable than trying to handle it solely in application code. It's the best way to ensure your system's data remains a 'single source of truth'.</p>
+</section>
