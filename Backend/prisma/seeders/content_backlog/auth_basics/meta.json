@@ -1,0 +1,8 @@
+{
+  "title": "Authentication Basics",
+  "description": "Learn about the essential authentication basics including tracking changes, coordinating multiple developers, and collaboration strategies.",
+  "module": "Full Stack Web Development",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Security", "Authentication", "MFA", "Passwords", "Biometrics"]
+}
