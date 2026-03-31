@@ -1,0 +1,18 @@
+{
+  "title": "C++ Loops Quiz",
+  "description": "Test your knowledge on for, while, and do-while loops.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which type of C++ loop is GUARANTEED to execute at least one time, regardless of the condition?",
+      "options": [
+        "for loop",
+        "while loop",
+        "do-while loop",
+        "infinite loop"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

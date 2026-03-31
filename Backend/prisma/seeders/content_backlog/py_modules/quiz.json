@@ -1,0 +1,18 @@
+{
+  "title": "Python Modules Quiz",
+  "description": "Test your knowledge on imports, namespacing, and __name__.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the value of the special '__name__' variable if a Python file is being run directly as a script?",
+      "options": [
+        "module",
+        "__main__",
+        "__start__",
+        "root"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

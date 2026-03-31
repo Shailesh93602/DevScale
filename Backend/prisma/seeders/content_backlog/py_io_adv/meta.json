@@ -1,0 +1,8 @@
+{
+  "title": "Python File I/O (Advanced)",
+  "description": "Master high-performance file management by learning to use seek, tell, and binary modes for precise data manipulation.",
+  "module": "Python Programming Masterclass",
+  "order": 1,
+  "difficulty": "Advanced",
+  "tags": ["Python", "IO", "Advanced", "Binary", "Performance"]
+}

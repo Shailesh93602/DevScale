@@ -1,0 +1,8 @@
+{
+  "title": "C++ Exception Handling",
+  "description": "Learn to write resilient, production-ready C++ code by mastering the try-throw-catch mechanism for error recovery.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 10,
+  "difficulty": "Advanced",
+  "tags": ["C++", "Exceptions", "Error Handling", "Stability"]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "Introduction to C++",
+  "description": "Kickstart your journey into the world of high-performance systems engineering with the foundations of the C++ programming language.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["C++", "Foundations", "Compilation", "Systems"]
+}

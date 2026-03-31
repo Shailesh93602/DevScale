@@ -1,0 +1,8 @@
+{
+  "title": "C++ Operators",
+  "description": "Learn to perform complex logic and leverage the power of operator overloading for intuitive data manipulation in C++.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 2,
+  "difficulty": "Beginner",
+  "tags": ["C++", "Operators", "Logic", "Overloading"]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "C++ File Handling",
+  "description": "Learn to persist data to the disk with maximum performance using C++ standard file streams.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 11,
+  "difficulty": "Intermediate",
+  "tags": ["C++", "File Handling", "Streams", "Persistence"]
+}

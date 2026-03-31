@@ -1,0 +1,8 @@
+{
+  "title": "C++ Function Pointers",
+  "description": "Learn to treat behavior as data by mastering the low-level storage of function addresses and implementation of callback patterns.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 22,
+  "difficulty": "Advanced",
+  "tags": ["C++", "Pointers", "Callbacks", "Systems"]
+}

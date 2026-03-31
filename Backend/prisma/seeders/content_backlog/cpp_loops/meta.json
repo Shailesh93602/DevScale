@@ -1,0 +1,8 @@
+{
+  "title": "C++ Loops",
+  "description": "Learn to manage repetitive logic and process data collections with maximum efficiency using C++ loop structures.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 3,
+  "difficulty": "Beginner",
+  "tags": ["C++", "Loops", "Architecture", "Control Flow"]
+}

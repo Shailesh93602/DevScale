@@ -1,0 +1,8 @@
+{
+  "title": "Python Functional Programming",
+  "description": "Master the art of writing clean, declarative code using Python's functional programming features like map, filter, and lambda functions.",
+  "module": "Python Programming Masterclass",
+  "order": 1,
+  "difficulty": "Intermediate",
+  "tags": ["Python", "Functional Programming", "Lambda", "Map", "Filter"]
+}

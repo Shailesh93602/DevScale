@@ -1,0 +1,16 @@
+<section>
+    <h2>Professional C++ Best Practices</h2>
+    <p>Writing code that works is the minimum requirement. Writing code that is maintainable, safe, and efficient distinguishes a professional C++ engineer.</p>
+
+    <h3>1. Use Modern Standards (C++17/20)</h3>
+    <p>Avoid "Legacy" C-style patterns. Use <code>std::string</code> instead of char arrays, <code>std::vector</code> instead of raw arrays, and <code>nullptr</code> instead of NULL.</p>
+
+    <h3>2. Const Everything</h3>
+    <p>If a variable shouldn't change, mark it <code>const</code>. If a function shouldn't modify the object, mark it <code>const</code>. This allows the compiler to optimize better and prevents accidental bugs.</p>
+
+    <h3>3. RAII is Mandatory</h3>
+    <p>Never manage memory manually. Use Smart Pointers. Use the Standard Library's containers. Your goal should be to never write the keyword <code>delete</code> in your entire career.</p>
+
+    <h3>Conclusion</h3>
+    <p>C++ is a language with many "sharp edges". By following a rigorous set of modern best practices, you can harness its legendary power while maintaining the safety of a modern managed language.</p>
+</section>
