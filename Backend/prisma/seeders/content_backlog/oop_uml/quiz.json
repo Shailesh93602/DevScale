@@ -1,0 +1,18 @@
+{
+  "title": "UML Quiz",
+  "description": "Test your knowledge on common UML diagrams and their purposes.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which UML diagram is primarily used to show the static structure of a system's classes and their relationships?",
+      "options": [
+        "Sequence Diagram",
+        "Class Diagram",
+        "Use Case Diagram",
+        "State Diagram"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

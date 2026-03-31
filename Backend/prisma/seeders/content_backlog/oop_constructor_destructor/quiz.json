@@ -1,0 +1,18 @@
+{
+  "title": "Constructor and Destructor Quiz",
+  "description": "Test your knowledge on object lifecycle management and resource cleanup.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which method is automatically called when a new object instance is created?",
+      "options": [
+        "Initializer",
+        "Destructor",
+        "Constructor",
+        "Finalizer"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "title": "Inheritance Quiz",
+  "description": "Test your knowledge on the parent-child relationship and code reuse in OOP.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What type of relationship does inheritance typically represent in software design?",
+      "options": [
+        "has-a",
+        "is-a",
+        "belongs-to",
+        "uses-a"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

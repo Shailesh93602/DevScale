@@ -1,0 +1,8 @@
+{
+  "title": "Encapsulation",
+  "description": "Learn the essential skill of protecting data integrity through information hiding and controlled class interfaces.",
+  "module": "Object Oriented Programming",
+  "order": 12,
+  "difficulty": "Beginner",
+  "tags": ["OOP", "Encapsulation", "Data Hiding", "Getters/Setters"]
+}

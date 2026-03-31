@@ -1,0 +1,8 @@
+{
+  "title": "Method Overloading",
+  "description": "Learn how to define multiple methods with the same name to improve code readability and consistency.",
+  "module": "Object Oriented Programming",
+  "order": 9,
+  "difficulty": "Intermediate",
+  "tags": ["OOP", "Method Overloading", "Polymorphism", "Fundamentals"]
+}

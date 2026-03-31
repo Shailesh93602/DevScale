@@ -1,0 +1,18 @@
+{
+  "title": "Composition Quiz",
+  "description": "Test your knowledge on the 'has-a' relationship and building complex objects from components.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What type of relationship does composition represent in object-oriented design?",
+      "options": [
+        "is-a",
+        "has-a",
+        "belongs-to",
+        "uses-a"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

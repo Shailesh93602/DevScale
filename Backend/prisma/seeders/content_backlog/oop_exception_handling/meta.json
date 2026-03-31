@@ -1,0 +1,8 @@
+{
+  "title": "Exception Handling",
+  "description": "Learn to write resilient code by mastering the try-catch-finally blocks and creating custom exception types.",
+  "module": "Object Oriented Programming",
+  "order": 18,
+  "difficulty": "Intermediate",
+  "tags": ["OOP", "Exception Handling", "Error Recovery", "Resilience"]
+}

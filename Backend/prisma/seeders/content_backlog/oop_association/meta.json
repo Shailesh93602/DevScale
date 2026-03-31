@@ -1,0 +1,8 @@
+{
+  "title": "Association",
+  "description": "Learn the fundamental 'uses-a' relationship and how independent objects interact through associations.",
+  "module": "Object Oriented Programming",
+  "order": 15,
+  "difficulty": "Intermediate",
+  "tags": ["OOP", "Association", "Relationships", "Multiplicity"]
+}

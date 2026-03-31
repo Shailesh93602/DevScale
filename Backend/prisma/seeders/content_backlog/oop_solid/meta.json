@@ -1,0 +1,8 @@
+{
+  "title": "SOLID Principles",
+  "description": "Master the five core principles of object-oriented design for building flexible and maintainable software.",
+  "module": "Object Oriented Programming",
+  "order": 20,
+  "difficulty": "Advanced",
+  "tags": ["OOP", "SOLID", "Design Principles", "Architecture"]
+}

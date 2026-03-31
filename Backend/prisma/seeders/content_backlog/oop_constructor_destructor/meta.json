@@ -1,0 +1,8 @@
+{
+  "title": "Constructor and Destructor",
+  "description": "Master the lifecycle of objects, from initializing data at creation to safely cleaning up resources.",
+  "module": "Object Oriented Programming",
+  "order": 8,
+  "difficulty": "Intermediate",
+  "tags": ["OOP", "Constructor", "Destructor", "Object Lifecycle"]
+}

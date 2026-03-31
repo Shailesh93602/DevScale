@@ -1,0 +1,18 @@
+{
+  "title": "Classes and Objects Quiz",
+  "description": "Test your knowledge on the fundamental relationship between classes and their instances.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of the following acts as a 'blueprint' for creating instances in OOP?",
+      "options": [
+        "Object",
+        "Class",
+        "Method",
+        "Variable"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
