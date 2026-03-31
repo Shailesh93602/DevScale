@@ -1,0 +1,20 @@
+<section>
+    <h2>Understanding Constants in C</h2>
+    <p>Constants refer to fixed values that the program may not alter during its execution. These fixed values are also called literals.</p>
+
+    <h3>1. The const Keyword</h3>
+    <p>You can define a constant by using the <code>const</code> keyword before the data type (e.g., <code>const int PI = 3.14;</code>). Any attempt to modify this value later in the code will result in a compiler error.</p>
+
+    <h3>2. Why use Constants?</h3>
+    <ul>
+        <li><strong>Safety:</strong> Prevents accidental modification of values that should remain fixed.</li>
+        <li><strong>Readability:</strong> Gives meaningful names to 'magic numbers' (e.g., using <code>MAX_USERS</code> instead of <code>100</code>).</li>
+        <li><strong>Maintenance:</strong> If a value needs to change, you only have to update it in one place.</li>
+    </ul>
+
+    <h3>3. Constants vs. Macros (#define)</h3>
+    <p>While <code>const</code> variables have a type and scope, <code>#define</code> macros are processed by the preprocessor before compilation and do not have type safety. <code>const</code> is generally preferred in modern C.</p>
+
+    <h3>Conclusion</h3>
+    <p>Using constants effectively leads to more robust, readable, and maintainable codebases by explicitly defining which values are intended to be immutable.</p>
+</section>

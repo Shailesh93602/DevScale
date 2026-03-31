@@ -1,0 +1,8 @@
+{
+  "title": "Short Hand If",
+  "description": "Master the ternary operator for writing concise and readable single-line conditional logic in C.",
+  "module": "C Programming Masterclass",
+  "order": 13,
+  "difficulty": "Intermediate",
+  "tags": ["C", "Ternary Operator", "Short Hand", "Logic"]
+}

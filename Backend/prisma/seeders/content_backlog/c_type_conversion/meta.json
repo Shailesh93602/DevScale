@@ -1,0 +1,8 @@
+{
+  "title": "Type Conversion",
+  "description": "Learn how to convert variables between different data types safely using implicit and explicit casting.",
+  "module": "C Programming Masterclass",
+  "order": 7,
+  "difficulty": "Intermediate",
+  "tags": ["C", "Data Types", "Type Casting", "Casting"]
+}

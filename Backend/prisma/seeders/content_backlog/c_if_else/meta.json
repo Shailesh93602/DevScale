@@ -1,0 +1,8 @@
+{
+  "title": "If Else",
+  "description": "Master the fundamental if-else structure for making simple two-way decisions in your C programs.",
+  "module": "C Programming Masterclass",
+  "order": 11,
+  "difficulty": "Beginner",
+  "tags": ["C", "Logic", "If Else", "Control Flow"]
+}

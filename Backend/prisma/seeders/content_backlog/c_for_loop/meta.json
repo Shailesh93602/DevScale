@@ -1,0 +1,8 @@
+{
+  "title": "For Loop",
+  "description": "Master the versatile for loop to efficiently repeat tasks and iterate through data sets in C.",
+  "module": "C Programming Masterclass",
+  "order": 15,
+  "difficulty": "Beginner",
+  "tags": ["C", "Loops", "Iteration", "Control Flow"]
+}

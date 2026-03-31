@@ -1,0 +1,16 @@
+<section>
+    <h2>Understanding Type Conversion in C</h2>
+    <p>Type conversion (also known as Type Casting) is the process of converting a variable from one data type to another.</p>
+
+    <h3>1. Implicit Conversion (Automatic)</h3>
+    <p>Implicit conversion happens automatically when you assign a value of a smaller type to a larger type (e.g., assigning an <code>int</code> to a <code>float</code>). The compiler handles this without loss of data.</p>
+
+    <h3>2. Explicit Conversion (Manual)</h3>
+    <p>Explicit conversion is performed manually by placing the desired type in parentheses before the expression (e.g., <code>(float)myInt</code>). This is necessary when converting from a larger type to a smaller type, where data loss might occur.</p>
+
+    <h3>3. The Dangers of Casting</h3>
+    <p>When converting from a larger type to a smaller one (e.g., <code>double</code> to <code>int</code>), decimal values are truncated, and if the original value is too large for the new type, you may encounter overflow errors.</p>
+
+    <h3>Conclusion</h3>
+    <p>Mastering type conversion allows you to handle data of different types flexibly while being mindful of potential precision loss or overflow issues.</p>
+</section>
