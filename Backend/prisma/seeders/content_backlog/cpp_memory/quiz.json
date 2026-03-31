@@ -1,0 +1,18 @@
+{
+  "title": "C++ Memory Management Quiz",
+  "description": "Test your knowledge on RAII, deep copying, and smart pointers.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which crucial C++ design pattern ensures that resources are automatically cleaned up when an object's lifetime ends?",
+      "options": [
+        "MVC",
+        "Singleton",
+        "RAII",
+        "Observer"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

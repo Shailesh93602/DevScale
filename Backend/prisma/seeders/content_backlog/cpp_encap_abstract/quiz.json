@@ -1,0 +1,18 @@
+{
+  "title": "Encapsulation and Abstraction Quiz",
+  "description": "Test your knowledge on private variables, getters/setters, and abstract classes.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which OOP concept is primarily focused on hiding the internal complexity of a system and only showing the essential 'interface' to the user?",
+      "options": [
+        "Inheritance",
+        "Abstraction",
+        "Polymorphism",
+        "Initialization"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

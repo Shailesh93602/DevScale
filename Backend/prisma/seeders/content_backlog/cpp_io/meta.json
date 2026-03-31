@@ -1,0 +1,8 @@
+{
+  "title": "C++ Input and Output",
+  "description": "Learn to interact with users by mastering the cin and cout objects in C++ for flexible data flow.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 5,
+  "difficulty": "Beginner",
+  "tags": ["C++", "IO", "Cin", "Cout", "Standard Library"]
+}

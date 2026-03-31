@@ -1,0 +1,8 @@
+{
+  "title": "C++ Templates",
+  "description": "Unlock the power of Generic Programming by mastering C++ templates for writing reusable, type-safe, and high-performance code.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 10,
+  "difficulty": "Advanced",
+  "tags": ["C++", "Templates", "Generics", "Optimization", "Architecture"]
+}

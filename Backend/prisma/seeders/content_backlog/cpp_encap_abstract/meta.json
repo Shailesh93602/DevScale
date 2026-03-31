@@ -1,0 +1,8 @@
+{
+  "title": "C++ Encapsulation and Abstraction",
+  "description": "Learn to secure your data and manage system complexity by mastering the twin pillars of Encapsulation and Abstraction in C++.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 9,
+  "difficulty": "Intermediate",
+  "tags": ["C++", "OOP", "Encapsulation", "Abstraction", "Design Patterns"]
+}

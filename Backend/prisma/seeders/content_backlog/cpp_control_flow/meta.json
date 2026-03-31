@@ -1,0 +1,8 @@
+{
+  "title": "C++ Control Structures",
+  "description": "Learn to manage the logic of your C++ apps by mastering if statements, switched cases, and advanced range-based loops.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 6,
+  "difficulty": "Beginner",
+  "tags": ["C++", "Control Flow", "Loops", "Modern C++"]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "C++ Variables and Data Types",
+  "description": "Learn the core data types of C++, including integers, floats, booleans, and the powerful string class.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 4,
+  "difficulty": "Beginner",
+  "tags": ["C++", "Variables", "Data Types", "Foundations"]
+}

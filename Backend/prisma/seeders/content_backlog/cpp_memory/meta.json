@@ -1,0 +1,8 @@
+{
+  "title": "C++ Memory Management",
+  "description": "Learn to manage system resources with legendary precision using C++ memory patterns, RAII, and Smart Pointers.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 12,
+  "difficulty": "Advanced",
+  "tags": ["C++", "Memory", "RAII", "Smart Pointers", "Optimization"]
+}
