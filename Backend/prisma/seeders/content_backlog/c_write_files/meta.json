@@ -1,0 +1,8 @@
+{
+  "title": "Write to Files",
+  "description": "Master the functions for sending text and data to files, allowing your C programs to produce durable results.",
+  "module": "C Programming Masterclass",
+  "order": 48,
+  "difficulty": "Advanced",
+  "tags": ["C", "File Handling", "Output", "Storage"]
+}

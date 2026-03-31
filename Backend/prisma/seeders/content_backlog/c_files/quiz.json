@@ -1,0 +1,18 @@
+{
+  "title": "C Files Quiz",
+  "description": "Test your knowledge on opening, closing, and managing file pointers in C.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which function is used to OPEN a file in C?",
+      "options": [
+        "fileopen()",
+        "openFile()",
+        "fopen()",
+        "read()"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

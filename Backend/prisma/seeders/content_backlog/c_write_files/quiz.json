@@ -1,0 +1,18 @@
+{
+  "title": "Write to Files Quiz",
+  "description": "Test your knowledge on fprintf, fputs, and file buffering.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which function works similarly to printf but sends output directly to a file pointer?",
+      "options": [
+        "sprintf()",
+        "fputs()",
+        "fprintf()",
+        "write()"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

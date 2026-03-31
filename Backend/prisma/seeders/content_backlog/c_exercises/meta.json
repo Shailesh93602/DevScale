@@ -1,0 +1,8 @@
+{
+  "title": "Exercises",
+  "description": "Apply everything you've learned to real-world coding challenges and build a portfolio of functional C programs.",
+  "module": "C Programming Masterclass",
+  "order": 54,
+  "difficulty": "Advanced",
+  "tags": ["C", "Hands-on", "Projects", "Algorithms"]
+}

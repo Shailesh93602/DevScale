@@ -1,0 +1,16 @@
+<section>
+    <h2>Reading from Files in C</h2>
+    <p>To read data from a file, you must open it in read ("r") mode and use functions that pull data from the file stream into your variables.</p>
+
+    <h3>1. Using fgets()</h3>
+    <p>The most common way to read a file line by line. It reads characters from the file and stores them into a string until it reaches a newline or a specific length: <code>fgets(buffer, 100, fptr);</code>.</p>
+
+    <h3>2. Using fscanf()</h3>
+    <p>Works like <code>scanf()</code> but for files. Ideal for reading structured data (like numbers separated by spaces). For example: <code>fscanf(fptr, "%d %f", &age, &price);</code>.</p>
+
+    <h3>3. The EOF (End Of File) Marker</h3>
+    <p>Most reading functions return a special value, <strong>EOF</strong>, when they reach the literal end of the file. You can use this in a loop to read an entire file, regardless of its size.</p>
+
+    <h3>Conclusion</h3>
+    <p>Reading from files is what enables your applications to load configurations, process large data sets, and resume previous work by loading saved state.</p>
+</section>

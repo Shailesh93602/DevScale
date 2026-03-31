@@ -1,0 +1,8 @@
+{
+  "title": "Files",
+  "description": "Learn the essentials of permanent data storage by mastering file pointers and the fopen library in C.",
+  "module": "C Programming Masterclass",
+  "order": 46,
+  "difficulty": "Advanced",
+  "tags": ["C", "File Handling", "Storage", "IO"]
+}

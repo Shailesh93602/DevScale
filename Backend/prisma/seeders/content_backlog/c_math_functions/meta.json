@@ -1,0 +1,8 @@
+{
+  "title": "Math Functions",
+  "description": "Master the versatile range of mathematical functions available in the C math.h library for your scientific and engineering needs.",
+  "module": "C Programming Masterclass",
+  "order": 45,
+  "difficulty": "Intermediate",
+  "tags": ["C", "Math", "Algorithms", "Precision"]
+}

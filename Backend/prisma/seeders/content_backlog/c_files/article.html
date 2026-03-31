@@ -1,0 +1,16 @@
+<section>
+    <h2>Understanding File Handling in C</h2>
+    <p>File handling allows your program to store data permanently on a disk by reading from and writing to files.</p>
+
+    <h3>1. The FILE Pointer</h3>
+    <p>In C, a file is treated as a stream of bytes. To work with a file, you must declare a pointer to a <code>FILE</code> structure: <code>FILE *fptr;</code>.</p>
+
+    <h3>2. Opening and Closing Files</h3>
+    <p>Use <code>fopen()</code> to open a file by specifying its name and a **mode** (like "r" for read, "w" for write, or "a" for append). Always use <code>fclose()</code> when you're finished to release system resources.</p>
+
+    <h3>3. Working with Paths</h3>
+    <p>You can specify absolute or relative paths. If a file doesn't exist when opening in "w" mode, C will automatically create it for you.</p>
+
+    <h3>Conclusion</h3>
+    <p>Mastering file handling is the final step toward building professional C applications that can save data between sessions and interact with the computer's file system.</p>
+</section>
