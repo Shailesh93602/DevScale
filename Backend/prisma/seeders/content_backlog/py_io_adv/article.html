@@ -1,0 +1,19 @@
+<section>
+    <h2>Advanced File I/O in Python</h2>
+    <p>Beyond simple read and write, Python provides advanced tools for managing file pointers, working with binary data, and handling complex file systems.</p>
+
+    <h3>1. Seeking and Telling</h3>
+    <ul>
+        <li><strong>tell():</strong> Tells you exactly where the "cursor" (file pointer) is currently located in the file.</li>
+        <li><strong>seek():</strong> Allows you to move the cursor to a specific byte position, perfect for jumping around large database files or log entries.</li>
+    </ul>
+
+    <h3>2. Binary Mode ("rb", "wb")</h3>
+    <p>When working with images, audio, or encrypted data, you must use <strong>Binary Mode</strong>. This prevents Python from adding its own encoding/decoding logic, ensuring the data remains raw and untouched.</p>
+
+    <h3>3. Random Access</h3>
+    <p>By combining seek and tell with binary mode, you can implement "Random Access" file reading—reading middle sections of massive files without loading the entire thing into memory.</p>
+
+    <h3>Conclusion</h3>
+    <p>Mastering advanced I/O allows you to build sophisticated systems that can efficiently handle massive datasets, media processing, and custom binary formats.</p>
+</section>

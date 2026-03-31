@@ -1,0 +1,18 @@
+{
+  "title": "Python File Handling Quiz",
+  "description": "Test your knowledge on open(), modes, and context managers.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which Python keyword is used to create a 'Context Manager' that automatically closes a file after use?",
+      "options": [
+        "using",
+        "open",
+        "with",
+        "auto"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

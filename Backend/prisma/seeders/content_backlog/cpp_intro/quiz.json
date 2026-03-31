@@ -1,0 +1,18 @@
+{
+  "title": "Introduction to C++ Quiz",
+  "description": "Test your knowledge on compilation and the core strengths of C++.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these is a primary difference between C++ and an interpreted language like Python?",
+      "options": [
+        "C++ is easier to read",
+        "C++ code is compiled directly into machine code",
+        "C++ does not require a compiler",
+        "C++ is only for web development"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

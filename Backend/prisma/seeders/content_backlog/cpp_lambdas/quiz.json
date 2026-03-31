@@ -1,0 +1,18 @@
+{
+  "title": "C++ Lambda Expressions Quiz",
+  "description": "Test your knowledge on capture clauses and anonymous function syntax.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which part of a C++ Lambda expression is used to 'capture' variables from the surrounding scope?",
+      "options": [
+        "( )",
+        "{ }",
+        "[ ]",
+        "< >"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

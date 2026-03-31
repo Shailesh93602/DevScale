@@ -1,0 +1,20 @@
+<section>
+    <h2>Introduction to Python File Handling</h2>
+    <p>Python makes it incredibly easy to work with files on your disk. Whether you need to save list data or read a configuration file, the <code>open()</code> function is your primary tool.</p>
+
+    <h3>1. Opening and Closing</h3>
+    <p>The standard way to open a file is <code>f = open("myfile.txt", "r")</code>. However, you must always remember to <code>f.close()</code> it to free up system memory.</p>
+
+    <h3>2. The 'with' Keyword (Context Managers)</h3>
+    <p>Modern Python uses the "With Context": <code>with open("myfile.txt") as f:</code>. This **automatically** closes the file for you as soon as the block ends, even if an error occurs. This is the industry-standard "Best Practice".</p>
+
+    <h3>3. File Modes</h3>
+    <ul>
+        <li><strong>"r":</strong> Read only (default).</li>
+        <li><strong>"w":</strong> Write (overwrites existing content).</li>
+        <li><strong>"a":</strong> Append (adds to the end of the file).</li>
+    </ul>
+
+    <h3>Conclusion</h3>
+    <p>By mastering basic file operations, you unlock the ability to persist data beyond the life of your program, allowing you to build real-world tools that interact with the user's file system.</p>
+</section>

@@ -1,0 +1,8 @@
+{
+  "title": "Python Error and Exception Handling",
+  "description": "Learn to build resilient applications that can gracefully handle runtime errors using Python's try-except mechanism.",
+  "module": "Python Programming Masterclass",
+  "order": 1,
+  "difficulty": "Intermediate",
+  "tags": ["Python", "Exceptions", "Error Handling", "Stability"]
+}

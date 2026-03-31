@@ -1,0 +1,18 @@
+{
+  "title": "C++ Exception Handling Quiz",
+  "description": "Test your knowledge on try, throw, catch, and exception safety.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which C++ keyword is used to SIGNAL that a runtime error has occurred inside a function?",
+      "options": [
+        "return",
+        "throw",
+        "signal",
+        "raise"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

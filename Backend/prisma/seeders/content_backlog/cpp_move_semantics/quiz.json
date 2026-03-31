@@ -1,0 +1,18 @@
+{
+  "title": "C++ Move Semantics Quiz",
+  "description": "Test your knowledge on rvalue references and resource transfer.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which C++ operator is used to declare an 'rvalue reference' for move semantics?",
+      "options": [
+        "&",
+        "&&",
+        "*",
+        "->"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

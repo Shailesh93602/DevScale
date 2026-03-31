@@ -1,0 +1,8 @@
+{
+  "title": "Python Modules",
+  "description": "Learn to structure your code for massive scale by mastering Python's modular import system and organizational patterns.",
+  "module": "Python Programming Masterclass",
+  "order": 1,
+  "difficulty": "Intermediate",
+  "tags": ["Python", "Modules", "Imports", "Scale"]
+}

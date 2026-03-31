@@ -1,17 +1,17 @@
 {
-  "title": "Working with APIs Quiz",
-  "description": "Test your knowledge on JSON, API keys, and HTTP methods.",
+  "title": "Python for APIs Quiz",
+  "description": "Test your knowledge on REST, HTTP methods, and JSON.",
   "passingScore": 70,
   "questions": [
     {
-      "question": "Which data format is the standard for exchanging information between modern web APIs and Python applications?",
+      "question": "Which HTTP method is primarily used to 'CREATE' new data on a server via an API?",
       "options": [
-        "XML",
-        "YAML",
-        "JSON",
-        "CSV"
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
       ],
-      "correctAnswer": 2,
+      "correctAnswer": 1,
       "points": 10
     }
   ]

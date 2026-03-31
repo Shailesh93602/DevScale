@@ -1,0 +1,16 @@
+<section>
+    <h2>Understanding Static Members in C++</h2>
+    <p>Static members are variables or functions that belong to the <strong>Class itself</strong>, rather than to any specific object instance.</p>
+
+    <h3>1. Shared State</h3>
+    <p>If you declare a variable as <code>static</code> inside a class, every object sharing that class will see the same value. This is perfect for "Counters" (e.g., counting how many total User objects exist in the system).</p>
+
+    <h3>2. Static Functions</h3>
+    <p>A static function can be called without creating an object of the class: <code>Math::calculate()</code>. Because of this, it CANNOT access non-static variables (which belong to a specific object).</p>
+
+    <h3>3. Definition Requirement</h3>
+    <p>Unlike normal variables, static variables MUST be defined outside the class header file, typically in a <code>.cpp</code> file, to allocate their memory only once.</p>
+
+    <h3>Conclusion</h3>
+    <p>Static members allow you to manage global-style data and utility functions while keeping them logically grouped inside a class, maintaining the organization of your OOP system.</p>
+</section>

@@ -1,0 +1,20 @@
+<section>
+    <h2>Mastering C++ File Handling (fstream)</h2>
+    <p>In C++, we use the <code>fstream</code> library to interact with files on the disk. It provides a stream-based approach similar to <code>cout</code> and <code>cin</code>.</p>
+
+    <h3>1. ifstream, ofstream, and fstream</h3>
+    <ul>
+        <li><strong>ifstream:</strong> For reading FROM a file.</li>
+        <li><strong>ofstream:</strong> For writing TO a file.</li>
+        <li><strong>fstream:</strong> Can do both simultaneously.</li>
+    </ul>
+
+    <h3>2. Opening and Closing</h3>
+    <p>You open a file using its constructor or the <code>open()</code> method: <code>ofstream file("test.txt");</code>. It is vital to call <code>file.close()</code> to ensure all data is written to the disk and system resources are freed.</p>
+
+    <h3>3. Stream Operators</h3>
+    <p>You can use the same <code>&lt;&lt;</code> (Insertion) and <code>&gt;&gt;</code> (Extraction) operators that you use for the terminal to write and read data from files effortlessly.</p>
+
+    <h3>Conclusion</h3>
+    <p>By mastering file streams, you unlock the ability to build data-persistent applications, from saving game states to managing large-scale database files in high-performance environments.</p>
+</section>

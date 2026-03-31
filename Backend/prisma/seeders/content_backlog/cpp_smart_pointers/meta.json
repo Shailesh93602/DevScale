@@ -1,0 +1,8 @@
+{
+  "title": "C++ Smart Pointers",
+  "description": "Eliminate memory leaks forever by mastering the automated memory management of unique, shared, and weak pointers in modern C++.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 21,
+  "difficulty": "Advanced",
+  "tags": ["C++", "Memory Management", "Smart Pointers", "RAII"]
+}

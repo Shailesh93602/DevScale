@@ -1,0 +1,8 @@
+{
+  "title": "C++ Lambda Expressions",
+  "description": "Master the syntax and capture mechanisms of anonymous functions to write cleaner, more local C++ code.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 20,
+  "difficulty": "Advanced",
+  "tags": ["C++", "Modern C++", "Lambdas", "Functional Programming"]
+}

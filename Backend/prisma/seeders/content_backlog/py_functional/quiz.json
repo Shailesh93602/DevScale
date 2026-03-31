@@ -1,0 +1,18 @@
+{
+  "title": "Python Functional Programming Quiz",
+  "description": "Test your knowledge on map, filter, and lambda functions.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which Python function is used to apply a specific operation to EVERY item in a list and return a new iterable?",
+      "options": [
+        "filter()",
+        "map()",
+        "reduce()",
+        "apply()"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

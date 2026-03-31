@@ -1,0 +1,16 @@
+<section>
+    <h2>Friend Functions and Classes</h2>
+    <p>In C++, Encapsulation usually prevents outside functions from accessing a class's private data. However, sometimes two classes need to work very closely together—this is where "Friends" come in.</p>
+
+    <h3>1. Breaking the Wall Safely</h3>
+    <p>A class can declare a function (or another class) as its <strong>friend</strong>. This gives that specific outside code full access to all its private and protected members.</p>
+
+    <h3>2. Syntax</h3>
+    <p>Inside the class definition, you simply add: <code>friend void someFunction();</code> or <code>friend class OtherClass;</code>.</p>
+
+    <h3>3. Use Sparingly</h3>
+    <p>Friendship is one-way (if A is a friend of B, B is not automatically a friend of A). Use it only when two classes are logically inseparable, like a <code>Database</code> class and its <code>Record</code> class.</p>
+
+    <h3>Conclusion</h3>
+    <p>Friend functions provide a strategic "backdoor" to encapsulation, allowing for high-performance integrations without making your private data public to the entire world.</p>
+</section>
