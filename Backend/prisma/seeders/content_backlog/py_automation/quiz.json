@@ -1,0 +1,18 @@
+{
+  "title": "Python for Automation Quiz",
+  "description": "Test your knowledge on common automation patterns and libraries.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these is the primary benefit of using Python for automation?",
+      "options": [
+        "It is the fastest language for CPU calculations",
+        "It has a simple syntax and a massive ecosystem of libraries",
+        "It doesn't require an interpreter",
+        "It only runs on Linux servers"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

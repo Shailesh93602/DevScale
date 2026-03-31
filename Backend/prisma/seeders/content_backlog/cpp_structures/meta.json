@@ -1,0 +1,8 @@
+{
+  "title": "C++ Structures",
+  "description": "Learn to create custom data models and logical data groupings using C++ structures.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 1,
+  "difficulty": "Intermediate",
+  "tags": ["C++", "Structures", "Data Modeling", "OOP Foundation"]
+}

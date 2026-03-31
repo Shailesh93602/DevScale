@@ -1,0 +1,8 @@
+{
+  "title": "C++ Classes and Objects",
+  "description": "Learn to architect your C++ applications using the fundamental Object-Oriented principles of classes and objects.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 1,
+  "difficulty": "Intermediate",
+  "tags": ["C++", "OOP", "Classes", "Objects", "Architecture"]
+}

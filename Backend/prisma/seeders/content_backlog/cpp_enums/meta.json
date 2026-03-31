@@ -1,0 +1,8 @@
+{
+  "title": "C++ Enumerations",
+  "description": "Learn to write self-documenting code by using traditional and strongly-typed enumerations to represent application states.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 1,
+  "difficulty": "Intermediate",
+  "tags": ["C++", "Enums", "Best Practices", "Foundations"]
+}
