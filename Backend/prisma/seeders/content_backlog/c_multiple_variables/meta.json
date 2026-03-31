@@ -1,0 +1,8 @@
+{
+  "title": "Multiple Variables",
+  "description": "Learn how to declare and initialize multiple related variables in a single line for cleaner and more compact C code.",
+  "module": "C Programming Masterclass",
+  "order": 22,
+  "difficulty": "Beginner",
+  "tags": ["C", "Variables", "Syntax", "Best Practices"]
+}

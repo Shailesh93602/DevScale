@@ -1,0 +1,18 @@
+{
+  "title": "C Syntax and Statements Quiz",
+  "description": "Test your knowledge on the basic structure and rules of the C language.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which character must be used to terminate every statement in a C program?",
+      "options": [
+        ":",
+        ".",
+        ";",
+        ","
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

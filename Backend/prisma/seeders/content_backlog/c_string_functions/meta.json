@@ -1,0 +1,8 @@
+{
+  "title": "String Functions",
+  "description": "Unlock advanced text manipulation capabilities using the powerful functions found in the C string.h library.",
+  "module": "C Programming Masterclass",
+  "order": 26,
+  "difficulty": "Intermediate",
+  "tags": ["C", "Strings", "String.h", "Text Analysis"]
+}

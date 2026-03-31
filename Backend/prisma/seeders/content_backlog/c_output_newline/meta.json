@@ -1,0 +1,8 @@
+{
+  "title": "Output & New Line",
+  "description": "Learn to use the printf() function and the newline character to format and display information on the screen in C.",
+  "module": "C Programming Masterclass",
+  "order": 27,
+  "difficulty": "Beginner",
+  "tags": ["C", "Output", "Newline", "Printf", "Escape Sequences"]
+}

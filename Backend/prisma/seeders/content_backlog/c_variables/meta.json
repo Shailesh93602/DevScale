@@ -1,0 +1,8 @@
+{
+  "title": "Variables",
+  "description": "Master the syntax for declaring and initializing variables in C to manage the data within your programs efficiently.",
+  "module": "C Programming Masterclass",
+  "order": 28,
+  "difficulty": "Beginner",
+  "tags": ["C", "Variables", "Initialization", "Data Storage"]
+}

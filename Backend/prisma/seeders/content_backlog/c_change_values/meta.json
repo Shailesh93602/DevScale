@@ -1,0 +1,8 @@
+{
+  "title": "Change Values",
+  "description": "Learn to use C's assignment and compound operators to efficiently update the internal state of your variables.",
+  "module": "C Programming Masterclass",
+  "order": 31,
+  "difficulty": "Beginner",
+  "tags": ["C", "Variables", "Assignment", "Operators", "State"]
+}

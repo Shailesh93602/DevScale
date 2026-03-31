@@ -1,0 +1,8 @@
+{
+  "title": "Numbers",
+  "description": "Learn the differences between integers, floats, and doubles, and when to use unsigned types for efficient data storage in C.",
+  "module": "C Programming Masterclass",
+  "order": 23,
+  "difficulty": "Beginner",
+  "tags": ["C", "Numbers", "Integers", "Floats", "Data Types"]
+}
