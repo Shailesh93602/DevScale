@@ -1,0 +1,8 @@
+{
+  "title": "LSM Trees vs. B-Trees: The storage engine deep-dive",
+  "description": "Master the fundamental trade-offs of database performance by learning how sorted logs and balanced trees handle world-scale data storage.",
+  "module": "Database Internals & Specialized Storage (Expert Tier Vol 2)",
+  "order": 1,
+  "difficulty": "Advanced",
+  "tags": ["Databases", "Internals", "B-Tree", "LSM-Tree", "Storage"]
+}

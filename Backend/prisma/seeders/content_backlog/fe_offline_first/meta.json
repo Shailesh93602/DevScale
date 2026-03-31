@@ -1,0 +1,8 @@
+{
+  "title": "Offline-First Design: PWA internals and Sync strategies",
+  "description": "Learn to build resilient web applications that provide seamless user experiences across any network condition by mastering Service Workers and offline sync logic.",
+  "module": "Senior Frontend Architecture (Expert Tier Vol 2)",
+  "order": 3,
+  "difficulty": "Advanced",
+  "tags": ["Frontend", "PWA", "Offline-first", "Service Worker", "Reliability"]
+}

@@ -1,0 +1,18 @@
+{
+  "title": "Chaos Engineering Quiz",
+  "description": "Test your knowledge on failure injection and Chaos Monkey.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the PRIMARY goal of 'Chaos Engineering' in a production software environment?",
+      "options": [
+        "To find and fix bugs faster",
+        "To build confidence in a system's ability to withstand unpredictable failures on its own",
+        "To save money on cloud hosting",
+        "To measure how long it takes to deploy new code"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "title": "Advanced State Quiz",
+  "description": "Test your knowledge on State Machines and hook separation.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary benefit of using a 'Finite State Machine' (FSM) pattern for managing complex UI logic?",
+      "options": [
+        "It makes the code shorter",
+        "It prevents 'impossible' or conflicting UI states by defining strictly allowed transitions",
+        "It automatically optimizes images",
+        "It replaces the need for a database"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

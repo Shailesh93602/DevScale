@@ -1,0 +1,18 @@
+{
+  "title": "Time-Series Quiz",
+  "description": "Test your knowledge on InfluxDB and columnar storage.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which time-series database is built as an extension to PostgreSQL, allowing you to use standard SQL for time-based data?",
+      "options": [
+        "InfluxDB",
+        "TimescaleDB",
+        "Redis",
+        "Cassandra"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

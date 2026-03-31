@@ -1,0 +1,18 @@
+{
+  "title": "Graph DB Quiz",
+  "description": "Test your knowledge on Neo4j and Cypher logic.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the name of the visual query language used by Neo4j that allows you to 'draw' relationships between data points?",
+      "options": [
+        "SQL",
+        "GraphQL",
+        "Cypher",
+        "Flux"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "Chaos Engineering: Testing systems under failure (Chaos Monkey)",
+  "description": "Achieve ultimate system resilience by mastering the art of failure injection and chaos engineering experimentation.",
+  "module": "Global Infrastructure & SRE (Expert Tier Vol 2)",
+  "order": 3,
+  "difficulty": "Advanced",
+  "tags": ["Chaos Engineering", "Resilience", "SRE", "Cloud", "Failure"]
+}

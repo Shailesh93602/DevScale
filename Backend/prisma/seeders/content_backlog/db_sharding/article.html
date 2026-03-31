@@ -1,0 +1,13 @@
+<section>
+    <h2>Mastering Database Sharding and Partitioning</h2>
+    <p>When a single database server cannot handle the load, you must split your data across multiple machines. Sharding and Partitioning are the two primary techniques for horizontal scaling.</p>
+
+    <h3>1. Partitioning (Horizontal Splitting)</h3>
+    <p>Partitioning splits a single large table into smaller, more manageable pieces on the **same server**. You can partition by Date (e.g., "Logs_2023", "Logs_2024") or by ID ranges. This keeps indexes small and queries fast even as the table grows to hundreds of millions of rows.</p>
+
+    <h3>2. Sharding (Global Splitting)</h3>
+    <p>Sharding takes partitioning further by moving the pieces to **different physical servers**. Each server (a "Shard") only stores a subset of the total data (e.g., Shard 1 has Users A-L, Shard 2 has Users M-Z). This allows you to handle billions of rows by simply adding more servers to your cluster.</p>
+
+    <h3>Conclusion</h3>
+    <p>Mastering sharding and partitioning transforms you into a "Global Scale Architect." You gain the skills to build systems that can grow infinitely, supporting billions of users with constant, sub-second query performance.</p>
+</section>

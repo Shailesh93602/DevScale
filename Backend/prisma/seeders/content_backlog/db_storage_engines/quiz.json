@@ -1,0 +1,18 @@
+{
+  "title": "Storage Engine Quiz",
+  "description": "Test your knowledge on LSM and B-Tree trade-offs.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which storage engine data structure is specifically optimized for high-velocity WRITE workloads by treating all updates as append-only logs in memory?",
+      "options": [
+        "B-Tree",
+        "LSM-Tree",
+        "Red-Black Tree",
+        "Hash Table"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
