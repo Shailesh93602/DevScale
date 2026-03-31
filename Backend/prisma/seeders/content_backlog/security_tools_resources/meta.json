@@ -1,0 +1,8 @@
+{
+  "title": "Security Tools and Resources",
+  "description": "Learn about the essential web security tools and resources including tracking changes, coordinating multiple developers, and collaboration strategies.",
+  "module": "Full Stack Web Development",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Security", "Web Security", "Tools", "Resources", "OWASP"]
+}
