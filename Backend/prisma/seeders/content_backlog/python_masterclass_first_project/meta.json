@@ -1,0 +1,8 @@
+{
+  "title": "First project in Python",
+  "description": "Kickstart your Python development by building your first application or API.",
+  "module": "Python Developer Masterclass",
+  "order": 2,
+  "difficulty": "Beginner",
+  "tags": ["Python", "Backend", "pip", "FastAPI"]
+}

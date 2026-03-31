@@ -1,0 +1,8 @@
+{
+  "title": "Performance Tuning in React",
+  "description": "Learn to optimize your React apps using memoization, windowing, and code splitting.",
+  "module": "React Developer Masterclass",
+  "order": 4,
+  "difficulty": "Advanced",
+  "tags": ["React", "Performance", "Optimization", "Memoization"]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "Getting Started with MachineLearning",
+  "description": "Explore the exciting world of Machine Learning, its core concepts, and the standard development pipeline.",
+  "module": "MachineLearning Developer Masterclass",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Machine Learning", "AI", "Supervised Learning", "Data Science"]
+}
