@@ -1,0 +1,31 @@
+{
+  "title": "Remote Repositories Quiz",
+  "description": "Test your knowledge on Git version control patterns.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which Git command is used to add a new remote repository to your local project?",
+      "options": ["git remote add name url", "git add remote name url", "git connect remote name url", "git start remote name url"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Regarding remote repositories, which command is used to send local commits to a specific branch on a remote server?",
+      "options": ["git push remote-name branch-name", "git send remote-name branch-name", "git commit remote-name branch-name", "git update remote-name branch-name"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which Git command is used to retrieve and merge changes from a remote branch into your local branch in a single operation?",
+      "options": ["git pull remote-name branch-name", "git fetch remote-name branch-name", "git get remote-name branch-name", "git version remote-name branch-name"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which command is used to record a copy of a remote Git repository onto your local system?",
+      "options": ["git clone url", "git save url", "git download url", "git copy url"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

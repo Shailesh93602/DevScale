@@ -1,0 +1,31 @@
+{
+  "title": "Resolving Merge Conflicts Quiz",
+  "description": "Test your knowledge on Git version control patterns.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is a merge conflict in Git?",
+      "options": ["A data error in a database", "A situation where two or more developers modify the same line of code in different branches", "A commit that is too large", "An installation error"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Regarding merge conflicts, which approach is best to follow for resolution?",
+      "options": ["Keep only the incoming change", "Keep only the current change", "Manually combine the two to create a new, resolved version", "Delete the affected file"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which Git command is used to stage a file that has been resolved for a merge conflict?",
+      "options": ["git add filename", "git stage filename", "git resolve filename", "git commit filename"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "A situation where two or more transactions are waiting for each other to release a lock, resulting in a hang, is called a _______.",
+      "options": ["Deadlock", "Live Lock", "Fast Lock", "User Lock"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

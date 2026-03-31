@@ -1,0 +1,31 @@
+{
+  "title": "Viewing Commit History Quiz",
+  "description": "Test your knowledge on Git version history concepts.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which command is used to view your Git commit history?",
+      "options": ["git history", "git log", "git view", "git install branch-name"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which Git command is used to see a condensed version of your commit history in a single line per commit?",
+      "options": ["git log --oneline", "git log --stat", "git log --graph", "git log --all"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Regarding Git version history, which command is used to see a graphical representation of your branches and merge history?",
+      "options": ["git log --graph", "git branch --view", "git merge --graph", "git graph"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "A situation where two or more transactions are waiting for each other to release a lock, resulting in a hang, is called a _______.",
+      "options": ["Deadlock", "Live Lock", "Fast Lock", "User Lock"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
