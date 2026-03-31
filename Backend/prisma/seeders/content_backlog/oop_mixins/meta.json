@@ -1,0 +1,8 @@
+{
+  "title": "Mixins",
+  "description": "Learn how to use mixins to add specialized behavior to classes without the rigidity of traditional inheritance.",
+  "module": "Object Oriented Programming",
+  "order": 24,
+  "difficulty": "Intermediate",
+  "tags": ["OOP", "Mixins", "Composition", "Code Reuse"]
+}

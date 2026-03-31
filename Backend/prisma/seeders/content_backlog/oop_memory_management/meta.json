@@ -1,0 +1,8 @@
+{
+  "title": "Memory Management in OOP",
+  "description": "Explore how stack and heap memory work and the role of garbage collection in modern OOP.",
+  "module": "Object Oriented Programming",
+  "order": 22,
+  "difficulty": "Advanced",
+  "tags": ["OOP", "Memory Management", "Stack", "Heap", "Garbage Collection"]
+}

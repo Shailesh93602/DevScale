@@ -1,0 +1,8 @@
+{
+  "title": "Object Life Cycle",
+  "description": "Master the various stages of an object's existence and how to manage its lifecycle effectively.",
+  "module": "Object Oriented Programming",
+  "order": 21,
+  "difficulty": "Intermediate",
+  "tags": ["OOP", "Object Lifecycle", "Constructor", "Destructor"]
+}
