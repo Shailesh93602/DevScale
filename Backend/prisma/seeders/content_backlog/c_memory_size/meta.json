@@ -1,0 +1,8 @@
+{
+  "title": "Memory Size",
+  "description": "Learn the importance of memory size and how to use the 'sizeof' operator to optimize your C programs.",
+  "module": "C Programming Masterclass",
+  "order": 5,
+  "difficulty": "Advanced",
+  "tags": ["C", "Memory", "Sizeof", "Precision", "Optimization"]
+}

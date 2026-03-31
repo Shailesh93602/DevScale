@@ -1,0 +1,18 @@
+{
+  "title": "Type Conversion Quiz",
+  "description": "Test your knowledge on implicit and explicit type casting in C.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which type of conversion is done manually by the programmer using parentheses?",
+      "options": [
+        "Implicit Conversion",
+        "Automatic Conversion",
+        "Explicit Conversion",
+        "Internal Conversion"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "title": "Else If Quiz",
+  "description": "Test your knowledge on chaining conditions with else if.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What happens after one condition in an 'else if' chain is found to be true?",
+      "options": [
+        "The compiler checks the remaining conditions",
+        "The compiler executes the rest of the chain",
+        "The block is executed and the rest of the chain is skipped",
+        "An error is thrown"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

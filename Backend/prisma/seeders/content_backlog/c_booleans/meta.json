@@ -1,0 +1,8 @@
+{
+  "title": "Booleans",
+  "description": "Learn how truth values are represented in C and how to use the modern stdbool.h library for cleaner logic.",
+  "module": "C Programming Masterclass",
+  "order": 9,
+  "difficulty": "Beginner",
+  "tags": ["C", "Booleans", "Logic", "Truth Values"]
+}

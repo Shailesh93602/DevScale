@@ -1,0 +1,8 @@
+{
+  "title": "Else If",
+  "description": "Master the syntax for handling multiple conditions efficiently using the else if statement in C.",
+  "module": "C Programming Masterclass",
+  "order": 6,
+  "difficulty": "Beginner",
+  "tags": ["C", "Control Flow", "Else If", "Logic"]
+}

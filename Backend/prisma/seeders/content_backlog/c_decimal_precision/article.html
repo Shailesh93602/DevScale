@@ -1,0 +1,19 @@
+<section>
+    <h2>Understanding Decimal Precision in C</h2>
+    <p>Decimal precision refers to the number of digits after the decimal point when representing floating-point numbers (floats and doubles) in C.</p>
+
+    <h3>1. Floats and Doubles</h3>
+    <ul>
+        <li><strong>Float:</strong> Typically has about 7 decimal digits of precision.</li>
+        <li><strong>Double:</strong> Usually has about 15 decimal digits of precision, making it more accurate for complex calculations.</li>
+    </ul>
+
+    <h3>2. Handling Inaccuracies</h3>
+    <p>Floating-point numbers are represented in binary internally, which means they can't accurately represent some decimal values (e.g., 0.1). This can lead to small rounding errors.</p>
+
+    <h3>3. Output Formatting</h3>
+    <p>You can control the number of decimal places displayed when printing using <strong>Format Specifiers</strong>. For example, <code>%.2f</code> will print a float with exactly two decimal places.</p>
+
+    <h3>Conclusion</h3>
+    <p>Understanding precision is crucial when performing financial calculations or scientific simulations, where even tiny inaccuracies can lead to large mistakes.</p>
+</section>

@@ -1,0 +1,8 @@
+{
+  "title": "Break/Continue",
+  "description": "Learn how to use break and continue to gain fine-grained control over your loops.",
+  "module": "C Programming Masterclass",
+  "order": 10,
+  "difficulty": "Intermediate",
+  "tags": ["C", "Loops", "Control Flow", "Optimization"]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "Else",
+  "description": "Learn the importance of the final 'else' statement and how it provides a default path for your program logic.",
+  "module": "C Programming Masterclass",
+  "order": 12,
+  "difficulty": "Beginner",
+  "tags": ["C", "Logic", "Else", "Control Flow"]
+}

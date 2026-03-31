@@ -1,0 +1,8 @@
+{
+  "title": "Constants",
+  "description": "Learn how to use the 'const' keyword to define immutable values that improve code safety and readability.",
+  "module": "C Programming Masterclass",
+  "order": 8,
+  "difficulty": "Beginner",
+  "tags": ["C", "Constants", "Immutability", "Best Practices"]
+}
