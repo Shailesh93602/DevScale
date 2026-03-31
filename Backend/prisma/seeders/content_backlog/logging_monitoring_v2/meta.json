@@ -1,0 +1,8 @@
+{
+  "title": "Logging and Monitoring",
+  "description": "Learn about the essential security logging tasks including tracking changes, coordinating multiple developers, and collaboration strategies.",
+  "module": "Full Stack Web Development",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Security", "Logging", "Monitoring", "Auditing"]
+}
