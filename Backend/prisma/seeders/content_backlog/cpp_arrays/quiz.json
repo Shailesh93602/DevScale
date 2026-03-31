@@ -1,0 +1,18 @@
+{
+  "title": "C++ Arrays Quiz",
+  "description": "Test your knowledge on indexing, memory layout, and vectors.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these Standard Library structures is commonly used in C++ to represent an array that can grow in size dynamically?",
+      "options": [
+        "Array",
+        "List",
+        "Vector",
+        "Stack"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

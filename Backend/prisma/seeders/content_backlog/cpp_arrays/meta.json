@@ -1,0 +1,8 @@
+{
+  "title": "C++ Arrays",
+  "description": "Learn to manage collections of data efficiently using both traditional fixed-size arrays and modern dynamic vectors in C++.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["C++", "Arrays", "Vectors", "Data Structures"]
+}

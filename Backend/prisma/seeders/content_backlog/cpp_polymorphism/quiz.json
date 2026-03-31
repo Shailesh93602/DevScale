@@ -1,0 +1,18 @@
+{
+  "title": "C++ Polymorphism Quiz",
+  "description": "Test your knowledge on virtual functions and many-forms logic.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which C++ keyword is used to declare a function in a base class that can be 'overridden' by a derived class for runtime polymorphism?",
+      "options": [
+        "override",
+        "new",
+        "virtual",
+        "static"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "title": "C++ Advanced Functions Quiz",
+  "description": "Test your knowledge on overloading, defaults, and inline functions.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which C++ feature allows you to have two functions with the EXACT same name but different input parameters?",
+      "options": [
+        "Function Overriding",
+        "Function Overloading",
+        "Function Duplication",
+        "Inline Functions"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

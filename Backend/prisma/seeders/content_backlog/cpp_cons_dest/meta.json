@@ -1,0 +1,8 @@
+{
+  "title": "C++ Constructors and Destructors",
+  "description": "Master the lifecycle of your objects by learning to automate initialization and cleanup using special C++ member functions.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 1,
+  "difficulty": "Advanced",
+  "tags": ["C++", "OOP", "Lifecycle", "RAII"]
+}

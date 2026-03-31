@@ -1,0 +1,16 @@
+<section>
+    <h2>Mastering C++ Arrays (Static and Dynamic)</h2>
+    <p>Arrays in C++ allow you to store multiple values of the same data type in a single variable. Understanding their memory layout is key to writing high-performance code.</p>
+
+    <h3>1. Fixed-Size (Static) Arrays</h3>
+    <p>When you declare an array like <code>int arr[10];</code>, C++ allocates a fixed block of memory on the <strong>Stack</strong>. The size cannot be changed while the program is running, making it fast but less flexible.</p>
+
+    <h3>2. Indices and Memory</h3>
+    <p>Arrays are zero-indexed. Accessing an element by index (e.g., <code>arr[5]</code>) is an "O(1)" operation—meaning it takes the same amount of time regardless of how large the array is.</p>
+
+    <h3>3. Vectors: The Superior Choice</h3>
+    <p>In modern C++, we often use <code>std::vector</code> from the Standard Library. Unlike raw arrays, vectors can grow or shrink in size automatically and live on the <strong>Heap</strong>, providing the ultimate balance of power and flexibility.</p>
+
+    <h3>Conclusion</h3>
+    <p>Mastering both raw fixed-size arrays and modern dynamic vectors allows you to choose the perfect storage strategy for every performance-critical task.</p>
+</section>

@@ -1,0 +1,16 @@
+<section>
+    <h2>Mastering C++ Enumerations (Enums)</h2>
+    <p>An enumeration is a user-defined type consisting of a set of named integer constants. Enums make your code easier to read, maintain, and debug.</p>
+
+    <h3>1. Improving Readability</h3>
+    <p>Instead of using 'magic numbers' (0 for red, 1 for green), you can define <code>enum Color { RED, GREEN };</code>. Now you can use <code>Color c = RED;</code>, which describes its purpose clearly.</p>
+
+    <h3>2. Typed Enums (Enum Class)</h3>
+    <p>Modern C++ (C++11) introduced <code>enum class</code>. These are "strongly typed" and don't automatically convert to integers, preventing accidental errors where you might compare a <code>Color</code> to a <code>ErrorCode</code>.</p>
+
+    <h3>3. Assigned Values</h3>
+    <p>By default, members are incremented from 0. However, you can manually assign values: <code>enum Level { LOW = 10, HIGH = 100 };</code>.</p>
+
+    <h3>Conclusion</h3>
+    <p>Using enums is a hallmark of professional C++ code. They transform anonymous integers into meaningful, type-safe symbols that describe the state of your application perfectly.</p>
+</section>
