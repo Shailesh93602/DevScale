@@ -1,0 +1,16 @@
+<section>
+    <h2>Understanding Aggregation</h2>
+    <p>Aggregation is a specialized form of Association that represents a 'part-of' relationship between two classes. It is a weaker form of relationship compared to composition.</p>
+
+    <h3>1. The 'Part-Of' Relationship</h3>
+    <p>In aggregation, the child object can exist independently of the parent. For example, a <code>Department</code> 'has-a' <code>Professor</code>. If the department is closed, the professor still exists.</p>
+
+    <h3>2. Unidirectional Relationship</h3>
+    <p>Aggregation is typically a one-way (unidirectional) relationship. A <code>Professor</code> belongs to a <code>Department</code>, but the <code>Department</code> doesn't necessarily belong to the <code>Professor</code> in the same way.</p>
+
+    <h3>3. Aggregation vs. Composition</h3>
+    <p>The key difference is <strong>Ownership</strong>. In <strong>Composition</strong>, the child's lifecycle is tied to the parent. In <strong>Aggregation</strong>, the child can survive the deletion of the parent.</p>
+
+    <h3>Conclusion</h3>
+    <p>Aggregation is used to model systems where objects collaborate but maintain their own independent lifecycles, ensuring a flexible and decoupled software architecture.</p>
+</section>

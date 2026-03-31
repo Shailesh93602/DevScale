@@ -1,0 +1,18 @@
+{
+  "title": "Polymorphism Quiz",
+  "description": "Test your knowledge on static and dynamic polymorphism in object-oriented design.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which principle allows an object of a subclass to be treated as an object of its superclass?",
+      "options": [
+        "Encapsulation",
+        "Abstraction",
+        "Inheritance",
+        "Polymorphism"
+      ],
+      "correctAnswer": 3,
+      "points": 10
+    }
+  ]
+}

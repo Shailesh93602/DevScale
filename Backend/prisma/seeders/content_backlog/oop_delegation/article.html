@@ -1,0 +1,16 @@
+<section>
+    <h2>Understanding Delegation</h2>
+    <p>Delegation is an object-oriented design pattern that allows an object to forward or delegate a task to another helper object, known as the delegate.</p>
+
+    <h3>1. Composition + Redirection</h3>
+    <p>Delegation is effectively composition in action. Instead of performing a task itself, the parent object calls a method on its internal component to do the work. It says: "I don't know how to do this, but my helper does."</p>
+
+    <h3>2. Why use Delegation?</h3>
+    <p>It is a powerful alternative to inheritance. Delegation allows for greater flexibility because you can change the delegate at runtime, essentially changing the object's behavior dynamically.</p>
+
+    <h3>3. Real-World Example</h3>
+    <p>In many UI frameworks, a <code>Table</code> object delegates the task of 'getting data' or 'handling clicks' to a <code>TableDelegate</code> object. The table knows <strong>when</strong> to act, but not <strong>how</strong> to handle specific app logic.</p>
+
+    <h3>Conclusion</h3>
+    <p>Delegation is a core pattern for building flexible and decoupled systems, avoiding the rigidity that often comes with deep inheritance hierarchies.</p>
+</section>

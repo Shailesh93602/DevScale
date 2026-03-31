@@ -1,0 +1,18 @@
+{
+  "title": "Exception Handling Quiz",
+  "description": "Test your knowledge on try-catch blocks and error recovery strategies.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which block of code always executes, whether or not an exception is thrown in the try block?",
+      "options": [
+        "Catch",
+        "Finally",
+        "Throw",
+        "Raise"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

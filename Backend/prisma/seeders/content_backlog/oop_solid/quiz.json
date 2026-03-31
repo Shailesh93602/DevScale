@@ -1,0 +1,18 @@
+{
+  "title": "SOLID Principles Quiz",
+  "description": "Test your knowledge on the five fundamental principles of maintainable software design.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which SOLID principle states that a class should have only one reason to change?",
+      "options": [
+        "Single Responsibility Principle",
+        "Open/Closed Principle",
+        "Liskov Substitution Principle",
+        "Dependency Inversion Principle"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

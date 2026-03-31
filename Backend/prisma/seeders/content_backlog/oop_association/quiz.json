@@ -1,0 +1,18 @@
+{
+  "title": "Association Quiz",
+  "description": "Test your knowledge on general object interactions and multiplicities.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What type of relationship does association typically represent in general OOP contexts?",
+      "options": [
+        "is-a",
+        "has-a",
+        "uses-a",
+        "belongs-to"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

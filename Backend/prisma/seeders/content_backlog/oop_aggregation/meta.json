@@ -1,0 +1,8 @@
+{
+  "title": "Aggregation",
+  "description": "Learn to model 'part-of' relationships where objects collaborate while maintaining independent lifecycles.",
+  "module": "Object Oriented Programming",
+  "order": 14,
+  "difficulty": "Intermediate",
+  "tags": ["OOP", "Aggregation", "Relationships", "Architecture"]
+}

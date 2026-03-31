@@ -1,0 +1,8 @@
+{
+  "title": "Inheritance",
+  "description": "Master the art of creating class hierarchies and leveraging code reuse through the parent-child relationship.",
+  "module": "Object Oriented Programming",
+  "order": 6,
+  "difficulty": "Beginner",
+  "tags": ["OOP", "Inheritance", "Subclassing", "Architecture"]
+}

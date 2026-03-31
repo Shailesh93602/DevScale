@@ -1,0 +1,8 @@
+{
+  "title": "Classes and Objects",
+  "description": "Learn the foundation of OOP: how classes define structure and objects represent specific instances of that data.",
+  "module": "Object Oriented Programming",
+  "order": 5,
+  "difficulty": "Beginner",
+  "tags": ["OOP", "Classes", "Objects", "Fundamentals"]
+}
