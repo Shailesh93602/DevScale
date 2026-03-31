@@ -1,0 +1,19 @@
+{
+  "title": "Introduction to React Testing Library Quiz",
+  "description": "Test your knowledge on the basics of React Testing Library.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary goal of React Testing Library?",
+      "options": ["To collect and analyze data", "To test React components by focusing on user interactions rather than implementation details", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Regarding React Testing Library, why is it beneficial to test components from a user's perspective?",
+      "options": ["It makes tests easier to maintain and provides more confidence in their correctness", "It makes your code build faster", "It deletes old commits by mistake", "Its only possible for SQL repositories"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

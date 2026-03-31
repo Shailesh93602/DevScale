@@ -1,0 +1,21 @@
+<section>
+    <h2>Mocking Dependencies in Frontend Testing</h2>
+    <p>Using the powerful, integrated, and feature-rich mocking capabilities provided by **Jest**, you can create a suite of unit tests for your project's components. By following these steps, you can set it up in minutes.</p>
+
+    <h3>1. Why Mock Dependencies?</h3>
+    <p>Unit tests should not depend on external systems like third-party APIs or databases, which can be unstable and slow. Instead, use "mocks" or "stubs" to control their behavior and ensure your tests are stable and performant.</p>
+
+    <h3>2. Mocking an API call</h3>
+    <pre><code>
+import axios from 'axios';
+jest.mock('axios');
+
+test('should fetch data correctly', async () => {
+  axios.get.mockResolvedValue({ data: { name: 'John' } });
+  // ... run test
+});
+    </code></pre>
+
+    <h3>Conclusion</h3>
+    <p>By making frontend testing a priority, you can ensure that your application's most valuable asset—its code—remains safe and performant for your users.</p>
+</section>
