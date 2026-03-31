@@ -1,0 +1,18 @@
+{
+  "title": "Introduction to OOP Quiz",
+  "description": "Test your knowledge on the core pillars of Object-Oriented design.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which pillar of OOP refers to the ability of a class to acquire the properties and methods of another class?",
+      "options": [
+        "Encapsulation",
+        "Polymorphism",
+        "Inheritance",
+        "Abstraction"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

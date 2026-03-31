@@ -1,0 +1,8 @@
+{
+  "title": "Examples",
+  "description": "Master the practical application of software engineering by exploring real-world examples across Python, C++, and System Design.",
+  "module": "Object Oriented Programming (OOP)",
+  "order": 100,
+  "difficulty": "Intermediate",
+  "tags": ["Examples", "Practical", "Implementation", "Real-World"]
+}

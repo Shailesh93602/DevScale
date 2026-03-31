@@ -1,0 +1,8 @@
+{
+  "title": "C++ Multithreading",
+  "description": "Unlock the full power of modern CPU cores by mastering thread management, mutex locks, and asynchronous patterns in C++.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 13,
+  "difficulty": "Advanced",
+  "tags": ["C++", "Concurrency", "Multithreading", "Performance", "Safety"]
+}

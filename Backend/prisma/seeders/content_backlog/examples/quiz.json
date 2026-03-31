@@ -1,0 +1,18 @@
+{
+  "title": "Practical Examples Quiz",
+  "description": "Test your knowledge on the real-world application of engineering concepts.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "In a real-world game engine, which concept would be most useful for running physics and graphics simultaneously?",
+      "options": [
+        "Inheritance",
+        "Multithreading",
+        "Casting",
+        "File Handling"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

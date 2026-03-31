@@ -1,0 +1,16 @@
+<section>
+    <h2>Modern C++ Multithreading</h2>
+    <p>Multithreading allows your program to perform multiple tasks at once, leveraging modern multi-core processors for maximum speed and responsiveness.</p>
+
+    <h3>1. std::thread</h3>
+    <p>Introduced in C++11, <code>std::thread</code> allows you to launch a task in the background: <code>std::thread myThread(taskFunction);</code>. You must always either <code>join()</code> (wait for it) or <code>detach()</code> it.</p>
+
+    <h3>2. Shared Data and Data Races</h3>
+    <p>When multiple threads try to change the same variable at once, a **Data Race** occurs, which can crash your program. We use <strong>Mutexes</strong> (<code>std::mutex</code>) to lock the data so only one thread can use it at a time.</p>
+
+    <h3>3. Futures and Promises</h3>
+    <p>For more advanced patterns, C++ provides <code>std::async</code>, which returns a **Future**. This allows you to start a calculation and retrieve the result later whenever you're ready, without blocking the main program.</p>
+
+    <h3>Conclusion</h3>
+    <p>Mastering multithreading is mandatory for modern high-performance engineering. It transforms your software from a sequential list of steps into a parallel engine capable of handling massive workloads.</p>
+</section>

@@ -1,0 +1,8 @@
+{
+  "title": "Binary Search Trees",
+  "description": "Unlock high-performance data retrieval by mastering the hierarchical logic and logarithmic search patterns of Binary Search Trees.",
+  "module": "Data Structures and Algorithms",
+  "order": 4,
+  "difficulty": "Advanced",
+  "tags": ["DSA", "BST", "Trees", "Search", "Hierarchical"]
+}

@@ -1,0 +1,18 @@
+{
+  "title": "C++ Type Casting Quiz",
+  "description": "Test your knowledge on static_cast, dynamic_cast, and safety.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which C++ cast is specifically designed to safely convert base class pointers to derived class pointers at runtime?",
+      "options": [
+        "static_cast",
+        "reinterpret_cast",
+        "dynamic_cast",
+        "const_cast"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

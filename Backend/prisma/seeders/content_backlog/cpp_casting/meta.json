@@ -1,0 +1,8 @@
+{
+  "title": "C++ Type Casting",
+  "description": "Learn to manage data types with absolute safety by mastering static, dynamic, and reinterpret casting in C++.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 15,
+  "difficulty": "Intermediate",
+  "tags": ["C++", "Casting", "Type Safety", "Polymorphism"]
+}

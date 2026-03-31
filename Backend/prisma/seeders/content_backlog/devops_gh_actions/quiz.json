@@ -1,0 +1,18 @@
+{
+  "title": "Advanced GitHub Actions Quiz",
+  "description": "Test your knowledge on matrix builds, secrets, and CD workflows.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which GitHub Actions feature allows you to run your tests across multiple operating systems simultaneously using a single config?",
+      "options": [
+        "Cloud Matrix",
+        "Build Strategy",
+        "Matrix Strategy",
+        "OS Bundling"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}
