@@ -1,0 +1,8 @@
+{
+  "title": "Data Integrity",
+  "description": "Learn the essential rules and constraints used by databases to maintain accuracy and consistency throughout the data lifecycle.",
+  "module": "Database Systems",
+  "order": 23,
+  "difficulty": "Intermediate",
+  "tags": ["Databases", "Data Integrity", "Constraints", "Best Practices"]
+}

@@ -1,0 +1,18 @@
+{
+  "title": "Data Governance Quiz",
+  "description": "Test your knowledge on data quality, compliance, and stewardship roles.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which term refers to the individuals in an organization responsible for overseeing data quality and compliance in their business segments?",
+      "options": [
+        "Data Scientists",
+        "Data Stewards",
+        "Data Miners",
+        "Data Architects"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "Database Design (Full Stack Web Development)",
+  "description": "Master the end-to-end process of designing robust and scalable database schemas for modern web applications.",
+  "module": "Database Systems",
+  "order": 22,
+  "difficulty": "Advanced",
+  "tags": ["Databases", "Design", "Schema", "Architecture", "Best Practices"]
+}

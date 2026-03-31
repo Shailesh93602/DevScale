@@ -1,0 +1,18 @@
+{
+  "title": "Data Replication Quiz",
+  "description": "Test your knowledge on synchronous and asynchronous database replication.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which type of replication waits for confirmation from the replica before committing a transaction on the primary?",
+      "options": [
+        "Asynchronous Replication",
+        "Synchronous Replication",
+        "Circular Replication",
+        "Deferred Replication"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

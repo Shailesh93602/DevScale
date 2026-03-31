@@ -1,0 +1,8 @@
+{
+  "title": "Special Characters",
+  "description": "Learn to use escape sequences and handle strings correctly by understanding the role of special characters in C.",
+  "module": "C Programming Masterclass",
+  "order": 17,
+  "difficulty": "Beginner",
+  "tags": ["C", "Strings", "Escape Sequences", "Formatting"]
+}

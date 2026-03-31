@@ -1,0 +1,8 @@
+{
+  "title": "User Input",
+  "description": "Learn how to make your programs interactive by accepting and processing user input from the keyboard.",
+  "module": "C Programming Masterclass",
+  "order": 19,
+  "difficulty": "Beginner",
+  "tags": ["C", "User Interaction", "Scanf", "IO"]
+}
