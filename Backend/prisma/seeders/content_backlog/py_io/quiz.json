@@ -1,0 +1,18 @@
+{
+  "title": "Python Input and Output Quiz",
+  "description": "Test your knowledge on print(), f-strings, and the input() function.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "By default, what data type is returned by the Python input() function?",
+      "options": [
+        "int",
+        "float",
+        "bool",
+        "str"
+      ],
+      "correctAnswer": 3,
+      "points": 10
+    }
+  ]
+}
