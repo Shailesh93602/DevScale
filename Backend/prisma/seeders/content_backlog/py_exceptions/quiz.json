@@ -1,0 +1,18 @@
+{
+  "title": "Python Exception Handling Quiz",
+  "description": "Test your knowledge on try, except, finally, and custom exception handling.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which block in a Python exception structure is guaranteed to run whether an error occurs or not?",
+      "options": [
+        "try",
+        "except",
+        "else",
+        "finally"
+      ],
+      "correctAnswer": 3,
+      "points": 10
+    }
+  ]
+}

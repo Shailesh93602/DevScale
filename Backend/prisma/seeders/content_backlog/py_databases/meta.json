@@ -1,0 +1,8 @@
+{
+  "title": "Python Databases",
+  "description": "Learn to connect your Python apps to the world of data storage using SQLite, raw SQL queries, and the power of ORMs.",
+  "module": "Python Programming Masterclass",
+  "order": 14,
+  "difficulty": "Intermediate",
+  "tags": ["Python", "SQL", "SQLite", "Databases", "ORM"]
+}

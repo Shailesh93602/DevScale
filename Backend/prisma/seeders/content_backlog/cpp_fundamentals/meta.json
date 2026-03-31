@@ -1,0 +1,8 @@
+{
+  "title": "C++ Fundamentals",
+  "description": "Begin your journey into high-performance systems programming by understanding the core principles and history of C++.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["C++", "Foundations", "OOP", "Systems Programming"]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "C++ Output (Print Text)",
+  "description": "Learn to use the cout object and insertion operators to display information and results from your C++ applications.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 3,
+  "difficulty": "Beginner",
+  "tags": ["C++", "Output", "Cout", "Standard Library"]
+}

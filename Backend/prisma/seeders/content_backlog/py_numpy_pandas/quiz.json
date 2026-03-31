@@ -1,0 +1,18 @@
+{
+  "title": "NumPy and Pandas Quiz",
+  "description": "Test your knowledge on ndarrays and DataFrames.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which library provides the 'ndarray' structure that allows for fast, vectorized mathematical operations?",
+      "options": [
+        "NumPy",
+        "Pandas",
+        "Django",
+        "Pytest"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

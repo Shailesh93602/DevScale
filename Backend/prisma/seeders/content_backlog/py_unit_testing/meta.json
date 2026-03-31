@@ -1,0 +1,8 @@
+{
+  "title": "Python Unit Testing",
+  "description": "Learn to write clear, automated tests for your Python functions to ensure long-term code stability and quality.",
+  "module": "Python Programming Masterclass",
+  "order": 12,
+  "difficulty": "Intermediate",
+  "tags": ["Python", "Testing", "Unittest", "TDD", "Software Engineering"]
+}
