@@ -1,0 +1,8 @@
+{
+  "title": "System Design: Building a Global Geolocation Service (Uber Logic)",
+  "description": "Master the complex world of real-time geospatial engineering by learning to architect systems that track and match millions of moving objects.",
+  "module": "Advanced DSA & System Design Patterns",
+  "order": 5,
+  "difficulty": "Advanced",
+  "tags": ["System Design", "Geospatial", "Geo-hash", "Quad-tree", "Uber"]
+}

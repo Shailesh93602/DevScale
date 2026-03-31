@@ -1,0 +1,18 @@
+{
+  "title": "Advanced Trees Quiz",
+  "description": "Test your knowledge on Red-Black, B-Trees, and Splay logic.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which tree structure is optimized specifically for reading data from a hard DISK by using a large 'branching factor' to minimize the tree's height?",
+      "options": [
+        "Binary Search Tree",
+        "Red-Black Tree",
+        "B-Tree",
+        "Splay Tree"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

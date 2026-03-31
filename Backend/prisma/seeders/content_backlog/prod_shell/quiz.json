@@ -1,0 +1,18 @@
+{
+  "title": "Shell Scripting Quiz",
+  "description": "Test your knowledge on pipes, variables, and Bash logic.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which Unix operator is used to 'feed' the output of one command as the input to the next command in a sequence?",
+      "options": [
+        ">",
+        "&",
+        "| (Pipe)",
+        "$"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

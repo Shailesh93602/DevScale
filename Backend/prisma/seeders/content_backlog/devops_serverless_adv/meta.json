@@ -1,0 +1,8 @@
+{
+  "title": "Serverless Design Patterns (Event-driven scaling architectures)",
+  "description": "Learn to design highly efficient, cost-optimized cloud systems using advanced serverless event-driven patterns.",
+  "module": "Advanced Cloud & DevOps Frontiers",
+  "order": 5,
+  "difficulty": "Advanced",
+  "tags": ["Serverless", "FaaS", "Lambda", "Event-driven", "Architecture"]
+}

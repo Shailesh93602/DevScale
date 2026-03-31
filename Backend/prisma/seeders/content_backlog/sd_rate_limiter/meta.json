@@ -1,0 +1,8 @@
+{
+  "title": "System Design: Designing a Distributed Rate Limiter",
+  "description": "Learn to protect your global infrastructure from overload and abuse by mastering distributed rate limiting patterns and algorithms.",
+  "module": "Advanced DSA & System Design Patterns",
+  "order": 4,
+  "difficulty": "Advanced",
+  "tags": ["System Design", "Rate Limiting", "Redis", "Security", "Scale"]
+}
