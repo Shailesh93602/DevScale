@@ -1,0 +1,25 @@
+{
+  "title": "Best Practices for Branching Quiz",
+  "description": "Test your knowledge on Git branching best practices.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these is a key benefit of using descriptive branch names?",
+      "options": ["It makes the repository faster", "It helps other developers understand the purpose of each branch", "It deletes old commits by mistake", "Its only used in SQL"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Regarding the branching best practices, how frequently should you merge your branches back into the main development line?",
+      "options": ["Once a year", "Every few months", "As frequently as possible to avoid long-running branches and complex conflicts", "Never"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "When should you use a new branch in Git?",
+      "options": ["For every feature, bug fix, or experiment", "Only for professional releases", "Never", "Its only for large teams"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
