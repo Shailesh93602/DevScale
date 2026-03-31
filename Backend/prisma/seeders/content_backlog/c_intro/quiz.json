@@ -1,0 +1,18 @@
+{
+  "title": "Introduction to C Quiz",
+  "description": "Test your knowledge on the history and importance of the C programming language.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "C is often termed a mid-level language because it combines features of which two types of languages?",
+      "options": [
+        "Scripting and Managed",
+        "Assembly and High-level",
+        "Functional and Reactive",
+        "Interpreted and Visual"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

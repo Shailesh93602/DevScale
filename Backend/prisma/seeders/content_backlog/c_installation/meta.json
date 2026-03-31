@@ -1,0 +1,8 @@
+{
+  "title": "Installation",
+  "description": "Set up your C development environment by installing a compiler and choosing the right editor.",
+  "module": "C Programming Masterclass",
+  "order": 2,
+  "difficulty": "Beginner",
+  "tags": ["C", "Setup", "Compiler", "IDE"]
+}

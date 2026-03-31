@@ -1,0 +1,18 @@
+{
+  "title": "Database Indexes Quiz",
+  "description": "Test your knowledge on clustered and non-clustered indexes and their impact on performance.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the main advantage of using an index on a database table?",
+      "options": [
+        "Reduced storage space",
+        "Faster data retrieval (queries)",
+        "Faster write operations (DML)",
+        "Automatic data backup"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

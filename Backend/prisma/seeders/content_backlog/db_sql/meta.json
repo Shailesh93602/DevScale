@@ -1,0 +1,8 @@
+{
+  "title": "SQL (Structured Query Language)",
+  "description": "Master the standard language for interacting with relational databases and performing powerful data analysis.",
+  "module": "Database Systems",
+  "order": 4,
+  "difficulty": "Intermediate",
+  "tags": ["Databases", "SQL", "Querying", "Data Analysis"]
+}

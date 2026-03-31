@@ -1,0 +1,18 @@
+{
+  "title": "Data Modeling Quiz",
+  "description": "Test your knowledge on the different levels of data modeling from conceptual to physical.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which type of data model is a high-level view used primarily for communicating with business stakeholders?",
+      "options": [
+        "Physical Data Model",
+        "Logical Data Model",
+        "Conceptual Data Model",
+        "Relational Data Model"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

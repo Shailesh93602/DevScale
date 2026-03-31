@@ -1,0 +1,16 @@
+<section>
+    <h2>Understanding Database Transactions</h2>
+    <p>A database transaction is a sequence of one or more database operations (like SQL queries) that are executed as a single, atomic unit of work.</p>
+
+    <h3>1. The All-or-Nothing Rule</h3>
+    <p>The most important property of a transaction is that either all of its operations are completed successfully (Committed), or none of them are applied at all (Rolled Back). This ensures the database never ends up in a partial or inconsistent state.</p>
+
+    <h3>2. Concurrency and Isolation</h3>
+    <p>Transactions allow multiple users to work with the same data simultaneously without interfering with each other. This is managed through <strong>Isolation Levels</strong>, which determine how visible the changes from one transaction are to others.</p>
+
+    <h3>3. Real-World Example</h3>
+    <p>Think of a bank transfer. Transaction A: Subtract $100 from Account X. Transaction B: Add $100 to Account Y. These two MUST be treated as a single transaction to ensure money isn't 'lost' if the system fails between steps.</p>
+
+    <h3>Conclusion</h3>
+    <p>Transactions are the foundation of reliable data management, providing the guarantees needed to build systems where data integrity is the highest priority.</p>
+</section>
