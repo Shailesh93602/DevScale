@@ -1,0 +1,25 @@
+{
+  "title": "Best Practices for Unit Testing Quiz",
+  "description": "Test your knowledge on unit testing best practices.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these is a key benefit of testing only one 'unit'—like a single function—at a time?",
+      "options": ["It makes the test faster and easier to debug if it fails", "It makes your code build faster", "It deletes old commits by mistake", "Its only used in SQL"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Regarding unit testing, how should you handle external systems like databases and web services?",
+      "options": ["Always test against the actual system", "Don't test them; only test your internal code", "Use mocks or stubs to control their behavior and isolate your tests", "Delete the tests if they depend on an external system"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a key rule of writing descriptive test case names?",
+      "options": ["They should describe specifically what function or component is being tested and what the expected result is", "They should be as short as possible", "They should only contain timestamps", "Names don't matter"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

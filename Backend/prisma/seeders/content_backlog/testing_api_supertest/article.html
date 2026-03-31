@@ -1,0 +1,31 @@
+<section>
+    <h2>Testing API Endpoints with Supertest</h2>
+    <p>Using the powerful, integrated, and feature-rich testing library provided by Supertest, you can create a suite of integration tests for your API project's endpoints. By following these steps, you can set it up in minutes.</p>
+
+    <h3>1. Installation via npm</h3>
+    <pre><code>
+npm install --save-dev supertest
+    </code></pre>
+
+    <h3>2. Testing a GET request</h3>
+    <pre><code>
+const request = require('supertest');
+request(app)
+  .get('/api/users')
+  .expect(200)
+  .then(res => {
+     expect(res.body).to.be.an('array');
+  });
+    </code></pre>
+
+    <h3>3. Testing a POST request</h3>
+    <pre><code>
+request(app)
+  .post('/api/users')
+  .send({ name: 'John' })
+  .expect(201);
+    </code></pre>
+
+    <h3>Conclusion</h3>
+    <p>By making API testing a priority, you can ensure that your application's most valuable asset—its code—remains safe and performant for your users.</p>
+</section>

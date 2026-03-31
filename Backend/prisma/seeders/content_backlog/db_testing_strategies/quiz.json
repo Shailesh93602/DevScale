@@ -1,0 +1,19 @@
+{
+  "title": "Database Testing Strategies Quiz",
+  "description": "Test your knowledge on database testing patterns.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the testing of database-interacting code, what is the primary role of a 'Test Database'?",
+      "options": ["To collect and analyze production data", "To provide a controlled, disposable, and predictable environment for running tests", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a key step in a database-testing-based workflow?",
+      "options": ["Automating database seeding and cleanup to ensure a clean state for every test", "Deleting all your local code", "Recording a commit directly to the SQL server", "Its only possible for SQL repositories"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
