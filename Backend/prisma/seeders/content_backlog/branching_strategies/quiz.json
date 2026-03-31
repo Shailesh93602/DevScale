@@ -1,0 +1,25 @@
+{
+  "title": "Branching Strategies Quiz",
+  "description": "Test your knowledge on common Git branching methodologies.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which Git branching strategy uses separate branches for development, production, and individual software releases?",
+      "options": ["Feature Branching", "Git Flow", "Trunk-Based Development", "Basic Branching"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Regarding the branching strategies, which one involves all developers working on a single, shared 'trunk' (main branch)?",
+      "options": ["Feature Branching", "Git Flow", "Trunk-Based Development", "Branching-per-Developer"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is 'Feature Branching' best suited for?",
+      "options": ["Small teams with single, fast development tasks", "Complex project development where multiple features are built at the same time", "SQL databases only", "NoSQL databases only"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
