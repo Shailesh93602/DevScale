@@ -1,0 +1,18 @@
+{
+  "title": "Binary Trees Quiz",
+  "description": "Test your knowledge on binary trees and binary search trees (BST).",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "In a Binary Search Tree (BST), where are smaller values always located relative to the current node?",
+      "options": [
+        "Right subtree",
+        "Left subtree",
+        "Sibling node",
+        "Parent node"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

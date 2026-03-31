@@ -1,8 +1,8 @@
 {
   "title": "Public Key Infrastructure (PKI)",
-  "description": "Learn about the essential PKI tasks including tracking changes, coordinating multiple developers, and collaboration strategies.",
+  "description": "Learn about Digital Certificates, Certificate Authorities, and the foundations of secure public-key cryptography.",
   "module": "Full Stack Web Development",
   "order": 1,
-  "difficulty": "Beginner",
+  "difficulty": "Advanced",
   "tags": ["Security", "Encryption", "PKI", "Certificates", "CA"]
 }
