@@ -1,0 +1,19 @@
+{
+  "title": "Integrating Tests with CI/CD Pipelines Quiz",
+  "description": "Test your knowledge on automated testing in CI/CD pipelines.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the integration of frontend tests into your CI/CD pipeline, what is the primary role of Continuous Integration (CI)?",
+      "options": ["To collect and analyze data", "To automatically build and test your changes after every commit", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a key step in a frontend-CI-based workflow?",
+      "options": ["Automatically running your code's tests—such as Jest or RTL—as soon as changes are pushed into a branch", "Deleting all your local code", "Recording a commit directly to a SQL database", "Its only possible for SQL repositories"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
