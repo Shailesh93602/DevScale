@@ -1,0 +1,8 @@
+{
+  "title": "Python Strings",
+  "description": "Unlock advanced text manipulation capabilities using Python's intuitive string methods and slicing techniques.",
+  "module": "Python Programming Masterclass",
+  "order": 3,
+  "difficulty": "Beginner",
+  "tags": ["Python", "Strings", "Slicing", "Text Processing"]
+}
