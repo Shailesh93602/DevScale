@@ -1,0 +1,20 @@
+<section>
+    <h2>Understanding Data Replication</h2>
+    <p>Data replication is the process of copying data from one database (the <strong>Primary</strong>) to one or more other databases (<strong>Replicas</strong>) to ensure they all contain the same information.</p>
+
+    <h3>1. Why replicate data?</h3>
+    <ul>
+        <li><strong>High Availability:</strong> If the primary database fails, a replica can take over immediately to prevent downtime.</li>
+        <li><strong>Read Scaling:</strong> Offloading read-heavy queries to replicas, keeping the primary database free for faster writes.</li>
+        <li><strong>Disaster Recovery:</strong> Keeping copies of the data in different geographical locations in case of a regional outage.</li>
+    </ul>
+
+    <h3>2. Replication Methods</h3>
+    <p><strong>Synchronous Replication:</strong> The primary database waits for a confirmation from the replica before committing a transaction. It's safer but slower. <strong>Asynchronous Replication:</strong> The primary commits immediately and sends data to replicas later. It's faster but has a small 'replication lag'.</p>
+
+    <h3>3. Multi-Source/Circular Replication</h3>
+    <p>More complex setups where data is replicated across multiple primary databases, allowing for even higher levels of redundancy and global performance.</p>
+
+    <h3>Conclusion</h3>
+    <p>Data replication is a core strategy for building world-class, resilient systems that can handle any scale and survive any catastrophic failure.</p>
+</section>

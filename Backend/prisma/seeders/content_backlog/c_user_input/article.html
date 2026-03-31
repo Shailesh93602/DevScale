@@ -1,0 +1,18 @@
+<section>
+    <h2>Handling User Input in C</h2>
+    <p>Most programs need to interact with the user to get data. In C, the primary way to do this at the command line is the <code>scanf()</code> function.</p>
+
+    <h3>1. Using scanf()</h3>
+    <p>The <code>scanf()</code> function reads formatted input from the standard input (keyboard). You must provide a <strong>Format Specifier</strong> and the <strong>Address</strong> of the variable where the data should be stored.</p>
+    <pre><code>int age;
+scanf("%d", &age); // Note the '&' symbol!</code></pre>
+
+    <h3>2. The Address Operator (&)</h3>
+    <p>The <code>&</code> symbol is the address-of operator. It tells <code>scanf</code> exactly where in the computer's memory to store the value it reads. Forgetting this symbol is a common beginner mistake that leads to crashes.</p>
+
+    <h3>3. Multiple Inputs</h3>
+    <p>You can read multiple values in a single <code>scanf</code> call by using multiple format specifiers: <code>scanf("%d %f", &myInt, &myFloat);</code>.</p>
+
+    <h3>Conclusion</h3>
+    <p>Mastering user input allows you to build dynamic, interactive programs that can respond to real-world data and user choices.</p>
+</section>

@@ -1,0 +1,19 @@
+<section>
+    <h2>Understanding Data Concurrency</h2>
+    <p>Data concurrency refers to the ability of multiple users to access and modify the same database records simultaneously without compromising data integrity.</p>
+
+    <h3>1. The Need for Concurrency Control</h3>
+    <p>Without control, two users could overwrite each other's changes (the <strong>Lost Update</strong> problem) or read data that's in the middle of being modified (<strong>Dirty Reads</strong>).</p>
+
+    <h3>2. Concurrency Mechanisms</h3>
+    <ul>
+        <li><strong>Optimistic Concurrency Control (OCC):</strong> Assumes conflicts are rare. It allows changes but checks for conflicts before committing (e.g., using a <code>version</code> column). It's popular in modern web apps.</li>
+        <li><strong>Pessimistic Concurrency Control (PCC):</strong> Assumes conflicts will happen. It uses <strong>Locks</strong> to prevent others from accessing data until a transaction is finished.</li>
+    </ul>
+
+    <h3>3. Multi-Version Concurrency Control (MVCC)</h3>
+    <p>A sophisticated method used by many modern RDBMS (like PostgreSQL). It stores multiple versions of a row, allowing readers to see a consistent 'snapshot' of the data without being blocked by writers.</p>
+
+    <h3>Conclusion</h3>
+    <p>Mastering concurrency control is essential for building real-time collaboration tools, high-traffic e-commerce systems, and any application where data consistency is non-negotiable under heavy load.</p>
+</section>

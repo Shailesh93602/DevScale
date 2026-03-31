@@ -1,0 +1,8 @@
+{
+  "title": "Memory Address",
+  "description": "Unlock the true power of C by learning how the computer organizes and identifies data in its RAM.",
+  "module": "C Programming Masterclass",
+  "order": 20,
+  "difficulty": "Intermediate",
+  "tags": ["C", "Memory", "Addresses", "Pointers"]
+}

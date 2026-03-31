@@ -1,0 +1,18 @@
+{
+  "title": "Database Design Quiz",
+  "description": "Test your knowledge on the stages of database design and common trade-offs.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which stage of database design involves the creation of ER diagrams to represent high-level data relationships?",
+      "options": [
+        "Requirement Analysis",
+        "Conceptual Design",
+        "Logical Design",
+        "Physical Design"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

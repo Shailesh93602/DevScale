@@ -1,0 +1,18 @@
+{
+  "title": "Data Concurrency Quiz",
+  "description": "Test your knowledge on locks, optimistic concurrency, and MVCC.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which concurrency control mechanism uses version check at commit-time instead of locking rows?",
+      "options": [
+        "Pessimistic Concurrency Control",
+        "Optimistic Concurrency Control",
+        "Full Table Locking",
+        "Isolation LevelING"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

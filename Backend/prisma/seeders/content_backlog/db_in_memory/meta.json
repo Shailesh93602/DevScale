@@ -1,0 +1,8 @@
+{
+  "title": "In-Memory Databases",
+  "description": "Explore the ultra-fast world of in-memory databases and how they power real-time application features.",
+  "module": "Database Systems",
+  "order": 26,
+  "difficulty": "Advanced",
+  "tags": ["Databases", "In-Memory", "Performance", "Caching", "Redis"]
+}

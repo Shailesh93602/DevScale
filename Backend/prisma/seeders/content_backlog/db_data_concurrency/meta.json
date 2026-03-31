@@ -1,0 +1,8 @@
+{
+  "title": "Data Concurrency",
+  "description": "Learn to manage simultaneous database access using locks, versions, and modern MVCC techniques.",
+  "module": "Database Systems",
+  "order": 24,
+  "difficulty": "Advanced",
+  "tags": ["Databases", "Concurrency", "Locks", "MVCC", "Data Integrity"]
+}

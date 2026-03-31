@@ -1,0 +1,18 @@
+{
+  "title": "User Input Quiz",
+  "description": "Test your knowledge on the scanf function and the address operator.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which operator must be placed before a variable name in a 'scanf' call to provide its memory address?",
+      "options": [
+        "*",
+        "!",
+        "&",
+        "%"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

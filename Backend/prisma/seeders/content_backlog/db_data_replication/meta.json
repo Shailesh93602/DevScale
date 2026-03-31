@@ -1,0 +1,8 @@
+{
+  "title": "Data Replication",
+  "description": "Learn to multiply your database performance and reliability by replicating data across multiple servers and locations.",
+  "module": "Database Systems",
+  "order": 25,
+  "difficulty": "Advanced",
+  "tags": ["Databases", "Replication", "High Availability", "Scaling"]
+}
