@@ -1,0 +1,13 @@
+{
+  "title": "Compliance Standards Quiz",
+  "description": "Test your knowledge on industry compliance standards like PCI DSS.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the web security, what consists of a primary role of 'Compliance Standards'?项目",
+      "options": ["To collect and analyze data", "Sets of rules and policies used to correctly and securely manage exactly how your project's security and data are handled correctly as intended", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
