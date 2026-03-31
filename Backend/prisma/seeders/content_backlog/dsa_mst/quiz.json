@@ -1,0 +1,18 @@
+{
+  "title": "Minimum Spanning Tree Quiz",
+  "description": "Test your knowledge on Kruskal's and Prim's MST algorithms.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which greedy algorithm for finding an MST involves sorting all edges by weight and adding them if they don't form a cycle?",
+      "options": [
+        "Prim's Algorithm",
+        "Kruskal's Algorithm",
+        "Dijkstra's Algorithm",
+        "Bellman-Ford Algorithm"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

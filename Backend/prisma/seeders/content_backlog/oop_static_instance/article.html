@@ -1,0 +1,16 @@
+<section>
+    <h2>Understanding Static and Instance Members</h2>
+    <p>In object-oriented programming, class members (variables and methods) can be defined as either instance-specific or shared by all instances of the class (static).</p>
+
+    <h3>1. Instance Members</h3>
+    <p>Instance variables and methods belong to a specific object. Each object has its own copy of instance variables, and the methods can access that specific object's state using the <code>this</code> keyword.</p>
+
+    <h3>2. Static Members</h3>
+    <p>Static members belong to the <strong>Class itself</strong> rather than any specific instance. There is only one copy of a static variable, regardless of how many objects are created. Static methods can be called without creating an instance.</p>
+
+    <h3>3. When to use Static?</h3>
+    <p>Use static variables for constants or for keeping track of global state (like a counter for all objects created). Use static methods for utility functions that don't depend on the state of a particular object.</p>
+
+    <h3>Conclusion</h3>
+    <p>Correctly choosing between static and instance members is key to efficient memory management and clean architectural design in OOP.</p>
+</section>

@@ -1,0 +1,8 @@
+{
+  "title": "Method Overriding",
+  "description": "Learn how subclasses can specialize behavior through method overriding and runtime polymorphism.",
+  "module": "Object Oriented Programming",
+  "order": 3,
+  "difficulty": "Intermediate",
+  "tags": ["OOP", "Method Overriding", "Polymorphism", "Inheritance"]
+}

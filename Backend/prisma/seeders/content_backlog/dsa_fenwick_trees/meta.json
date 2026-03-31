@@ -1,0 +1,8 @@
+{
+  "title": "Fenwick Trees",
+  "description": "Explore the elegant and efficient Binary Indexed Tree (BIT) for fast dynamic prefix sum updates.",
+  "module": "Data Structures",
+  "order": 19,
+  "difficulty": "Advanced",
+  "tags": ["DSA", "Fenwick Trees", "BIT", "Prefix Sum", "Algorithms"]
+}
