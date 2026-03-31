@@ -1,0 +1,18 @@
+{
+  "title": "Saga Pattern Quiz",
+  "description": "Test your knowledge on compensating transactions and orchestration.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the name of the operation used to 'undo' changes in a Saga when a later step in the process fails?",
+      "options": [
+        "Delete Transaction",
+        "Compensating Transaction",
+        "Rollback Query",
+        "Reset Event"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

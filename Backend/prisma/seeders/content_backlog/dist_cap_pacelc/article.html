@@ -1,0 +1,20 @@
+<section>
+    <h2>Understanding CAP and PACELC Theorems</h2>
+    <p>In the world of distributed systems, you cannot have everything. These two theorems define the fundamental trade-offs that every architect must make when designing globally scalable software.</p>
+
+    <h3>1. The CAP Theorem</h3>
+    <p>Introduced by Eric Brewer, CAP states that a distributed data store can only provide two out of three guarantees:</p>
+    <ul>
+        <li><strong>Consistency:</strong> Every read receives the most recent write (or an error).</li>
+        <li><strong>Availability:</strong> Every request receives a (non-error) response, without the guarantee that it contains the most recent write.</li>
+        <li><strong>Partition Tolerance:</strong> The system continues to operate despite an arbitrary number of messages being dropped (or delayed) by the network between nodes.</li>
+    </ul>
+    <p><strong>Crucial Rule:</strong> Because network partitions ARE a reality ("P" is mandatory), you must choose between Consistency (CP) or Availability (AP).</p>
+
+    <h3>2. PACELC: The Extended Theorem</h3>
+    <p>PACELC takes it further: If there is a partition (P), how does the system trade off Availability (A) and Consistency (C)? <strong>Else (E)</strong>, when the system is running normally, how does it trade off <strong>Latency (L)</strong> and <strong>Consistency (C)</strong>?</p>
+    <p>For example, MongoDB is often configured as **PA/EC**: It prioritizes availability during partitions, but emphasizes consistency during normal operations.</p>
+
+    <h3>Conclusion</h3>
+    <p>Mastering CAP and PACELC allows you to choose the right database for the job. If you're building a bank, you choose **Consistency**. If you're building a social media feed, you choose **Availability** and **Low Latency**.</p>
+</section>

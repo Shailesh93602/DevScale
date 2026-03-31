@@ -1,0 +1,8 @@
+{
+  "title": "CAP Theorem & PACELC Deep-Dive",
+  "description": "Master the fundamental trade-offs of distributed systems by learning why Consistency, Availability, and Latency are in constant tension.",
+  "module": "Distributed Systems Architecture",
+  "order": 1,
+  "difficulty": "Advanced",
+  "tags": ["Distributed Systems", "Consistency", "Availability", "Architect", "Scaling"]
+}

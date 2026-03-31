@@ -1,0 +1,8 @@
+{
+  "title": "Web Performance: Critical Rendering Path (CRP) optimization",
+  "description": "Deliver lightning-fast user experiences by mastering the browser's rendering internals and eliminating load-time bottlenecks.",
+  "module": "Advanced Performance Engineering",
+  "order": 5,
+  "difficulty": "Advanced",
+  "tags": ["Web Performance", "CRP", "Browser", "Optimization", "Speed"]
+}
