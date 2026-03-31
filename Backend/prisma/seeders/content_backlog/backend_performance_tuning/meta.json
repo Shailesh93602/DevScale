@@ -1,0 +1,8 @@
+{
+  "title": "Performance Tuning in Backend",
+  "description": "Learn how to optimize backend performance, reduce latency, and scale server-side applications.",
+  "module": "Backend Developer Masterclass",
+  "order": 4,
+  "difficulty": "Intermediate",
+  "tags": ["Backend", "Performance Tuning", "Optimization", "Scalability", "Caching"]
+}

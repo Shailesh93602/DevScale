@@ -1,0 +1,8 @@
+{
+  "title": "Performance Tuning in Node",
+  "description": "Learn how to optimize the event loop and scale Node.js applications with clustering.",
+  "module": "Node Developer Masterclass",
+  "order": 4,
+  "difficulty": "Advanced",
+  "tags": ["Node.js", "Performance", "Optimization", "Event Loop"]
+}

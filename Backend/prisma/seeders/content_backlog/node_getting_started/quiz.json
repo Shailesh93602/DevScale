@@ -1,0 +1,18 @@
+{
+  "title": "Getting Started with Node Quiz",
+  "description": "Test your knowledge on the basics of Node.js.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary engine that powers Node.js?",
+      "options": [
+        "SpiderMonkey",
+        "V8 Engine",
+        "Chakra",
+        "Nitro"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

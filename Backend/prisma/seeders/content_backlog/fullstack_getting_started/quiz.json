@@ -1,0 +1,18 @@
+{
+  "title": "Getting Started with FullStack Quiz",
+  "description": "Test your knowledge on the basics of fullstack development.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of the following best describes the role of a FullStack developer?",
+      "options": [
+        "Working exclusively on database administration",
+        "Working on both the frontend and backend of an application",
+        "Focusing only on UI/UX design",
+        "Writing only documentation for the project"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
