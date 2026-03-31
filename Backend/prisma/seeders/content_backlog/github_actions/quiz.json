@@ -1,0 +1,25 @@
+{
+  "title": "GitHub Actions Quiz",
+  "description": "Test your knowledge on GitHub automation and CI/CD tools.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding GitHub, what are 'GitHub Actions' used for?",
+      "options": ["To collect and analyze data from the database", "To build, test, and deploy code projects directly on GitHub's servers", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a key step in a GitHub-Actions-based workflow?",
+      "options": ["Creating automated workflows that are triggered by specific events in your repository", "Deleting all your local code", "Recording a commit directly through SQL", "Its only possible for SQL repositories"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which of these events is a common trigger for a GitHub Action?",
+      "options": ["Pushing to a specific branch", "Creating a pull request", "Opening a new issue", "All of the above"],
+      "correctAnswer": 3,
+      "points": 10
+    }
+  ]
+}
