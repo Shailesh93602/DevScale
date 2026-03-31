@@ -1,0 +1,8 @@
+{
+  "title": "Disjoint Set",
+  "description": "Explore the Union-Find structure and the optimizations that make it a powerful tool for graph connectivity problems.",
+  "module": "Data Structures",
+  "order": 21,
+  "difficulty": "Advanced",
+  "tags": ["DSA", "Disjoint Set", "Union-Find", "Path Compression", "Algorithms"]
+}

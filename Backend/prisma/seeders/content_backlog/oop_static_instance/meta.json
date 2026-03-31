@@ -1,0 +1,8 @@
+{
+  "title": "Static and Instance Members",
+  "description": "Understand the difference between object-specific members and shared class-level members.",
+  "module": "Object Oriented Programming",
+  "order": 4,
+  "difficulty": "Intermediate",
+  "tags": ["OOP", "Static", "Memory Management", "Architecture"]
+}

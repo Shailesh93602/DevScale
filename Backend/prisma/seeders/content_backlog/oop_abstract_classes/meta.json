@@ -1,0 +1,8 @@
+{
+  "title": "Abstract Classes",
+  "description": "Explore how abstract classes serve as blueprints for related objects while providing shared logic and state.",
+  "module": "Object Oriented Programming",
+  "order": 2,
+  "difficulty": "Intermediate",
+  "tags": ["OOP", "Abstract Classes", "Inheritance", "Abstraction"]
+}
