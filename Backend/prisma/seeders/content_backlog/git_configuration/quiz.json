@@ -1,0 +1,31 @@
+{
+  "title": "Git Configuration Quiz",
+  "description": "Test your knowledge on Git setup and identity configuration.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which Git command is used to set your global user name?",
+      "options": ["git config --global user.name 'Name'", "git user --set name 'Name'", "git set --global user.name 'Name'", "git install --name 'Name'"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Regarding Git configuration, what is the 'Global' level used for?",
+      "options": ["To collect and analyze data", "To apply a configuration to every repository for the current user", "To set up a local Git server", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which command is used to list all of your active Git configurations?",
+      "options": ["git config --list", "git config --show", "git config --view", "git list configs"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "A situation where two or more transactions are waiting for each other to release a lock, resulting in a hang, is called a _______.",
+      "options": ["Deadlock", "Live Lock", "Fast Lock", "User Lock"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

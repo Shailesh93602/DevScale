@@ -1,0 +1,31 @@
+{
+  "title": "Introduction to Branching Quiz",
+  "description": "Test your knowledge on Git version control patterns.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is a 'Branch' in the context of Git?",
+      "options": ["A data error in a database", "A separate line of development that allows you to make changes without affecting the main code base", "A commit that is too large", "An installation error"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Regarding the Git workflow, why should you use branches for new features and bug fixes?",
+      "options": ["To collect and analyze data", "To keep your main code base stable and avoid interrupting other team members", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a key benefit of feature branching?",
+      "options": ["It keeps your main branch stable and makes development cleaner", "It slows down development for better code quality", "It deletes all your local work by mistake", "It replaces your remote repository"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "A situation where two or more transactions are waiting for each other to release a lock, resulting in a hang, is called a _______.",
+      "options": ["Deadlock", "Live Lock", "Fast Lock", "User Lock"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
