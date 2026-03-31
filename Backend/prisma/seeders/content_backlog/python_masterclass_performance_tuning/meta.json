@@ -1,0 +1,8 @@
+{
+  "title": "Performance Tuning in Python",
+  "description": "Optimize your Python apps using profiling, efficient data structures, and concurrency.",
+  "module": "Python Developer Masterclass",
+  "order": 4,
+  "difficulty": "Advanced",
+  "tags": ["Python", "Performance", "Optimization", "Multiprocessing"]
+}

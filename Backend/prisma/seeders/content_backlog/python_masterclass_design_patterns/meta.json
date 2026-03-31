@@ -1,0 +1,8 @@
+{
+  "title": "Design Patterns in Python",
+  "description": "Learn to apply design patterns like Decorators, Generators, and Singletons in Python.",
+  "module": "Python Developer Masterclass",
+  "order": 3,
+  "difficulty": "Intermediate",
+  "tags": ["Python", "Design Patterns", "Generators", "Decorators"]
+}

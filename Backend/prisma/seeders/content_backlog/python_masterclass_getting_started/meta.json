@@ -1,0 +1,8 @@
+{
+  "title": "Getting Started with Python",
+  "description": "Jump into Python development with this overview of the language and its backend ecosystem.",
+  "module": "Python Developer Masterclass",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Python", "Backend", "PEP8", "Environment"]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "First project in MachineLearning",
+  "description": "Learn by doing: Build, train, and evaluate your first Machine Learning model.",
+  "module": "MachineLearning Developer Masterclass",
+  "order": 2,
+  "difficulty": "Beginner",
+  "tags": ["Machine Learning", "EDA", "Evaluation", "First Project"]
+}

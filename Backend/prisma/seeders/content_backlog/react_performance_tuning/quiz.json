@@ -1,0 +1,18 @@
+{
+  "title": "Performance Tuning in React Quiz",
+  "description": "Test your knowledge on optimizing React applications for speed and efficiency.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which React hook is used to memoize the result of a complex calculation?",
+      "options": [
+        "useMemo",
+        "useCallback",
+        "useEffect",
+        "useRef"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
