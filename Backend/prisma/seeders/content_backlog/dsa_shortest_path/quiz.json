@@ -1,0 +1,18 @@
+{
+  "title": "Shortest Path Algorithms Quiz",
+  "description": "Test your knowledge on Dijkstra's, Bellman-Ford, and Floyd-Warshall algorithms.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which shortest path algorithm is capable of handling negative edge weights?",
+      "options": [
+        "Dijkstra's Algorithm",
+        "Bellman-Ford Algorithm",
+        "Breadth-First Search (BFS)",
+        "Kruskal's Algorithm"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "Shortest Path Algorithms",
+  "description": "Master the algorithms behind GPS and network routing, from Dijkstra's to Floyd-Warshall.",
+  "module": "Data Structures",
+  "order": 15,
+  "difficulty": "Advanced",
+  "tags": ["DSA", "Shortest Path", "Dijkstra", "Bellman-Ford", "Algorithms"]
+}

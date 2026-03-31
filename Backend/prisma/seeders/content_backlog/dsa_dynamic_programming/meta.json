@@ -1,0 +1,8 @@
+{
+  "title": "Dynamic Programming",
+  "description": "Learn the powerful technique of breaking down complex problems using memoization and tabulation.",
+  "module": "Data Structures",
+  "order": 9,
+  "difficulty": "Advanced",
+  "tags": ["DSA", "Dynamic Programming", "Memoization", "Algorithms"]
+}

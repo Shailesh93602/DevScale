@@ -1,0 +1,18 @@
+{
+  "title": "Backtracking Quiz",
+  "description": "Test your knowledge on backtracking principles and common search-space problems.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the technique of discarding branches of a search tree that cannot lead to a valid solution?",
+      "options": [
+        "Recursion",
+        "Pruning",
+        "Memoization",
+        "Iteration"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "AVL Trees",
+  "description": "Learn the principles of self-balancing trees, balance factors, and tree rotations.",
+  "module": "Data Structures",
+  "order": 3,
+  "difficulty": "Advanced",
+  "tags": ["DSA", "AVL Trees", "Self-Balancing", "Algorithms"]
+}

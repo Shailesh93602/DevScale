@@ -1,0 +1,18 @@
+{
+  "title": "Hash Tables Quiz",
+  "description": "Test your knowledge on hashing, collision resolution, and hash table performance.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What happens when two different keys result in the same index from a hash function?",
+      "options": [
+        "A Collision",
+        "A Runtime Error",
+        "Data Loss",
+        "Index Overflow"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

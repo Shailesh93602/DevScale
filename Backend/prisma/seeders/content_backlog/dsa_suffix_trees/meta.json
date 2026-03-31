@@ -1,0 +1,8 @@
+{
+  "title": "Suffix Trees",
+  "description": "Master the structure that indexes every suffix of a text for high-performance substring searching.",
+  "module": "Data Structures",
+  "order": 17,
+  "difficulty": "Advanced",
+  "tags": ["DSA", "Suffix Trees", "Ukkonen's Algorithm", "String Search", "Algorithms"]
+}
