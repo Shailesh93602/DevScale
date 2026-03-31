@@ -1,0 +1,8 @@
+{
+  "title": "Micro-Frontends: Scalable Architecture (Module Federation)",
+  "description": "Learn to architect world-class enterprise web applications by mastering the independent deployment and runtime integration of micro-frontends.",
+  "module": "Senior Frontend Architecture (Expert Tier Vol 2)",
+  "order": 1,
+  "difficulty": "Advanced",
+  "tags": ["Frontend", "Micro-frontends", "Architecture", "Webpack", "Scalability"]
+}

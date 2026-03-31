@@ -1,0 +1,8 @@
+{
+  "title": "Time-Series Databases: InfluxDB & TimescaleDB internals",
+  "description": "Master the ingestion and analysis of high-resolution temporal data by learning the internals of world-leading time-series storage engines.",
+  "module": "Database Internals & Specialized Storage (Expert Tier Vol 2)",
+  "order": 3,
+  "difficulty": "Advanced",
+  "tags": ["Databases", "Time-series", "IoT", "InfluxDB", "SQL"]
+}

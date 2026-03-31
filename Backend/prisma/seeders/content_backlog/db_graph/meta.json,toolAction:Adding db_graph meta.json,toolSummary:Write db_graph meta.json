@@ -1,0 +1,8 @@
+{
+  "title": "Graph Data Modeling: Neo4j & Relationship Traversal algorithms",
+  "description": "Unlock the power of network-scale data by mastering the modeling and traversal of complex relationships with Neo4j and Cypher.",
+  "module": "Database Internals & Specialized Storage (Expert Tier Vol 2)",
+  "order": 4,
+  "difficulty": "Advanced",
+  "tags": ["Databases", "Neo4j", "Graph", "Cypher", "Networking"]
+}

@@ -1,0 +1,18 @@
+{
+  "title": "Design Systems Quiz",
+  "description": "Test your knowledge on Atomic Design hierarchy.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "In the Atomic Design methodology, what is the term for the most basic, indivisible building blocks like Buttons or Labels?",
+      "options": [
+        "Molecules",
+        "Atoms",
+        "Organisms",
+        "Templates"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

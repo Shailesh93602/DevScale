@@ -1,0 +1,8 @@
+{
+  "title": "Infrastructure Observability: Prometheus, Grafana, and ELK Stack",
+  "description": "Achieve total visibility over your microservices by mastering the three pillars of observability: Metrics, Logging, and Tracing.",
+  "module": "Global Infrastructure & SRE (Expert Tier Vol 2)",
+  "order": 2,
+  "difficulty": "Advanced",
+  "tags": ["Observability", "Monitoring", "Prometheus", "Grafana", "ELK"]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "Database Sharding & Partitioning Strategies for Billion-Row Scale",
+  "description": "Learn to scale your data layer to the world's most extreme traffic levels by mastering the architecture of horizontal partitioning and database sharding.",
+  "module": "Database Internals & Specialized Storage (Expert Tier Vol 2)",
+  "order": 2,
+  "difficulty": "Advanced",
+  "tags": ["Databases", "Sharding", "Scaling", "Architecture", "Performance"]
+}
