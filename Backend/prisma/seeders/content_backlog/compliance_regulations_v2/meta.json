@@ -1,0 +1,8 @@
+{
+  "title": "Compliance and Regulations",
+  "description": "Learn about the essential legal and compliance tasks including tracking changes, coordinating multiple developers, and collaboration strategies.",
+  "module": "Full Stack Web Development",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Security", "Legal", "Compliance", "GDPR", "Privacy"]
+}
