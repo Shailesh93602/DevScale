@@ -1,0 +1,18 @@
+{
+  "title": "Output & New Line Quiz",
+  "description": "Test your knowledge on printf() and the newline escape sequence.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these escape sequences is used to move the cursor to the start of the next line?",
+      "options": [
+        "\\t",
+        "\\n",
+        "\\b",
+        "\\r"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "title": "Change Values Quiz",
+  "description": "Test your knowledge on assignment and compound assignment operators in C.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which operator is used to add 5 to the current value of a variable named 'score' and store the result back in 'score'?",
+      "options": [
+        "score + 5",
+        "score += 5",
+        "score =+ 5",
+        "score == 5"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

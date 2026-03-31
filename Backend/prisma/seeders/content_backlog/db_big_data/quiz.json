@@ -1,0 +1,18 @@
+{
+  "title": "Big Data Quiz",
+  "description": "Test your knowledge on the 4 Vs of Big Data and core storage technologies.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which 'V' of Big Data refers to the sheer speed at which data is generated and processed?",
+      "options": [
+        "Volume",
+        "Velocity",
+        "Variety",
+        "Veracity"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "Create Variables",
+  "description": "Learn the precise steps and rules for creating and initializing your variables effectively in C.",
+  "module": "C Programming Masterclass",
+  "order": 29,
+  "difficulty": "Beginner",
+  "tags": ["C", "Variables", "Creation", "Initialization"]
+}

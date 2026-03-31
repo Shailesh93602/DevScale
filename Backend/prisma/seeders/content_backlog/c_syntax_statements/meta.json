@@ -1,0 +1,8 @@
+{
+  "title": "Syntax & Statements",
+  "description": "Learn the core rules of C: semicolons, comments, and the basic structure of a program.",
+  "module": "C Programming Masterclass",
+  "order": 21,
+  "difficulty": "Beginner",
+  "tags": ["C", "Syntax", "Statements", "Foundations"]
+}

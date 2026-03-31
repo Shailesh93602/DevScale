@@ -1,0 +1,8 @@
+{
+  "title": "Big Data",
+  "description": "Explore the challenges and technologies involved in managing and analyzing massive, high-velocity, and varied data sets.",
+  "module": "Database Systems",
+  "order": 30,
+  "difficulty": "Advanced",
+  "tags": ["Databases", "Big Data", "Hadoop", "Data Lakes", "Analytics"]
+}
