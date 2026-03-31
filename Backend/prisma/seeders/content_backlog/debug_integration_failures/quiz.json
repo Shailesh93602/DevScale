@@ -1,0 +1,19 @@
+{
+  "title": "Debugging Integration Test Failures Quiz",
+  "description": "Test your knowledge on debugging complex integration issues.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the testing of software, what is the first step in debugging an 'Integration Test Failure'?",
+      "options": ["To collect and analyze data", "To read the error output carefully to determine the cause and location of the problem", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a key step in a integration-test-failure-debugging workflow?",
+      "options": ["Narrowing down the specific integration point where the failure is occurring, such as a database call", "Deleting all your local code", "Recording a commit directly to the SQL database", "Its only possible for SQL repositories"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
