@@ -1,0 +1,16 @@
+<section>
+    <h2>Understanding Fenwick Trees (Binary Indexed Trees)</h2>
+    <p>A Fenwick Tree, also known as a Binary Indexed Tree (BIT), is a data structure that can efficiently update elements and calculate prefix sums in a table of numbers.</p>
+
+    <h3>1. Space and Time Efficiency</h3>
+    <p>Compared to a Segment Tree, a Fenwick Tree is much more space-efficient (it uses exactly N space) and is easier to implement. It supports both point updates and prefix sum queries in O(log n) time.</p>
+
+    <h3>2. How it Works</h3>
+    <p>Each node in a BIT stores the sum of a range of elements. The range of elements covered by a node at index <code>i</code> is determined by the last set bit (LSB) of <code>i</code>.</p>
+
+    <h3>3. Use Cases</h3>
+    <p>Fenwick Trees are primarily used for prefix sums, range sums (as <code>Sum(L,R) = PrefixSum(R) - PrefixSum(L-1)</code>), and counting inversions in an array. However, they are less versatile than Segment Trees (e.g., they don't easily support range maximum queries).</p>
+
+    <h3>Conclusion</h3>
+    <p>The Fenwick Tree is an elegant solution for problems requiring fast prefix sum updates, offering high performance with minimal implementation overhead.</p>
+</section>

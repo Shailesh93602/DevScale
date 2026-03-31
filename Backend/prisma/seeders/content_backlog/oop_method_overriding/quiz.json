@@ -1,0 +1,18 @@
+{
+  "title": "Method Overriding Quiz",
+  "description": "Test your knowledge on runtime polymorphism and method overriding rules.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which type of polymorphism is achieved through method overriding?",
+      "options": [
+        "Compile-time Polymorphism",
+        "Runtime Polymorphism",
+        "Static Binding",
+        "Generic Polymorphism"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

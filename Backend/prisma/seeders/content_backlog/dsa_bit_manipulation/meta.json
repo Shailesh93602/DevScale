@@ -1,0 +1,8 @@
+{
+  "title": "Bit Manipulation",
+  "description": "Master the art of manipulating data at the binary level for high-performance and memory-efficient solutions.",
+  "module": "Data Structures",
+  "order": 22,
+  "difficulty": "Advanced",
+  "tags": ["DSA", "Bit Manipulation", "Binary", "Algorithms"]
+}

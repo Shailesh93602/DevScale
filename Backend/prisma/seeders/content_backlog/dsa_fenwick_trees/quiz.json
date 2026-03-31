@@ -1,0 +1,18 @@
+{
+  "title": "Fenwick Trees Quiz",
+  "description": "Test your knowledge on Binary Indexed Trees and prefix sum calculations.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the time complexity for both updating an element and querying a prefix sum in a Fenwick Tree?",
+      "options": [
+        "O(1)",
+        "O(n)",
+        "O(log n)",
+        "O(n log n)"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

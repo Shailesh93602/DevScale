@@ -1,0 +1,18 @@
+{
+  "title": "Disjoint Set Quiz",
+  "description": "Test your knowledge on Union-Find operations and optimizations like Path Compression.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the technique of making every node on a Find path point directly to the root called?",
+      "options": [
+        "Union by Rank",
+        "Path Compression",
+        "Lazy Propagation",
+        "Memoization"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

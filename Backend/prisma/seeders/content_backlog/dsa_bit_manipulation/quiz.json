@@ -1,0 +1,18 @@
+{
+  "title": "Bit Manipulation Quiz",
+  "description": "Test your knowledge on bitwise operators and common binary arithmetic tricks.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which bitwise operator returns 1 only if both corresponding bits are 1?",
+      "options": [
+        "OR (|)",
+        "AND (&)",
+        "XOR (^)",
+        "NOT (~)"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

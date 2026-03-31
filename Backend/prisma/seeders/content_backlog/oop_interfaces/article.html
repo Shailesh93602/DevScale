@@ -1,0 +1,16 @@
+<section>
+    <h2>Understanding Interfaces in OOP</h2>
+    <p>An Interface is a reference type in object-oriented programming that defines a contract—a set of methods that a class must implement, without providing the implementation itself.</p>
+
+    <h3>1. Decoupling and abstraction</h3>
+    <p>Interfaces allow for high levels of abstraction by decoupling the 'what' from the 'how'. A class can implement multiple interfaces, enabling a form of multiple inheritance and ensuring that different classes can be treated uniformly if they share an interface.</p>
+
+    <h3>2. Interfaces vs. Classes</h3>
+    <p>Unlike classes, interfaces cannot be instantiated directly and typically do not contain state (variables), although some languages allow default method implementations. They are purely for defining behavior.</p>
+
+    <h3>3. Real-World Use Case</h3>
+    <p>Consider a <code>Drawable</code> interface with a <code>draw()</code> method. Both <code>Circle</code> and <code>Square</code> classes can implement this interface, allowing a graphics engine to render a list of <code>Drawable</code> objects without knowing their specific types.</p>
+
+    <h3>Conclusion</h3>
+    <p>Interfaces are fundamental for building scalable, maintainable, and loosely coupled systems, forming the basis for many object-oriented design patterns.</p>
+</section>
