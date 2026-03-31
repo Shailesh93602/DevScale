@@ -1,0 +1,25 @@
+{
+  "title": "Deleting Branches Quiz",
+  "description": "Test your knowledge on Git branch cleanup concepts.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these is the correct command for deleting a merged local branch in Git?",
+      "options": ["git branch -d branch-name", "git branch -D branch-name", "git delete branch-name", "git remove branch-name"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Regarding branch deletion, which of these flags is specifically designed for forcing the deletion of an unmerged local branch?",
+      "options": ["-d", "-D", "-f", "-F"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "How do you delete a specific branch on as a remote server origin?",
+      "options": ["git push origin --delete branch-name", "git remote branch --delete-branch branch-name", "git remove origin branch-name", "git push --delete-branch origin branch-name"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

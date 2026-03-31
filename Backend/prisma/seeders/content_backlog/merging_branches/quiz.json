@@ -1,0 +1,25 @@
+{
+  "title": "Merging Branches Quiz",
+  "description": "Test your knowledge on Git branch merge concepts.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding Git branching, which command is used to merge changes from one branch into another?",
+      "options": ["git join branch-name", "git merge branch-name", "git combine branch-name", "git start branch-name"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is a 'Fast-Forward' merge in Git?",
+      "options": ["Merging directly without checking for conflicts", "Moving the pointer to the latest commit if no new commits exist in the target branch", "A merge commit that combinations two sets of changes", "An installation merge"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which type of merge is performed by Git when both branches have new commits since the branched off point?",
+      "options": ["Fast-Forward Merge", "Three-Way Merge", "Static Merge", "Dynamic Merge"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
