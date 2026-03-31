@@ -1,0 +1,8 @@
+{
+  "title": "Serverless Frameworks and Tools",
+  "description": "Learn about the essential serverless frameworks and tools including tracking changes, coordinating multiple developers, and collaboration strategies.",
+  "module": "Full Stack Web Development",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Serverless", "DevOps", "Frameworks", "Tools"]
+}

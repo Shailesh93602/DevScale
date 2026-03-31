@@ -1,0 +1,8 @@
+{
+  "title": "Cost Management in PaaS",
+  "description": "Learn about the essential PaaS cost management tasks including tracking changes, coordinating multiple developers, and collaboration strategies.",
+  "module": "Full Stack Web Development",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Cloud", "DevOps", "PaaS", "Cost Management", "Budget"]
+}

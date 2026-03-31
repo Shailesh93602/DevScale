@@ -1,0 +1,13 @@
+{
+  "title": "Cost Management for Serverless Quiz",
+  "description": "Test your knowledge on managing serverless computing costs.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the DevOps, what is the primary role of 'Cost Management for Serverless'?",
+      "options": ["To collect and analyze data", "Correctly tracking and managing exactly how much your project's serverless code is costing you", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

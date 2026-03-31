@@ -1,0 +1,13 @@
+{
+  "title": "Security in Serverless Quiz",
+  "description": "Test your knowledge on securing serverless architectures.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the DevOps, what is the primary role of 'Security in Serverless Architecture'?",
+      "options": ["To collect and analyze data", "Correctly securing your project's serverless functions and their data against vulnerabilities and unauthorized access", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
