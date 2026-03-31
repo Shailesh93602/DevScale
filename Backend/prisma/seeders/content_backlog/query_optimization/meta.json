@@ -1,0 +1,8 @@
+{
+  "title": "Query Optimization",
+  "description": "Learn about the essential database query optimization tasks including slow query identification, using EXPLAIN, and index management.",
+  "module": "Full Stack Web Development",
+  "order": 1,
+  "difficulty": "Advanced",
+  "tags": ["Database", "Query Optimization", "Performance Tuning", "Indexing"]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "Viewing Commit History",
+  "description": "Learn about the essential Git version control tasks including tracking changes, coordinating multiple developers, and collaboration strategies.",
+  "module": "Full Stack Web Development",
+  "order": 5,
+  "difficulty": "Beginner",
+  "tags": ["Git", "Version Control", "Collaboration", "Software Engineering"]
+}
