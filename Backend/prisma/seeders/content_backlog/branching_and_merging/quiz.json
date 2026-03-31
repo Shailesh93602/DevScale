@@ -1,0 +1,31 @@
+{
+  "title": "Branching and Merging Quiz",
+  "description": "Test your knowledge on Git branching and merging concepts.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which command is used to create a new branch in Git?",
+      "options": ["git branch branch-name", "git create branch-name", "git start branch-name", "git install branch-name"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which Git command is used to switch from one branch to another?",
+      "options": ["git checkout branch-name", "git jump branch-name", "git move branch-name", "git start branch-name"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Regarding Git branching, which command is used to merge changes from one branch into another?",
+      "options": ["git join", "git merge branch-name", "git combine", "git start branch-name"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "A situation where two or more transactions are waiting for each other to release a lock, resulting in a hang, is called a _______.",
+      "options": ["Deadlock", "Live Lock", "Fast Lock", "User Lock"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
