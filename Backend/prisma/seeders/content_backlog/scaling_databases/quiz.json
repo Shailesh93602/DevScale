@@ -1,0 +1,31 @@
+{
+  "title": "Scaling Databases Quiz",
+  "description": "Test your knowledge on database scaling concepts.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is 'Vertical Scaling' also known as?",
+      "options": ["Scaling Up", "Scaling Out", "Clustering", "Normalization"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is 'Horizontal Scaling' also known as?",
+      "options": ["Scaling Up", "Scaling Out", "Partitioning", "Grouping"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which scaling strategy involves adding more resources to a single database server?",
+      "options": ["Horizontal Scaling", "Sharding", "Clustering", "Vertical Scaling"],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "Regarding horizontal scaling, which technique involves creating one or more exact copies of your primary database and dedicating them to handling read-only queries?",
+      "options": ["Read Replicas", "Database Sharding", "Vertical Scaling", "Indexing"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "Caching Strategies",
+  "description": "Learn the theory and practice of database caching strategies like Cache-Aside, Write-Through, and Write-Back.",
+  "module": "Full Stack Web Development",
+  "order": 1,
+  "difficulty": "Intermediate",
+  "tags": ["Database", "Caching", "Redis", "Performance Tuning"]
+}

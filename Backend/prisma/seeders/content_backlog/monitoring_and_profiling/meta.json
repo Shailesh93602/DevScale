@@ -1,0 +1,8 @@
+{
+  "title": "Monitoring and Profiling",
+  "description": "Learn about the essential database monitoring and profiling tasks including EXPLAIN, slow query logs, health metrics, and popular tools.",
+  "module": "Full Stack Web Development",
+  "order": 4,
+  "difficulty": "Intermediate",
+  "tags": ["Database", "Monitoring", "Profiling", "Performance Tuning"]
+}

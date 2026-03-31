@@ -1,0 +1,37 @@
+{
+  "title": "Caching Strategies Quiz",
+  "description": "Test your knowledge on different database caching patterns.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these is the most common caching pattern used in multi-tier applications?",
+      "options": ["Write-Through", "Write-Back", "Cache-Aside", "Read-Only"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is a 'Cache Miss'?",
+      "options": ["A failed cache-to-database synchronization", "Data not found in the cache, requiring retrieval from the primary source", "Deleting a record from the cache by mistake", "A cache that is too small"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which caching pattern writes data initially only to the cache and syncs it to the database in the background?",
+      "options": ["Write-Through", "Write-Back", "Cache-Aside", "No-Cache"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "When should you use caching to improve performance?",
+      "options": ["Always for every query", "Only for data that changes on every request", "Primarily for frequently read but infrequently changed data", "Never"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a popular tool for distributed caching?",
+      "options": ["Redis", "TablePlus", "Git", "Lighthouse"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

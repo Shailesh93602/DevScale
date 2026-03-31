@@ -1,0 +1,31 @@
+{
+  "title": "Monitoring and Profiling Quiz",
+  "description": "Test your knowledge on database monitoring and profiling.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary role of database monitoring?",
+      "options": ["To collect and analyze data from the database server and queries", "To delete old users", "To encrypt the database", "To create new tables"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a key metric to monitor for database performance?",
+      "options": ["CPU and Memory Usage", "Active Connections Count", "Slow Query Logs", "All of the above"],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "Regarding database profiling, what is the best tool to use to identify bottlenecks in a specific query?",
+      "options": ["EXPLAIN", "Slow Query Log", "Monitor", "Lighthouse"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "A record of all queries that take more than a specific amount of time to execute is called a _______.",
+      "options": ["Fast Query Log", "Slow Query Log", "Index Log", "User Log"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
