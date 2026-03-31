@@ -1,0 +1,8 @@
+{
+  "title": "Object-Oriented Analysis and Design",
+  "description": "Transition from developer to architect by mastering the systematic process of analyzing and designing complex software systems.",
+  "module": "System Architecture and Design",
+  "order": 1,
+  "difficulty": "Advanced",
+  "tags": ["OOA", "OOD", "Solid", "Architecture", "Engineering"]
+}

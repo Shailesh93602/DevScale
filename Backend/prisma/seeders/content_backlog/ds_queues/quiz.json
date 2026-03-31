@@ -1,0 +1,18 @@
+{
+  "title": "Queues Quiz",
+  "description": "Test your knowledge on FIFO and enqueue/dequeue logic.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "In a 'Queue', where is a NEW element always added?",
+      "options": [
+        "The Front",
+        "The Middle",
+        "The Rear",
+        "Wherever there is space"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

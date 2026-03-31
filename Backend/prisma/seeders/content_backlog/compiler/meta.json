@@ -1,0 +1,8 @@
+{
+  "title": "Compiler",
+  "description": "Deepen your computer science foundation by learning the internal mechanics of how compilers translate and optimize high-level code.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 0,
+  "difficulty": "Advanced",
+  "tags": ["Compiler", "CS Foundations", "Optimization", "Lower-Level"]
+}

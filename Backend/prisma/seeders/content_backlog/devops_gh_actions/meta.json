@@ -1,0 +1,8 @@
+{
+  "title": "Advanced GitHub Actions Workflows (Cloud & DevOps)",
+  "description": "Master the art of automated software delivery by learning cloud-grade GitHub Actions patterns and security standards.",
+  "module": "Cloud Computing and DevOps",
+  "order": 1,
+  "difficulty": "Advanced",
+  "tags": ["DevOps", "GitHub Actions", "CI/CD", "Automation", "Cloud"]
+}

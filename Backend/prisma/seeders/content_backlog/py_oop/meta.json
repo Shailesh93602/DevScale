@@ -1,0 +1,8 @@
+{
+  "title": "Object-Oriented Programming (OOP) in Python",
+  "description": "Learn to apply professional Object-Oriented principles using Python's specific syntax, including magic methods and self-referencing.",
+  "module": "Python Programming Masterclass",
+  "order": 10,
+  "difficulty": "Intermediate",
+  "tags": ["Python", "OOP", "Self", "Architecture"]
+}

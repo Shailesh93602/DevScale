@@ -1,0 +1,8 @@
+{
+  "title": "C++ Standard Template Library (STL)",
+  "description": "Master the industry-standard tools of C++ by learning to use vectors, maps, and high-performance algorithms from the STL.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 12,
+  "difficulty": "Advanced",
+  "tags": ["C++", "STL", "Containers", "Algorithms", "Performance"]
+}

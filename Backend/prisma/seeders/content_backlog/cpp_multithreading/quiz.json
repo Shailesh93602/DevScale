@@ -1,0 +1,18 @@
+{
+  "title": "C++ Multithreading Quiz",
+  "description": "Test your knowledge on threads, mutexes, and data races.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which C++ object is used to 'lock' shared data to prevent multiple threads from accessing it simultaneously?",
+      "options": [
+        "std::thread",
+        "std::mutex",
+        "std::future",
+        "std::atomic"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

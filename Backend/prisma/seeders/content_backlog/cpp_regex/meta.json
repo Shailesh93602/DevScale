@@ -1,0 +1,8 @@
+{
+  "title": "C++ Regular Expressions",
+  "description": "Learn to parse complex text and validate user data with extreme precision using modern C++ regex patterns.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 14,
+  "difficulty": "Intermediate",
+  "tags": ["C++", "Regex", "Text Parsing", "Verification"]
+}

@@ -1,0 +1,18 @@
+{
+  "title": "OOAD Quiz",
+  "description": "Test your knowledge on analysis, design, and object relationships.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which phase of OOAD focuses on IDENTIFYING the core objects and actors within a project's requirements?",
+      "options": [
+        "Design",
+        "Implementation",
+        "Analysis",
+        "Testing"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

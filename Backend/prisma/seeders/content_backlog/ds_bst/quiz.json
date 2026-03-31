@@ -1,0 +1,18 @@
+{
+  "title": "Binary Search Trees Quiz",
+  "description": "Test your knowledge on logarithmic search and tree traversals.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "In a 'Binary Search Tree', where would a value LARGER than the root node be placed?",
+      "options": [
+        "In the Left subtree",
+        "In the Right subtree",
+        "It replaced the root",
+        "It cannot be added"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
