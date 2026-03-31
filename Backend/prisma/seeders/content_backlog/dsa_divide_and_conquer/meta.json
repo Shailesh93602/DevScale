@@ -1,0 +1,8 @@
+{
+  "title": "Divide and Conquer",
+  "description": "Master the multi-branched recursive paradigm used in efficient algorithms like Merge Sort and Quick Sort.",
+  "module": "Data Structures",
+  "order": 12,
+  "difficulty": "Intermediate",
+  "tags": ["DSA", "Divide and Conquer", "Recursion", "Algorithms"]
+}

@@ -1,0 +1,18 @@
+{
+  "title": "Segment Trees Quiz",
+  "description": "Test your knowledge on range queries, point updates, and lazy propagation.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What technique is used to perform range updates in O(log n) time with a Segment Tree?",
+      "options": [
+        "Binary Search",
+        "Lazy Propagation",
+        "Memoization",
+        "Tabulation"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

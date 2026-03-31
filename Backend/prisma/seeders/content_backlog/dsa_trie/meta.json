@@ -1,0 +1,8 @@
+{
+  "title": "Trie",
+  "description": "Learn about the prefix tree structure, its efficiency in string lookups, and its use in autocomplete features.",
+  "module": "Data Structures",
+  "order": 16,
+  "difficulty": "Advanced",
+  "tags": ["DSA", "Trie", "Prefix Tree", "String Search", "Algorithms"]
+}

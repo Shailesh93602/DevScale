@@ -1,0 +1,18 @@
+{
+  "title": "Searching Algorithms Quiz",
+  "description": "Test your knowledge on linear and binary search techniques.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the prerequisite for performing a Binary Search on a collection?",
+      "options": [
+        "The collection must be sorted",
+        "The collection must be small",
+        "The collection must contain only integers",
+        "The collection must be empty"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
