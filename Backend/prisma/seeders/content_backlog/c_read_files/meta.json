@@ -1,0 +1,8 @@
+{
+  "title": "Read Files",
+  "description": "Learn to load and process information from the file system by mastering the reading functions of the C language.",
+  "module": "C Programming Masterclass",
+  "order": 49,
+  "difficulty": "Advanced",
+  "tags": ["C", "File Handling", "Input", "Storage"]
+}

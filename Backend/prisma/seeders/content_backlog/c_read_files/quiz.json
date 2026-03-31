@@ -1,0 +1,18 @@
+{
+  "title": "Read Files Quiz",
+  "description": "Test your knowledge on fgets, fscanf, and EOF markers.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which function is best suited for reading an entire line of text from a file into a string?",
+      "options": [
+        "fscanf()",
+        "get()",
+        "fgets()",
+        "input()"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

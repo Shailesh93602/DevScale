@@ -1,0 +1,18 @@
+{
+  "title": "C Structures Quiz",
+  "description": "Test your knowledge on struct definition and member access.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which operator is used to access members or properties of a structure variable in C?",
+      "options": [
+        "->",
+        "&",
+        ".",
+        "*"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+<section>
+    <h2>Understanding References vs Pointers in C</h2>
+    <p>In C, the term "reference" typically refers to the address of a variable. While C++ has a dedicated reference type, in C, we achieve this functionality entirely through <strong>Pointers</strong>.</p>
+
+    <h3>1. Passed by Reference</h3>
+    <p>When you pass a pointer to a function (e.g., <code>void update(int *p)</code>), you are performing what's known as **Pass by Reference**. The function can now directly modify the original variable's value in memory.</p>
+
+    <h3>2. Efficient Data Access</h3>
+    <p>Working with addresses (references) allows multiple parts of your program to interact with the same data without making expensive copies. This is essential for large structures and complex arrays.</p>
+
+    <h3>3. The Address-of Operator (&)</h3>
+    <p>Whenever you see <code>&x</code>, you are creating a "reference" to <code>x</code> by identifying its exact location in the computer's memory.</p>
+
+    <h3>Conclusion</h3>
+    <p>While C is strictly procedural, understanding how to use pointers as references is the key to building efficient, interconnected systems that can share and update data across multiple functions.</p>
+</section>

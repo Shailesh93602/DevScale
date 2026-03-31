@@ -1,0 +1,8 @@
+{
+  "title": "Create Files",
+  "description": "Learn to generate new files dynamically using the different file modes in the C language.",
+  "module": "C Programming Masterclass",
+  "order": 47,
+  "difficulty": "Advanced",
+  "tags": ["C", "File Handling", "Storage", "Creation"]
+}

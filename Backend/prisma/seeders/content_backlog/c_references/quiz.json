@@ -1,0 +1,18 @@
+{
+  "title": "C References Quiz",
+  "description": "Test your knowledge on pass-by-reference and the address-of operator.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which operator is used to get a 'reference' (memory address) to an existing variable in C?",
+      "options": [
+        "*",
+        "!",
+        "&",
+        "%"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

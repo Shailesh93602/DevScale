@@ -1,0 +1,16 @@
+<section>
+    <h2>Writing to Files in C</h2>
+    <p>Once you have a file open in write ("w") or append ("a") mode, you can use several functions to send data into it.</p>
+
+    <h3>1. Using fprintf()</h3>
+    <p>This is the most flexible function. It works exactly like <code>printf()</code>, but its first argument is the file pointer: <code>fprintf(fptr, "Hello, %s!", name);</code>.</p>
+
+    <h3>2. Using fputs()</h3>
+    <p>Used specifically for writing strings to a file. It is simple and efficient: <code>fputs("This is a line of text.", fptr);</code>.</p>
+
+    <h3>3. Flushing the Buffer</h3>
+    <p>When you write to a file, C often stores the data in a temporary 'buffer' in memory first. To ensure all data is actually written to the physical disk, use <code>fflush(fptr);</code> or simply <code>fclose(fptr);</code>.</p>
+
+    <h3>Conclusion</h3>
+    <p>Writing data to files is a fundamental skill for creating durable and useful software that can produce output beyond the terminal screen.</p>
+</section>
