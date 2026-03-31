@@ -1,0 +1,13 @@
+{
+  "title": "Legal Requirements Quiz",
+  "description": "Test your knowledge on legal requirements for web development.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the web development, what consists of a primary role of 'Legal Requirements'?项目",
+      "options": ["To collect and analyze data", "Correctly and securely following exactly how your project's data and user interactions are handled correctly as intended by law", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

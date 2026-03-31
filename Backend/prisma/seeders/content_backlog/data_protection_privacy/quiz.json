@@ -1,0 +1,13 @@
+{
+  "title": "Data Protection Quiz",
+  "description": "Test your knowledge on protecting user data and privacy.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the web security, what consists of a primary role of 'Data Protection'?项目",
+      "options": ["To collect and analyze data", "Correctly and securely managing exactly how your project's personal and sensitive data is handled", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
