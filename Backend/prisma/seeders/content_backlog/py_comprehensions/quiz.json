@@ -1,0 +1,18 @@
+{
+  "title": "Python Comprehensions Quiz",
+  "description": "Test your knowledge on the syntax and usage of list and dictionary comprehensions.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which set of characters is used to define a 'List Comprehension' in Python?",
+      "options": [
+        "{}",
+        "()",
+        "[]",
+        "<>"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

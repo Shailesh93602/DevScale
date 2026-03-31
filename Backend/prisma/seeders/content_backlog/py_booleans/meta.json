@@ -1,0 +1,8 @@
+{
+  "title": "Python Booleans",
+  "description": "Learn the essential rules of truth and falsehood in Python to build powerful conditional logic in your apps.",
+  "module": "Python Programming Masterclass",
+  "order": 4,
+  "difficulty": "Beginner",
+  "tags": ["Python", "Booleans", "Logic", "ConditionalFlow"]
+}
