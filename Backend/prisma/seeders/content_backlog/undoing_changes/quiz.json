@@ -1,0 +1,31 @@
+{
+  "title": "Undoing Changes Quiz",
+  "description": "Test your knowledge on Git version control patterns.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which command is used to discard local changes from a specific file in Git?",
+      "options": ["git restore filename", "git discard filename", "git revert filename", "git log filename"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Regarding undoing changes, which Git command is used to unstage changes from the staging area?",
+      "options": ["git restore --staged filename", "git unstage filename", "git unadd filename", "git commit --undo"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which Git command is used to record a new commit that reverts the changes from a specific, previous commit?",
+      "options": ["git revert commit-sha", "git undo commit-sha", "git back commit-sha", "git log --revert"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which Git command is used to update the most recent commit with new changes or a new message?",
+      "options": ["git commit --amend", "git update --last", "git save", "git version --amend"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

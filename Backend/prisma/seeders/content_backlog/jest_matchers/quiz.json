@@ -1,0 +1,31 @@
+{
+  "title": "Jest Matchers and Assertions Quiz",
+  "description": "Test your knowledge on Jest unit testing concepts.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which Jest matcher is used for exact equality check using Object.is?",
+      "options": ["toBe()", "toEqual()", "toContain()", "toMatch()"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which of these mathers is best for checking the equality of an object or array's content?",
+      "options": ["toBe()", "toEqual()", "toContain()", "toMatch()"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Regarding Jest matchers, which one is used to check if an array contains a specific item?",
+      "options": ["toContain()", "toHaveProperty()", "toBeDefined()", "toBeTruthy()"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "A situation where two or more transactions are waiting for each other to release a lock, resulting in a hang, is called a _______.",
+      "options": ["Deadlock", "Live Lock", "Fast Lock", "User Lock"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

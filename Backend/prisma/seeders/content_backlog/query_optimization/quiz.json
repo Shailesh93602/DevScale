@@ -1,0 +1,31 @@
+{
+  "title": "Query Optimization Quiz",
+  "description": "Test your knowledge on database query optimization concepts.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary role of query optimization?",
+      "options": ["To collect and analyze data from the database server and queries", "To identify and improve the efficiency of slow-performing database queries", "To delete old users", "To encrypt the database"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a key metric to monitor for database performance?",
+      "options": ["CPU and Memory Usage", "Active Connections Count", "Slow Query Logs", "All of the above"],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "Regarding query optimization, which tool is best to use to see exactly how a database executes a query?",
+      "options": ["EXPLAIN", "Slow Query Log", "Monitor", "Lighthouse"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "A situation where two or more transactions are waiting for each other to release a lock, resulting in a hang, is called a _______.",
+      "options": ["Deadlock", "Live Lock", "Fast Lock", "User Lock"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
