@@ -1,0 +1,20 @@
+<section>
+    <h2>Understanding Database Indexes</h2>
+    <p>An index is a data structure that improves the speed of data retrieval operations on a database table at the cost of additional writes and storage space.</p>
+
+    <h3>1. Why use Indexes?</h3>
+    <p>Just like a book index help you find a topic without reading the whole book, a database index allows the DBMS to find specific rows quickly without scanning the entire table (a 'Full Table Scan').</p>
+
+    <h3>2. Types of Indexes</h3>
+    <ul>
+        <li><strong>Clustered Index:</strong> Defines the physical order of data in the table. There can only be one per table (usually the primary key).</li>
+        <li><strong>Non-Clustered Index:</strong> A separate structure that contains the indexed columns and a pointer to the actual data rows.</li>
+        <li><strong>Unique Index:</strong> Ensures that no two rows have the same value in the indexed columns.</li>
+    </ul>
+
+    <h3>3. The Cost of Over-Indexing</h3>
+    <p>Every time you <code>INSERT</code>, <code>UPDATE</code>, or <code>DELETE</code>, the indexes must also be updated. Over-indexing can significantly slow down write performance and consume excessive disk space.</p>
+
+    <h3>Conclusion</h3>
+    <p>Indexes are the primary tools for performance tuning in databases. Correctly identifying which columns to index can transform a slow application into a high-performance system.</p>
+</section>

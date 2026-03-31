@@ -1,0 +1,8 @@
+{
+  "title": "ACID Properties",
+  "description": "Master the four fundamental pillars of data reliability: Atomicity, Consistency, Isolation, and Durability.",
+  "module": "Database Systems",
+  "order": 12,
+  "difficulty": "Advanced",
+  "tags": ["Databases", "ACID", "Transactions", "Reliability"]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "Data Warehousing",
+  "description": "Learn how to build centralized repositories for high-performance reporting and business intelligence.",
+  "module": "Database Systems",
+  "order": 14,
+  "difficulty": "Advanced",
+  "tags": ["Databases", "Data Warehousing", "ETL", "OLAP", "BI"]
+}

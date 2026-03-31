@@ -1,0 +1,18 @@
+{
+  "title": "Introduction to Databases Quiz",
+  "description": "Test your basic knowledge on databases and their importance in software development.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary purpose of a database system?",
+      "options": [
+        "To play videos",
+        "To edit photos",
+        "To efficiently store and manage electronic data",
+        "To provide an internet connection"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

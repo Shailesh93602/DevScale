@@ -1,0 +1,18 @@
+{
+  "title": "Data Warehousing Quiz",
+  "description": "Test your knowledge on OLTP, OLAP, and the ETL process.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What does the ETL acronym stand for in the context of data warehousing?",
+      "options": [
+        "Extra Table Logic",
+        "Extract, Transform, Load",
+        "Encrypt, Transfer, List",
+        "Evaluate, Target, Log"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

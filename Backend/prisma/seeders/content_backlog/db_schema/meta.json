@@ -1,0 +1,8 @@
+{
+  "title": "Database Schema",
+  "description": "Learn to design and manage the formal structure of your databases, from logical definitions to physical implementation.",
+  "module": "Database Systems",
+  "order": 17,
+  "difficulty": "Intermediate",
+  "tags": ["Databases", "Schema", "Design", "Migrations"]
+}

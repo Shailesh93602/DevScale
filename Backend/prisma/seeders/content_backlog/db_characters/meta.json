@@ -1,0 +1,8 @@
+{
+  "title": "Characters",
+  "description": "Learn how databases store and compare text data using character sets, encodings, and collations.",
+  "module": "Database Systems",
+  "order": 16,
+  "difficulty": "Intermediate",
+  "tags": ["Databases", "Characters", "Encoding", "Unicode", "Collation"]
+}

@@ -1,0 +1,18 @@
+{
+  "title": "ER Model Quiz",
+  "description": "Test your knowledge on entities, attributes, and relationship cardinalities.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What does a rectangle typically represent in a standard Entity-Relationship Diagram (ERD)?",
+      "options": [
+        "Attribute",
+        "Relationship",
+        "Entity",
+        "Constraint"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

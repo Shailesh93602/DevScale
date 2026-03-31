@@ -1,0 +1,18 @@
+{
+  "title": "SQL Quiz",
+  "description": "Test your knowledge on SQL commands and query structures.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which SQL command is used to retrieve data from a database?",
+      "options": [
+        "INSERT",
+        "UPDATE",
+        "SELECT",
+        "DELETE"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

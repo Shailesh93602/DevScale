@@ -1,0 +1,8 @@
+{
+  "title": "Transactions (Full Stack Web Development)",
+  "description": "Learn how to group database operations into atomic units to ensure data integrity and reliable system behavior.",
+  "module": "Database Systems",
+  "order": 11,
+  "difficulty": "Advanced",
+  "tags": ["Databases", "Transactions", "Commit", "Rollback", "Data Integrity"]
+}
