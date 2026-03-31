@@ -1,0 +1,19 @@
+{
+  "title": "Managing Secrets in CI/CD Quiz",
+  "description": "Test your knowledge on secure secrets management in CI/CD.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the DevOps, what is the primary role of 'Secrets Management' in Continuous Integration and Continuous Deployment (CI/CD)?",
+      "options": ["To collect and analyze data", "To securely store and manage sensitive pieces of information—such as database passwords and API keys—that your application project needs to function correctly", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a key step in a secrets-management-CI/CD workflow?",
+      "options": ["Using the encrypted 'secrets' or 'variables' provided by your CI/CD platform to securely handle your application's passwords and API keys during a pipeline run", "Deleting all your local code", "Recording a commit directly through SQL", "Its only possible for SQL repositories"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

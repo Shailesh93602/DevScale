@@ -1,0 +1,19 @@
+{
+  "title": "Dockerfile Basics Quiz",
+  "description": "Test your knowledge on writing Dockerfiles.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the DevOps, what is the primary role of a 'Dockerfile'?",
+      "options": ["To collect and analyze data", "To define exactly how a Docker container image should be built for your application", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a typical command used within a project's Dockerfile to define its Base Image?",
+      "options": ["FROM", "WORKDIR", "RUN", "CMD"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

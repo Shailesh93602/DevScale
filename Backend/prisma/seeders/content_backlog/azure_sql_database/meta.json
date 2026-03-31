@@ -1,0 +1,8 @@
+{
+  "title": "Azure SQL Database",
+  "description": "Learn about the essential cloud database tasks including tracking changes, coordinating multiple developers, and collaboration strategies.",
+  "module": "Full Stack Web Development",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Cloud", "DevOps", "Azure", "SQL", "Databases"]
+}
