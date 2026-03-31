@@ -1,0 +1,8 @@
+{
+  "title": "Serverless Best Practices",
+  "description": "Learn about the essential serverless best practices including tracking changes, coordinating multiple developers, and collaboration strategies.",
+  "module": "Full Stack Web Development",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Serverless", "DevOps", "Best Practices", "Software Engineering"]
+}

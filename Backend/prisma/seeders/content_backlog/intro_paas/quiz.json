@@ -1,0 +1,13 @@
+{
+  "title": "Introduction to PaaS Quiz",
+  "description": "Test your knowledge on the basics of Platform as a Service (PaaS).",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary role of 'Platform as a Service (PaaS)' in modern software development?",
+      "options": ["To collect and analyze data", "Building and deploying application code without managing any underlying infrastructure directly", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

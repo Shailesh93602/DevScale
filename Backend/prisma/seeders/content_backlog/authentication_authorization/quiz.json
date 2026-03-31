@@ -1,0 +1,19 @@
+{
+  "title": "Authentication and Authorization Quiz",
+  "description": "Test your knowledge on identity and access management.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the web security, what is the primary role of 'Authentication'?",
+      "options": ["To collect and analyze data", "Correctly verifying exactly who a user is—such as through its login and its password", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Regarding the web security, what is 'Authorization' primarily used for?",
+      "options": ["Correctly and securely verifying exactly what an authenticated user is allowed to do—such as through its user roles and its permissions", "Deleting all your local code", "Recording a commit directly through SQL", "Its only possible for SQL repositories"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
