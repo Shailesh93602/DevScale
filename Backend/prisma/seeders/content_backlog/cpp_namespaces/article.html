@@ -1,0 +1,16 @@
+<section>
+    <h2>Understanding C++ Namespaces</h2>
+    <p>Namespaces are used to organize code into logical groups and to prevent name collisions that can occur especially when your code base includes multiple libraries.</p>
+
+    <h3>1. The Problem: Name Collisions</h3>
+    <p>If you use two different libraries that both have a function named <code>calculate()</code>, the compiler won't know which one to use. Namespaces solve this by wrapping code in a unique domain.</p>
+
+    <h3>2. Declaring and Using Namespaces</h3>
+    <p>You define a namespace using the <code>namespace</code> keyword. To access its contents, you use the <strong>Scope Resolution Operator</strong> (<code>::</code>): <code>MyLib::calculate()</code>.</p>
+
+    <h3>3. The std Namespace</h3>
+    <p>All the standard C++ libraries (like iostream, vector, and string) live inside the <code>std</code> namespace. This is why we use <code>std::cout</code> or the <code>using namespace std;</code> directive.</p>
+
+    <h3>Conclusion</h3>
+    <p>Namespaces are essential for professional software development, ensuring that your code remains clean, organized, and compatible with the thousands of external libraries available in the C++ ecosystem.</p>
+</section>

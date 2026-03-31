@@ -1,0 +1,8 @@
+{
+  "title": "C++ Functions (Advanced)",
+  "description": "Learn to write more flexible and performant code by mastering function overloading, default parameters, and inline optimization.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 1,
+  "difficulty": "Advanced",
+  "tags": ["C++", "Functions", "Overloading", "Optimization"]
+}

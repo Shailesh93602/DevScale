@@ -1,0 +1,16 @@
+<section>
+    <h2>Understanding Constructors and Destructors</h2>
+    <p>Constructors and Destructors are special member functions of a class that are executed automatically when an object is created or destroyed.</p>
+
+    <h3>1. Constructors (The Initialization)</h3>
+    <p>A <strong>Constructor</strong> has the same name as the class and no return type. It is used to set initial values for the object's variables: <code>Car() { speed = 0; }</code>. You can also create 'Parameterized Constructors' to set specific values at creation.</p>
+
+    <h3>2. Destructors (The Cleanup)</h3>
+    <p>A <strong>Destructor</strong> has the same name as the class but begins with a tilde (<code>~</code>). It is used to release any resources (like memory or files) that the object was using: <code>~Car() { /* cleanup code */ }</code>.</p>
+
+    <h3>3. Automatic Lifecycle</h3>
+    <p>You never call these functions manually. C++ ensures they run at the exact right moment, making object management safer and more reliable than manual initialization.</p>
+
+    <h3>Conclusion</h3>
+    <p>Mastering constructors and destructors is the key to writing "bulletproof" C++ code where objects always start in a valid state and never leave behind memory leaks when they die.</p>
+</section>

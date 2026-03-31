@@ -1,0 +1,18 @@
+{
+  "title": "C++ Enumerations Quiz",
+  "description": "Test your knowledge on enums and the modern enum class syntax.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which modern C++ directive is used to create a 'strongly typed' enumeration that doesn't implicitly convert to an integer?",
+      "options": [
+        "enum",
+        "enum class",
+        "define enum",
+        "const enum"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

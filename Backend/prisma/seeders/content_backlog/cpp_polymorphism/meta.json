@@ -1,0 +1,8 @@
+{
+  "title": "C++ Polymorphism",
+  "description": "Unlock the true power of Object-Oriented design by learning to create flexible, extensible systems using C++ virtual functions.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 1,
+  "difficulty": "Advanced",
+  "tags": ["C++", "OOP", "Polymorphism", "Architecture"]
+}

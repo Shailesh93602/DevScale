@@ -1,0 +1,8 @@
+{
+  "title": "C++ Namespaces",
+  "description": "Learn to manage code complexity and avoid name collisions by mastering the organization power of C++ namespaces.",
+  "module": "C++ Masterclass: From Beginner to Pro",
+  "order": 1,
+  "difficulty": "Intermediate",
+  "tags": ["C++", "Namespaces", "Organization", "Best Practices"]
+}
