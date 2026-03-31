@@ -1,0 +1,31 @@
+{
+  "title": "Database Partitioning Quiz",
+  "description": "Test your knowledge on different database partitioning patterns and concepts.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is 'Horizontal Partitioning' also known as?",
+      "options": ["Sharding", "Clustering", "Normalization", "Grouping"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a way to divide a single table into smaller, more manageable pieces?",
+      "options": ["Partitioning", "Normalization", "Indexing", "Linking"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which partitioning method divides data based on a mathematical calculation on a specific column?",
+      "options": ["Range Partitioning", "List Partitioning", "Hash Partitioning", "Vertical Partitioning"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "What is a major benefit of database partitioning?",
+      "options": ["Better query performance for large tables", "Easier database backups and restores", "Ability to scale individual partitions across multiple disks", "All of the above"],
+      "correctAnswer": 3,
+      "points": 10
+    }
+  ]
+}

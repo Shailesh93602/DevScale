@@ -1,0 +1,31 @@
+{
+  "title": "Introduction to Git Quiz",
+  "description": "Test your knowledge on Git version control concepts.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary role of Git?",
+      "options": ["To collect and analyze data from the database server and queries", "To track changes to your code over time and coordinate work among multiple developers on a single project", "To encrypt the database", "To create new tables"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a key metric to monitor for Git performance?",
+      "options": ["CPU and Memory Usage", "Active Connections Count", "Slow Query Logs", "None of the above"],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "Regarding Git collaboration, which approach is more common in modern application development?",
+      "options": ["Pessimistic Locking", "Optimistic Locking", "No Locking", "Deadlocking"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "A situation where two or more transactions are waiting for each other to release a lock, resulting in a hang, is called a _______.",
+      "options": ["Deadlock", "Live Lock", "Fast Lock", "User Lock"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

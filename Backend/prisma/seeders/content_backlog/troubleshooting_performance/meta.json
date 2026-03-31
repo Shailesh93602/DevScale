@@ -1,0 +1,8 @@
+{
+  "title": "Troubleshooting Performance Issues",
+  "description": "Learn about the essential database performance troubleshooting tasks including slow query optimization, concurrency conflict management, and infrastructure monitoring.",
+  "module": "Full Stack Web Development",
+  "order": 3,
+  "difficulty": "Intermediate",
+  "tags": ["Database", "Troubleshooting", "Performance Tuning", "High Availability"]
+}

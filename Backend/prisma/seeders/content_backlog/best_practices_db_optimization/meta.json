@@ -1,0 +1,8 @@
+{
+  "title": "Best Practices for Database Optimization",
+  "description": "Learn about the essential database optimization best practices including normalization, index management, and query optimization.",
+  "module": "Full Stack Web Development",
+  "order": 2,
+  "difficulty": "Intermediate",
+  "tags": ["Database", "Optimization", "High Performance", "Scalability"]
+}

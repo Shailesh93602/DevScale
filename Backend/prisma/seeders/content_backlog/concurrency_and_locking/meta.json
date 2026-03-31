@@ -1,0 +1,8 @@
+{
+  "title": "Concurrency and Locking",
+  "description": "Learn about the essential database concurrency and locking tasks including optimistic vs pessimistic locking, health metrics, and popular tools.",
+  "module": "Full Stack Web Development",
+  "order": 5,
+  "difficulty": "Intermediate",
+  "tags": ["Database", "Concurrency", "Locking", "Performance Tuning"]
+}
