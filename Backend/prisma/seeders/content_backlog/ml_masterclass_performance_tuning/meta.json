@@ -1,0 +1,8 @@
+{
+  "title": "Performance Tuning in MachineLearning",
+  "description": "Learn to optimize your ML models using pruning, quantization, and hardware acceleration.",
+  "module": "MachineLearning Developer Masterclass",
+  "order": 4,
+  "difficulty": "Advanced",
+  "tags": ["Machine Learning", "Performance", "Optimization", "Inference"]
+}

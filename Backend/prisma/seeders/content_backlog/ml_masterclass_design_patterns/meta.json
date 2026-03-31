@@ -1,0 +1,8 @@
+{
+  "title": "Design Patterns in MachineLearning",
+  "description": "Learn to address common ML challenges in data representation, model training, and serving.",
+  "module": "MachineLearning Developer Masterclass",
+  "order": 3,
+  "difficulty": "Intermediate",
+  "tags": ["Machine Learning", "Design Patterns", "A/B Testing", "Transfer Learning"]
+}
