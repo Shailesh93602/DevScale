@@ -1,0 +1,18 @@
+{
+  "title": "FullStack Design Patterns Quiz",
+  "description": "Test your knowledge on common design patterns used in fullstack development.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which design pattern is commonly used in modern frontend frameworks to build reusable UI elements?",
+      "options": [
+        "Component-Based Architecture",
+        "Singleton Pattern",
+        "Observer Pattern",
+        "Factory Pattern"
+      ],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

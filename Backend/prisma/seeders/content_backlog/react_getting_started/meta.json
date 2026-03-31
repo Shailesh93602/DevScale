@@ -1,0 +1,8 @@
+{
+  "title": "Getting Started with React",
+  "description": "Learn the basics of React.js, from components to the Virtual DOM.",
+  "module": "React Developer Masterclass",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["React", "Frontend", "JavaScript", "UI"]
+}

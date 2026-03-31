@@ -1,0 +1,13 @@
+{
+  "title": "Regression Analysis Quiz",
+  "description": "Test your knowledge on regression models and predictive analysis.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the Data Science, what consists of a primary role of 'Regression Analysis'?项目",
+      "options": ["To collect and analyze data", "Statistical processes for correctly and mathematically estimating the relationships between exactly how your project's variables are handled", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

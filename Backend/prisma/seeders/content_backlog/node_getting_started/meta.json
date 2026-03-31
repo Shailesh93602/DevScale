@@ -1,0 +1,8 @@
+{
+  "title": "Getting Started with Node",
+  "description": "Begin your journey into backend development with the powerful Node.js runtime.",
+  "module": "Node Developer Masterclass",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Node.js", "Backend", "JavaScript", "Getting Started"]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "First project in Node",
+  "description": "Build your first backend server and project using Node.js.",
+  "module": "Node Developer Masterclass",
+  "order": 2,
+  "difficulty": "Beginner",
+  "tags": ["Node.js", "Backend", "First Project", "Server"]
+}

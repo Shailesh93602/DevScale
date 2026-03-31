@@ -1,0 +1,8 @@
+{
+  "title": "Getting Started with FullStack",
+  "description": "Learn about the essential fullstack tasks including tracking changes, coordinating multiple developers, and collaboration strategies.",
+  "module": "FullStack Developer Masterclass",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["FullStack", "Frontend", "Backend", "API"]
+}

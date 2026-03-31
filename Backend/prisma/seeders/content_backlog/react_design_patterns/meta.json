@@ -1,0 +1,8 @@
+{
+  "title": "Design Patterns in React",
+  "description": "Master patterns like HOCs, Render Props, and Custom Hooks for clean React code.",
+  "module": "React Developer Masterclass",
+  "order": 3,
+  "difficulty": "Intermediate",
+  "tags": ["React", "Design Patterns", "Hooks", "HOC"]
+}
