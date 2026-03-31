@@ -1,0 +1,25 @@
+{
+  "title": "Switching Branches Quiz",
+  "description": "Test your knowledge on Git branch navigation concepts.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which Git command is used to switch from one branch to another?",
+      "options": ["git checkout branch-name", "git jump branch-name", "git move branch-name", "git start branch-name"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Regarding the modern Git commands, which one is specifically designed for switching branches?",
+      "options": ["git switch branch-name", "git move branch-name", "git change branch-name", "git jump branch-name"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a key reason why you might be unable to switch from one branch to another in Git?",
+      "options": ["You have uncommitted changes in your working directory", "The remote repository is too large", "You don't have enough RAM", "All of the above"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

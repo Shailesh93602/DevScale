@@ -1,0 +1,25 @@
+{
+  "title": "Remote Branches Quiz",
+  "description": "Test your knowledge on Git's remote branch interaction mechanism.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these is the correct command for viewing all your remote branches in Git?",
+      "options": ["git branch -r", "git branch --remote", "git view remote-branches", "git branch -a"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Regarding remote branches, which command retrieves new history from a remote repository without merging it into your current branch?",
+      "options": ["git fetch origin", "git pull origin", "git get origin", "git clone origin"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which flag is used with 'git push' to set up a permanent tracking relationship between a local branch and a remote one named after it?",
+      "options": ["-u", "--set-upstream", "-t", "Both -u and --set-upstream are used"],
+      "correctAnswer": 3,
+      "points": 10
+    }
+  ]
+}

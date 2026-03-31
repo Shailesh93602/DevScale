@@ -1,0 +1,25 @@
+{
+  "title": "Stashing Changes Quiz",
+  "description": "Test your knowledge on Git's stashing mechanism.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is 'Stashing' in the context of Git?",
+      "options": ["A data error in a database", "Temporarily storing uncommitted changes so you can switch tasks", "A commit that is too large", "An installation error"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which command is used to see a list of all your active Git stashes?",
+      "options": ["git stash show", "git stash view", "git stash list", "git show stashes"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Regarding stashing, what is a key difference between 'apply' and 'pop'?",
+      "options": ["'apply' saves the stash; 'pop' deletes it", "'apply' leaves the stash in the list; 'pop' removes it after applying", "There is no difference", "Both apply and pop are only used in SQL"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

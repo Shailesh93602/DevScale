@@ -1,0 +1,25 @@
+{
+  "title": "Introduction to GitHub Quiz",
+  "description": "Test your knowledge on GitHub basics.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the primary role of GitHub?",
+      "options": ["To collect and analyze data", "To host and facilitate collaboration on Git repositories", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Regarding GitHub, where is your code hosted?",
+      "options": ["On a local Git server", "On your local machine only", "In the cloud on GitHub's servers", "In a SQL database"],
+      "correctAnswer": 2,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a key benefit of using GitHub for your project development?",
+      "options": ["It provides powerful tools for collaborating on code projects among team members", "It makes your local machine faster", "It deletes old commits by mistake", "Its only used for SQL code"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

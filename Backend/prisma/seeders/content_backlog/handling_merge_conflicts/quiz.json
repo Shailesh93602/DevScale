@@ -1,0 +1,31 @@
+{
+  "title": "Handling Merge Conflicts Quiz",
+  "description": "Test your knowledge on Git conflict management concepts.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is a 'Merge Conflict' in Git?",
+      "options": ["When a repository is too large", "When two or more developers modify the same line of code in different branches", "When a Git installation fails", "When a branch name is invalid"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Regarding merge conflict markers, what does 'HEAD' represent?",
+      "options": ["Your current branch content", "The incoming change content", "A Git configuration file", "A specific commit hash"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which Git command is used to move the resolved version of a file from the staging area into a merge commit?",
+      "options": ["git add filename", "git resolve filename", "git merge --resolved", "git start branch-name"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "What is the primary role of a merge conflict resolution strategy?",
+      "options": ["To collect and analyze data from the database", "To choose which version of the codebase to keep or blend together", "To delete old commits", "To restart the development from scratch"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

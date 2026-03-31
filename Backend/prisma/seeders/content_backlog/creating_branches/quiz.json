@@ -1,0 +1,31 @@
+{
+  "title": "Creating Branches Quiz",
+  "description": "Test your knowledge on Git branch creation concepts.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which command is used to create a new branch in Git?",
+      "options": ["git branch branch-name", "git create branch-name", "git start branch-name", "git install branch-name"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which of these Git commands is used to create and switch to a new branch in a single operation?",
+      "options": ["git checkout -b branch-name", "git branch -s branch-name", "git move branch-name", "git start branch-name"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Regarding Git branching, which approach is more common in modern application development for individual features?",
+      "options": ["Pessimistic Locking", "Optimistic Locking", "No Locking", "Deadlocking"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "A situation where two or more transactions are waiting for each other to release a lock, resulting in a hang, is called a _______.",
+      "options": ["Deadlock", "Live Lock", "Fast Lock", "User Lock"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

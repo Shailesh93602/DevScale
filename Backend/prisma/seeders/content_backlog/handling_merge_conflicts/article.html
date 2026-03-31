@@ -1,0 +1,30 @@
+<section>
+    <h2>Handling Git Merge Conflicts</h2>
+    <p>Merge conflicts occur when two or more developers modify the same line of code in different branches, and Git is unable to automatically merge the changes. By following these steps, you can set it up in minutes and start collaborating with others.</p>
+
+    <h3>1. Identifying a Conflict</h3>
+    <pre><code>
+git merge branch-name
+# Output: CONFLICT (content): Merge conflict in file-name.js
+    </code></pre>
+
+    <h3>2. Viewing Conflict Markers</h3>
+    <p>Git adds markers directly to your code file to show the "HEAD" (current branch) and incoming changes.</p>
+    <pre><code>
+<<<<<<< HEAD
+    Current Branch Content
+=======
+    Incoming Change Content
+>>>>>>> feature-branch
+    </code></pre>
+
+    <h3>3. Choosing a Resolution Strategy</h3>
+    <ul>
+      <li><strong>Manually Fix:</strong> Edit the file to blend both changes or keep only one.</li>
+      <li><strong>Keep Ours:</strong> Use Git commands to resolve the conflict by keeping only your version.</li>
+      <li><strong>Keep Theirs:</strong> Use Git commands to resolve the conflict by keeping only their version.</li>
+    </ul>
+
+    <h3>Conclusion</h3>
+    <p>By making branching a priority, you can ensure that your application's most valuable asset—its code—remains safe and organized for your users.</p>
+</section>

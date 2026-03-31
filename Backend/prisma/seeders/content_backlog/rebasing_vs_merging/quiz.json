@@ -1,0 +1,25 @@
+{
+  "title": "Rebasing vs. Merging Quiz",
+  "description": "Test your knowledge on Git branch history management concepts.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these is a key difference between merging and rebasing?",
+      "options": ["Merging is only used in SQL; Rebasing is for NoSQL", "Merging preserves the original branch history; Rebasing rewrites it for a linear timeline", "Merging is faster than rebasing by 10x", "There is no difference"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Regarding Git branching, which technique 'replays' your branch's individual commits on top of another branch's latest commit?",
+      "options": ["Merging", "Rebasing", "Stashing", "Cloning"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "What is a potential risk of using 'rebase' instead of 'merge'?",
+      "options": ["Creating too many branch names", "Rewriting history that has already been pushed to a shared remote repository", "It deletes all your local work by mistake", "It replaces the repository's configuration"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
