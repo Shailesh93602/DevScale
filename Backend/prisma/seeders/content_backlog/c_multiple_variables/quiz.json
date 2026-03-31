@@ -1,0 +1,18 @@
+{
+  "title": "Multiple Variables Quiz",
+  "description": "Test your knowledge on declaring and initializing multiple variables in C.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which character is used to separate variable names in a single type declaration?",
+      "options": [
+        ";",
+        ":",
+        ",",
+        "|"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

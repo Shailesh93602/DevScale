@@ -1,0 +1,8 @@
+{
+  "title": "Cloud Databases",
+  "description": "Learn the advantages of deploying and managing your databases on modern cloud platforms like AWS, GCP, and Azure.",
+  "module": "Database Systems",
+  "order": 31,
+  "difficulty": "Intermediate",
+  "tags": ["Databases", "Cloud", "DBaaS", "AWS", "Azure", "GCP"]
+}

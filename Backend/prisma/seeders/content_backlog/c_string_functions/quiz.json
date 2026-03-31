@@ -1,0 +1,18 @@
+{
+  "title": "C String Functions Quiz",
+  "description": "Test your knowledge on common functions from the string.h library.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which function is used to join or concatenate two strings together in C?",
+      "options": [
+        "strjoin()",
+        "strcat()",
+        "strcpy()",
+        "strlen()"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

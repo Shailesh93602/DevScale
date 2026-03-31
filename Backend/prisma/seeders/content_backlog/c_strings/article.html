@@ -1,0 +1,16 @@
+<section>
+    <h2>Understanding Strings in C</h2>
+    <p>A string in C is not a separate data type but is represented as a character array that is terminated by a special <strong>Null Character (<code>\0</code>)</strong>.</p>
+
+    <h3>1. Strings are Character Arrays</h3>
+    <p>You declare a string just like any other array: <code>char name[] = "EduScale";</code>. The compiler automatically adds the <code>\0</code> at the end, so a string with 8 characters actually takes up 9 bytes of memory.</p>
+
+    <h3>2. Input and Output</h3>
+    <p>You can print a string using the <code>%s</code> format specifier: <code>printf("%s", name);</code>. To read a string from the user, you use <code>scanf("%s", name);</code> (note: <code>scanf</code> stops at the first space it encounters).</p>
+
+    <h3>3. Immutability?</h3>
+    <p>Unlike languages where strings are immutable, in C, you can modify any individual character in a string array directly (e.g., <code>name[0] = 'e';</code>).</p>
+
+    <h3>Conclusion</h3>
+    <p>Because strings are just arrays, all your knowledge of indices and loops applies directly to them. This provides deep control over text processing, but requires care to manage memory correctly.</p>
+</section>

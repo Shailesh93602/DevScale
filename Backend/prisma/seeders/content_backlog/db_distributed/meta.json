@@ -1,0 +1,8 @@
+{
+  "title": "Distributed Databases",
+  "description": "Learn how to manage data across multiple physical locations to improve global performance and system resilience.",
+  "module": "Database Systems",
+  "order": 29,
+  "difficulty": "Advanced",
+  "tags": ["Databases", "Distributed Systems", "Replication", "Fragmentation"]
+}

@@ -1,0 +1,18 @@
+{
+  "title": "C Strings Quiz",
+  "description": "Test your knowledge on the null terminator and character array representation of strings.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which special character is used to signal the absolute end of a string in C memory?",
+      "options": [
+        "\\n",
+        "\\t",
+        "\\0",
+        "\\"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}
