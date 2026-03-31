@@ -1,0 +1,19 @@
+{
+  "title": "Browser DevTools Overview Quiz",
+  "description": "Test your knowledge on browser developer tools.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding web development, what is the primary role of 'Browser DevTools'?",
+      "options": ["To collect and analyze data", "To provide a set of built-in web developer tools directly within a browser", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which panel in Browser DevTools is commonly used for viewing and modifying a project's DOM and CSS in real-time?",
+      "options": ["Elements or Inspector", "Console", "Network", "Sources"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
