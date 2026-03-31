@@ -1,0 +1,8 @@
+{
+  "title": "Multiple Inheritance",
+  "description": "Explore the capabilities and challenges of multiple inheritance, including the diamond problem and its resolutions.",
+  "module": "Object Oriented Programming",
+  "order": 25,
+  "difficulty": "Advanced",
+  "tags": ["OOP", "Multiple Inheritance", "Diamond Problem", "Design Patterns"]
+}
