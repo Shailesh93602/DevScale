@@ -1,0 +1,25 @@
+{
+  "title": "Assertions with Chai Quiz",
+  "description": "Test your knowledge on the Chai assertion library.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the installation of Chai via npm, which of these is the correct command?",
+      "options": ["npm install --save-dev chai", "npm save chai", "npm get chai", "npm start chai"],
+      "correctAnswer": 0,
+      "points": 10
+    },
+    {
+      "question": "Which of these assertion styles is NOT supported by Chai?",
+      "options": ["Expect", "Should", "Assert", "Verify"],
+      "correctAnswer": 3,
+      "points": 10
+    },
+    {
+      "question": "Regarding the assertion style, which one uses a readable, chainable syntax like 'expect(val).to.equal(result)'?",
+      "options": ["Expect", "Should", "Assert", "None of the above"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}
