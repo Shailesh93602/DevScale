@@ -1,0 +1,18 @@
+{
+  "title": "Python Numbers and Casting Quiz",
+  "description": "Test your knowledge on int, float, and complex numbers, along with casting functions.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which Python function would you use to convert the string '10.5' into a floating-point number?",
+      "options": [
+        "int()",
+        "float()",
+        "str()",
+        "num()"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

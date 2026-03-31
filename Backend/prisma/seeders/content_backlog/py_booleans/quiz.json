@@ -1,0 +1,18 @@
+{
+  "title": "Python Booleans Quiz",
+  "description": "Test your knowledge on truth values, falsy objects, and logical operators.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these Python values is considered 'False' when evaluated in a boolean context?",
+      "options": [
+        "\"False\"",
+        "1",
+        "0.1",
+        "None"
+      ],
+      "correctAnswer": 3,
+      "points": 10
+    }
+  ]
+}

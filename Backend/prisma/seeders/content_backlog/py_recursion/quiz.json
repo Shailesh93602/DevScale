@@ -1,0 +1,18 @@
+{
+  "title": "Python Recursion Quiz",
+  "description": "Test your knowledge on base cases and recursive function calls in Python.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "What is the crucial condition in a recursive function that prevents it from calling itself infinitely?",
+      "options": [
+        "The recursive step",
+        "The default case",
+        "The base case",
+        "The argument limit"
+      ],
+      "correctAnswer": 2,
+      "points": 10
+    }
+  ]
+}

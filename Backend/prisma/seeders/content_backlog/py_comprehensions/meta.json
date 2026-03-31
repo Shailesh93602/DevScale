@@ -1,0 +1,8 @@
+{
+  "title": "Python Comprehensions",
+  "description": "Learn to write concise, efficient, and Pythonic transformations using list, dictionary, and set comprehensions.",
+  "module": "Python Programming Masterclass",
+  "order": 10,
+  "difficulty": "Intermediate",
+  "tags": ["Python", "Comprehensions", "Optimization", "Syntax"]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "Python Functions",
+  "description": "Learn to write modular and reusable code by mastering Python's clean and powerful function syntax.",
+  "module": "Python Programming Masterclass",
+  "order": 8,
+  "difficulty": "Intermediate",
+  "tags": ["Python", "Functions", "Reusability", "def"]
+}
