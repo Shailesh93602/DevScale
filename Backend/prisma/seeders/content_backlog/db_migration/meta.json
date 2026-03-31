@@ -1,0 +1,8 @@
+{
+  "title": "Database Migration",
+  "description": "Learn to manage your database schema as code, ensuring smooth updates and rollbacks across all environments.",
+  "module": "Database Systems",
+  "order": 27,
+  "difficulty": "Advanced",
+  "tags": ["Databases", "Migration", "DevOps", "Prisma", "CI/CD"]
+}

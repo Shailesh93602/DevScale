@@ -1,0 +1,8 @@
+{
+  "title": "Query Optimization (Full Stack Web Development)",
+  "description": "Learn to write high-performance SQL by understanding the internal workings of the query optimizer and execution plans.",
+  "module": "Database Systems",
+  "order": 21,
+  "difficulty": "Advanced",
+  "tags": ["Databases", "Optimization", "SQL", "Performance", "Explain"]
+}

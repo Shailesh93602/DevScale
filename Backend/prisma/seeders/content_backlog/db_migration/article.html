@@ -1,0 +1,19 @@
+<section>
+    <h2>Understanding Database Migration</h2>
+    <p>Database migration refers to the process of updating a database's schema (tables, columns, etc.) in a version-controlled and reversible manner.</p>
+
+    <h3>1. Schema Evolution as Code</h3>
+    <p>Modern applications change frequently. Database migrations treat these changes as <strong>Migrations as Code</strong>. Each change is a script that is tracked and applied automatically across different development, testing, and production environments.</p>
+
+    <h3>2. Up and Down migrations</h3>
+    <ul>
+        <li><strong>Up Migration:</strong> The script that applies the change (e.g., creating a new table).</li>
+        <li><strong>Down Migration:</strong> The script that reverses the change, allowing you to 'roll back' to a previous version if something goes wrong.</li>
+    </ul>
+
+    <h3>3. Popular Tools</h3>
+    <p>Common migration frameworks include <strong>Liquibase</strong>, <strong>Flyway</strong>, and built-in tools within web frameworks, such as <strong>Prisma</strong> (Node.js), <strong>Rails Migrations</strong> (Ruby), and <strong>Alembic</strong> (Python).</p>
+
+    <h3>Conclusion</h3>
+    <p>Database migration is an essential part of CI/CD, ensuring that your database and application code always stay in sync as they evolve together.</p>
+</section>

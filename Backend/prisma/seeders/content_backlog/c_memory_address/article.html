@@ -1,0 +1,18 @@
+<section>
+    <h2>Understanding Memory Addresses in C</h2>
+    <p>A memory address is a unique identifier (typically a hexadecimal number) for a location in the computer's RAM where data is stored.</p>
+
+    <h3>1. Variables are Labels</h3>
+    <p>In high-level languages, we work with variable names. In C, we can also work with the underlying memory addresses. A variable is effectively a human-readable label for a specific address in memory.</p>
+
+    <h3>2. Viewing Memory Addresses</h3>
+    <p>You can use the <strong>Address-of Operator (&)</strong> to see where a variable is stored. To print a memory address, use the <code>%p</code> format specifier in <code>printf</code>.</p>
+    <pre><code>int x = 10;
+printf("%p", &x); // Prints the hex address, e.g., 0x7ffd9b8</code></pre>
+
+    <h3>3. Why bother with Addresses?</h3>
+    <p>Working with addresses directly is the secret to C's power. It allows for efficient memory management, <strong>Pass-by-Reference</strong> (modifying data inside functions), and the creation of complex data structures like linked lists and trees.</p>
+
+    <h3>Conclusion</h3>
+    <p>Understanding memory addresses is the first step toward mastering <strong>Pointers</strong>, one of the most powerful and distinctive features of the C language.</p>
+</section>

@@ -1,0 +1,18 @@
+{
+  "title": "Nested Loops Quiz",
+  "description": "Test your knowledge on the execution flow and performance of nested loops.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "If an outer loop runs 5 times and an inner loop runs 4 times, how many times will the code inside the inner loop execute in total?",
+      "options": [
+        "9",
+        "20",
+        "5",
+        "4"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
