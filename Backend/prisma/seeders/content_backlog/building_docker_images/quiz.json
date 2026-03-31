@@ -1,0 +1,19 @@
+{
+  "title": "Building Docker Images Quiz",
+  "description": "Test your knowledge on the Docker image building process.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the DevOps, what is the primary role of 'Building Docker Images'?",
+      "options": ["To collect and analyze data", "Creating a single, portable, and consistent container format for your project's application code and its dependencies", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a common command for building a project's new Docker container image?",
+      "options": ["docker build -t my-app .", "docker build image my-app", "docker create my-app", "docker run -b my-app"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "title": "Optimizing Docker Images Quiz",
+  "description": "Test your knowledge on reducing Docker image size and build times.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the DevOps, what is the primary role of 'Optimizing Docker Images'?",
+      "options": ["To collect and analyze data", "Building smaller, faster, and more efficient container images for your application project", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which of these is a key step in an image-optimization workflow for a project?",
+      "options": ["Using multi-stage builds to only include your production-ready code in your application's final images", "Deleting all your local code", "Recording a commit directly through SQL", "Its only possible for SQL repositories"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

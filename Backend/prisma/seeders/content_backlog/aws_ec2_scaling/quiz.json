@@ -1,0 +1,19 @@
+{
+  "title": "AWS EC2 and Scaling Quiz",
+  "description": "Test your knowledge on Amazon EC2 virtual servers and auto scaling.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding DevOps, what is the primary role of 'Amazon EC2 (Elastic Compute Cloud)'?",
+      "options": ["To collect and analyze data", "Providing flexible and scalable virtual servers—or 'instances'—in the cloud for your application project", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Which AWS service is used to automatically adjust your project's number of EC2 instances as intended?",
+      "options": ["AWS Auto Scaling", "Amazon S3", "Amazon RDS", "AWS IAM"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "Hybrid Cloud and Multi-Cloud",
+  "description": "Learn about the essential cloud infrastructure tasks including tracking changes, coordinating multiple developers, and collaboration strategies.",
+  "module": "Full Stack Web Development",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Cloud", "DevOps", "Hybrid Cloud", "Multi-Cloud"]
+}

@@ -1,0 +1,19 @@
+{
+  "title": "AWS Lambda Quiz",
+  "description": "Test your knowledge on Amazon AWS Lambda serverless functions.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the DevOps, what is the primary role of 'AWS Lambda'?",
+      "options": ["To collect and analyze data", "Running and managing code—such as for an API—without having to provision or manage any servers", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    },
+    {
+      "question": "Regarding the serverless, which AWS service is commonly used to automatically trigger exactly how your Lambda functions run from an HTTP request?",
+      "options": ["Amazon API Gateway", "Amazon S3", "Amazon EC2", "Amazon RDS"],
+      "correctAnswer": 0,
+      "points": 10
+    }
+  ]
+}

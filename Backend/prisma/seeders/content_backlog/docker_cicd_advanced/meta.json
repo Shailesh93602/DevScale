@@ -1,0 +1,8 @@
+{
+  "title": "Advanced Docker in CI/CD",
+  "description": "Learn about the essential containerization tasks including tracking changes, coordinating multiple developers, and collaboration strategies.",
+  "module": "Full Stack Web Development",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["DevOps", "Docker", "CI/CD", "Advanced Containers"]
+}
