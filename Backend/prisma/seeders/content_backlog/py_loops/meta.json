@@ -1,0 +1,8 @@
+{
+  "title": "Python Loops",
+  "description": "Learn to manage repetitive tasks and sequence iteration by mastering Python's for and while loop structures.",
+  "module": "Python Programming Masterclass",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Python", "Loops", "Iteration", "Automation"]
+}

@@ -1,0 +1,16 @@
+<section>
+    <h2>List Comprehensions and Generators</h2>
+    <p>Python provides several ways to create and transform sequences. While list comprehensions are fast, **Generators** are the ultimate tool for memory efficiency.</p>
+
+    <h3>1. List Comprehension Recap</h3>
+    <p>A concise way to create lists: <code>[x**2 for x in my_list]</code>. It builds the ENTIRE list in memory at once.</p>
+
+    <h3>2. Introducing Generators</h3>
+    <p>A Generator expression looks like a list comprehension but uses round brackets: <code>(x**2 for x in my_list)</code>. Instead of creating a full list, it returns an **iterator** that generates one item at a time only when you ask for it.</p>
+
+    <h3>3. The 'yield' Keyword</h3>
+    <p>You can also create generators using functions and the <code>yield</code> keyword. When a function <code>yields</code> a value, its state is "paused", allowing it to resume exactly where it left off next time it's called.</p>
+
+    <h3>Conclusion</h3>
+    <p>Use list comprehensions for small datasets where speed is priority. Use generators for massive or infinite datasets to keep your memory usage near zero.</p>
+</section>

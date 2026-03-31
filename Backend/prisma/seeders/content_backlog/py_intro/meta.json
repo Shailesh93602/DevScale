@@ -1,0 +1,8 @@
+{
+  "title": "Introduction to Python",
+  "description": "Kickstart your Journey with the basics of what makes Python the world's most popular and versatile programming language.",
+  "module": "Python Programming Masterclass",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Python", "Foundations", "Interpreted", "Introduction"]
+}

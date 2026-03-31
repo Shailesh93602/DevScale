@@ -1,0 +1,8 @@
+{
+  "title": "Python Networking",
+  "description": "Learn to build interconnected applications by mastering low-level socket communication and high-level internet protocols in Python.",
+  "module": "Python Programming Masterclass",
+  "order": 1,
+  "difficulty": "Advanced",
+  "tags": ["Python", "Networking", "Sockets", "HTTP", "Systems"]
+}

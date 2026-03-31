@@ -1,0 +1,18 @@
+{
+  "title": "Introduction to Python Quiz",
+  "description": "Test your knowledge on the history and core characteristics of the Python language.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Which of these is a core philosophy of the Python programming language?",
+      "options": [
+        "Semicolons are mandatory",
+        "Readability counts",
+        "Complexity is better than simplicity",
+        "Explicit is worse than implicit"
+      ],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}

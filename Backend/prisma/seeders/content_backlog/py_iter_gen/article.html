@@ -1,0 +1,16 @@
+<section>
+    <h2>Iterators and Generators in Depth</h2>
+    <p>Iteration is at the heart of Python. Understanding how it works "under the hood" allows you to build sophisticated data streams and custom collection types.</p>
+
+    <h3>1. The Iterator Protocol</h3>
+    <p>An **Iterable** is any object you can loop over (like a list). An **Iterator** is the object that actually does the work. To be an iterator, an object must implement <code>__iter__()</code> and <code>__next__()</code> methods.</p>
+
+    <h3>2. Generating on Demand</h3>
+    <p>A **Generator** is a simplified way to create an iterator. Because they "yield" values one by one, they never load the full dataset into RAM, allowing you to process files that are much larger than your computer's memory.</p>
+
+    <h3>3. Creating Infinite Streams</h3>
+    <p>Because generators only produce values when requested, you can easily create "infinite" sequences (like an infinite stream of random numbers or Fibonacci numbers) that will never crash your program.</p>
+
+    <h3>Conclusion</h3>
+    <p>By mastering the iterator protocol and generators, you unlock the ability to handle data-intensive tasks that were previously impossible, making your Python code incredibly scalable.</p>
+</section>
