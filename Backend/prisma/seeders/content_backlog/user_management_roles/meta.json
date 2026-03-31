@@ -1,0 +1,8 @@
+{
+  "title": "User Management and Roles",
+  "description": "Learn about the essential user management tasks including tracking changes, coordinating multiple developers, and collaboration strategies.",
+  "module": "Full Stack Web Development",
+  "order": 1,
+  "difficulty": "Beginner",
+  "tags": ["Security", "User Management", "Roles", "RBAC"]
+}

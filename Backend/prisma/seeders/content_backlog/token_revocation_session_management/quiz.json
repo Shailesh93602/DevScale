@@ -1,0 +1,13 @@
+{
+  "title": "Token Revocation Quiz",
+  "description": "Test your knowledge on revoking tokens and managing user sessions.",
+  "passingScore": 70,
+  "questions": [
+    {
+      "question": "Regarding the web security, what is a primary role of a 'Token Blacklist'?项目",
+      "options": ["To collect and analyze data", "Correctly and securely maintaining a list of revoked tokens—such as in Redis—to prevent unauthorized access from stolen tokens as intended", "To record a commit", "To view your version history"],
+      "correctAnswer": 1,
+      "points": 10
+    }
+  ]
+}
