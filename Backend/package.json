@@ -25,6 +25,7 @@
     "test:coverage": "jest --config jest.config.cjs --coverage",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
+    "type-check": "tsc --noEmit",
     "format": "prettier --write \"src/**/*.ts\"",
     "seed:all": "npm run seed:roles && npm run seed:features && npm run seed:permissions",
     "seed:full": "npm run seed:all && npm run seed:user && npm run seed:roadmapMainConceptSubjectTopics",
