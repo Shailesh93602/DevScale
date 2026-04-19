@@ -1,4 +1,4 @@
-import { PrismaClient, BattleType, BattleStatus, Difficulty, Length } from '@prisma/client';
+import { PrismaClient, BattleType, BattleStatus, Difficulty } from '@prisma/client';
 
 const prisma = new PrismaClient();
 const admin = 'admin@eduscale.io';
@@ -23,7 +23,8 @@ const seedBattles = async () => {
         }
 
         const difficulties = [Difficulty.EASY, Difficulty.MEDIUM, Difficulty.HARD];
-        const _lengths = [Length.short, Difficulty.MEDIUM, Length.long]; // Note: length enum might be different logic but let's stick to valid ones
+        // Note: length/difficulty mapping is seed-only; if you revive this,
+        // it'd be [Length.short, Difficulty.MEDIUM, Length.long].
         const types = [BattleType.QUICK, BattleType.SCHEDULED, BattleType.PRACTICE];
         const titles = [
             'JavaScript Fundamentals Duel',
