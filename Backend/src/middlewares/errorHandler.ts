@@ -46,7 +46,8 @@ export const errorHandler: ErrorRequestHandler = (
   // Error response handling
   const statusCode = err.statusCode || 500;
   const isDev = process.env.NODE_ENV === 'development';
-  const message = (statusCode === 500 && !isDev) ? 'Internal server error' : err.message;
+  const message =
+    statusCode === 500 && !isDev ? 'Internal server error' : err.message;
 
   res.status(statusCode).json({
     status: statusCode,

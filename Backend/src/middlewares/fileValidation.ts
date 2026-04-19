@@ -26,9 +26,9 @@ const ALLOWED_MIME_TYPES = new Set([
 const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
 
 interface FileValidationOptions {
-  required?: boolean;                        // default true
-  allowedTypes?: Set<string>;                // override MIME whitelist
-  maxSizeBytes?: number;                     // override size cap
+  required?: boolean; // default true
+  allowedTypes?: Set<string>; // override MIME whitelist
+  maxSizeBytes?: number; // override size cap
 }
 
 export const validateFileUpload = (options: FileValidationOptions = {}) => {
@@ -52,8 +52,8 @@ export const validateFileUpload = (options: FileValidationOptions = {}) => {
       next(
         createAppError(
           `File type "${req.file.mimetype}" is not allowed. Accepted: ${[...allowedTypes].join(', ')}`,
-          415,
-        ),
+          415
+        )
       );
       return;
     }
@@ -62,8 +62,8 @@ export const validateFileUpload = (options: FileValidationOptions = {}) => {
       next(
         createAppError(
           `File too large. Maximum size is ${Math.round(maxSizeBytes / (1024 * 1024))} MB`,
-          413,
-        ),
+          413
+        )
       );
       return;
     }

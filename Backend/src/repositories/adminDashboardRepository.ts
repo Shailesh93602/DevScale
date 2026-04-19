@@ -26,7 +26,10 @@ import UserRepository from './userRepository';
 
 import prisma from '../lib/prisma.js';
 
-export default class AdminDashboardRepository extends BaseRepository< User, typeof prisma.user > {
+export default class AdminDashboardRepository extends BaseRepository<
+  User,
+  typeof prisma.user
+> {
   private readonly userRepo: UserRepository;
   constructor() {
     super(prisma.user);
@@ -137,11 +140,11 @@ export default class AdminDashboardRepository extends BaseRepository< User, type
   ) {
     const timeFilter = timeRange
       ? {
-        created_at: {
-          gte: timeRange.start,
-          lte: timeRange.end,
-        },
-      }
+          created_at: {
+            gte: timeRange.start,
+            lte: timeRange.end,
+          },
+        }
       : {};
 
     switch (metric) {

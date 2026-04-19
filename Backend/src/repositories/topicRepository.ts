@@ -3,7 +3,10 @@ import BaseRepository from './baseRepository.js';
 
 import prisma from '../lib/prisma.js';
 
-export default class TopicRepository extends BaseRepository< Topic, typeof prisma.topic > {
+export default class TopicRepository extends BaseRepository<
+  Topic,
+  typeof prisma.topic
+> {
   constructor() {
     super(prisma.topic);
   }

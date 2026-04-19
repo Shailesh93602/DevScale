@@ -3,22 +3,34 @@ import { Challenge } from '@prisma/client';
 export const getFunctionName = (signature: string): string => {
   // Matches: function name(...), func name(...), public int name(...), def name(self, ...), name(...)
   // We try to find the word before the first parenthesis that is not a keyword
-  const keywords = ['function', 'func', 'public', 'private', 'static', 'def', 'var', 'let', 'const', 'class', 'struct'];
-  
+  const keywords = [
+    'function',
+    'func',
+    'public',
+    'private',
+    'static',
+    'def',
+    'var',
+    'let',
+    'const',
+    'class',
+    'struct',
+  ];
+
   const cleanSignature = signature.replaceAll(/:[^,)]+/g, ''); // Simple strip of TS types like : string
   const match = /(\w+)\s*\(/.exec(cleanSignature);
-  
+
   if (match) {
     const candidate = match[1];
     if (!keywords.includes(candidate)) {
       return candidate;
     }
   }
-  
+
   // Try to find "var name = function" or "const name =" patterns
   const assignmentMatch = /(?:var|let|const)\s+(\w+)\s*=/.exec(signature);
   if (assignmentMatch) return assignmentMatch[1];
-  
+
   // Try harder if it's "function name"
   const funcMatch = /(?:function|func|def)\s+(\w+)/.exec(signature);
   if (funcMatch) return funcMatch[1];
@@ -26,7 +38,11 @@ export const getFunctionName = (signature: string): string => {
   return 'solution'; // fallback
 };
 
-export const wrapCode = (code: string, language: string, challenge: Challenge): string => {
+export const wrapCode = (
+  code: string,
+  language: string,
+  challenge: Challenge
+): string => {
   const functionName = getFunctionName(challenge.function_signature);
 
   switch (language.toLowerCase()) {

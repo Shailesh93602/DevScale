@@ -44,7 +44,10 @@ jest.mock('../../repositories/rbacRepository', () => ({
 }));
 
 import { authorizeRoles } from '../../middlewares/authMiddleware';
-import { requirePermission, requireRole } from '../../middlewares/rbacMiddleware';
+import {
+  requirePermission,
+  requireRole,
+} from '../../middlewares/rbacMiddleware';
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 function makeReq(roleName?: string): Request {
@@ -84,7 +87,7 @@ describe('RBAC Middleware', () => {
       const req = makeReq('STUDENT');
       middleware(req, res, next as NextFunction);
       expect(next).toHaveBeenCalledWith(
-        expect.objectContaining({ statusCode: 403 }),
+        expect.objectContaining({ statusCode: 403 })
       );
     });
 
@@ -93,7 +96,7 @@ describe('RBAC Middleware', () => {
       const req = { headers: {} } as unknown as Request;
       middleware(req, res, next as NextFunction);
       expect(next).toHaveBeenCalledWith(
-        expect.objectContaining({ statusCode: 401 }),
+        expect.objectContaining({ statusCode: 401 })
       );
     });
 
@@ -102,7 +105,7 @@ describe('RBAC Middleware', () => {
       const req = { user: { id: 'u1' }, headers: {} } as unknown as Request;
       middleware(req, res, next as NextFunction);
       expect(next).toHaveBeenCalledWith(
-        expect.objectContaining({ statusCode: 403 }),
+        expect.objectContaining({ statusCode: 403 })
       );
     });
   });
@@ -114,7 +117,11 @@ describe('RBAC Middleware', () => {
       const middleware = requirePermission('articles', 'delete');
       const req = makeReq('ADMIN');
       await middleware(req, res, next as NextFunction);
-      expect(mockCheckPermission).toHaveBeenCalledWith('user-123', 'articles', 'delete');
+      expect(mockCheckPermission).toHaveBeenCalledWith(
+        'user-123',
+        'articles',
+        'delete'
+      );
       expect(next).toHaveBeenCalledWith();
     });
 
@@ -124,7 +131,7 @@ describe('RBAC Middleware', () => {
       const req = makeReq('STUDENT');
       await middleware(req, res, next as NextFunction);
       expect(next).toHaveBeenCalledWith(
-        expect.objectContaining({ statusCode: 403 }),
+        expect.objectContaining({ statusCode: 403 })
       );
     });
 
@@ -133,7 +140,7 @@ describe('RBAC Middleware', () => {
       const req = { headers: {} } as unknown as Request;
       await middleware(req, res, next as NextFunction);
       expect(next).toHaveBeenCalledWith(
-        expect.objectContaining({ statusCode: 401 }),
+        expect.objectContaining({ statusCode: 401 })
       );
     });
   });
@@ -162,7 +169,7 @@ describe('RBAC Middleware', () => {
       const req = makeReq('STUDENT');
       await middleware(req, res, next as NextFunction);
       expect(next).toHaveBeenCalledWith(
-        expect.objectContaining({ statusCode: 403 }),
+        expect.objectContaining({ statusCode: 403 })
       );
     });
 
@@ -171,7 +178,7 @@ describe('RBAC Middleware', () => {
       const req = { headers: {} } as unknown as Request;
       await middleware(req, res, next as NextFunction);
       expect(next).toHaveBeenCalledWith(
-        expect.objectContaining({ statusCode: 401 }),
+        expect.objectContaining({ statusCode: 401 })
       );
     });
   });

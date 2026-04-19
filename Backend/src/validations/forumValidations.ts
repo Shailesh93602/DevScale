@@ -16,6 +16,8 @@ export const createForumSchema = Joi.object({
 export const updateForumSchema = Joi.object({
   title: Joi.string().min(3).max(200).optional(),
   description: Joi.string().min(10).max(10000).optional(),
-}).min(1).messages({
-  'object.min': 'Provide at least one field to update (title or description)',
-});
+})
+  .min(1)
+  .messages({
+    'object.min': 'Provide at least one field to update (title or description)',
+  });

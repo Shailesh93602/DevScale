@@ -89,11 +89,12 @@ export interface ChatMessage {
 }
 
 // Redis key helpers — all socket state lives here so it's shared across all server instances
-const USER_SOCKETS_KEY  = (userId: string)   => `eduscale:sockets:${userId}`;
-const BATTLE_USERS_KEY  = (battleId: string) => `eduscale:battle:users:${battleId}`;
-const PRESENCE_KEY      = (userId: string)   => `eduscale:presence:${userId}`;
-const SOCKET_TTL        = 24 * 60 * 60; // 1 day — auto-expire orphaned keys
-const PRESENCE_TTL      = 35;            // 35 s — client pings every 25 s; gone after 35 s silence
+const USER_SOCKETS_KEY = (userId: string) => `eduscale:sockets:${userId}`;
+const BATTLE_USERS_KEY = (battleId: string) =>
+  `eduscale:battle:users:${battleId}`;
+const PRESENCE_KEY = (userId: string) => `eduscale:presence:${userId}`;
+const SOCKET_TTL = 24 * 60 * 60; // 1 day — auto-expire orphaned keys
+const PRESENCE_TTL = 35; // 35 s — client pings every 25 s; gone after 35 s silence
 
 class SocketService {
   private io: SocketIOServer | null = null;
@@ -109,8 +110,12 @@ class SocketService {
     this.pubClient = new Redis(REDIS_URL);
     this.subClient = this.pubClient.duplicate();
 
-    this.pubClient.on('error', (err) => logger.error('Socket.io pubClient Redis error', { err }));
-    this.subClient.on('error', (err) => logger.error('Socket.io subClient Redis error', { err }));
+    this.pubClient.on('error', (err) =>
+      logger.error('Socket.io pubClient Redis error', { err })
+    );
+    this.subClient.on('error', (err) =>
+      logger.error('Socket.io subClient Redis error', { err })
+    );
 
     this.io = new SocketIOServer(server, {
       cors: {
@@ -137,7 +142,10 @@ class SocketService {
             /^https?:\/\/(192\.168|10\.|172\.(1[6-9]|2\d|3[01]))\.\d{1,3}\.\d{1,3}(:\d+)?$/.test(
               origin
             );
-          callback(isAllowed ? null : new Error('Origin not allowed'), isAllowed);
+          callback(
+            isAllowed ? null : new Error('Origin not allowed'),
+            isAllowed
+          );
         },
         methods: ['GET', 'POST'],
         credentials: true,
@@ -200,17 +208,26 @@ class SocketService {
 
       // Track user connections in Redis
       this.pubClient?.sadd(USER_SOCKETS_KEY(userId), socket.id).catch(() => {
-        this.userSockets.set(userId, [...(this.userSockets.get(userId) || []), socket.id]);
+        this.userSockets.set(userId, [
+          ...(this.userSockets.get(userId) || []),
+          socket.id,
+        ]);
       });
-      this.pubClient?.expire(USER_SOCKETS_KEY(userId), SOCKET_TTL).catch(() => {});
+      this.pubClient
+        ?.expire(USER_SOCKETS_KEY(userId), SOCKET_TTL)
+        .catch(() => {});
 
       // ─── Presence heartbeat ────────────────────────────────────────────
       // Mark user online; TTL auto-expires if the client stops pinging.
-      this.pubClient?.setex(PRESENCE_KEY(userId), PRESENCE_TTL, '1').catch(() => {});
+      this.pubClient
+        ?.setex(PRESENCE_KEY(userId), PRESENCE_TTL, '1')
+        .catch(() => {});
 
       // Client should emit 'ping' every ~25 s; each ping renews the TTL.
       socket.on('ping', () => {
-        this.pubClient?.setex(PRESENCE_KEY(userId), PRESENCE_TTL, '1').catch(() => {});
+        this.pubClient
+          ?.setex(PRESENCE_KEY(userId), PRESENCE_TTL, '1')
+          .catch(() => {});
         socket.emit('pong');
       });
 
@@ -246,10 +263,13 @@ class SocketService {
 
     // Track user ↔ battle membership in Redis
     this.pubClient?.sadd(BATTLE_USERS_KEY(battleId), userId).catch(() => {
-      if (!this.battleRooms.has(battleId)) this.battleRooms.set(battleId, new Set());
+      if (!this.battleRooms.has(battleId))
+        this.battleRooms.set(battleId, new Set());
       this.battleRooms.get(battleId)?.add(userId);
     });
-    this.pubClient?.expire(BATTLE_USERS_KEY(battleId), SOCKET_TTL).catch(() => {});
+    this.pubClient
+      ?.expire(BATTLE_USERS_KEY(battleId), SOCKET_TTL)
+      .catch(() => {});
 
     socket.to(`battle:${battleId}`).emit(SocketEvents.BATTLE_PARTICIPANT_JOIN, {
       battle_id: battleId,
@@ -269,18 +289,24 @@ class SocketService {
       this.battleRooms.get(battleId)?.delete(userId);
     });
 
-    socket.to(`battle:${battleId}`).emit(SocketEvents.BATTLE_PARTICIPANT_LEAVE, {
-      battle_id: battleId,
-      user_id: userId,
-      username: socket.data.user?.username || 'Anonymous',
-      avatar_url: socket.data.user?.avatar_url,
-      status: 'left',
-    } as ParticipantUpdate);
+    socket
+      .to(`battle:${battleId}`)
+      .emit(SocketEvents.BATTLE_PARTICIPANT_LEAVE, {
+        battle_id: battleId,
+        user_id: userId,
+        username: socket.data.user?.username || 'Anonymous',
+        avatar_url: socket.data.user?.avatar_url,
+        status: 'left',
+      } as ParticipantUpdate);
 
     logger.info(`User ${userId} left battle ${battleId}`);
   }
 
-  private async handleChatMessage(socket: Socket, userId: string, data: ChatMessage) {
+  private async handleChatMessage(
+    socket: Socket,
+    userId: string,
+    data: ChatMessage
+  ) {
     const { battle_id, message } = data;
 
     if (!battle_id || !message || message.trim() === '') return;
@@ -288,7 +314,11 @@ class SocketService {
     // Verify user is in this battle (Redis-backed, cross-server safe)
     let isMember = false;
     try {
-      isMember = (await this.pubClient?.sismember(BATTLE_USERS_KEY(battle_id), userId)) === 1;
+      isMember =
+        (await this.pubClient?.sismember(
+          BATTLE_USERS_KEY(battle_id),
+          userId
+        )) === 1;
     } catch {
       isMember = this.battleRooms.get(battle_id)?.has(userId) ?? false;
     }
@@ -303,7 +333,9 @@ class SocketService {
       timestamp: Date.now(),
     };
 
-    this.io?.to(`battle:${battle_id}`).emit(SocketEvents.CHAT_MESSAGE, chatMessage);
+    this.io
+      ?.to(`battle:${battle_id}`)
+      .emit(SocketEvents.CHAT_MESSAGE, chatMessage);
   }
 
   private async handleDisconnect(socket: Socket, userId: string) {
@@ -316,36 +348,43 @@ class SocketService {
       if (!remaining || remaining === 0) {
         // Clear presence — user is fully offline
         this.pubClient?.del(PRESENCE_KEY(userId)).catch(() => {});
-        const battleIds = await this.pubClient?.keys(BATTLE_USERS_KEY('*')) ?? [];
+        const battleIds =
+          (await this.pubClient?.keys(BATTLE_USERS_KEY('*'))) ?? [];
         for (const key of battleIds) {
           const isMember = await this.pubClient?.sismember(key, userId);
           if (isMember) {
             const battleId = key.replace('eduscale:battle:users:', '');
             await this.pubClient?.srem(key, userId);
-            socket.to(`battle:${battleId}`).emit(SocketEvents.BATTLE_PARTICIPANT_LEAVE, {
-              battle_id: battleId,
-              user_id: userId,
-              username: socket.data.user?.username || 'Anonymous',
-              avatar_url: socket.data.user?.avatar_url,
-              status: 'left',
-            } as ParticipantUpdate);
+            socket
+              .to(`battle:${battleId}`)
+              .emit(SocketEvents.BATTLE_PARTICIPANT_LEAVE, {
+                battle_id: battleId,
+                user_id: userId,
+                username: socket.data.user?.username || 'Anonymous',
+                avatar_url: socket.data.user?.avatar_url,
+                status: 'left',
+              } as ParticipantUpdate);
           }
         }
       }
     } catch {
       // Fallback: clean up in-memory maps
-      const updatedSockets = (this.userSockets.get(userId) || []).filter((id) => id !== socket.id);
+      const updatedSockets = (this.userSockets.get(userId) || []).filter(
+        (id) => id !== socket.id
+      );
       if (updatedSockets.length === 0) {
         this.userSockets.delete(userId);
         this.battleRooms.forEach((users, battleId) => {
           if (users.has(userId)) {
             users.delete(userId);
-            socket.to(`battle:${battleId}`).emit(SocketEvents.BATTLE_PARTICIPANT_LEAVE, {
-              battle_id: battleId,
-              user_id: userId,
-              username: socket.data.user?.username || 'Anonymous',
-              status: 'left',
-            } as ParticipantUpdate);
+            socket
+              .to(`battle:${battleId}`)
+              .emit(SocketEvents.BATTLE_PARTICIPANT_LEAVE, {
+                battle_id: battleId,
+                user_id: userId,
+                username: socket.data.user?.username || 'Anonymous',
+                status: 'left',
+              } as ParticipantUpdate);
           }
         });
       } else {
@@ -374,10 +413,16 @@ class SocketService {
    * Emit a private event to a specific user.
    * With the Redis adapter, io.to(socketId) is routed to the correct server automatically.
    */
-  async emitToUser(battleId: string, userId: string, event: string, data: unknown) {
+  async emitToUser(
+    battleId: string,
+    userId: string,
+    event: string,
+    data: unknown
+  ) {
     if (!this.io) return;
     try {
-      const socketIds = await this.pubClient?.smembers(USER_SOCKETS_KEY(userId)) ?? [];
+      const socketIds =
+        (await this.pubClient?.smembers(USER_SOCKETS_KEY(userId))) ?? [];
       for (const sid of socketIds) {
         this.io.to(sid).emit(event, data);
       }
@@ -413,13 +458,16 @@ class SocketService {
   }
 
   completeBattle(battleId: string, results: unknown) {
-    this.emitToRoom(battleId, SocketEvents.BATTLE_COMPLETED, { battle_id: battleId, results });
+    this.emitToRoom(battleId, SocketEvents.BATTLE_COMPLETED, {
+      battle_id: battleId,
+      results,
+    });
     logger.info(`Battle ${battleId} completed`);
   }
 
   async getConnectedUsers(battleId: string): Promise<string[]> {
     try {
-      return await this.pubClient?.smembers(BATTLE_USERS_KEY(battleId)) ?? [];
+      return (await this.pubClient?.smembers(BATTLE_USERS_KEY(battleId))) ?? [];
     } catch {
       return Array.from(this.battleRooms.get(battleId) || []);
     }

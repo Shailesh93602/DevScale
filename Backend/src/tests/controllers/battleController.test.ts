@@ -65,8 +65,14 @@ describe('BattleController', () => {
       };
       mockRequest.body = battleData;
 
-      const createdBattle = { id: 'battle-id', ...battleData, status: 'WAITING' };
-      (BattleRepository.prototype.createBattle as unknown as jest.Mock).mockResolvedValue(createdBattle as never);
+      const createdBattle = {
+        id: 'battle-id',
+        ...battleData,
+        status: 'WAITING',
+      };
+      (
+        BattleRepository.prototype.createBattle as unknown as jest.Mock
+      ).mockResolvedValue(createdBattle as never);
 
       await battleController.createBattle(
         mockRequest as Request,
@@ -94,7 +100,9 @@ describe('BattleController', () => {
         mockNext(err);
       }
 
-      expect(mockNext).toHaveBeenCalledWith(expect.objectContaining({ statusCode: 401 }));
+      expect(mockNext).toHaveBeenCalledWith(
+        expect.objectContaining({ statusCode: 401 })
+      );
     });
   });
 
@@ -104,7 +112,9 @@ describe('BattleController', () => {
         data: [{ id: '1', title: 'Battle 1', status: 'WAITING' }],
         meta: { total: 1, page: 1, limit: 10, totalPages: 1 },
       };
-      (BattleRepository.prototype.getBattles as unknown as jest.Mock).mockResolvedValue(mockBattles as never);
+      (
+        BattleRepository.prototype.getBattles as unknown as jest.Mock
+      ).mockResolvedValue(mockBattles as never);
 
       await battleController.getBattles(
         mockRequest as Request,
@@ -123,8 +133,14 @@ describe('BattleController', () => {
   describe('getBattle', () => {
     it('returns a single battle with 200', async () => {
       mockRequest.params = { id: 'battle-id' };
-      const mockBattle = { id: 'battle-id', title: 'Battle 1', status: 'WAITING' };
-      (BattleRepository.prototype.getBattleDetails as unknown as jest.Mock).mockResolvedValue(mockBattle as never);
+      const mockBattle = {
+        id: 'battle-id',
+        title: 'Battle 1',
+        status: 'WAITING',
+      };
+      (
+        BattleRepository.prototype.getBattleDetails as unknown as jest.Mock
+      ).mockResolvedValue(mockBattle as never);
 
       await battleController.getBattle(
         mockRequest as Request,
@@ -132,7 +148,9 @@ describe('BattleController', () => {
         mockNext as NextFunction
       );
 
-      expect(BattleRepository.prototype.getBattleDetails).toHaveBeenCalledWith('battle-id');
+      expect(BattleRepository.prototype.getBattleDetails).toHaveBeenCalledWith(
+        'battle-id'
+      );
       expect(mockResponse.status).toHaveBeenCalledWith(200);
     });
   });
@@ -140,9 +158,9 @@ describe('BattleController', () => {
   describe('cancelBattle', () => {
     it('cancels a battle and returns 200', async () => {
       mockRequest.params = { id: 'battle-id' };
-      (BattleRepository.prototype.cancelBattle as unknown as jest.Mock).mockResolvedValue(
-        { id: 'battle-id', status: 'CANCELLED' } as never
-      );
+      (
+        BattleRepository.prototype.cancelBattle as unknown as jest.Mock
+      ).mockResolvedValue({ id: 'battle-id', status: 'CANCELLED' } as never);
 
       await battleController.cancelBattle(
         mockRequest as Request,
@@ -150,7 +168,10 @@ describe('BattleController', () => {
         mockNext as NextFunction
       );
 
-      expect(BattleRepository.prototype.cancelBattle).toHaveBeenCalledWith('battle-id', 'test-user-id');
+      expect(BattleRepository.prototype.cancelBattle).toHaveBeenCalledWith(
+        'battle-id',
+        'test-user-id'
+      );
       expect(mockResponse.status).toHaveBeenCalledWith(200);
     });
 
@@ -168,7 +189,9 @@ describe('BattleController', () => {
         mockNext(err);
       }
 
-      expect(mockNext).toHaveBeenCalledWith(expect.objectContaining({ statusCode: 401 }));
+      expect(mockNext).toHaveBeenCalledWith(
+        expect.objectContaining({ statusCode: 401 })
+      );
     });
   });
 });

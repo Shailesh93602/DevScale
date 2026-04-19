@@ -7,9 +7,9 @@ export function slugify(text: string): string {
     .toLowerCase()
     .trim()
     .replace(/[^a-z0-9\s-]/g, '') // remove non-alphanumeric (keep spaces and hyphens)
-    .replace(/[\s]+/g, '-')        // spaces → hyphens
-    .replace(/-+/g, '-')           // collapse multiple hyphens
-    .replace(/^-+|-+$/g, '');      // trim leading/trailing hyphens
+    .replace(/[\s]+/g, '-') // spaces → hyphens
+    .replace(/-+/g, '-') // collapse multiple hyphens
+    .replace(/^-+|-+$/g, ''); // trim leading/trailing hyphens
 }
 
 /**
@@ -27,7 +27,9 @@ export function generateBattleSlug(title: string, id: string): string {
  * Detects whether a string is a UUID v4.
  */
 export function isUuid(value: string): boolean {
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+    value
+  );
 }
 
 /**

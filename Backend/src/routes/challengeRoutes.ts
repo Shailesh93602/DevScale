@@ -20,7 +20,10 @@ export class ChallengeRoutes extends BaseRouter {
 
   protected initializeRoutes(): void {
     // Static paths before /:id
-    this.router.get('/categories', this.challengeController.getChallengeCategories);
+    this.router.get(
+      '/categories',
+      this.challengeController.getChallengeCategories
+    );
     this.router.get('/', this.challengeController.getChallenges);
     this.router.get(
       '/leaderboard',

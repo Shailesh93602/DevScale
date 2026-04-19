@@ -5,7 +5,10 @@ import BaseRepository from './baseRepository.js';
 
 import prisma from '../lib/prisma.js';
 
-export default class ResourceRepository extends BaseRepository< Resource, typeof prisma.resource > {
+export default class ResourceRepository extends BaseRepository<
+  Resource,
+  typeof prisma.resource
+> {
   constructor() {
     super(prisma.resource);
   }

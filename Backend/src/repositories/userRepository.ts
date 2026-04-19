@@ -4,7 +4,10 @@ import { createAppError } from '../utils/errorHandler.js';
 import logger from '../utils/logger.js';
 import prisma from '../lib/prisma.js';
 
-export default class UserRepository extends BaseRepository<User, typeof prisma.user> {
+export default class UserRepository extends BaseRepository<
+  User,
+  typeof prisma.user
+> {
   constructor() {
     super(prisma.user);
   }
@@ -131,13 +134,13 @@ export default class UserRepository extends BaseRepository<User, typeof prisma.u
       }),
     ]);
 
-    const usersByRole = await this.groupBy({
+    const usersByRole = (await this.groupBy({
       by: [Prisma.UserScalarFieldEnum.experience_level],
       _count: true,
       orderBy: {
         experience_level: 'asc',
       },
-    }) as Array<{ experience_level: string | null; _count: number }>;
+    })) as Array<{ experience_level: string | null; _count: number }>;
 
     // Create a map with all experience levels initialized to 0
     const roleCountMap: Record<
@@ -160,24 +163,25 @@ export default class UserRepository extends BaseRepository<User, typeof prisma.u
     });
 
     // Calculate completion rates per experience level
-    const userRoadmapsWithProgress = await this.prismaClient.userRoadmap.findMany({
-      include: {
-        user: {
-          select: {
-            experience_level: true,
+    const userRoadmapsWithProgress =
+      await this.prismaClient.userRoadmap.findMany({
+        include: {
+          user: {
+            select: {
+              experience_level: true,
+            },
           },
-        },
-        roadmap: {
-          include: {
-            topics: {
-              select: {
-                topic_id: true,
+          roadmap: {
+            include: {
+              topics: {
+                select: {
+                  topic_id: true,
+                },
               },
             },
           },
         },
-      },
-    });
+      });
 
     const userCompletedTopics = await this.prismaClient.userProgress.findMany({
       where: {
@@ -199,7 +203,10 @@ export default class UserRepository extends BaseRepository<User, typeof prisma.u
       userCompletedMap.get(p.user_id)!.add(p.topic_id);
     });
 
-    const experienceLevelProgress = new Map<string, { totalProgress: number; count: number }>();
+    const experienceLevelProgress = new Map<
+      string,
+      { totalProgress: number; count: number }
+    >();
 
     userRoadmapsWithProgress.forEach((ur) => {
       const level = ur.user.experience_level?.toLowerCase() || 'unknown';

@@ -13,7 +13,10 @@ import { createAppError } from '../utils/errorHandler.js';
 
 import prisma from '../lib/prisma.js';
 
-export default class QuizRepository extends BaseRepository< Quiz, typeof prisma.quiz > {
+export default class QuizRepository extends BaseRepository<
+  Quiz,
+  typeof prisma.quiz
+> {
   constructor() {
     super(prisma.quiz);
   }
@@ -35,11 +38,11 @@ export default class QuizRepository extends BaseRepository< Quiz, typeof prisma.
             type: q.type,
             options: q.options
               ? {
-                create: q.options.map((option) => ({
-                  text: option,
-                  is_correct: option === q.correct_answer,
-                })),
-              }
+                  create: q.options.map((option) => ({
+                    text: option,
+                    is_correct: option === q.correct_answer,
+                  })),
+                }
               : undefined,
             correct_answer: q.correct_answer,
             points: q.points,

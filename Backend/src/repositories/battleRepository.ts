@@ -1,10 +1,20 @@
-import { Battle, BattleStatus, BattleType, Difficulty, Prisma } from '@prisma/client';
+import {
+  Battle,
+  BattleStatus,
+  BattleType,
+  Difficulty,
+  Prisma,
+} from '@prisma/client';
 import BaseRepository from './baseRepository.js';
 import { createAppError } from '../utils/errorHandler.js';
 import prisma from '../lib/prisma.js';
 import logger from '../utils/logger.js';
 import { generateBattleSlug, isUuid } from '../utils/slugify.js';
-import { getCached, setCached, invalidatePattern } from '../services/memoryCache.js';
+import {
+  getCached,
+  setCached,
+  invalidatePattern,
+} from '../services/memoryCache.js';
 import { redlock } from '../services/cacheService.js';
 
 type UserParticipation = Prisma.BattleParticipantGetPayload<{
@@ -135,7 +145,10 @@ async function buildLeaderboard(battleId: string) {
 
 // ─── Repository ────────────────────────────────────────────────────────────
 
-export class BattleRepository extends BaseRepository<Battle, typeof prisma.battle> {
+export class BattleRepository extends BaseRepository<
+  Battle,
+  typeof prisma.battle
+> {
   constructor() {
     super(prisma.battle);
   }
@@ -154,7 +167,11 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
 
   // ── Lock Helper ──────────────────────────────────────────────────────────
 
-  private async withBattleLock<T>(battleId: string, ttlMs: number, callback: () => Promise<T>): Promise<T> {
+  private async withBattleLock<T>(
+    battleId: string,
+    ttlMs: number,
+    callback: () => Promise<T>
+  ): Promise<T> {
     const resource = `battle:lock:${battleId}`;
     const lock = await redlock.acquire([resource], ttlMs);
     try {
@@ -178,12 +195,22 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
    * Single SQL query instead of fetching 100 full battle objects.
    * Cached 30s — fresh enough for a live counter.
    */
-  async getGlobalStats(): Promise<{ activeBattles: number; upcomingBattles: number; totalParticipants: number }> {
+  async getGlobalStats(): Promise<{
+    activeBattles: number;
+    upcomingBattles: number;
+    totalParticipants: number;
+  }> {
     const cacheKey = 'battles:global-stats';
-    const cached = getCached<{ activeBattles: number; upcomingBattles: number; totalParticipants: number }>(cacheKey);
+    const cached = getCached<{
+      activeBattles: number;
+      upcomingBattles: number;
+      totalParticipants: number;
+    }>(cacheKey);
     if (cached) return cached;
 
-    const [row] = await prisma.$queryRaw<[{ active: number; upcoming: number; total_participants: bigint }]>`
+    const [row] = await prisma.$queryRaw<
+      [{ active: number; upcoming: number; total_participants: bigint }]
+    >`
       SELECT
         COUNT(*) FILTER (WHERE status = 'IN_PROGRESS')::int          AS active,
         COUNT(*) FILTER (WHERE status IN ('WAITING', 'LOBBY'))::int  AS upcoming,
@@ -201,14 +228,19 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
     return stats;
   }
 
-  async getBattles(params: BattleListParams): Promise<{ data: BattleSummary[]; meta: BattleListMeta }> {
+  async getBattles(
+    params: BattleListParams
+  ): Promise<{ data: BattleSummary[]; meta: BattleListMeta }> {
     const page = Math.max(1, params.page || 1);
     const limit = Math.min(50, Math.max(1, params.limit || 12));
     const skip = (page - 1) * limit;
 
     // Cache key encodes all list params — stable across concurrent identical requests
     const cacheKey = `battles:list:p${page}:l${limit}:s${params.search || ''}:st${params.status || ''}:d${params.difficulty || ''}:t${params.type || ''}:tp${params.topic_id || ''}:u${params.user_id || ''}:sb${params.sort_by || ''}:so${params.sort_order || ''}`;
-    const cachedList = getCached<{ data: BattleSummary[]; meta: BattleListMeta }>(cacheKey);
+    const cachedList = getCached<{
+      data: BattleSummary[];
+      meta: BattleListMeta;
+    }>(cacheKey);
     if (cachedList) return cachedList;
 
     const where: Prisma.BattleWhereInput = {};
@@ -225,8 +257,15 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
     if (params.topic_id) where.topic_id = params.topic_id;
     if (params.user_id) where.user_id = params.user_id;
 
-    const allowedSortFields = ['created_at', 'start_time', 'current_participants', 'title'];
-    const sortField = allowedSortFields.includes(params.sort_by || '') ? params.sort_by! : 'created_at';
+    const allowedSortFields = [
+      'created_at',
+      'start_time',
+      'current_participants',
+      'title',
+    ];
+    const sortField = allowedSortFields.includes(params.sort_by || '')
+      ? params.sort_by!
+      : 'created_at';
     const sortOrder = params.sort_order === 'asc' ? 'asc' : 'desc';
 
     const [data, total] = await prisma.$transaction([
@@ -262,8 +301,14 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
 
   async getBattleDetails(idOrSlug: string): Promise<BattleDetail> {
     const battle = isUuid(idOrSlug)
-      ? await prisma.battle.findUnique({ where: { id: idOrSlug }, include: battleDetailInclude })
-      : await prisma.battle.findFirst({ where: { slug: idOrSlug }, include: battleDetailInclude });
+      ? await prisma.battle.findUnique({
+          where: { id: idOrSlug },
+          include: battleDetailInclude,
+        })
+      : await prisma.battle.findFirst({
+          where: { slug: idOrSlug },
+          include: battleDetailInclude,
+        });
 
     if (!battle) throw createAppError('Battle not found', 404);
     return battle;
@@ -329,7 +374,7 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
       explanation: string | null;
       points: number;
       time_limit: number;
-    }[],
+    }[]
   ) {
     const battle = await prisma.battle.findUnique({
       where: { id: battleId },
@@ -357,68 +402,86 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
 
   async joinBattle(battleIdOrSlug: string, userId: string) {
     const battleId = await this.resolveId(battleIdOrSlug);
-    return prisma.$transaction(async (tx) => {
-      const battle = await tx.battle.findUnique({ where: { id: battleId } });
-      if (!battle) throw createAppError('Battle not found', 404);
-      if (battle.status !== 'WAITING' && battle.status !== 'LOBBY') {
-        throw createAppError('Cannot join — battle has already started or ended', 403);
-      }
-      if (battle.current_participants >= battle.max_participants) {
-        throw createAppError('Battle is full', 403);
-      }
+    return prisma.$transaction(
+      async (tx) => {
+        const battle = await tx.battle.findUnique({ where: { id: battleId } });
+        if (!battle) throw createAppError('Battle not found', 404);
+        if (battle.status !== 'WAITING' && battle.status !== 'LOBBY') {
+          throw createAppError(
+            'Cannot join — battle has already started or ended',
+            403
+          );
+        }
+        if (battle.current_participants >= battle.max_participants) {
+          throw createAppError('Battle is full', 403);
+        }
 
-      // Guard: reject if already enrolled
-      const existingParticipant = await tx.battleParticipant.findUnique({
-        where: { battle_id_user_id: { battle_id: battleId, user_id: userId } },
-      });
-      if (existingParticipant) {
-        throw createAppError('You are already enrolled in this battle', 409);
-      }
+        // Guard: reject if already enrolled
+        const existingParticipant = await tx.battleParticipant.findUnique({
+          where: {
+            battle_id_user_id: { battle_id: battleId, user_id: userId },
+          },
+        });
+        if (existingParticipant) {
+          throw createAppError('You are already enrolled in this battle', 409);
+        }
 
-      const participant = await tx.battleParticipant.create({
-        data: { battle_id: battleId, user_id: userId, status: 'JOINED' },
-        include: { user: { select: creatorSelect } },
-      });
+        const participant = await tx.battleParticipant.create({
+          data: { battle_id: battleId, user_id: userId, status: 'JOINED' },
+          include: { user: { select: creatorSelect } },
+        });
 
-      const updated = await tx.battle.update({
-        where: { id: battleId },
-        data: { current_participants: { increment: 1 } },
-        include: battleDetailInclude,
-      });
+        const updated = await tx.battle.update({
+          where: { id: battleId },
+          data: { current_participants: { increment: 1 } },
+          include: battleDetailInclude,
+        });
 
-      return { participant, battle: updated };
-    }, { timeout: 15_000 });
+        return { participant, battle: updated };
+      },
+      { timeout: 15_000 }
+    );
   }
 
   // ── Leave ────────────────────────────────────────────────────────────────
 
   async leaveBattle(battleIdOrSlug: string, userId: string) {
     const battleId = await this.resolveId(battleIdOrSlug);
-    return prisma.$transaction(async (tx) => {
-      const participant = await tx.battleParticipant.findUnique({
-        where: { battle_id_user_id: { battle_id: battleId, user_id: userId } },
-      });
-      if (!participant) throw createAppError('You are not in this battle', 404);
-
-      const battle = await tx.battle.findUnique({ where: { id: battleId } });
-      if (battle?.status === 'IN_PROGRESS') {
-        // Mark as disconnected rather than removing
-        await tx.battleParticipant.update({
-          where: { battle_id_user_id: { battle_id: battleId, user_id: userId } },
-          data: { status: 'DISCONNECTED', last_seen_at: new Date() },
+    return prisma.$transaction(
+      async (tx) => {
+        const participant = await tx.battleParticipant.findUnique({
+          where: {
+            battle_id_user_id: { battle_id: battleId, user_id: userId },
+          },
         });
-        return tx.battle.findUnique({ where: { id: battleId } });
-      }
+        if (!participant)
+          throw createAppError('You are not in this battle', 404);
 
-      await tx.battleParticipant.delete({
-        where: { battle_id_user_id: { battle_id: battleId, user_id: userId } },
-      });
+        const battle = await tx.battle.findUnique({ where: { id: battleId } });
+        if (battle?.status === 'IN_PROGRESS') {
+          // Mark as disconnected rather than removing
+          await tx.battleParticipant.update({
+            where: {
+              battle_id_user_id: { battle_id: battleId, user_id: userId },
+            },
+            data: { status: 'DISCONNECTED', last_seen_at: new Date() },
+          });
+          return tx.battle.findUnique({ where: { id: battleId } });
+        }
 
-      return tx.battle.update({
-        where: { id: battleId },
-        data: { current_participants: { decrement: 1 } },
-      });
-    }, { timeout: 15_000 });
+        await tx.battleParticipant.delete({
+          where: {
+            battle_id_user_id: { battle_id: battleId, user_id: userId },
+          },
+        });
+
+        return tx.battle.update({
+          where: { id: battleId },
+          data: { current_participants: { decrement: 1 } },
+        });
+      },
+      { timeout: 15_000 }
+    );
   }
 
   // ── Ready ────────────────────────────────────────────────────────────────
@@ -450,11 +513,16 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
       },
     });
     if (!battle) throw createAppError('Battle not found', 404);
-    if (battle.user_id !== userId) throw createAppError('Only the creator can start this battle', 403);
-    if (battle.status !== 'LOBBY') throw createAppError('Battle must be in LOBBY state to start', 400);
-    if (battle.current_participants < 2) throw createAppError('Need at least 2 participants to start', 400);
+    if (battle.user_id !== userId)
+      throw createAppError('Only the creator can start this battle', 403);
+    if (battle.status !== 'LOBBY')
+      throw createAppError('Battle must be in LOBBY state to start', 400);
+    if (battle.current_participants < 2)
+      throw createAppError('Need at least 2 participants to start', 400);
 
-    const readyCount = battle.participants.filter((p) => p.status === 'READY').length;
+    const readyCount = battle.participants.filter(
+      (p) => p.status === 'READY'
+    ).length;
     if (readyCount < battle.current_participants) {
       throw createAppError('Not all participants are ready', 400);
     }
@@ -482,11 +550,16 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
     const battleId = await this.resolveId(battleIdOrSlug);
     const battle = await prisma.battle.findUnique({ where: { id: battleId } });
     if (!battle) throw createAppError('Battle not found', 404);
-    if (battle.user_id !== userId) throw createAppError('Only the creator can cancel this battle', 403);
+    if (battle.user_id !== userId)
+      throw createAppError('Only the creator can cancel this battle', 403);
     if (battle.status === 'IN_PROGRESS' || battle.status === 'COMPLETED') {
-      throw createAppError('Cannot cancel a battle that has already started or completed', 400);
+      throw createAppError(
+        'Cannot cancel a battle that has already started or completed',
+        400
+      );
     }
-    if (battle.status === 'CANCELLED') throw createAppError('Battle is already cancelled', 400);
+    if (battle.status === 'CANCELLED')
+      throw createAppError('Battle is already cancelled', 400);
 
     return prisma.battle.update({
       where: { id: battleId },
@@ -512,7 +585,10 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
 
     if (!battle) throw createAppError('Battle not found', 404);
     if (battle.status !== 'IN_PROGRESS') {
-      throw createAppError('Questions are only available during an active battle', 403);
+      throw createAppError(
+        'Questions are only available during an active battle',
+        403
+      );
     }
     if (!battle.participants.length) {
       throw createAppError('You are not a participant in this battle', 403);
@@ -548,9 +624,13 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
       include: { _count: { select: { questions: true } } },
     });
     if (!battle) throw createAppError('Battle not found', 404);
-    if (battle.user_id !== userId) throw createAppError('Only the creator can add questions', 403);
+    if (battle.user_id !== userId)
+      throw createAppError('Only the creator can add questions', 403);
     if (['IN_PROGRESS', 'COMPLETED', 'CANCELLED'].includes(battle.status)) {
-      throw createAppError('Cannot add questions to a battle that has already started or ended', 400);
+      throw createAppError(
+        'Cannot add questions to a battle that has already started or ended',
+        400
+      );
     }
 
     const existingCount = battle._count.questions;
@@ -600,100 +680,123 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
     timeTakenMs: number
   ) {
     const txResult = await this.withBattleLock(battleId, 15_000, async () => {
-      return prisma.$transaction(async (tx) => {
-        const question = await tx.battleQuestion.findUnique({
-          where: { id: questionId },
-        });
-        if (question?.battle_id !== battleId) {
-          throw createAppError('Invalid question', 400);
-        }
-
-        // Reject answers submitted well after the time limit (2-second network grace period)
-        const timeLimit = question?.time_limit ?? 0;
-        const maxAllowedMs = timeLimit * 1000 + 2000;
-        if (timeTakenMs > maxAllowedMs) {
-          throw createAppError('Answer submitted after the time limit', 400);
-        }
-
-        const isCorrect = question.correct_answer === selectedOption;
-        const pointsEarned = calculatePoints(isCorrect, question.points, timeTakenMs, question.time_limit);
-
-        // Persist the answer
-        const answer = await tx.battleAnswer.create({
-          data: {
-            battle_id: battleId,
-            question_id: questionId,
-            user_id: userId,
-            selected_option: selectedOption,
-            is_correct: isCorrect,
-            time_taken_ms: timeTakenMs,
-            points_earned: pointsEarned,
-          },
-        });
-
-        // Update participant totals
-        const answeredCount = await tx.battleAnswer.count({
-          where: { battle_id: battleId, user_id: userId },
-        });
-
-        const allAnswers = await tx.battleAnswer.findMany({
-          where: { battle_id: battleId, user_id: userId },
-          select: { time_taken_ms: true, is_correct: true, points_earned: true },
-        });
-
-        const totalScore = allAnswers.reduce((sum, a) => sum + a.points_earned, 0);
-        const correctCount = allAnswers.filter((a) => a.is_correct).length;
-        const wrongCount = allAnswers.filter((a) => !a.is_correct).length;
-        const avgTimeMs = Math.floor(
-          allAnswers.reduce((sum, a) => sum + a.time_taken_ms, 0) / allAnswers.length
-        );
-
-        await tx.battleParticipant.update({
-          where: { battle_id_user_id: { battle_id: battleId, user_id: userId } },
-          data: {
-            score: totalScore,
-            correct_count: correctCount,
-            wrong_count: wrongCount,
-            avg_time_per_answer_ms: avgTimeMs,
-          },
-        });
-
-        // Recalculate ranks (tiebreaker: lower avg time = better rank)
-        await this.recalculateRanks(tx, battleId);
-
-        // Check if this participant has finished all questions
-        const battle = await tx.battle.findUnique({
-          where: { id: battleId },
-          select: { total_questions: true }
-        });
-        const totalQuestions = battle?.total_questions || 0;
-
-        if (answeredCount >= totalQuestions) {
-          await tx.battleParticipant.update({
-            where: { battle_id_user_id: { battle_id: battleId, user_id: userId } },
-            data: { status: 'COMPLETED', completed_at: new Date() },
+      return prisma.$transaction(
+        async (tx) => {
+          const question = await tx.battleQuestion.findUnique({
+            where: { id: questionId },
           });
-        }
+          if (question?.battle_id !== battleId) {
+            throw createAppError('Invalid question', 400);
+          }
 
-        const leaderboard = await buildLeaderboard(battleId);
+          // Reject answers submitted well after the time limit (2-second network grace period)
+          const timeLimit = question?.time_limit ?? 0;
+          const maxAllowedMs = timeLimit * 1000 + 2000;
+          if (timeTakenMs > maxAllowedMs) {
+            throw createAppError('Answer submitted after the time limit', 400);
+          }
 
-        return {
-          answer,
-          is_correct: isCorrect,
-          points_earned: pointsEarned,
-          correct_answer: question.correct_answer,
-          explanation: question.explanation,
-          participant_done: answeredCount >= totalQuestions,
-          leaderboard,
-        };
-      }, { timeout: 15_000 });
+          const isCorrect = question.correct_answer === selectedOption;
+          const pointsEarned = calculatePoints(
+            isCorrect,
+            question.points,
+            timeTakenMs,
+            question.time_limit
+          );
+
+          // Persist the answer
+          const answer = await tx.battleAnswer.create({
+            data: {
+              battle_id: battleId,
+              question_id: questionId,
+              user_id: userId,
+              selected_option: selectedOption,
+              is_correct: isCorrect,
+              time_taken_ms: timeTakenMs,
+              points_earned: pointsEarned,
+            },
+          });
+
+          // Update participant totals
+          const answeredCount = await tx.battleAnswer.count({
+            where: { battle_id: battleId, user_id: userId },
+          });
+
+          const allAnswers = await tx.battleAnswer.findMany({
+            where: { battle_id: battleId, user_id: userId },
+            select: {
+              time_taken_ms: true,
+              is_correct: true,
+              points_earned: true,
+            },
+          });
+
+          const totalScore = allAnswers.reduce(
+            (sum, a) => sum + a.points_earned,
+            0
+          );
+          const correctCount = allAnswers.filter((a) => a.is_correct).length;
+          const wrongCount = allAnswers.filter((a) => !a.is_correct).length;
+          const avgTimeMs = Math.floor(
+            allAnswers.reduce((sum, a) => sum + a.time_taken_ms, 0) /
+              allAnswers.length
+          );
+
+          await tx.battleParticipant.update({
+            where: {
+              battle_id_user_id: { battle_id: battleId, user_id: userId },
+            },
+            data: {
+              score: totalScore,
+              correct_count: correctCount,
+              wrong_count: wrongCount,
+              avg_time_per_answer_ms: avgTimeMs,
+            },
+          });
+
+          // Recalculate ranks (tiebreaker: lower avg time = better rank)
+          await this.recalculateRanks(tx, battleId);
+
+          // Check if this participant has finished all questions
+          const battle = await tx.battle.findUnique({
+            where: { id: battleId },
+            select: { total_questions: true },
+          });
+          const totalQuestions = battle?.total_questions || 0;
+
+          if (answeredCount >= totalQuestions) {
+            await tx.battleParticipant.update({
+              where: {
+                battle_id_user_id: { battle_id: battleId, user_id: userId },
+              },
+              data: { status: 'COMPLETED', completed_at: new Date() },
+            });
+          }
+
+          const leaderboard = await buildLeaderboard(battleId);
+
+          return {
+            answer,
+            is_correct: isCorrect,
+            points_earned: pointsEarned,
+            correct_answer: question.correct_answer,
+            explanation: question.explanation,
+            participant_done: answeredCount >= totalQuestions,
+            leaderboard,
+          };
+        },
+        { timeout: 15_000 }
+      );
     });
 
     return txResult;
   }
 
   // Helper extracted to reduce Cognitive Complexity
-  private async recalculateRanks(tx: Prisma.TransactionClient, battleId: string): Promise<void> {
+  private async recalculateRanks(
+    tx: Prisma.TransactionClient,
+    battleId: string
+  ): Promise<void> {
     const allParticipants = await tx.battleParticipant.findMany({
       where: { battle_id: battleId },
       orderBy: [{ score: 'desc' }, { avg_time_per_answer_ms: 'asc' }],
@@ -744,7 +847,11 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
 
       const battle = await prisma.battle.update({
         where: { id: battleId },
-        data: { status: 'COMPLETED', ended_at: new Date(), winner_id: winnerId },
+        data: {
+          status: 'COMPLETED',
+          ended_at: new Date(),
+          winner_id: winnerId,
+        },
         include: battleDetailInclude,
       });
 
@@ -755,15 +862,20 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
         select: { user_id: true, time_taken_ms: true },
       });
 
-      const timeByUser = allAnswers.reduce((acc, a) => {
-        acc[a.user_id] = (acc[a.user_id] || 0) + a.time_taken_ms;
-        return acc;
-      }, {} as Record<string, number>);
+      const timeByUser = allAnswers.reduce(
+        (acc, a) => {
+          acc[a.user_id] = (acc[a.user_id] || 0) + a.time_taken_ms;
+          return acc;
+        },
+        {} as Record<string, number>
+      );
 
       for (let i = 0; i < participants.length; i++) {
         const p = participants[i];
         await prisma.battleLeaderboard.upsert({
-          where: { battle_id_user_id: { battle_id: battleId, user_id: p.user_id } },
+          where: {
+            battle_id_user_id: { battle_id: battleId, user_id: p.user_id },
+          },
           create: {
             battle_id: battleId,
             user_id: p.user_id,
@@ -840,7 +952,10 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
 
     if (!battle) throw createAppError('Battle not found', 404);
     if (battle.status !== 'COMPLETED') {
-      throw createAppError('Results are only available after the battle ends', 403);
+      throw createAppError(
+        'Results are only available after the battle ends',
+        403
+      );
     }
 
     return battle;
@@ -876,7 +991,10 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
     });
     if (!battle) throw createAppError('Battle not found', 404);
     if (battle.status !== 'COMPLETED') {
-      throw createAppError('Results are only available after the battle ends', 403);
+      throw createAppError(
+        'Results are only available after the battle ends',
+        403
+      );
     }
 
     // User's answers with question details
@@ -911,8 +1029,12 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
         _count: { id: true },
       }),
     ]);
-    const totalByQ = new Map(allCounts.map((r) => [r.question_id, r._count.id]));
-    const correctByQ = new Map(correctCounts.map((r) => [r.question_id, r._count.id]));
+    const totalByQ = new Map(
+      allCounts.map((r) => [r.question_id, r._count.id])
+    );
+    const correctByQ = new Map(
+      correctCounts.map((r) => [r.question_id, r._count.id])
+    );
 
     // User's participant summary
     const participant = await prisma.battleParticipant.findUnique({
@@ -950,7 +1072,8 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
           is_correct: a.is_correct,
           time_taken_ms: a.time_taken_ms,
           points_earned: a.points_earned,
-          community_accuracy_pct: total > 0 ? Math.round((correct / total) * 100) : 0,
+          community_accuracy_pct:
+            total > 0 ? Math.round((correct / total) * 100) : 0,
           community_total_answers: total,
         };
       }),
@@ -987,7 +1110,10 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
       prisma.battle.count({ where }),
     ]);
 
-    return { data, meta: { total, page, limit, totalPages: Math.ceil(total / limit) } };
+    return {
+      data,
+      meta: { total, page, limit, totalPages: Math.ceil(total / limit) },
+    };
   }
 
   // ── User statistics ───────────────────────────────────────────────────────
@@ -995,7 +1121,10 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
   async getUserStats(userId: string, timeframe?: string) {
     const since = this.getTimeframeSince(timeframe);
     const participations = await prisma.battleParticipant.findMany({
-      where: { user_id: userId, ...(since ? { joined_at: { gte: since } } : {}) },
+      where: {
+        user_id: userId,
+        ...(since ? { joined_at: { gte: since } } : {}),
+      },
       include: {
         battle: {
           select: {
@@ -1013,7 +1142,9 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
       orderBy: { joined_at: 'desc' },
     });
 
-    const completed = participations.filter((p) => p.battle.status === 'COMPLETED');
+    const completed = participations.filter(
+      (p) => p.battle.status === 'COMPLETED'
+    );
     const metrics = this.calculateParticipationMetrics(userId, completed);
 
     const wins = completed.filter((p) => p.battle.winner_id === userId).length;
@@ -1022,17 +1153,38 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
         total_battles: participations.length,
         completed_battles: completed.length,
         wins,
-        win_rate: completed.length > 0 ? Math.round((wins / completed.length) * 100) : 0,
+        win_rate:
+          completed.length > 0
+            ? Math.round((wins / completed.length) * 100)
+            : 0,
         total_score: metrics.totalScore,
         correct_answers: metrics.correctAnswers,
         total_answers: metrics.totalAnswers,
-        accuracy: metrics.totalAnswers > 0 ? Math.round((metrics.correctAnswers / metrics.totalAnswers) * 100) : 0,
-        accuracy_rate: metrics.totalAnswers > 0 ? Math.round((metrics.correctAnswers / metrics.totalAnswers) * 100) : 0,
+        accuracy:
+          metrics.totalAnswers > 0
+            ? Math.round((metrics.correctAnswers / metrics.totalAnswers) * 100)
+            : 0,
+        accuracy_rate:
+          metrics.totalAnswers > 0
+            ? Math.round((metrics.correctAnswers / metrics.totalAnswers) * 100)
+            : 0,
         avg_time_ms: metrics.avgTimePerAnswer,
       },
-      recent_battles: this.getRecentBattleSummaries(userId, participations.slice(0, 10)),
-      performance_by_difficulty: this.aggregateStatsByGroup(completed, (p) => p.battle.difficulty, userId),
-      performance_by_topic: this.aggregateStatsByGroup(completed, (p) => p.battle.topic?.id ?? 'unknown', userId, (p) => p.battle.topic?.title ?? 'Unknown')
+      recent_battles: this.getRecentBattleSummaries(
+        userId,
+        participations.slice(0, 10)
+      ),
+      performance_by_difficulty: this.aggregateStatsByGroup(
+        completed,
+        (p) => p.battle.difficulty,
+        userId
+      ),
+      performance_by_topic: this.aggregateStatsByGroup(
+        completed,
+        (p) => p.battle.topic?.id ?? 'unknown',
+        userId,
+        (p) => p.battle.topic?.title ?? 'Unknown'
+      )
         .sort((a, b) => b.battles - a.battles)
         .slice(0, 5),
       performance_over_time: this.getPerformanceByWeek(userId, completed),
@@ -1043,17 +1195,28 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
 
   private getTimeframeSince(timeframe?: string): Date | undefined {
     const now = new Date();
-    if (timeframe === 'this-week') return new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
-    if (timeframe === 'this-month') return new Date(now.getFullYear(), now.getMonth(), 1);
+    if (timeframe === 'this-week')
+      return new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
+    if (timeframe === 'this-month')
+      return new Date(now.getFullYear(), now.getMonth(), 1);
     if (timeframe === 'this-year') return new Date(now.getFullYear(), 0, 1);
     return undefined;
   }
 
-  private calculateParticipationMetrics(userId: string, completed: UserParticipation[]) {
+  private calculateParticipationMetrics(
+    userId: string,
+    completed: UserParticipation[]
+  ) {
     const totalScore = completed.reduce((sum, p) => sum + (p.score || 0), 0);
-    const correctAnswers = completed.reduce((sum, p) => sum + (p.correct_count || 0), 0);
-    const totalAnswers = completed.reduce((sum, p) => sum + (p.correct_count || 0) + (p.wrong_count || 0), 0);
-    
+    const correctAnswers = completed.reduce(
+      (sum, p) => sum + (p.correct_count || 0),
+      0
+    );
+    const totalAnswers = completed.reduce(
+      (sum, p) => sum + (p.correct_count || 0) + (p.wrong_count || 0),
+      0
+    );
+
     const totalTimeTakenMs = completed.reduce((sum, p) => {
       const qCount = (p.correct_count || 0) + (p.wrong_count || 0);
       return sum + (p.avg_time_per_answer_ms || 0) * qCount;
@@ -1063,11 +1226,15 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
       totalScore,
       correctAnswers,
       totalAnswers,
-      avgTimePerAnswer: totalAnswers > 0 ? Math.round(totalTimeTakenMs / totalAnswers) : 0,
+      avgTimePerAnswer:
+        totalAnswers > 0 ? Math.round(totalTimeTakenMs / totalAnswers) : 0,
     };
   }
 
-  private getRecentBattleSummaries(userId: string, participations: UserParticipation[]) {
+  private getRecentBattleSummaries(
+    userId: string,
+    participations: UserParticipation[]
+  ) {
     return participations.map((p) => {
       let resultLabel: string;
       if (p.battle.status === 'COMPLETED') {
@@ -1092,14 +1259,27 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
     });
   }
 
-  private aggregateStatsByGroup(completed: UserParticipation[], keySelector: (p: UserParticipation) => string, userId: string, nameSelector?: (p: UserParticipation) => string) {
-    const map = new Map<string, { name: string; wins: number; total: number; score: number }>();
+  private aggregateStatsByGroup(
+    completed: UserParticipation[],
+    keySelector: (p: UserParticipation) => string,
+    userId: string,
+    nameSelector?: (p: UserParticipation) => string
+  ) {
+    const map = new Map<
+      string,
+      { name: string; wins: number; total: number; score: number }
+    >();
     for (const p of completed) {
       const key = keySelector(p);
-      const entry = map.get(key) ?? { name: nameSelector ? nameSelector(p) : key, wins: 0, total: 0, score: 0 };
+      const entry = map.get(key) ?? {
+        name: nameSelector ? nameSelector(p) : key,
+        wins: 0,
+        total: 0,
+        score: 0,
+      };
       entry.total += 1;
       if (p.battle.winner_id === userId) entry.wins += 1;
-      entry.score += (p.score || 0);
+      entry.score += p.score || 0;
       map.set(key, entry);
     }
     return Array.from(map.entries()).map(([groupId, v]) => ({
@@ -1114,9 +1294,14 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
 
   private getPerformanceByWeek(userId: string, completed: UserParticipation[]) {
     const eightWeeksAgo = new Date(Date.now() - 56 * 24 * 60 * 60 * 1000);
-    const recent = completed.filter(p => p.battle.ended_at && p.battle.ended_at >= eightWeeksAgo);
-    
-    const weekMap = new Map<string, { wins: number; total: number; score: number }>();
+    const recent = completed.filter(
+      (p) => p.battle.ended_at && p.battle.ended_at >= eightWeeksAgo
+    );
+
+    const weekMap = new Map<
+      string,
+      { wins: number; total: number; score: number }
+    >();
     for (const p of recent) {
       const d = p.battle.ended_at;
       if (!d) continue;
@@ -1144,11 +1329,16 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
 
   // ── Status transition ─────────────────────────────────────────────────────
 
-  async updateStatus(battleIdOrSlug: string, userId: string, newStatus: BattleStatus) {
+  async updateStatus(
+    battleIdOrSlug: string,
+    userId: string,
+    newStatus: BattleStatus
+  ) {
     const battleId = await this.resolveId(battleIdOrSlug);
     const battle = await prisma.battle.findUnique({ where: { id: battleId } });
     if (!battle) throw createAppError('Battle not found', 404);
-    if (battle.user_id !== userId) throw createAppError('Only the creator can update battle status', 403);
+    if (battle.user_id !== userId)
+      throw createAppError('Only the creator can update battle status', 403);
 
     const allowed: Record<string, string[]> = {
       WAITING: ['LOBBY', 'CANCELLED'],
@@ -1159,7 +1349,10 @@ export class BattleRepository extends BaseRepository<Battle, typeof prisma.battl
     };
 
     if (!allowed[battle.status]?.includes(newStatus)) {
-      throw createAppError(`Invalid transition: ${battle.status} → ${newStatus}`, 400);
+      throw createAppError(
+        `Invalid transition: ${battle.status} → ${newStatus}`,
+        400
+      );
     }
 
     return prisma.battle.update({

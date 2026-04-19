@@ -4,10 +4,10 @@ import logger from '../utils/logger.js';
 
 /**
  * CSRF Double-Submit Token Pattern Middleware
- * 
+ *
  * Sets a non-httpOnly cookie 'XSRF-TOKEN' that the client can read and send back
  * in the 'X-XSRF-TOKEN' header for any state-changing request (POST, PUT, DELETE, PATCH).
- * 
+ *
  * Enforce SameSite=Strict to mitigate CSRF in modern browsers.
  */
 
@@ -18,7 +18,11 @@ const CSRF_HEADER_NAME = 'x-xsrf-token';
  * Ensures the CSRF cookie is set and up to date.
  * Should be called on stable GET requests or after login.
  */
-export const setCsrfToken = (req: Request, res: Response, next: NextFunction): void => {
+export const setCsrfToken = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   // Rotate/Set token if it doesn't exist
   if (!req.cookies[CSRF_COOKIE_NAME]) {
     const token = crypto.randomBytes(32).toString('hex');
@@ -35,7 +39,11 @@ export const setCsrfToken = (req: Request, res: Response, next: NextFunction): v
 /**
  * Verifies the CSRF token for state-changing methods.
  */
-export const verifyCsrfToken = (req: Request, res: Response, next: NextFunction): void => {
+export const verifyCsrfToken = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   const method = req.method.toUpperCase();
   const unprotectedMethods = ['GET', 'HEAD', 'OPTIONS'];
 
@@ -54,7 +62,7 @@ export const verifyCsrfToken = (req: Request, res: Response, next: NextFunction)
       hasCookie: !!cookieToken,
       hasHeader: !!headerToken,
     });
-    
+
     res.status(403).json({
       message: 'CSRF token validation failed. Please refresh the page.',
       code: 'CSRF_INVALID',

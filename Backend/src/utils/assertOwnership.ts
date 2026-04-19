@@ -17,7 +17,7 @@ import { sendResponse } from './apiResponse';
 export function assertOwnership(
   req: Request,
   res: Response,
-  resourceOwnerId: string | null | undefined,
+  resourceOwnerId: string | null | undefined
 ): boolean {
   const userId = req.user?.id;
   const role = (req.user as { role?: string } | undefined)?.role;

@@ -14,7 +14,9 @@ export class HealthCheckRoutes extends BaseRouter {
      * when the container is ready to receive traffic.
      */
     this.router.get('/ready', (_req, res) => {
-      res.status(200).json({ status: 'ready', timestamp: new Date().toISOString() });
+      res
+        .status(200)
+        .json({ status: 'ready', timestamp: new Date().toISOString() });
     });
 
     this.router.get('/', async (req, res) => {

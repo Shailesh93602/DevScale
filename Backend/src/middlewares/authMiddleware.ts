@@ -16,7 +16,9 @@ const TOKEN_BLOCKLIST_PREFIX = 'eduscale:auth:blocklist:';
 
 const isTokenBlocklisted = async (token: string): Promise<boolean> => {
   try {
-    const key = TOKEN_BLOCKLIST_PREFIX + crypto.createHash('sha256').update(token).digest('hex');
+    const key =
+      TOKEN_BLOCKLIST_PREFIX +
+      crypto.createHash('sha256').update(token).digest('hex');
     return (await redis.exists(key)) === 1;
   } catch {
     return false;
@@ -38,13 +40,17 @@ interface AuthCacheData {
 const getAuthCache = async (token: string): Promise<AuthCacheData | null> => {
   try {
     const raw = await redis.get(tokenCacheKey(token));
-    return raw ? JSON.parse(raw) as AuthCacheData : null;
+    return raw ? (JSON.parse(raw) as AuthCacheData) : null;
   } catch {
     return null;
   }
 };
 
-const setAuthCache = async (token: string, user: SupabaseUser, userData: Request['user']) => {
+const setAuthCache = async (
+  token: string,
+  user: SupabaseUser,
+  userData: Request['user']
+) => {
   try {
     await redis.setex(
       tokenCacheKey(token),
@@ -124,16 +130,23 @@ const syncUser = async (user: SupabaseUser): Promise<Request['user']> => {
       })) as unknown as Request['user'];
     }
   } else {
-    const studentRole = await prisma.role.findUnique({ where: { name: 'STUDENT' } });
+    const studentRole = await prisma.role.findUnique({
+      where: { name: 'STUDENT' },
+    });
     const fullName = metadata.full_name as string;
 
     userData = (await prisma.user.create({
       data: {
         supabase_id: user.id,
         email: user.email ?? '',
-        username: (user.email?.split('@')[0] || 'user') + '_' + Math.floor(Math.random() * 1000),
-        first_name: (metadata.first_name as string) || splitFullName(fullName).firstName,
-        last_name: (metadata.last_name as string) || splitFullName(fullName).lastName,
+        username:
+          (user.email?.split('@')[0] || 'user') +
+          '_' +
+          Math.floor(Math.random() * 1000),
+        first_name:
+          (metadata.first_name as string) || splitFullName(fullName).firstName,
+        last_name:
+          (metadata.last_name as string) || splitFullName(fullName).lastName,
         avatar_url: (metadata.avatar_url as string) || '',
         role_id: studentRole?.id,
         status: 'active',
@@ -179,7 +192,12 @@ export const authMiddleware = async (
 
     next();
   } catch (err) {
-    if (err && typeof err === 'object' && 'statusCode' in err && err.statusCode === 401) {
+    if (
+      err &&
+      typeof err === 'object' &&
+      'statusCode' in err &&
+      err.statusCode === 401
+    ) {
       return next(err);
     }
     logger.error('Authentication process failed', { error: err });

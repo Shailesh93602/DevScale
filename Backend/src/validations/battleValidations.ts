@@ -9,11 +9,16 @@ const questionSourceSchema = Joi.object({
   type: Joi.string()
     .valid('topic', 'subject', 'main_concept', 'roadmap', 'dsa')
     .required()
-    .messages({ 'any.only': 'source type must be topic, subject, main_concept, roadmap, or dsa' }),
+    .messages({
+      'any.only':
+        'source type must be topic, subject, main_concept, roadmap, or dsa',
+    }),
   id: Joi.string().min(2).max(120).required().messages({
     'any.required': 'source id is required',
   }),
-  difficulty: Joi.string().valid(...Object.values(Difficulty)).optional(),
+  difficulty: Joi.string()
+    .valid(...Object.values(Difficulty))
+    .optional(),
   categories: Joi.array().items(Joi.string()).optional(),
   count: Joi.number().integer().min(5).max(50).optional(),
 });
@@ -23,7 +28,9 @@ export const questionPoolQuerySchema = Joi.object({
     .valid('topic', 'subject', 'main_concept', 'roadmap', 'dsa')
     .required(),
   id: Joi.string().min(2).max(120).required(),
-  difficulty: Joi.string().valid(...Object.values(Difficulty)).optional(),
+  difficulty: Joi.string()
+    .valid(...Object.values(Difficulty))
+    .optional(),
   categories: Joi.string().optional(), // comma-separated
   count: Joi.number().integer().min(1).max(50).optional(),
 });
@@ -83,7 +90,8 @@ export const createBattleValidationSchema = Joi.object({
       .min(new Date(Date.now() + 5 * 60 * 1000))
       .required()
       .messages({
-        'date.min': 'Scheduled start time must be at least 5 minutes in the future',
+        'date.min':
+          'Scheduled start time must be at least 5 minutes in the future',
         'any.required': 'Start time is required for scheduled battles',
       }),
     otherwise: Joi.date().optional(),
@@ -119,11 +127,16 @@ export const addQuestionsValidationSchema = Joi.object({
             'array.length': 'Each question must have exactly 4 options',
             'any.required': 'Options are required',
           }),
-        correct_answer: Joi.number().integer().min(0).max(3).required().messages({
-          'number.min': 'correct_answer must be an index 0–3',
-          'number.max': 'correct_answer must be an index 0–3',
-          'any.required': 'correct_answer is required',
-        }),
+        correct_answer: Joi.number()
+          .integer()
+          .min(0)
+          .max(3)
+          .required()
+          .messages({
+            'number.min': 'correct_answer must be an index 0–3',
+            'number.max': 'correct_answer must be an index 0–3',
+            'any.required': 'correct_answer is required',
+          }),
         explanation: Joi.string().max(500).optional().allow(''),
         points: Joi.number().integer().min(10).max(1000).optional(),
         time_limit: Joi.number().integer().min(15).max(60).optional(),

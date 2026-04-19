@@ -1,7 +1,11 @@
 import { Prisma } from '@prisma/client';
 import type { Roadmap } from '@prisma/client';
 import { createAppError } from '../middlewares/errorHandler.js';
-import { getCache, setCache, invalidateCachePattern } from '../services/cacheService.js';
+import {
+  getCache,
+  setCache,
+  invalidateCachePattern,
+} from '../services/cacheService.js';
 import BaseRepository from './baseRepository.js';
 import prisma from '../lib/prisma.js';
 import { isUuid } from '../utils/slugify.js';
@@ -32,7 +36,10 @@ interface RoadmapListItem {
   popularity?: number;
 }
 
-export default class RoadmapRepository extends BaseRepository< Roadmap, typeof prisma.roadmap > {
+export default class RoadmapRepository extends BaseRepository<
+  Roadmap,
+  typeof prisma.roadmap
+> {
   constructor() {
     super(prisma.roadmap);
   }
@@ -64,7 +71,11 @@ export default class RoadmapRepository extends BaseRepository< Roadmap, typeof p
     }
   }
 
-  private async createConcepts(tx: Prisma.TransactionClient, roadmapId: string, concepts: ConceptData[]) {
+  private async createConcepts(
+    tx: Prisma.TransactionClient,
+    roadmapId: string,
+    concepts: ConceptData[]
+  ) {
     for (const concept of concepts) {
       const mainConcept = await tx.mainConcept.create({
         data: {
@@ -88,7 +99,11 @@ export default class RoadmapRepository extends BaseRepository< Roadmap, typeof p
     }
   }
 
-  private async createSubjects(tx: Prisma.TransactionClient, mainConceptId: string, subjects: SubjectData[]) {
+  private async createSubjects(
+    tx: Prisma.TransactionClient,
+    mainConceptId: string,
+    subjects: SubjectData[]
+  ) {
     for (const subjectData of subjects) {
       const subject = await tx.subject.create({
         data: {
@@ -112,7 +127,11 @@ export default class RoadmapRepository extends BaseRepository< Roadmap, typeof p
     }
   }
 
-  private async createTopics(tx: Prisma.TransactionClient, subjectId: string, topics: TopicData[]) {
+  private async createTopics(
+    tx: Prisma.TransactionClient,
+    subjectId: string,
+    topics: TopicData[]
+  ) {
     for (const topicData of topics) {
       const topic = await tx.topic.create({
         data: {
@@ -156,7 +175,15 @@ export default class RoadmapRepository extends BaseRepository< Roadmap, typeof p
     const roadmapPromise = this.prismaClient.roadmap.findUnique({
       where: { id },
       include: {
-        user: { select: { id: true, username: true, first_name: true, last_name: true, avatar_url: true } },
+        user: {
+          select: {
+            id: true,
+            username: true,
+            first_name: true,
+            last_name: true,
+            avatar_url: true,
+          },
+        },
         category: { select: { id: true, name: true } },
         _count: {
           select: {
@@ -166,15 +193,21 @@ export default class RoadmapRepository extends BaseRepository< Roadmap, typeof p
             topics: true,
           },
         },
-        likes: userId ? { where: { user_id: userId }, select: { id: true } } : false,
-        user_roadmaps: userId ? { where: { user_id: userId }, select: { id: true } } : false,
+        likes: userId
+          ? { where: { user_id: userId }, select: { id: true } }
+          : false,
+        user_roadmaps: userId
+          ? { where: { user_id: userId }, select: { id: true } }
+          : false,
       },
     });
 
     // 2. Fetch the entire nested concept tree using a single raw SQL query with JSON aggregation.
     // This offloads the heavy JOINs and array grouping to Postgres (written in C) instead of
     // transferring thousands of flattened rows to Node.js for Prisma to group.
-    const conceptsPromise = this.prismaClient.$queryRaw<{ main_concepts: unknown }[]>`
+    const conceptsPromise = this.prismaClient.$queryRaw<
+      { main_concepts: unknown }[]
+    >`
       SELECT 
         COALESCE(
           jsonb_agg(
@@ -235,21 +268,21 @@ export default class RoadmapRepository extends BaseRepository< Roadmap, typeof p
     // 3. Optional: fetch user progress if logged in
     const progressPromise = userId
       ? this.prismaClient.userProgress.findMany({
-        where: {
-          user_id: userId,
-          topic: {
-            roadmaps: { some: { roadmap_id: id } }
-          }
-        },
-        select: { is_completed: true },
-      })
+          where: {
+            user_id: userId,
+            topic: {
+              roadmaps: { some: { roadmap_id: id } },
+            },
+          },
+          select: { is_completed: true },
+        })
       : Promise.resolve([]);
 
     // Execute all queries in parallel
     const [roadmap, conceptsResult, userProgress] = await Promise.all([
       roadmapPromise,
       conceptsPromise,
-      progressPromise
+      progressPromise,
     ]);
 
     if (!roadmap) {
@@ -260,9 +293,10 @@ export default class RoadmapRepository extends BaseRepository< Roadmap, typeof p
     let progress = 0;
     if (userId && roadmap.user_roadmaps && roadmap.user_roadmaps.length > 0) {
       const completedTopics = userProgress.filter((p) => p.is_completed).length;
-      progress = roadmap._count.topics > 0
-        ? Math.round((completedTopics / roadmap._count.topics) * 100)
-        : 0;
+      progress =
+        roadmap._count.topics > 0
+          ? Math.round((completedTopics / roadmap._count.topics) * 100)
+          : 0;
     }
 
     const main_concepts = conceptsResult[0]?.main_concepts || [];
@@ -278,7 +312,9 @@ export default class RoadmapRepository extends BaseRepository< Roadmap, typeof p
       steps: roadmap._count.topics,
       isEnrolled: Boolean(roadmap.user_roadmaps?.length),
       progress: progress,
-      estimatedTime: roadmap.estimatedHours ? `${roadmap.estimatedHours} hours` : undefined,
+      estimatedTime: roadmap.estimatedHours
+        ? `${roadmap.estimatedHours} hours`
+        : undefined,
       isFeatured: roadmap.popularity > 100,
     };
 
@@ -537,33 +573,54 @@ export default class RoadmapRepository extends BaseRepository< Roadmap, typeof p
     const limit = Number(req.query.limit) || 10;
     const page = Number(req.query.page) || 1;
     const search = typeof req.query.search === 'string' ? req.query.search : '';
-    const category = typeof req.query.category === 'string' ? req.query.category : '';
-    const difficulty = typeof req.query.difficulty === 'string' ? req.query.difficulty : '';
-    const sort = typeof req.query.sort === 'string' ? req.query.sort : 'popular';
+    const category =
+      typeof req.query.category === 'string' ? req.query.category : '';
+    const difficulty =
+      typeof req.query.difficulty === 'string' ? req.query.difficulty : '';
+    const sort =
+      typeof req.query.sort === 'string' ? req.query.sort : 'popular';
     const userId = req.user?.id;
 
     // ─── Cache Key ───
     const cacheKey = `roadmaps:list:${userId || 'guest'}:${sort}:${page}:${limit}:${search}:${category || ''}:${difficulty || ''}:${JSON.stringify(where || {})}`;
-    const cached = await getCache<{ data: unknown[]; meta: Record<string, unknown> }>(cacheKey);
+    const cached = await getCache<{
+      data: unknown[];
+      meta: Record<string, unknown>;
+    }>(cacheKey);
     if (cached) return cached;
 
     const whereClause: Prisma.RoadmapWhereInput = {
       ...where,
       ...(category ? { category_id: { in: category.split(',') } } : {}),
-      ...(difficulty ? { difficulty: difficulty as 'EASY' | 'MEDIUM' | 'HARD' } : {}),
+      ...(difficulty
+        ? { difficulty: difficulty as 'EASY' | 'MEDIUM' | 'HARD' }
+        : {}),
     };
 
-    const combinedWhere: Prisma.RoadmapWhereInput = { ...where, ...whereClause };
+    const combinedWhere: Prisma.RoadmapWhereInput = {
+      ...where,
+      ...whereClause,
+    };
     const sortOptions = this.getRoadmapSortOptions(sort);
 
-    const topicsInclude = userId ? { topics: { select: { topic: { select: { id: true, title: true } } } } } : {};
+    const topicsInclude = userId
+      ? { topics: { select: { topic: { select: { id: true, title: true } } } } }
+      : {};
 
     const roadmaps = (await this.paginate(
       { limit, page, search, sort: sortOptions },
       ['title'],
       {
         include: {
-          user: { select: { id: true, username: true, first_name: true, last_name: true, avatar_url: true } },
+          user: {
+            select: {
+              id: true,
+              username: true,
+              first_name: true,
+              last_name: true,
+              avatar_url: true,
+            },
+          },
           category: { select: { id: true, name: true } },
           ...topicsInclude,
           _count: {
@@ -574,14 +631,21 @@ export default class RoadmapRepository extends BaseRepository< Roadmap, typeof p
               topics: true,
             },
           },
-          likes: userId ? { where: { user_id: userId }, select: { id: true } } : false,
-          user_roadmaps: userId ? { where: { user_id: userId }, select: { id: true } } : false,
+          likes: userId
+            ? { where: { user_id: userId }, select: { id: true } }
+            : false,
+          user_roadmaps: userId
+            ? { where: { user_id: userId }, select: { id: true } }
+            : false,
         },
       },
       combinedWhere
     )) as unknown as { data: RoadmapListItem[]; meta: Record<string, unknown> };
 
-    const userProgressMap = await this.calculateUserProgress(userId, roadmaps.data);
+    const userProgressMap = await this.calculateUserProgress(
+      userId,
+      roadmaps.data
+    );
 
     const result = {
       ...roadmaps,
@@ -596,14 +660,19 @@ export default class RoadmapRepository extends BaseRepository< Roadmap, typeof p
 
   private getRoadmapSortOptions(sort: string) {
     switch (sort) {
-      case 'recent': return { field: 'created_at', direction: 'desc' as const };
+      case 'recent':
+        return { field: 'created_at', direction: 'desc' as const };
       case 'popular':
       case 'rating':
-      default: return { field: 'popularity', direction: 'desc' as const };
+      default:
+        return { field: 'popularity', direction: 'desc' as const };
     }
   }
 
-  private async calculateUserProgress(userId: string | undefined, roadmapsData: RoadmapListItem[]) {
+  private async calculateUserProgress(
+    userId: string | undefined,
+    roadmapsData: RoadmapListItem[]
+  ) {
     const userProgressMap: Record<string, number> = {};
     if (!userId || roadmapsData.length === 0) return userProgressMap;
 
@@ -622,15 +691,22 @@ export default class RoadmapRepository extends BaseRepository< Roadmap, typeof p
       select: { topic_id: true },
     });
 
-    const completedTopicIds = new Set(userProgress.map((p) => p.topic_id).filter(Boolean) as string[]);
+    const completedTopicIds = new Set(
+      userProgress.map((p) => p.topic_id).filter(Boolean) as string[]
+    );
 
     roadmapsData.forEach((roadmap) => {
       if (roadmap.id && roadmap.topics) {
-        const roadmapTopics = roadmap.topics.map((t: { topic: { id: string } }) => t.topic.id);
-        const completedCount = roadmapTopics.filter((topicId: string) => completedTopicIds.has(topicId)).length;
-        userProgressMap[roadmap.id] = roadmapTopics.length > 0
-          ? Math.round((completedCount / roadmapTopics.length) * 100)
-          : 0;
+        const roadmapTopics = roadmap.topics.map(
+          (t: { topic: { id: string } }) => t.topic.id
+        );
+        const completedCount = roadmapTopics.filter((topicId: string) =>
+          completedTopicIds.has(topicId)
+        ).length;
+        userProgressMap[roadmap.id] =
+          roadmapTopics.length > 0
+            ? Math.round((completedCount / roadmapTopics.length) * 100)
+            : 0;
       }
     });
 
@@ -649,7 +725,9 @@ export default class RoadmapRepository extends BaseRepository< Roadmap, typeof p
       steps: roadmap._count.topics,
       isEnrolled: Boolean(roadmap.user_roadmaps?.length),
       progress,
-      estimatedTime: roadmap.estimatedHours ? `${roadmap.estimatedHours} hours` : undefined,
+      estimatedTime: roadmap.estimatedHours
+        ? `${roadmap.estimatedHours} hours`
+        : undefined,
       isFeatured: (roadmap.popularity ?? 0) > 100,
     };
   }

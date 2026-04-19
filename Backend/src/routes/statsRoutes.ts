@@ -23,12 +23,16 @@ export class StatsRoutes extends BaseRouter {
           return;
         }
 
-        const [row] = await prisma.$queryRaw<[{
-          total_users: bigint;
-          total_battles: bigint;
-          total_roadmaps: bigint;
-          total_topics: bigint;
-        }]>`
+        const [row] = await prisma.$queryRaw<
+          [
+            {
+              total_users: bigint;
+              total_battles: bigint;
+              total_roadmaps: bigint;
+              total_topics: bigint;
+            },
+          ]
+        >`
           SELECT
             (SELECT COUNT(*) FROM "User")    AS total_users,
             (SELECT COUNT(*) FROM "Battle")  AS total_battles,
@@ -37,17 +41,19 @@ export class StatsRoutes extends BaseRouter {
         `;
 
         const data = {
-          totalUsers:    Number(row.total_users),
-          totalBattles:  Number(row.total_battles),
+          totalUsers: Number(row.total_users),
+          totalBattles: Number(row.total_battles),
           totalRoadmaps: Number(row.total_roadmaps),
-          totalTopics:   Number(row.total_topics),
+          totalTopics: Number(row.total_topics),
         };
 
         await setCache(CACHE_KEY, data, { ttl: CACHE_TTL });
         res.json({ success: true, data });
       } catch (err) {
         logger.error('Failed to fetch stats summary', { err });
-        res.status(500).json({ success: false, message: 'Failed to fetch stats' });
+        res
+          .status(500)
+          .json({ success: false, message: 'Failed to fetch stats' });
       }
     });
   }

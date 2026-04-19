@@ -3,9 +3,10 @@ import Redlock from 'redlock';
 import logger from '../utils/logger.js';
 import { REDIS_URL } from '../config/index.js';
 
-type RedlockClient = ConstructorParameters<typeof Redlock>[0] extends Iterable<infer T>
-  ? T
-  : never;
+type RedlockClient =
+  ConstructorParameters<typeof Redlock>[0] extends Iterable<infer T>
+    ? T
+    : never;
 
 type CacheOptions = {
   ttl?: number;
@@ -20,28 +21,25 @@ export const redis = new Redis(REDIS_URL, {
   },
 });
 
-export const redlock = new Redlock(
-  [redis as unknown as RedlockClient],
-  {
-    // The expected clock drift; for more check http://redis.io/topics/distlock
-    driftFactor: 0.01, // time in ms
+export const redlock = new Redlock([redis as unknown as RedlockClient], {
+  // The expected clock drift; for more check http://redis.io/topics/distlock
+  driftFactor: 0.01, // time in ms
 
-    // The max number of times Redlock will attempt to lock a resource
-    // before erroring.
-    retryCount: 10,
+  // The max number of times Redlock will attempt to lock a resource
+  // before erroring.
+  retryCount: 10,
 
-    // the time in ms between attempts
-    retryDelay: 200, // time in ms
+  // the time in ms between attempts
+  retryDelay: 200, // time in ms
 
-    // the max time in ms randomly added to retries
-    // to improve performance under high contention
-    // see https://www.rahuljaitly.com/blog/distributed-locking-using-redis
-    retryJitter: 200, // time in ms
+  // the max time in ms randomly added to retries
+  // to improve performance under high contention
+  // see https://www.rahuljaitly.com/blog/distributed-locking-using-redis
+  retryJitter: 200, // time in ms
 
-    // The minimum remaining time on a lock before an extension is attempted
-    automaticExtensionThreshold: 500, // time in ms
-  }
-);
+  // The minimum remaining time on a lock before an extension is attempted
+  automaticExtensionThreshold: 500, // time in ms
+});
 
 redlock.on('clientError', (error: Error) => {
   // Ignore 'resource_locked' errors as they are part of the normal flow
@@ -160,7 +158,7 @@ export async function getWithSWR<T>(
 ): Promise<T> {
   const { ttl = 60, staleTtl = 3600 } = options;
   const staleKey = `stale:${key}`;
-  
+
   // Try to find fresh data
   const cached = await getCache<T>(key);
   if (cached) return cached;

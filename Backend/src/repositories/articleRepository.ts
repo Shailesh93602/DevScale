@@ -15,7 +15,10 @@ import { ContentFilter } from '../utils/contentFilter';
 
 import prisma from '../lib/prisma.js';
 
-export class ArticleRepository extends BaseRepository< Article, typeof prisma.article > {
+export class ArticleRepository extends BaseRepository<
+  Article,
+  typeof prisma.article
+> {
   constructor() {
     super(prisma.article);
   }

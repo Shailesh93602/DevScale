@@ -5,7 +5,10 @@ import BaseRepository from './baseRepository.js';
 
 import prisma from '../lib/prisma.js';
 
-export default class SystemConfigRepository extends BaseRepository< SystemConfig, typeof prisma.systemConfig > {
+export default class SystemConfigRepository extends BaseRepository<
+  SystemConfig,
+  typeof prisma.systemConfig
+> {
   constructor() {
     super(prisma.systemConfig);
   }
@@ -30,9 +33,9 @@ export default class SystemConfigRepository extends BaseRepository< SystemConfig
     category: string;
     description?: string;
   }) {
-    const validatedValue = (data.value === null
-      ? Prisma.JsonNull
-      : structuredClone(data.value)) as Prisma.InputJsonValue;
+    const validatedValue = (
+      data.value === null ? Prisma.JsonNull : structuredClone(data.value)
+    ) as Prisma.InputJsonValue;
     const createData = {
       ...data,
       value: validatedValue,

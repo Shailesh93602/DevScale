@@ -60,7 +60,7 @@ export class App {
   private initializeMiddlewares(): void {
     this.app.use(requestIdMiddleware);
     this.app.use(compression());
-    
+
     // Global body parsers — skip JSON for stripe webhooks to allow raw parsing in SubscriptionRoutes
     this.app.use((req, res, next) => {
       if (req.originalUrl.includes('/billing/stripe/webhook')) {
@@ -95,9 +95,7 @@ export class App {
             ) {
               return callback(null, true);
             }
-            return callback(
-              new Error(`Origin ${origin} not allowed by CORS`)
-            );
+            return callback(new Error(`Origin ${origin} not allowed by CORS`));
           }
 
           // In development, allow localhost and private network IPs
@@ -136,23 +134,23 @@ export class App {
         crossOriginEmbedderPolicy: isProd,
         contentSecurityPolicy: isProd
           ? {
-            directives: {
-              defaultSrc: ["'self'"],
-              scriptSrc: ["'self'"],
-              styleSrc: ["'self'", "'unsafe-inline'"], // unsafe-inline needed for inline styles from Swagger UI
-              imgSrc: ["'self'", 'data:', cloudinaryHost],
-              connectSrc: [
-                "'self'",
-                apiOrigin,
-                supabaseHost,
-                ...clientOrigins,
-              ],
-              fontSrc: ["'self'", 'https://fonts.gstatic.com'],
-              objectSrc: ["'none'"],
-              frameAncestors: ["'none'"],
-              upgradeInsecureRequests: [],
-            },
-          }
+              directives: {
+                defaultSrc: ["'self'"],
+                scriptSrc: ["'self'"],
+                styleSrc: ["'self'", "'unsafe-inline'"], // unsafe-inline needed for inline styles from Swagger UI
+                imgSrc: ["'self'", 'data:', cloudinaryHost],
+                connectSrc: [
+                  "'self'",
+                  apiOrigin,
+                  supabaseHost,
+                  ...clientOrigins,
+                ],
+                fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+                objectSrc: ["'none'"],
+                frameAncestors: ["'none'"],
+                upgradeInsecureRequests: [],
+              },
+            }
           : false,
         referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
         // Permissions-Policy: disable unused browser APIs that could be abused
@@ -165,7 +163,7 @@ export class App {
     this.app.use((_req, res, next) => {
       res.setHeader(
         'Permissions-Policy',
-        'camera=(), microphone=(), geolocation=(), payment=()',
+        'camera=(), microphone=(), geolocation=(), payment=()'
       );
       next();
     });
@@ -177,7 +175,8 @@ export class App {
       legacyHeaders: false,
       message: 'Too many requests from this IP, please try again later.',
       store: new RedisStore({
-        sendCommand: (...args: string[]) => redis.call(...args as [string, ...string[]]) as Promise<RedisReply>,
+        sendCommand: (...args: string[]) =>
+          redis.call(...(args as [string, ...string[]])) as Promise<RedisReply>,
       }),
     });
     this.app.use(limiter);
@@ -228,7 +227,10 @@ export class App {
     });
 
     process.on('uncaughtException', (error) => {
-      logger.error('Uncaught exception', { error: error.message, stack: error.stack });
+      logger.error('Uncaught exception', {
+        error: error.message,
+        stack: error.stack,
+      });
       process.exit(1);
     });
 

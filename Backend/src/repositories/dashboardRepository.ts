@@ -1,10 +1,12 @@
 import type { User } from '@prisma/client';
 import BaseRepository from './baseRepository.js';
 import prisma from '../lib/prisma.js';
+import { DashboardStats } from '../types/dashboard';
 import {
-  DashboardStats,
-} from '../types/dashboard';
-import { getCached, setCached, invalidatePattern } from '../services/memoryCache';
+  getCached,
+  setCached,
+  invalidatePattern,
+} from '../services/memoryCache';
 
 // Raw SQL row shapes
 interface RoadmapRow {
@@ -54,7 +56,10 @@ interface SummaryQueryResult {
   }> | null;
 }
 
-export class DashboardRepository extends BaseRepository< User, typeof prisma.user > {
+export class DashboardRepository extends BaseRepository<
+  User,
+  typeof prisma.user
+> {
   /**
    * Promise coalescing — if two requests arrive before the first completes,
    * they share the same in-flight promise instead of triggering duplicate DB calls.
@@ -123,7 +128,9 @@ export class DashboardRepository extends BaseRepository< User, typeof prisma.use
       }),
     ]);
 
-    const completedTopicIdsSet = new Set(userCompletedTopics.map((p) => p.topic_id));
+    const completedTopicIdsSet = new Set(
+      userCompletedTopics.map((p) => p.topic_id)
+    );
     let completedRoadmaps = 0;
     let inProgressRoadmaps = 0;
     let totalProgressPercentage = 0;
@@ -133,7 +140,7 @@ export class DashboardRepository extends BaseRepository< User, typeof prisma.use
       if (roadmapTopics.length === 0) return;
 
       const completedCount = roadmapTopics.filter((t) =>
-        t.topic_id ? completedTopicIdsSet.has(t.topic_id) : false,
+        t.topic_id ? completedTopicIdsSet.has(t.topic_id) : false
       ).length;
       const progress = (completedCount / roadmapTopics.length) * 100;
       totalProgressPercentage += progress;
@@ -146,7 +153,9 @@ export class DashboardRepository extends BaseRepository< User, typeof prisma.use
     });
 
     const averageProgress =
-      userRoadmaps.length > 0 ? Math.round(totalProgressPercentage / userRoadmaps.length) : 0;
+      userRoadmaps.length > 0
+        ? Math.round(totalProgressPercentage / userRoadmaps.length)
+        : 0;
 
     return {
       enrolledRoadmaps: enrolledRoadmapsCount,
@@ -257,7 +266,8 @@ export class DashboardRepository extends BaseRepository< User, typeof prisma.use
     const cacheKey = `dashboard:summary:${userId}`;
 
     // 1. In-memory cache hit (warm path — ~0 ms)
-    const cached = getCached<Awaited<ReturnType<typeof this._buildSummary>>>(cacheKey);
+    const cached =
+      getCached<Awaited<ReturnType<typeof this._buildSummary>>>(cacheKey);
     if (cached) return cached;
 
     // 2. Promise coalescing — if a build is already in-flight for this user,
@@ -391,16 +401,29 @@ export class DashboardRepository extends BaseRepository< User, typeof prisma.use
     const parse = <T>(val: T | string | null | undefined, fallback: T): T => {
       if (val === null || val === undefined) return fallback;
       if (typeof val === 'string') {
-        try { return JSON.parse(val) as T; } catch { return fallback; }
+        try {
+          return JSON.parse(val) as T;
+        } catch {
+          return fallback;
+        }
       }
       return val as T;
     };
 
-    const enrolled  = parse<RoadmapRow[]>(row.enrolled_roadmaps,    []);
+    const enrolled = parse<RoadmapRow[]>(row.enrolled_roadmaps, []);
     const recommended = parse<RoadmapRow[]>(row.recommended_roadmaps, []);
-    const activities  = parse<SummaryQueryResult['activities']>(row.activities,   []);
-    const achievements = parse<SummaryQueryResult['achievements']>(row.achievements, []);
-    const weeklyActivity = parse<SummaryQueryResult['weekly_activity']>(row.weekly_activity, []);
+    const activities = parse<SummaryQueryResult['activities']>(
+      row.activities,
+      []
+    );
+    const achievements = parse<SummaryQueryResult['achievements']>(
+      row.achievements,
+      []
+    );
+    const weeklyActivity = parse<SummaryQueryResult['weekly_activity']>(
+      row.weekly_activity,
+      []
+    );
     const streak = parse<SummaryQueryResult['streak']>(row.streak, null);
 
     const shapeRoadmap = (r: RoadmapRow) => ({

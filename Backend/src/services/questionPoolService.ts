@@ -1,14 +1,19 @@
 import prisma from '../lib/prisma';
 import { getCache, setCache } from './cacheService';
 
-export type QuestionSourceType = 'topic' | 'subject' | 'main_concept' | 'roadmap' | 'dsa';
+export type QuestionSourceType =
+  | 'topic'
+  | 'subject'
+  | 'main_concept'
+  | 'roadmap'
+  | 'dsa';
 
 export interface PoolQuestion {
   source_quiz_question_id: string | null;
   source_challenge_id: string | null;
   question: string;
-  options: string[];        // exactly 4 items
-  correct_answer: number;   // index 0-3
+  options: string[]; // exactly 4 items
+  correct_answer: number; // index 0-3
   explanation: string | null;
   points: number;
   time_limit: number;
@@ -20,7 +25,7 @@ export interface QuestionPoolOptions {
   difficulty?: string;
   categories?: string[];
   count?: number;
-  exclude_question_ids?: string[];  // anti-repeat: source_quiz_question_id values to skip
+  exclude_question_ids?: string[]; // anti-repeat: source_quiz_question_id values to skip
 }
 
 export interface QuestionPoolResult {
@@ -48,7 +53,7 @@ function convertQuizQuestion(
     options: { answer_text: string; is_correct: boolean }[];
   },
   defaultPoints: number,
-  defaultTimeLimit: number,
+  defaultTimeLimit: number
 ): PoolQuestion | null {
   if (!q.options || q.options.length < 2) return null;
 
@@ -79,7 +84,7 @@ function convertQuizQuestion(
  */
 async function getRecentlyUsedIds(
   sourceType: QuestionSourceType,
-  sourceId: string,
+  sourceId: string
 ): Promise<string[]> {
   const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
 
@@ -101,7 +106,9 @@ async function getRecentlyUsedIds(
 /**
  * Fetch all QuizQuestions for a set of quiz IDs, with their QuizOptions.
  */
-async function fetchQuestionsForQuizIds(quizIds: string[]): Promise<PoolQuestion[]> {
+async function fetchQuestionsForQuizIds(
+  quizIds: string[]
+): Promise<PoolQuestion[]> {
   if (quizIds.length === 0) return [];
 
   const quizQuestions = await prisma.quizQuestion.findMany({
@@ -148,11 +155,15 @@ async function poolForSubject(subjectId: string): Promise<PoolQuestion[]> {
     select: { id: true },
   });
 
-  const allIds = [...new Set([...directQuizzes, ...topicQuizzes].map((q) => q.id))];
+  const allIds = [
+    ...new Set([...directQuizzes, ...topicQuizzes].map((q) => q.id)),
+  ];
   return fetchQuestionsForQuizIds(allIds);
 }
 
-async function poolForMainConcept(mainConceptId: string): Promise<PoolQuestion[]> {
+async function poolForMainConcept(
+  mainConceptId: string
+): Promise<PoolQuestion[]> {
   // Quizzes directly on the main concept
   const directQuizzes = await prisma.quiz.findMany({
     where: { main_concept_id: mainConceptId },
@@ -183,7 +194,9 @@ async function poolForMainConcept(mainConceptId: string): Promise<PoolQuestion[]
   });
 
   const allIds = [
-    ...new Set([...directQuizzes, ...subjectQuizzes, ...topicQuizzes].map((q) => q.id)),
+    ...new Set(
+      [...directQuizzes, ...subjectQuizzes, ...topicQuizzes].map((q) => q.id)
+    ),
   ];
   return fetchQuestionsForQuizIds(allIds);
 }
@@ -191,25 +204,45 @@ async function poolForMainConcept(mainConceptId: string): Promise<PoolQuestion[]
 async function poolForRoadmap(roadmapId: string): Promise<PoolQuestion[]> {
   // Round 1 (parallel): main concept IDs + direct roadmap→topic links
   const [mcLinks, roadmapTopicLinks] = await Promise.all([
-    prisma.roadmapMainConcept.findMany({ where: { roadmap_id: roadmapId }, select: { main_concept_id: true } }),
-    prisma.roadmapTopic.findMany({ where: { roadmap_id: roadmapId }, select: { topic_id: true } }),
+    prisma.roadmapMainConcept.findMany({
+      where: { roadmap_id: roadmapId },
+      select: { main_concept_id: true },
+    }),
+    prisma.roadmapTopic.findMany({
+      where: { roadmap_id: roadmapId },
+      select: { topic_id: true },
+    }),
   ]);
   const mcIds = mcLinks.map((m) => m.main_concept_id);
   const directTopicIds = roadmapTopicLinks.map((t) => t.topic_id);
 
   // Round 2 (parallel): mc-level quizzes + subject links (both depend on mcIds)
   const [mcQuizzes, subjectLinks] = await Promise.all([
-    prisma.quiz.findMany({ where: { main_concept_id: { in: mcIds } }, select: { id: true } }),
-    prisma.mainConceptSubject.findMany({ where: { main_concept_id: { in: mcIds } }, select: { subject_id: true } }),
+    prisma.quiz.findMany({
+      where: { main_concept_id: { in: mcIds } },
+      select: { id: true },
+    }),
+    prisma.mainConceptSubject.findMany({
+      where: { main_concept_id: { in: mcIds } },
+      select: { subject_id: true },
+    }),
   ]);
   const subjectIds = subjectLinks.map((s) => s.subject_id);
 
   // Round 3 (parallel): subject-level quizzes + topic links (both depend on subjectIds)
   const [subjectQuizzes, topicLinks] = await Promise.all([
-    prisma.quiz.findMany({ where: { subject_id: { in: subjectIds } }, select: { id: true } }),
-    prisma.subjectTopic.findMany({ where: { subject_id: { in: subjectIds } }, select: { topic_id: true } }),
+    prisma.quiz.findMany({
+      where: { subject_id: { in: subjectIds } },
+      select: { id: true },
+    }),
+    prisma.subjectTopic.findMany({
+      where: { subject_id: { in: subjectIds } },
+      select: { topic_id: true },
+    }),
   ]);
-  const allTopicIds = [...new Set([...topicLinks.map((t) => t.topic_id), ...directTopicIds])];
+  const allTopicIds = [
+    ...new Set([...topicLinks.map((t) => t.topic_id), ...directTopicIds]),
+  ];
 
   // Round 4: topic-level quizzes
   const topicQuizzes = await prisma.quiz.findMany({
@@ -218,7 +251,9 @@ async function poolForRoadmap(roadmapId: string): Promise<PoolQuestion[]> {
   });
 
   const allIds = [
-    ...new Set([...mcQuizzes, ...subjectQuizzes, ...topicQuizzes].map((q) => q.id)),
+    ...new Set(
+      [...mcQuizzes, ...subjectQuizzes, ...topicQuizzes].map((q) => q.id)
+    ),
   ];
   return fetchQuestionsForQuizIds(allIds);
 }
@@ -231,7 +266,9 @@ async function poolForRoadmap(roadmapId: string): Promise<PoolQuestion[]> {
  * @param opts.count      How many questions to return (default 10, max 50)
  * @param opts.exclude_question_ids  source_quiz_question_id values to skip (anti-repeat)
  */
-export async function getQuestionPool(opts: QuestionPoolOptions): Promise<QuestionPoolResult> {
+export async function getQuestionPool(
+  opts: QuestionPoolOptions
+): Promise<QuestionPoolResult> {
   const count = Math.min(opts.count ?? 10, 50);
   const cacheKey = `qpool:${opts.type}:${opts.id}:${opts.difficulty ?? 'any'}`;
 
@@ -268,7 +305,8 @@ export async function getQuestionPool(opts: QuestionPoolOptions): Promise<Questi
   // Apply anti-repeat exclusion
   const excludeSet = new Set(opts.exclude_question_ids ?? []);
   let filtered = allQuestions.filter(
-    (q) => !q.source_quiz_question_id || !excludeSet.has(q.source_quiz_question_id),
+    (q) =>
+      !q.source_quiz_question_id || !excludeSet.has(q.source_quiz_question_id)
   );
 
   // If exclusion leaves too few, fall back to full pool
@@ -288,7 +326,7 @@ export async function getQuestionPool(opts: QuestionPoolOptions): Promise<Questi
  */
 export async function getAntiRepeatExclusions(
   sourceType: QuestionSourceType,
-  sourceId: string,
+  sourceId: string
 ): Promise<string[]> {
   return getRecentlyUsedIds(sourceType, sourceId);
 }

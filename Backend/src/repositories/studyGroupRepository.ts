@@ -4,7 +4,10 @@ import BaseRepository from './baseRepository.js';
 
 import prisma from '../lib/prisma.js';
 
-export default class StudyGroupRepository extends BaseRepository< StudyGroup, typeof prisma.studyGroup > {
+export default class StudyGroupRepository extends BaseRepository<
+  StudyGroup,
+  typeof prisma.studyGroup
+> {
   constructor() {
     super(prisma.studyGroup);
   }

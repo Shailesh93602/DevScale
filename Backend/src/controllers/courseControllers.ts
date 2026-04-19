@@ -48,7 +48,7 @@ export default class CourseController {
         user_id_course_id: {
           user_id: userId,
           course_id: courseId,
-        }
+        },
       },
     });
 
@@ -73,60 +73,65 @@ export default class CourseController {
     });
   });
 
-  public getUserEnrollments = catchAsync(async (req: Request, res: Response) => {
-    const userId = req.user?.id;
+  public getUserEnrollments = catchAsync(
+    async (req: Request, res: Response) => {
+      const userId = req.user?.id;
 
-    if (!userId) {
-      return sendResponse(res, 'UNAUTHORIZED');
+      if (!userId) {
+        return sendResponse(res, 'UNAUTHORIZED');
+      }
+
+      const enrollments = await prisma.enrollment.findMany({
+        where: { user_id: userId },
+        include: {
+          course: true,
+        },
+        orderBy: { enrollment_date: 'desc' },
+      });
+
+      return sendResponse(res, 'ENROLLMENTS_FETCHED', {
+        data: enrollments,
+      });
     }
+  );
 
-    const enrollments = await prisma.enrollment.findMany({
-      where: { user_id: userId },
-      include: {
-        course: true,
-      },
-      orderBy: { enrollment_date: 'desc' },
-    });
+  public updateEnrollmentProgress = catchAsync(
+    async (req: Request, res: Response) => {
+      const enrollmentId = req.params.enrollmentId;
+      const { progress } = req.body;
+      const userId = req.user?.id;
 
-    return sendResponse(res, 'ENROLLMENTS_FETCHED', {
-      data: enrollments,
-    });
-  });
+      if (!userId) {
+        return sendResponse(res, 'UNAUTHORIZED');
+      }
 
-  public updateEnrollmentProgress = catchAsync(async (req: Request, res: Response) => {
-    const enrollmentId = req.params.enrollmentId;
-    const { progress } = req.body;
-    const userId = req.user?.id;
+      const enrollment = await prisma.enrollment.findFirst({
+        where: {
+          id: enrollmentId,
+          user_id: userId,
+        },
+      });
 
-    if (!userId) {
-      return sendResponse(res, 'UNAUTHORIZED');
+      if (!enrollment) {
+        return sendResponse(res, 'ENROLLMENT_NOT_FOUND');
+      }
+
+      const status = progress >= 100 ? 'COMPLETED' : 'IN_PROGRESS';
+      const completionDate =
+        progress >= 100 ? new Date() : enrollment.completion_date;
+
+      const updatedEnrollment = await prisma.enrollment.update({
+        where: { id: enrollmentId },
+        data: {
+          progress,
+          status,
+          completion_date: completionDate,
+        },
+      });
+
+      return sendResponse(res, 'ENROLLMENT_UPDATED', {
+        data: updatedEnrollment,
+      });
     }
-
-    const enrollment = await prisma.enrollment.findFirst({
-      where: {
-        id: enrollmentId,
-        user_id: userId,
-      },
-    });
-
-    if (!enrollment) {
-      return sendResponse(res, 'ENROLLMENT_NOT_FOUND');
-    }
-
-    const status = progress >= 100 ? 'COMPLETED' : 'IN_PROGRESS';
-    const completionDate = progress >= 100 ? new Date() : enrollment.completion_date;
-
-    const updatedEnrollment = await prisma.enrollment.update({
-      where: { id: enrollmentId },
-      data: {
-        progress,
-        status,
-        completion_date: completionDate,
-      },
-    });
-
-    return sendResponse(res, 'ENROLLMENT_UPDATED', {
-      data: updatedEnrollment,
-    });
-  });
+  );
 }

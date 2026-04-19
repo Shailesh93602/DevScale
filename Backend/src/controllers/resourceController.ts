@@ -46,11 +46,11 @@ export default class ResourceController {
     const resources = await prisma.subject.findMany({
       where: search
         ? {
-          OR: [
-            { title: { contains: search, mode: 'insensitive' } },
-            { description: { contains: search, mode: 'insensitive' } },
-          ],
-        }
+            OR: [
+              { title: { contains: search, mode: 'insensitive' } },
+              { description: { contains: search, mode: 'insensitive' } },
+            ],
+          }
         : undefined,
       take: limit,
       skip: offset,
