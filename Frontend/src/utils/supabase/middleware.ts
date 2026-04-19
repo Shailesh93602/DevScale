@@ -10,11 +10,13 @@ import {
  * Middleware — Server-side auth & RBAC guard
  *
  * Flow:
- * 1. Refresh Supabase session (CRITICAL — must be first)
- * 2. If user is NOT authenticated:
+ * 1. Fast-path: purely public routes (not /, not auth-required, not guest-only)
+ *    skip the Supabase network call entirely → no timeout risk.
+ * 2. For all other routes, refresh Supabase session via getUser().
+ * 3. If user is NOT authenticated:
  *    - Allow public routes through
  *    - Redirect protected routes to /auth/login
- * 3. If user IS authenticated:
+ * 4. If user IS authenticated:
  *    - Redirect from auth pages (login/register) to /dashboard
  *    - For admin routes: read role from JWT custom claims
  *    - Allow everything else through
@@ -29,6 +31,22 @@ import {
  */
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
+
+  const pathname = request.nextUrl.pathname;
+
+  // ── Fast path: skip network call for purely public routes ──────────────────
+  // Routes that are not /, not auth-required, and not guest-only never need
+  // a user object — they're always public regardless of auth state.
+  // Skipping getUser() here prevents MIDDLEWARE_INVOCATION_TIMEOUT when the
+  // Supabase project is cold or free-tier paused.
+  if (
+    pathname !== '/' &&
+    !requiresAuthRoute(pathname) &&
+    !isGuestOnlyRoute(pathname)
+  ) {
+    return supabaseResponse;
+  }
+  // ──────────────────────────────────────────────────────────────────────────
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -57,8 +75,6 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
   // ─────────────────────────────────────────────────────────────────────────────
-
-  const pathname = request.nextUrl.pathname;
 
   // ── Unauthenticated user ───────────────────────────────────────────────────
   if (!user) {
