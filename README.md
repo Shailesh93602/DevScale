@@ -1,242 +1,261 @@
 <div align="center">
-  <img src="assets/logo.png" alt="EduScale Logo" width="200" height="auto" />
-  <h1>🚀 EduScale Platform</h1>
-  <p><strong>The All-in-One Engineering Learning Hub & Community</strong></p>
+  <h1>EduScale</h1>
+  <p><strong>Distributed real-time EdTech platform — Socket.io at scale, Redlock, circuit breaker, Prometheus</strong></p>
 
   <p>
-    <a href="https://nextjs.org"><img src="https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js" alt="Next.js" /></a>
-    <a href="https://react.dev"><img src="https://img.shields.io/badge/React-19-blue?style=for-the-badge&logo=react" alt="React" /></a>
-    <a href="https://nodejs.org"><img src="https://img.shields.io/badge/Node.js-Backend-green?style=for-the-badge&logo=node.js" alt="Node" /></a>
-    <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-Ready-blue?style=for-the-badge&logo=typescript" alt="TypeScript" /></a>
-    <a href="https://postgresql.org"><img src="https://img.shields.io/badge/PostgreSQL-Database-336791?style=for-the-badge&logo=postgresql" alt="Postgres" /></a>
-  </p>
-  
-  <p>
-    <em>Empowering developers to grow from beginners to experts through interactive roadmaps, real-time coding battles, and peer mentorship.</em>
+    <a href="https://eduscale.vercel.app"><img src="https://img.shields.io/badge/live-eduscale.vercel.app-blue?style=flat-square" alt="Live" /></a>
+    <a href="https://github.com/Shailesh93602/devscale"><img src="https://img.shields.io/badge/github-devscale-black?style=flat-square&logo=github" alt="GitHub" /></a>
+    <img src="https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js" alt="Next.js 15" />
+    <img src="https://img.shields.io/badge/Socket.io-Redis_Adapter-010101?style=flat-square&logo=socket.io" alt="Socket.io" />
+    <img src="https://img.shields.io/badge/Redis-Redlock_%2B_Pub%2FSub-DC382D?style=flat-square&logo=redis" alt="Redis" />
+    <img src="https://img.shields.io/badge/Prometheus-prom--client-E6522C?style=flat-square&logo=prometheus" alt="Prometheus" />
   </p>
 </div>
 
 ---
 
-## 📖 Table of Contents
-- [Overview](#-overview)
-- [System Architecture](#-system-architecture)
-- [Core Modules & Features](#-core-modules--features)
-- [Technology Stack](#-technology-stack)
-- [Project Structure](#-project-structure)
-- [Getting Started](#-getting-started)
-- [Environment Variables](#-environment-variables)
-- [Future Roadmap](#-future-roadmap)
-- [License & Authors](#-license--authors)
+## What it is
+
+EduScale is an engineering learning platform with real-time coding battles. The interesting engineering problem: when two players join a battle room, the server that handles "player 1 joined" and the server that handles "player 2 joined" may be **different Node.js instances**. Without distributed coordination, the battle never starts.
+
+This README focuses on the infrastructure decisions — the distributed architecture, not the features.
 
 ---
 
-## ✨ Overview
+## Architecture
 
-**EduScale** is a highly scalable, premium EdTech platform tailored for engineering students and aspiring developers. Designed with a microservice-like layered architecture, EduScale bridges the gap between academic theory and industry implementation. 
-
-Users begin by selecting specialized pathways (e.g., Full Stack, DevOps, Data Science) and execute a curated learning journey. The platform enforces learning through interactive quizzes, an integrated IDE for coding challenges, real-time developer face-offs (Battle Zone), and deep community integrations like study groups and mentoring capabilities.
-
----
-
-## 🏗 System Architecture
-
-EduScale utilizes a modern decoupled architecture ensuring high availability, rapid scaling capabilities, and real-time interaction speed via WebSocket integration.
-
-```mermaid
-graph TD
-  subgraph Client Layer
-    Web[Next.js 15 Web Application]
-    Mobile[React Native App - Planned]
-  end
-
-  subgraph API Gateway / CDN
-    Vercel[Vercel Edge Network]
-    Nginx[Nginx Reverse Proxy]
-  end
-
-  subgraph Service Layer - Express / Node.js
-    REST[RESTful API Services]
-    WS[WebSocket Server - Socket.io]
-    Auth[Supabase Auth Service]
-  end
-
-  subgraph Data & Infra Layer
-    DB[(PostgreSQL)]
-    Cache[(Redis In-Memory Cache)]
-    Queue[(BullMQ Background Jobs)]
-    Storage[(Cloudinary / Object Storage)]
-  end
-
-  Web -->|HTTPS| Vercel
-  Mobile -->|HTTPS| Nginx
-  
-  Vercel -.->|REST| REST
-  Vercel -.->|WSS| WS
-  Nginx -.->|Traffic| REST
-  
-  REST -->|Prisma Client| DB
-  REST -->|Session/Rate Limits| Cache
-  REST -->|Async Tasks| Queue
-  REST -->|Media Asset Uploads| Storage
-  
-  WS <-->|Game State PubSub| Cache
-  
-  Web -->|JWT Issuance| Auth
-  REST -->|Token Validation| Auth
+```
+Browser ──────────────────────────────────────────────────────────────
+          WebSocket (wss://)        HTTP (REST/Next.js SSR)
+               │                              │
+         ┌─────▼──────┐               ┌───────▼───────┐
+         │  Socket.io  │               │  Next.js 15   │
+         │  Server A   │               │  App Router   │
+         └─────┬───────┘               └───────┬───────┘
+               │                              │
+    @socket.io/redis-adapter          Prisma + PostgreSQL
+               │
+         ┌─────▼───────────────────────────────┐
+         │              Redis                  │
+         │  • Pub/Sub (socket.io cross-node)   │
+         │  • Redlock (battle start mutex)     │
+         │  • Bull queue (background jobs)     │
+         └─────────────────────────────────────┘
+               │
+         ┌─────▼───────┐
+         │  Socket.io  │
+         │  Server B   │
+         └─────────────┘
 ```
 
 ---
 
-## 🎯 Core Modules & Features
+## Key design decisions
 
-### 🎓 **Personalized Learning Paths**
-- **Structured Roadmaps:** Curated, stage-by-stage learning trees.
-- **Progress Tracking:** Automatic milestone completion and streak algorithms.
-- **Certifications:** Verifiable credential generation upon curriculum completion.
+### 1. `@socket.io/redis-adapter` — multi-instance Socket.io
 
-### ⚔️ **Interactive Battle Zone (Real-Time)**
-- **Multiplayer Coding Battles:** Socket.io powered synchronized 1v1 and Free-for-All matches.
-- **Live Leaderboards:** Real-time scoring and rank tracking via Redis.
-- **Multi-Language IDE:** Monaco-based editor supporting JS, Python, Java, C++, and Go.
+The default Socket.io in-memory adapter only broadcasts events within a single Node.js process. When deployed on Vercel/Railway with multiple instances, `socket.to(room).emit(...)` would reach only sockets connected to the same instance.
 
-### 👥 **Community & Mentorship**
-- **Discussion Forums:** Reddit-style threaded Q&A and knowledge sharing.
-- **Peer Study Groups:** Create and join distinct cohorts for collaborative project building.
-- **Mentorship System:** Connect juniors with verified industry experts.
+The Redis adapter publishes every room event to a Redis Pub/Sub channel. All instances subscribe and re-emit to their local sockets:
 
-### 💼 **Career Progression**
-- **Interview Prep:** Highly curated bank of technical interview questions.
-- **Job Board:** Internal pipeline for hiring partners and curated listings.
-- **Developer Portfolio:** Public-facing profile aggregating Git stats, badges, and project history.
+```ts
+import { createAdapter } from '@socket.io/redis-adapter';
+import { createClient } from 'redis';
 
----
+const pubClient = createClient({ url: process.env.REDIS_URL });
+const subClient = pubClient.duplicate();
+await Promise.all([pubClient.connect(), subClient.connect()]);
 
-## 🛠 Technology Stack
+io.adapter(createAdapter(pubClient, subClient));
+```
 
-We've chosen a bleeding-edge, enterprise-grade stack perfectly suited for a $50k+ ARR SaaS product:
+Without this: battles only work when both players hit the same server. With this: horizontal scaling works transparently.
 
-| Layer | Technologies Used | Purpose |
-| :--- | :--- | :--- |
-| **Frontend** | Next.js 15, React 19, TypeScript | SEO-optimized, SSR/SSG capable client interface |
-| **Styling & UI** | TailwindCSS, Radix UI, Framer Motion | Accessible, animated, and dark-mode native components |
-| **State Mgt.** | Redux Toolkit, Zustand, React Query | Complex global state and server-state caching |
-| **Backend** | Node.js, Express.js, TypeScript | Highly scalable monolithic service architecture |
-| **Database** | PostgreSQL, Prisma ORM | Relational data integrity with type-safe querying |
-| **Real-time** | Socket.io, Redis | Event-driven architecture for live battles and chat |
-| **Auth** | Supabase Authentication | Secure, session-based & OAuth flow identity provider |
-| **Media** | Cloudinary | Auto-optimized, edge-delivered asset management |
+### 2. Redlock — distributed mutex on battle start
 
----
+When two players join simultaneously, both Socket.io servers may detect "room is full" at the same time and try to start the battle. Without a lock, both execute the start logic — double-starting a battle corrupts scoring.
 
-## 📂 Project Structure
+Redlock implements the [Redlock algorithm](https://redis.io/docs/manual/patterns/distributed-locks/): acquire a lock across Redis with a TTL before executing the critical section.
 
-EduScale operates as a managed monorepo structure separating the presentation layer from the core infrastructure constraints.
+```ts
+import Redlock from 'redlock';
 
-```bash
-EduScale/
-├── Frontend/                 # Next.js 15 Client Application
-│   ├── src/
-│   │   ├── app/              # Next.js App Router Pages
-│   │   ├── components/       # Reusable UI/Radix Components
-│   │   ├── contexts/         # React Context (Auth, Theme)
-│   │   ├── hooks/            # Custom React Hooks (e.g., useBattleSocket)
-│   │   └── utils/            # Supabase clients, formatters
-│   ├── public/               # Static web assets
-│   └── tailwind.config.ts    # Design System Tokens
-│
-└── Backend/                  # Express.js API Server
-    ├── src/
-    │   ├── controllers/      # Route logic & payload formatting
-    │   ├── services/         # Core business logic & WebSocket classes
-    │   ├── repositories/     # Data Access Layer (Prisma wrappers)
-    │   ├── middlewares/      # Rate Limiting, Helmet, Auth Guards
-    │   └── routes/           # API Endpoint declarations
-    ├── prisma/               # Schema definitions & Database Seeders
-    └── docs/                 # OpenAPI/Swagger Specifications
+const redlock = new Redlock([redis], {
+  retryCount: 0,    // fail-fast: if we can't get the lock, the other instance got it
+  retryDelay: 0,
+  driftFactor: 0.01,
+});
+
+async function startBattle(roomId: string) {
+  const lock = await redlock.acquire([`lock:battle:${roomId}`], 5000);
+  try {
+    // only one instance reaches here
+    await initializeBattleState(roomId);
+    io.to(roomId).emit('battle:started', { roomId });
+  } finally {
+    await lock.release();
+  }
+}
+```
+
+**Why `retryCount: 0`:** If the lock is taken, the other instance already won the race and is starting the battle. Retrying would queue up a second start attempt after the first completes — which would restart an already-running battle. Fail-fast is the correct behavior here.
+
+### 3. opossum — circuit breaker on code execution
+
+The code execution service (external sandbox) is the most likely failure point. If it goes down or becomes slow, every battle hangs waiting for execution results.
+
+opossum wraps the execution call with a circuit breaker:
+
+```ts
+import CircuitBreaker from 'opossum';
+
+const executionBreaker = new CircuitBreaker(executeCode, {
+  timeout: 3000,          // 3s — execution should be fast
+  errorThresholdPercentage: 50,  // open if >50% fail
+  resetTimeout: 10000,    // try again after 10s
+  volumeThreshold: 5,     // need 5 calls before tripping
+});
+
+executionBreaker.fallback(() => ({
+  output: '',
+  error: 'Code execution unavailable. Score based on test cases submitted.',
+  timedOut: true,
+}));
+```
+
+When the circuit is open, battles continue with the fallback — players can still submit, scoring just uses the already-submitted results.
+
+### 4. prom-client — Prometheus `/metrics`
+
+```ts
+import { collectDefaultMetrics, Counter, Histogram, register } from 'prom-client';
+
+collectDefaultMetrics();
+
+export const battleStarted = new Counter({
+  name: 'eduscale_battles_started_total',
+  help: 'Total battles started',
+  labelNames: ['mode'],   // 1v1 | ffa
+});
+
+export const executionDuration = new Histogram({
+  name: 'eduscale_code_execution_duration_seconds',
+  help: 'Code execution latency',
+  buckets: [0.1, 0.5, 1, 2, 5],
+});
+
+app.get('/metrics', async (req, res) => {
+  res.set('Content-Type', register.contentType);
+  res.end(await register.metrics());
+});
+```
+
+Metrics exposed: battle start count (by mode), code execution latency histogram, Redis lock acquisition failures, circuit breaker state.
+
+### 5. Bull queues — async background processing
+
+Score updates, badge awards, and leaderboard recalculations happen in Bull workers, not in the WebSocket handler. The handler returns immediately; the queue processes asynchronously:
+
+```ts
+import Bull from 'bull';
+
+const scoreQueue = new Bull('score-update', { redis: process.env.REDIS_URL });
+
+// In WebSocket handler (fast path):
+await scoreQueue.add({ userId, battleId, score });
+
+// In worker (decoupled, retryable):
+scoreQueue.process(async (job) => {
+  await updateUserScore(job.data);
+  await recalculateLeaderboard(job.data.userId);
+  await awardBadgesIfEarned(job.data);
+});
 ```
 
 ---
 
-## 🚀 Getting Started
-
-Follow these instructions to spin up the local development environment seamlessly.
+## Running locally
 
 ### Prerequisites
-- **Node.js**: `v18.17.0` or higher
-- **Package Manager**: `npm` (v9+)
-- **Database**: Active PostgreSQL instance (Local or Supabase)
-- **Cache**: Active Redis server running on `localhost:6379`
 
-### 1. Clone the Repository
+- Node.js 18+
+- PostgreSQL (local or Supabase free tier)
+- Redis (local or Upstash free tier)
+
+### 1. Clone
+
 ```bash
-git clone https://github.com/shaileshchaudhary/EduScale.git
-cd EduScale
+git clone https://github.com/Shailesh93602/devscale.git
+cd devscale
 ```
 
-### 2. Backend Setup
+### 2. Backend
+
 ```bash
 cd Backend
 npm install
-
-# Setup Prisma Schema & Seed the database
+cp .env.example .env   # fill in values below
 npx prisma generate
 npx prisma db push
-npm run seed
-
-# Start the API & WebSocket server (Runs on port 5000)
-npm run dev
+npm run dev            # starts on :5000
 ```
 
-### 3. Frontend Setup
+### 3. Frontend
+
 ```bash
-# Open a new terminal
 cd Frontend
 npm install
-
-# Start the Next.js development server (Runs on port 3000)
-npm run dev
+cp .env.example .env   # fill in values below
+npm run dev            # starts on :3000
 ```
 
 ---
 
-## 🔐 Environment Variables
+## Environment variables
 
-Both layers require proper `.env` configurations. Refer to `.env.example` in each directory.
+### Backend (`Backend/.env`)
 
-**Backend (`Backend/.env`) High-level:**
-```env
-DATABASE_URL="postgres://user:pass@localhost:5432/eduscale"
-REDIS_URL="redis://localhost:6379"
-PORT=5000
-JWT_SECRET="super_secure_key"
-CLOUDINARY_CLOUD_NAME="..."
-```
+| Variable | Required | Description |
+|---|---|---|
+| `DATABASE_URL` | Yes | PostgreSQL connection string |
+| `REDIS_URL` | Yes | Redis URL — used by socket adapter, Redlock, Bull |
+| `JWT_SECRET` | Yes | Sign JWT access tokens |
+| `PORT` | No | API port (default: 5000) |
+| `CLOUDINARY_CLOUD_NAME` | No | Media uploads |
+| `CLOUDINARY_API_KEY` | No | Media uploads |
+| `CLOUDINARY_API_SECRET` | No | Media uploads |
 
-**Frontend (`Frontend/.env`) High-level:**
-```env
-NEXT_PUBLIC_API_BASE_URL="http://localhost:5000/api/v1"
-NEXT_PUBLIC_WS_URL="http://localhost:5000"
-NEXT_PUBLIC_SUPABASE_URL="..."
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY="..."
-```
+### Frontend (`Frontend/.env`)
 
----
-
-## 🔮 Future Roadmap
-
-EduScale's master roadmap focuses on bringing deep, AI-centric enterprise features to our core users.
-
-- [ ] **AI-Powered Code Review:** Automated AST and linting feedback using LLMs for submitted programming challenges.
-- [ ] **Dynamic Virtual Whiteboard:** A WebRTC-powered shared canvas system for 1-on-1 system design mentorship.
-- [ ] **React Native Mobile App:** Cross-platform native application equipped with offline-learning support and push notifications.
-- [ ] **Advanced Gamification:** Implementation of competitive leagues (Bronze, Silver, Gold), monthly sprint hackathons, and global ELO rankings.
-- [ ] **Corporate Dashboard:** B2B integration allowing recruiting partners to source top talent directly via specialized leaderboards.
+| Variable | Required | Description |
+|---|---|---|
+| `NEXT_PUBLIC_API_BASE_URL` | Yes | Backend REST URL, e.g. `http://localhost:5000/api/v1` |
+| `NEXT_PUBLIC_WS_URL` | Yes | Socket.io server URL, e.g. `http://localhost:5000` |
+| `NEXT_PUBLIC_SUPABASE_URL` | Yes | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Yes | Supabase anon key |
 
 ---
 
-## 📄 License & Authors
+## Tech stack
 
-**EduScale** is proprietary software and architecture conceptually built for premier deployment.
+| Layer | Package | Why |
+|---|---|---|
+| Real-time transport | `socket.io` | WebSocket + fallback, room/namespace model |
+| Multi-instance scaling | `@socket.io/redis-adapter` | Cross-node Pub/Sub for Socket.io rooms |
+| Distributed locking | `redlock` | Redlock algorithm — prevents double-start race condition |
+| Circuit breaker | `opossum` | Protects code execution service; fallback keeps battles running |
+| Metrics | `prom-client` | Prometheus-compatible `/metrics` endpoint |
+| Background jobs | `bull` | Redis-backed queue for async score/badge processing |
+| ORM | `prisma` | Type-safe PostgreSQL queries |
+| Frontend | `next.js 15` | App Router, SSR, edge functions |
+| State | `redux-toolkit` | Battle state, user session |
 
-Built and maintained with ❤️ by [Shailesh Chaudhari](https://shaileshchaudhari.vercel.app). All Rights Reserved.
+---
+
+## Live demo
+
+[eduscale.vercel.app](https://eduscale.vercel.app)
+
+---
+
+Built by [Shailesh Chaudhary](https://shaileshchaudhari.vercel.app)
