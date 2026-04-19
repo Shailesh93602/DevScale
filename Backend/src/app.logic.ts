@@ -147,7 +147,10 @@ export const initializeApp = async (apiRoutes: Router[]) => {
     process.exit(1);
   });
   process.on('uncaughtException', (error: Error) => {
-    logger.error('Uncaught exception', { error: error.message, stack: error.stack });
+    logger.error('Uncaught exception', {
+      error: error.message,
+      stack: error.stack,
+    });
     process.exit(1);
   });
 

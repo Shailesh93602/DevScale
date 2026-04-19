@@ -13,8 +13,16 @@ export const battleAntiCheatMiddleware = async (
     const { battle_id, question_id, selected_option, time_taken_ms } = req.body;
     const userId = req.user?.id;
 
-    if (!battle_id || !userId || !question_id || selected_option === undefined || time_taken_ms === undefined) {
-      return next(createAppError('Missing required fields for submission', 400));
+    if (
+      !battle_id ||
+      !userId ||
+      !question_id ||
+      selected_option === undefined ||
+      time_taken_ms === undefined
+    ) {
+      return next(
+        createAppError('Missing required fields for submission', 400)
+      );
     }
 
     const battle = await prisma.battle.findUnique({
@@ -30,7 +38,9 @@ export const battleAntiCheatMiddleware = async (
       return next(createAppError('Battle is not in progress', 403));
     }
     if (!battle.participants.length) {
-      return next(createAppError('You are not a participant in this battle', 403));
+      return next(
+        createAppError('You are not a participant in this battle', 403)
+      );
     }
     if (!battle.questions.length) {
       return next(createAppError('Invalid question for this battle', 400));
@@ -50,7 +60,9 @@ export const battleAntiCheatMiddleware = async (
       where: { question_id, user_id: userId },
     });
     if (existingAnswer) {
-      return next(createAppError('Answer already submitted for this question', 409));
+      return next(
+        createAppError('Answer already submitted for this question', 409)
+      );
     }
 
     next();

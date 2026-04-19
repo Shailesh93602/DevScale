@@ -6,7 +6,10 @@ export const updateArticleStatusSchema = Joi.object({
   status: Joi.string()
     .valid('DRAFT', 'PENDING_REVIEW', 'PUBLISHED', 'ARCHIVED', 'REJECTED')
     .required()
-    .messages({ 'any.only': 'status must be DRAFT, PENDING_REVIEW, PUBLISHED, ARCHIVED, or REJECTED' }),
+    .messages({
+      'any.only':
+        'status must be DRAFT, PENDING_REVIEW, PUBLISHED, ARCHIVED, or REJECTED',
+    }),
 });
 
 // POST /articles/:id/moderation
@@ -22,9 +25,11 @@ export const updateModerationNotesSchema = Joi.object({
 export const updateArticleContentSchema = Joi.object({
   title: Joi.string().min(3).max(300).optional(),
   content: Joi.string().min(10).optional(),
-}).min(1).messages({
-  'object.min': 'Provide at least one field to update (title or content)',
-});
+})
+  .min(1)
+  .messages({
+    'object.min': 'Provide at least one field to update (title or content)',
+  });
 
 // Param validator reused across article routes
 export const articleIdParamSchema = Joi.object({

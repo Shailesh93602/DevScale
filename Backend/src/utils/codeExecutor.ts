@@ -22,16 +22,22 @@ interface ExecutionResult {
 // Opens after 3 failures in a 10-second window; half-opens after 30 seconds.
 // Prevents cascading timeouts when Judge0 / RapidAPI is degraded.
 const judge0Breaker = new CircuitBreaker(_executeCodeRaw, {
-  timeout: 15000,           // 15 s — Judge0 slow-path ceiling
+  timeout: 15000, // 15 s — Judge0 slow-path ceiling
   errorThresholdPercentage: 50, // open when ≥50% of calls in window fail
-  resetTimeout: 30000,      // try again after 30 s
-  volumeThreshold: 3,       // need at least 3 calls before opening
+  resetTimeout: 30000, // try again after 30 s
+  volumeThreshold: 3, // need at least 3 calls before opening
   name: 'judge0',
 });
 
-judge0Breaker.on('open',     () => logger.warn('Judge0 circuit breaker OPEN — requests failing fast'));
-judge0Breaker.on('halfOpen', () => logger.info('Judge0 circuit breaker HALF-OPEN — probing'));
-judge0Breaker.on('close',    () => logger.info('Judge0 circuit breaker CLOSED — service recovered'));
+judge0Breaker.on('open', () =>
+  logger.warn('Judge0 circuit breaker OPEN — requests failing fast')
+);
+judge0Breaker.on('halfOpen', () =>
+  logger.info('Judge0 circuit breaker HALF-OPEN — probing')
+);
+judge0Breaker.on('close', () =>
+  logger.info('Judge0 circuit breaker CLOSED — service recovered')
+);
 
 export const executeCode = async (
   params: ExecuteCodeParams
@@ -42,7 +48,7 @@ export const executeCode = async (
     if (judge0Breaker.opened) {
       throw createAppError(
         'Code execution is temporarily unavailable — please try again in a moment.',
-        503,
+        503
       );
     }
     throw error;
@@ -77,7 +83,7 @@ async function _executeCodeRaw(
     const result = await pollSubmissionResult(token);
 
     // Decode base64 results
-    const decode = (str: string | null) => 
+    const decode = (str: string | null) =>
       str ? Buffer.from(str, 'base64').toString('utf-8') : '';
 
     const stdout = decode(result.stdout);
@@ -97,14 +103,18 @@ async function _executeCodeRaw(
     };
   } catch (error: unknown) {
     logger.error('Code execution error:', error);
-    
+
     if (axios.isAxiosError(error) && error.response?.status === 401) {
-      throw createAppError('Code execution API key is missing or invalid. Please check your Backend .env file.', 401);
+      throw createAppError(
+        'Code execution API key is missing or invalid. Please check your Backend .env file.',
+        401
+      );
     }
-    
-    const message = (axios.isAxiosError(error) 
-      ? error.response?.data?.error || error.response?.data?.message 
-      : (error as Error).message) || 'Failed to execute code';
+
+    const message =
+      (axios.isAxiosError(error)
+        ? error.response?.data?.error || error.response?.data?.message
+        : (error as Error).message) || 'Failed to execute code';
     throw createAppError(`Code Execution Error: ${message}`, 500);
   }
 }

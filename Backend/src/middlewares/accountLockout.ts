@@ -15,10 +15,10 @@ import { createAppError } from '../utils/errorHandler';
 import logger from '../utils/logger';
 
 const MAX_FAILURES = 10;
-const WINDOW_SECS = 15 * 60;       // 15-minute sliding window for counting failures
+const WINDOW_SECS = 15 * 60; // 15-minute sliding window for counting failures
 const LOCK_DURATION_SECS = 30 * 60; // 30-minute lockout
 const FAILURE_PREFIX = 'eduscale:lockout:failures:';
-const LOCK_PREFIX    = 'eduscale:lockout:locked:';
+const LOCK_PREFIX = 'eduscale:lockout:locked:';
 
 const ipKey = (req: Request) => req.ip || 'unknown';
 
@@ -32,11 +32,16 @@ export const checkAccountLockout = async (
     const locked = await redis.exists(key);
     if (locked) {
       const ttl = await redis.ttl(key);
-      logger.warn('Locked IP attempted request', { ip: ipKey(req), ttlRemaining: ttl });
-      next(createAppError(
-        `Too many failed attempts. Try again in ${Math.ceil(ttl / 60)} minutes.`,
-        429,
-      ));
+      logger.warn('Locked IP attempted request', {
+        ip: ipKey(req),
+        ttlRemaining: ttl,
+      });
+      next(
+        createAppError(
+          `Too many failed attempts. Try again in ${Math.ceil(ttl / 60)} minutes.`,
+          429
+        )
+      );
       return;
     }
     next();
@@ -49,7 +54,7 @@ export const checkAccountLockout = async (
 export const recordAuthFailure = async (req: Request): Promise<void> => {
   try {
     const failKey = FAILURE_PREFIX + ipKey(req);
-    const lockKey = LOCK_PREFIX    + ipKey(req);
+    const lockKey = LOCK_PREFIX + ipKey(req);
 
     const failures = await redis.incr(failKey);
     // Reset expiry on every increment so the window stays sliding
@@ -58,7 +63,10 @@ export const recordAuthFailure = async (req: Request): Promise<void> => {
     if (failures >= MAX_FAILURES) {
       await redis.setex(lockKey, LOCK_DURATION_SECS, '1');
       await redis.del(failKey); // reset counter once lock is set
-      logger.warn('IP locked after repeated auth failures', { ip: ipKey(req), failures });
+      logger.warn('IP locked after repeated auth failures', {
+        ip: ipKey(req),
+        failures,
+      });
     }
   } catch {
     // non-fatal

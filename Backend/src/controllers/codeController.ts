@@ -24,7 +24,9 @@ export default class CodeController {
     const userId = req.user?.id;
 
     if (!userId) {
-      return sendResponse(res, 'UNAUTHORIZED', { data: { message: 'Login required to save progress' } });
+      return sendResponse(res, 'UNAUTHORIZED', {
+        data: { message: 'Login required to save progress' },
+      });
     }
 
     const draft = await prisma.challengeDraft.upsert({
@@ -33,7 +35,7 @@ export default class CodeController {
           user_id: userId,
           challenge_id: challengeId,
           language: language,
-        }
+        },
       },
       update: { code },
       create: {
@@ -41,7 +43,7 @@ export default class CodeController {
         challenge_id: challengeId,
         language: language,
         code: code,
-      }
+      },
     });
 
     return sendResponse(res, 'DRAFT_SAVED', { data: draft });
@@ -62,8 +64,8 @@ export default class CodeController {
           user_id: userId,
           challenge_id: challengeId,
           language: language as string,
-        }
-      }
+        },
+      },
     });
 
     return sendResponse(res, 'DRAFT_FETCHED', { data: draft });
@@ -73,11 +75,15 @@ export default class CodeController {
     // Be robust with field names from frontend
     const code = req.body.code;
     const language = req.body.language;
-    const challengeId = req.body.challengeId || req.body.challenge_id || req.body.id;
+    const challengeId =
+      req.body.challengeId || req.body.challenge_id || req.body.id;
     const challengeTitle = req.body.challengeTitle;
     let { input = '' } = req.body;
 
-    logger.debug('Resolved code execution target', { challengeId, challengeTitle });
+    logger.debug('Resolved code execution target', {
+      challengeId,
+      challengeTitle,
+    });
 
     let challenge: ChallengeWithTestCases | null = null;
 
@@ -89,14 +95,16 @@ export default class CodeController {
             OR: [
               { id: challengeId },
               { title: challengeId },
-              { title: challengeTitle || '' }
-            ]
+              { title: challengeTitle || '' },
+            ],
           },
-          include: { test_cases: true }
+          include: { test_cases: true },
         })) as ChallengeWithTestCases | null;
 
         if (challenge) {
-          logger.debug('Found challenge for wrapping', { title: challenge.title });
+          logger.debug('Found challenge for wrapping', {
+            title: challenge.title,
+          });
           // Set default input if none provided
           if (!input && challenge.test_cases?.length > 0) {
             input = challenge.test_cases[0].input;
@@ -105,16 +113,18 @@ export default class CodeController {
           logger.debug('No challenge found for wrapping, skipping wrapper');
         }
       } catch (err) {
-        logger.error('Error during challenge lookup for code wrapping', { err });
+        logger.error('Error during challenge lookup for code wrapping', {
+          err,
+        });
       }
     }
 
     const result = await (async () => {
-        const testCasesToRun = [];
+      const testCasesToRun = [];
 
-        if (challenge && challenge.test_cases?.length > 0) {
-          // Run all public test cases
-          const publicCases = challenge.test_cases.filter((tc) => !tc.is_hidden);
+      if (challenge && challenge.test_cases?.length > 0) {
+        // Run all public test cases
+        const publicCases = challenge.test_cases.filter((tc) => !tc.is_hidden);
         testCasesToRun.push(...publicCases);
       } else {
         // Basic execution with provided input or default
@@ -132,11 +142,12 @@ export default class CodeController {
 
           const actualOutput = execResult.output.trim();
           const expectedOutput = (tc.output || '').trim();
-          
+
           // Basic comparison - might need something more robust for floating points or whitespace
           let status = 'Accepted';
           if (tc.output) {
-             status = actualOutput === expectedOutput ? 'Accepted' : 'Wrong Answer';
+            status =
+              actualOutput === expectedOutput ? 'Accepted' : 'Wrong Answer';
           }
 
           return {
@@ -148,7 +159,8 @@ export default class CodeController {
             memoryUsed: execResult.memoryUsed,
           };
         } catch (err) {
-          const errorMessage = err instanceof Error ? err.message : 'Execution Error';
+          const errorMessage =
+            err instanceof Error ? err.message : 'Execution Error';
           return {
             input: tc.input,
             expectedOutput: tc.output,

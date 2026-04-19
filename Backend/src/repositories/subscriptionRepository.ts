@@ -2,12 +2,17 @@ import { Prisma, Subscription } from '@prisma/client';
 import BaseRepository from './baseRepository.js';
 import prisma from '../lib/prisma.js';
 
-export default class SubscriptionRepository extends BaseRepository<Subscription, typeof prisma.subscription> {
+export default class SubscriptionRepository extends BaseRepository<
+  Subscription,
+  typeof prisma.subscription
+> {
   constructor() {
     super(prisma.subscription);
   }
 
-  async findByStripeCustomerId(stripeCustomerId: string): Promise<Subscription | null> {
+  async findByStripeCustomerId(
+    stripeCustomerId: string
+  ): Promise<Subscription | null> {
     return this.findUnique({
       where: { stripe_customer_id: stripeCustomerId },
     });
@@ -25,14 +30,20 @@ export default class SubscriptionRepository extends BaseRepository<Subscription,
     });
   }
 
-  async updateByStripeId(stripeId: string, data: Prisma.SubscriptionUpdateInput): Promise<Subscription> {
+  async updateByStripeId(
+    stripeId: string,
+    data: Prisma.SubscriptionUpdateInput
+  ): Promise<Subscription> {
     return this.update({
       where: { stripe_id: stripeId },
       data,
     });
   }
 
-  async upsertSubscription(userId: string, data: Prisma.SubscriptionCreateInput): Promise<Subscription> {
+  async upsertSubscription(
+    userId: string,
+    data: Prisma.SubscriptionCreateInput
+  ): Promise<Subscription> {
     return this.upsert({
       where: { user_id: userId },
       update: {
@@ -40,7 +51,7 @@ export default class SubscriptionRepository extends BaseRepository<Subscription,
       },
       create: {
         ...data,
-        user: { connect: { id: userId } }
+        user: { connect: { id: userId } },
       },
     });
   }

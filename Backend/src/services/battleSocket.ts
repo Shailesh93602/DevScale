@@ -26,16 +26,23 @@ class BattleSocketService {
 
   async initializeBattle(battleId: string) {
     try {
-      const battle = await prisma.battle.findUnique({ where: { id: battleId } });
+      const battle = await prisma.battle.findUnique({
+        where: { id: battleId },
+      });
       if (!battle) return;
 
       if (battle.type === 'SCHEDULED' && battle.start_time) {
         const lobbyOpenAt = battle.start_time.getTime() - 60_000;
         const delay = lobbyOpenAt - Date.now();
         if (delay > 0) {
-          const handle = setTimeout(() => this.transitionToLobby(battleId), delay);
+          const handle = setTimeout(
+            () => this.transitionToLobby(battleId),
+            delay
+          );
           this.getOrCreateState(battleId).startScheduleHandle = handle;
-          logger.info(`Battle ${battleId}: lobby opens in ${Math.round(delay / 1000)}s`);
+          logger.info(
+            `Battle ${battleId}: lobby opens in ${Math.round(delay / 1000)}s`
+          );
         } else if (delay > -60_000) {
           // Already within lobby window
           await this.transitionToLobby(battleId);
@@ -55,7 +62,9 @@ class BattleSocketService {
         data: { status: 'LOBBY' },
       });
 
-      socketService.emitToRoom(battleId, 'battle:status_changed', { status: 'LOBBY' });
+      socketService.emitToRoom(battleId, 'battle:status_changed', {
+        status: 'LOBBY',
+      });
       logger.info(`Battle ${battleId} → LOBBY`);
 
       if (battle.type === 'SCHEDULED' && battle.start_time) {
@@ -78,7 +87,9 @@ class BattleSocketService {
         await this.startBattle(battleId);
         return;
       }
-      socketService.emitToRoom(battleId, 'battle:countdown', { seconds_remaining: secondsRemaining });
+      socketService.emitToRoom(battleId, 'battle:countdown', {
+        seconds_remaining: secondsRemaining,
+      });
     }, 1000);
 
     state.lobbyCountdownHandle = tick;
@@ -94,13 +105,18 @@ class BattleSocketService {
         state.lobbyCountdownHandle = null;
       }
 
-      await prisma.battle.update({ where: { id: battleId }, data: { status: 'IN_PROGRESS' } });
+      await prisma.battle.update({
+        where: { id: battleId },
+        data: { status: 'IN_PROGRESS' },
+      });
       await prisma.battleParticipant.updateMany({
         where: { battle_id: battleId, status: { in: ['JOINED', 'READY'] } },
         data: { status: 'PLAYING' },
       });
 
-      socketService.emitToRoom(battleId, 'battle:started', { started_at: Date.now() });
+      socketService.emitToRoom(battleId, 'battle:started', {
+        started_at: Date.now(),
+      });
       logger.info(`Battle ${battleId} → IN_PROGRESS`);
 
       setTimeout(() => this.broadcastQuestion(battleId, 0), 2000);
@@ -114,8 +130,10 @@ class BattleSocketService {
   async broadcastQuestion(battleId: string, index: number) {
     try {
       const state = this.getOrCreateState(battleId);
-      if (state.questionTimerInterval) clearInterval(state.questionTimerInterval);
-      if (state.questionTimeoutHandle) clearTimeout(state.questionTimeoutHandle);
+      if (state.questionTimerInterval)
+        clearInterval(state.questionTimerInterval);
+      if (state.questionTimeoutHandle)
+        clearTimeout(state.questionTimeoutHandle);
       state.questionTimerInterval = null;
       state.questionTimeoutHandle = null;
 
@@ -149,23 +167,28 @@ class BattleSocketService {
       const timerInterval = setInterval(() => {
         const secondsRemaining = Math.ceil((endsAt - Date.now()) / 1000);
         if (secondsRemaining > 0) {
-          socketService.emitToRoom(battleId, 'battle:timer_tick', { seconds_remaining: secondsRemaining });
+          socketService.emitToRoom(battleId, 'battle:timer_tick', {
+            seconds_remaining: secondsRemaining,
+          });
         }
       }, 1000);
 
       // Auto-advance when time expires
-      const timeoutHandle = setTimeout(async () => {
-        clearInterval(timerInterval);
-        state.questionTimerInterval = null;
-        state.questionTimeoutHandle = null;
-        logger.info(`Battle ${battleId} Q${index} expired → advancing`);
-        const done = await battleRepo.checkAllParticipantsDone(battleId);
-        if (done) {
-          await this.endBattle(battleId);
-        } else {
-          await this.broadcastQuestion(battleId, index + 1);
-        }
-      }, question.time_limit * 1000 + 500);
+      const timeoutHandle = setTimeout(
+        async () => {
+          clearInterval(timerInterval);
+          state.questionTimerInterval = null;
+          state.questionTimeoutHandle = null;
+          logger.info(`Battle ${battleId} Q${index} expired → advancing`);
+          const done = await battleRepo.checkAllParticipantsDone(battleId);
+          if (done) {
+            await this.endBattle(battleId);
+          } else {
+            await this.broadcastQuestion(battleId, index + 1);
+          }
+        },
+        question.time_limit * 1000 + 500
+      );
 
       state.questionTimerInterval = timerInterval;
       state.questionTimeoutHandle = timeoutHandle;
@@ -228,7 +251,9 @@ class BattleSocketService {
         leaderboard,
       });
       this.cleanup(battleId);
-      logger.info(`Battle ${battleId} → COMPLETED. Winner: ${battle.winner_id}`);
+      logger.info(
+        `Battle ${battleId} → COMPLETED. Winner: ${battle.winner_id}`
+      );
     } catch (err) {
       logger.error(`endBattle ${battleId}:`, err);
     }
@@ -249,7 +274,9 @@ class BattleSocketService {
 
   async handleParticipantReady(battleId: string, userId: string) {
     const [readyCount, totalCount] = await Promise.all([
-      prisma.battleParticipant.count({ where: { battle_id: battleId, status: 'READY' } }),
+      prisma.battleParticipant.count({
+        where: { battle_id: battleId, status: 'READY' },
+      }),
       prisma.battleParticipant.count({ where: { battle_id: battleId } }),
     ]);
     socketService.emitToRoom(battleId, 'battle:participant_ready', {
@@ -275,7 +302,9 @@ class BattleSocketService {
         where: { id: battleId },
         include: {
           participants: {
-            include: { user: { select: { id: true, username: true, avatar_url: true } } },
+            include: {
+              user: { select: { id: true, username: true, avatar_url: true } },
+            },
           },
         },
       });

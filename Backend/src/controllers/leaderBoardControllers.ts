@@ -14,7 +14,8 @@ export default class LeaderboardController {
     async (req: Request, res: Response) => {
       const { user_id, subject_id, limit } = req.query;
       const parsedLimit = Number(limit);
-      const take = Number.isFinite(parsedLimit) && parsedLimit > 0 ? parsedLimit : 50;
+      const take =
+        Number.isFinite(parsedLimit) && parsedLimit > 0 ? parsedLimit : 50;
       const where: Record<string, string> = {};
 
       if (typeof user_id === 'string' && user_id && user_id !== 'undefined') {

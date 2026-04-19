@@ -4,7 +4,10 @@ import BaseRepository from './baseRepository.js';
 
 import prisma from '../lib/prisma.js';
 
-export class ForumRepository extends BaseRepository< Forum, typeof prisma.forum > {
+export class ForumRepository extends BaseRepository<
+  Forum,
+  typeof prisma.forum
+> {
   constructor() {
     super(prisma.forum);
   }
