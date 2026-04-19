@@ -6,5 +6,11 @@
       "source": "/(.*)",
       "destination": "/api/index.ts"
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/v1/health",
+      "schedule": "0 9 * * *"
+    }
   ]
 }
