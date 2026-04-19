@@ -1,12 +1,8 @@
 import { PrismaClient, Status, QuizType } from '@prisma/client';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { dirname } from 'node:path';
 
 const prisma = new PrismaClient();
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 /** 
  * Targeted Topic Seeder
@@ -122,12 +118,13 @@ async function seedSingleTopic() {
             });
 
             if (q.options) {
+                type QuizOption = string | { text: string; isCorrect?: boolean };
                 await prisma.option.createMany({
-                    data: q.options.map((opt: any, idx: number) => ({
+                    data: (q.options as QuizOption[]).map((opt, idx) => ({
                         question_id: question.id,
                         text: typeof opt === 'string' ? opt : opt.text,
-                        is_correct: idx === q.correctAnswer || !!opt.isCorrect
-                    }))
+                        is_correct: idx === q.correctAnswer || (typeof opt !== 'string' && !!opt.isCorrect),
+                    })),
                 });
             }
         }
