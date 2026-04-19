@@ -34,6 +34,7 @@ async function handleKeepalive(request: Request) {
 
     return NextResponse.json({
       ok: true,
+      project: 'eduscale-frontend',
       db: 'supabase',
       at: new Date().toISOString(),
     });
